@@ -1,0 +1,12 @@
+{
+  "static_slides": 12,
+  "animated_slides": 12,
+  "speaker_note_sets": 12,
+  "timing_seconds": 1200,
+  "pdf_pages": 12,
+  "preview_images": 12,
+  "native_overflow_issues": 0,
+  "animation_timing_parts": 8,
+  "expected_timing_parts": 8,
+  "assertion_errors": []
+}

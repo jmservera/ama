@@ -1,0 +1,56 @@
+slide: 9
+title: "Resident trust is a delivery outcome."
+section: "Resident value"
+layout: blank
+duration_seconds: 95
+background: {fill: "#F4F3EE"}
+elements:
+  - &k {type: textbox, left: 0.7, top: 0.55, width: 11.8, height: 0.35, text: "WHAT BETTER SHOULD FEEL LIKE", font: "Segoe UI", font_size: 12, font_color: "#176D67", font_bold: true}
+  - {<<: *k, top: 1.1, height: 0.8, text: "Resident trust is a delivery outcome.", font_size: 34, font_color: "#142B3B"}
+  - &n {type: textbox, left: 0.75, top: 2.45, width: 0.8, height: 0.6, text: "01", font: "Segoe UI", font_size: 27, font_color: "#176D67", font_bold: true}
+  - {<<: *n, left: 6.85, text: "02"}
+  - {<<: *n, top: 4.15, text: "03"}
+  - {<<: *n, left: 6.85, top: 4.15, text: "04"}
+  - &h {type: textbox, left: 1.65, top: 2.45, width: 4.55, height: 0.6, text: "Clear choices", font: "Segoe UI", font_size: 26, font_color: "#142B3B", font_bold: true}
+  - {<<: *h, left: 7.75, text: "Reliable appointments"}
+  - {<<: *h, top: 4.15, text: "A usable home"}
+  - {<<: *h, left: 7.75, top: 4.15, text: "A person who can help"}
+  - &b {type: textbox, left: 1.65, top: 3.1, width: 4.55, height: 0.8, text: "Accessible information and time\nto consider discretionary measures.", font: "Segoe UI", font_size: 19, font_color: "#4B606C"}
+  - {<<: *b, left: 7.75, text: "Real capacity, agreed adjustments\nand honest updates."}
+  - {<<: *b, top: 4.8, text: "Quality checks, practical handover\nand follow-up on comfort."}
+  - {<<: *b, left: 7.75, top: 4.8, text: "Human review, aftercare and\ncomplaint routes without detriment."}
+  - {<<: *h, left: 0.75, top: 5.95, width: 11.8, height: 0.55, text: "Measure comfort and affordability. Do not promise every bill will fall.", font_size: 23}
+  - {<<: *k, top: 6.7, width: 10.9, height: 0.3, text: "Proposed resident outcomes; direct research still required  |  BRD: BR-011 to BR-020, BR-036/037, BR-051", font_size: 11, font_color: "#4B606C", font_bold: false}
+  - {<<: *k, left: 12.0, top: 6.7, width: 0.6, height: 0.3, text: "09", font_size: 11, font_color: "#4B606C", font_bold: false, alignment: right}
+speaker_notes: |
+  TIMING: 10:50-12:25 (95 seconds).
+
+  The four questions from the opening now become four service commitments to
+  validate. Clear choices means property-specific, accessible information,
+  not an automated campaign designed to maximise acceptance. Silence or survey
+  access is not agreement to installation.
+
+  Reliable appointments mean supplier capacity has been confirmed, necessary
+  adjustments are understood and the resident receives honest updates.
+  An incomplete appointment must not automatically become resident refusal.
+
+  A usable home means more than a contractor reporting a finished job.
+  It includes competent quality acceptance, accessible operating guidance and
+  aftercare. A person who can help means an accountable route to challenge a
+  decision, report a defect or make a complaint without losing other services.
+
+  Energy outcomes need equal care. A household that previously under-heated
+  its home may choose greater comfort rather than lower consumption. Tariffs,
+  weather, occupancy and the measure itself affect bills. We should measure
+  comfort, affordability and adverse outcomes instead of promising universal
+  savings.
+
+  These are proposed standards, not claims that residents have validated the
+  service. Representative digital and non-digital journey testing is a
+  condition of live use.
+
+  TRANSITION: The same discipline we apply to resident promises must apply to
+  the financial story.
+
+  SOURCE: BRD, BR-011 through BR-020, BR-036, BR-037, BR-051,
+  Pilot Evaluation and CXO Value Proposition.

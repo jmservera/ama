@@ -1,0 +1,53 @@
+slide: 11
+title: "Value must be earned, not assumed."
+section: "Business value"
+layout: blank
+duration_seconds: 90
+background: {fill: "#F4F3EE"}
+elements:
+  - &k {type: textbox, left: 0.7, top: 0.55, width: 11.8, height: 0.35, text: "FOUR OUTCOMES THE EXECUTIVE TEAM CAN TEST", font: "Segoe UI", font_size: 12, font_color: "#176D67", font_bold: true}
+  - {<<: *k, top: 1.1, height: 0.85, text: "Value must be earned, not assumed.", font_size: 34, font_color: "#142B3B"}
+  - &b {type: shape, shape: rectangle, left: 0.75, top: 2.4, width: 5.75, height: 1.45, fill: "#FFFFFF", line_color: "#FFFFFF"}
+  - {<<: *b, left: 6.85}
+  - {<<: *b, top: 4.2}
+  - {<<: *b, left: 6.85, top: 4.2}
+  - &h {type: textbox, left: 1.0, top: 2.58, width: 5.2, height: 0.4, text: "CAPACITY RELEASED", font: "Segoe UI", font_size: 15, font_color: "#176D67", font_bold: true}
+  - {<<: *h, left: 7.1, text: "CAPITAL BETTER CONTROLLED"}
+  - {<<: *h, top: 4.38, text: "RESIDENT OUTCOMES IMPROVED"}
+  - {<<: *h, left: 7.1, top: 4.38, text: "QUALITY MADE VISIBLE"}
+  - &t {type: textbox, left: 1.0, top: 3.05, width: 5.15, height: 0.8, text: "Less chasing.\nMore professional judgement.", font: "Segoe UI", font_size: 20, font_color: "#142B3B"}
+  - {<<: *t, left: 7.1, text: "Fewer avoidable costs.\nClearer cash exposure."}
+  - {<<: *t, top: 4.85, text: "Reliable service.\nComfort and affordability."}
+  - {<<: *t, left: 7.1, top: 4.85, text: "Accepted work.\nEarlier defect containment."}
+  - {<<: *t, left: 0.75, top: 6.0, width: 11.8, height: 0.5, text: "Value = attributable improvement over a credible alternative, net of all added costs.", font_size: 21, font_bold: true}
+  - {<<: *k, top: 6.7, width: 10.9, height: 0.3, text: "Value hypotheses, not realised benefits  |  BRD: benefits register and separate investment cases", font_size: 11, font_color: "#4B606C", font_bold: false}
+  - {<<: *k, left: 12.0, top: 6.7, width: 0.6, height: 0.3, text: "11", font_size: 11, font_color: "#4B606C", font_bold: false, alignment: right}
+speaker_notes: |
+  TIMING: 14:15-15:45 (90 seconds).
+
+  These are four outcome categories the executive team can own and test.
+  Programme leadership measures whether coordination effort and cycle time
+  fall. Finance measures attributable avoided expenditure, eligible grant
+  conversion and cash exposure. Resident leadership measures lived outcomes.
+  Assets and quality leadership measure accepted work and defects.
+
+  The key phrase is attributable improvement. The association would obtain
+  some benefits from retrofit even without new technology. We cannot claim
+  the whole capital programme as the return on an AI investment.
+
+  Likewise, staff time released is capacity until a budget owner confirms
+  that expenditure will reduce. Grant already assumed in the plan is not a
+  new benefit; receiving it earlier is a timing improvement. Resident savings
+  are resident value, not landlord cash. Better governance matters, but we
+  should not invent a large borrowing-capacity benefit without a treasury model.
+
+  Compare the selected option with process improvement and conventional
+  workflow. Include integration, data remediation, licences, support, training,
+  human review, assurance and exit costs. If AI does not add value, choose the
+  simpler option while retaining the stronger operating controls.
+
+  TRANSITION: That is why we propose staged proof rather than one large
+  transformation commitment.
+
+  SOURCE: BRD, CXO Value Proposition, Separate Investment Cases and Attribution,
+  Benefits Validation Register, BR-029, BR-043 and BR-049.

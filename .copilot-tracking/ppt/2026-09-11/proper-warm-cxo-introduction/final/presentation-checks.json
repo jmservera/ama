@@ -1,0 +1,12 @@
+{
+  "canonical_pptx": "proper-warm-cxo-executive-presentation.pptx",
+  "slides": 14,
+  "speaker_note_sets": 14,
+  "timing_seconds": 1200,
+  "pdf_pages": 14,
+  "preview_images": 14,
+  "native_overflow_issues": 0,
+  "animation_timing_parts": 9,
+  "expected_animation_timing_parts": 9,
+  "assertion_errors": []
+}

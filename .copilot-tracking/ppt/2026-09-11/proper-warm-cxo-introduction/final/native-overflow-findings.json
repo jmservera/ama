@@ -1,0 +1,14 @@
+[
+  {
+    "slide": 2,
+    "shape": "TextBox 11",
+    "needed": 100.8,
+    "available": 79.2
+  },
+  {
+    "slide": 3,
+    "shape": "TextBox 11",
+    "needed": 64.8,
+    "available": 46.8
+  }
+]

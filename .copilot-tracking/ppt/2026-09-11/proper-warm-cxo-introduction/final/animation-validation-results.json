@@ -1,0 +1,681 @@
+[
+  {
+    "slide": 1,
+    "effect_count": 0,
+    "effects": []
+  },
+  {
+    "slide": 2,
+    "effect_count": 8,
+    "effects": [
+      {
+        "order": 1,
+        "shape_id": 5,
+        "shape_name": "Rectangle 4",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 2,
+        "shape_id": 8,
+        "shape_name": "TextBox 7",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 3,
+        "shape_id": 11,
+        "shape_name": "TextBox 10",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 4,
+        "shape_id": 6,
+        "shape_name": "Rectangle 5",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 5,
+        "shape_id": 9,
+        "shape_name": "TextBox 8",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 6,
+        "shape_id": 12,
+        "shape_name": "TextBox 11",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 7,
+        "shape_id": 13,
+        "shape_name": "Rectangle 12",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 8,
+        "shape_id": 14,
+        "shape_name": "TextBox 13",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      }
+    ]
+  },
+  {
+    "slide": 3,
+    "effect_count": 0,
+    "effects": []
+  },
+  {
+    "slide": 4,
+    "effect_count": 11,
+    "effects": [
+      {
+        "order": 1,
+        "shape_id": 5,
+        "shape_name": "Rectangle 4",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 2,
+        "shape_id": 9,
+        "shape_name": "TextBox 8",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 3,
+        "shape_id": 13,
+        "shape_name": "TextBox 12",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 4,
+        "shape_id": 6,
+        "shape_name": "Rectangle 5",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 5,
+        "shape_id": 10,
+        "shape_name": "TextBox 9",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 6,
+        "shape_id": 14,
+        "shape_name": "TextBox 13",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 7,
+        "shape_id": 7,
+        "shape_name": "Rectangle 6",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 8,
+        "shape_id": 11,
+        "shape_name": "TextBox 10",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 9,
+        "shape_id": 15,
+        "shape_name": "TextBox 14",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 10,
+        "shape_id": 16,
+        "shape_name": "TextBox 15",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 11,
+        "shape_id": 17,
+        "shape_name": "TextBox 16",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      }
+    ]
+  },
+  {
+    "slide": 5,
+    "effect_count": 8,
+    "effects": [
+      {
+        "order": 1,
+        "shape_id": 5,
+        "shape_name": "TextBox 4",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 2,
+        "shape_id": 8,
+        "shape_name": "TextBox 7",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 3,
+        "shape_id": 11,
+        "shape_name": "TextBox 10",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 4,
+        "shape_id": 6,
+        "shape_name": "TextBox 5",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 5,
+        "shape_id": 9,
+        "shape_name": "TextBox 8",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 6,
+        "shape_id": 12,
+        "shape_name": "TextBox 11",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 7,
+        "shape_id": 13,
+        "shape_name": "Rectangle 12",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 8,
+        "shape_id": 14,
+        "shape_name": "TextBox 13",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      }
+    ]
+  },
+  {
+    "slide": 6,
+    "effect_count": 0,
+    "effects": []
+  },
+  {
+    "slide": 7,
+    "effect_count": 8,
+    "effects": [
+      {
+        "order": 1,
+        "shape_id": 4,
+        "shape_name": "TextBox 3",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 2,
+        "shape_id": 7,
+        "shape_name": "TextBox 6",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 3,
+        "shape_id": 5,
+        "shape_name": "TextBox 4",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 4,
+        "shape_id": 8,
+        "shape_name": "TextBox 7",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 5,
+        "shape_id": 6,
+        "shape_name": "TextBox 5",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 6,
+        "shape_id": 9,
+        "shape_name": "TextBox 8",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 7,
+        "shape_id": 10,
+        "shape_name": "Rectangle 9",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 8,
+        "shape_id": 11,
+        "shape_name": "TextBox 10",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      }
+    ]
+  },
+  {
+    "slide": 8,
+    "effect_count": 4,
+    "effects": [
+      {
+        "order": 1,
+        "shape_id": 5,
+        "shape_name": "Rectangle 4",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 2,
+        "shape_id": 7,
+        "shape_name": "TextBox 6",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 3,
+        "shape_id": 9,
+        "shape_name": "TextBox 8",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 4,
+        "shape_id": 10,
+        "shape_name": "TextBox 9",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      }
+    ]
+  },
+  {
+    "slide": 9,
+    "effect_count": 0,
+    "effects": []
+  },
+  {
+    "slide": 10,
+    "effect_count": 7,
+    "effects": [
+      {
+        "order": 1,
+        "shape_id": 6,
+        "shape_name": "Rectangle 5",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 2,
+        "shape_id": 8,
+        "shape_name": "TextBox 7",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 3,
+        "shape_id": 10,
+        "shape_name": "TextBox 9",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 4,
+        "shape_id": 7,
+        "shape_name": "Rectangle 6",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 5,
+        "shape_id": 9,
+        "shape_name": "TextBox 8",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 6,
+        "shape_id": 11,
+        "shape_name": "TextBox 10",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 7,
+        "shape_id": 12,
+        "shape_name": "TextBox 11",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      }
+    ]
+  },
+  {
+    "slide": 11,
+    "effect_count": 0,
+    "effects": []
+  },
+  {
+    "slide": 12,
+    "effect_count": 14,
+    "effects": [
+      {
+        "order": 1,
+        "shape_id": 5,
+        "shape_name": "TextBox 4",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 2,
+        "shape_id": 10,
+        "shape_name": "TextBox 9",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 3,
+        "shape_id": 15,
+        "shape_name": "TextBox 14",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 4,
+        "shape_id": 6,
+        "shape_name": "TextBox 5",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 5,
+        "shape_id": 11,
+        "shape_name": "TextBox 10",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 6,
+        "shape_id": 16,
+        "shape_name": "TextBox 15",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 7,
+        "shape_id": 7,
+        "shape_name": "TextBox 6",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 8,
+        "shape_id": 12,
+        "shape_name": "TextBox 11",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 9,
+        "shape_id": 17,
+        "shape_name": "TextBox 16",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 10,
+        "shape_id": 8,
+        "shape_name": "TextBox 7",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 11,
+        "shape_id": 13,
+        "shape_name": "TextBox 12",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 12,
+        "shape_id": 18,
+        "shape_name": "TextBox 17",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 13,
+        "shape_id": 19,
+        "shape_name": "Rectangle 18",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 14,
+        "shape_id": 20,
+        "shape_name": "TextBox 19",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      }
+    ]
+  },
+  {
+    "slide": 13,
+    "effect_count": 7,
+    "effects": [
+      {
+        "order": 1,
+        "shape_id": 4,
+        "shape_name": "TextBox 3",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 2,
+        "shape_id": 5,
+        "shape_name": "TextBox 4",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 3,
+        "shape_id": 6,
+        "shape_name": "TextBox 5",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 4,
+        "shape_id": 7,
+        "shape_name": "TextBox 6",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 5,
+        "shape_id": 8,
+        "shape_name": "TextBox 7",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 6,
+        "shape_id": 9,
+        "shape_name": "TextBox 8",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 7,
+        "shape_id": 12,
+        "shape_name": "TextBox 11",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      }
+    ]
+  },
+  {
+    "slide": 14,
+    "effect_count": 8,
+    "effects": [
+      {
+        "order": 1,
+        "shape_id": 4,
+        "shape_name": "TextBox 3",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 2,
+        "shape_id": 7,
+        "shape_name": "TextBox 6",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 3,
+        "shape_id": 5,
+        "shape_name": "TextBox 4",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 4,
+        "shape_id": 8,
+        "shape_name": "TextBox 7",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 5,
+        "shape_id": 6,
+        "shape_name": "TextBox 5",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 6,
+        "shape_id": 9,
+        "shape_name": "TextBox 8",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 7,
+        "shape_id": 10,
+        "shape_name": "Rectangle 9",
+        "trigger": 1,
+        "duration": 0.4,
+        "effect_type": 10
+      },
+      {
+        "order": 8,
+        "shape_id": 11,
+        "shape_name": "TextBox 10",
+        "trigger": 2,
+        "duration": 0.4,
+        "effect_type": 10
+      }
+    ]
+  }
+]
