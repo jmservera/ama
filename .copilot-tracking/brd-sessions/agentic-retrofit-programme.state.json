@@ -1,0 +1,69 @@
+{
+  "brdFile": "docs/brds/agentic-retrofit-programme-brd.md",
+  "lastAccessed": "2026-09-11T11:09:35+02:00",
+  "currentPhase": "baseline-validation",
+  "questionsAsked": [
+    "safety-stop-condition",
+    "board-acceleration-gate",
+    "grant-value-states",
+    "frontline-exception-handoffs",
+    "supplier-capacity-commitment",
+    "resident-consent-challenge",
+    "property-lifecycle-controls"
+  ],
+  "answeredQuestions": {
+    "safety-stop-condition": "Block progression for missing, stale, contradictory or unresolved safety evidence until accountable human release.",
+    "board-acceleration-gate": "Require a board-approved investment envelope, portfolio trajectory and downside tolerances before exceeding the annual plan.",
+    "grant-value-states": "Report opportunity, awarded, claimable and cash received as separate evidence-controlled states.",
+    "frontline-exception-handoffs": "Stop autonomous progression and require named human acceptance, a deadline and a resident update.",
+    "supplier-capacity-commitment": "Schedule only against contractually committed, competent and contingency-backed capacity.",
+    "resident-consent-challenge": "Maintain measure-specific decisions, accessible review rights, pause controls and auditable outcomes.",
+    "property-lifecycle-controls": "Use version-controlled property states, separate approvals and defect-driven reopening."
+  },
+  "referencesProcessed": [
+    {
+      "file": "docs/case_study_48.md",
+      "status": "analyzed",
+      "keyFindings": "Established the business challenge, proposed agent roles, autonomy boundaries, regulatory timing and unvalidated value claims."
+    },
+    {
+      "file": "support/company-profile-research.md",
+      "status": "analyzed",
+      "keyFindings": "Provided sector patterns, regulatory baseline, cross-team risks and evidence gaps without establishing fictional company facts."
+    },
+    {
+      "file": "support/uk-social-housing-baseline-research.md",
+      "status": "created",
+      "keyFindings": "Added provisional EPC, damp, repairs, complaints, grant, finance, capacity and quality benchmarks with explicit evidence classes and caveats."
+    },
+    {
+      "file": "support/uk-social-housing-baseline-source-register.md",
+      "status": "created",
+      "keyFindings": "Mapped every benchmark family and derived portfolio value to official publications, direct reports and underlying datasets."
+    }
+  ],
+  "nextActions": [
+    "Validate portfolio and throughput baselines",
+    "Assign owners to open decisions",
+    "Confirm approval thresholds and downside tolerances",
+    "Validate resident requirements with representative residents",
+    "Verify regulatory controls against current official guidance",
+    "Approve the grant and affordability model",
+    "Replace provisional sector benchmarks with company evidence"
+  ],
+  "qualityChecks": [
+    "required-sections-complete",
+    "requirements-linked-to-objectives",
+    "acceptance-criteria-defined",
+    "facts-hypotheses-unknowns-separated",
+    "human-approval-gates-explicit",
+    "resident-consent-and-safety-controls-explicit",
+    "provisional-sector-benchmarks-cited"
+  ],
+  "userPreferences": {
+    "detail-level": "comprehensive",
+    "question-style": "agent-assisted",
+    "working-association-name": "Proper North Homes",
+    "working-programme-name": "Proper Warm"
+  }
+}
