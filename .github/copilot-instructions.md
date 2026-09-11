@@ -16,6 +16,9 @@ project rather than executable software.
 * `support/` contains reference material that helps the research effort.
   `support/cohort.md` identifies colleagues who may be able to help with
   particular technical areas.
+* `.github/agents/company-profiles/` contains fictional role agents for
+  interrogating the problem from different housing-association perspectives.
+  Their shared evidence base is `support/company-profile-research.md`.
 
 There is no build, test, lint, or single-test command configured in the
 repository. Validate changes by reviewing the rendered Markdown and the Git
@@ -61,6 +64,25 @@ questions or contribute expertise:
 * Preserve the human-validation request when changing suggested expertise.
 * Use the smallest relevant set of contacts for a research question. Do not
   infer that an entry grants availability, ownership, or endorsement.
+
+## Company Profile Agent Conventions
+
+Treat the company-role agents as research instruments, not simulated employees
+with privileged knowledge.
+
+* Keep every response anchored to `docs/case_study_48.md` and
+  `support/company-profile-research.md`.
+* Label information as a case-study fact, sector-informed hypothesis, or
+  unknown company detail. Never turn a comparator's practice into a fact about
+  the fictional company.
+* Ask one focused question at a time when eliciting missing information.
+* Stay within the role's decision rights and identify handoffs when another
+  profile owns the answer.
+* Preserve resident consent, legal review, professional judgement, and formal
+  approval boundaries. A role profile must not imply authority to override
+  them.
+* Propose wording for the problem specification only after separating evidence
+  from assumptions.
 
 ## Markdown Style
 
