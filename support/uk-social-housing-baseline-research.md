@@ -1,6 +1,6 @@
 ---
 title: UK Social Housing Baseline Research
-description: Provisional sector benchmarks for the fictional 60,000-home retrofit programme
+description: Provisional sector benchmarks for the Proper North Homes retrofit programme
 author: AMA Research Team
 ms.date: 2026-09-11
 ms.topic: reference
@@ -8,14 +8,14 @@ ms.topic: reference
 
 ## Purpose
 
-This research provides provisional England and UK social-housing comparators for
-the fictional 60,000-home association in
-[Case Study 48](../docs/case_study_48.md). It supports planning where company
-baselines are not yet known.
+This research provides provisional England and UK social-housing comparators
+for the 60,000-home Proper North Homes association in
+[Case Study 48 Addendum](../docs/case_study_48_addendum.md). It supports
+planning where company baselines are not yet known.
 
-The figures are not facts about the fictional association. They must be
-replaced with property-level, resident, contract and financial evidence before
-investment approval.
+The figures are sector benchmarks, not verified Proper North Homes results.
+They must be replaced with property-level, resident, contract and financial
+evidence before investment approval.
 
 Research was conducted on 11 September 2026. Official and first-party sources
 were preferred. National survey values, landlord medians, legal service
@@ -220,9 +220,8 @@ The pairing connects northern identity, warmth and programme coordination. The
 optional line should be used only in general presentation material, never in
 hazard, complaint, safeguarding or resident-consent communications.
 
-The identity is fictional. No exact Companies House or Regulator of Social
-Housing register match was found on 11 September 2026. It has not received
-trademark, domain, accessibility, linguistic or resident testing.
+The identity has not received trademark, domain, accessibility, linguistic or
+resident testing.
 
 Alternative presentation-safe pairs considered were:
 

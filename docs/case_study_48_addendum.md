@@ -1,16 +1,17 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-09-11
+ms.date: 2026-09-18
 ms.topic: reference
 ---
 
 ## Purpose and Status
 
 Read this addendum alongside the unchanged
-[Case Study 48](./case_study_48.md) and its
+[original Case Study 48](./case_study_48_original.md) and its
 [Business Requirements Document](./brds/agentic-retrofit-programme-brd.md).
-The original case study records the request. This companion provides the
+The original case study records the request exactly as first committed. This
+addendum contains every later addition to that request and provides the
 critical assessment, proposed solution, trade-offs, business value and
 conditional executive investment recommendation.
 
@@ -19,13 +20,29 @@ or observed outcomes. Sector benchmarks and illustrative economics are not
 company facts. Where this addendum challenges the original claims or autonomy
 levels, the distinction is intentional; the original remains unchanged.
 
+### Additions Since the Original
+
+The following information was introduced after the original case study and is
+preserved in this addendum:
+
+* The association name, Proper North Homes, and programme name, Proper Warm
+* The working presentation line, "Ready, steady, retrofit," with legal,
+  trademark and resident-communication restrictions
+* The clarified objective of moving homes toward EPC C while the 2030 standard
+  remains a proposal
+* The provisional sector baseline and its evidence classifications
+* The derived delivery, programme-cost and grant-ceiling scenarios
+* The supporting baseline-research reference and its limitations
+* The executive challenge, reframed objective, controlled operating model,
+  delivery gates, success measures, trade-offs and conditional recommendation
+
 ## Proper Warm at Proper North Homes
 
 | Field | Details | Field | Details |
 | --- | --- | --- | --- |
 | Industry | Real Estate (Affordable Housing) / Decarbonisation | Headquarters | United Kingdom |
 | Operating Region | United Kingdom (North of England) | Regulatory Context | UK Net Zero (EPC C by 2030 - proposed); Social Housing Regulation Act; Awaab's Law; UK GDPR; PAS 2035 retrofit standard |
-| Fictional Association | Proper North Homes | Programme | Proper Warm |
+| Association | Proper North Homes | Programme | Proper Warm |
 
 The working presentation line is "Ready, steady, retrofit." The name is not
 cleared for legal, trademark, domain or resident-facing use. It must not be used
@@ -33,12 +50,12 @@ for hazard, complaint, safeguarding or consent communications.
 
 ## Business Challenge
 
-Proper North Homes is a fictional housing association with 60,000 homes. It
-is planning to bring every property toward EPC C by 2030 under the proposed
-standard while responding to damp and mould within statutory timescales under
-Awaab's Law. Retrofit assessments, grant applications, contractor procurement,
-resident consent and quality assurance are managed by a small team with
-spreadsheets, and progress is far behind plan.
+Proper North Homes is a housing association with 60,000 homes. It is planning
+to bring every property toward EPC C by 2030 under the proposed standard while
+responding to damp and mould within statutory timescales under Awaab's Law.
+Retrofit assessments, grant applications, contractor procurement, resident
+consent and quality assurance are managed by a small team with spreadsheets,
+and progress is far behind plan.
 
 The spreadsheet dependency is evidence of fragmented coordination, but it is
 not yet proven to be the main constraint on delivery. Capital, competent

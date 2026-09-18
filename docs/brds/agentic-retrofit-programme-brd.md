@@ -11,13 +11,13 @@ ms.topic: reference
 | Field | Value |
 | --- | --- |
 | Initiative | Agentic Retrofit Programme Delivery |
-| Organisation | Proper North Homes (fictional working name) |
+| Organisation | Proper North Homes |
 | Programme | Proper Warm |
 | Region | North of England |
 | Portfolio | 60,000 homes |
 | Executive sponsor | Executive Director of Assets, supported by the Chief Executive |
 | Status | Draft for business validation |
-| Source | [Case Study 48](../case_study_48.md) |
+| Source | [Original Case Study 48](../case_study_48_original.md) and [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Proposal source | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Recommended decision | Capped readiness and gated pilot; no portfolio-wide rollout or capital acceleration approval |
 
@@ -75,10 +75,10 @@ The BRD uses four evidence classes:
 
 | Classification | Meaning |
 | --- | --- |
-| Case-study fact | Stated fictional operating context, not independently verified company evidence |
+| Case-study fact | Stated operating context, not independently verified company evidence |
 | Sector-informed recommendation | A proposed requirement derived from the addendum, housing-sector practice or specialist review |
 | Planning assumption or value hypothesis | An illustrative cost, target, schedule or benefit requiring validation; a source claim is not an observed outcome |
-| Unknown company detail | Information the fictional association must validate before approval |
+| Unknown company detail | Information the association must validate before approval |
 
 ## Business Context and Background
 
@@ -777,7 +777,8 @@ evidence, unresolved decisions and accountable owners.
 
 This draft integrates:
 
-* [Case Study 48](../case_study_48.md)
+* [Original Case Study 48](../case_study_48_original.md)
+* [Case Study 48 Addendum](../case_study_48_addendum.md)
 * [Case Study 48 Addendum - Executive Solution Proposal](../case_study_48_addendum.md)
 * [Company Profile Research](../../support/company-profile-research.md)
 * [UK Social Housing Baseline Research](../../support/uk-social-housing-baseline-research.md)

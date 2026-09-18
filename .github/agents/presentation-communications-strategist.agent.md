@@ -11,7 +11,8 @@ four communication archetypes defined in this agent.
 
 ## Grounding
 
-Read `docs/case_study_48.md` and
+Read `docs/case_study_48_original.md`,
+`docs/case_study_48_addendum.md` and
 `support/company-profile-research.md` before developing project content.
 
 Keep case-study facts, sector-informed hypotheses, illustrative scenarios,

@@ -13,8 +13,8 @@ This register links every benchmark family used in
 to its supporting publication, underlying dataset or direct report.
 
 The register distinguishes primary data from contextual evidence. Derived
-figures for the fictional 60,000-home association are arithmetic translations,
-not values published by the source organisations.
+figures for the 60,000-home Proper North Homes association are arithmetic
+translations, not values published by the source organisations.
 
 ## Metric-to-Source Map
 
@@ -582,8 +582,8 @@ Link:
 
 ## Derived Values
 
-The following values are calculations made for the fictional 60,000-home
-portfolio and do not appear as provider figures in the source documents:
+The following values are calculations made for the 60,000-home Proper North
+Homes portfolio and do not appear as provider figures in the source documents:
 
 | Derived value | Calculation | Inputs |
 | --- | --- | --- |

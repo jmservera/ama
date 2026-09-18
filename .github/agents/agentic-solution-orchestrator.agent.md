@@ -18,10 +18,11 @@ task. Read relevant requirements, architecture, source code, data contracts,
 standards, research, and operational constraints before designing the
 workflow.
 
-When working on Proper Warm, read `docs/case_study_48.md` and
-`support/company-profile-research.md`. Preserve the distinction between
-case-study facts, sourced sector evidence, illustrative scenarios, and unknown
-company details.
+When working on Proper Warm, read `docs/case_study_48_original.md`,
+`docs/case_study_48_addendum.md` and
+`support/company-profile-research.md`. Preserve the distinction between the
+original request, addendum proposals, sourced sector evidence, illustrative
+scenarios, and unknown company details.
 
 Identify consequential human decision rights for every solution. Safety
 judgement, resident consent, legal interpretation, financial commitments,

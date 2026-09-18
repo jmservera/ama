@@ -11,13 +11,14 @@ This repository contains Markdown documentation for an evolving research
 project rather than executable software.
 
 * `docs/` is the canonical location for project documentation.
-  `docs/case_study_48.md` is the initial problem specification and should evolve
-  as research adds, validates, refines, or invalidates assumptions.
+  `docs/case_study_48_original.md` preserves the initial problem specification,
+  while `docs/case_study_48_addendum.md` evolves as research adds, validates,
+  refines, or invalidates assumptions.
 * `support/` contains reference material that helps the research effort.
   `support/cohort.md` identifies colleagues who may be able to help with
   particular technical areas.
-* `.github/agents/company-profiles/` contains fictional role agents for
-  interrogating the problem from different housing-association perspectives.
+* `.github/agents/company-profiles/` contains role agents for interrogating the
+  problem from different Proper North Homes perspectives.
   Their shared evidence base is `support/company-profile-research.md`.
 
 There is no build, test, lint, or single-test command configured in the
@@ -26,7 +27,8 @@ diff.
 
 ## Problem Specification Conventions
 
-Extend `docs/case_study_48.md` in place as the research progresses. Do not create
+Preserve `docs/case_study_48_original.md` unchanged. Extend
+`docs/case_study_48_addendum.md` in place as research progresses. Do not create
 additional case studies unless the project scope explicitly expands.
 
 * Preserve the current problem framing: business challenge, transformation
@@ -70,11 +72,12 @@ questions or contribute expertise:
 Treat the company-role agents as research instruments, not simulated employees
 with privileged knowledge.
 
-* Keep every response anchored to `docs/case_study_48.md` and
+* Keep every response anchored to `docs/case_study_48_original.md`,
+  `docs/case_study_48_addendum.md` and
   `support/company-profile-research.md`.
 * Label information as a case-study fact, sector-informed hypothesis, or
   unknown company detail. Never turn a comparator's practice into a fact about
-  the fictional company.
+  Proper North Homes.
 * Ask one focused question at a time when eliciting missing information.
 * Stay within the role's decision rights and identify handoffs when another
   profile owns the answer.

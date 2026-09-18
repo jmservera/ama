@@ -1,16 +1,16 @@
 ---
 title: Company Profile Research
-description: Evidence base for fictional UK housing association role agents
+description: Evidence base for Proper North Homes role agents
 ms.date: 2026-09-10
 ms.topic: reference
 ---
 
 ## Purpose
 
-This research supports fictional role profiles for the 60,000-home North of
-England housing association in the initial problem specification. It provides
-sector patterns and questions to investigate. It does not establish facts about
-the fictional company.
+This research supports role profiles for Proper North Homes, the 60,000-home
+North of England housing association in the initial problem specification. It
+provides sector patterns and questions to investigate. It does not establish
+undocumented company facts.
 
 Research was conducted on 10 September 2026 using public sources. Sourced facts,
 sector-informed hypotheses, and unresolved company details must remain
@@ -41,7 +41,7 @@ condition evidence. Sector risk reporting identifies incomplete surveys,
 fragmented records, and weak evidence of remedial actions as recurring
 governance risks.
 
-For the fictional company, spreadsheet-led coordination makes the following
+For Proper North Homes, spreadsheet-led coordination makes the following
 questions high priority:
 
 * What percentage of homes has a recent physical stock condition survey?
@@ -70,8 +70,8 @@ supply-chain capacity, and grant deadlines can conflict with delivery targets.
 
 Karbon's published EPC position illustrates the possible scale. Applying its
 77% EPC C rate to 60,000 homes would leave approximately 13,800 homes below EPC
-C, but this is only a scenario benchmark. The fictional company's actual
-baseline is unknown.
+C, but this is only a scenario benchmark. Proper North Homes' actual baseline
+is unknown.
 
 ### Damp, Mould, and Repair Responsiveness
 
@@ -82,7 +82,7 @@ remediation, evidence, and resident-update workflows.
 
 Onward's decision to bring damp and mould delivery in-house demonstrates one
 possible response to contractor dependency. It does not establish the right
-model for the fictional company.
+model for Proper North Homes.
 
 ### Contractor Capacity and Assurance
 
@@ -130,8 +130,8 @@ Recurring information gaps occur between:
 | Neighbourhood Housing Officer | Local tenancy relationship, issue intake, resident context, frontline escalation | Technical diagnosis, capital decisions, legal enforcement, specialist safeguarding |
 
 Approval limits and reporting lines vary between providers. Any monetary
-threshold used in discussion must be treated as an unknown until the fictional
-company's governance is defined.
+threshold used in discussion must be treated as an unknown until Proper North
+Homes' governance is defined.
 
 ## Regulatory Baseline
 
@@ -146,11 +146,11 @@ The role agents should apply this time-specific baseline:
   higher-risk buildings. The housing association, rather than a role-played
   employee, is normally the legal accountable person.
 * The Procurement Act 2023 came into force on 24 February 2025. Whether every
-  provision applies to the fictional association requires advice based on its
-  legal and operating circumstances.
+  provision applies to the association requires advice based on its legal and
+  operating circumstances.
 * Warm Homes: Social Housing Fund Wave 3 delivery runs to September 2028, with
   grant spend required by 31 March 2028. The case study does not establish
-  whether the fictional provider received an allocation.
+  whether Proper North Homes received an allocation.
 * EPC C for all social homes remains a policy objective or proposal unless and
   until the applicable legal requirement is confirmed. Current Decent Homes,
   safety, and repair duties must not be described as future aspirations.
@@ -238,4 +238,4 @@ Public evidence was stronger for regulatory duties and sector-level problems
 than for internal job descriptions or delegated financial authorities. Some
 provider reports were published only as PDFs or were inaccessible during
 research. Role names, reporting lines, approval limits, and operating models
-therefore remain hypotheses until defined for the fictional company.
+therefore remain hypotheses until defined for Proper North Homes.
