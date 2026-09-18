@@ -1,0 +1,129 @@
+slide: 3
+title: "Current duties and funding milestones create a decision window"
+section: "Timing"
+layout: "content"
+background:
+  fill: "#FFFFFF"
+elements:
+  - type: shape
+    shape: rectangle
+    left: 0
+    top: 0
+    width: 13.333
+    height: 0.1
+    fill: "#1B998B"
+    line_color: "#1B998B"
+  - type: textbox
+    left: 0.68
+    top: 0.42
+    width: 11.9
+    height: 0.7
+    text: "Current duties and funding milestones create a decision window"
+    font: "Aptos Display"
+    font_size: 29
+    font_color: "#102A43"
+    font_bold: true
+  - type: connector
+    connector_type: straight
+    begin_x: 1.25
+    begin_y: 3.6
+    end_x: 12.0
+    end_y: 3.6
+    line_color: "#9FB3C8"
+    line_width: 3
+    head_end: arrow
+  - type: shape
+    shape: oval
+    left: 1.2
+    top: 3.28
+    width: 0.64
+    height: 0.64
+    fill: "#C44536"
+    line_color: "#C44536"
+  - type: textbox
+    left: 0.72
+    top: 1.7
+    width: 2.4
+    height: 1.2
+    text: "27 OCT 2025\nAwaab's Law Phase 1 in force"
+    font: "Aptos"
+    font_size: 17
+    font_color: "#7A271A"
+    font_bold: true
+    alignment: center
+  - type: shape
+    shape: oval
+    left: 4.12
+    top: 3.28
+    width: 0.64
+    height: 0.64
+    fill: "#F2C14E"
+    line_color: "#F2C14E"
+  - type: textbox
+    left: 3.25
+    top: 4.18
+    width: 2.4
+    height: 1.2
+    text: "30 NOV 2026\nPhase 2 due; reconfirm applicability"
+    font: "Aptos"
+    font_size: 17
+    font_color: "#5F4B00"
+    font_bold: true
+    alignment: center
+  - type: shape
+    shape: oval
+    left: 7.35
+    top: 3.28
+    width: 0.64
+    height: 0.64
+    fill: "#2F80ED"
+    line_color: "#2F80ED"
+  - type: textbox
+    left: 6.42
+    top: 1.7
+    width: 2.55
+    height: 1.2
+    text: "31 MAR 2028\nWH:SHF grant spend deadline recorded"
+    font: "Aptos"
+    font_size: 17
+    font_color: "#174A7E"
+    font_bold: true
+    alignment: center
+  - type: shape
+    shape: oval
+    left: 10.64
+    top: 3.28
+    width: 0.64
+    height: 0.64
+    fill: "#1B998B"
+    line_color: "#1B998B"
+  - type: textbox
+    left: 9.75
+    top: 4.18
+    width: 2.55
+    height: 1.2
+    text: "2030\nEPC C remains a proposal in the case materials"
+    font: "Aptos"
+    font_size: 17
+    font_color: "#0B625B"
+    font_bold: true
+    alignment: center
+  - type: shape
+    shape: rounded_rectangle
+    left: 3.98
+    top: 6.02
+    width: 5.38
+    height: 0.62
+    fill: "#102A43"
+    line_color: "#102A43"
+    text: "VERIFY AT EACH APPROVAL GATE"
+    text_font: "Aptos"
+    text_size: 16
+    text_color: "#FFFFFF"
+    text_bold: true
+speaker_notes: |
+  Urgency does not remove the need to diagnose the constraint. Existing hazard
+  services and eligible grant delivery cannot wait for a new platform. Do not
+  describe EPC C by 2030 as an in-force statutory deadline or imply that a
+  Proper North Homes grant allocation is confirmed. Regulatory applicability
+  must be checked at each consequential decision.

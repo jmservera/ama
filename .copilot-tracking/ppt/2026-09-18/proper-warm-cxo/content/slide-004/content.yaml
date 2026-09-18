@@ -1,0 +1,224 @@
+slide: 4
+title: "One governed property journey across existing services"
+section: "Target Operating Model"
+layout: "content"
+background:
+  fill: "#F5F7FA"
+elements:
+  - type: shape
+    shape: rectangle
+    left: 0
+    top: 0
+    width: 13.333
+    height: 0.1
+    fill: "#2F80ED"
+    line_color: "#2F80ED"
+  - type: textbox
+    left: 0.68
+    top: 0.42
+    width: 11.9
+    height: 0.7
+    text: "One governed property journey across existing services"
+    font: "Aptos Display"
+    font_size: 30
+    font_color: "#102A43"
+    font_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 0.72
+    top: 1.72
+    width: 1.35
+    height: 0.88
+    fill: "#2F80ED"
+    line_color: "#2F80ED"
+    text: "IDENTIFY"
+    text_font: "Aptos"
+    text_size: 13
+    text_color: "#FFFFFF"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 2.2
+    top: 1.72
+    width: 1.35
+    height: 0.88
+    fill: "#2874C6"
+    line_color: "#2874C6"
+    text: "ASSESS"
+    text_font: "Aptos"
+    text_size: 13
+    text_color: "#FFFFFF"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 3.68
+    top: 1.72
+    width: 1.35
+    height: 0.88
+    fill: "#1B998B"
+    line_color: "#1B998B"
+    text: "AGREE"
+    text_font: "Aptos"
+    text_size: 13
+    text_color: "#FFFFFF"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 5.16
+    top: 1.72
+    width: 1.35
+    height: 0.88
+    fill: "#16847A"
+    line_color: "#16847A"
+    text: "FUND"
+    text_font: "Aptos"
+    text_size: 13
+    text_color: "#FFFFFF"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 6.64
+    top: 1.72
+    width: 1.35
+    height: 0.88
+    fill: "#D99C21"
+    line_color: "#D99C21"
+    text: "SCHEDULE"
+    text_font: "Aptos"
+    text_size: 12
+    text_color: "#FFFFFF"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 8.12
+    top: 1.72
+    width: 1.35
+    height: 0.88
+    fill: "#C97F1A"
+    line_color: "#C97F1A"
+    text: "INSTALL"
+    text_font: "Aptos"
+    text_size: 13
+    text_color: "#FFFFFF"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 9.6
+    top: 1.72
+    width: 1.35
+    height: 0.88
+    fill: "#C44536"
+    line_color: "#C44536"
+    text: "ASSURE"
+    text_font: "Aptos"
+    text_size: 13
+    text_color: "#FFFFFF"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 11.08
+    top: 1.72
+    width: 1.35
+    height: 0.88
+    fill: "#A7352A"
+    line_color: "#A7352A"
+    text: "HANDOVER"
+    text_font: "Aptos"
+    text_size: 12
+    text_color: "#FFFFFF"
+    text_bold: true
+  - type: textbox
+    left: 0.72
+    top: 3.12
+    width: 11.9
+    height: 0.5
+    text: "One visible lifecycle | Separate safety, resident, professional, supplier, funding and quality gates"
+    font: "Aptos"
+    font_size: 18
+    font_color: "#243B53"
+    font_bold: true
+    alignment: center
+  - type: shape
+    shape: rounded_rectangle
+    left: 0.72
+    top: 4.05
+    width: 2.02
+    height: 1.25
+    fill: "#FFFFFF"
+    line_color: "#9FB3C8"
+    text: "ASSET\nSYSTEM"
+    text_font: "Aptos"
+    text_size: 16
+    text_color: "#243B53"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 3.0
+    top: 4.05
+    width: 2.02
+    height: 1.25
+    fill: "#FFFFFF"
+    line_color: "#9FB3C8"
+    text: "REPAIRS\nSYSTEM"
+    text_font: "Aptos"
+    text_size: 16
+    text_color: "#243B53"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 5.28
+    top: 4.05
+    width: 2.02
+    height: 1.25
+    fill: "#FFFFFF"
+    line_color: "#9FB3C8"
+    text: "HOUSING\nSYSTEM"
+    text_font: "Aptos"
+    text_size: 16
+    text_color: "#243B53"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 7.56
+    top: 4.05
+    width: 2.02
+    height: 1.25
+    fill: "#FFFFFF"
+    line_color: "#9FB3C8"
+    text: "FINANCE\nSYSTEM"
+    text_font: "Aptos"
+    text_size: 16
+    text_color: "#243B53"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 9.84
+    top: 4.05
+    width: 2.78
+    height: 1.25
+    fill: "#FFFFFF"
+    line_color: "#9FB3C8"
+    text: "CONTRACTOR\nSYSTEMS"
+    text_font: "Aptos"
+    text_size: 16
+    text_color: "#243B53"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 2.12
+    top: 5.72
+    width: 9.1
+    height: 0.75
+    fill: "#102A43"
+    line_color: "#102A43"
+    text: "SHARED WORKFLOW + EVIDENCE LAYER - CONNECT, DO NOT REPLACE"
+    text_font: "Aptos"
+    text_size: 17
+    text_color: "#FFFFFF"
+    text_bold: true
+speaker_notes: |
+  Make the future state tangible: every executive question should trace to the
+  same property evidence, decision, owner and exception. The control plane
+  connects existing services; it does not replace every system. Emergency,
+  damp-and-mould, safeguarding, complaints and repairs routes remain
+  independently available and take precedence.

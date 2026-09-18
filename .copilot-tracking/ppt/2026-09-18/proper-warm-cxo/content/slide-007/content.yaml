@@ -1,0 +1,122 @@
+slide: 7
+title: "Readiness will answer whether, where and how to pilot"
+section: "Readiness"
+layout: "content"
+background:
+  fill: "#FFFFFF"
+elements:
+  - type: shape
+    shape: rectangle
+    left: 0
+    top: 0
+    width: 13.333
+    height: 0.1
+    fill: "#1B998B"
+    line_color: "#1B998B"
+  - type: textbox
+    left: 0.68
+    top: 0.42
+    width: 11.9
+    height: 0.7
+    text: "Readiness will answer whether, where and how to pilot"
+    font: "Aptos Display"
+    font_size: 29
+    font_color: "#102A43"
+    font_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 0.72
+    top: 1.45
+    width: 2.75
+    height: 1.65
+    fill: "#EAF2FD"
+    line_color: "#2F80ED"
+    text: "BASELINE\n\nProperty and building data\nThroughput and delay causes"
+    text_font: "Aptos"
+    text_size: 15
+    text_color: "#174A7E"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 3.77
+    top: 1.45
+    width: 2.75
+    height: 1.65
+    fill: "#E7F6F3"
+    line_color: "#1B998B"
+    text: "RESIDENT\n\nJourneys and accessibility\nExceptions and redress"
+    text_font: "Aptos"
+    text_size: 15
+    text_color: "#0B625B"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 6.82
+    top: 1.45
+    width: 2.75
+    height: 1.65
+    fill: "#FFF8E6"
+    line_color: "#F2C14E"
+    text: "CAPACITY\n\nPAS 2035 competence\nSupplier route and contingency"
+    text_font: "Aptos"
+    text_size: 15
+    text_color: "#5F4B00"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 9.87
+    top: 1.45
+    width: 2.75
+    height: 1.65
+    fill: "#FCE8E6"
+    line_color: "#C44536"
+    text: "FINANCE\n\nGrant and funding status\nHeadroom and downside"
+    text_font: "Aptos"
+    text_size: 15
+    text_color: "#7A271A"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 2.25
+    top: 3.45
+    width: 4.25
+    height: 1.65
+    fill: "#EDF2F7"
+    line_color: "#486581"
+    text: "OPTIONS APPRAISAL\n\nProcess and existing platform\nRules-based workflow or bounded AI"
+    text_font: "Aptos"
+    text_size: 15
+    text_color: "#243B53"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 6.82
+    top: 3.45
+    width: 4.25
+    height: 1.65
+    fill: "#EDF2F7"
+    line_color: "#102A43"
+    text: "CONTROL OWNERS\n\nSafety, resident, finance and procurement\nData, digital and professional roles"
+    text_font: "Aptos"
+    text_size: 15
+    text_color: "#243B53"
+    text_bold: true
+  - type: shape
+    shape: rounded_rectangle
+    left: 2.25
+    top: 5.62
+    width: 8.82
+    height: 0.82
+    fill: "#102A43"
+    line_color: "#102A43"
+    text: "PILOT BUSINESS CASE + CONTROL PACK"
+    text_font: "Aptos"
+    text_size: 18
+    text_color: "#FFFFFF"
+    text_bold: true
+speaker_notes: |
+  Answer the executive question: what are we buying in eight weeks? Each
+  output needs a named owner. Require a twelve-month baseline by property
+  archetype, measure, supplier and lifecycle stage, including reopened work.
+  If coordination is not a material constraint, do not force an agentic
+  solution.
