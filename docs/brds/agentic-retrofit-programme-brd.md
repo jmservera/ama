@@ -2,7 +2,7 @@
 title: Agentic Retrofit Programme Business Requirements Document
 description: Business requirements for safe, resident-centred and financially controlled retrofit delivery
 author: AMA Research Team
-ms.date: 2026-09-11
+ms.date: 2026-09-19
 ms.topic: reference
 ---
 
@@ -155,6 +155,99 @@ The programme must first establish which of these constraints limits accepted
 outcomes and whether process redesign, existing platform configuration,
 conventional workflow integration or bounded AI best addresses it. Faster
 administration alone does not prove that physical delivery can increase.
+
+### Cross-Functional Challenge to the Five-Agent Request
+
+A structured review challenged the original architecture from asset,
+programme, finance and grants, resident engagement, building safety,
+procurement and frontline housing perspectives. These fictional role profiles
+are research instruments grounded in the case-study evidence and sector
+research. Their convergence is a sector-informed recommendation, not proof of
+company stakeholder agreement.
+
+All seven perspectives rejected five end-to-end agents as an implementation
+commitment. The requested decomposition assigns technology to five visible
+activities before the association has established the binding delivery
+constraint, authoritative data, controlled lifecycle, professional capacity,
+supplier commitments, resident journey or defensible financial baseline. It
+also combines responsibilities that require different authorities while
+duplicating evidence, reconciliation, exception and reporting capabilities
+that should be shared.
+
+The underlying requirement is to establish a controlled property-to-portfolio
+operating model that can answer:
+
+* Where each home is in the retrofit lifecycle
+* How long it has remained at that stage
+* What prevents progression
+* Who owns and has accepted the next decision
+* When the resident will receive the next update
+* Whether the binding constraint is data, capital, professional capacity,
+  supplier capacity, resident access, technical complexity, quality or
+  administration
+* Whether completion means activity, installation or a safe,
+  resident-accepted and evidence-complete handover
+
+The five proposed agents should therefore be treated as hypotheses:
+
+| Original proposal | Cross-functional challenge | Proposed disposition |
+| --- | --- | --- |
+| Stock Prioritisation Agent | No verified address-level baseline, data-confidence model or approved cohort policy exists. Ranking may conceal missing safety, building, planned-maintenance or resident information. | Defer live use. Test transparent rules and explainable recommendations in shadow mode as a control-plane module. |
+| Assessment Agent | Software cannot perform missing observations or combine the responsibilities of assessors, designers, coordinators and evaluators into one approval. | Replace with bounded assessment preparation: source-backed factual pre-population, evidence assembly and omission checks for competent review. |
+| Grant and Funding Agent | The GBP 40 million remains an opportunity rather than an evidenced award, and the essential control is a deterministic evidence-to-cash ledger with segregation of duties. | Implement grant-state, eligibility, reconciliation and approval controls first. Pilot drafting only for an evidenced award or application route. |
+| Contractor and Resident Coordination Agent | Supplier utilisation and resident choice have different interests, authorities, information needs and escalation routes. Combining them could pressure resident decisions or misclassify failed access. | Reject the combined responsibility. Keep resident service human-owned and separate from supplier and work-package coordination. |
+| Quality Verification Agent | Documentary completeness or normal sensor readings cannot establish physical quality, resident satisfaction or safe closure. Contractors must not accept their own evidence. | Rename as evidence assurance and anomaly flagging. Competent people retain inspection, acceptance, remediation and closure authority. |
+| Programme supervisor | An AI orchestrator cannot safely enforce undefined states, gates, authority limits or exception routes. | Implement deterministic workflow, queues, clocks, audit and escalation first. Consider later summarisation and recommendation support only. |
+
+The dependency-first proposition is:
+
+1. Verify the current property and resident journey using twelve months of
+   property-level cases.
+2. Establish common property and building identifiers, authoritative sources
+   and data owners.
+3. Define lifecycle states, mandatory gates, decision authorities,
+   material-change rules and accepted-handover criteria.
+4. Implement closed-loop handoffs, common exception controls, queue ageing and
+   property-to-portfolio reporting.
+5. Validate professional, supplier, resident-service, assurance and financial
+   capacity for the pilot.
+6. Compare process redesign, existing-platform configuration, deterministic
+   workflow and bounded AI in shadow mode.
+7. Authorise only capabilities with attributable value and acceptable
+   safety, resident, quality, financial and operational performance.
+
+The leading non-agent comparator is a Frontline Property Progress and Handoff
+View for one pilot locality. It would show the controlled property timeline,
+current stage, age, blocked reason, live appointments, relevant repairs and
+complaints, named owner, accepted handoff, next action and promised resident
+update. It would also flag unowned, overdue, conflicting and reopened work
+without becoming a second system of authority.
+
+If readiness evidence supports bounded AI, the first candidates are:
+
+* An Evidence-to-Claim Assurance Assistant combining assessment preparation,
+  quality evidence checks and grant-pack reconciliation
+* A Supplier Delivery Assurance Assistant reconciling contracted capacity,
+  work-package demand, evidence obligations, subcontractor performance and
+  material changes
+
+Neither candidate may exercise safety, professional, resident-consent,
+procurement, investment, payment, grant-submission, quality-acceptance or
+defect-closure authority.
+
+### Sponsor Discovery Questions
+
+The following questions continue Method 1 scope discovery. Answers must be
+supported by company evidence rather than sector assumptions.
+
+| Priority question | Evidence requested | Decision unlocked |
+| --- | --- | --- |
+| Where was elapsed time lost between candidate identification and accepted handover during the last twelve months? | Property-level stage entry, exit, pause and reopen dates; delay reasons; queue owners; decision times; manual effort | Binding-constraint definition and options appraisal |
+| When a resident reports a missed retrofit appointment and worsening mould, where is the account recorded once and who accepts the next decision? | Current contact journey, repair and hazard route, handoff acceptance, next-update ownership and frontline visibility | Frontline view, exception and resident-service design |
+| Which PAS 2035 and assurance roles are available, competent and committed by month for the proposed pilot? | Named role model, competence scope, internal and supplier capacity, evidence and approval responsibilities | Technically credible pilot scope |
+| What survey, installation and quality capacity is contractually committed rather than forecast? | Contracts, frameworks, work packages, locality and monthly capacity, subcontractors, contingency and performance evidence | Supplier strategy, cohort size and mobilisation decision |
+| Has the association received an executed award supporting any part of the GBP 40 million opportunity? | Award, eligible-property schedule, match funding, spend and claim deadlines, payment profile and clawback conditions | Grant workflow, affordability and benefit case |
+| Which pilot buildings have unresolved safety, shared-system, planned-maintenance or property-condition dependencies? | Building register, accountable owners, current evidence, open actions and progression-blocking conditions | Safe cohort and sequencing rules |
 
 ### Business Drivers
 
