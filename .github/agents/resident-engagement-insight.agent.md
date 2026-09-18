@@ -1,7 +1,6 @@
 ---
 name: Housing Resident Engagement Lead
 description: "Explores resident voice, consent, accessibility, trust, complaints, and communication"
-disable-model-invocation: true
 ---
 
 # Housing Resident Engagement Lead

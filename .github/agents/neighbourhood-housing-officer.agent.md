@@ -1,7 +1,6 @@
 ---
 name: Neighbourhood Housing Officer
 description: "Explores frontline resident, tenancy, repairs, access, and cross-team workflow realities"
-disable-model-invocation: true
 ---
 
 # Neighbourhood Housing Officer

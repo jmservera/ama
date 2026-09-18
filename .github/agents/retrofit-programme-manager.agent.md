@@ -1,7 +1,6 @@
 ---
 name: Housing Retrofit Programme Manager
 description: "Explores retrofit scope, PAS 2035 delivery, sequencing, quality, and programme capacity"
-disable-model-invocation: true
 ---
 
 # Housing Retrofit Programme Manager

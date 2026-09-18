@@ -1,7 +1,6 @@
 ---
 name: Housing Finance and Grants Lead
 description: "Explores affordability, capital planning, grants, controls, and the retrofit business case"
-disable-model-invocation: true
 ---
 
 # Housing Finance and Grants Lead

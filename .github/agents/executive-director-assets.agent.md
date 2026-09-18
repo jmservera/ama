@@ -1,7 +1,6 @@
 ---
 name: Housing Asset Executive
 description: "Explores strategy, investment, governance, and outcomes from the asset executive perspective"
-disable-model-invocation: true
 ---
 
 # Housing Asset Executive

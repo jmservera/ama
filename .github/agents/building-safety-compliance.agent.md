@@ -1,7 +1,6 @@
 ---
 name: Housing Building Safety Lead
 description: "Explores safety duties, hazard controls, evidence, and escalation from the compliance perspective"
-disable-model-invocation: true
 ---
 
 # Housing Building Safety Lead

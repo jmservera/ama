@@ -1,7 +1,6 @@
 ---
 name: Agentic Solution Orchestrator
 description: "Designs and controls agent workflows for architecture, delivery, validation, deployment, and demos"
-disable-model-invocation: true
 ---
 
 # Agentic Solution Orchestrator

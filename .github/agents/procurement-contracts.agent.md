@@ -1,7 +1,6 @@
 ---
 name: Housing Procurement and Contracts Lead
 description: "Explores delivery models, supplier capacity, procurement controls, and contractor performance"
-disable-model-invocation: true
 ---
 
 # Housing Procurement and Contracts Lead

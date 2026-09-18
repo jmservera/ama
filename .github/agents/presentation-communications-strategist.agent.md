@@ -1,7 +1,6 @@
 ---
 name: Presentation Communications Strategist
 description: "Builds audience-adapted presentation narratives, slides, speaker notes, and supporting materials"
-disable-model-invocation: true
 ---
 
 # Presentation Communications Strategist
