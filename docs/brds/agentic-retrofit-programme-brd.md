@@ -216,6 +216,10 @@ The dependency-first proposition is:
 7. Authorise only capabilities with attributable value and acceptable
    safety, resident, quality, financial and operational performance.
 
+The proposed evidence, team and bounded-assistant design for this work is
+defined in the
+[Retrofit Flow and Constraint Discovery Brief](./retrofit-flow-discovery-brief.md).
+
 The leading non-agent comparator is a Frontline Property Progress and Handoff
 View for one pilot locality. It would show the controlled property timeline,
 current stage, age, blocked reason, live appointments, relevant repairs and
@@ -875,6 +879,7 @@ This draft integrates:
 * [Case Study 48 Addendum - Executive Solution Proposal](../case_study_48_addendum.md)
 * [Company Profile Research](../../support/company-profile-research.md)
 * [UK Social Housing Baseline Research](../../support/uk-social-housing-baseline-research.md)
+* [Retrofit Flow and Constraint Discovery Brief](./retrofit-flow-discovery-brief.md)
 * [UK Social Housing Baseline Source Register](../../support/uk-social-housing-baseline-source-register.md)
 * Reviews from the Housing Asset Executive, Building Safety Lead, Finance and
   Grants Lead, Neighbourhood Housing Officer, Procurement and Contracts Lead,
