@@ -13,13 +13,14 @@ project rather than executable software.
 * `docs/` is the canonical location for project documentation.
   `docs/case_study_48_original.md` preserves the initial problem specification,
   while `docs/case_study_48_addendum.md` evolves as research adds, validates,
-  refines, or invalidates assumptions.
+  refines, or invalidates assumptions. Always read both documents to start working on the project.
 * `support/` contains reference material that helps the research effort.
   `support/cohort.md` identifies colleagues who may be able to help with
   particular technical areas.
-* `.github/agents/company-profiles/` contains role agents for interrogating the
+* `.github/agents/company-*` are the role agents for interrogating the
   problem from different Proper North Homes perspectives.
   Their shared evidence base is `support/company-profile-research.md`.
+* `.github/agents/ama-*` are AMA helper agents with knowledge extracted from the AMA trainings.
 
 There is no build, test, lint, or single-test command configured in the
 repository. Validate changes by reviewing the rendered Markdown and the Git
