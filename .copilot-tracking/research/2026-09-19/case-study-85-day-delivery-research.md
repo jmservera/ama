@@ -5,10 +5,10 @@
 ## Scope
 
 Use 2026-09-19 as planning day zero, then run an 85-calendar-day engagement
-from 2026-09-20 through 2026-12-13 inclusive. Schedule exactly one focused
-workday in each of 12 execution windows to prepare a one-hour C-suite
-presentation, supporting architecture, decision rationale, synthetic evidence
-and an optional working demonstration.
+from 2026-09-20 through 2026-12-13 inclusive. Complete the substantive work in
+11 focused weekly sessions by 2026-12-05. Reserve 2026-12-06 through
+2026-12-13 as an unallocated finishing margin for minor corrections, packaging,
+final rehearsal and presentation delivery.
 
 ## Sources
 
@@ -38,12 +38,13 @@ labelled value scenario and stop conditions.
 
 ### Delivery capacity
 
-The window provides 12 focused work sessions. Capacity is divided into nine
-production sessions, two feedback or recovery sessions and one final
-presentation session. Session 6 protects architecture restart capacity.
+The delivery plan provides 11 focused work sessions followed by one finishing
+margin week. Capacity is divided into nine production sessions and two feedback
+or recovery sessions. Session 6 protects architecture restart capacity.
 Session 9 can discard and rebuild the narrow prototype after the Session 8
-review. Session 11 protects narrative and assurance recovery. These reserves
-are not available for discretionary scope.
+review. Session 11 completes mandatory assurance, final validation and the
+readiness freeze. The final margin week is not available for new evidence,
+architecture, features or prototype rebuilding.
 
 ### Evidence and regulatory posture
 
@@ -94,7 +95,7 @@ than tested screenshots or a recorded walkthrough.
 * Named C-suite chair and the decision authority available in the final meeting
 * Actual company systems, architecture standards and hosting constraints
 * Readiness budget ceiling, pilot locality and internal approval route
-* Mentor and SME availability across the 12 weekly windows
+* Mentor and SME availability across the 11 delivery sessions
 * Whether prior presentation artifacts are a baseline or reference only
 
 These inputs do not block the plan. Until they are resolved, the default ask is

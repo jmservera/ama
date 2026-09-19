@@ -9,10 +9,11 @@ inputs still explicitly unknown.
 
 Research date: 2026-09-19.
 
-Scope: 2026-09-19 is planning day zero. A fixed 85-calendar-day delivery
-roadmap runs from 2026-09-20 through 2026-12-13 inclusive, with one dedicated
-working day in each of 12 execution windows, ending in a one-hour C-suite
-presentation. The roadmap covers
+Scope: 2026-09-19 is planning day zero. A fixed 85-calendar-day engagement
+runs from 2026-09-20 through 2026-12-13 inclusive. Substantive delivery uses
+11 focused weekly sessions ending 2026-12-05. The final 2026-12-06 through
+2026-12-13 window is reserved as finishing margin and presentation delivery.
+The roadmap covers
 the opening 10-minute pitch, high- and medium-level architectures, trade-offs,
 synthetic data, fictional role-agent interviews, an optional demonstration,
 feedback-driven resets and schedule buffer.
@@ -36,7 +37,7 @@ readiness and a pilot, not a five-agent rollout or unsecured grant assumption
 investment decision easy to understand while showing that the team knows what
 not to automate.
 
-With only about 12 focused work sessions available, the credible output is an
+With only 11 committed work sessions available, the credible output is an
 evidence-backed executive proposition, architecture pack, options appraisal,
 synthetic evidence scenario and optionally a tightly bounded demonstrator. It
 is not a production implementation, live-data integration, PAS 2035 automation
@@ -317,7 +318,7 @@ material-change invalidation, output labels and segregation of duties
 | Control plane vs replacement platform | Integrate existing systems first | Authoritative systems are unknown; replacement adds migration and delivery risk |
 | Deterministic workflow vs agent orchestration | Deterministic controls first | Rules, calculations, authorisation and irreversible actions are easier to test; repository guidance says the same (`.github/agents/agentic-solution-orchestrator.agent.md:104-118`) |
 | One combined coordination agent vs separated services | Separate resident service from supplier coordination | Their interests, authority and failure modes differ; combined optimisation can pressure consent |
-| Five-agent breadth vs one coherent slice | Prototype the flow/evidence slice | Twelve focused sessions cannot validate five end-to-end agents; one slice tests the binding premise |
+| Five-agent breadth vs one coherent slice | Prototype the flow/evidence slice | Eleven focused sessions cannot validate five end-to-end agents; one slice tests the binding premise |
 | Live data vs synthetic data | Synthetic only for presentation/demo | Company access and lawful basis are unknown; synthetic evidence avoids false claims and resident risk |
 | Working demo vs architecture/story | Demo only after a gate | A fragile demo can consume scarce days and reduce executive trust |
 | AI vs conventional BI/workflow | Compare both | BRD requires attributable incremental value, not agent novelty |
@@ -426,19 +427,22 @@ with no structural warnings, but it covers only slides 3-8 and does not prove
 narrative, factual or delivery readiness
 (`.copilot-tracking/ppt/2026-09-18/proper-warm-cxo/slide-deck/validation/deck-validation-report.md:1-41`).
 
-## Twelve-session, 85-calendar-day sequence
+## Eleven-session delivery sequence with finishing margin
 
-The fixed window runs from 2026-09-20 through 2026-12-13 inclusive, with
-2026-09-19 treated as planning day zero. One dedicated workday in each of 12
-execution windows yields exactly 12 focused sessions. Capacity is budgeted
-as nine production sessions, two feedback/recovery sessions and one final
-presentation session. Sessions 6 and 11 contain protected restart capacity;
-they are not spare feature capacity. Each session ends with one accepted
-artifact, an explicit decision and an updated remaining-capacity check.
+The fixed engagement runs from 2026-09-20 through 2026-12-13 inclusive, with
+2026-09-19 treated as planning day zero. Eleven focused sessions complete all
+substantive work by 2026-12-05. The final 2026-12-06 through 2026-12-13 window
+is an unallocated finishing margin, not a twelfth delivery session. Capacity is
+budgeted as nine production sessions and two feedback/recovery sessions.
+Session 6 contains protected architecture recovery capacity, and Session 11
+contains bounded final assurance capacity. They are not spare feature capacity.
+Each session ends with one accepted artifact, a slide-ready update to the
+living deck or appendix, an explicit decision and an updated
+remaining-capacity check.
 
 | Session and calendar window | One-day objective and deliverable | End-of-session gate |
 | --- | --- | --- |
-| 1, 20-26 Sep | Lock goal card, audience, decision ask, evidence classes, source register and 12-session capacity limit | Sponsor-level planning proxy accepts the question and non-goals |
+| 1, 20-26 Sep | Lock goal card, audience, decision ask, evidence classes, source register and 11-session delivery limit | Sponsor-level planning proxy accepts the question and non-goals |
 | 2, 27 Sep-3 Oct | Build requirement/claim traceability from original, addendum, BRD and current references; record the MEES wording conflict | No unsupported claim remains in the core story |
 | 3, 4-10 Oct | Run Asset, Safety, Programme and Frontline fictional interviews; synthesise current journey and top unknowns | Gate A: if the problem/decision cannot be stated in one sentence, reset scope |
 | 4, 11-17 Oct | Run Finance, Procurement, Resident and Data interviews; create the handoff register; score process, platform, workflow and bounded-AI options | Interview outputs remain hypotheses and at least one non-agent comparator survives |
@@ -447,15 +451,16 @@ artifact, an explicit decision and an updated remaining-capacity check.
 | 7, 1-7 Nov | Draft medium-level component, data and event architecture, including failures, manual fallback, privacy and security controls | All Must control concepts and traceable interfaces are represented |
 | 8, 8-14 Nov | Specify and generate synthetic data with hidden ground truth; run deterministic validation; make the demo/no-demo decision | Gate C: build only if data, reset and six-minute demo criteria pass |
 | 9, 15-21 Nov | Accept or discard the prototype specification after mentor review, then build one narrow prototype or static walkthrough and run failure scenarios | Prototype or fallback is reproducible from a clean start |
-| 10, 22-28 Nov | Executive-proxy checkpoint; test the first 10 minutes, architecture comprehension, evidence trust and demo value; then build the full deck and notes | Gate D: reset the narrative if the proxy cannot repeat the ask, evidence and stop conditions |
-| 11, 29 Nov-5 Dec | Protected narrative recovery and mandatory assurance: recheck regulation after the 30 November Phase 2 date, reconcile claims/economics, finalise appendix, rehearse and test demo failure fallback | Gate E: freeze the deck and kill any unreliable live demo; no discretionary new scope |
-| 12, 6-13 Dec | Final timed readiness check, one-hour C-suite presentation and decision capture; record conditions, owners, next gate and unanswered questions | Outcome is a recorded decision, not applause |
+| 10, 22-28 Nov | Integrate the slide-ready modules created in Sessions 1-9; run the executive-proxy checkpoint; apply one bounded opening rewrite if needed; complete final assembly, notes and full claim/economics/scorecard reconciliation | Gate D: the proxy can repeat the ask, evidence and stop conditions |
+| 11, 29 Nov-5 Dec | Mandatory final assurance only: perform a post-30-November regulatory delta check, reconcile resulting changes, run one timed rehearsal, verify the accepted demo and fallback once, then freeze | Gate E: freeze the deck, kill any unreliable live demo and confirm presentation readiness |
+| Margin, 6-13 Dec | No planned research, architecture, features or prototype work. Use only if needed for minor corrections, packaging, accessibility, final rehearsal and presentation delivery | Outcome is a recorded decision, not applause |
 
-If no restart is consumed by Session 11, use the protected capacity only for
-regulatory/citation assurance, accessibility, timed rehearsal and Q&A. Do not
-convert it into additional product scope. If a restart consumes all of Session
-11, presentation readiness takes priority over the live demo and detailed
-appendix polish.
+Session 11 must finish with a presentation-ready, frozen package. It permits no
+narrative, architecture or prototype recovery. If the post-30-November delta
+check finds a material change that cannot be reconciled that day, remove the
+affected claim or use the static fallback before Gate E. The final margin can
+correct small defects or improve delivery, but it cannot rescue incomplete
+architecture, missing evidence, an unvalidated story or a failed prototype.
 
 ## Kill, reset and restart rules
 
@@ -470,8 +475,9 @@ appendix polish.
   build/validation attempts or if synthetic ground truth cannot be recovered.
   Restart once with a smaller deterministic slice; otherwise switch to static.
 * Gate D, narrative reset: If an executive proxy cannot repeat the ask,
-  evidence and stop conditions after 10 minutes, discard the sequence, not the
-  evidence. Rebuild the opening before polishing slides.
+  evidence and stop conditions after 10 minutes, apply one bounded opening
+  rewrite using accepted evidence. If recall still fails, remove the live demo
+  and simplify the story rather than starting another narrative cycle.
 * Gate E, demo kill: Remove the live demo if it needs network access, hidden
   credentials, manual data repair, more than six minutes, or fails a
   cold-start/reset rehearsal. Use the tested fallback.

@@ -1,0 +1,400 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="2820" viewBox="0 0 1800 2820" role="img" aria-labelledby="title description">
+  <title id="title">Case Study 48: 85-Day C-Suite Solution Roadmap</title>
+  <desc id="description">Eleven-session delivery roadmap with a protected finishing-margin week, covering evidence, role-agent research, architecture, synthetic data, prototype decisions, executive presentation, recovery gates and final decision capture.</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#000000" flood-opacity="0.14"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#605E5C"/>
+    </marker>
+    <style>
+      .title { font: 700 42px "Segoe UI", Arial, sans-serif; fill: #201F1E; }
+      .subtitle { font: 400 21px "Segoe UI", Arial, sans-serif; fill: #605E5C; }
+      .header-title { font: 700 42px "Segoe UI", Arial, sans-serif; fill: #ffffff; }
+      .header-subtitle { font: 400 21px "Segoe UI", Arial, sans-serif; fill: #ffffff; }
+      .phase { font: 700 17px "Segoe UI", Arial, sans-serif; fill: #ffffff; letter-spacing: 0.5px; }
+      .week { font: 700 17px "Segoe UI", Arial, sans-serif; fill: #201F1E; }
+      .date { font: 600 14px "Segoe UI", Arial, sans-serif; fill: #605E5C; }
+      .card-title { font: 700 22px "Segoe UI", Arial, sans-serif; fill: #201F1E; }
+      .label { font: 700 14px "Segoe UI", Arial, sans-serif; fill: #201F1E; }
+      .body { font: 400 14px "Segoe UI", Arial, sans-serif; fill: #323130; }
+      .gate { font: 700 13px "Segoe UI", Arial, sans-serif; fill: #8A2C0D; }
+      .small { font: 400 13px "Segoe UI", Arial, sans-serif; fill: #323130; }
+      .run { font: 600 14px "Segoe UI", Arial, sans-serif; fill: #201F1E; }
+      .arrow { stroke: #605E5C; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .restart { stroke: #D13438; stroke-width: 3; fill: none; stroke-dasharray: 10 8; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1800" height="2820" fill="#FAF9F8"/>
+  <rect x="0" y="0" width="1800" height="160" fill="#0078D4"/>
+  <text x="70" y="70" class="header-title">Case Study 48: 85-Day C-Suite Solution Roadmap</text>
+  <text x="70" y="112" class="header-subtitle">11 delivery sessions finish 5 Dec  |  6-13 Dec reserved for finishing margin and presentation</text>
+
+  <rect x="60" y="190" width="1680" height="115" rx="16" fill="#F3F2F1" stroke="#8A8886" stroke-width="2"/>
+  <text x="90" y="222" class="label">Operating rhythm</text>
+  <text x="90" y="250" class="body">Start every session: 30-minute capacity and evidence review. End every session: 45-minute checkpoint.</text>
+  <text x="90" y="276" class="body">Always label evidence as case-study fact, sector hypothesis/comparator, or unknown company detail. Record decisions, alternatives, trade-offs, owner and reversal condition.</text>
+
+  <!-- Row 1 -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="350" width="510" height="400" rx="18" fill="#ffffff" stroke="#0078D4" stroke-width="3"/>
+    <rect x="60" y="350" width="510" height="42" rx="18" fill="#0078D4"/>
+    <rect x="60" y="374" width="510" height="18" fill="#0078D4"/>
+  </g>
+  <text x="82" y="378" class="phase">PHASE 1 · FRAME THE DECISION</text>
+  <text x="82" y="425" class="week">SESSION 1</text>
+  <text x="228" y="425" class="date">20-26 SEP</text>
+  <text x="82" y="462" class="card-title">Lock the engagement contract</text>
+  <text x="82" y="498" class="label">Do</text>
+  <text x="82" y="523" class="body">
+    <tspan x="82" dy="0">• Define audience and exact final decision</tspan>
+    <tspan x="82" dy="22">• Write the first-10-minute promise and non-goals</tspan>
+    <tspan x="82" dy="22">• Reserve 11 delivery days, reviewers and margin week</tspan>
+  </text>
+  <text x="82" y="605" class="label">Produce</text>
+  <text x="82" y="630" class="body">
+    <tspan x="82" dy="0">Goal card · decision ladder · CxO influence map</tspan>
+    <tspan x="82" dy="22">Evidence legend · source register · mentor calendar</tspan>
+  </text>
+  <rect x="82" y="690" width="466" height="38" rx="8" fill="#CFE4FA"/>
+  <text x="98" y="714" class="gate">PASS: ask fits one sentence; rollout is explicitly out of scope</text>
+
+  <g filter="url(#shadow)">
+    <rect x="645" y="350" width="510" height="400" rx="18" fill="#ffffff" stroke="#0078D4" stroke-width="3"/>
+    <rect x="645" y="350" width="510" height="42" rx="18" fill="#0078D4"/>
+    <rect x="645" y="374" width="510" height="18" fill="#0078D4"/>
+  </g>
+  <text x="667" y="378" class="phase">PHASE 1 · FRAME THE EVIDENCE</text>
+  <text x="667" y="425" class="week">SESSION 2</text>
+  <text x="813" y="425" class="date">27 SEP-3 OCT</text>
+  <text x="667" y="462" class="card-title">Establish traceability</text>
+  <text x="667" y="498" class="label">Do</text>
+  <text x="667" y="523" class="body">
+    <tspan x="667" dy="0">• Trace original brief, addendum, BRD and laws</tspan>
+    <tspan x="667" dy="22">• Separate facts, scenarios, targets and unknowns</tspan>
+    <tspan x="667" dy="22">• Check MEES, Awaab’s Law, PAS 2035 and UK GDPR</tspan>
+    <tspan x="667" dy="22">• Label guidance separately from legislation</tspan>
+  </text>
+  <text x="667" y="628" class="label">Produce</text>
+  <text x="667" y="653" class="body">
+    <tspan x="667" dy="0">Claim matrix · dated rule-source register</tspan>
+    <tspan x="667" dy="22">Assumption backlog · initial executive risk register</tspan>
+  </text>
+  <rect x="667" y="690" width="466" height="38" rx="8" fill="#CFE4FA"/>
+  <text x="683" y="714" class="gate">PASS: no unsupported core claim; contested claims are removed</text>
+
+  <g filter="url(#shadow)">
+    <rect x="1230" y="350" width="510" height="400" rx="18" fill="#ffffff" stroke="#5C2D91" stroke-width="3"/>
+    <rect x="1230" y="350" width="510" height="42" rx="18" fill="#5C2D91"/>
+    <rect x="1230" y="374" width="510" height="18" fill="#5C2D91"/>
+  </g>
+  <text x="1252" y="378" class="phase">PHASE 2 · CHALLENGE THE REQUEST</text>
+  <text x="1252" y="425" class="week">SESSION 3</text>
+  <text x="1398" y="425" class="date">4-10 OCT</text>
+  <text x="1252" y="462" class="card-title">Investigate operations and safety</text>
+  <text x="1252" y="498" class="label">Ask fictional role agents</text>
+  <text x="1252" y="523" class="body">
+    <tspan x="1252" dy="0">Asset Executive · Building Safety Lead</tspan>
+    <tspan x="1252" dy="22">Retrofit Programme Manager · Housing Officer</tspan>
+  </text>
+  <text x="1252" y="584" class="label">Produce</text>
+  <text x="1252" y="609" class="body">
+    <tspan x="1252" dy="0">Resident/property journey · 15-stage lifecycle</tspan>
+    <tspan x="1252" dy="22">Authority matrix · ranked binding constraints</tspan>
+  </text>
+  <rect x="1252" y="672" width="466" height="56" rx="8" fill="#FFF4CE" stroke="#F7630C"/>
+  <text x="1268" y="695" class="gate">
+    <tspan x="1268" dy="0">GATE A: if problem + decision do not fit one sentence,</tspan>
+    <tspan x="1268" dy="19">discard solution framing and restart with discovery</tspan>
+  </text>
+
+  <!-- Row 1 arrows -->
+  <path d="M575 550 L635 550" class="arrow"/>
+  <path d="M1160 550 L1220 550" class="arrow"/>
+
+  <!-- Row 2 -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="810" width="510" height="400" rx="18" fill="#ffffff" stroke="#5C2D91" stroke-width="3"/>
+    <rect x="60" y="810" width="510" height="42" rx="18" fill="#5C2D91"/>
+    <rect x="60" y="834" width="510" height="18" fill="#5C2D91"/>
+  </g>
+  <text x="82" y="838" class="phase">PHASE 2 · TEST VALUE AND ACCEPTANCE</text>
+  <text x="82" y="885" class="week">SESSION 4</text>
+  <text x="228" y="885" class="date">11-17 OCT</text>
+  <text x="82" y="922" class="card-title">Compare solution paths</text>
+  <text x="82" y="958" class="label">Ask fictional role agents</text>
+  <text x="82" y="983" class="body">
+    <tspan x="82" dy="0">Finance · Procurement · Resident Engagement</tspan>
+    <tspan x="82" dy="22">Data &amp; Performance</tspan>
+  </text>
+  <text x="82" y="1044" class="label">Compare</text>
+  <text x="82" y="1069" class="body">
+    <tspan x="82" dy="0">Process change · workflow/BI · bounded AI control plane</tspan>
+    <tspan x="82" dy="22">Original five-agent concept</tspan>
+  </text>
+  <text x="82" y="1130" class="label">Produce</text>
+  <text x="82" y="1155" class="body">Options appraisal · synthetic-data spec · benefits scorecard</text>
+
+  <g filter="url(#shadow)">
+    <rect x="645" y="810" width="510" height="400" rx="18" fill="#ffffff" stroke="#5C2D91" stroke-width="3"/>
+    <rect x="645" y="810" width="510" height="42" rx="18" fill="#5C2D91"/>
+    <rect x="645" y="834" width="510" height="18" fill="#5C2D91"/>
+  </g>
+  <text x="667" y="838" class="phase">PHASE 2 · SELECT THE PROPOSITION</text>
+  <text x="667" y="885" class="week">SESSION 5</text>
+  <text x="813" y="885" class="date">18-24 OCT</text>
+  <text x="667" y="922" class="card-title">Design the high-level architecture</text>
+  <text x="667" y="958" class="label">Show on one slide</text>
+  <text x="667" y="983" class="body">
+    <tspan x="667" dy="0">Actors · systems of record · trust boundaries</tspan>
+    <tspan x="667" dy="22">Deterministic controls · human decisions · analytics</tspan>
+    <tspan x="667" dy="22">Bounded AI · manual fallback</tspan>
+  </text>
+  <text x="667" y="1066" class="label">Produce</text>
+  <text x="667" y="1091" class="body">
+    <tspan x="667" dy="0">High-level architecture · target operating model</tspan>
+    <tspan x="667" dy="22">Architecture decisions · executive recommendation</tspan>
+  </text>
+  <rect x="667" y="1140" width="466" height="48" rx="8" fill="#FFF4CE" stroke="#F7630C"/>
+  <text x="683" y="1162" class="gate">
+    <tspan x="683" dy="0">GATE B: kill five-agent-first unless it uniquely beats</tspan>
+    <tspan x="683" dy="19">simpler process, workflow or BI alternatives</tspan>
+  </text>
+
+  <g filter="url(#shadow)">
+    <rect x="1230" y="810" width="510" height="400" rx="18" fill="#ffffff" stroke="#F7630C" stroke-width="4"/>
+    <rect x="1230" y="810" width="510" height="42" rx="18" fill="#F7630C"/>
+    <rect x="1230" y="834" width="510" height="18" fill="#F7630C"/>
+  </g>
+  <text x="1252" y="838" class="phase">PHASE 3 · PROTECTED RECOVERY</text>
+  <text x="1252" y="885" class="week">SESSION 6</text>
+  <text x="1398" y="885" class="date">25-31 OCT</text>
+  <text x="1252" y="922" class="card-title">Review, repair, restart or stop</text>
+  <text x="1252" y="958" class="label">Get focused feedback</text>
+  <text x="1252" y="983" class="body">
+    <tspan x="1252" dy="0">Mentor · architecture · sector · privacy</tspan>
+    <tspan x="1252" dy="22">No new features or discretionary scope</tspan>
+  </text>
+  <text x="1252" y="1044" class="label">Decision paths</text>
+  <text x="1252" y="1069" class="body">
+    <tspan x="1252" dy="0">Accept: freeze concept</tspan>
+    <tspan x="1252" dy="22">Repair: bounded correction and repeat check</tspan>
+    <tspan x="1252" dy="22">Restart: rebuild rejected value/boundary assumption</tspan>
+    <tspan x="1252" dy="22">Stop: fall back to evidence/readiness proposition</tspan>
+  </text>
+  <rect x="1252" y="1170" width="466" height="24" rx="8" fill="#FDE7E9"/>
+  <text x="1268" y="1188" class="gate">PROTECTED BUFFER: medium-level design cannot start rejected</text>
+
+  <path d="M575 1010 L635 1010" class="arrow"/>
+  <path d="M1160 1010 L1220 1010" class="arrow"/>
+  <path d="M1485 760 C1485 785 315 775 315 800" class="arrow"/>
+
+  <!-- Row 3 -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="1270" width="510" height="400" rx="18" fill="#ffffff" stroke="#0C8599" stroke-width="3"/>
+    <rect x="60" y="1270" width="510" height="42" rx="18" fill="#0C8599"/>
+    <rect x="60" y="1294" width="510" height="18" fill="#0C8599"/>
+  </g>
+  <text x="82" y="1298" class="phase">PHASE 4 · DETAIL THE DESIGN</text>
+  <text x="82" y="1345" class="week">SESSION 7</text>
+  <text x="228" y="1345" class="date">1-7 NOV</text>
+  <text x="82" y="1382" class="card-title">Create medium-level architecture</text>
+  <text x="82" y="1418" class="label">Decompose into</text>
+  <text x="82" y="1443" class="body">
+    <tspan x="82" dy="0">Adapters · identity reconciliation · lifecycle events</tspan>
+    <tspan x="82" dy="22">Dated rules · state machine · work queues</tspan>
+    <tspan x="82" dy="22">Evidence ledger · assistants · approvals · analytics</tspan>
+    <tspan x="82" dy="22">Audit · observability · rollback and replay</tspan>
+  </text>
+  <text x="82" y="1548" class="label">Produce</text>
+  <text x="82" y="1573" class="body">
+    <tspan x="82" dy="0">Component diagram · data/event flow · trust boundaries</tspan>
+    <tspan x="82" dy="22">Failure and manual-fallback paths · decisions</tspan>
+  </text>
+  <rect x="82" y="1630" width="466" height="24" rx="8" fill="#DFF6DD"/>
+  <text x="98" y="1648" class="gate">PASS: no AI component can take irreversible action</text>
+
+  <g filter="url(#shadow)">
+    <rect x="645" y="1270" width="510" height="400" rx="18" fill="#ffffff" stroke="#0C8599" stroke-width="3"/>
+    <rect x="645" y="1270" width="510" height="42" rx="18" fill="#0C8599"/>
+    <rect x="645" y="1294" width="510" height="18" fill="#0C8599"/>
+  </g>
+  <text x="667" y="1298" class="phase">PHASE 4 · TEST WITH SYNTHETIC EVIDENCE</text>
+  <text x="667" y="1345" class="week">SESSION 8</text>
+  <text x="813" y="1345" class="date">8-14 NOV</text>
+  <text x="667" y="1382" class="card-title">Generate evidence and gate the demo</text>
+  <text x="667" y="1418" class="label">Build synthetic package</text>
+  <text x="667" y="1443" class="body">
+    <tspan x="667" dy="0">~500 properties · 12 months · hidden ground truth</tspan>
+    <tspan x="667" dy="22">Capacity, resident, supplier, evidence and quality constraints</tspan>
+    <tspan x="667" dy="22">Manifest · dictionary · deterministic validation</tspan>
+  </text>
+  <text x="667" y="1526" class="label">Review</text>
+  <text x="667" y="1551" class="body">Mentor accepts or rejects specification before code is retained</text>
+  <rect x="667" y="1598" width="466" height="56" rx="8" fill="#FFF4CE" stroke="#F7630C"/>
+  <text x="683" y="1621" class="gate">
+    <tspan x="683" dy="0">GATE C: build only if data validates, reset is clean,</tspan>
+    <tspan x="683" dy="19">scenario fits 6 minutes and adds decision evidence</tspan>
+  </text>
+
+  <g filter="url(#shadow)">
+    <rect x="1230" y="1270" width="510" height="400" rx="18" fill="#ffffff" stroke="#0C8599" stroke-width="4"/>
+    <rect x="1230" y="1270" width="510" height="42" rx="18" fill="#0C8599"/>
+    <rect x="1230" y="1294" width="510" height="18" fill="#0C8599"/>
+  </g>
+  <text x="1252" y="1298" class="phase">PHASE 4 · BUILD OR REBUILD</text>
+  <text x="1252" y="1345" class="week">SESSION 9</text>
+  <text x="1398" y="1345" class="date">15-21 NOV</text>
+  <text x="1252" y="1382" class="card-title">Prototype the narrow slice</text>
+  <text x="1252" y="1418" class="label">If accepted</text>
+  <text x="1252" y="1443" class="body">
+    <tspan x="1252" dy="0">Build property timeline + portfolio constraint queue</tspan>
+    <tspan x="1252" dy="22">Show safety control + source-linked AI summary</tspan>
+  </text>
+  <text x="1252" y="1504" class="label">If rejected</text>
+  <text x="1252" y="1529" class="body">
+    <tspan x="1252" dy="0">Discard design and code; rebuild from clean criterion</tspan>
+    <tspan x="1252" dy="22">At midpoint failure, stop coding and use static fallback</tspan>
+  </text>
+  <text x="1252" y="1590" class="label">Produce</text>
+  <text x="1252" y="1615" class="body">6-minute runbook · reset · failure narration · fallback</text>
+
+  <path d="M575 1470 L635 1470" class="arrow"/>
+  <path d="M1160 1470 L1220 1470" class="arrow"/>
+  <path d="M1485 1220 C1485 1245 315 1235 315 1260" class="arrow"/>
+  <path d="M1710 1530 C1770 1530 1770 1390 1705 1390" class="restart"/>
+  <text x="1612" y="1366" class="gate">CLEAN REBUILD</text>
+
+  <!-- Row 4 -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="1730" width="510" height="400" rx="18" fill="#ffffff" stroke="#107C10" stroke-width="3"/>
+    <rect x="60" y="1730" width="510" height="42" rx="18" fill="#107C10"/>
+    <rect x="60" y="1754" width="510" height="18" fill="#107C10"/>
+  </g>
+  <text x="82" y="1758" class="phase">PHASE 5 · BUILD THE EXECUTIVE STORY</text>
+  <text x="82" y="1805" class="week">SESSION 10</text>
+  <text x="238" y="1805" class="date">22-28 NOV</text>
+  <text x="82" y="1842" class="card-title">Test the pitch, then build the deck</text>
+  <text x="82" y="1878" class="label">Test before polishing</text>
+  <text x="82" y="1903" class="body">
+    <tspan x="82" dy="0">Decision recall · evidence trust · architecture clarity</tspan>
+    <tspan x="82" dy="22">Scorecard logic · demo value · stop conditions</tspan>
+  </text>
+  <text x="82" y="1964" class="label">Produce</text>
+  <text x="82" y="1989" class="body">
+    <tspan x="82" dy="0">Integrate slide-ready modules from Sessions 1-9</tspan>
+    <tspan x="82" dy="22">Proxy test · bounded opening rewrite · notes · reconciliation</tspan>
+  </text>
+  <rect x="82" y="2062" width="466" height="48" rx="8" fill="#FFF4CE" stroke="#F7630C"/>
+  <text x="98" y="2084" class="gate">
+    <tspan x="98" dy="0">GATE D: if proxy cannot repeat ask, evidence and stops,</tspan>
+    <tspan x="98" dy="19">rewrite once; if recall still fails, remove demo + simplify</tspan>
+  </text>
+
+  <g filter="url(#shadow)">
+    <rect x="645" y="1730" width="510" height="400" rx="18" fill="#ffffff" stroke="#F7630C" stroke-width="4"/>
+    <rect x="645" y="1730" width="510" height="42" rx="18" fill="#F7630C"/>
+    <rect x="645" y="1754" width="510" height="18" fill="#F7630C"/>
+  </g>
+  <text x="667" y="1758" class="phase">PHASE 6 · ASSURE, VALIDATE AND FREEZE</text>
+  <text x="667" y="1805" class="week">SESSION 11</text>
+  <text x="823" y="1805" class="date">29 NOV-5 DEC</text>
+  <text x="667" y="1842" class="card-title">Final readiness before the margin</text>
+  <text x="667" y="1878" class="label">Mandatory assurance</text>
+  <text x="667" y="1903" class="body">
+    <tspan x="667" dy="0">Post-30 Nov regulatory delta check only</tspan>
+    <tspan x="667" dy="22">Reconcile resulting changes · one timed rehearsal</tspan>
+    <tspan x="667" dy="22">Verify accepted demo + fallback once · freeze package</tspan>
+  </text>
+  <text x="667" y="1986" class="label">Produce</text>
+  <text x="667" y="2011" class="body">
+    <tspan x="667" dy="0">Frozen deck + notes · regulatory review</tspan>
+    <tspan x="667" dy="22">Ratified or explicitly provisional benefits scorecard</tspan>
+  </text>
+  <rect x="667" y="2062" width="466" height="48" rx="8" fill="#FDE7E9"/>
+  <text x="683" y="2084" class="gate">
+    <tspan x="683" dy="0">GATE E: no prototype rebuild; kill unreliable live demo;</tspan>
+    <tspan x="683" dy="19">freeze all discretionary scope</tspan>
+  </text>
+
+  <g filter="url(#shadow)">
+    <rect x="1230" y="1730" width="510" height="400" rx="18" fill="#ffffff" stroke="#1E1E1E" stroke-width="4"/>
+    <rect x="1230" y="1730" width="510" height="42" rx="18" fill="#1E1E1E"/>
+    <rect x="1230" y="1754" width="510" height="18" fill="#1E1E1E"/>
+  </g>
+  <text x="1252" y="1758" class="phase">RESERVED · FINISHING MARGIN</text>
+  <text x="1252" y="1805" class="week">MARGIN WEEK</text>
+  <text x="1408" y="1805" class="date">6-13 DEC</text>
+  <text x="1252" y="1842" class="card-title">Finish details and present</text>
+  <text x="1252" y="1878" class="label">Allowed only if needed</text>
+  <text x="1252" y="1903" class="body">
+    <tspan x="1252" dy="0">Minor corrections · accessibility · packaging · backup</tspan>
+    <tspan x="1252" dy="22">One confidence rehearsal · no new scope or rebuild</tspan>
+  </text>
+  <text x="1252" y="1964" class="label">Present and record</text>
+  <text x="1252" y="1989" class="body">
+    <tspan x="1252" dy="0">Approval · conditional approval · evidence request · rejection</tspan>
+    <tspan x="1252" dy="22">Conditions · named owners · dates · next gate</tspan>
+  </text>
+  <rect x="1252" y="2062" width="466" height="48" rx="8" fill="#DFF6DD"/>
+  <text x="1268" y="2084" class="gate">
+    <tspan x="1268" dy="0">MARGIN PROTECTED: core package passed by 5 Dec;</tspan>
+    <tspan x="1268" dy="19">do not infer approval from applause or positive feedback</tspan>
+  </text>
+
+  <path d="M575 1930 L635 1930" class="arrow"/>
+  <path d="M1160 1930 L1220 1930" class="arrow"/>
+  <path d="M1485 1680 C1485 1705 315 1695 315 1720" class="arrow"/>
+
+  <!-- Presentation run of show -->
+  <rect x="60" y="2200" width="1680" height="345" rx="18" fill="#ffffff" stroke="#0078D4" stroke-width="3"/>
+  <text x="90" y="2245" class="card-title">Final one-hour C-suite run of show</text>
+  <line x1="90" y1="2290" x2="1710" y2="2290" stroke="#D2D0CE" stroke-width="2"/>
+  <rect x="90" y="2320" width="270" height="92" rx="10" fill="#CFE4FA" stroke="#0078D4"/>
+  <text x="108" y="2348" class="run">0-10 min · Win the room</text>
+  <text x="108" y="2373" class="small">Decision, resident stakes, insight,</text>
+  <text x="108" y="2394" class="small">architecture, value and ask</text>
+  <rect x="380" y="2320" width="190" height="92" rx="10" fill="#E8DAEF" stroke="#5C2D91"/>
+  <text x="398" y="2348" class="run">10-18 · Evidence</text>
+  <text x="398" y="2373" class="small">Regulation, facts,</text>
+  <text x="398" y="2394" class="small">scenarios, unknowns</text>
+  <rect x="590" y="2320" width="240" height="92" rx="10" fill="#E8DAEF" stroke="#5C2D91"/>
+  <text x="608" y="2348" class="run">18-28 · Future state</text>
+  <text x="608" y="2373" class="small">Journey, operating model,</text>
+  <text x="608" y="2394" class="small">high-level architecture</text>
+  <rect x="850" y="2320" width="220" height="92" rx="10" fill="#D5F3F6" stroke="#0C8599"/>
+  <text x="868" y="2348" class="run">28-38 · Deep dive</text>
+  <text x="868" y="2373" class="small">Medium-level design,</text>
+  <text x="868" y="2394" class="small">controls and trade-offs</text>
+  <rect x="1090" y="2320" width="170" height="92" rx="10" fill="#D5F3F6" stroke="#0C8599"/>
+  <text x="1108" y="2348" class="run">38-44 · Demo</text>
+  <text x="1108" y="2373" class="small">Live narrow slice</text>
+  <text x="1108" y="2394" class="small">or tested fallback</text>
+  <rect x="1280" y="2320" width="190" height="92" rx="10" fill="#DFF6DD" stroke="#107C10"/>
+  <text x="1298" y="2348" class="run">44-50 · Value</text>
+  <text x="1298" y="2373" class="small">Economics, attribution</text>
+  <text x="1298" y="2394" class="small">and downside</text>
+  <rect x="1490" y="2320" width="220" height="92" rx="10" fill="#F3F2F1" stroke="#1E1E1E"/>
+  <text x="1508" y="2348" class="run">50-60 · Decide</text>
+  <text x="1508" y="2373" class="small">Roadmap + ask, then</text>
+  <text x="1508" y="2394" class="small">challenge and confirmation</text>
+  <text x="90" y="2480" class="label">Default executive ask</text>
+  <text x="295" y="2480" class="body">Approve capped readiness and shadow-pilot design. Do not approve live deployment, autonomous authority or portfolio capital release.</text>
+  <text x="90" y="2515" class="label">Demo rule</text>
+  <text x="205" y="2515" class="body">Presentation trust outranks working code. Static evidence replaces any demo that is unsafe, unclear, network-dependent or unreliable.</text>
+
+  <!-- Legend -->
+  <rect x="60" y="2590" width="1680" height="165" rx="18" fill="#F3F2F1" stroke="#8A8886"/>
+  <text x="90" y="2632" class="label">Legend</text>
+  <rect x="180" y="2608" width="28" height="28" rx="5" fill="#0078D4"/><text x="220" y="2629" class="small">Evidence</text>
+  <rect x="330" y="2608" width="28" height="28" rx="5" fill="#5C2D91"/><text x="370" y="2629" class="small">Challenge &amp; choose</text>
+  <rect x="555" y="2608" width="28" height="28" rx="5" fill="#F7630C"/><text x="595" y="2629" class="small">Protected recovery</text>
+  <rect x="800" y="2608" width="28" height="28" rx="5" fill="#0C8599"/><text x="840" y="2629" class="small">Architecture &amp; demo</text>
+  <rect x="1045" y="2608" width="28" height="28" rx="5" fill="#107C10"/><text x="1085" y="2629" class="small">Executive story</text>
+  <rect x="1240" y="2608" width="28" height="28" rx="5" fill="#1E1E1E"/><text x="1280" y="2629" class="small">Final decision</text>
+  <line x1="90" y1="2680" x2="150" y2="2680" class="restart"/><text x="165" y="2685" class="small">Discard/rebuild route</text>
+  <text x="400" y="2685" class="small">Human-only authority: consent · safety · professional outputs · procurement · finance · grants · payment · quality acceptance</text>
+  <text x="90" y="2725" class="small">Core design principle: deterministic lifecycle and evidence controls first; bounded AI may only recommend, draft, reconcile and flag.</text>
+</svg>

@@ -11,11 +11,11 @@ and
 
 ## Working Method
 
-Treat 2026-09-19 as planning day zero. The 85-day execution window runs from
-2026-09-20 through 2026-12-13 inclusive. Schedule exactly one protected
-workday in each of the 12 windows below. The final window is eight days only so
-that the presentation can occur on 2026-12-13 without creating a thirteenth
-work session.
+Treat 2026-09-19 as planning day zero. The 85-day engagement runs from
+2026-09-20 through 2026-12-13 inclusive. Complete substantive delivery in 11
+protected weekly workdays ending 2026-12-05. Hold 2026-12-06 through
+2026-12-13 as an unallocated finishing margin. Do not schedule research,
+architecture, feature development or prototype rebuilding in that margin.
 
 Start each session with a 30-minute capacity and evidence review. End with a
 45-minute checkpoint that records the accepted artifact, rejected assumptions,
@@ -32,6 +32,12 @@ Maintain a decision register for every material architecture, demo and narrative
 choice. Record the decision, alternatives, evidence, trade-offs, owner,
 reversal condition and date.
 
+Maintain a living presentation shell from Session 1. Every accepted artifact
+must update its slide-ready main-deck module or appendix module during the same
+session. Run link, citation and readability checks on each new module before
+the session closes. Session 10 integrates and tests these prepared modules; it
+does not create the complete deck from scratch.
+
 ## Implementation Phase 1: Frame the Decision and Evidence
 
 <!-- parallelizable: false -->
@@ -39,7 +45,7 @@ reversal condition and date.
 ### Step 1.1: Session 1, 20-26 September, lock the engagement contract
 
 Create a one-page goal card that names the audience, the requested final
-decision, the first-10-minute promise, non-goals and the 12-session capacity
+decision, the first-10-minute promise, non-goals and the 11-session delivery
 limit. Define success as an executive being able to repeat the problem, ask,
 evidence, architecture boundary and next gate.
 
@@ -54,11 +60,12 @@ Outputs:
 * Evidence classification legend
 * Source and claim register skeleton
 * Mentor review calendar with feedback deadlines
+* Presentation shell with the one-hour run of show and slide placeholders
 
 Success criteria:
 * The final ask fits in one sentence
 * The non-goals explicitly exclude production rollout and portfolio benefit proof
-* Every weekly session has a reserved calendar slot and review owner
+* Every one of the 11 delivery sessions has a reserved calendar slot and review owner
 
 Dependencies:
 * Access to the case-study source and available mentor calendar
@@ -76,6 +83,7 @@ Outputs:
   confirmation-needed states
 * Assumption and unknown-company-detail backlog
 * Initial executive risk register
+* Slide-ready evidence, regulation and unknowns module
 
 Success criteria:
 * Every claim intended for the first 10 minutes has a source and evidence label
@@ -115,6 +123,7 @@ Outputs:
 * Fifteen-stage lifecycle and handoff map
 * Human authority and stop-control matrix
 * Ranked unknowns and candidate binding constraints
+* Slide-ready resident journey, lifecycle and authority module
 
 Gate A:
 * Continue only if the problem and requested decision fit in one sentence
@@ -145,6 +154,7 @@ Outputs:
 * Draft benefits and evaluation scorecard covering accepted handovers,
   cycle time, manual review effort, resident outcomes, safety, quality,
   evidence completeness, complaints and cash
+* Slide-ready options, value and scorecard module
 
 Success criteria:
 * At least one non-agent option remains viable
@@ -170,6 +180,7 @@ Outputs:
 * Target operating model
 * Primary architecture decision records
 * Executive options slide and recommendation
+* Slide-ready high-level architecture and trade-off module
 
 Gate B:
 * Kill the five-agent-first design unless evidence shows unique value that a
@@ -207,6 +218,8 @@ Outputs:
 * Feedback synthesis grouped by evidence, value, control and communication
 * Root-cause record for every rejected assumption
 * Accepted high-level architecture or documented fallback proposition
+* CxO objection and answer backlog seeded from reviewer feedback
+* Updated slide modules reflecting accepted feedback
 * Updated remaining-capacity forecast
 
 Success criteria:
@@ -234,6 +247,7 @@ Outputs:
 * Trust-boundary and threat summary
 * Failure, manual fallback, disable and replay paths
 * Medium-level architecture decision records
+* Slide-ready medium-level architecture and control module
 
 Success criteria:
 * Every high-level boundary maps to a component or human process
@@ -257,6 +271,7 @@ Outputs:
 * Three executive demo scenarios, including a failure path
 * Mentor-reviewed prototype specification with explicit rejection criteria
 * Demo/no-demo decision record
+* Slide-ready synthetic evidence and demonstration-method module
 
 Gate C:
 * Build only when the data validates, the slice can reset cleanly, the scenario
@@ -289,6 +304,7 @@ Outputs:
 * Six-minute runbook and reset procedure
 * Screenshot or recorded fallback
 * Failure narration and known-limitations list
+* Accepted demo/fallback record and slide-ready demonstration module
 
 Success criteria:
 * The demonstration starts from a clean state and is repeatable
@@ -305,13 +321,15 @@ Dependencies:
 
 <!-- parallelizable: false -->
 
-### Step 5.1: Session 10, 22-28 November, test the pitch and assemble the deck
+### Step 5.1: Session 10, 22-28 November, integrate and test the executive story
 
 Present the first 10 minutes to an executive proxy before polishing the full
 deck. Test decision recall, evidence trust, architecture comprehension and the
 value of the demo. Test whether the proxy can explain how the scorecard decides
-if readiness should progress to a live pilot. Then assemble the one-hour
-narrative, speaker notes and appendix.
+if readiness should progress to a live pilot. Integrate the slide-ready modules
+created in Sessions 1-9, apply at most one bounded rewrite of the opening
+sequence, complete speaker notes and appendix assembly, and perform the full
+claim, economics and scorecard reconciliation.
 
 First-10-minute sequence:
 * 0:00-1:30: Decision, urgency and explicit non-approval boundaries
@@ -330,9 +348,17 @@ Full run of show:
 * 50-54 minutes: roadmap, gates, owners and requested decision
 * 54-60 minutes: structured challenge and decision confirmation
 
+Outputs:
+* Complete draft deck, notes and appendix
+* Reconciled claim, economics and scorecard register
+* Updated CxO objection and answer bank
+* Executive-proxy findings and bounded opening revision record
+
 Gate D:
 * If the proxy cannot repeat the ask, supporting evidence and stop conditions,
-  discard the sequence and rewrite the opening before polishing slides
+  rewrite only the opening sequence using the already accepted evidence
+* If the proxy still cannot repeat them after one bounded rewrite, remove the
+  live demo and simplify the story rather than starting another narrative cycle
 
 Success criteria:
 * The ask is stated in the first and final 10 minutes
@@ -345,81 +371,73 @@ Success criteria:
 Dependencies:
 * Phase 4 completion
 
-### Step 5.2: Session 11, 29 November-5 December, protected assurance and recovery
+### Step 5.2: Session 11, 29 November-5 December, final assurance and readiness freeze
 
-Absorb one narrative or architecture-explanation restart if required. Prototype
-rebuild is no longer permitted. Recheck legal claims after Awaab's Law Phase 2
-applies on 2026-11-30. Confirm the status of Phase 2 guidance, MEES
-implementation and the applicable PAS 2035 edition, contract and funding
-conditions. Reconcile all deck claims and scorecard measures with the source
-register, rehearse and test the demo failure fallback.
+No narrative, architecture or prototype repair is permitted in this session.
+Perform a delta-only legal review after Awaab's Law Phase 2 applies on
+2026-11-30. Confirm the status of Phase 2 guidance, MEES implementation and the
+applicable PAS 2035 edition, contract and funding conditions. Reconcile only
+changes arising from that delta review. Run one timed rehearsal and one final
+cold-start verification of the already accepted demo and static fallback, then
+freeze the presentation package.
 
 Outputs:
 * Final regulatory and claim review
 * Frozen deck, notes and appendix
-* Final economics and trade-off reconciliation
+* Delta reconciliation for any post-30-November change
 * Ratified or explicitly provisional benefits and evaluation scorecard
-* CxO objection and answer bank
 * Timed rehearsal and demo-failure evidence
+* Presentation-ready package
 
 Gate E:
 * Remove the live demo if it requires a network, credentials, manual data
   repair, more than six minutes or fails a cold-start rehearsal
 * Freeze discretionary scope at the end of this session
+* Do not enter the finishing margin with incomplete evidence, architecture or
+  an untested opening narrative
 
 Success criteria:
 * One full rehearsal completes in 54 minutes or less before Q&A
-* All regulatory claims have dates, status and sources
+* Opening pitch completes in 9-10 minutes
+* The delta review resolves or labels every post-30-November regulatory change
 * PAS 2035 and non-statutory guidance caveats are explicit
-* Every likely CxO role has a concise answer addressing value, risk and control
 * Static fallback is immediately available
+* High-level architecture is readable without narration
+* Medium-level architecture is explainable in under 10 minutes
+* Demo and fallback each fit the allocated six minutes
+* The requested decision, authority, owner, next gate and stop conditions are explicit
 
 Dependencies:
 * Step 5.1 completion
 
-## Implementation Phase 6: Final Validation and Presentation
+## Reserved Finishing Margin and Presentation
 
-<!-- parallelizable: false -->
+The period from 2026-12-06 through 2026-12-13 is not a planned delivery
+session. Keep up to one workday unallocated for last finishing details and the
+presentation.
 
-### Step 6.1: Session 12, 6-13 December, run final readiness validation
+Permitted uses:
+* Correct a citation, typo, broken link, layout defect or accessibility issue
+* Apply minor wording improvements arising from the frozen rehearsal
+* Package, export and back up the deck, appendix, diagrams and demo fallback
+* Run one confidence rehearsal without changing the narrative structure
+* Deliver the one-hour presentation and capture its decision
 
-Run one final cold-start demonstration, link and citation check, slide
-readability check and timed rehearsal. Apply only corrections that prevent
-misstatement, confusion or failure. Do not introduce new analysis or features.
+Prohibited uses:
+* Add new research, claims, architecture, scope or features
+* Rebuild the prototype or replace the selected technical direction
+* Introduce a live dependency not tested and accepted in Session 11
+* Conceal unresolved evidence or weaken safety, consent or approval boundaries
 
-Validation:
-* Opening pitch completes in 9-10 minutes
-* Main presentation completes in 50-54 minutes
-* Q&A reserve remains at least six minutes
-* High-level architecture is readable without narration
-* Medium-level architecture is explainable in under 10 minutes
-* Demo and fallback each fit the allocated six minutes
-* The requested decision, amount or authority, owner, next gate and stop
-  conditions are explicit
-
-### Step 6.2: Deliver the presentation and capture the decision
-
-Deliver the one-hour session. Close by asking each condition or objection to be
-attached to a named owner and date. Record whether the result is approval,
-conditional approval, request for more evidence or rejection.
-
-Outputs:
-* Presented deck and appendix
-* Decision and condition record
-* Named owners and next gate
-* Unanswered-question and evidence backlog
+Presentation close:
+* Ask each condition or objection to be attached to a named owner and date
+* Record approval, conditional approval, request for more evidence or rejection
+* Record the next gate, unanswered questions and evidence backlog
 
 Success criteria:
+* Main presentation completes in 50-54 minutes with at least six minutes for Q&A
 * Outcome is recorded as a decision rather than inferred from positive feedback
 * Conditions and follow-up owners are confirmed before the session ends
-
-### Step 6.3: Report blocking issues
-
-If final validation exposes a problem requiring more than a minor correction:
-* Remove the live demo before weakening the pitch or control story
-* Use the static fallback
-* Label unresolved evidence rather than inventing certainty
-* Preserve safety, consent, professional and approval boundaries
 
 ## Dependencies
 
@@ -431,7 +449,9 @@ If final validation exposes a problem requiring more than a minor correction:
 
 ## Success Criteria
 
-* The plan stays within 12 weekly sessions and protects Sessions 6 and 11
+* The substantive plan finishes in 11 weekly sessions by 2026-12-05
+* The final 2026-12-06 through 2026-12-13 window remains unallocated margin
+  until the presentation-ready package passes Session 11
 * The first 10 minutes make a bounded, evidence-backed decision easy to repeat
 * High- and medium-level architectures show human and deterministic controls
 * Every material decision has evidence, alternatives and reversal conditions

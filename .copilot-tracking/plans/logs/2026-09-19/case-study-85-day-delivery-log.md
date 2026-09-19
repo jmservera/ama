@@ -4,39 +4,55 @@
 
 ## Discrepancy Log
 
-Revalidation found no remaining Critical or Major discrepancy.
+No Critical, Major or Minor findings remain.
 
 ### Resolved Findings
 
-* PV-01, resolved: 2026-09-19 is explicitly planning day zero. The inclusive
-  execution period from 2026-09-20 through 2026-12-13 is 85 days and is divided
-  into exactly 12 session windows, with one protected workday in each
-  (`case-study-85-day-delivery-details.md:12-16,39-399`).
-* PV-02, resolved: Session 8 now requires mentor acceptance or rejection before
-  code is retained. Session 9 owns complete discard and clean rebuild, switches
-  automatically to the tested static fallback at its midpoint, and cannot use
-  presentation-assurance capacity
-  (`case-study-85-day-delivery-details.md:247-303`). Session 11 explicitly
-  prohibits prototype rebuild (`case-study-85-day-delivery-details.md:348-352`).
-* PV-03, resolved: The quantitative benefits/evaluation scorecard is drafted in
-  Session 4, tested with an executive proxy in Session 10, and ratified or
-  labelled provisional in Session 11. It includes definitions, baseline owner
-  and status, proposed target, measurement window, attribution and stop
-  threshold; the 20% and 25% figures remain unratified proposals
-  (`case-study-85-day-delivery-details.md:132-160,308-379`).
-* PV-04, resolved: Sessions 2 and 11 explicitly check PAS 2035 applicability,
-  edition, contract and funding conditions and distinguish non-statutory
-  guidance from legislation
-  (`case-study-85-day-delivery-details.md:66-90,348-379`).
+* PV-06, resolved: Session 11 now permits no narrative, architecture or
+  prototype repair. It contains only the post-30-November regulatory delta
+  check, reconciliation of resulting changes, one timed rehearsal, one
+  verification of the accepted demo/fallback and freeze
+  (`case-study-85-day-delivery-details.md:374-412`). Packaging and backups are
+  confined to the margin.
+* PV-07, resolved: The SVG now says "do not infer approval from applause or
+  positive feedback" and aligns with the detailed plan.
+* PV-08, resolved: Detailed research now refers to eleven focused sessions.
+* PV-09, resolved: A living presentation shell starts in Session 1. Sessions
+  1-9 create locally checked slide-ready modules; Session 6 seeds objections;
+  and Session 9 accepts the demo and fallback. Session 10 now integrates
+  prepared modules, runs the proxy test, permits one bounded opening rewrite,
+  completes notes and appendix assembly, and performs final reconciliation
+  (`case-study-85-day-delivery-details.md:31-38,324-373`). Continued recall
+  failure triggers simplification rather than another narrative cycle.
+* PV-10, resolved: Detailed research now states that Session 11 permits no
+  narrative, architecture or prototype recovery and defines the delta-check
+  fallback.
+* PV-11, resolved: Detailed research and the SVG now match the controlling Gate
+  D rule: permit one bounded opening rewrite using accepted evidence, then
+  remove the live demo and simplify if recall still fails
+  (`case-study-delivery-research.md:477-480`,
+  `case-study-85-day-roadmap.svg:292-293`).
 
-### Remaining Non-Major Open Input
+### Confirmed Controls
 
-* PV-05: The named C-suite chair, meeting authority and readiness budget ceiling
-  remain unknown. This is not a plan defect or blocker because the documented
-  default is a capped readiness and shadow-design mandate with no live
-  deployment or portfolio capital release. Session 12 requires the final
-  decision, amount or authority, owner, next gate and stop conditions to be
-  explicit (`case-study-85-day-delivery-details.md:384-399`).
+* The engagement remains exactly 85 inclusive days. Eleven seven-day session
+  windows end on 2026-12-05, followed by an eight-day margin through
+  2026-12-13.
+* All prior deliverables and Gates A-E remain represented. Architecture,
+  synthetic-data, prototype-discard, scorecard, regulatory, presentation and
+  decision-capture requirements are retained.
+* The margin is explicitly prohibited from accepting research, architecture,
+  features, prototype rebuilding or untested dependencies, and permits only
+  minor corrections, accessibility, packaging, one confidence rehearsal,
+  presentation and decision capture
+  (`case-study-85-day-delivery-details.md:413-440`).
+* All numeric plan-to-detail line ranges are correct. Both graphical files are
+  syntactically valid and agree on dates, 11 sessions, core deliverables,
+  prototype fallback, revised Session 10 and 11 responsibilities, margin
+  restrictions, Gate D fallback and presentation timing.
+* The unknown C-suite chair, authority and budget ceiling remain non-blocking
+  because the documented default is a capped readiness and shadow-design
+  mandate with no live deployment or portfolio capital release.
 
 ## Implementation Paths Considered
 
@@ -53,7 +69,7 @@ Revalidation found no remaining Critical or Major discrepancy.
 * Approach: Design and demonstrate all five named agents as the primary solution
 * Trade-offs: Strong visual alignment with the brief, but weak evidence,
   excessive breadth, blurred authority and high demo risk
-* Rejection rationale: Twelve sessions cannot validate five end-to-end agent
+* Rejection rationale: Eleven sessions cannot validate five end-to-end agent
   responsibilities or prove that administration is the binding constraint
 
 ### IP-02: Deliver architecture and business case without a prototype
@@ -95,13 +111,9 @@ Revalidation found no remaining Critical or Major discrepancy.
 
 Validated.
 
-No Critical or Major issues remain. PV-01 through PV-04 are resolved, and PV-05
-is a non-blocking input with a safe stated default. Revalidation confirms exact
-85-day and 12-session capacity, accurate detailed-plan line ranges, explicit
-evidence labels and regulatory caveats, decision and restart gates, high- and
-medium-level architecture deliverables, synthetic-data controls, bounded
-prototype rebuild and static fallback, quantitative evaluation measures, and a
-60-minute presentation with a tested first 10 minutes and six-minute challenge
-reserve. The artifacts satisfy the Task Planner requirements for referenced
-research, actionable implementation detail, dependencies, validation criteria,
-deferred follow-on work and linked discrepancy tracking.
+No Critical, Major or Minor inconsistency remains. PV-06 through PV-11 are
+resolved. The 85-day calendar, 11-session capacity, incremental presentation
+workflow, bounded Gate D response, delta-only Session 11, Gates A-E,
+deliverables, line references, graphical artifacts and protected finishing
+margin are internally consistent. No question is blocking under the documented
+defaults.
