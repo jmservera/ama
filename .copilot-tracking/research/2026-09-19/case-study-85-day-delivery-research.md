@@ -29,9 +29,27 @@ authority on 2026-09-20.
 |-------|-------|
 | Audience | Chief Executive, Executive Director of Assets, Finance Director or CFO, Director of Operations or Housing, and Legal, Governance or Regulatory lead |
 | Final decision | Approve a capped readiness and shadow-pilot exercise to test whether a controlled retrofit delivery service with deterministic lifecycle controls and bounded AI assistance can improve safe, resident-accepted, evidence-complete handovers, not a portfolio-wide autonomous rollout |
-| First-10-minute promise | Establish the decision requested, resident and business stakes, core insight, high-level architecture, labelled value scenario and stop conditions |
+| First-10-minute promise | Establish the decision requested, resident and business stakes, risk of doing nothing, core insight, high-level architecture, labelled ROI scenario and stop conditions |
 | Non-goals | No production rollout, portfolio-wide autonomous implementation, presumption that five end-to-end agents are approved, unverified portfolio benefit proof, or unvalidated claims about current throughput, grants, costs or borrowing capacity |
 | Delivery limit | Eleven focused work sessions ending 2026-12-05, followed by a protected finishing margin from 2026-12-06 through 2026-12-13 |
+| Budget presentation | Present tiered readiness and shadow-pilot cost options for executive selection rather than a single predetermined ceiling |
+| Recommended tier | Recommend Tier 2, readiness plus a narrow shadow pilot; retain Tier 1 as the fallback and unlock Tier 3 only after agreed evidence gates pass |
+| Tier 2 investment envelope | Design the recommended option within a total range of GBP 100,000 to GBP 250,000 |
+| Tier 2 funding control | Seek approval for up to GBP 250,000, released in tranches at the readiness and four-week observational-shadow gates |
+| Tier 2 tranche allocation | Allocate up to 20% (GBP 50,000) to readiness, 30% (GBP 75,000) to observation and 50% (GBP 125,000) to assisted operation |
+| Pilot cohort | Select one active locality or programme with measurable handover and rework pain |
+| Pilot containment | Cap the narrow shadow pilot at 12 weeks and no more than 50 properties or cases |
+| Accountable sponsor | Executive Director of Assets, with the Chief Executive retaining the investment decision |
+| Pause and restart authority | Any designated assurance owner can pause the shadow pilot when a safety, resident-consent, data-protection or evidence-integrity gate fails; only the Executive Director of Assets can authorize restart after remediation |
+| Assurance group | Building safety and PAS 2035, resident operations, data protection, finance and procurement, and evidence-quality owners |
+| ROI comparison | Compare the 50 pilot cases with a matched set of recent completed cases using the same definitions |
+| Pilot stages | Run four weeks of observational shadowing, followed by up to eight weeks of human-approved assistance only if the observation-stage gates pass |
+| Tier 3 benefit gate | Require at least a 20% directional improvement in validated preventable handover defects or rework events versus matched cases, with no deterioration in safety or resident consent |
+| Financial hurdle | Require scenario payback within 18 months and a benefit-cost ratio of at least 1.5x over three years before Tier 3 or production investment is considered |
+| Economic case | Show attributable ROI, sensitivity ranges, payback conditions and the quantified or explicitly bounded risk of doing nothing |
+| Primary ROI anchor | Avoided failure and rework cost from safer, evidence-complete handovers; treat throughput, grant, capital and resident outcomes as supporting benefits unless evidence supports attribution |
+| Lead inaction risk | Missed retrofit milestones, grant opportunities and capital-plan slippage; retain resident safety, regulatory, rework and trust impacts as linked secondary risks |
+| Inaction horizon | Show exposure over the next 12 months and cumulatively over three years |
 
 The final ask fits in one sentence and explicitly excludes production rollout
 and portfolio benefit proof. Its wording remains a proposal until the sponsor
@@ -83,6 +101,24 @@ quality acceptance.
 | C5 | All 11 sessions have calendar slots, owners and feedback deadlines | Unknown | Phase 1 Step 1.1 completion criterion | Open | Populate and issue invitations |
 | C6 | The proposed five-role audience is correct | Proposal | Audience and influence map above | Open | Confirm or reduce audience |
 | C7 | Company throughput, costs, grants and borrowing capacity are known | Unknown | `docs/case_study_48_addendum.md:118-126` | Open | Validate before using any figures |
+| C8 | The board requires ROI and the risk of doing nothing in the decision case | Fact | User confirmation on 2026-09-20 | Confirmed | Define measures, baselines and sensitivity ranges |
+| C9 | Avoided failure and rework cost is the primary ROI anchor | Fact | User confirmation on 2026-09-20 | Confirmed | Use labelled sector-informed sensitivity ranges because no usable company baseline is currently available |
+| C10 | A company baseline for failed or incomplete handovers and rework is currently available | Unknown | User confirmation on 2026-09-20 | No usable baseline identified | Do not present sector ranges as Proper North Homes facts |
+| C11 | Missed retrofit milestones, grant opportunities and capital-plan slippage lead the risk-of-inaction case | Fact | User confirmation on 2026-09-20 | Confirmed | Quantify only through labelled scenarios until company evidence is available |
+| C12 | Tier 2, readiness plus a narrow shadow pilot, is the recommended executive option | Fact | User confirmation on 2026-09-20 | Confirmed | Define the pilot cohort, cost envelope and gates |
+| C13 | The narrow shadow pilot uses one active locality or programme with measurable handover and rework pain | Fact | User confirmation on 2026-09-20 | Confirmed | Select the named cohort during readiness |
+| C14 | The narrow shadow pilot has both a fixed timebox and a maximum property or case count | Fact | User confirmation on 2026-09-20 | Confirmed | Use a 12-week duration and a 50-case maximum |
+| C15 | The Executive Director of Assets is the accountable executive sponsor for Tier 2 | Fact | User confirmation on 2026-09-20 | Confirmed | Assign operational, finance and assurance owners |
+| C16 | Designated assurance owners can pause the pilot, while the Executive Director of Assets controls restart | Fact | User confirmation on 2026-09-20 | Confirmed | Name the assurance owners and remediation evidence required |
+| C17 | The minimum assurance group covers building safety and PAS 2035, resident operations, data protection, finance and procurement, and evidence quality | Fact | User confirmation on 2026-09-20 | Confirmed | Assign named individuals during readiness |
+| C18 | Pilot cases will be compared with a matched set of recent completed cases using the same definitions | Fact | User confirmation on 2026-09-20 | Confirmed | Define matching criteria, exclusions and measures during readiness |
+| C19 | The pilot uses four weeks of observational shadowing followed by up to eight weeks of human-approved assistance if gates pass | Fact | User confirmation on 2026-09-20 | Confirmed | Define the transition gates and permitted assistance |
+| C20 | Tier 3 requires at least a 20% directional improvement in validated preventable handover defects or rework events, with no safety or consent deterioration | Fact | User confirmation on 2026-09-20 | Confirmed | Pair with a financial hurdle and evidence-confidence statement |
+| C21 | Tier 3 or production investment requires scenario payback within 18 months and at least 1.5x benefit-cost over three years | Fact | User confirmation on 2026-09-20 | Confirmed | Test low, central and high sensitivity cases |
+| C22 | The Tier 2 investment envelope is GBP 100,000 to GBP 250,000 | Fact | User confirmation on 2026-09-20 | Confirmed | Allocate the envelope across gated stages |
+| C23 | Tier 2 seeks approval for up to GBP 250,000 released at readiness and four-week shadow gates | Fact | User confirmation on 2026-09-20 | Confirmed | Define tranche proportions and gate evidence |
+| C24 | The maximum Tier 2 allocation is 20% readiness, 30% observation and 50% assisted operation | Fact | User confirmation on 2026-09-20 | Confirmed | Refine costs when resource and supplier estimates are available |
+| C25 | The risk-of-inaction case covers the next 12 months and cumulative three-year exposure | Proposal | Pragmatic default selected on 2026-09-20 when the user was unavailable | Open for confirmation | Align short-term urgency with the three-year benefit-cost horizon |
 
 ### Mentor review calendar
 
@@ -113,7 +149,7 @@ evidence, architecture, features or prototype rebuilding.
 | 18-28 minutes | Service design | Resident journey, target operating model and high-level design |
 | 28-38 minutes | Control design | Medium-level architecture, controls, trust boundaries and trade-offs |
 | 38-44 minutes | Demonstration | Optional live synthetic-data slice, tested screenshots or recorded fallback |
-| 44-50 minutes | Economics | Cost envelope, attribution, sensitivity and downside |
+| 44-50 minutes | Economics | Tier costs, attributable ROI, sensitivity, payback conditions and risk of doing nothing |
 | 50-54 minutes | Delivery decision | Roadmap, gates, owners and decision request |
 | 54-60 minutes | Structured challenge | Conditions, objections, actions and decision confirmation |
 
@@ -208,7 +244,8 @@ than tested screenshots or a recorded walkthrough.
 
 * Named C-suite chair and the decision authority available in the final meeting
 * Actual company systems, architecture standards and hosting constraints
-* Readiness budget ceiling, pilot locality and internal approval route
+* Cost and scope boundaries for each executive budget tier
+* Pilot locality and internal approval route
 * Mentor and SME availability across the 11 delivery sessions
 * Whether prior presentation artifacts are a baseline or reference only
 
