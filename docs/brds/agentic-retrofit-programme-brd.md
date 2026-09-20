@@ -827,6 +827,58 @@ would risk double counting.
 | OD-24 | Regulatory source owners, official retrieval methods, interpretation authority, emergency holds and activation process | Legal, Compliance, DPO, Finance and Digital | Regulatory knowledge service and live-rule change control |
 | OD-25 | Employee, resident, contractor and official service journeys, baseline times, escalation owners and non-digital fallbacks | Programme, Resident Engagement and service owners | Phase 0 and shadow-mode exit |
 
+### TypeSafe Batch Review of Open Decisions
+
+On 20 September 2026, all 25 open decisions were reviewed in one TypeSafe
+System One request using `jev-1.13.0`. The full BRD and its evidence-classification
+rule were supplied as shared state. Each decision received:
+
+* A Choice judgment on whether it was resolved by company evidence, supported
+  only as a provisional direction, still required company evidence, or had
+  been superseded
+* A Noul judgment estimating whether the BRD contains a concrete provisional
+  direction that can guide readiness work without being treated as company
+  evidence or approval
+
+The batch used 28,304 input tokens and 2,475 output tokens. TypeSafe judgments
+are semantic review signals, not evidence, professional advice or approval.
+Choice confidence describes how concentrated the model's answer distribution
+was. The provisional-direction value is the probability of yes, not a
+confidence score.
+
+| ID | TypeSafe answer | Choice confidence | Provisional direction probability | Current answer |
+| --- | --- | ---: | ---: | --- |
+| OD-01 | Company evidence required | 0.74 | 0.76 | Keep the 74% benchmark only for scenario planning; Asset must provide the address-level baseline. |
+| OD-02 | Company evidence required | 0.80 | 0.84 | Keep 3,900 homes per year as a trajectory scenario; Programme must establish accepted throughput and an approved path. |
+| OD-03 | Company evidence required | 0.75 | 0.67 | Use BR-038 to structure the decision; executives and data governance must name each authoritative system and owner. |
+| OD-04 | Company evidence required | 0.93 | 0.62 | No building-safety baseline is evidenced; Building Safety must provide the register, status and accountable owners. |
+| OD-05 | Company evidence required | 0.83 | 0.47 | No operational evidence set, validity period or hazard threshold can be inferred; Building Safety must define and approve them. |
+| OD-06 | Company evidence required | 0.91 | 0.80 | Preserve the named-role model in BR-044; Programme must evidence competent people, scope and committed capacity. |
+| OD-07 | Company evidence required | 0.88 | 0.69 | Retain accessible digital and non-digital journeys as the design direction; Resident Engagement must provide resident evidence. |
+| OD-08 | Company evidence required | 0.66 | 0.73 | Keep sector rates as sensitivities only; Resident Engagement must replace them with the association's complete funnel. |
+| OD-09 | Company evidence required | 0.82 | 0.57 | BR-017 through BR-020 define the control pattern; Housing and Repairs must name teams, targets and out-of-hours routes. |
+| OD-10 | Company evidence required | 0.69 | 0.82 | Retain the 6-to-9-month mobilisation and 10% to 20% reserve only as test assumptions pending committed-supplier evidence. |
+| OD-11 | Company evidence required | 0.87 | 0.86 | Continue to report GBP 40 million as opportunity only; Finance must supply award, eligibility, match-funding and claim evidence. |
+| OD-12 | Company evidence required | 0.92 | 0.54 | No acceleration envelope is established; Finance and Board must provide liquidity, covenant, security and approval tolerances. |
+| OD-13 | Company evidence required | 0.41 | 0.81 | BR-008 and BR-033 through BR-035 provide a provisional control pattern; Quality and Finance must ratify classifications and holds. |
+| OD-14 | Company evidence required | 0.72 | 0.74 | BR-058 defines the required gates; the DPO must determine lawful basis, DPIA, retention and sharing controls. |
+| OD-15 | Company evidence required | 0.89 | 0.61 | No Board risk appetite is evidenced; the Board must approve downside tolerances and pause conditions. |
+| OD-16 | Company evidence required | 0.50 | 0.91 | Phase 0 should compare process, platform, workflow and bounded AI; measured constraints and Finance-approved economics must select the option. |
+| OD-17 | Company evidence required | 0.34 | 0.90 | Use one locality, limited archetypes and a cross-functional cell as the planning proposition only; control owners must ratify scope and budget. |
+| OD-18 | Company evidence required | 0.49 | 0.88 | Use BR-049 and the proposed 20% cycle-time and 25% effort improvements to design the protocol; owners must ratify baselines and thresholds. |
+| OD-19 | Provisional direction only | 0.57 | 0.88 | Start with AI limited to recommendations, drafts, reconciliation and flags under BR-046; all control owners must approve the detailed authority matrix and workload. |
+| OD-20 | Company evidence required | 0.54 | 0.86 | BR-047 and BR-048 define continuity and portability outcomes; Digital, data owners and Procurement must select interfaces, limits and terms. |
+| OD-21 | Company evidence required | 0.86 | 0.81 | Keep GBP 20,000 and grant-cap calculations illustrative; Finance must define cost inclusions, actual scheme rules and incremental technology economics. |
+| OD-22 | Company evidence required | 0.46 | 0.86 | BR-045 supplies the provisional sequencing rule; Assets, Safety and competent roles must define building dependencies and reuse limits. |
+| OD-23 | Company evidence required | 0.51 | 0.86 | BR-037 and BR-051 provide the provisional evaluation pattern; Resident Engagement, Assets and the DPO must approve evidence and follow-up. |
+| OD-24 | Company evidence required | 0.47 | 0.86 | BR-052 through BR-055 define the candidate workflow; accountable functions must assign sources, interpretation authority, holds and activation. |
+| OD-25 | Company evidence required | 0.68 | 0.84 | BR-056 and BR-057 define the service standard; service owners must map journeys, baseline times, escalation and non-digital fallback. |
+
+The batch therefore closes none of the open decisions. It provides provisional
+readiness directions for owner validation and confirms that no quantified
+company baseline, authority, capacity, funding or approval assumption should
+be promoted to an approved requirement without the requested evidence.
+
 ## Requirements Traceability
 
 | Objective | Supporting requirements |
