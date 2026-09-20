@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-09-18
+ms.date: 2026-09-20
 ms.topic: reference
 ---
 
@@ -41,7 +41,7 @@ preserved in this addendum:
 | Field | Details | Field | Details |
 | --- | --- | --- | --- |
 | Industry | Real Estate (Affordable Housing) / Decarbonisation | Headquarters | United Kingdom |
-| Operating Region | United Kingdom (North of England) | Regulatory Context | UK Net Zero (EPC C by 2030 - proposed); Social Housing Regulation Act; Awaab's Law; UK GDPR; PAS 2035 retrofit standard |
+| Operating Region | United Kingdom (North of England) | Regulatory Context | UK Net Zero; final SRS MEES policy not yet evidenced as commenced law; Social Housing Regulation Act; Awaab's Law; UK GDPR; PAS 2035 retrofit standard |
 | Association | Proper North Homes | Programme | Proper Warm |
 
 The working presentation line is "Ready, steady, retrofit." The name is not
@@ -51,8 +51,9 @@ for hazard, complaint, safeguarding or consent communications.
 ## Business Challenge
 
 Proper North Homes is a housing association with 60,000 homes. It is planning
-to bring every property toward EPC C by 2030 under the proposed standard while
-responding to damp and mould within statutory timescales under Awaab's Law.
+for the final government SRS MEES policy position while the downloaded evidence
+does not yet establish a commenced 2030 landlord duty. It must also respond to
+damp and mould within statutory timescales under Awaab's Law.
 Retrofit assessments, grant applications, contractor procurement, resident
 consent and quality assurance are managed by a small team with spreadsheets,
 and progress is far behind plan.
@@ -112,6 +113,44 @@ capital acceleration.
 > business outcome. The solution earns the right to scale only by increasing
 > safe, resident-accepted and evidence-complete handovers at an affordable
 > risk-adjusted cost.
+
+### Regulatory Evidence and Service Design
+
+The legal and regulatory corpus in
+[Regulatory Context Reference Documents](./reference/README.md) is a dated
+evidence set for research and for the proposed solution. It is not a
+self-updating legal authority. The service needs a managed source register,
+versioned snapshots, official-source monitoring and human approval before a
+detected change alters an operational rule.
+
+The regulatory operating model should:
+
+* Prefer consolidated legislation, regulator publications and applicable grant
+  or contract terms over guidance, impact assessments and consultations
+* Record source authority, jurisdiction, retrieval and effective dates,
+  applicability, supersession, change likelihood and accountable owner
+* Detect official-source changes automatically, but route differences through
+  legal, compliance, data-protection, funding or competent-professional review
+* Link each approved interpretation to requirements, deterministic rules,
+  communications, evidence templates, tests and decisions
+* Preserve the last approved version and provide rollback, audit and effective
+  date control
+* Increase monitoring around announced commencement dates, new funding rounds,
+  consultations and standards revisions
+
+Service design must make lawful work easier and faster for four user groups.
+Employees need one evidence pack, named queues, clear authority and fewer
+repeated entries. Residents need accessible choices, human and non-digital
+routes, reliable appointments, explanations, correction, complaint and
+aftercare. Contractors need complete work orders, minimum necessary resident
+information and precise evidence checks. Officials, funders and regulators
+need traceable, versioned and reusable assurance packs with unresolved
+exceptions visible.
+
+Automation must not trade speed for rights or safety. A source update, sensor
+reading, missed contact or generated interpretation cannot diagnose a hazard,
+infer consent, remove a resident's priority, satisfy a statutory duty, approve
+professional work or certify an external submission.
 
 ### What We Are Challenging
 
@@ -323,10 +362,14 @@ The investment appraisal must separate:
 ## Why Now (2026-2028)
 
 Awaab's Law Phase 1 came into force on 27 October 2025 for emergency hazards and
-significant damp and mould hazards. Phase 2 is due to apply from 30 November
-2026, while Phase 3 remains a future 2027 phase requiring confirmation against
-current official guidance. EPC C by 2030 remains a proposal rather than an
-in-force requirement in this case.
+significant damp and mould hazards. Phase 2 guidance states an intended
+30 November 2026 commencement, but the implementing instrument is not in the
+local corpus and must be verified before rules are activated. Phase 3 remains
+future and requires an implementing instrument. The government published its
+final SRS MEES policy on 1 April 2026, including one qualifying metric by
+1 April 2030 and a second by 1 April 2039, but the corpus does not yet evidence
+the directions, revised regulatory standard and commencement needed to treat
+that policy as an in-force landlord duty.
 
 WH:SHF Wave 3 delivery runs to September 2028, with grant spend required by
 31 March 2028. The case study does not establish that Proper North Homes has an

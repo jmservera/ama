@@ -13,7 +13,11 @@ project rather than executable software.
 * `docs/` is the canonical location for project documentation.
   `docs/case_study_48_original.md` preserves the initial problem specification,
   while `docs/case_study_48_addendum.md` evolves as research adds, validates,
-  refines, or invalidates assumptions. Always read both documents to start working on the project.
+  refines, or invalidates assumptions. Always read both documents to start
+  working on the project.
+* `docs/reference/` contains dated local copies of legislation, regulatory
+  standards, government policy, guidance, funding material and standards-body
+  information. Read `docs/reference/README.md` before using these sources.
 * `support/` contains reference material that helps the research effort.
   `support/cohort.md` identifies colleagues who may be able to help with
   particular technical areas.
@@ -50,6 +54,39 @@ additional case studies unless the project scope explicitly expands.
   specification changes materially.
 * Keep business value and success measures quantitative when evidence supports
   them. Preserve uncertainty when figures remain estimates.
+
+## Legal and Regulatory Evidence Conventions
+
+Treat local regulatory documents as evidence snapshots, not a self-updating
+source of legal truth.
+
+* Classify each claim as legislation, regulatory standard, official guidance,
+  final policy, consultation material, funding condition, technical standard
+  or internal interpretation.
+* Use the authority hierarchy and current-use status in
+  `docs/reference/README.md`. Do not use historical or superseded material as
+  an operational rule.
+* Cite the local source, relevant provision or section, source date and
+  retrieval date for every material regulatory claim.
+* Check the linked official source for amendments, commencement, replacement
+  or withdrawal before a consequential design, approval, release or external
+  submission. Record the check rather than claiming a local copy is current.
+* Keep legal interpretation and activation of operational rules under named
+  human legal, compliance or professional approval. Agents may retrieve,
+  compare, summarise and flag changes, but must not decide that a duty is
+  satisfied or silently update a live control.
+* Record detected changes as review items with affected requirements,
+  decisions, user journeys, rules, tests and evidence. Preserve prior versions
+  and the effective dates of approved changes.
+* Assess change likelihood as `High`, `Medium` or `Low`, and apply the review
+  cadence in the reference register. Increase review frequency around announced
+  commencement dates, consultations, scheme changes and standards revisions.
+* Design every control to reduce avoidable effort and delay for employees,
+  residents, contractors and public officials without weakening safety,
+  accessibility, privacy, redress, professional judgement or resident choice.
+* Prefer official legislation data, publication metadata and alerts for change
+  detection. Web scraping may support discovery, but scraped content remains
+  unverified until provenance, completeness and differences are reviewed.
 
 ## Cohort Reference Conventions
 

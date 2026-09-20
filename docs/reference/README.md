@@ -1,7 +1,7 @@
 ---
 title: Regulatory Context Reference Documents
 description: Authoritative reference documents for the Case Study 48 regulatory context
-ms.date: 2026-09-19
+ms.date: 2026-09-20
 ms.topic: reference
 ---
 
@@ -18,6 +18,106 @@ later amendments or replacements before relying on a local copy.
 
 Each converted reference links to its original authoritative source near the
 top of the file.
+
+## Authority and Use
+
+Apply sources in this order when they address the same point:
+
+1. Current consolidated legislation and commenced statutory instruments
+2. Current regulatory standards and binding directions
+3. Applicable grant agreements, contracts and incorporated technical standards
+4. Official guidance and final government policy
+5. Impact assessments and consultation material
+
+The lower-ranked source may explain context but cannot override a higher-ranked
+source. The current UK GDPR text is the working local baseline. The adopted UK
+GDPR text, enacted-text Data Protection Act PDF and consultation documents are
+historical or incomplete where later amendments or final decisions exist.
+
+> [!IMPORTANT]
+> A successful source check does not constitute legal advice or approval to
+> activate a rule. Consequential interpretations require the named legal,
+> compliance, data-protection, funding or competent professional owner.
+
+## Change Assessment and Monitoring Register
+
+Change likelihood describes the risk that the operational interpretation or
+supporting detail will change, not the importance of the source.
+
+| Local file | Current-use status | Change likelihood | Official monitoring cadence |
+| --- | --- | --- | --- |
+| `net-zero-2050-target-order-2019.md` | In-force national target; it does not itself impose an EPC C duty on the provider | Low | Check legislation.gov.uk annually and after major climate legislation |
+| `social-rented-sector-mees-consultation-2025.md` | Historical consultation; superseded where the 2026 final position differs | Low relevance, high obsolescence | Retain for rationale and audit; do not encode operational rules from it |
+| `social-rented-sector-mees-impact-assessment-2025.md` | Historical consultation-stage analysis | Low relevance, high obsolescence | Retain for sensitivities; compare only when final policy changes |
+| `social-rented-sector-mees-government-response-2026.md` | Final policy position, not evidence by itself of a commenced landlord duty | Medium | Check MHCLG, DESNZ and RSH monthly until implementation, then quarterly |
+| `social-rented-sector-mees-final-impact-assessment-2026.md` | Final policy evidence; technical metric and implementation detail remain subject to delivery work | High for EPC and exemption detail | Check EPC reform, Home Energy Model, DHS and RSH publications monthly until final specifications |
+| `social-housing-regulation-act-2023.md` | Enacted primary legislation; current commencement and amendments require consolidated-source checks | Low for framework, medium for commencement detail | Check legislation.gov.uk quarterly and before relying on a provision |
+| `social-housing-safety-and-quality-standard-2024.md` | Regulatory standard effective from 1 April 2024 | Medium | Check RSH consumer standards and regulatory publications quarterly |
+| `awaabs-law-hazards-in-social-housing-regulations-2025.md` | Phase 1 regulations in force from 27 October 2025 | Low for Phase 1, subject to amendment | Check SI 2025/1042 monthly and after MHCLG announcements |
+| `awaabs-law-phase-1-guidance-2025.md` | Official non-statutory implementation guidance | Medium | Check the GOV.UK publication monthly and after regulation changes |
+| `awaabs-law-phase-2-guidance-2026.md` | Official non-statutory guidance for planned commencement on 30 November 2026 | High until commencement | Check legislation.gov.uk and GOV.UK weekly until commencement, then monthly for six months |
+| `awaabs-law-phase-2-hazards-guidance-2026.md` | Official non-statutory guidance; the local copy contains limited introductory material | High | Check the GOV.UK publication weekly until a complete stable version is confirmed |
+| `uk-gdpr-current-text.md` | Working consolidated local baseline as retrieved on 19 September 2026 | High for automated-decision rules; lower for core principles | Check consolidated legislation and ICO guidance monthly and before each production release |
+| `uk-gdpr-adopted-text.md` | Historical comparison only; not the current operational authority | Low relevance, high obsolescence | Retain for comparison; do not use for current Article 22 rules |
+| `data-protection-act-2018.md` | Enacted-text copy; later amendments may be absent | Medium | Check revised legislation quarterly and before relying on a Schedule 1 condition |
+| `pas-2035-2023-bsi-overview.md` | Overview only; obtain the licensed standard and verify contractual incorporation | Medium | Check BSI, TrustMark and applicable scheme rules quarterly and at procurement or grant change |
+| `warm-homes-social-housing-fund-technical-annex-2025.md` | Allocation methodology, not complete eligibility rules or evidence of an award | High for provider use | Check current scheme guidance, award letter and grant agreement monthly during delivery and before claims |
+
+Phase 3 of Awaab's Law is not represented by an implementing instrument in
+this collection. Monitor MHCLG, legislation.gov.uk and GOV.UK monthly, moving
+to weekly checks when draft regulations are laid.
+
+## Managed Update Workflow
+
+The production solution should maintain a regulatory source register separate
+from the searchable document index. Each source record needs:
+
+* Stable source identifier, official URL, jurisdiction and authority type
+* Publication, retrieval, effective, review and supersession dates
+* Content hash, local version, parser result and completeness status
+* Change likelihood, monitoring cadence and accountable owner
+* Applicability, affected requirements, operational rules, tests and user
+  journeys
+* Review, approval, activation and retirement history
+
+Use official APIs, legislation data, publication metadata, feeds and alerts
+where available. Scheduled retrieval may compare metadata, hashes and semantic
+sections. Scraping is a fallback for discovery, not an authority signal.
+
+The update path is:
+
+1. Detect a new publication, amendment, metadata change or retrieval failure.
+2. Preserve the previous snapshot and store the candidate with provenance.
+3. Classify the difference and identify affected requirements, rules, evidence
+   templates, communications and reports.
+4. Route the candidate to the named legal, compliance, data-protection, funding
+   or professional owner.
+5. Update interpretations and deterministic rules only after approval.
+6. Run regression, accessibility, timing, privacy and audit-trace tests.
+7. Activate the approved version on its effective date with rollback available.
+8. Notify affected employees, residents, contractors and reporting owners in
+   an appropriate form.
+
+Detection must never overwrite the last approved operational rule. If a change
+may create immediate harm or illegality, an authorised owner can place a hold
+while the interpretation and implementation are reviewed.
+
+## Agent Retrieval and Answer Controls
+
+Agents using this corpus must:
+
+* Retrieve only sources marked current for the question and disclose historical
+  material when it is used for context
+* Return source, provision, status, retrieval date and effective-date context
+  with each consequential answer
+* Preserve uncertainty where commencement, applicability or interpretation is
+  unresolved
+* Refuse to convert missing evidence into compliance or to treat a policy
+  announcement as commenced law
+* Escalate conflicting sources, incomplete retrievals and high-impact changes
+  to a named human owner
+* Keep resident reports, professional findings and authorised decisions above
+  inferred or generated conclusions
 
 ## UK Net Zero and social housing energy efficiency
 

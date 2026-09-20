@@ -2,7 +2,7 @@
 title: Agentic Retrofit Programme Business Requirements Document
 description: Business requirements for safe, resident-centred and financially controlled retrofit delivery
 author: AMA Research Team
-ms.date: 2026-09-19
+ms.date: 2026-09-20
 ms.topic: reference
 ---
 
@@ -30,8 +30,10 @@ ms.topic: reference
 The original case study remains the record of the request. This BRD translates
 the addendum into proposed requirements, not evidence of approval or achieved
 benefits. BR-001 through BR-042 retain their identifiers; BR-043 through BR-051
-add the operating-model, evaluation and staged-release requirements. The
-addendum's reference to 42 controls describes the earlier BRD baseline.
+add the operating-model, evaluation and staged-release requirements. BR-052
+through BR-058 add regulatory-knowledge, user-service and data-protection
+requirements. The addendum's reference to 42 controls describes the earlier
+BRD baseline.
 
 The working presentation line is "Ready, steady, retrofit." The identity is not
 cleared for legal, trademark, domain or resident-facing use. It must not be used
@@ -109,11 +111,18 @@ confirmed before the pilot.
 
 ### Regulatory Timing
 
-As recorded in the sources on 11 September 2026, Awaab's Law Phase 1 came into
-force on 27 October 2025 for emergency hazards and significant damp and mould
-hazards. Phase 2 is due from 30 November 2026; Phase 3 is a future 2027 phase
-whose scope and commencement require confirmation. EPC C by 2030 is identified
-as a consultation proposal rather than an in-force requirement.
+The local legal corpus was retrieved on 19 September 2026. Awaab's Law Phase 1
+came into force on 27 October 2025 for emergency hazards and significant damp
+and mould hazards. Phase 2 guidance states 30 November 2026, but the
+implementing instrument is not in the corpus and must be verified before
+activation. Phase 3 scope and commencement remain unconfirmed.
+
+The government response of 1 April 2026 sets a final SRS MEES policy position:
+one qualifying metric by 1 April 2030 and a second by 1 April 2039, subject to
+transition and exemption arrangements. The corpus does not yet evidence the
+direction, revised RSH standard and commencement needed to treat the policy as
+an in-force landlord duty. Consultation-stage requirements are historical
+where the final response differs.
 
 The addendum and supporting research record WH:SHF Wave 3 grant spend by
 31 March 2028 and delivery to September 2028. No allocation to Proper North
@@ -600,6 +609,18 @@ reviewed again.
 | BR-050 | Each delivery phase, tranche and later authority expansion shall require an evidence-based release decision within an approved cost and risk envelope. | OBJ-02, OBJ-03, OBJ-05, OBJ-06, OBJ-08, OBJ-12 | Sponsor, Board, control owners, assurance | Release records identify applicable requirements, acceptance evidence, unresolved issues and named approvers. Shadow mode cannot cause live actions. Safety or resident-rights breaches stop affected activity; failed value or quality gates prevent expansion. Restart and rollback are tested; prohibited AI decisions remain prohibited at scale. | Must |
 | BR-051 | Prioritisation, resident journeys and outcome evaluation shall be tested for accessibility and unfair exclusion, with human review of missing data, support needs and incomplete appointments. | OBJ-01, OBJ-05, OBJ-09 | Residents, engagement, assets, housing, data protection | Before live contact, representative digital and non-digital journeys are tested and deficiencies resolved. Reports show lawful, proportionate outcome breakdowns; neither missing sensors nor support needs silently deprioritise a home. Consent rates are not an optimisation target. | Must |
 
+### Regulatory Knowledge and User Service
+
+| ID | Requirement | Linked objective | Impacted stakeholders | Acceptance criteria | Priority |
+| --- | --- | --- | --- | --- | --- |
+| BR-052 | The solution shall maintain a regulatory source register separate from the searchable document index. | OBJ-03, OBJ-04, OBJ-06, OBJ-07, OBJ-10, OBJ-12 | Legal, compliance, data protection, funding, digital, audit | Each source records stable identifier, official URL, jurisdiction, authority type, publication, retrieval, effective, review and supersession dates, hash, completeness, applicability, change likelihood, cadence and accountable owner. Historical and current-use sources are distinguishable. | Must |
+| BR-053 | Scheduled monitoring shall prefer official legislation data, publication metadata, feeds and alerts, using scraping only as a controlled fallback for discovery. | OBJ-03, OBJ-04, OBJ-07, OBJ-10, OBJ-12 | Digital, legal, compliance, funding | Tests detect new, changed, withdrawn, incomplete and unreachable sources. Retrieval preserves the prior snapshot, provenance and error state. A detected or scraped change cannot overwrite an approved interpretation or live rule. | Must |
+| BR-054 | Every detected regulatory, guidance, funding or standards change shall enter a human-owned assessment and approval workflow before operational activation. | OBJ-03, OBJ-04, OBJ-06, OBJ-07, OBJ-10, OBJ-12 | Legal, compliance, DPO, competent roles, finance, digital | The review identifies affected requirements, rules, decisions, communications, evidence templates, reports and user journeys. Approval records interpretation, owner, tests, effective date, notification, rollback and any temporary hold. | Must |
+| BR-055 | Consequential decisions and external submissions shall be traceable to the approved source, interpretation and rule versions effective when the decision was made. | OBJ-03, OBJ-04, OBJ-05, OBJ-06, OBJ-07, OBJ-10 | Residents, employees, contractors, officials, audit | An export reconstructs source provisions, evidence, recommendation, human decision, override, communication and correction history. Missing or conflicting authority blocks compliance claims and external certification. | Must |
+| BR-056 | The service shall provide role-appropriate evidence views that reduce repeated entry and evidence chasing without exposing unnecessary personal or commercially sensitive information. | OBJ-05, OBJ-07, OBJ-09, OBJ-10, OBJ-11 | Employees, residents, contractors, officials, data protection | Employees have named queues and one controlled evidence pack; residents have accessible explanations and correction or challenge routes; contractors receive authorised scope and minimum necessary adjustments; officials receive qualified, reusable assurance packs. | Must |
+| BR-057 | Each material user journey shall have accountable ownership, service-time measures, escalation and tested manual or non-digital alternatives. | OBJ-03, OBJ-04, OBJ-05, OBJ-09, OBJ-10, OBJ-11 | Residents, employees, contractors, officials | Measures cover intake-to-owner, hazard action, professional review, resident contact and adjustment, appointment recovery, evidence review, defect resolution and external-query response. Results expose overdue, paused and reopened work and lawful accessibility differences. | Must |
+| BR-058 | Personal-data use by agents shall pass purpose, lawful-basis, special-category, transparency, automated-decision, DPIA, security, supplier and incident gates before live processing. | OBJ-03, OBJ-05, OBJ-09, OBJ-12 | Residents, employees, DPO, digital, suppliers | Processing records separate each purpose. Meaningful human review occurs before significant outcomes; reviewers can depart and record reasons. Resident works decisions are not treated as blanket data-processing consent. Vulnerability data is minimised, and contractor access is limited to functional adjustments. | Must |
+
 ## Data and Reporting Requirements
 
 ### Minimum Data Domains
@@ -618,6 +639,8 @@ reviewed again.
   scheme-level investment decisions
 * Model, rule, configuration and interface versions with source provenance,
   authority decisions, reconciliation and recovery records
+* Regulatory source, snapshot, difference, interpretation, approval,
+  activation, notification, test and retirement records
 * Baselines, comparison cohorts, effort measurements, evaluation results,
   benefits owners and tranche approvals
 
@@ -641,6 +664,8 @@ reviewed again.
   versus the agreed counterfactual
 * Phase and tranche readiness, stop decisions, pending seasonal evidence and
   resident outcomes across relevant groups
+* Regulatory source freshness, failed retrievals, detected changes, pending
+  reviews, approved effective dates and rules awaiting regression tests
 
 ## Benefits and High-Level Economics
 
@@ -799,6 +824,8 @@ would risk double counting.
 | OD-21 | Cost inclusions within GBP 20,000, actual grant averaging rules, and separate incremental technology economics | Finance | Investment and tranche affordability |
 | OD-22 | Building dependencies, planned-maintenance bundling, archetype reuse and related-stock defect review | Assets, Safety and competent technical roles | Cohort and design release |
 | OD-23 | Accessible resident journey evidence and proportionate seasonal follow-up and outcome breakdowns | Resident Engagement, Assets and DPO | Live contact and in-use evaluation |
+| OD-24 | Regulatory source owners, official retrieval methods, interpretation authority, emergency holds and activation process | Legal, Compliance, DPO, Finance and Digital | Regulatory knowledge service and live-rule change control |
+| OD-25 | Employee, resident, contractor and official service journeys, baseline times, escalation owners and non-digital fallbacks | Programme, Resident Engagement and service owners | Phase 0 and shadow-mode exit |
 
 ## Requirements Traceability
 
@@ -806,16 +833,16 @@ would risk double counting.
 | --- | --- |
 | OBJ-01 | BR-029, BR-030, BR-041, BR-045, BR-051 |
 | OBJ-02 | BR-005, BR-021 through BR-024, BR-030, BR-041, BR-043, BR-045, BR-049, BR-050 |
-| OBJ-03 | BR-001 through BR-003, BR-007 through BR-009, BR-017, BR-031, BR-033, BR-034, BR-037, BR-038, BR-040, BR-041, BR-044 through BR-047, BR-050 |
-| OBJ-04 | BR-001, BR-003, BR-004, BR-017, BR-019, BR-041, BR-046, BR-047 |
-| OBJ-05 | BR-008, BR-011 through BR-016, BR-017, BR-020, BR-031, BR-036, BR-039 through BR-042, BR-046, BR-048, BR-050, BR-051 |
-| OBJ-06 | BR-005 through BR-010, BR-021, BR-022, BR-024, BR-031 through BR-035, BR-038, BR-039, BR-041, BR-044, BR-046, BR-048 through BR-050 |
-| OBJ-07 | BR-010, BR-025 through BR-029, BR-034, BR-038, BR-041, BR-046 |
+| OBJ-03 | BR-001 through BR-003, BR-007 through BR-009, BR-017, BR-031, BR-033, BR-034, BR-037, BR-038, BR-040, BR-041, BR-044 through BR-047, BR-050, BR-052 through BR-054, BR-056 through BR-058 |
+| OBJ-04 | BR-001, BR-003, BR-004, BR-017, BR-019, BR-041, BR-046, BR-047, BR-052 through BR-055, BR-057 |
+| OBJ-05 | BR-008, BR-011 through BR-016, BR-017, BR-020, BR-031, BR-036, BR-039 through BR-042, BR-046, BR-048, BR-050, BR-051, BR-055 through BR-058 |
+| OBJ-06 | BR-005 through BR-010, BR-021, BR-022, BR-024, BR-031 through BR-035, BR-038, BR-039, BR-041, BR-044, BR-046, BR-048 through BR-050, BR-052, BR-054, BR-055 |
+| OBJ-07 | BR-010, BR-025 through BR-029, BR-034, BR-038, BR-041, BR-046, BR-052 through BR-056 |
 | OBJ-08 | BR-028 through BR-031, BR-040, BR-041, BR-043, BR-045, BR-048, BR-050 |
-| OBJ-09 | BR-012, BR-015, BR-020, BR-023, BR-024, BR-033, BR-036, BR-037, BR-041, BR-049, BR-051 |
-| OBJ-10 | BR-006, BR-017 through BR-019, BR-041, BR-042, BR-047, BR-048 |
-| OBJ-11 | BR-041, BR-043, BR-049 |
-| OBJ-12 | BR-029, BR-041, BR-043, BR-046 through BR-050 |
+| OBJ-09 | BR-012, BR-015, BR-020, BR-023, BR-024, BR-033, BR-036, BR-037, BR-041, BR-049, BR-051, BR-056 through BR-058 |
+| OBJ-10 | BR-006, BR-017 through BR-019, BR-041, BR-042, BR-047, BR-048, BR-052 through BR-057 |
+| OBJ-11 | BR-041, BR-043, BR-049, BR-056, BR-057 |
+| OBJ-12 | BR-029, BR-041, BR-043, BR-046 through BR-050, BR-052 through BR-055, BR-058 |
 
 ## Validation and Approval Criteria
 
@@ -881,6 +908,7 @@ This draft integrates:
 * [UK Social Housing Baseline Research](../../support/uk-social-housing-baseline-research.md)
 * [Retrofit Flow and Constraint Discovery Brief](./retrofit-flow-discovery-brief.md)
 * [UK Social Housing Baseline Source Register](../../support/uk-social-housing-baseline-source-register.md)
+* [Regulatory Context Reference Documents](../reference/README.md)
 * Reviews from the Housing Asset Executive, Building Safety Lead, Finance and
   Grants Lead, Neighbourhood Housing Officer, Procurement and Contracts Lead,
   Resident Engagement Lead and Retrofit Programme Manager
@@ -893,5 +921,7 @@ The 11 September 2026 addendum review informs the revised operating model,
 pilot gates, value attribution and new requirements. Pilot sizes, durations
 and improvement targets remain proposals. The financial qualifications above
 clarify the full-cap home equivalent and unspecified cost inclusions without
-changing either source document. Specialist input is not organisational
-approval; named human owners must validate this BRD before the relevant release.
+changing either source document. The 20 September 2026 legal-corpus and
+user-journey reviews inform BR-052 through BR-058. Specialist input is not
+organisational approval; named human owners must validate this BRD before the
+relevant release.
