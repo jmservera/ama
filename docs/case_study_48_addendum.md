@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-09-20
+ms.date: 2026-09-24
 ms.topic: reference
 ---
 
@@ -246,6 +246,14 @@ the absence of a sensor alert to contradict a resident.
 | Supplier coordination | Suggest schedules within confirmed constraints | Contract manager accepts capacity; programme releases work |
 | Quality assurance | Check evidence and flag anomalies | Competent quality authority accepts work and closes defects |
 | Executive reporting | Summarise controlled records | Executives and the Board make investment and risk decisions |
+
+Typed decision models that return closed-set answers and probabilities, rather
+than generated text, are an implementation option under research for some of
+these capabilities. The strongest candidate fits are resident and contractor
+message routing and quality evidence flags. This remains an unvalidated
+proposal for Phase 1 shadow-mode comparison, recorded in
+[System One Decision Models for Retrofit Agents](./typesafe-system-one-agent-fit.md)
+and the [Idea Register](./idea-register.md).
 
 ## Phased Delivery and Decision Gates
 
