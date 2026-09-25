@@ -59,3 +59,20 @@ metadata when the knowledge base was created.
 * Updated links in the addendum, BRD, discovery brief, idea documents, agents,
   root README and repository instructions. Fixed pre-existing broken links in
   the addendum, idea documents and discovery brief.
+
+## [2026-09-25] ingest | Microsoft Industry Hub
+
+* Source: Microsoft Industry Hub home page and Nonprofit Industry Page on
+  Seismic, supplied by the project owner, with related SharePoint items.
+* Retrieved search snippets with WorkIQ on 2026-09-25. Documents were not
+  read end to end.
+* Created `resources/microsoft-industry-hub.md` with entry points, nonprofit
+  hero use cases, patterns mapped to each Proper Warm agent, customer
+  evidence and lessons. Added a `resources/` layer to the index.
+* Excluded internal-only deal data, such as opportunity identifiers,
+  contract values and battlecard content, and staff names.
+* Open question: no UK housing association customer story was found. Search
+  again or ask the nonprofit or public sector industry team.
+* The owner removed `support/resources.md`, whose Industry Hub link now lives
+  in the resources page, and moved its meeting note into `memory.md`. Updated
+  the memory standing preference to match.

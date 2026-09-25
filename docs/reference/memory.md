@@ -36,6 +36,7 @@ between the business and technology.
 
 Additional tips:
 
+* Prepare the meetings for explaining it to the CEO, CIO and CFO, tailoring your message to each executive's priorities and concerns.
 * Keep your slides concise and focused on key points.
 * Anticipate potential questions and prepare answers.
 * Practice your pitch multiple times to ensure smooth delivery.
@@ -44,7 +45,6 @@ Additional tips:
 
 ## Standing Preferences
 
-* `support/` is the owner's private working area. `support/cohort.md` and
-  `support/resources.md` are for internal use and are not part of the
-  knowledge base. Consult `support/cohort.md` only when the owner asks who
-  could help with a question.
+* `support/` is the owner's private working area. `support/cohort.md` is for
+  internal use and is not part of the knowledge base. Consult it only when
+  the owner asks who could help with a question.

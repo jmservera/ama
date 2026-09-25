@@ -28,6 +28,9 @@ project rather than executable software.
     housing association is. Read it to understand the customer.
   * `docs/reference/method/` holds AMA training material and reusable
     prompts.
+  * `docs/reference/resources/` holds curated pointers to internal and
+    external resources, such as the Microsoft Industry Hub, with retrieved
+    findings. Internal Microsoft content can be retrieved with WorkIQ.
   * `docs/reference/log.md` is the append-only change log for the knowledge
     base.
 * `support/` is the owner's private working area and is not part of the

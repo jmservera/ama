@@ -41,6 +41,7 @@ management: short pages that point to clusters of related material.
 | Sources | [regulatory/](./regulatory/) | Dated official snapshots. Immutable; a newer retrieval is recorded as a reviewed update |
 | Syntheses | [research/](./research/) | Agent-maintained research with citations. Integrate new findings in place |
 | Method | [method/](./method/) | AMA training material and reusable working prompts |
+| Resources | [resources/](./resources/) | Curated pointers to internal and external resources, with retrieved findings and access notes |
 | Memory | [memory.md](./memory.md) | Owner-curated notes. Agents update it only when the owner asks |
 | Log | [log.md](./log.md) | Append-only record of ingests, restructures and lint passes |
 | Project documents | [docs/](../) outside this folder | Problem specification and deliverables, governed by the repository instructions |
@@ -61,6 +62,7 @@ management: short pages that point to clusters of related material.
 | Evaluate a new idea | [Idea Register](../ideas/idea-register.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Prepare a presentation or pitch | [Project Memory](./memory.md) | [Proper Warm CXO initial proposal](../presentations/proper-warm-cxo-initial-proposal.pptx) and [85-day roadmap](../case-study-85-day-roadmap.svg) |
 | Design a looped agent goal | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | [Project Memory](./memory.md) |
+| Find proven use cases, customer evidence or reusable solutions | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 
 ## Catalog
 
@@ -98,6 +100,12 @@ official links for every snapshot. Check it before relying on any file below.
 | [social-housing-regulation/](./regulatory/social-housing-regulation/) | Social Housing (Regulation) Act 2023; Safety and Quality Standard 2024; Awaab's Law regulations 2025 and Phase 1 and Phase 2 guidance | Phase 1 in force from 27 October 2025; Phase 2 planned from 30 November 2026 |
 | [data-protection/](./regulatory/data-protection/) | UK GDPR current consolidated text; UK GDPR adopted text; Data Protection Act 2018 | Use the current consolidated UK GDPR text; the adopted text is historical |
 | [retrofit-standards-and-funding/](./regulatory/retrofit-standards-and-funding/) | PAS 2035:2023 BSI overview; Warm Homes: Social Housing Fund Wave 3 technical annex | Overview and allocation method only; the licensed standard and grant agreement govern |
+
+### Resources
+
+| Document | Summary | Updated |
+| --- | --- | --- |
+| [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | Internal hub entry points, nonprofit hero use cases, patterns mapped to each Proper Warm agent, customer evidence and lessons | 2026-09-25 |
 
 ### Method and Memory
 
@@ -156,6 +164,7 @@ Record the result as a `lint` entry in the log.
 | Sector research and benchmarks | `research/sector/` |
 | Research about Proper North Homes and its roles | `research/company/` |
 | AMA training material and reusable prompts | `method/` |
+| Internal or external resource pointers and their retrieved findings | `resources/` |
 | Owner notes and preferences | `memory.md`, only when the owner asks |
 | Problem specification, BRDs, ideas and presentations | Existing folders under `docs/` |
 | Private owner material, such as the cohort map | `support/`, outside the knowledge base |
