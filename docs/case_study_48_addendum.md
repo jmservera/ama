@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-09-24
+ms.date: 2026-09-25
 ms.topic: reference
 ---
 
@@ -33,6 +33,8 @@ preserved in this addendum:
 * The provisional sector baseline and its evidence classifications
 * The derived delivery, programme-cost and grant-ceiling scenarios
 * The supporting baseline-research reference and its limitations
+* The reference to the modelled customer profile in company research, whose
+  values are modelled estimates, not company facts
 * The executive challenge, reframed objective, controlled operating model,
   delivery gates, success measures, trade-offs and conditional recommendation
 
@@ -94,6 +96,13 @@ GBP 7,500 cap.
 
 Full sources, limitations and alternative sensitivities are recorded in
 [UK Social Housing Baseline Research](./reference/research/sector/uk-social-housing-baseline-research.md).
+
+A modelled profile of Proper North Homes, covering its likely archetype,
+tenure mix, leaseholders and resident indicators, is recorded in the
+[Modelled Customer Profile](./reference/research/company/company-profile-research.md#modelled-customer-profile)
+of the company profile research. Its values are modelled estimates from
+sector medians and national rates, and company details are not yet
+confirmed. It is not copied here and must not be read as company fact.
 
 ## Executive Assessment
 

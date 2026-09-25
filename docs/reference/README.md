@@ -53,6 +53,7 @@ management: short pages that point to clusters of related material.
 | Understand the customer and the sector | [Housing Association Primer](./research/sector/housing-association-primer.md) | [Company Profile Research](./research/company/company-profile-research.md) |
 | Start or resume any project work | [Original Case Study 48](../case_study_48_original.md) and [Case Study 48 Addendum](../case_study_48_addendum.md) | [Project Memory](./memory.md) |
 | Answer as a Proper North Homes role | [Company Profile Research](./research/company/company-profile-research.md) | The matching `company-*` agent in [.github/agents/](../../.github/agents/) |
+| Estimate Proper North Homes' tenure, leasehold, resident or financial scale | [Modelled Customer Profile](./research/company/company-profile-research.md#modelled-customer-profile) in Company Profile Research | [Housing Association Primer](./research/sector/housing-association-primer.md) |
 | Quote a benchmark, cost or sector statistic | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) | [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md) |
 | Make a regulatory, legal or funding claim | [Regulatory Source Register](./regulatory/README.md) | The snapshot for the topic under [regulatory/](./regulatory/) |
 | Design Awaab's Law, damp and mould or safety controls | [social-housing-regulation/](./regulatory/social-housing-regulation/) | [Company Profile Research](./research/company/company-profile-research.md) |
@@ -71,7 +72,7 @@ management: short pages that point to clusters of related material.
 | Document | Summary | Updated |
 | --- | --- | --- |
 | [Original Case Study 48](../case_study_48_original.md) | Initial problem specification. Preserved unchanged | 2026-09-10 |
-| [Case Study 48 Addendum](../case_study_48_addendum.md) | Evolving critical assessment, solution proposal, trade-offs and business value | 2026-09-24 |
+| [Case Study 48 Addendum](../case_study_48_addendum.md) | Evolving critical assessment, solution proposal, trade-offs and business value | 2026-09-25 |
 | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | Business requirements for safe, resident-centred and financially controlled retrofit delivery | 2026-09-20 |
 | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) | Evidence, team and bounded assistant requirements for finding delivery constraints | 2026-09-19 |
 | [Idea Register](../ideas/idea-register.md) | Research ideas that are not yet validated requirements | 2026-09-24 |
@@ -83,10 +84,10 @@ management: short pages that point to clusters of related material.
 
 | Document | Summary | Updated |
 | --- | --- | --- |
-| [Housing Association Primer](./research/sector/housing-association-primer.md) | What a UK housing association is, tenure types, funding model and implications for Proper North Homes | 2026-09-25 |
+| [Housing Association Primer](./research/sector/housing-association-primer.md) | What a UK housing association is, sector scale and archetypes, tenure types, lease responsibility rules for retrofit, resident needs, board capital patterns, funding model and implications for Proper North Homes | 2026-09-25 |
 | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) | Provisional sector benchmarks for energy, repairs, safety, grants, finance, delivery and quality | 2026-09-11 |
 | [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md) | Official publications and datasets behind each baseline benchmark | 2026-09-11 |
-| [Company Profile Research](./research/company/company-profile-research.md) | Comparators, common sector problems, role map and company gaps for the role agents | 2026-09-10 |
+| [Company Profile Research](./research/company/company-profile-research.md) | Comparators, modelled customer profile (estimates, not company facts), common sector problems, role map and company gaps for the role agents | 2026-09-25 |
 
 ### Regulatory Sources
 

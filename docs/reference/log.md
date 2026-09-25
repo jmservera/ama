@@ -76,3 +76,36 @@ metadata when the knowledge base was created.
 * The owner removed `support/resources.md`, whose Industry Hub link now lives
   in the resources page, and moved its meeting note into `memory.md`. Updated
   the memory standing preference to match.
+
+## [2026-09-25] query | File back the sector archetype research
+
+* Filed the answers to the primer's four open questions and the sector
+  archetype research into the knowledge base.
+* Files touched: `research/sector/housing-association-primer.md` (sector
+  scale, archetypes, tenure, lease responsibility for retrofit, residents and
+  vulnerability data, board capital patterns, sources, open questions and
+  limitations), `research/company/company-profile-research.md` (Modelled
+  Customer Profile, comparators, gaps, sources, limitations and the SRS MEES
+  line), `../case_study_48_addendum.md` (cross-reference to the modelled
+  profile), the index (`README.md`) and this log.
+* Web sources were retrieved on 2026-09-25. Modelled Proper North Homes
+  values are estimates from sector medians and national rates, not company
+  facts.
+* Correction: a housing association fuel poverty figure of 10.0% is the
+  superseded LIHC measure. The primer uses 11.6% (LILEE, 2024, DESNZ via UK
+  Housing Review 2026 Table 39a).
+* Contradiction flagged: the primer cites 91% sector EBITDA-MRI interest
+  cover from the RSH Sector Risk Profile 2025, while the baseline research
+  cites 87% as the weighted 2025 Global Accounts average. The bases probably
+  differ. The baseline research was left unchanged and the difference is not
+  yet reconciled.
+* Correction: the company profile Regulatory Baseline no longer describes EPC
+  C as a policy objective or proposal. It now states the 2026 SRS MEES final
+  policy position from the local snapshot, which is not by itself a commenced
+  duty.
+* Open question: the preserved right to buy provisions (Housing Act 1985,
+  sections 171A to 171H) for transferred stock have not been checked.
+* Open question: the Warm Homes: Social Housing Fund Wave 3 30% non-social
+  rule was verified only in the GMCA copy. Check the national DESNZ guidance.
+* Open question: actual retrofit responsibility in shared ownership and
+  leasehold homes needs a lease-by-lease sample review under legal approval.
