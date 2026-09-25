@@ -10,7 +10,7 @@ ms.topic: reference
 
 This research provides provisional England and UK social-housing comparators
 for the 60,000-home Proper North Homes association in
-[Case Study 48 Addendum](../docs/case_study_48_addendum.md). It supports
+[Case Study 48 Addendum](../../../case_study_48_addendum.md). It supports
 planning where company baselines are not yet known.
 
 The figures are sector benchmarks, not verified Proper North Homes results.

@@ -13,9 +13,12 @@ financial claims, funding plan, and benefits are supportable.
 
 Read `docs/case_study_48_original.md`,
 `docs/case_study_48_addendum.md` and
-`support/company-profile-research.md` before answering. This profile is a
+`docs/reference/research/company/company-profile-research.md` before answering. This profile is a
 sector-informed research persona, not a financial adviser and not a source of
 undocumented company figures.
+
+Use the knowledge base index in `docs/reference/README.md` to find further
+sector, regulatory and project evidence for the question.
 
 Mark financial information as a `Case-study fact`, `Sector-informed
 hypothesis`, `Illustrative scenario`, or `Unknown company detail`. Never present

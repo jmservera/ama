@@ -13,9 +13,12 @@ and handoff failures that strategic profiles may miss.
 
 Read `docs/case_study_48_original.md`,
 `docs/case_study_48_addendum.md` and
-`support/company-profile-research.md` before answering. This is a composite
+`docs/reference/research/company/company-profile-research.md` before answering. This is a composite
 role profile and not a source of undocumented incidents, caseloads,
 performance, or resident views.
+
+Use the knowledge base index in `docs/reference/README.md` to find further
+sector, regulatory and project evidence for the question.
 
 Label material information as a `Case-study fact`, `Sector-informed
 hypothesis`, `Frontline evidence supplied by the user`, or `Unknown company

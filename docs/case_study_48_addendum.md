@@ -93,7 +93,7 @@ unsecured opportunity and would support at most about 5,333 homes at the
 GBP 7,500 cap.
 
 Full sources, limitations and alternative sensitivities are recorded in
-[UK Social Housing Baseline Research](../support/uk-social-housing-baseline-research.md).
+[UK Social Housing Baseline Research](./reference/research/sector/uk-social-housing-baseline-research.md).
 
 ## Executive Assessment
 
@@ -117,7 +117,7 @@ capital acceleration.
 ### Regulatory Evidence and Service Design
 
 The legal and regulatory corpus in
-[Regulatory Context Reference Documents](./reference/README.md) is a dated
+[Regulatory Context Reference Documents](./reference/regulatory/README.md) is a dated
 evidence set for research and for the proposed solution. It is not a
 self-updating legal authority. The service needs a managed source register,
 versioned snapshots, official-source monitoring and human approval before a
@@ -252,8 +252,8 @@ than generated text, are an implementation option under research for some of
 these capabilities. The strongest candidate fits are resident and contractor
 message routing and quality evidence flags. This remains an unvalidated
 proposal for Phase 1 shadow-mode comparison, recorded in
-[System One Decision Models for Retrofit Agents](./typesafe-system-one-agent-fit.md)
-and the [Idea Register](./idea-register.md).
+[System One Decision Models for Retrofit Agents](./ideas/typesafe-system-one-agent-fit.md)
+and the [Idea Register](./ideas/idea-register.md).
 
 ## Phased Delivery and Decision Gates
 

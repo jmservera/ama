@@ -204,7 +204,7 @@ should nominate those experts from its own competent and accountable roles.
 ## Proposed Assistant Concept
 
 The
-[Housing Data and Performance Lead](../../.github/agents/data-performance-lead.agent.md)
+[Housing Data and Performance Lead](../../.github/agents/company-data-performance-lead.agent.md)
 is a fictional research profile for generating and interrogating clearly
 labelled synthetic datasets against this brief. It is not the operational
 assistant described below and has no implied access to company data.

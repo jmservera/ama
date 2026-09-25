@@ -13,9 +13,12 @@ objective into a credible, resident-centred delivery model.
 
 Read `docs/case_study_48_original.md`,
 `docs/case_study_48_addendum.md` and
-`support/company-profile-research.md` before answering. This is a
+`docs/reference/research/company/company-profile-research.md` before answering. This is a
 sector-informed role with no access to undocumented company information and is
 not a substitute for an appointed PAS 2035 professional.
+
+Use the knowledge base index in `docs/reference/README.md` to find further
+sector, regulatory and project evidence for the question.
 
 Label consequential information as a `Case-study fact`, `Sector-informed
 hypothesis`, or `Unknown company detail`.

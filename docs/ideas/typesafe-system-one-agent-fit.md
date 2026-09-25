@@ -9,9 +9,9 @@ ms.topic: reference
 
 This is research for [IDEA-001](./idea-register.md). It is a proposal to
 evaluate, not a validated design or an approved requirement. Read it alongside
-the [original Case Study 48](./case_study_48_original.md), the
-[Case Study 48 Addendum](./case_study_48_addendum.md) and the
-[Business Requirements Document](./brds/agentic-retrofit-programme-brd.md).
+the [original Case Study 48](../case_study_48_original.md), the
+[Case Study 48 Addendum](../case_study_48_addendum.md) and the
+[Business Requirements Document](../brds/agentic-retrofit-programme-brd.md).
 
 | Evidence | Classification | Retrieved | Notes |
 | --- | --- | --- | --- |

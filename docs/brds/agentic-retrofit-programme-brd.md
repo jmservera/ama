@@ -328,7 +328,7 @@ Homes.
 | Survey-ready reserve | 10% to 20% above completion target | Planning assumption |
 
 Detailed sources, caveats, calculations and unsupported-average gaps are in
-[UK Social Housing Baseline Research](../../support/uk-social-housing-baseline-research.md).
+[UK Social Housing Baseline Research](../reference/research/sector/uk-social-housing-baseline-research.md).
 
 ## Stakeholders and Roles
 
@@ -956,11 +956,11 @@ This draft integrates:
 * [Original Case Study 48](../case_study_48_original.md)
 * [Case Study 48 Addendum](../case_study_48_addendum.md)
 * [Case Study 48 Addendum - Executive Solution Proposal](../case_study_48_addendum.md)
-* [Company Profile Research](../../support/company-profile-research.md)
-* [UK Social Housing Baseline Research](../../support/uk-social-housing-baseline-research.md)
+* [Company Profile Research](../reference/research/company/company-profile-research.md)
+* [UK Social Housing Baseline Research](../reference/research/sector/uk-social-housing-baseline-research.md)
 * [Retrofit Flow and Constraint Discovery Brief](./retrofit-flow-discovery-brief.md)
-* [UK Social Housing Baseline Source Register](../../support/uk-social-housing-baseline-source-register.md)
-* [Regulatory Context Reference Documents](../reference/README.md)
+* [UK Social Housing Baseline Source Register](../reference/research/sector/uk-social-housing-baseline-source-register.md)
+* [Regulatory Context Reference Documents](../reference/regulatory/README.md)
 * Reviews from the Housing Asset Executive, Building Safety Lead, Finance and
   Grants Lead, Neighbourhood Housing Officer, Procurement and Contracts Lead,
   Resident Engagement Lead and Retrofit Programme Manager

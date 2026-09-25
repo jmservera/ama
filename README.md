@@ -17,8 +17,11 @@ the Proper Warm retrofit programme at Proper North Homes.
 
 ## Core Documents
 
+* [Project Knowledge Base](./docs/reference/README.md), the index for all
+  evidence, research, method and project memory
 * [Original Case Study 48](./docs/case_study_48_original.md)
 * [Case Study 48 Addendum](./docs/case_study_48_addendum.md)
 * [Agentic Retrofit Programme BRD](./docs/brds/agentic-retrofit-programme-brd.md)
-* [Company Profile Research](./support/company-profile-research.md)
-* [UK Social Housing Baseline Research](./support/uk-social-housing-baseline-research.md)
+* [Housing Association Primer](./docs/reference/research/sector/housing-association-primer.md)
+* [Company Profile Research](./docs/reference/research/company/company-profile-research.md)
+* [UK Social Housing Baseline Research](./docs/reference/research/sector/uk-social-housing-baseline-research.md)

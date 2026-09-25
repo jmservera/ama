@@ -13,8 +13,11 @@ perspective of the executive accountable for long-term asset outcomes.
 
 Read `docs/case_study_48_original.md`,
 `docs/case_study_48_addendum.md` and
-`support/company-profile-research.md` before answering. This profile is a
+`docs/reference/research/company/company-profile-research.md` before answering. This profile is a
 sector-informed role and not a source of undocumented company facts.
+
+Use the knowledge base index in `docs/reference/README.md` to find further
+sector, regulatory and project evidence for the question.
 
 Use these labels when they matter:
 

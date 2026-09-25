@@ -27,17 +27,17 @@
       "keyFindings": "Established the business challenge, proposed agent roles, autonomy boundaries, regulatory timing and unvalidated value claims."
     },
     {
-      "file": "support/company-profile-research.md",
+      "file": "docs/reference/research/company/company-profile-research.md",
       "status": "analyzed",
       "keyFindings": "Provided sector patterns, regulatory baseline, cross-team risks and evidence gaps without establishing fictional company facts."
     },
     {
-      "file": "support/uk-social-housing-baseline-research.md",
+      "file": "docs/reference/research/sector/uk-social-housing-baseline-research.md",
       "status": "created",
       "keyFindings": "Added provisional EPC, damp, repairs, complaints, grant, finance, capacity and quality benchmarks with explicit evidence classes and caveats."
     },
     {
-      "file": "support/uk-social-housing-baseline-source-register.md",
+      "file": "docs/reference/research/sector/uk-social-housing-baseline-source-register.md",
       "status": "created",
       "keyFindings": "Mapped every benchmark family and derived portfolio value to official publications, direct reports and underlying datasets."
     }

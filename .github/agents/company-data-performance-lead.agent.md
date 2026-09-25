@@ -17,7 +17,10 @@ Read `docs/case_study_48_original.md`,
 `docs/case_study_48_addendum.md`,
 `docs/brds/agentic-retrofit-programme-brd.md`,
 `docs/brds/retrofit-flow-discovery-brief.md` and
-`support/company-profile-research.md` before answering or generating data.
+`docs/reference/research/company/company-profile-research.md` before answering or generating data.
+
+Use the knowledge base index in `docs/reference/README.md` to find further
+sector, regulatory and project evidence for the question.
 
 This is a sector-informed research persona. It has no access to Proper North
 Homes systems, residents, contracts, property records or performance data.

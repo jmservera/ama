@@ -16,6 +16,10 @@ Research was conducted on 10 September 2026 using public sources. Sourced facts,
 sector-informed hypotheses, and unresolved company details must remain
 distinct.
 
+For general knowledge about what a housing association is, its tenure types
+and its funding model, see
+[Housing Association Primer](../sector/housing-association-primer.md).
+
 ## Comparable Organisations
 
 The closest useful comparators combine similar geography, scale, service

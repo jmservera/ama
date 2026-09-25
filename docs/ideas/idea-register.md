@@ -10,8 +10,8 @@ ms.topic: reference
 This register records ideas raised during the Case Study 48 research so they
 are not lost. An entry is a proposal to investigate, not an approved
 requirement, design decision or observed outcome. Move an idea into the
-[Case Study 48 Addendum](./case_study_48_addendum.md) or the
-[Business Requirements Document](./brds/agentic-retrofit-programme-brd.md)
+[Case Study 48 Addendum](../case_study_48_addendum.md) or the
+[Business Requirements Document](../brds/agentic-retrofit-programme-brd.md)
 only after its evidence and owners are recorded.
 
 ## Status Values
