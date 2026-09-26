@@ -386,16 +386,16 @@ supported by company evidence rather than sector assumptions.
 | ID | Legacy ID | Objective | Measure | Baseline | Target and timeframe | Status |
 | --- | --- | --- | --- | --- | --- | --- |
 | BG-001 | OBJ-01 | Improve portfolio energy performance | Number and percentage of homes below EPC C | Provisional sector benchmark: 15,600 homes, or 26%; modelled range about 15,000 to 15,600 | Board-approved annual reduction through 2030 | Replace with company data |
-| BG-002 | OBJ-02 | Increase safe retrofit throughput, RULE-023 | Homes reaching accepted handover per year, with reopened defects shown separately | Actual throughput unknown; 3,900 per year is a required-trajectory scenario, not a baseline | Indicative pilot: at least 50 accepted handovers from 80 to 100 candidates; approve portfolio trajectory separately | Pilot and trajectory proposals |
+| BG-002 | OBJ-02 | Increase safe retrofit throughput | Homes reaching accepted handover per year, with reopened defects shown separately | Actual throughput unknown; 3,900 per year is a required-trajectory scenario, not a baseline | Indicative pilot: at least 50 accepted handovers from 80 to 100 candidates; approve portfolio trajectory separately | Pilot and trajectory proposals |
 | BG-003 | OBJ-03 | Protect resident health and safety | Controlled progressions with unresolved safety evidence | Unknown | Zero | Proposed |
 | BG-004 | OBJ-04 | Meet hazard response obligations | Cases meeting applicable response and resident-update times | Unknown | 100% within applicable requirements | Proposed |
 | BG-005 | OBJ-05 | Preserve resident control | Work started without valid agreement or authorised exception | Unknown | Zero | Proposed |
-| BG-006 | OBJ-06 | Improve quality, RULE-023 | Right-first-time acceptance and material defect rates | No sector average; 90% initial target for scenario testing | Board-approved thresholds before rollout | Planning assumption |
+| BG-006 | OBJ-06 | Improve quality | Right-first-time acceptance and material defect rates | No sector average; 90% initial target for scenario testing | Board-approved thresholds before rollout | Planning assumption |
 | BG-007 | OBJ-07 | Improve grant conversion | Opportunity, award, claimable and cash values | GBP 40 million opportunity; no award evidenced | Separate, reconciled reporting for every funding stream | Unverified opportunity |
-| BG-008 | OBJ-08 | Maintain affordability, RULE-023 | Minimum liquidity and covenant headroom | Sector warning comparators only; provider position unknown | Remain within board-approved tolerances | Requires company data |
+| BG-008 | OBJ-08 | Maintain affordability | Minimum liquidity and covenant headroom | Sector warning comparators only; provider position unknown | Remain within board-approved tolerances | Requires company data |
 | BG-009 | OBJ-09 | Improve resident outcomes | Energy-cost, comfort, satisfaction and complaint measures | Repairs 73.6%; listens and acts 61.6%; complaint handling 35.5% | Validated improvement without increased harm | Provisional sector medians |
 | BG-010 | OBJ-10 | Improve accountability | Exception handoffs accepted by a named human owner | Unknown | 100% accepted or escalated within approved times | Proposed |
-| BG-011 | OBJ-11 | Reduce avoidable coordination effort and delay, RULE-023 | Assessment-to-ready-to-install elapsed time and manual coordination hours per accepted home, net of review and assurance | Measure in Phase 0 using a comparable cohort | Proposed pilot improvements: at least 20% lower cycle time and 25% fewer coordination hours | Unvalidated addendum targets |
+| BG-011 | OBJ-11 | Reduce avoidable coordination effort and delay | Assessment-to-ready-to-install elapsed time and manual coordination hours per accepted home, net of review and assurance | Measure in Phase 0 using a comparable cohort | Proposed pilot improvements: at least 20% lower cycle time and 25% fewer coordination hours | Unvalidated addendum targets |
 | BG-012 | OBJ-12 | Demonstrate proportionate technology value | Incremental benefit, whole-life cost, draft accuracy, overrides and critical exceptions versus non-agentic alternatives | Establish options and shadow-mode baseline | Positive attributable value before scale; zero autonomous controlled approvals and no missed critical exceptions in agreed tests | Proposed scale gate, not proof of zero live risk |
 
 BG-002 to BG-005 and BG-011 have measurable targets and timeframes, although
@@ -628,10 +628,9 @@ reviewed again.
 
 ### Requirement Identifier Scheme
 
-Every requirement row carries one canonical identifier, its legacy alias, the
-business goals it supports and one acceptance criterion. Numbering is
-sequential in document order within each family, and identifiers are not
-renumbered after deletion or reordering.
+Every FR, RULE and NFR requirement row carries one canonical identifier, its
+legacy alias, the business goals it supports and one acceptance criterion.
+Identifiers are stable and are not renumbered after deletion or reordering.
 
 | Prefix | Family | Use in this BRD | Count |
 | --- | --- | --- | --- |

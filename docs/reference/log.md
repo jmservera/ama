@@ -195,7 +195,7 @@ metadata when the knowledge base was created.
   cites legislation outside the local corpus through the housing association
   primer; Legal must validate it before live use.
 * Rerun result: FAIL, Define exit blocked. FR-to-AC and FR-to-BG coverage are
-  100.0%. Remaining risks are seven business goals without numeric targets
-  and NFR-009 thresholds, which need company data or board decisions (OD-01,
-  OD-08, OD-09, OD-11, OD-12, OD-13, OD-15, OD-18, OD-25). Targets were not
-  invented.
+  100.0%. Remaining risks are seven business goals lacking a numeric target,
+  a timeframe or both, and NFR-009 thresholds, which need company data or
+  board decisions (OD-01, OD-08, OD-09, OD-11, OD-12, OD-13, OD-15, OD-18,
+  OD-25). Targets were not invented.
