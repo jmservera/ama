@@ -962,7 +962,7 @@ fr_ac_coverage:
   fr_total: 0
   fr_with_ac: 0
   coverage_pct: 0.0
-notes: Canonical scan results: FR=0, AC=0, NFR=0, CON=0, BG=0, BR=68, OBJ=12, OD=33. For interpretation only, this review also treated the BRD's own BR rows as functional/control requirement equivalents and OBJ rows as business-goal equivalents. Under that legacy mapping, 68 of 68 BR rows have an acceptance-criteria column and every BR row links to an OBJ value, but those figures do not satisfy the canonical FR-to-AC or FR-to-BG contract metrics.
+notes: "Canonical scan results: FR=0, AC=0, NFR=0, CON=0, BG=0, BR=68, OBJ=12, OD=33. For interpretation only, this review also treated the BRD's own BR rows as functional/control requirement equivalents and OBJ rows as business-goal equivalents. Under that legacy mapping, 68 of 68 BR rows have an acceptance-criteria column and every BR row links to an OBJ value, but those figures do not satisfy the canonical FR-to-AC or FR-to-BG contract metrics."
 ---
 schema_version: BRD_QUALITY_REPORT_V1
 report_id: agentic-retrofit-programme-brd-quality-20260926T160906Z
@@ -1122,7 +1122,7 @@ recommendations:
   - id: REC-001
     priority: P0
     target_section: Business Requirements
-    action: Perform a taxonomy migration before re-running Define gate review: assign canonical FR, AC, NFR, CON, BR and BG identifiers, then recompute FR-to-AC coverage against the 80.0% threshold.
+    action: "Perform a taxonomy migration before re-running Define gate review: assign canonical FR, AC, NFR, CON, BR and BG identifiers, then recompute FR-to-AC coverage against the 80.0% threshold."
     related_finding_ids:
       - req-qual-001
       - req-qual-002
