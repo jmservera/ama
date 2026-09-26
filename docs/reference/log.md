@@ -109,3 +109,24 @@ metadata when the knowledge base was created.
   rule was verified only in the GMCA copy. Check the national DESNZ guidance.
 * Open question: actual retrofit responsibility in shared ownership and
   leasehold homes needs a lease-by-lease sample review under legal approval.
+
+## [2026-09-26] query | Challenge the requested agents with the role agents
+
+* Sent each requested agent's "owns end-to-end" line to the eight `company-*`
+  role agents in parallel. Each role was asked for the real problem, the
+  challenge, non-agent alternatives, where an agent fits, what to build
+  behind it, a value test with stop criteria, and the unknowns.
+* Files touched: `research/company/agent-request-challenge.md` (new),
+  `../case_study_48_addendum.md` (new subsection, Challenge of the Requested
+  Agents, and `ms.date`), the index (`README.md`) and this log.
+* Finding: no role supported building any of the five as an end-to-end
+  agent. Each request bundles deterministic controls, accountable human
+  decisions and a smaller set of tasks suited to bounded AI. All of them
+  depend on the same shared records.
+* BRD IDs and regulatory provisions cited in the page were spot-checked
+  against local files on 2026-09-26. They were not checked against the
+  official sources online.
+* Open contradictions: Quality Verification AI at L4 or at recommend level;
+  L3 booking for residents who have opted into digital contact. Legal
+  questions on procurement modification, payment notices and contractor
+  awareness remain open.

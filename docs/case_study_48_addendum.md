@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-09-25
+ms.date: 2026-09-26
 ms.topic: reference
 ---
 
@@ -172,6 +172,20 @@ professional work or certify an external submission.
 | Use agents to run PAS 2035 assessments | Competent professionals must own assessment, design, coordination and evaluation | Named roles, competence, capacity, current standards and controlled professional approvals |
 | Automate resident and contractor coordination | Automation can amplify pressure, exclusion, missed adjustments and supplier failure | Tested resident journeys, committed capacity, human exception ownership and manual fallback |
 | Use sensors to identify health risk and verify quality | Sensors provide partial evidence and cannot overrule a resident report or competent inspection | Lawful purpose, data quality, maintenance model and evidence of predictive value |
+
+### Challenge of the Requested Agents
+
+On 2026-09-26 the eight Proper North Homes role agents challenged each
+requested agent's "owns end-to-end" line. No role supported building any of
+the five as an end-to-end agent. Each request bundles three things:
+deterministic control work, accountable human decisions, and a smaller set
+of tasks where bounded AI helps. Those tasks are reconciliation, reading
+evidence, drafting, message routing and raise-only signal scanning. Every
+request also depends on the same shared records, which is further evidence
+for the control plane below. These are sector-informed role hypotheses, not
+company findings. The per-agent problems, alternatives, stop criteria and
+open questions are recorded in the
+[Agent Request Challenge](./reference/research/company/agent-request-challenge.md).
 
 ## Reframed Transformation Objective
 
