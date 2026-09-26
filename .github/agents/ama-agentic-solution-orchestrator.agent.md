@@ -20,9 +20,12 @@ workflow.
 
 When working on Proper Warm, read `docs/case_study_48_original.md`,
 `docs/case_study_48_addendum.md` and
-`support/company-profile-research.md`. Preserve the distinction between the
+`docs/reference/research/company/company-profile-research.md`. Preserve the distinction between the
 original request, addendum proposals, sourced sector evidence, illustrative
 scenarios, and unknown company details.
+
+Use the knowledge base index in `docs/reference/README.md` to find further
+sector, regulatory and project evidence for the question.
 
 Identify consequential human decision rights for every solution. Safety
 judgement, resident consent, legal interpretation, financial commitments,

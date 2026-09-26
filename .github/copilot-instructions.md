@@ -15,20 +15,61 @@ project rather than executable software.
   while `docs/case_study_48_addendum.md` evolves as research adds, validates,
   refines, or invalidates assumptions. Always read both documents to start
   working on the project.
-* `docs/reference/` contains dated local copies of legislation, regulatory
-  standards, government policy, guidance, funding material and standards-body
-  information. Read `docs/reference/README.md` before using these sources.
-* `support/` contains reference material that helps the research effort.
-  `support/cohort.md` identifies colleagues who may be able to help with
-  particular technical areas.
+* `docs/reference/` is the project knowledge base, the second brain for
+  agents and people. Read its index, `docs/reference/README.md`, at the start
+  of every task to find the relevant files, and read
+  `docs/reference/memory.md` for the owner's context and preferences.
+  * `docs/reference/regulatory/` holds dated local copies of legislation,
+    regulatory standards, government policy, guidance, funding material and
+    standards-body information, grouped by topic. Read
+    `docs/reference/regulatory/README.md` before using these sources.
+  * `docs/reference/research/` holds cited research syntheses.
+    `research/sector/housing-association-primer.md` explains what a UK
+    housing association is. Read it to understand the customer.
+  * `docs/reference/method/` holds AMA training material and reusable
+    prompts.
+  * `docs/reference/resources/` holds curated pointers to internal and
+    external resources, such as the Microsoft Industry Hub, with retrieved
+    findings. Internal Microsoft content can be retrieved with WorkIQ.
+  * `docs/reference/log.md` is the append-only change log for the knowledge
+    base.
+* `support/` is the owner's private working area and is not part of the
+  knowledge base. `support/cohort.md` identifies colleagues who may be able
+  to help with particular technical areas.
 * `.github/agents/company-*` are the role agents for interrogating the
   problem from different Proper North Homes perspectives.
-  Their shared evidence base is `support/company-profile-research.md`.
+  Their shared evidence base is
+  `docs/reference/research/company/company-profile-research.md`.
 * `.github/agents/ama-*` are AMA helper agents with knowledge extracted from the AMA trainings.
 
 There is no build, test, lint, or single-test command configured in the
 repository. Validate changes by reviewing the rendered Markdown and the Git
 diff.
+
+## Knowledge Base Conventions
+
+Keep `docs/reference/` current so knowledge compounds across sessions instead
+of being rediscovered.
+
+* Start from the index and open only the files the task needs. Search large
+  regulatory snapshots for the relevant provision instead of reading them end
+  to end.
+* Treat regulatory snapshots as immutable. Record a newer retrieval as a
+  reviewed update in the regulatory register.
+* Integrate new findings into the existing synthesis or project document.
+  Create a new page only when no existing page can hold the topic, and follow
+  the placement rules in the index.
+* File durable answers, comparisons and findings back into the knowledge base
+  with their evidence rather than leaving them in chat history.
+* When a knowledge base file is added, moved, retired or materially changed,
+  update the index and append an entry to `docs/reference/log.md`. Never
+  rewrite earlier log entries.
+* Update `docs/reference/memory.md` only when the owner asks. Memory is
+  context, not evidence.
+* Flag contradictions between sources and syntheses rather than silently
+  resolving them.
+* Use relative links between knowledge base files and fix every link a move
+  breaks.
 
 ## Problem Specification Conventions
 
@@ -64,8 +105,8 @@ source of legal truth.
   final policy, consultation material, funding condition, technical standard
   or internal interpretation.
 * Use the authority hierarchy and current-use status in
-  `docs/reference/README.md`. Do not use historical or superseded material as
-  an operational rule.
+  `docs/reference/regulatory/README.md`. Do not use historical or superseded
+  material as an operational rule.
 * Cite the local source, relevant provision or section, source date and
   retrieval date for every material regulatory claim.
 * Check the linked official source for amendments, commencement, replacement
@@ -90,8 +131,8 @@ source of legal truth.
 
 ## Cohort Reference Conventions
 
-Use `support/cohort.md` to identify colleagues who may be able to answer
-questions or contribute expertise:
+Use `support/cohort.md` only when the owner asks who could answer questions or
+contribute expertise. It is private owner material outside the knowledge base:
 
 * Separate suggested subject-matter areas from the evidence used to infer them.
 * Use `High`, `Medium`, or `Limited` confidence only as a measure of evidence
@@ -112,7 +153,7 @@ with privileged knowledge.
 
 * Keep every response anchored to `docs/case_study_48_original.md`,
   `docs/case_study_48_addendum.md` and
-  `support/company-profile-research.md`.
+  `docs/reference/research/company/company-profile-research.md`.
 * Label information as a case-study fact, sector-informed hypothesis, or
   unknown company detail. Never turn a comparator's practice into a fact about
   Proper North Homes.

@@ -1,0 +1,175 @@
+---
+title: Knowledge Base Log
+description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
+ms.date: 2026-09-26
+ms.topic: reference
+---
+
+## Conventions
+
+Append new entries at the end. Do not edit or delete earlier entries; record a
+correction as a new entry. Start each entry with a heading in this form so the
+log can be searched with simple tools:
+
+```text
+## [YYYY-MM-DD] type | Short title
+```
+
+Use one of these types: `ingest`, `query`, `restructure`, `memory`, `lint`.
+List the files touched and any contradiction or open question raised.
+
+Entries dated before 2026-09-25 are reconstructed from Git history and file
+metadata when the knowledge base was created.
+
+## [2026-09-11] ingest | Sector baseline and company profile research
+
+* Added company profile research and UK social housing baseline research with
+  its source register, then located in `support/`.
+
+## [2026-09-19] ingest | Regulatory source snapshots
+
+* Downloaded and converted 16 official legislation, regulator, policy,
+  guidance, standards and funding documents, with the regulatory register.
+* Retrieval date for the snapshots: 2026-09-19. Register updated 2026-09-20.
+
+## [2026-09-25] ingest | Housing association primer
+
+* Source: newhomesforsale.co.uk, Understanding Housing Associations in the UK,
+  last updated June 2026, retrieved 2026-09-25.
+* Created `research/sector/housing-association-primer.md`.
+* Contradiction flagged: the source frames 300,000 affordable homes over five
+  years, while GOV.UK describes the Social and Affordable Homes Programme as a
+  ten-year programme from April 2026 to March 2036.
+* Inconsistency flagged: the source ranks L&Q above Peabody while reporting a
+  higher home count for Peabody.
+
+## [2026-09-25] restructure | Create the project knowledge base
+
+* Turned `docs/reference/` into the knowledge base with an index, this log
+  and a project memory file.
+* Moved the regulatory snapshots and register into `regulatory/` topic
+  folders.
+* Moved research syntheses from `support/` into `research/sector/` and
+  `research/company/`.
+* Moved `support/loop_example.md` to `method/loop-goal-designer-prompt.md`.
+* Moved `support/notes.md` to `memory.md` and restructured it without
+  changing its meaning.
+* Kept `support/cohort.md` and `support/resources.md` in `support/` as private
+  owner material.
+* Updated links in the addendum, BRD, discovery brief, idea documents, agents,
+  root README and repository instructions. Fixed pre-existing broken links in
+  the addendum, idea documents and discovery brief.
+
+## [2026-09-25] ingest | Microsoft Industry Hub
+
+* Source: Microsoft Industry Hub home page and Nonprofit Industry Page on
+  Seismic, supplied by the project owner, with related SharePoint items.
+* Retrieved search snippets with WorkIQ on 2026-09-25. Documents were not
+  read end to end.
+* Created `resources/microsoft-industry-hub.md` with entry points, nonprofit
+  hero use cases, patterns mapped to each Proper Warm agent, customer
+  evidence and lessons. Added a `resources/` layer to the index.
+* Excluded internal-only deal data, such as opportunity identifiers,
+  contract values and battlecard content, and staff names.
+* Open question: no UK housing association customer story was found. Search
+  again or ask the nonprofit or public sector industry team.
+* The owner removed `support/resources.md`, whose Industry Hub link now lives
+  in the resources page, and moved its meeting note into `memory.md`. Updated
+  the memory standing preference to match.
+
+## [2026-09-25] query | File back the sector archetype research
+
+* Filed the answers to the primer's four open questions and the sector
+  archetype research into the knowledge base.
+* Files touched: `research/sector/housing-association-primer.md` (sector
+  scale, archetypes, tenure, lease responsibility for retrofit, residents and
+  vulnerability data, board capital patterns, sources, open questions and
+  limitations), `research/company/company-profile-research.md` (Modelled
+  Customer Profile, comparators, gaps, sources, limitations and the SRS MEES
+  line), `../case_study_48_addendum.md` (cross-reference to the modelled
+  profile), the index (`README.md`) and this log.
+* Web sources were retrieved on 2026-09-25. Modelled Proper North Homes
+  values are estimates from sector medians and national rates, not company
+  facts.
+* Correction: a housing association fuel poverty figure of 10.0% is the
+  superseded LIHC measure. The primer uses 11.6% (LILEE, 2024, DESNZ via UK
+  Housing Review 2026 Table 39a).
+* Contradiction flagged: the primer cites 91% sector EBITDA-MRI interest
+  cover from the RSH Sector Risk Profile 2025, while the baseline research
+  cites 87% as the weighted 2025 Global Accounts average. The bases probably
+  differ. The baseline research was left unchanged and the difference is not
+  yet reconciled.
+* Correction: the company profile Regulatory Baseline no longer describes EPC
+  C as a policy objective or proposal. It now states the 2026 SRS MEES final
+  policy position from the local snapshot, which is not by itself a commenced
+  duty.
+* Open question: the preserved right to buy provisions (Housing Act 1985,
+  sections 171A to 171H) for transferred stock have not been checked.
+* Open question: the Warm Homes: Social Housing Fund Wave 3 30% non-social
+  rule was verified only in the GMCA copy. Check the national DESNZ guidance.
+* Open question: actual retrofit responsibility in shared ownership and
+  leasehold homes needs a lease-by-lease sample review under legal approval.
+
+## [2026-09-26] query | Challenge the requested agents with the role agents
+
+* Sent each requested agent's "owns end-to-end" line to the eight `company-*`
+  role agents in parallel. Each role was asked for the real problem, the
+  challenge, non-agent alternatives, where an agent fits, what to build
+  behind it, a value test with stop criteria, and the unknowns.
+* Files touched: `research/company/agent-request-challenge.md` (new),
+  `../case_study_48_addendum.md` (new subsection, Challenge of the Requested
+  Agents, and `ms.date`), the index (`README.md`) and this log.
+* Finding: no role supported building any of the five as an end-to-end
+  agent. Each request bundles deterministic controls, accountable human
+  decisions and a smaller set of tasks suited to bounded AI. All of them
+  depend on the same shared records.
+* BRD IDs and regulatory provisions cited in the page were spot-checked
+  against local files on 2026-09-26. They were not checked against the
+  official sources online.
+* Open contradictions: Quality Verification AI at L4 or at recommend level;
+  L3 booking for residents who have opted into digital contact. Legal
+  questions on procurement modification, payment notices and contractor
+  awareness remain open.
+
+## [2026-09-26] query | Review the BRD against the new research and challenge
+
+* Reviewed the Agentic Retrofit Programme BRD against the Modelled Customer
+  Profile and Housing Association Primer (2026-09-25), the Agent Request
+  Challenge (2026-09-26) and IDEA-001.
+* Sent one focused gap question each to five `company-*` role agents in
+  parallel: Building Safety, Resident Engagement, Procurement, Finance and
+  the Retrofit Programme Manager. Their proposed wording, labelled as
+  sector-informed, informs the new requirements.
+* Files touched: `../brds/agentic-retrofit-programme-brd.md` (BR-059 to
+  BR-068, OD-26 to OD-33, disposition table with a damp-and-mould loop row,
+  bounded AI capability value tests, stakeholders, scope, data domains,
+  risks, sponsor questions, traceability, sources and `ms.date`),
+  `../case_study_48_addendum.md` (cross-reference to the new BRD IDs), the
+  index (`README.md`) and this log.
+* Awaab's Law Phase 1 guidance sections 3 and 7.5 and the WH:SHF technical
+  annex Pages 3 and 5 were checked against the local snapshots only. Section
+  7.5 advises reviewing contractor agreements; the same-visit reporting duty
+  in BR-062 is a proposal, not a guidance requirement.
+* Still open: the QV autonomy divergence (OD-31, with a proposed three-arm
+  shadow test) and L3 digital booking (OD-32). The Legal questions are
+  consolidated in OD-27, OD-29 and OD-30. The 30% non-social rule is still
+  verified only in the GMCA copy (OD-26).
+* No BRD quality reviewer subagent was available, so no
+  `BRD_QUALITY_REPORT_V1` was produced. The BRD remains a draft for business
+  validation.
+
+## [2026-09-26] query | Apply confirmed not-for-profit status to role agents
+
+* Recorded the project owner's confirmation that Proper North Homes is a
+  not-for-profit organisation. Its exact legal form, registration, group
+  structure and charitable status remain unknown.
+* Updated `research/company/company-profile-research.md`,
+  `../case_study_48_addendum.md`, all eight `company-*` role agents, the index
+  (`README.md`) and this log.
+* Applied the fact by role: mission-led asset stewardship, retained-surplus
+  affordability, whole-life procurement value, resident accountability,
+  frontline service outcomes, unchanged safety duties, quality-adjusted
+  retrofit outcomes, and mission-aware performance measurement.
+* Guardrail: not-for-profit status does not imply unlimited funding, reduced
+  legal duties, charitable status, resident endorsement or freedom from
+  financial discipline.

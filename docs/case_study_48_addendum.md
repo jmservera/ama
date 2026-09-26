@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-09-20
+ms.date: 2026-09-26
 ms.topic: reference
 ---
 
@@ -26,6 +26,9 @@ The following information was introduced after the original case study and is
 preserved in this addendum:
 
 * The association name, Proper North Homes, and programme name, Proper Warm
+* The owner-confirmed fact that Proper North Homes is a not-for-profit
+  organisation, while its exact legal form and charitable status remain
+  unknown
 * The working presentation line, "Ready, steady, retrofit," with legal,
   trademark and resident-communication restrictions
 * The clarified objective of moving homes toward EPC C while the 2030 standard
@@ -33,6 +36,8 @@ preserved in this addendum:
 * The provisional sector baseline and its evidence classifications
 * The derived delivery, programme-cost and grant-ceiling scenarios
 * The supporting baseline-research reference and its limitations
+* The reference to the modelled customer profile in company research, whose
+  values are modelled estimates, not company facts
 * The executive challenge, reframed objective, controlled operating model,
   delivery gates, success measures, trade-offs and conditional recommendation
 
@@ -43,6 +48,7 @@ preserved in this addendum:
 | Industry | Real Estate (Affordable Housing) / Decarbonisation | Headquarters | United Kingdom |
 | Operating Region | United Kingdom (North of England) | Regulatory Context | UK Net Zero; final SRS MEES policy not yet evidenced as commenced law; Social Housing Regulation Act; Awaab's Law; UK GDPR; PAS 2035 retrofit standard |
 | Association | Proper North Homes | Programme | Proper Warm |
+| Operating purpose | Not-for-profit, confirmed by the project owner on 26 September 2026 | Legal form | Unknown; do not infer charitable status, registration or group structure |
 
 The working presentation line is "Ready, steady, retrofit." The name is not
 cleared for legal, trademark, domain or resident-facing use. It must not be used
@@ -93,7 +99,14 @@ unsecured opportunity and would support at most about 5,333 homes at the
 GBP 7,500 cap.
 
 Full sources, limitations and alternative sensitivities are recorded in
-[UK Social Housing Baseline Research](../support/uk-social-housing-baseline-research.md).
+[UK Social Housing Baseline Research](./reference/research/sector/uk-social-housing-baseline-research.md).
+
+A modelled profile of Proper North Homes, covering its likely archetype,
+tenure mix, leaseholders and resident indicators, is recorded in the
+[Modelled Customer Profile](./reference/research/company/company-profile-research.md#modelled-customer-profile)
+of the company profile research. Its values are modelled estimates from
+sector medians and national rates, and company details are not yet
+confirmed. It is not copied here and must not be read as company fact.
 
 ## Executive Assessment
 
@@ -117,7 +130,7 @@ capital acceleration.
 ### Regulatory Evidence and Service Design
 
 The legal and regulatory corpus in
-[Regulatory Context Reference Documents](./reference/README.md) is a dated
+[Regulatory Context Reference Documents](./reference/regulatory/README.md) is a dated
 evidence set for research and for the proposed solution. It is not a
 self-updating legal authority. The service needs a managed source register,
 versioned snapshots, official-source monitoring and human approval before a
@@ -163,6 +176,26 @@ professional work or certify an external submission.
 | Use agents to run PAS 2035 assessments | Competent professionals must own assessment, design, coordination and evaluation | Named roles, competence, capacity, current standards and controlled professional approvals |
 | Automate resident and contractor coordination | Automation can amplify pressure, exclusion, missed adjustments and supplier failure | Tested resident journeys, committed capacity, human exception ownership and manual fallback |
 | Use sensors to identify health risk and verify quality | Sensors provide partial evidence and cannot overrule a resident report or competent inspection | Lawful purpose, data quality, maintenance model and evidence of predictive value |
+
+### Challenge of the Requested Agents
+
+On 2026-09-26 the eight Proper North Homes role agents challenged each
+requested agent's "owns end-to-end" line. No role supported building any of
+the five as an end-to-end agent. Each request bundles three things:
+deterministic control work, accountable human decisions, and a smaller set
+of tasks where bounded AI helps. Those tasks are reconciliation, reading
+evidence, drafting, message routing and raise-only signal scanning. Every
+request also depends on the same shared records, which is further evidence
+for the control plane below. These are sector-informed role hypotheses, not
+company findings. The per-agent problems, alternatives, stop criteria and
+open questions are recorded in the
+[Agent Request Challenge](./reference/research/company/agent-request-challenge.md).
+The BRD review of the same date turned these findings, and the modelled
+customer profile, into proposed requirements BR-059 through BR-068 and open
+decisions OD-26 through OD-33. They cover eligibility and funding route,
+tenure, hazard awareness from retrofit channels, vulnerability data,
+contractor instructions, quality assurance when nothing is flagged, and
+separate PAS 2035 sign-offs. They remain proposals for owner validation.
 
 ## Reframed Transformation Objective
 
@@ -247,6 +280,14 @@ the absence of a sensor alert to contradict a resident.
 | Quality assurance | Check evidence and flag anomalies | Competent quality authority accepts work and closes defects |
 | Executive reporting | Summarise controlled records | Executives and the Board make investment and risk decisions |
 
+Typed decision models that return closed-set answers and probabilities, rather
+than generated text, are an implementation option under research for some of
+these capabilities. The strongest candidate fits are resident and contractor
+message routing and quality evidence flags. This remains an unvalidated
+proposal for Phase 1 shadow-mode comparison, recorded in
+[System One Decision Models for Retrofit Agents](./ideas/typesafe-system-one-agent-fit.md)
+and the [Idea Register](./ideas/idea-register.md).
+
 ## Phased Delivery and Decision Gates
 
 | Phase | Scope | Evidence to proceed |
@@ -312,6 +353,14 @@ The primary value is not the number of agents deployed. It is the association's
 ability to make better capital decisions and convert approved investment into
 safe, resident-complete, evidence-accepted and fundable outcomes with fewer
 avoidable delays and failures.
+
+As a not-for-profit, Proper North Homes should appraise the programme as
+mission investment under financial discipline. Resident and social value,
+stewardship of homes and compliance outcomes are primary, while operating
+surplus, liquidity, covenant headroom and value for money preserve the
+organisation's capacity to pursue those outcomes. The business case must not
+use distributable profit or shareholder return as an objective, and it must
+not treat not-for-profit status as evidence of unlimited affordability.
 
 | Value domain | Potential business value | Evidence and treatment |
 | --- | --- | --- |

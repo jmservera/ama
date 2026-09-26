@@ -1,160 +1,173 @@
 ---
-title: Regulatory Context Reference Documents
-description: Authoritative reference documents for the Case Study 48 regulatory context
-ms.date: 2026-09-20
-ms.topic: reference
+title: Project Knowledge Base
+description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
+ms.date: 2026-09-26
+ms.topic: overview
 ---
 
-## Scope
+## Purpose
 
-These files support the regulatory context identified in the
-[original Case Study 48](../case_study_48_original.md). They were downloaded
-from official UK government, legislation, regulator, or standards-body sources
-on 19 September 2026.
+This folder is the project's knowledge base, a persistent second brain for the
+Proper Warm research. It gathers the evidence, syntheses, working method and
+project memory that agents and people need, and this index tells them where to
+look first.
 
-The collection distinguishes legislation already in force from consultation
-material, guidance, and licensed standards. Always check the linked source for
-later amendments or replacements before relying on a local copy.
+The design follows the LLM Wiki pattern described by Andrej Karpathy: keep
+immutable sources separate from maintained syntheses, read a content index
+before searching, record changes in an append-only log, and file useful
+answers back into the knowledge base so they are not lost in chat history.
+Topic hubs work like the Maps of Content used in personal knowledge
+management: short pages that point to clusters of related material.
 
-Each converted reference links to its original authoritative source near the
-top of the file.
+## How to Use This Knowledge Base
 
-## Authority and Use
+1. Read this index first and pick the rows in
+   [Task Routing](#task-routing) that match the task.
+2. Read the [Project Memory](./memory.md) for owner context and preferences.
+3. Open only the files the task needs. Large regulatory snapshots should be
+   searched for the relevant provision, not read end to end.
+4. Cite the file, section and date for every material claim, and follow the
+   evidence rules in the [Regulatory Source Register](./regulatory/README.md).
+5. When the work produces a durable finding, integrate it into the right
+   document, update this index and add an entry to the
+   [Knowledge Base Log](./log.md).
 
-Apply sources in this order when they address the same point:
+## Layers
 
-1. Current consolidated legislation and commenced statutory instruments
-2. Current regulatory standards and binding directions
-3. Applicable grant agreements, contracts and incorporated technical standards
-4. Official guidance and final government policy
-5. Impact assessments and consultation material
-
-The lower-ranked source may explain context but cannot override a higher-ranked
-source. The current UK GDPR text is the working local baseline. The adopted UK
-GDPR text, enacted-text Data Protection Act PDF and consultation documents are
-historical or incomplete where later amendments or final decisions exist.
-
-> [!IMPORTANT]
-> A successful source check does not constitute legal advice or approval to
-> activate a rule. Consequential interpretations require the named legal,
-> compliance, data-protection, funding or competent professional owner.
-
-## Change Assessment and Monitoring Register
-
-Change likelihood describes the risk that the operational interpretation or
-supporting detail will change, not the importance of the source.
-
-| Local file | Current-use status | Change likelihood | Official monitoring cadence |
-| --- | --- | --- | --- |
-| `net-zero-2050-target-order-2019.md` | In-force national target; it does not itself impose an EPC C duty on the provider | Low | Check legislation.gov.uk annually and after major climate legislation |
-| `social-rented-sector-mees-consultation-2025.md` | Historical consultation; superseded where the 2026 final position differs | Low relevance, high obsolescence | Retain for rationale and audit; do not encode operational rules from it |
-| `social-rented-sector-mees-impact-assessment-2025.md` | Historical consultation-stage analysis | Low relevance, high obsolescence | Retain for sensitivities; compare only when final policy changes |
-| `social-rented-sector-mees-government-response-2026.md` | Final policy position, not evidence by itself of a commenced landlord duty | Medium | Check MHCLG, DESNZ and RSH monthly until implementation, then quarterly |
-| `social-rented-sector-mees-final-impact-assessment-2026.md` | Final policy evidence; technical metric and implementation detail remain subject to delivery work | High for EPC and exemption detail | Check EPC reform, Home Energy Model, DHS and RSH publications monthly until final specifications |
-| `social-housing-regulation-act-2023.md` | Enacted primary legislation; current commencement and amendments require consolidated-source checks | Low for framework, medium for commencement detail | Check legislation.gov.uk quarterly and before relying on a provision |
-| `social-housing-safety-and-quality-standard-2024.md` | Regulatory standard effective from 1 April 2024 | Medium | Check RSH consumer standards and regulatory publications quarterly |
-| `awaabs-law-hazards-in-social-housing-regulations-2025.md` | Phase 1 regulations in force from 27 October 2025 | Low for Phase 1, subject to amendment | Check SI 2025/1042 monthly and after MHCLG announcements |
-| `awaabs-law-phase-1-guidance-2025.md` | Official non-statutory implementation guidance | Medium | Check the GOV.UK publication monthly and after regulation changes |
-| `awaabs-law-phase-2-guidance-2026.md` | Official non-statutory guidance for planned commencement on 30 November 2026 | High until commencement | Check legislation.gov.uk and GOV.UK weekly until commencement, then monthly for six months |
-| `awaabs-law-phase-2-hazards-guidance-2026.md` | Official non-statutory guidance; the local copy contains limited introductory material | High | Check the GOV.UK publication weekly until a complete stable version is confirmed |
-| `uk-gdpr-current-text.md` | Working consolidated local baseline as retrieved on 19 September 2026 | High for automated-decision rules; lower for core principles | Check consolidated legislation and ICO guidance monthly and before each production release |
-| `uk-gdpr-adopted-text.md` | Historical comparison only; not the current operational authority | Low relevance, high obsolescence | Retain for comparison; do not use for current Article 22 rules |
-| `data-protection-act-2018.md` | Enacted-text copy; later amendments may be absent | Medium | Check revised legislation quarterly and before relying on a Schedule 1 condition |
-| `pas-2035-2023-bsi-overview.md` | Overview only; obtain the licensed standard and verify contractual incorporation | Medium | Check BSI, TrustMark and applicable scheme rules quarterly and at procurement or grant change |
-| `warm-homes-social-housing-fund-technical-annex-2025.md` | Allocation methodology, not complete eligibility rules or evidence of an award | High for provider use | Check current scheme guidance, award letter and grant agreement monthly during delivery and before claims |
-
-Phase 3 of Awaab's Law is not represented by an implementing instrument in
-this collection. Monitor MHCLG, legislation.gov.uk and GOV.UK monthly, moving
-to weekly checks when draft regulations are laid.
-
-## Managed Update Workflow
-
-The production solution should maintain a regulatory source register separate
-from the searchable document index. Each source record needs:
-
-* Stable source identifier, official URL, jurisdiction and authority type
-* Publication, retrieval, effective, review and supersession dates
-* Content hash, local version, parser result and completeness status
-* Change likelihood, monitoring cadence and accountable owner
-* Applicability, affected requirements, operational rules, tests and user
-  journeys
-* Review, approval, activation and retirement history
-
-Use official APIs, legislation data, publication metadata, feeds and alerts
-where available. Scheduled retrieval may compare metadata, hashes and semantic
-sections. Scraping is a fallback for discovery, not an authority signal.
-
-The update path is:
-
-1. Detect a new publication, amendment, metadata change or retrieval failure.
-2. Preserve the previous snapshot and store the candidate with provenance.
-3. Classify the difference and identify affected requirements, rules, evidence
-   templates, communications and reports.
-4. Route the candidate to the named legal, compliance, data-protection, funding
-   or professional owner.
-5. Update interpretations and deterministic rules only after approval.
-6. Run regression, accessibility, timing, privacy and audit-trace tests.
-7. Activate the approved version on its effective date with rollback available.
-8. Notify affected employees, residents, contractors and reporting owners in
-   an appropriate form.
-
-Detection must never overwrite the last approved operational rule. If a change
-may create immediate harm or illegality, an authorised owner can place a hold
-while the interpretation and implementation are reviewed.
-
-## Agent Retrieval and Answer Controls
-
-Agents using this corpus must:
-
-* Retrieve only sources marked current for the question and disclose historical
-  material when it is used for context
-* Return source, provision, status, retrieval date and effective-date context
-  with each consequential answer
-* Preserve uncertainty where commencement, applicability or interpretation is
-  unresolved
-* Refuse to convert missing evidence into compliance or to treat a policy
-  announcement as commenced law
-* Escalate conflicting sources, incomplete retrievals and high-impact changes
-  to a named human owner
-* Keep resident reports, professional findings and authorised decisions above
-  inferred or generated conclusions
-
-## UK Net Zero and social housing energy efficiency
-
-| Local file | Status and purpose | Official source |
+| Layer | Location | Owner and change rule |
 | --- | --- | --- |
-| `net-zero-2050-target-order-2019.md` | Legislation that amended the Climate Change Act 2008 target to net zero by 2050, converted from PDF | [UK Statutory Instruments 2019 No. 1056](https://www.legislation.gov.uk/uksi/2019/1056/contents) |
-| `social-rented-sector-mees-consultation-2025.md` | Consultation proposal for EPC C or equivalent by 2030, converted from PDF | [Improving the energy efficiency of socially rented homes in England](https://www.gov.uk/government/consultations/improving-the-energy-efficiency-of-socially-rented-homes-in-england) |
-| `social-rented-sector-mees-impact-assessment-2025.md` | Consultation-stage impact assessment converted from PDF | [Consultation attachments](https://www.gov.uk/government/consultations/improving-the-energy-efficiency-of-socially-rented-homes-in-england) |
-| `social-rented-sector-mees-government-response-2026.md` | Government response converted from the published HTML | [Government response](https://www.gov.uk/government/consultations/improving-the-energy-efficiency-of-socially-rented-homes-in-england/outcome/improving-the-energy-efficiency-of-socially-rented-homes-in-england-government-response) |
-| `social-rented-sector-mees-final-impact-assessment-2026.md` | Final-stage impact assessment converted from PDF | [Consultation outcome](https://www.gov.uk/government/consultations/improving-the-energy-efficiency-of-socially-rented-homes-in-england) |
+| Schema | [copilot-instructions.md](../../.github/copilot-instructions.md) | Repository conventions for agents. Change only when the working method changes |
+| Index | This file | Updated whenever a knowledge base file is added, moved, retired or materially changed |
+| Sources | [regulatory/](./regulatory/) | Dated official snapshots. Immutable; a newer retrieval is recorded as a reviewed update |
+| Syntheses | [research/](./research/) | Agent-maintained research with citations. Integrate new findings in place |
+| Method | [method/](./method/) | AMA training material and reusable working prompts |
+| Resources | [resources/](./resources/) | Curated pointers to internal and external resources, with retrieved findings and access notes |
+| Memory | [memory.md](./memory.md) | Owner-curated notes. Agents update it only when the owner asks |
+| Log | [log.md](./log.md) | Append-only record of ingests, restructures and lint passes |
+| Project documents | [docs/](../) outside this folder | Problem specification and deliverables, governed by the repository instructions |
 
-## Social housing regulation and Awaab's Law
+## Task Routing
 
-| Local file | Status and purpose | Official source |
+| Task | Start with | Then consult |
 | --- | --- | --- |
-| `social-housing-regulation-act-2023.md` | Enacted Social Housing (Regulation) Act 2023, converted from PDF | [2023 c. 36](https://www.legislation.gov.uk/ukpga/2023/36/contents) |
-| `social-housing-safety-and-quality-standard-2024.md` | Regulator of Social Housing consumer standard effective from 1 April 2024, converted from PDF | [Safety and Quality Standard](https://www.gov.uk/government/publications/safety-and-quality-standard) |
-| `awaabs-law-hazards-in-social-housing-regulations-2025.md` | The Hazards in Social Housing (Prescribed Requirements) (England) Regulations 2025, converted from PDF | [UK Statutory Instruments 2025 No. 1042](https://www.legislation.gov.uk/uksi/2025/1042/contents) |
-| `awaabs-law-phase-1-guidance-2025.md` | Phase 1 landlord guidance converted from the published HTML | [Phase 1 guidance](https://www.gov.uk/government/publications/awaabs-law-guidance-for-social-landlords) |
-| `awaabs-law-phase-2-guidance-2026.md` | Phase 2 landlord guidance converted from the published HTML | [Phase 2 guidance](https://www.gov.uk/government/publications/awaabs-law-phase-2-guidance-for-social-housing-landlords) |
-| `awaabs-law-phase-2-hazards-guidance-2026.md` | Phase 2 hazard guidance converted from the published HTML | [Phase 2 hazards guidance](https://www.gov.uk/government/publications/awaabs-law-phase-2-hazards-guidance-for-social-landlords) |
+| Understand the customer and the sector | [Housing Association Primer](./research/sector/housing-association-primer.md) | [Company Profile Research](./research/company/company-profile-research.md) |
+| Start or resume any project work | [Original Case Study 48](../case_study_48_original.md) and [Case Study 48 Addendum](../case_study_48_addendum.md) | [Project Memory](./memory.md) |
+| Answer as a Proper North Homes role | [Company Profile Research](./research/company/company-profile-research.md) | The matching `company-*` agent in [.github/agents/](../../.github/agents/) |
+| Estimate Proper North Homes' tenure, leasehold, resident or financial scale | [Modelled Customer Profile](./research/company/company-profile-research.md#modelled-customer-profile) in Company Profile Research | [Housing Association Primer](./research/sector/housing-association-primer.md) |
+| Quote a benchmark, cost or sector statistic | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) | [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md) |
+| Make a regulatory, legal or funding claim | [Regulatory Source Register](./regulatory/README.md) | The snapshot for the topic under [regulatory/](./regulatory/) |
+| Design Awaab's Law, damp and mould or safety controls | [social-housing-regulation/](./regulatory/social-housing-regulation/) | [Company Profile Research](./research/company/company-profile-research.md) |
+| Design EPC C, energy standard or grant logic | [energy-efficiency/](./regulatory/energy-efficiency/) and [retrofit-standards-and-funding/](./regulatory/retrofit-standards-and-funding/) | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) |
+| Handle resident data, consent or automated decisions | [data-protection/](./regulatory/data-protection/) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
+| Write or review requirements | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) |
+| Evaluate a new idea | [Idea Register](../ideas/idea-register.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
+| Challenge whether a requested agent is needed, or decide what to build instead | [Agent Request Challenge](./research/company/agent-request-challenge.md) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
+| Prepare a presentation or pitch | [Project Memory](./memory.md) | [Proper Warm CXO initial proposal](../presentations/proper-warm-cxo-initial-proposal.pptx) and [85-day roadmap](../case-study-85-day-roadmap.svg) |
+| Design a looped agent goal | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | [Project Memory](./memory.md) |
+| Find proven use cases, customer evidence or reusable solutions | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 
-## Data protection
+## Catalog
 
-| Local file | Status and purpose | Official source |
+### Project Documents
+
+| Document | Summary | Updated |
 | --- | --- | --- |
-| `uk-gdpr-current-text.md` | Consolidated UK legislation data for Regulation (EU) 2016/679 converted from XML, including amendments recorded by legislation.gov.uk | [UK GDPR current text](https://www.legislation.gov.uk/eur/2016/679/contents) |
-| `uk-gdpr-adopted-text.md` | Adopted EU text converted from PDF for historical comparison; use the consolidated Markdown text for the current UK text | [Regulation (EU) 2016/679](https://www.legislation.gov.uk/eur/2016/679/contents) |
-| `data-protection-act-2018.md` | Enacted Data Protection Act 2018, converted from PDF | [2018 c. 12](https://www.legislation.gov.uk/ukpga/2018/12/contents) |
+| [Original Case Study 48](../case_study_48_original.md) | Initial problem specification. Preserved unchanged | 2026-09-10 |
+| [Case Study 48 Addendum](../case_study_48_addendum.md) | Evolving critical assessment, solution proposal, trade-offs and business value | 2026-09-26 |
+| [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | Business requirements for safe, resident-centred and financially controlled retrofit delivery, including tenure, eligibility, hazard-awareness and contractor-instruction controls from the agent request challenge | 2026-09-26 |
+| [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) | Evidence, team and bounded assistant requirements for finding delivery constraints | 2026-09-19 |
+| [Idea Register](../ideas/idea-register.md) | Research ideas that are not yet validated requirements | 2026-09-24 |
+| [System One Decision Models for Retrofit Agents](../ideas/typesafe-system-one-agent-fit.md) | Research on typed decision models for IDEA-001 | 2026-09-24 |
+| [Proper Warm CXO initial proposal](../presentations/proper-warm-cxo-initial-proposal.pptx) | Initial executive presentation deck | Binary file |
+| [85-day roadmap](../case-study-85-day-roadmap.svg) | C-suite solution roadmap diagram, with its [Excalidraw source](../case-study-85-day-roadmap.excalidraw) | Binary file |
 
-## PAS 2035 and funded retrofit delivery
+### Research Syntheses
 
-| Local file | Status and purpose | Official source |
+| Document | Summary | Updated |
 | --- | --- | --- |
-| `pas-2035-2023-bsi-overview.md` | BSI overview of PAS 2035:2023 converted from the published HTML | [BSI PAS 2035 overview](https://www.bsigroup.com/en-GB/insights-and-media/insights/brochures/pas-2035-retrofitting-dwellings-for-improved-energy-efficiency/) |
-| `warm-homes-social-housing-fund-technical-annex-2025.md` | Government technical annex that applies retrofit requirements to funded delivery, converted from PDF | [Warm Homes: Social Housing Fund Wave 3](https://www.gov.uk/government/publications/warm-homes-social-housing-fund-wave-3) |
+| [Housing Association Primer](./research/sector/housing-association-primer.md) | What a UK housing association is, sector scale and archetypes, tenure types, lease responsibility rules for retrofit, resident needs, board capital patterns, funding model and implications for Proper North Homes | 2026-09-25 |
+| [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) | Provisional sector benchmarks for energy, repairs, safety, grants, finance, delivery and quality | 2026-09-11 |
+| [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md) | Official publications and datasets behind each baseline benchmark | 2026-09-11 |
+| [Company Profile Research](./research/company/company-profile-research.md) | Confirmed not-for-profit status, comparators, modelled customer profile (estimates, not company facts), common sector problems, role map and company gaps for the role agents | 2026-09-26 |
+| [Agent Request Challenge](./research/company/agent-request-challenge.md) | Role-agent challenge of the five requested agents: real problems, non-agent alternatives, bounded AI fit, shared foundation, value tests and stop criteria | 2026-09-26 |
 
-PAS 2035:2023 is a licensed BSI standard. The standard itself is not reproduced
-in this repository. Obtain an authorised copy from BSI and verify the edition
-required by the relevant funding scheme or contract.
+### Regulatory Sources
+
+The [Regulatory Source Register](./regulatory/README.md) holds the authority
+hierarchy, current-use status, change likelihood, monitoring cadence and
+official links for every snapshot. Check it before relying on any file below.
+
+| Topic folder | Snapshots | Use status summary |
+| --- | --- | --- |
+| [energy-efficiency/](./regulatory/energy-efficiency/) | Net Zero 2050 Target Order 2019; social rented sector MEES consultation and impact assessment 2025; government response and final impact assessment 2026 | 2026 government response and final impact assessment are the final policy position, not a commenced landlord duty; 2025 material is historical |
+| [social-housing-regulation/](./regulatory/social-housing-regulation/) | Social Housing (Regulation) Act 2023; Safety and Quality Standard 2024; Awaab's Law regulations 2025 and Phase 1 and Phase 2 guidance | Phase 1 in force from 27 October 2025; Phase 2 planned from 30 November 2026 |
+| [data-protection/](./regulatory/data-protection/) | UK GDPR current consolidated text; UK GDPR adopted text; Data Protection Act 2018 | Use the current consolidated UK GDPR text; the adopted text is historical |
+| [retrofit-standards-and-funding/](./regulatory/retrofit-standards-and-funding/) | PAS 2035:2023 BSI overview; Warm Homes: Social Housing Fund Wave 3 technical annex | Overview and allocation method only; the licensed standard and grant agreement govern |
+
+### Resources
+
+| Document | Summary | Updated |
+| --- | --- | --- |
+| [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | Internal hub entry points, nonprofit hero use cases, patterns mapped to each Proper Warm agent, customer evidence and lessons | 2026-09-25 |
+
+### Method and Memory
+
+| Document | Summary |
+| --- | --- |
+| [Project Memory](./memory.md) | AMA programme process, presentation guidance and owner preferences |
+| [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | Coaching prompt that turns a recurring task into a Goal Card for an agent working in an assess, act, check and adjust loop |
+| [Knowledge Base Log](./log.md) | Chronological record of knowledge base changes |
+
+### Agents
+
+| Agents | Purpose |
+| --- | --- |
+| `company-*` in [.github/agents/](../../.github/agents/) | Proper North Homes role agents for interrogating the problem. Grounded in [Company Profile Research](./research/company/company-profile-research.md) |
+| `ama-*` in [.github/agents/](../../.github/agents/) | AMA helper agents for solution orchestration and presentation communications |
+
+## Maintenance
+
+### Ingest a New Source
+
+1. Classify the source using the categories in the repository instructions.
+2. Place an official regulatory, funding or standards snapshot in the matching
+   [regulatory/](./regulatory/) topic folder and add it to the
+   [Regulatory Source Register](./regulatory/README.md). Record other sources
+   in the synthesis that uses them.
+3. Integrate the findings into the existing synthesis or project document.
+   Create a new synthesis page only when no existing page can hold the topic.
+4. Flag contradictions with existing pages rather than overwriting them.
+5. Update this index and append an `ingest` entry to the
+   [Knowledge Base Log](./log.md).
+
+### File Back a Durable Answer
+
+When a question produces a comparison, analysis or finding worth keeping,
+save it into the relevant synthesis or project document with its evidence,
+update this index when a page is added, and log it as a `query` entry.
+
+### Lint the Knowledge Base
+
+Run a lint pass before a major deliverable, submission or regulatory
+commencement date. Check for:
+
+* Broken relative links and files missing from this index
+* Contradictions between syntheses, project documents and sources
+* Stale claims superseded by a newer source or a regulatory change
+* Snapshots past their monitoring cadence in the register
+* Orphan pages with no inbound link from this index or another page
+
+Record the result as a `lint` entry in the log.
+
+### Placement Rules
+
+| Material | Location |
+| --- | --- |
+| Official legislation, standards, policy, guidance or funding material | `regulatory/{topic}/` |
+| Sector research and benchmarks | `research/sector/` |
+| Research about Proper North Homes and its roles | `research/company/` |
+| AMA training material and reusable prompts | `method/` |
+| Internal or external resource pointers and their retrieved findings | `resources/` |
+| Owner notes and preferences | `memory.md`, only when the owner asks |
+| Problem specification, BRDs, ideas and presentations | Existing folders under `docs/` |
+| Private owner material, such as the cohort map | `support/`, outside the knowledge base |

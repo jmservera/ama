@@ -13,7 +13,10 @@ four communication archetypes defined in this agent.
 
 Read `docs/case_study_48_original.md`,
 `docs/case_study_48_addendum.md` and
-`support/company-profile-research.md` before developing project content.
+`docs/reference/research/company/company-profile-research.md` before developing project content.
+
+Use the knowledge base index in `docs/reference/README.md` to find further
+sector, regulatory and project evidence for the question.
 
 Keep case-study facts, sector-informed hypotheses, illustrative scenarios,
 unknown company details, and resident evidence distinct. Do not invent
