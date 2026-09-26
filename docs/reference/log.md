@@ -199,3 +199,81 @@ metadata when the knowledge base was created.
   and NFR-009 thresholds, which need company data or board decisions (OD-01,
   OD-08, OD-09, OD-11, OD-12, OD-13, OD-15, OD-18, OD-25). Targets were not
   invented.
+
+## [2026-09-26] query | Challenge the pilot measurement and benefits dashboard proposal
+
+* The owner proposed a benefits dashboard, comparison with historical
+  records or a short prospective history, and comparison of the pilot with
+  non-pilot retrofit work. The eight `company-*` role agents challenged it in
+  parallel.
+* Added `research/company/pilot-measurement-challenge.md`: challenge table,
+  the operating-model versus agent decision, a two-layer comparison design,
+  freeze list, analysis rules, effort measurement, operational dashboard
+  versus benefits scorecard, consolidated scorecard, guardrails with stop
+  triggers, vanity metrics and plausible history sources.
+* Flagged contradictions: the BRD Current-State Summary treats the
+  twelve-month reconstruction as the counterfactual, while the panel treats
+  it as context only; the BG-011 targets may be below the pilot's minimum
+  detectable effect. Both go to OD-18. The BRD and addendum were not changed.
+* BRD identifiers were spot-checked against the local BRD, and the Awaab's
+  Law timer claim against the local Phase 1 guidance snapshot. Nothing was
+  checked against official sources online. All role answers are hypotheses,
+  not company facts.
+* Updated the index (`README.md`) and this log.
+
+## [2026-09-26] update | Integrate the pilot measurement design into the BRD and addendum
+
+* At the owner's request, the BRD Builder integrated
+  `research/company/pilot-measurement-challenge.md` into
+  `../brds/agentic-retrofit-programme-brd.md`, now version 0.3.0. RULE-019
+  requires a frozen two-layer protocol. AC-062 covers the freeze and Finance
+  attribution, and AC-074 to AC-077 cover Layer A, Layer B, statistical
+  reporting and effort measurement. New RULE-024 (AC-078) pauses affected
+  work on a guardrail breach. Other changes: a BG-011 caveat on the minimum
+  detectable effect, FR-025 measurement costs, an operational dashboard
+  versus benefits scorecard, a misleading-measures list, OD-34 to OD-38, and
+  updated traceability and approval criteria.
+* The Current-State Summary now treats the twelve-month reconstruction as
+  context. The proposed counterfactual is the instrumented pre-period plus a
+  concurrent matched comparison, pending OD-18. This resolves the
+  contradiction flagged in the previous entry, but only as a proposal.
+* Added a measurement-design note and a challenge row to
+  `../case_study_48_addendum.md`.
+* BRD Quality Reviewer, Define: the first 0.3.0 pass raised four CAUTION
+  findings (compound AC-062, unnumbered prose obligations, untraced
+  guardrails, inconsistent timing gate). The BRD Builder corrected all four,
+  and the rerun found no new findings. The overall result is still FAIL, with
+  Define exit blocked, only because of the accepted company-data gaps
+  (req-qual-001 to 008). Run 3 was recorded in
+  `.copilot-tracking/brd-sessions/agentic-retrofit-programme.quality-report.yml`.
+* Updated the challenge page, the index (`README.md`) and this log.
+
+## [2026-09-26] update | Reframe as agent-led modernisation and place agents only where they add value
+
+* At the owner's request, the programme is now framed as an agent-led
+  modernisation of the existing retrofit model. The BRD Builder updated
+  `../brds/agentic-retrofit-programme-brd.md` to version 0.4.0 and
+  `../case_study_48_addendum.md`. The pilot uses existing teams and
+  suppliers. The dedicated delivery cell and ring-fenced capacity were
+  removed, and "control plane" became "digital foundation".
+* Measurement: Comparison 1 tests a locality with agents against a matched
+  locality without them. Comparison 2 gives per-capability task-level
+  evidence. Both replace Layer A and B, and AC-074, AC-075 and RULE-019 were
+  edited in place. OD-34 is a proposed resolution: the pilot decides which
+  agent capabilities scale. Sponsor, Assets and Finance must confirm it. An
+  Owner Decision section was added to
+  `research/company/pilot-measurement-challenge.md`.
+* Agent placement: the capability tables in the BRD and the addendum now show
+  a deterministic core beside the place where an agent helps. Decisions that
+  need clear, transparent and repeatable rules stay deterministic. Agents turn
+  free text into sourced values, propose missing values for owners to
+  confirm, reconcile records, draft and raise signals. Ranking weights and
+  executive reporting are no longer agent capabilities, and programme
+  supervision and reporting have no agent in the initial pilot. A raise-only
+  hazard-signal row was added. The addendum links each capability to a
+  proposed business value measure.
+* Removed wording saying the documents do not judge current teams.
+* BRD Quality Reviewer, Define: Runs 4 and 5 found no new findings. The result
+  is still FAIL, with Define exit blocked, only because of the accepted
+  company-data gaps (req-qual-001 to 008).
+* Updated the index (`README.md`) and this log.

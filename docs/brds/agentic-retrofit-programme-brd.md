@@ -6,7 +6,7 @@ ms.date: 2026-09-26
 ms.topic: reference
 brd_id: "BRD-2026-AMA48-001"
 status: "draft"
-version: "0.2.0"
+version: "0.4.0"
 owners: ["AMA Research Team"]
 reviewers: ["Executive Director of Assets (proposed sponsor)", "Named Proper North Homes control owners (to be confirmed)"]
 created_date: "2026-09-11"
@@ -40,6 +40,7 @@ requirement_id_prefixes:
 | Source | [Original Case Study 48](../case_study_48_original.md) and [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Proposal source | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Recommended decision | Capped readiness and gated pilot; no portfolio-wide rollout or capital acceleration approval |
+| Owner decision | 2026-09-26: frame the programme as agent-led modernisation of the existing retrofit model, with agents taking on coordination, chasing, re-keying, reconciliation and evidence assembly while people keep decisions |
 
 > [!IMPORTANT]
 > Quantified benefits, portfolio baselines, approval thresholds and internal
@@ -80,19 +81,22 @@ improvements while protecting resident safety, meeting applicable statutory
 response times, preserving resident choice, maintaining retrofit quality and
 operating within financial and supplier capacity.
 
-Current retrofit assessment, grant, procurement, resident consent and quality
-assurance activities rely heavily on a small team and spreadsheets. This does
-not establish that administration is the binding delivery constraint.
+A small team holds retrofit assessment, grant, procurement, resident consent
+and quality assurance together through spreadsheet-based coordination. This
+does not establish that administration is the binding delivery constraint.
 Readiness work must distinguish coordination failures from capital, competent
 staff, supplier, property, resident and technical constraints.
 
-The proposed solution is a governed retrofit delivery service supported by a
-portfolio control plane: a shared workflow and evidence layer connecting
-existing services. Deterministic rules enforce mandatory gates. Bounded AI may
-recommend, draft, reconcile and flag, but is not the default solution to every
-workflow. Accountable people retain authority for safety, technical approval,
-resident consent, investment, procurement, grant submission, payment and
-quality acceptance.
+The proposed solution is agent-led modernisation of the existing retrofit
+model. Existing teams, suppliers, professional roles and systems remain. The
+agents take on manual coordination, chasing, re-keying, reconciliation and
+evidence assembly through the digital foundation they need: a shared property
+record, explicit lifecycle stages, named handoff owners and deterministic
+controls for safety, consent and approvals. Bounded AI may recommend, draft,
+reconcile and flag, but is not the default solution to every workflow.
+Accountable people retain authority for safety, technical approval, resident
+consent, investment, procurement, grant submission, payment and quality
+acceptance.
 
 The programme will not be approved on delivery volume alone. It must demonstrate
 safe property progression, valid and accessible resident decisions, committed
@@ -224,16 +228,21 @@ change what the requirements must cover:
 ### Problem Statement
 
 The association cannot establish a credible path to faster retrofit delivery
-while critical decisions, evidence and handoffs remain fragmented across
-spreadsheets and teams. The current model creates a risk that delivery targets
-are pursued without reliable property data, explicit safety holds, accessible
-resident decisions, committed supplier capacity, controlled PAS 2035
-progression, verified grant value or an affordable investment trajectory.
+while critical decisions, evidence and handoffs are spread across spreadsheets
+and teams, and much of the coordination rests on a small team. This creates a
+risk that
+delivery targets are pursued without reliable property data, explicit safety
+holds, accessible resident decisions, committed supplier capacity, controlled
+PAS 2035 progression, verified grant value or an affordable investment
+trajectory.
 
-The programme must first establish which of these constraints limits accepted
-outcomes and whether process redesign, existing platform configuration,
-conventional workflow integration or bounded AI best addresses it. Faster
-administration alone does not prove that physical delivery can increase.
+The programme must first establish which constraints limit accepted outcomes
+and which agent capabilities add value compared with matched existing delivery
+without agents. Faster administration alone does not prove that physical
+delivery can increase. If Phase 0 shows supplier or competent-assessor
+capacity is the binding constraint, agents cannot create that capacity; their
+value is in forecasting, scheduling within confirmed capacity and evidence
+flow.
 
 ### Cross-Functional Challenge to the Five-Agent Request
 
@@ -250,7 +259,7 @@ case-study evidence and sector research. Their convergence is a
 sector-informed recommendation, not proof of company stakeholder agreement.
 
 No perspective supported five end-to-end agents as an implementation
-commitment. Each request bundles three kinds of work: deterministic control
+commitment. Each request combines three kinds of work: deterministic control
 work, accountable human decisions, and a smaller set of tasks where bounded AI
 helps. The requested decomposition assigns technology to five visible
 activities before the association has established the binding delivery
@@ -260,8 +269,8 @@ also combines responsibilities that require different authorities while
 duplicating evidence, reconciliation, exception and reporting capabilities
 that should be shared.
 
-The underlying requirement is to establish a controlled property-to-portfolio
-operating model that can answer:
+The underlying requirement is to establish the digital foundation that agents
+need, so existing teams and decision makers can answer:
 
 * Where each home is in the retrofit lifecycle
 * How long it has remained at that stage
@@ -278,7 +287,7 @@ The five proposed agents should therefore be treated as hypotheses:
 
 | Original proposal | Cross-functional challenge | Proposed disposition |
 | --- | --- | --- |
-| Stock Prioritisation Agent | No verified address-level baseline, data-confidence model or approved cohort policy exists. Once weights are agreed, ranking is arithmetic; eligibility is a rules question. Ranking may conceal missing safety, building, planned-maintenance or resident information, and recorded vulnerability flags are probably incomplete. | Defer live use. Test a transparent, versioned scoring model and deterministic eligibility rules (FR-026) in shadow mode as a control-plane module. Limit AI to reconciliation, extraction from free text and plain-language explanation. |
+| Stock Prioritisation Agent | No verified address-level baseline, data-confidence model or approved cohort policy exists. Once weights are agreed, ranking is arithmetic; eligibility is a rules question. Ranking may conceal missing safety, building, planned-maintenance or resident information, and recorded vulnerability flags are probably incomplete. | Defer live use. Test a transparent, versioned scoring model and deterministic eligibility rules (FR-026) in shadow mode as a digital-foundation module. Limit AI to reconciliation, extraction from free text and plain-language explanation. |
 | Assessment Agent | Software cannot perform missing observations. The request merges the Retrofit Assessor's survey ownership and the Retrofit Coordinator's review into one approval. | Replace with bounded assessment preparation: source-backed factual pre-population, evidence assembly and omission checks for separate competent sign-offs. |
 | Grant and Funding Agent | The GBP 40 million remains an opportunity rather than an evidenced award. Reporting is a data-lineage problem, and the funding route may be a formula allocation rather than a bid. | Implement the grant ledger, versioned eligibility and route rules, reconciliation and approval controls first. Pilot drafting only for an evidenced award or open route. |
 | Contractor and Resident Coordination Agent | Supplier utilisation and resident choice have different interests, authorities, information needs and escalation routes. An agent cannot secure consent, and a drafted contractor message could act as a client instruction or variation. | Split in two. Resident side: deterministic decision record, human-owned service, bounded drafting and routing only. Contractor side: suggestions within committed capacity, with instructions reserved to the contract manager. |
@@ -395,7 +404,7 @@ supported by company evidence rather than sector assumptions.
 | BG-008 | OBJ-08 | Maintain affordability, RULE-023 | Minimum liquidity and covenant headroom | Sector warning comparators only; provider position unknown | Remain within board-approved tolerances | Requires company data |
 | BG-009 | OBJ-09 | Improve resident outcomes | Energy-cost, comfort, satisfaction and complaint measures | Repairs 73.6%; listens and acts 61.6%; complaint handling 35.5% | Validated improvement without increased harm | Provisional sector medians |
 | BG-010 | OBJ-10 | Improve accountability | Exception handoffs accepted by a named human owner | Unknown | 100% accepted or escalated within approved times | Proposed |
-| BG-011 | OBJ-11 | Reduce avoidable coordination effort and delay, RULE-023 | Assessment-to-ready-to-install elapsed time and manual coordination hours per accepted home, net of review and assurance | Measure in Phase 0 using a comparable cohort | Proposed pilot improvements: at least 20% lower cycle time and 25% fewer coordination hours | Unvalidated addendum targets |
+| BG-011 | OBJ-11 | Reduce avoidable coordination effort and delay, RULE-023 | Assessment-to-ready-to-install elapsed time and manual coordination hours per accepted home, net of review and assurance | Measure in Phase 0 using a comparable cohort | Proposed pilot improvements: at least 20% lower cycle time and 25% fewer coordination hours; Phase 0 must test whether these targets are below the pilot's minimum detectable effect | Unvalidated addendum targets |
 | BG-012 | OBJ-12 | Demonstrate proportionate technology value | Incremental benefit, whole-life cost, draft accuracy, overrides and critical exceptions versus non-agentic alternatives | Establish options and shadow-mode baseline | Positive attributable value before scale; zero autonomous controlled approvals and no missed critical exceptions in agreed tests | Proposed scale gate, not proof of zero live risk |
 
 BG-002 to BG-005 and BG-011 have measurable targets and timeframes, although
@@ -408,7 +417,10 @@ These goals fail the SMART check until the owners supply the values. This BRD
 does not invent them.
 
 No objective will be considered achieved solely because an automated action was
-completed or an installation volume increased.
+completed or an installation volume increased. BG-011 keeps the 20% cycle-time
+and 25% effort targets as unvalidated addendum targets. If the Phase 0 minimum
+detectable effect is larger than either target, the pilot reports an estimated
+effect with an interval and caveat rather than a pass or fail.
 
 Accepted handover requires current professional approvals, resident decision
 or separately authorised lawful process, accepted physical and documentary
@@ -512,29 +524,41 @@ Detailed sources, caveats, calculations and unsupported-average gaps are in
 * Mandatory sensors or a new platform as a prerequisite for current services
 * An upfront commitment to five agents or portfolio-wide capital acceleration
 
-### Operating Model and Authority
+### Digital Foundation and Authority
 
-The control plane connects authoritative asset, repairs, housing, finance,
+The digital foundation connects authoritative asset, repairs, housing, finance,
 procurement and contractor systems. It does not recreate their services or
 transfer their statutory or financial accountability. Property records link to
 building records where shared systems or building-level safety controls apply.
 
 Deterministic workflow enforces evidence validity, safety and resident holds,
-statutory timers, delegated approvals, funding and capacity gates, audit and
+statutory timers, delegated approvals, funding and capacity gates, scoring
+weights, eligibility and route rules, lifecycle states, queues, audit and
 reconciliation. Only authorised people make the underlying controlled
 decisions. A workflow may execute a validated transition after those decisions;
 an AI recommendation cannot satisfy an approval gate.
 
-| Capability | Initial AI responsibility and boundary | Human authority |
-| --- | --- | --- |
-| Portfolio prioritisation | Recommend and explain priorities from sourced evidence; flag missing data | Asset and safety owners approve rules, cohorts and exceptions |
-| Data readiness | Reconcile records and flag conflicts through to owner disposition | Named data owners resolve critical conflicts |
-| PAS 2035 workflow | Pre-populate factual inputs and track omissions; no generated site findings | Competent assessors, designers, coordinators and evaluators own professional outputs |
-| Grant and funding | Assemble drafts and reconcile supporting evidence to Finance review | Finance approves funding, validates and submits bids and claims, and confirms receipts |
-| Resident service | Draft accessible content and suggest options; no autonomous consequential contact or consent determination | Residents decide on discretionary measures; staff own support, communication, exceptions and redress |
-| Supplier coordination | Suggest appointments using approved design, resident decisions and committed capacity; no autonomous works release | Contract manager accepts capacity; Programme releases work and confirms appointments |
-| Quality assurance | Check evidence and raise anomalies; a missing flag is not assurance; no acceptance or automated defect closure | Competent quality authority accepts work and verifies remediation |
-| Executive reporting | Summarise controlled records, preserving uncertainty and open exceptions | Executives and Board approve investment, risk and further tranches |
+Decisions that must follow clear rules and be transparent, repeatable and
+explainable to residents, regulators, funders or the Board use the
+deterministic approach. Agents are placed only where the
+[Agent Request Challenge](../reference/research/company/agent-request-challenge.md)
+found a plausible gain: turning free text, documents and messages into
+concrete, sourced values for the rules and benefits measures; proposing
+missing values with source and confidence for owner confirmation, never
+inventing an observation; reconciling records; drafting from approved records;
+and raising signals for human triage. Programme supervision and portfolio
+reporting stay deterministic in the initial pilot.
+
+| Capability | Deterministic core | Initial agent responsibility and boundary | Human authority |
+| --- | --- | --- | --- |
+| Property data and prioritisation | Versioned scoring weights, pass, fail or unknown eligibility rules (FR-026) and data validity rules | Reconcile records, extract condition facts from free text, flag missing or stale fields and explain scores; no ranking weights, eligibility decisions or silent exclusion | Asset and safety owners approve rules, cohorts and exceptions; named data owners confirm proposed values and resolve critical conflicts |
+| PAS 2035 assessment preparation | Stage gates, separate assessor and coordinator sign-off (FR-010), material-change rules and safety-hold check | Pre-populate sourced factual inputs, structure survey notes and track omissions; no generated site findings | Competent assessors, designers, coordinators and evaluators own professional outputs |
+| Grant and funding evidence | Four-state grant ledger (FR-023), eligibility and route rules, reconciliation and claim holds | Match evidence to the per-measure schedule and assemble draft packs for Finance review, only once the ledger exists and an award or open route is evidenced | Finance approves funding, validates and submits bids and claims, and confirms receipts |
+| Resident service | Measure-specific decision record, adjustments, pauses and failed-access rules (RULE-006) | Draft accessible content, route free-text messages to fixed categories and suggest options; no autonomous consequential contact or consent determination | Residents decide on discretionary measures; staff own support, communication, exceptions and redress |
+| Supplier coordination | Committed-capacity register, standard work orders, appointment outcome codes and contract-manager instructions | Suggest appointments within approved design, resident decisions and committed capacity, and convert contractor messages to outcome codes; no autonomous works release or instruction | Contract manager accepts capacity; Programme releases work and confirms appointments |
+| Quality evidence assurance | Per-measure evidence checklist, defect severity rules and independent acceptance | Check evidence and raise anomalies; a missing flag is not assurance (RULE-014); no acceptance or automated defect closure | Competent quality authority accepts work and verifies remediation |
+| Hazard signals | Statutory clocks and awareness timestamp in the existing hazard and repairs service (FR-003, RULE-003) | Raise-only scan of retrofit notes and messages feeding human triage; no hazard categorisation or clock control | Hazard and repairs service owns categorisation, clocks and closure |
+| Programme supervision and reporting | Lifecycle states, queues, clocks, audit and reports from controlled records | None in the initial pilot; later summarisation support requires its own RULE-019 test | Programme owns the workflow; executives and Board approve investment, risk and further tranches |
 
 Shadow mode permits no live consequential actions. The initial live pilot
 retains these draft-and-recommend boundaries. Any later routine automation
@@ -545,15 +569,17 @@ decisions remain prohibited.
 
 | Phase | Proposed scope and timing | Evidence and authority to proceed |
 | --- | --- | --- |
-| 0. Readiness | Indicative 6 to 8 weeks; validate pilot-area stock and building data, twelve-month throughput, delay causes, resident journeys, competence, suppliers, funding, headroom and platform options | Sponsor and Finance authorise a capped discovery envelope; relevant control owners accept the baseline, options appraisal and evaluation plan before shadow work |
-| 1. Shadow mode | Recommendations, drafts and exception tests without live commitments or resident contact; duration agreed after readiness | Sponsor authorises live pilot only after safety, technical, resident, finance, procurement, data and digital owners accept controls, comparison results, DPIA, continuity tests and pilot budget |
-| 2. Controlled live pilot | Indicative 6 to 9 months; one locality, a few understood archetypes, one cross-functional cell and ring-fenced supplier and assurance capacity; 80 to 100 candidate homes and at least 50 accepted handovers proposed | Control owners and independent assurance review all pilot measures; Board authorises any acceleration beyond the existing annual plan under RULE-011 |
+| 0. Readiness | Indicative 6 to 8 weeks; validate pilot-area stock and building data, twelve-month throughput, delay causes, resident journeys, competence, suppliers, funding, headroom and platform options; after the frozen protocol and the OD-36 DPIA and lawful measurement basis are approved, switch on identical event capture for the proposed pilot locality and matched locality before resident contact | Sponsor and Finance authorise a capped discovery envelope; relevant control owners accept the baseline, options appraisal, Comparison 1 and Comparison 2 evaluation protocol, guardrails and data-protection gates before any Phase 0 pilot or comparison event capture. Shadow testing additionally requires the shadow-mode entry evidence listed for Phase 1 |
+| 1. Shadow mode | Recommendations, drafts and exception tests without live commitments or resident contact; duration agreed after readiness; run paired agent outputs against the same cases handled by workflow-only teams where lawful | Sponsor authorises live pilot only after safety, technical, resident, finance, procurement, data and digital owners accept controls, comparison results, DPIA, continuity tests, guardrail stop triggers and pilot budget |
+| 2. Controlled live pilot | Indicative 6 to 9 months; existing teams and suppliers in one locality, a few understood archetypes, named accountable owners, agents operating within recommend, draft, reconcile and flag boundaries, 80 to 100 candidate homes and at least 50 accepted handovers proposed; assurance capacity needed for safety remains a control | Control owners and independent assurance review the frozen benefits scorecard, operating dashboard exceptions and guardrail breaches; Board authorises any acceleration beyond the existing annual plan under RULE-011 |
 | 3. Repeatable schemes | Approved archetype patterns, geographic packages, planned-maintenance alignment, supplier scorecards and risk-based inspection | Next tranche requires accepted quality, resident, capacity, funding and financial evidence within the approved envelope |
 | 4. Selective scale | Add only automation with proven incremental value and extend by archetype or geography | Board approves the next envelope after independent assurance and downside testing; relevant owners approve each authority change |
 
-Phase 0 must ratify cohort size, archetypes, schedule, cost ceiling and
-thresholds before measurement begins. These are planning proposals, not a
-delivery promise or a statistically sufficient demonstration of safety.
+Before any Phase 0 pilot or comparison event capture, Phase 0 must ratify
+cohort size, archetypes, schedule, cost ceiling and thresholds through the
+frozen protocol and the approved OD-36 DPIA and lawful measurement basis. These
+are planning proposals, not a delivery promise or a statistically sufficient
+demonstration of safety.
 Time elapsed or handover count alone cannot pass a gate. Include varied
 resident communication and adjustment needs; technically excluded homes remain
 visible with named owners and appropriate service routes.
@@ -578,8 +604,72 @@ conventional workflow delivery rather than a forced AI rollout.
 | In-use evaluation | Lawful, proportionate follow-up plan for energy, comfort, affordability, moisture and ventilation; seasonal evidence reported as pending where not yet available |
 
 RULE-019 requires baselines, denominators, comparison design and owners before
-testing. Short pilots must not claim seasonal bill savings or safety assurance
-from a small number of successful handovers.
+testing. The proposed counterfactual is the instrumented Phase 0 and shadow-mode
+pre-period plus a concurrent matched comparison cohort, pending OD-18
+ratification. Short pilots must not claim seasonal bill savings or safety
+assurance from a small number of successful handovers.
+
+The pilot protocol must use two named comparisons:
+
+* Comparison 1, locality with agents versus matched locality without agents,
+  tests whether adding agents to existing teams improves accepted outcomes. It
+  freezes the cohort before any resident contact; analyses all homes that
+  entered on an intention-to-treat basis; uses a concurrent matched comparison
+  locality using existing teams without agents; switches on identical event
+  capture in both localities during Phase 0; compares each locality with its
+  instrumented pre-period using difference-in-differences; reports output per
+  unit of committed competent capacity as well as total output; and logs shared
+  staff or supplier time because shared resources can contaminate the
+  comparison.
+* Comparison 2, per-capability task-level evidence, tests which agent
+  capabilities scale. It uses paired shadow-mode comparison on the same cases,
+  and task-level allocation between agent-assisted and workflow-only handling
+  where safe and lawful. Measures include review minutes, drafts accepted
+  without material edit, error severity, overrides and missed critical
+  exceptions.
+
+Before any Phase 0 pilot or comparison event capture, RULE-019, OD-18 and
+OD-36 must freeze and version the event dictionary, accepted-handover
+definition, clock and pause rules, eligibility, entry cut-off, denominators,
+matching variables, primary measures, minimum detectable effect, thresholds,
+unfinished-case handling, exclusions and analysis code version, and approve the
+DPIA and lawful measurement basis. Later changes record a new version and reason.
+
+Analysis uses medians and 80th or 90th percentiles for cycle time. Open cases
+are reported as censored time-to-event observations, with withdrawal and
+technical exclusion as competing outcomes. If the minimum detectable effect is
+larger than the BG-011 targets, the pilot reports an interval estimate rather
+than a pass or fail. Safety, resident rights and quality are must-not-worsen
+tests, not benefits to trade against throughput. Zero incidents in about 50
+handovers is not evidence of safety.
+
+Effort measurement is part of the RULE-019 protocol governed by AC-077. The
+design uses work sampling, short time studies or short diary weeks in both arms,
+net of review and assurance, and shows effort shifted to residents, suppliers
+and housing officers, including the time spent recording. Measurement, parallel
+running and assurance are technology costs under FR-025.
+
+Proposed guardrails and stop triggers are:
+
+| Guardrail | Governing requirement IDs | Accountable owner | Required measurement | Proposed stop trigger | Restart authority |
+| --- | --- | --- | --- | --- | --- |
+| Unresolved safety hold | FR-001, RULE-001, RULE-024 | Accountable safety role | Gate passes with a missing, stale or unresolved hold | Any one pauses the affected work package for review | OD-35 named authority under RULE-020 |
+| Hazard response | FR-002, FR-003, RULE-003, RULE-024 | Repairs and Building Safety owners | Pilot-locality cases meeting each Awaab's Law step, split by source, including the awareness-to-referral gap | Any retrofit-linked breach or unaccepted referral pauses affected work | OD-35 named authority under RULE-020; hazard response remains with the repairs and hazard service |
+| Defects at handover | FR-029, FR-030, AC-043, RULE-013, RULE-024 | Competent quality authority | Safety-critical, material and minor defects by severity, plus reopened cases | A safety-critical defect holds the home; repeated or systemic defects trigger competent review and hold affected further work | OD-35 named authority under RULE-020, with competent quality disposition |
+| Post-retrofit damp, mould and ventilation | FR-032, RULE-014, RULE-024 | Assets, Building Safety and DPO-approved evaluation owners | New or recurrent cases over fixed follow-up windows against comparable homes | A confirmed significant hazard triggers competent review; a cluster pauses the archetype | OD-35 named authority under RULE-020, after evaluation-owner review |
+| Fire-relevant measures | FR-035, AC-055, RULE-024 | Assets, Building Safety and competent technical roles | Measures affecting fire-relevant elements reviewed before instruction and inspected at handover | Missing review, missing inspection or fire-stopping defect holds that work | OD-35 named authority under RULE-020, with competent technical approval |
+| Resident authority | FR-011, FR-013, FR-014, FR-015, RULE-024 | Resident Engagement, Home Ownership and Legal where tenure or lease interests apply | Works started without a current resident decision or authorised exception | Any one pauses the work package | OD-35 named authority under RULE-020 after the current decision or authorised exception is recorded |
+
+RULE-024 records the pause-and-restart rule for guardrail breaches. Override
+authority, if any, is open under OD-35. Awaab's Law clocks stay outside any acceleration or
+cycle-time measure (FR-002, RULE-003). The local [Awaab's Law Phase 1 guidance](../reference/regulatory/social-housing-regulation/awaabs-law-phase-1-guidance-2025.md)
+is official non-statutory guidance for requirements in force from 27 October
+2025, retrieved 2026-09-19; section 1.4 records fixed timeframes including 24
+hours for emergency hazards and 10 working days to investigate potential
+significant hazards. The local [Awaab's Law Phase 2 guidance](../reference/regulatory/social-housing-regulation/awaabs-law-phase-2-guidance-2026.md),
+also official non-statutory guidance, states that Phase 2 requirements apply
+from 30 November 2026. Legal must confirm current scope and applicability before
+the protocol is frozen.
 
 ## Current and Future Business Processes
 
@@ -590,10 +680,13 @@ procurement, resident consent and quality assurance. The authoritative systems,
 handoff rules, approval thresholds, data quality and performance baselines are
 unknown.
 
-Readiness shall collect a twelve-month accepted-throughput baseline by
-archetype, measure and supplier, plus stage timings, delay causes, repeat work,
-manual effort, access outcomes and defects. These inputs establish the
-counterfactual for the options appraisal and pilot.
+For RULE-016, the readiness evidence includes a twelve-month accepted-throughput
+reconstruction by archetype, measure and supplier, plus stage timings, delay
+causes, repeat work, manual effort, access outcomes and defects. The
+reconstruction provides context with coverage flags. It does not establish the
+counterfactual on its own. The proposed counterfactual for the options appraisal
+and pilot is the instrumented Phase 0 and shadow-mode pre-period plus the
+concurrent matched comparison cohort, pending OD-18 ratification.
 
 ### Future-State Lifecycle
 
@@ -629,7 +722,7 @@ reviewed again.
 ### Requirement Identifier Scheme
 
 Every requirement row carries one canonical identifier, its legacy alias, the
-business goals it supports and one acceptance criterion. Numbering is
+business goals it supports and one or more acceptance criteria. Numbering is
 sequential in document order within each family, and identifiers are not
 renumbered after deletion or reordering.
 
@@ -637,11 +730,11 @@ renumbered after deletion or reordering.
 | --- | --- | --- | --- |
 | BG | Business goal | Outcome in Business Objectives and Success Metrics; legacy alias OBJ-## | 12 |
 | FR | Functional requirement | Business capability or control the programme must provide | 41 |
-| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 73 |
+| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 78 |
 | NFR | Non-functional requirement | Quality attribute classified by ISO/IEC 25010 category | 9 |
 | CON | Constraint | Imposed, non-negotiable boundary from legislation, regulation, funding or the case study | 6 |
-| RULE | Business rule | Standing policy or authority rule that outlives the solution; replaces the canonical BR prefix to avoid a clash with legacy BR-### aliases | 23 |
-| OD | Open decision | Unresolved company decision; not a requirement | 33 |
+| RULE | Business rule | Standing policy or authority rule that outlives the solution; replaces the canonical BR prefix to avoid a clash with legacy BR-### aliases | 24 |
+| OD | Open decision | Unresolved company decision; not a requirement | 38 |
 
 Requirement rows remain grouped by business domain below, so a domain table
 can hold FR, RULE and NFR rows together. The prefix states the type.
@@ -742,7 +835,7 @@ against the official source online.
 | RULE-009 | BR-026 | The case-study GBP 40 million shall remain labelled as an unverified grant opportunity until formal evidence supports a state change. | BG-007 | Finance, board | AC-033: No dashboard presents the amount as secured funding, income, approved budget, claimable value or cash. | Must |
 | FR-024 | BR-027 | Every grant state transition shall record dated source evidence, scheme, amount, property or work package, named approver and immutable history. | BG-007 | Finance, audit, programme | AC-034: Finance can reconcile opening award, claims, approvals, receipts, adjustments and closing balance. | Must |
 | RULE-010 | BR-028 | Automated capabilities shall not submit a bid, approve match funding, certify a claim or record cash receipt without designated human financial authority. | BG-007, BG-008 | Finance, board | AC-035: Role and authority tests block unauthorised actions. | Must |
-| FR-025 | BR-029 | The business case shall separately model the retrofit investment and incremental technology option, eligible delivery, grant conversion, whole-life costs, match funding, monthly cash exposure and downside scenarios. | BG-007, BG-008, BG-012 | Finance, board, assets, digital | AC-036: Finance reconciles existing, rephased, displaced and incremental spend; current-plan, incremental, accelerated and at-risk grant; cost inclusions; peak cash, liquidity, covenant and security headroom. Neither grant nor cost items are double counted. | Must |
+| FR-025 | BR-029 | The business case shall separately model the retrofit investment and incremental technology option, eligible delivery, grant conversion, whole-life costs, match funding, monthly cash exposure and downside scenarios. | BG-007, BG-008, BG-012 | Finance, board, assets, digital | AC-036: Finance reconciles existing, rephased, displaced and incremental spend; current-plan, incremental, accelerated and at-risk grant; technology measurement, parallel-running and assurance costs; cost inclusions; peak cash, liquidity, covenant and security headroom. Neither grant nor cost items are double counted. | Must |
 | RULE-011 | BR-030 | Delivery acceleration shall require a board-approved investment envelope integrated with the long-term asset plan, liquidity forecast and covenant model. | BG-001, BG-002, BG-008 | Board, executive, finance | AC-037: Acceleration cannot exceed the approved annual plan until the gate is satisfied. | Must |
 | RULE-012 | BR-031 | Board-defined downside tolerances shall pause further acceleration when safety, resident, quality, capital, grant or capacity exposure exceeds approved limits. | BG-003, BG-005, BG-006, BG-008 | Board, executive, programme | AC-038: A tolerance breach creates an escalation and blocks new acceleration; affected live activity is contained under the relevant hold. Restart records remediation and approval by the control owners and Board where its envelope is affected. | Must |
 | FR-026 | BR-059 | Eligibility for each home, scheme and funding route shall be a deterministic pass, fail or unknown result from a versioned rule set approved by Finance and traced to a named section of the scheme guidance. | BG-007, BG-012 | Finance, assets, data owners, audit, legal | AC-039: Each result records rule version, guidance section, inputs and their sources, tenure and a reason code; the same inputs and version always give the same result. Rule changes create a new version with approver and effective date, and earlier results are kept. Missing tenure, EPC or lease data returns unknown and opens an investigation under NFR-008. Only passed homes feed opportunity, award or claimable value; injected unknown and failed test homes show zero. Non-social conditions return unknown until the rule is verified against the national scheme guidance. | Must |
@@ -770,7 +863,7 @@ against the official source online.
 | FR-033 | BR-041 | Programme reporting shall distinguish starts, accepted handovers and intended energy outcomes, and show holds, resident pauses, handoffs, capacity, defects, grant states, financial tolerances and attributable technology benefit. | All | Board, executive, programme, residents | AC-051: Reports expose overdue, unowned, blocked and reopened work, with cycle time, effort and quality-adjusted cost denominators; no incomplete work is presented as accepted. | Must |
 | FR-034 | BR-042 | Decision explanations shall show the data, rules, confidence, exceptions and human authority relevant to each prioritisation or progression decision. | BG-005, BG-010 | Residents, staff, audit | AC-052: Affected users can understand why a recommendation or hold occurred and how to challenge it. | Must |
 
-### Proportionate Solution and Professional Operating Model
+### Proportionate Solution and Professional Authority
 
 | ID | Legacy ID | Requirement | Business goals | Impacted stakeholders | Acceptance criteria | Priority |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -793,8 +886,9 @@ against the official source online.
 
 | ID | Legacy ID | Requirement | Business goals | Impacted stakeholders | Acceptance criteria | Priority |
 | --- | --- | --- | --- | --- | --- | --- |
-| RULE-019 | BR-049 | Before shadow testing, the programme shall approve a pilot protocol and benefits register comparing selected automation with a credible non-agentic counterfactual. | BG-002, BG-006, BG-009, BG-011, BG-012 | Programme, finance, residents, digital, assurance | AC-062: The protocol names owners, cohorts, baseline period, denominators, thresholds, critical-exception tests and evidence sources. Reports include pauses, incomplete and reopened cases, error severity and review effort; Finance validates attribution and cashability separately from released staff capacity. | Must |
+| RULE-019 | BR-049 | Before any Phase 0 pilot or comparison event capture and before shadow testing, the programme shall approve a frozen pilot protocol, the OD-36 DPIA and lawful measurement basis, and a benefits register with Comparison 1 for existing teams with agents versus a matched locality without agents, plus Comparison 2 for per-capability task-level evidence. Shadow testing also requires the shadow-mode entry evidence. | BG-002, BG-006, BG-009, BG-011, BG-012 | Programme, finance, residents, digital, assurance | AC-062: The protocol freezes and versions the event dictionary, accepted-handover definition, clock and pause rules, cohort eligibility, entry cut-off, denominators, matching variables, primary measures, minimum detectable effect, thresholds, unfinished-case handling, exclusions and analysis code version. Later changes create a new approved version. The approval record includes the OD-36 DPIA and lawful measurement-basis decision. Finance validates attribution and cashability separately from released staff capacity.<br>AC-074: Comparison 1 design uses a cohort frozen before resident contact, intention-to-treat analysis, concurrent matched comparison in another locality without agents, identical Phase 0 event capture in both localities, difference-in-differences against the instrumented pre-period, output per unit of committed competent capacity and shared-resource logs for staff or suppliers working across localities.<br>AC-075: Comparison 2 design uses paired shadow-mode comparison on the same cases and task-level allocation between agent-assisted and workflow-only handling where safe and lawful, with measures of review minutes, draft acceptance, error severity, overrides and missed critical exceptions.<br>AC-076: Statistical reporting uses medians, 80th or 90th percentiles, censored time-to-event analysis, interval estimates where the minimum detectable effect exceeds BG-011 targets, and must-not-worsen safety, resident and quality tests.<br>AC-077: Effort measurement uses work-sampling, short time studies or short diary weeks in both arms, net of review and assurance, and includes effort shifted to residents, suppliers and housing officers plus the time spent recording. | Must |
 | RULE-020 | BR-050 | Each delivery phase, tranche and later authority expansion shall require an evidence-based release decision within an approved cost and risk envelope. | BG-002, BG-003, BG-005, BG-006, BG-008, BG-012 | Sponsor, Board, control owners, assurance | AC-063: Release records identify applicable requirements, acceptance evidence, unresolved issues and named approvers. Shadow mode cannot cause live actions. Safety or resident-rights breaches stop affected activity; failed value or quality gates prevent expansion. Restart and rollback are tested; prohibited AI decisions remain prohibited at scale. | Must |
+| RULE-024 | None | A guardrail breach shall pause the affected home, work package, archetype or workstream regardless of throughput until restart is authorised under the OD-35 authority and RULE-020 release decision. | BG-003, BG-004, BG-005, BG-006 | Sponsor, control owners, assurance, residents, contractors | AC-078: The breach record identifies scope, owner, evidence, containment, resident impact, remediation and restart authority. Affected work cannot restart until the OD-35 authority and the relevant RULE-020 release decision accept remediation evidence; emergency and statutory hazard response continues outside the pause. | Must |
 | NFR-008 | BR-051 | Prioritisation, resident journeys and outcome evaluation shall be tested for accessibility and unfair exclusion, with human review of missing data, support needs and incomplete appointments. | BG-001, BG-005, BG-009 | Residents, engagement, assets, housing, data protection | AC-064: Before live contact, representative digital and non-digital journeys are tested and deficiencies resolved. Reports show lawful, proportionate outcome breakdowns; neither missing sensors nor support needs silently deprioritise a home. Consent rates are not an optimisation target. | Must |
 | FR-037 | BR-064 | Prioritisation shall not depend only on recorded vulnerability flags and shall include staffed officer-nomination and resident self-referral routes. | BG-003, BG-005, BG-009 | Residents, housing officers, engagement, assets, DPO | AC-065: Missing flags are recorded as "unknown", never "none". Each cohort run is reported with and without flags, and differences go to human review. Flag coverage is compared with prevalence benchmarks by tenure and scheme type. Self-referral works by phone, letter, in person, through trusted intermediaries and digitally; every referral and nomination is acknowledged, decided by a human and explained, with a challenge route (RULE-005, FR-034). No automated capability infers health status. Special category data is used only after DPO approval of the DPIA (RULE-022). Damp and mould hazards stay on the statutory route (FR-002). | Must |
 
@@ -837,10 +931,20 @@ against the official source online.
   authority decisions, reconciliation and recovery records
 * Regulatory source, snapshot, difference, interpretation, approval,
   activation, notification, test and retirement records
-* Baselines, comparison cohorts, effort measurements, evaluation results,
-  benefits owners and tranche approvals
+* Baselines, comparison cohorts, event dictionaries, analysis code versions,
+  effort measurements, evaluation results, benefits owners and tranche approvals
+* Shared-resource allocation logs, work-sampling records and short time-study
+  records, including recording burden
 
 ### Required Management Views
+
+The pilot needs two separate instruments. The operational dashboard steers the
+pilot week to week, can change definitions as the team learns, reports at team
+level rather than individual-officer level and is not gate evidence. The
+benefits scorecard uses frozen, versioned definitions under RULE-019, is
+independently assured and is the gate evidence. Suppliers see contractual KPIs.
+Evaluation measures may be shared with suppliers after a delay, with a right to
+review and challenge data before publication but no veto over the scorecard.
 
 * Portfolio trajectory and validated EPC baseline
 * Safety holds, emergency handoffs and response performance
@@ -862,6 +966,13 @@ against the official source online.
   resident outcomes across relevant groups
 * Regulatory source freshness, failed retrievals, detected changes, pending
   reviews, approved effective dates and rules awaiting regression tests
+
+Measures that must not be used as benefit evidence are starts, installations or
+works released as throughput; completed-only averages; agent activity counts;
+"hours saved" calculated as task counts multiplied by assumed minutes or
+converted into cash; consent rate as a target; combined grant captured;
+supplier-declared utilisation; zero incidents or days since last incident; and
+the absence of an AI flag or sensor alert.
 
 ## Benefits and High-Level Economics
 
@@ -886,8 +997,9 @@ FR-025 and RULE-016 require separate appraisals for the physical retrofit progra
 and the incremental technology option. Each must distinguish existing planned
 expenditure, rephased or displaced expenditure, incremental acceleration and
 financing. Technology costs include discovery, data remediation, integration,
-licensing or consumption, retained staff, training, parallel operation,
-human review, assurance, support, model and rule maintenance, and exit.
+licensing or consumption, retained staff, training, measurement design and
+capture, parallel operation, human review, assurance, support, model and rule
+maintenance, and exit.
 
 Only differences attributable to the selected option against the agreed
 counterfactual count as technology benefits. Staff time released is capacity,
@@ -959,13 +1071,14 @@ would risk double counting.
 | Hypothesis | Evidence before scale | Accountable owner | Requirement |
 | --- | --- | --- | --- |
 | Coordination is a material delivery constraint | Stage delays, failure demand, capacity and root causes | Programme | RULE-016 |
-| Accepted outcomes increase rather than activity | Comparable cohort, accepted handovers and separately measured energy outcomes | Programme and Assets | FR-033, RULE-019 |
+| Accepted outcomes increase rather than activity | Frozen cohort, intention-to-treat analysis, concurrent matched comparison, instrumented pre-period and accepted handovers with separately measured energy outcomes | Programme and Assets | FR-033, RULE-019 |
 | Grant conversion improves | Eligible award, evidence acceptance, claims and receipts net of the current plan | Finance | FR-023, FR-024, FR-025, RULE-009, RULE-010 |
-| Administrative benefits exceed review costs | Net effort, staffing consequences and verified cashability | Programme and Finance | RULE-019 |
+| Administrative benefits exceed review costs | Work sampling or short time studies in both arms, net effort including shifted burden and recording time, staffing consequences and verified cashability | Programme and Finance | RULE-019, FR-025 |
 | Quality is maintained at higher volume | Independent physical inspection, rejection, defect severity, recurrence and remediation cost | Quality | FR-028, FR-029, FR-030, FR-031, FR-032, RULE-013 |
 | Residents receive equitable value | Accessible journey tests and lawful outcome breakdowns, including adverse outcomes | Resident Engagement | FR-032, NFR-008 |
 | Acceleration remains affordable | Monthly cash and severe-but-plausible treasury scenarios | Finance and Board | FR-025, RULE-011, RULE-012 |
-| AI adds value over conventional workflow | Options appraisal, error severity, review effort and incremental whole-life economics | Digital and Finance | RULE-016, FR-036, RULE-018, RULE-019, RULE-020 |
+| Agent capabilities add value over conventional workflow | Comparison 2 paired shadow-mode evidence, lawful task-level allocation where used, error severity, review effort, missed critical exceptions and incremental whole-life economics | Digital and Finance | RULE-016, FR-036, RULE-018, RULE-019, RULE-020 |
+| Safe acceleration does not worsen guardrails | Approved stop triggers, breach logs, affected-work pauses and restart evidence | Building Safety, Programme and Sponsor | FR-001, FR-002, FR-003, FR-030, FR-032, RULE-003, RULE-020 |
 
 ### Executive Trade-Offs as Approval Criteria
 
@@ -974,7 +1087,7 @@ would risk double counting.
 | Speed versus safety and quality | Accepted outcomes and independent evidence outweigh starts or calendar pressure | FR-001, FR-028, RULE-020 |
 | Grant eligibility versus whole-asset value | Record why the intervention fits condition and planned maintenance, not merely a grant | FR-025, FR-035 |
 | Automation versus accountability | Enforce the authority matrix and preserve human professional and resident decisions | RULE-017, FR-036, RULE-018 |
-| Breadth versus deliverability | Test a bounded delivery cell before expanding capabilities or capital | RULE-016, RULE-020 |
+| Breadth versus deliverability | Test agent capabilities in a bounded locality with existing named owners before expanding capabilities or capital | RULE-016, RULE-020 |
 | Standardisation versus property context | Reuse archetype details only after property and building checks | FR-007, FR-035 |
 | Portfolio optimisation versus resident agency | Investigate missing data and support needs rather than exclude silently | RULE-005, NFR-008 |
 | Supplier scale versus resilience | Validate capacity and contingency; use quality-adjusted scorecards for new allocations | FR-019, FR-020, FR-021 |
@@ -1026,8 +1139,8 @@ would risk double counting.
 | OD-14 | Lawful basis, DPIA, retention and data-sharing rules | Data Protection Officer | Data controls |
 | OD-15 | Board risk appetite and downside tolerances | Board | Programme approval |
 | OD-16 | Measured binding constraints and selection among process, existing-platform, workflow and AI options | Programme, Digital and Finance | Phase 0 exit |
-| OD-17 | Pilot locality, archetypes, representative residents, exclusions, budget, schedule and retained delivery cell | Sponsor and Programme with control owners | Shadow and live-pilot scope |
-| OD-18 | Comparable baseline, metric definitions, benefits owners, critical-exception tests and ratified 20% cycle-time and 25% effort targets | Programme, Finance and independent assurance | Evaluation protocol before shadow testing |
+| OD-17 | Pilot locality, archetypes, representative residents, exclusions, budget, schedule and existing named accountable owners | Sponsor and Programme with control owners | Shadow and live-pilot scope |
+| OD-18 | Comparable baseline, metric definitions, benefits owners, critical-exception tests and ratified 20% cycle-time and 25% effort targets | Programme, Finance and independent assurance | Evaluation protocol before Phase 0 capture and shadow testing |
 | OD-19 | Allow/deny matrix, initial human-review workload and later authority-change procedure | Digital and all control owners | Live-pilot and automation release |
 | OD-20 | Interfaces, reconciliation, recovery limits, manual fallback, model and rule change control, support and exit terms | Digital service owner, data owners and Procurement | Live service readiness |
 | OD-21 | Cost inclusions within GBP 20,000, actual grant averaging rules, and separate incremental technology economics | Finance | Investment and tranche affordability |
@@ -1043,13 +1156,18 @@ would risk double counting.
 | OD-31 | Quality flag autonomy: L4 raise-only flags or recommend-level evidence reading. Proposed settlement: a blinded three-arm shadow test (checklist only, L4 flags, recommend level) on past packs and seeded defects. L4 is rejected if a safety-critical seeded defect is missed, detection on unflagged packs falls below the checklist arm, false flags exceed approved reviewer capacity, or recall does not improve | Retrofit Programme Manager, Building Safety and Data and Performance Lead; Sponsor approves any authority change under RULE-020 | Quality module authority (FR-036, RULE-018, RULE-014) |
 | OD-32 | Whether booking of confirmed slots for residents who have opted into digital contact could later move to L3; revisit only after Phase 1 evidence | Resident Engagement, Neighbourhood Housing and Programme | Later authority change under RULE-020 |
 | OD-33 | Who carries out the Retrofit Assessor survey and who acts as Retrofit Coordinator for pilot homes, employed or contracted, and each role's monthly capacity | Retrofit Programme Manager | Separate sign-offs and pilot capacity (RULE-017, FR-010) |
+| OD-34 | Proposed owner resolution on 2026-09-26: the pilot gate decides which agent capabilities scale, using Comparison 1 and Comparison 2; the existing retrofit model is modernised with agents rather than replaced | Sponsor, Executive Director of Assets and Finance | Proposed resolution pending Sponsor, Executive Director of Assets and Finance confirmation in the RULE-019 protocol |
+| OD-35 | Guardrail stop override authority, if any, and evidence needed to restart affected work | Building Safety and Sponsor | Live-pilot approval, breach response and restart under RULE-020 |
+| OD-36 | DPIA and lawful basis for new resident and staff measurement data, including staff-level monitoring | Data Protection Officer | Blocks Phase 0 capture |
+| OD-37 | Supplier data duties in existing pilot contracts and whether adding pilot measurement duties requires contract variations | Procurement and Legal | Blocks pilot protocol and supplier data capture |
+| OD-38 | Who funds recording time for frontline and matched-locality staff, including housing officers | Programme and Housing | Blocks Phase 0 capture budget and effort measurement |
 
 ### TypeSafe Batch Review of Open Decisions
 
 On 20 September 2026, the 25 decisions then open (OD-01 to OD-25) were
 reviewed in one TypeSafe System One request using `jev-1.13.0`. The full BRD
 and its evidence-classification rule were supplied as shared state. OD-26 to
-OD-33 were added later and have not been through this review. Each decision
+OD-38 were added later and have not been through this review. Each decision
 received:
 
 * A Choice judgment on whether it was resolved by company evidence, supported
@@ -1083,7 +1201,7 @@ confidence score.
 | OD-14 | Company evidence required | 0.72 | 0.74 | RULE-022 defines the required gates; the DPO must determine lawful basis, DPIA, retention and sharing controls. |
 | OD-15 | Company evidence required | 0.89 | 0.61 | No Board risk appetite is evidenced; the Board must approve downside tolerances and pause conditions. |
 | OD-16 | Company evidence required | 0.50 | 0.91 | Phase 0 should compare process, platform, workflow and bounded AI; measured constraints and Finance-approved economics must select the option. |
-| OD-17 | Company evidence required | 0.34 | 0.90 | Use one locality, limited archetypes and a cross-functional cell as the planning proposition only; control owners must ratify scope and budget. |
+| OD-17 | Company evidence required | 0.34 | 0.90 | Use one locality, limited archetypes and existing named accountable owners as the planning proposition only; control owners must ratify scope and budget. |
 | OD-18 | Company evidence required | 0.49 | 0.88 | Use RULE-019 and the proposed 20% cycle-time and 25% effort improvements to design the protocol; owners must ratify baselines and thresholds. |
 | OD-19 | Provisional direction only | 0.57 | 0.88 | Start with AI limited to recommendations, drafts, reconciliation and flags under FR-036, RULE-018; all control owners must approve the detailed authority matrix and workload. |
 | OD-20 | Company evidence required | 0.54 | 0.86 | NFR-004 and NFR-005, NFR-006, NFR-007 define continuity and portability outcomes; Digital, data owners and Procurement must select interfaces, limits and terms. |
@@ -1110,10 +1228,10 @@ Acceptance criteria are not yet written in Given/When/Then form.
 | --- | --- | --- | --- |
 | BG-001 | FR-033, FR-035 | RULE-011 | NFR-008 |
 | BG-002 | FR-005, FR-019, FR-020, FR-021, FR-022, FR-033, FR-035 | RULE-007, RULE-011, RULE-016, RULE-019, RULE-020 | None |
-| BG-003 | FR-001, FR-002, FR-003, FR-004, FR-007, FR-008, FR-009, FR-010, FR-016, FR-029, FR-030, FR-032, FR-033, FR-035, FR-036, FR-037, FR-038, FR-039, FR-040 | RULE-001, RULE-003, RULE-012, RULE-014, RULE-015, RULE-017, RULE-018, RULE-020, RULE-021, RULE-022 | NFR-003, NFR-004, NFR-009 |
-| BG-004 | FR-001, FR-002, FR-003, FR-004, FR-016, FR-033, FR-036, FR-038, FR-039, FR-040 | RULE-002, RULE-003, RULE-018, RULE-021 | NFR-004, NFR-009 |
-| BG-005 | FR-008, FR-011, FR-012, FR-013, FR-014, FR-015, FR-016, FR-031, FR-033, FR-034, FR-036, FR-037, FR-040, FR-041 | RULE-005, RULE-006, RULE-012, RULE-018, RULE-020, RULE-022 | NFR-001, NFR-002, NFR-003, NFR-005, NFR-006, NFR-007, NFR-008, NFR-009 |
-| BG-006 | FR-005, FR-006, FR-007, FR-008, FR-009, FR-010, FR-019, FR-021, FR-022, FR-028, FR-029, FR-030, FR-033, FR-036, FR-038, FR-040 | RULE-004, RULE-007, RULE-008, RULE-012, RULE-013, RULE-014, RULE-015, RULE-017, RULE-018, RULE-019, RULE-020, RULE-021 | NFR-002, NFR-005, NFR-006, NFR-007 |
+| BG-003 | FR-001, FR-002, FR-003, FR-004, FR-007, FR-008, FR-009, FR-010, FR-016, FR-029, FR-030, FR-032, FR-033, FR-035, FR-036, FR-037, FR-038, FR-039, FR-040 | RULE-001, RULE-003, RULE-012, RULE-014, RULE-015, RULE-017, RULE-018, RULE-020, RULE-021, RULE-022, RULE-024 | NFR-003, NFR-004, NFR-009 |
+| BG-004 | FR-001, FR-002, FR-003, FR-004, FR-016, FR-033, FR-036, FR-038, FR-039, FR-040 | RULE-002, RULE-003, RULE-018, RULE-021, RULE-024 | NFR-004, NFR-009 |
+| BG-005 | FR-008, FR-011, FR-012, FR-013, FR-014, FR-015, FR-016, FR-031, FR-033, FR-034, FR-036, FR-037, FR-040, FR-041 | RULE-005, RULE-006, RULE-012, RULE-018, RULE-020, RULE-022, RULE-024 | NFR-001, NFR-002, NFR-003, NFR-005, NFR-006, NFR-007, NFR-008, NFR-009 |
+| BG-006 | FR-005, FR-006, FR-007, FR-008, FR-009, FR-010, FR-019, FR-021, FR-022, FR-028, FR-029, FR-030, FR-033, FR-036, FR-038, FR-040 | RULE-004, RULE-007, RULE-008, RULE-012, RULE-013, RULE-014, RULE-015, RULE-017, RULE-018, RULE-019, RULE-020, RULE-021, RULE-024 | NFR-002, NFR-005, NFR-006, NFR-007 |
 | BG-007 | FR-023, FR-024, FR-025, FR-026, FR-027, FR-030, FR-033, FR-036, FR-038, FR-039, FR-040, FR-041 | RULE-004, RULE-009, RULE-010, RULE-014, RULE-015, RULE-018, RULE-021 | None |
 | BG-008 | FR-022, FR-025, FR-027, FR-033, FR-035 | RULE-008, RULE-010, RULE-011, RULE-012, RULE-016, RULE-020 | NFR-003, NFR-005, NFR-006, NFR-007 |
 | BG-009 | FR-012, FR-015, FR-020, FR-021, FR-029, FR-031, FR-032, FR-033, FR-037, FR-041 | RULE-005, RULE-006, RULE-014, RULE-019, RULE-022 | NFR-008, NFR-009 |
@@ -1197,11 +1315,12 @@ verified by the record named in the Verification column.
 | RULE-016 | BR-043 | None | AC-053; Readiness decision record approved by the executive sponsor |
 | RULE-017 | BR-044 | FR-007, FR-010 | AC-054 |
 | RULE-018 | BR-046 | FR-009, FR-036 | AC-057 |
-| RULE-019 | BR-049 | None | AC-062; Pilot protocol and benefits register approved by the programme board, with the Data and Performance Lead as evidence owner |
+| RULE-019 | BR-049 | None | AC-062, AC-074, AC-075, AC-076, AC-077; Frozen Comparison 1 and Comparison 2 pilot protocol, benefits scorecard and benefits register approved by the programme board, with the Data and Performance Lead as evidence owner |
 | RULE-020 | BR-050 | None | AC-063; Release decision for each phase and tranche recorded by the executive sponsor |
 | RULE-021 | BR-054 | FR-038, FR-039, FR-040 | AC-068 |
 | RULE-022 | BR-058 | NFR-003 | AC-072; DPO-approved DPIA and gate record |
 | RULE-023 | BR-066 | FR-022 | AC-073 |
+| RULE-024 | None | None | AC-078; Guardrail breach and restart record approved by the OD-35 authority under RULE-020 |
 
 ### Legacy Identifier Map
 
@@ -1290,15 +1409,21 @@ evidence, unresolved decisions and accountable owners.
 
 * The sponsor and Finance approve a capped readiness envelope and named owners
   for open decisions.
-* Before shadow testing, the binding-constraint and options appraisal,
-  pilot scope, baselines, comparison protocol, proposed targets and cost
-  inclusions are accepted.
+* Before any Phase 0 pilot or comparison event capture, the frozen RULE-019
+  protocol, OD-18 comparison decision and OD-36 DPIA and lawful measurement
+  basis are approved. Shadow testing additionally requires the binding constraint
+  and options appraisal, pilot scope, baselines, proposed targets, guardrails,
+  cost inclusions and no-live-action controls to be accepted.
 * Shadow activity has no live consequential permissions or resident contact;
   any use of real data has approved access and data-protection controls.
 
 ### Live-Pilot Approval
 
 * All applicable Must requirements have named owners and accepted test evidence.
+* The approved RULE-019 protocol defines Comparison 1 and Comparison 2, frozen
+  metrics, identical event capture, the OD-36 DPIA and lawful measurement
+  basis, the benefits scorecard, operational dashboard limits, assurance, cost
+  treatment and guardrail stop triggers.
 * Current regulatory rules, professional competence and authority boundaries
   are confirmed.
 * Property and building controls, planned-maintenance alignment, approved
@@ -1316,6 +1441,9 @@ evidence, unresolved decisions and accountable owners.
   cash and downside model; unawarded grant is not committed funding.
 * In-use follow-up and all unresolved issues have owners and dates. No issue
   blocking a relevant safety, resident, technical or financial gate is deferred.
+* A guardrail breach pauses affected work regardless of throughput under
+  RULE-024. Any restart uses the authority and evidence agreed under OD-35 and
+  RULE-020.
 
 ### Tranche and Scale Approval
 
@@ -1346,6 +1474,9 @@ This draft integrates:
   including the Modelled Customer Profile added on 25 September 2026
 * [Housing Association Primer](../reference/research/sector/housing-association-primer.md)
 * [Agent Request Challenge](../reference/research/company/agent-request-challenge.md)
+* [Pilot Measurement Challenge](../reference/research/company/pilot-measurement-challenge.md),
+  a 26 September 2026 role-agent panel whose findings are sector-informed
+  hypotheses and proposals, not company facts
 * [System One Decision Models for Retrofit Agents](../ideas/typesafe-system-one-agent-fit.md)
 * [UK Social Housing Baseline Research](../reference/research/sector/uk-social-housing-baseline-research.md)
 * [Retrofit Flow and Constraint Discovery Brief](./retrofit-flow-discovery-brief.md)
@@ -1360,18 +1491,26 @@ The Housing role reviews provide sector-informed recommendations. They do not
 replace resident research, competent professional judgement, formal governance
 or legal advice.
 
-The 11 September 2026 addendum review informs the revised operating model,
+The 11 September 2026 addendum review informs the revised digital foundation,
 pilot gates, value attribution and new requirements. Pilot sizes, durations
 and improvement targets remain proposals. The financial qualifications above
 clarify the full-cap home equivalent and unspecified cost inclusions without
 changing either source document. The 20 September 2026 legal-corpus and
 user-journey reviews inform FR-038, FR-039, FR-040, FR-041, RULE-021, RULE-022, NFR-009.
 
+The 26 September 2026 owner decision reframed the BRD as agent-led
+modernisation of the existing retrofit model, with Comparison 1 and Comparison
+2 measuring agent value and OD-34 marked as a proposed resolution pending
+Sponsor, Executive Director of Assets and Finance confirmation.
+
 The 26 September 2026 BRD review integrated the modelled customer profile,
-the housing association primer and the agent request challenge. Gaps in the
-BRD were put as focused questions to the Building Safety, Resident
-Engagement, Procurement, Finance and Retrofit Programme role agents, and
-their proposed wording informs FR-003, FR-004, FR-010, FR-015, FR-022, FR-026, FR-027, FR-037, RULE-003, RULE-008, RULE-014 and OD-26 through OD-33.
+the housing association primer, the agent request challenge and the pilot
+measurement challenge. Gaps in the BRD were put as focused questions to the
+Building Safety, Resident Engagement, Procurement, Finance, Retrofit Programme
+and Data and Performance role agents, and their proposed wording informs
+FR-003, FR-004, FR-010, FR-015, FR-022, FR-025, FR-026, FR-027, FR-037,
+RULE-003, RULE-008, RULE-014, RULE-019, RULE-024, AC-062, AC-074 through
+AC-078 and OD-26 through OD-38.
 The role agents had no company data. Regulatory citations in those
 requirements were checked against the local snapshots on 26 September 2026,
 not against the official sources online. Specialist input is not

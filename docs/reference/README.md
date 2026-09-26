@@ -62,6 +62,7 @@ management: short pages that point to clusters of related material.
 | Write or review requirements | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) |
 | Evaluate a new idea | [Idea Register](../ideas/idea-register.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Challenge whether a requested agent is needed, or decide what to build instead | [Agent Request Challenge](./research/company/agent-request-challenge.md) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
+| Design pilot measurement, baselines, comparison cohorts or a benefits dashboard | [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) |
 | Prepare a presentation or pitch | [Project Memory](./memory.md) | [Proper Warm CXO initial proposal](../presentations/proper-warm-cxo-initial-proposal.pptx) and [85-day roadmap](../case-study-85-day-roadmap.svg) |
 | Design a looped agent goal | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | [Project Memory](./memory.md) |
 | Find proven use cases, customer evidence or reusable solutions | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
@@ -73,8 +74,8 @@ management: short pages that point to clusters of related material.
 | Document | Summary | Updated |
 | --- | --- | --- |
 | [Original Case Study 48](../case_study_48_original.md) | Initial problem specification. Preserved unchanged | 2026-09-10 |
-| [Case Study 48 Addendum](../case_study_48_addendum.md) | Evolving critical assessment, solution proposal, trade-offs and business value | 2026-09-26 |
-| [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | Business requirements for safe, resident-centred and financially controlled retrofit delivery, including tenure, eligibility, hazard-awareness and contractor-instruction controls from the agent request challenge; uses canonical FR, AC, NFR, CON, RULE and BG identifiers with a legacy BR and OBJ alias map | 2026-09-26 |
+| [Case Study 48 Addendum](../case_study_48_addendum.md) | Evolving critical assessment, agent-led modernisation proposal with a business value measure per agent capability, trade-offs and business value | 2026-09-26 |
+| [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | Business requirements for safe, resident-centred and financially controlled retrofit delivery, including tenure, eligibility, hazard-awareness and contractor-instruction controls from the agent request challenge, and the pilot measurement protocol (Comparison 1 and 2), benefits scorecard and guardrail pause from the pilot measurement challenge; framed since version 0.4.0 as agent-led modernisation of the existing retrofit model; uses canonical FR, AC, NFR, CON, RULE and BG identifiers with a legacy BR and OBJ alias map | 2026-09-26 |
 | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) | Evidence, team and bounded assistant requirements for finding delivery constraints | 2026-09-19 |
 | [Idea Register](../ideas/idea-register.md) | Research ideas that are not yet validated requirements | 2026-09-24 |
 | [System One Decision Models for Retrofit Agents](../ideas/typesafe-system-one-agent-fit.md) | Research on typed decision models for IDEA-001 | 2026-09-24 |
@@ -90,6 +91,7 @@ management: short pages that point to clusters of related material.
 | [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md) | Official publications and datasets behind each baseline benchmark | 2026-09-11 |
 | [Company Profile Research](./research/company/company-profile-research.md) | Confirmed not-for-profit status, comparators, modelled customer profile (estimates, not company facts), common sector problems, role map and company gaps for the role agents | 2026-09-26 |
 | [Agent Request Challenge](./research/company/agent-request-challenge.md) | Role-agent challenge of the five requested agents: real problems, non-agent alternatives, bounded AI fit, shared foundation, value tests and stop criteria | 2026-09-26 |
+| [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | Role-agent challenge of measuring acceleration with a dashboard, short history and non-pilot comparison, plus the owner's modernisation decision: Comparison 1 and 2, frozen protocol, benefits scorecard, guardrails, vanity metrics and history sources | 2026-09-26 |
 
 ### Regulatory Sources
 
