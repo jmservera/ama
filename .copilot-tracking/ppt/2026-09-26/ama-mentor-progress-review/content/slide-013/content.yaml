@@ -1,0 +1,229 @@
+slide: 13
+title: Next steps and mentor questions
+layout: blank
+background:
+  fill: '#FFFFFF'
+elements:
+- type: textbox
+  name: Title
+  left: 0.6
+  top: 0.5
+  width: 12.133000000000001
+  height: 0.75
+  text: Four decisions where I would value your challenge today
+  font: Segoe UI
+  font_size: 26
+  font_color: '#102A43'
+  font_bold: true
+  vertical_anchor: middle
+- type: shape
+  name: Questions
+  shape: rounded_rectangle
+  left: 0.6
+  top: 1.65
+  width: 6.9
+  height: 3.85
+  fill: '#FFFFFF'
+  line_color: '#B83A2E'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: QUESTIONS FOR YOU
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#B83A2E'
+    text_bold: true
+    space_after: 12
+    alignment: left
+  - text: Will the panel read control plane plus bounded AI as a stronger answer, or as refusing the brief?
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 12
+    bullet_auto_number: arabicPeriod
+    bullet_start_at: 1
+    bullet_margin_left: 342900
+    bullet_indent: -342900
+    alignment: left
+  - text: How should I balance business depth against architecture depth?
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 12
+    bullet_auto_number: arabicPeriod
+    bullet_start_at: 2
+    bullet_margin_left: 342900
+    bullet_indent: -342900
+    alignment: left
+  - text: Keep the BRD failing on unset targets, or propose illustrative targets?
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 12
+    bullet_auto_number: arabicPeriod
+    bullet_start_at: 3
+    bullet_margin_left: 342900
+    bullet_indent: -342900
+    alignment: left
+  - text: 'Which open divergence first: L4 quality flags or L3 digital booking?'
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 12
+    bullet_auto_number: arabicPeriod
+    bullet_start_at: 4
+    bullet_margin_left: 342900
+    bullet_indent: -342900
+    alignment: left
+  - text: 'And on the story itself: where did it lose you?'
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#486581'
+    text_bold: false
+    space_after: 0
+    italic: true
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Next
+  shape: rounded_rectangle
+  left: 7.8
+  top: 1.65
+  width: 4.933000000000001
+  height: 3.85
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: NEXT, ON THE 85-DAY PLAN (TO 5 DEC)
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 12
+    alignment: left
+  - text: High- and medium-level architecture with justified trade-offs
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 10
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Shadow-mode comparison of typed decision models (IDEA-001)
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 10
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Optional bounded demo, with a static fallback
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 10
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: CEO, CIO and CFO versions of the 15-minute pitch
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 10
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: No real resident or staff evidence yet; the role agents' discovery questions are ready
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Takeaway
+  shape: rounded_rectangle
+  left: 0.6
+  top: 5.8
+  width: 12.133000000000001
+  height: 0.6
+  fill: '#102A43'
+  line_color: '#102A43'
+  text: Those are my questions. Which one would you take first?
+  text_font: Segoe UI
+  text_size: 16
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: textbox
+  name: Source
+  left: 0.6
+  top: 6.7
+  width: 12.133000000000001
+  height: 0.28
+  text: 'Sources: .copilot-tracking/plans/2026-09-19/case-study-85-day-delivery-plan.instructions.md;
+    docs/reference/memory.md; docs/ideas/idea-register.md.'
+  font: Segoe UI
+  font_size: 9
+  font_color: '#627D98'
+  margin_top: 0
+  margin_bottom: 0
+speaker_notes: |
+  These are the four places I would most value your challenge.
+
+  First, will the panel read a control plane plus bounded AI as a stronger answer,
+  or as refusing the brief?
+
+  Second, how much business depth versus architecture depth should the capstone
+  show?
+
+  Third, should the BRD keep failing where targets need company data, or should I
+  propose clearly labelled illustrative targets?
+
+  Fourth, of the open divergences between the role agents, which should I resolve
+  first?
+
+  On the right is what comes next on the 85-day plan, which finishes the committed
+  work on 5 December with a week of margin: the high- and medium-level
+  architecture, a shadow comparison of typed decision models, an optional bounded
+  demo with a static fallback, and CEO, CIO and CFO versions of the pitch. There is
+  still no real resident or staff evidence; the role agents' questions are the
+  discovery agenda.
+
+  And one question on the story itself: where did it lose you?
+
+  Those are my questions. Which one would you take first?

@@ -1,0 +1,15 @@
+dimensions:
+  width_inches: 13.333
+  height_inches: 7.5
+  format: "16:9"
+
+metadata:
+  title: "Case Study 48 - Mentor Progress Review"
+  author: "AMA Research Team"
+  subject: "How the Proper Warm case gaps were filled: research, role agents, BRD, design thinking and quality review"
+  keywords: "AMA, Case Study 48, Proper Warm, BRD, design thinking, knowledge base"
+  category: "Mentoring"
+
+defaults:
+  font: "Segoe UI"
+  speaker_notes_required: true

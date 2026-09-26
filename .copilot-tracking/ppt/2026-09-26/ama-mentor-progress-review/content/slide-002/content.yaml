@@ -1,0 +1,216 @@
+slide: 2
+title: The request and its gaps
+layout: blank
+background:
+  fill: '#FFFFFF'
+elements:
+- type: textbox
+  name: Title
+  left: 0.6
+  top: 0.5
+  width: 12.133000000000001
+  height: 0.75
+  text: The case names five agents but not the problem they solve
+  font: Segoe UI
+  font_size: 26
+  font_color: '#102A43'
+  font_bold: true
+  vertical_anchor: middle
+- type: shape
+  name: Request
+  shape: rounded_rectangle
+  left: 0.6
+  top: 1.65
+  width: 5.9015
+  height: 3.8
+  fill: '#FFFFFF'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: THE REQUEST (ORIGINAL CASE STUDY)
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 10
+    alignment: left
+  - text: A housing association with 60,000 homes in the North of England
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Every home to EPC C by 2030, while meeting Awaab's Law damp and mould timescales
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: A small team on spreadsheets, far behind plan
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Five agents, from L2 recommend to L4 autonomous flags
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: 'Promised: double delivery, GBP 40m of grants, lower energy bills'
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Gaps
+  shape: rounded_rectangle
+  left: 6.8315
+  top: 1.65
+  width: 5.9015
+  height: 3.8
+  fill: '#FBEAE8'
+  line_color: '#F3C7C1'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: WHAT THE DOCUMENT DOES NOT TELL US
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#B83A2E'
+    text_bold: true
+    space_after: 10
+    alignment: left
+  - text: What kind of organisation it is, and who decides
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Current throughput, backlog and data quality
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Which rules apply today, which are proposals, and from when
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Whether the GBP 40m is awarded or only available
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: 'The problem: it names the solution first; each agent gets one "owns end-to-end" line'
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Takeaway
+  shape: rounded_rectangle
+  left: 0.6
+  top: 5.8
+  width: 12.133000000000001
+  height: 0.6
+  fill: '#102A43'
+  line_color: '#102A43'
+  text: 'My working question: what business problem would make these agents worth building?'
+  text_font: Segoe UI
+  text_size: 15
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: textbox
+  name: Source
+  left: 0.6
+  top: 6.7
+  width: 12.133000000000001
+  height: 0.28
+  text: 'Source: docs/case_study_48_original.md (10 Sep 2026). Gaps identified during research, 11 to
+    25 Sep 2026.'
+  font: Segoe UI
+  font_size: 9
+  font_color: '#627D98'
+  margin_top: 0
+  margin_bottom: 0
+speaker_notes: |
+  The brief is a one-page solution request. It names five agents with autonomy
+  levels, a business case, and outcomes such as doubling delivery and capturing
+  GBP 40 million of grants.
+
+  What it does not give is everything an architect needs to justify a design: what
+  kind of organisation this is, what the current throughput and data look like,
+  which regulations are in force versus proposed, and whether the grant money is
+  real. Above all, it names the solution before the problem: each agent is
+  described by a single "owns end-to-end" line.
+
+  So I set myself one working question for the whole research phase: what business
+  problem would make these agents worth building? Everything that follows is how I
+  tried to answer it without inventing facts about the company.

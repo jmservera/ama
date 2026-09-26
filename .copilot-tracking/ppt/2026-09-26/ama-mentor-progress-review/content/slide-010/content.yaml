@@ -1,0 +1,274 @@
+slide: 10
+title: Challenges and lessons
+layout: blank
+background:
+  fill: '#FFFFFF'
+elements:
+- type: textbox
+  name: Title
+  left: 0.6
+  top: 0.5
+  width: 12.133000000000001
+  height: 0.75
+  text: Keeping evidence honest was hard; here is what I would change
+  font: Segoe UI
+  font_size: 26
+  font_color: '#102A43'
+  font_bold: true
+  vertical_anchor: middle
+- type: textbox
+  name: Challenges head
+  left: 0.6
+  top: 1.55
+  width: 12.133000000000001
+  height: 0.3
+  text: CHALLENGES
+  font: Segoe UI
+  font_size: 12
+  font_color: '#0B625B'
+  font_bold: true
+  margin_top: 0
+  margin_bottom: 0
+- type: textbox
+  name: Lessons head
+  left: 0.6
+  top: 4.2
+  width: 12.133000000000001
+  height: 0.3
+  text: WHAT I WOULD DO DIFFERENTLY
+  font: Segoe UI
+  font_size: 12
+  font_color: '#1D5FB8'
+  font_bold: true
+  margin_top: 0
+  margin_bottom: 0
+- type: shape
+  name: Challenge 1
+  shape: rounded_rectangle
+  left: 0.6
+  top: 2.15
+  width: 3.8443333333333336
+  height: 1.75
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: No company data
+    text_font: Segoe UI
+    text_size: 16
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: The company is fictional. I modelled tenure, residents and finances from sector medians and
+      labelled every value as an estimate.
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Challenge 2
+  shape: rounded_rectangle
+  left: 4.7443333333333335
+  top: 2.15
+  width: 3.8443333333333336
+  height: 1.75
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: Agents that sound certain
+    text_font: Segoe UI
+    text_size: 16
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: 'Role answers are hypotheses, and the roles share my framing. Divergences stay open: L4 quality
+      flags, L3 digital booking.'
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Challenge 3
+  shape: rounded_rectangle
+  left: 8.888666666666667
+  top: 2.15
+  width: 3.8443333333333336
+  height: 1.75
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: Sources that disagree
+    text_font: Segoe UI
+    text_size: 16
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: Interest cover 91% or 87%; fuel poverty corrected from 10.0% to 11.6%; EPC C final policy, not
+      commenced law. Flagged, not resolved.
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Challenge 4
+  shape: rounded_rectangle
+  left: 0.6
+  top: 4.8
+  width: 3.8443333333333336
+  height: 1.6
+  fill: '#E6EFFB'
+  line_color: '#C7D9F3'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: Start the log on day one
+    text_font: Segoe UI
+    text_size: 16
+    text_color: '#1D5FB8'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: Log entries before 25 Sep had to be reconstructed from Git history.
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Challenge 5
+  shape: rounded_rectangle
+  left: 4.7443333333333335
+  top: 4.8
+  width: 3.8443333333333336
+  height: 1.6
+  fill: '#E6EFFB'
+  line_color: '#C7D9F3'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: Canonical IDs from the first draft
+    text_font: Segoe UI
+    text_size: 16
+    text_color: '#1D5FB8'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: The first quality run scored 0% only because of legacy IDs; relabelling cost a full pass.
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Challenge 6
+  shape: rounded_rectangle
+  left: 8.888666666666667
+  top: 4.8
+  width: 3.8443333333333336
+  height: 1.6
+  fill: '#E6EFFB'
+  line_color: '#C7D9F3'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: Run the value challenge earlier, and blind
+    text_font: Segoe UI
+    text_size: 16
+    text_color: '#1D5FB8'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: It came after eight BRD revisions, and the roles could read my addendum. One pass without it
+      would test for priming.
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: textbox
+  name: Source
+  left: 0.6
+  top: 6.7
+  width: 12.133000000000001
+  height: 0.28
+  text: 'Sources: docs/reference/log.md (Conventions; corrections, 25 to 26 Sep 2026); agent-request-challenge.md
+    (Divergences, Limitations); git log.'
+  font: Segoe UI
+  font_size: 9
+  font_color: '#627D98'
+  margin_top: 0
+  margin_bottom: 0
+speaker_notes: |
+  The writing was not the hard part. Keeping the evidence honest was.
+
+  The company is fictional, so every number about it is modelled and labelled as an
+  estimate. The role agents are persuasive, which is a risk, and they read my own
+  addendum, so they share my framing. Where they disagree, such as on L4 autonomy
+  for quality flags, I keep the divergence open instead of smoothing it over.
+  Sources disagree too, for example on interest cover, and I found and corrected a
+  superseded fuel poverty measure. Regulation moves: Awaab's Law Phase 2 is planned
+  from 30 November 2026, and EPC C is final policy but not commenced law. I flag
+  those rather than silently choose.
+
+  There is also sheer volume: some legal texts are over a megabyte, so I search by
+  provision rather than reading end to end.
+
+  If I started again tomorrow, I would change three things. I would start the log
+  on day one; earlier entries had to be rebuilt from Git. I would use canonical
+  requirement identifiers from the first draft; the first quality run scored zero
+  only because of legacy identifiers. And I would run the value challenge earlier,
+  and once without the addendum, to test whether the roles were primed by my own
+  framing.
