@@ -186,6 +186,12 @@ for the control plane below. These are sector-informed role hypotheses, not
 company findings. The per-agent problems, alternatives, stop criteria and
 open questions are recorded in the
 [Agent Request Challenge](./reference/research/company/agent-request-challenge.md).
+The BRD review of the same date turned these findings, and the modelled
+customer profile, into proposed requirements BR-059 through BR-068 and open
+decisions OD-26 through OD-33. They cover eligibility and funding route,
+tenure, hazard awareness from retrofit channels, vulnerability data,
+contractor instructions, quality assurance when nothing is flagged, and
+separate PAS 2035 sign-offs. They remain proposals for owner validation.
 
 ## Reframed Transformation Objective
 

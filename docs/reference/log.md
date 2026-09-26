@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-09-25
+ms.date: 2026-09-26
 ms.topic: reference
 ---
 
@@ -130,3 +130,30 @@ metadata when the knowledge base was created.
   L3 booking for residents who have opted into digital contact. Legal
   questions on procurement modification, payment notices and contractor
   awareness remain open.
+
+## [2026-09-26] query | Review the BRD against the new research and challenge
+
+* Reviewed the Agentic Retrofit Programme BRD against the Modelled Customer
+  Profile and Housing Association Primer (2026-09-25), the Agent Request
+  Challenge (2026-09-26) and IDEA-001.
+* Sent one focused gap question each to five `company-*` role agents in
+  parallel: Building Safety, Resident Engagement, Procurement, Finance and
+  the Retrofit Programme Manager. Their proposed wording, labelled as
+  sector-informed, informs the new requirements.
+* Files touched: `../brds/agentic-retrofit-programme-brd.md` (BR-059 to
+  BR-068, OD-26 to OD-33, disposition table with a damp-and-mould loop row,
+  bounded AI capability value tests, stakeholders, scope, data domains,
+  risks, sponsor questions, traceability, sources and `ms.date`),
+  `../case_study_48_addendum.md` (cross-reference to the new BRD IDs), the
+  index (`README.md`) and this log.
+* Awaab's Law Phase 1 guidance sections 3 and 7.5 and the WH:SHF technical
+  annex Pages 3 and 5 were checked against the local snapshots only. Section
+  7.5 advises reviewing contractor agreements; the same-visit reporting duty
+  in BR-062 is a proposal, not a guidance requirement.
+* Still open: the QV autonomy divergence (OD-31, with a proposed three-arm
+  shadow test) and L3 digital booking (OD-32). The Legal questions are
+  consolidated in OD-27, OD-29 and OD-30. The 30% non-social rule is still
+  verified only in the GMCA copy (OD-26).
+* No BRD quality reviewer subagent was available, so no
+  `BRD_QUALITY_REPORT_V1` was produced. The BRD remains a draft for business
+  validation.
