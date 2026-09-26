@@ -1,6 +1,6 @@
 {
   "brdFile": "docs/brds/agentic-retrofit-programme-brd.md",
-  "lastAccessed": "2026-09-26T22:51:24+02:00",
+  "lastAccessed": "2026-09-26T23:34:08.814+02:00",
   "currentPhase": "Define",
   "questionsAsked": [
     "safety-stop-condition",
@@ -81,6 +81,21 @@
       "file": "docs/reference/research/company/pilot-measurement-challenge.md",
       "status": "analyzed",
       "keyFindings": "Role-agent hypotheses for pilot measurement, now mapped by owner decision to Comparison 1 and Comparison 2, with frozen protocol, benefits scorecard, guardrails, misleading metrics, counterfactual caveat and OD-34 to OD-38."
+    },
+    {
+      "file": "docs/reference/regulatory/data-protection/uk-gdpr-current-text.md",
+      "status": "analyzed",
+      "keyFindings": "Current text omits Article 22 and includes Articles 22A to 22C safeguards, Articles 12 to 15 transparency and meaningful-logic provisions, and Article 35 DPIA provisions."
+    },
+    {
+      "file": "docs/reference/regulatory/social-housing-regulation/social-housing-safety-and-quality-standard-2024.md",
+      "status": "analyzed",
+      "keyFindings": "Sections 2.3.2 and 2.3.3 support clear timescale and planned-improvement communications."
+    },
+    {
+      "file": "docs/reference/regulatory/social-housing-regulation/awaabs-law-phase-2-guidance-2026.md",
+      "status": "analyzed",
+      "keyFindings": "Section 3 cites the Transparency, Influence and Accountability Standard as a secondary reference pending a local snapshot."
     }
   ],
   "nextActions": [
@@ -94,7 +109,10 @@
     "Assign owners and dates to OD-26 to OD-38",
     "Obtain Legal review of lease, consultation, procurement modification, payment notice, contractor-awareness and supplier measurement duties",
     "Check the national DESNZ WH:SHF Wave 3 guidance for the 30% non-social rule",
-    "Validate portfolio and throughput baselines, resident requirements, regulatory controls, grant and affordability model, and company evidence for provisional sector benchmarks"
+    "Validate portfolio and throughput baselines, resident requirements, regulatory controls, grant and affordability model, and company evidence for provisional sector benchmarks",
+    "DPO to check official UK GDPR source for automated-decision amendments and commencement before release",
+    "Obtain OD-39 local snapshots before relying on the Transparency, Influence and Accountability Standard, Complaint Handling Code, Governance and Financial Viability Standard or ICO AI explanation guidance",
+    "Owners to set explanation comprehension, automation-bias and AI assurance cadence thresholds before live use"
   ],
   "qualityChecks": [
     "required-sections-complete",
@@ -110,7 +128,10 @@
     "quality-review-run",
     "canonical-taxonomy-applied",
     "fr-to-ac-coverage-100",
-    "fr-to-bg-coverage-100"
+    "fr-to-bg-coverage-100",
+    "explainability-transparency-review-integrated",
+    "identifier-counts-validated",
+    "new-acceptance-criteria-traced"
   ],
   "userPreferences": {
     "detail-level": "comprehensive",
@@ -148,11 +169,12 @@
     },
     "counts": {
       "BG": 12,
-      "FR": 41,
-      "AC": 78,
+      "FR": 44,
+      "AC": 85,
       "NFR": 9,
       "CON": 6,
-      "RULE": 24
+      "RULE": 24,
+      "OD": 39
     },
     "legacyAliases": "BR-001..BR-068, OBJ-01..OBJ-12 kept in Legacy ID columns and Legacy Identifier Map",
     "splits": [
@@ -161,5 +183,10 @@
       "BR-062",
       "BR-066"
     ]
+  },
+  "latestRevision": {
+    "version": "0.5.0",
+    "updatedAt": "2026-09-26T23:34:08.814+02:00",
+    "summary": "Applied approved explainability and transparency review: data-protection citations, transparency gate, explanation records, provenance, prioritisation policy, AI capability register, pilot explanation-quality measures and OD-39 evidence snapshots."
   }
 }

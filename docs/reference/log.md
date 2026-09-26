@@ -277,3 +277,30 @@ metadata when the knowledge base was created.
   is still FAIL, with Define exit blocked, only because of the accepted
   company-data gaps (req-qual-001 to 008).
 * Updated the index (`README.md`) and this log.
+
+## [2026-09-26] review | Check the BRD against explainability and transparency
+
+* Reviewed the Agentic Retrofit Programme BRD against NIST AI RMF MS-2.8,
+  MS-2.9 and GV-1.6, UK GDPR Articles 12 to 15 and 22A to 22C, and Safety and
+  Quality Standard 2.3.2 and 2.3.3. Proper North Homes is a regulated
+  not-for-profit, so explanations are designed for residents, the Regulator,
+  funders and the Board.
+* Contradiction fixed: CON-003 cited UK GDPR Article 22. The local
+  consolidated text (converted 2026-09-19) omits Article 22 and uses Articles
+  22A to 22D. CON-003, RULE-022 and AC-072 now cite Articles 12 to 15 and 22A
+  to 22C and map human review to the four Article 22C(2) safeguards.
+* BRD version 0.5.0 adds the AC-079 transparency gate, audience-specific
+  explanation records with a resident comprehension test (FR-034, AC-080,
+  AC-081), a published prioritisation policy with per-home reason codes
+  (FR-042), an AI capability register and Board assurance report (FR-043),
+  per-output provenance (FR-044), source-based confidence categories,
+  unsupported-claim, explanation-fidelity and automation-bias measures
+  (AC-085), AI supplier documentation terms and OD-39.
+* Evidence gap (OD-39): the Transparency, Influence and Accountability
+  Standard, the Housing Ombudsman Complaint Handling Code, the Governance and
+  Financial Viability Standard and ICO guidance on explaining AI decisions are
+  not held locally.
+* BRD Quality Reviewer, Define: Run 6 found no new findings. The result is
+  still FAIL, with Define exit blocked, only because of the accepted
+  company-data gaps (req-qual-001 to 008).
+* Updated the index (`README.md`) and this log.

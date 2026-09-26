@@ -1,3 +1,596 @@
+# Run 6: BRD Quality Reviewer, Define phase, after explainability and transparency edits (BRD version 0.5.0, uncommitted working tree).
+# Owner request 2026-09-26: check BRD quality against explainability and transparency for a regulated not-for-profit housing association; apply all ten findings.
+# Changes: CON-003 citations corrected to UK GDPR Articles 12 to 15 and 22A to 22C; AC-079 transparency gate; FR-034 explanation records (AC-052, AC-080, AC-081); FR-042 prioritisation policy; FR-043 AI capability register and Board assurance; FR-044 output provenance; AC-085 explanation quality; OD-39 missing local snapshots.
+# Reviewer applied NIST AI RMF MS-2.8, MS-2.9 and GV-1.6 lens. No new findings.
+# State: overall FAIL; define_exit BLOCKED pending company data only (req-qual-001..008); req-qual-009 and req-qual-010 remain Define-stage caveats.
+---
+schema_version: BRD_STANDARD_FINDINGS_V1
+assessment_id: requirements-quality-BRD-2026-AMA48-001-20260926T214323Z
+assessed_at: '2026-09-26T21:43:23Z'
+brd:
+  id: BRD-2026-AMA48-001
+  version: 0.5.0
+  phase: Define
+  artifact_path: docs\brds\agentic-retrofit-programme-brd.md
+standard:
+  skill_name: requirements-quality
+  skill_version: '1.1'
+mode: plan
+assessment_outcome: plan
+overall_status: RISK
+summary_counts:
+  RISK: 8
+  CAUTION: 2
+  COVERED: 9
+  NOT_APPLICABLE: 0
+findings:
+- finding_id: req-qual-001
+  checklist_item: smart-business-goal-target
+  requirement_id: BG-001
+  status: RISK
+  severity: HIGH
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L400-L418
+  finding: BG-001 still depends on replacement company data and a board-approved annual reduction through 2030, so the target
+    is not yet a quantified SMART target.
+  recommendation: Replace the provisional below-EPC-C benchmark with validated company data and a numeric annual reduction
+    target approved for the 2030 trajectory.
+- finding_id: req-qual-002
+  checklist_item: smart-business-goal-target
+  requirement_id: BG-006
+  status: RISK
+  severity: HIGH
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L405-L418
+  finding: BG-006 keeps a 90% scenario-testing assumption and defers rollout thresholds to board approval, so the final quality
+    target and timeframe remain unresolved.
+  recommendation: Define board-approved right-first-time and defect-rate thresholds with the approval phase or timeframe in
+    which each threshold applies.
+- finding_id: req-qual-003
+  checklist_item: smart-business-goal-target
+  requirement_id: BG-007
+  status: RISK
+  severity: HIGH
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L406-L418
+  finding: BG-007 separates opportunity, award, claimable and cash reporting but does not yet state a numeric grant-conversion
+    target or timeframe.
+  recommendation: Add approved grant opportunity, award, claim and cash-receipt targets once OD-11 provides award, eligibility
+    and match-funding evidence.
+- finding_id: req-qual-004
+  checklist_item: smart-business-goal-target
+  requirement_id: BG-008
+  status: RISK
+  severity: HIGH
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L407-L418
+  finding: BG-008 depends on provider-specific liquidity, covenant and board tolerance values and therefore does not yet have
+    measurable SMART thresholds.
+  recommendation: Replace board-approved tolerances with the specific liquidity, covenant and downside limits that Finance
+    and the Board approve.
+- finding_id: req-qual-005
+  checklist_item: smart-business-goal-target
+  requirement_id: BG-009
+  status: RISK
+  severity: HIGH
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L408-L418
+  finding: BG-009 names resident outcome domains but leaves the improvement target and timeframe as a validated improvement
+    without increased harm.
+  recommendation: Set numeric resident outcome targets, disaggregation rules and measurement windows after OD-08 and OD-18
+    are resolved.
+- finding_id: req-qual-006
+  checklist_item: smart-business-goal-target
+  requirement_id: BG-010
+  status: RISK
+  severity: HIGH
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L409-L418
+  finding: BG-010 targets 100% accepted or escalated handoffs but the approved times are not yet defined.
+  recommendation: Define the handoff acceptance and escalation time limits by exception type and operating period before treating
+    BG-010 as SMART.
+- finding_id: req-qual-007
+  checklist_item: smart-business-goal-target
+  requirement_id: BG-012
+  status: RISK
+  severity: HIGH
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L411-L418
+  finding: BG-012 requires positive attributable value before scale but does not yet state a numeric value threshold or timeframe.
+  recommendation: Define the minimum attributable benefit, whole-life cost tolerance and test window required before scale
+    approval.
+- finding_id: req-qual-008
+  checklist_item: iso-29148-verifiable
+  requirement_id: NFR-009
+  status: RISK
+  severity: HIGH
+  location:
+    section: Regulatory Knowledge and User Service
+    line_range: L927-L927
+  finding: NFR-009 requires service-time measures, escalation and alternatives, but the actual journey thresholds remain open
+    under OD-25 and related owner decisions.
+  recommendation: Add journey-specific service-time thresholds, escalation limits and manual or non-digital fallback test
+    criteria once OD-25 is resolved.
+- finding_id: req-qual-009
+  checklist_item: iso-25010-category-coverage
+  status: CAUTION
+  severity: MEDIUM
+  location:
+    section: Non-Functional Requirement Categories
+    line_range: L781-L793
+  finding: Functional suitability is represented by FR rows rather than a dedicated NFR, and performance efficiency remains
+    absent pending company volume, response-time and capacity data.
+  recommendation: Retain the explicit functional-suitability caveat and add a performance-efficiency NFR when OD-03, OD-09
+    and OD-25 provide measurable thresholds.
+- finding_id: req-qual-010
+  checklist_item: acceptance-criteria-format
+  status: CAUTION
+  severity: LOW
+  location:
+    section: Requirements Traceability
+    line_range: L1261-L1264
+  finding: The BRD states that acceptance criteria are testable row statements but not yet written in Given/When/Then form.
+  recommendation: Convert acceptance criteria to Given/When/Then form if the next downstream consumer requires Gherkin-style
+    scenarios.
+- finding_id: req-qual-011
+  checklist_item: identifier-and-count-conformance
+  status: COVERED
+  severity: N/A
+  location:
+    section: Requirement Identifier Scheme
+    line_range: L742-L757
+  finding: 'The scheme table counts match the current BRD identifiers: 12 BG, 44 FR, 85 AC, 9 NFR, 6 CON, 24 RULE and 39 OD
+    rows. BR-### and OBJ-## appear only as legacy aliases.'
+  recommendation: null
+- finding_id: req-qual-012
+  checklist_item: fr-ac-bg-traceability
+  status: COVERED
+  severity: N/A
+  location:
+    section: FR-to-AC and FR-to-BG Coverage
+    line_range: L1283-L1335
+  finding: All 44 functional requirements have at least one acceptance criterion and at least one business-goal link, so FR-to-AC
+    and FR-to-BG coverage are both 44 of 44, or 100.0%.
+  recommendation: null
+- finding_id: req-qual-013
+  checklist_item: data-protection-citation-accuracy
+  requirement_id: CON-003
+  status: COVERED
+  severity: N/A
+  location:
+    section: Imposed Constraints; Regulatory Knowledge and User Service
+    line_range: L775-L775, L928-L928
+  finding: 'CON-003 and RULE-022 cite the local UK GDPR current-text snapshot accurately: Article 22 is dotted out while Articles
+    22A to 22C define solely automated significant decisions and the four Article 22C(2) safeguards; Articles 12 to 15 and
+    35 support transparency, rights and DPIA gates.'
+  recommendation: null
+- finding_id: req-qual-014
+  checklist_item: safety-quality-citation-accuracy
+  status: COVERED
+  severity: N/A
+  location:
+    section: Data, Audit and Reporting; Regulatory Knowledge and User Service
+    line_range: L885-L885, L928-L928
+  finding: FR-042 AC-082 maps planned-improvement timescale communication to Safety and Quality Standard 2.3.2, and RULE-022
+    AC-079 maps clear and timely communication to 2.3.3; both provision numbers are present in the local snapshot.
+  recommendation: null
+- finding_id: req-qual-015
+  checklist_item: explainability-transparency-testability
+  status: COVERED
+  severity: N/A
+  location:
+    section: Data, Audit and Reporting; Evaluation, Release and Equitable Outcomes
+    line_range: L884-L887, L912-L912
+  finding: 'New AC-079 through AC-085 are testable and traced: they require DPO-approved notices, explanation records, resident
+    explanation testing, policy reason codes, AI capability register fields, provenance fields and reviewer-sampled unsupported-claim,
+    explanation-fidelity and automation-bias measures.'
+  recommendation: null
+- finding_id: req-qual-016
+  checklist_item: authority-boundary-preservation
+  status: COVERED
+  severity: N/A
+  location:
+    section: Source Context and Original Request; Imposed Constraints; Automation Authority, Integration and Continuity
+    line_range: L137-L139, L778-L778, L901-L902
+  finding: 'The v0.5.0 additions preserve CON-006 and RULE-018 boundaries: residents retain works decisions, the asset and
+    Board authorities keep investment and acceleration decisions, Finance submits grants, and AI remains limited to recommendations,
+    drafts, reconciliation, routing and raise-only flags.'
+  recommendation: null
+- finding_id: req-qual-017
+  checklist_item: non-local-source-handling
+  status: COVERED
+  severity: N/A
+  location:
+    section: Imposed Constraints; Regulatory Knowledge and User Service; Assumptions and Open Decisions
+    line_range: L776-L776, L928-L928, L1204-L1204
+  finding: 'The BRD does not present missing local sources as local evidence: CON-004 names leasehold legislation as not held
+    locally, AC-079 treats the Transparency, Influence and Accountability Standard as a secondary reference through local
+    Awaab guidance, and OD-39 blocks reliance on missing snapshots.'
+  recommendation: null
+- finding_id: req-qual-018
+  checklist_item: provenance-register-and-supplier-exit
+  status: COVERED
+  severity: N/A
+  location:
+    section: Data, Audit and Reporting; Automation Authority, Integration and Continuity
+    line_range: L887-L887, L905-L905, L925-L925
+  finding: FR-044, NFR-006 and FR-040 together require output provenance, model and configuration version, exportable evidence,
+    supplier-independent retention and reconstruction of consequential decisions without creating an approval shortcut.
+  recommendation: null
+- finding_id: req-qual-019
+  checklist_item: programme-supervision-agent-consistency
+  status: COVERED
+  severity: N/A
+  location:
+    section: Digital Foundation and Authority; Data, Audit and Reporting
+    line_range: L578-L578, L886-L886
+  finding: FR-043 requires a register and Board assurance for AI capabilities used or proposed for use, but it does not contradict
+    the programme-supervision row because that row still states no agent is in the initial pilot for programme supervision
+    and reporting.
+  recommendation: null
+iso_29148_attributes:
+  necessary: 3
+  appropriate: 3
+  unambiguous: 2
+  complete: 2
+  singular: 3
+  feasible: 3
+  verifiable: 1
+  correct: 3
+  conforming: 3
+iso_25010_categories:
+  functional_suitability: true
+  performance_efficiency: false
+  compatibility: true
+  usability: true
+  reliability: true
+  security: true
+  maintainability: true
+  portability: true
+smart_business_goals:
+- goal_id: BG-001
+  statement: Improve portfolio energy performance
+  specific: true
+  measurable: false
+  achievable: false
+  relevant: true
+  time_bound: true
+  overall: FAIL
+- goal_id: BG-002
+  statement: Increase safe retrofit throughput, RULE-023
+  specific: true
+  measurable: true
+  achievable: true
+  relevant: true
+  time_bound: true
+  overall: PASS
+- goal_id: BG-003
+  statement: Protect resident health and safety
+  specific: true
+  measurable: true
+  achievable: true
+  relevant: true
+  time_bound: true
+  overall: PASS
+- goal_id: BG-004
+  statement: Meet hazard response obligations
+  specific: true
+  measurable: true
+  achievable: true
+  relevant: true
+  time_bound: true
+  overall: PASS
+- goal_id: BG-005
+  statement: Preserve resident control
+  specific: true
+  measurable: true
+  achievable: true
+  relevant: true
+  time_bound: true
+  overall: PASS
+- goal_id: BG-006
+  statement: Improve quality, RULE-023
+  specific: true
+  measurable: false
+  achievable: false
+  relevant: true
+  time_bound: false
+  overall: FAIL
+- goal_id: BG-007
+  statement: Improve grant conversion
+  specific: true
+  measurable: false
+  achievable: false
+  relevant: true
+  time_bound: false
+  overall: FAIL
+- goal_id: BG-008
+  statement: Maintain affordability, RULE-023
+  specific: true
+  measurable: false
+  achievable: false
+  relevant: true
+  time_bound: false
+  overall: FAIL
+- goal_id: BG-009
+  statement: Improve resident outcomes
+  specific: true
+  measurable: false
+  achievable: false
+  relevant: true
+  time_bound: false
+  overall: FAIL
+- goal_id: BG-010
+  statement: Improve accountability
+  specific: true
+  measurable: false
+  achievable: true
+  relevant: true
+  time_bound: false
+  overall: FAIL
+- goal_id: BG-011
+  statement: Reduce avoidable coordination effort and delay, RULE-023
+  specific: true
+  measurable: true
+  achievable: true
+  relevant: true
+  time_bound: true
+  overall: PASS
+- goal_id: BG-012
+  statement: Demonstrate proportionate technology value
+  specific: true
+  measurable: false
+  achievable: true
+  relevant: true
+  time_bound: false
+  overall: FAIL
+fr_ac_coverage:
+  fr_total: 44
+  fr_with_ac: 44
+  coverage_pct: 100.0
+notes: Read-only Define review of BRD version 0.5.0 with the explicit explainability and transparency lens requested for Run
+  6. No new RISK or CAUTION findings were introduced. The Define gate remains blocked by accepted carried-forward req-qual-001
+  through req-qual-008 only, with carried-forward cautions req-qual-009 and req-qual-010.
+---
+schema_version: BRD_QUALITY_REPORT_V1
+report_id: BRD-2026-AMA48-001-quality-20260926T214323Z
+generated_at: '2026-09-26T21:43:23Z'
+brd:
+  id: BRD-2026-AMA48-001
+  version: 0.5.0
+  phase: Define
+  artifact_path: docs\brds\agentic-retrofit-programme-brd.md
+overall_status: FAIL
+decision_thresholds:
+  iso_29148_core_min_score: 2
+  fr_to_ac_min_pct: 80.0
+  fr_to_bg_target_pct: 100.0
+gate_decisions:
+  define_exit: BLOCKED
+  govern_exit: NOT_EVALUATED
+summary_counts:
+  RISK: 8
+  CAUTION: 2
+  COVERED: 9
+  NOT_APPLICABLE: 0
+severity_breakdown:
+  CRITICAL: 0
+  HIGH: 8
+  MEDIUM: 1
+  LOW: 1
+standards_assessed:
+- skill_name: requirements-quality
+  skill_version: '1.1'
+  overall_status: RISK
+  findings_count: 19
+category_summaries:
+  iso_29148:
+    average_score: 2.56
+    weakest_attribute: verifiable
+    weakest_attribute_score: 1
+  iso_25010:
+    covered_categories: 7
+    missing_categories:
+    - performance_efficiency
+  smart:
+    goals_total: 12
+    goals_passing: 5
+    pass_rate_pct: 41.67
+  fr_ac_coverage:
+    fr_total: 44
+    fr_with_ac: 44
+    coverage_pct: 100.0
+    threshold_pct: 80.0
+  fr_bg_coverage:
+    fr_total: 44
+    fr_with_bg: 44
+    bg_total: 12
+    coverage_pct: 100.0
+    target_pct: 100.0
+    waiver_required: false
+top_findings:
+- finding_id: req-qual-001
+  standard: requirements-quality
+  severity: HIGH
+  status: RISK
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L400-L418
+  finding: BG-001 still depends on replacement company data and a board-approved annual reduction through 2030, so the target
+    is not yet a quantified SMART target.
+  recommendation: Replace the provisional below-EPC-C benchmark with validated company data and a numeric annual reduction
+    target approved for the 2030 trajectory.
+- finding_id: req-qual-002
+  standard: requirements-quality
+  severity: HIGH
+  status: RISK
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L405-L418
+  finding: BG-006 keeps a 90% scenario-testing assumption and defers rollout thresholds to board approval, so the final quality
+    target and timeframe remain unresolved.
+  recommendation: Define board-approved right-first-time and defect-rate thresholds with the approval phase or timeframe in
+    which each threshold applies.
+- finding_id: req-qual-003
+  standard: requirements-quality
+  severity: HIGH
+  status: RISK
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L406-L418
+  finding: BG-007 separates opportunity, award, claimable and cash reporting but does not yet state a numeric grant-conversion
+    target or timeframe.
+  recommendation: Add approved grant opportunity, award, claim and cash-receipt targets once OD-11 provides award, eligibility
+    and match-funding evidence.
+- finding_id: req-qual-004
+  standard: requirements-quality
+  severity: HIGH
+  status: RISK
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L407-L418
+  finding: BG-008 depends on provider-specific liquidity, covenant and board tolerance values and therefore does not yet have
+    measurable SMART thresholds.
+  recommendation: Replace board-approved tolerances with the specific liquidity, covenant and downside limits that Finance
+    and the Board approve.
+- finding_id: req-qual-005
+  standard: requirements-quality
+  severity: HIGH
+  status: RISK
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L408-L418
+  finding: BG-009 names resident outcome domains but leaves the improvement target and timeframe as a validated improvement
+    without increased harm.
+  recommendation: Set numeric resident outcome targets, disaggregation rules and measurement windows after OD-08 and OD-18
+    are resolved.
+- finding_id: req-qual-006
+  standard: requirements-quality
+  severity: HIGH
+  status: RISK
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L409-L418
+  finding: BG-010 targets 100% accepted or escalated handoffs but the approved times are not yet defined.
+  recommendation: Define the handoff acceptance and escalation time limits by exception type and operating period before treating
+    BG-010 as SMART.
+- finding_id: req-qual-007
+  standard: requirements-quality
+  severity: HIGH
+  status: RISK
+  location:
+    section: Business Objectives and Success Metrics
+    line_range: L411-L418
+  finding: BG-012 requires positive attributable value before scale but does not yet state a numeric value threshold or timeframe.
+  recommendation: Define the minimum attributable benefit, whole-life cost tolerance and test window required before scale
+    approval.
+- finding_id: req-qual-008
+  standard: requirements-quality
+  severity: HIGH
+  status: RISK
+  location:
+    section: Regulatory Knowledge and User Service
+    line_range: L927-L927
+  finding: NFR-009 requires service-time measures, escalation and alternatives, but the actual journey thresholds remain open
+    under OD-25 and related owner decisions.
+  recommendation: Add journey-specific service-time thresholds, escalation limits and manual or non-digital fallback test
+    criteria once OD-25 is resolved.
+- finding_id: req-qual-009
+  standard: requirements-quality
+  severity: MEDIUM
+  status: CAUTION
+  location:
+    section: Non-Functional Requirement Categories
+    line_range: L781-L793
+  finding: Functional suitability is represented by FR rows rather than a dedicated NFR, and performance efficiency remains
+    absent pending company volume, response-time and capacity data.
+  recommendation: Retain the explicit functional-suitability caveat and add a performance-efficiency NFR when OD-03, OD-09
+    and OD-25 provide measurable thresholds.
+- finding_id: req-qual-010
+  standard: requirements-quality
+  severity: LOW
+  status: CAUTION
+  location:
+    section: Requirements Traceability
+    line_range: L1261-L1264
+  finding: The BRD states that acceptance criteria are testable row statements but not yet written in Given/When/Then form.
+  recommendation: Convert acceptance criteria to Given/When/Then form if the next downstream consumer requires Gherkin-style
+    scenarios.
+recommendations:
+- id: REC-001
+  priority: P1
+  target_section: Business Objectives and Success Metrics
+  action: Resolve OD-01, OD-08, OD-09, OD-11, OD-12, OD-13, OD-15 and OD-18 enough to replace provisional or board-dependent
+    wording with numeric targets, timeframes and measurement owners for BG-001, BG-006, BG-007, BG-008, BG-009, BG-010 and
+    BG-012.
+  related_finding_ids:
+  - req-qual-001
+  - req-qual-002
+  - req-qual-003
+  - req-qual-004
+  - req-qual-005
+  - req-qual-006
+  - req-qual-007
+- id: REC-002
+  priority: P1
+  target_section: Regulatory Knowledge and User Service
+  action: Resolve OD-09 and OD-25 into journey-specific service-time thresholds, escalation limits and manual or non-digital
+    fallback tests for NFR-009 before live use.
+  related_finding_ids:
+  - req-qual-008
+- id: REC-003
+  priority: P2
+  target_section: Non-Functional Requirement Categories
+  action: Add a measurable performance-efficiency NFR when readiness provides company volumes, response-time thresholds and
+    capacity data; keep the ISO 25010 functional-suitability caveat if the BRD continues to express that category through
+    FR rows.
+  related_finding_ids:
+  - req-qual-009
+- id: REC-004
+  priority: P3
+  target_section: Requirements Traceability
+  action: Convert row-level acceptance criteria to Given/When/Then form if the downstream PRD or test authoring process requires
+    Gherkin-style scenarios.
+  related_finding_ids:
+  - req-qual-010
+warnings:
+- id: WARN-001
+  severity: ADVISORY
+  message: Run 6 introduced no new blocking or caution findings; Define remains blocked by accepted carried-forward RISK findings
+    pending company data and owner decisions.
+  related_finding_ids:
+  - req-qual-001
+  - req-qual-002
+  - req-qual-003
+  - req-qual-004
+  - req-qual-005
+  - req-qual-006
+  - req-qual-007
+  - req-qual-008
+- id: WARN-002
+  severity: INFO
+  message: Explainability and transparency checks found the new ACs testable and traced, identifier counts correct, regulatory
+    provision numbers accurate against local snapshots, and missing local evidence handled through OD-39.
+  related_finding_ids:
+  - req-qual-011
+  - req-qual-012
+  - req-qual-013
+  - req-qual-014
+  - req-qual-015
+  - req-qual-016
+  - req-qual-017
+  - req-qual-018
+  - req-qual-019
+notes: Run 6 reviewed v0.5.0 against the standard BRD quality rubric and an explicit NIST AI RMF MS-2.8, MS-2.9 and GV-1.6,
+  UK GDPR Articles 12 to 15 and 22A to 22C, and Safety and Quality Standard 2.3.2 and 2.3.3 transparency lens. BR-### and
+  OBJ-## were treated as legacy aliases and not flagged.
 # Run 5: BRD Quality Reviewer, Define phase, after agent-placement and wording edits (BRD version 0.4.0, uncommitted working tree).
 # Owner request 2026-09-26: remove "not a judgement" wording; place agents only where the Agent Request Challenge found value; add a deterministic core per capability; no agent for programme supervision and reporting in the initial pilot; add raise-only hazard signals.
 # Reviewer confirmed cited IDs, RULE-018 and FR-036 boundaries and controls remain consistent. No new findings.
