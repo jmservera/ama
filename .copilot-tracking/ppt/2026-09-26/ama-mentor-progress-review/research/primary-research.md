@@ -8,7 +8,7 @@
 * Goal: summarise the case, the request, how the gaps were filled, the
   challenges met, and how the repository is organised so every decision can
   be justified or challenged.
-* Length: short, about 13 slides for a 20 to 30 minute conversation.
+* Length: 13 slides plus one appendix slide, speaker notes capped at about 2,000 words (about 14 minutes) so the mentor has 10 to 15 minutes for questions.
 * Topic research (`rpi-research`) skipped: all content comes from the
   repository, supplied by the owner. No external product or standards claims.
 
@@ -28,11 +28,14 @@
 | Agent challenge verdicts and "what to build" | `agent-request-challenge.md`, Summary table |
 | Five bounded AI candidates, shared foundation | `agent-request-challenge.md`, Cross-Cutting Findings |
 | Control plane and capped readiness plus gated pilots | Addendum, Solution Proposal; BRD Document Status |
-| 12 BG, 41 FR, 73 AC, 9 NFR, 6 CON, 23 RULE; 0% to 100% coverage; FAIL | log 2026-09-26 relabel entry; BRD frontmatter; quality report |
+| 12 BG, 44 FR, 85 AC, 9 NFR, 6 CON, 24 RULE; 0% to 100% coverage; six runs; FAIL | BRD v0.5.0; quality report Runs 1 to 6 |
+| Agent-led modernisation, digital foundation, one locality with existing teams | Addendum (Executive Proposition; Where Agents Fit); BRD Document Status owner decision; log 2026-09-26 reframe entry |
+| Comparison 1 and 2, dashboard versus scorecard, RULE-024, OD-34 proposal | pilot-measurement-challenge.md (Summary; Owner Decision); BRD RULE-019, RULE-024 |
+| CON-003 Article 22 fix (local text: 22A to 22D; CON-003 cites 22A to 22C), AC-079, FR-042 to FR-044, OD-39 | log 2026-09-26 transparency entry; BRD v0.5.0 |
 | Contradictions: 91% vs 87% interest cover; fuel poverty 10.0% to 11.6% | log 2026-09-25 |
 | Divergences: L4 quality flags, L3 digital booking | `agent-request-challenge.md`, Divergences |
 | Knowledge base layers, Karpathy LLM Wiki pattern | `docs/reference/README.md` |
-| 31 commits, PR #1 | `git log` on 2026-09-26 |
+| 35 commits, PR #1; 12 commits touch the BRD | `git log` on 2026-09-27 |
 | 85-day plan ending 5 Dec, sessions, fallback demo | `.copilot-tracking/plans/2026-09-19/case-study-85-day-delivery-plan.instructions.md` |
 | 15-minute pitch for CEO, CIO, CFO | `docs/reference/memory.md` |
 
@@ -45,12 +48,13 @@
 5. Role agents
 6. BRD iterations
 7. Design thinking: requests as expected value
-8. What we really need to build
-9. BRD quality review
-10. Challenges
-11. Knowledge base organisation
+8. What we build: digital foundation, bounded agents, accountable people
+9. Proving and explaining the value
+10. BRD quality review
+11. Challenges and lessons
 12. Traceability chain
 13. Next steps and mentor questions
+14. Appendix: knowledge base organisation
 
 ## Global Style
 
@@ -65,5 +69,6 @@
 ## Gaps and Open Questions
 
 * The owner's name is not in the repository; the title slide omits it.
-* `docs/presentations/proper-warm-cxo-initial-proposal.pptx` is deleted in
-  the working tree (owner change); not referenced by this deck.
+* `docs/presentations/proper-warm-cxo-initial-proposal.pptx` was deliberately
+  removed by the owner (confirmed 2026-09-27). This deck is published to
+  `docs/presentations/ama-mentor-progress-review.pptx`.

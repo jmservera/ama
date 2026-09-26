@@ -33,6 +33,12 @@ project rather than executable software.
     findings. Internal Microsoft content can be retrieved with WorkIQ.
   * `docs/reference/log.md` is the append-only change log for the knowledge
     base.
+* `docs/presentations/` holds the final, validated presentation decks. Deck
+  working files (content YAML, research, validation images and change logs)
+  stay under `.copilot-tracking/ppt/{YYYY-MM-DD}/{deck-name}/`. After a deck
+  passes validation, copy the generated PPTX from its `slide-deck/` folder to
+  `docs/presentations/{deck-name}.pptx` as the delivery copy, replacing the
+  previous version of the same deck, and list it in the index.
 * `support/` is the owner's private working area and is not part of the
   knowledge base. `support/cohort.md` identifies colleagues who may be able
   to help with particular technical areas.

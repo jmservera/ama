@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-09-26
+ms.date: 2026-09-27
 ms.topic: reference
 ---
 
@@ -303,4 +303,30 @@ metadata when the knowledge base was created.
 * BRD Quality Reviewer, Define: Run 6 found no new findings. The result is
   still FAIL, with Define exit blocked, only because of the accepted
   company-data gaps (req-qual-001 to 008).
+* Updated the index (`README.md`) and this log.
+
+## [2026-09-27] update | Refresh and publish the AMA mentor progress review deck
+
+* Reviewed the mentor deck against the four later 2026-09-26 entries: pilot
+  measurement challenge, BRD 0.3.0 integration, the agent-led modernisation
+  reframe (BRD 0.4.0) and the transparency review (BRD 0.5.0). Working files
+  are in `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/`.
+* Slide 8 now shows the digital foundation, bounded agents and accountable
+  people, with the one-locality ask using existing teams and suppliers. A new
+  slide 9 covers Comparison 1 and 2, the dashboard versus benefits scorecard,
+  RULE-024, the CON-003 citation fix, AC-079, FR-042 to FR-044, OD-39 and the
+  OD-34 proposal. BRD counts were updated to 12 BG, 44 FR, 85 AC, 9 NFR,
+  6 CON and 24 RULE, and to six quality runs.
+* The Presentation Communications Strategist reviewed the changes. It found
+  one error: the local UK GDPR text omits Article 22 and holds Articles 22A to
+  22D, while CON-003 cites 22A to 22C. The error and its other recommendations
+  were applied. At the owner's request, the knowledge-organisation slide moved
+  to an appendix and the speaker notes were cut to about 2,000 words.
+* Found why `../presentations/` was empty. The PowerPoint pipeline writes only
+  to its tracking folder. The owner had deliberately removed
+  `proper-warm-cxo-initial-proposal.pptx`, and that deletion was committed
+  with the first mentor deck (df1de38), so the index links were broken.
+  Published `../presentations/ama-mentor-progress-review.pptx`, replaced the
+  broken index links with it, and added a delivery-copy rule to
+  `.github/copilot-instructions.md`.
 * Updated the index (`README.md`) and this log.

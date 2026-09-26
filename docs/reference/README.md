@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-09-26
+ms.date: 2026-09-27
 ms.topic: overview
 ---
 
@@ -63,7 +63,7 @@ management: short pages that point to clusters of related material.
 | Evaluate a new idea | [Idea Register](../ideas/idea-register.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Challenge whether a requested agent is needed, or decide what to build instead | [Agent Request Challenge](./research/company/agent-request-challenge.md) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
 | Design pilot measurement, baselines, comparison cohorts or a benefits dashboard | [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) |
-| Prepare a presentation or pitch | [Project Memory](./memory.md) | [Proper Warm CXO initial proposal](../presentations/proper-warm-cxo-initial-proposal.pptx) and [85-day roadmap](../case-study-85-day-roadmap.svg) |
+| Prepare a presentation or pitch | [Project Memory](./memory.md) | [AMA mentor progress review](../presentations/ama-mentor-progress-review.pptx) and [85-day roadmap](../case-study-85-day-roadmap.svg) |
 | Design a looped agent goal | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | [Project Memory](./memory.md) |
 | Find proven use cases, customer evidence or reusable solutions | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 
@@ -79,7 +79,7 @@ management: short pages that point to clusters of related material.
 | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) | Evidence, team and bounded assistant requirements for finding delivery constraints | 2026-09-19 |
 | [Idea Register](../ideas/idea-register.md) | Research ideas that are not yet validated requirements | 2026-09-24 |
 | [System One Decision Models for Retrofit Agents](../ideas/typesafe-system-one-agent-fit.md) | Research on typed decision models for IDEA-001 | 2026-09-24 |
-| [Proper Warm CXO initial proposal](../presentations/proper-warm-cxo-initial-proposal.pptx) | Initial executive presentation deck | Binary file |
+| [AMA mentor progress review](../presentations/ama-mentor-progress-review.pptx) | Deck for the first mentoring session, with 13 slides and a knowledge-organisation appendix. It covers the request and its gaps, research loops, role agents, the value challenge, agent-led modernisation, pilot measurement and transparency, BRD quality, lessons, a traceability chain and mentor questions. Working files: `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/` | Binary file, 2026-09-27 |
 | [85-day roadmap](../case-study-85-day-roadmap.svg) | C-suite solution roadmap diagram, with its [Excalidraw source](../case-study-85-day-roadmap.excalidraw) | Binary file |
 
 ### Research Syntheses

@@ -40,7 +40,7 @@ elements:
     text_bold: true
     space_after: 12
     alignment: left
-  - text: Will the panel read control plane plus bounded AI as a stronger answer, or as refusing the brief?
+  - text: Will the panel read agent-led modernisation, not five end-to-end agents, as answering the brief?
     text_font: Segoe UI
     text_size: 15
     text_color: '#102A43'
@@ -202,28 +202,17 @@ elements:
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
-speaker_notes: |
+speaker_notes: |-
   These are the four places I would most value your challenge.
 
-  First, will the panel read a control plane plus bounded AI as a stronger answer,
-  or as refusing the brief?
+  First, will the panel read agent-led modernisation, not five end-to-end agents, as answering the brief, or as stepping back from the five agents it asked for?
 
-  Second, how much business depth versus architecture depth should the capstone
-  show?
+  Second, how much business depth versus architecture depth should the capstone show?
 
-  Third, should the BRD keep failing where targets need company data, or should I
-  propose clearly labelled illustrative targets?
+  Third, should the BRD keep failing where targets need company data, or should I propose clearly labelled illustrative targets?
 
-  Fourth, of the open divergences between the role agents, which should I resolve
-  first?
+  Fourth, which open divergence between the role agents should I resolve first?
 
-  On the right is what comes next on the 85-day plan, which finishes the committed
-  work on 5 December with a week of margin: the high- and medium-level
-  architecture, a shadow comparison of typed decision models, an optional bounded
-  demo with a static fallback, and CEO, CIO and CFO versions of the pitch. There is
-  still no real resident or staff evidence; the role agents' questions are the
-  discovery agenda.
+  On the right is what comes next on the 85-day plan, which finishes on 5 December: the architecture, a shadow comparison of typed decision models, an optional demo with a static fallback, and CEO, CIO and CFO versions of the pitch. There is still no real resident or staff evidence.
 
-  And one question on the story itself: where did it lose you?
-
-  Those are my questions. Which one would you take first?
+  And on the story itself: where did it lose you? Which question would you take first?
