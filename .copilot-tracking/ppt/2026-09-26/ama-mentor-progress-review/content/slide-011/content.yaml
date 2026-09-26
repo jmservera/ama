@@ -1,0 +1,519 @@
+slide: 11
+title: Knowledge organisation
+layout: blank
+background:
+  fill: '#FFFFFF'
+elements:
+- type: textbox
+  name: Title
+  left: 0.6
+  top: 0.5
+  width: 12.133000000000001
+  height: 0.75
+  text: The repo works as a second brain, so knowledge compounds
+  font: Segoe UI
+  font_size: 26
+  font_color: '#102A43'
+  font_bold: true
+  vertical_anchor: middle
+- type: textbox
+  name: Col A head
+  left: 0.6
+  top: 1.55
+  width: 3.0
+  height: 0.35
+  text: PROBLEM DOCUMENTS
+  font: Segoe UI
+  font_size: 12
+  font_color: '#B83A2E'
+  font_bold: true
+- type: shape
+  name: Problem 1
+  shape: rounded_rectangle
+  left: 0.6
+  top: 2.2
+  width: 3.0
+  height: 0.95
+  fill: '#FBEAE8'
+  line_color: '#F3C7C1'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: Original case study
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: Immutable record of the request
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Problem 2
+  shape: rounded_rectangle
+  left: 0.6
+  top: 3.45
+  width: 3.0
+  height: 0.95
+  fill: '#FBEAE8'
+  line_color: '#F3C7C1'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: Addendum
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: Evolving assessment and proposal
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Problem 3
+  shape: rounded_rectangle
+  left: 0.6
+  top: 4.7
+  width: 3.0
+  height: 0.95
+  fill: '#FBEAE8'
+  line_color: '#F3C7C1'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: BRD
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: Requirements with stable IDs
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: textbox
+  name: Col B head
+  left: 3.9
+  top: 1.55
+  width: 5.6
+  height: 0.35
+  text: 'DOCS/REFERENCE: THE KNOWLEDGE BASE'
+  font: Segoe UI
+  font_size: 12
+  font_color: '#0B625B'
+  font_bold: true
+- type: shape
+  name: KB 1
+  shape: rounded_rectangle
+  left: 3.9
+  top: 2.2
+  width: 2.65
+  height: 0.65
+  fill: '#E3F4F1'
+  line_color: '#B7E2DA'
+  line_width: 1
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: Index
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  - text: README task routing
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: KB 2
+  shape: rounded_rectangle
+  left: 6.85
+  top: 2.2
+  width: 2.65
+  height: 0.65
+  fill: '#E3F4F1'
+  line_color: '#B7E2DA'
+  line_width: 1
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: Sources
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  - text: Immutable dated snapshots
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: KB 3
+  shape: rounded_rectangle
+  left: 3.9
+  top: 3.1500000000000004
+  width: 2.65
+  height: 0.65
+  fill: '#E3F4F1'
+  line_color: '#B7E2DA'
+  line_width: 1
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: Syntheses
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  - text: Cited sector and company research
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: KB 4
+  shape: rounded_rectangle
+  left: 6.85
+  top: 3.1500000000000004
+  width: 2.65
+  height: 0.65
+  fill: '#E3F4F1'
+  line_color: '#B7E2DA'
+  line_width: 1
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: Method
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  - text: AMA training and prompts
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: KB 5
+  shape: rounded_rectangle
+  left: 3.9
+  top: 4.1
+  width: 2.65
+  height: 0.65
+  fill: '#E3F4F1'
+  line_color: '#B7E2DA'
+  line_width: 1
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: Resources
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  - text: Industry Hub findings
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: KB 6
+  shape: rounded_rectangle
+  left: 6.85
+  top: 4.1
+  width: 2.65
+  height: 0.65
+  fill: '#E3F4F1'
+  line_color: '#B7E2DA'
+  line_width: 1
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: Memory
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  - text: Owner context, not evidence
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: KB 7
+  shape: rounded_rectangle
+  left: 3.9
+  top: 5.05
+  width: 2.65
+  height: 0.65
+  fill: '#E3F4F1'
+  line_color: '#B7E2DA'
+  line_width: 1
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: Log
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  - text: Append-only changes and contradictions
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: KB 8
+  shape: rounded_rectangle
+  left: 6.85
+  top: 5.05
+  width: 2.65
+  height: 0.65
+  fill: '#E3F4F1'
+  line_color: '#B7E2DA'
+  line_width: 1
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: Schema
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  - text: copilot-instructions rules
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: textbox
+  name: Col C head
+  left: 9.8
+  top: 1.55
+  width: 2.933
+  height: 0.35
+  text: WORKING EVIDENCE
+  font: Segoe UI
+  font_size: 12
+  font_color: '#1D5FB8'
+  font_bold: true
+- type: shape
+  name: Tracking
+  shape: rounded_rectangle
+  left: 9.8
+  top: 2.2
+  width: 2.933
+  height: 1.6
+  fill: '#E6EFFB'
+  line_color: '#C7D9F3'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: .copilot-tracking
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: Plans, research, changes, reviews and BRD session state for every workflow
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Git
+  shape: rounded_rectangle
+  left: 9.8
+  top: 4.1
+  width: 2.933
+  height: 1.6
+  fill: '#E6EFFB'
+  line_color: '#C7D9F3'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: Git history
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: '32 commits and PR #1; most messages say what changed and why'
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Takeaway
+  shape: rounded_rectangle
+  left: 0.6
+  top: 6.0
+  width: 12.133000000000001
+  height: 0.4
+  fill: '#102A43'
+  line_color: '#102A43'
+  text: 'Pattern: Karpathy''s LLM Wiki. Immutable sources, maintained syntheses, read the index first,
+    log every change'
+  text_font: Segoe UI
+  text_size: 13
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: textbox
+  name: Source
+  left: 0.6
+  top: 6.7
+  width: 12.133000000000001
+  height: 0.28
+  text: 'Sources: docs/reference/README.md (Layers, Task Routing); .github/copilot-instructions.md; docs/reference/log.md.'
+  font: Segoe UI
+  font_size: 9
+  font_color: '#627D98'
+  margin_top: 0
+  margin_bottom: 0
+speaker_notes: |
+  This is how I kept a two-week research effort from turning into a pile of
+  documents.
+
+  On the left are the problem documents. The original case study is never edited,
+  so the request is always visible. The addendum evolves with every finding, and
+  the BRD carries the requirements with stable identifiers.
+
+  In the middle is the knowledge base, organised on Andrej Karpathy's LLM Wiki
+  pattern. An index routes any task to the right files. Regulatory sources are
+  dated and immutable. Syntheses carry citations. Memory holds my own context and is
+  explicitly not evidence. The log is append-only and records every ingest,
+  correction and contradiction. The schema, the repository instructions, tells every
+  agent how to use all of this.
+
+  On the right is the working evidence: the tracking folders for each workflow, and
+  Git history. Together they mean the next session, human or agent, starts from
+  what we already know instead of rediscovering it.

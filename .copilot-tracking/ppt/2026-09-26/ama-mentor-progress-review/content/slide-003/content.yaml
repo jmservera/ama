@@ -1,0 +1,398 @@
+slide: 3
+title: Five loops
+layout: blank
+background:
+  fill: '#FFFFFF'
+elements:
+- type: textbox
+  name: Title
+  left: 0.6
+  top: 0.5
+  width: 12.133000000000001
+  height: 0.75
+  text: 'Five loops, not a line: each finding sent me back to research'
+  font: Segoe UI
+  font_size: 26
+  font_color: '#102A43'
+  font_bold: true
+  vertical_anchor: middle
+- type: shape
+  name: Step 1
+  shape: pentagon
+  left: 0.6
+  top: 1.7
+  width: 2.2266000000000004
+  height: 0.7
+  fill: '#0B625B'
+  line_color: '#0B625B'
+  text: 1  Research
+  text_font: Segoe UI
+  text_size: 14
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+- type: shape
+  name: Step 1 detail
+  shape: rounded_rectangle
+  left: 0.6
+  top: 2.65
+  width: 2.2266000000000004
+  height: 2.85
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: 11 TO 25 SEP
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 8
+    alignment: left
+  - text: Company, sector statistics, comparators and 16 official regulatory documents
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 12
+    alignment: left
+  - text: OUTPUT
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#627D98'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: Primer, customer profile, regulatory register
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Step 2
+  shape: pentagon
+  left: 3.0766000000000004
+  top: 1.7
+  width: 2.2266000000000004
+  height: 0.7
+  fill: '#0B625B'
+  line_color: '#0B625B'
+  text: 2  Role agents
+  text_font: Segoe UI
+  text_size: 14
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+- type: shape
+  name: Step 2 detail
+  shape: rounded_rectangle
+  left: 3.0766000000000004
+  top: 2.65
+  width: 2.2266000000000004
+  height: 2.85
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: FROM 11 SEP
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 8
+    alignment: left
+  - text: Eight Proper North Homes perspectives to ask what the case never says
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 12
+    alignment: left
+  - text: OUTPUT
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#627D98'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: 8 company-* agents and their questions
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Step 3
+  shape: pentagon
+  left: 5.5532
+  top: 1.7
+  width: 2.2266000000000004
+  height: 0.7
+  fill: '#1D5FB8'
+  line_color: '#1D5FB8'
+  text: 3  BRD iterations
+  text_font: Segoe UI
+  text_size: 14
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+- type: shape
+  name: Step 3 detail
+  shape: rounded_rectangle
+  left: 5.5532
+  top: 2.65
+  width: 2.2266000000000004
+  height: 2.85
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: 11 TO 26 SEP
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#1D5FB8'
+    text_bold: true
+    space_after: 8
+    alignment: left
+  - text: Ten revisions, with new research and role answers between each
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 12
+    alignment: left
+  - text: OUTPUT
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#627D98'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: BRD v0.2.0
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Step 4
+  shape: pentagon
+  left: 8.029800000000002
+  top: 1.7
+  width: 2.2266000000000004
+  height: 0.7
+  fill: '#B83A2E'
+  line_color: '#B83A2E'
+  text: 4  Design thinking
+  text_font: Segoe UI
+  text_size: 14
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+- type: shape
+  name: Step 4 detail
+  shape: rounded_rectangle
+  left: 8.029800000000002
+  top: 2.65
+  width: 2.2266000000000004
+  height: 2.85
+  fill: '#FBEAE8'
+  line_color: '#F3C7C1'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: 26 SEP | TURNING POINT
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#B83A2E'
+    text_bold: true
+    space_after: 8
+    alignment: left
+  - text: Read each agent's "owns end-to-end" line as the value behind it
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 12
+    alignment: left
+  - text: OUTPUT
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#627D98'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: agent-request-challenge.md
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Step 5
+  shape: rectangle
+  left: 10.506400000000001
+  top: 1.7
+  width: 2.2266000000000004
+  height: 0.7
+  fill: '#1D5FB8'
+  line_color: '#1D5FB8'
+  text: 5  Quality review
+  text_font: Segoe UI
+  text_size: 14
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+- type: shape
+  name: Step 5 detail
+  shape: rounded_rectangle
+  left: 10.506400000000001
+  top: 2.65
+  width: 2.2266000000000004
+  height: 2.85
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: 26 SEP
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#1D5FB8'
+    text_bold: true
+    space_after: 8
+    alignment: left
+  - text: Canonical goals, FR, AC, NFR, constraints and rules, with coverage checks
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 12
+    alignment: left
+  - text: OUTPUT
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#627D98'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: Quality report, canonical IDs
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Takeaway
+  shape: rounded_rectangle
+  left: 0.6
+  top: 5.8
+  width: 12.133000000000001
+  height: 0.6
+  fill: '#102A43'
+  line_color: '#102A43'
+  text: Every loop sent me back to research and filed its findings in the addendum, the BRD and the log
+  text_font: Segoe UI
+  text_size: 15
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: textbox
+  name: Source
+  left: 0.6
+  top: 6.7
+  width: 12.133000000000001
+  height: 0.28
+  text: 'Sources: git log (32 commits, 10 to 26 Sep 2026); docs/reference/log.md; docs/brds/agentic-retrofit-programme-brd.md
+    history.'
+  font: Segoe UI
+  font_size: 9
+  font_color: '#627D98'
+  margin_top: 0
+  margin_bottom: 0
+speaker_notes: |
+  This is the backbone of the story. The five strands were not a straight line;
+  each loop produced questions that sent me back into research.
+
+  Research built the context. The role agents let me ask questions the brief could
+  not answer. The BRD was rewritten ten times as research and role answers came
+  in. The design thinking session on 26 September was the turning point: instead
+  of refining five agents, I asked what value each request implied, and tested an
+  early control plane hypothesis agent by agent. The quality review then made the
+  requirements traceable and showed where targets are still missing.
+
+  The important habit: nothing stayed in chat history. Every finding was filed back
+  into the addendum, the BRD or the knowledge base, and logged.
+
+  Loop 4, on 26 September, is the turning point. Everything before it built the
+  case; everything after it made the case testable.

@@ -1,0 +1,74 @@
+slide: 1
+title: Case Study 48 mentor progress review
+layout: blank
+background:
+  fill: '#102A43'
+elements:
+- type: textbox
+  name: Kicker
+  left: 0.9
+  top: 1.5
+  width: 11.5
+  height: 0.4
+  text: AMA CASE STUDY 48  |  MENTOR SESSION 1
+  font: Segoe UI
+  font_size: 14
+  font_color: '#7FD1C7'
+  font_bold: true
+  char_spacing: 1
+- type: textbox
+  name: Title
+  left: 0.9
+  top: 2.2
+  width: 11.5
+  height: 1.7
+  text: 'From "build five agents" to
+
+    "what value do they really need?"'
+  font: Segoe UI
+  font_size: 38
+  font_color: '#FFFFFF'
+  font_bold: true
+- type: textbox
+  name: Subtitle
+  left: 0.9
+  top: 4.2
+  width: 11.5
+  height: 0.8
+  text: How I filled the gaps in the Proper Warm case, 10 to 26 September 2026
+  font: Segoe UI
+  font_size: 20
+  font_color: '#BCCCDC'
+- type: shape
+  name: Rule
+  shape: rectangle
+  left: 0.9
+  top: 5.3
+  width: 1.6
+  height: 0.06
+  fill: '#1B998B'
+  line_color: '#1B998B'
+- type: textbox
+  name: Strands
+  left: 0.9
+  top: 5.66
+  width: 11.5
+  height: 0.5
+  text: 'Today: the story so far, then four decisions I would value your challenge on'
+  font: Segoe UI
+  font_size: 16
+  font_color: '#D9E2EC'
+speaker_notes: |
+  I have the story so far to show you, and four decisions I want your challenge
+  on. The short version: the brief asks for five agents; two weeks of evidence
+  says the value is real, but end-to-end agents are not the way to get it. One of
+  the four decisions is whether that reframing will read as refusing the brief.
+
+  The title is the story in one line. The brief asks me to build five agents. The
+  work so far turned that into a different question: what business value do the
+  people behind those agents actually expect, and what is the smallest thing that
+  delivers it safely?
+
+  I will cover five strands in order: research, role agents, BRD iterations, a
+  design thinking challenge of the five agents, and a BRD quality review. Then
+  the challenges, how the repository holds the evidence, and my questions for you.
