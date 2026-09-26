@@ -157,3 +157,19 @@ metadata when the knowledge base was created.
 * No BRD quality reviewer subagent was available, so no
   `BRD_QUALITY_REPORT_V1` was produced. The BRD remains a draft for business
   validation.
+
+## [2026-09-26] query | Apply confirmed not-for-profit status to role agents
+
+* Recorded the project owner's confirmation that Proper North Homes is a
+  not-for-profit organisation. Its exact legal form, registration, group
+  structure and charitable status remain unknown.
+* Updated `research/company/company-profile-research.md`,
+  `../case_study_48_addendum.md`, all eight `company-*` role agents, the index
+  (`README.md`) and this log.
+* Applied the fact by role: mission-led asset stewardship, retained-surplus
+  affordability, whole-life procurement value, resident accountability,
+  frontline service outcomes, unchanged safety duties, quality-adjusted
+  retrofit outcomes, and mission-aware performance measurement.
+* Guardrail: not-for-profit status does not imply unlimited funding, reduced
+  legal duties, charitable status, resident endorsement or freedom from
+  financial discipline.

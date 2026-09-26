@@ -1,7 +1,7 @@
 ---
 title: Company Profile Research
 description: Evidence base for Proper North Homes role agents
-ms.date: 2026-09-25
+ms.date: 2026-09-26
 ms.topic: reference
 ---
 
@@ -20,9 +20,28 @@ On 25 September 2026, a [Modelled Customer Profile](#modelled-customer-profile)
 was added from official sector statistics. Its values are modelled estimates,
 not company facts.
 
+On 26 September 2026, the project owner confirmed that Proper North Homes is
+a not-for-profit organisation. This is owner-supplied company information,
+not a conclusion drawn from the comparator research. Its exact corporate form,
+registration, group structure and charitable status remain unknown.
+
 For general knowledge about what a housing association is, its tenure types
 and its funding model, see
 [Housing Association Primer](../sector/housing-association-primer.md).
+
+## Confirmed Company Information
+
+| Information | Evidence status | Decision implication |
+| --- | --- | --- |
+| Proper North Homes is a not-for-profit organisation | Confirmed by the project owner on 26 September 2026 | Evaluate capital, operating and technology choices against resident and social outcomes, stewardship of homes, long-term financial resilience and value for money. Do not frame distributable profit or shareholder return as an objective |
+
+Not-for-profit status does not mean that funding is unconstrained or that
+surplus is unimportant. The organisation still needs sufficient operating
+surplus, liquidity, covenant headroom and borrowing capacity to maintain its
+homes, meet its duties and invest in its mission. Any surplus is retained for
+organisational purposes rather than treated as a distribution to investors.
+The allocation of surplus, delegated authorities and board priorities remain
+unknown company details.
 
 ## Comparable Organisations
 
@@ -273,6 +292,7 @@ Recurring information gaps occur between:
 | Head of Procurement and Contract Management | Procurement route, supplier due diligence, contract performance | Technical specification, budget ownership, legal advice on applicability and disputes |
 | Head of Resident Engagement and Insight | Meaningful engagement, accessibility, resident insight, satisfaction and complaints themes | Service decisions, individual consent, operational remediation |
 | Neighbourhood Housing Officer | Local tenancy relationship, issue intake, resident context, frontline escalation | Technical diagnosis, capital decisions, legal enforcement, specialist safeguarding |
+| Data and Performance Lead | Synthetic data design, lifecycle measures, data quality and analytical test evidence | Operational interpretation, investment, safety, resident, supplier and professional decisions |
 
 Approval limits and reporting lines vary between providers. Any monetary
 threshold used in discussion must be treated as an unknown until Proper North
@@ -320,7 +340,7 @@ only; the official source was not rechecked online.
 
 ## Priority Company Gaps
 
-The seven profiles should collectively elicit:
+The eight profiles should collectively elicit:
 
 1. Stock composition, condition-data coverage, EPC baseline, and higher-risk
    building exposure. A modelled tenure mix and EPC range exist in the
@@ -343,7 +363,9 @@ The seven profiles should collectively elicit:
 7. Governance structure, approval thresholds, board reporting, risk ownership,
    and regulatory assurance. A modelled board prioritisation hypothesis exists
    in the [Modelled Customer Profile](#modelled-customer-profile) and needs
-   company confirmation.
+   company confirmation. The organisation's not-for-profit status is
+   confirmed, but its exact legal form, charitable status, group structure,
+   surplus policy and mission outcome framework remain unknown.
 8. Systems of record, spreadsheet dependencies, integration points, and data
    ownership
 9. Workforce size, specialist competencies, geographic operating model, and

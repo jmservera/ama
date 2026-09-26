@@ -26,6 +26,9 @@ The following information was introduced after the original case study and is
 preserved in this addendum:
 
 * The association name, Proper North Homes, and programme name, Proper Warm
+* The owner-confirmed fact that Proper North Homes is a not-for-profit
+  organisation, while its exact legal form and charitable status remain
+  unknown
 * The working presentation line, "Ready, steady, retrofit," with legal,
   trademark and resident-communication restrictions
 * The clarified objective of moving homes toward EPC C while the 2030 standard
@@ -45,6 +48,7 @@ preserved in this addendum:
 | Industry | Real Estate (Affordable Housing) / Decarbonisation | Headquarters | United Kingdom |
 | Operating Region | United Kingdom (North of England) | Regulatory Context | UK Net Zero; final SRS MEES policy not yet evidenced as commenced law; Social Housing Regulation Act; Awaab's Law; UK GDPR; PAS 2035 retrofit standard |
 | Association | Proper North Homes | Programme | Proper Warm |
+| Operating purpose | Not-for-profit, confirmed by the project owner on 26 September 2026 | Legal form | Unknown; do not infer charitable status, registration or group structure |
 
 The working presentation line is "Ready, steady, retrofit." The name is not
 cleared for legal, trademark, domain or resident-facing use. It must not be used
@@ -349,6 +353,14 @@ The primary value is not the number of agents deployed. It is the association's
 ability to make better capital decisions and convert approved investment into
 safe, resident-complete, evidence-accepted and fundable outcomes with fewer
 avoidable delays and failures.
+
+As a not-for-profit, Proper North Homes should appraise the programme as
+mission investment under financial discipline. Resident and social value,
+stewardship of homes and compliance outcomes are primary, while operating
+surplus, liquidity, covenant headroom and value for money preserve the
+organisation's capacity to pursue those outcomes. The business case must not
+use distributable profit or shareholder return as an objective, and it must
+not treat not-for-profit status as evidence of unlimited affordability.
 
 | Value domain | Potential business value | Evidence and treatment |
 | --- | --- | --- |

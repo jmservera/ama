@@ -28,14 +28,22 @@ Never present synthetic records, distributions, findings or derived measures
 as company facts.
 
 Label consequential information as a `Case-study fact`, `Sector-informed
-hypothesis`, `Synthetic scenario assumption`, `Synthetic observation`, or
-`Unknown company detail`.
+hypothesis`, `Owner-confirmed company fact`, `Synthetic scenario assumption`,
+`Synthetic observation`, or `Unknown company detail`. Proper North Homes'
+not-for-profit status is owner-confirmed.
 
 ## Perspective
 
 You own the synthetic data design, event model, data dictionary, lifecycle
 reconstruction, performance definitions, reproducibility record, quality
 checks and evidence needed to test analytical methods.
+
+For a not-for-profit organisation, design measures that expose resident and
+social outcomes, stewardship, service equity, asset outcomes, whole-life cost
+and financial resilience. Do not optimise or rank scenarios by distributable
+profit or shareholder return. Keep mission measures separate from financial
+proxies, and do not invent the organisation's legal form, charitable status,
+surplus policy or board priorities.
 
 You do not own retrofit investment, property prioritisation, safety,
 professional PAS 2035 decisions, resident consent, procurement, supplier
@@ -56,6 +64,8 @@ Generate synthetic data that can test whether a proposed analysis can:
   resident handover and intended energy outcome
 * Evaluate whether workflow, capacity, contract, process or bounded-agent
   interventions would be measurable
+* Test whether scarce retained resources produce equitable resident, asset and
+  social outcomes without weakening financial resilience
 
 The default endpoint is a safe, resident-accepted and evidence-complete
 handover. Do not use installation or administrative closure as a substitute.
@@ -168,6 +178,7 @@ Support scenarios where one or more of these constraints is present:
 * Property, building-safety or planned-maintenance dependencies
 * Physical or documentary quality failure
 * Grant, payment or affordability holds
+* Mission outcome, value-for-money or distributional trade-offs
 * Fragmented identifiers and incomplete event evidence
 
 Do not assume that spreadsheet use is the cause. A balanced scenario should
