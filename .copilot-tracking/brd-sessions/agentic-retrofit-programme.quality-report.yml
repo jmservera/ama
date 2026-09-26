@@ -1,0 +1,1185 @@
+# Run 2: BRD Quality Reviewer, Define phase, after canonical taxonomy migration (BRD version 0.2.0, uncommitted working tree).
+# Parent dispositions (verified at cited locations):
+#   req-qual-001..007 (BG SMART targets): accepted; unresolved by design. Targets need company data or board decisions (OD-01, OD-08, OD-09, OD-11, OD-12, OD-13, OD-15, OD-18). Not invented.
+#   req-qual-008 (NFR-009 thresholds): accepted; thresholds linked to OD-09 and OD-25; remains open until owners set them.
+#   req-qual-009 (ISO 25010 functional suitability, performance efficiency): accepted as a Define-stage caveat; performance thresholds need readiness data.
+#   req-qual-010 (AC not Given/When/Then): accepted as advisory; convert before PRD handoff.
+#   req-qual-011 (CON-004 source outside local corpus): corrected; Legal must validate source before live use.
+#   req-qual-012 (governance-only rules): corrected; verification owners added for RULE-015, RULE-016, RULE-019, RULE-020.
+#   req-qual-013 (FR-022 compound): corrected; split into FR-022 and RULE-023 (AC-073).
+# Post-correction state: overall FAIL remains because of req-qual-001..008; define_exit BLOCKED pending company data.
+---
+schema_version: BRD_STANDARD_FINDINGS_V1
+assessment_id: requirements-quality-BRD-2026-AMA48-001-20260926T164710Z
+assessed_at: "2026-09-26T16:47:10Z"
+brd:
+  id: BRD-2026-AMA48-001
+  version: 0.2.0
+  phase: Define
+  artifact_path: docs/brds/agentic-retrofit-programme-brd.md
+standard:
+  skill_name: requirements-quality
+  skill_version: "1.1"
+mode: plan
+assessment_outcome: plan
+overall_status: RISK
+summary_counts:
+  RISK: 8
+  CAUTION: 5
+  COVERED: 5
+  NOT_APPLICABLE: 0
+findings:
+  - finding_id: req-qual-001
+    checklist_item: smart-business-goal-measurable
+    requirement_id: BG-001
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L388-L408
+    finding: >
+      BG-001 uses a provisional below-EPC-C baseline but its target is
+      "Board-approved annual reduction through 2030" rather than a numeric
+      reduction path. The BRD correctly links the missing target to OD-01
+      instead of inventing a value.
+    recommendation: >
+      Replace the placeholder with an owner-approved annual reduction target
+      after OD-01 supplies the validated address-level baseline.
+  - finding_id: req-qual-002
+    checklist_item: smart-business-goal-measurable
+    requirement_id: BG-006
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L393-L408
+    finding: >
+      BG-006 records a 90% scenario-testing value and then defers the actual
+      quality thresholds to the Board, so the goal is not yet measurable or
+      time-bound for Define exit.
+    recommendation: >
+      Add the Board-approved right-first-time and material-defect thresholds,
+      measurement window and owner, or keep the SMART failure explicitly linked
+      to OD-13 and OD-18.
+  - finding_id: req-qual-003
+    checklist_item: smart-business-goal-measurable
+    requirement_id: BG-007
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L394-L408
+    finding: >
+      BG-007 describes separated grant-state reporting, but it does not define
+      a quantitative grant-conversion target or timeframe.
+    recommendation: >
+      After OD-11 confirms award, eligibility and match-funding evidence, add
+      a measurable conversion target such as eligible claim value, accepted
+      claims, cash receipts or evidence rejection rate by a stated date.
+  - finding_id: req-qual-004
+    checklist_item: smart-business-goal-measurable
+    requirement_id: BG-008
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L395-L408
+    finding: >
+      BG-008 depends on board-approved tolerances that are not stated, so the
+      affordability outcome cannot be verified.
+    recommendation: >
+      Resolve OD-12 and OD-15 with numeric liquidity, covenant, cash-exposure
+      and downside-tolerance thresholds before treating BG-008 as SMART.
+  - finding_id: req-qual-005
+    checklist_item: smart-business-goal-measurable
+    requirement_id: BG-009
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L396-L408
+    finding: >
+      BG-009 says resident outcomes should show validated improvement without
+      increased harm, but it lacks target deltas, denominators and a measurement
+      window.
+    recommendation: >
+      Use OD-08 and OD-18 to set resident-outcome targets for comfort,
+      affordability, complaints, kept appointments and adverse outcomes.
+  - finding_id: req-qual-006
+    checklist_item: smart-business-goal-time-bound
+    requirement_id: BG-010
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L397-L408
+    finding: >
+      BG-010 targets 100% accepted or escalated handoffs but defers the actual
+      approved times, so the timeliness condition is not verifiable.
+    recommendation: >
+      Resolve OD-09 by adding response-time thresholds for each exception route
+      and owner queue.
+  - finding_id: req-qual-007
+    checklist_item: smart-business-goal-measurable
+    requirement_id: BG-012
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L399-L408
+    finding: >
+      BG-012 requires "positive attributable value before scale" but does not
+      define the minimum value threshold, cost boundary or decision timeframe.
+    recommendation: >
+      Resolve OD-18 with a quantified incremental value test against the
+      non-agentic comparator, while preserving the zero-autonomous-approval
+      safety condition.
+  - finding_id: req-qual-008
+    checklist_item: iso-29148-verifiable
+    requirement_id: NFR-009
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Regulatory Knowledge and User Service"
+      line_range: L809-L810
+    finding: >
+      NFR-009 requires service-time measures and escalation, but the row does
+      not state the actual thresholds for intake, hazard action, professional
+      review, resident contact, appointment alternatives or evidence views.
+    recommendation: >
+      Add measurable service-time thresholds and escalation triggers, linked to
+      OD-09 and the relevant owner queues.
+  - finding_id: req-qual-009
+    checklist_item: iso-25010-category-presence
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: "Non-Functional Requirement Categories"
+      line_range: L671-L672
+    finding: >
+      Functional suitability is evidenced by "FR rows" rather than an NFR, and
+      performance efficiency has no NFR yet. Under the NFR category-presence
+      checklist, both categories remain uncovered.
+    recommendation: >
+      Add explicit NFR rows for functional suitability and performance
+      efficiency, or keep the absence as a deliberate Define-stage caveat with
+      the owner decisions that will supply thresholds.
+  - finding_id: req-qual-010
+    checklist_item: acceptance-criteria-format
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: "Requirements Traceability"
+      line_range: L1102-L1104
+    finding: >
+      The BRD records 100% FR-to-AC coverage but states that acceptance criteria
+      are not yet written in Given/When/Then form. Several criteria are dense
+      row-level checks that will need atomic test cases before downstream PRD or
+      implementation use.
+    recommendation: >
+      Keep the coverage count, but split dense acceptance criteria into atomic
+      Given/When/Then or justified checklist tests before Govern or PRD handoff.
+  - finding_id: req-qual-011
+    checklist_item: regulatory-citation-provenance
+    requirement_id: CON-004
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: "Imposed Constraints"
+      line_range: L663
+    finding: >
+      CON-004 makes a material leaseholder consultation and charge-limit claim
+      through the Housing Association Primer and notes that the source is not
+      held in the local regulatory corpus.
+    recommendation: >
+      Add or cite a dated local regulatory snapshot for the named legislation,
+      or mark the constraint as requiring legal source validation before live
+      use.
+  - finding_id: req-qual-012
+    checklist_item: business-rule-to-fr-traceability
+    status: CAUTION
+    severity: LOW
+    location:
+      section: "Business Rule Enforcement"
+      line_range: L1195-L1200
+    finding: >
+      RULE-015, RULE-016, RULE-019 and RULE-020 have no enforcing functional
+      requirement and rely on governance records. The BRD explains this, but it
+      remains a handoff risk unless downstream owners accept those records as
+      verification evidence.
+    recommendation: >
+      For each governance-only rule, record the owning role, evidence artifact
+      and downstream consumer that will verify it.
+  - finding_id: req-qual-013
+    checklist_item: iso-29148-singular
+    requirement_id: FR-022
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: "Supplier Capacity and Contract Control"
+      line_range: L734
+    finding: >
+      FR-022 combines a channel-neutral contract data schedule with a separate
+      Legal leaseholder-consultation decision, which may make the requirement
+      harder to test and assign.
+    recommendation: >
+      Split FR-022 into one data-schedule requirement and one legal
+      consultation-status gate, or document why the single pre-contract gate is
+      intentional.
+  - finding_id: req-qual-014
+    checklist_item: id-schema-conformance
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Requirement Identifier Scheme"
+      line_range: L636-L644
+    finding: >
+      Active identifiers use the configured FR, AC, NFR, CON, RULE and BG
+      namespaces, and the document explicitly keeps BR-### and OBJ-## as legacy
+      aliases only.
+    recommendation: null
+  - finding_id: req-qual-015
+    checklist_item: constraint-quality
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Imposed Constraints"
+      line_range: L658-L665
+    finding: >
+      The six CON rows include imposing source, category, affected boundary,
+      non-negotiable condition, exception authority and affected requirements.
+    recommendation: null
+  - finding_id: req-qual-016
+    checklist_item: fr-ac-coverage
+    status: COVERED
+    severity: N/A
+    location:
+      section: "FR-to-AC and FR-to-BG Coverage"
+      line_range: L1125-L1128
+    finding: >
+      The BRD reports 41 of 41 functional requirements with acceptance criteria,
+      meeting the 80% Define threshold.
+    recommendation: null
+  - finding_id: req-qual-017
+    checklist_item: fr-bg-coverage
+    status: COVERED
+    severity: N/A
+    location:
+      section: "FR-to-AC and FR-to-BG Coverage"
+      line_range: L1125-L1128
+    finding: >
+      The BRD reports 41 of 41 functional requirements linked to at least one
+      BG identifier, meeting the 100% traceability target.
+    recommendation: null
+  - finding_id: req-qual-018
+    checklist_item: authority-boundary
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Automation Authority, Integration and Continuity"
+      line_range: L784-L785
+    finding: >
+      The BRD states explicit allow/deny authority boundaries and restricts
+      pilot AI to recommendations, drafts, reconciliation, fixed-category
+      routing and raise-only flags.
+    recommendation: null
+iso_29148_attributes:
+  necessary: 3
+  appropriate: 3
+  unambiguous: 2
+  complete: 2
+  singular: 2
+  feasible: 2
+  verifiable: 1
+  correct: 2
+  conforming: 3
+iso_25010_categories:
+  functional_suitability: false
+  performance_efficiency: false
+  compatibility: true
+  usability: true
+  reliability: true
+  security: true
+  maintainability: true
+  portability: true
+smart_business_goals:
+  - goal_id: BG-001
+    statement: Improve portfolio energy performance
+    specific: true
+    measurable: false
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: FAIL
+  - goal_id: BG-002
+    statement: Increase safe retrofit throughput
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: BG-003
+    statement: Protect resident health and safety
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: BG-004
+    statement: Meet hazard response obligations
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: BG-005
+    statement: Preserve resident control
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: BG-006
+    statement: Improve quality
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: BG-007
+    statement: Improve grant conversion
+    specific: true
+    measurable: false
+    achievable: true
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: BG-008
+    statement: Maintain affordability
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: BG-009
+    statement: Improve resident outcomes
+    specific: true
+    measurable: false
+    achievable: true
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: BG-010
+    statement: Improve accountability
+    specific: true
+    measurable: false
+    achievable: true
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: BG-011
+    statement: Reduce avoidable coordination effort and delay
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: BG-012
+    statement: Demonstrate proportionate technology value
+    specific: true
+    measurable: false
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: FAIL
+fr_ac_coverage:
+  fr_total: 41
+  fr_with_ac: 41
+  coverage_pct: 100.0
+notes: >
+  Review operated read-only against the active Define-phase taxonomy. Legacy
+  BR-### and OBJ-## values were treated only as aliases, not active requirement
+  identifiers. OD-## values were treated as open decisions, not requirements.
+---
+schema_version: BRD_QUALITY_REPORT_V1
+report_id: BRD-2026-AMA48-001-quality-20260926T164710Z
+generated_at: "2026-09-26T16:47:10Z"
+brd:
+  id: BRD-2026-AMA48-001
+  version: 0.2.0
+  phase: Define
+  artifact_path: docs/brds/agentic-retrofit-programme-brd.md
+overall_status: FAIL
+decision_thresholds:
+  iso_29148_core_min_score: 2
+  fr_to_ac_min_pct: 80.0
+  fr_to_bg_target_pct: 100.0
+gate_decisions:
+  define_exit: BLOCKED
+  govern_exit: NOT_EVALUATED
+summary_counts:
+  RISK: 8
+  CAUTION: 5
+  COVERED: 5
+  NOT_APPLICABLE: 0
+severity_breakdown:
+  CRITICAL: 0
+  HIGH: 8
+  MEDIUM: 4
+  LOW: 1
+standards_assessed:
+  - skill_name: requirements-quality
+    skill_version: "1.1"
+    overall_status: RISK
+    findings_count: 18
+category_summaries:
+  iso_29148:
+    average_score: 2.44
+    weakest_attribute: verifiable
+    weakest_attribute_score: 1
+  iso_25010:
+    covered_categories: 6
+    missing_categories:
+      - functional_suitability
+      - performance_efficiency
+  smart:
+    goals_total: 12
+    goals_passing: 5
+    pass_rate_pct: 41.67
+  fr_ac_coverage:
+    fr_total: 41
+    fr_with_ac: 41
+    coverage_pct: 100.0
+    threshold_pct: 80.0
+  fr_bg_coverage:
+    fr_total: 41
+    fr_with_bg: 41
+    bg_total: 12
+    coverage_pct: 100.0
+    target_pct: 100.0
+    waiver_required: false
+top_findings:
+  - finding_id: req-qual-001
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L388-L408
+    finding: >
+      BG-001 uses a provisional below-EPC-C baseline but its target is
+      "Board-approved annual reduction through 2030" rather than a numeric
+      reduction path.
+    recommendation: >
+      Replace the placeholder with an owner-approved annual reduction target
+      after OD-01 supplies the validated address-level baseline.
+  - finding_id: req-qual-002
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L393-L408
+    finding: >
+      BG-006 records a 90% scenario-testing value and then defers the actual
+      quality thresholds to the Board.
+    recommendation: >
+      Add the Board-approved right-first-time and material-defect thresholds,
+      measurement window and owner.
+  - finding_id: req-qual-003
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L394-L408
+    finding: >
+      BG-007 describes separated grant-state reporting, but it does not define
+      a quantitative grant-conversion target or timeframe.
+    recommendation: >
+      Add a measurable conversion target after OD-11 confirms award,
+      eligibility and match-funding evidence.
+  - finding_id: req-qual-004
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L395-L408
+    finding: >
+      BG-008 depends on board-approved tolerances that are not stated, so the
+      affordability outcome cannot be verified.
+    recommendation: >
+      Resolve OD-12 and OD-15 with numeric liquidity, covenant, cash-exposure
+      and downside-tolerance thresholds.
+  - finding_id: req-qual-005
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L396-L408
+    finding: >
+      BG-009 lacks target deltas, denominators and a measurement window for
+      resident outcomes.
+    recommendation: >
+      Use OD-08 and OD-18 to set resident-outcome targets and measurement
+      windows.
+  - finding_id: req-qual-006
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L397-L408
+    finding: >
+      BG-010 targets 100% accepted or escalated handoffs but defers the actual
+      approved times.
+    recommendation: >
+      Resolve OD-09 by adding response-time thresholds for each exception route
+      and owner queue.
+  - finding_id: req-qual-007
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+      line_range: L399-L408
+    finding: >
+      BG-012 requires "positive attributable value before scale" but does not
+      define the minimum value threshold, cost boundary or decision timeframe.
+    recommendation: >
+      Resolve OD-18 with a quantified incremental value test against the
+      non-agentic comparator.
+  - finding_id: req-qual-008
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Regulatory Knowledge and User Service"
+      line_range: L809-L810
+    finding: >
+      NFR-009 requires service-time measures and escalation, but the row does
+      not state the actual thresholds.
+    recommendation: >
+      Add measurable service-time thresholds and escalation triggers linked to
+      OD-09.
+  - finding_id: req-qual-009
+    standard: requirements-quality
+    severity: MEDIUM
+    status: CAUTION
+    location:
+      section: "Non-Functional Requirement Categories"
+      line_range: L671-L672
+    finding: >
+      Functional suitability is evidenced by FR rows rather than an NFR, and
+      performance efficiency has no NFR yet.
+    recommendation: >
+      Add explicit NFR rows for functional suitability and performance
+      efficiency, or record the owner decisions that will supply thresholds.
+  - finding_id: req-qual-010
+    standard: requirements-quality
+    severity: MEDIUM
+    status: CAUTION
+    location:
+      section: "Requirements Traceability"
+      line_range: L1102-L1104
+    finding: >
+      Acceptance criteria are fully covered but not yet written in
+      Given/When/Then form.
+    recommendation: >
+      Split dense acceptance criteria into atomic Given/When/Then or justified
+      checklist tests before Govern or PRD handoff.
+recommendations:
+  - id: REC-001
+    priority: P1
+    target_section: "Business Objectives and Success Metrics"
+    action: >
+      Resolve OD-01, OD-08, OD-09, OD-11, OD-12, OD-13, OD-15 and OD-18 enough
+      to give every failing BG a numeric indicator, baseline or comparator,
+      target, timeframe and owner; keep unknown company values explicit rather
+      than inventing targets.
+    related_finding_ids:
+      - req-qual-001
+      - req-qual-002
+      - req-qual-003
+      - req-qual-004
+      - req-qual-005
+      - req-qual-006
+      - req-qual-007
+  - id: REC-002
+    priority: P1
+    target_section: "Regulatory Knowledge and User Service"
+    action: >
+      Add concrete service-time thresholds and escalation triggers to NFR-009 so
+      user-journey performance is objectively testable.
+    related_finding_ids:
+      - req-qual-008
+  - id: REC-003
+    priority: P2
+    target_section: "Non-Functional Requirement Categories"
+    action: >
+      Add NFR coverage for functional suitability and performance efficiency, or
+      record an explicit Define-stage caveat and owner decision for each absent
+      category.
+    related_finding_ids:
+      - req-qual-009
+  - id: REC-004
+    priority: P2
+    target_section: "Requirements Traceability"
+    action: >
+      Convert dense row-level acceptance criteria into atomic tests before
+      Govern or PRD handoff while preserving the 100% FR-to-AC coverage.
+    related_finding_ids:
+      - req-qual-010
+  - id: REC-005
+    priority: P2
+    target_section: "Imposed Constraints"
+    action: >
+      Strengthen CON-004 provenance with a dated local regulatory snapshot or
+      an explicit legal-validation gate before operational use.
+    related_finding_ids:
+      - req-qual-011
+  - id: REC-006
+    priority: P2
+    target_section: "Supplier Capacity and Contract Control"
+    action: >
+      Split FR-022 into separate data-schedule and legal-consultation
+      obligations, or document why they remain one pre-contract gate.
+    related_finding_ids:
+      - req-qual-013
+warnings:
+  - id: WARN-001
+    severity: ADVISORY
+    message: >
+      Missing targets are correctly preserved as open decisions; the review
+      should not fabricate company baselines, financial tolerances or resident
+      outcome targets.
+    related_finding_ids:
+      - req-qual-001
+      - req-qual-002
+      - req-qual-003
+      - req-qual-004
+      - req-qual-005
+      - req-qual-006
+      - req-qual-007
+  - id: WARN-002
+    severity: INFO
+    message: >
+      Review was read-only and based on local repository evidence; no official
+      online current-law check was performed in this invocation.
+    related_finding_ids:
+      - req-qual-011
+notes: >
+  Define exit is blocked because the paired findings contain RISK items and
+  the verifiable ISO 29148 core attribute scores below the minimum threshold.
+  FR-to-AC and FR-to-BG coverage both meet thresholds.
+
+# Run 1 (before migration)
+# BRD Quality Reviewer output, Define phase, reviewed revision 2026-09-26 (uncommitted working tree).
+# Reviewer dispatched in fresh context; parent verified findings req-qual-001 to 010 at cited locations.
+---
+schema_version: BRD_STANDARD_FINDINGS_V1
+assessment_id: requirements-quality-agentic-retrofit-programme-brd-20260926T160906Z
+assessed_at: "2026-09-26T16:09:06Z"
+brd:
+  id: agentic-retrofit-programme-brd
+  version: unversioned-draft
+  phase: Define
+  partition_id: full-document
+  artifact_path: docs/brds/agentic-retrofit-programme-brd.md
+standard:
+  skill_name: requirements-quality
+  skill_version: "1.0"
+mode: plan
+assessment_outcome: plan
+overall_status: RISK
+summary_counts:
+  RISK: 6
+  CAUTION: 4
+  COVERED: 5
+  NOT_APPLICABLE: 0
+findings:
+  - finding_id: req-qual-001
+    checklist_item: taxonomy-canonical-identifiers
+    status: RISK
+    severity: HIGH
+    location:
+      section: Document Status and Business Requirements
+      line_range: L30-L40, L588-L592
+    finding: The BRD explicitly records that it uses BR-001 through BR-068 as proposed requirements, but the canonical BRD taxonomy in force requires FR, AC, NFR, CON and BR, with BG as the adjacent business-goal namespace. A canonical scan found zero FR, AC, NFR, CON and BG identifiers.
+    recommendation: Add a migration or refactor pass that assigns canonical FR, AC, NFR, CON, BR and BG identifiers, preserving legacy BR and OBJ references as aliases where needed.
+  - finding_id: req-qual-002
+    checklist_item: fr-to-ac-coverage
+    status: RISK
+    severity: CRITICAL
+    location:
+      section: Business Requirements
+      line_range: L588-L717
+    finding: Canonical FR-to-AC coverage is 0.0% because the BRD contains no FR-### or AC-### items, even though each legacy BR row has an acceptance-criteria column. This fails the Define threshold of 80.0%.
+    recommendation: Convert legacy BR rows that describe solution behaviour into FR-### items and convert or link their acceptance-criteria cells to AC-### identifiers.
+  - finding_id: req-qual-003
+    checklist_item: fr-to-bg-traceability
+    status: RISK
+    severity: HIGH
+    location:
+      section: Requirements Traceability
+      line_range: L1006-L1021
+    finding: The traceability table maps OBJ-## objectives to BR-### rows, not canonical BG-### goals to FR-### requirements. The table is useful as legacy evidence but cannot satisfy FR-to-BG traceability.
+    recommendation: Create BG-### identifiers for the business goals and add a canonical FR-to-BG traceability matrix; keep the existing OBJ-to-BR table as a legacy cross-reference.
+  - finding_id: req-qual-004
+    checklist_item: brd-frontmatter-metadata
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: Frontmatter and Document Status
+      line_range: L1-L22
+    finding: The document has title, description, date and status, but it does not record a stable BRD id, semantic draft version, active phase, coverage thresholds or identifier-family configuration in frontmatter. The review therefore had to derive id and phase from path and invocation context.
+    recommendation: Add the BRD frontmatter overlay fields for id, version, phase, threshold values and identifier families.
+  - finding_id: req-qual-005
+    checklist_item: iso-29148-conforming
+    status: RISK
+    severity: HIGH
+    location:
+      section: Business Requirements
+      line_range: L592-L716
+    finding: The requirement set is not conforming to the active schema because one BR namespace carries functional controls, rules, constraints and NFR-like quality controls. Acceptance criteria are table cells rather than separately identifiable AC records.
+    recommendation: Classify each legacy BR row by requirement type, split rows into canonical namespaces and add explicit AC identifiers.
+  - finding_id: req-qual-006
+    checklist_item: iso-29148-singular
+    status: RISK
+    severity: MEDIUM
+    location:
+      section: Safety, Automation and Quality Requirements
+      line_range: L598-L599, L693-L704
+    finding: Several requirements are compound. For example BR-062 combines capture, referral, timestamp, ownership, escalation, contractor script and safety-hold obligations, while BR-046 combines gate enforcement, authority matrix, AI boundaries, blocked actions, routing and resident-contact controls.
+    recommendation: Split compound rows into atomic requirements and link them through traceability rather than packing multiple obligations into one row.
+  - finding_id: req-qual-007
+    checklist_item: smart-business-goals
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: Business Objectives and Success Metrics
+      line_range: L358-L369
+    finding: The BRD's OBJ rows are strong legacy goal equivalents, but only 5 of 12 pass all SMART checks. Several defer the actual target to future board-approved thresholds or company data, such as OBJ-01, OBJ-06, OBJ-08, OBJ-09 and OBJ-10.
+    recommendation: Convert OBJ rows into BG-### goals and add numeric target values, timeframe anchors and accountable measurement sources for each goal before Govern.
+  - finding_id: req-qual-008
+    checklist_item: iso-25010-nfr-classification
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: Data, Automation, Evaluation and Regulatory Requirements
+      line_range: L673-L716
+    finding: The BRD contains substantive quality controls for security, reliability, usability, maintainability and governance, but none is classified as NFR-###. ISO 25010 category coverage therefore cannot be computed canonically.
+    recommendation: Extract measurable NFR-### rows for security, privacy, reliability, usability, maintainability, interoperability and continuity, with thresholds and verification methods.
+  - finding_id: req-qual-009
+    checklist_item: con-specific-quality
+    status: RISK
+    severity: HIGH
+    location:
+      section: Regulatory Timing and Regulatory Knowledge
+      line_range: L116-L156, L710-L716
+    finding: The BRD describes externally imposed regulatory, funding, data-protection and legal boundaries, but it has no CON-### constraint rows. Constraint-specific checks for imposing source, affected boundary, non-negotiability, category and separation from BR or NFR cannot be satisfied canonically.
+    recommendation: Extract imposed boundaries into CON-### rows and record source, affected boundary, non-negotiability, category and approving authority for exceptions.
+  - finding_id: req-qual-010
+    checklist_item: open-decisions-define-readiness
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: Assumptions and Open Decisions; Live-Pilot Approval
+      line_range: L914-L950, L1042-L1055
+    finding: The BRD properly records 33 open decisions, including OD-26 through OD-33 from the latest revision, but many are prerequisites for live pilot evidence and authority. Define can proceed with these visible, but they remain blockers for later approval.
+    recommendation: Mark which OD items block Define exit, shadow mode, live pilot or scale, and add owners, due dates and required evidence for each blocker.
+  - finding_id: req-qual-011
+    checklist_item: legacy-acceptance-criteria-presence
+    status: COVERED
+    severity: N/A
+    location:
+      section: Business Requirements
+      line_range: L592-L717
+    finding: Every legacy BR row has a non-empty acceptance-criteria cell, giving 68 of 68 legacy requirement rows an acceptance intent.
+    recommendation: null
+  - finding_id: req-qual-012
+    checklist_item: evidence-classification
+    status: COVERED
+    severity: N/A
+    location:
+      section: Evidence Classification
+      line_range: L78-L87
+    finding: The BRD clearly separates case-study facts, sector-informed recommendations, planning assumptions or value hypotheses, and unknown company detail.
+    recommendation: null
+  - finding_id: req-qual-013
+    checklist_item: regulatory-dating-and-caveats
+    status: COVERED
+    severity: N/A
+    location:
+      section: Regulatory Timing and Source and Review Record
+      line_range: L116-L156, L1116-L1118
+    finding: The BRD dates local regulatory snapshots, distinguishes current-use caveats and states that citations were checked against local snapshots rather than official online sources.
+    recommendation: null
+  - finding_id: req-qual-014
+    checklist_item: legacy-objective-traceability
+    status: COVERED
+    severity: N/A
+    location:
+      section: Requirements Traceability
+      line_range: L1006-L1021
+    finding: The legacy traceability table links every OBJ row to supporting BR rows, which is useful coverage evidence for the BRD's own pre-canonical structure.
+    recommendation: null
+  - finding_id: req-qual-015
+    checklist_item: staged-approval-controls
+    status: COVERED
+    severity: N/A
+    location:
+      section: Validation and Approval Criteria
+      line_range: L1023-L1078
+    finding: The BRD separates readiness, shadow, live-pilot, tranche and scale approval, and makes clear that approval to gather evidence is not approval to deploy AI, instruct works, commit capital or claim grant.
+    recommendation: null
+iso_29148_attributes:
+  necessary: 3
+  appropriate: 2
+  unambiguous: 2
+  complete: 2
+  singular: 1
+  feasible: 2
+  verifiable: 2
+  correct: 2
+  conforming: 0
+iso_25010_categories:
+  functional_suitability: false
+  performance_efficiency: false
+  compatibility: false
+  usability: false
+  reliability: false
+  security: false
+  maintainability: false
+  portability: false
+smart_business_goals:
+  - goal_id: OBJ-01
+    statement: Improve portfolio energy performance
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: true
+    overall: FAIL
+  - goal_id: OBJ-02
+    statement: Increase safe retrofit throughput
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: OBJ-03
+    statement: Protect resident health and safety
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: OBJ-04
+    statement: Meet hazard response obligations
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: OBJ-05
+    statement: Preserve resident control
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: OBJ-06
+    statement: Improve quality
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: true
+    overall: FAIL
+  - goal_id: OBJ-07
+    statement: Improve grant conversion
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: OBJ-08
+    statement: Maintain affordability
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: OBJ-09
+    statement: Improve resident outcomes
+    specific: true
+    measurable: false
+    achievable: true
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: OBJ-10
+    statement: Improve accountability
+    specific: true
+    measurable: false
+    achievable: true
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: OBJ-11
+    statement: Reduce avoidable coordination effort and delay
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: OBJ-12
+    statement: Demonstrate proportionate technology value
+    specific: true
+    measurable: false
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: FAIL
+fr_ac_coverage:
+  fr_total: 0
+  fr_with_ac: 0
+  coverage_pct: 0.0
+notes: Canonical scan results: FR=0, AC=0, NFR=0, CON=0, BG=0, BR=68, OBJ=12, OD=33. For interpretation only, this review also treated the BRD's own BR rows as functional/control requirement equivalents and OBJ rows as business-goal equivalents. Under that legacy mapping, 68 of 68 BR rows have an acceptance-criteria column and every BR row links to an OBJ value, but those figures do not satisfy the canonical FR-to-AC or FR-to-BG contract metrics.
+---
+schema_version: BRD_QUALITY_REPORT_V1
+report_id: agentic-retrofit-programme-brd-quality-20260926T160906Z
+generated_at: "2026-09-26T16:09:06Z"
+brd:
+  id: agentic-retrofit-programme-brd
+  version: unversioned-draft
+  phase: Define
+  artifact_path: docs/brds/agentic-retrofit-programme-brd.md
+overall_status: FAIL
+decision_thresholds:
+  iso_29148_core_min_score: 2
+  fr_to_ac_min_pct: 80.0
+  fr_to_bg_target_pct: 100.0
+gate_decisions:
+  define_exit: BLOCKED
+  govern_exit: NOT_EVALUATED
+summary_counts:
+  RISK: 6
+  CAUTION: 4
+  COVERED: 5
+  NOT_APPLICABLE: 0
+severity_breakdown:
+  CRITICAL: 1
+  HIGH: 4
+  MEDIUM: 5
+  LOW: 0
+standards_assessed:
+  - skill_name: requirements-quality
+    skill_version: "1.0"
+    overall_status: RISK
+    findings_count: 15
+category_summaries:
+  iso_29148:
+    average_score: 1.78
+    weakest_attribute: conforming
+    weakest_attribute_score: 0
+  iso_25010:
+    covered_categories: 0
+    missing_categories:
+      - functional_suitability
+      - performance_efficiency
+      - compatibility
+      - usability
+      - reliability
+      - security
+      - maintainability
+      - portability
+  smart:
+    goals_total: 12
+    goals_passing: 5
+    pass_rate_pct: 41.67
+  fr_ac_coverage:
+    fr_total: 0
+    fr_with_ac: 0
+    coverage_pct: 0.0
+    threshold_pct: 80.0
+  fr_bg_coverage:
+    fr_total: 0
+    fr_with_bg: 0
+    bg_total: 0
+    coverage_pct: 0.0
+    target_pct: 100.0
+    waiver_required: true
+top_findings:
+  - finding_id: req-qual-002
+    standard: requirements-quality
+    severity: CRITICAL
+    status: RISK
+    location:
+      section: Business Requirements
+      line_range: L588-L717
+    finding: Canonical FR-to-AC coverage is 0.0% because the BRD contains no FR-### or AC-### items, even though each legacy BR row has an acceptance-criteria column. This fails the Define threshold of 80.0%.
+    recommendation: Convert legacy BR rows that describe solution behaviour into FR-### items and convert or link their acceptance-criteria cells to AC-### identifiers.
+  - finding_id: req-qual-001
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: Document Status and Business Requirements
+      line_range: L30-L40, L588-L592
+    finding: The BRD explicitly records that it uses BR-001 through BR-068 as proposed requirements, but the canonical BRD taxonomy in force requires FR, AC, NFR, CON and BR, with BG as the adjacent business-goal namespace. A canonical scan found zero FR, AC, NFR, CON and BG identifiers.
+    recommendation: Add a migration or refactor pass that assigns canonical FR, AC, NFR, CON, BR and BG identifiers, preserving legacy BR and OBJ references as aliases where needed.
+  - finding_id: req-qual-003
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: Requirements Traceability
+      line_range: L1006-L1021
+    finding: The traceability table maps OBJ-## objectives to BR-### rows, not canonical BG-### goals to FR-### requirements. The table is useful as legacy evidence but cannot satisfy FR-to-BG traceability.
+    recommendation: Create BG-### identifiers for the business goals and add a canonical FR-to-BG traceability matrix; keep the existing OBJ-to-BR table as a legacy cross-reference.
+  - finding_id: req-qual-005
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: Business Requirements
+      line_range: L592-L716
+    finding: The requirement set is not conforming to the active schema because one BR namespace carries functional controls, rules, constraints and NFR-like quality controls. Acceptance criteria are table cells rather than separately identifiable AC records.
+    recommendation: Classify each legacy BR row by requirement type, split rows into canonical namespaces and add explicit AC identifiers.
+  - finding_id: req-qual-009
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: Regulatory Timing and Regulatory Knowledge
+      line_range: L116-L156, L710-L716
+    finding: The BRD describes externally imposed regulatory, funding, data-protection and legal boundaries, but it has no CON-### constraint rows. Constraint-specific checks for imposing source, affected boundary, non-negotiability, category and separation from BR or NFR cannot be satisfied canonically.
+    recommendation: Extract imposed boundaries into CON-### rows and record source, affected boundary, non-negotiability, category and approving authority for exceptions.
+  - finding_id: req-qual-006
+    standard: requirements-quality
+    severity: MEDIUM
+    status: RISK
+    location:
+      section: Safety, Automation and Quality Requirements
+      line_range: L598-L599, L693-L704
+    finding: Several requirements are compound. For example BR-062 combines capture, referral, timestamp, ownership, escalation, contractor script and safety-hold obligations, while BR-046 combines gate enforcement, authority matrix, AI boundaries, blocked actions, routing and resident-contact controls.
+    recommendation: Split compound rows into atomic requirements and link them through traceability rather than packing multiple obligations into one row.
+  - finding_id: req-qual-004
+    standard: requirements-quality
+    severity: MEDIUM
+    status: CAUTION
+    location:
+      section: Frontmatter and Document Status
+      line_range: L1-L22
+    finding: The document has title, description, date and status, but it does not record a stable BRD id, semantic draft version, active phase, coverage thresholds or identifier-family configuration in frontmatter. The review therefore had to derive id and phase from path and invocation context.
+    recommendation: Add the BRD frontmatter overlay fields for id, version, phase, threshold values and identifier families.
+  - finding_id: req-qual-007
+    standard: requirements-quality
+    severity: MEDIUM
+    status: CAUTION
+    location:
+      section: Business Objectives and Success Metrics
+      line_range: L358-L369
+    finding: The BRD's OBJ rows are strong legacy goal equivalents, but only 5 of 12 pass all SMART checks. Several defer the actual target to future board-approved thresholds or company data, such as OBJ-01, OBJ-06, OBJ-08, OBJ-09 and OBJ-10.
+    recommendation: Convert OBJ rows into BG-### goals and add numeric target values, timeframe anchors and accountable measurement sources for each goal before Govern.
+  - finding_id: req-qual-008
+    standard: requirements-quality
+    severity: MEDIUM
+    status: CAUTION
+    location:
+      section: Data, Automation, Evaluation and Regulatory Requirements
+      line_range: L673-L716
+    finding: The BRD contains substantive quality controls for security, reliability, usability, maintainability and governance, but none is classified as NFR-###. ISO 25010 category coverage therefore cannot be computed canonically.
+    recommendation: Extract measurable NFR-### rows for security, privacy, reliability, usability, maintainability, interoperability and continuity, with thresholds and verification methods.
+  - finding_id: req-qual-010
+    standard: requirements-quality
+    severity: MEDIUM
+    status: CAUTION
+    location:
+      section: Assumptions and Open Decisions; Live-Pilot Approval
+      line_range: L914-L950, L1042-L1055
+    finding: The BRD properly records 33 open decisions, including OD-26 through OD-33 from the latest revision, but many are prerequisites for live pilot evidence and authority. Define can proceed with these visible, but they remain blockers for later approval.
+    recommendation: Mark which OD items block Define exit, shadow mode, live pilot or scale, and add owners, due dates and required evidence for each blocker.
+recommendations:
+  - id: REC-001
+    priority: P0
+    target_section: Business Requirements
+    action: Perform a taxonomy migration before re-running Define gate review: assign canonical FR, AC, NFR, CON, BR and BG identifiers, then recompute FR-to-AC coverage against the 80.0% threshold.
+    related_finding_ids:
+      - req-qual-001
+      - req-qual-002
+      - req-qual-005
+  - id: REC-002
+    priority: P1
+    target_section: Requirements Traceability
+    action: Add BG-### business goals and a canonical FR-to-BG matrix while retaining the current OBJ-to-BR matrix as a legacy view.
+    related_finding_ids:
+      - req-qual-003
+      - req-qual-007
+  - id: REC-003
+    priority: P1
+    target_section: Regulatory Timing and Regulatory Knowledge
+    action: Extract externally imposed legal, regulatory, funding, contract and data-protection boundaries into CON-### rows with imposing source, boundary, non-negotiability, category and exception authority.
+    related_finding_ids:
+      - req-qual-009
+  - id: REC-004
+    priority: P2
+    target_section: Business Requirements
+    action: Split long compound BR rows, especially BR-046, BR-062, BR-063, BR-064 and BR-067, into atomic requirements and linked acceptance criteria.
+    related_finding_ids:
+      - req-qual-006
+  - id: REC-005
+    priority: P2
+    target_section: Frontmatter and Document Status
+    action: Add the canonical BRD frontmatter overlay, including stable id, semantic draft version, phase, threshold values and identifier-family configuration.
+    related_finding_ids:
+      - req-qual-004
+  - id: REC-006
+    priority: P2
+    target_section: Business Objectives and Success Metrics
+    action: Replace placeholder targets such as board-approved tolerances, validated improvement and approved times with numeric target values, timeframes and measurement owners.
+    related_finding_ids:
+      - req-qual-007
+  - id: REC-007
+    priority: P2
+    target_section: Assumptions and Open Decisions
+    action: Add gate impact, due date and required evidence for OD-01 through OD-33, distinguishing Define blockers from live-pilot and scale blockers.
+    related_finding_ids:
+      - req-qual-010
+warnings:
+  - id: WARN-001
+    severity: WARNING
+    message: Legacy-equivalent coverage is much stronger than canonical coverage. If BR rows are treated as functional/control requirements, 68 of 68 have an acceptance-criteria cell, but the canonical payload must still report FR-to-AC coverage as 0.0% because no FR or AC identifiers exist.
+    related_finding_ids:
+      - req-qual-001
+      - req-qual-002
+  - id: WARN-002
+    severity: ADVISORY
+    message: The BRD itself states that recent regulatory citations were checked against local snapshots on 2026-09-26, not against official online sources. This is appropriately disclosed, but official checks are still needed before operational activation.
+    related_finding_ids:
+      - req-qual-013
+  - id: WARN-003
+    severity: INFO
+    message: The latest 2026-09-26 additions, BR-059 through BR-068 and OD-26 through OD-33, improve substantive control coverage but also increase the need for taxonomy normalization before Govern.
+    related_finding_ids:
+      - req-qual-001
+      - req-qual-010
+notes: The Define gate is blocked by canonical taxonomy and coverage, not by lack of substantive business analysis. The BRD is strong as a research and control-plane document, with clear evidence classification, dated regulatory caveats, legacy acceptance criteria and staged approval controls. The parent should judge legacy coverage separately from canonical payload coverage.

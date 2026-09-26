@@ -1,6 +1,6 @@
 {
   "brdFile": "docs/brds/agentic-retrofit-programme-brd.md",
-  "lastAccessed": "2026-09-26T17:45:00+02:00",
+  "lastAccessed": "2026-09-26T19:00:00+02:00",
   "currentPhase": "Define",
   "questionsAsked": [
     "safety-stop-condition",
@@ -75,7 +75,9 @@
     }
   ],
   "nextActions": [
-    "Run a BRD quality review and record BRD_QUALITY_REPORT_V1 before any Define exit",
+    "Obtain company data and board decisions for BG-001, BG-006 to BG-010 and BG-012 targets (OD-01, OD-08, OD-09, OD-11, OD-12, OD-13, OD-15, OD-18), then rerun the BRD quality review",
+    "Set NFR-009 service-time thresholds (OD-09, OD-25) and add performance-efficiency NFRs from readiness data",
+    "Convert dense acceptance criteria to atomic Given/When/Then form before PRD handoff",
     "Put the sponsor discovery questions added on 2026-09-26 to Proper North Homes",
     "Assign owners and dates to OD-26 to OD-33",
     "Obtain Legal review of lease, consultation, procurement modification, payment notice and contractor-awareness questions",
@@ -98,7 +100,11 @@
     "provisional-sector-benchmarks-cited",
     "tenure-routes-explicit",
     "challenge-findings-integrated",
-    "regulatory-citations-checked-locally"
+    "regulatory-citations-checked-locally",
+    "quality-review-run",
+    "canonical-taxonomy-applied",
+    "fr-to-ac-coverage-100",
+    "fr-to-bg-coverage-100"
   ],
   "userPreferences": {
     "detail-level": "comprehensive",
@@ -109,5 +115,45 @@
   "disclaimerShownAt": "2026-09-26T17:45:00+02:00",
   "phaseSkillsLoaded": [
     "brd-author#define"
-  ]
+  ],
+  "latestQualityReport": {
+    "path": ".copilot-tracking/brd-sessions/agentic-retrofit-programme.quality-report.yml",
+    "run": 2,
+    "overallStatus": "FAIL",
+    "defineExit": "BLOCKED",
+    "governExit": "NOT_EVALUATED",
+    "generatedAt": "2026-09-26T16:47:10Z",
+    "primaryCause": "7 business goals lack numeric targets pending company data (OD-01, OD-08, OD-09, OD-11, OD-12, OD-13, OD-15, OD-18); NFR-009 thresholds pending OD-09 and OD-25",
+    "metrics": {
+      "frToAcCoveragePct": 100.0,
+      "frToBgCoveragePct": 100.0,
+      "smartPassRatePct": 41.67,
+      "iso25010CategoriesCovered": 6
+    }
+  },
+  "taxonomyMigration": {
+    "date": "2026-09-26",
+    "prefixes": {
+      "fr": "FR",
+      "ac": "AC",
+      "nfr": "NFR",
+      "con": "CON",
+      "br": "RULE"
+    },
+    "counts": {
+      "BG": 12,
+      "FR": 41,
+      "AC": 73,
+      "NFR": 9,
+      "CON": 6,
+      "RULE": 23
+    },
+    "legacyAliases": "BR-001..BR-068, OBJ-01..OBJ-12 kept in Legacy ID columns and Legacy Identifier Map",
+    "splits": [
+      "BR-046",
+      "BR-048",
+      "BR-062",
+      "BR-066"
+    ]
+  }
 }

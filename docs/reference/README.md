@@ -74,7 +74,7 @@ management: short pages that point to clusters of related material.
 | --- | --- | --- |
 | [Original Case Study 48](../case_study_48_original.md) | Initial problem specification. Preserved unchanged | 2026-09-10 |
 | [Case Study 48 Addendum](../case_study_48_addendum.md) | Evolving critical assessment, solution proposal, trade-offs and business value | 2026-09-26 |
-| [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | Business requirements for safe, resident-centred and financially controlled retrofit delivery, including tenure, eligibility, hazard-awareness and contractor-instruction controls from the agent request challenge | 2026-09-26 |
+| [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | Business requirements for safe, resident-centred and financially controlled retrofit delivery, including tenure, eligibility, hazard-awareness and contractor-instruction controls from the agent request challenge; uses canonical FR, AC, NFR, CON, RULE and BG identifiers with a legacy BR and OBJ alias map | 2026-09-26 |
 | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) | Evidence, team and bounded assistant requirements for finding delivery constraints | 2026-09-19 |
 | [Idea Register](../ideas/idea-register.md) | Research ideas that are not yet validated requirements | 2026-09-24 |
 | [System One Decision Models for Retrofit Agents](../ideas/typesafe-system-one-agent-fit.md) | Research on typed decision models for IDEA-001 | 2026-09-24 |
