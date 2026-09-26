@@ -1,0 +1,463 @@
+slide: 5
+title: Role agents
+layout: blank
+background:
+  fill: '#FFFFFF'
+elements:
+- type: textbox
+  name: Title
+  left: 0.6
+  top: 0.5
+  width: 12.133000000000001
+  height: 0.75
+  text: Eight role agents stood in for the company I cannot interview
+  font: Segoe UI
+  font_size: 26
+  font_color: '#102A43'
+  font_bold: true
+  vertical_anchor: middle
+- type: shape
+  name: Role 1
+  shape: rounded_rectangle
+  left: 0.6
+  top: 1.65
+  width: 2.95
+  height: 0.5
+  fill: '#FFFFFF'
+  line_color: '#1B998B'
+  text: Executive Director of Assets
+  text_font: Segoe UI
+  text_size: 13
+  text_color: '#102A43'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+  line_width: 1.5
+- type: shape
+  name: Role 2
+  shape: rounded_rectangle
+  left: 3.8000000000000003
+  top: 1.65
+  width: 2.95
+  height: 0.5
+  fill: '#FFFFFF'
+  line_color: '#1B998B'
+  text: Finance, Capital and Grants
+  text_font: Segoe UI
+  text_size: 13
+  text_color: '#102A43'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+  line_width: 1.5
+- type: shape
+  name: Role 3
+  shape: rounded_rectangle
+  left: 0.6
+  top: 2.27
+  width: 2.95
+  height: 0.5
+  fill: '#FFFFFF'
+  line_color: '#1B998B'
+  text: Retrofit Programme Manager
+  text_font: Segoe UI
+  text_size: 13
+  text_color: '#102A43'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+  line_width: 1.5
+- type: shape
+  name: Role 4
+  shape: rounded_rectangle
+  left: 3.8000000000000003
+  top: 2.27
+  width: 2.95
+  height: 0.5
+  fill: '#FFFFFF'
+  line_color: '#1B998B'
+  text: Building Safety and Compliance
+  text_font: Segoe UI
+  text_size: 13
+  text_color: '#102A43'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+  line_width: 1.5
+- type: shape
+  name: Role 5
+  shape: rounded_rectangle
+  left: 0.6
+  top: 2.8899999999999997
+  width: 2.95
+  height: 0.5
+  fill: '#FFFFFF'
+  line_color: '#1B998B'
+  text: Resident Engagement and Insight
+  text_font: Segoe UI
+  text_size: 13
+  text_color: '#102A43'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+  line_width: 1.5
+- type: shape
+  name: Role 6
+  shape: rounded_rectangle
+  left: 3.8000000000000003
+  top: 2.8899999999999997
+  width: 2.95
+  height: 0.5
+  fill: '#FFFFFF'
+  line_color: '#1B998B'
+  text: Procurement and Contracts
+  text_font: Segoe UI
+  text_size: 13
+  text_color: '#102A43'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+  line_width: 1.5
+- type: shape
+  name: Role 7
+  shape: rounded_rectangle
+  left: 0.6
+  top: 3.51
+  width: 2.95
+  height: 0.5
+  fill: '#FFFFFF'
+  line_color: '#1B998B'
+  text: Data and Performance Lead
+  text_font: Segoe UI
+  text_size: 13
+  text_color: '#102A43'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+  line_width: 1.5
+- type: shape
+  name: Role 8
+  shape: rounded_rectangle
+  left: 3.8000000000000003
+  top: 3.51
+  width: 2.95
+  height: 0.5
+  fill: '#FFFFFF'
+  line_color: '#1B998B'
+  text: Neighbourhood Housing Officer
+  text_font: Segoe UI
+  text_size: 13
+  text_color: '#102A43'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+  line_width: 1.5
+- type: shape
+  name: Rules
+  shape: rounded_rectangle
+  left: 7.05
+  top: 1.65
+  width: 5.683000000000001
+  height: 2.36
+  fill: '#E3F4F1'
+  line_color: '#B7E2DA'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: RULES THAT KEEP THEM HONEST
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: Anchored to the case, the addendum and the company research
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 3
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: 'Every answer labelled: case fact, sector hypothesis or unknown'
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 3
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: One focused question at a time, within the role's decision rights
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 3
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Research instruments, not simulated employees
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  corner_radius: 0.06
+- type: textbox
+  name: Exchange head
+  left: 0.6
+  top: 4.31
+  width: 12.133000000000001
+  height: 0.3
+  text: 'ONE REAL EXCHANGE: GRANT AND FUNDING'
+  font: Segoe UI
+  font_size: 12
+  font_color: '#B83A2E'
+  font_bold: true
+  margin_top: 0
+  margin_bottom: 0
+- type: shape
+  name: Exchange 1
+  shape: rounded_rectangle
+  left: 0.6
+  top: 4.91
+  width: 2.73325
+  height: 1.49
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: QUESTION TO FINANCE
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 4
+    alignment: left
+  - text: Would a grant-drafting agent add value?
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Exchange arrow 1
+  shape: right_arrow
+  left: 3.39325
+  top: 5.5
+  width: 0.28
+  height: 0.3
+  fill: '#9FB3C8'
+  line_color: '#9FB3C8'
+- type: shape
+  name: Exchange 2
+  shape: rounded_rectangle
+  left: 3.73325
+  top: 4.91
+  width: 2.73325
+  height: 1.49
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: REGULATORY FACT
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 4
+    alignment: left
+  - text: WH:SHF Wave 3 is formula-allocated in Greater Manchester and the West Midlands, not bid for
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Exchange arrow 2
+  shape: right_arrow
+  left: 6.5264999999999995
+  top: 5.5
+  width: 0.28
+  height: 0.3
+  fill: '#9FB3C8'
+  line_color: '#9FB3C8'
+- type: shape
+  name: Exchange 3
+  shape: rounded_rectangle
+  left: 6.866499999999999
+  top: 4.91
+  width: 2.73325
+  height: 1.49
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: UNKNOWN
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#486581'
+    text_bold: true
+    space_after: 4
+    alignment: left
+  - text: Whether Proper North Homes operates in either area
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Exchange arrow 3
+  shape: right_arrow
+  left: 9.65975
+  top: 5.5
+  width: 0.28
+  height: 0.3
+  fill: '#9FB3C8'
+  line_color: '#9FB3C8'
+- type: shape
+  name: Exchange 4
+  shape: rounded_rectangle
+  left: 9.999749999999999
+  top: 4.91
+  width: 2.73325
+  height: 1.49
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: EFFECT ON THE BRD
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#1D5FB8'
+    text_bold: true
+    space_after: 4
+    alignment: left
+  - text: 'FR-027: every scheme records an evidenced funding route; unknown blocks bid work'
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: textbox
+  name: Source
+  left: 0.6
+  top: 6.7
+  width: 12.133000000000001
+  height: 0.28
+  text: 'Sources: .github/agents/company-*.agent.md; agent-request-challenge.md (Grant and Funding); WH:SHF
+    technical annex (Page 3, Page 5 Table 3), retrieved 19 Sep 2026. Question paraphrased.'
+  font: Segoe UI
+  font_size: 9
+  font_color: '#627D98'
+  margin_top: 0
+  margin_bottom: 0
+speaker_notes: |
+  The case describes a company that does not exist, so there is nobody to
+  interview. I created eight role agents, one per perspective that owns part of a
+  retrofit programme: the asset executive, finance, the programme manager, building
+  safety, resident engagement, procurement, data and performance, and a frontline
+  housing officer.
+
+  The key design choice was to treat them as research instruments, not as
+  simulated employees. They are anchored to the case, the addendum and the company
+  research, and they must label every answer as a case fact, a sector hypothesis or
+  an unknown. That stops an articulate answer from becoming a fake company fact.
+
+  Their most useful output was not an answer but a question: each role named the
+  one question that would change its answer most. Those questions are now the
+  discovery agenda for the real company.
+
+  Here is one exchange. I asked, in effect, whether a grant-drafting agent would add
+  value. The finance role answered with a regulatory fact from the local snapshot:
+  in Greater Manchester and the West Midlands, Wave 3 money is allocated by formula
+  through integrated settlements, not by competitive bid. Whether Proper North Homes
+  operates there is unknown. So the value of drafting depends on the funding route,
+  and the BRD now requires every scheme to record an evidenced funding route before
+  any bid work starts.

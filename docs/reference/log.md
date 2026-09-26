@@ -173,3 +173,29 @@ metadata when the knowledge base was created.
 * Guardrail: not-for-profit status does not imply unlimited funding, reduced
   legal duties, charitable status, resident endorsement or freedom from
   financial discipline.
+
+## [2026-09-26] update | Relabel the BRD to the canonical requirement taxonomy
+
+* A BRD quality review (BRD Quality Reviewer, Define phase) failed the draft
+  because its legacy BR-### and OBJ-## identifiers gave 0.0% canonical
+  FR-to-AC and FR-to-BG coverage. The owner chose to relabel with legacy
+  aliases and to use RULE-### for business rules, so no ID means two things.
+* Updated `../brds/agentic-retrofit-programme-brd.md`: frontmatter overlay
+  (`brd_id` BRD-2026-AMA48-001, version 0.2.0, prefixes), 12 BG, 41 FR,
+  73 AC, 9 NFR, 6 CON and 23 RULE identifiers, a Requirement Identifier
+  Scheme, Imposed Constraints, NFR categories by ISO/IEC 25010, regenerated
+  traceability and a Legacy Identifier Map. BR-046, BR-048, BR-062 and BR-066
+  were split; no requirement changed meaning.
+* Goal alignment is now generated from each row's business goals. Where the
+  earlier OBJ-to-BR table disagreed with the rows, the rows govern.
+* Updated `../case_study_48_addendum.md` (legacy alias note), the index
+  (`README.md`) and this log. BR-### and OBJ-## citations in earlier entries
+  and other documents remain valid through the map.
+* Constraint citations were checked against local snapshots only. CON-004
+  cites legislation outside the local corpus through the housing association
+  primer; Legal must validate it before live use.
+* Rerun result: FAIL, Define exit blocked. FR-to-AC and FR-to-BG coverage are
+  100.0%. Remaining risks are seven business goals lacking a numeric target,
+  a timeframe or both, and NFR-009 thresholds, which need company data or
+  board decisions (OD-01, OD-08, OD-09, OD-11, OD-12, OD-13, OD-15, OD-18,
+  OD-25). Targets were not invented.

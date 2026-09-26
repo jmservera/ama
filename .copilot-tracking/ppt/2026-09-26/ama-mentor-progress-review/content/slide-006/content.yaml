@@ -1,0 +1,269 @@
+slide: 6
+title: Rising action
+layout: blank
+background:
+  fill: '#FFFFFF'
+elements:
+- type: textbox
+  name: Title
+  left: 0.6
+  top: 0.5
+  width: 12.133000000000001
+  height: 0.75
+  text: The case against five agents built up across two weeks
+  font: Segoe UI
+  font_size: 26
+  font_color: '#102A43'
+  font_bold: true
+  vertical_anchor: middle
+- type: connector
+  name: Timeline
+  connector_type: straight
+  begin_x: 1.75
+  begin_y: 2.75
+  end_x: 11.6
+  end_y: 2.75
+  line_color: '#9FB3C8'
+  line_width: 3
+- type: textbox
+  name: Date 1
+  left: 0.6000000000000001
+  top: 1.8
+  width: 2.3
+  height: 0.4
+  text: 11 SEP
+  font: Segoe UI
+  font_size: 16
+  font_color: '#0B625B'
+  font_bold: true
+  alignment: center
+- type: shape
+  name: Dot 1
+  shape: oval
+  left: 1.55
+  top: 2.55
+  width: 0.4
+  height: 0.4
+  fill: '#0B625B'
+  line_color: '#FFFFFF'
+  line_width: 2
+- type: textbox
+  name: Change 1
+  left: 0.6000000000000001
+  top: 3.25
+  width: 2.3
+  height: 1.35
+  text: 'Addendum proposes a control plane: "agentic is an implementation option"'
+  font: Segoe UI
+  font_size: 15
+  font_color: '#243B53'
+  alignment: center
+- type: textbox
+  name: Date 2
+  left: 3.0625000000000004
+  top: 1.8
+  width: 2.3
+  height: 0.4
+  text: 19 SEP
+  font: Segoe UI
+  font_size: 16
+  font_color: '#1D5FB8'
+  font_bold: true
+  alignment: center
+- type: shape
+  name: Dot 2
+  shape: oval
+  left: 4.0125
+  top: 2.55
+  width: 0.4
+  height: 0.4
+  fill: '#1D5FB8'
+  line_color: '#FFFFFF'
+  line_width: 2
+- type: textbox
+  name: Change 2
+  left: 3.0625000000000004
+  top: 3.25
+  width: 2.3
+  height: 1.35
+  text: BRD adds a cross-functional challenge to the five-agent request
+  font: Segoe UI
+  font_size: 15
+  font_color: '#243B53'
+  alignment: center
+- type: textbox
+  name: Date 3
+  left: 5.525
+  top: 1.8
+  width: 2.3
+  height: 0.4
+  text: 20 SEP
+  font: Segoe UI
+  font_size: 16
+  font_color: '#0B625B'
+  font_bold: true
+  alignment: center
+- type: shape
+  name: Dot 3
+  shape: oval
+  left: 6.475
+  top: 2.55
+  width: 0.4
+  height: 0.4
+  fill: '#0B625B'
+  line_color: '#FFFFFF'
+  line_width: 2
+- type: textbox
+  name: Change 3
+  left: 5.525
+  top: 3.25
+  width: 2.3
+  height: 1.35
+  text: Regulatory context; TypeSafe review of open decisions
+  font: Segoe UI
+  font_size: 15
+  font_color: '#243B53'
+  alignment: center
+- type: textbox
+  name: Date 4
+  left: 7.987499999999999
+  top: 1.8
+  width: 2.3
+  height: 0.4
+  text: 25 SEP
+  font: Segoe UI
+  font_size: 16
+  font_color: '#1D5FB8'
+  font_bold: true
+  alignment: center
+- type: shape
+  name: Dot 4
+  shape: oval
+  left: 8.9375
+  top: 2.55
+  width: 0.4
+  height: 0.4
+  fill: '#1D5FB8'
+  line_color: '#FFFFFF'
+  line_width: 2
+- type: textbox
+  name: Change 4
+  left: 7.987499999999999
+  top: 3.25
+  width: 2.3
+  height: 1.35
+  text: Modelled customer profile; knowledge base restructure
+  font: Segoe UI
+  font_size: 15
+  font_color: '#243B53'
+  alignment: center
+- type: textbox
+  name: Date 5
+  left: 10.45
+  top: 1.8
+  width: 2.3
+  height: 0.4
+  text: 26 SEP
+  font: Segoe UI
+  font_size: 16
+  font_color: '#B83A2E'
+  font_bold: true
+  alignment: center
+- type: shape
+  name: Dot 5
+  shape: oval
+  left: 11.4
+  top: 2.55
+  width: 0.4
+  height: 0.4
+  fill: '#B83A2E'
+  line_color: '#FFFFFF'
+  line_width: 2
+- type: textbox
+  name: Change 5
+  left: 10.45
+  top: 3.25
+  width: 2.3
+  height: 1.35
+  text: Role challenge of each agent adds ten BRD rows
+  font: Segoe UI
+  font_size: 15
+  font_color: '#243B53'
+  alignment: center
+- type: shape
+  name: Doubt
+  shape: rounded_rectangle
+  left: 0.6
+  top: 4.95
+  width: 12.133000000000001
+  height: 0.45
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 1
+  margin_left: 0.05
+  margin_right: 0.05
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: The doubt came first; 26 Sep turned it from my opinion into evidence for each agent.
+    text_font: Segoe UI
+    text_size: 15
+    text_color: '#B83A2E'
+    text_bold: true
+    space_after: 0
+    alignment: center
+  corner_radius: 0.06
+- type: shape
+  name: Takeaway
+  shape: rounded_rectangle
+  left: 0.6
+  top: 5.8
+  width: 12.133000000000001
+  height: 0.6
+  fill: '#102A43'
+  line_color: '#102A43'
+  text: 'Ten BRD revisions, each the same pass: research, ask the role agents, rewrite, log what and why'
+  text_font: Segoe UI
+  text_size: 15
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: textbox
+  name: Source
+  left: 0.6
+  top: 6.7
+  width: 12.133000000000001
+  height: 0.28
+  text: 'Sources: git log, 11 to 26 Sep 2026 (dc6561a, 6bbb392, f1c185a, a72f231, 3db359c); docs/reference/log.md.'
+  font: Segoe UI
+  font_size: 9
+  font_color: '#627D98'
+  margin_top: 0
+  margin_bottom: 0
+speaker_notes: |
+  This slide is the honest origin of the turning point. The doubt about five agents
+  did not appear on 26 September. It built up across two weeks.
+
+  On 11 September, my first addendum already said that "agentic" is an
+  implementation option, not the business outcome, and proposed a portfolio control
+  plane. On 19 September the BRD gained a cross-functional challenge to the
+  five-agent request, and the Warm Homes Social Housing Fund annex added real grant
+  conditions. On 20 September I added regulatory context and reviewed the open
+  decisions. On 25 September the modelled customer profile arrived and the
+  knowledge base was restructured.
+
+  What I did not have was evidence for each agent. On 26 September I challenged
+  each request with all eight role agents, which added ten new requirements, BR-059
+  to BR-068, and eight open decisions.
+
+  Across all of this the BRD went through ten revisions, each the same pass:
+  research, ask the role agents, rewrite the requirements, and log what changed and
+  why.

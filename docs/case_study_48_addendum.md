@@ -196,6 +196,9 @@ decisions OD-26 through OD-33. They cover eligibility and funding route,
 tenure, hazard awareness from retrofit channels, vulnerability data,
 contractor instructions, quality assurance when nothing is flagged, and
 separate PAS 2035 sign-offs. They remain proposals for owner validation.
+The BRD has since relabelled its requirements to canonical FR, AC, NFR, CON,
+RULE and BG identifiers. BR-### and OBJ-## references in this addendum remain
+valid legacy aliases, resolved by the BRD's Legacy Identifier Map.
 
 ## Reframed Transformation Objective
 

@@ -1,0 +1,308 @@
+slide: 7
+title: Design thinking challenge
+layout: blank
+background:
+  fill: '#FFFFFF'
+elements:
+- type: textbox
+  name: Title
+  left: 0.6
+  top: 0.5
+  width: 12.133000000000001
+  height: 0.75
+  text: Each request states a value; none needs an end-to-end agent
+  font: Segoe UI
+  font_size: 26
+  font_color: '#102A43'
+  font_bold: true
+  vertical_anchor: middle
+- type: shape
+  name: Before
+  shape: rounded_rectangle
+  left: 0.6
+  top: 1.55
+  width: 3.9
+  height: 0.75
+  fill: '#FBEAE8'
+  line_color: '#F3C7C1'
+  line_width: 1
+  margin_left: 0.14
+  margin_right: 0.14
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: BEFORE
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#B83A2E'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  - text: How do we build five agents to double delivery?
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: After
+  shape: rounded_rectangle
+  left: 4.699999999999999
+  top: 1.55
+  width: 8.033000000000001
+  height: 0.75
+  fill: '#E3F4F1'
+  line_color: '#B7E2DA'
+  line_width: 1
+  margin_left: 0.14
+  margin_right: 0.14
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: AFTER
+    text_font: Segoe UI
+    text_size: 11
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  - text: What shared records and gates let a small team deliver more safe, accepted, grant-claimable
+      homes, and where does bounded AI beat a checklist?
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: table
+  name: Challenge table
+  left: 0.6
+  top: 2.6
+  width: 12.133000000000001
+  height: 3.0
+  columns:
+  - width: 2.35
+  - width: 2.55
+  - width: 3.55
+  - width: 3.6830000000000016
+  rows:
+  - cells:
+    - font_bold: true
+      fill: '#102A43'
+      font_color: '#FFFFFF'
+      font_size: 12
+      font: Segoe UI
+      text: Requested agent
+    - font_bold: true
+      fill: '#102A43'
+      font_color: '#FFFFFF'
+      font_size: 12
+      font: Segoe UI
+      text: Value the request implies
+    - font_bold: true
+      fill: '#102A43'
+      font_color: '#FFFFFF'
+      font_size: 12
+      font: Segoe UI
+      text: Real problem found
+    - font_bold: true
+      fill: '#102A43'
+      font_color: '#FFFFFF'
+      font_size: 12
+      font: Segoe UI
+      text: What to build instead
+  - cells:
+    - text: Stock Prioritisation (L2)
+      font_size: 11
+      font: Segoe UI
+      font_color: '#102A43'
+      font_bold: true
+      fill: '#F0F4F8'
+    - text: Defensible capital allocation
+      font_size: 11
+      font: Segoe UI
+      font_color: '#0B625B'
+      font_bold: false
+      fill: '#F0F4F8'
+    - text: Fragmented stock, EPC and hazard data; no approved cohort policy
+      font_size: 11
+      font: Segoe UI
+      font_color: '#243B53'
+      font_bold: false
+      fill: '#F0F4F8'
+    - text: Versioned scoring and eligibility rules; AI reconciles and explains
+      font_size: 11
+      font: Segoe UI
+      font_color: '#243B53'
+      font_bold: false
+      fill: '#F0F4F8'
+  - cells:
+    - text: Assessment (L3)
+      font_size: 11
+      font: Segoe UI
+      font_color: '#102A43'
+      font_bold: true
+      fill: '#FFFFFF'
+    - text: More homes ready for design
+      font_size: 11
+      font: Segoe UI
+      font_color: '#0B625B'
+      font_bold: false
+      fill: '#FFFFFF'
+    - text: Assessor capacity, fragmented data and rework
+      font_size: 11
+      font: Segoe UI
+      font_color: '#243B53'
+      font_bold: false
+      fill: '#FFFFFF'
+    - text: Sourced evidence record; AI pre-fills facts and checks completeness
+      font_size: 11
+      font: Segoe UI
+      font_color: '#243B53'
+      font_bold: false
+      fill: '#FFFFFF'
+  - cells:
+    - text: Grant and Funding (L3)
+      font_size: 11
+      font: Segoe UI
+      font_color: '#102A43'
+      font_bold: true
+      fill: '#F0F4F8'
+    - text: Grant cash without clawback
+      font_size: 11
+      font: Segoe UI
+      font_color: '#0B625B'
+      font_bold: false
+      fill: '#F0F4F8'
+    - text: No evidenced award; reporting is a data problem
+      font_size: 11
+      font: Segoe UI
+      font_color: '#243B53'
+      font_bold: false
+      fill: '#F0F4F8'
+    - text: Four-state grant ledger first; AI drafts from evidence
+      font_size: 11
+      font: Segoe UI
+      font_color: '#243B53'
+      font_bold: false
+      fill: '#F0F4F8'
+  - cells:
+    - text: Contractor and Resident (L3)
+      font_size: 11
+      font: Segoe UI
+      font_color: '#102A43'
+      font_bold: true
+      fill: '#FFFFFF'
+    - text: Capacity meets resident readiness
+      font_size: 11
+      font: Segoe UI
+      font_color: '#0B625B'
+      font_bold: false
+      fill: '#FFFFFF'
+    - text: No-access logged as refusal; frontline context lost
+      font_size: 11
+      font: Segoe UI
+      font_color: '#243B53'
+      font_bold: false
+      fill: '#FFFFFF'
+    - text: Deterministic decision record; AI drafts, routes, suggests slots
+      font_size: 11
+      font: Segoe UI
+      font_color: '#243B53'
+      font_bold: false
+      fill: '#FFFFFF'
+  - cells:
+    - text: Quality Verification (L4)
+      font_size: 11
+      font: Segoe UI
+      font_color: '#102A43'
+      font_bold: true
+      fill: '#F0F4F8'
+    - text: No payment for defective work
+      font_size: 11
+      font: Segoe UI
+      font_color: '#0B625B'
+      font_bold: false
+      fill: '#F0F4F8'
+    - text: Late detection of systemic defects
+      font_size: 11
+      font: Segoe UI
+      font_color: '#243B53'
+      font_bold: false
+      fill: '#F0F4F8'
+    - text: Evidence schedule and defect register; AI flags, never clears
+      font_size: 11
+      font: Segoe UI
+      font_color: '#243B53'
+      font_bold: false
+      fill: '#F0F4F8'
+  first_row: true
+- type: shape
+  name: Takeaway
+  shape: rounded_rectangle
+  left: 0.6
+  top: 5.9
+  width: 12.133000000000001
+  height: 0.5
+  fill: '#B83A2E'
+  line_color: '#B83A2E'
+  text: 'Verdict of all eight roles: build none of the five as an end-to-end agent. The gap is shared
+    records, not intelligence.'
+  text_font: Segoe UI
+  text_size: 14
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: textbox
+  name: Source
+  left: 0.6
+  top: 6.7
+  width: 12.133000000000001
+  height: 0.28
+  text: 'Source: agent-request-challenge.md (26 Sep 2026). Roles read the case, addendum and BRD: verdicts
+    are sector-informed hypotheses, not validation.'
+  font: Segoe UI
+  font_size: 9
+  font_color: '#627D98'
+  margin_top: 0
+  margin_bottom: 0
+speaker_notes: |
+  This is the turning point. I had suspected since 11 September that a control
+  plane mattered more than agents; it was in the first addendum. What I did not
+  have was evidence for each agent.
+
+  So in the design thinking session on 26 September I stopped treating the five
+  agents as a specification and treated each "owns end-to-end" line as the business
+  telling us what value it expects. Stock prioritisation really means defensible
+  capital allocation. Grant and funding really means turning delivered homes into
+  grant cash without clawback. Quality verification really means never paying for
+  defective work. The "after" question at the top paraphrases the addendum's
+  strategic proposition.
+
+  I then asked all eight role agents, in parallel, what the real problem was, what
+  cheaper alternatives existed, and where an agent would fit. The answer was
+  unanimous: none of the five should be built as an end-to-end agent. Each request
+  bundles deterministic control work, accountable human decisions, and a small
+  amount of work where bounded AI genuinely helps. The most memorable row is
+  quality verification: every role said the real risk is the reverse, that a pack
+  with no flags gets read as proof of quality.
+
+  One caveat before you ask: the role agents read my addendum, so their agreement
+  is a sector-informed hypothesis, not validation. The questions they raised are
+  how we validate it with the real company.
+
+  The underlying problem is missing shared records and undefined lifecycle states.
+  A lack of intelligence is not the problem.

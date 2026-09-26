@@ -1,0 +1,308 @@
+slide: 4
+title: Research
+layout: blank
+background:
+  fill: '#FFFFFF'
+elements:
+- type: textbox
+  name: Title
+  left: 0.6
+  top: 0.5
+  width: 12.133000000000001
+  height: 0.75
+  text: Research filled three gaps and corrected two claims in the brief
+  font: Segoe UI
+  font_size: 26
+  font_color: '#102A43'
+  font_bold: true
+  vertical_anchor: middle
+- type: shape
+  name: Research 1
+  shape: rounded_rectangle
+  left: 0.6
+  top: 1.65
+  width: 3.8443333333333336
+  height: 3.45
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: COMPANY
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: Not-for-profit
+    text_font: Segoe UI
+    text_size: 26
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 10
+    alignment: left
+  - text: 'Proper North Homes: owner-confirmed not-for-profit, 26 Sep'
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 6
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Legal form, registration and charitable status still unknown
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 6
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Modelled customer profile from sector medians, labelled as estimates
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 6
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Housing association primer to understand the customer
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 6
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Research 2
+  shape: rounded_rectangle
+  left: 4.7443333333333335
+  top: 1.65
+  width: 3.8443333333333336
+  height: 3.45
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: SECTOR BASELINE (ESTIMATE)
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#1D5FB8'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: c. 15,600 homes
+    text_font: Segoe UI
+    text_size: 26
+    text_color: '#1D5FB8'
+    text_bold: true
+    space_after: 10
+    alignment: left
+  - text: 26% of stock estimated below EPC C
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 6
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: 3,900 accepted completions a year for a four-year path
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 6
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: About GBP 312m gross at GBP 20k per home
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 6
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: At most 5,333 homes at the GBP 7,500 grant cap
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 6
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Research 3
+  shape: rounded_rectangle
+  left: 8.888666666666667
+  top: 1.65
+  width: 3.8443333333333336
+  height: 3.45
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: REGULATION
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#B83A2E'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: 16 documents
+    text_font: Segoe UI
+    text_size: 26
+    text_color: '#B83A2E'
+    text_bold: true
+    space_after: 10
+    alignment: left
+  - text: 'Retrieved 19 Sep: social housing, energy efficiency, retrofit and funding, data protection'
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 6
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Awaab's Law Phase 1 in force since 27 Oct 2025; Phase 2 planned from 30 Nov 2026
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 6
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Every regulatory claim cites a dated local snapshot
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 6
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Corrections
+  shape: rounded_rectangle
+  left: 0.6
+  top: 5.4
+  width: 12.133000000000001
+  height: 1.0
+  fill: '#FBEAE8'
+  line_color: '#F3C7C1'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: TWO CORRECTIONS TO THE BRIEF
+    text_font: Segoe UI
+    text_size: 12
+    text_color: '#B83A2E'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: The GBP 40m is an opportunity, not an award
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 0
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: EPC C by 2030 is final SRS MEES policy, not a consultation, but not yet evidenced as commenced
+      law
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#102A43'
+    text_bold: true
+    space_after: 0
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  corner_radius: 0.06
+- type: textbox
+  name: Source
+  left: 0.6
+  top: 6.7
+  width: 12.133000000000001
+  height: 0.28
+  text: 'Sources: company-profile-research.md; housing-association-primer.md; uk-social-housing-baseline-research.md;
+    regulatory/README.md. Benchmarks are not company facts.'
+  font: Segoe UI
+  font_size: 9
+  font_color: '#627D98'
+  margin_top: 0
+  margin_bottom: 0
+speaker_notes: |
+  Three things came out of the research phase.
+
+  First, the company. The brief does not say what kind of organisation this is. I
+  built a housing association primer and a modelled customer profile from sector
+  medians. On 26 September I confirmed it is a not-for-profit, which changes how
+  every role thinks about surplus, stewardship and value for money. Its exact legal
+  form is still unknown, and I have not assumed charitable status.
+
+  Second, the numbers. Sector benchmarks suggest about 26 percent of stock is below
+  EPC C, roughly 15,600 homes. That implies about 3,900 accepted completions a year
+  and a gross programme of about GBP 312 million. These are planning estimates,
+  not company facts.
+
+  Third, regulation. I downloaded 16 official documents so every regulatory claim
+  has a dated local source.
+
+  The research also corrected two claims in the brief. The GBP 40 million is an
+  opportunity, not an award, and would cover at most about 5,333 homes at the grant
+  cap. Grants are capped and need co-funding, so more grant means more of our own
+  spend: the addendum illustration is about GBP 66.7 million of provider funding
+  against the GBP 40 million, as an estimate. Grant capture cannot pay for the
+  technology on its own. And the brief calls EPC C by 2030 a consultation proposal;
+  the local snapshot shows a final policy position, which I could not yet evidence
+  as commenced law.
