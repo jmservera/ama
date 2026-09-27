@@ -394,3 +394,72 @@ metadata when the knowledge base was created.
 * Finding: none of the additional scenarios changes the headline
   verdict; several sharpen it by exposing new Article 9, Article 22,
   Procurement Act 2023 and fairness questions.
+
+## [2026-09-27] review | What-if study validated after the branch merge
+
+* Trigger: owner `/rpi-review` request to check the Agent What-If Study
+  was still valid after merging `Review-progress-challenge` (BRD v0.3.0 to
+  v0.5.0, the agent-led modernisation reframe, the pilot measurement
+  design and the transparency review) and to fix anything outdated.
+* Review record:
+  `.copilot-tracking/reviews/logs/2026-09-27/agent-what-if-study-post-merge-review.md`
+  (outcome: defects found; six findings, RV-001 to RV-006).
+* Files touched: `research/company/agent-what-if-study.md`,
+  `../case_study_48_addendum.md` (what-if paragraph), `README.md`
+  (catalog row).
+* Finding: the headline verdict still holds. The reframe adds bounded
+  agent capabilities, not end-to-end agents.
+* Correction: the study's "Article 22" citations did not resolve, because
+  the local consolidated UK GDPR text omits Article 22. They now cite
+  Articles 22A to 22C, with the Article 22B special-category restriction
+  where it applies. This is the same correction made to BRD CON-003 on
+  2026-09-26.
+* Contradiction flagged and resolved: the extension entry above says the
+  same role agents answered every new scenario, but eleven answers were
+  attributed to four perspectives with no role agent (Chief Data and
+  Digital Officer, Executive Director of Finance and Governance, Company
+  Secretary and Head of Governance, Head of Internal Audit and Assurance).
+  At the owner's direction, nine were re-run with the Data and
+  Performance Lead and the Head of Finance, Capital and Grants and
+  replaced. Material differences changed the capacity-mesh stop criterion
+  (quality and complaint thresholds become hard limits), the sensor
+  description (pseudonymised, not anonymised readings) and the
+  transcription answer (keep the call timestamp and a minimal excerpt as
+  awareness evidence). The governance and internal audit answers are
+  relabelled as author hypotheses with no role-agent anchor. The earlier
+  entry is left unchanged as history.
+* Added a Reconciliation With the Current Proposal section. It maps
+  "shared foundation" to the digital foundation and reads "Do not build
+  as agent" as "no end-to-end agent", which is consistent with the Agentic
+  Architecture Brief. It positions the grid as a candidate order for
+  Phase 0 and Comparison 2 testing under the proposed OD-34 resolution,
+  not a scaling decision. The Value Test now cross-references FR-042,
+  FR-043, FR-044, RULE-019, RULE-024, OD-36 and OD-39. Legacy BR-011,
+  BR-013, BR-016 and BR-020 are replaced by FR-011, FR-013, NFR-001 and
+  RULE-006.
+* Residual: the other role answers were given against the pre-reframe
+  addendum and have not been re-run.
+## [2026-09-27] presentation | Mentor deck iteration 4 and the ama-mentor-deck skill
+
+* Trigger: the owner asked for another review of the mentor deck against
+  the log and memory, and for the deck process to be captured so it does
+  not need re-explaining.
+* Files touched: `../presentations/ama-mentor-progress-review.pptx`
+  (replaced), `README.md` (deck row), `../../.github/skills/ama-mentor-deck/`
+  (new skill with `deck_yaml.py` and `Export-SlideImages.ps1`),
+  `../../.github/copilot-instructions.md` (pointer to the skill).
+* Deck: a new slide 10 covers the what-if stress test. It shows a grid of
+  all 20 scenarios as a Comparison 2 test order under proposed OD-34, and
+  the post-merge corrections. Slides 1, 3, 6 and 15 now use the verified
+  counts: 39 non-merge commits from 10 to 27 Sep and 13 BRD commits. The
+  slide 12 notes add the lesson to search every derived document when
+  fixing an error. The deck has 14 main slides plus an appendix.
+* Review: the Presentation Communications Strategist made eleven findings,
+  and all were accepted after checking. Main notes went from 2,158 to 1,921
+  words. The review found a contradiction in the iteration-3 deck: the
+  slide 3 card said twelve BRD revisions while the notes and slide 6 said
+  thirteen. It is now corrected to thirteen, which `git log` confirms.
+* Validation: both validators report 0 issues across 15 slides. The
+  published copy matches the build by SHA-256.
+* Working records: `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/changes/build-validate-iteration-4.md`
+  and `research/subagents/storytelling-review-iteration-4.md`.

@@ -1,5 +1,5 @@
 slide: 13
-title: Next steps and mentor questions
+title: Traceability chain
 layout: blank
 background:
   fill: '#FFFFFF'
@@ -10,96 +10,40 @@ elements:
   top: 0.5
   width: 12.133000000000001
   height: 0.75
-  text: Four decisions where I would value your challenge today
+  text: One real chain, from a decision down to its dated source
   font: Segoe UI
   font_size: 26
   font_color: '#102A43'
   font_bold: true
   vertical_anchor: middle
 - type: shape
-  name: Questions
+  name: Chain 1 head
   shape: rounded_rectangle
   left: 0.6
-  top: 1.65
-  width: 6.9
-  height: 3.85
-  fill: '#FFFFFF'
+  top: 1.7
+  width: 2.0666
+  height: 0.55
+  fill: '#B83A2E'
   line_color: '#B83A2E'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: top
-  text: ''
-  paragraphs:
-  - text: QUESTIONS FOR YOU
-    text_font: Segoe UI
-    text_size: 13
-    text_color: '#B83A2E'
-    text_bold: true
-    space_after: 12
-    alignment: left
-  - text: Will the panel read agent-led modernisation, not five end-to-end agents, as answering the brief?
-    text_font: Segoe UI
-    text_size: 15
-    text_color: '#102A43'
-    text_bold: true
-    space_after: 12
-    bullet_auto_number: arabicPeriod
-    bullet_start_at: 1
-    bullet_margin_left: 342900
-    bullet_indent: -342900
-    alignment: left
-  - text: How should I balance business depth against architecture depth?
-    text_font: Segoe UI
-    text_size: 15
-    text_color: '#102A43'
-    text_bold: true
-    space_after: 12
-    bullet_auto_number: arabicPeriod
-    bullet_start_at: 2
-    bullet_margin_left: 342900
-    bullet_indent: -342900
-    alignment: left
-  - text: Keep the BRD failing on unset targets, or propose illustrative targets?
-    text_font: Segoe UI
-    text_size: 15
-    text_color: '#102A43'
-    text_bold: true
-    space_after: 12
-    bullet_auto_number: arabicPeriod
-    bullet_start_at: 3
-    bullet_margin_left: 342900
-    bullet_indent: -342900
-    alignment: left
-  - text: 'Which open divergence first: L4 quality flags or L3 digital booking?'
-    text_font: Segoe UI
-    text_size: 15
-    text_color: '#102A43'
-    text_bold: true
-    space_after: 12
-    bullet_auto_number: arabicPeriod
-    bullet_start_at: 4
-    bullet_margin_left: 342900
-    bullet_indent: -342900
-    alignment: left
-  - text: 'And on the story itself: where did it lose you?'
-    text_font: Segoe UI
-    text_size: 14
-    text_color: '#486581'
-    text_bold: false
-    space_after: 0
-    italic: true
-    alignment: left
-  corner_radius: 0.06
+  text: Decision
+  text_font: Segoe UI
+  text_size: 15
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
 - type: shape
-  name: Next
+  name: Chain 1 body
   shape: rounded_rectangle
-  left: 7.8
-  top: 1.65
-  width: 4.933000000000001
-  height: 3.85
+  left: 0.6
+  top: 2.55
+  width: 2.0666
+  height: 1.75
   fill: '#F0F4F8'
   line_color: '#D9E2EC'
   line_width: 1
@@ -110,76 +54,386 @@ elements:
   vertical_anchor: top
   text: ''
   paragraphs:
-  - text: NEXT, ON THE 85-DAY PLAN (TO 5 DEC)
+  - text: 'Addendum: approve a capped pilot, not a five-agent rollout; no end-to-end Stock Prioritisation
+      agent'
     text_font: Segoe UI
     text_size: 13
-    text_color: '#0B625B'
-    text_bold: true
-    space_after: 12
-    alignment: left
-  - text: High- and medium-level architecture with justified trade-offs
-    text_font: Segoe UI
-    text_size: 14
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 10
-    bullet_char: •
-    bullet_margin_left: 228600
-    bullet_indent: -228600
-    alignment: left
-  - text: Shadow-mode comparison of typed decision models (IDEA-001)
-    text_font: Segoe UI
-    text_size: 14
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 10
-    bullet_char: •
-    bullet_margin_left: 228600
-    bullet_indent: -228600
-    alignment: left
-  - text: Optional bounded demo, with a static fallback
-    text_font: Segoe UI
-    text_size: 14
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 10
-    bullet_char: •
-    bullet_margin_left: 228600
-    bullet_indent: -228600
-    alignment: left
-  - text: CEO, CIO and CFO versions of the 15-minute pitch
-    text_font: Segoe UI
-    text_size: 14
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 10
-    bullet_char: •
-    bullet_margin_left: 228600
-    bullet_indent: -228600
-    alignment: left
-  - text: No real resident or staff evidence yet; the role agents' discovery questions are ready
-    text_font: Segoe UI
-    text_size: 14
     text_color: '#243B53'
     text_bold: false
     space_after: 0
-    bullet_char: •
-    bullet_margin_left: 228600
-    bullet_indent: -228600
     alignment: left
   corner_radius: 0.06
 - type: shape
-  name: Takeaway
+  name: Chain arrow 1
+  shape: right_arrow
+  left: 2.7366
+  top: 1.83
+  width: 0.31
+  height: 0.3
+  fill: '#9FB3C8'
+  line_color: '#9FB3C8'
+- type: shape
+  name: Chain 2 head
   shape: rounded_rectangle
-  left: 0.6
-  top: 5.8
-  width: 12.133000000000001
-  height: 0.6
+  left: 3.1166000000000005
+  top: 1.7
+  width: 2.0666
+  height: 0.55
+  fill: '#0B625B'
+  line_color: '#0B625B'
+  text: Evidence
+  text_font: Segoe UI
+  text_size: 15
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: shape
+  name: Chain 2 body
+  shape: rounded_rectangle
+  left: 3.1166000000000005
+  top: 2.55
+  width: 2.0666
+  height: 1.75
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: 'Agent Request Challenge, Stock Prioritisation: "eligibility is a rules question"'
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Chain arrow 2
+  shape: right_arrow
+  left: 5.253200000000001
+  top: 1.83
+  width: 0.31
+  height: 0.3
+  fill: '#9FB3C8'
+  line_color: '#9FB3C8'
+- type: shape
+  name: Chain 3 head
+  shape: rounded_rectangle
+  left: 5.6332
+  top: 1.7
+  width: 2.0666
+  height: 0.55
+  fill: '#1D5FB8'
+  line_color: '#1D5FB8'
+  text: Requirement
+  text_font: Segoe UI
+  text_size: 15
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: shape
+  name: Chain 3 body
+  shape: rounded_rectangle
+  left: 5.6332
+  top: 2.55
+  width: 2.0666
+  height: 1.75
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: 'FR-026, AC-039 and CON-005: deterministic pass, fail or unknown eligibility'
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Chain arrow 3
+  shape: right_arrow
+  left: 7.769800000000001
+  top: 1.83
+  width: 0.31
+  height: 0.3
+  fill: '#9FB3C8'
+  line_color: '#9FB3C8'
+- type: shape
+  name: Chain 4 head
+  shape: rounded_rectangle
+  left: 8.1498
+  top: 1.7
+  width: 2.0666
+  height: 0.55
   fill: '#102A43'
   line_color: '#102A43'
-  text: Those are my questions. Which one would you take first?
+  text: Source
   text_font: Segoe UI
-  text_size: 16
+  text_size: 15
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: shape
+  name: Chain 4 body
+  shape: rounded_rectangle
+  left: 8.1498
+  top: 2.55
+  width: 2.0666
+  height: 1.75
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: WH:SHF Wave 3 technical annex, Page 3 footnote 1; retrieved 19 Sep 2026
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Chain arrow 4
+  shape: right_arrow
+  left: 10.2864
+  top: 1.83
+  width: 0.31
+  height: 0.3
+  fill: '#9FB3C8'
+  line_color: '#9FB3C8'
+- type: shape
+  name: Chain 5 head
+  shape: rounded_rectangle
+  left: 10.666400000000001
+  top: 1.7
+  width: 2.0666
+  height: 0.55
+  fill: '#486581'
+  line_color: '#486581'
+  text: Change record
+  text_font: Segoe UI
+  text_size: 15
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: shape
+  name: Chain 5 body
+  shape: rounded_rectangle
+  left: 10.666400000000001
+  top: 2.55
+  width: 2.0666
+  height: 1.75
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: log.md, 26 Sep entries; commits a72f231, 3db359c and c3e423a
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Justify
+  shape: rounded_rectangle
+  left: 0.6
+  top: 4.6
+  width: 5.9015
+  height: 0.95
+  fill: '#E3F4F1'
+  line_color: '#B7E2DA'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: To justify
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: Follow the chain from the decision down to the dated source.
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Challenge
+  shape: rounded_rectangle
+  left: 6.8315
+  top: 4.6
+  width: 5.9015
+  height: 0.95
+  fill: '#FBEAE8'
+  line_color: '#F3C7C1'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: middle
+  text: ''
+  paragraphs:
+  - text: To challenge
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#B83A2E'
+    text_bold: true
+    space_after: 2
+    alignment: left
+  - text: Change one piece of evidence and see which rules and decisions move.
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: textbox
+  name: Classes label
+  left: 0.6
+  top: 5.85
+  width: 1.9
+  height: 0.5
+  text: 'Every claim is labelled:'
+  font: Segoe UI
+  font_size: 12
+  font_color: '#486581'
+  font_bold: true
+  vertical_anchor: middle
+- type: shape
+  name: Class 1
+  shape: rounded_rectangle
+  left: 2.65
+  top: 5.85
+  width: 2.37075
+  height: 0.5
+  fill: '#102A43'
+  line_color: '#102A43'
+  text: Case-study fact
+  text_font: Segoe UI
+  text_size: 13
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: shape
+  name: Class 2
+  shape: rounded_rectangle
+  left: 5.220750000000001
+  top: 5.85
+  width: 2.37075
+  height: 0.5
+  fill: '#0B625B'
+  line_color: '#0B625B'
+  text: Sector hypothesis
+  text_font: Segoe UI
+  text_size: 13
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: shape
+  name: Class 3
+  shape: rounded_rectangle
+  left: 7.791500000000001
+  top: 5.85
+  width: 2.37075
+  height: 0.5
+  fill: '#1D5FB8'
+  line_color: '#1D5FB8'
+  text: Planning assumption
+  text_font: Segoe UI
+  text_size: 13
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: shape
+  name: Class 4
+  shape: rounded_rectangle
+  left: 10.362250000000001
+  top: 5.85
+  width: 2.37075
+  height: 0.5
+  fill: '#486581'
+  line_color: '#486581'
+  text: Unknown detail
+  text_font: Segoe UI
+  text_size: 13
   text_color: '#FFFFFF'
   text_bold: true
   alignment: center
@@ -195,24 +449,16 @@ elements:
   top: 6.7
   width: 12.133000000000001
   height: 0.28
-  text: 'Sources: .copilot-tracking/plans/2026-09-19/case-study-85-day-delivery-plan.instructions.md;
-    docs/reference/memory.md; docs/ideas/idea-register.md.'
+  text: 'Sources: case_study_48_addendum.md (Recommended Executive Decision); agent-request-challenge.md;
+    BRD FR-026, CON-005; WH:SHF annex snapshot; log.md.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
 speaker_notes: |-
-  These are the four places I would most value your challenge.
+  This slide is the reason for all the structure: immutable dated sources, cited syntheses, an index and an append-only log, on Karpathy's LLM Wiki pattern. The organisation is in the appendix. Any decision in the addendum can be walked back to its evidence, and this is a real chain.
 
-  First, will the panel read agent-led modernisation, not five end-to-end agents, as answering the brief, or as stepping back from the five agents it asked for?
+  The decision: a capped readiness and pilot stage, not a five-agent rollout, with no end-to-end stock prioritisation agent. The evidence: the roles said eligibility is a rules question. The requirement: FR-026 requires a deterministic pass, fail or unknown eligibility result, tested by AC-039 and constrained by CON-005. The source: the Wave 3 technical annex, page 3, footnote 1, retrieved on 19 September.
 
-  Second, how much business depth versus architecture depth should the capstone show?
-
-  Third, should the BRD keep failing where targets need company data, or should I propose clearly labelled illustrative targets?
-
-  Fourth, which open divergence between the role agents should I resolve first?
-
-  On the right is what comes next on the 85-day plan, which finishes on 5 December: the architecture, a shadow comparison of typed decision models, an optional demo with a static fallback, and CEO, CIO and CFO versions of the pitch. There is still no real resident or staff evidence.
-
-  And on the story itself: where did it lose you? Which question would you take first?
+  To challenge a decision, change one piece of evidence, such as a real throughput figure, and the chain shows what has to move.

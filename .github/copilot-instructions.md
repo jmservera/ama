@@ -38,7 +38,9 @@ project rather than executable software.
   stay under `.copilot-tracking/ppt/{YYYY-MM-DD}/{deck-name}/`. After a deck
   passes validation, copy the generated PPTX from its `slide-deck/` folder to
   `docs/presentations/{deck-name}.pptx` as the delivery copy, replacing the
-  previous version of the same deck, and list it in the index.
+  previous version of the same deck, and list it in the index. Use the
+  `ama-mentor-deck` skill in `.github/skills/ama-mentor-deck/` to create,
+  update, review or republish the mentor progress review deck.
 * `support/` is the owner's private working area and is not part of the
   knowledge base. `support/cohort.md` identifies colleagues who may be able
   to help with particular technical areas.

@@ -8,7 +8,7 @@
 * Goal: summarise the case, the request, how the gaps were filled, the
   challenges met, and how the repository is organised so every decision can
   be justified or challenged.
-* Length: 13 slides plus one appendix slide, speaker notes capped at about 2,000 words (about 14 minutes) so the mentor has 10 to 15 minutes for questions.
+* Length: 14 slides plus one appendix slide, speaker notes capped at about 2,000 words (about 14 minutes) so the mentor has 10 to 15 minutes for questions.
 * Topic research (`rpi-research`) skipped: all content comes from the
   repository, supplied by the owner. No external product or standards claims.
 
@@ -24,7 +24,7 @@
 | SRS MEES final policy not evidenced as commenced law | Addendum, Proper Warm table |
 | Eight company role agents, labelling rules | `.github/agents/company-*`, repository instructions |
 | Role questions (authoritative system for property identity and EPC) | `agent-request-challenge.md`, Questions for Proper North Homes |
-| Ten BRD revisions 11 to 26 Sep | `git log --follow docs/brds/agentic-retrofit-programme-brd.md` |
+| Thirteen BRD revisions 11 to 26 Sep | `git log --follow docs/brds/agentic-retrofit-programme-brd.md` |
 | Agent challenge verdicts and "what to build" | `agent-request-challenge.md`, Summary table |
 | Five bounded AI candidates, shared foundation | `agent-request-challenge.md`, Cross-Cutting Findings |
 | Control plane and capped readiness plus gated pilots | Addendum, Solution Proposal; BRD Document Status |
@@ -35,7 +35,8 @@
 | Contradictions: 91% vs 87% interest cover; fuel poverty 10.0% to 11.6% | log 2026-09-25 |
 | Divergences: L4 quality flags, L3 digital booking | `agent-request-challenge.md`, Divergences |
 | Knowledge base layers, Karpathy LLM Wiki pattern | `docs/reference/README.md` |
-| 35 commits, PR #1; 12 commits touch the BRD | `git log` on 2026-09-27 |
+| 39 non-merge commits 10 to 27 Sep, PR #1; 13 commits touch the BRD | `git rev-list --count --no-merges HEAD` and `git log --no-merges -- docs/brds/agentic-retrofit-programme-brd.md` on 2026-09-27 |
+| 20 what-if scenarios, value-versus-complexity grid, grid as a Comparison 2 test order under proposed OD-34; post-merge corrections (Articles 22A to 22C, nine answers re-run, two author hypotheses) | `agent-what-if-study.md` (Summary of Revised Verdicts; Reconciliation With the Current Proposal; Value vs Complexity Quadrant; Purpose and Method); review record `.copilot-tracking/reviews/logs/2026-09-27/agent-what-if-study-post-merge-review.md` |
 | 85-day plan ending 5 Dec, sessions, fallback demo | `.copilot-tracking/plans/2026-09-19/case-study-85-day-delivery-plan.instructions.md` |
 | 15-minute pitch for CEO, CIO, CFO | `docs/reference/memory.md` |
 
@@ -50,11 +51,12 @@
 7. Design thinking: requests as expected value
 8. What we build: digital foundation, bounded agents, accountable people
 9. Proving and explaining the value
-10. BRD quality review
-11. Challenges and lessons
-12. Traceability chain
-13. Next steps and mentor questions
-14. Appendix: knowledge base organisation
+10. What-if stress test: twenty scenarios and where to start
+11. BRD quality review
+12. Challenges and lessons
+13. Traceability chain
+14. Next steps and mentor questions
+15. Appendix: knowledge base organisation
 
 ## Global Style
 

@@ -1,0 +1,268 @@
+===== slide-001 (main) From "build five agents" to "what value do they really need?"
+  [Kicker] AMA CASE STUDY 48  |  MENTOR SESSION 1
+  [Subtitle] How I filled the gaps in the Proper Warm case, 10 to 27 September 2026
+  [Strands] Today: the story so far, then four decisions I would value your challenge on
+  NOTES (105 words): I have the story so far to show you, and four decisions I want your challenge on. The short version: the brief asks for five agents. Two weeks of evidence says the value is credible, but end-to-end agents are not the way to get it. Where I have landed is an agent-led modernisation of the existing retrofit model, with agents only where they beat the same workflow without them. One of my four questions is whether the panel will read that as answering the brief.
+
+I will walk through five strands of work, three later challenges, my lessons and one traceability chain, then my questions.
+===== slide-002 (main) The case names five agents but not the problem they solve
+  [Request] THE REQUEST (ORIGINAL CASE STUDY) / A housing association with 60,000 homes in the North of England / Every home to EPC C by 2030, while meeting Awaab's Law damp and mould timescales / A small team on spreadsheets, far behind plan / Five agents, from L2 recommend to L4 autonomous flags / Promised: double delivery, GBP 40m of grants, lower energy bills
+  [Gaps] WHAT THE DOCUMENT DOES NOT TELL US / What kind of organisation it is, and who decides / Current throughput, backlog and data quality / Which rules apply today, which are proposals, and from when / Whether the GBP 40m is awarded or only available / The problem: it names the solution first; each agent gets one "owns end-to-end" line
+  [Takeaway] My working question: what business problem would make these agents worth building?
+  [Source] Source: docs/case_study_48_original.md (10 Sep 2026). Gaps identified during research, 11 to 25 Sep 2026.
+  NOTES (122 words): The brief is a one-page solution request: five agents with autonomy levels, and promises such as doubling delivery and GBP 40 million of grants.
+
+What it does not give is everything an architect needs to justify a design: what
+kind of organisation this is, what the current throughput and data look like,
+which regulations are in force versus proposed, and whether the grant money is
+real. Above all, it names the solution before the problem: each agent is
+described by a single "owns end-to-end" line.
+
+So I set myself one working question for the whole research phase: what business
+problem would make these agents worth building? Everything that follows is how I
+tried to answer it without inventing facts about the company.
+===== slide-003 (main) Five loops, not a line: each finding sent me back to research
+  [Step 1] 1  Research
+  [Step 1 detail] 11 TO 25 SEP / Company, sector statistics, comparators and 16 official regulatory documents / OUTPUT / Primer, customer profile, regulatory register
+  [Step 2] 2  Role agents
+  [Step 2 detail] FROM 11 SEP / Eight Proper North Homes perspectives to ask what the case never says / OUTPUT / 8 company-* agents and their questions
+  [Step 3] 3  BRD iterations
+  [Step 3 detail] 11 TO 26 SEP / Thirteen revisions, with new research and role answers between each / OUTPUT / BRD v0.5.0
+  [Step 4] 4  Design thinking
+  [Step 4 detail] 26 SEP | TURNING POINT / Read each agent's "owns end-to-end" line as the value behind it / OUTPUT / agent-request-challenge.md
+  [Step 5] 5  Quality review
+  [Step 5 detail] 26 SEP / Canonical IDs and coverage checks, re-run after every later change / OUTPUT / Six runs; FAIL only on data gaps
+  [Takeaway] Every loop sent me back to research and filed its findings in the addendum, the BRD and the log
+  [Source] Sources: git log (39 commits, 10 to 27 Sep 2026); docs/reference/log.md; docs/brds/agentic-retrofit-programme-brd.md history.
+  NOTES (122 words): This is the backbone of the story. The five strands were not a straight line; each loop produced questions that sent me back into research.
+
+Research built the context. The role agents let me ask what the brief could not answer. The BRD has been revised in thirteen commits and is now version 0.5.0. The design thinking session on 26 September was the turning point: I read each agent request as the value behind it and tested my early doubts agent by agent. The quality review made the requirements traceable, and it was re-run after every later change.
+
+The habit that matters: nothing stayed in chat history. Every finding was filed in the addendum, the BRD or the knowledge base, and logged.
+===== slide-004 (main) Research filled three gaps and corrected two claims in the brief
+  [Research 1] COMPANY / Not-for-profit / Proper North Homes: owner-confirmed not-for-profit, 26 Sep / Legal form, registration and charitable status still unknown / Modelled customer profile from sector medians, labelled as estimates / Housing association primer to understand the customer
+  [Research 2] SECTOR BASELINE (ESTIMATE) / c. 15,600 homes / 26% of stock estimated below EPC C / 3,900 accepted completions a year for a four-year path / About GBP 312m gross at GBP 20k per home / At most 5,333 homes at the GBP 7,500 grant cap
+  [Research 3] REGULATION / 16 documents / Retrieved 19 Sep: social housing, energy efficiency, retrofit and funding, data protection / Awaab's Law Phase 1 in force since 27 Oct 2025; Phase 2 planned from 30 Nov 2026 / Every regulatory claim cites a dated local snapshot
+  [Corrections] TWO CORRECTIONS TO THE BRIEF / The GBP 40m is an opportunity, not an award / EPC C by 2030 is final SRS MEES policy, not a consultation, but not yet evidenced as commenced law
+  [Source] Sources: company-profile-research.md; housing-association-primer.md; uk-social-housing-baseline-research.md; regulatory/README.md. Benchmarks are not company facts.
+  NOTES (161 words): Three things came out of research.
+
+First, the company. The brief does not say what kind of organisation this is. I built a housing association primer and a modelled customer profile from sector medians. On 26 September I confirmed it is a not-for-profit. Its legal form is still unknown, and I have not assumed charitable status.
+
+Second, the numbers. Sector benchmarks suggest about 26 percent of stock is below EPC C, roughly 15,600 homes, about 3,900 accepted completions a year and a gross programme of about GBP 312 million. These are planning estimates, not company facts.
+
+Third, regulation: 16 official documents, so every regulatory claim has a dated local source.
+
+Research also corrected two claims in the brief. The GBP 40 million is an opportunity, not an award, and would cover at most about 5,333 homes at the grant cap. And EPC C by 2030 is final policy, not a consultation, though I could not yet evidence it as commenced law.
+===== slide-005 (main) Eight role agents stood in for the company I cannot interview
+  [Role 1] Executive Director of Assets
+  [Role 2] Finance, Capital and Grants
+  [Role 3] Retrofit Programme Manager
+  [Role 4] Building Safety and Compliance
+  [Role 5] Resident Engagement and Insight
+  [Role 6] Procurement and Contracts
+  [Role 7] Data and Performance Lead
+  [Role 8] Neighbourhood Housing Officer
+  [Rules] RULES THAT KEEP THEM HONEST / Anchored to the case, the addendum and the company research / Every answer labelled: case fact, sector hypothesis or unknown / One focused question at a time, within the role's decision rights / Research instruments, not simulated employees
+  [Exchange head] ONE REAL EXCHANGE: GRANT AND FUNDING
+  [Exchange 1] QUESTION TO FINANCE / Would a grant-drafting agent add value?
+  [Exchange 2] REGULATORY FACT / WH:SHF Wave 3 is formula-allocated in Greater Manchester and the West Midlands, not bid for
+  [Exchange 3] UNKNOWN / Whether Proper North Homes operates in either area
+  [Exchange 4] EFFECT ON THE BRD / FR-027: every scheme records an evidenced funding route; unknown blocks bid work
+  [Source] Sources: .github/agents/company-*.agent.md; agent-request-challenge.md (Grant and Funding); WH:SHF technical annex (Page 3, Page 5 Table 3), retrieved 19 Sep 2026. Question paraphrased.
+  NOTES (139 words): The company is fictional, so there is nobody to interview. I created eight role agents, one for each perspective that owns part of a retrofit programme.
+
+They are research instruments, not simulated employees. They label every answer as a case fact, a sector hypothesis or an unknown. That stops an articulate answer from becoming a fake company fact. Their most useful output is the one question per role that would change its answer most; those questions are now the discovery agenda.
+
+One exchange: would a grant-drafting agent add value? The finance role answered with a fact from the local snapshot: in Greater Manchester and the West Midlands, Wave 3 money is allocated by formula, not by bid. Whether Proper North Homes operates there is unknown. So the BRD now requires an evidenced funding route before any bid work starts.
+===== slide-006 (main) The case against five agents built up across two weeks
+  [Date 1] 11 SEP
+  [Change 1] Addendum proposes a control plane: "agentic is an implementation option"
+  [Date 2] 19 SEP
+  [Change 2] BRD adds a cross-functional challenge to the five-agent request
+  [Date 3] 20 SEP
+  [Change 3] Regulatory context; TypeSafe review of open decisions
+  [Date 4] 25 SEP
+  [Change 4] Modelled customer profile; knowledge base restructure
+  [Date 5] 26 SEP
+  [Change 5] Role challenge of each agent adds ten BRD rows
+  [Doubt] The doubt came first; 26 Sep turned it from my opinion into evidence for each agent.
+  [Takeaway] Thirteen BRD revisions, each the same pass: research, ask the role agents, rewrite, log what and why
+  [Source] Sources: git log, 11 to 26 Sep 2026 (dc6561a, 6bbb392, f1c185a, a72f231, 3db359c); docs/reference/log.md.
+  NOTES (101 words): This slide is the honest origin of the turning point. The doubt about five agents built up over two weeks.
+
+On 11 September my first addendum already said that "agentic" is an implementation option and proposed a portfolio control plane, now called the digital foundation. On 19 September the BRD gained a cross-functional challenge to the five-agent request.
+
+What I lacked was evidence for each agent. On 26 September all eight role agents challenged each request, which added ten requirements and eight open decisions. Each BRD revision was the same pass: research, ask the roles, rewrite, log what changed and why.
+===== slide-007 (main) Each request states a value; none needs an end-to-end agent
+  [Before] BEFORE / How do we build five agents to double delivery?
+  [After] AFTER / What shared records and gates let existing teams deliver more safe, accepted, grant-claimable homes, and where does an agent beat the same workflow?
+  [Challenge table] Requested agent | Value the request implies | Real problem found | What to build instead / Stock Prioritisation (L2) | Defensible capital allocation | Fragmented stock, EPC and hazard data; no approved cohort policy | Versioned scoring and eligibility rules; AI reconciles and explains / Assessment (L3) | More homes ready for design | Assessor capacity, fragmented data and rework | Sourced evidence record; AI pre-fills facts and checks completeness / Grant and Funding (L3) | Grant cash without clawback | No evidenced award; reporting is a data problem | Four-state grant ledger first; AI drafts from evidence / Contractor and Resident (L3) | Capacity meets resident readiness | No-access logged as refusal; frontline context lost | Deterministic decision record; AI drafts, routes, suggests slots / Quality Verification (L4) | No payment for defective work | Late detection of systemic defects | Evidence schedule and defect register; AI flags, never clears
+  [Takeaway] Verdict of all eight roles: build none of the five as an end-to-end agent. The gap is shared records, not intelligence.
+  [Source] Source: agent-request-challenge.md (26 Sep 2026). Roles read the case, addendum and BRD: verdicts are sector-informed hypotheses, not validation.
+  NOTES (144 words): This is the turning point. I stopped treating the five agents as a specification and read each "owns end-to-end" line as the business telling us what value it expects. For example, quality verification means never paying for defective work.
+
+I asked all eight role agents, in parallel, what the real problem was, what cheaper alternatives existed and where an agent would fit. The answer was unanimous: build none of the five as an end-to-end agent. Each request bundles deterministic control work, accountable human decisions and a smaller set of tasks where bounded AI helps. The most memorable row is quality: every role said the real risk is that a pack with no flags gets read as proof of quality.
+
+The "after" question is how I phrase it now.
+
+One caveat: the roles read my addendum, so their agreement is a sector-informed hypothesis, not validation.
+===== slide-008 (main) Agents for the messy work, rules for decisions we must explain
+  [Layer 1 label] Accountable people
+  [Layer 1 body] Safety, professional sign-off, resident consent, investment, procurement, grant submission, payment and quality acceptance
+  [Layer 2 label] Bounded agents
+  [Layer 2 body] Turn free text into sourced values, propose missing values for owners to confirm, reconcile, draft, route messages, raise hazard and quality signals
+  [Layer 3 label] Digital foundation
+  [Layer 3 body] Deterministic: property master, published scoring weights, eligibility rules, gates and clocks, resident decisions, capacity, grant ledger, defects
+  [Ask] THE ASK TO THE BOARD CHANGES / From / Five end-to-end agents, portfolio-wide / To / Agent-led modernisation of the existing model: one locality, existing teams and suppliers / Rules stay deterministic where a decision must be transparent and repeatable / Each agent capability scales only if it beats the same workflow without it (proposed)
+  [Takeaway] Agents earn the right to scale only through safe, resident-accepted, evidence-complete handovers
+  [Source] Sources: case_study_48_addendum.md (Where Agents Fit; Agentic Architecture Brief); agent-request-challenge.md; BRD v0.5.0 Document Status (owner decision, 26 Sep 2026).
+  NOTES (178 words): So if the gap is shared records, not intelligence, why is this agent-led? Because the records do not fill themselves. What rests on a small team today is coordination, chasing, re-keying, reconciliation and evidence assembly, and that unstructured work is where agents help. Later on 26 September, a challenge to my own measurement plan showed the pilot bundled three changes: a new delivery cell, ring-fenced supplier capacity and agents, so it could never tell the Board which one worked. So I reframed it as agent-led modernisation of the existing retrofit model. Whether coordination really is the binding constraint is still a Phase 0 question.
+
+Read the stack from the bottom. The foundation is deterministic, because decisions that residents, the Regulator, funders or the Board must be able to follow should come from rules. Agents sit where the work is unstructured, and people keep every decision with legal, professional or resident authority.
+
+The ask changes: agents added to existing teams in one locality and, as a proposal, each capability scales only if it beats the same workflow without it.
+===== slide-009 (main) Two more challenges: how to prove the value and how to explain it
+  [Prove] PROVE IT: PILOT MEASUREMENT CHALLENGE / All eight roles backed the intent but rejected my acceleration dashboard: speed is not the benefit, and about 50 handovers in 6 to 9 months cannot prove a 20% gain / Comparison 1: pilot locality with agents against a matched locality without, same event capture from Phase 0 / Comparison 2: each agent capability against the same workflow without it, review effort counted / The dashboard steers; a frozen benefits scorecard decides; a guardrail breach pauses work (RULE-024)
+  [Explain] EXPLAIN IT: TRANSPARENCY REVIEW, BRD v0.5.0 / Fixed my own citation: CON-003 cited UK GDPR Article 22, which the local text omits; it now cites Articles 22A to 22C / Transparency gate before live processing (AC-079); per-home reason codes (FR-042) / AI capability register and Board assurance report (FR-043); provenance on every agent output (FR-044) / Gap: three standards or codes and ICO guidance are not held locally (OD-39)
+  [Takeaway] Proposed (OD-34): the pilot decides which agent capabilities scale
+  [Source] Sources: pilot-measurement-challenge.md (Summary; Owner Decision); BRD v0.5.0 CON-003, RULE-019, RULE-024, AC-079, FR-042 to FR-044, OD-34, OD-39; log.md (26 Sep 2026). Role answers are hypotheses.
+  NOTES (165 words): Two challenges asked whether I could prove the value and whether I could explain it. The first came before the reframe and caused it; the second came after.
+
+The first was my own idea: a dashboard showing the pilot accelerates delivery. All eight roles backed the intent and rejected the design. Speed is not the benefit; accepted handovers are. And, as you saw, it bundled three changes. About 50 handovers in six to nine months cannot prove a 20 percent gain. So there are now two comparisons: a pilot locality with agents against a matched locality without, and each agent capability against the same workflow without it.
+
+The second was a transparency review. It found an error of mine: CON-003 cited UK GDPR Article 22, but the local consolidated text omits it and uses Articles 22A to 22D. CON-003 now cites Articles 22A to 22C and maps human review to the four Article 22C(2) safeguards.
+
+Still a proposal: the pilot decides which agent capabilities scale.
+===== slide-010 (main) Twenty what-ifs changed no verdict, but they show where to start
+  [Value complexity grid] Value | Low complexity | Medium complexity | High complexity / High value | Lifecycle events on a workflow engine | Evidence packs for assessment, quality and damp | Data fusion, drones, sensors, call transcripts / Medium | Structured invoices; capacity feeds and resident app | Condition-photo app, live eligibility, concierge, board narratives | Funder-portal integrations / Low |  | Sector defect benchmarking | Digital twin, supplier mesh, site scanning, AI triage
+  [Legend] Green: test first, after the foundation. White: opportunistic. Amber: big bets. Grey: defer.
+  [Findings] WHAT 20 SCENARIOS FOUND, 27 SEP / None moves a request to an end-to-end agent / Richer inputs enrich the digital foundation first / Duties grow before autonomy: special category data, Awaab's Law awareness, payment and procurement rules / The grid orders what Comparison 2 tests first; under proposed OD-34, the pilot decides what scales
+  [Takeaway] Foundation first, then lifecycle events, then evidence packs for assessment, quality and damp
+  [Source] Sources: agent-what-if-study.md (Reconciliation With the Current Proposal; Value vs Complexity Quadrant) and its post-merge review, 27 Sep 2026. Scores are coarse judgements; role answers are hypotheses.
+  NOTES (149 words): One more test, on 27 September. Would richer inputs change any verdict? Phone photos with location, structured invoices, sensors, drones, even a digital twin: twenty scenarios, with focused questions to the role agents.
+
+None moved a request to an end-to-end agent. Richer inputs enrich the digital foundation and widen what bounded agents can check, but they add duties before autonomy: special category data, Awaab's Law awareness from the moment a photo arrives, and payment and procurement rules.
+
+The useful output is the grid: lifecycle events first, then evidence packs for assessment, quality and damp. It is my coarse judgement of what Comparison 2 should test first, not a scaling decision.
+
+A post-merge review caught two errors: the same Article 22 citation I had fixed in CON-003, and eleven answers from roles that have no agent. I re-ran nine with the nearest roles and labelled two as my own hypotheses.
+===== slide-011 (main) Relabelling fixed traceability; the gate still fails on targets
+  [Stat 1] 12
+  [Stat 1 label] Business goals (BG)
+  [Stat 2] 44
+  [Stat 2 label] Functional requirements (FR)
+  [Stat 3] 85
+  [Stat 3 label] Acceptance criteria (AC)
+  [Stat 4] 9
+  [Stat 4 label] Non-functional (NFR, ISO/IEC 25010)
+  [Stat 5] 6
+  [Stat 5 label] Imposed constraints (CON)
+  [Stat 6] 24
+  [Stat 6 label] Business rules (RULE)
+  [Before] 0%
+  [After] 100%
+  [Coverage label] ID traceability: FR-to-AC and FR-to-BG
+  [Still fail] STILL FAIL, ON PURPOSE / Relabel: 68 BR and 12 OBJ rows mapped, four compound rows split, no meaning changed / Extracted: FR-022 split into FR-022 and RULE-023; CON-004 sent to Legal to validate its source / Seven business goals still lack a numeric target; NFR-009 thresholds need owner decisions / Six runs to v0.5.0: four new findings on v0.3.0, all fixed; none since / Advisory: rewrite AC as Given/When/Then before PRD handoff / I did not invent targets to pass the gate
+  [Source] Sources: BRD v0.5.0 frontmatter and Requirements Traceability; .copilot-tracking/brd-sessions/agentic-retrofit-programme.quality-report.yml (Runs 1 to 6); log.md (26 Sep 2026).
+  NOTES (129 words): Alongside all of this ran a formal BRD quality review, re-run after every change. The first run failed hard: the BRD used legacy BR and OBJ identifiers, so the reviewer measured zero percent coverage from functional requirements to acceptance criteria and business goals.
+
+I relabelled the document to a canonical taxonomy, with a legacy map so every old reference stays valid. Coverage went from zero to one hundred percent. That was an identifier-format problem, not missing requirements. Relabelling fixed traceability; it did not fix measurability.
+
+There have been six runs so far. It still fails, because seven business goals have no numeric target until company data or board decisions exist. I chose to leave the gate failing rather than invent numbers, and I would like your view on that.
+===== slide-012 (main) Keeping evidence honest was hard; here is what I would change
+  [Challenges head] CHALLENGES
+  [Lessons head] WHAT I WOULD DO DIFFERENTLY
+  [Challenge 1] No company data / The company is fictional. I modelled tenure, residents and finances from sector medians and labelled every value as an estimate.
+  [Challenge 2] Agents that sound certain / Role answers are hypotheses, and the roles share my framing. Divergences stay open: L4 quality flags, L3 digital booking.
+  [Challenge 3] Sources that disagree / Interest cover 91% or 87%; fuel poverty corrected from 10.0% to 11.6%; EPC C final policy, not commenced law. Flagged, not resolved.
+  [Challenge 4] Start the log on day one / Log entries before 25 Sep had to be reconstructed from Git history.
+  [Challenge 5] Canonical IDs from the first draft / The first quality run scored 0% only because of legacy IDs; relabelling cost a full pass.
+  [Challenge 6] Run the value challenge earlier, and blind / It came after eight BRD revisions, and the roles could read my addendum. One pass without it would test for priming.
+  [Source] Sources: docs/reference/log.md (Conventions; corrections, 25 to 26 Sep 2026); agent-request-challenge.md (Divergences, Limitations); git log.
+  NOTES (153 words): The writing was not the hard part. Keeping the evidence honest was.
+
+The company is fictional, so every number about it is modelled and labelled as an estimate. The role agents are persuasive, and they read my own addendum, so they share my framing. Where they disagree, such as L4 autonomy for quality flags, I keep the divergence open. Sources disagree too, for example on interest cover, and I corrected a superseded fuel poverty measure. I flag those rather than silently choose.
+
+If I started again, I would change four things. Start the log on day one; earlier entries had to be rebuilt from Git. Use canonical requirement identifiers from the first draft. When I fix an error, search every derived document for it; the what-if study repeated my Article 22 mistake. And run the value challenge earlier, and once without the addendum, to test whether the roles were primed by my framing.
+===== slide-013 (main) One real chain, from a decision down to its dated source
+  [Chain 1 head] Decision
+  [Chain 1 body] Addendum: approve a capped pilot, not a five-agent rollout; no end-to-end Stock Prioritisation agent
+  [Chain 2 head] Evidence
+  [Chain 2 body] Agent Request Challenge, Stock Prioritisation: "eligibility is a rules question"
+  [Chain 3 head] Requirement
+  [Chain 3 body] FR-026, AC-039 and CON-005: deterministic pass, fail or unknown eligibility
+  [Chain 4 head] Source
+  [Chain 4 body] WH:SHF Wave 3 technical annex, Page 3 footnote 1; retrieved 19 Sep 2026
+  [Chain 5 head] Change record
+  [Chain 5 body] log.md, 26 Sep entries; commits a72f231, 3db359c and c3e423a
+  [Justify] To justify / Follow the chain from the decision down to the dated source.
+  [Challenge] To challenge / Change one piece of evidence and see which rules and decisions move.
+  [Classes label] Every claim is labelled:
+  [Class 1] Case-study fact
+  [Class 2] Sector hypothesis
+  [Class 3] Planning assumption
+  [Class 4] Unknown detail
+  [Source] Sources: case_study_48_addendum.md (Recommended Executive Decision); agent-request-challenge.md; BRD FR-026, CON-005; WH:SHF annex snapshot; log.md.
+  NOTES (134 words): This slide is the reason for all the structure: immutable dated sources, cited syntheses, an index and an append-only log, on Karpathy's LLM Wiki pattern. The organisation is in the appendix. Any decision in the addendum can be walked back to its evidence, and this is a real chain.
+
+The decision: a capped readiness and pilot stage, not a five-agent rollout, with no end-to-end stock prioritisation agent. The evidence: the roles said eligibility is a rules question. The requirement: FR-026 requires a deterministic pass, fail or unknown eligibility result, tested by AC-039 and constrained by CON-005. The source: the Wave 3 technical annex, page 3, footnote 1, retrieved on 19 September.
+
+To challenge a decision, change one piece of evidence, such as a real throughput figure, and the chain shows what has to move.
+===== slide-014 (main) Four decisions where I would value your challenge today
+  [Questions] QUESTIONS FOR YOU / Will the panel read agent-led modernisation, not five end-to-end agents, as answering the brief? / How should I balance business depth against architecture depth? / Keep the BRD failing on unset targets, or propose illustrative targets? / Which open divergence first: L4 quality flags or L3 digital booking? / And on the story itself: where did it lose you?
+  [Next] NEXT, ON THE 85-DAY PLAN (TO 5 DEC) / High- and medium-level architecture with justified trade-offs / Shadow-mode comparison of typed decision models (IDEA-001) / Optional bounded demo, with a static fallback / CEO, CIO and CFO versions of the 15-minute pitch / No real resident or staff evidence yet; the role agents' discovery questions are ready
+  [Takeaway] Those are my questions. Which one would you take first?
+  [Source] Sources: .copilot-tracking/plans/2026-09-19/case-study-85-day-delivery-plan.instructions.md; docs/reference/memory.md; docs/ideas/idea-register.md.
+  NOTES (119 words): These are the four places I would most value your challenge.
+
+First, will the panel read agent-led modernisation, not five end-to-end agents, as answering the brief, or as stepping back from the five agents it asked for?
+
+Second, how much business depth versus architecture depth should the capstone show?
+
+Third, should the BRD keep failing where targets need company data, or should I propose clearly labelled illustrative targets?
+
+Fourth, which open divergence between the role agents should I resolve first?
+
+On the right is what comes next on the 85-day plan, to 5 December. There is still no real resident or staff evidence.
+
+And on the story itself: where did it lose you? Which question would you take first?
+===== slide-015 (appendix) Appendix: the repo works as a second brain
+  [Col A head] PROBLEM DOCUMENTS
+  [Problem 1] Original case study / Immutable record of the request
+  [Problem 2] Addendum / Evolving assessment and proposal
+  [Problem 3] BRD / Requirements with stable IDs
+  [Col B head] DOCS/REFERENCE: THE KNOWLEDGE BASE
+  [KB 1] Index / README task routing
+  [KB 2] Sources / Immutable dated snapshots
+  [KB 3] Syntheses / Cited sector and company research
+  [KB 4] Method / AMA training and prompts
+  [KB 5] Resources / Industry Hub findings
+  [KB 6] Memory / Owner context, not evidence
+  [KB 7] Log / Append-only changes and contradictions
+  [KB 8] Schema / copilot-instructions rules
+  [Col C head] WORKING EVIDENCE
+  [Tracking] .copilot-tracking / Plans, research, changes, reviews and BRD session state for every workflow
+  [Git] Git history / 39 commits, 10 to 27 Sep, and PR #1; most messages say what changed and why
+  [Takeaway] Pattern: Karpathy's LLM Wiki. Immutable sources, maintained syntheses, read the index first, log every change
+  [Source] Sources: docs/reference/README.md (Layers, Task Routing); .github/copilot-instructions.md; docs/reference/log.md.
+  NOTES (153 words): This is how I kept a two-week research effort from turning into a pile of
+documents.
+
+On the left are the problem documents. The original case study is never edited,
+so the request is always visible. The addendum evolves with every finding, and
+the BRD carries the requirements with stable identifiers.
+
+In the middle is the knowledge base, organised on Andrej Karpathy's LLM Wiki
+pattern. An index routes any task to the right files. Regulatory sources are
+dated and immutable. Syntheses carry citations. Memory holds my own context and is
+explicitly not evidence. The log is append-only and records every ingest,
+correction and contradiction. The schema, the repository instructions, tells every
+agent how to use all of this.
+
+On the right is the working evidence: the tracking folders for each workflow, and
+Git history. Together they mean the next session, human or agent, starts from
+what we already know instead of rediscovering it.
+
+Main notes: 1921 words, about 13.7 minutes at 140 wpm
+Appendix notes: 153 words

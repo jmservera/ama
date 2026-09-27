@@ -1,5 +1,5 @@
 slide: 11
-title: Challenges and lessons
+title: BRD quality review
 layout: blank
 background:
   fill: '#FFFFFF'
@@ -10,47 +10,276 @@ elements:
   top: 0.5
   width: 12.133000000000001
   height: 0.75
-  text: Keeping evidence honest was hard; here is what I would change
+  text: Relabelling fixed traceability; the gate still fails on targets
   font: Segoe UI
   font_size: 26
   font_color: '#102A43'
   font_bold: true
   vertical_anchor: middle
+- type: shape
+  name: Stat 1
+  shape: rounded_rectangle
+  left: 0.6
+  top: 1.7
+  width: 1.1
+  height: 0.8
+  fill: '#0B625B'
+  line_color: '#0B625B'
+  text: '12'
+  text_font: Segoe UI
+  text_size: 26
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
 - type: textbox
-  name: Challenges head
-  left: 0.6
-  top: 1.55
-  width: 12.133000000000001
-  height: 0.3
-  text: CHALLENGES
+  name: Stat 1 label
+  left: 1.7999999999999998
+  top: 1.7
+  width: 1.8
+  height: 0.8
+  text: Business goals (BG)
   font: Segoe UI
-  font_size: 12
-  font_color: '#0B625B'
-  font_bold: true
-  margin_top: 0
-  margin_bottom: 0
+  font_size: 13
+  font_color: '#243B53'
+  vertical_anchor: middle
+- type: shape
+  name: Stat 2
+  shape: rounded_rectangle
+  left: 3.75
+  top: 1.7
+  width: 1.1
+  height: 0.8
+  fill: '#1D5FB8'
+  line_color: '#1D5FB8'
+  text: '44'
+  text_font: Segoe UI
+  text_size: 26
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
 - type: textbox
-  name: Lessons head
-  left: 0.6
-  top: 4.2
-  width: 12.133000000000001
-  height: 0.3
-  text: WHAT I WOULD DO DIFFERENTLY
+  name: Stat 2 label
+  left: 4.95
+  top: 1.7
+  width: 1.8
+  height: 0.8
+  text: Functional requirements (FR)
   font: Segoe UI
-  font_size: 12
-  font_color: '#1D5FB8'
+  font_size: 13
+  font_color: '#243B53'
+  vertical_anchor: middle
+- type: shape
+  name: Stat 3
+  shape: rounded_rectangle
+  left: 0.6
+  top: 2.8
+  width: 1.1
+  height: 0.8
+  fill: '#0B625B'
+  line_color: '#0B625B'
+  text: '85'
+  text_font: Segoe UI
+  text_size: 26
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: textbox
+  name: Stat 3 label
+  left: 1.7999999999999998
+  top: 2.8
+  width: 1.8
+  height: 0.8
+  text: Acceptance criteria (AC)
+  font: Segoe UI
+  font_size: 13
+  font_color: '#243B53'
+  vertical_anchor: middle
+- type: shape
+  name: Stat 4
+  shape: rounded_rectangle
+  left: 3.75
+  top: 2.8
+  width: 1.1
+  height: 0.8
+  fill: '#1D5FB8'
+  line_color: '#1D5FB8'
+  text: '9'
+  text_font: Segoe UI
+  text_size: 26
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: textbox
+  name: Stat 4 label
+  left: 4.95
+  top: 2.8
+  width: 1.8
+  height: 0.8
+  text: Non-functional (NFR, ISO/IEC 25010)
+  font: Segoe UI
+  font_size: 13
+  font_color: '#243B53'
+  vertical_anchor: middle
+- type: shape
+  name: Stat 5
+  shape: rounded_rectangle
+  left: 0.6
+  top: 3.9000000000000004
+  width: 1.1
+  height: 0.8
+  fill: '#0B625B'
+  line_color: '#0B625B'
+  text: '6'
+  text_font: Segoe UI
+  text_size: 26
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: textbox
+  name: Stat 5 label
+  left: 1.7999999999999998
+  top: 3.9000000000000004
+  width: 1.8
+  height: 0.8
+  text: Imposed constraints (CON)
+  font: Segoe UI
+  font_size: 13
+  font_color: '#243B53'
+  vertical_anchor: middle
+- type: shape
+  name: Stat 6
+  shape: rounded_rectangle
+  left: 3.75
+  top: 3.9000000000000004
+  width: 1.1
+  height: 0.8
+  fill: '#1D5FB8'
+  line_color: '#1D5FB8'
+  text: '24'
+  text_font: Segoe UI
+  text_size: 26
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: textbox
+  name: Stat 6 label
+  left: 4.95
+  top: 3.9000000000000004
+  width: 1.8
+  height: 0.8
+  text: Business rules (RULE)
+  font: Segoe UI
+  font_size: 13
+  font_color: '#243B53'
+  vertical_anchor: middle
+- type: shape
+  name: Before
+  shape: rounded_rectangle
+  left: 0.6
+  top: 5.2
+  width: 1.3
+  height: 0.8
+  fill: '#B83A2E'
+  line_color: '#B83A2E'
+  text: 0%
+  text_font: Segoe UI
+  text_size: 24
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: shape
+  name: Arrow
+  shape: right_arrow
+  left: 2.1
+  top: 5.4
+  width: 0.7
+  height: 0.4
+  fill: '#9FB3C8'
+  line_color: '#9FB3C8'
+- type: shape
+  name: After
+  shape: rounded_rectangle
+  left: 3.0
+  top: 5.2
+  width: 1.3
+  height: 0.8
+  fill: '#0B625B'
+  line_color: '#0B625B'
+  text: 100%
+  text_font: Segoe UI
+  text_size: 24
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
+- type: textbox
+  name: Coverage label
+  left: 4.45
+  top: 5.2
+  width: 2.2
+  height: 0.8
+  text: 'ID traceability: FR-to-AC and FR-to-BG'
+  font: Segoe UI
+  font_size: 13
+  font_color: '#243B53'
   font_bold: true
-  margin_top: 0
-  margin_bottom: 0
+  vertical_anchor: middle
 - type: shape
-  name: Challenge 1
+  name: Still fail
   shape: rounded_rectangle
-  left: 0.6
-  top: 2.15
-  width: 3.8443333333333336
-  height: 1.75
-  fill: '#F0F4F8'
-  line_color: '#D9E2EC'
+  left: 7.0
+  top: 1.65
+  width: 5.7330000000000005
+  height: 4.35
+  fill: '#FDF4DC'
+  line_color: '#F0DCA5'
   line_width: 1
   margin_left: 0.18
   margin_right: 0.18
@@ -59,183 +288,72 @@ elements:
   vertical_anchor: top
   text: ''
   paragraphs:
-  - text: No company data
-    text_font: Segoe UI
-    text_size: 16
-    text_color: '#0B625B'
-    text_bold: true
-    space_after: 6
-    alignment: left
-  - text: The company is fictional. I modelled tenure, residents and finances from sector medians and
-      labelled every value as an estimate.
+  - text: STILL FAIL, ON PURPOSE
     text_font: Segoe UI
     text_size: 13
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 0
-    alignment: left
-  corner_radius: 0.06
-- type: shape
-  name: Challenge 2
-  shape: rounded_rectangle
-  left: 4.7443333333333335
-  top: 2.15
-  width: 3.8443333333333336
-  height: 1.75
-  fill: '#F0F4F8'
-  line_color: '#D9E2EC'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: top
-  text: ''
-  paragraphs:
-  - text: Agents that sound certain
-    text_font: Segoe UI
-    text_size: 16
-    text_color: '#0B625B'
+    text_color: '#B83A2E'
     text_bold: true
-    space_after: 6
+    space_after: 8
     alignment: left
-  - text: 'Role answers are hypotheses, and the roles share my framing. Divergences stay open: L4 quality
-      flags, L3 digital booking.'
+  - text: 'Relabel: 68 BR and 12 OBJ rows mapped, four compound rows split, no meaning changed'
     text_font: Segoe UI
-    text_size: 13
+    text_size: 14
     text_color: '#243B53'
     text_bold: false
-    space_after: 0
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
     alignment: left
-  corner_radius: 0.06
-- type: shape
-  name: Challenge 3
-  shape: rounded_rectangle
-  left: 8.888666666666667
-  top: 2.15
-  width: 3.8443333333333336
-  height: 1.75
-  fill: '#F0F4F8'
-  line_color: '#D9E2EC'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: top
-  text: ''
-  paragraphs:
-  - text: Sources that disagree
+  - text: 'Extracted: FR-022 split into FR-022 and RULE-023; CON-004 sent to Legal to validate its source'
     text_font: Segoe UI
-    text_size: 16
-    text_color: '#0B625B'
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Seven business goals still lack a numeric target; NFR-009 thresholds need owner decisions
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: 'Six runs to v0.5.0: four new findings on v0.3.0, all fixed; none since'
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: 'Advisory: rewrite AC as Given/When/Then before PRD handoff'
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: I did not invent targets to pass the gate
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#102A43'
     text_bold: true
-    space_after: 6
-    alignment: left
-  - text: Interest cover 91% or 87%; fuel poverty corrected from 10.0% to 11.6%; EPC C final policy, not
-      commenced law. Flagged, not resolved.
-    text_font: Segoe UI
-    text_size: 13
-    text_color: '#243B53'
-    text_bold: false
     space_after: 0
-    alignment: left
-  corner_radius: 0.06
-- type: shape
-  name: Challenge 4
-  shape: rounded_rectangle
-  left: 0.6
-  top: 4.8
-  width: 3.8443333333333336
-  height: 1.6
-  fill: '#E6EFFB'
-  line_color: '#C7D9F3'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: top
-  text: ''
-  paragraphs:
-  - text: Start the log on day one
-    text_font: Segoe UI
-    text_size: 16
-    text_color: '#1D5FB8'
-    text_bold: true
-    space_after: 6
-    alignment: left
-  - text: Log entries before 25 Sep had to be reconstructed from Git history.
-    text_font: Segoe UI
-    text_size: 13
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 0
-    alignment: left
-  corner_radius: 0.06
-- type: shape
-  name: Challenge 5
-  shape: rounded_rectangle
-  left: 4.7443333333333335
-  top: 4.8
-  width: 3.8443333333333336
-  height: 1.6
-  fill: '#E6EFFB'
-  line_color: '#C7D9F3'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: top
-  text: ''
-  paragraphs:
-  - text: Canonical IDs from the first draft
-    text_font: Segoe UI
-    text_size: 16
-    text_color: '#1D5FB8'
-    text_bold: true
-    space_after: 6
-    alignment: left
-  - text: The first quality run scored 0% only because of legacy IDs; relabelling cost a full pass.
-    text_font: Segoe UI
-    text_size: 13
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 0
-    alignment: left
-  corner_radius: 0.06
-- type: shape
-  name: Challenge 6
-  shape: rounded_rectangle
-  left: 8.888666666666667
-  top: 4.8
-  width: 3.8443333333333336
-  height: 1.6
-  fill: '#E6EFFB'
-  line_color: '#C7D9F3'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: top
-  text: ''
-  paragraphs:
-  - text: Run the value challenge earlier, and blind
-    text_font: Segoe UI
-    text_size: 16
-    text_color: '#1D5FB8'
-    text_bold: true
-    space_after: 6
-    alignment: left
-  - text: It came after eight BRD revisions, and the roles could read my addendum. One pass without it
-      would test for priming.
-    text_font: Segoe UI
-    text_size: 13
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 0
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
     alignment: left
   corner_radius: 0.06
 - type: textbox
@@ -244,16 +362,16 @@ elements:
   top: 6.7
   width: 12.133000000000001
   height: 0.28
-  text: 'Sources: docs/reference/log.md (Conventions; corrections, 25 to 26 Sep 2026); agent-request-challenge.md
-    (Divergences, Limitations); git log.'
+  text: 'Sources: BRD v0.5.0 frontmatter and Requirements Traceability; .copilot-tracking/brd-sessions/agentic-retrofit-programme.quality-report.yml
+    (Runs 1 to 6); log.md (26 Sep 2026).'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
 speaker_notes: |-
-  The writing was not the hard part. Keeping the evidence honest was.
+  Alongside all of this ran a formal BRD quality review, re-run after every change. The first run failed hard: the BRD used legacy BR and OBJ identifiers, so the reviewer measured zero percent coverage from functional requirements to acceptance criteria and business goals.
 
-  The company is fictional, so every number about it is modelled and labelled as an estimate. The role agents are persuasive, and they read my own addendum, so they share my framing. Where they disagree, such as L4 autonomy for quality flags, I keep the divergence open. Sources disagree too, for example on interest cover, and I corrected a superseded fuel poverty measure. Regulation moves: EPC C is final policy but not commenced law, and Awaab's Law Phase 2 is planned from 30 November 2026. I flag those rather than silently choose.
+  I relabelled the document to a canonical taxonomy, with a legacy map so every old reference stays valid. Coverage went from zero to one hundred percent. That was an identifier-format problem, not missing requirements. Relabelling fixed traceability; it did not fix measurability.
 
-  If I started again, I would change three things. Start the log on day one; earlier entries had to be rebuilt from Git. Use canonical requirement identifiers from the first draft. And run the value challenge earlier, and once without the addendum, to test whether the roles were primed by my framing.
+  There have been six runs so far. It still fails, because seven business goals have no numeric target until company data or board decisions exist. I chose to leave the gate failing rather than invent numbers, and I would like your view on that.

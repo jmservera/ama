@@ -206,16 +206,22 @@ The BRD has since relabelled its requirements to canonical FR, AC, NFR, CON,
 RULE and BG identifiers. BR-### and OBJ-## references in this addendum remain
 valid legacy aliases, resolved by the BRD's Legacy Identifier Map.
 
-On 2026-09-27 a follow-up what-if session tested whether richer inputs (phone
-photos with EXIF GPS, structured digital invoices, app-based consent,
-adjustment and outcome capture, contractor capacity feeds and sensor validity
-metadata) would move any of the five verdicts. The role agents' clarification
-answers and revised verdicts are recorded in the
+On 2026-09-27 a follow-up what-if session tested whether richer inputs would
+move any of the five verdicts. It ran 20 scenarios, two or three per requested
+agent, from phone photos with EXIF GPS, structured digital invoices and
+app-based consent to funder-portal integrations, ambient sensors and call
+transcription. It scored each scenario on value against complexity. The role
+agents' clarification answers, revised verdicts and grid are recorded in the
 [Agent What-If Study](./reference/research/company/agent-what-if-study.md).
-The headline verdict is unchanged: the augmentations enrich the shared
+The headline verdict is unchanged: the augmentations enrich the digital
 foundation and expand bounded AI's useful checks, but they do not create an
-end-to-end agent and they expand Article 9, Awaab's Law, Construction Act and
-Procurement Act 2023 duties before they expand autonomy.
+end-to-end agent. They expand UK GDPR Article 9 and Articles 22A to 22C,
+Awaab's Law, Construction Act and Procurement Act 2023 duties before they
+expand autonomy. A post-merge review the same day confirmed the verdict
+against the agent-led modernisation reframe. It corrected the automated-decision
+citations and re-ran answers first attributed to roles without an agent. It
+also positioned the grid as a candidate order for Phase 0 and Comparison 2
+testing, not a scaling decision.
 
 ## Modernised Retrofit Delivery Objective
 

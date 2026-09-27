@@ -192,7 +192,7 @@ elements:
     text_bold: true
     space_after: 8
     alignment: left
-  - text: Twelve revisions, with new research and role answers between each
+  - text: Thirteen revisions, with new research and role answers between each
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -373,7 +373,7 @@ elements:
   top: 6.7
   width: 12.133000000000001
   height: 0.28
-  text: 'Sources: git log (35 commits, 10 to 26 Sep 2026); docs/reference/log.md; docs/brds/agentic-retrofit-programme-brd.md
+  text: 'Sources: git log (39 commits, 10 to 27 Sep 2026); docs/reference/log.md; docs/brds/agentic-retrofit-programme-brd.md
     history.'
   font: Segoe UI
   font_size: 9
@@ -383,6 +383,6 @@ elements:
 speaker_notes: |-
   This is the backbone of the story. The five strands were not a straight line; each loop produced questions that sent me back into research.
 
-  Research built the context. The role agents let me ask what the brief could not answer. The BRD has been rewritten twelve times and is now version 0.5.0. The design thinking session on 26 September was the turning point: I read each agent request as the value behind it and tested my early doubts agent by agent. The quality review made the requirements traceable, and it was re-run after every later change.
+  Research built the context. The role agents let me ask what the brief could not answer. The BRD has been revised in thirteen commits and is now version 0.5.0. The design thinking session on 26 September was the turning point: I read each agent request as the value behind it and tested my early doubts agent by agent. The quality review made the requirements traceable, and it was re-run after every later change.
 
   The habit that matters: nothing stayed in chat history. Every finding was filed in the addendum, the BRD or the knowledge base, and logged.
