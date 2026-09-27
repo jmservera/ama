@@ -457,7 +457,7 @@ elements:
     text_bold: true
     space_after: 2
     alignment: left
-  - text: '39 commits, 10 to 27 Sep, and PR #1; most messages say what changed and why'
+  - text: '41 commits, 10 to 27 Sep, and three merged PRs; the log records what changed and why'
     text_font: Segoe UI
     text_size: 12
     text_color: '#243B53'

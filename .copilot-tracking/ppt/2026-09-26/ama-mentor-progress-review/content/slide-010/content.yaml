@@ -146,7 +146,7 @@ elements:
   left: 8.1
   top: 1.65
   width: 4.633
-  height: 3.7
+  height: 3.95
   fill: '#F0F4F8'
   line_color: '#D9E2EC'
   line_width: 1
@@ -162,14 +162,14 @@ elements:
     text_size: 13
     text_color: '#1D5FB8'
     text_bold: true
-    space_after: 12
+    space_after: 8
     alignment: left
   - text: None moves a request to an end-to-end agent
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
     text_bold: false
-    space_after: 12
+    space_after: 8
     bullet_char: •
     bullet_margin_left: 228600
     bullet_indent: -228600
@@ -179,29 +179,37 @@ elements:
     text_size: 14
     text_color: '#243B53'
     text_bold: false
-    space_after: 12
+    space_after: 8
     bullet_char: •
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: 'Duties grow before autonomy: special category data, Awaab''s Law awareness, payment and procurement
-      rules'
+  - text: 'Duties grow before autonomy: special category data, Awaab''s Law, payment and procurement rules'
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
     text_bold: false
-    space_after: 12
+    space_after: 8
     bullet_char: •
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: The grid orders what Comparison 2 tests first; under proposed OD-34, the pilot decides what
-      scales
+  - text: 'All 48 role answers re-run on the reframe: six tightened controls, every verdict held'
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
     text_bold: false
-    space_after: 12
+    space_after: 8
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: The grid orders Comparison 2 tests; under proposed OD-34, the pilot decides what scales
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 8
     bullet_char: •
     bullet_margin_left: 228600
     bullet_indent: -228600
@@ -234,8 +242,7 @@ elements:
   top: 6.7
   width: 12.133000000000001
   height: 0.28
-  text: 'Sources: agent-what-if-study.md (Reconciliation With the Current Proposal; Value vs Complexity
-    Quadrant) and its post-merge review, 27 Sep 2026. Scores are coarse judgements; role answers are hypotheses.'
+  text: 'Sources: agent-what-if-study.md (Reconciliation; Value vs Complexity Quadrant), post-merge review and role-answer re-run, 27 Sep 2026. Scores are coarse judgements; role answers are hypotheses.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
@@ -244,8 +251,8 @@ elements:
 speaker_notes: |-
   One more test, on 27 September. Would richer inputs change any verdict? Phone photos with location, structured invoices, sensors, drones, even a digital twin: twenty scenarios, with focused questions to the role agents.
 
-  None moved a request to an end-to-end agent. Richer inputs enrich the digital foundation and widen what bounded agents can check, but they add duties before autonomy: special category data, Awaab's Law awareness from the moment a photo arrives, and payment and procurement rules.
+  None moved a request to an end-to-end agent. Richer inputs enrich the digital foundation and widen what bounded agents can check, but they add duties before autonomy: special category data, Awaab's Law awareness, which a hazard photo can establish no later than its arrival, and payment and procurement rules.
 
   The useful output is the grid: lifecycle events first, then evidence packs for assessment, quality and damp. It is my coarse judgement of what Comparison 2 should test first, not a scaling decision.
 
-  A post-merge review caught two errors: the same Article 22 citation I had fixed in CON-003, and eleven answers from roles that have no agent. I re-ran nine with the nearest roles and labelled two as my own hypotheses.
+  A post-merge review caught two errors: the same Article 22 citation I had fixed in CON-003, and eleven answers from roles that have no agent. I re-ran nine with the nearest roles and labelled two as my own hypotheses. Then I re-ran every other role answer against the reframed proposal. Every verdict held; six answers tightened controls to match the BRD. For example, AI risk paths stay in shadow mode, and a person approves every AI-drafted message to a resident.

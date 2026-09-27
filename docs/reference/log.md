@@ -504,3 +504,27 @@ metadata when the knowledge base was created.
   * A missing blank line before the presentation entry above was fixed.
 * Residual: the two author hypotheses (board-narrative controls and
   exception-detection audit) still have no role-agent anchor.
+
+## [2026-09-27] presentation | Mentor deck iteration 5 after the role-answer re-run
+
+* Trigger: the owner asked to update the mentor deck again after the
+  what-if role answers were re-run.
+* Files touched: `../presentations/ama-mentor-progress-review.pptx`
+  (replaced).
+* Deck: the slide 10 findings panel now says all 48 role answers were
+  re-run on the reframe, with six tightened controls and every verdict
+  held. The notes describe both re-run passes, give two tightened
+  controls as examples and qualify Awaab's Law awareness: a hazard photo
+  can establish it no later than its arrival. Slides 3 and 15 now say 41
+  non-merge commits from 10 to 27 Sep, and slide 15 says three merged PRs.
+* Review: the Presentation Communications Strategist made five findings.
+  All were accepted, one with changed wording. The review caught the
+  draft notes saying all eleven no-agent answers were re-run, which undid
+  an iteration 4 fix, and "no verdict changed", which overstated the
+  study because scenario verdict text changed. Main notes are 1,967 words.
+* Open for the owner: commit 7bdd952, which carries the role-answer
+  re-run, has a generic message that does not describe the change.
+* Validation: both validators report 0 issues across 15 slides. The
+  published copy matches the build by SHA-256.
+* Working records: `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/changes/build-validate-iteration-5.md`
+  and `research/subagents/storytelling-review-iteration-5.md`.

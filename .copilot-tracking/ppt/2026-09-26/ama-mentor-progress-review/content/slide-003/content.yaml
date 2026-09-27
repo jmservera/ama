@@ -373,7 +373,7 @@ elements:
   top: 6.7
   width: 12.133000000000001
   height: 0.28
-  text: 'Sources: git log (39 commits, 10 to 27 Sep 2026); docs/reference/log.md; docs/brds/agentic-retrofit-programme-brd.md
+  text: 'Sources: git log (41 commits, 10 to 27 Sep 2026); docs/reference/log.md; docs/brds/agentic-retrofit-programme-brd.md
     history.'
   font: Segoe UI
   font_size: 9
