@@ -236,3 +236,30 @@ metadata when the knowledge base was created.
 * Regulatory citations in the study were spot-checked against local
   snapshots on 2026-09-27. They were not checked against the official
   sources online.
+
+## [2026-09-27] query | What-if study extended to multiple scenarios per agent
+
+* Owner feedback on the initial study noted that the photo/GPS worked
+  example was one scenario, and asked for multiple distinct what-if
+  scenarios per requested agent.
+* Files touched: `research/company/agent-what-if-study.md`.
+* Extension: each of the five requested agents plus the supervisor and
+  damp-and-mould loop was re-examined with two or three distinct
+  scenarios (for example Stock Prioritisation now covers a resident app,
+  external data fusion and a per-archetype digital twin; Assessment
+  covers app-fed evidence, on-site structured scanning and pre-visit AI
+  triage; Grant and Funding covers structured invoices, funder-portal
+  integrations and continuous eligibility monitoring; Coordination
+  covers capacity feeds, a multi-supplier capacity mesh and a
+  multi-channel resident concierge; Quality Verification covers
+  per-measure packs, independent drone or robotic inspection and
+  sector-defect-feed benchmarking; the Supervisor gains an exception
+  dashboard and board-narrative generator; the damp loop gains ambient
+  sensors and call-recording transcription).
+* For every new scenario, the same role agents were asked clarification
+  questions and answered as `Sector-informed hypothesis`. The summary
+  table, per-agent aggregate verdicts and per-agent stop criteria were
+  extended accordingly.
+* Finding: none of the additional scenarios changes the headline
+  verdict; several sharpen it by exposing new Article 9, Article 22,
+  Procurement Act 2023 and fairness questions.
