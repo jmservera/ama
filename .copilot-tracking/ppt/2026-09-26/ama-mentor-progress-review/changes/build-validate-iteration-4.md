@@ -44,7 +44,7 @@ Review: [storytelling-review-iteration-4.md](../research/subagents/storytelling-
 ## Speaker Q&A Card
 
 * Did the what-if study change no verdict at all? The headline verdict is unchanged. QV2 and QV3 are slightly stronger, but they remain raise-only evidence.
-* Were the role answers given before the reframe? Most were, and they have not been re-run. The nine re-runs used BRD v0.5.0.
+* Were the role answers given before the reframe? They were at first, but on 27 Sep 2026 every role answer was re-run against the current addendum and BRD v0.5.0. The verdict held. Six answers tightened controls to match the BRD, for example risk-path proposals stay in shadow mode and a named person approves every AI-drafted resident message.
 * Were the regulatory citations checked? Only against the local snapshots, not against the official sources online.
 * What does more grant money mean for our own spend? Grants need co-funding, so more grant means more of our own spend. The addendum illustrates about GBP 66.7 million of provider funding, as an estimate. This answer was moved from the slide 4 notes.
 

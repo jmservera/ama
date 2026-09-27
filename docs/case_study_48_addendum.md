@@ -221,7 +221,16 @@ expand autonomy. A post-merge review the same day confirmed the verdict
 against the agent-led modernisation reframe. It corrected the automated-decision
 citations and re-ran answers first attributed to roles without an agent. It
 also positioned the grid as a candidate order for Phase 0 and Comparison 2
-testing, not a scaling decision.
+testing, not a scaling decision. All role-agent answers were then re-run
+against the current proposal, and the verdict still holds. Six answers
+tightened the study's controls to match the BRD:
+
+* photo and transcript scans only raise flags for human triage and never
+  set or back-date a clock
+* AI-proposed PAS 2035 risk paths stay in blind shadow mode until released
+* suppliers offer capacity through any channel
+* a named person approves every AI-drafted resident message
+* programme supervision has no AI summarisation in the initial pilot
 
 ## Modernised Retrofit Delivery Objective
 

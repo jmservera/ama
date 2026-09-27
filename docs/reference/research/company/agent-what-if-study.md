@@ -46,6 +46,15 @@ scenario text were updated. The two governance and internal audit
 questions have no matching role agent and are labelled as author
 hypotheses.
 
+Later on 2026-09-27 the remaining 39 role-agent answers were re-run
+with the same eight role agents against the current addendum and BRD
+v0.5.0, so every role answer now reflects the current proposal. Each
+agent classified its answer as unchanged, refined or materially
+changed. Six were material, and the scenario text, verdicts and stop
+criteria they affect were updated (see
+[Reconciliation With the Current Proposal](#reconciliation-with-the-current-proposal)).
+Cited BRD identifiers were checked against the BRD.
+
 All role-agent answers are `Sector-informed hypothesis` unless they restate
 material already in the case study, the addendum or the local regulatory
 snapshots. The role agents have no access to Proper North Homes' systems,
@@ -93,10 +102,10 @@ the inputs.
 | Quality Verification | 2. Independent robotic and drone inspection (thermal drone flyover, cavity borescope), producing a machine-readable inspection record | Bounded AI inside workflow | Slightly stronger for defect detection; results are evidence for the competent quality authority, not acceptance |
 | Quality Verification | 3. Cross-installer benchmarking against an anonymised sector defect feed (for example TrustMark and MCS defect data) | Bounded AI inside workflow | Slightly stronger for earlier detection of systemic patterns; still raise-only |
 | Programme Supervisor | 1. Photo, invoice and appointment events all keyed to the property lifecycle state machine | Do not build as agent | Unchanged. Richer events make the workflow engine more useful; they do not remove the need for named owners, gates and clocks |
-| Programme Supervisor | 2. Always-on AI exception dashboard and board-narrative generator drafting daily executive summaries from controlled records | Do not build as agent | Unchanged. Summaries are drafts under human sign-off; they do not replace named accountability |
+| Programme Supervisor | 2. Always-on AI exception dashboard and board-narrative generator drafting daily executive summaries from controlled records | Do not build as agent | Unchanged. Summaries are drafts under human sign-off; they do not replace named accountability. Later work: the initial pilot has no supervision agent |
 | Damp-and-Mould Loop | 1. Resident and contractor app with geotagged hazard photos and same-visit reporting | Do not build as agent; statutory clocks in the repairs system | Unchanged. Faster awareness capture is valuable, but Awaab's Law Phase 1 awareness and triage decisions stay with the landlord, not with an AI |
 | Damp-and-Mould Loop | 2. Consented ambient sensors (temperature, humidity, VOC) as a raise-only early-warning across a defined cohort | Do not build as agent | Unchanged. A sensor risk notification does not by itself make the landlord aware; deployment needs a separate lawful basis and a DPIA |
-| Damp-and-Mould Loop | 3. Contractor and repairs call-recording transcription with automatic hazard-signal extraction to catch reports made verbally | Do not build as agent | Unchanged. Extraction is a raise-only signal into human triage; it must never delay, reset or close a statutory clock |
+| Damp-and-Mould Loop | 3. Contractor and repairs call-recording transcription with automatic hazard-signal extraction to catch reports made verbally | Do not build as agent | Unchanged. Extraction is a raise-only signal into human triage; it must never delay, reset, back-date or close a statutory clock |
 
 ## Reconciliation With the Current Proposal
 
@@ -130,11 +139,17 @@ follows.
   pilot gate decides which agent capabilities scale, using Comparison 1
   and Comparison 2 under the frozen RULE-019 protocol
   ([BRD](../../../brds/agentic-retrofit-programme-brd.md)).
-* Role answers. Most clarification answers were given against the
-  pre-reframe addendum and have not been re-run since. Nothing in the
-  reframe contradicts them, but they remain sector-informed hypotheses.
-  The nine answers re-run on 2026-09-27 (see Purpose and Method) used
-  the current addendum and BRD v0.5.0.
+* Role answers. All 48 role-agent answers were re-run on 2026-09-27
+  against the current addendum and BRD v0.5.0 (see Purpose and Method).
+  The two author hypotheses were not. Six re-run answers changed the
+  study materially. Photo scans raise flags for human triage rather than
+  opening cases. Pre-Visit AI Triage keeps risk-path proposals
+  shadow-only. Suppliers offer capacity through any channel. Every
+  AI-drafted resident message needs named approval before it is sent.
+  The initial pilot has no supervision summarisation module. A
+  transcript flag never back-dates a clock. The affected scenario text,
+  verdicts and stop criteria were updated. The answers remain
+  sector-informed hypotheses.
 
 ## Value vs Complexity Quadrant
 
@@ -329,27 +344,45 @@ flags into the property master, would the scoring model become more
 defensible, or would the underlying data-completeness problem remain the
 binding constraint?
 
-* Sector-informed hypothesis: an app improves timeliness and provenance
-  for the properties it reaches, but the ranking's defensibility depends
-  on covering every property, not on the richness of the covered ones. In
-  most housing associations, the properties least likely to appear in a
-  self-service app are the ones with the greatest data gaps: households
-  who never contact the landlord, residents without smartphones or English
-  as a first language, and unoccupied or void homes. Without an outreach
-  and assisted-capture route, a photo channel could widen, not close, the
-  data-completeness gap. The field-level source register in the shared
-  foundation is still the binding change.
+* Sector-informed hypothesis: data completeness is still the binding
+  constraint. An app enriches the homes it reaches, but the ranking is
+  defensible only if it covers every candidate home, and households the
+  app does not reach, void homes and non-digital residents are likely to
+  be the largest gaps. An agent may extract sourced values from photos
+  and propose missing values, but these stay unconfirmed until a named
+  owner confirms them (BRD FR-009, FR-044), and they cannot replace
+  assessment (RULE-017). Missing fields and flags stay "unknown" and go
+  to human review, not deprioritisation (FR-037, NFR-008). Weights stay
+  deterministic (FR-042), hazards seen in photos enter the hazard route
+  (FR-003), and an app launched only in the pilot locality would
+  confound Comparison 1 (RULE-019).
+* Handoff: the Executive Director of Assets for cohort policy and
+  weights; the Head of Resident Engagement and Insight and the
+  Neighbourhood Housing Officer for assisted and non-digital capture;
+  the Head of Building Safety and Compliance for hazard awareness from
+  photos; the Data Protection Officer for the Article 9 basis and DPIA
+  (CON-003, OD-28).
 
 `Executive Director of Assets` was asked: would you accept a ranking that
 weights resident-declared vulnerabilities differently from
 professional-observed vulnerabilities, or would that need a Board policy
 change first?
 
-* Sector-informed hypothesis: differential weighting of self-declared
-  versus recorded vulnerability would need explicit cohort policy from the
-  Board, with DPO and legal review. It is likely to be rejected as a
-  single weight and accepted only as a documented exception route that
-  routes self-declared cases to a named assessment queue.
+* Sector-informed hypothesis: no weight should discount
+  resident-declared vulnerability because of its source. The source
+  decides how the case is checked, not its priority: self-declared cases
+  go to a staffed route where a person decides, explains the decision
+  and offers a challenge (BRD FR-037, AC-065). FR-042 allows delegated
+  Asset Director approval of versioned weights, but the health-risk
+  weight uses special category data, so it should still go to the Board
+  with DPO approval of the DPIA (OD-28, RULE-022). No agent sets or
+  tunes weights; agents may flag missing or stale flags but never infer
+  health status. Weights are frozen before the Comparison 1 cohort is
+  fixed (RULE-019).
+* Handoff: the Board for cohort policy and the health-risk weight; the
+  Data Protection Officer for the Article 9 condition and DPIA; the Head
+  of Resident Engagement and Insight for self-referral and challenge
+  routes; Legal.
 
 #### Scenario Verdict
 
@@ -386,12 +419,22 @@ landlord, so coverage will be partial and skewed.
 EPC-register and fuel-poverty data raise or lower the strength of a
 grant-eligibility narrative for a given cohort?
 
-* Sector-informed hypothesis: raise it, but only for the homes in the
-  cohort with consented smart-meter data and a live EPC. For the rest,
-  the narrative is no stronger than today. The grant case has to be
-  built on the shared cohort, not on the best-instrumented subset. This
-  also creates a fairness question if consented properties are more
-  likely to attract funded work than unconsented ones.
+* Sector-informed hypothesis: fusion strengthens the grant case only
+  where it yields sourced values that data owners confirm and that move
+  a home to "pass" under BRD FR-026, with an evidenced funding route
+  under FR-027. Postcode or LSOA fuel-poverty proxies cannot prove a
+  single property is eligible, because being in scope is not being
+  eligible (CON-005). Homes without consented smart-meter data return
+  "unknown" and are investigated, not pushed down the list (NFR-008),
+  and only homes that pass count toward opportunity or award value
+  (FR-023, RULE-009). If fusion shapes cohort selection, it must be
+  applied the same way in both Comparison 1 localities before any
+  resident contact, or the grant-conversion comparison is biased
+  (RULE-019, AC-074).
+* Handoff: the Data Protection Officer for the lawful basis and UK GDPR
+  Articles 22A to 22C (CON-003); the Executive Director of Assets for
+  prioritisation policy (FR-042); the Data and Performance Lead for
+  cohort matching.
 
 `Head of Building Safety and Compliance` was asked: does fusing DWP-
 derived fuel poverty proxies with vulnerability data create a solely
@@ -400,17 +443,22 @@ question was first put as "Article 22"; the local consolidated text
 omits Article 22, so the citation and answer were corrected on
 2026-09-27, matching the correction to BRD CON-003.)
 
-* Sector-informed hypothesis: it can. A ranking that materially decides
-  whether a household is offered retrofit is likely to be a significant
-  decision, and with no meaningful human involvement it is solely
-  automated (UK GDPR Article 22A). Where the vulnerability weight draws
-  on health or other special category data, Article 22B restricts a
-  solely automated decision to explicit consent, or to a decision
-  required or authorised by law with an Article 9(2)(g) condition.
-  Otherwise Article 22C(2) requires information, representations, human
-  intervention and contest safeguards
-  ([local snapshot](../../regulatory/data-protection/uk-gdpr-current-text.md),
-  converted 2026-09-19). This is a DPO decision, not a technical one.
+* Sector-informed hypothesis: it still can. Moving the weights into a
+  published, deterministic score (BRD FR-042) narrows the exposure but
+  does not remove it: a rules-based score is still automated processing,
+  and approving cohort rules is unlikely to count as meaningful human
+  involvement in each household's offer or deferral (UK GDPR Article
+  22A, including profiling). Where a health or vulnerability weight
+  feeds a solely automated significant decision, Article 22B limits it
+  to explicit consent, or to contract necessity or authorisation by law
+  with an Article 9(2)(g) condition; otherwise the Article 22C(2)
+  safeguards apply (CON-003, RULE-022, FR-037, OD-28). The ranking must
+  never delay or replace statutory hazard triage (CON-001).
+* Handoff: the Data Protection Officer and Legal for the lawful basis,
+  the Article 22B condition, the DPIA and any Article 22D regulations;
+  the Executive Director of Assets and the Board for the weights
+  (FR-042); the Head of Resident Engagement and Insight for
+  vulnerability coverage (OD-28).
 
 #### Scenario Verdict
 
@@ -447,21 +495,45 @@ significant decision.
 pathway safely inform work-package bundling at archetype level, or
 would that still need a per-property survey?
 
-* Sector-informed hypothesis: yes for early scoping and design-package
-  choice at archetype level, subject to sampled physical validation and
-  a documented rule that no home enters delivery without a PAS 2035
-  assessment. The twin can help decide which archetypes to prioritise
-  procurement for, but a home's actual works order comes from the
-  assessor and coordinator, not the twin.
+* Sector-informed hypothesis: yes, for archetype-level scoping and
+  bundling proposals, if the twin is a deterministic appraisal model in
+  the digital foundation rather than an agent capability. Its confidence
+  score cannot change ranking or per-home priority unless it is built
+  into the approved, versioned scoring policy (BRD FR-042). Each bundle
+  records its rationale, and archetype reuse cannot bypass
+  property-specific review (FR-035, AC-055). Sampled physical surveys
+  calibrate the twin, and every home still needs a Retrofit Assessor
+  survey and a separate coordinator decision (FR-010) before design
+  release (FR-007). With existing suppliers, the twin shapes work
+  packages within committed capacity rather than driving new
+  procurement. It is validated in Phase 0 scoping, not in the initial
+  pilot's agent tests.
+* Handoff: the Executive Director of Assets for cohort policy and
+  weights; the Retrofit Assessor, Retrofit Coordinator and designers for
+  property-specific outputs; the Head of Building Safety and Compliance
+  for building dependencies (OD-22); Procurement for any change to
+  supplier capacity.
 
 `Executive Director of Assets` was asked: is a twin-derived pathway
 acceptable evidence for a Board cohort-approval paper, or does the
 Board need physical survey evidence?
 
-* Sector-informed hypothesis: acceptable for the cohort framing paper,
-  with named sensitivity and model-risk sections and a clear statement
-  that individual home decisions require survey evidence. Not
-  acceptable as sole evidence for individual capital commitments.
+* Sector-informed hypothesis: acceptable for framing a later tranche or
+  acceleration paper (BRD RULE-011), not the pilot cohort, which the
+  Sponsor and Programme decide under OD-17. The paper needs sensitivity
+  ranges, model-risk disclosure, calibration against sampled surveys and
+  a clear statement that modelled values are not verified observations.
+  It is not evidence for an individual home: each home still needs a PAS
+  2035 assessment by named competent roles (RULE-017, FR-010), and
+  archetype reuse cannot bypass property-specific review (FR-035). A
+  twin estimate must never push a home down the list without a reason
+  code and human review (FR-042, NFR-008). Any use needs versioning and
+  evaluation (NFR-007) and Finance affordability modelling (FR-025).
+* Handoff: the Retrofit Programme Manager and competent PAS 2035 roles
+  for property-level assessment and archetype reuse (OD-22); the Head of
+  Finance, Capital and Grants for affordability (FR-025); the Data and
+  Performance Lead for model validation; the Board for envelope
+  approval.
 
 #### Scenario Verdict
 
@@ -526,8 +598,10 @@ cut in assessment-to-ready-to-install time depends on. It does not remove
 the Assessor's or Coordinator's sign-off.
 
 It does expand two governance duties. Photos capture household context
-that Article 9 covers, and provenance-checked hazard photos create Awaab's
-Law awareness the moment they arrive.
+that Article 9 covers, and hazard photos can establish Awaab's Law
+awareness no later than their arrival. Provenance checking does not itself
+create awareness, and whether an installer's on-site knowledge counts
+earlier depends on contractor status (BRD OD-29).
 
 #### Clarification Questions to the Company Agents
 
@@ -536,15 +610,21 @@ checked evidence assessment for the Retrofit Assessor, could the
 Assessor's on-site time realistically fall, or would the PAS 2035 method
 still require the same visit length?
 
-* Sector-informed hypothesis: on-site time would fall for the pre- and
-  post-visit work rather than for the visit itself. The Assessor still
-  has to inspect construction, ventilation, condition, occupancy patterns
-  and higher-risk features in person. Pre-populated evidence packs reduce
-  the desk time and the rework caused by missing surveys, and they let
-  the Coordinator set the risk path faster. A cautious planning
-  assumption is that assessment-to-ready-to-install cycle time can fall
-  by 15% to 25% from evidence handling alone, subject to Phase 1
-  measurement; visit duration is largely unchanged.
+* Sector-informed hypothesis: the visit itself stays about the same
+  length, because the Assessor still inspects construction, ventilation,
+  condition, occupancy and possible hazards in person. The gains come
+  before and after the visit: sourced pre-populated facts, completeness
+  checks before sign-off and fewer returns cut desk time and
+  assessment-to-ready-to-install time. The earlier 15% to 25% planning
+  range should no longer be cited. The addendum's "at least 20%" target
+  counts only when Comparison 1 shows it against the matched locality
+  and Comparison 2 shows a gain after review minutes are counted (BRD
+  RULE-019, AC-075, AC-077). Pre-fill holds only facts with a named
+  source, and missing observations need assessment, not AI completion
+  (AC-014, AC-054).
+* Handoff: the Retrofit Assessor and Retrofit Coordinator for
+  professional method and sign-off; the Data and Performance Lead for
+  the RULE-019 protocol and effort measurement.
 
 `Head of Building Safety and Compliance` was asked: if resident and
 installer photos routinely showed damp, mould, unsafe electrics or
@@ -552,15 +632,22 @@ fire-safety issues while an assessment was in progress, how should the
 platform route them so the Awaab's Law clock is respected without
 suppressing the retrofit process?
 
-* Sector-informed hypothesis: every inbound photo channel needs a
-  raise-only hazard signal scan and a hard split from the retrofit
-  workflow. When any content matches the hazard signal set, a hazard case
-  is opened in the repairs system with the awareness timestamp taken from
-  the earliest evidence of arrival, not from the moment a human triager
-  reads it. The retrofit safety hold flag is set on the property lifecycle
-  record. The retrofit workflow continues its non-safety steps but cannot
-  release works until the hold clears. AI decides nothing about the
-  hazard; it just makes sure the case, the timestamp and the hold exist.
+* Sector-informed hypothesis: keep the hard split, but the scan must not
+  open cases or set holds itself. A staff or resident hazard answer
+  creates or links one case in the existing hazard and repairs service,
+  with awareness and referral timestamps that cannot be edited (BRD
+  FR-003, RULE-003). A photo scan only raises flags, and a human triager
+  records each referral or non-referral with a reason (FR-004,
+  RULE-018); an untriaged flag stops automated progression (FR-016). A
+  referral sets the FR-001 hold, which only RULE-001 can release, while
+  the hazard response and non-safety retrofit steps continue (FR-002).
+  For installer photos, arrival is the latest awareness point; whether
+  awareness began earlier, on site, depends on contractor status
+  (OD-29).
+* Handoff: the repairs and hazard service for triage, categorisation and
+  clocks; Legal for contractor awareness and agency status (OD-29); the
+  Retrofit Coordinator for the hold; the Data Protection Officer for
+  Article 9 processing of photos (RULE-022).
 
 #### Scenario Verdict
 
@@ -602,25 +689,38 @@ suitable state.
 thermal imagery let the assessor sign off risk-path decisions in the
 office rather than on site?
 
-* Sector-informed hypothesis: no. The risk-path decision (Path A or B
-  under PAS 2035, higher-risk building classification, presence of
-  significant heritage or safety features) is a judgement based on the
-  built form and its context. Scans support the judgement, but the
-  assessor must still be able to inspect ambiguous items, discuss
-  occupancy with the resident and observe features that scans miss.
-  The office-based portion of the assessment gets shorter and better;
-  the on-site portion stays.
+* Sector-informed hypothesis: no. The risk-path decision is the Retrofit
+  Coordinator's, separate from the Retrofit Assessor's survey sign-off
+  (BRD FR-010), so the question's framing needs correcting. Measured
+  geometry and thermal imagery improve the evidence both roles use, and
+  the agent may turn scan outputs into structured, sourced inputs and
+  flag conflicts with legacy records. Scans do not replace the visit:
+  unclear construction, moisture, ventilation, occupancy and hazard
+  features still need in-person inspection, and missing observations
+  need assessment, not AI completion (AC-054). The office work gets
+  shorter; the on-site survey and both sign-offs stay, and the
+  coordinator confirms which PAS 2035 edition applies (AC-014).
+* Handoff: the Retrofit Assessor and Retrofit Coordinator for
+  professional judgement and sign-off; the Head of Building Safety and
+  Compliance for higher-risk building status.
 
 `Head of Procurement and Contract Management` was asked: does mandating
 scanning kit and workflows for the assessor pool constrain the
 supplier market?
 
-* Sector-informed hypothesis: yes for smaller assessor firms without
-  the equipment, which is a real risk given PAS 2035 assessor capacity
-  is already tight. A framework specification with a transition
-  window, a supplied-kit option or a shared-kit pool by geography
-  reduces the risk. Any imposed data format should follow an open
-  standard, not a single vendor's file type.
+* Sector-informed hypothesis: yes, a mandate would still narrow an
+  already tight assessor market, and the pilot does not need one,
+  because the agent works from existing survey notes and photos. Whether
+  assessors are employed or contracted is an unknown company detail (BRD
+  OD-33). Kit should be optional or supplied, never a condition of
+  getting work. Adding a mandate to live pilot contracts needs the OD-37
+  variation check and Legal review (OD-30). If kit is used, it should be
+  used the same way in both Comparison 1 localities (AC-074). Any future
+  requirement should start at let or renewal, through an FR-022 data
+  schedule in an open format with a transition period.
+* Handoff: the Retrofit Programme Manager for assessor roles and kit
+  specification; Legal for contract modification; the Data and
+  Performance Lead for comparison design.
 
 #### Scenario Verdict
 
@@ -639,7 +739,11 @@ consented smart-meter data. It produces a proposed PAS 2035 risk path,
 a draft archetype match, a list of measures likely to be in scope, a
 list of higher-risk building or heritage flags, and a set of questions
 for the assessor to ask on site. The coordinator reviews and either
-adopts, adjusts or rejects the proposal before dispatch.
+adopts, adjusts or rejects the proposal before dispatch. Under the
+current proposal, assessment support in the initial pilot covers sourced
+facts, flags and site questions only (BRD AC-014). The proposed risk
+path would run blind in shadow mode against coordinator decisions until
+a RULE-020 release decision.
 
 #### Would It Remove the Original Blockers?
 
@@ -657,39 +761,60 @@ decisions.
 before an AI-proposed risk path could be adopted by the coordinator
 without rework?
 
-* Sector-informed hypothesis: an audited historical accuracy record
-  against past coordinator decisions, published false-path rates, the
-  coordinator's written confirmation for each adopted proposal, and a
-  policy that a proposal cannot be adopted for higher-risk buildings
-  or for properties with open safety cases without explicit
-  coordinator review. The comparator is a coordinator working from the
-  same records with no proposal; if the proposal does not measurably
-  reduce coordinator time without lowering decision quality, it is
-  not worth the risk.
+* Sector-informed hypothesis: an AI-proposed risk path falls outside the
+  initial pilot, where assessment support only pre-fills named-source
+  facts and checks completeness (BRD AC-014) and the risk path stays the
+  coordinator's separate professional decision (FR-010). A proposal
+  could run only blind in shadow mode against coordinator decisions on
+  the same cases (AC-075). Before any coordinator sees one, it needs an
+  accuracy and false-path record by archetype and tenure, no missed
+  higher-risk building or open-hazard case, coordinator time saved after
+  review effort (AC-077) and passing automation-bias checks (AC-085).
+  Showing proposals live is an authority expansion that needs a release
+  decision (RULE-020), and the coordinator still records their own
+  decision and rationale.
+* Handoff: the Retrofit Coordinator for the risk-path decision; the Data
+  and Performance Lead for Comparison 2 shadow evidence; the Sponsor for
+  the RULE-020 release decision, with OD-34 still only proposed; the
+  Head of Building Safety and Compliance for higher-risk building and
+  open-hazard checks.
 
 `Head of Building Safety and Compliance` was asked: if the AI triage
 missed a higher-risk building indicator or an open damp case, where
 should accountability sit?
 
-* Sector-informed hypothesis: with the coordinator, whose job includes
-  independent verification of higher-risk building status and open
-  safety cases before dispatch. AI triage is a draft, and drafts do
-  not shift accountability. The safeguard is to require the
-  coordinator to positively acknowledge the higher-risk building and
-  open-hazard check at dispatch, whether or not AI made a proposal.
+* Sector-informed hypothesis: the association stays legally accountable,
+  and the primary safeguard moves out of AI. Higher-risk building
+  status, building-level dependencies and open hazard cases should be
+  deterministic lookups from the authoritative registers at the
+  assessment gate (BRD FR-001, FR-035, RULE-015), so an AI triage miss
+  cannot hide them. The coordinator still positively acknowledges those
+  checks and owns the risk path (FR-010, RULE-017). A wrong register is
+  a Building Safety and data-owner failure (OD-03, OD-04). A triage miss
+  counts as a missed critical exception in Comparison 2 (AC-075) and
+  should be treated as a guardrail breach that pauses the capability
+  (RULE-024).
+* Handoff: the Retrofit Programme Manager and the Retrofit Coordinator
+  for the risk path (OD-33); named data owners for register accuracy
+  (RULE-015); Legal for Building Safety Act accountable-person duties.
 
 #### Scenario Verdict
 
-Bounded AI inside workflow. Triage runs at recommend level, and the
-coordinator's positive acknowledgement of higher-risk building and
-hazard checks is required whether the triage flagged them or not.
+Bounded AI inside workflow. Triage runs at recommend level for sourced
+facts, flags and site questions. Risk-path proposals stay shadow-only
+until blind shadow evidence and a RULE-020 release decision support
+showing them. Higher-risk building status and open hazard cases come
+from deterministic register lookups, and the coordinator's positive
+acknowledgement of those checks is required whether the triage flagged
+them or not.
 
 ### Aggregate Verdict for Assessment
 
 Bounded AI inside workflow across all three scenarios, at recommend or
-pre-fill level. Combined, the scenarios could plausibly meet the
-addendum's 15% to 25% assessment-to-ready-to-install cycle-time target,
-but none of them lifts the PAS 2035 sign-off model, and each of them
+pre-fill level. Combined, the scenarios could plausibly contribute to
+the addendum's target of at least a 20% cut in assessment-to-ready-to-
+install time, which counts only when Comparison 1 and Comparison 2 show
+it. None of them lifts the PAS 2035 sign-off model, and each of them
 must be delivered without deepening supplier-market or Article 9
 exposure.
 
@@ -697,8 +822,9 @@ exposure.
 
 * Stop if the AI records a site observation that no photo, sensor or note
   supports
-* Stop if a hazard signal is generated but no case, timestamp or hold is
-  created
+* Stop if a hazard signal is not triaged by a human within the limit
+  Repairs has approved, or a referred hazard lacks a case, awareness
+  timestamp or hold
 * Stop if the pre-fill or evidence assessment removes an assessor from
   the pathway rather than reallocating their time
 * Stop if the review of AI drafts takes as long as the manual pre-visit
@@ -713,9 +839,10 @@ exposure.
 * Stop if pre-visit AI triage output is adopted as the assessment path
   without the coordinator positively acknowledging HRB, damp-and-mould
   and vulnerability signals
-* Stop if triage adoption rises without an audited record of triage
-  accuracy against subsequent on-site findings, per archetype and per
-  tenure
+* Stop if any AI-proposed risk path is shown to coordinators before
+  blind shadow evidence and a RULE-020 release decision, or if triage
+  adoption rises without an audited record of triage accuracy against
+  subsequent on-site findings, per archetype and per tenure
 
 ## Grant and Funding Agent
 
@@ -751,29 +878,42 @@ invoice arrived structured and reconciled to a geotagged evidence pack,
 what is the highest autonomy level the ledger and drafting step could
 run at before Finance loses audit control?
 
-* Sector-informed hypothesis: draft only, with Finance signing every
-  claim. Structured invoices raise claim quality and reduce Finance's
-  review time, but the finance authority acts (certify, submit, accept
-  receipt) are personal responsibilities under the delegated authority
-  matrix and, where applicable, funder terms. The addendum's stop
-  criterion for the Grant and Funding module (Finance's net review time
-  must fall by at least 25%) becomes more testable with structured
-  invoices, not more permissive. There is also a Construction Act payment
-  notice question if the app becomes the interpreted "application for
-  payment" channel; that needs Legal.
+* Sector-informed hypothesis: still draft only. The agent may match
+  invoice lines to accepted evidence and assemble draft packs; Finance
+  validates, approves, certifies, submits and records receipts (BRD
+  RULE-010; CON-006, a case-study fact). With structured invoices most
+  matching becomes simple rule-based work, so Comparison 2 must show the
+  agent beats the ledger-only workflow once Finance review minutes are
+  counted (AC-075, AC-077); if not, keep it rule-based. Every figure
+  records its source, reviewer and decision (FR-044, FR-024). Finance
+  judges cashable savings separately from released staff time (AC-062)
+  and must confirm OD-34 before anything scales. The Construction Act
+  payment-notice question stays open.
+* Handoff: Legal for Construction Act payment notices and funder terms;
+  the Head of Procurement and Contract Management for installer invoice
+  obligations; the Data and Performance Lead for the Comparison 2
+  protocol; the Sponsor and the Executive Director of Assets for OD-34
+  confirmation.
 
 `Head of Procurement and Contract Management` was asked: could the
 requirement for a structured, geotagged evidence pack be introduced
 through PAS 2035 contracts and framework mini-competitions without
 excluding small installers who are commonly used?
 
-* Sector-informed hypothesis: yes as a contractual expectation, subject
-  to a transition period, a supplied evidence template and an assisted
-  route for installers without smartphone workflows. Enforcing it from
-  day one would probably shrink the supplier pool. Procurement Act 2023
-  route selection and the risk that the app or its data terms count as a
-  material contract modification for existing framework calls need Legal
-  review before rollout.
+* Sector-informed hypothesis: yes, but as a per-measure evidence
+  schedule that works through any channel, not as an app. BRD FR-022
+  already requires the data schedule to be deliverable by email or
+  spreadsheet as well as an interface, and the agent can turn installer
+  emails, documents and photos into sourced values, so small installers
+  are not excluded by format. Geotags are useful provenance, not a pass
+  condition. For live pilot contracts, first confirm which evidence
+  duties already exist and whether adding more needs a variation (OD-37,
+  OD-30). New duties start at let or renewal, with a template and
+  transition period. Finance and Legal own the effects on invoicing and
+  Construction Act payment notices (RULE-010).
+* Handoff: the Head of Finance, Capital and Grants for the ledger,
+  claims and payment notices; Legal for the Procurement Act 2023 and the
+  Construction Act.
 
 #### Scenario Verdict
 
@@ -812,13 +952,21 @@ single automated pack cannot be reused verbatim across funders.
 would you accept the module writing to directly on your credentials,
 and where must a human always paste and press "submit"?
 
-* Sector-informed hypothesis: writes should be limited to draft or
-  save-as-draft calls even when APIs allow submission. The named finance
-  officer retains the physical act of submission, both to preserve the
-  audit trail and to match funder terms of use that name a responsible
-  officer. Read integrations (lodgement identifiers, certificate
-  statuses, receipt statuses) are lower risk and give most of the
-  reconciliation benefit.
+* Sector-informed hypothesis: no portal writes on a named officer's
+  personal login, because that would blur who acted and break the output
+  record (BRD FR-044) and traceable submission (FR-040). The main gain
+  is read-only integration for lodgement, certificate and receipt
+  status, with any mismatch raised to a named owner (RULE-015). A
+  save-as-draft write is acceptable only through a separate system
+  account with minimum access rights, where funder terms allow, and it
+  is not a submission. The named Finance officer reviews the pack and
+  presses submit personally (RULE-010; CON-006, a case-study fact). A
+  funder-side receipt status counts as cash only once matched to the
+  bank record (FR-023, FR-024).
+* Handoff: Legal for funder portal terms and named-officer requirements;
+  the digital and information security owner for the system account and
+  access control; the Data and Performance Lead for TrustMark and MCS
+  identifier quality.
 
 `Data and Performance Lead` was asked: if TrustMark and MCS
 identifiers become the reconciliation key, what data-quality and change
@@ -841,10 +989,19 @@ trusted?
 installers to keep TrustMark and MCS records synchronised on a defined
 cadence constitute a change to existing PAS 2035 contracts?
 
-* Sector-informed hypothesis: potentially a material change if enforced
-  with new deductions or holdbacks, so it should be introduced through
-  new contracts and mini-competitions rather than retro-fitted. Legal
-  review under the Procurement Act 2023 is needed.
+* Sector-informed hypothesis: a required sync cadence backed by new
+  deductions or holdbacks is still potentially a material change and
+  needs Legal review where the Procurement Act 2023 applies, but the
+  reframe reduces the need for it. Proper North Homes can read TrustMark
+  and MCS status itself and let the agent reconcile it against its own
+  records; a mismatch opens an exception for a named owner and never an
+  automatic installer hold (BRD RULE-015, NFR-005). The lodgement duties
+  already in live pilot contracts are an unknown company detail to
+  confirm under OD-37. Any cadence or remedy should come in at let or
+  renewal through the FR-022 data schedule.
+* Handoff: the Head of Finance, Capital and Grants for claim holds; the
+  Data and Performance Lead for identifier mapping; Legal for
+  modification rules.
 
 #### Scenario Verdict
 
@@ -895,11 +1052,22 @@ change categories must trigger a mandatory human review regardless of
 model confidence (for example HRB scope, Awaab's Law scope, Decent
 Homes Standard changes)?
 
-* Sector-informed hypothesis: any change touching Building Safety Act
-  in-scope buildings, Awaab's Law hazard scope or duties, Decent Homes
-  Standard revisions, or PAS 2035 versioning should always route to a
-  named human reviewer. Model confidence must not gate these; they are
-  legal-review categories.
+* Sector-informed hypothesis: no change may be cleared on model
+  confidence, and every detected change already goes through human-owned
+  assessment (BRD RULE-021). The categories below therefore decide who
+  must review and how urgently: Building Safety Act and higher-risk
+  building scope and fire safety duties; Awaab's Law scope, timescales
+  and commencement (Phase 1 is in force, a case-study fact; the Phase 2
+  instrument must be verified before activation, CON-001); Decent Homes
+  Standard and Safety and Quality Standard changes; PAS 2035 editions
+  (FR-010); and automated-decision rules, including any Article 22D
+  regulations. An agent may draft the impact mapping, but detected
+  changes cannot overwrite live rules (FR-039), and each approval
+  records owner, effective date and rollback (AC-068).
+* Handoff: Legal, Compliance and the Data Protection Officer for
+  interpretation; competent PAS 2035 roles for standards changes;
+  Finance for scheme rules; interpretation authority is still open
+  (OD-24).
 
 `Data and Performance Lead` was asked: how do you version the rule
 pack so that a claim submitted last month is judged against the rules
@@ -954,8 +1122,10 @@ rises.
 
 #### Augmentation
 
-Contractors publish committed capacity through an installer app or an
-existing scheduling system with an integration. Residents use a Proper
+Contractors offer capacity through the channel they already use (email,
+spreadsheet, an installer app or an existing scheduling system), the
+agent turns it into sourced values, and a named contract manager accepts
+it as committed capacity (BRD RULE-007, FR-022). Residents use a Proper
 Warm app to view proposed slots, record measure-specific consent,
 withdraw consent, register accessibility adjustments, and see who is
 coming. Installers on arrival open the appointment, capture a geotagged
@@ -989,51 +1159,70 @@ consent flow lived in a Proper Warm app, what would you require in the
 design so digital consent does not become the default expectation and
 excluded households do not lose their offer?
 
-* Sector-informed hypothesis: every measure-specific consent has an
-  equally weighted paper, phone and in-person route with the same
-  wording, the same right to withdraw and the same audit trail; the app
-  never marks a resident as harder to serve for using a non-digital
-  route; adjustments recorded once flow to every future contact; and no
-  contractor visit is scheduled until an explicit affirmative consent
-  exists in the record, from any channel. Silence, implied consent from
-  access for a survey and click-through terms of service are not
-  consent (BRD FR-011 and FR-013, legacy aliases BR-011 and BR-013).
+* Sector-informed hypothesis: an app is one channel into one decision
+  record that works the same whatever the channel. Paper, phone,
+  in-person and advocate routes use the same wording, withdrawal right
+  and audit trail (BRD FR-011, FR-013, NFR-009), and silence, survey
+  access or click-through never counts as agreement (AC-015). The agent
+  may draft accessible content and suggest options, but never decides
+  consent, and a named person approves any AI draft before it is sent
+  (RULE-018, AC-079). Choosing a channel never lowers a household's
+  priority, and consent rates are not a target (NFR-008). Slot booking
+  at L3 for residents who opt in waits for OD-32, and direct resident
+  research must test the journeys (OD-07, OD-25).
+* Handoff: the Data Protection Officer for the privacy notice and
+  separate personal-data basis (RULE-022); the digital service owner for
+  the app build; the Neighbourhood Housing Officer for the in-person
+  route; the Retrofit Programme Manager with neighbourhood housing for
+  OD-32.
 
 `Neighbourhood Housing Officer` was asked: does a geotagged proof-of-
 visit and fixed outcome-code list remove the risk that a missed visit
 is silently reclassified as refusal, or are there frontline situations
 that would still fall between the codes?
 
-* Sector-informed hypothesis: proof-of-visit removes the "was the visit
-  even attempted" question, which is the source of the worst
-  misclassifications. Between-code cases still exist: household in
-  crisis, safeguarding concern discovered on the doorstep, contractor
-  arriving without notice, wrong address, subcontractor sent when the
-  named installer expected, or resident asking to speak to the housing
-  officer first. The design must let the installer log "handoff to
-  officer" as an outcome code and must not let the AI reclassify a
-  handoff as a refusal.
+* Sector-informed hypothesis: proof-of-visit settles whether a visit was
+  attempted, but the agent that converts contractor notes into outcome
+  codes is a new place where a visit could be wrongly reclassified.
+  Crisis, a doorstep safeguarding concern, unannounced arrival, wrong
+  address, an unexpected subcontractor and "resident wants their officer
+  first" still fall between codes. The FR-022 code list needs a "handoff
+  to officer" code, and ambiguous or unclassifiable notes go to a named
+  human, never to refusal (BRD RULE-006, FR-016, FR-018). A safeguarding
+  concern holds non-urgent work (FR-014) and goes to the safeguarding
+  route. Comparison 2 shadow tests should include seeded cases like
+  these and count officer time spent correcting codes (AC-075, AC-077).
+* Handoff: the Head of Procurement and Contract Management for the
+  FR-022 outcome-code list; the safeguarding lead for doorstep concerns;
+  the Data Protection Officer for location data; the Data and
+  Performance Lead for seeded Comparison 2 tests.
 
 `Head of Procurement and Contract Management` was asked: which
 contractors could commit capacity through the app or an API, and what
 contract change would that require?
 
-* Sector-informed hypothesis: large national and regional installers
-  with existing job-management platforms can integrate through an API,
-  probably at the price of a paid connector. Small local installers can
-  publish committed capacity through a lightweight app with SMS or
-  email fallback. Both changes are contractable through the standard
-  work order and appointment outcome codes in the shared foundation and
-  through a KPI-linked payment schedule. Procurement Act 2023
-  modification questions on existing framework calls remain and need
-  Legal.
+* Sector-informed hypothesis: in the pilot, no contractor needs to
+  commit capacity through an app or API. Suppliers offer capacity
+  through the channel they already use, the agent converts their emails
+  and notes into sourced values and outcome codes, and a named contract
+  manager accepts the commitment before any slot is suggested (BRD
+  RULE-007, AC-026, RULE-008, FR-019). Larger installers may integrate
+  later if it costs less, but FR-022 keeps integration optional and
+  assumes no scheduling API. The only pilot contract change is
+  confirming data duties in live contracts (OD-37, OD-30). A KPI-linked
+  payment schedule would be a variation, so it waits for let or renewal.
+  Suppliers working in both localities are logged (AC-074).
+* Handoff: Legal for modification checks; the Head of Finance, Capital
+  and Grants for any payment schedule; the Data and Performance Lead for
+  logging shared suppliers.
 
 #### Scenario Verdict
 
 The augmentation strengthens the deterministic decision record and the
 no-access handling. It narrows the useful scope of AI to drafting,
-translation, routing and slot suggestion inside committed capacity. It
-does not create an end-to-end agent.
+translation, routing, converting contractor emails and notes into
+outcome codes, and slot suggestion inside accepted committed capacity.
+It does not create an end-to-end agent.
 
 ### What-If 2: Multi-Supplier Capacity Mesh
 
@@ -1065,24 +1254,40 @@ contractual model supports several installers publishing capacity to a
 shared register without triggering Procurement Act 2023 modification
 issues?
 
-* Sector-informed hypothesis: a dynamic purchasing system or a
-  framework with a defined mini-competition rule set (for example
-  measure and archetype call-offs), designed from the outset with the
-  capacity-mesh model in mind. Retrofitting this to existing framework
-  calls is high risk. Terms of use and data terms for the register must
-  be part of the agreement, not an afterthought.
+* Sector-informed hypothesis: a new framework with published call-off
+  rules, or a dynamic market where the Procurement Act 2023 applies;
+  Legal must confirm the route, including whether new dynamic purchasing
+  systems can still be set up. The arrangement should be designed from
+  the start to cover offered capacity, register and data terms, and how
+  work is allocated. It is not a pilot option: the pilot runs on
+  existing contracts, moving work between suppliers needs a modification
+  check and Legal review (BRD RULE-008, AC-030), and moving work between
+  localities would contaminate Comparison 1 (AC-074). Allocation should
+  follow quality-adjusted accepted outcomes (FR-021), and a loss of
+  capacity follows FR-020.
+* Handoff: Legal for route selection and modification; the Head of
+  Resident Engagement and Insight for re-agreement when the installer
+  changes.
 
 `Head of Resident Engagement and Insight` was asked: when the mesh
 proposes reassigning a household from installer A to installer B, what
 must the resident be told and consulted on?
 
-* Sector-informed hypothesis: any change of named installer requires
-  positive re-consent from the resident, with a clear explanation of
-  why the change is proposed and their right to keep the original slot
-  even if that means waiting longer. Silent reassignment for
-  utilisation reasons is not acceptable and would likely breach both
-  the consumer standards and the deterministic decision record's
-  spirit.
+* Sector-informed hypothesis: moving a household to another installer is
+  a contract-manager act, never an agent act, and it needs a
+  modification check and, where required, Legal review (BRD RULE-008,
+  AC-030). A change of installer is a material change that reopens the
+  resident's appointment agreement (FR-008, FR-011). Before any visit,
+  the resident gets an explanation approved by a named person covering
+  why the change is proposed, who is coming, what changes for scope,
+  timing and disruption, and whether adjustments carry over, and then
+  agrees or declines through any channel (FR-012, FR-013, AC-079).
+  Declining or waiting never lowers priority (NFR-008). If lost capacity
+  means the original slot no longer exists, the resident is told plainly
+  (FR-020).
+* Handoff: the Head of Procurement and Contract Management and named
+  contract managers (RULE-008); Legal for the modification check; the
+  Retrofit Programme Manager to confirm appointments.
 
 `Head of Finance, Capital and Grants` was asked: what
 conflict-of-interest controls are required so mesh optimisation does
@@ -1118,8 +1323,10 @@ A concierge module handles resident communication across WhatsApp, SMS,
 voice call, email, letter and doorstep visits, translating in and out
 of the resident's preferred language, summarising into the deterministic
 record, and offering the same consent options with identical wording on
-every channel. AI drafts responses; humans send them for sensitive
-categories.
+every channel. AI drafts responses, and in the pilot a named person
+approves every AI-drafted message before it is sent (BRD AC-079).
+Always-human categories route to staffed specialist queues without an
+AI-drafted reply.
 
 #### Would It Remove the Original Blockers?
 
@@ -1136,12 +1343,22 @@ responses than residents whose interactions rely on frontline officers.
 resident contact must always route to a human before response, even if
 the concierge could draft accurately?
 
-* Sector-informed hypothesis: complaints, safeguarding, hazard reports,
-  Awaab's Law-in-scope reports, requests to withdraw consent, requests
-  for adjustments under the Equality Act 2010, tenancy-affecting
-  matters, and anything mentioning suicide, self-harm, domestic abuse
-  or a child at risk. AI may prepare a summary and a suggested reply
-  but must not send.
+* Sector-informed hypothesis: in the pilot, a named person approves
+  every AI-drafted resident message before it is sent, so there are no
+  live AI voice or chat replies (BRD RULE-018, AC-057, AC-079). The
+  always-human list therefore controls routing, not sending. Complaints,
+  hazard, damp or mould reports, safeguarding concerns, any mention of
+  suicide, self-harm, domestic abuse or a child at risk, consent
+  withdrawal or dispute, adjustment requests, tenancy-affecting matters,
+  requests for a human explanation or review, data-rights requests and
+  unclassifiable messages go straight to a staffed specialist queue with
+  only an internal summary (FR-003, FR-014, FR-016, RULE-005). The agent
+  drafts no substantive reply in these categories, and a misrouted
+  safeguarding or hazard message pauses routing (RULE-024).
+* Handoff: the Neighbourhood Housing Officer and housing and repairs
+  leads for staffed queues and out-of-hours routes (OD-09); the hazard
+  and repairs service (RULE-003); the safeguarding lead; the complaints
+  owner; the Data Protection Officer for data-rights requests.
 
 `Data and Performance Lead` was asked: how do you monitor and
 correct for a fairness gap between AI-assisted channels and human-only
@@ -1164,17 +1381,29 @@ channels?
 displacing the doorstep visit as a form of contact, and what would you
 protect?
 
-* Sector-informed hypothesis: yes if left unmanaged. Doorstep contact
-  is the only route that finds hidden hazards, hoarding, safeguarding
-  concerns and unreported disrepair. The concierge must not be a metric
-  against which "avoided visits" is scored positively; a proportion of
-  visits must remain scheduled as a matter of policy.
+* Sector-informed hypothesis: the risk is sharper now, because existing
+  housing officers absorb the pilot, so fewer doorstep visits could look
+  like a saving. The resident service capability is limited to drafting
+  accessible content, routing free text into fixed categories and
+  suggesting options, with a named human approving before sending (BRD
+  RULE-022, AC-079). Four things need protecting: doorstep visits as a
+  real non-digital route (FR-013, NFR-009); safeguarding and hazard
+  messages always routed to people; no "avoided visits" benefit, since
+  the resident service measures are repeat contacts, adjustments met and
+  first appointments kept; and effort counting that includes work
+  shifted onto officers (AC-077). How many visits stay scheduled is for
+  the service owners.
+* Handoff: the Head of Resident Engagement and Insight, with
+  neighbourhood housing management, for visit policy and channel design;
+  the Data and Performance Lead for effort measurement (AC-077); the
+  safeguarding lead for routing categories.
 
 #### Scenario Verdict
 
-Bounded AI translation, drafting and summarisation with human send on
-sensitive categories. Real accessibility value if fairness monitoring
-is in place. Autonomy stays low.
+Bounded AI translation, drafting and summarisation, with named human
+approval of every send and specialist-queue routing for always-human
+categories. Real accessibility value if fairness monitoring is in place.
+Autonomy stays low.
 
 ### Aggregate Verdict for Contractor and Resident Coordination
 
@@ -1199,9 +1428,12 @@ utilisation-versus-choice conflict of interest.
 * Stop if the mesh's objective function is not published, reviewed by
   Audit and Risk, or treats quality and complaint history as weights
   that utilisation can offset rather than as hard eligibility limits
-* Stop if the concierge sends (rather than drafts) in any category on
-  the always-route-to-human list
+* Stop if any AI-drafted resident message is sent without named human
+  approval, or an always-human category is routed anywhere other than a
+  staffed specialist queue
 * Stop if "avoided visits" becomes a positive concierge metric
+* Stop if using an app or API becomes a condition of work allocation,
+  or is imposed as an unvaried duty in existing pilot contracts
 
 ## Quality Verification Agent
 
@@ -1231,7 +1463,7 @@ a resident report; sensors have their own validity problems; Awaab's
 Law Phase 1 guidance says a sensor risk notification does not by itself
 make the landlord aware
 ([local snapshot](../../regulatory/social-housing-regulation/awaabs-law-phase-1-guidance-2025.md),
-section 3 and section 3.5).
+section 3).
 
 The augmentation reduces the "no flags means quality" risk in one
 specific way. If the pack is complete against the per-measure evidence
@@ -1253,39 +1485,63 @@ flags safely move from L4 (autonomous flags into a queue) to a slightly
 higher autonomy, for example holding payment automatically until a
 human closes the flag?
 
-* Sector-informed hypothesis: no. Holding payment is a
-  contract-manager act with commercial consequences and, potentially,
-  Construction Act payment-notice implications. Even where the flag
-  seems safety-critical, the AI should raise the flag, the human
-  should decide the hold. The gap between "raise" and "act" is what
-  keeps the quality authority intact. A better use of the richer input
-  is to make the flag queue triaged (safety, evidence, invoice
-  mismatch) so that competent inspectors see the safety flags first.
+* Sector-informed hypothesis: still no. Holding payment is a
+  contract-manager and Finance act that may have Construction Act
+  payment-notice implications (BRD OD-30, OD-13), and FR-036 tests block
+  any AI payment action. The agent raises gaps but never clears or
+  accepts (RULE-018), and a pack with no flags is not evidence of
+  acceptance (RULE-014). The deterministic route is safer: once a
+  competent person records a material defect, the workflow blocks the
+  related payment and closure recommendations (FR-030). Flags should be
+  triaged so safety flags reach competent inspectors first. The blinded
+  OD-31 shadow test decides flag autonomy and rejects L4 if any
+  safety-critical seeded defect is missed.
+* Handoff: the Head of Procurement and Contract Management for contract
+  managers and payment notices; Finance for payment and claim holds
+  (OD-13); Legal for the Construction Act (OD-30); the competent quality
+  authority for acceptance.
 
 `Head of Procurement and Contract Management` was asked: could per-
 measure geotagged photo packs and structured commissioning data be
 contracted for through PAS 2035 and standard work orders, and what
 would that mean for payment gates?
 
-* Sector-informed hypothesis: yes, as a contractual condition of a
-  payment gate rather than as an AI-driven withhold. The evidence
-  schedule already exists in the shared foundation; the contract makes
-  the pack a condition of the milestone claim. Payment is released by
-  the named quality authority once the pack is accepted, whether that
-  acceptance is preceded by AI checks or not. The commercial change is
-  in the contract, not in the AI.
+* Sector-informed hypothesis: yes, an accepted per-measure evidence pack
+  can be a contract condition for a milestone valuation, but never
+  grounds for AI to withhold payment. The quality authority accepts the
+  evidence (BRD FR-028), the contract manager values the work under the
+  contract, and Finance pays; this corrects the earlier line that the
+  quality authority releases payment. The contractor cannot approve its
+  own work (RULE-004), a pack with no flags does not count toward
+  payment (RULE-014), and material defects block payment recommendations
+  (FR-030). Whether live pilot contracts have evidence-gated milestones
+  is an unknown company detail to confirm under OD-37 and OD-30. The
+  gate belongs in new or renewed contracts through the FR-022 schedule.
+* Handoff: the Head of Finance, Capital and Grants for payment; the
+  Retrofit Programme Manager and the Head of Building Safety and
+  Compliance for acceptance criteria; Legal for the Construction Act.
 
 `Data and Performance Lead` was asked: does structured commissioning
 data plus a sensor validity register produce enough clean device-months
 for the flagging model to work at recommend level?
 
-* Sector-informed hypothesis: probably not in the first 12 months.
-  Sensor coverage, calibration, heating-season alignment and consent
-  variability mean the recommend-level flagging model needs a
-  deliberate reference cohort with baseline readings and an independent
-  inspection sample. Without that, false-flag and missed-flag rates
-  cannot be reported honestly. This supports the Data Lead's earlier
-  divergence (recommend, not L4) rather than resolving it.
+* Sector-informed hypothesis: still probably not. A 6 to 9 month pilot
+  with about 50 proposed accepted handovers is unlikely to produce
+  enough valid heating-season device-months. The question is also partly
+  displaced: the quality capability stays at raise-only flags on
+  documents and photos (BRD RULE-018), and recommend-level evidence
+  reading would be settled under OD-31 by a blinded three-arm shadow
+  test on past packs and seeded defects, not by sensor volume. Sensor
+  data informs decisions only after it passes validity rules, and
+  invalid or missing data shows "insufficient", never "normal"
+  (RULE-014). Seasonal outcomes are reported as pending (FR-032). Any
+  sensor flagging needs its own Comparison 2 test with an independent
+  inspection sample (RULE-019).
+* Handoff: the Retrofit Programme Manager and the Head of Building
+  Safety and Compliance as OD-31 co-owners, with the competent quality
+  authority keeping acceptance; the Data Protection Officer for the
+  sensor lawful basis and DPIA; the Sponsor for any authority change
+  (RULE-020).
 
 #### Scenario Verdict
 
@@ -1321,33 +1577,62 @@ imaging can inadvertently capture people or interiors.
 must be met for independent drone or robotic imagery to be admissible
 as evidence for a defect notice or refusal to accept?
 
-* Sector-informed hypothesis: a documented scope, a competent
-  inspector reviewing the imagery, a chain of custody for the raw
-  files, and a resident-facing statement of what was captured and why.
-  Imagery is evidence for a human decision, not itself an acceptance
-  or rejection.
+* Sector-informed hypothesis: imagery is evidence for a competent
+  person's decision, never itself an acceptance, a rejection or a defect
+  notice. The minimum conditions are a documented inspection scope; a
+  competent inspector who reviews the raw imagery and records the
+  decision (BRD RULE-013, FR-036); chain of custody with capture
+  provenance, linked into the measure's evidence chain (FR-028, FR-044)
+  and exportable without the supplier (NFR-006); and a resident-facing
+  statement of what was captured and why, with a lawful basis and
+  minimisation for incidental images of people or interiors (RULE-022,
+  NFR-003). Any AI analysis of the imagery is only a raise-only flag
+  (RULE-018).
+* Handoff: Legal for dispute admissibility and airspace; the Data
+  Protection Officer for the lawful basis; the Head of Resident
+  Engagement and Insight for notice; Procurement for the independent
+  supplier.
 
 `Head of Resident Engagement and Insight` was asked: what consent and
 notification model is required before drone or robotic inspection over
 tenanted homes?
 
-* Sector-informed hypothesis: measure-specific written notice with the
-  purpose, scope, retention period and right to object; equally
-  weighted non-digital consent routes; and a clear commitment that
-  refusal does not affect a resident's retrofit offer or their
-  Awaab's Law protections. Blocks of flats need block-level and
-  household-level consultation.
+* Sector-informed hypothesis: drone or robotic inspection is not an
+  initial pilot capability; it needs a later authority change and its
+  own Comparison 2 test (BRD RULE-020, RULE-019). The resident's
+  agreement to a flyover or to access is recorded separately from the
+  data-protection lawful basis, which the Data Protection Officer
+  decides and which may not be consent (FR-011, RULE-022). The notice
+  comes in accessible formats and through non-digital routes, states the
+  purpose, scope, retention and how to object, and reaches neighbours
+  and other occupants in view. Blocks need building-level and
+  household-level engagement by tenure route (FR-015). Objecting never
+  affects the offer, priority or hazard protections, and missing imagery
+  is neither assurance nor fault (NFR-008, RULE-014).
+* Handoff: the Data Protection Officer and Legal for the lawful basis,
+  DPIA, airspace and leaseholder consultation; the Head of Building
+  Safety and Compliance for competent review; the Head of Procurement
+  and Contract Management for the independent inspector.
 
 `Head of Procurement and Contract Management` was asked: does an
 independent inspection tier need to be a separately procured supplier
 from the installers, and how is that structured?
 
-* Sector-informed hypothesis: yes, separately procured under an
-  independent scope with an explicit conflict-of-interest control that
-  the inspector does not carry installer work in the same programme.
-  Procurement Act 2023 route selection needs Legal review. The
-  budget line is small relative to remediation cost avoided but
-  must be visible in the business case.
+* Sector-informed hypothesis: the inspection must be independent, but it
+  does not always need a separate procurement. First test whether
+  existing in-house or contracted inspectors, independent of the
+  installer on the same homes, can cover the sample (BRD RULE-013).
+  Procure a separate specialist only for drone or robotic work, later;
+  that supplier must not carry installer work in the programme, and
+  Legal should review the route. Where the sample is used to count
+  missed critical exceptions (AC-075) or in the OD-31 tests, it is
+  applied the same way in both localities (AC-074). The cost stays
+  visible in the business case (FR-025). The current inspection model is
+  an unknown company detail.
+* Handoff: the Head of Building Safety and Compliance and the Retrofit
+  Programme Manager for competence and scope; the Head of Resident
+  Engagement and Insight for notice; the Head of Finance, Capital and
+  Grants for budget; Legal for the route.
 
 #### Scenario Verdict
 
@@ -1383,12 +1668,20 @@ whose customers are more likely to report.
 sector-defect-feed comparisons be used in supplier reviews, and if
 so under what governance?
 
-* Sector-informed hypothesis: yes, as one input into supplier
-  performance reviews, never as a sole basis for exclusion or
-  deduction. The methodology must be published to suppliers, they
-  must have a right to challenge, and the review record must show
-  where the internal Proper North Homes data was decisive versus where
-  the sector comparison was decisive.
+* Sector-informed hypothesis: yes, but only as a raise-only input to BRD
+  FR-021 supplier reviews, never the sole basis for exclusion,
+  deductions, a smaller tranche or a Procurement Act 2023 performance
+  notice where the Act applies. The method is published, suppliers can
+  challenge the data, and the review records whether Proper North Homes'
+  confirmed defects or the sector comparison was decisive. New in the
+  reframe: agents find more gaps in the pilot locality, so a supplier
+  working there may look worse than in the matched locality. Comparisons
+  adjust for checking intensity and rely on independently verified
+  defects (RULE-013, RULE-014). Contract remedies stay with the contract
+  manager (RULE-008).
+* Handoff: the Data and Performance Lead and the Data Protection Officer
+  for feed governance and the adjustment method; Legal for remedies and
+  performance notices.
 
 `Data and Performance Lead` was asked: what data-governance
 obligations attach to importing sector defect feeds?
@@ -1411,11 +1704,23 @@ obligations attach to importing sector defect feeds?
 benchmarking to a sector baseline drives the programme towards
 "average" quality rather than better?
 
-* Sector-informed hypothesis: yes if the benchmark is used to signal
-  "acceptable when not worse than sector". The correct use is to
-  identify divergence for investigation, not to define an acceptable
-  ceiling. Proper North Homes' own quality target sits above the
-  sector baseline by design.
+* Sector-informed hypothesis: yes, if a sector baseline becomes an
+  acceptance floor. Sector feeds should only flag divergence for human
+  investigation: a flag cannot accept work (BRD RULE-018), and supplier
+  allocation reflects Proper North Homes' own quality-adjusted accepted
+  outcomes (FR-021). The quality standard should rest on absolute
+  tolerances and a measured company baseline, such as the proposed zero
+  unresolved safety-critical defects at handover, right-first-time
+  acceptance by severity and competent review of systemic defects
+  (FR-030). The earlier claim that the company targets a level above the
+  sector is not evidenced. Severity rules await OD-13 and Board
+  tolerances come under RULE-012. Feed benchmarking is not an initial
+  pilot capability and needs its own Comparison 2 test (RULE-019).
+* Handoff: the Retrofit Programme Manager and the competent quality
+  authority for acceptance (OD-13); the Head of Procurement and Contract
+  Management for supplier reviews; the Data Protection Officer and Legal
+  for feed data terms; the Data and Performance Lead for Comparison 2
+  design; the Board for tolerances (RULE-012).
 
 #### Scenario Verdict
 
@@ -1472,12 +1777,22 @@ supervisor role move from workflow engine to an AI orchestrator, or
 does the accountability model still require named owners at every
 gate?
 
-* Sector-informed hypothesis: named owners are required at every gate
-  regardless of how rich the events are. The regulator, funder and
-  auditor need to see who decided what, when and on what evidence. AI
-  orchestration would create a supervision layer that no one signs.
-  The right pattern is a workflow engine with an AI summarisation
-  module for board and executive narratives.
+* Sector-informed hypothesis: named owners are still required at every
+  gate, however rich the events, and generated text cannot supply an
+  approval (BRD FR-036). Supervision is a deterministic workflow engine,
+  with reports built from controlled records (FR-033). The current
+  proposal has no programme supervision agent in the initial pilot and
+  excludes executive reporting from agent capabilities, so the earlier
+  recommendation of an AI summarisation module for Board and executive
+  narratives no longer fits: those narratives stay written by
+  executives. Any later exception summarisation needs its own RULE-019
+  test, a RULE-020 release decision, output provenance (FR-044) and
+  reporting in the Board AI assurance report (FR-043). OD-34 should not
+  bring in a supervision agent by default.
+* Handoff: the Board and governance lead for what reaches the Board; the
+  Sponsor and the Head of Finance, Capital and Grants for OD-34
+  co-confirmation; the Retrofit Programme Manager for workflow
+  ownership; the Data and Performance Lead for any later RULE-019 test.
 
 Scenario verdict: workflow engine, unchanged in kind, stronger in
 inputs. Autonomy stays with named owners at every gate.
@@ -1539,12 +1854,18 @@ between successive board packs?
 
 Scenario verdict: bounded AI summarisation and exception detection.
 Genuinely useful, autonomy stays at draft. Only proceed with
-independent audit reconciliation.
+independent audit reconciliation. This is later work outside the
+initial pilot, which has no supervision agent and excludes executive
+reporting from agent capabilities, so it needs its own RULE-019 test
+and a RULE-020 release decision.
 
 #### Aggregate Verdict for Programme Supervisor
 
-The supervisor is a workflow engine plus a bounded AI summarisation
-module. Neither what-if creates an autonomous supervisor.
+The supervisor is a workflow engine, with reports built from controlled
+records (BRD FR-033). The initial pilot has no supervision agent, and
+Board and executive narratives stay written by executives. A bounded AI
+summarisation and exception-detection module is later, separately tested
+work. Neither what-if creates an autonomous supervisor.
 
 #### Stop Criteria Across All Supervisor Scenarios
 
@@ -1583,27 +1904,41 @@ always-on evidence channel accelerate compliance with Phase 1, or
 does it increase the volume of clocks the association is expected to
 meet?
 
-* Sector-informed hypothesis: both. Awareness moves earlier, which
-  starts more clocks, which raises the risk of missed statutory
-  deadlines if triage and inspection capacity does not scale. The
-  evidence in the same channel makes it easier to prove the clock
-  was met when it was. The net effect depends on Proper North Homes'
-  current damp and mould volumes and inspection capacity, which are
-  Unknown company details.
+* Sector-informed hypothesis: both, and the reframe sharpens the
+  capacity risk, because existing repairs and hazard teams absorb the
+  extra clocks without ring-fenced capacity. An always-on channel moves
+  awareness earlier and makes timely response easier to prove through
+  awareness and referral timestamps that cannot be edited (BRD FR-003).
+  FR-004 disables the scan if hits exceed the triage capacity Repairs
+  has approved; that must fall back to manual review of the channel
+  (NFR-004), never to ignoring content, because resident reports still
+  establish awareness. In Comparison 1, more hazards detected in the
+  agent locality is not a sign of harm; missed or late clocks are. Damp
+  volumes and inspection capacity remain unknown company details
+  (OD-09).
+* Handoff: repairs and hazard service owners for triage capacity
+  (OD-09); the Data and Performance Lead for handling the detection
+  effect in Comparison 1; Legal for awareness rules (OD-29).
 
 `Neighbourhood Housing Officer` was asked: how should a hazard photo
 from a retrofit app become one timed case, given that residents may
 also report the same hazard through the repairs line or a housing
 officer visit?
 
-* Sector-informed hypothesis: one damp intake route with strict
-  deduplication, keyed to the property and to the earliest awareness
-  timestamp of any channel. The retrofit app never opens a second
-  case; it links to the existing one. The retrofit safety hold is
-  set from the case, so the retrofit workflow always sees the hold
-  even if the case moves through the repairs service. Housing
-  officers keep the frontline decision on whether a report needs
-  urgent visit.
+* Sector-informed hypothesis: the current BRD writes this design into
+  requirements. Every retrofit channel records a possible hazard with
+  its source, channel and an uneditable awareness timestamp and refers
+  it to the existing hazard and repairs service (BRD FR-003); retrofit
+  tooling can only create or link a case (RULE-003). The linked retrofit
+  record is held (FR-001), and the hold does not pause the statutory
+  response (FR-002, CON-001). The raise-only scan only feeds human
+  triage (FR-004). Correction to the earlier answer: the hazard and
+  repairs service decides category and urgency, not housing officers,
+  whose job is to escalate and supply context. Duplicate merging and
+  which timestamp counts are open under OD-29.
+* Handoff: repairs and the hazard service, Building Safety and Legal for
+  deduplication, contractor awareness and timestamp correction rules
+  (OD-29).
 
 Scenario verdict: workflow engine plus hazard app. Autonomy stays at
 awareness capture and routing; investigation and decision remain with
@@ -1622,7 +1957,7 @@ route that residents and contractors use. Awaab's Law Phase 1
 guidance is explicit that a sensor risk notification does not by
 itself make the landlord aware
 ([local snapshot](../../regulatory/social-housing-regulation/awaabs-law-phase-1-guidance-2025.md),
-section 3.5), so the module never sets an awareness timestamp on
+section 3), so the module never sets an awareness timestamp on
 its own.
 
 Would it remove the original blockers? It attacks the "silent
@@ -1639,24 +1974,41 @@ report is de-prioritised because "the sensors are quiet".
 attaches to threshold-based hazard flags in an Awaab's Law-in-scope
 setting?
 
-* Sector-informed hypothesis: thresholds are published, versioned
-  and reviewed by a competent inspector, with false-positive and
-  false-negative rates reported. A sensor flag is never sufficient
-  to close a resident-reported case; a resident report is always
-  investigated as such, regardless of sensor readings, per section
-  3.5 of the Phase 1 guidance
-  ([local snapshot](../../regulatory/social-housing-regulation/awaabs-law-phase-1-guidance-2025.md)).
+* Sector-informed hypothesis: Building Safety defines and approves the
+  thresholds (BRD OD-05), informed by competent specialists. Thresholds
+  are published, versioned, evaluated before release and reversible
+  (NFR-007), with false-positive and false-negative rates reported, and
+  threshold changes cannot remove human review of a hit (FR-004).
+  Invalid or missing data shows as "insufficient", never "normal", and a
+  quiet sensor never counts toward closure or contradicts a resident
+  (RULE-014). A resident report is investigated as a report: section 3
+  of the Phase 1 guidance says a sensor risk notification does not by
+  itself make the landlord aware, while a tenant raising an issue does.
+  Deployment needs a DPIA, a lawful basis and a capability register
+  entry (RULE-022, FR-043).
+* Handoff: the Data Protection Officer for the lawful basis and DPIA;
+  the Head of Resident Engagement and Insight for agreement; the Data
+  and Performance Lead for validity rules and error rates; Repairs for
+  triage.
 
 `Head of Resident Engagement and Insight` was asked: what does a
 lawful, non-coercive consent flow look like for ambient sensors?
 
-* Sector-informed hypothesis: measure-specific written consent with
-  a plain-English purpose, retention period, right to withdraw
-  without effect on the tenancy or the retrofit offer, and a
-  documented data-minimisation stance (aggregated trends, not
-  continuous fine-grained data). Consent must be re-affirmable on
-  any change of purpose. Bundling with retrofit consent is not
-  acceptable.
+* Sector-informed hypothesis: sensors are outside the initial pilot's
+  raise-only hazard scan, which covers retrofit notes and messages, so
+  deploying them is a later authority change with its own test (BRD
+  RULE-020, RULE-019). Sensor agreement is a separate, optional record,
+  never bundled with agreement to works (FR-011, AC-072). It covers the
+  purpose in plain language, minimised trend data only, retention, other
+  occupants' interests and withdrawal as easy as agreement, through any
+  channel. Declining never lowers priority or the offer, and a quiet
+  sensor never outweighs a resident report (NFR-008, FR-032, RULE-014).
+  Using the data to measure pilot outcomes needs the OD-36 basis, and a
+  change of purpose needs fresh agreement. The Data Protection Officer
+  decides the lawful basis (RULE-022).
+* Handoff: the Data Protection Officer and Legal for the lawful basis,
+  DPIA and OD-36; the Head of Building Safety and Compliance for
+  threshold governance.
 
 `Data and Performance Lead` was asked: what lawful basis and
 DPIA controls are required?
@@ -1676,8 +2028,10 @@ DPIA controls are required?
 * Handoff: the Data Protection Officer and Legal decide the lawful
   basis and approve the DPIA.
 
-Scenario verdict: bounded raise-only early warning under consent
-and independent threshold governance. Autonomy stays at flag-only,
+Scenario verdict: bounded raise-only early warning under a separate
+sensor agreement and Building Safety threshold governance. Sensors are
+outside the initial pilot's hazard-signal scan, so deployment is a later
+authority change with its own test (BRD RULE-020, RULE-019). Autonomy stays at flag-only,
 and the awareness rules are unchanged.
 
 #### What-If 3: Call Recording Transcription with Hazard-Signal Extraction
@@ -1700,13 +2054,22 @@ sensors if human triage stops trusting the transcript flag.
 notification and consent model attaches to call recording for
 hazard extraction?
 
-* Sector-informed hypothesis: a plain-English notification at the
-  start of every call, an accessible objection route that does not
-  degrade service, and separate lawful bases for recording (contract
-  or legitimate interest) and for AI hazard extraction (a documented
-  legitimate-interest assessment with an explicit balancing test
-  covering vulnerable residents). Bundling into a click-through
-  consent is not acceptable.
+* Sector-informed hypothesis: a transcript scan would fall under the
+  raise-only hazard rule, but call transcription is not in the initial
+  pilot and needs its own gate and test (BRD FR-004, RULE-020). It needs
+  a plain-language notice at the start of every call that names both
+  recording and AI hazard scanning, offered in the caller's language,
+  including through relay or an interpreter, and an objection route that
+  costs the caller nothing: the handler still asks the hazard question
+  and records the answer manually. Awareness runs from the call, not
+  from extraction, and objecting never delays a clock (FR-003,
+  RULE-003). The earlier answer named specific lawful bases; those are
+  for the Data Protection Officer and Legal to decide (CON-003,
+  RULE-022).
+* Handoff: the Data Protection Officer and Legal for the lawful basis,
+  Article 9 condition and retention; the hazard and repairs service
+  owner (RULE-003); the Head of Building Safety and Compliance for
+  awareness evidence.
 
 `Data and Performance Lead` was asked: what are the special
 category data implications, given calls may reveal health, ethnicity
@@ -1732,15 +2095,30 @@ or religious observance?
 `Head of Building Safety and Compliance` was asked: does a
 transcript-derived flag itself start an Awaab's Law clock?
 
-* Sector-informed hypothesis: the awareness timestamp is set at the
-  moment the resident said it on the call, not at the moment the
-  AI extracted it. The extraction speeds up detection but does not
-  change the awareness rule. Statutory clocks must therefore be
-  back-dated to the call time.
+* Sector-informed hypothesis: no. The flag starts nothing; the clock
+  depends on when the landlord was told. If the resident told an
+  employee on the call, the call time is the likely day zero (Phase 1
+  guidance, section 3); for a contractor-run line it depends on the
+  contractor's agency status (BRD OD-29). The extraction only raises a
+  flag for human triage (FR-004), and the triager opens or links the
+  case with the call time as awareness evidence (FR-003), so the repairs
+  service should plan its response cautiously from that time. No
+  automated process may back-date or change a live clock; a hit
+  suggesting earlier awareness than recorded goes to Legal and Safety
+  (FR-004, RULE-003).
+* Handoff: the repairs and hazard service for clocks (RULE-003); Legal
+  for awareness and contractor agency (OD-29); the Data Protection
+  Officer for transcription lawfulness.
 
 Scenario verdict: bounded transcription-and-extract as raise-only,
 under a documented Article 9 condition and a short retention
-policy. Only proceed after Data Protection and Legal review.
+policy. Only proceed after Data Protection and Legal review. Hits go
+to human triage (BRD FR-004), and a hit suggesting earlier awareness
+than recorded goes to Legal and Safety without changing any live
+clock. When a contractor-run line establishes awareness depends on
+OD-29. Repairs-call transcription is outside the initial pilot's
+hazard-signal scan, so it needs its own FR-043 register entry and
+Comparison 2 test.
 
 #### Aggregate Verdict for Damp-and-Mould Loop
 
@@ -1758,17 +2136,20 @@ one-case-per-property, deduplicated hazard-case record.
   from arrival
 * Stop if the retrofit app opens a duplicate hazard case
 * Stop if ambient-sensor thresholds are unpublished, unversioned or
-  not reviewed by a competent inspector
+  not approved by Building Safety (BRD OD-05)
 * Stop if a sensor "quiet" reading is used to de-prioritise a
   resident report
-* Stop if ambient-sensor deployment lacks measure-specific written
-  consent, a full DPIA and a costless withdrawal route
+* Stop if ambient-sensor deployment lacks a separate, optional sensor
+  agreement, a DPO-approved lawful basis and DPIA, and a costless
+  withdrawal route
 * Stop if call recording proceeds without a plain-English
   notification and accessible objection route
-* Stop if the transcript is retained beyond signal extraction, or if
-  Article 9 conditions and DPIA are not in place
-* Stop if a transcript-derived flag sets the awareness timestamp
-  later than the moment the resident said it on the call
+* Stop if the full transcript is retained beyond signal extraction
+  (the hazard case keeps only the call timestamp and a minimal
+  excerpt), or if Article 9 conditions and DPIA are not in place
+* Stop if any automated process sets, back-dates or changes a live
+  clock, or if a hit suggesting earlier awareness than recorded is not
+  sent to Legal and Safety
 
 ### Revised Verdict for Both
 
@@ -1869,7 +2250,7 @@ important questions to Proper North Homes, in priority order, are:
 | Priority | Question | Why it matters |
 | --- | --- | --- |
 | 1 | Does the association have an approved lawful basis, DPIA and retention model for a resident app that captures photos and vulnerabilities? | Every augmentation above depends on it |
-| 2 | What share of contractor capacity today is with installers who could integrate an app or API, and what does the transition look like for the rest? | Sets the feasible pace of the coordination and quality modules |
+| 2 | What supplier data duties do the existing pilot contracts contain (BRD OD-37), and which installers could later integrate an app or API? | Sets the feasible pace of the coordination and quality modules; the pilot accepts capacity and evidence through any channel |
 | 3 | Which system will own the property lifecycle state machine and the hazard case record, and who is accountable for its data quality? | The augmentations all key to it |
 | 4 | Does the association hold an evidenced WH:SHF Wave 3 award, and under which route? | Determines whether the grant module is worth the augmentation cost |
 | 5 | What is the current damp and mould volume and inspection capacity, and how would it scale if awareness moved earlier through app channels? | Determines whether the Awaab's Law augmentation reduces or increases the risk of missed clocks |
@@ -1883,6 +2264,10 @@ important questions to Proper North Homes, in priority order, are:
 * The role agents have no access to Proper North Homes' systems,
   contracts, resident base or supplier arrangements, so this study does
   not establish feasibility, lawfulness or affordability.
+* Every role-agent answer was re-run on 2026-09-27 against the current
+  addendum and BRD v0.5.0. The re-run tests consistency with the
+  current proposal, not truth about the company, and the answers remain
+  sector-informed hypotheses.
 * Two answers, on board-narrative controls and on auditing exception
   detection, have no role-agent anchor because no role agent covers
   corporate governance or internal audit. They are the author's

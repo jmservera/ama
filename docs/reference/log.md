@@ -439,6 +439,7 @@ metadata when the knowledge base was created.
   RULE-006.
 * Residual: the other role answers were given against the pre-reframe
   addendum and have not been re-run.
+
 ## [2026-09-27] presentation | Mentor deck iteration 4 and the ama-mentor-deck skill
 
 * Trigger: the owner asked for another review of the mentor deck against
@@ -463,3 +464,43 @@ metadata when the knowledge base was created.
   published copy matches the build by SHA-256.
 * Working records: `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/changes/build-validate-iteration-4.md`
   and `research/subagents/storytelling-review-iteration-4.md`.
+
+## [2026-09-27] research | Re-run all what-if role answers against the current proposal
+
+* Trigger: the owner asked to re-run the remaining what-if role answers
+  after the agent-led modernisation reframe, closing the residual in the
+  review entry above.
+* Method: the 39 answers not re-run earlier went to the eight
+  `company-*` role agents in parallel. Each agent read the current
+  addendum and BRD v0.5.0 and classified its answer as unchanged (1),
+  refined (32) or materially changed (6). Every cited BRD identifier
+  resolves in the BRD. The answers remain sector-informed hypotheses.
+* Files touched: `research/company/agent-what-if-study.md`,
+  `../case_study_48_addendum.md` (what-if paragraph), `README.md`
+  (catalog row).
+* Material changes, each checked against the BRD before applying:
+  * Photo scans raise flags for human triage and do not open cases
+    (FR-003, FR-004). Assessment awareness wording now defers to OD-29.
+  * Pre-Visit AI Triage keeps risk-path proposals in blind shadow mode
+    until a RULE-020 release decision (AC-014, FR-010).
+  * Suppliers offer capacity through any channel, and a contract manager
+    accepts it (FR-022, RULE-007). A new stop criterion bars making an
+    app or API a condition of work.
+  * A named person approves every AI-drafted resident message before
+    sending (AC-079), and always-human categories go to staffed queues.
+  * Programme supervision has no AI summarisation in the initial pilot;
+    Board narratives stay written by executives.
+  * A transcript flag never back-dates a clock. Earlier-awareness hits go
+    to Legal and Safety (FR-004 AC-007), and the stop criterion changed.
+* Other corrections:
+  * The Assessment aggregate verdict cited a "15% to 25%" addendum
+    target. The addendum says at least 20%.
+  * The sensor-awareness citation said Phase 1 guidance section 3.5
+    (information about the tenant). The rule is in section 3.
+  * The sensor stop criteria now require a separate sensor agreement, a
+    DPO-approved basis and Building Safety threshold approval (OD-05).
+  * The earlier asset answer's claim that the company targets quality
+    above the sector baseline was unevidenced and is withdrawn.
+  * A missing blank line before the presentation entry above was fixed.
+* Residual: the two author hypotheses (board-narrative controls and
+  exception-detection audit) still have no role-agent anchor.
