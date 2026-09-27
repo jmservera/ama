@@ -88,6 +88,124 @@ the inputs.
 | Damp-and-Mould Loop | 2. Consented ambient sensors (temperature, humidity, VOC) as a raise-only early-warning across a defined cohort | Do not build as agent | Unchanged. A sensor risk notification does not by itself make the landlord aware; deployment needs a separate lawful basis and a DPIA |
 | Damp-and-Mould Loop | 3. Contractor and repairs call-recording transcription with automatic hazard-signal extraction to catch reports made verbally | Do not build as agent | Unchanged. Extraction is a raise-only signal into human triage; it must never delay, reset or close a statutory clock |
 
+## Value vs Complexity Quadrant
+
+The quadrant plots every what-if scenario on business value (vertical
+axis) against implementation complexity (horizontal axis). The top-left
+(high value, low complexity) is the target quadrant. Scenarios there
+should be considered first; scenarios in the bottom-right (low value,
+high complexity) should be deferred or dropped.
+
+Each scenario is labelled by agent initial and scenario number:
+
+* SP1, SP2, SP3: Stock Prioritisation what-ifs 1, 2, 3
+* AS1, AS2, AS3: Assessment what-ifs 1, 2, 3
+* GF1, GF2, GF3: Grant and Funding what-ifs 1, 2, 3
+* CO1, CO2, CO3: Contractor and Resident Coordination what-ifs 1, 2, 3
+* QV1, QV2, QV3: Quality Verification what-ifs 1, 2, 3
+* PS1, PS2: Programme Supervisor what-ifs 1, 2
+* DM1, DM2, DM3: Damp-and-Mould Loop what-ifs 1, 2, 3
+
+Value and complexity are scored `H`, `M`, `L` from the augmentation
+analysis in each scenario section, the addendum's stop criteria and
+the regulatory citations. Scoring is deliberately coarse; the aim is
+to sequence scenarios, not to price them. The target quadrant contains
+scenarios that are at least `M` value and at most `M` complexity, with
+at least one axis at its favourable extreme (`H` value or `L`
+complexity); this is why AS1, QV1 and DM1 (all `H/M`) sit there
+alongside PS1 (`H/L`) and GF1 (`M/L`).
+
+### ASCII Quadrant
+
+The chart is a 3-by-3 grid on value (rows) and complexity (columns).
+The top-left cell is the target; the bottom-right cell is defer.
+
+```text
+                             Implementation complexity
+                       LOW              MEDIUM             HIGH
+                  +----------------+----------------+----------------+
+             HIGH |  PS1           |  AS1           |  SP2           |
+                  |                |  QV1           |  QV2           |
+                  |                |  DM1           |  DM2           |
+                  |                |                |  DM3           |
+                  +----------------+----------------+----------------+
+  Business   MED  |  GF1           |  SP1           |  GF2           |
+  value           |  CO1           |  GF3           |                |
+                  |                |  CO3           |                |
+                  |                |  PS2           |                |
+                  +----------------+----------------+----------------+
+              LOW |                |  QV3           |  SP3           |
+                  |                |                |  CO2           |
+                  |                |                |  AS2           |
+                  |                |                |  AS3           |
+                  +----------------+----------------+----------------+
+                    TARGET zone      Housekeeping       Big-bet /
+                    (top-left)       or selective       Defer
+                                     bets (middle)      (right)
+```
+
+Read the grid by cell:
+
+* Target zone (top row and left column): do first. PS1 (H/L), AS1
+  (H/M), QV1 (H/M), DM1 (H/M), GF1 (M/L), CO1 (M/L).
+* Big-bet zone (top-right cell, H/H): only after the shared
+  foundation and the target zone are stable. SP2, QV2, DM2, DM3.
+* Housekeeping or selective bets (middle band, M value): do
+  opportunistically. SP1, GF3, CO3, PS2 sit at M/M; GF2 at M/H is a
+  selective bet.
+* Defer zone (bottom row and right column with L value): do not
+  start without a specific triggering condition. QV3 (L/M), SP3
+  (L/H), CO2 (L/H), AS2 (L/H), AS3 (L/H).
+
+### Scoring Table
+
+| ID | Scenario | Value | Complexity | Rationale |
+| --- | --- | --- | --- | --- |
+| SP1 | Resident and inspection app with geotagged photos and vulnerability channel | M | M | Better prioritisation inputs, but ranking is arithmetic; Article 9 handling and equity checks add real design work |
+| SP2 | Smart-meter, EPC and fuel-poverty data fusion | H | H | Meaningfully improves cohort selection; DCC access, consent, Article 22 controls and fairness monitoring are heavy |
+| SP3 | Per-archetype digital twin with parametric energy modelling | L | H | Useful for design and appraisal but does not remove the survey, cohort or eligibility blockers; modelling and calibration cost is high |
+| AS1 | App-fed provenance-checked evidence into PAS 2035 templates | H | M | Directly shortens assessor review cycles; app and provenance stack are well-understood; DPIA and equity checks are the main lift |
+| AS2 | On-site structured scanning (LiDAR, thermal, moisture, blower door) | L | H | Real time saving in fabric capture, but small addressable population, kit and training cost is high, and it does not remove sign-off |
+| AS3 | Pre-visit AI triage across asset, repairs, EPC and open-source data | L | H | Speeds coordinator preparation; model risk on HRB and damp signals is significant; requires audited accuracy record before adoption |
+| GF1 | Structured digital invoices with product and serial data | M | L | Clean lineage into the ledger; low technical cost; value ceiling set by the ledger itself |
+| GF2 | Direct funder-portal, TrustMark and MCS integrations | M | H | Removes re-keying and speeds submission drafts; each integration is a separate governance and data-sharing exercise |
+| GF3 | Continuous eligibility monitoring with plain-language explanations | M | M | Real value in catching mid-programme rule changes; rule pack versioning and immutable snapshots are non-trivial |
+| CO1 | Contractor capacity feeds and resident app for consent and outcomes | M | L | High operational uplift once the shared foundation is in place; app tech is mature; consent-parity and non-digital fallbacks are the design work |
+| CO2 | Multi-supplier capacity mesh with automated re-routing | L | H | Attacks single-supplier fragility, but Procurement Act 2023 route selection, resident re-consent and conflict-of-interest controls are heavy |
+| CO3 | Multi-channel resident concierge with unified contact log | M | M | Real accessibility uplift; requires fairness-gap monitoring and clear human-send rules for sensitive categories |
+| QV1 | Per-measure geotagged evidence packs plus structured commissioning data | H | M | Directly strengthens raise-only flagging and defect-pattern detection; contract change and evidence schedule already exist in the shared foundation |
+| QV2 | Independent drone and robotic inspection sampling | H | H | Genuine independent evidence source and stronger defect-pattern signal; airspace, insurance, consent and separate procurement are heavy |
+| QV3 | Cross-installer benchmarking against sector defect feeds | L | M | Useful additional signal, but sector feeds may be biased; supplier right-of-challenge and data-sharing agreements limit the value ceiling |
+| PS1 | Photo, invoice and appointment events keyed to the lifecycle state machine | H | L | The single highest-leverage change in the study; a conventional workflow engine consumes richer events with almost no new AI risk |
+| PS2 | Always-on AI exception dashboard and board-narrative generator | M | M | Real reporting uplift; needs prompt or model versioning, independent audit reconciliation and executive sign-off |
+| DM1 | Resident and contractor hazard app with geotagged photos | H | M | Materially earlier awareness for Awaab's Law; requires real-time triage capacity and strict one-case-per-property deduplication |
+| DM2 | Consented ambient sensors as raise-only early warning | H | H | High potential value in silent-hazard detection; consent, DPIA, fairness and threshold governance are all substantial |
+| DM3 | Call-recording transcription with hazard-signal extraction | H | H | Catches hazards mentioned verbally on other calls; Article 9 data, notification and retention model are heavy |
+
+### Sequencing Implied by the Grid
+
+Combining the grid with the aggregate verdicts, a defensible sequence
+is:
+
+1. Shared foundation first (property master, lifecycle state
+   machine, hazard case record, evidence schedule, grant ledger,
+   capacity register). Nothing in the grid delivers its full value
+   until this exists.
+2. Target zone: PS1, then AS1, QV1, DM1, then GF1 and CO1. PS1 is
+   the load-bearing enabler; the others depend on the workflow
+   engine (PS1) to carry their events safely.
+3. Middle band, opportunistically: SP1, GF3, CO3, PS2 (all M/M),
+   guided by digital exclusion and consent constraints; GF2 (M/H)
+   only alongside a clearly-scoped funder integration.
+4. Big-bet zone (H/H), only with explicit business-case sign-off
+   and a completed DPIA: DM3 and DM2 for hazard detection uplift,
+   then SP2 for cohort prioritisation, then QV2 for independent
+   quality evidence.
+5. Defer zone: QV3, SP3, CO2, AS2, AS3. Only revisit if a specific
+   triggering condition (for example evidenced supplier fragility
+   for CO2, or evidenced coordinator preparation bottleneck for
+   AS3) emerges.
+
 ## Cross-Cutting Considerations
 
 Six issues run through every augmentation. They should be treated as
