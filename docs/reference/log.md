@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-09-26
+ms.date: 2026-09-27
 ms.topic: reference
 ---
 
@@ -199,3 +199,40 @@ metadata when the knowledge base was created.
   a timeframe or both, and NFR-009 thresholds, which need company data or
   board decisions (OD-01, OD-08, OD-09, OD-11, OD-12, OD-13, OD-15, OD-18,
   OD-25). Targets were not invented.
+
+## [2026-09-27] query | What-if session on the Agent Request Challenge
+
+* Owner asked whether richer inputs (phone-captured photos with EXIF GPS,
+  structured digital invoices, app-based consent, adjustment and outcome
+  capture, contractor capacity feeds, sensor validity metadata) would
+  change any of the five 2026-09-26 verdicts. Assessment was given as a
+  worked example: a provenance-checked evidence bundle enabling an
+  evidence assessment for the Retrofit Assessor.
+* Files touched: `research/company/agent-what-if-study.md` (new),
+  `../case_study_48_addendum.md` (cross-reference from the Challenge of
+  the Requested Agents subsection and `ms.date`), the index (`README.md`
+  and `ms.date`) and this log.
+* Focused clarification questions were put to the relevant `company-*`
+  role agents per augmentation: Data Lead and Asset Executive for Stock
+  Prioritisation; Retrofit Programme Manager and Building Safety for
+  Assessment; Finance and Procurement for Grant and Funding; Resident
+  Engagement, Neighbourhood Officer and Procurement for Coordination;
+  Building Safety, Procurement and Data Lead for Quality Verification;
+  Asset Executive, Building Safety and Neighbourhood Officer for the
+  Supervisor and Damp-and-Mould loop. Answers are labelled
+  `Sector-informed hypothesis`.
+* Finding: no augmentation changes the headline verdict. The strongest
+  cases (Assessment and Quality Verification) widen what bounded AI can
+  usefully check without moving autonomy above recommend or raise-only.
+  The augmentations mostly enrich the shared foundation and expand
+  governance duties (Article 9, Awaab's Law awareness, Construction Act
+  payment notices, Procurement Act 2023 modification) before they expand
+  autonomy.
+* Open items and risks: false-provenance rates for EXIF GPS need a
+  seeded test set; digital exclusion needs equity checks; Awaab's Law
+  awareness timestamp must come from arrival, not human review; a
+  cross-module DPIA is needed if one resident app carries consent,
+  adjustments, condition photos and hazard photos.
+* Regulatory citations in the study were spot-checked against local
+  snapshots on 2026-09-27. They were not checked against the official
+  sources online.

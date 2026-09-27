@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-09-26
+ms.date: 2026-09-27
 ms.topic: reference
 ---
 
@@ -199,6 +199,17 @@ separate PAS 2035 sign-offs. They remain proposals for owner validation.
 The BRD has since relabelled its requirements to canonical FR, AC, NFR, CON,
 RULE and BG identifiers. BR-### and OBJ-## references in this addendum remain
 valid legacy aliases, resolved by the BRD's Legacy Identifier Map.
+
+On 2026-09-27 a follow-up what-if session tested whether richer inputs (phone
+photos with EXIF GPS, structured digital invoices, app-based consent,
+adjustment and outcome capture, contractor capacity feeds and sensor validity
+metadata) would move any of the five verdicts. The role agents' clarification
+answers and revised verdicts are recorded in the
+[Agent What-If Study](./reference/research/company/agent-what-if-study.md).
+The headline verdict is unchanged: the augmentations enrich the shared
+foundation and expand bounded AI's useful checks, but they do not create an
+end-to-end agent and they expand Article 9, Awaab's Law, Construction Act and
+Procurement Act 2023 duties before they expand autonomy.
 
 ## Reframed Transformation Objective
 
