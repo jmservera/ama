@@ -200,6 +200,137 @@ metadata when the knowledge base was created.
   board decisions (OD-01, OD-08, OD-09, OD-11, OD-12, OD-13, OD-15, OD-18,
   OD-25). Targets were not invented.
 
+## [2026-09-26] query | Challenge the pilot measurement and benefits dashboard proposal
+
+* The owner proposed a benefits dashboard, comparison with historical
+  records or a short prospective history, and comparison of the pilot with
+  non-pilot retrofit work. The eight `company-*` role agents challenged it in
+  parallel.
+* Added `research/company/pilot-measurement-challenge.md`: challenge table,
+  the operating-model versus agent decision, a two-layer comparison design,
+  freeze list, analysis rules, effort measurement, operational dashboard
+  versus benefits scorecard, consolidated scorecard, guardrails with stop
+  triggers, vanity metrics and plausible history sources.
+* Flagged contradictions: the BRD Current-State Summary treats the
+  twelve-month reconstruction as the counterfactual, while the panel treats
+  it as context only; the BG-011 targets may be below the pilot's minimum
+  detectable effect. Both go to OD-18. The BRD and addendum were not changed.
+* BRD identifiers were spot-checked against the local BRD, and the Awaab's
+  Law timer claim against the local Phase 1 guidance snapshot. Nothing was
+  checked against official sources online. All role answers are hypotheses,
+  not company facts.
+* Updated the index (`README.md`) and this log.
+
+## [2026-09-26] update | Integrate the pilot measurement design into the BRD and addendum
+
+* At the owner's request, the BRD Builder integrated
+  `research/company/pilot-measurement-challenge.md` into
+  `../brds/agentic-retrofit-programme-brd.md`, now version 0.3.0. RULE-019
+  requires a frozen two-layer protocol. AC-062 covers the freeze and Finance
+  attribution, and AC-074 to AC-077 cover Layer A, Layer B, statistical
+  reporting and effort measurement. New RULE-024 (AC-078) pauses affected
+  work on a guardrail breach. Other changes: a BG-011 caveat on the minimum
+  detectable effect, FR-025 measurement costs, an operational dashboard
+  versus benefits scorecard, a misleading-measures list, OD-34 to OD-38, and
+  updated traceability and approval criteria.
+* The Current-State Summary now treats the twelve-month reconstruction as
+  context. The proposed counterfactual is the instrumented pre-period plus a
+  concurrent matched comparison, pending OD-18. This resolves the
+  contradiction flagged in the previous entry, but only as a proposal.
+* Added a measurement-design note and a challenge row to
+  `../case_study_48_addendum.md`.
+* BRD Quality Reviewer, Define: the first 0.3.0 pass raised four CAUTION
+  findings (compound AC-062, unnumbered prose obligations, untraced
+  guardrails, inconsistent timing gate). The BRD Builder corrected all four,
+  and the rerun found no new findings. The overall result is still FAIL, with
+  Define exit blocked, only because of the accepted company-data gaps
+  (req-qual-001 to 008). Run 3 was recorded in
+  `.copilot-tracking/brd-sessions/agentic-retrofit-programme.quality-report.yml`.
+* Updated the challenge page, the index (`README.md`) and this log.
+
+## [2026-09-26] update | Reframe as agent-led modernisation and place agents only where they add value
+
+* At the owner's request, the programme is now framed as an agent-led
+  modernisation of the existing retrofit model. The BRD Builder updated
+  `../brds/agentic-retrofit-programme-brd.md` to version 0.4.0 and
+  `../case_study_48_addendum.md`. The pilot uses existing teams and
+  suppliers. The dedicated delivery cell and ring-fenced capacity were
+  removed, and "control plane" became "digital foundation".
+* Measurement: Comparison 1 tests a locality with agents against a matched
+  locality without them. Comparison 2 gives per-capability task-level
+  evidence. Both replace Layer A and B, and AC-074, AC-075 and RULE-019 were
+  edited in place. OD-34 is a proposed resolution: the pilot decides which
+  agent capabilities scale. Sponsor, Assets and Finance must confirm it. An
+  Owner Decision section was added to
+  `research/company/pilot-measurement-challenge.md`.
+* Agent placement: the capability tables in the BRD and the addendum now show
+  a deterministic core beside the place where an agent helps. Decisions that
+  need clear, transparent and repeatable rules stay deterministic. Agents turn
+  free text into sourced values, propose missing values for owners to
+  confirm, reconcile records, draft and raise signals. Ranking weights and
+  executive reporting are no longer agent capabilities, and programme
+  supervision and reporting have no agent in the initial pilot. A raise-only
+  hazard-signal row was added. The addendum links each capability to a
+  proposed business value measure.
+* Removed wording saying the documents do not judge current teams.
+* BRD Quality Reviewer, Define: Runs 4 and 5 found no new findings. The result
+  is still FAIL, with Define exit blocked, only because of the accepted
+  company-data gaps (req-qual-001 to 008).
+* Updated the index (`README.md`) and this log.
+
+## [2026-09-26] review | Check the BRD against explainability and transparency
+
+* Reviewed the Agentic Retrofit Programme BRD against NIST AI RMF MS-2.8,
+  MS-2.9 and GV-1.6, UK GDPR Articles 12 to 15 and 22A to 22C, and Safety and
+  Quality Standard 2.3.2 and 2.3.3. Proper North Homes is a regulated
+  not-for-profit, so explanations are designed for residents, the Regulator,
+  funders and the Board.
+* Contradiction fixed: CON-003 cited UK GDPR Article 22. The local
+  consolidated text (converted 2026-09-19) omits Article 22 and uses Articles
+  22A to 22D. CON-003, RULE-022 and AC-072 now cite Articles 12 to 15 and 22A
+  to 22C and map human review to the four Article 22C(2) safeguards.
+* BRD version 0.5.0 adds the AC-079 transparency gate, audience-specific
+  explanation records with a resident comprehension test (FR-034, AC-080,
+  AC-081), a published prioritisation policy with per-home reason codes
+  (FR-042), an AI capability register and Board assurance report (FR-043),
+  per-output provenance (FR-044), source-based confidence categories,
+  unsupported-claim, explanation-fidelity and automation-bias measures
+  (AC-085), AI supplier documentation terms and OD-39.
+* Evidence gap (OD-39): the Transparency, Influence and Accountability
+  Standard, the Housing Ombudsman Complaint Handling Code, the Governance and
+  Financial Viability Standard and ICO guidance on explaining AI decisions are
+  not held locally.
+* BRD Quality Reviewer, Define: Run 6 found no new findings. The result is
+  still FAIL, with Define exit blocked, only because of the accepted
+  company-data gaps (req-qual-001 to 008).
+* Updated the index (`README.md`) and this log.
+
+## [2026-09-27] update | Refresh and publish the AMA mentor progress review deck
+
+* Reviewed the mentor deck against the four later 2026-09-26 entries: pilot
+  measurement challenge, BRD 0.3.0 integration, the agent-led modernisation
+  reframe (BRD 0.4.0) and the transparency review (BRD 0.5.0). Working files
+  are in `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/`.
+* Slide 8 now shows the digital foundation, bounded agents and accountable
+  people, with the one-locality ask using existing teams and suppliers. A new
+  slide 9 covers Comparison 1 and 2, the dashboard versus benefits scorecard,
+  RULE-024, the CON-003 citation fix, AC-079, FR-042 to FR-044, OD-39 and the
+  OD-34 proposal. BRD counts were updated to 12 BG, 44 FR, 85 AC, 9 NFR,
+  6 CON and 24 RULE, and to six quality runs.
+* The Presentation Communications Strategist reviewed the changes. It found
+  one error: the local UK GDPR text omits Article 22 and holds Articles 22A to
+  22D, while CON-003 cites 22A to 22C. The error and its other recommendations
+  were applied. At the owner's request, the knowledge-organisation slide moved
+  to an appendix and the speaker notes were cut to about 2,000 words.
+* Found why `../presentations/` was empty. The PowerPoint pipeline writes only
+  to its tracking folder. The owner had deliberately removed
+  `proper-warm-cxo-initial-proposal.pptx`, and that deletion was committed
+  with the first mentor deck (df1de38), so the index links were broken.
+  Published `../presentations/ama-mentor-progress-review.pptx`, replaced the
+  broken index links with it, and added a delivery-copy rule to
+  `.github/copilot-instructions.md`.
+* Updated the index (`README.md`) and this log.
+
 ## [2026-09-27] query | What-if session on the Agent Request Challenge
 
 * Owner asked whether richer inputs (phone-captured photos with EXIF GPS,

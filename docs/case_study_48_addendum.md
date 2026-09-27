@@ -38,8 +38,11 @@ preserved in this addendum:
 * The supporting baseline-research reference and its limitations
 * The reference to the modelled customer profile in company research, whose
   values are modelled estimates, not company facts
-* The executive challenge, reframed objective, controlled operating model,
-  delivery gates, success measures, trade-offs and conditional recommendation
+* The executive challenge, modernised retrofit delivery objective, digital
+  foundation for agents, delivery gates, success measures, trade-offs and
+  conditional recommendation
+* The pilot measurement challenge, including Comparison 1, Comparison 2,
+  benefits scorecard, guardrails and counterfactual caveat
 
 ## Proper Warm at Proper North Homes
 
@@ -60,17 +63,18 @@ Proper North Homes is a housing association with 60,000 homes. It is planning
 for the final government SRS MEES policy position while the downloaded evidence
 does not yet establish a commenced 2030 landlord duty. It must also respond to
 damp and mould within statutory timescales under Awaab's Law.
-Retrofit assessments, grant applications, contractor procurement, resident
-consent and quality assurance are managed by a small team with spreadsheets,
-and progress is far behind plan.
+A small team holds a complex programme together through spreadsheet-based
+coordination across retrofit assessments, grant applications, contractor
+procurement, resident consent and quality assurance, and progress is far
+behind plan.
 
-The spreadsheet dependency is evidence of fragmented coordination, but it is
-not yet proven to be the main constraint on delivery. Capital, competent
-people, supplier capacity, property data, resident access, technical
-complexity, quality failure and grant conditions may be equally or more
-important. Automating the current process before identifying the binding
-constraint could make unreliable decisions faster without increasing safe,
-accepted completions.
+The spreadsheet dependency shows how much coordination currently rests on a
+small team. It is not yet proven to be the main constraint on delivery.
+Capital, competent people, supplier capacity, property data, resident access,
+technical complexity, quality failure and grant conditions may be equally or
+more important. Automating current administration before identifying the
+binding constraint could make unreliable decisions faster without increasing
+safe, accepted completions.
 
 ## Provisional Sector Baseline
 
@@ -121,11 +125,12 @@ gated discovery and pilot, not a portfolio-wide autonomous implementation or
 capital acceleration.
 
 > [!IMPORTANT]
-> The strategic proposition is a governed retrofit delivery service supported
-> by a portfolio control plane. "Agentic" is an implementation option, not the
-> business outcome. The solution earns the right to scale only by increasing
-> safe, resident-accepted and evidence-complete handovers at an affordable
-> risk-adjusted cost.
+> The strategic proposition is an agent-led modernisation of the association's
+> existing retrofit model. Existing teams, suppliers, professional roles and
+> systems remain; agents take on manual coordination, chasing, re-keying,
+> reconciliation and evidence assembly. The agents earn the right to scale only
+> by increasing safe, resident-accepted and evidence-complete handovers at an
+> affordable risk-adjusted cost.
 
 ### Regulatory Evidence and Service Design
 
@@ -176,17 +181,18 @@ professional work or certify an external submission.
 | Use agents to run PAS 2035 assessments | Competent professionals must own assessment, design, coordination and evaluation | Named roles, competence, capacity, current standards and controlled professional approvals |
 | Automate resident and contractor coordination | Automation can amplify pressure, exclusion, missed adjustments and supplier failure | Tested resident journeys, committed capacity, human exception ownership and manual fallback |
 | Use sensors to identify health risk and verify quality | Sensors provide partial evidence and cannot overrule a resident report or competent inspection | Lawful purpose, data quality, maintenance model and evidence of predictive value |
+| Measure acceleration with a dashboard | A dashboard can steer work but cannot prove benefits if definitions change, cohorts are selected for success or safety holds are pressured | Frozen protocol, concurrent comparison, benefits scorecard, assurance and guardrails that pause affected work |
 
 ### Challenge of the Requested Agents
 
 On 2026-09-26 the eight Proper North Homes role agents challenged each
 requested agent's "owns end-to-end" line. No role supported building any of
-the five as an end-to-end agent. Each request bundles three things:
+the five as an end-to-end agent. Each request combines three things:
 deterministic control work, accountable human decisions, and a smaller set
 of tasks where bounded AI helps. Those tasks are reconciliation, reading
 evidence, drafting, message routing and raise-only signal scanning. Every
 request also depends on the same shared records, which is further evidence
-for the control plane below. These are sector-informed role hypotheses, not
+for the digital foundation below. These are sector-informed role hypotheses, not
 company findings. The per-agent problems, alternatives, stop criteria and
 open questions are recorded in the
 [Agent Request Challenge](./reference/research/company/agent-request-challenge.md).
@@ -211,46 +217,50 @@ foundation and expand bounded AI's useful checks, but they do not create an
 end-to-end agent and they expand Article 9, Awaab's Law, Construction Act and
 Procurement Act 2023 duties before they expand autonomy.
 
-## Reframed Transformation Objective
+## Modernised Retrofit Delivery Objective
 
-Create a controlled property-to-portfolio operating model that:
+Modernise the association's existing retrofit delivery model with agents,
+supported by the digital foundation they need:
 
-* Establishes a trusted stock, condition, safety and energy baseline
-* Aligns retrofit with planned maintenance, building safety and the long-term
+* Establish a shared stock, condition, safety and energy record
+* Align retrofit with planned maintenance, building safety and the long-term
   asset plan
-* Moves each home through explicit technical, resident, supplier, funding,
-  quality and handover gates
-* Uses deterministic workflow for mandatory controls and bounded AI for
+* Move each home through explicit technical, resident, supplier, funding,
+  quality and handover stages
+* Name handoff owners so agents can chase, reconcile and assemble evidence
+  without taking decisions from people
+* Use deterministic workflow for mandatory controls and bounded AI for
   recommendations, drafting, reconciliation and exception detection
-* Preserves accountable human authority for safety, professional judgement,
+* Preserve accountable human authority for safety, professional judgement,
   resident decisions, investment, procurement, payment, grant submission and
   quality acceptance
-* Measures accepted resident and asset outcomes rather than starts, automated
+* Measure accepted resident and asset outcomes rather than starts, automated
   actions or nominal installations
 
 ## Solution Proposal
 
 ### Executive Proposition
 
-Invest in a retrofit portfolio control plane that turns verified property need,
-resident readiness, competent capacity and committed funding into safe,
-quality-adjusted outcomes. Begin with one bounded delivery cell and scale by
-archetype or geography only after the evidence demonstrates that the model
-improves outcomes at lower risk-adjusted cost than conventional workflow
-improvement.
+Invest in bounded retrofit agents and the digital foundation they need to turn
+verified property need, resident readiness, competent capacity and committed
+funding into safe, quality-adjusted outcomes. Begin with one locality using
+existing teams and suppliers, then scale only the agent capabilities that
+demonstrate measurable value over matched existing delivery without weakening
+controls.
 
-This positions the programme as an asset, resident and risk transformation
-supported by technology. It avoids asking the Board to approve an artificial
-intelligence platform before the physical programme, financial envelope and
-operating constraints are understood.
+This positions the programme as an agent-led modernisation of the existing
+retrofit model that builds on the teams, suppliers and systems already in
+place. It avoids asking the Board to approve an artificial intelligence
+platform before the physical programme, financial envelope and delivery
+constraints are understood.
 
-### Operating Model
+### Digital Foundation for Agentic Delivery
 
-The control plane should connect existing asset, repairs, housing, finance,
-procurement and contractor systems rather than replace every service. It should
-maintain a property-level lifecycle, a building-level parent record where work
-affects shared systems or higher-risk buildings, and a portfolio view for
-investment decisions.
+The digital foundation should connect existing asset, repairs, housing,
+finance, procurement and contractor systems rather than replace every service.
+It should maintain a property-level lifecycle, a building-level parent record
+where work affects shared systems or higher-risk buildings, and a portfolio
+view for investment decisions.
 
 Deterministic rules should control:
 
@@ -259,22 +269,30 @@ Deterministic rules should control:
 * Resident decisions, withdrawals, pauses and accessibility adjustments
 * Delegated authority, segregation of duties and approval limits
 * Funding, budget, supplier-capacity, payment, claim and closure gates
+* Property scoring weights, grant eligibility and funding-route rules
+* Lifecycle states, queues, handoff ownership and programme reporting
 * Version history, audit, reconciliation and fail-closed behaviour
 
-Bounded AI capabilities may:
+### Where Agents Fit and Where They Do Not
 
-* Recommend explainable property priorities and identify missing or conflicting
-  data
-* Pre-populate factual assessment inputs for competent-person review without
-  inventing site observations
-* Assemble draft grant, resident, contractor and management packs from approved
+Where a decision must follow clear rules and be transparent, repeatable and
+explainable to residents, regulators, funders or the Board, the programme uses
+a deterministic approach. Examples are eligibility, scoring, statutory clocks,
+gates, consent status and approvals. An agent adds risk there, because its
+output can vary and is harder to audit.
+
+Agents add value where the work is unstructured, incomplete or text-heavy:
+
+* Turning free text, survey notes, emails, documents and photos into concrete,
+  sourced values for the rules and the benefits measures
+* Filling gaps by proposing a missing value with its source and confidence,
+  for the data owner to confirm, and never inventing an observation
+* Reconciling conflicting records and flagging missing, stale or contradictory
   evidence
-* Suggest appointment options after resident preferences and supplier capacity
-  are confirmed
-* Summarise installation evidence and flag anomalies, defects or systemic
-  patterns
-* Produce portfolio narratives that preserve uncertainty and show blocked,
-  overdue and reopened work
+* Drafting packs, letters and explanations from approved records for a person
+  to review
+* Routing messages into fixed categories and raising possible hazard or quality
+  signals for human triage
 
 AI must not diagnose hazards, decide that a statutory duty is satisfied,
 release a safety hold, approve professional work, infer consent, commit capital,
@@ -283,16 +301,28 @@ the absence of a sensor alert to contradict a resident.
 
 ### Agentic Architecture Brief
 
-| Capability | Initial AI role | Accountable human authority |
-| --- | --- | --- |
-| Portfolio prioritisation | Recommend and explain | Asset and safety owners approve cohort rules and exceptions |
-| Property data readiness | Reconcile and flag | Named data owners resolve critical conflicts |
-| PAS 2035 workflow | Pre-populate facts and check completeness | Competent assessors, designers, coordinators and evaluators own professional outputs |
-| Grant and funding | Draft and reconcile evidence | Finance validates, approves and submits |
-| Resident service | Draft accessible content and suggest options | Residents decide on discretionary measures; staff own support, exceptions and redress |
-| Supplier coordination | Suggest schedules within confirmed constraints | Contract manager accepts capacity; programme releases work |
-| Quality assurance | Check evidence and flag anomalies | Competent quality authority accepts work and closes defects |
-| Executive reporting | Summarise controlled records | Executives and the Board make investment and risk decisions |
+The pilot places agents only where the
+[Agent Request Challenge](./reference/research/company/agent-request-challenge.md)
+found a plausible gain. Programme supervision and portfolio reporting stay
+deterministic in the initial pilot; later summarisation support would need its
+own test.
+
+| Capability | Deterministic core | Where an agent helps | Proposed business value measure | Accountable human authority |
+| --- | --- | --- | --- | --- |
+| Property data and prioritisation | Versioned, published scoring weights; pass, fail or unknown eligibility rules; data validity rules | Reconcile conflicting legacy records; extract condition facts from free-text survey notes; flag missing or stale fields; explain each score in plain language | Data reconciliation time; critical conflicts found before survey; homes still viable after survey | Asset and safety owners approve cohort rules and exceptions; named data owners confirm proposed values |
+| PAS 2035 assessment preparation | Stage gates; separate assessor and coordinator sign-off; material-change rules; safety-hold check | Pre-populate sourced facts; turn survey notes into structured assessment inputs; check completeness before sign-off | Assessment-to-ready-to-install time; returns and re-approvals per home | Competent assessors, designers, coordinators and evaluators own professional outputs |
+| Grant and funding evidence | Four-state grant ledger; eligibility and route rules; monthly reconciliation; claim holds | Match installation evidence to the per-measure schedule; assemble draft claim packs from approved records, only once the ledger exists and an award or open route is evidenced | First-time grant evidence acceptance; rejected or clawed-back value; time to claim | Finance validates, approves and submits |
+| Resident service | Measure-specific decision record; adjustments; pauses; failed access never recorded as refusal | Draft accessible content; route free-text messages into fixed categories; suggest options | Repeat resident contacts; adjustments met; first appointments kept | Residents decide on discretionary measures; staff own support, exceptions and redress |
+| Supplier coordination | Committed-capacity register; standard work orders; appointment outcome codes; instructions only from contract managers | Suggest appointment slots within committed capacity; convert contractor emails and notes into outcome codes | Coordination hours per accepted home; supplier-caused appointment failures | Contract manager accepts capacity; programme releases work |
+| Quality evidence assurance | Per-measure evidence checklist; defect severity rules; independent acceptance | Read documents and photos; raise gaps and anomalies; never clear or accept | Evidence rework; right-first-time evidence acceptance; defects found before handover | Competent quality authority accepts work and closes defects |
+| Hazard signals | Statutory clocks and awareness timestamp in the existing repairs and hazard service | Raise-only scan of retrofit notes and messages for possible damp, mould or safety signals, routed to human triage | Awareness-to-referral time for retrofit-channel hazards | Hazard and repairs service owns categorisation, clocks and closure |
+| Programme supervision and reporting | Lifecycle states, queues, clocks, audit and reports built from controlled records | No agent in the initial pilot | Queue ageing and unowned handoffs, reported as operational measures | Programme owns the workflow; executives and the Board make investment and risk decisions |
+
+The value measures are proposals for the benefits scorecard, not forecast
+results. Each agent capability scales only if Comparison 2 shows it beats the
+same deterministic workflow without the agent once review effort is counted.
+Draft acceptance, review minutes and missed critical exceptions apply to every
+agent capability.
 
 Typed decision models that return closed-set answers and probabilities, rather
 than generated text, are an implementation option under research for some of
@@ -308,7 +338,7 @@ and the [Idea Register](./ideas/idea-register.md).
 | --- | --- | --- |
 | 0. Readiness, 6 to 8 weeks | Validate pilot-area stock data, current throughput, delay causes, resident journeys, PAS 2035 capacity, supplier routes, grant status, financial headroom and system options | Asset, safety, resident, finance, procurement, data and technical owners accept the baseline and pilot controls |
 | 1. Shadow mode | Run recommendations, drafts and exception tests without live consequential actions; compare conventional workflow, rules-based automation and bounded AI | Accuracy, override rate, missed critical exceptions, review time, data quality, accessibility and whole-life cost support a live test |
-| 2. Controlled live pilot, 6 to 9 months | Use one locality, a small number of understood archetypes, one cross-functional delivery cell and ring-fenced supplier and assurance capacity | At least 50 accepted handovers from an indicative 80 to 100 candidate homes, subject to validated company data and no uncontrolled safety or resident-rights breach |
+| 2. Controlled live pilot, 6 to 9 months | Use existing teams and suppliers in one locality, a small number of understood archetypes, named accountable owners and agents operating within recommend, draft, reconcile and flag boundaries; retain assurance needed for safety as a control | At least 50 accepted handovers from an indicative 80 to 100 candidate homes, subject to validated company data and no uncontrolled safety or resident-rights breach |
 | 3. Repeatable scheme delivery | Add approved archetype patterns, geographic work packages, planned-maintenance integration, supplier scorecards and risk-based quality sampling | Quality, resident, capacity, grant, cash and operating measures remain within approved tolerances |
 | 4. Selective scale | Add separately governed automation only where the pilot proves incremental value; release capital in tranches | Board approves the next envelope after independent assurance and downside testing |
 
@@ -332,6 +362,29 @@ resident needs and competent capacity.
 | Funding | Installed scope, accepted evidence, claim recommendation, Finance decision and cash receipt reconciled separately |
 | Financial control | Cost per accepted home, peak cash, match funding, contingency and covenant headroom within approved tolerances |
 | AI safety and value | Zero autonomous controlled approvals; no missed critical exception in agreed tests; draft acceptance and review effort demonstrate incremental value |
+
+Measurement-design note: the pilot should use the updated comparison proposal
+from the
+[Pilot Measurement Challenge](./reference/research/company/pilot-measurement-challenge.md).
+Comparison 1 tests existing teams with agents in the pilot locality against
+matched existing teams without agents in another locality, using a frozen
+cohort before resident contact, identical Phase 0 event capture,
+intention-to-treat analysis and difference-in-differences against the
+instrumented pre-period. Comparison 2 tests each agent capability through
+paired shadow-mode comparison and, where safe and lawful, task-level allocation
+between agent-assisted and workflow-only handling. The twelve-month
+reconstruction is context with coverage flags; the proposed counterfactual is
+the instrumented pre-period plus the concurrent matched comparison cohort. The
+operational dashboard steers the pilot and is not gate evidence. The benefits
+scorecard has frozen, versioned definitions, assurance and supplier
+data-challenge rights without veto. Shared staff or suppliers across localities
+are logged because they can contaminate the comparison. Guardrail breaches
+pause affected work regardless of throughput, and seasonal comfort, damp, mould
+and ventilation outcomes remain pending where the pilot window cannot observe
+them. If Phase 0 shows supplier or competent-assessor capacity is the binding
+constraint, agents cannot create that capacity; their value case must focus on
+forecasting, scheduling within confirmed capacity and evidence flow. These are
+role-agent hypotheses and proposals, not company facts.
 
 ## Executive Trade-Offs
 
@@ -383,7 +436,7 @@ not treat not-for-profit status as evidence of unlimited affordability.
 | Asset and programme value | Better sequencing with planned maintenance; fewer abortive interventions; visible constraints; quality-adjusted throughput; earlier detection of systemic defects | Measure cost and accepted outcome by archetype, lifecycle stage, supplier and defect severity |
 | Financial value | Higher conversion of eligible awards into compliant claims and cash; lower avoidable rework; clearer peak-cash and match-funding exposure; better capital allocation | Count only incremental grant received and cashable budget reductions; include technology, integration, staffing, assurance, financing, contingency and exit costs |
 | Risk and governance value | Stronger evidence for Board, regulator, funder and audit scrutiny; fewer uncontrolled approvals; earlier pause when tolerances are breached | Use a risk scorecard; do not convert the same risk reduction into multiple cash benefits |
-| Strategic value | A reusable property and evidence control capability that supports future asset, safety and decarbonisation decisions | Scale only if portability, data quality, operating ownership and whole-life affordability are proven |
+| Strategic value | A reusable property and evidence capability that supports future asset, safety and decarbonisation decisions | Scale only if portability, data quality, named ownership and whole-life affordability are proven |
 
 ### Illustrative Economics
 

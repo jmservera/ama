@@ -224,7 +224,8 @@ elements:
   height: 0.6
   fill: '#102A43'
   line_color: '#102A43'
-  text: 'Ten BRD revisions, each the same pass: research, ask the role agents, rewrite, log what and why'
+  text: 'Twelve BRD revisions, each the same pass: research, ask the role agents, rewrite, log what and
+    why'
   text_font: Segoe UI
   text_size: 15
   text_color: '#FFFFFF'
@@ -248,22 +249,9 @@ elements:
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
-speaker_notes: |
-  This slide is the honest origin of the turning point. The doubt about five agents
-  did not appear on 26 September. It built up across two weeks.
+speaker_notes: |-
+  This slide is the honest origin of the turning point. The doubt about five agents built up over two weeks.
 
-  On 11 September, my first addendum already said that "agentic" is an
-  implementation option, not the business outcome, and proposed a portfolio control
-  plane. On 19 September the BRD gained a cross-functional challenge to the
-  five-agent request, and the Warm Homes Social Housing Fund annex added real grant
-  conditions. On 20 September I added regulatory context and reviewed the open
-  decisions. On 25 September the modelled customer profile arrived and the
-  knowledge base was restructured.
+  On 11 September my first addendum already said that "agentic" is an implementation option and proposed a portfolio control plane, now called the digital foundation. On 19 September the BRD gained a cross-functional challenge to the five-agent request. Then came the regulatory context, the open-decision review and the modelled customer profile.
 
-  What I did not have was evidence for each agent. On 26 September I challenged
-  each request with all eight role agents, which added ten new requirements, BR-059
-  to BR-068, and eight open decisions.
-
-  Across all of this the BRD went through ten revisions, each the same pass:
-  research, ask the role agents, rewrite the requirements, and log what changed and
-  why.
+  What I lacked was evidence for each agent. On 26 September all eight role agents challenged each request, which added ten requirements and eight open decisions. Each BRD revision was the same pass: research, ask the roles, rewrite, log what changed and why.

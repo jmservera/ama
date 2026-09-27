@@ -456,23 +456,9 @@ elements:
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
-speaker_notes: |
-  This slide is the reason for all the structure. Any decision in the addendum can
-  be walked back to its evidence, and this is a real chain you can open.
+speaker_notes: |-
+  This slide is the reason for all the structure: immutable dated sources, cited syntheses, an index and an append-only log, on Karpathy's LLM Wiki pattern. The organisation is in the appendix. Any decision in the addendum can be walked back to its evidence, and this is a real chain.
 
-  The decision: the addendum recommends a capped readiness and pilot stage, not a
-  five-agent rollout, and stock prioritisation is not built as an end-to-end agent.
-  The evidence: in the agent request challenge, the roles said eligibility is a
-  rules question, not a judgement for an agent. The requirement: FR-026, legacy
-  BR-059, requires a deterministic pass, fail or unknown eligibility result, tested
-  by AC-039 and constrained by CON-005. The source: the Warm Homes Social Housing
-  Fund Wave 3 technical annex, page 3, footnote 1, which says that being in scope
-  does not by itself mean eligible, retrieved on 19 September. The change record:
-  the 26 September log entries and the commits that added and relabelled the rows.
+  The decision: a capped readiness and pilot stage, not a five-agent rollout, with no end-to-end stock prioritisation agent. The evidence: the roles said eligibility is a rules question. The requirement: FR-026 requires a deterministic pass, fail or unknown eligibility result, tested by AC-039 and constrained by CON-005. The source: the Wave 3 technical annex, page 3, footnote 1, retrieved on 19 September. The change record: the 26 September log entries and commits.
 
-  To justify a decision, follow the chain. To challenge it, change one piece of
-  evidence, for example a real throughput figure from the company, and the chain
-  shows which requirements, rules and decisions have to move.
-
-  Every claim also carries an evidence class, so nobody mistakes a sector
-  hypothesis for a company fact.
+  To challenge a decision, change one piece of evidence, such as a real throughput figure, and the chain shows what has to move.

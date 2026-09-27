@@ -1,6 +1,6 @@
 {
   "brdFile": "docs/brds/agentic-retrofit-programme-brd.md",
-  "lastAccessed": "2026-09-26T19:00:00+02:00",
+  "lastAccessed": "2026-09-26T23:34:08.814+02:00",
   "currentPhase": "Define",
   "questionsAsked": [
     "safety-stop-condition",
@@ -15,7 +15,9 @@
     "vulnerability-flag-dependence",
     "hazard-awareness-retrofit-channels",
     "contractor-instruction-authority",
-    "quality-absence-of-flag-and-sign-offs"
+    "quality-absence-of-flag-and-sign-offs",
+    "pilot-measurement-design",
+    "modernisation-framing"
   ],
   "answeredQuestions": {
     "safety-stop-condition": "Block progression for missing, stale, contradictory or unresolved safety evidence until accountable human release.",
@@ -30,7 +32,9 @@
     "vulnerability-flag-dependence": "Resident Engagement role agent: unknown not none, with-and-without-flag runs, officer nomination and self-referral routes, DPO-approved DPIA (BR-064).",
     "hazard-awareness-retrofit-channels": "Building Safety role agent: mandatory hazard question and timestamped referral to the existing hazard service; raise-only signal scan with Legal handoff (BR-062, BR-063).",
     "contractor-instruction-authority": "Procurement role agent: only named contract managers instruct; channel-neutral contract data schedule and Legal consultation check before award (BR-065, BR-066).",
-    "quality-absence-of-flag-and-sign-offs": "Retrofit Programme Manager role agent: absence of flag or alert is not evidence; sensor validity rules; separate assessor and coordinator sign-offs; three-arm shadow test for L4 versus recommend (BR-067, BR-068, OD-31)."
+    "quality-absence-of-flag-and-sign-offs": "Retrofit Programme Manager role agent: absence of flag or alert is not evidence; sensor validity rules; separate assessor and coordinator sign-offs; three-arm shadow test for L4 versus recommend (BR-067, BR-068, OD-31).",
+    "pilot-measurement-design": "User approved integrating the 2026-09-26 pilot measurement challenge. The owner later reframed it as Comparison 1 (existing teams with agents versus matched locality without agents) and Comparison 2 (per-capability task-level evidence), with frozen cohort and definitions, operational dashboard versus assured benefits scorecard, guardrails, effort measurement and five open decisions.",
+    "modernisation-framing": "Owner decided on 2026-09-26 to frame Proper Warm as agent-led modernisation of the existing retrofit model: existing teams, suppliers, professional roles and systems remain; agents take on coordination, chasing, re-keying, reconciliation and evidence assembly; the pilot uses existing teams and suppliers in one locality; Comparison 1 and Comparison 2 measure agent value; OD-34 is proposed resolved pending Sponsor, Executive Director of Assets and Finance confirmation."
   },
   "referencesProcessed": [
     {
@@ -72,23 +76,43 @@
       "file": "docs/reference/regulatory/retrofit-standards-and-funding/warm-homes-social-housing-fund-technical-annex-2025.md",
       "status": "analyzed",
       "keyFindings": "In scope is not eligible (Page 3 footnote 1); GMCA 5.7% and WMCA 7.8% formula allocations (Page 5 Table 3)."
+    },
+    {
+      "file": "docs/reference/research/company/pilot-measurement-challenge.md",
+      "status": "analyzed",
+      "keyFindings": "Role-agent hypotheses for pilot measurement, now mapped by owner decision to Comparison 1 and Comparison 2, with frozen protocol, benefits scorecard, guardrails, misleading metrics, counterfactual caveat and OD-34 to OD-38."
+    },
+    {
+      "file": "docs/reference/regulatory/data-protection/uk-gdpr-current-text.md",
+      "status": "analyzed",
+      "keyFindings": "Current text omits Article 22 and includes Articles 22A to 22C safeguards, Articles 12 to 15 transparency and meaningful-logic provisions, and Article 35 DPIA provisions."
+    },
+    {
+      "file": "docs/reference/regulatory/social-housing-regulation/social-housing-safety-and-quality-standard-2024.md",
+      "status": "analyzed",
+      "keyFindings": "Sections 2.3.2 and 2.3.3 support clear timescale and planned-improvement communications."
+    },
+    {
+      "file": "docs/reference/regulatory/social-housing-regulation/awaabs-law-phase-2-guidance-2026.md",
+      "status": "analyzed",
+      "keyFindings": "Section 3 cites the Transparency, Influence and Accountability Standard as a secondary reference pending a local snapshot."
     }
   ],
   "nextActions": [
-    "Obtain company data and board decisions for BG-001, BG-006 to BG-010 and BG-012 targets (OD-01, OD-08, OD-09, OD-11, OD-12, OD-13, OD-15, OD-18), then rerun the BRD quality review",
+    "Parent to run the BRD Quality Reviewer after the modernisation-framing edits; leave the eight accepted RISK findings unresolved by design",
+    "Obtain Sponsor, Executive Director of Assets and Finance confirmation of the OD-34 proposed resolution in the RULE-019 protocol",
+    "Name the OD-35 guardrail restart authority and restart evidence before live-pilot approval under RULE-020 and RULE-024",
+    "Approve the OD-36 DPIA and lawful measurement basis before any Phase 0 pilot or matched-locality event capture",
+    "Ratify OD-18 with Comparison 1, Comparison 2, minimum detectable effect and counterfactual design",
+    "Confirm Awaab's Law Phase 2 scope and current official source before freezing the pilot protocol",
     "Set NFR-009 service-time thresholds (OD-09, OD-25) and add performance-efficiency NFRs from readiness data",
-    "Convert dense acceptance criteria to atomic Given/When/Then form before PRD handoff",
-    "Put the sponsor discovery questions added on 2026-09-26 to Proper North Homes",
-    "Assign owners and dates to OD-26 to OD-33",
-    "Obtain Legal review of lease, consultation, procurement modification, payment notice and contractor-awareness questions",
+    "Assign owners and dates to OD-26 to OD-38",
+    "Obtain Legal review of lease, consultation, procurement modification, payment notice, contractor-awareness and supplier measurement duties",
     "Check the national DESNZ WH:SHF Wave 3 guidance for the 30% non-social rule",
-    "Ratify the bounded AI capability shadow tests and stop criteria under BR-049",
-    "Validate portfolio and throughput baselines",
-    "Confirm approval thresholds and downside tolerances",
-    "Validate resident requirements with representative residents",
-    "Verify regulatory controls against current official guidance",
-    "Approve the grant and affordability model",
-    "Replace provisional sector benchmarks with company evidence"
+    "Validate portfolio and throughput baselines, resident requirements, regulatory controls, grant and affordability model, and company evidence for provisional sector benchmarks",
+    "DPO to check official UK GDPR source for automated-decision amendments and commencement before release",
+    "Obtain OD-39 local snapshots before relying on the Transparency, Influence and Accountability Standard, Complaint Handling Code, Governance and Financial Viability Standard or ICO AI explanation guidance",
+    "Owners to set explanation comprehension, automation-bias and AI assurance cadence thresholds before live use"
   ],
   "qualityChecks": [
     "required-sections-complete",
@@ -104,7 +128,10 @@
     "quality-review-run",
     "canonical-taxonomy-applied",
     "fr-to-ac-coverage-100",
-    "fr-to-bg-coverage-100"
+    "fr-to-bg-coverage-100",
+    "explainability-transparency-review-integrated",
+    "identifier-counts-validated",
+    "new-acceptance-criteria-traced"
   ],
   "userPreferences": {
     "detail-level": "comprehensive",
@@ -142,11 +169,12 @@
     },
     "counts": {
       "BG": 12,
-      "FR": 41,
-      "AC": 73,
+      "FR": 44,
+      "AC": 85,
       "NFR": 9,
       "CON": 6,
-      "RULE": 23
+      "RULE": 24,
+      "OD": 39
     },
     "legacyAliases": "BR-001..BR-068, OBJ-01..OBJ-12 kept in Legacy ID columns and Legacy Identifier Map",
     "splits": [
@@ -155,5 +183,10 @@
       "BR-062",
       "BR-066"
     ]
+  },
+  "latestRevision": {
+    "version": "0.5.0",
+    "updatedAt": "2026-09-26T23:34:08.814+02:00",
+    "summary": "Applied approved explainability and transparency review: data-protection citations, transparency gate, explanation records, provenance, prioritisation policy, AI capability register, pilot explanation-quality measures and OD-39 evidence snapshots."
   }
 }

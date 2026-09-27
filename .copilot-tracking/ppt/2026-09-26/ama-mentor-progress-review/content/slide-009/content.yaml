@@ -1,5 +1,5 @@
 slide: 9
-title: BRD quality review
+title: Proving and explaining value
 layout: blank
 background:
   fill: '#FFFFFF'
@@ -10,276 +10,21 @@ elements:
   top: 0.5
   width: 12.133000000000001
   height: 0.75
-  text: Relabelling fixed traceability; the gate still fails on targets
+  text: 'Two more challenges: how to prove the value and how to explain it'
   font: Segoe UI
   font_size: 26
   font_color: '#102A43'
   font_bold: true
   vertical_anchor: middle
 - type: shape
-  name: Stat 1
+  name: Prove
   shape: rounded_rectangle
   left: 0.6
-  top: 1.7
-  width: 1.1
-  height: 0.8
-  fill: '#0B625B'
-  line_color: '#0B625B'
-  text: '12'
-  text_font: Segoe UI
-  text_size: 26
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: textbox
-  name: Stat 1 label
-  left: 1.7999999999999998
-  top: 1.7
-  width: 1.8
-  height: 0.8
-  text: Business goals (BG)
-  font: Segoe UI
-  font_size: 13
-  font_color: '#243B53'
-  vertical_anchor: middle
-- type: shape
-  name: Stat 2
-  shape: rounded_rectangle
-  left: 3.75
-  top: 1.7
-  width: 1.1
-  height: 0.8
-  fill: '#1D5FB8'
-  line_color: '#1D5FB8'
-  text: '41'
-  text_font: Segoe UI
-  text_size: 26
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: textbox
-  name: Stat 2 label
-  left: 4.95
-  top: 1.7
-  width: 1.8
-  height: 0.8
-  text: Functional requirements (FR)
-  font: Segoe UI
-  font_size: 13
-  font_color: '#243B53'
-  vertical_anchor: middle
-- type: shape
-  name: Stat 3
-  shape: rounded_rectangle
-  left: 0.6
-  top: 2.8
-  width: 1.1
-  height: 0.8
-  fill: '#0B625B'
-  line_color: '#0B625B'
-  text: '73'
-  text_font: Segoe UI
-  text_size: 26
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: textbox
-  name: Stat 3 label
-  left: 1.7999999999999998
-  top: 2.8
-  width: 1.8
-  height: 0.8
-  text: Acceptance criteria (AC)
-  font: Segoe UI
-  font_size: 13
-  font_color: '#243B53'
-  vertical_anchor: middle
-- type: shape
-  name: Stat 4
-  shape: rounded_rectangle
-  left: 3.75
-  top: 2.8
-  width: 1.1
-  height: 0.8
-  fill: '#1D5FB8'
-  line_color: '#1D5FB8'
-  text: '9'
-  text_font: Segoe UI
-  text_size: 26
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: textbox
-  name: Stat 4 label
-  left: 4.95
-  top: 2.8
-  width: 1.8
-  height: 0.8
-  text: Non-functional (NFR, ISO/IEC 25010)
-  font: Segoe UI
-  font_size: 13
-  font_color: '#243B53'
-  vertical_anchor: middle
-- type: shape
-  name: Stat 5
-  shape: rounded_rectangle
-  left: 0.6
-  top: 3.9000000000000004
-  width: 1.1
-  height: 0.8
-  fill: '#0B625B'
-  line_color: '#0B625B'
-  text: '6'
-  text_font: Segoe UI
-  text_size: 26
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: textbox
-  name: Stat 5 label
-  left: 1.7999999999999998
-  top: 3.9000000000000004
-  width: 1.8
-  height: 0.8
-  text: Imposed constraints (CON)
-  font: Segoe UI
-  font_size: 13
-  font_color: '#243B53'
-  vertical_anchor: middle
-- type: shape
-  name: Stat 6
-  shape: rounded_rectangle
-  left: 3.75
-  top: 3.9000000000000004
-  width: 1.1
-  height: 0.8
-  fill: '#1D5FB8'
-  line_color: '#1D5FB8'
-  text: '23'
-  text_font: Segoe UI
-  text_size: 26
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: textbox
-  name: Stat 6 label
-  left: 4.95
-  top: 3.9000000000000004
-  width: 1.8
-  height: 0.8
-  text: Business rules (RULE)
-  font: Segoe UI
-  font_size: 13
-  font_color: '#243B53'
-  vertical_anchor: middle
-- type: shape
-  name: Before
-  shape: rounded_rectangle
-  left: 0.6
-  top: 5.2
-  width: 1.3
-  height: 0.8
-  fill: '#B83A2E'
-  line_color: '#B83A2E'
-  text: 0%
-  text_font: Segoe UI
-  text_size: 24
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: shape
-  name: Arrow
-  shape: right_arrow
-  left: 2.1
-  top: 5.4
-  width: 0.7
-  height: 0.4
-  fill: '#9FB3C8'
-  line_color: '#9FB3C8'
-- type: shape
-  name: After
-  shape: rounded_rectangle
-  left: 3.0
-  top: 5.2
-  width: 1.3
-  height: 0.8
-  fill: '#0B625B'
-  line_color: '#0B625B'
-  text: 100%
-  text_font: Segoe UI
-  text_size: 24
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: textbox
-  name: Coverage label
-  left: 4.45
-  top: 5.2
-  width: 2.2
-  height: 0.8
-  text: 'ID traceability: FR-to-AC and FR-to-BG'
-  font: Segoe UI
-  font_size: 13
-  font_color: '#243B53'
-  font_bold: true
-  vertical_anchor: middle
-- type: shape
-  name: Still fail
-  shape: rounded_rectangle
-  left: 7.0
   top: 1.65
-  width: 5.7330000000000005
-  height: 4.35
-  fill: '#FDF4DC'
-  line_color: '#F0DCA5'
+  width: 5.95
+  height: 3.85
+  fill: '#FFFFFF'
+  line_color: '#D9E2EC'
   line_width: 1
   margin_left: 0.18
   margin_right: 0.18
@@ -288,106 +33,162 @@ elements:
   vertical_anchor: top
   text: ''
   paragraphs:
-  - text: STILL FAIL, ON PURPOSE
+  - text: 'PROVE IT: PILOT MEASUREMENT CHALLENGE'
     text_font: Segoe UI
     text_size: 13
-    text_color: '#B83A2E'
+    text_color: '#0B625B'
     text_bold: true
-    space_after: 8
+    space_after: 12
     alignment: left
-  - text: 'Relabel: 68 BR and 12 OBJ rows mapped, four compound rows split, no meaning changed'
+  - text: 'All eight roles backed the intent but rejected my acceleration dashboard: speed is not the
+      benefit, and about 50 handovers in 6 to 9 months cannot prove a 20% gain'
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
     text_bold: false
-    space_after: 8
+    space_after: 12
     bullet_char: •
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: 'Extracted: FR-022 split into FR-022 and RULE-023; CON-004 sent to Legal to validate its source'
+  - text: 'Comparison 1: pilot locality with agents against a matched locality without, same event capture
+      from Phase 0'
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
     text_bold: false
-    space_after: 8
+    space_after: 12
     bullet_char: •
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: Seven business goals still have no numeric target; NFR-009 thresholds need owner decisions
+  - text: 'Comparison 2: each agent capability against the same workflow without it, review effort counted'
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
     text_bold: false
-    space_after: 8
+    space_after: 12
     bullet_char: •
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: Targets need company data or board decisions (OD-01, OD-08, OD-09 and others)
+  - text: The dashboard steers; a frozen benefits scorecard decides; a guardrail breach pauses work (RULE-024)
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
     text_bold: false
-    space_after: 8
-    bullet_char: •
-    bullet_margin_left: 228600
-    bullet_indent: -228600
-    alignment: left
-  - text: 'Advisory: rewrite AC as Given/When/Then before PRD handoff'
-    text_font: Segoe UI
-    text_size: 14
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 8
-    bullet_char: •
-    bullet_margin_left: 228600
-    bullet_indent: -228600
-    alignment: left
-  - text: I did not invent targets to pass the gate
-    text_font: Segoe UI
-    text_size: 14
-    text_color: '#102A43'
-    text_bold: true
     space_after: 0
     bullet_char: •
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
   corner_radius: 0.06
+- type: shape
+  name: Explain
+  shape: rounded_rectangle
+  left: 6.85
+  top: 1.65
+  width: 5.883
+  height: 3.85
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: 'EXPLAIN IT: TRANSPARENCY REVIEW, BRD v0.5.0'
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#1D5FB8'
+    text_bold: true
+    space_after: 12
+    alignment: left
+  - text: 'Fixed my own citation: CON-003 cited UK GDPR Article 22, which the local text omits; it now
+      cites Articles 22A to 22C'
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 12
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: Transparency gate before live processing (AC-079); per-home reason codes (FR-042)
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 12
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: AI capability register and Board assurance report (FR-043); provenance on every agent output
+      (FR-044)
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 12
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  - text: 'Gap: three standards or codes and ICO guidance are not held locally (OD-39)'
+    text_font: Segoe UI
+    text_size: 14
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    bullet_char: •
+    bullet_margin_left: 228600
+    bullet_indent: -228600
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Takeaway
+  shape: rounded_rectangle
+  left: 0.6
+  top: 5.8
+  width: 12.133000000000001
+  height: 0.6
+  fill: '#102A43'
+  line_color: '#102A43'
+  text: 'Proposed (OD-34): the pilot decides which agent capabilities scale'
+  text_font: Segoe UI
+  text_size: 16
+  text_color: '#FFFFFF'
+  text_bold: true
+  alignment: center
+  vertical_anchor: middle
+  margin_left: 0.12
+  margin_right: 0.12
+  margin_top: 0.04
+  margin_bottom: 0.04
+  corner_radius: 0.12
 - type: textbox
   name: Source
   left: 0.6
   top: 6.7
   width: 12.133000000000001
   height: 0.28
-  text: 'Sources: BRD v0.2.0 frontmatter and Requirements Traceability; .copilot-tracking/brd-sessions/agentic-retrofit-programme.quality-report.yml;
-    log.md (26 Sep 2026).'
+  text: 'Sources: pilot-measurement-challenge.md (Summary; Owner Decision); BRD v0.5.0 CON-003, RULE-019,
+    RULE-024, AC-079, FR-042 to FR-044, OD-34, OD-39; log.md (26 Sep 2026). Role answers are hypotheses.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
-speaker_notes: |
-  The last step so far was a formal BRD quality review. The first run failed hard:
-  the BRD used legacy BR and OBJ identifiers, so the reviewer measured zero percent
-  coverage from functional requirements to acceptance criteria and to business
-  goals.
+speaker_notes: |-
+  Two challenges asked whether I could prove the value and whether I could explain it. The first came before the reframe and caused it; the second came after.
 
-  I relabelled the whole document to a canonical taxonomy: 12 business goals, 41
-  functional requirements, 73 acceptance criteria, 9 non-functional requirements
-  grouped by ISO 25010, 6 imposed constraints and 23 business rules. Four compound
-  rows were split, and a legacy map keeps every old reference valid. Coverage went
-  from zero to one hundred percent. The 0 percent was an identifier-format problem,
-  not missing requirements. Relabelling fixed traceability. It did not fix
-  measurability.
+  The first was my own idea: a dashboard showing the pilot accelerates delivery. All eight roles backed the intent and rejected the design. Speed is not the benefit; accepted handovers are. And, as you saw, it bundled three changes. About 50 handovers in six to nine months cannot prove a 20 percent gain. So there are now two comparisons: a pilot locality with agents against a matched locality without, and each agent capability against the same workflow without it. The dashboard steers; only a frozen benefits scorecard counts at the gate.
 
-  The review also extracted new structure: FR-022 was split into a functional
-  requirement and a business rule, and CON-004 was flagged for Legal because its
-  source sits outside the local corpus.
+  The second was a transparency review. It found an error of mine: CON-003 cited UK GDPR Article 22, but the local consolidated text omits it and uses Articles 22A to 22D. CON-003 now cites Articles 22A to 22C and maps human review to the four Article 22C(2) safeguards. Some sources are still missing locally, logged as OD-39.
 
-  The rerun still fails, and I think that is the right result. Seven business goals
-  have no numeric target because the targets depend on company data or board
-  decisions. I chose to leave the gate failing rather than invent numbers. I would
-  like your view on that choice.
+  Still a proposal: the pilot decides which agent capabilities scale.

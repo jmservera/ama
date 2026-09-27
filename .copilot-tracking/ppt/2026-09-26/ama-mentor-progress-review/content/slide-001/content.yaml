@@ -22,9 +22,9 @@ elements:
   top: 2.2
   width: 11.5
   height: 1.7
-  text: 'From "build five agents" to
-
-    "what value do they really need?"'
+  text: |-
+    From "build five agents" to
+    "what value do they really need?"
   font: Segoe UI
   font_size: 38
   font_color: '#FFFFFF'
@@ -58,17 +58,7 @@ elements:
   font: Segoe UI
   font_size: 16
   font_color: '#D9E2EC'
-speaker_notes: |
-  I have the story so far to show you, and four decisions I want your challenge
-  on. The short version: the brief asks for five agents; two weeks of evidence
-  says the value is real, but end-to-end agents are not the way to get it. One of
-  the four decisions is whether that reframing will read as refusing the brief.
+speaker_notes: |-
+  I have the story so far to show you, and four decisions I want your challenge on. The short version: the brief asks for five agents. Two weeks of evidence says the value is credible, but end-to-end agents are not the way to get it. Where I have landed is an agent-led modernisation of the existing retrofit model, with agents only where they beat the same workflow without them. One of my four questions is whether the panel will read that as answering the brief.
 
-  The title is the story in one line. The brief asks me to build five agents. The
-  work so far turned that into a different question: what business value do the
-  people behind those agents actually expect, and what is the smallest thing that
-  delivers it safely?
-
-  I will cover five strands in order: research, role agents, BRD iterations, a
-  design thinking challenge of the five agents, and a BRD quality review. Then
-  the challenges, how the repository holds the evidence, and my questions for you.
+  I will cover five strands: research, role agents, BRD iterations, a design thinking challenge of the five agents and a BRD quality review, plus two later challenges on how to prove and explain the value. Then lessons, one traceability chain, and my questions for you.

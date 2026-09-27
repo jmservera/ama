@@ -438,26 +438,9 @@ elements:
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
-speaker_notes: |
-  The case describes a company that does not exist, so there is nobody to
-  interview. I created eight role agents, one per perspective that owns part of a
-  retrofit programme: the asset executive, finance, the programme manager, building
-  safety, resident engagement, procurement, data and performance, and a frontline
-  housing officer.
+speaker_notes: |-
+  The company is fictional, so there is nobody to interview. I created eight role agents, one for each perspective that owns part of a retrofit programme, from the asset executive to a frontline housing officer.
 
-  The key design choice was to treat them as research instruments, not as
-  simulated employees. They are anchored to the case, the addendum and the company
-  research, and they must label every answer as a case fact, a sector hypothesis or
-  an unknown. That stops an articulate answer from becoming a fake company fact.
+  They are research instruments, not simulated employees. They are anchored to the case, the addendum and the company research, and they label every answer as a case fact, a sector hypothesis or an unknown. That stops an articulate answer from becoming a fake company fact. Their most useful output is the one question per role that would change its answer most; those questions are now the discovery agenda.
 
-  Their most useful output was not an answer but a question: each role named the
-  one question that would change its answer most. Those questions are now the
-  discovery agenda for the real company.
-
-  Here is one exchange. I asked, in effect, whether a grant-drafting agent would add
-  value. The finance role answered with a regulatory fact from the local snapshot:
-  in Greater Manchester and the West Midlands, Wave 3 money is allocated by formula
-  through integrated settlements, not by competitive bid. Whether Proper North Homes
-  operates there is unknown. So the value of drafting depends on the funding route,
-  and the BRD now requires every scheme to record an evidenced funding route before
-  any bid work starts.
+  One exchange: would a grant-drafting agent add value? The finance role answered with a fact from the local snapshot: in Greater Manchester and the West Midlands, Wave 3 money is allocated by formula, not by bid. Whether Proper North Homes operates there is unknown. So the BRD now requires an evidenced funding route before any bid work starts.
