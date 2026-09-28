@@ -200,10 +200,8 @@ elements:
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
-speaker_notes: |
-  The brief is a one-page solution request. It names five agents with autonomy
-  levels, a business case, and outcomes such as doubling delivery and capturing
-  GBP 40 million of grants.
+speaker_notes: |-
+  The brief is a one-page solution request: five agents with autonomy levels, and promises such as doubling delivery and GBP 40 million of grants.
 
   What it does not give is everything an architect needs to justify a design: what
   kind of organisation this is, what the current throughput and data look like,

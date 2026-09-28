@@ -192,7 +192,7 @@ elements:
     text_bold: true
     space_after: 8
     alignment: left
-  - text: Ten revisions, with new research and role answers between each
+  - text: Thirteen revisions, with new research and role answers between each
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -206,7 +206,7 @@ elements:
     text_bold: true
     space_after: 2
     alignment: left
-  - text: BRD v0.2.0
+  - text: BRD v0.5.0
     text_font: Segoe UI
     text_size: 13
     text_color: '#102A43'
@@ -324,7 +324,7 @@ elements:
     text_bold: true
     space_after: 8
     alignment: left
-  - text: Canonical goals, FR, AC, NFR, constraints and rules, with coverage checks
+  - text: Canonical IDs and coverage checks, re-run after every later change
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -338,7 +338,7 @@ elements:
     text_bold: true
     space_after: 2
     alignment: left
-  - text: Quality report, canonical IDs
+  - text: Six runs; FAIL only on data gaps
     text_font: Segoe UI
     text_size: 13
     text_color: '#102A43'
@@ -373,26 +373,16 @@ elements:
   top: 6.7
   width: 12.133000000000001
   height: 0.28
-  text: 'Sources: git log (32 commits, 10 to 26 Sep 2026); docs/reference/log.md; docs/brds/agentic-retrofit-programme-brd.md
+  text: 'Sources: git log (41 commits, 10 to 27 Sep 2026); docs/reference/log.md; docs/brds/agentic-retrofit-programme-brd.md
     history.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
-speaker_notes: |
-  This is the backbone of the story. The five strands were not a straight line;
-  each loop produced questions that sent me back into research.
+speaker_notes: |-
+  This is the backbone of the story. The five strands were not a straight line; each loop produced questions that sent me back into research.
 
-  Research built the context. The role agents let me ask questions the brief could
-  not answer. The BRD was rewritten ten times as research and role answers came
-  in. The design thinking session on 26 September was the turning point: instead
-  of refining five agents, I asked what value each request implied, and tested an
-  early control plane hypothesis agent by agent. The quality review then made the
-  requirements traceable and showed where targets are still missing.
+  Research built the context. The role agents let me ask what the brief could not answer. The BRD has been revised in thirteen commits and is now version 0.5.0. The design thinking session on 26 September was the turning point: I read each agent request as the value behind it and tested my early doubts agent by agent. The quality review made the requirements traceable, and it was re-run after every later change.
 
-  The important habit: nothing stayed in chat history. Every finding was filed back
-  into the addendum, the BRD or the knowledge base, and logged.
-
-  Loop 4, on 26 September, is the turning point. Everything before it built the
-  case; everything after it made the case testable.
+  The habit that matters: nothing stayed in chat history. Every finding was filed in the addendum, the BRD or the knowledge base, and logged.

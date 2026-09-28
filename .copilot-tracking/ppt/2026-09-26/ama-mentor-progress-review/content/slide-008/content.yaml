@@ -10,7 +10,7 @@ elements:
   top: 0.5
   width: 12.133000000000001
   height: 0.75
-  text: 'What we really need: a control plane first, then bounded AI'
+  text: Agents for the messy work, rules for decisions we must explain
   font: Segoe UI
   font_size: 26
   font_color: '#102A43'
@@ -72,7 +72,7 @@ elements:
   height: 1.15
   fill: '#0B625B'
   line_color: '#0B625B'
-  text: Bounded AI
+  text: Bounded agents
   text_font: Segoe UI
   text_size: 15
   text_color: '#FFFFFF'
@@ -101,8 +101,8 @@ elements:
   vertical_anchor: middle
   text: ''
   paragraphs:
-  - text: 'Five candidates for shadow testing: reconcile records, read evidence against checklists, draft
-      from controlled records, route messages, raise-only signal scans'
+  - text: Turn free text into sourced values, propose missing values for owners to confirm, reconcile,
+      draft, route messages, raise hazard and quality signals
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -119,7 +119,7 @@ elements:
   height: 1.15
   fill: '#1D5FB8'
   line_color: '#1D5FB8'
-  text: Control plane
+  text: Digital foundation
   text_font: Segoe UI
   text_size: 15
   text_color: '#FFFFFF'
@@ -148,8 +148,8 @@ elements:
   vertical_anchor: middle
   text: ''
   paragraphs:
-  - text: Property master (UPRN), lifecycle gates and clocks, hazard case record, resident decision record,
-      capacity register, grant ledger, defect register
+  - text: 'Deterministic: property master, published scoring weights, eligibility rules, gates and clocks,
+      resident decisions, capacity, grant ledger, defects'
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -202,14 +202,14 @@ elements:
     text_bold: true
     space_after: 0
     alignment: left
-  - text: A capped readiness stage, then gated shadow and live pilots in one delivery cell
+  - text: 'Agent-led modernisation of the existing model: one locality, existing teams and suppliers'
     text_font: Segoe UI
     text_size: 15
     text_color: '#102A43'
     text_bold: true
     space_after: 12
     alignment: left
-  - text: Every AI module needs a non-agent comparator and a stop criterion
+  - text: Rules stay deterministic where a decision must be transparent and repeatable
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -219,7 +219,7 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: Every layer traces to a role verdict and to BRD rows BR-059 to BR-068
+  - text: Each agent capability scales only if it beats the same workflow without it (proposed)
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -239,7 +239,7 @@ elements:
   height: 0.4
   fill: '#102A43'
   line_color: '#102A43'
-  text: '"Agentic" is an implementation option, not the business outcome'
+  text: Agents earn the right to scale only through safe, resident-accepted, evidence-complete handovers
   text_font: Segoe UI
   text_size: 15
   text_color: '#FFFFFF'
@@ -257,32 +257,16 @@ elements:
   top: 6.7
   width: 12.133000000000001
   height: 0.28
-  text: 'Sources: case_study_48_addendum.md (Solution Proposal); agent-request-challenge.md (Cross-Cutting
-    Findings); BRD Document Status (26 Sep 2026).'
+  text: 'Sources: case_study_48_addendum.md (Where Agents Fit; Agentic Architecture Brief); agent-request-challenge.md;
+    BRD v0.5.0 Document Status (owner decision, 26 Sep 2026).'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
-speaker_notes: |
-  The challenge confirmed and sharpened the control plane I had proposed on 11
-  September. What changed on 26 September is that every layer now traces to a role
-  verdict, ten new BRD rows (BR-059 to BR-068) and five bounded AI candidates, each
-  with a comparator and a stop criterion.
+speaker_notes: |-
+  So if the gap is shared records, not intelligence, why is this agent-led? Because the records do not fill themselves. What rests on a small team today is coordination, chasing, re-keying, reconciliation and evidence assembly, and that unstructured work is where agents help. Later on 26 September, a challenge to my own measurement plan showed the pilot bundled three changes: a new delivery cell, ring-fenced supplier capacity and agents, so it could never tell the Board which one worked. So I reframed it as agent-led modernisation of the existing retrofit model. Whether coordination really is the binding constraint is still a Phase 0 question.
 
-  Read the stack from the bottom. The foundation is a portfolio control plane: a
-  deterministic layer with a property master keyed on UPRN, lifecycle gates and
-  statutory clocks, a hazard case record, a resident decision record, a capacity
-  register, a grant ledger and a defect register. Every one of the five requested
-  agents depended on these records, and they deliver value without any AI.
+  Read the stack from the bottom. The foundation is deterministic, because decisions that residents, the Regulator, funders or the Board must be able to follow should come from rules. Agents sit where the work is unstructured, and people keep every decision with legal, professional or resident authority.
 
-  On top sit five bounded AI capabilities that came up across several roles. All of
-  them recommend, draft or raise flags. None needs end-to-end ownership, and each
-  must beat a non-agent comparator in shadow testing before it goes live. They are
-  candidates for shadow testing, not tested yet.
-
-  At the top, accountable people keep every decision that carries legal,
-  professional or resident authority.
-
-  That changes the ask to the board: not a five-agent rollout, but a capped
-  readiness stage and gated pilots in one delivery cell.
+  The ask changes: agents added to existing teams in one locality and, as a proposal, each capability scales only if it beats the same workflow without it.

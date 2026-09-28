@@ -1,5 +1,5 @@
 slide: 12
-title: Traceability chain
+title: Challenges and lessons
 layout: blank
 background:
   fill: '#FFFFFF'
@@ -10,469 +10,250 @@ elements:
   top: 0.5
   width: 12.133000000000001
   height: 0.75
-  text: One real chain, from a decision down to its dated source
+  text: Keeping evidence honest was hard; here is what I would change
   font: Segoe UI
   font_size: 26
   font_color: '#102A43'
   font_bold: true
   vertical_anchor: middle
-- type: shape
-  name: Chain 1 head
-  shape: rounded_rectangle
-  left: 0.6
-  top: 1.7
-  width: 2.0666
-  height: 0.55
-  fill: '#B83A2E'
-  line_color: '#B83A2E'
-  text: Decision
-  text_font: Segoe UI
-  text_size: 15
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: shape
-  name: Chain 1 body
-  shape: rounded_rectangle
-  left: 0.6
-  top: 2.55
-  width: 2.0666
-  height: 1.75
-  fill: '#F0F4F8'
-  line_color: '#D9E2EC'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: top
-  text: ''
-  paragraphs:
-  - text: 'Addendum: approve a capped pilot, not a five-agent rollout; no end-to-end Stock Prioritisation
-      agent'
-    text_font: Segoe UI
-    text_size: 13
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 0
-    alignment: left
-  corner_radius: 0.06
-- type: shape
-  name: Chain arrow 1
-  shape: right_arrow
-  left: 2.7366
-  top: 1.83
-  width: 0.31
-  height: 0.3
-  fill: '#9FB3C8'
-  line_color: '#9FB3C8'
-- type: shape
-  name: Chain 2 head
-  shape: rounded_rectangle
-  left: 3.1166000000000005
-  top: 1.7
-  width: 2.0666
-  height: 0.55
-  fill: '#0B625B'
-  line_color: '#0B625B'
-  text: Evidence
-  text_font: Segoe UI
-  text_size: 15
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: shape
-  name: Chain 2 body
-  shape: rounded_rectangle
-  left: 3.1166000000000005
-  top: 2.55
-  width: 2.0666
-  height: 1.75
-  fill: '#F0F4F8'
-  line_color: '#D9E2EC'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: top
-  text: ''
-  paragraphs:
-  - text: 'Agent Request Challenge, Stock Prioritisation: "eligibility is a rules question"'
-    text_font: Segoe UI
-    text_size: 13
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 0
-    alignment: left
-  corner_radius: 0.06
-- type: shape
-  name: Chain arrow 2
-  shape: right_arrow
-  left: 5.253200000000001
-  top: 1.83
-  width: 0.31
-  height: 0.3
-  fill: '#9FB3C8'
-  line_color: '#9FB3C8'
-- type: shape
-  name: Chain 3 head
-  shape: rounded_rectangle
-  left: 5.6332
-  top: 1.7
-  width: 2.0666
-  height: 0.55
-  fill: '#1D5FB8'
-  line_color: '#1D5FB8'
-  text: Requirement
-  text_font: Segoe UI
-  text_size: 15
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: shape
-  name: Chain 3 body
-  shape: rounded_rectangle
-  left: 5.6332
-  top: 2.55
-  width: 2.0666
-  height: 1.75
-  fill: '#F0F4F8'
-  line_color: '#D9E2EC'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: top
-  text: ''
-  paragraphs:
-  - text: 'FR-026, AC-039 and CON-005: deterministic pass, fail or unknown eligibility'
-    text_font: Segoe UI
-    text_size: 13
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 0
-    alignment: left
-  corner_radius: 0.06
-- type: shape
-  name: Chain arrow 3
-  shape: right_arrow
-  left: 7.769800000000001
-  top: 1.83
-  width: 0.31
-  height: 0.3
-  fill: '#9FB3C8'
-  line_color: '#9FB3C8'
-- type: shape
-  name: Chain 4 head
-  shape: rounded_rectangle
-  left: 8.1498
-  top: 1.7
-  width: 2.0666
-  height: 0.55
-  fill: '#102A43'
-  line_color: '#102A43'
-  text: Source
-  text_font: Segoe UI
-  text_size: 15
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: shape
-  name: Chain 4 body
-  shape: rounded_rectangle
-  left: 8.1498
-  top: 2.55
-  width: 2.0666
-  height: 1.75
-  fill: '#F0F4F8'
-  line_color: '#D9E2EC'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: top
-  text: ''
-  paragraphs:
-  - text: WH:SHF Wave 3 technical annex, Page 3 footnote 1; retrieved 19 Sep 2026
-    text_font: Segoe UI
-    text_size: 13
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 0
-    alignment: left
-  corner_radius: 0.06
-- type: shape
-  name: Chain arrow 4
-  shape: right_arrow
-  left: 10.2864
-  top: 1.83
-  width: 0.31
-  height: 0.3
-  fill: '#9FB3C8'
-  line_color: '#9FB3C8'
-- type: shape
-  name: Chain 5 head
-  shape: rounded_rectangle
-  left: 10.666400000000001
-  top: 1.7
-  width: 2.0666
-  height: 0.55
-  fill: '#486581'
-  line_color: '#486581'
-  text: Change record
-  text_font: Segoe UI
-  text_size: 15
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
-- type: shape
-  name: Chain 5 body
-  shape: rounded_rectangle
-  left: 10.666400000000001
-  top: 2.55
-  width: 2.0666
-  height: 1.75
-  fill: '#F0F4F8'
-  line_color: '#D9E2EC'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: top
-  text: ''
-  paragraphs:
-  - text: log.md, 26 Sep entries; commits a72f231, 3db359c and c3e423a
-    text_font: Segoe UI
-    text_size: 13
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 0
-    alignment: left
-  corner_radius: 0.06
-- type: shape
-  name: Justify
-  shape: rounded_rectangle
-  left: 0.6
-  top: 4.6
-  width: 5.9015
-  height: 0.95
-  fill: '#E3F4F1'
-  line_color: '#B7E2DA'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: middle
-  text: ''
-  paragraphs:
-  - text: To justify
-    text_font: Segoe UI
-    text_size: 14
-    text_color: '#0B625B'
-    text_bold: true
-    space_after: 2
-    alignment: left
-  - text: Follow the chain from the decision down to the dated source.
-    text_font: Segoe UI
-    text_size: 13
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 0
-    alignment: left
-  corner_radius: 0.06
-- type: shape
-  name: Challenge
-  shape: rounded_rectangle
-  left: 6.8315
-  top: 4.6
-  width: 5.9015
-  height: 0.95
-  fill: '#FBEAE8'
-  line_color: '#F3C7C1'
-  line_width: 1
-  margin_left: 0.18
-  margin_right: 0.18
-  margin_top: 0.14
-  margin_bottom: 0.1
-  vertical_anchor: middle
-  text: ''
-  paragraphs:
-  - text: To challenge
-    text_font: Segoe UI
-    text_size: 14
-    text_color: '#B83A2E'
-    text_bold: true
-    space_after: 2
-    alignment: left
-  - text: Change one piece of evidence and see which rules and decisions move.
-    text_font: Segoe UI
-    text_size: 13
-    text_color: '#243B53'
-    text_bold: false
-    space_after: 0
-    alignment: left
-  corner_radius: 0.06
 - type: textbox
-  name: Classes label
+  name: Challenges head
   left: 0.6
-  top: 5.85
-  width: 1.9
-  height: 0.5
-  text: 'Every claim is labelled:'
+  top: 1.55
+  width: 12.133000000000001
+  height: 0.3
+  text: CHALLENGES
   font: Segoe UI
   font_size: 12
-  font_color: '#486581'
+  font_color: '#0B625B'
   font_bold: true
-  vertical_anchor: middle
+  margin_top: 0
+  margin_bottom: 0
+- type: textbox
+  name: Lessons head
+  left: 0.6
+  top: 4.2
+  width: 12.133000000000001
+  height: 0.3
+  text: WHAT I WOULD DO DIFFERENTLY
+  font: Segoe UI
+  font_size: 12
+  font_color: '#1D5FB8'
+  font_bold: true
+  margin_top: 0
+  margin_bottom: 0
 - type: shape
-  name: Class 1
+  name: Challenge 1
   shape: rounded_rectangle
-  left: 2.65
-  top: 5.85
-  width: 2.37075
-  height: 0.5
-  fill: '#102A43'
-  line_color: '#102A43'
-  text: Case-study fact
-  text_font: Segoe UI
-  text_size: 13
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
+  left: 0.6
+  top: 2.15
+  width: 3.8443333333333336
+  height: 1.75
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: No company data
+    text_font: Segoe UI
+    text_size: 16
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: The company is fictional. I modelled tenure, residents and finances from sector medians and
+      labelled every value as an estimate.
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
 - type: shape
-  name: Class 2
+  name: Challenge 2
   shape: rounded_rectangle
-  left: 5.220750000000001
-  top: 5.85
-  width: 2.37075
-  height: 0.5
-  fill: '#0B625B'
-  line_color: '#0B625B'
-  text: Sector hypothesis
-  text_font: Segoe UI
-  text_size: 13
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
+  left: 4.7443333333333335
+  top: 2.15
+  width: 3.8443333333333336
+  height: 1.75
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: Agents that sound certain
+    text_font: Segoe UI
+    text_size: 16
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: 'Role answers are hypotheses, and the roles share my framing. Divergences stay open: L4 quality
+      flags, L3 digital booking.'
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
 - type: shape
-  name: Class 3
+  name: Challenge 3
   shape: rounded_rectangle
-  left: 7.791500000000001
-  top: 5.85
-  width: 2.37075
-  height: 0.5
-  fill: '#1D5FB8'
-  line_color: '#1D5FB8'
-  text: Planning assumption
-  text_font: Segoe UI
-  text_size: 13
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
+  left: 8.888666666666667
+  top: 2.15
+  width: 3.8443333333333336
+  height: 1.75
+  fill: '#F0F4F8'
+  line_color: '#D9E2EC'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: Sources that disagree
+    text_font: Segoe UI
+    text_size: 16
+    text_color: '#0B625B'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: Interest cover 91% or 87%; fuel poverty corrected from 10.0% to 11.6%; EPC C final policy, not
+      commenced law. Flagged, not resolved.
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
 - type: shape
-  name: Class 4
+  name: Challenge 4
   shape: rounded_rectangle
-  left: 10.362250000000001
-  top: 5.85
-  width: 2.37075
-  height: 0.5
-  fill: '#486581'
-  line_color: '#486581'
-  text: Unknown detail
-  text_font: Segoe UI
-  text_size: 13
-  text_color: '#FFFFFF'
-  text_bold: true
-  alignment: center
-  vertical_anchor: middle
-  margin_left: 0.12
-  margin_right: 0.12
-  margin_top: 0.04
-  margin_bottom: 0.04
-  corner_radius: 0.12
+  left: 0.6
+  top: 4.8
+  width: 3.8443333333333336
+  height: 1.6
+  fill: '#E6EFFB'
+  line_color: '#C7D9F3'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: Start the log on day one
+    text_font: Segoe UI
+    text_size: 16
+    text_color: '#1D5FB8'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: Log entries before 25 Sep had to be reconstructed from Git history.
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Challenge 5
+  shape: rounded_rectangle
+  left: 4.7443333333333335
+  top: 4.8
+  width: 3.8443333333333336
+  height: 1.6
+  fill: '#E6EFFB'
+  line_color: '#C7D9F3'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: Canonical IDs from the first draft
+    text_font: Segoe UI
+    text_size: 16
+    text_color: '#1D5FB8'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: The first quality run scored 0% only because of legacy IDs; relabelling cost a full pass.
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
+- type: shape
+  name: Challenge 6
+  shape: rounded_rectangle
+  left: 8.888666666666667
+  top: 4.8
+  width: 3.8443333333333336
+  height: 1.6
+  fill: '#E6EFFB'
+  line_color: '#C7D9F3'
+  line_width: 1
+  margin_left: 0.18
+  margin_right: 0.18
+  margin_top: 0.14
+  margin_bottom: 0.1
+  vertical_anchor: top
+  text: ''
+  paragraphs:
+  - text: Run the value challenge earlier, and blind
+    text_font: Segoe UI
+    text_size: 16
+    text_color: '#1D5FB8'
+    text_bold: true
+    space_after: 6
+    alignment: left
+  - text: It came after eight BRD revisions, and the roles could read my addendum. One pass without it
+      would test for priming.
+    text_font: Segoe UI
+    text_size: 13
+    text_color: '#243B53'
+    text_bold: false
+    space_after: 0
+    alignment: left
+  corner_radius: 0.06
 - type: textbox
   name: Source
   left: 0.6
   top: 6.7
   width: 12.133000000000001
   height: 0.28
-  text: 'Sources: case_study_48_addendum.md (Recommended Executive Decision); agent-request-challenge.md;
-    BRD FR-026, CON-005; WH:SHF annex snapshot; log.md.'
+  text: 'Sources: docs/reference/log.md (Conventions; corrections, 25 to 26 Sep 2026); agent-request-challenge.md
+    (Divergences, Limitations); git log.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
-speaker_notes: |
-  This slide is the reason for all the structure. Any decision in the addendum can
-  be walked back to its evidence, and this is a real chain you can open.
+speaker_notes: |-
+  The writing was not the hard part. Keeping the evidence honest was.
 
-  The decision: the addendum recommends a capped readiness and pilot stage, not a
-  five-agent rollout, and stock prioritisation is not built as an end-to-end agent.
-  The evidence: in the agent request challenge, the roles said eligibility is a
-  rules question, not a judgement for an agent. The requirement: FR-026, legacy
-  BR-059, requires a deterministic pass, fail or unknown eligibility result, tested
-  by AC-039 and constrained by CON-005. The source: the Warm Homes Social Housing
-  Fund Wave 3 technical annex, page 3, footnote 1, which says that being in scope
-  does not by itself mean eligible, retrieved on 19 September. The change record:
-  the 26 September log entries and the commits that added and relabelled the rows.
+  The company is fictional, so every number about it is modelled and labelled as an estimate. The role agents are persuasive, and they read my own addendum, so they share my framing. Where they disagree, such as L4 autonomy for quality flags, I keep the divergence open. Sources disagree too, for example on interest cover, and I corrected a superseded fuel poverty measure. I flag those rather than silently choose.
 
-  To justify a decision, follow the chain. To challenge it, change one piece of
-  evidence, for example a real throughput figure from the company, and the chain
-  shows which requirements, rules and decisions have to move.
-
-  Every claim also carries an evidence class, so nobody mistakes a sector
-  hypothesis for a company fact.
+  If I started again, I would change four things. Start the log on day one; earlier entries had to be rebuilt from Git. Use canonical requirement identifiers from the first draft. When I fix an error, search every derived document for it; the what-if study repeated my Article 22 mistake. And run the value challenge earlier, and once without the addendum, to test whether the roles were primed by my framing.
