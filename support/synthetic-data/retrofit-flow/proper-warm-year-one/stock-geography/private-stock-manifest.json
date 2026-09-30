@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0-private-local",
+  "generated_at": "2026-09-30",
+  "seed": 4820260930,
+  "synthetic_home_count": 60000,
+  "candidate_address_points_in_source": 132033,
+  "selected_unique_map_anchors": 60000,
+  "lsoa_count": 1044,
+  "local_authority_count": 12,
+  "epc_group_counts": {
+    "EPC C or above": 44400,
+    "Below EPC C": 15600
+  },
+  "tenure_counts": {
+    "Shared ownership": 2940,
+    "Social rent": 44400,
+    "Social rent (assumed)": 5100,
+    "Affordable rent": 7560
+  },
+  "note": "All stock attributes are synthetic. Exact location anchors are sampled from real OSM address-bearing map features; association ownership and household tenure are not verified."
+}
