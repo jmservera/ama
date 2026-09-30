@@ -1,7 +1,7 @@
 ---
 title: Project Memory
 description: Owner-curated working notes, preferences and standing context for the AMA Case Study 48 project
-ms.date: 2026-09-25
+ms.date: 2026-09-30
 ms.topic: reference
 ---
 
@@ -42,6 +42,15 @@ Additional tips:
 * Practice your pitch multiple times to ensure smooth delivery.
 * Engage your audience with clear visuals and examples.
 * Time yourself to make sure you stay within the 15-minute limit.
+
+Cohort 1 shared the following guidance, recorded here as peer advice rather
+than validated evidence:
+
+* Start with the customer and the reason the work matters.
+* Make the business problem and value unmistakable.
+* Tell one clear end-to-end story, not a series of disconnected slides.
+* Show how the solution changes the customer outcome.
+* Use the demo as the proof point that brings the story to life.
 
 ## Standing Preferences
 

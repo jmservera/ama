@@ -118,7 +118,7 @@ official links for every snapshot. Check it before relying on any file below.
 
 | Document | Summary |
 | --- | --- |
-| [Project Memory](./memory.md) | AMA programme process, presentation guidance and owner preferences |
+| [Project Memory](./memory.md) | AMA programme process, customer-first presentation and demo guidance, and owner preferences |
 | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | Coaching prompt that turns a recurring task into a Goal Card for an agent working in an assess, act, check and adjust loop |
 | [Knowledge Base Log](./log.md) | Chronological record of knowledge base changes |
 

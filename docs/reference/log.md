@@ -549,3 +549,14 @@ metadata when the knowledge base was created.
 * Working records:
   `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/changes/build-validate-iteration-6.md`
   and `research/subagents/storytelling-review-iteration-6.md`.
+
+## [2026-09-30] memory | Add cohort presentation guidance
+
+* Trigger: the owner asked to preserve presentation advice shared by AMA
+  cohort 1.
+* Added five customer-first storytelling principles to `memory.md`: lead with
+  the customer and why, make the business problem and value explicit, tell one
+  end-to-end story, show the changed customer outcome and use the demo as the
+  proof point.
+* Classified the material as peer advice rather than validated evidence and
+  updated the knowledge-base index summary for Project Memory.
