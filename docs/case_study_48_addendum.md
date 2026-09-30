@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-09-27
+ms.date: 2026-09-30
 ms.topic: reference
 ---
 
@@ -19,6 +19,16 @@ The recommendations are proposals for validation, not approved requirements
 or observed outcomes. Sector benchmarks and illustrative economics are not
 company facts. Where this addendum challenges the original claims or autonomy
 levels, the distinction is intentional; the original remains unchanged.
+
+### Capstone Review Gate
+
+The final presentation, architecture and pitch must each be checked and
+challenged against the complete
+[Capstone Assessment Guide](./reference/method/ama-capstone-assessment-guide.md)
+before they are treated as ready. The review must use the published criteria
+and descriptors, cite the evidence for each judgement, expose gaps and
+assumptions, and apply the section and individual-criterion floors rather than
+relying on an overall score.
 
 ### Additions Since the Original
 

@@ -64,7 +64,7 @@ management: short pages that point to clusters of related material.
 | Challenge whether a requested agent is needed, or decide what to build instead | [Agent Request Challenge](./research/company/agent-request-challenge.md) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
 | Test whether richer inputs (phone photos, geotagging, structured invoices) change any agent verdict | [Agent What-If Study](./research/company/agent-what-if-study.md) | [Agent Request Challenge](./research/company/agent-request-challenge.md) |
 | Design pilot measurement, baselines, comparison cohorts or a benefits dashboard | [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) |
-| Prepare a presentation or pitch | [Project Memory](./memory.md) | [AMA mentor progress review](../presentations/ama-mentor-progress-review.pptx) and [85-day roadmap](../case-study-85-day-roadmap.svg) |
+| Prepare or challenge the final presentation, architecture or pitch | [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) | [Project Memory](./memory.md), [Case Study 48 Addendum](../case_study_48_addendum.md), [AMA mentor progress review](../presentations/ama-mentor-progress-review.pptx) and [85-day roadmap](../case-study-85-day-roadmap.svg) |
 | Design a looped agent goal | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | [Project Memory](./memory.md) |
 | Find proven use cases, customer evidence or reusable solutions | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 
@@ -118,7 +118,8 @@ official links for every snapshot. Check it before relying on any file below.
 
 | Document | Summary |
 | --- | --- |
-| [Project Memory](./memory.md) | AMA programme process, customer-first presentation and demo guidance, and owner preferences |
+| [Project Memory](./memory.md) | AMA programme process, capstone rubric review requirement, customer-first presentation and demo guidance, and owner preferences |
+| [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) | Complete FY27 participant rubric for technical excellence, communication and executive presence, consultative and stakeholder skills, and the thought leadership artifact |
 | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | Coaching prompt that turns a recurring task into a Goal Card for an agent working in an assess, act, check and adjust loop |
 | [Knowledge Base Log](./log.md) | Chronological record of knowledge base changes |
 

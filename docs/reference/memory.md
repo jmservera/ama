@@ -34,6 +34,14 @@ The programme progresses through five stages:
 Prepare a 15-minute presentation pitch, and be prepared to go back and forth
 between the business and technology.
 
+The final presentation, architecture and pitch must each be checked and
+challenged against the complete
+[Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md).
+The challenge must use the published criteria and descriptors, record the
+evidence for each judgement, identify gaps and assumptions, and apply the
+section and individual-criterion floors before treating a deliverable as
+ready.
+
 Additional tips:
 
 * Prepare the meetings for explaining it to the CEO, CIO and CFO, tailoring your message to each executive's priorities and concerns.

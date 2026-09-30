@@ -560,3 +560,14 @@ metadata when the knowledge base was created.
   proof point.
 * Classified the material as peer advice rather than validated evidence and
   updated the knowledge-base index summary for Project Memory.
+
+## [2026-09-30] ingest | Add AMA capstone assessment rubric
+
+* Trigger: the owner supplied the FY27 participant rubric and asked that the
+  final presentation, architecture and pitch be checked and challenged against
+  it.
+* Converted the supplied document to
+  `method/ama-capstone-assessment-guide.md` without changing its wording.
+* Added the rubric to task routing and the method catalog.
+* Added an explicit rubric review gate to `memory.md` and
+  `../case_study_48_addendum.md`.
