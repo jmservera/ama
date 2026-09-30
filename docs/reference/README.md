@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-09-27
+ms.date: 2026-09-30
 ms.topic: overview
 ---
 
@@ -80,7 +80,7 @@ management: short pages that point to clusters of related material.
 | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) | Evidence, team and bounded assistant requirements for finding delivery constraints | 2026-09-19 |
 | [Idea Register](../ideas/idea-register.md) | Research ideas that are not yet validated requirements | 2026-09-24 |
 | [System One Decision Models for Retrofit Agents](../ideas/typesafe-system-one-agent-fit.md) | Research on typed decision models for IDEA-001 | 2026-09-24 |
-| [AMA mentor progress review](../presentations/ama-mentor-progress-review.pptx) | Deck for the first mentoring session, with 14 slides and a knowledge-organisation appendix. It covers the request and its gaps, research loops, role agents, the value challenge, agent-led modernisation, pilot measurement and transparency, the what-if stress test, BRD quality, lessons, a traceability chain and mentor questions. Maintained with the `ama-mentor-deck` skill. Working files: `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/` | Binary file, 2026-09-27 |
+| [AMA mentor progress review](../presentations/ama-mentor-progress-review.pptx) | Deck for the first mentoring session, with 14 slides and a knowledge-organisation appendix. It covers the request and its gaps, research loops, role agents, the value challenge, agent-led modernisation, pilot measurement and transparency, the what-if stress test, BRD quality, lessons, a traceability chain and mentor questions. Iteration 6 updates the Git evidence and repairs source footers. The validated working build is ready, but the 2026-09-27 published binary remains in place because PowerPoint held it open on 2026-09-30. Maintained with the `ama-mentor-deck` skill. Working files: `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/` | Validated working build, 2026-09-30; publish blocked |
 | [85-day roadmap](../case-study-85-day-roadmap.svg) | C-suite solution roadmap diagram, with its [Excalidraw source](../case-study-85-day-roadmap.excalidraw) | Binary file |
 
 ### Research Syntheses

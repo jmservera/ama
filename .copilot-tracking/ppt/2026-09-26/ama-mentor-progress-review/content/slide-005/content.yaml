@@ -428,16 +428,21 @@ elements:
 - type: textbox
   name: Source
   left: 0.6
-  top: 6.7
-  width: 12.133000000000001
-  height: 0.28
-  text: 'Sources: .github/agents/company-*.agent.md; agent-request-challenge.md (Grant and Funding); WH:SHF
-    technical annex (Page 3, Page 5 Table 3), retrieved 19 Sep 2026. Question paraphrased.'
+  top: 6.6
+  width: 12.0
+  height: 0.38
+  text: |-
+    Sources: company role agents; Agent Request Challenge (Grant and Funding); WH:SHF technical annex, pp. 3 and 5 (retrieved 19 Sep 2026).
+    Question paraphrased.
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
+  alignment: left
+  vertical_anchor: top
+  margin_left: 0
+  margin_right: 0
 speaker_notes: |-
   The company is fictional, so there is nobody to interview. I created eight role agents, one for each perspective that owns part of a retrofit programme.
 

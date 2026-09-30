@@ -269,16 +269,21 @@ elements:
 - type: textbox
   name: Source
   left: 0.6
-  top: 6.7
-  width: 12.133000000000001
-  height: 0.28
-  text: 'Source: agent-request-challenge.md (26 Sep 2026). Roles read the case, addendum and BRD: verdicts
-    are sector-informed hypotheses, not validation.'
+  top: 6.6
+  width: 12.0
+  height: 0.38
+  text: |-
+    Source: Agent Request Challenge (26 Sep 2026). Roles read the case, addendum and BRD.
+    Verdicts are sector-informed hypotheses, not validation.
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
+  alignment: left
+  vertical_anchor: top
+  margin_left: 0
+  margin_right: 0
 speaker_notes: |-
   This is the turning point. I stopped treating the five agents as a specification and read each "owns end-to-end" line as the business telling us what value it expects. For example, quality verification means never paying for defective work.
 

@@ -241,16 +241,20 @@ elements:
 - type: textbox
   name: Source
   left: 0.6
-  top: 6.7
-  width: 12.133000000000001
-  height: 0.28
-  text: 'Sources: docs/reference/log.md (Conventions; corrections, 25 to 26 Sep 2026); agent-request-challenge.md
-    (Divergences, Limitations); git log.'
+  top: 6.6
+  width: 12.0
+  height: 0.38
+  text: 'Sources: knowledge-base log (conventions and corrections, 25 to 26 Sep 2026); Agent Request Challenge
+    (Divergences; Limitations); git log.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
+  alignment: left
+  vertical_anchor: top
+  margin_left: 0
+  margin_right: 0
 speaker_notes: |-
   The writing was not the hard part. Keeping the evidence honest was.
 

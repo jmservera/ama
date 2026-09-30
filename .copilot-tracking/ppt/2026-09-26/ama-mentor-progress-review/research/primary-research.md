@@ -35,7 +35,7 @@
 | Contradictions: 91% vs 87% interest cover; fuel poverty 10.0% to 11.6% | log 2026-09-25 |
 | Divergences: L4 quality flags, L3 digital booking | `agent-request-challenge.md`, Divergences |
 | Knowledge base layers, Karpathy LLM Wiki pattern | `docs/reference/README.md` |
-| 41 non-merge commits 10 to 27 Sep, three merged PRs; 13 commits touch the BRD | `git rev-list --count --no-merges HEAD` and `git log --no-merges -- docs/brds/agentic-retrofit-programme-brd.md` on 2026-09-27 |
+| 42 non-merge commits 10 to 27 Sep; five PRs merged by 28 Sep; 13 commits touch the BRD | `git rev-list --count --no-merges HEAD`, `git log --no-merges -- docs/brds/agentic-retrofit-programme-brd.md`, and `gh pr list --state merged` checked for iteration 6 |
 | 20 what-if scenarios, value-versus-complexity grid, grid as a Comparison 2 test order under proposed OD-34; post-merge corrections (Articles 22A to 22C, nine answers re-run, two author hypotheses); all 48 role answers re-run against the reframe, six tightened controls, every verdict held | `agent-what-if-study.md` (Summary of Revised Verdicts; Reconciliation With the Current Proposal; Value vs Complexity Quadrant; Purpose and Method); review record `.copilot-tracking/reviews/logs/2026-09-27/agent-what-if-study-post-merge-review.md` |
 | 85-day plan ending 5 Dec, sessions, fallback demo | `.copilot-tracking/plans/2026-09-19/case-study-85-day-delivery-plan.instructions.md` |
 | 15-minute pitch for CEO, CIO, CFO | `docs/reference/memory.md` |
@@ -74,3 +74,6 @@
 * `docs/presentations/proper-warm-cxo-initial-proposal.pptx` was deliberately
   removed by the owner (confirmed 2026-09-27). This deck is published to
   `docs/presentations/ama-mentor-progress-review.pptx`.
+* The iteration 6 working build passed both validators on 2026-09-30, but the
+  published copy could not be replaced because PowerPoint held it open. The
+  working build remains the delivery candidate until the lock is released.

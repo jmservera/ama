@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-09-27
+ms.date: 2026-09-30
 ms.topic: reference
 ---
 
@@ -528,3 +528,24 @@ metadata when the knowledge base was created.
   published copy matches the build by SHA-256.
 * Working records: `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/changes/build-validate-iteration-5.md`
   and `research/subagents/storytelling-review-iteration-5.md`.
+
+## [2026-09-30] query | Validate mentor deck iteration 6
+
+* Trigger: the owner supplied the completed iteration 6 storytelling review
+  and asked for its three findings to be executed without changing the
+  15-slide structure or the 10 to 27 September title period.
+* Slides 3 and 15 now show 42 non-merge commits through 27 September. Slide 15
+  distinguishes that period from five pull requests merged by 28 September.
+* Source footers on slides 3 to 13 now use concise citations, explicit
+  left alignment and one- or two-line layouts with safe edge margins. Slides
+  3 to 13 were inspected from the final PowerPoint exports.
+* Both validators report zero issues across 15 slides. Main notes remain
+  1,967 words. The validated working build has SHA-256
+  `8F3CD9DDFAF47CB1E5738AFB7BE790E2D8A61CA70C87203D98066677D46A5F5D`.
+* Publication is blocked because PowerPoint holds
+  `../presentations/ama-mentor-progress-review.pptx` open. The file was not
+  replaced or forced. Its SHA-256 remains
+  `D950070D0E8C1EC50951E33E5B412B6F12E02C5AF24D1272DFD45CE83F645343`.
+* Working records:
+  `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/changes/build-validate-iteration-6.md`
+  and `research/subagents/storytelling-review-iteration-6.md`.

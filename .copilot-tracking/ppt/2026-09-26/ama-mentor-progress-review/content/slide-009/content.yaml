@@ -174,16 +174,21 @@ elements:
 - type: textbox
   name: Source
   left: 0.6
-  top: 6.7
-  width: 12.133000000000001
-  height: 0.28
-  text: 'Sources: pilot-measurement-challenge.md (Summary; Owner Decision); BRD v0.5.0 CON-003, RULE-019,
-    RULE-024, AC-079, FR-042 to FR-044, OD-34, OD-39; log.md (26 Sep 2026). Role answers are hypotheses.'
+  top: 6.6
+  width: 12.0
+  height: 0.38
+  text: |-
+    Sources: Pilot Measurement Challenge; BRD v0.5.0 CON-003, RULE-019, RULE-024, AC-079, FR-042 to FR-044, OD-34 and OD-39;
+    log, 26 Sep 2026. Role answers are hypotheses.
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
+  alignment: left
+  vertical_anchor: top
+  margin_left: 0
+  margin_right: 0
 speaker_notes: |-
   Two challenges asked whether I could prove the value and whether I could explain it. The first came before the reframe and caused it; the second came after.
 

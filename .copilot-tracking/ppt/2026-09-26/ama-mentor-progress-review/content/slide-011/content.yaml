@@ -359,16 +359,21 @@ elements:
 - type: textbox
   name: Source
   left: 0.6
-  top: 6.7
-  width: 12.133000000000001
-  height: 0.28
-  text: 'Sources: BRD v0.5.0 frontmatter and Requirements Traceability; .copilot-tracking/brd-sessions/agentic-retrofit-programme.quality-report.yml
-    (Runs 1 to 6); log.md (26 Sep 2026).'
+  top: 6.6
+  width: 12.0
+  height: 0.38
+  text: |-
+    Sources: BRD v0.5.0 frontmatter and Requirements Traceability; BRD quality report, runs 1 to 6;
+    log, 26 Sep 2026.
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
+  alignment: left
+  vertical_anchor: top
+  margin_left: 0
+  margin_right: 0
 speaker_notes: |-
   Alongside all of this ran a formal BRD quality review, re-run after every change. The first run failed hard: the BRD used legacy BR and OBJ identifiers, so the reviewer measured zero percent coverage from functional requirements to acceptance criteria and business goals.
 
