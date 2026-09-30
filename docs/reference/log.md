@@ -571,3 +571,22 @@ metadata when the knowledge base was created.
 * Added the rubric to task routing and the method catalog.
 * Added an explicit rubric review gate to `memory.md` and
   `../case_study_48_addendum.md`.
+
+## [2026-09-30] query | Review BRD against capstone rubric
+
+* Reviewed the Agentic Retrofit Programme BRD against all 20 FY27 AMA
+  capstone criteria and applied the section and individual-criterion floors.
+* Recorded a provisional evidence score of 61/100 if assessed today. Section B
+  is below its floor, and A4, B3, B5 and D3 score 1 because working
+  implementation, demo delivery and dissemination evidence do not yet exist.
+* Added
+  `research/company/capstone-brd-rubric-review.md` with criterion evidence,
+  gaps and a four-gate remediation plan covering build, operation, executive
+  delivery and publication.
+* Updated `../brds/agentic-retrofit-programme-brd.md` to version 0.6.0 with a
+  Board decision narrative and a clearer separation between the complete
+  non-production demonstrator and separately authorised operational
+  validation.
+* Open questions: the demonstrator architecture, technology choices, threat
+  model, model evaluation harness, operating targets, cost per journey, timed
+  demo and thought-leadership publication route remain to be completed.

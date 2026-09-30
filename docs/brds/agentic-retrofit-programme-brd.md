@@ -2,15 +2,15 @@
 title: Agentic Retrofit Programme Business Requirements Document
 description: Business requirements for safe, resident-centred and financially controlled retrofit delivery
 author: AMA Research Team
-ms.date: 2026-09-26
+ms.date: 2026-09-30
 ms.topic: reference
 brd_id: "BRD-2026-AMA48-001"
 status: "draft"
-version: "0.5.0"
+version: "0.6.0"
 owners: ["AMA Research Team"]
 reviewers: ["Executive Director of Assets (proposed sponsor)", "Named Proper North Homes control owners (to be confirmed)"]
 created_date: "2026-09-11"
-last_updated: "2026-09-26"
+last_updated: "2026-09-30"
 business_goal_ids: ["BG-001", "BG-002", "BG-003", "BG-004", "BG-005", "BG-006", "BG-007", "BG-008", "BG-009", "BG-010", "BG-011", "BG-012"]
 business_goal_smart_status: "fail"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -39,7 +39,7 @@ requirement_id_prefixes:
 | Status | Draft for business validation |
 | Source | [Original Case Study 48](../case_study_48_original.md) and [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Proposal source | [Case Study 48 Addendum](../case_study_48_addendum.md) |
-| Recommended decision | Capped readiness and gated pilot; no portfolio-wide rollout or capital acceleration approval |
+| Recommended decision | Build an end-to-end non-production demonstrator, then authorise controlled operational validation; no portfolio-wide rollout or capital acceleration approval |
 | Owner decision | 2026-09-26: frame the programme as agent-led modernisation of the existing retrofit model, with agents taking on coordination, chasing, re-keying, reconciliation and evidence assembly while people keep decisions |
 
 > [!IMPORTANT]
@@ -104,10 +104,75 @@ delivery capacity, evidence-based grant reporting, controlled quality and an
 affordable portfolio trajectory.
 
 The immediate investment request is a capped readiness stage followed by
-separately authorised shadow and live pilots. The underlying retrofit capital
-case and the incremental technology case require separate appraisal. A
-five-agent rollout, GBP 40 million of secured grant and doubled throughput are
-not approval assumptions.
+an end-to-end non-production demonstrator and separately authorised shadow and
+live validation. The underlying retrofit capital case and the incremental
+technology case require separate appraisal. A five-agent rollout, GBP 40
+million of secured grant and doubled throughput are not approval assumptions.
+
+## Board Decision Narrative
+
+Proper North Homes does not have a spreadsheet problem. It has a delivery
+control problem that spreadsheets make harder to see. A small team coordinates
+property evidence, professional approvals, resident decisions, supplier
+capacity, grant records and quality assurance across fragmented records. The
+result is avoidable chasing, repeated data entry, unclear ownership and weak
+visibility of the constraint preventing each home from progressing.
+
+The stakes are material. The provisional scenario contains 15,600 homes below
+EPC C and implies 3,900 accepted completions a year over four full delivery
+years. At the illustrative GBP 20,000 cost per home, that is a GBP 312 million
+programme before the association has validated the cohort, delivery capacity,
+grant award, match funding or affordability. Moving unreliable information
+faster would amplify risk rather than create value.
+
+We recommend that the Board sponsor a complete end-to-end demonstrator of the
+target operating model, followed by controlled operational validation. The
+demonstrator will connect one property journey from readiness and assessment
+through resident engagement, supplier coordination, quality evidence, grant
+reconciliation and portfolio reporting. It will use synthetic or approved
+de-identified cases in a non-production environment, so the architecture can
+be built, tested and demonstrated without exercising live authority over a
+resident, contractor, payment, grant claim or safety decision.
+
+The proposition is not five autonomous agents replacing existing teams. It is
+one controlled property lifecycle with bounded agents removing coordination,
+chasing, re-keying, reconciliation and evidence-assembly work. Deterministic
+controls govern safety holds, consent status, eligibility, approvals, funding
+and lifecycle transitions. Agents may reconcile records, draft from approved
+evidence, recommend within committed capacity and raise exceptions. Named
+people retain every consequential decision.
+
+The first demonstration must prove value to the people doing the work. A user
+should be able to see which homes need attention, why each is blocked, who owns
+the next action and when the resident should receive an update. The system
+should pre-populate sourced facts, assemble draft evidence packs and route
+exceptions instead of asking staff to maintain parallel spreadsheets. Success
+is less manual effort and fewer avoidable failures per accepted handover, not
+the number of agent features shown.
+
+The Board is asked to approve the direction and the conditions for a capped
+demonstrator, not the full capital programme or portfolio rollout. Before any
+live validation, accountable owners must approve the lawful measurement basis,
+data protection assessment, safety and resident guardrails, technical
+authority, supplier capacity, funding position, operating cost and stop
+criteria. The demonstrator must disclose known gaps and show tested fallback
+when an agent, model, integration or data source fails.
+
+The programme will return with evidence in three forms:
+
+* a working architecture that completes representative property journeys
+  end to end and exposes its state, decisions, handoffs and failures;
+* a task-level comparison showing whether each agent capability improves
+  quality, review time and cost over deterministic workflow alone; and
+* an operational validation plan showing how attributable value, resident
+  experience, safety, quality, affordability and scale readiness will be
+  measured against current delivery.
+
+This is more ambitious than a collection of disconnected pilots and safer than
+an immediate portfolio rollout. It builds the complete architecture needed to
+demonstrate the future service, while preserving a separate evidence gate
+before the association exposes residents, staff, suppliers or capital to live
+consequences.
 
 ## Evidence Classification
 
@@ -590,6 +655,7 @@ decisions remain prohibited.
 | Phase | Proposed scope and timing | Evidence and authority to proceed |
 | --- | --- | --- |
 | 0. Readiness | Indicative 6 to 8 weeks; validate pilot-area stock and building data, twelve-month throughput, delay causes, resident journeys, competence, suppliers, funding, headroom and platform options; after the frozen protocol and the OD-36 DPIA and lawful measurement basis are approved, switch on identical event capture for the proposed pilot locality and matched locality before resident contact | Sponsor and Finance authorise a capped discovery envelope; relevant control owners accept the baseline, options appraisal, Comparison 1 and Comparison 2 evaluation protocol, guardrails and data-protection gates before any Phase 0 pilot or comparison event capture. Shadow testing additionally requires the shadow-mode entry evidence listed for Phase 1 |
+| 0D. End-to-end demonstrator | Build and self-test the complete target workflow in a non-production environment using synthetic or approved de-identified cases; include representative successful, safety-hold, consent, eligibility, missing-evidence and integration-failure paths | Sponsor accepts demonstrator scope and cost; architecture, security, data and control owners accept that no live authority or production dependency is implied. Progression to shadow mode requires documented component contracts, threat controls, evaluation results, observability, known gaps and tested fallback |
 | 1. Shadow mode | Recommendations, drafts and exception tests without live commitments or resident contact; duration agreed after readiness; run paired agent outputs against the same cases handled by workflow-only teams where lawful | Sponsor authorises live pilot only after safety, technical, resident, finance, procurement, data and digital owners accept controls, comparison results, DPIA, continuity tests, guardrail stop triggers and pilot budget |
 | 2. Controlled live pilot | Indicative 6 to 9 months; existing teams and suppliers in one locality, a few understood archetypes, named accountable owners, agents operating within recommend, draft, reconcile and flag boundaries, 80 to 100 candidate homes and at least 50 accepted handovers proposed; assurance capacity needed for safety remains a control | Control owners and independent assurance review the frozen benefits scorecard, operating dashboard exceptions and guardrail breaches; Board authorises any acceleration beyond the existing annual plan under RULE-011 |
 | 3. Repeatable schemes | Approved archetype patterns, geographic packages, planned-maintenance alignment, supplier scorecards and risk-based inspection | Next tranche requires accepted quality, resident, capacity, funding and financial evidence within the approved envelope |
@@ -610,6 +676,136 @@ waive safety, resident or financial gates. Portfolio optimisation may be
 deferred, but pilot properties must already have the necessary building and
 planned-maintenance checks. Failure to demonstrate AI value can lead to
 conventional workflow delivery rather than a forced AI rollout.
+
+### User Value, Adoption and End-to-End Demonstration Strategy
+
+The programme should not be pitched as a technology demonstration alone. The
+value proposition is an agent-led modernisation of the current retrofit model
+that reduces administrative drag, eliminates avoidable rework and improves
+decision quality without diluting resident choice, safety controls, professional
+authority or financial discipline. The solution therefore has two parallel goals:
+
+1. prove the complete workflow and architecture across representative
+   non-production property journeys; and
+2. prove the people who run the process find it easier to use than the current
+   spreadsheet-based coordination model.
+
+The main design tension is that the evaluation rubric requires a complete,
+end-to-end architecture demonstration, while the staged-implementation logic
+requires controlled evidence before live use. The solution separates technical
+completeness from operational authority. The demonstrator implements the
+complete architecture in a non-production environment with synthetic or
+approved de-identified cases. Shadow and live validation then test whether the
+same capabilities create attributable value in the operating context. A
+complete demo therefore does not imply a portfolio-wide autonomous
+implementation.
+
+The architecture should therefore be demonstrated across one complete retrofit
+journey from property readiness through assessment, eligibility, resident
+engagement, contractor coordination, evidence assurance and portfolio
+reporting. Within that slice, the deterministic workflow establishes the
+source of truth and the agent functions are limited to recommend, draft,
+reconcile and raise-only behaviours. The value to users is visible in every stage:
+
+* property, risk and grant data are reconciled before survey and no longer
+  re-entered manually across spreadsheets;
+* the team sees a single queue of homes by stage, age, owner and block reason;
+* draft PAS 2035 inputs and grant evidence packs are assembled from approved
+  records, reducing rework and missed evidence;
+* resident decision records and communication drafts are generated and routed to
+  named staff for approval, not silently assumed;
+* capacity, work-order and appointment planning is suggested against committed
+  supplier capacity instead of through manual chasing;
+* quality evidence is checked for omissions and anomalies before handover, with
+  flagged exceptions routed to a person;
+* reports show where the programme is blocked, who owns the next action and
+  which homes remain off-plan because of data, resident access, capacity or
+  professional review.
+
+This provides immediate value to the end users because it removes the work they
+currently do in Excel, not because it creates an additional process layer.
+Legal, regulatory and resident-safeguard controls remain visible and
+non-negotiable. Human users keep authority for safety holds, resident consent,
+professional sign-off, supplier instruction, grant approval, payment and quality
+acceptance.
+
+The adoption plan lowers resistance to change by showing user value before
+asking the organisation to change live work. The demonstrator should contain a
+representative synthetic case pack covering straightforward journeys,
+resident-contact-heavy journeys, supplier dependencies, missing or conflicting
+data and controlled failures. Staff can test those journeys and influence the
+design without affecting a resident or live decision. The later operational
+cohort should cover one locality, a limited number of archetypes and a bounded
+set of completion routes, with a matched comparison group.
+
+| Demonstration objective | Proposed design | Value to users | Approval gate |
+| --- | --- | --- | --- |
+| End-to-end architecture proof | Non-production implementation of the full lifecycle from intake to handover, with deterministic workflow, bounded agent functions and synthetic or approved de-identified cases | Team sees one path through an otherwise fragmented system without the spreadsheet shuffle | Sponsor accepts the scope; architecture, security and control owners accept the evidence and known gaps |
+| User-value proof | Staff test current pain points: duplicate data entry, missing evidence, queue ambiguity, resident communication and manual rework | Users experience fewer manual steps, clearer ownership and faster escalation in a safe proving environment | Process owners validate the scenarios and usability findings |
+| Adoption and trust | Human approval gates, evidence lineage, explanations, overrides and failure recovery are visible during the demo | Staff can see where the workflow helps and where human judgement still matters | Data, DPO, resident engagement and technical owners accept progression to shadow mode |
+| Operational value | One locality and a matched comparison group validate the demonstrated capabilities against current delivery | Teams learn from real cases without unbounded operational risk | Sponsor approves the cohort, lawful measurement basis, measures and stop criteria |
+
+The demonstrator should therefore be designed as a complete but bounded
+proving environment, not a collection of disconnected feature prototypes. It
+must exercise at least one complete property journey in every major pathway,
+supported by the shared record, lifecycle state, queue management, named
+ownership, approval gates, agent handoffs, observability and failure recovery.
+The later operational validation provides the comparison arm and evidence of
+real-world value.
+
+The proposed staged sequence is:
+
+1. Baseline and design: define the property lifecycle, map the current
+   resident and contractor journey and identify the manual work now done in
+   spreadsheets.
+2. End-to-end build: implement the common property record, state model, queue,
+   handoff ownership, consent status, quality checklist, grant ledger,
+   deterministic controls and bounded agent assistance in non-production.
+3. Architect self-test: execute representative happy, exception and failure
+   paths; capture logs, metrics, traces, latency, quality and cost; disclose
+   simulated boundaries and known gaps.
+4. Staff validation: ask representative users to complete the same scenarios,
+   test whether the workflow is faster and clearer than the spreadsheet
+   process, and correct barriers before shadow use.
+5. Shadow and operational comparison: instrument the current process in the
+   pilot and matched localities, freeze the event dictionary, and use task-level
+   and process-level evidence to show whether the demonstrated capabilities
+   improve accepted outcomes.
+6. Scale decision: proceed to the next tranche only after value is
+   demonstrated and controls prove stable, with reporting and governance
+   revalidated for the broader rollout.
+
+This gives the sponsor a more ambitious plan than a few disconnected pilots
+while preserving an evidence-led, low-risk progression. The architecture is
+built and exercised end to end first. Operational authority is added only
+after self-test, staff validation and control-owner review. The project does
+not seek to prove a fully autonomous agent portfolio; it proves that a bounded,
+accountable workflow can work as a complete service and then tests whether it
+outperforms the spreadsheet model.
+
+The user-value measures should be visible to the programme team in the first
+month of demonstration, not only at the end of the pilot. Lead indicators should
+include:
+
+* time to reconcile missing records and evidence;
+* manual hours avoided per home;
+* number of homes left unowned or stalled in the queue;
+* repeat resident contacts and failed access events;
+* number of grant evidence packs drafted without manual correction;
+* percentage of homes with clear next action, owner and promised update;
+* number of critical exceptions caught before a survey or handover.
+
+Lagging indicators should include accepted handovers, defect rates, quality
+rework, grant conversion efficiency, resident satisfaction and maintenance of
+safety and consent controls. These metrics support the BRD's requirement that
+value be assessed against current delivery, not against the activity count or
+the number of AI features shown in a demo.
+
+The governing principle is therefore straightforward: prove a complete,
+value-bearing operating slice end-to-end, keep the decision authority with
+people, and only then expand. This satisfies the rubric requirement for a
+credible architecture demonstration while aligning with the staged, regulated,
+resident-safe delivery model expected by the BRD.
 
 ### Pilot Evaluation
 
@@ -1522,6 +1718,7 @@ This draft integrates:
 
 * [Original Case Study 48](../case_study_48_original.md)
 * [Case Study 48 Addendum](../case_study_48_addendum.md)
+* [Capstone Rubric Review of the Agentic Retrofit Programme BRD](../reference/research/company/capstone-brd-rubric-review.md)
 * [Case Study 48 Addendum - Executive Solution Proposal](../case_study_48_addendum.md)
 * [Company Profile Research](../reference/research/company/company-profile-research.md),
   including the Modelled Customer Profile added on 25 September 2026
@@ -1543,6 +1740,14 @@ This draft integrates:
 The Housing role reviews provide sector-informed recommendations. They do not
 replace resident research, competent professional judgement, formal governance
 or legal advice.
+
+The 30 September 2026 capstone review assessed this BRD against all 20 FY27 AMA
+criteria. It found a strong design and governance foundation but no working
+evidence for implementation completeness, observability, demo delivery or
+dissemination. Version 0.6.0 therefore separates a complete non-production
+demonstrator from shadow and live operational authority and adds a Board
+decision narrative. This change does not validate any business outcome or
+authorise live use.
 
 The 11 September 2026 addendum review informs the revised digital foundation,
 pilot gates, value attribution and new requirements. Pilot sizes, durations
