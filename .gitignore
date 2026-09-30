@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+# Synthetic-data answer keys stay local so analysis can remain blind
+support/synthetic-data/**/answer-key/
