@@ -1,0 +1,26 @@
+{
+  "task_id": "2026-10-02-rubric-gate-push-test-head-parent",
+  "task_slug": "rubric-gate-push-test-head-parent",
+  "parent_task": { "task_id": "2026-10-02-rubric-gate-diff-base-tests", "task_slug": "rubric-gate-diff-base-tests" },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/reviews/2026-10-02/rubric-gate-diff-base-tests-review.md",
+    "plan": ".copilot-tracking/reviews/2026-10-02/rubric-gate-push-test-head-parent-review.md",
+    "details": null,
+    "critique": null,
+    "changes": ".copilot-tracking/reviews/2026-10-02/rubric-gate-push-test-head-parent-review.md",
+    "review": ".copilot-tracking/reviews/2026-10-02/rubric-gate-push-test-head-parent-review.md"
+  },
+  "confirmed_decisions": [
+    { "decision": "Research reused (RT-001); critique skipped; review executed once inline: Conformant, RT-001 closed", "status": "recorded", "evidence": ".copilot-tracking/reviews/2026-10-02/rubric-gate-push-test-head-parent-review.md" }
+  ],
+  "blockers": [],
+  "next_action": { "phase": "Follow-up", "action": "Owner selects a ranked follow-up, Stop automatic session, or Switch to manual mode" },
+  "prioritized_follow_ups": [
+    { "rank": 1, "task": "RV-002 pass the model's input as a file from rubric_prepare; verify on first live run", "rationale": "Removes dependence on gh-aw .github snapshot", "evidence": "RV-002" },
+    { "rank": 2, "task": "Remaining hardening RV-005, RV-006, RV-009, RV-010, RG-002, RG-009, RG-010", "rationale": "Low-severity defence in depth", "evidence": "earlier reviews" }
+  ]
+}

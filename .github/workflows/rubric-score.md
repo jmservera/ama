@@ -69,6 +69,24 @@ jobs:
           FORCE_FLAG=""
           if [ "$FORCE" = "true" ]; then FORCE_FLAG="--force"; fi
           python3 /tmp/rubric-tools/prepare.py decide --root . --base-ref "$BASE_REF" --event "$GITHUB_EVENT_NAME" $FORCE_FLAG
+      # Built here on the scored commit because gh-aw replaces .github/ in the agent job before pre-agent-steps.
+      - name: Prepare rubric context
+        if: steps.decide.outputs.should_score == 'true'
+        env:
+          BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'HEAD' }}
+          FORCE: ${{ github.event.inputs.force }}
+        run: |
+          FORCE_FLAG=""
+          if [ "$FORCE" = "true" ]; then FORCE_FLAG="--force"; fi
+          python3 /tmp/rubric-tools/prepare.py context --root . --base-ref "$BASE_REF" --event "$GITHUB_EVENT_NAME" --out /tmp/gh-aw/agent/rubric $FORCE_FLAG
+      - name: Upload rubric context
+        if: steps.decide.outputs.should_score == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rubric-context
+          path: /tmp/gh-aw/agent/rubric
+          if-no-files-found: error
+          retention-days: 3
       - name: Report initial status
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -109,24 +127,11 @@ jobs:
               body: `Rubric scoring did not produce a verdict, so \`rubric/score\` stays pending and the pull request stays blocked. Check the [workflow run](${runUrl}) and rerun it.`,
             });
 pre-agent-steps:
-  - name: Load trusted rubric tools
-    env:
-      BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'HEAD' }}
-    run: |
-      mkdir -p /tmp/rubric-tools
-      if git cat-file -e "$BASE_REF:.github/rubric/scripts/prepare.py" 2>/dev/null; then
-        git show "$BASE_REF:.github/rubric/scripts/prepare.py" > /tmp/rubric-tools/prepare.py
-      else
-        cp .github/rubric/scripts/prepare.py /tmp/rubric-tools/prepare.py
-      fi
-  - name: Prepare rubric context
-    env:
-      BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'HEAD' }}
-      FORCE: ${{ github.event.inputs.force }}
-    run: |
-      FORCE_FLAG=""
-      if [ "$FORCE" = "true" ]; then FORCE_FLAG="--force"; fi
-      python3 /tmp/rubric-tools/prepare.py context --root . --base-ref "$BASE_REF" --event "$GITHUB_EVENT_NAME" --out /tmp/gh-aw/agent/rubric $FORCE_FLAG
+  - name: Download rubric context
+    uses: actions/download-artifact@v4
+    with:
+      name: rubric-context
+      path: /tmp/gh-aw/agent/rubric
 safe-outputs:
   report-failure-as-issue: false
   jobs:

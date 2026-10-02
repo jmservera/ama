@@ -248,7 +248,30 @@ def test_given_pr_when_context_written_then_diff_base_is_merge_base(tmp_path):
     git(root, "checkout", "-b", "feature")
     git(root, "rm", REMOVED)
     git(root, "commit", "-m", "delete")
+    git(root, "checkout", "main")
+    (root / "docs" / "other.md").write_text("main moved on\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "main moves")
+    git(root, "checkout", "feature")
     state = prepare.compute_state(root, "main", "pull_request")
+
+    # Act
+    context = json.loads(prepare.write_context(root, state, tmp_path / "out").read_text(encoding="utf-8"))
+
+    # Assert
+    assert (context["diff_base"], context["removed_files"]) == (expected, [REMOVED])
+
+
+def test_given_direct_push_when_context_written_then_diff_base_is_last_scores_commit(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    expected = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, check=True).stdout.decode().strip()
+    git(root, "rm", REMOVED)
+    git(root, "commit", "-m", "delete on main")
+    (root / "docs" / "other.md").write_text("later unrelated change\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "unrelated")
+    state = prepare.compute_state(root, "HEAD", "push")
 
     # Act
     context = json.loads(prepare.write_context(root, state, tmp_path / "out").read_text(encoding="utf-8"))
