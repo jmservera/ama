@@ -54,6 +54,30 @@ There is no build, test, lint, or single-test command configured in the
 repository. Validate changes by reviewing the rendered Markdown and the Git
 diff.
 
+## Branch and Pull Request Workflow
+
+Make all new work on a topic branch and bring it into `main` through a pull
+request. Do not commit or push directly to `main`.
+
+* Before changing files, check `git status --short` and
+  `git branch --show-current`. When on `main`, fetch and create a branch from
+  the latest `origin/main` named `{type}/{short-description}`, where `{type}`
+  is the Conventional Commit type, for example `docs/retrofit-funding-update`
+  or `feat/rubric-gate-context`.
+* Keep each branch to one coherent change. Start a separate branch for
+  unrelated work instead of adding it to an open branch.
+* When uncommitted changes already exist, do not discard, stash, commit or
+  move them without the owner's confirmation. Ask whether to carry them onto
+  the new branch or to isolate the new work in a separate `git worktree`.
+* Commit following the commit message conventions, push the branch and open
+  a pull request against `main` with `gh pr create`. Describe the change, the
+  evidence or sources used and the validation performed.
+* Let the pull request checks, including the rubric scoring workflow, run
+  before merge. Address review feedback with further commits on the same
+  branch.
+* Leave the merge decision to the owner. Do not merge, force-push or rewrite
+  `main` history unless the owner asks.
+
 ## Knowledge Base Conventions
 
 Keep `docs/reference/` current so knowledge compounds across sessions instead
