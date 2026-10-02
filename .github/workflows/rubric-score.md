@@ -245,7 +245,7 @@ safe-outputs:
             git add .github/rubric/scores/latest.json
             if git diff --cached --quiet; then exit 0; fi
             git commit -m "chore(rubric): record score $(jq -r .total /tmp/rubric-out/latest.json)/100"
-            if git push "https://x-access-token:${PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:$HEAD_REF"; then
+            if git -c core.hooksPath=/dev/null push "https://x-access-token:${PUSH_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git" "HEAD:$HEAD_REF"; then
               echo "new_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
             else
               echo "push_failed=true" >> "$GITHUB_OUTPUT"

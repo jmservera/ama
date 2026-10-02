@@ -275,6 +275,9 @@ def compute_state(root: Path, base_ref: str, event: str, force: bool = False) ->
             changed_files |= set(artifact["files"])
             continue
         present, removed = classify_changes(entries, artifact["include"], artifact["exclude"], artifact["files"])
+        if event != "pull_request":
+            # Push ranges can miss main-side edits merged earlier (stale squash), so every scored file may be cited.
+            present |= set(artifact["files"])
         changed_files |= present
         removed_files |= removed
     changed_files |= removed_files

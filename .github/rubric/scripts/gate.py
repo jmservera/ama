@@ -46,6 +46,9 @@ def clean_text(text: Any, limit: int = MAX_TEXT) -> str:
     value = re.sub(r"://", f":{ZWSP}//", value)
     value = re.sub(f"@(?!{ZWSP})", f"@{ZWSP}", value)
     value = re.sub(f"#(?!{ZWSP})(?=\\d)", f"#{ZWSP}", value)
+    value = re.sub(r"\bwww\.", f"www{ZWSP}.", value, flags=re.IGNORECASE)
+    value = re.sub(r"\bGH-(?=\d)", f"GH{ZWSP}-", value, flags=re.IGNORECASE)
+    value = re.sub(f"(?<![0-9A-Za-z{ZWSP}])([0-9a-f]{{4}})([0-9a-f]{{3,36}})(?![0-9A-Za-z])", f"\\1{ZWSP}\\2", value)
     return value if len(value) <= limit else value[: limit - 3] + "..."
 
 

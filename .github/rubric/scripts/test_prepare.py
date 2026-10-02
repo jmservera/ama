@@ -296,6 +296,23 @@ def test_given_tip_writes_scores_and_deletes_file_when_pushed_then_removed_detec
     assert state["removed_files"] == [REMOVED]
 
 
+def test_given_stale_squash_when_pushed_then_main_side_edits_are_citable(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    (root / "docs" / "brds" / "a.md").write_text("# A edited on main\n", encoding="utf-8")
+    git(root, "commit", "-am", "direct edit on main")
+    (root / REMOVED).write_text("# B edited in PR\n", encoding="utf-8")
+    scores = root / ".github" / "rubric" / "scores" / "latest.json"
+    scores.write_text(scores.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+    git(root, "commit", "-am", "squash of an out-of-date PR")
+
+    # Act
+    state = prepare.compute_state(root, "HEAD", "push")
+
+    # Assert
+    assert "docs/brds/a.md" in state["changed_files"]
+
+
 def test_given_removed_file_when_context_written_then_diff_has_no_content(tmp_path):
     # Arrange
     root = make_repo(tmp_path)
