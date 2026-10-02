@@ -12,6 +12,8 @@ import argparse
 import datetime as dt
 import json
 import logging
+import os
+import posixpath
 import re
 import sys
 from pathlib import Path
@@ -32,16 +34,40 @@ COMMENT_MARKER = "<!-- rubric-score -->"
 logger = logging.getLogger(__name__)
 
 
-def sanitize(text: Any, limit: int = MAX_TEXT) -> str:
-    """Make untrusted agent text safe for a Markdown table cell."""
-    value = re.sub(r"\s+", " ", str(text or "")).strip()
-    value = value.replace("<", "&lt;").replace(">", "&gt;").replace("|", "\\|").replace("@", "@\u200b")
+ZWSP = "\u200b"
+
+
+def clean_text(text: Any, limit: int = MAX_TEXT) -> str:
+    """Neutralise links, URLs, mentions and issue references in untrusted text; idempotent."""
+    value = re.sub(r"[\x00-\x1f\x7f]", " ", str(text or ""))
+    value = re.sub(r"\s+", " ", value).strip()
+    value = re.sub(r"\]\(", f"]{ZWSP}(", value)
+    value = re.sub(r"!\[", f"!{ZWSP}[", value)
+    value = re.sub(r"://", f":{ZWSP}//", value)
+    value = re.sub(f"@(?!{ZWSP})", f"@{ZWSP}", value)
+    value = re.sub(f"#(?!{ZWSP})(?=\\d)", f"#{ZWSP}", value)
+    value = re.sub(r"\bwww\.", f"www{ZWSP}.", value, flags=re.IGNORECASE)
+    value = re.sub(r"\bGH-(?=\d)", f"GH{ZWSP}-", value, flags=re.IGNORECASE)
+    value = re.sub(f"(?<![0-9A-Za-z{ZWSP}])([0-9a-f]{{4}})([0-9a-f]{{3,36}})(?![0-9A-Za-z])", f"\\1{ZWSP}\\2", value)
     return value if len(value) <= limit else value[: limit - 3] + "..."
 
 
+def sanitize(text: Any, limit: int = MAX_TEXT) -> str:
+    """Make untrusted agent text safe for a Markdown table cell."""
+    value = clean_text(text, limit)
+    return value.replace("<", "&lt;").replace(">", "&gt;").replace("|", "\\|")
+
+
 def evidence_path(reference: str) -> str:
-    """Strip a trailing :line or :start-end suffix from an evidence reference."""
-    return re.sub(r"(:\d+(-\d+)?)+$", "", reference.strip().removeprefix("./"))
+    """Normalise an evidence reference to a repository-relative POSIX path without line anchors."""
+    value = reference.strip().replace("\\", "/")
+    workspace = os.environ.get("GITHUB_WORKSPACE", "").replace("\\", "/").rstrip("/")
+    if workspace and value.startswith(workspace + "/"):
+        value = value[len(workspace) + 1 :]
+    value = re.sub(r"#L\d+(-L?\d+)?$", "", value)
+    value = re.sub(r"(:L?\d+(-L?\d+)?)+$", "", value)
+    value = posixpath.normpath(value.lstrip("/"))
+    return "" if value == "." else value
 
 
 def outcome_label(rubric: dict[str, Any], total: int, floors_met: bool) -> str:
@@ -246,7 +272,11 @@ def build_scores_file(result: dict[str, Any], fingerprints: dict[str, str], comm
         "floors_met": result["floors_met"],
         "outcome": result["outcome"],
         "criteria": {
-            cid: {"score": entry["score"], "evidence": entry.get("evidence", []), "rationale": entry.get("rationale", "")}
+            cid: {
+                "score": entry["score"],
+                "evidence": [clean_text(ref, 200) for ref in entry.get("evidence", [])],
+                "rationale": clean_text(entry.get("rationale", "")),
+            }
             for cid, entry in result["criteria"].items()
         },
     }
@@ -288,7 +318,7 @@ def main() -> int:
     root = args.root.resolve()
     try:
         state = prepare.compute_state(root, args.base_ref, args.event, args.force)
-    except (FileNotFoundError, json.JSONDecodeError, KeyError, RuntimeError) as error:
+    except (FileNotFoundError, json.JSONDecodeError, KeyError, RuntimeError, UnicodeError) as error:
         logger.error("Cannot compute rubric state: %s", error)
         return EXIT_ERROR
 
