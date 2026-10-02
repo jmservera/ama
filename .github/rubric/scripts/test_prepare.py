@@ -144,7 +144,7 @@ def test_given_pr_hiding_scored_file_when_computed_then_path_is_removed(tmp_path
     root = make_repo(tmp_path)
     git(root, "checkout", "-b", "feature")
     if not hide(root):
-        return  # symlinks unavailable on this host
+        pytest.skip("symlinks are unavailable on this host")
     git(root, "commit", "-m", "hide evidence")
 
     # Act
@@ -227,3 +227,31 @@ def test_given_force_when_computed_then_all_criteria_open(tmp_path):
 
     # Assert
     assert (state["should_score"], len(state["open_criteria"])) == (True, 20)
+
+
+def test_given_force_when_context_written_then_baseline_withheld(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    state = prepare.compute_state(root, "HEAD", "workflow_dispatch", force=True)
+
+    # Act
+    context = json.loads(prepare.write_context(root, state, tmp_path / "out").read_text(encoding="utf-8"))
+
+    # Assert
+    assert (context["calibration"], context["baseline"]) == (True, {"source": None, "total": None, "sections": None, "criteria": {}})
+
+
+def test_given_pr_when_context_written_then_diff_base_is_merge_base(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    expected = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, check=True).stdout.decode().strip()
+    git(root, "checkout", "-b", "feature")
+    git(root, "rm", REMOVED)
+    git(root, "commit", "-m", "delete")
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Act
+    context = json.loads(prepare.write_context(root, state, tmp_path / "out").read_text(encoding="utf-8"))
+
+    # Assert
+    assert (context["diff_base"], context["removed_files"]) == (expected, [REMOVED])

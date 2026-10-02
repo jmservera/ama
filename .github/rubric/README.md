@@ -24,7 +24,7 @@ The pass or fail decision is made by [gate.py](scripts/gate.py), never by the mo
 
 A criterion can only move when an artifact that informs it changes, and every move must cite a changed file. Deleting a scored file, renaming it outside the registry globs or letting it grow past `max_file_bytes` counts as a change: the scorer can lower the affected criteria by citing the removed path, but a removed path never justifies a higher score.
 
-Scores are readiness estimates from repository evidence. Live-scored criteria (B1 to B5 and C2) are informed only by the capstone deck and pitch artifacts. They keep their baseline until one of those changes, except in bootstrap and calibration runs, which score every criterion from scratch.
+Scores are readiness estimates from repository evidence. Live-scored criteria (B1 to B5 and C2) are informed only by the capstone deck and pitch artifacts. They keep their baseline until one of those changes, except in bootstrap and calibration runs, which score every criterion from scratch, and in pull requests that change the rubric, registry, prompt or scripts, which reopen every criterion (moves still need a cited changed artifact file).
 
 ## Files
 
@@ -58,8 +58,8 @@ Scores are readiness estimates from repository evidence. Live-scored criteria (B
 * Open a pull request. The workflow posts a sticky "Rubric score" comment, sets `rubric/score`, submits APPROVE or REQUEST_CHANGES, and commits the new `latest.json` to your branch. Pull that commit before pushing again.
 * Pull requests that do not touch a scored artifact or the rubric tooling get an immediate `rubric/score` success without an agent run.
 * If two pull requests both record a score, the second conflicts on `latest.json` after the first merges. Update the branch from `main` and push; the gate rescores against the new baseline.
-* Pushes to `main` outside a pull request are scored for information only. A regression or a scoring failure on `main` opens an issue; runs on other branches never open issues.
-* To measure scorer variance, start the workflow manually with `force` ticked two or three times on an unchanged branch. Forced runs score every criterion from scratch without seeing the baseline, report in the job summary, never update `latest.json` and never open issues.
+* Pushes to `main` outside a pull request are scored for information only. A regression or an invalid scorecard on `main` opens an issue; an agent failure or timeout only shows as a failed run. Runs on other branches never open issues.
+* To measure scorer variance, start the workflow manually with `force` ticked two or three times on an unchanged branch. Each forced run gets its own concurrency slot, so they do not cancel each other. Forced runs score every criterion from scratch with the baseline removed from the agent's context (the prompt also tells it not to read the scores file), report in the job summary, never update `latest.json` and never open issues.
 * To recover from a stuck `pending` status, rerun the workflow from the Actions tab.
 
 ## Adding an Artifact Type

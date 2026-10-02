@@ -346,7 +346,15 @@ def write_context(root: Path, state: dict[str, Any], out_dir: Path) -> Path:
     else:
         diff_path.write_text("", encoding="utf-8")
 
-    baseline = state["baseline"] or {}
+    baseline = {} if state["force"] else (state["baseline"] or {})
+    diff_base = ""
+    if state["diff_args"]:
+        first = state["diff_args"][0]
+        if "..." in first:
+            merge_base = git(root, "merge-base", first.split("...")[0], "HEAD")
+            diff_base = merge_base.stdout.decode("utf-8").strip() if merge_base.returncode == 0 else ""
+        else:
+            diff_base = first
     context = {
         "event": state["event"],
         "rubric_guide": state["rubric"].get("guide"),
@@ -360,6 +368,7 @@ def write_context(root: Path, state: dict[str, Any], out_dir: Path) -> Path:
         "changed_files": state["changed_files"],
         "removed_files": state["removed_files"],
         "diff_range": " ".join(state["diff_args"] or []),
+        "diff_base": diff_base,
         "changes_diff": diff_path.as_posix(),
         "artifacts": {
             key: {
@@ -376,7 +385,7 @@ def write_context(root: Path, state: dict[str, Any], out_dir: Path) -> Path:
             "source": baseline.get("source"),
             "total": baseline.get("total"),
             "sections": baseline.get("sections"),
-            "criteria": {} if state["force"] else baseline.get("criteria", {}),
+            "criteria": baseline.get("criteria", {}),
         },
     }
     context_path = out_dir / "context.json"

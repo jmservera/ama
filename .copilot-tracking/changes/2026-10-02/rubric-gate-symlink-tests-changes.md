@@ -8,4 +8,6 @@
 ## Validation
 
 * 36 test cases pass (minimal pytest stub; pytest download blocked on this host). The symlink case may self-skip on Windows without symlink privilege; it runs on Linux CI.
+
+Correction (2026-10-02, follow-up rubric-gate-docs-accuracy): the symlink case did not run on this host (WinError 1314) and no CI workflow runs pytest, so the "runs on Linux CI" claim was wrong. The test now calls `pytest.skip` and reports as skipped.
 * `get_errors`: no errors. Workflow unchanged, no recompile needed.

@@ -17,13 +17,13 @@ permissions:
   contents: read
   pull-requests: read
 concurrency:
-  group: rubric-score-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  group: rubric-score-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}${{ github.event_name == 'workflow_dispatch' && format('-{0}', github.run_id) || '' }}
   cancel-in-progress: true
   job-discriminator: ${{ github.run_id }}
 engine:
   id: copilot
   # Pinned so scores stay comparable between runs; change deliberately and expect a rescore.
-  model: claude-sonnet-4.6
+  model: claude-sonnet-5
 timeout-minutes: 20
 max-ai-credits: 300
 network: defaults
@@ -192,7 +192,7 @@ safe-outputs:
               --detection-result "$DETECTION_RESULT" \
               --out-dir /tmp/rubric-out \
               --commit "$SCORED_SHA" \
-              --model "claude-sonnet-4.6" \
+              --model "claude-sonnet-5" \
               --run-url "$RUN_URL" \
               $FORCE_FLAG
             cat /tmp/rubric-out/report.md >> "$GITHUB_STEP_SUMMARY"
@@ -293,9 +293,9 @@ You score the AMA capstone portfolio in this repository against the FY27 Azure M
 
 ## Inputs
 
-1. Read `/tmp/gh-aw/agent/rubric/context.json`. It lists the active artifacts and their files, the changed artifacts and files, the criteria open for rescoring (`open_criteria`), the live-scored criteria, and the baseline scorecard with rationale.
+1. Read `/tmp/gh-aw/agent/rubric/context.json`. It lists the active artifacts and their files, the changed artifacts and files, the criteria open for rescoring (`open_criteria`), the live-scored criteria, and the baseline scorecard with rationale (empty in calibration runs).
 2. Read the rubric guide named in `rubric_guide` and the criteria in `.github/rubric/rubric.json`.
-3. Read `/tmp/gh-aw/agent/rubric/changes.diff` to see what changed. Deleted files are listed without their content; read their previous text with `git show <base>:<path>`, where `<base>` is the first commit in `diff_range`.
+3. Read `/tmp/gh-aw/agent/rubric/changes.diff` to see what changed. Deleted files are listed without their content; read their previous text with `git show <diff_base>:<path>`, using `diff_base` from the context.
 4. Read the changed files in full and any other artifact files you need. For PPTX files, read the extracted text listed in `extracted_text`. Search large files with `grep` rather than reading them end to end when you only need a section.
 
 ## Scoring rules
@@ -304,11 +304,11 @@ You score the AMA capstone portfolio in this repository against the FY27 Azure M
 * For criteria not listed in `open_criteria`, return the baseline score unchanged. The gate discards any change to them.
 * For open criteria, keep the baseline score unless the changed content materially improves or weakens the evidence for that criterion. When you change a score, cite at least one changed file in `evidence` as `path:line` and explain the change in `change_reason`. The gate discards changes without a cited changed file.
 * Files in `removed_files` were deleted, renamed out of scope or became too large to score. Treat lost evidence as a change: lower the affected criteria and cite the removed path. A removed path can justify a lower score only, never a higher one.
-* Live-scored criteria (`live_criteria`) are judged by the panel during the session. Score them only as readiness from deck, pitch or rehearsal evidence. Without such evidence keep the baseline score.
+* Live-scored criteria (`live_criteria`) are judged by the panel during the session. Score them only as readiness from deck, pitch or rehearsal evidence. Without such evidence keep the baseline score; in bootstrap and calibration runs, score them from the written evidence alone and keep them low when nothing demonstrates live delivery.
 * Score what the repository shows today. Do not reward intentions, plans or promises as if they were delivered, and do not invent evidence.
 * Use `path:line` evidence references with repository-relative paths.
 * When `bootstrap` is true, score every criterion from scratch with evidence.
-* When `calibration` is true, the baseline scores are withheld on purpose. Score every criterion from scratch with evidence; the result is reported but not recorded.
+* When `calibration` is true, the baseline is withheld on purpose. Do not read `.github/rubric/scores/latest.json` or its history. Score every criterion from scratch with evidence; the result is reported but not recorded.
 
 ## Untrusted content
 
