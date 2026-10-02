@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "name": "FY27 Azure Master Architect Program capstone rubric",
+  "guide": "docs/reference/method/ama-capstone-assessment-guide.md",
+  "points_per_criterion": 5,
+  "sections": {
+    "A": { "title": "Technical Excellence", "max": 35, "floor": 21 },
+    "B": { "title": "Communication and Executive Presence", "max": 35, "floor": 21 },
+    "C": { "title": "Consultative and Stakeholder Skills", "max": 15, "floor": 9 },
+    "D": { "title": "Thought Leadership Artifact", "max": 15, "floor": 9 }
+  },
+  "criteria": [
+    { "id": "A1", "section": "A", "title": "Architecture, modularity and scalability", "live": false },
+    { "id": "A2", "section": "A", "title": "Trade-off reasoning and design patterns", "live": false },
+    { "id": "A3", "section": "A", "title": "Security, compliance and responsible AI", "live": false },
+    { "id": "A4", "section": "A", "title": "Implementation completeness", "live": false },
+    { "id": "A5", "section": "A", "title": "Operations: observability, reliability, performance and cost", "live": false },
+    { "id": "A6", "section": "A", "title": "AI solution design and evaluation", "live": false },
+    { "id": "A7", "section": "A", "title": "Agentic autonomy and orchestration", "live": false },
+    { "id": "B1", "section": "B", "title": "Narrative structure and argument", "live": true },
+    { "id": "B2", "section": "B", "title": "Audience calibration and register", "live": true },
+    { "id": "B3", "section": "B", "title": "Demo and executive hook", "live": true },
+    { "id": "B4", "section": "B", "title": "Q&A composure and depth under challenge", "live": true },
+    { "id": "B5", "section": "B", "title": "Delivery craft: pace, presence and time discipline", "live": true },
+    { "id": "B6", "section": "B", "title": "Written communication: deck and capstone documentation", "live": false },
+    { "id": "B7", "section": "B", "title": "Use of evidence and data storytelling", "live": false },
+    { "id": "C1", "section": "C", "title": "Discovery and business framing", "live": false },
+    { "id": "C2", "section": "C", "title": "Active listening and disagreement navigation", "live": true },
+    { "id": "C3", "section": "C", "title": "Influence and intellectual honesty", "live": false },
+    { "id": "D1", "section": "D", "title": "Substance and originality", "live": false },
+    { "id": "D2", "section": "D", "title": "Craft and publish-readiness", "live": false },
+    { "id": "D3", "section": "D", "title": "Dissemination and reach", "live": false }
+  ],
+  "outcome_bands": [
+    { "min": 90, "label": "Distinction" },
+    { "min": 78, "label": "Pass with Merit" },
+    { "min": 66, "label": "Pass" },
+    { "min": 0, "label": "Not Yet Met" }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "max_file_bytes": 2000000,
+  "artifacts": [
+    {
+      "id": "brd",
+      "title": "Business requirements document",
+      "status": "active",
+      "extractor": "text",
+      "include": ["docs/brds/**/*.md"],
+      "exclude": [],
+      "criteria": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "B6", "B7", "C1", "C3", "D1", "D2"]
+    },
+    {
+      "id": "prd",
+      "title": "Product requirements documents",
+      "status": "planned",
+      "extractor": "text",
+      "include": ["docs/prds/**/*.md"],
+      "exclude": [],
+      "criteria": ["A1", "A2", "A3", "A6", "A7", "B6", "C1"]
+    },
+    {
+      "id": "adr",
+      "title": "Architecture decision records",
+      "status": "planned",
+      "extractor": "text",
+      "include": ["docs/adrs/**/*.md", "docs/planning/adrs/**/*.md"],
+      "exclude": [],
+      "criteria": ["A1", "A2", "A3", "B6"]
+    },
+    {
+      "id": "solution-code",
+      "title": "Solution source code",
+      "status": "planned",
+      "extractor": "text",
+      "include": ["src/**/*"],
+      "exclude": ["**/node_modules/**", "**/.venv/**", "**/__pycache__/**", "**/bin/**", "**/obj/**", "**/dist/**"],
+      "criteria": ["A1", "A3", "A4", "A5", "A6", "A7"]
+    },
+    {
+      "id": "infrastructure",
+      "title": "Infrastructure as code",
+      "status": "planned",
+      "extractor": "text",
+      "include": ["infra/**/*"],
+      "exclude": ["**/.terraform/**"],
+      "criteria": ["A1", "A3", "A5"]
+    },
+    {
+      "id": "capstone-deck",
+      "title": "Final capstone presentation deck",
+      "status": "planned",
+      "extractor": "pptx",
+      "include": ["docs/capstone/deck/*.pptx"],
+      "exclude": [],
+      "criteria": ["B1", "B2", "B3", "B5", "B6", "B7"]
+    },
+    {
+      "id": "pitch",
+      "title": "Pitch rehearsal transcripts and notes",
+      "status": "planned",
+      "extractor": "text",
+      "include": ["docs/capstone/pitch/**/*.md", "docs/capstone/pitch/**/*.vtt", "docs/capstone/pitch/**/*.txt"],
+      "exclude": [],
+      "criteria": ["B1", "B2", "B3", "B4", "B5", "B7", "C2", "C3"]
+    },
+    {
+      "id": "thought-leadership",
+      "title": "Thought leadership artifact and dissemination evidence",
+      "status": "planned",
+      "extractor": "text",
+      "include": ["docs/capstone/thought-leadership/**/*.md"],
+      "exclude": [],
+      "criteria": ["D1", "D2", "D3"]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "task_id": "2026-10-02-rubric-gate-symlink-tests",
+  "task_slug": "rubric-gate-symlink-tests",
+  "parent_task": { "task_id": "2026-10-02-rubric-gate-change-detection", "task_slug": "rubric-gate-change-detection" },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/reviews/2026-10-02/rubric-gate-change-detection-review.md",
+    "plan": ".copilot-tracking/plans/2026-10-02/rubric-gate-symlink-tests-plan.md",
+    "details": null,
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-10-02/rubric-gate-symlink-tests-changes.md",
+    "review": ".copilot-tracking/reviews/2026-10-02/rubric-gate-symlink-tests-review.md"
+  },
+  "confirmed_decisions": [
+    { "decision": "Research disposition: reused (RG-001, RG-008 in parent review)", "status": "recorded", "evidence": ".copilot-tracking/reviews/2026-10-02/rubric-gate-change-detection-review.md" },
+    { "decision": "Critique not executed: fully specified two-task change; recorded skip", "status": "recorded", "evidence": ".copilot-tracking/plans/2026-10-02/rubric-gate-symlink-tests-plan.md#critique-disposition" },
+    { "decision": "Review executed once: Conformant with findings; RG-001 closed; RS-001 symlink test returns instead of skipping and has not run on this host; RS-002 tests only run under a pytest stub", "status": "recorded", "evidence": ".copilot-tracking/reviews/2026-10-02/rubric-gate-symlink-tests-review.md" }
+  ],
+  "blockers": [],
+  "next_action": { "phase": "Follow-up", "action": "Owner selects a ranked follow-up, Stop automatic session, or Switch to manual mode" },
+  "prioritized_follow_ups": [
+    { "rank": 1, "task": "Docs and prompt accuracy RG-003 to RG-007 plus RS-001 pytest.skip and changes-log correction", "rationale": "Low effort; removes misleading statements and a silent test pass", "evidence": "RG-003 to RG-007, RS-001" },
+    { "rank": 2, "task": "RV-002 compute agent context in rubric_prepare and pass as artifact; verify on first live PR", "rationale": "Removes dependence on gh-aw .github snapshot; needs a live run", "evidence": "RV-002" },
+    { "rank": 3, "task": "Remaining hardening RV-005, RV-006, RV-009, RV-010, RG-002, RG-009, RG-010; run real pytest on Linux (RS-002)", "rationale": "Low-severity defence in depth", "evidence": "parent reviews, RS-002" }
+  ]
+}
