@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-09-30
+ms.date: 2026-10-02
 ms.topic: overview
 ---
 
@@ -97,6 +97,7 @@ management: short pages that point to clusters of related material.
 | [Agent What-If Study](./research/company/agent-what-if-study.md) | Follow-up thought experiment running 20 augmentation scenarios across the requested agents, from phone-captured evidence and structured invoices to funder integrations, sensors and call transcription, with role-agent clarification answers re-run against the current proposal, a value-versus-complexity grid and a reconciliation with the agent-led modernisation reframe; headline verdict unchanged after the post-merge review | 2026-09-27 |
 | [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | Role-agent challenge of measuring acceleration with a dashboard, short history and non-pilot comparison, plus the owner's modernisation decision: Comparison 1 and 2, frozen protocol, benefits scorecard, guardrails, vanity metrics and history sources | 2026-09-26 |
 | [Retrofit Synthetic Evidence Pack](./research/retrofit-synthetic-data/README.md) | Version 2.0.0: fifteen months of synthetic operating records for 980 candidate homes. A professional team knows it has bottlenecks but not where. The pack covers the tracker, stage event log, property register, CRM contacts, supplier appointments, safety holds, QA and evidence, grant and finance, capacity, board reports and issues log, with realistic record-keeping imperfections, a data dictionary and a manifest. The answer key and generator are held outside the knowledge base so analysis can stay blind | 2026-09-30 |
+| [Program Manager Document Workspace Journey](./research/ux/program-manager-document-workspace-journey.md) | Stakeholder-informed JTBD analysis, journey map, accessibility requirements and design handoff for the repository-backed Program Workbench canvas. All behavioural findings remain reported or assumed pending direct user research | 2026-10-02 |
 
 ### Regulatory Sources
 
