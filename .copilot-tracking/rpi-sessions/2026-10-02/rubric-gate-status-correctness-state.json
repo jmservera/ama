@@ -1,0 +1,25 @@
+{
+  "task_id": "2026-10-02-rubric-gate-status-correctness",
+  "task_slug": "rubric-gate-status-correctness",
+  "parent_task": { "task_id": "2026-10-02-rubric-gate-rename-encoding", "task_slug": "rubric-gate-rename-encoding" },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/reviews/2026-10-02/rubric-gate-hardening-review.md",
+    "plan": ".copilot-tracking/reviews/2026-10-02/rubric-gate-status-correctness-review.md",
+    "details": null,
+    "critique": null,
+    "changes": ".copilot-tracking/reviews/2026-10-02/rubric-gate-status-correctness-review.md",
+    "review": ".copilot-tracking/reviews/2026-10-02/rubric-gate-status-correctness-review.md"
+  },
+  "confirmed_decisions": [
+    { "decision": "Research reused; critique skipped; review executed once inline: Conformant; RH-004 to RH-007 closed", "status": "recorded", "evidence": ".copilot-tracking/reviews/2026-10-02/rubric-gate-status-correctness-review.md" }
+  ],
+  "blockers": [],
+  "next_action": { "phase": "Follow-up", "action": "Owner selects a ranked follow-up, Stop automatic session, or Switch to manual mode" },
+  "prioritized_follow_ups": [
+    { "rank": 1, "task": "RH-003 stale-squash range, RH-008 extra link forms, RH-009 GHES host", "rationale": "Only remaining known findings; unlikely in a single-owner github.com repo", "evidence": "RH-003, RH-008, RH-009" }
+  ]
+}

@@ -34,6 +34,7 @@ WORKFLOW_PATH = ".github/workflows/rubric-score.md"
 SCRIPT_PATHS = (".github/rubric/scripts/prepare.py", ".github/rubric/scripts/gate.py")
 INSTRUMENT_PATHS = (RUBRIC_PATH, REGISTRY_PATH, WORKFLOW_PATH, *SCRIPT_PATHS)
 MAX_DIFF_BYTES = 400_000
+MAX_PPTX_UNCOMPRESSED = 200_000_000
 MAX_LISTED_FILES = 500
 
 logger = logging.getLogger(__name__)
@@ -100,7 +101,7 @@ def tracked_files(root: Path) -> list[str]:
     result = git(root, "ls-files", "-z")
     if result.returncode != 0:
         raise RuntimeError("git ls-files failed: " + result.stderr.decode("utf-8", "replace").strip())
-    return [item for item in result.stdout.decode("utf-8").split("\0") if item]
+    return [item for item in result.stdout.decode("utf-8", "surrogateescape").split("\0") if item]
 
 
 def match_files(root: Path, include: list[str], exclude: list[str], max_bytes: int) -> tuple[list[str], list[str]]:
@@ -125,7 +126,7 @@ def fingerprint_files(root: Path, files: list[str]) -> str:
     """Hash file paths and contents so renames and edits both change the fingerprint."""
     digest = hashlib.sha256()
     for relative in files:
-        digest.update(relative.encode("utf-8"))
+        digest.update(relative.encode("utf-8", "surrogateescape"))
         digest.update(b"\0")
         digest.update((root / relative).read_bytes())
         digest.update(b"\0")
@@ -145,7 +146,7 @@ def differs_from_base(root: Path, base_ref: str, path: str) -> bool:
 
 def parse_name_status(output: bytes) -> list[tuple[str, str, str | None]]:
     """Parse `git diff --name-status -z` into (status letter, path, rename or copy target)."""
-    tokens = output.decode("utf-8").split("\0")
+    tokens = output.decode("utf-8", "surrogateescape").split("\0")
     entries: list[tuple[str, str, str | None]] = []
     index = 0
     while index < len(tokens) and tokens[index]:
@@ -169,7 +170,13 @@ def diff_args(root: Path, base_ref: str, event: str) -> list[str] | None:
         return [f"{base_ref}...HEAD"]
     result = git(root, "log", "-1", "--format=%H", base_ref, "--", SCORES_PATH)
     commit = result.stdout.decode("utf-8").strip() if result.returncode == 0 else ""
-    return [commit, "HEAD"] if commit else None
+    if not commit:
+        return None
+    head = git(root, "rev-parse", "HEAD").stdout.decode("utf-8").strip()
+    # When the tip itself wrote the scores, compare with its first parent so its own artifact edits stay visible.
+    if commit == head and git(root, "rev-parse", "--verify", "--quiet", f"{commit}^1").returncode == 0:
+        return [f"{commit}^1", "HEAD"]
+    return [commit, "HEAD"]
 
 
 def classify_changes(
@@ -311,6 +318,8 @@ def extract_pptx_text(path: Path) -> str:
     lines: list[str] = []
     with zipfile.ZipFile(path) as archive:
         names = archive.namelist()
+        if sum(info.file_size for info in archive.infolist()) > MAX_PPTX_UNCOMPRESSED:
+            return f"PPTX not extracted: uncompressed size exceeds {MAX_PPTX_UNCOMPRESSED} bytes.\n"
         slides = sorted((n for n in names if re.fullmatch(r"ppt/slides/slide\d+\.xml", n)), key=slide_number)
         for slide in slides:
             number = slide_number(slide)
@@ -340,8 +349,14 @@ def write_context(root: Path, state: dict[str, Any], out_dir: Path) -> Path:
             extracted[relative] = target.as_posix()
 
     diff_path = out_dir / "changes.diff"
-    if state["changed_files"] and state["diff_args"]:
-        diff = git(root, "diff", "-M", "-D", *state["diff_args"], "--", *state["changed_files"]).stdout
+    # Only paths that still exist but cannot be scored (oversize, symlink) are reduced to a stat line.
+    unscorable = {path for path in state["removed_files"] if (root / path).exists() or (root / path).is_symlink()}
+    present = [path for path in state["changed_files"] if path not in unscorable]
+    if state["diff_args"] and (present or unscorable):
+        diff = git(root, "diff", "-M", "-D", *state["diff_args"], "--", *present).stdout if present else b""
+        if unscorable:
+            stat = git(root, "diff", "-M", "--stat", *state["diff_args"], "--", *sorted(unscorable)).stdout
+            diff = b"# Unscorable files (stat only)\n" + stat + b"\n" + diff
         diff_path.write_bytes(diff[:MAX_DIFF_BYTES])
     else:
         diff_path.write_text("", encoding="utf-8")
@@ -413,7 +428,7 @@ def main() -> int:
     root = args.root.resolve()
     try:
         state = compute_state(root, args.base_ref, args.event, args.force)
-    except (FileNotFoundError, json.JSONDecodeError, KeyError, RuntimeError) as error:
+    except (FileNotFoundError, json.JSONDecodeError, KeyError, RuntimeError, UnicodeError) as error:
         logger.error("Cannot compute rubric state: %s", error)
         return EXIT_ERROR
 

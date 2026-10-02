@@ -164,3 +164,35 @@ def test_given_agent_text_with_markup_when_sanitized_then_neutralised():
 
     # Assert
     assert "<" not in value and "@owner" not in value and "\\|" in value
+
+
+def test_given_links_and_references_when_cleaned_twice_then_neutralised_and_stable():
+    # Arrange
+    text = "see [x](https://evil.example) ![i](u) @owner #12\x07"
+
+    # Act
+    once = gate.clean_text(text)
+
+    # Assert
+    assert ("](" not in once, "![" not in once, "://" not in once, "\x07" not in once, gate.clean_text(once)) == (
+        True, True, True, True, once,
+    )
+
+
+@pytest.mark.parametrize(
+    "reference",
+    [
+        f"{BRD}:12",
+        f"{BRD}:L12-L20",
+        f"{BRD}#L12",
+        f"./{BRD}",
+        f"/{BRD}",
+        BRD.replace("/", "\\") + ":3",
+    ],
+)
+def test_given_evidence_reference_variant_when_normalised_then_repository_path(reference):
+    # Act
+    path = gate.evidence_path(reference)
+
+    # Assert
+    assert path == BRD

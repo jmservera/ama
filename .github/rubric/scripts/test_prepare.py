@@ -278,3 +278,83 @@ def test_given_direct_push_when_context_written_then_diff_base_is_last_scores_co
 
     # Assert
     assert (context["diff_base"], context["removed_files"]) == (expected, [REMOVED])
+
+
+def test_given_tip_writes_scores_and_deletes_file_when_pushed_then_removed_detected(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "rm", REMOVED)
+    scores = root / ".github" / "rubric" / "scores" / "latest.json"
+    scores.write_text(scores.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "delete and touch scores")
+
+    # Act
+    state = prepare.compute_state(root, "HEAD", "push")
+
+    # Assert
+    assert state["removed_files"] == [REMOVED]
+
+
+def test_given_removed_file_when_context_written_then_diff_has_no_content(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "checkout", "-b", "feature")
+    git(root, "rm", REMOVED)
+    git(root, "commit", "-m", "delete")
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Act
+    prepare.write_context(root, state, tmp_path / "out")
+    diff = (tmp_path / "out" / "changes.diff").read_text(encoding="utf-8")
+
+    # Assert
+    assert ("deleted file mode" in diff, "# B" in diff) == (True, False)
+
+
+def test_given_rename_within_scope_when_context_written_then_diff_shows_rename(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "checkout", "-b", "feature")
+    git(root, "mv", REMOVED, "docs/brds/c.md")
+    git(root, "commit", "-m", "rename")
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Act
+    prepare.write_context(root, state, tmp_path / "out")
+    diff = (tmp_path / "out" / "changes.diff").read_text(encoding="utf-8")
+
+    # Assert
+    assert ("rename from docs/brds/b.md" in diff, "new file mode" in diff) == (True, False)
+
+
+def test_given_grown_file_when_context_written_then_only_stat_listed(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "checkout", "-b", "feature")
+    hide_by_growing(root)
+    git(root, "commit", "-m", "grow")
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Act
+    prepare.write_context(root, state, tmp_path / "out")
+    diff = (tmp_path / "out" / "changes.diff").read_text(encoding="utf-8")
+
+    # Assert
+    assert ("Unscorable files (stat only)" in diff, "x" * 100 in diff) == (True, False)
+
+
+def test_given_non_utf8_path_when_fingerprinted_then_no_encoding_error(tmp_path):
+    # Arrange
+    name = "docs/bad-\udcff.md"
+    try:
+        (tmp_path / "docs").mkdir()
+        (tmp_path / name).write_text("x", encoding="utf-8")
+    except (OSError, UnicodeError):
+        pytest.skip("host file system cannot store non-UTF-8 names")
+
+    # Act
+    digest = prepare.fingerprint_files(tmp_path, [name])
+
+    # Assert
+    assert len(digest) == 64
