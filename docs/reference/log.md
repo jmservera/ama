@@ -643,3 +643,23 @@ metadata when the knowledge base was created.
 * The generator now defaults to the knowledge-base pack folder and
   `../answer-key`. Regenerating with seed 1341953496 reproduces identical
   files.
+
+## [2026-10-02] query | Design the program-manager document workspace
+
+* Trigger: the owner requested a shared project canvas so program managers can
+  navigate and edit repository documentation without using Git or a coding
+  editor.
+* Added `research/ux/program-manager-document-workspace-journey.md` with a
+  stakeholder-informed JTBD analysis, journey map, accessibility requirements,
+  design handoff and validation plan.
+* Added the project-scoped Program Workbench extension under
+  `../../.github/extensions/program-workbench/`. It indexes Markdown,
+  presentations and visual artifacts; searches Markdown content; renders and
+  edits Markdown; exposes outgoing links and backlinks; and protects the
+  original case study, regulatory snapshots and owner-controlled memory.
+* Presentations and visual artifacts are discoverable but read-only in version
+  one. Rich presentation preview, relationship visualisation and MCP
+  connectivity remain version-two opportunities.
+* Research limitation: no program-manager interviews, contextual inquiry,
+  analytics or usability studies have been completed. Behavioural findings are
+  reported or assumed and must be validated before they become requirements.

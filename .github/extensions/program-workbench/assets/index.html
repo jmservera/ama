@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en" data-color-mode="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="canvas-token" content="__CANVAS_TOKEN__">
+  <meta name="initial-path" content="__INITIAL_PATH__">
+  <title>Program Workbench</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to document workspace</a>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Proper Warm Program Workbench">
+        <span class="brand-mark" aria-hidden="true">PW</span>
+        <span><strong>Program Workbench</strong><small>Proper Warm | single source of truth</small></span>
+      </div>
+      <label class="search-box" for="global-search">
+        <span aria-hidden="true">&#8981;</span>
+        <input id="global-search" type="search" placeholder="Find requirements, decisions, evidence..." autocomplete="off">
+        <kbd>Ctrl K</kbd>
+      </label>
+      <div class="top-actions">
+        <span id="save-status" class="save-status" role="status">All changes saved</span>
+        <button id="refresh-button" class="icon-button" type="button" title="Refresh document index" aria-label="Refresh document index">&#8635;</button>
+      </div>
+    </header>
+
+    <aside class="rail" aria-label="Workspace sections">
+      <button class="rail-button active" data-view="overview" type="button"><span aria-hidden="true">&#9707;</span><small>Overview</small></button>
+      <button class="rail-button" data-view="documents" type="button"><span aria-hidden="true">&#8801;</span><small>Documents</small></button>
+      <button class="rail-button" data-view="connections" type="button"><span aria-hidden="true">&#8984;</span><small>Links</small></button>
+    </aside>
+
+    <nav class="library" aria-label="Program document library">
+      <div class="library-heading">
+        <p class="eyebrow">PROGRAM LIBRARY</p>
+        <h1>Solution record</h1>
+        <p id="document-count" class="muted">Loading documents...</p>
+      </div>
+      <div id="category-list" class="category-list"></div>
+      <div class="library-note">
+        <span class="note-signal" aria-hidden="true"></span>
+        <div><strong>Repository-backed</strong><p>Every save updates the shared Markdown source.</p></div>
+      </div>
+    </nav>
+
+    <main id="main" class="main" tabindex="-1">
+      <section id="overview-view" class="view overview-view">
+        <div class="hero">
+          <div>
+            <p class="eyebrow">BETWEEN-SPRINT CONTROL ROOM</p>
+            <h2>Keep the programme story<br><em>coherent and current.</em></h2>
+            <p class="hero-copy">Move from business intent to requirements, decisions, evidence, and delivery material without leaving the desktop workspace.</p>
+          </div>
+          <div class="pulse-card" aria-label="Documentation pulse">
+            <span class="pulse-orbit" aria-hidden="true"></span>
+            <strong id="pulse-number">-</strong>
+            <span>connected records</span>
+          </div>
+        </div>
+        <div id="metric-grid" class="metric-grid"></div>
+        <div class="overview-grid">
+          <section class="panel priority-panel">
+            <div class="panel-heading"><div><p class="eyebrow">START HERE</p><h3>Programme spine</h3></div><span class="status-pill">Curated</span></div>
+            <div id="spine-list" class="spine-list"></div>
+          </section>
+          <section class="panel recent-panel">
+            <div class="panel-heading"><div><p class="eyebrow">RECENT SIGNAL</p><h3>Latest updates</h3></div></div>
+            <div id="recent-list" class="recent-list"></div>
+          </section>
+        </div>
+        <aside class="assumption-banner">
+          <strong>Research status</strong>
+          <span>This workflow is based on stakeholder input and repository structure. Validate it with program-manager interviews and usability testing before treating it as proven.</span>
+        </aside>
+      </section>
+
+      <section id="documents-view" class="view documents-view hidden" aria-labelledby="document-title">
+        <header class="document-header">
+          <div class="breadcrumbs" id="breadcrumbs"></div>
+          <div class="document-title-row">
+            <div><span id="evidence-badge" class="evidence-badge"></span><h2 id="document-title">Choose a document</h2><p id="document-description" class="muted"></p></div>
+            <div class="document-actions">
+              <div class="segmented" aria-label="Document mode"><button class="mode-button active" data-mode="preview" type="button">Read</button><button class="mode-button" data-mode="edit" type="button">Edit</button></div>
+              <button id="save-button" class="primary-button" type="button" disabled>Save changes</button>
+            </div>
+          </div>
+          <div id="readonly-note" class="readonly-note hidden" role="note"></div>
+        </header>
+        <div class="document-layout">
+          <article id="markdown-preview" class="markdown-preview" aria-label="Rendered document"></article>
+          <label id="editor-wrap" class="editor-wrap hidden"><span class="sr-only">Markdown editor</span><textarea id="markdown-editor" spellcheck="true"></textarea></label>
+          <aside class="context-panel" aria-label="Document context">
+            <section><p class="eyebrow">OUTGOING</p><div id="outgoing-links" class="context-links"></div></section>
+            <section><p class="eyebrow">REFERENCED BY</p><div id="backlinks" class="context-links"></div></section>
+            <section class="file-meta"><p class="eyebrow">RECORD</p><dl><div><dt>Updated</dt><dd id="meta-updated">-</dd></div><div><dt>Path</dt><dd id="meta-path">-</dd></div></dl></section>
+          </aside>
+        </div>
+      </section>
+
+      <section id="connections-view" class="view connections-view hidden">
+        <div class="empty-state"><span aria-hidden="true">&#8984;</span><h2>Relationship view</h2><p>Open a document to inspect what it cites and where it is referenced. A full visual traceability map is planned for version two.</p><button id="connections-open-docs" class="primary-button" type="button">Browse documents</button></div>
+      </section>
+
+      <section id="search-view" class="view search-view hidden">
+        <div class="search-heading"><p class="eyebrow">SEARCH RESULTS</p><h2 id="search-title">Find across the programme</h2></div>
+        <div id="search-results" class="search-results"></div>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>
