@@ -1,8 +1,8 @@
 ---
 prd_id: "PRD-2026-AMA48-001"
-title: "Proper Warm Retrofit Programme Demonstrator and Platform Assessment"
+title: "Proper Warm Hybrid Retrofit Programme Demonstrator"
 status: "draft"
-version: "0.1.0"
+version: "0.2.0"
 owners: ["AMA Research Team (draft custodian); product owner to be named"]
 reviewers: ["Product sponsor, Asset, Digital, Finance, Retrofit, Safety, Procurement, Resident Engagement (to be confirmed)"]
 created_date: "2026-10-03"
@@ -26,9 +26,9 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-# Proper Warm Retrofit Programme Demonstrator and Platform Assessment
+# Proper Warm Hybrid Retrofit Programme Demonstrator
 
-> **PRD-2026-AMA48-001** | Status: draft | Version: 0.1.0 | Last Updated: 2026-10-03
+> **PRD-2026-AMA48-001** | Status: draft | Version: 0.2.0 | Last Updated: 2026-10-03
 
 ## Executive Summary
 
@@ -39,28 +39,35 @@ team coordinates assessment, funding, procurement, resident engagement and
 quality through spreadsheets. It also cautions that spreadsheets have not
 been established as the binding delivery constraint.
 
-This PRD proposes a non-production demonstrator and platform-options
-assessment. It compares three approaches against the same control and
-whole-life-value criteria: full Azure custom development; a business-apps
-approach using Power Platform, Dataverse, Copilot Studio and SharePoint, with
-existing Dynamics 365 considered if present; and an Azure control layer with
-M365 collaboration and document services. No company platform estate,
-licensing, integration, budget or operational-support facts have been
-confirmed.
+The owner confirms that current coordination uses Excel files and that Proper
+North Homes has no Dataverse or Dynamics 365. The M365 tenant, SharePoint
+availability and licences remain unverified. This changes the business-apps
+option from a potential reuse of an incumbent estate to a greenfield platform
+adoption.
 
-The demonstrator will use synthetic data by default and will prove one
-representative property journey, including failure and exception paths. A
-platform decision is a gate, not an assumption. If a candidate cannot meet the
-required controls or its support and whole-life costs cannot be justified, the
-decision remains open. The demonstrator will not exercise production
-authority, contact residents, or establish operational benefit.
+This PRD uses an Azure-led hybrid as the proposed demonstrator baseline:
+Azure hosts the programme control plane, structured lifecycle data,
+deterministic gates, integrations and bounded AI; M365 may provide managed
+documents and staff collaboration after tenant capability, licensing and
+governance are verified. Azure is not assumed to replace existing authoritative
+housing, repairs, safety, finance or contractor systems. The design will avoid
+Dataverse and Dynamics 365 dependencies unless a later approved decision
+changes the scope.
 
-The primary success signal is a reviewable decision package covering all three
-options plus a non-production end-to-end scenario suite for the candidate
-selected through the options gate. Safety, consent, authority, recovery and
-evidence traceability are release conditions, not tradeable throughput
-targets. Calendar dates, cost ceilings, performance thresholds, baselines and
-named approvers remain to be established.
+The appraisal will compare the hybrid with full Azure custom and a greenfield
+business-apps alternative, but only the hybrid is the proposed build target.
+Synthetic data will be used to prove one representative property journey,
+including controlled import of representative Excel workbook structures and
+failure/exception paths. This does not authorize live Excel cutover, resident
+contact, production integration or operational use. If the hybrid cannot meet
+the controls or its support and whole-life costs cannot be justified, the
+architecture decision must return to the authorized reviewers.
+
+The primary success signals are an evidence-backed comparison of all three
+approaches and a non-production hybrid scenario suite. Safety, consent,
+authority, recovery and evidence traceability are release conditions, not
+tradeable throughput targets. Calendar dates, cost ceilings, performance
+thresholds, baselines and named approvers remain to be established.
 
 ## Product Context
 
@@ -76,9 +83,12 @@ contractor services to retain their accountability.
 
 The project owner prefers Azure for the AMA capstone and their Solution
 Architect practice, while explicitly requesting an objective assessment of
-business-app and mixed options. That preference is an owner statement about
-the capstone, not evidence that Azure is the best customer investment or a
-platform approval.
+business-app and mixed options. The owner also confirms that current
+coordination uses Excel files and that Dataverse and Dynamics 365 are absent.
+These are owner-provided inputs; the latter updates the options baseline but
+does not confirm M365 tenant capabilities, licences or SharePoint readiness.
+The capstone preference is not itself a platform approval or proof that Azure
+is the best customer investment.
 
 ### Options presented to the Proper Warm role profiles
 
@@ -93,13 +103,13 @@ company evidence, resident research, approval or legal advice.
 | Option | Candidate boundary | Role-profile challenge |
 | --- | --- | --- |
 | Full Azure custom | Azure workbench, APIs, programme data and deterministic workflow, integrations, and bounded Foundry-based AI | Offers maximum control over bespoke lifecycle contracts, but requires the strongest evidence for build cost, engineering support, operations, maintenance and exit. It does not create competent or supplier capacity. |
-| Business apps | Power Apps, Dataverse, Power Automate, Copilot Studio and SharePoint; reuse Dynamics 365 only if the estate and capabilities are confirmed | Could reduce bespoke work if a suitable, governed estate, licensing and support capability already exist. Must prove server-side authority, evidence retention/export, failure recovery and cross-system fit; familiar tools do not establish resident suitability. |
-| Azure-led hybrid | Azure control plane for programme state and bounded AI, with M365 collaboration/documents and optional Copilot Studio staff channels | A plausible candidate to test for cross-system control needs and commodity reuse. It adds identity, permissions, support, evidence-authority and integration boundaries that must be demonstrated end to end. |
+| Business apps | Greenfield Power Apps, Dataverse, Power Automate, Copilot Studio and SharePoint adoption; there is no current Dataverse or Dynamics 365 estate to reuse | Could provide a managed low-code platform if adopted, licensed and supported. It must prove server-side authority, evidence retention/export, failure recovery, affordability and cross-system fit; resident suitability is not established. |
+| Azure-led hybrid (proposed build target) | Azure programme control plane, structured state, integrations and bounded AI; M365 managed documents and staff collaboration only where verified | A plausible starting architecture for the demonstrator. It adds identity, permissions, support, evidence-authority and integration boundaries that must be demonstrated end to end. |
 
 The role-profile synthesis is deliberately conditional:
 
-* Asset found no platform winner without the asset plan, capital envelope,
-  current systems and whole-life-cost evidence.
+* Asset found no customer-wide platform winner without the asset plan, capital
+  envelope and whole-life-cost evidence.
 * Retrofit and frontline profiles considered a mixed approach a candidate,
   but noted that existing business applications could be preferable if they
   meet the same controls with less effort and cost.
@@ -115,10 +125,52 @@ The role-profile synthesis is deliberately conditional:
   service, human safety authority, fail-closed controls and tested recovery to
   remain effective across all options.
 
-The full option comparison in the
+The owner subsequently confirmed Excel-only current coordination and no
+Dataverse or Dynamics 365. Accordingly, business apps must be costed as a
+greenfield adoption, not as reuse. The hybrid is the requested PRD baseline;
+M365/SharePoint capability remains to be verified. The full option comparison in the
 [Case Study 48 Addendum](../case_study_48_addendum.md#implementation-options-and-provisional-platform-recommendation)
-is the current architecture hypothesis. The PRD keeps implementation
-selection open until the appraisal and decision gate are completed.
+provides the architecture rationale. The hybrid is proposed for the
+non-production demonstrator but remains subject to the appraisal and approval
+gate before implementation commitments or production use.
+
+### Proposed hybrid boundary
+
+* **Azure programme control plane:** a web workbench and domain API on Azure
+  Container Apps; Azure SQL Database as the authoritative store for
+  demonstrator programme state, controlled transitions, approval references,
+  handoffs and reconciliation; Durable Functions on Azure Functions for
+  long-running handoffs and explicit human-review waits where needed.
+* **Evidence documents:** a governed SharePoint document library is the
+  proposed M365 location for managed collaboration documents only if tenant
+  capability, licensing, retention, access and support are confirmed. The
+  Azure programme store holds identifiers, metadata, version references and
+  approval relationships, not duplicate document approvals. If SharePoint is
+  not available or suitable, keep the demonstrator's synthetic files in
+  controlled Azure Blob Storage and record that the M365 integration remains
+  unproven.
+* **Bounded AI:** Azure AI Foundry models may perform sourced extraction,
+  reconciliation, drafting and raise-only flags through tool APIs. Authorization
+  and state transitions are enforced by the domain API, not by agent
+  instructions.
+* **Identity and operations:** Microsoft Entra ID authentication, managed
+  identities for service-to-service access, role-based least privilege,
+  versioned configuration, deployment automation, correlated telemetry,
+  disablement and tested manual/reconciliation fallback.
+* **Existing systems:** Excel workbooks are the current coordination
+  artefacts. In the demonstrator, representative synthetic workbook structures
+  are imported through a validated mapping and exception queue; the source
+  files are preserved unchanged. No production workbook migration or live
+  integration is authorized. Asset, repairs, safety, finance, procurement and
+  contractor records remain authoritative in their existing systems.
+
+This is a candidate service allocation, not a final service commitment.
+Validate Azure region and feature availability, service lifecycle/support,
+M365 tenant and SharePoint configuration, data residency, cost, network and
+identity boundaries, disaster recovery and operating ownership before build
+approval. Avoid Service Bus, Azure AI Search, Document Intelligence and
+Copilot Studio in the initial slice unless a tested requirement justifies the
+additional service and support surface.
 
 ### Evidence status and source readiness
 
@@ -152,16 +204,17 @@ demonstrator. No resident-facing live journey is authorised in this scope.
 
 | Decision ID | Draft decision | Rationale | Decision maker | Status |
 | --- | --- | --- | --- | --- |
-| DD-001 | Keep full Azure, business-app and mixed implementations in the options appraisal until the evidence gate. | The owner asked for a comparative assessment; role profiles did not establish a platform winner and company estate facts are unknown. | Sponsor and named architecture authority to confirm | Proposed |
+| DD-001 | Use the Azure-led hybrid as the proposed non-production demonstrator baseline; compare full Azure custom and a greenfield business-apps alternative, and permit the decision gate to reject the hybrid if evidence fails. | Owner requests a hybrid PRD direction and confirms Excel-only coordination with no Dataverse or Dynamics 365. M365/SharePoint capability and whole-life value remain unverified. | Sponsor and named architecture authority to confirm | Proposed |
 | DD-002 | Use synthetic data for the initial demonstrator. | Avoids implying access or authority to process resident or production data while testing the workflow. | Product, Data and DPO reviewers to confirm | Proposed |
 | DD-003 | Separate deterministic controls from bounded AI and compare agent-assisted tasks against workflow-only handling. | The BRD requires accountable human decisions and evidence that any AI adds incremental value. | Product and control owners to confirm | Proposed |
+| DD-004 | Treat Excel workbooks as import sources to profile and validate, not as the target programme workflow or approval authority. | Owner confirms current coordination uses Excel files; the demonstrator needs to test migration mapping without altering source records. | Data owner and product owner to confirm | Proposed |
 
 ## Product Goals
 
 | Goal | Outcome | Priority | KPI and target | Status |
 | --- | --- | --- | --- | --- |
-| GOAL-001 | Enable accountable decision-makers to compare three implementation options on equivalent scope and evidence. | MUST | One option appraisal covers all 3 options, the same mandatory controls, explicit unknowns and whole-life cost categories before architecture selection. Baseline: no completed appraisal in evidence. | Candidate |
-| GOAL-002 | Demonstrate a controlled property journey end to end in a non-production environment. | MUST | All agreed representative scenarios execute or block as expected; 100% of prohibited transitions are blocked in the acceptance suite. Baseline: no PRD demonstrator delivered. | Candidate |
+| GOAL-001 | Enable accountable decision-makers to compare the proposed hybrid with full Azure custom and greenfield business apps on equivalent scope and evidence. | MUST | One appraisal covers all 3 approaches, the same mandatory controls, explicit unknowns and whole-life cost categories before build commitment. Baseline: no completed appraisal in evidence. | Candidate |
+| GOAL-002 | Demonstrate the Azure-led hybrid property-control journey end to end in a non-production environment. | MUST | All agreed representative scenarios execute or block as expected; 100% of prohibited transitions are blocked in the acceptance suite. Baseline: no PRD hybrid demonstrator delivered. | Candidate |
 | GOAL-003 | Determine whether bounded AI adds measurable task value over workflow-only handling without weakening safeguards. | SHOULD | Paired evaluation records task quality, unsupported claims, review effort, overrides and missed critical exceptions; owner-set thresholds are approved before evaluation. No numeric quality threshold is established yet. | Candidate |
 
 **SMART status:** Deferred. Scope and candidate signals are stated, but
@@ -172,18 +225,19 @@ achievability require sponsor and Finance input.
 
 | ID | Requirement | Actor / trigger | Expected outcome | Acceptance criteria | Goals |
 | --- | --- | --- | --- | --- | --- |
-| FR-001 | When the product team begins the options gate, the system shall assess full Azure custom, business apps and Azure-led hybrid against one approved set of scope, control, cost, support, evidence and exit criteria. | Architecture lead; options gate | A comparable, sourced appraisal for all three options | AC-001, AC-002 | GOAL-001 |
+| FR-001 | When the product team begins the options gate, the system shall assess full Azure custom, a greenfield business-apps adoption and the proposed Azure-led hybrid against one approved set of scope, control, cost, support, evidence and exit criteria. | Architecture lead; options gate | A comparable, sourced appraisal for all three options, with hybrid designated as the proposed demonstrator baseline | AC-001, AC-002, AC-012 | GOAL-001 |
 | FR-002 | When an option score or cost assumption is entered, the system shall record its source, owner, date, confidence/evidence status and unresolved gap. | Finance, Digital or control owner; appraisal update | Reviewers can distinguish evidence, estimate and unknown | AC-002 | GOAL-001 |
-| FR-003 | When a demonstrator case is created, the system shall assign a synthetic property and building identifier and link each lifecycle event to source and evidence version. | Programme user; case creation | Reconstructable synthetic property journey | AC-003, AC-009 | GOAL-002 |
+| FR-003 | When a synthetic Excel workbook is imported, the system shall validate its mapping, assign or resolve synthetic property and building identifiers, retain source-row lineage and route unmapped or conflicting values to an exception queue without changing the source file. | Data analyst; workbook import | Controlled, auditable synthetic migration into the hybrid programme state | AC-003, AC-009, AC-013, AC-014 | GOAL-002 |
 | FR-004 | When a lifecycle transition is requested, the system shall evaluate deterministic evidence, hold, role and approval gates before changing state. | Programme user or test harness; transition request | Allowed transition or explicit block with reason and owner | AC-004, AC-005 | GOAL-002 |
 | FR-005 | If safety, consent, professional approval, funding, capacity or required evidence is missing, stale, contradictory or unresolved, then the system shall block the affected demonstrator transition and identify the unresolved condition. | Workflow; gate evaluation | Fail-closed transition, with no inferred approval | AC-004, AC-005 | GOAL-002 |
-| FR-006 | When an approved synthetic scenario is run, the system shall show property readiness, current stage, holds, evidence status, next-action owner and handoff state. | Programme manager; scenario run | A reviewable end-to-end case view | AC-003, AC-006 | GOAL-002 |
+| FR-006 | When an approved synthetic scenario is run, the Azure workbench shall show property readiness, current stage, holds, evidence status, next-action owner and handoff state using the Azure programme store as the demonstrator state authority. | Programme manager; scenario run | A reviewable end-to-end case view | AC-003, AC-006 | GOAL-002 |
 | FR-007 | Where bounded AI is included, the system shall produce only source-linked extraction, reconciliation, draft or raise-only flag outputs for human review. | Named reviewer; AI task invocation | Reviewable suggestion; no consequential action | AC-007, AC-008 | GOAL-003 |
 | FR-008 | When an AI output is generated or reviewed, the system shall retain the applicable source, output, model/configuration version, reviewer decision and correction or override. | Reviewer; output review | Reproducible task-level evaluation evidence | AC-008, AC-009 | GOAL-003 |
 | FR-009 | When a scenario, option appraisal or evidence pack is exported, the system shall include its source links, versions, approval state and explicit unresolved items. | Sponsor, Finance or assurance reviewer; export | Portable, interpretable decision evidence | AC-009 | GOAL-001, GOAL-002 |
 | FR-010 | When a demonstrator component or integration fails, the system shall expose the affected work, block unverified state changes and support controlled reconciliation before restart. | Digital operator; failure injection | Visible, recoverable failure; no silent progression | AC-005, AC-010 | GOAL-002 |
 | FR-011 | When the options gate is reviewed, the system shall record the recommendation, alternatives, criteria, evidence, dissent, approvers and decision status. | Sponsor and designated reviewers; gate review | Decision record; remains open if evidence or authority is insufficient | AC-001, AC-002 | GOAL-001 |
 | FR-012 | Before any resident-facing communication or live operational use is enabled, the system shall require a separately approved release configuration and the applicable data-protection, safety, service and authority gates. | Product / control owners; release configuration | Non-production draft cannot silently become operational | AC-010 | GOAL-002, GOAL-003 |
+| FR-013 | When a reviewer opens a linked collaboration document, the system shall resolve a controlled M365 document reference to the approved file location and version, or clearly report that M365 capability is unavailable; it shall not create a competing approval record. | Programme reviewer; document access | Azure state retains the decision reference while the document store remains explicitly identified | AC-009, AC-015 | GOAL-002 |
 
 All requirements are draft candidates. The implementation team and product
 owner must validate actors, system boundaries and acceptance evidence.
@@ -230,7 +284,8 @@ relevant validation gate, not guessed in this draft.
 * **NFR-007:** Before option selection, each candidate's supported scale,
   capacity and cost assumptions shall be recorded for the same approved
   workload. A production-scale requirement is not established by the
-  60,000-home case-study portfolio figure alone.
+  60,000-home case-study portfolio figure alone. The hybrid demonstrator must
+  test against an owner-approved synthetic workload.
 
 ### Maintainability and Operability
 
@@ -258,8 +313,9 @@ relevant validation gate, not guessed in this draft.
 
 * **NFR-011:** Each proposed integration shall document source authority,
   identifiers, schema, access, conflict handling, failure behavior and
-  reconciliation. MVP integrations shall use mocks, synthetic interfaces
-  or explicitly approved test environments.
+  reconciliation. MVP integrations to M365 SharePoint, if available, shall
+  use a test library; other company integrations shall use mocks, synthetic
+  interfaces or explicitly approved test environments.
 
 ### Portability
 
@@ -278,20 +334,22 @@ relevant validation gate, not guessed in this draft.
 | CON-004 | The initial demonstrator shall use synthetic data; any future personal-data processing requires separate approval and applicable privacy controls. | PRD MVP boundary; BRD RULE-022 | Data: no production or resident personal data in MVP. |
 | CON-005 | No platform choice is approved until equivalent-scope options evidence, whole-life cost, supportability and required control tests are reviewed by named authorities. | Owner request and BRD RULE-016 / AC-053 | Technology and governance: architecture decision remains open. |
 | CON-006 | The demonstrator must not delay, pause, reset or close the separate statutory hazard response. | BRD CON-001 and RULE-003 | Safety: hazard-service authority remains outside the retrofit demonstrator. |
+| CON-007 | The baseline hybrid design shall not depend on Dataverse or Dynamics 365; their absence and Excel-only coordination are owner-confirmed as of 2026-10-03. | Owner statement on 2026-10-03 | Architecture: any later change requires an explicit scope and options-appraisal revision. |
+| CON-008 | SharePoint, OneDrive, Teams and M365 licensing/configuration are not assumed available for this solution until tenant and governance checks pass. | Current tenant capability is unknown | Architecture/operations: use a controlled Azure document store fallback in the demonstrator and record the M365 integration gap. |
 
 ## Process Models
 
 ```mermaid
 flowchart LR
-    A[Confirm scope, controls and appraisal criteria] --> B[Assess full Azure option]
-    A --> C[Assess business-apps option]
-    A --> D[Assess Azure-led hybrid option]
+    A[Confirm scope, controls and appraisal criteria] --> B[Assess full Azure custom option]
+    A --> C[Assess greenfield business-apps option]
+    A --> D[Assess Azure-led hybrid baseline]
     B --> E[Compare evidence, cost, support, risk and exit]
     C --> E
     D --> E
-    E --> F{Authorized option decision?}
-    F -- No or insufficient evidence --> G[Record gaps; keep decision open]
-    F -- Yes --> H[Configure non-production demonstrator]
+    E --> F{Hybrid passes controls, cost and support gate?}
+    F -- No or insufficient evidence --> G[Record gaps; revisit architecture with approvers]
+    F -- Yes --> H[Configure non-production Azure and verified M365 boundary]
     H --> I[Run synthetic property scenarios]
     I --> J[Review controls, recovery, usability and AI task evidence]
     J --> K[Document result; no production release implied]
@@ -304,9 +362,9 @@ technical and control owners.
 
 | ID | Given / When / Then | Covers | Status |
 | --- | --- | --- | --- |
-| AC-001 | Given the three approaches are in scope, when the options gate is reviewed, then one decision pack compares all three against the same approved criteria and records recommendation, alternatives and decision authority. | FR-001, FR-011 | Not Started |
+| AC-001 | Given the three approaches are in scope, when the options gate is reviewed, then one decision pack compares full Azure, greenfield business apps and the Azure-led hybrid against the same approved criteria and records the proposed hybrid baseline, alternatives and decision authority. | FR-001, FR-011 | Not Started |
 | AC-002 | Given an appraisal contains a cost, capability or risk claim, when a reviewer inspects it, then its source or explicit unknown status, owner, date and assumptions are visible. | FR-001, FR-002, FR-011 | Not Started |
-| AC-003 | Given a synthetic property scenario, when the lifecycle is displayed, then each event can be reconstructed by property/building identifier, stage, source and evidence version, with current hold and next owner visible. | FR-003, FR-006 | Not Started |
+| AC-003 | Given a representative synthetic Excel workbook is imported, when the lifecycle is displayed, then each accepted event can be reconstructed by source workbook, sheet/row, synthetic property/building identifier, stage, source and evidence version, with rejected mappings routed to an exception queue. | FR-003, FR-006 | Not Started |
 | AC-004 | Given a required approval, safety hold, resident decision or evidence item is absent, stale or contradictory, when progression is requested, then the transition is blocked with the unmet condition and responsible role shown. | FR-004, FR-005 | Not Started |
 | AC-005 | Given safety, consent, professional approval, funding or capacity is unresolved, when a direct API, workflow or agent tool attempts a prohibited action, then the action is denied and no controlled state is changed. | FR-004, FR-005, FR-010 | Not Started |
 | AC-006 | Given an authorized synthetic journey is run, when the programme manager opens its case view, then stage, evidence status, hold reason, next-action owner and handoff state are available without implying that work is approved for production. | FR-006 | Not Started |
@@ -315,8 +373,10 @@ technical and control owners.
 | AC-009 | Given the decision pack or scenario evidence is exported, when another reviewer opens the export without the AI provider, then source links, evidence versions, approval state, unresolved items and supersession history remain interpretable. | FR-003, FR-008, FR-009 | Not Started |
 | AC-010 | Given a model, workflow or integration failure is injected, when the scenario is exercised, then controlled progression stops, affected work and owner are visible, and restart requires reconciliation; the failure cannot affect a live hazard service. | FR-010, FR-012 | Not Started |
 | AC-011 | Given a proposed move from non-production to any live use, when release readiness is reviewed, then separate approval records exist for product, data protection, safety, resident service, finance, procurement and technical authority as applicable; otherwise live release remains blocked. | FR-012 | Not Started |
-| AC-012 | Given three platform candidates, when the option matrix is scored, then criteria weights and pass/fail thresholds have documented owners and rationale; no platform is selected solely because of the capstone owner's preference. | FR-001, FR-011 | Not Started |
+| AC-012 | Given three platform candidates and an owner-confirmed Excel-only baseline with no Dataverse or Dynamics 365, when the option matrix is scored, then the business-apps option is costed as greenfield and the hybrid baseline's thresholds and decision authority are documented; no platform is selected solely because of the capstone owner's preference. | FR-001, FR-011 | Not Started |
 | AC-013 | Given synthetic data is loaded, when privacy checks run, then no real resident identifier, address, contact detail or health-history text is present. | FR-003, FR-012 | Not Started |
+| AC-014 | Given an Excel import contains an unknown column, duplicate row, unmapped value or conflicting identifier, when validation runs, then the source file remains unchanged, the import does not silently resolve the conflict and each rejected row is available for human review. | FR-003 | Not Started |
+| AC-015 | Given M365/SharePoint is proposed for a managed document, when tenant, license, permission and version checks are run, then the integration is enabled only if all checks pass; otherwise the demonstrator uses the documented controlled Blob Storage fallback and records the M365 gap. | FR-013 | Not Started |
 
 ## Traceability Matrix
 
@@ -326,7 +386,7 @@ technical and control owners.
 | --- | --- | --- | --- |
 | FR-001 | Compare all implementation options | AC-001, AC-002, AC-012 | 3 |
 | FR-002 | Record evidence status and assumptions | AC-002 | 1 |
-| FR-003 | Create traceable synthetic property events | AC-003, AC-009, AC-013 | 3 |
+| FR-003 | Import synthetic Excel rows with traceability | AC-003, AC-009, AC-013, AC-014 | 4 |
 | FR-004 | Enforce transition gates | AC-004, AC-005 | 2 |
 | FR-005 | Fail closed on unresolved conditions | AC-004, AC-005 | 2 |
 | FR-006 | Show case state and ownership | AC-003, AC-006 | 2 |
@@ -336,8 +396,9 @@ technical and control owners.
 | FR-010 | Expose and reconcile failures | AC-005, AC-010 | 2 |
 | FR-011 | Record the option decision | AC-001, AC-002, AC-012 | 3 |
 | FR-012 | Gate live-use configuration | AC-010, AC-011, AC-013 | 3 |
+| FR-013 | Resolve controlled M365 document reference | AC-009, AC-015 | 2 |
 
-Coverage: 12/12 requirements linked, **100%**. Threshold: 80.0%.
+Coverage: 13/13 requirements linked, **100%**. Threshold: 80.0%.
 
 ### FR-to-GOAL Alignment
 
@@ -345,7 +406,7 @@ Coverage: 12/12 requirements linked, **100%**. Threshold: 80.0%.
 | --- | --- | --- | --- |
 | FR-001 | Compare all implementation options | GOAL-001 | 1 |
 | FR-002 | Record evidence status and assumptions | GOAL-001 | 1 |
-| FR-003 | Create traceable synthetic property events | GOAL-002 | 1 |
+| FR-003 | Import synthetic Excel rows with traceability | GOAL-002 | 1 |
 | FR-004 | Enforce transition gates | GOAL-002 | 1 |
 | FR-005 | Fail closed on unresolved conditions | GOAL-002 | 1 |
 | FR-006 | Show case state and ownership | GOAL-002 | 1 |
@@ -355,18 +416,20 @@ Coverage: 12/12 requirements linked, **100%**. Threshold: 80.0%.
 | FR-010 | Expose and reconcile failures | GOAL-002 | 1 |
 | FR-011 | Record the option decision | GOAL-001 | 1 |
 | FR-012 | Gate live-use configuration | GOAL-002, GOAL-003 | 2 |
+| FR-013 | Resolve controlled M365 document reference | GOAL-002 | 1 |
 
-Coverage: 12/12 requirements linked, **100%**. Target: 100.0%.
+Coverage: 13/13 requirements linked, **100%**. Target: 100.0%.
 
 ### Requirement-to-source trace
 
 | Source | Relevant requirement area |
 | --- | --- |
-| BRD FR-036, RULE-016, AC-053 | FR-001, FR-004, FR-005, FR-011 |
+| BRD FR-036, RULE-016, AC-053 | FR-001, FR-004, FR-005, FR-011; DD-001 |
 | BRD NFR-002 to NFR-007 | FR-003, FR-008, FR-009, FR-010; NFR-002 to NFR-009, NFR-011, NFR-012 |
 | BRD CON-001, CON-003, RULE-003, FR-002 to FR-004 | FR-004, FR-005, FR-010, FR-012; CON-003, CON-006 |
 | BRD RULE-018, RULE-022, RULE-024 | FR-007, FR-008, FR-012; CON-003 to CON-006 |
 | Case Study 48 Addendum, “Implementation Options and Provisional Platform Recommendation” | FR-001, FR-002, FR-009, FR-011; DD-001 |
+| Owner confirmation, 2026-10-03: coordination uses Excel files; no Dataverse or Dynamics 365 | Product Context, DD-001, DD-004, FR-003, CON-007, AC-012, AC-014 |
 | Eight company-role profile option challenges, 2026-10-03 | Product Context; decision criteria and open questions only; not company evidence |
 
 ## MVP and Release Framing
@@ -380,11 +443,15 @@ handling. Option comparison precedes any architecture lock.
 
 ### MVP slice
 
-* Deliver a decision pack for full Azure, business apps and Azure-led hybrid
-  using identical criteria, documented evidence and explicit unknowns.
-* Following an authorized option decision, deliver one non-production
-  demonstrator with a synthetic property lifecycle and representative
-  exception/failure paths.
+* Deliver a decision pack for full Azure custom, greenfield business apps and
+  the Azure-led hybrid using identical criteria, documented evidence and
+  explicit unknowns. The hybrid is the proposed demonstrator baseline; the
+  gate may reject it if controls, support or whole-life value do not pass.
+* Deliver one non-production hybrid demonstrator with an Azure-owned synthetic
+  property lifecycle, representative Excel import mapping, and M365 document
+  collaboration only where tenant, licensing and governance checks pass.
+  Provide a controlled Blob Storage fallback and record any unproven M365
+  boundary.
 * Compare at least one bounded AI task with workflow-only handling in paired
   test cases if AI is justified by the appraisal; document the result even if
   the decision is not to use AI.
@@ -406,15 +473,17 @@ calendar, implementation cost and user-research plan require discovery.
 * Treating agent output, missing alerts or synthetic evaluation as evidence of
   legal compliance, professional approval or achieved customer benefits.
 * Building all three options as production-grade implementations; compare all
-  three consistently and implement only the candidate authorized at the gate.
+  three consistently and implement only the hybrid demonstrator baseline
+  authorized at the gate.
 
 ## Success Metrics
 
 | Metric | Definition | Baseline | Target | Window / source | Owner |
 | --- | --- | --- | --- | --- | --- |
-| Option appraisal completeness | Count of candidate options assessed against each approved criterion with evidence or an explicit gap | No completed comparative appraisal evidenced | 3/3 options; every criterion has evidence, unknown status or justified N/A before decision | Architecture gate; decision pack | Product owner and architecture lead, to be named |
+| Option appraisal completeness | Count of candidate options assessed against each approved criterion with evidence or an explicit gap | No completed comparative appraisal evidenced | 3/3 options; full Azure custom, greenfield business apps and hybrid assessed before build authorization | Architecture gate; decision pack | Product owner and architecture lead, to be named |
 | Critical transition control pass rate | Prohibited or unresolved transitions blocked / total negative control tests | No PRD demo test suite | 100%; zero unauthorized controlled transitions in the agreed suite | Each demonstrator release; versioned test results | Safety and technical authority, to be named |
-| Scenario completion | Approved end-to-end scenarios that reach expected terminal state or explicit safe block / total approved scenarios | No PRD demonstrator delivered | 100% of the agreed scenario suite | Demonstrator acceptance; scenario evidence | Retrofit product owner, to be named |
+| Scenario completion | Approved end-to-end hybrid scenarios that reach expected terminal state or explicit safe block / total approved scenarios | No PRD hybrid demonstrator delivered | 100% of the agreed scenario suite | Demonstrator acceptance; scenario evidence | Retrofit product owner, to be named |
+| Excel import disposition | Source rows imported with traceable mapping or explicitly rejected for human review / total source rows | Current coordination uses Excel files; workbook structure and row quality unknown | 100% of test rows have a visible disposition; zero silent drops or overwrites | Synthetic migration test; import log | Data owner, to be named |
 | Evidence export completeness | Required synthetic records whose source, version, approval and supersession metadata survive export / required records | Unknown | 100% of required synthetic test records | Each export acceptance run | Data owner, to be named |
 | AI incremental task value | Paired comparison of output quality, unsupported-claim rate, review minutes, overrides and missed critical exceptions versus workflow-only | No measured PRD task baseline | Thresholds set by owners before evaluation; zero undetected critical safety, eligibility or consent errors accepted | Shadow evaluation only; paired test record | Product, safety and assurance owners |
 | Whole-life cost confidence | Major cost categories with sourced estimate or explicit gap / required categories | Unknown; no company platform inventory or comparable quotation | All agreed categories shown for each option; Finance validates before decision | Options gate; estimate and evidence log | Finance |
@@ -430,20 +499,21 @@ resident-benefit claims.
 
 | Assumption | Impact if false | Mitigation |
 | --- | --- | --- |
-| The BRD's proposed end-to-end demonstrator is the intended PRD scope. | High | Confirm product boundary and demonstrate how a platform appraisal leads to a bounded demo. |
+| The BRD's proposed end-to-end demonstrator is the intended PRD scope, with the Azure-led hybrid as the baseline. | High | Confirm product boundary, architecture gate, and evidence needed to reject or proceed with the hybrid. |
 | Each of the three options can be described against a common control and evidence model. | Medium | Architecture lead to define neutral criteria and disclose any unequal evidence quality. |
 | Synthetic data is sufficient to test representative flows and failure paths. | Medium | Data and programme roles review scenario validity; no claim of live-user validation. |
 | Foundry/agent evaluation is relevant only if a bounded task demonstrates value over conventional workflow. | Medium | Include workflow-only baseline and permit an explicit no-AI recommendation. |
-| A non-production prototype can use mocks or test adapters for unknown company systems. | High | Inventory system/API constraints before architecture selection; record mock limitations. |
+| A non-production prototype can use mocks or test adapters for unknown company systems and representative synthetic Excel workbooks. | High | Inventory system/API and workbook constraints; record mock and import limitations. |
+| M365 SharePoint can be used for managed demonstrator documents. | High | Verify tenant, license, permissions, retention and operating ownership; use the Blob fallback if any prerequisite fails. |
 
 ### Risk Register
 
 | Risk | Probability | Impact | Mitigation |
 | --- | --- | --- | --- |
-| Azure preference predetermines the appraisal | Medium | High | Freeze criteria before scoring; document business-app alternative and decision authority. |
+| Azure preference predetermines the appraisal | Medium | High | Freeze criteria before scoring; cost business apps as greenfield and document the decision authority and reasons for the hybrid baseline. |
 | Role-agent hypotheses are mistaken for company or resident evidence | Medium | High | Label their status; validate with actual stakeholders and residents before commitment. |
 | Incomplete BRD handoff or unresolved upstream quality issues propagate into the PRD | High | High | Obtain latest BRD quality report, coverage/waiver context and named approvals before Validate. |
-| Split authority across Azure, Dataverse and SharePoint creates conflicting approvals or evidence | Medium | High | Map one authoritative record per entity and test conflict, export and reconciliation behavior. |
+| Split authority across Azure and SharePoint creates conflicting approvals or evidence | Medium | High | Keep Azure SQL as programme-state authority; define SharePoint document authority only if verified; test links, versioning, export and reconciliation. |
 | Product demo passes while operational support or failure recovery is inadequate | Medium | High | Require runbooks, owner, recovery exercise and support model before any later live gate. |
 | Synthetic success is presented as actual delivery benefit | Medium | High | Label every output synthetic and separate feasibility evidence from the BRD's operational Comparisons 1 and 2. |
 | Unverified resident needs or platform channels exclude people | Medium | High | Conduct direct resident research and accessibility testing before any resident-facing product scope. |
@@ -452,8 +522,8 @@ resident-benefit claims.
 
 | Term | Definition |
 | --- | --- |
-| Azure-led hybrid | Candidate architecture in which Azure provides the programme control plane while M365 supports collaboration/documents and optional staff channels. |
-| Business apps | Candidate Power Platform and M365 approach; Dynamics 365 is considered only if its presence and suitability are confirmed. |
+| Azure-led hybrid | Proposed demonstrator architecture in which Azure provides programme state and control, while verified M365 services may support managed documents and staff collaboration. |
+| Business apps | Greenfield Power Platform and M365 adoption; Proper North Homes has no Dataverse or Dynamics 365 estate to reuse, per owner confirmation on 2026-10-03. |
 | Control plane | Programme-specific lifecycle, gates, evidence links, handoffs and status coordination; it does not replace existing authoritative systems. |
 | Demonstrator | Non-production implementation used to prove representative technical paths and controls, not operational benefits. |
 | Foundry | Azure AI platform candidate for bounded AI capabilities; specific model, availability, region and deployment are undecided. |

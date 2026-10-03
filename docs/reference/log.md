@@ -696,3 +696,21 @@ metadata when the knowledge base was created.
   BRD's draft status and the need to reconcile its latest quality evidence
   before PRD validation.
 * Updated this index. The PRD is not approved for implementation.
+
+## [2026-10-03] update | Set hybrid demonstrator baseline
+
+* Trigger: the owner selected the hybrid approach as the PRD direction and
+  confirmed that current coordination uses Excel files, with no Dataverse or
+  Dynamics 365 estate.
+* Updated the addendum to classify the Excel-only and absent-platform details
+  as owner-confirmed company context; M365 tenant, SharePoint availability and
+  licensing remain unknown.
+* Revised the PRD to version 0.2.0: Azure owns the proposed programme control
+  plane; M365 document collaboration is conditional on verification, with
+  controlled Azure Blob Storage as a demonstrator fallback. Excel import is
+  tested on synthetic representatives; source workbooks remain unchanged.
+* Kept the greenfield business-apps option as a whole-life-cost comparator.
+  The hybrid is a proposed demonstrator baseline, not production architecture,
+  procurement approval or permission to process resident data.
+* Updated the index. Owner-controlled memory and the original case study
+  remain unchanged.

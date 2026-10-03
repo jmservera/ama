@@ -367,6 +367,14 @@ capstone preference, not evidence that Azure is the best customer investment.
 The recommendation below is a proposal, not an approved architecture,
 procurement decision or validated company requirement.
 
+On 3 October 2026 the owner confirmed that Proper North Homes currently uses
+Excel files for this coordination and does not have Dataverse or Dynamics 365.
+This is owner-confirmed company context. The existing Microsoft 365 tenant,
+SharePoint availability, licences, governance, retention configuration and
+support capability remain unverified. The business-apps alternative would
+therefore be a greenfield platform adoption in this comparison, not reuse of
+an existing Dataverse or Dynamics 365 estate.
+
 The key choice is where programme state, business controls and evidence
 authority live, not whether a conversational Copilot is present. The
 [BRD](./brds/agentic-retrofit-programme-brd.md), Digital Foundation and Authority,
@@ -381,12 +389,14 @@ baseline against which these implementation options must earn their cost.
 | Option | Proposed implementation | Principal advantage | Principal trade-off |
 | --- | --- | --- | --- |
 | Azure custom application | Programme workbench, domain APIs, transactional programme store, durable workflow, integration adapters and Foundry-based AI capabilities | Direct control over contracts, evaluation, telemetry, resilience and user experience | Highest bespoke engineering and ongoing operational responsibility |
-| Business-platform-led | Power Apps and Dataverse, Power Automate, Copilot Studio and SharePoint documents; Dynamics 365 where existing capabilities fit | Potentially less bespoke development and faster delivery with an established platform team | Licensing, capacity limits, integration complexity and platform governance still require design and validation |
+| Business-platform-led | Greenfield Power Apps and Dataverse, Power Automate, Copilot Studio and SharePoint documents; no current Dataverse or Dynamics 365 estate is available for reuse | Could offer a managed low-code platform if the organisation adopts, licenses and supports it | Requires new platform adoption and operating capability; licensing, capacity, migration, integration and governance need full costing and validation |
 | Azure-led hybrid | Azure owns the programme control layer and bounded AI services; M365 supplies documents, collaboration and optional staff-facing agent channels | Customise distinctive controls while reusing commodity capabilities | Cross-platform identity, permissions, evidence ownership and support boundaries must be explicit |
 
 SharePoint, OneDrive and M365 Copilot alone are not the strongest comparator
 for the full BRD. A fair business-platform option includes Dataverse or an
 existing operational system for structured records and controlled transitions.
+Proper North Homes has no Dataverse or Dynamics 365 estate to reuse, so
+Dataverse would require a greenfield adoption.
 SharePoint can hold managed documents; OneDrive can support personal working
 material. Personal drives are not proposed as the authoritative programme
 approval or evidence store.
@@ -450,9 +460,11 @@ application-level authority checks, idempotency and reconciliation.
 Keep two arguments separate:
 
 * Customer selection: choose the lowest whole-life-cost option that satisfies
-  all mandatory controls and can be supported by the organisation. An
-  established Dynamics 365 or Power Platform estate could make the
-  business-platform-led option preferable.
+  all mandatory controls and can be supported by the organisation. The owner
+  confirmed there is no current Dataverse or Dynamics 365 estate to reuse.
+  A greenfield Power Platform adoption could still be preferable if it meets
+  the controls at lower whole-life cost and the organisation funds its
+  governance and support capability.
 * Capstone selection: Azure provides a direct way to demonstrate contracts,
   failure recovery, model comparisons, instrumentation and cost per business
   outcome. This is a legitimate project preference, not proof of customer
@@ -473,10 +485,24 @@ This task remains subject to the BRD's comparison, safety and release gates.
 
 #### Evidence Needed Before a Platform Decision
 
-The company's current systems and licences, available APIs, operating-team
-skills, transaction volumes, document sensitivity and support ownership are
-unknown. No comparative implementation, licensing quotation, whole-life cost
-model or direct stakeholder validation establishes a winning platform yet.
+The owner reports that current coordination uses Excel files and that
+Dataverse and Dynamics 365 are not present. The Microsoft 365 tenant,
+SharePoint availability and licences, Excel workbook formats and quality,
+available APIs, operating-team skills, transaction volumes, document
+sensitivity and support ownership are still unknown. No comparative
+implementation, licensing quotation, whole-life cost model or direct
+stakeholder validation establishes a winning platform yet.
+
+Given the confirmed absence of Dataverse and Dynamics 365, the hybrid approach
+is the provisional demonstrator baseline for the PRD: Azure owns the new
+structured programme state, deterministic gates, integrations and bounded AI;
+M365 services may support managed documents and staff collaboration once
+tenant capability, licensing and governance are verified. Excel is treated as
+the current source material to assess for controlled import, not as the target
+live workflow or an authoritative approval record. The greenfield business-apps
+option remains a priced comparator, not the selected build target. This
+direction remains subject to sponsor, architecture, security, Finance and
+control-owner review.
 
 Agree appraisal criteria before assigning weights or scores. Compare equivalent
 scope and operating assumptions across options, including implementation,
@@ -497,9 +523,10 @@ The provisional decision statement is:
 > Prefer an Azure-led programme control layer, subject to options appraisal,
 > because the proposed lifecycle requires explicit cross-system controls,
 > recoverable execution and measurable AI behaviour. Reuse M365 for
-> collaboration and documents, and retain a Dataverse/Copilot Studio-led
-> alternative if existing capabilities meet the same requirements with lower
-> whole-life cost.
+> collaboration and documents only after tenant and governance verification.
+> Compare a greenfield Dataverse/Copilot Studio-led alternative if it meets
+> the same requirements with lower whole-life cost, including platform
+> adoption and operating capability.
 
 #### Platform Evidence
 
