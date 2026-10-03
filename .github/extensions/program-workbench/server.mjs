@@ -43,7 +43,7 @@ export async function getIndexedDocument(requestedPath, repositoryRoot = default
   return readDocument(repositoryRoot, requestedPath, await getIndex(repositoryRoot));
 }
 
-export async function startProgramWorkbenchServer({ initialPath = "", repositoryRoot = defaultRepositoryRoot, port = 0, requestEditor } = {}) {
+export async function startProgramWorkbenchServer({ initialPath = "", repositoryRoot = defaultRepositoryRoot, port = 0, requestConversation } = {}) {
   const token = randomBytes(24).toString("hex");
   const server = createServer(async (req, res) => {
     try {
@@ -52,14 +52,13 @@ export async function startProgramWorkbenchServer({ initialPath = "", repository
         if (req.headers["x-canvas-token"] !== token) return sendJson(res, 403, { error: "Canvas token is missing or invalid." });
         if (req.method === "GET" && url.pathname === "/api/index") return sendJson(res, 200, { documents: await getIndex(repositoryRoot) });
         if (req.method === "POST" && url.pathname === "/api/refresh") return sendJson(res, 200, { documents: await getIndex(repositoryRoot, true) });
-        if (req.method === "POST" && url.pathname === "/api/open-editor") {
+        if (req.method === "POST" && url.pathname === "/api/start-conversation") {
           const body = await readBody(req);
           const documents = await getIndex(repositoryRoot, true);
           const document = documents.find((item) => item.path === body.path && item.kind === "markdown");
           if (!document) return sendJson(res, 400, { error: "Select an indexed Markdown document." });
-          if (!document.editable) return sendJson(res, 403, { error: document.readOnlyReason });
-          if (!requestEditor) return sendJson(res, 503, { error: "The agent editor handoff is unavailable." });
-          return sendJson(res, 202, { path: document.path, ...await requestEditor(document.path) });
+          if (!requestConversation) return sendJson(res, 503, { error: "The conversation handoff is unavailable." });
+          return sendJson(res, 202, { path: document.path, ...await requestConversation(document.path) });
         }
         if (req.method === "GET" && url.pathname === "/api/document") {
           return sendJson(res, 200, await getIndexedDocument(url.searchParams.get("path"), repositoryRoot));

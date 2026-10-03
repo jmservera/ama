@@ -161,7 +161,7 @@ async function openDocument(path, refreshOnly = false) {
     const editButton = $('.mode-button[data-mode="edit"]');
     editButton.disabled = !doc.editable;
     editButton.title = doc.editable ? "Edit this Markdown document" : doc.readOnlyReason;
-    $("#agent-editor-button").disabled = !doc.editable;
+    $("#conversation-button").disabled = false;
     renderContextLinks("#outgoing-links", doc.outgoing || []);
     renderContextLinks("#backlinks", doc.backlinks || []);
     $$(".library-document").forEach((button) => button.classList.toggle("active", button.dataset.path === path));
@@ -197,16 +197,18 @@ async function saveCurrent() {
   } catch (error) { showToast(`Save failed: ${error.message}`); }
 }
 
-async function openEditorViaAgent() {
-  if (!state.current?.editable) return;
-  if (state.dirty) { showToast("Save or discard canvas edits before opening the app editor."); return; }
-  const button = $("#agent-editor-button");
+async function startConversation() {
+  if (!state.current) return;
+  if (state.dirty) { showToast("Save or discard canvas edits before starting a conversation about the saved file."); return; }
+  const button = $("#conversation-button");
   button.disabled = true;
   try {
-    await api("/api/open-editor", { method: "POST", body: JSON.stringify({ path: state.current.path }) });
-    showToast("Editor request sent to the agent. Opening may take an agent turn.");
-  } catch (error) { showToast(`Editor request failed: ${error.message}`); }
-  finally { button.disabled = !state.current?.editable; }
+    const result = await api("/api/start-conversation", { method: "POST", body: JSON.stringify({ path: state.current.path }) });
+    showToast(result.agent
+      ? "Conversation requested with Product Manager Advisor. The agent will attach the file and open the chat."
+      : "Conversation requested with the default agent; Product Manager Advisor is unavailable.");
+  } catch (error) { showToast(`Conversation request failed: ${error.message}`); }
+  finally { button.disabled = !state.current; }
 }
 
 let searchTimer;
@@ -257,7 +259,7 @@ async function initialize() {
 $$('.rail-button').forEach((button) => button.addEventListener("click", () => switchView(button.dataset.view)));
 $$('.mode-button').forEach((button) => button.addEventListener("click", () => setMode(button.dataset.mode)));
 $("#save-button").addEventListener("click", saveCurrent);
-$("#agent-editor-button").addEventListener("click", openEditorViaAgent);
+$("#conversation-button").addEventListener("click", startConversation);
 $("#refresh-button").addEventListener("click", () => refresh());
 $("#global-search").addEventListener("input", (event) => runSearch(event.target.value));
 $("#connections-open-docs").addEventListener("click", () => switchView("overview"));

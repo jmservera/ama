@@ -20,11 +20,14 @@ editor.
   Markdown mode blocks switching into WYSIWYG.
 * Fill the remaining visible page height in Edit mode. The editor scrolls
   internally; metadata and linked-record context have separate bounded scrolling.
-* Test an experimental "Open editor via agent" handoff to the app's native
-  editor. The button sends a navigation-only request to the current agent;
-  it is not a direct Files-tab API and requires an agent turn. Protected
-  documents cannot use the handoff, and unsaved canvas edits must be saved
-  or discarded first.
+* Start a standalone chat with the selected saved Markdown file attached.
+  The button asks the current agent to stage a file copy, create a detached
+  chat and navigate to it. It requires an agent turn, not a direct host API.
+  Product Manager Advisor is selected by its stable ID when present in the
+  selectable agent list; otherwise the UI reports use of the default agent.
+  Read-only documents can be discussed without relaxing their edit protections.
+  Save or discard pending canvas edits first. The attachment is a snapshot,
+  not a live repository connection.
 * Refresh the index and selected viewer document on focus or visibility return,
   without overwriting unsaved canvas edits. Only saved disk changes are visible.
 * Inspect outgoing links and backlinks.
@@ -55,6 +58,8 @@ Run `python tests/test_editor.py` with Python Playwright and its Chromium browse
 installed. The tests use a temporary repository, never modify project documents,
 and cover mode switching, frontmatter, tables, relative links, source fallback,
 protected documents, saves and refresh while edits are pending.
+Run `node --test tests/conversation.test.mjs` to check advisor selection,
+standalone-chat request construction and conversation endpoint validation.
 
 ## Canvas Identity
 

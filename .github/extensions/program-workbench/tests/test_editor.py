@@ -129,7 +129,7 @@ class EditorIntegrationTest(unittest.TestCase):
         self.page.locator('.library-document[data-path="docs/case_study_48_original.md"]').click()
         expect(self.page.locator("#document-title")).to_have_text("Protected fixture")
         self.assertTrue(self.page.locator('[data-mode="edit"]').is_disabled())
-        self.assertTrue(self.page.locator("#agent-editor-button").is_disabled())
+        self.assertFalse(self.page.locator("#conversation-button").is_disabled())
 
     def test_refresh_preserves_dirty_edits_and_reloads_saved_changes(self):
         metadata = self.page.locator("#frontmatter-editor")
