@@ -1,8 +1,8 @@
-import { copyFile, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { build } from "esbuild-wasm";
 import { fileURLToPath } from "node:url";
 
-const directory = new URL("./assets/vendor/", import.meta.url);
+const directory = new URL("../../.github/extensions/program-workbench/assets/vendor/", import.meta.url);
 await mkdir(directory, { recursive: true });
 await build({
   stdin: {
@@ -28,3 +28,18 @@ for (const dependency of Object.keys(lock.packages).filter(Boolean)) {
   }
 }
 await writeFile(new URL("THIRD-PARTY-NOTICES.txt", directory), notices.join("\n"));
+
+async function directorySize(folder) {
+  const entries = await readdir(folder, { withFileTypes: true });
+  let bytes = 0;
+  for (const entry of entries) {
+    const file = new URL(entry.name + (entry.isDirectory() ? "/" : ""), folder);
+    bytes += entry.isDirectory() ? await directorySize(file) : (await stat(file)).size;
+  }
+  return bytes;
+}
+
+const extension = new URL("../../.github/extensions/program-workbench/", import.meta.url);
+const bytes = await directorySize(extension);
+if (bytes >= 8388608) throw new Error(`Extension is ${bytes} bytes, exceeding the project trust limit. Keep build dependencies outside the extension.`);
+console.error(`Program Workbench extension: ${bytes} bytes (limit: 8388608).`);

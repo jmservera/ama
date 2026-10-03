@@ -40,8 +40,13 @@ an instance token.
 
 ## Building and Checking Editor Assets
 
-From this extension folder, run `npm ci --ignore-scripts` and `npm run build`
-after changing dependencies. The build uses a portable WebAssembly bundler.
+From `tools/program-workbench-assets/` at the repository root, run
+`npm ci --ignore-scripts` and `npm run build` after changing dependencies.
+Build dependencies must stay outside `.github/extensions/`: the app's 8 MiB
+project-extension trust limit includes local files such as `node_modules`,
+even when Git ignores them. Only the generated runtime assets and notices
+belong in this extension. The build checks the extension size after generation
+and uses a portable WebAssembly bundler.
 The Copilot SDK remains supplied by the runtime and is not an npm dependency.
 
 Run `python tests/test_editor.py` with Python Playwright and its Chromium browser
