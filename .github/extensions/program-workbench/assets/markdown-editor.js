@@ -11,10 +11,8 @@ export function requiresSourceEditing(body) {
 }
 
 export function createDocumentEditor(onChange) {
-  const source = document.querySelector("#markdown-editor");
   const metadata = document.querySelector("#frontmatter-editor");
   const metadataWrap = document.querySelector("#frontmatter-wrap");
-  const sourceWrap = document.querySelector("#source-editor-wrap");
   const visual = document.querySelector("#visual-editor");
   const note = document.querySelector("#editor-note");
   let editor = null, original = "", draft = "", initialMarkdown = "", header = "", originalBody = "", loading = false, sourceOnly = false, switching = false, userEdited = false;
@@ -44,17 +42,16 @@ export function createDocumentEditor(onChange) {
     if (loading || switching) return;
     const currentHeader = metadata.value === header.replace(/\r\n/g, "\n") ? header : metadata.value;
     let body = originalBody;
-    if (userEdited && editor && !sourceOnly) {
+    if (userEdited && editor) {
       const newline = original.includes("\r\n") ? "\r\n" : "\n";
       body = editor.getMarkdown().replace(/\r?\n/g, newline);
       if (/^\r?\n/.test(originalBody) && !/^\r?\n/.test(body)) body = newline + body;
       if (/\r?\n$/.test(originalBody) && !/\r?\n$/.test(body)) body += newline;
     }
-    draft = !sourceOnly && editor ? currentHeader + body : source.value;
+    draft = currentHeader + body;
     onChange(draft);
   }
 
-  source.addEventListener("input", update);
   metadata.addEventListener("input", update);
 
   return {
@@ -67,16 +64,13 @@ export function createDocumentEditor(onChange) {
       const body = parts.body;
       originalBody = body;
       metadata.value = header;
-      source.value = content;
       sourceOnly = requiresSourceEditing(body);
-      sourceWrap.classList.toggle("hidden", !sourceOnly);
-      visual.classList.toggle("hidden", sourceOnly);
-      metadataWrap.classList.toggle("hidden", sourceOnly || !header);
+      metadataWrap.classList.toggle("hidden", !header);
       note.classList.toggle("hidden", !sourceOnly);
       note.textContent = sourceOnly
-        ? "Source editing protects this document's callouts, diagrams, images or extended Markdown. Use the app editor for another editing experience."
+        ? "TOAST Markdown mode protects this document's callouts, diagrams, images or extended syntax. WYSIWYG conversion is blocked while that syntax is present."
         : "";
-      if (!sourceOnly) {
+      {
         if (!globalThis.toastui?.Editor) throw new Error("The local TOAST editor failed to load.");
         if (editor) {
           editor.changeMode("markdown", true);
@@ -84,7 +78,7 @@ export function createDocumentEditor(onChange) {
         } else {
           editor = new toastui.Editor({
             el: visual,
-            height: "600px",
+            height: "100%",
             initialEditType: "markdown",
             previewStyle: "tab",
             initialValue: body,
@@ -98,7 +92,7 @@ export function createDocumentEditor(onChange) {
             if (draft === original) initialMarkdown = editor.getMarkdown();
           });
           editor.on("change", () => {
-            if (loading || switching || sourceOnly) return;
+            if (loading || switching) return;
             if (!userEdited) { update(); return; }
             // Opening or switching modes must not turn serializer normalization into an edit.
             if (editor.getMarkdown() === initialMarkdown && metadata.value === header) {
@@ -111,6 +105,6 @@ export function createDocumentEditor(onChange) {
       loading = false;
     },
     getContent() { return draft; },
-    focus() { if (!sourceOnly && editor) editor.focus(); else source.focus(); },
+    focus() { editor?.focus(); },
   };
 }

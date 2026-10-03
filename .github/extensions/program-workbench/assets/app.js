@@ -89,6 +89,7 @@ function switchView(view) {
   $(`#${view}-view`)?.classList.remove("hidden");
   $$(".rail-button").forEach((button) => button.classList.toggle("active", button.dataset.view === view));
   $("#main").scrollTop = 0;
+  $("#main").classList.toggle("document-editing", view === "documents" && state.mode === "edit");
 }
 
 function categoryOrder(category) {
@@ -171,6 +172,7 @@ async function openDocument(path, refreshOnly = false) {
 function setMode(mode) {
   if (mode === "edit" && !state.current?.editable) return;
   state.mode = mode;
+  $("#main").classList.toggle("document-editing", state.view === "documents" && mode === "edit");
   $$(".mode-button").forEach((button) => button.classList.toggle("active", button.dataset.mode === mode));
   $("#markdown-preview").classList.toggle("hidden", mode !== "preview");
   $("#editor-wrap").classList.toggle("hidden", mode !== "edit");

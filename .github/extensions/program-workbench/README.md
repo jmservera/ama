@@ -13,11 +13,13 @@ editor.
 * Keep YAML frontmatter outside the visual editor in an expandable source field.
   Opening a document or toggling modes without editing preserves the original
   source, including line endings. Visual edits can normalize Markdown formatting.
-* Use the full-source textarea for detected callouts, diagrams, raw HTML,
-  reference definitions, images and other guarded syntax rather than risk losing
-  it through visual conversion. Detection is conservative, not a guarantee of
+* Use TOAST's Markdown source mode for detected callouts, diagrams, raw HTML,
+  reference definitions, images and other guarded syntax; visual conversion is
+  blocked to avoid losing it. Detection is conservative, not a guarantee of
   lossless round-tripping for every Markdown extension. Adding guarded syntax in
   Markdown mode blocks switching into WYSIWYG.
+* Fill the remaining visible page height in Edit mode. The editor scrolls
+  internally; metadata and linked-record context have separate bounded scrolling.
 * Test an experimental "Open editor via agent" handoff to the app's native
   editor. The button sends a navigation-only request to the current agent;
   it is not a direct Files-tab API and requires an agent turn. Protected

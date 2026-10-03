@@ -125,7 +125,15 @@ kbd { border: 1px solid var(--line); background: color-mix(in srgb, var(--paper)
 .markdown-preview th, .markdown-preview td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
 .markdown-preview th { background: rgba(41,77,60,.06); }
 .markdown-preview a { color: var(--moss); text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.editor-wrap { display: block; max-width: none; }
+.editor-wrap { display: flex; flex-direction: column; gap: 12px; max-width: none; min-height: 0; padding: 16px 20px; overflow: hidden; }
+.document-editing { overflow: hidden; }
+.document-editing .documents-view { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.document-editing .document-header { position: relative; flex: 0 0 auto; }
+.document-editing .document-layout { flex: 1; min-height: 0; overflow: hidden; grid-template-rows: minmax(0, 1fr); }
+.document-editing .context-panel { min-height: 0; overflow: auto; }
+#visual-editor { flex: 1; min-height: 0; }
+#editor-note { flex: 0 0 auto; margin: 0; }
+.editor-wrap .frontmatter-wrap { flex: 0 0 auto; margin: 0; max-height: 35%; overflow: auto; }
 .frontmatter-wrap { margin-bottom: 16px; border: 1px solid var(--line); background: var(--panel); padding: 12px; }
 .frontmatter-wrap summary { cursor: pointer; color: var(--muted); }
 #frontmatter-editor { width: 100%; min-height: 180px; margin-top: 12px; padding: 12px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); font: 13px/1.6 var(--font-mono, Consolas, monospace); }
@@ -133,7 +141,6 @@ kbd { border: 1px solid var(--line); background: color-mix(in srgb, var(--paper)
 .toastui-editor-defaultUI .toastui-editor-toolbar, .toastui-editor-mode-switch { background: var(--paper); border-color: var(--line); }
 .toastui-editor-contents { font-family: var(--font-sans, "Aptos", "Segoe UI", sans-serif); }
 .toastui-editor-contents h1, .toastui-editor-contents h2, .toastui-editor-contents h3 { font-family: Georgia, "Times New Roman", serif; }
-#markdown-editor { width: 100%; height: calc(100vh - 230px); min-height: 520px; resize: none; border: 1px solid var(--line); border-radius: 4px; background: color-mix(in srgb, var(--panel) 92%, white); color: var(--ink); padding: 22px; font: 13px/1.7 var(--font-mono, Consolas, monospace); tab-size: 2; box-shadow: inset 0 2px 8px rgba(25,34,29,.04); }
 .context-panel { border-left: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 76%, transparent); padding: 26px 18px; }
 .context-panel section { padding: 0 0 22px; margin-bottom: 22px; border-bottom: 1px solid var(--line); }
 .context-link { width: 100%; min-height: 34px; border: 0; border-left: 2px solid var(--line); background: transparent; padding: 5px 8px; text-align: left; cursor: pointer; color: var(--muted); font-size: 11px; }
@@ -164,5 +171,8 @@ kbd { border: 1px solid var(--line); background: color-mix(in srgb, var(--paper)
   .metric-grid { grid-template-columns: repeat(2, 1fr); }
   .document-layout { grid-template-columns: 1fr; }
   .context-panel { border-left: 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .document-editing .context-panel { display: none; }
+  .document-title-row { flex-wrap: wrap; gap: 12px; }
+  .document-actions { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }

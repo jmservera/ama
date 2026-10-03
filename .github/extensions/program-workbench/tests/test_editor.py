@@ -114,13 +114,18 @@ class EditorIntegrationTest(unittest.TestCase):
         self.page.locator('.library-document[data-path="docs/callout.md"]').click()
         expect(self.page.locator("#meta-path")).to_have_text("docs/callout.md")
         self.page.locator('[data-mode="edit"]').click()
-        self.assertTrue(self.page.locator("#source-editor-wrap").is_visible())
-        self.assertIn("Source editing protects", self.page.locator("#editor-note").inner_text())
-        source = self.page.locator("#markdown-editor")
-        source.fill(source.input_value() + "\nNew source text.\n")
+        self.assertTrue(self.page.locator("#visual-editor").is_visible())
+        self.assertIn("TOAST Markdown mode protects", self.page.locator("#editor-note").inner_text())
+        source = self.page.locator(".toastui-editor-md-container .ProseMirror")
+        source.click()
+        self.page.keyboard.press("Control+End")
+        self.page.keyboard.press("Enter")
+        self.page.keyboard.type("New source text.")
         self.page.locator("#save-button").click()
         expect(self.page.locator("#save-button")).to_be_disabled()
-        self.assertIn("> [!IMPORTANT]", (self.root / "docs" / "callout.md").read_text())
+        saved = (self.root / "docs" / "callout.md").read_text()
+        self.assertIn("> [!IMPORTANT]", saved)
+        self.assertIn("New source text.", saved)
         self.page.locator('.library-document[data-path="docs/case_study_48_original.md"]').click()
         expect(self.page.locator("#document-title")).to_have_text("Protected fixture")
         self.assertTrue(self.page.locator('[data-mode="edit"]').is_disabled())
@@ -181,6 +186,35 @@ class EditorIntegrationTest(unittest.TestCase):
         self.assertNotIn("onerror", sanitized)
         self.assertNotIn("<script", sanitized)
         self.assertNotIn("style=", sanitized)
+
+    def test_editor_fills_visible_height_with_internal_scroll(self):
+        long_document = DOCUMENT + "\n".join(f"Paragraph {index}.\n" for index in range(300))
+        (self.root / "docs" / "fixture.md").write_text(long_document, encoding="utf-8")
+        self.page.locator("#refresh-button").click()
+        self.page.wait_for_load_state("networkidle")
+        expect(self.page.locator(".toastui-editor-md-container")).to_contain_text("Paragraph 299.")
+        for width, height in [(1600, 1000), (1600, 700), (900, 800)]:
+            self.page.set_viewport_size({"width": width, "height": height})
+            self.page.wait_for_timeout(150)
+            dimensions = self.page.evaluate("""() => {
+              const main = document.querySelector('#main');
+              const host = document.querySelector('#visual-editor').getBoundingClientRect();
+              const editor = document.querySelector('.toastui-editor-defaultUI').getBoundingClientRect();
+              const scroller = document.querySelector('.toastui-editor-md-container .ProseMirror');
+              return {
+                viewport: innerHeight, hostBottom: host.bottom,
+                editorBottom: editor.bottom, mainHeight: main.clientHeight,
+                mainScrollHeight: main.scrollHeight, scrollHeight: scroller.scrollHeight,
+                clientHeight: scroller.clientHeight
+              };
+            }""")
+            self.assertLessEqual(abs(dimensions["hostBottom"] - (height - 16)), 2)
+            self.assertLessEqual(abs(dimensions["editorBottom"] - dimensions["hostBottom"]), 2)
+            self.assertLessEqual(dimensions["mainScrollHeight"], dimensions["mainHeight"] + 1)
+            self.assertGreater(dimensions["scrollHeight"], dimensions["clientHeight"])
+        self.page.locator("#frontmatter-wrap summary").click()
+        self.page.wait_for_timeout(100)
+        expect(self.page.locator(".toastui-editor-mode-switch")).to_be_in_viewport()
 
 
 if __name__ == "__main__":
