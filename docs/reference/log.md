@@ -663,3 +663,19 @@ metadata when the knowledge base was created.
 * Research limitation: no program-manager interviews, contextual inquiry,
   analytics or usability studies have been completed. Behavioural findings are
   reported or assumed and must be validated before they become requirements.
+
+## [2026-10-03] query | Record BRD implementation options
+
+* Trigger: the owner requested an Azure versus M365 and business-platform
+  assessment and then asked to preserve the discussion.
+* Integrated the comparison into the case-study addendum's Solution Proposal,
+  covering Azure custom development, a Dataverse and Copilot Studio-led
+  implementation, and an Azure-led hybrid.
+* Recorded the conditional Azure-led preference, relevant BRD controls,
+  candidate service boundaries, whole-life cost and equivalent-journey
+  evaluation needs, and official product documentation checked on 3 October.
+* Separated the owner's Azure preference for AMA from a validated customer
+  platform decision. No architecture, procurement, production release or
+  expanded agent authority is approved by this assessment.
+* Updated the knowledge-base index. The original case study, BRD requirements
+  and owner-controlled memory remain unchanged.
