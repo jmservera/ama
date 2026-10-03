@@ -1,16 +1,17 @@
 {
   "schema_version": 1,
   "source": "workflow",
-  "scored_at": "2026-10-03T18:08:51+00:00",
-  "commit": "e392f4ee37654ce773d7fcefe4405c7c4c415081",
+  "scored_at": "2026-10-03T21:26:13+00:00",
+  "commit": "dc44e2e78da48d2635b1997e69f69ba77473fa9e",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37142761506",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37154712636",
   "fingerprints": {
-    "brd": "ae2295d4ba1f21367730e23cfa0c3addbb727b5734df1bea55d584679f8a43fe"
+    "brd": "7e62a05ba1d9b49075e4093bb35fa579b812646644a84a95d2988565f5b1d4d3",
+    "prd": "f78b3dbeb2eadfc80238b767009b3ff7037e9b597345d5551fedff1409e761b6"
   },
-  "total": 61,
+  "total": 66,
   "sections": {
-    "A": 21,
+    "A": 26,
     "B": 19,
     "C": 12,
     "D": 9
@@ -19,12 +20,12 @@
   "outcome": "Not Yet Met (floor)",
   "criteria": {
     "A1": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:613",
-        "docs/brds/agentic-retrofit-programme-brd.md:653"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:176",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:182"
       ],
-      "rationale": "Deterministic core vs bounded-agent table and phased approval gates show clear decoupled responsibilities and a scaling path; no component contracts or failure-domain diagrams yet."
+      "rationale": "New Component Contracts and Failure Domains table names each component's interface, data ownership and fallback behaviour, closing the gap the baseline flagged."
     },
     "A2": {
       "score": 5,
@@ -32,44 +33,46 @@
         "docs/brds/agentic-retrofit-programme-brd.md:312",
         "docs/brds/agentic-retrofit-programme-brd.md:353"
       ],
-      "rationale": "Cross-functional challenge table names each of the five requested agents, the alternative considered and why it was rejected or bounded instead."
+      "rationale": "Cross-functional challenge table still names each agent, the alternative considered and why it was rejected or bounded instead."
     },
     "A3": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:963",
-        "docs/brds/agentic-retrofit-programme-brd.md:992"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:192",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:198"
       ],
-      "rationale": "Named legislation, DPIA, segregation-of-duties and AI-risk controls are strong; no explicit attacker/threat model is stated."
+      "rationale": "New Threat Model table states prompt-injection, exfiltration, hallucination, spoofing and drift scenarios against named boundaries with mitigations, closing the stated-threat-model gap."
     },
     "A4": {
       "score": 1,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:1745"
       ],
-      "rationale": "Document records the 30 Sept 2026 review finding 'no working evidence for implementation completeness'; only a planned non-production demonstrator exists."
+      "rationale": "Still only design documents and a planned non-production demonstrator; no working implementation evidence exists anywhere in the changed files."
     },
     "A5": {
-      "score": 2,
-      "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:810"
-      ],
-      "rationale": "Pilot Evaluation table specifies cost, throughput and quality measures to capture, but nothing is yet instrumented or measured."
-    },
-    "A6": {
       "score": 3,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:340",
-        "docs/brds/agentic-retrofit-programme-brd.md:810"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:363",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:372"
       ],
-      "rationale": "Shadow-mode test design per capability is defined with stop criteria, but no evaluation harness exists and model choice is not yet justified."
+      "rationale": "New log-schema/correlation-ID envelope and named latency/failure-rate/cost metrics with a fixed measurement method move past purely qualitative discussion, though nothing is yet instrumented or measured."
+    },
+    "A6": {
+      "score": 4,
+      "evidence": [
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:407",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:420"
+      ],
+      "rationale": "New AI Model Selection and Evaluation Harness section defines comparison criteria against smaller/larger models and a paired baseline evaluation harness with metrics and failure-mode taxonomy, though no model choice or evaluation has actually run."
     },
     "A7": {
-      "score": 2,
+      "score": 3,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:598"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:435",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:443"
       ],
-      "rationale": "Agent boundaries (recommend/draft/reconcile/flag) and handoffs are well defined, but no autonomous behaviour has been demonstrated."
+      "rationale": "New Agent Orchestration Pattern section specifies a state-graph handoff, reflection/self-check step and tool-scoped authorization, a deliberate coordination design, but no autonomous behaviour is demonstrated."
     },
     "B1": {
       "score": 4,
@@ -111,25 +114,24 @@
       "score": 4,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:941",
-        "docs/brds/retrofit-flow-discovery-brief.md:1"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:661"
       ],
-      "rationale": "Extensive, cross-referenced, traceable documentation across two linked files with identifier schemes; still dense and reader-effort heavy in places, and no accompanying slide deck."
+      "rationale": "Documentation grows denser with cross-referenced tables (Open Questions register, owner-direction cross-references) but remains reader-effort heavy with no accompanying slide deck."
     },
     "B7": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1282",
-        "docs/brds/agentic-retrofit-programme-brd.md:502"
+        "docs/brds/agentic-retrofit-programme-brd.md:447"
       ],
-      "rationale": "Quantified illustrative economics and a sourced sector benchmark pack are interpreted carefully with caveats; no measured demo or live data storytelling yet."
+      "rationale": "Owner-direction table adds quantified data points (grant coverage, missed-appointment threshold) but these are carefully labelled as owner statements, not new interpreted evidence or visuals."
     },
     "C1": {
       "score": 5,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:530",
-        "docs/brds/agentic-retrofit-programme-brd.md:1215"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:665"
       ],
-      "rationale": "Stakeholders, constraints, quantified value at stake (GBP 312m scenario) and cost of inaction are explicit and interrogated rather than merely restated."
+      "rationale": "Stakeholders, constraints and quantified value at stake remain explicit and interrogated; new Open Questions register further names accountable functions per gap."
     },
     "C2": {
       "score": 2,
@@ -142,24 +144,25 @@
       "score": 5,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:120",
-        "docs/brds/agentic-retrofit-programme-brd.md:1261"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:654"
       ],
-      "rationale": "Makes a clear recommendation (capped demonstrator, not full rollout), rejects premature five-agent autonomy, and surfaces unvalidated value claims unprompted."
+      "rationale": "Recommendation and risk disclosure remain clear; new risk row explicitly flags the danger of mistaking owner direction for verified evidence, reinforcing intellectual honesty."
     },
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/brds/retrofit-flow-discovery-brief.md:1",
-        "docs/brds/agentic-retrofit-programme-brd.md:312"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:251",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:661"
       ],
-      "rationale": "Substantial original synthesis (discovery brief, agent-request challenge) actionable by another architect; grounded mainly in sector research rather than direct company engagement evidence."
+      "rationale": "New scoring framework, threat model, evaluation harness and open-questions register are substantial original synthesis actionable by another architect, but still grounded in internal design work rather than direct company engagement evidence."
     },
     "D2": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1715"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:2",
+        "docs/brds/agentic-retrofit-programme-brd.md:2"
       ],
-      "rationale": "Structured, cited, version-controlled with a documented review and revision history; not yet a standalone publishable piece separate from the BRD apparatus."
+      "rationale": "Structured, cited and version-controlled with clear revision tracking, but still not a standalone publishable piece separate from the BRD/PRD apparatus."
     },
     "D3": {
       "score": 1,

@@ -2,7 +2,7 @@
 prd_id: "PRD-2026-AMA48-001"
 title: "Proper Warm Hybrid Retrofit Programme Demonstrator"
 status: "draft"
-version: "0.2.0"
+version: "0.4.0"
 owners: ["AMA Research Team (draft custodian); product owner to be named"]
 reviewers: ["Product sponsor, Asset, Digital, Finance, Retrofit, Safety, Procurement, Resident Engagement (to be confirmed)"]
 created_date: "2026-10-03"
@@ -28,7 +28,7 @@ license: "CC-BY 4.0 (Microsoft HVE-Core)"
 
 # Proper Warm Hybrid Retrofit Programme Demonstrator
 
-> **PRD-2026-AMA48-001** | Status: draft | Version: 0.2.0 | Last Updated: 2026-10-03
+> **PRD-2026-AMA48-001** | Status: draft | Version: 0.4.0 | Last Updated: 2026-10-03
 
 ## Executive Summary
 
@@ -125,8 +125,9 @@ The role-profile synthesis is deliberately conditional:
   service, human safety authority, fail-closed controls and tested recovery to
   remain effective across all options.
 
-The owner subsequently confirmed Excel-only current coordination and no
-Dataverse or Dynamics 365. Accordingly, business apps must be costed as a
+The owner subsequently confirmed Excel-based current coordination and no
+Dataverse or Dynamics 365; other systems and authority behind that
+coordination remain unknown. Accordingly, business apps must be costed as a
 greenfield adoption, not as reuse. The hybrid is the requested PRD baseline;
 M365/SharePoint capability remains to be verified. The full option comparison in the
 [Case Study 48 Addendum](../case_study_48_addendum.md#implementation-options-and-provisional-platform-recommendation)
@@ -172,16 +173,52 @@ approval. Avoid Service Bus, Azure AI Search, Document Intelligence and
 Copilot Studio in the initial slice unless a tested requirement justifies the
 additional service and support surface.
 
+### Component Contracts and Failure Domains
+
+Each component below is treated as a separately deployable, separately
+failing unit. Naming a contract and a failure domain does not imply the
+contract is implemented or the failure behaviour is tested; both remain
+demonstrator design work.
+
+| Component | Contract (interface and data owned) | Failure domain and fallback |
+| --- | --- | --- |
+| Domain API (Azure Container Apps) | Exposes the only write path for controlled state transitions, approvals and AI-proposal acceptance; all other components call it rather than writing Azure SQL directly. | If unavailable, no transition can occur; reads from Azure SQL may remain available read-only. No agent or workflow bypasses the API to change state. |
+| Azure SQL Database (programme state) | Authoritative store for lifecycle state, transition history, handoff and evidence-link records; schema versioned with the domain API. | If unavailable, the domain API fails closed (CON-006, NFR-008); no transition is accepted until the store is reachable and reconciled. |
+| Durable Functions (long-running handoffs) | Owns orchestration of multi-step handoffs and human-review waits; emits events to the domain API, does not hold authoritative state itself. | An interrupted orchestration must be resumable from the last durable checkpoint without duplicating a transition; idempotency keys are required on every resumed step. |
+| Bounded AI (Azure AI Foundry) | Receives a tool-scoped request with source references and returns a proposal (extraction, reconciliation, draft or flag) plus a confidence/rationale field; never calls the domain API directly. | If the model is unavailable, degraded or exceeds a defined latency/error threshold, the workflow falls back to workflow-only (no-AI) handling for that task and records the fallback (AC-007, AC-010). |
+| Document store (SharePoint or Blob fallback) | Holds synthetic documents and version/approval metadata referenced, not duplicated, by the domain API. | If SharePoint prerequisites are unverified or the service is unavailable, the demonstrator uses the controlled Blob Storage fallback automatically at configuration time, not as an untested runtime failover (NFR-011, CON-008). |
+| Excel import pipeline | Validates and maps a representative workbook against a declared schema; writes only to a staging area and the exception queue, never to the source file. | A malformed or partially mapped workbook is rejected row-by-row into the exception queue; the pipeline does not partially commit a workbook (AC-014). |
+
+### Threat Model (illustrative, not yet validated)
+
+The following threat scenarios are a design-stage hypothesis to focus NFR-003
+and NFR-004 controls on the bounded-AI and document boundaries. They are
+illustrative risk categories, not a completed security assessment, and do not
+replace a named security/DPO review before any live-use gate (AC-011).
+
+| Threat | Boundary | Illustrative mitigation to test |
+| --- | --- | --- |
+| Prompt injection via workbook free-text or resident-style synthetic notes altering AI output or instructions | Bounded AI tool input | Treat all ingested text as untrusted data, not instructions; constrain the model's tool surface so it can only return a structured proposal, never invoke a transition directly. |
+| Data exfiltration through an export or AI response that reveals more than the requesting role is entitled to see | Export (NFR-012) and AI proposal responses | Apply role-based field filtering at the domain API before data reaches the export or AI context; log every export and AI read for review. |
+| Model hallucination producing an unsupported flag or false reassurance on a safety- or eligibility-relevant case | Bounded AI output | Require every material AI output to cite its source reference (AC-007); route low-confidence or unsupported outputs to mandatory human review rather than auto-acceptance. |
+| Identity spoofing or privilege misuse at an approval or override step | Domain API authorization | Enforce authorization and transition rules in the domain API using Entra ID roles, not client-side checks or agent instructions (A7 orchestration note below). |
+| Silent drift between Azure SQL state and SharePoint/Blob document metadata | Document store boundary | Treat the Azure SQL reference as authoritative; reconcile or flag any document-metadata mismatch rather than resolving it silently (NFR-011). |
+
 ### Evidence status and source readiness
 
 The upstream
 [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md)
-is draft version 0.6.0. No signed `BRD_TO_PRD_HANDOFF_V1` payload was present
-for this authoring session. The BRD session state records a prior quality
-report with Define exit blocked; confirm the latest formal BRD quality and
-approval status before treating its requirements as an approved baseline.
-This PRD is therefore an initial draft derived from the current BRD and case
-study, not a governed handoff.
+is draft version 0.7.0, which adds an "Owner-Provided Direction on Sponsor
+Discovery Questions (2026-10-03)" subsection and a PAS 2035 role-profile
+hypothesis. No signed `BRD_TO_PRD_HANDOFF_V1` payload was present for this
+authoring session. The BRD session state records a prior quality report with
+Define exit blocked; confirm the latest formal BRD quality and approval
+status before treating its requirements as an approved baseline. This PRD is
+therefore an initial draft derived from the current BRD and case study, not a
+governed handoff. Owner-provided direction in the BRD is treated the same way
+as the role-profile hypotheses in this PRD's Open Questions register: it
+narrows a question, it does not close it, and it is not a substitute for
+named-function verified evidence (see Risks and Assumptions).
 
 ## Users and Personas
 
@@ -204,10 +241,26 @@ demonstrator. No resident-facing live journey is authorised in this scope.
 
 | Decision ID | Draft decision | Rationale | Decision maker | Status |
 | --- | --- | --- | --- | --- |
-| DD-001 | Use the Azure-led hybrid as the proposed non-production demonstrator baseline; compare full Azure custom and a greenfield business-apps alternative, and permit the decision gate to reject the hybrid if evidence fails. | Owner requests a hybrid PRD direction and confirms Excel-only coordination with no Dataverse or Dynamics 365. M365/SharePoint capability and whole-life value remain unverified. | Sponsor and named architecture authority to confirm | Proposed |
+| DD-001 | Use the Azure-led hybrid as the proposed non-production demonstrator baseline; compare full Azure custom and a greenfield business-apps alternative, and permit the decision gate to reject the hybrid if evidence fails. | Owner requests a hybrid PRD direction and confirms Excel-based coordination with no Dataverse or Dynamics 365; other systems and authority remain unknown. M365/SharePoint capability and whole-life value remain unverified. | Sponsor and named architecture authority to confirm | Proposed |
 | DD-002 | Use synthetic data for the initial demonstrator. | Avoids implying access or authority to process resident or production data while testing the workflow. | Product, Data and DPO reviewers to confirm | Proposed |
 | DD-003 | Separate deterministic controls from bounded AI and compare agent-assisted tasks against workflow-only handling. | The BRD requires accountable human decisions and evidence that any AI adds incremental value. | Product and control owners to confirm | Proposed |
 | DD-004 | Treat Excel workbooks as import sources to profile and validate, not as the target programme workflow or approval authority. | Owner confirms current coordination uses Excel files; the demonstrator needs to test migration mapping without altering source records. | Data owner and product owner to confirm | Proposed |
+| DD-005 | Score the options gate against a weighted, pre-declared criteria set (below) rather than a narrative recommendation. | A reviewer with no prior context should be able to reproduce how the hybrid baseline was reached or rejected; this is a decision instrument, not a scored result. | Architecture lead and sponsor to confirm weights before scoring | Proposed |
+| DD-006 | Add a candidate missed-appointment escalation control (FR-014) that routes a case for investigation after a to-be-confirmed repeated-miss threshold, illustratively 5. | Owner directed an escalation path on 2026-10-03 for repeated missed appointments associated with unresolved hazard follow-up; the exact threshold and investigation owner are not yet ratified. | Retrofit Programme Manager and Building Safety to confirm threshold and owner | Candidate |
+
+### Options Gate Scoring Framework (draft criteria and weights)
+
+This framework operationalises FR-001/FR-011 and AC-001/AC-002/AC-012. Weights
+are placeholders for the architecture lead and sponsor to set before any
+option is scored; no option has been scored against this framework yet.
+
+| Criterion | What is scored | Illustrative weight | Evidence source |
+| --- | --- | --- | --- |
+| Control coverage | Share of CON-001 to CON-008 and FR-004/FR-005 gates the option can enforce without a bespoke build | TBD | Architecture comparison matrix |
+| Whole-life cost confidence | Share of agreed cost categories with a sourced estimate rather than a gap (Success Metrics: Whole-life cost confidence) | TBD | Finance costing log |
+| Support and exit | Named support model, contract term, renewal/exit path and in-house skill availability | TBD | Procurement and Digital input |
+| Evidence quality and unknowns | Count of unresolved Open Questions or unverified prerequisites the option depends on | TBD | Open Questions register; OQ-001 to OQ-008 |
+| Resident and accessibility readiness | Whether the option's resident-facing path (if any) has a defined research and accessibility plan before productisation | TBD | NFR-010; Resident Engagement input |
 
 ## Product Goals
 
@@ -238,6 +291,13 @@ achievability require sponsor and Finance input.
 | FR-011 | When the options gate is reviewed, the system shall record the recommendation, alternatives, criteria, evidence, dissent, approvers and decision status. | Sponsor and designated reviewers; gate review | Decision record; remains open if evidence or authority is insufficient | AC-001, AC-002 | GOAL-001 |
 | FR-012 | Before any resident-facing communication or live operational use is enabled, the system shall require a separately approved release configuration and the applicable data-protection, safety, service and authority gates. | Product / control owners; release configuration | Non-production draft cannot silently become operational | AC-010 | GOAL-002, GOAL-003 |
 | FR-013 | When a reviewer opens a linked collaboration document, the system shall resolve a controlled M365 document reference to the approved file location and version, or clearly report that M365 capability is unavailable; it shall not create a competing approval record. | Programme reviewer; document access | Azure state retains the decision reference while the document store remains explicitly identified | AC-009, AC-015 | GOAL-002 |
+| FR-014 (candidate) | When a synthetic case records more than a to-be-confirmed number of missed appointments (illustratively 5), the system shall route the case to an investigation queue with a named owner and shall not silently continue the standard journey. | Workflow; repeated-miss threshold reached | Visible escalation and investigation ownership instead of an unexamined repeated miss | AC-016 | GOAL-002 |
+
+FR-014 reflects owner direction on 2026-10-03 (see BRD Owner-Provided
+Direction subsection) and is labelled **candidate** because the exact
+threshold, investigation owner and root-cause process are not yet confirmed
+by Retrofit Programme Manager and Building Safety functions; do not treat the
+illustrative "5" as an approved operational threshold.
 
 All requirements are draft candidates. The implementation team and product
 owner must validate actors, system boundaries and acceptance evidence.
@@ -300,6 +360,26 @@ relevant validation gate, not guessed in this draft.
   with identifiers sufficient to correlate events without logging
   unnecessary resident data.
 
+**Log schema and correlation-ID convention (design, not yet implemented).**
+Every event the demonstrator emits is proposed to carry a common envelope:
+`timestamp`, `correlation_id` (one per scenario run, propagated through every
+handoff and AI call), `scenario_id`, `actor_type` (resident-proxy, workflow,
+bounded-AI, reviewer), `event_type` (state-transition, failure, recovery,
+AI-review, escalation), `status` and `duration_ms`. No resident-identifying
+fields are included in the envelope; any payload field that could identify a
+real person is excluded by schema, not by convention.
+
+**Named metrics and SLO measurement methodology (targets TBD, method fixed).**
+Three metrics are proposed as the demonstrator's baseline instrumentation,
+each with a measurement method the owner can later attach a target to:
+scenario completion latency (p50/p95 of `duration_ms` across a rolling
+window of completed runs), scenario failure rate (failed or escalated runs
+divided by started runs, over the same window) and AI-task cost per
+scenario (provider-reported token or call cost attributed to the
+`correlation_id`, summed per run). None of these have an agreed target yet;
+the method is fixed so a target can be set without re-engineering the
+instrumentation.
+
 ### Usability and Accessibility
 
 * **NFR-010:** Before acceptance, representative programme and frontline
@@ -324,6 +404,61 @@ relevant validation gate, not guessed in this draft.
   versions, approvals and supersession links, in a documented format that
   remains interpretable without the selected AI provider.
 
+### AI Model Selection and Evaluation Harness
+
+This is a design methodology for FR-007/FR-008 and GOAL-003; it defines how a
+model choice will be justified and how the paired evaluation (Success
+Metrics: AI incremental task value) will be measured. No model has been
+selected and no evaluation has been run; the figures below are placeholder
+criteria, not results.
+
+* **Model selection criteria.** Before a candidate model or model tier is
+  proposed for a bounded task, record a one-page comparison against at least
+  one smaller/cheaper model and one larger/more capable model on: task
+  accuracy on a held-out synthetic sample, p95 latency, cost per invocation,
+  and failure mode (silent wrong answer vs. refusal vs. low-confidence flag).
+  Prefer the smallest model that meets an owner-approved accuracy threshold,
+  consistent with a cost-conscious, AMA-aligned design.
+* **Evaluation harness.** For each bounded AI task in scope (extraction,
+  reconciliation, drafting, raise-only flag), define before running any
+  evaluation: the paired workflow-only baseline, the synthetic test-case set
+  and its size, the metrics to capture (precision/recall against a labelled
+  synthetic answer key, unsupported-claim rate, reviewer override rate,
+  review-minutes delta), and a documented failure-mode taxonomy (e.g.
+  missed critical exception, false positive flag, hallucinated source
+  reference). Thresholds for "pass" are set by product, safety and
+  assurance owners before evaluation, per Success Metrics.
+* **What this does not claim.** No accuracy, latency or cost numbers are
+  asserted here; this subsection defines the method that will produce them,
+  satisfying FR-007/FR-008 traceability without fabricating a result.
+
+### Agent Orchestration Pattern
+
+The bounded AI capability follows an explicit orchestration pattern rather
+than an open-ended agent loop, to keep autonomy auditable and consistent with
+CON-003 and DD-003.
+
+* **State-graph handoff.** Each task moves through named stages — extraction,
+  reconciliation, draft, raise-only flag, human review — with the domain API
+  recording the stage transition (Component Contracts and Failure Domains,
+  above). The model is invoked per stage with a narrow tool contract; it does
+  not choose its own next stage.
+* **Reflection/self-check step.** Before a flag or draft reaches a human
+  reviewer, the task definition includes a self-check pass that compares the
+  proposed output against its cited source reference and rejects (routes to
+  manual review) an output that cannot cite one, rather than auto-escalating
+  an unsupported claim.
+* **Tool-scoped authorization, not agent trust.** Every tool the model can
+  call is scoped to read or propose, never to commit a transition; the domain
+  API independently re-checks authorization and gate conditions on any
+  accepted proposal (AC-007, AC-008). This keeps the enforcement boundary at
+  the API, not at the model's instructions, addressing the identity-spoofing
+  and privilege-misuse threat above.
+* **Workflow-only fallback as a first-class path.** The orchestration treats
+  "do not use AI for this task" as a valid, tested path (DD-003), not an
+  error state, so the paired evaluation in the harness above has a genuine
+  baseline to compare against.
+
 ## Constraints
 
 | ID | Constraint | Imposing source | Boundary and impact |
@@ -334,7 +469,7 @@ relevant validation gate, not guessed in this draft.
 | CON-004 | The initial demonstrator shall use synthetic data; any future personal-data processing requires separate approval and applicable privacy controls. | PRD MVP boundary; BRD RULE-022 | Data: no production or resident personal data in MVP. |
 | CON-005 | No platform choice is approved until equivalent-scope options evidence, whole-life cost, supportability and required control tests are reviewed by named authorities. | Owner request and BRD RULE-016 / AC-053 | Technology and governance: architecture decision remains open. |
 | CON-006 | The demonstrator must not delay, pause, reset or close the separate statutory hazard response. | BRD CON-001 and RULE-003 | Safety: hazard-service authority remains outside the retrofit demonstrator. |
-| CON-007 | The baseline hybrid design shall not depend on Dataverse or Dynamics 365; their absence and Excel-only coordination are owner-confirmed as of 2026-10-03. | Owner statement on 2026-10-03 | Architecture: any later change requires an explicit scope and options-appraisal revision. |
+| CON-007 | The baseline hybrid design shall not depend on Dataverse or Dynamics 365; their absence and Excel-based coordination are owner-confirmed as of 2026-10-03, but the other systems and authority behind that coordination are unknown. | Owner statement on 2026-10-03 | Architecture: any later change requires an explicit scope and options-appraisal revision. |
 | CON-008 | SharePoint, OneDrive, Teams and M365 licensing/configuration are not assumed available for this solution until tenant and governance checks pass. | Current tenant capability is unknown | Architecture/operations: use a controlled Azure document store fallback in the demonstrator and record the M365 integration gap. |
 
 ## Process Models
@@ -373,10 +508,11 @@ technical and control owners.
 | AC-009 | Given the decision pack or scenario evidence is exported, when another reviewer opens the export without the AI provider, then source links, evidence versions, approval state, unresolved items and supersession history remain interpretable. | FR-003, FR-008, FR-009 | Not Started |
 | AC-010 | Given a model, workflow or integration failure is injected, when the scenario is exercised, then controlled progression stops, affected work and owner are visible, and restart requires reconciliation; the failure cannot affect a live hazard service. | FR-010, FR-012 | Not Started |
 | AC-011 | Given a proposed move from non-production to any live use, when release readiness is reviewed, then separate approval records exist for product, data protection, safety, resident service, finance, procurement and technical authority as applicable; otherwise live release remains blocked. | FR-012 | Not Started |
-| AC-012 | Given three platform candidates and an owner-confirmed Excel-only baseline with no Dataverse or Dynamics 365, when the option matrix is scored, then the business-apps option is costed as greenfield and the hybrid baseline's thresholds and decision authority are documented; no platform is selected solely because of the capstone owner's preference. | FR-001, FR-011 | Not Started |
+| AC-012 | Given three platform candidates and an owner-confirmed Excel-based coordination baseline with no Dataverse or Dynamics 365 (other systems and authority unknown), when the option matrix is scored, then the business-apps option is costed as greenfield and the hybrid baseline's thresholds and decision authority are documented; no platform is selected solely because of the capstone owner's preference. | FR-001, FR-011 | Not Started |
 | AC-013 | Given synthetic data is loaded, when privacy checks run, then no real resident identifier, address, contact detail or health-history text is present. | FR-003, FR-012 | Not Started |
 | AC-014 | Given an Excel import contains an unknown column, duplicate row, unmapped value or conflicting identifier, when validation runs, then the source file remains unchanged, the import does not silently resolve the conflict and each rejected row is available for human review. | FR-003 | Not Started |
 | AC-015 | Given M365/SharePoint is proposed for a managed document, when tenant, license, permission and version checks are run, then the integration is enabled only if all checks pass; otherwise the demonstrator uses the documented controlled Blob Storage fallback and records the M365 gap. | FR-013 | Not Started |
+| AC-016 (candidate) | Given a synthetic case exceeds the to-be-confirmed missed-appointment threshold, when the threshold is reached, then the case is routed to an investigation queue with a named owner and is visibly flagged rather than continuing silently. | FR-014 | Not Started |
 
 ## Traceability Matrix
 
@@ -397,8 +533,9 @@ technical and control owners.
 | FR-011 | Record the option decision | AC-001, AC-002, AC-012 | 3 |
 | FR-012 | Gate live-use configuration | AC-010, AC-011, AC-013 | 3 |
 | FR-013 | Resolve controlled M365 document reference | AC-009, AC-015 | 2 |
+| FR-014 (candidate) | Escalate repeated missed appointments | AC-016 | 1 |
 
-Coverage: 13/13 requirements linked, **100%**. Threshold: 80.0%.
+Coverage: 14/14 requirements linked, **100%**. Threshold: 80.0%.
 
 ### FR-to-GOAL Alignment
 
@@ -417,8 +554,9 @@ Coverage: 13/13 requirements linked, **100%**. Threshold: 80.0%.
 | FR-011 | Record the option decision | GOAL-001 | 1 |
 | FR-012 | Gate live-use configuration | GOAL-002, GOAL-003 | 2 |
 | FR-013 | Resolve controlled M365 document reference | GOAL-002 | 1 |
+| FR-014 (candidate) | Escalate repeated missed appointments | GOAL-002 | 1 |
 
-Coverage: 13/13 requirements linked, **100%**. Target: 100.0%.
+Coverage: 14/14 requirements linked, **100%**. Target: 100.0%.
 
 ### Requirement-to-source trace
 
@@ -430,7 +568,8 @@ Coverage: 13/13 requirements linked, **100%**. Target: 100.0%.
 | BRD RULE-018, RULE-022, RULE-024 | FR-007, FR-008, FR-012; CON-003 to CON-006 |
 | Case Study 48 Addendum, “Implementation Options and Provisional Platform Recommendation” | FR-001, FR-002, FR-009, FR-011; DD-001 |
 | Owner confirmation, 2026-10-03: coordination uses Excel files; no Dataverse or Dynamics 365 | Product Context, DD-001, DD-004, FR-003, CON-007, AC-012, AC-014 |
-| Eight company-role profile option challenges, 2026-10-03 | Product Context; decision criteria and open questions only; not company evidence |
+| Eight company-role profile option challenges, 2026-10-03 | Product Context; Open Questions OQ-001 to OQ-008; decision criteria only, not company evidence |
+| BRD v0.7.0 Owner-Provided Direction subsection (2026-10-03): missed-appointment escalation direction, partial grant award, "all contracts/frameworks" pilot scope, hazard-reporting description, PAS 2035 role-profile hypothesis | FR-014 (candidate), DD-005, DD-006, Options Gate Scoring Framework; Open Questions OQ-002, OQ-003, OQ-004, OQ-006 |
 
 ## MVP and Release Framing
 
@@ -512,11 +651,72 @@ resident-benefit claims.
 | --- | --- | --- | --- |
 | Azure preference predetermines the appraisal | Medium | High | Freeze criteria before scoring; cost business apps as greenfield and document the decision authority and reasons for the hybrid baseline. |
 | Role-agent hypotheses are mistaken for company or resident evidence | Medium | High | Label their status; validate with actual stakeholders and residents before commitment. |
+| Owner-provided direction (for example the missed-appointment escalation threshold, the grant award status, or "all contracts/frameworks" scope) is treated as named-function verified evidence, a financial/legal sign-off, or a ratified operational rule | Medium | High | Keep owner direction labelled as planning direction in the BRD and as Open in the PRD's Open Questions register; require the accountable function (Retrofit, Finance, Procurement or Building Safety) to supply and ratify the actual evidence before FR-014 or any related control is built. |
 | Incomplete BRD handoff or unresolved upstream quality issues propagate into the PRD | High | High | Obtain latest BRD quality report, coverage/waiver context and named approvals before Validate. |
 | Split authority across Azure and SharePoint creates conflicting approvals or evidence | Medium | High | Keep Azure SQL as programme-state authority; define SharePoint document authority only if verified; test links, versioning, export and reconciliation. |
 | Product demo passes while operational support or failure recovery is inadequate | Medium | High | Require runbooks, owner, recovery exercise and support model before any later live gate. |
 | Synthetic success is presented as actual delivery benefit | Medium | High | Label every output synthetic and separate feasibility evidence from the BRD's operational Comparisons 1 and 2. |
 | Unverified resident needs or platform channels exclude people | Medium | High | Conduct direct resident research and accessibility testing before any resident-facing product scope. |
+
+## Open Questions
+
+The eight `company-*` role profiles each reviewed the proposed hybrid baseline
+on 2026-10-03 from their defined perspective. Their output is a set of
+role-profile discovery prompts and hypotheses, not company facts, resident
+research or approvals; no answer below should be inferred or assumed on the
+company's behalf. Every question below stays **Open** until an accountable
+function supplies verified evidence. MVP remains synthetic-only with no live
+resident contact regardless of how these questions resolve.
+
+| ID | Question | Accountable function / evidence to obtain | Decision or gate blocked | Status |
+| --- | --- | --- | --- | --- |
+| OQ-001 | Is the non-production demonstrator authorization separate from the customer platform choice, and who holds cost/effort authority over each? | Asset Executive; asset plan, capital envelope, delegated authority and decision-rights record | DD-001 confirmation; options gate (FR-001, FR-011) | Open |
+| OQ-002 | What is the validated representative property journey, and how are stage, handoff, exception and accepted-handover defined for it? | Retrofit Programme Manager; current workflow walkthrough, PAS 2035 capacity evidence and the BRD's accepted-handover protocol | Scenario design for FR-003, FR-006; AC-003, AC-006 | Open |
+| OQ-003 | What comparable whole-life cost, affordability and grant evidence exists for each option, and who owns the costing baseline and decision? | Finance and Grants; sourced cost model, budget ceiling, award/match-funding data and named decision owner | Options gate (FR-001, FR-002, FR-011); Whole-life cost confidence metric | Open |
+| OQ-004 | For a greenfield business-apps option, what are the actual licensing entitlements, contract/API terms, procurement route, exit path and ongoing operating support? | Procurement and Contracts; licence inventory, contract terms, procurement policy and support/exit commitments | Options gate (FR-001, FR-011); CON-005, CON-008 | Open |
+| OQ-005 | Is Excel the sole source of record, or does other current coordination tooling exist, and what is the workbook profile (identifiers, conflicts, volume), expected workload/performance and retention requirement? | Data and Performance; workbook inventory, identifier scheme, conflict examples, workload profile and retention policy | FR-003 import design; AC-003, AC-013, AC-014; NFR-007 | Open |
+| OQ-006 | Who is the named safety/hazard-service authority, how is synthetic/mock isolation enforced, and what evidence demonstrates no-bypass gates and tested recovery? | Building Safety; named hazard-service owner, isolation design and recovery-test evidence | CON-006; FR-004, FR-005, FR-010; AC-004, AC-005, AC-010 | Open |
+| OQ-007 | What are the validated frontline task, handoff, exception, usability and fallback needs for programme and resident-facing staff? | Neighbourhood Housing Officer; frontline task observation, usability session findings and fallback-process evidence | NFR-010 usability acceptance; FR-006 case view design | Open |
+| OQ-008 | Who owns the resident-service relationship, what later accessibility/inclusion research is planned, and what are the resident channel, choice, redress and privacy-readiness requirements? | Resident Engagement; named resident-service owner, accessibility research plan, channel inventory and redress/privacy controls | FR-012 release gate; AC-011; NFR-005, NFR-010 | Open |
+
+All eight rows remain unresolved as of this draft. Close an item only when the
+accountable function supplies verified, sourced evidence; do not mark a row
+resolved on the strength of a role-profile hypothesis alone.
+
+### Owner-direction cross-references (2026-10-03)
+
+The BRD's "Owner-Provided Direction on Sponsor Discovery Questions" subsection
+(v0.7.0) narrows, but does not close, three of the rows above. Each remains
+**Open** because owner direction is not named-function verified evidence.
+
+* **OQ-002** (validated journey): the BRD records a PAS 2035 role-profile
+  hypothesis (six illustrative roles) and an owner-directed escalation
+  control for repeated missed appointments (reflected as candidate FR-014).
+  Neither is a validated workflow walkthrough or an accepted-handover
+  protocol; the row stays Open pending Retrofit Programme Manager evidence.
+* **OQ-003** (grant evidence): the owner confirms a grant award exists and
+  covers roughly half of the homes that could have received it. Award terms,
+  eligible-property schedule, match funding and clawback conditions remain
+  unknown; the row stays Open pending Finance and Grants evidence.
+* **OQ-004** (licensing/contract route): the owner directs that the pilot
+  would use all available contracts/frameworks rather than a single named
+  route. Named contract managers, authority limits, expiry and delegated
+  authority per contract remain unknown; the row stays Open pending
+  Procurement and Contracts evidence.
+* **OQ-006** (hazard authority): the owner describes the current hazard
+  reporting route (technician write-up, or a resident phone call followed by
+  a technician audit of severity) but did not name a hazard-service authority
+  or supply isolation/recovery-test evidence; the row stays Open pending
+  Building Safety evidence.
+
+Four other owner-direction items (survey/install/quality capacity, pilot
+building dependencies, tenure/lease data share, local-authority stock
+distribution) were explicitly **declined** by the owner as statistical
+estimates rather than answered, because no grounding data exists in this
+repository; they are not reflected as PRD evidence and remain fully
+unresolved, most closely touching OQ-002 (capacity), OQ-006 (building
+dependencies), OQ-005 (tenure/lease data) and OQ-001 (stock geography)
+respectively.
 
 ## Glossary
 
@@ -529,6 +729,9 @@ resident-benefit claims.
 | Foundry | Azure AI platform candidate for bounded AI capabilities; specific model, availability, region and deployment are undecided. |
 | Accepted handover | BRD outcome separating installation, physical acceptance, evidence acceptance and resident handover; operational definition remains subject to BRD and protocol approval. |
 | Synthetic data | Clearly fictional test data with no real resident identifiers or personal information. |
+| Threat model | A design-stage list of plausible attack or misuse scenarios against a stated boundary, used to target controls; illustrative until a named security review validates it. |
+| Evaluation harness | The defined set of paired test cases, metrics and failure-mode taxonomy used to compare a bounded AI task against workflow-only handling; a method, not a result. |
+| Options Gate Scoring Framework | The weighted, pre-declared criteria set used to score the three implementation options at the architecture gate, so the comparison is reproducible rather than narrative. |
 
 ## Sign-Off
 

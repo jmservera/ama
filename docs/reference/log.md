@@ -722,3 +722,99 @@ metadata when the knowledge base was created.
 * Updated the PRD session-state path and the knowledge-base catalog link.
 * The PRD registry entry is still marked `planned`; this move alone does not
   activate rubric scoring.
+
+## [2026-10-03] query | Role-profile Open Questions register added to the PRD (v0.3.0)
+
+* Ran a second-pass review of the proposed hybrid baseline through all eight
+  `company-*` role profiles (Asset Executive, Retrofit Programme Manager,
+  Finance and Grants, Procurement and Contracts, Data and Performance,
+  Building Safety, Neighbourhood Housing Officer, Resident Engagement) and
+  synthesized one open question per role into a new Open Questions section
+  in `docs/prds/proper-warm-retrofit-programme-demonstrator.md`
+  (OQ-001 to OQ-008), each with an accountable function, evidence to obtain
+  and the decision/gate it blocks.
+* Labelled the register as role-profile discovery prompts/hypotheses, not
+  company facts, resident research or approvals; no row infers a company
+  answer, and every row stays Open pending accountable-function evidence.
+* Corrected four overstated "Excel-only" passages (Product Context, DD-001,
+  CON-007, AC-012) to "Excel-based current coordination; other systems and
+  authority unknown," matching OQ-005.
+* Preserved MVP scope: synthetic data only, no live resident contact.
+* Updated the PRD session-state file
+  (`.copilot-tracking/prd-sessions/proper-warm-retrofit-programme-demonstrator.state.json`)
+  with the new role-profile review, question history, next actions and the
+  evidence boundary, and updated the knowledge-base catalog entry above.
+
+## [2026-10-03] query | Owner direction on BRD Sponsor Discovery Questions recorded (v0.7.0)
+
+* The owner answered all 12 Sponsor Discovery Questions in
+  `docs/brds/agentic-retrofit-programme-brd.md`. Added a new subsection,
+  "Owner-Provided Direction on Sponsor Discovery Questions (2026-10-03)",
+  immediately after the existing question table, recording each answer with
+  an explicit evidence-status label.
+* Recorded as genuine owner direction, not inferred company fact: acceptance
+  of a mixed/unseparated delay cause for elapsed time; a new candidate
+  escalation control for more than 5 missed appointments (pending Housing and
+  repairs leads' ratification); confirmation that a grant award exists
+  covering roughly half the eligible homes; a description of current hazard
+  reporting practice (technician write-up or resident phone call, then a
+  technician audit); and a direction that the pilot would use all current
+  contracts and frameworks.
+* Declined to fabricate statistics for four requests with no grounding
+  evidence in the repository: survey/install/quality capacity, pilot
+  building dependencies, tenure/lease verification share, and local-authority
+  stock distribution. These stay fully open.
+* For two requests, substituted the existing, already-sourced sector
+  benchmarks (rolling stock-survey cadence; first-appointment no-access and
+  refusal/withdrawal rates) as explicitly-labelled illustrative reference
+  points only, not company evidence.
+* For the PAS 2035 role question, the owner asked the company-role agents to
+  decide. Dispatched the Housing Retrofit Programme Manager role-profile
+  agent and added its six-role hypothesis (Retrofit Coordinator, Assessor,
+  Adviser/Designer, Evaluator, PAS 2030 installer/site-supervisor quality
+  role, named programme assurance) as a labelled role-profile hypothesis, not
+  confirmed staffing.
+* No Open Decision (OD-01 to OD-39) was marked resolved; each referenced OD
+  stays open pending named accountable-function evidence. Bumped the BRD to
+  version 0.7.0 and updated its session-state file
+  (`.copilot-tracking/brd-sessions/agentic-retrofit-programme.state.json`)
+  and the knowledge-base catalog entry above.
+
+## [2026-10-03] update | PRD strengthened against BRD v0.7.0 and the capstone rubric (v0.4.0)
+
+* Trigger: review `docs/prds/proper-warm-retrofit-programme-demonstrator.md`
+  against the updated BRD and the capstone rubric/assessment guide, and
+  improve it without inventing company facts or fabricated results.
+* Added design-rigor content targeting only the rubric's non-live,
+  repo-evidence-scored criteria: a Component Contracts and Failure Domains
+  table (architecture decoupling and failure domains), an illustrative
+  Threat Model explicitly marked as not yet validated (security), a
+  log-schema/correlation-ID/named-SLO-measurement-method observability
+  design under NFR-009 (targets left TBD), an AI Model Selection and
+  Evaluation Harness section stating no model is selected and no evaluation
+  has run, an Agent Orchestration Pattern section (state-graph handoff,
+  reflection step, tool-scoped authorization, workflow-only fallback), and
+  an Options Gate Scoring Framework with criteria-only, weights-TBD scoring
+  (new DD-005, DD-006).
+* Added candidate FR-014 and AC-016 for a missed-appointment escalation
+  route, traced to the BRD's owner-directed "more than 5" threshold and
+  explicitly marked unconfirmed/unratified pending Retrofit and Building
+  Safety sign-off. Updated the FR-to-AC, FR-to-GOAL and
+  requirement-to-source traceability tables to 14/14 coverage.
+* Added an "Owner-direction cross-references (2026-10-03)" subsection in
+  Open Questions: BRD v0.7.0 owner direction narrows but does not close
+  OQ-002 (PAS 2035 roles, escalation), OQ-003 (grant award is partial),
+  OQ-004 (all contracts/frameworks direction) and OQ-006 (hazard-reporting
+  description); the four BRD-declined items (survey/install capacity,
+  pilot building dependencies, tenure/lease share, LA stock distribution)
+  remain fully open and are not modelled from role-profile hypotheses.
+* Added a Risk Register row warning that owner-provided planning direction
+  must not be mistaken for named-function verified evidence or a ratified
+  operational rule, and requiring the accountable function to supply and
+  ratify real evidence before FR-014 or any related control is built.
+* Did not and could not address the rubric's live criteria (B1-B5, C2,
+  scored only in an actual panel session) or A4/D3 (no working demonstrator
+  evidence yet; no publication path yet) through PRD document edits; these
+  remain outstanding and require separate, non-documentation work.
+* Updated the PRD's session-state file, this log and the knowledge-base
+  catalog entry above. PRD bumped to version 0.4.0.
