@@ -2,15 +2,15 @@
 title: Agentic Retrofit Programme Business Requirements Document
 description: Business requirements for safe, resident-centred and financially controlled retrofit delivery
 author: AMA Research Team
-ms.date: 2026-09-30
+ms.date: 2026-10-03
 ms.topic: reference
 brd_id: "BRD-2026-AMA48-001"
 status: "draft"
-version: "0.6.0"
+version: "0.7.0"
 owners: ["AMA Research Team"]
 reviewers: ["Executive Director of Assets (proposed sponsor)", "Named Proper North Homes control owners (to be confirmed)"]
 created_date: "2026-09-11"
-last_updated: "2026-09-30"
+last_updated: "2026-10-03"
 business_goal_ids: ["BG-001", "BG-002", "BG-003", "BG-004", "BG-005", "BG-006", "BG-007", "BG-008", "BG-009", "BG-010", "BG-011", "BG-012"]
 business_goal_smart_status: "fail"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -443,6 +443,66 @@ supported by company evidence rather than sector assumptions.
 | Which local authority areas contain the stock, and does any fall within a combined-authority integrated settlement? | Stock by local authority, funding route per scheme and co-funding sources | Funding route and eligibility rules (FR-026, FR-027, OD-26) |
 | Which contracts and frameworks would the pilot use, and who is the named contract manager and authority limit for each? | Contract forms, expiry dates, data obligations, leaseholder contributions and delegated authority | Contractor control and award gate (RULE-008, FR-022, OD-30) |
 | Can the association supply twelve months of no-access and withdrawal records, with reasons, by channel and adjustment need? | Appointment outcomes, withdrawal reasons, channels and adjustment records | Replacement of no-access and refusal planning assumptions (OD-08) |
+
+### Owner-Provided Direction on Sponsor Discovery Questions (2026-10-03)
+
+The programme owner gave the directions below on 2026-10-03 in response to
+the Sponsor Discovery Questions. These are owner statements and planning
+directions, not verified company evidence, system records or completed
+company research. Several explicitly substitute a modelled or illustrative
+estimate for data the owner has not yet supplied; those are labelled
+accordingly and do not close the related Open Decision.
+
+| Question | Owner direction, 2026-10-03 | Evidence status |
+| --- | --- | --- |
+| Elapsed time lost between candidate identification and accepted handover | Owner accepts the cause is "a mix of everything" and is content to proceed without separating causes for now. | Owner-accepted ambiguity; no stage-level records supplied. OD-01 and OD-18 stay open; the binding-constraint analysis still needs real stage data. |
+| Missed appointment and worsening mould, account ownership | Owner directs a new escalation control: after more than 5 missed appointments for the same case, escalate for investigation of the root cause and a fix. | Owner design direction, not existing practice evidence. Candidate addition to RULE-006/FR-016 exception handling; needs Housing and repairs leads to ratify (OD-09). |
+| PAS 2035 and assurance roles for the pilot | Owner asked the company-role agents to decide, intending to request engagement of these roles at an upcoming presentation. The Housing Retrofit Programme Manager role-profile agent proposes six named roles with their PAS 2035 function and the monthly evidence needed to confirm each; see "PAS 2035 role-profile hypothesis" below. | Role-profile hypothesis for the sponsor's presentation request, not confirmed company staffing. OD-06 and OD-33 stay open pending named people, certification and committed capacity. |
+| Survey/install/quality capacity: contracted vs forecast | Owner asked for an educated guess; no sector benchmark or company record in the repository supports a defensible locality-level capacity estimate. | Declined: no evidence base exists to model this responsibly. OD-10 and OD-30 stay fully open; contract and framework capacity data is still required. |
+| GBP 40 million grant opportunity, award status | Owner states an award has been executed, covering roughly half of the homes that could have received it. | Owner-provided direction; exact award terms, eligible-property schedule, match funding, deadlines and clawback conditions are not yet supplied. OD-11 and OD-26 stay open for the documented award evidence. |
+| Pilot building safety/shared-system/condition dependencies | Owner asked for a statistical model; the repository holds no building register or portfolio geography to ground a per-building estimate. | Declined: no evidence base exists to model this responsibly. OD-04 and OD-22 stay fully open; the building register and accountable owners are still required. |
+| Authoritative property/EPC system and 5-year stock-condition survey coverage | Owner asked for a statistical estimate. The Provisional Sector Benchmark Pack's "Rolling stock surveys" line (12,000 homes per year for a five-year cycle) is a stronger-practice comparator target, not an observed completion rate; if the association already ran at that cadence, a five-year rolling cycle would in principle cover the full 60,000-home portfolio, but no evidence confirms the association runs at, below or above that rate, and no authoritative system has been named. | Illustrative benchmark-derived reference point only, explicitly not company evidence. OD-03 and OD-26 stay open for the named system and the real survey-coverage figure. |
+| Hazard reporting route and awareness-date tracking | Owner describes current practice: a hazard is reported to the team via a written description from the technician, or by phone from the resident; when a resident reports it, a technician then attends to audit the mould's severity. | Owner-provided description of current practice. Confirms a reporting route exists but does not state whether the system records the awareness date separately from the logging date, or the volumes and backlog. OD-29 stays open for that remaining evidence. |
+| Tenure/lease type recording and verified share | Owner asked for a statistical model; the repository holds no tenure-mix survey or verification-rate benchmark to ground a defensible estimate (the existing company-profile tenure split is itself labelled an estimate, not a verified share). | Declined: no evidence base exists to model this responsibly. OD-27 stays fully open; the housing-management-system fields and verification status are still required. |
+| Local authority areas containing the stock, and combined-authority settlement overlap | Owner asked for a statistical model; the repository holds no stock-by-local-authority breakdown to ground an estimate. | Declined: no evidence base exists to model this responsibly. OD-26 stays fully open; stock geography by local authority is still required. |
+| Contracts and frameworks the pilot would use | Owner states the pilot would use all of the association's current contracts and frameworks, not a subset. | Owner-provided direction; named contract managers, authority limits, expiry dates and data obligations per contract are not yet supplied. OD-30 stays open for that detail. |
+| No-access and withdrawal history, 12 months | Owner asked for a statistical model. The Provisional Sector Benchmark Pack already carries a first-appointment no-access planning assumption (10% central, 5% to 15% sensitivity) and a resident refusal/withdrawal planning assumption (5% to 10%), both sourced to sector data, not company records. | Illustrative sector-benchmark substitute only, explicitly not company evidence. OD-08 stays open for the association's own 12-month records by reason, channel and adjustment need. |
+
+#### PAS 2035 role-profile hypothesis (role-profile agent output, 2026-10-03)
+
+The Housing Retrofit Programme Manager role-profile agent proposed six roles
+for the sponsor's presentation request. This is a role-profile hypothesis for
+requesting engagement, not a statement of Proper North Homes' current
+staffing; no named individuals, headcounts or capacity figures are asserted.
+
+1. **Retrofit Coordinator** - owns the PAS 2035 pathway, risk-path decision
+   and design release; typically an internal or long-term named role,
+   distinct from the Assessor. Monthly evidence: named competent person(s),
+   certification validity, live concurrent-home caseload against a stated
+   per-FTE capacity ceiling.
+2. **Retrofit Assessor** - owns the site survey sign-off, separate from
+   Coordinator review; commonly contracted or supplier-provided. Monthly
+   evidence: certification, surveys signed off, confirmation no person holds
+   both roles that month.
+3. **Retrofit Adviser/Designer** - produces the property-specific measure
+   design requiring competent sign-off; often an external consultant.
+   Monthly evidence: design approvals issued, qualification currency,
+   caseload.
+4. **Retrofit Evaluator** - independent post-installation technical
+   verification, independent of the installer; typically contracted. Monthly
+   evidence: inspections completed, pass/defect rate, sampling percentage.
+5. **Installer-side quality role (PAS 2030-certified installer/site
+   supervisor)** - delivers and self-evidences installation only, cannot
+   approve compliance; always supplier-provided. Monthly evidence:
+   certification scope, committed versus delivered capacity, defect and
+   reopen rate.
+6. **Named programme assurance (Building Safety Lead liaison and independent
+   reviewer)** - holds safety-hold release and escalation authority; should
+   sit independently of delivery. Monthly evidence: holds raised and
+   released, review turnaround.
+
+Confirmation that all six are available, competent and committed each month
+remains the Phase 0 readiness gate (OD-06, OD-33) before pilot mobilisation.
 
 ### Business Drivers
 

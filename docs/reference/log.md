@@ -744,3 +744,38 @@ metadata when the knowledge base was created.
   (`.copilot-tracking/prd-sessions/proper-warm-retrofit-programme-demonstrator.state.json`)
   with the new role-profile review, question history, next actions and the
   evidence boundary, and updated the knowledge-base catalog entry above.
+
+## [2026-10-03] query | Owner direction on BRD Sponsor Discovery Questions recorded (v0.7.0)
+
+* The owner answered all 12 Sponsor Discovery Questions in
+  `docs/brds/agentic-retrofit-programme-brd.md`. Added a new subsection,
+  "Owner-Provided Direction on Sponsor Discovery Questions (2026-10-03)",
+  immediately after the existing question table, recording each answer with
+  an explicit evidence-status label.
+* Recorded as genuine owner direction, not inferred company fact: acceptance
+  of a mixed/unseparated delay cause for elapsed time; a new candidate
+  escalation control for more than 5 missed appointments (pending Housing and
+  repairs leads' ratification); confirmation that a grant award exists
+  covering roughly half the eligible homes; a description of current hazard
+  reporting practice (technician write-up or resident phone call, then a
+  technician audit); and a direction that the pilot would use all current
+  contracts and frameworks.
+* Declined to fabricate statistics for four requests with no grounding
+  evidence in the repository: survey/install/quality capacity, pilot
+  building dependencies, tenure/lease verification share, and local-authority
+  stock distribution. These stay fully open.
+* For two requests, substituted the existing, already-sourced sector
+  benchmarks (rolling stock-survey cadence; first-appointment no-access and
+  refusal/withdrawal rates) as explicitly-labelled illustrative reference
+  points only, not company evidence.
+* For the PAS 2035 role question, the owner asked the company-role agents to
+  decide. Dispatched the Housing Retrofit Programme Manager role-profile
+  agent and added its six-role hypothesis (Retrofit Coordinator, Assessor,
+  Adviser/Designer, Evaluator, PAS 2030 installer/site-supervisor quality
+  role, named programme assurance) as a labelled role-profile hypothesis, not
+  confirmed staffing.
+* No Open Decision (OD-01 to OD-39) was marked resolved; each referenced OD
+  stays open pending named accountable-function evidence. Bumped the BRD to
+  version 0.7.0 and updated its session-state file
+  (`.copilot-tracking/brd-sessions/agentic-retrofit-programme.state.json`)
+  and the knowledge-base catalog entry above.
