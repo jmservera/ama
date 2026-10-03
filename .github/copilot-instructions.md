@@ -69,11 +69,12 @@ request. Do not commit or push directly to `main`.
 * When uncommitted changes already exist, do not discard, stash, commit or
   move them without the owner's confirmation. Ask whether to carry them onto
   the new branch or to isolate the new work in a separate `git worktree`.
-* Before committing, configure the repository-local Git email as the owner's
-  GitHub privacy-safe address, `8036360+jmservera@users.noreply.github.com`.
-  Use it for both author and committer; do not use a private email or change
-  global Git configuration. For a different owner, resolve the authenticated
-  account with `gh api user` and use `{id}+{login}@users.noreply.github.com`.
+* Before committing, resolve the authenticated GitHub account with
+  `gh api user` and construct its privacy-safe email as
+  `{id}+{login}@users.noreply.github.com` using the returned `id` and `login`.
+  Configure that address with repository-local `git config --local user.email`
+  and use it for both author and committer. Do not hardcode a user's email in
+  these instructions, use a private email or change global Git configuration.
   If GitHub rejects a push for email privacy, do not disable privacy protection;
   obtain the owner's permission before amending an existing commit.
 * Commit following the commit message conventions, push the branch and open
