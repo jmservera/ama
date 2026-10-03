@@ -714,3 +714,11 @@ metadata when the knowledge base was created.
   procurement approval or permission to process resident data.
 * Updated the index. Owner-controlled memory and the original case study
   remain unchanged.
+
+## [2026-10-03] restructure | Move PRD to rubric registry path
+
+* Moved the hybrid retrofit PRD from `docs/project-planning/` to
+  `docs/prds/`, matching the path anticipated by the rubric artifact registry.
+* Updated the PRD session-state path and the knowledge-base catalog link.
+* The PRD registry entry is still marked `planned`; this move alone does not
+  activate rubric scoring.
