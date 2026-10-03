@@ -1,6 +1,6 @@
 {
   "prdFile": "docs/prds/proper-warm-retrofit-programme-demonstrator.md",
-  "lastAccessed": "2026-10-03T18:30:00+02:00",
+  "lastAccessed": "2026-10-03T21:10:00+02:00",
   "currentPhase": "build",
   "disclaimerShownAt": "2026-10-03T12:09:35+02:00",
   "phaseSkillsLoaded": [
@@ -12,7 +12,8 @@
   ],
   "questionsAsked": [
     "prd-boundary-confirmation",
-    "role-profile-open-question-synthesis"
+    "role-profile-open-question-synthesis",
+    "rubric-aligned-review-pass"
   ],
   "answeredQuestions": {
     "initiative-name": "Proper Warm Retrofit Programme Demonstrator and Platform Assessment",
@@ -22,7 +23,8 @@
     "role-profile-review": "All eight company-* role profiles were asked for a role-specific challenge on 2026-10-03. Their responses are sector-informed hypotheses and unknowns, not company facts, resident evidence or approvals.",
     "mvp-boundary": "Proposed non-production, synthetic-data demonstrator; compare all options consistently and build only the candidate authorized at a platform decision gate. No production integrations, live resident contact or operational authority.",
     "prd-boundary-confirmation": "Owner directed the PRD to use the Azure-led hybrid approach and confirmed current coordination uses Excel files only, with no Dataverse or Dynamics 365. Treat hybrid as the proposed demonstrator baseline; retain full Azure and greenfield business apps as comparators. M365/SharePoint tenancy, licences and governance remain unverified.",
-    "role-profile-open-question-synthesis": "Each of the eight company-* role profiles completed a second-pass review of the hybrid baseline on 2026-10-03 and raised one focused open question from its perspective (Asset Executive, Retrofit Programme Manager, Finance and Grants, Procurement and Contracts, Data and Performance, Building Safety, Neighbourhood Housing Officer, Resident Engagement). Synthesized into an eight-row Open Questions register (OQ-001 to OQ-008) in the PRD, labelled as role-profile discovery prompts/hypotheses, not company facts or approvals. Also corrected overstated 'Excel-only' language in four places to 'Excel-based current coordination; other systems and authority unknown'."
+    "role-profile-open-question-synthesis": "Each of the eight company-* role profiles completed a second-pass review of the hybrid baseline on 2026-10-03 and raised one focused open question from its perspective (Asset Executive, Retrofit Programme Manager, Finance and Grants, Procurement and Contracts, Data and Performance, Building Safety, Neighbourhood Housing Officer, Resident Engagement). Synthesized into an eight-row Open Questions register (OQ-001 to OQ-008) in the PRD, labelled as role-profile discovery prompts/hypotheses, not company facts or approvals. Also corrected overstated 'Excel-only' language in four places to 'Excel-based current coordination; other systems and authority unknown'.",
+    "rubric-aligned-review-pass": "Reviewed the PRD against BRD v0.7.0 (including the new Owner-Provided Direction on Sponsor Discovery Questions subsection) and the AMA rubric/assessment guide. Added, for non-live repo-evidence criteria only: Component Contracts and Failure Domains (A1), an illustrative Threat Model (A3), a log-schema/correlation-ID/named-SLO-method observability design (A5), an AI Model Selection and Evaluation Harness section (A6), an Agent Orchestration Pattern section (A7), and an Options Gate Scoring Framework with DD-005/DD-006 (D1). Added candidate FR-014/AC-016 for a missed-appointment escalation route traced to owner direction, kept explicitly unratified. Added an Owner-direction cross-references subsection narrowing but not closing OQ-002/003/004/006, and a new Risk Register row warning that owner direction must not be mistaken for verified or ratified evidence. Did not attempt to move A4, D3, or any live (B1-B5, C2) criterion, since those require an actual working demonstrator or a live panel session, not PRD edits."
   },
   "referencesProcessed": [
     {
@@ -116,6 +118,25 @@
       "pendingActions": [
         "Obtain accountable-function evidence to close OQ-001 through OQ-008 before the options gate and build acceptance review."
       ]
+    },
+    {
+      "file": "docs/brds/agentic-retrofit-programme-brd.md#owner-provided-direction-on-sponsor-discovery-questions-2026-10-03",
+      "status": "analyzed",
+      "timestamp": "2026-10-03T21:10:00+02:00",
+      "keyFindings": "BRD bumped to v0.7.0 with owner answers to 12 Sponsor Discovery Questions: 8 are owner-provided planning direction (mixed-cause elapsed time; a candidate >5-missed-appointment escalation threshold; PAS 2035 role model deferred to role-profile hypothesis; capacity, pilot-dependency, authoritative-system, tenure/lease and LA-coverage questions answered as 'run a statistical model/educated guess'; partial award on part of the GBP 40m grant; 'all' contracts/frameworks in scope); 4 are explicitly declined by the owner as having no evidence base (survey/install/quality capacity, pilot building dependencies, tenure/lease verified share, LA stock distribution) and must not be modelled. Used to cross-reference PRD FR-014/DD-005/DD-006/Options Gate Scoring Framework and the Owner-direction cross-references subsection in Open Questions, narrowing OQ-002/003/004/006 without closing them.",
+      "integratedSections": [
+        "Design Decisions",
+        "Functional Requirements",
+        "Acceptance Criteria",
+        "Traceability Matrix",
+        "Open Questions",
+        "Risks and Assumptions"
+      ],
+      "conflicts": [],
+      "pendingActions": [
+        "Ratify or withdraw FR-014/AC-016 once Retrofit and Building Safety confirm the escalation threshold and owning function.",
+        "Obtain the 4 explicitly-declined data points (survey/install capacity, pilot dependencies, tenure/lease share, LA stock distribution) from the accountable functions; do not model them from role-profile or statistical hypothesis."
+      ]
     }
   ],
   "nextActions": [
@@ -128,6 +149,9 @@
     "Set calendar horizon, test workload, performance targets, accessibility standard, usability protocol and AI evaluation thresholds.",
     "Validate resident-facing assumptions with direct research before including a live resident product journey (OQ-008).",
     "Obtain accountable-function evidence to close each row in the Open Questions register (OQ-001 to OQ-008).",
+    "Ratify or withdraw candidate FR-014/AC-016 (missed-appointment escalation route) with Retrofit and Building Safety before it is treated as a committed requirement.",
+    "Assign weights and run the Options Gate Scoring Framework once cost, support and evidence inputs are available; it is currently criteria-only (TBD weights).",
+    "Address the A4 (no working demonstrator evidence) and D3 (no publication path) floor-violation gaps separately; these cannot be closed by further PRD document edits.",
     "Run PRD quality reviewer only after discovery and build gaps are addressed."
   ],
   "qualityChecks": [
@@ -143,7 +167,9 @@
     "metrics-marked-provisional-where-baseline-unknown",
     "disclaimer-displayed-and-included",
     "open-questions-register-labelled-as-role-profile-hypotheses-not-company-fact",
-    "no-inferred-company-answers-in-open-questions-register"
+    "no-inferred-company-answers-in-open-questions-register",
+    "owner-direction-labelled-as-direction-not-verified-evidence-or-ratified-rule",
+    "new-rubric-targeted-content-is-methodology-or-candidate-not-fabricated-results"
   ],
   "userPreferences": {
     "detail-level": "comprehensive",

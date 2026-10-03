@@ -779,3 +779,42 @@ metadata when the knowledge base was created.
   version 0.7.0 and updated its session-state file
   (`.copilot-tracking/brd-sessions/agentic-retrofit-programme.state.json`)
   and the knowledge-base catalog entry above.
+
+## [2026-10-03] update | PRD strengthened against BRD v0.7.0 and the capstone rubric (v0.4.0)
+
+* Trigger: review `docs/prds/proper-warm-retrofit-programme-demonstrator.md`
+  against the updated BRD and the capstone rubric/assessment guide, and
+  improve it without inventing company facts or fabricated results.
+* Added design-rigor content targeting only the rubric's non-live,
+  repo-evidence-scored criteria: a Component Contracts and Failure Domains
+  table (architecture decoupling and failure domains), an illustrative
+  Threat Model explicitly marked as not yet validated (security), a
+  log-schema/correlation-ID/named-SLO-measurement-method observability
+  design under NFR-009 (targets left TBD), an AI Model Selection and
+  Evaluation Harness section stating no model is selected and no evaluation
+  has run, an Agent Orchestration Pattern section (state-graph handoff,
+  reflection step, tool-scoped authorization, workflow-only fallback), and
+  an Options Gate Scoring Framework with criteria-only, weights-TBD scoring
+  (new DD-005, DD-006).
+* Added candidate FR-014 and AC-016 for a missed-appointment escalation
+  route, traced to the BRD's owner-directed "more than 5" threshold and
+  explicitly marked unconfirmed/unratified pending Retrofit and Building
+  Safety sign-off. Updated the FR-to-AC, FR-to-GOAL and
+  requirement-to-source traceability tables to 14/14 coverage.
+* Added an "Owner-direction cross-references (2026-10-03)" subsection in
+  Open Questions: BRD v0.7.0 owner direction narrows but does not close
+  OQ-002 (PAS 2035 roles, escalation), OQ-003 (grant award is partial),
+  OQ-004 (all contracts/frameworks direction) and OQ-006 (hazard-reporting
+  description); the four BRD-declined items (survey/install capacity,
+  pilot building dependencies, tenure/lease share, LA stock distribution)
+  remain fully open and are not modelled from role-profile hypotheses.
+* Added a Risk Register row warning that owner-provided planning direction
+  must not be mistaken for named-function verified evidence or a ratified
+  operational rule, and requiring the accountable function to supply and
+  ratify real evidence before FR-014 or any related control is built.
+* Did not and could not address the rubric's live criteria (B1-B5, C2,
+  scored only in an actual panel session) or A4/D3 (no working demonstrator
+  evidence yet; no publication path yet) through PRD document edits; these
+  remain outstanding and require separate, non-documentation work.
+* Updated the PRD's session-state file, this log and the knowledge-base
+  catalog entry above. PRD bumped to version 0.4.0.
