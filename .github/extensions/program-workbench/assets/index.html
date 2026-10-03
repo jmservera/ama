@@ -6,6 +6,7 @@
   <meta name="canvas-token" content="__CANVAS_TOKEN__">
   <meta name="initial-path" content="__INITIAL_PATH__">
   <title>Program Workbench</title>
+  <link rel="stylesheet" href="/vendor/toastui-editor.css">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -83,6 +84,14 @@
           <div class="document-title-row">
             <div><span id="evidence-badge" class="evidence-badge"></span><h2 id="document-title">Choose a document</h2><p id="document-description" class="muted"></p></div>
             <div class="document-actions">
+              <div class="conversation-split">
+                <button id="conversation-button" class="primary-button" type="button" disabled title="Continue in the current conversation with this saved file as context">Start conversation</button>
+                <button id="conversation-menu-toggle" class="primary-button" type="button" disabled aria-label="Conversation options" aria-expanded="false" aria-controls="conversation-menu" aria-haspopup="menu">&#9662;</button>
+                <div id="conversation-menu" class="conversation-menu hidden" role="menu" aria-label="Conversation options">
+                  <button type="button" role="menuitem" data-conversation-target="current">Start conversation</button>
+                  <button type="button" role="menuitem" data-conversation-target="new">Start new conversation</button>
+                </div>
+              </div>
               <div class="segmented" aria-label="Document mode"><button class="mode-button active" data-mode="preview" type="button">Read</button><button class="mode-button" data-mode="edit" type="button">Edit</button></div>
               <button id="save-button" class="primary-button" type="button" disabled>Save changes</button>
             </div>
@@ -91,7 +100,15 @@
         </header>
         <div class="document-layout">
           <article id="markdown-preview" class="markdown-preview" aria-label="Rendered document"></article>
-          <label id="editor-wrap" class="editor-wrap hidden"><span class="sr-only">Markdown editor</span><textarea id="markdown-editor" spellcheck="true"></textarea></label>
+          <section id="editor-wrap" class="editor-wrap hidden" aria-label="Document editor">
+            <p id="editor-note" class="readonly-note hidden" role="note"></p>
+            <details id="frontmatter-wrap" class="frontmatter-wrap hidden">
+              <summary>Document metadata (YAML source)</summary>
+              <label for="frontmatter-editor" class="sr-only">YAML frontmatter including delimiters</label>
+              <textarea id="frontmatter-editor" spellcheck="false"></textarea>
+            </details>
+            <div id="visual-editor"></div>
+          </section>
           <aside class="context-panel" aria-label="Document context">
             <section><p class="eyebrow">OUTGOING</p><div id="outgoing-links" class="context-links"></div></section>
             <section><p class="eyebrow">REFERENCED BY</p><div id="backlinks" class="context-links"></div></section>
@@ -111,6 +128,7 @@
     </main>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/vendor/toastui-editor.js"></script>
   <script src="/app.js" type="module"></script>
 </body>
 </html>

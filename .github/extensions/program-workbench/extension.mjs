@@ -1,7 +1,9 @@
 import { CanvasError, createCanvas, joinSession } from "@github/copilot-sdk/extension";
 import { getIndexedDocument, refreshDocumentIndex, startProgramWorkbenchServer } from "./server.mjs";
+import { requestConversation } from "./conversation.mjs";
 
 const servers = new Map();
+let session;
 
 const canvas = createCanvas({
   id: "program-workbench",
@@ -36,7 +38,10 @@ const canvas = createCanvas({
   open: async (ctx) => {
     let entry = servers.get(ctx.instanceId);
     if (!entry) {
-      entry = await startProgramWorkbenchServer({ initialPath: ctx.input?.initialPath });
+      entry = await startProgramWorkbenchServer({
+        initialPath: ctx.input?.initialPath,
+        requestConversation: (path, options) => requestConversation(session, path, options),
+      });
       servers.set(ctx.instanceId, entry);
     }
     return { title: "Proper Warm - Program Workbench", status: "Repository documentation", url: entry.url };
@@ -49,4 +54,4 @@ const canvas = createCanvas({
   },
 });
 
-await joinSession({ canvases: [canvas] });
+session = await joinSession({ canvases: [canvas] });

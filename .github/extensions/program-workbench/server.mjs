@@ -43,7 +43,7 @@ export async function getIndexedDocument(requestedPath, repositoryRoot = default
   return readDocument(repositoryRoot, requestedPath, await getIndex(repositoryRoot));
 }
 
-export async function startProgramWorkbenchServer({ initialPath = "", repositoryRoot = defaultRepositoryRoot, port = 0 } = {}) {
+export async function startProgramWorkbenchServer({ initialPath = "", repositoryRoot = defaultRepositoryRoot, port = 0, requestConversation } = {}) {
   const token = randomBytes(24).toString("hex");
   const server = createServer(async (req, res) => {
     try {
@@ -52,6 +52,19 @@ export async function startProgramWorkbenchServer({ initialPath = "", repository
         if (req.headers["x-canvas-token"] !== token) return sendJson(res, 403, { error: "Canvas token is missing or invalid." });
         if (req.method === "GET" && url.pathname === "/api/index") return sendJson(res, 200, { documents: await getIndex(repositoryRoot) });
         if (req.method === "POST" && url.pathname === "/api/refresh") return sendJson(res, 200, { documents: await getIndex(repositoryRoot, true) });
+        if (req.method === "POST" && url.pathname === "/api/start-conversation") {
+          const body = await readBody(req);
+          const target = body.target ?? "current";
+          if (!["current", "new"].includes(target)) return sendJson(res, 400, { error: "Select current or new conversation." });
+          const documents = await getIndex(repositoryRoot, true);
+          const document = documents.find((item) => item.path === body.path && item.kind === "markdown");
+          if (!document) return sendJson(res, 400, { error: "Select an indexed Markdown document." });
+          if (!requestConversation) return sendJson(res, 503, { error: "The conversation handoff is unavailable." });
+          return sendJson(res, 202, {
+            path: document.path,
+            ...await requestConversation(document.path, { target, absolutePath: join(repositoryRoot, document.path) }),
+          });
+        }
         if (req.method === "GET" && url.pathname === "/api/document") {
           return sendJson(res, 200, await getIndexedDocument(url.searchParams.get("path"), repositoryRoot));
         }
@@ -67,13 +80,18 @@ export async function startProgramWorkbenchServer({ initialPath = "", repository
         return sendJson(res, 404, { error: "Canvas endpoint not found." });
       }
 
-      const assetMap = { "/": "index.html", "/app.js": "app.js", "/styles.css": "styles.css" };
+      const assetMap = {
+        "/": "index.html", "/app.js": "app.js", "/styles.css": "styles.css",
+        "/markdown-editor.js": "markdown-editor.js",
+        "/vendor/toastui-editor.js": "vendor/toastui-editor.js",
+        "/vendor/toastui-editor.css": "vendor/toastui-editor.css",
+      };
       const asset = assetMap[url.pathname];
       if (!asset) { res.writeHead(404); return res.end("Not found"); }
       let content = await readFile(join(assetsDirectory, asset), "utf8");
       if (asset === "index.html") {
         content = content.replace("__CANVAS_TOKEN__", token).replace("__INITIAL_PATH__", encodeURIComponent(initialPath));
-        res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'");
+        res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'");
       }
       const type = extname(asset) === ".js" ? "text/javascript" : extname(asset) === ".css" ? "text/css" : "text/html";
       res.writeHead(200, { "Content-Type": `${type}; charset=utf-8`, "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" });
