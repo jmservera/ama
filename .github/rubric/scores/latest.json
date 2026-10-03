@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "source": "workflow",
-  "scored_at": "2026-10-02T17:22:43+00:00",
-  "commit": "f9005de740ef3f034790a6db77f599ff46a1dd30",
+  "scored_at": "2026-10-03T18:08:51+00:00",
+  "commit": "e392f4ee37654ce773d7fcefe4405c7c4c415081",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37039792523",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37142761506",
   "fingerprints": {
     "brd": "ae2295d4ba1f21367730e23cfa0c3addbb727b5734df1bea55d584679f8a43fe"
   },
@@ -24,7 +24,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:613",
         "docs/brds/agentic-retrofit-programme-brd.md:653"
       ],
-      "rationale": "Deterministic core vs bounded-agent table and phased approval gates show clear decoupled responsibilities and a scaling path; no component contracts, interface definitions or failure-domain diagrams yet."
+      "rationale": "Deterministic core vs bounded-agent table and phased approval gates show clear decoupled responsibilities and a scaling path; no component contracts or failure-domain diagrams yet."
     },
     "A2": {
       "score": 5,
@@ -40,14 +40,14 @@
         "docs/brds/agentic-retrofit-programme-brd.md:963",
         "docs/brds/agentic-retrofit-programme-brd.md:992"
       ],
-      "rationale": "Named legislation, DPIA, segregation-of-duties and AI-risk controls (unsupported-claim sampling, automation-bias) are strong; no explicit attacker/threat model is stated."
+      "rationale": "Named legislation, DPIA, segregation-of-duties and AI-risk controls are strong; no explicit attacker/threat model is stated."
     },
     "A4": {
       "score": 1,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:1745"
       ],
-      "rationale": "Document itself records the 30 Sept 2026 review finding 'no working evidence for implementation completeness'; only a planned non-production demonstrator exists."
+      "rationale": "Document records the 30 Sept 2026 review finding 'no working evidence for implementation completeness'; only a planned non-production demonstrator exists."
     },
     "A5": {
       "score": 2,

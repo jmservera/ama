@@ -663,3 +663,62 @@ metadata when the knowledge base was created.
 * Research limitation: no program-manager interviews, contextual inquiry,
   analytics or usability studies have been completed. Behavioural findings are
   reported or assumed and must be validated before they become requirements.
+
+## [2026-10-03] query | Record BRD implementation options
+
+* Trigger: the owner requested an Azure versus M365 and business-platform
+  assessment and then asked to preserve the discussion.
+* Integrated the comparison into the case-study addendum's Solution Proposal,
+  covering Azure custom development, a Dataverse and Copilot Studio-led
+  implementation, and an Azure-led hybrid.
+* Recorded the conditional Azure-led preference, relevant BRD controls,
+  candidate service boundaries, whole-life cost and equivalent-journey
+  evaluation needs, and official product documentation checked on 3 October.
+* Separated the owner's Azure preference for AMA from a validated customer
+  platform decision. No architecture, procurement, production release or
+  expanded agent authority is approved by this assessment.
+* Updated the knowledge-base index. The original case study, BRD requirements
+  and owner-controlled memory remain unchanged.
+
+## [2026-10-03] create | Draft platform assessment PRD
+
+* Trigger: the owner asked to present full Azure, business-app and mixed
+  approaches to the `company-*` role profiles, then draft a PRD.
+* Consulted the eight role profiles for bounded perspectives on asset,
+  programme delivery, finance, procurement, residents, data, safety and
+  frontline workflow. Their views are labelled as sector-informed hypotheses,
+  not company facts, resident evidence or approvals.
+* Added `docs/project-planning/proper-warm-retrofit-programme-demonstrator.md`
+  and its `.copilot-tracking/prd-sessions/` state file from the canonical PRD
+  template. The draft keeps platform selection open and scopes an options gate
+  plus a synthetic-data, non-production demonstrator.
+* No signed `BRD_TO_PRD_HANDOFF_V1` was available. The PRD records the upstream
+  BRD's draft status and the need to reconcile its latest quality evidence
+  before PRD validation.
+* Updated this index. The PRD is not approved for implementation.
+
+## [2026-10-03] update | Set hybrid demonstrator baseline
+
+* Trigger: the owner selected the hybrid approach as the PRD direction and
+  confirmed that current coordination uses Excel files, with no Dataverse or
+  Dynamics 365 estate.
+* Updated the addendum to classify the Excel-only and absent-platform details
+  as owner-confirmed company context; M365 tenant, SharePoint availability and
+  licensing remain unknown.
+* Revised the PRD to version 0.2.0: Azure owns the proposed programme control
+  plane; M365 document collaboration is conditional on verification, with
+  controlled Azure Blob Storage as a demonstrator fallback. Excel import is
+  tested on synthetic representatives; source workbooks remain unchanged.
+* Kept the greenfield business-apps option as a whole-life-cost comparator.
+  The hybrid is a proposed demonstrator baseline, not production architecture,
+  procurement approval or permission to process resident data.
+* Updated the index. Owner-controlled memory and the original case study
+  remain unchanged.
+
+## [2026-10-03] restructure | Move PRD to rubric registry path
+
+* Moved the hybrid retrofit PRD from `docs/project-planning/` to
+  `docs/prds/`, matching the path anticipated by the rubric artifact registry.
+* Updated the PRD session-state path and the knowledge-base catalog link.
+* The PRD registry entry is still marked `planned`; this move alone does not
+  activate rubric scoring.

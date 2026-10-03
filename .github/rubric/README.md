@@ -66,7 +66,7 @@ Scores are readiness estimates from repository evidence. Live-scored criteria (B
 
 Edit [artifacts.json](artifacts.json) in its own pull request: set the entry's `status` to `active` and check its `include` globs and `criteria`. Registry and rubric changes take effect after they merge, because the gate reads them from `main`. The next pull request that touches those files scores them.
 
-Planned entries already exist for PRDs, ADRs, solution code, infrastructure, the capstone deck (`docs/capstone/deck/*.pptx`), pitch transcripts (`docs/capstone/pitch/`) and the thought leadership artifact. PPTX files are converted to slide and speaker-note text before scoring.
+PRDs under `docs/prds/**/*.md` are active scoring artifacts. Planned entries remain for ADRs, solution code, infrastructure, the capstone deck (`docs/capstone/deck/*.pptx`), pitch transcripts (`docs/capstone/pitch/`) and the thought leadership artifact. PPTX files are converted to slide and speaker-note text before scoring.
 
 ## Limits and Risks
 

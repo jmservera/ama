@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-09-30
+ms.date: 2026-10-03
 ms.topic: reference
 ---
 
@@ -356,6 +356,184 @@ message routing and quality evidence flags. This remains an unvalidated
 proposal for Phase 1 shadow-mode comparison, recorded in
 [System One Decision Models for Retrofit Agents](./ideas/typesafe-system-one-agent-fit.md)
 and the [Idea Register](./ideas/idea-register.md).
+
+### Implementation Options and Provisional Platform Recommendation
+
+This assessment records the owner's 3 October 2026 request to compare Azure
+development with Microsoft 365 and business-platform solutions before
+justifying a platform choice. The owner prefers Azure for the Azure Master
+Architect (AMA) project and their Solution Architect practice. This is a
+capstone preference, not evidence that Azure is the best customer investment.
+The recommendation below is a proposal, not an approved architecture,
+procurement decision or validated company requirement.
+
+On 3 October 2026 the owner confirmed that Proper North Homes currently uses
+Excel files for this coordination and does not have Dataverse or Dynamics 365.
+This is owner-confirmed company context. The existing Microsoft 365 tenant,
+SharePoint availability, licences, governance, retention configuration and
+support capability remain unverified. The business-apps alternative would
+therefore be a greenfield platform adoption in this comparison, not reuse of
+an existing Dataverse or Dynamics 365 estate.
+
+The key choice is where programme state, business controls and evidence
+authority live, not whether a conversational Copilot is present. The
+[BRD](./brds/agentic-retrofit-programme-brd.md), Digital Foundation and Authority,
+requires a controlled property lifecycle with bounded AI. RULE-016 and AC-053
+require comparison of process redesign, existing platform configuration,
+conventional workflow integration and bounded AI before solution selection.
+Improving or configuring existing systems without AI therefore remains the
+baseline against which these implementation options must earn their cost.
+
+#### Comparable Implementation Options
+
+| Option | Proposed implementation | Principal advantage | Principal trade-off |
+| --- | --- | --- | --- |
+| Azure custom application | Programme workbench, domain APIs, transactional programme store, durable workflow, integration adapters and Foundry-based AI capabilities | Direct control over contracts, evaluation, telemetry, resilience and user experience | Highest bespoke engineering and ongoing operational responsibility |
+| Business-platform-led | Greenfield Power Apps and Dataverse, Power Automate, Copilot Studio and SharePoint documents; no current Dataverse or Dynamics 365 estate is available for reuse | Could offer a managed low-code platform if the organisation adopts, licenses and supports it | Requires new platform adoption and operating capability; licensing, capacity, migration, integration and governance need full costing and validation |
+| Azure-led hybrid | Azure owns the programme control layer and bounded AI services; M365 supplies documents, collaboration and optional staff-facing agent channels | Customise distinctive controls while reusing commodity capabilities | Cross-platform identity, permissions, evidence ownership and support boundaries must be explicit |
+
+SharePoint, OneDrive and M365 Copilot alone are not the strongest comparator
+for the full BRD. A fair business-platform option includes Dataverse or an
+existing operational system for structured records and controlled transitions.
+Proper North Homes has no Dataverse or Dynamics 365 estate to reuse, so
+Dataverse would require a greenfield adoption.
+SharePoint can hold managed documents; OneDrive can support personal working
+material. Personal drives are not proposed as the authoritative programme
+approval or evidence store.
+
+M365 Copilot is a productivity experience; Copilot Studio builds agents and
+tools. Neither becomes an approval authority because it can invoke an action.
+Low-code does not imply weak governance, and Azure does not confer compliance
+automatically. Existing asset, repairs, housing, finance and contractor systems
+retain their authoritative records and accountable services under all options.
+
+#### Fit to the BRD Controls
+
+| BRD concern | Azure-led approach | Business-platform approach |
+| --- | --- | --- |
+| Mandatory gates and authority, FR-036 | Explicit state transitions and server-side authorisation in a domain API | Dataverse records and server-side rules or custom APIs, with flows coordinating work |
+| Immutable evidence version identifiers and retained prior versions, NFR-002 | Versioned evidence records and storage with appropriate retention controls | Controlled document libraries and Dataverse references, with explicit retention and supersession controls |
+| Failure, disablement and recovery, NFR-004 | Durable execution, monitored queues, retries, idempotency and reconciliation | Governed flows, exception queues and reconciliation, with actual timeout and recovery behaviour tested |
+| Authoritative-system integration, NFR-005 | API or event adapters with documented source ownership and conflict handling | Connectors and custom APIs, using Azure integration services where justified |
+| Portable evidence and exit, NFR-006 | Exportable records, evidence and approval history independent of the model provider | Exportable Dataverse and document evidence, including approval and supersession history |
+| Evaluated and reversible changes, NFR-007 | Code-managed evaluation harness and versioned model, prompt, rule and tool configurations | Platform lifecycle management and evaluations, supplemented by custom controls where required |
+| Staff experience | Custom workbench, optionally surfaced through Teams | Power Apps and Teams with familiar document collaboration |
+
+These are candidate implementation approaches, not acceptance evidence.
+Neither database audit logs nor ordinary document version history alone proves
+the required immutability, retained approvals, access separation or exit path.
+Both options must pass the same BRD acceptance tests, including permissions,
+prohibited actions, evidence export and failure recovery.
+
+#### Proposed Azure-Led Implementation Boundary
+
+Build a focused programme control layer, not a replacement housing-management
+system. The candidate components are:
+
+* Container Apps for the programme workbench, domain APIs and services.
+* A relational programme store for lifecycle state, approvals and
+  reconciliation, with Blob Storage or SharePoint for evidence. Define one
+  authority for each artefact and avoid competing approval records.
+* Durable Functions or another justified durable execution approach for
+  long waits, handoffs and recovery. Add Service Bus where asynchronous
+  integration warrants its complexity.
+* Foundry-hosted models for sourced extraction, reconciliation, drafting and
+  raise-only anomaly flags. Tool APIs enforce access and allowable actions
+  independently of agent instructions.
+* Entra ID, managed identities, appropriate secret management, telemetry and
+  deployment automation, with measured quality, latency and operating cost.
+
+Azure AI Search, Document Intelligence and Copilot Studio are optional
+components, justified by retrieval, document-processing or channel needs rather
+than service count. Region, feature availability, support status, licensing,
+data boundaries and deployment constraints require verification before design
+approval.
+
+Copilot Studio data policies can govern connectors, knowledge sources, HTTP
+access and authentication [S1]. They complement business authorisation rather
+than replace it. Azure durable workflow patterns support persisted execution,
+recovery and human approval waits [S2]; safe external actions still require
+application-level authority checks, idempotency and reconciliation.
+
+#### Customer Value and AMA Evidence
+
+Keep two arguments separate:
+
+* Customer selection: choose the lowest whole-life-cost option that satisfies
+  all mandatory controls and can be supported by the organisation. The owner
+  confirmed there is no current Dataverse or Dynamics 365 estate to reuse.
+  A greenfield Power Platform adoption could still be preferable if it meets
+  the controls at lower whole-life cost and the organisation funds its
+  governance and support capability.
+* Capstone selection: Azure provides a direct way to demonstrate contracts,
+  failure recovery, model comparisons, instrumentation and cost per business
+  outcome. This is a legitimate project preference, not proof of customer
+  superiority.
+
+The [Capstone Assessment Guide](./reference/method/ama-capstone-assessment-guide.md)
+rewards justified alternatives (A2), implementation completeness (A4),
+measured operations and cost (A5), model evaluation (A6), and meaningful bounded
+autonomy (A7). It does not reward Azure service count. The assessment should not
+present a scripted approval flow as agentic autonomy or expand AI authority to
+meet the rubric.
+
+A candidate bounded task is for an agent to identify missing evidence, select
+permitted sources, reconcile discrepancies and assemble a sourced review-ready
+draft within tool, iteration, time and cost limits. Deterministic workflow
+still controls property progression; people retain consequential decisions.
+This task remains subject to the BRD's comparison, safety and release gates.
+
+#### Evidence Needed Before a Platform Decision
+
+The owner reports that current coordination uses Excel files and that
+Dataverse and Dynamics 365 are not present. The Microsoft 365 tenant,
+SharePoint availability and licences, Excel workbook formats and quality,
+available APIs, operating-team skills, transaction volumes, document
+sensitivity and support ownership are still unknown. No comparative
+implementation, licensing quotation, whole-life cost model or direct
+stakeholder validation establishes a winning platform yet.
+
+Given the confirmed absence of Dataverse and Dynamics 365, the hybrid approach
+is the provisional demonstrator baseline for the PRD: Azure owns the new
+structured programme state, deterministic gates, integrations and bounded AI;
+M365 services may support managed documents and staff collaboration once
+tenant capability, licensing and governance are verified. Excel is treated as
+the current source material to assess for controlled import, not as the target
+live workflow or an authoritative approval record. The greenfield business-apps
+option remains a priced comparator, not the selected build target. This
+direction remains subject to sponsor, architecture, security, Finance and
+control-owner review.
+
+Agree appraisal criteria before assigning weights or scores. Compare equivalent
+scope and operating assumptions across options, including implementation,
+integration, migration, licences, infrastructure, model use, support, assurance
+and exit costs. Include staff review effort rather than treating generated
+outputs as completed work.
+
+Use the same representative property journey to test the options, including
+successful progression, a safety hold, withdrawn consent, missing evidence and
+integration failure. Measure errors, review effort, latency, recovery and cost
+per reviewed task; assess cost per accepted handover only when operational
+evidence supports it. Synthetic demonstrations can establish technical
+feasibility, not attributable live delivery benefits. The BRD's Comparison 1
+and Comparison 2 remain the operational and task-level value tests.
+
+The provisional decision statement is:
+
+> Prefer an Azure-led programme control layer, subject to options appraisal,
+> because the proposed lifecycle requires explicit cross-system controls,
+> recoverable execution and measurable AI behaviour. Reuse M365 for
+> collaboration and documents only after tenant and governance verification.
+> Compare a greenfield Dataverse/Copilot Studio-led alternative if it meets
+> the same requirements with lower whole-life cost, including platform
+> adoption and operating capability.
+
+#### Platform Evidence
+
+| Reference | Source and relevant section | Classification | Checked | Limitation |
+| --- | --- | --- | --- | --- |
+| S1 | [Configure data policies for agents](https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-data-loss-prevention), Copilot Studio connectors and common data policy use cases | Official product documentation | 2026-10-03 | Describes platform data governance, not proof of business-control compliance |
+| S2 | [Workflow in Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/workflows-overview), workflow frameworks and durable execution for AI agents | Official product documentation | 2026-10-03 | Describes execution patterns, not end-to-end action authorisation or a verified deployment choice |
 
 ## Phased Delivery and Decision Gates
 

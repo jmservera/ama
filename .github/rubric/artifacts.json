@@ -14,7 +14,7 @@
     {
       "id": "prd",
       "title": "Product requirements documents",
-      "status": "planned",
+      "status": "active",
       "extractor": "text",
       "include": ["docs/prds/**/*.md"],
       "exclude": [],

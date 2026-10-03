@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-02
+ms.date: 2026-10-03
 ms.topic: overview
 ---
 
@@ -60,6 +60,7 @@ management: short pages that point to clusters of related material.
 | Design EPC C, energy standard or grant logic | [energy-efficiency/](./regulatory/energy-efficiency/) and [retrofit-standards-and-funding/](./regulatory/retrofit-standards-and-funding/) | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) |
 | Handle resident data, consent or automated decisions | [data-protection/](./regulatory/data-protection/) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
 | Write or review requirements | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) |
+| Compare Azure development with M365 and business-platform implementation | [Implementation Options and Provisional Platform Recommendation](../case_study_48_addendum.md#implementation-options-and-provisional-platform-recommendation) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) and [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) |
 | Evaluate a new idea | [Idea Register](../ideas/idea-register.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Challenge whether a requested agent is needed, or decide what to build instead | [Agent Request Challenge](./research/company/agent-request-challenge.md) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
 | Test whether richer inputs (phone photos, geotagging, structured invoices) change any agent verdict | [Agent What-If Study](./research/company/agent-what-if-study.md) | [Agent Request Challenge](./research/company/agent-request-challenge.md) |
@@ -76,8 +77,9 @@ management: short pages that point to clusters of related material.
 | Document | Summary | Updated |
 | --- | --- | --- |
 | [Original Case Study 48](../case_study_48_original.md) | Initial problem specification. Preserved unchanged | 2026-09-10 |
-| [Case Study 48 Addendum](../case_study_48_addendum.md) | Evolving critical assessment, agent-led modernisation proposal with a business value measure per agent capability, trade-offs and business value | 2026-09-26 |
+| [Case Study 48 Addendum](../case_study_48_addendum.md) | Evolving critical assessment, agent-led modernisation proposal with a business value measure per agent capability, trade-offs and business value; Azure, business-platform and hybrid implementation comparison with a conditional Azure-led recommendation | 2026-10-03 |
 | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | Business requirements for safe, resident-centred and financially controlled retrofit delivery, including a Board decision narrative, an end-to-end non-production demonstrator, controlled operational validation, tenure, eligibility, hazard-awareness, contractor-instruction, explainability and transparency controls, and the pilot measurement protocol; uses canonical FR, AC, NFR, CON, RULE and BG identifiers with a legacy BR and OBJ alias map | 2026-09-30 |
+| [Proper Warm Hybrid Retrofit Programme Demonstrator PRD](../prds/proper-warm-retrofit-programme-demonstrator.md) | Draft product requirements for an Azure-led hybrid demonstrator, with a comparative options gate, synthetic Excel import, Azure programme control plane and conditional M365 document collaboration; owner confirms no Dataverse or Dynamics 365 estate | 2026-10-03 |
 | [Capstone Rubric Review of the Agentic Retrofit Programme BRD](./research/company/capstone-brd-rubric-review.md) | Criterion-by-criterion readiness assessment of the BRD against the FY27 AMA capstone rubric, with floor analysis and a four-gate remediation plan | 2026-09-30 |
 | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) | Evidence, team and bounded assistant requirements for finding delivery constraints | 2026-09-19 |
 | [Idea Register](../ideas/idea-register.md) | Research ideas that are not yet validated requirements | 2026-09-24 |
