@@ -2,7 +2,7 @@
 prd_id: "PRD-2026-AMA48-001"
 title: "Proper Warm Hybrid Retrofit Programme Demonstrator"
 status: "draft"
-version: "0.2.0"
+version: "0.3.0"
 owners: ["AMA Research Team (draft custodian); product owner to be named"]
 reviewers: ["Product sponsor, Asset, Digital, Finance, Retrofit, Safety, Procurement, Resident Engagement (to be confirmed)"]
 created_date: "2026-10-03"
@@ -28,7 +28,7 @@ license: "CC-BY 4.0 (Microsoft HVE-Core)"
 
 # Proper Warm Hybrid Retrofit Programme Demonstrator
 
-> **PRD-2026-AMA48-001** | Status: draft | Version: 0.2.0 | Last Updated: 2026-10-03
+> **PRD-2026-AMA48-001** | Status: draft | Version: 0.3.0 | Last Updated: 2026-10-03
 
 ## Executive Summary
 
@@ -125,8 +125,9 @@ The role-profile synthesis is deliberately conditional:
   service, human safety authority, fail-closed controls and tested recovery to
   remain effective across all options.
 
-The owner subsequently confirmed Excel-only current coordination and no
-Dataverse or Dynamics 365. Accordingly, business apps must be costed as a
+The owner subsequently confirmed Excel-based current coordination and no
+Dataverse or Dynamics 365; other systems and authority behind that
+coordination remain unknown. Accordingly, business apps must be costed as a
 greenfield adoption, not as reuse. The hybrid is the requested PRD baseline;
 M365/SharePoint capability remains to be verified. The full option comparison in the
 [Case Study 48 Addendum](../case_study_48_addendum.md#implementation-options-and-provisional-platform-recommendation)
@@ -204,7 +205,7 @@ demonstrator. No resident-facing live journey is authorised in this scope.
 
 | Decision ID | Draft decision | Rationale | Decision maker | Status |
 | --- | --- | --- | --- | --- |
-| DD-001 | Use the Azure-led hybrid as the proposed non-production demonstrator baseline; compare full Azure custom and a greenfield business-apps alternative, and permit the decision gate to reject the hybrid if evidence fails. | Owner requests a hybrid PRD direction and confirms Excel-only coordination with no Dataverse or Dynamics 365. M365/SharePoint capability and whole-life value remain unverified. | Sponsor and named architecture authority to confirm | Proposed |
+| DD-001 | Use the Azure-led hybrid as the proposed non-production demonstrator baseline; compare full Azure custom and a greenfield business-apps alternative, and permit the decision gate to reject the hybrid if evidence fails. | Owner requests a hybrid PRD direction and confirms Excel-based coordination with no Dataverse or Dynamics 365; other systems and authority remain unknown. M365/SharePoint capability and whole-life value remain unverified. | Sponsor and named architecture authority to confirm | Proposed |
 | DD-002 | Use synthetic data for the initial demonstrator. | Avoids implying access or authority to process resident or production data while testing the workflow. | Product, Data and DPO reviewers to confirm | Proposed |
 | DD-003 | Separate deterministic controls from bounded AI and compare agent-assisted tasks against workflow-only handling. | The BRD requires accountable human decisions and evidence that any AI adds incremental value. | Product and control owners to confirm | Proposed |
 | DD-004 | Treat Excel workbooks as import sources to profile and validate, not as the target programme workflow or approval authority. | Owner confirms current coordination uses Excel files; the demonstrator needs to test migration mapping without altering source records. | Data owner and product owner to confirm | Proposed |
@@ -334,7 +335,7 @@ relevant validation gate, not guessed in this draft.
 | CON-004 | The initial demonstrator shall use synthetic data; any future personal-data processing requires separate approval and applicable privacy controls. | PRD MVP boundary; BRD RULE-022 | Data: no production or resident personal data in MVP. |
 | CON-005 | No platform choice is approved until equivalent-scope options evidence, whole-life cost, supportability and required control tests are reviewed by named authorities. | Owner request and BRD RULE-016 / AC-053 | Technology and governance: architecture decision remains open. |
 | CON-006 | The demonstrator must not delay, pause, reset or close the separate statutory hazard response. | BRD CON-001 and RULE-003 | Safety: hazard-service authority remains outside the retrofit demonstrator. |
-| CON-007 | The baseline hybrid design shall not depend on Dataverse or Dynamics 365; their absence and Excel-only coordination are owner-confirmed as of 2026-10-03. | Owner statement on 2026-10-03 | Architecture: any later change requires an explicit scope and options-appraisal revision. |
+| CON-007 | The baseline hybrid design shall not depend on Dataverse or Dynamics 365; their absence and Excel-based coordination are owner-confirmed as of 2026-10-03, but the other systems and authority behind that coordination are unknown. | Owner statement on 2026-10-03 | Architecture: any later change requires an explicit scope and options-appraisal revision. |
 | CON-008 | SharePoint, OneDrive, Teams and M365 licensing/configuration are not assumed available for this solution until tenant and governance checks pass. | Current tenant capability is unknown | Architecture/operations: use a controlled Azure document store fallback in the demonstrator and record the M365 integration gap. |
 
 ## Process Models
@@ -373,7 +374,7 @@ technical and control owners.
 | AC-009 | Given the decision pack or scenario evidence is exported, when another reviewer opens the export without the AI provider, then source links, evidence versions, approval state, unresolved items and supersession history remain interpretable. | FR-003, FR-008, FR-009 | Not Started |
 | AC-010 | Given a model, workflow or integration failure is injected, when the scenario is exercised, then controlled progression stops, affected work and owner are visible, and restart requires reconciliation; the failure cannot affect a live hazard service. | FR-010, FR-012 | Not Started |
 | AC-011 | Given a proposed move from non-production to any live use, when release readiness is reviewed, then separate approval records exist for product, data protection, safety, resident service, finance, procurement and technical authority as applicable; otherwise live release remains blocked. | FR-012 | Not Started |
-| AC-012 | Given three platform candidates and an owner-confirmed Excel-only baseline with no Dataverse or Dynamics 365, when the option matrix is scored, then the business-apps option is costed as greenfield and the hybrid baseline's thresholds and decision authority are documented; no platform is selected solely because of the capstone owner's preference. | FR-001, FR-011 | Not Started |
+| AC-012 | Given three platform candidates and an owner-confirmed Excel-based coordination baseline with no Dataverse or Dynamics 365 (other systems and authority unknown), when the option matrix is scored, then the business-apps option is costed as greenfield and the hybrid baseline's thresholds and decision authority are documented; no platform is selected solely because of the capstone owner's preference. | FR-001, FR-011 | Not Started |
 | AC-013 | Given synthetic data is loaded, when privacy checks run, then no real resident identifier, address, contact detail or health-history text is present. | FR-003, FR-012 | Not Started |
 | AC-014 | Given an Excel import contains an unknown column, duplicate row, unmapped value or conflicting identifier, when validation runs, then the source file remains unchanged, the import does not silently resolve the conflict and each rejected row is available for human review. | FR-003 | Not Started |
 | AC-015 | Given M365/SharePoint is proposed for a managed document, when tenant, license, permission and version checks are run, then the integration is enabled only if all checks pass; otherwise the demonstrator uses the documented controlled Blob Storage fallback and records the M365 gap. | FR-013 | Not Started |
@@ -430,7 +431,7 @@ Coverage: 13/13 requirements linked, **100%**. Target: 100.0%.
 | BRD RULE-018, RULE-022, RULE-024 | FR-007, FR-008, FR-012; CON-003 to CON-006 |
 | Case Study 48 Addendum, “Implementation Options and Provisional Platform Recommendation” | FR-001, FR-002, FR-009, FR-011; DD-001 |
 | Owner confirmation, 2026-10-03: coordination uses Excel files; no Dataverse or Dynamics 365 | Product Context, DD-001, DD-004, FR-003, CON-007, AC-012, AC-014 |
-| Eight company-role profile option challenges, 2026-10-03 | Product Context; decision criteria and open questions only; not company evidence |
+| Eight company-role profile option challenges, 2026-10-03 | Product Context; Open Questions OQ-001 to OQ-008; decision criteria only, not company evidence |
 
 ## MVP and Release Framing
 
@@ -517,6 +518,31 @@ resident-benefit claims.
 | Product demo passes while operational support or failure recovery is inadequate | Medium | High | Require runbooks, owner, recovery exercise and support model before any later live gate. |
 | Synthetic success is presented as actual delivery benefit | Medium | High | Label every output synthetic and separate feasibility evidence from the BRD's operational Comparisons 1 and 2. |
 | Unverified resident needs or platform channels exclude people | Medium | High | Conduct direct resident research and accessibility testing before any resident-facing product scope. |
+
+## Open Questions
+
+The eight `company-*` role profiles each reviewed the proposed hybrid baseline
+on 2026-10-03 from their defined perspective. Their output is a set of
+role-profile discovery prompts and hypotheses, not company facts, resident
+research or approvals; no answer below should be inferred or assumed on the
+company's behalf. Every question below stays **Open** until an accountable
+function supplies verified evidence. MVP remains synthetic-only with no live
+resident contact regardless of how these questions resolve.
+
+| ID | Question | Accountable function / evidence to obtain | Decision or gate blocked | Status |
+| --- | --- | --- | --- | --- |
+| OQ-001 | Is the non-production demonstrator authorization separate from the customer platform choice, and who holds cost/effort authority over each? | Asset Executive; asset plan, capital envelope, delegated authority and decision-rights record | DD-001 confirmation; options gate (FR-001, FR-011) | Open |
+| OQ-002 | What is the validated representative property journey, and how are stage, handoff, exception and accepted-handover defined for it? | Retrofit Programme Manager; current workflow walkthrough, PAS 2035 capacity evidence and the BRD's accepted-handover protocol | Scenario design for FR-003, FR-006; AC-003, AC-006 | Open |
+| OQ-003 | What comparable whole-life cost, affordability and grant evidence exists for each option, and who owns the costing baseline and decision? | Finance and Grants; sourced cost model, budget ceiling, award/match-funding data and named decision owner | Options gate (FR-001, FR-002, FR-011); Whole-life cost confidence metric | Open |
+| OQ-004 | For a greenfield business-apps option, what are the actual licensing entitlements, contract/API terms, procurement route, exit path and ongoing operating support? | Procurement and Contracts; licence inventory, contract terms, procurement policy and support/exit commitments | Options gate (FR-001, FR-011); CON-005, CON-008 | Open |
+| OQ-005 | Is Excel the sole source of record, or does other current coordination tooling exist, and what is the workbook profile (identifiers, conflicts, volume), expected workload/performance and retention requirement? | Data and Performance; workbook inventory, identifier scheme, conflict examples, workload profile and retention policy | FR-003 import design; AC-003, AC-013, AC-014; NFR-007 | Open |
+| OQ-006 | Who is the named safety/hazard-service authority, how is synthetic/mock isolation enforced, and what evidence demonstrates no-bypass gates and tested recovery? | Building Safety; named hazard-service owner, isolation design and recovery-test evidence | CON-006; FR-004, FR-005, FR-010; AC-004, AC-005, AC-010 | Open |
+| OQ-007 | What are the validated frontline task, handoff, exception, usability and fallback needs for programme and resident-facing staff? | Neighbourhood Housing Officer; frontline task observation, usability session findings and fallback-process evidence | NFR-010 usability acceptance; FR-006 case view design | Open |
+| OQ-008 | Who owns the resident-service relationship, what later accessibility/inclusion research is planned, and what are the resident channel, choice, redress and privacy-readiness requirements? | Resident Engagement; named resident-service owner, accessibility research plan, channel inventory and redress/privacy controls | FR-012 release gate; AC-011; NFR-005, NFR-010 | Open |
+
+All eight rows remain unresolved as of this draft. Close an item only when the
+accountable function supplies verified, sourced evidence; do not mark a row
+resolved on the strength of a role-profile hypothesis alone.
 
 ## Glossary
 

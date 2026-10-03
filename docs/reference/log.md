@@ -722,3 +722,25 @@ metadata when the knowledge base was created.
 * Updated the PRD session-state path and the knowledge-base catalog link.
 * The PRD registry entry is still marked `planned`; this move alone does not
   activate rubric scoring.
+
+## [2026-10-03] query | Role-profile Open Questions register added to the PRD (v0.3.0)
+
+* Ran a second-pass review of the proposed hybrid baseline through all eight
+  `company-*` role profiles (Asset Executive, Retrofit Programme Manager,
+  Finance and Grants, Procurement and Contracts, Data and Performance,
+  Building Safety, Neighbourhood Housing Officer, Resident Engagement) and
+  synthesized one open question per role into a new Open Questions section
+  in `docs/prds/proper-warm-retrofit-programme-demonstrator.md`
+  (OQ-001 to OQ-008), each with an accountable function, evidence to obtain
+  and the decision/gate it blocks.
+* Labelled the register as role-profile discovery prompts/hypotheses, not
+  company facts, resident research or approvals; no row infers a company
+  answer, and every row stays Open pending accountable-function evidence.
+* Corrected four overstated "Excel-only" passages (Product Context, DD-001,
+  CON-007, AC-012) to "Excel-based current coordination; other systems and
+  authority unknown," matching OQ-005.
+* Preserved MVP scope: synthetic data only, no live resident contact.
+* Updated the PRD session-state file
+  (`.copilot-tracking/prd-sessions/proper-warm-retrofit-programme-demonstrator.state.json`)
+  with the new role-profile review, question history, next actions and the
+  evidence boundary, and updated the knowledge-base catalog entry above.
