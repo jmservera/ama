@@ -161,7 +161,8 @@ async function openDocument(path, refreshOnly = false) {
     const editButton = $('.mode-button[data-mode="edit"]');
     editButton.disabled = !doc.editable;
     editButton.title = doc.editable ? "Edit this Markdown document" : doc.readOnlyReason;
-    $("#conversation-button").disabled = false;
+    $("#conversation-button").disabled = conversationPending;
+    $("#conversation-menu-toggle").disabled = conversationPending;
     renderContextLinks("#outgoing-links", doc.outgoing || []);
     renderContextLinks("#backlinks", doc.backlinks || []);
     $$(".library-document").forEach((button) => button.classList.toggle("active", button.dataset.path === path));
@@ -197,18 +198,28 @@ async function saveCurrent() {
   } catch (error) { showToast(`Save failed: ${error.message}`); }
 }
 
-async function startConversation() {
+let conversationPending = false;
+function setConversationMenu(open) {
+  $("#conversation-menu").classList.toggle("hidden", !open);
+  $("#conversation-menu-toggle").setAttribute("aria-expanded", String(open));
+}
+
+async function startConversation(target = "current") {
+  setConversationMenu(false);
+  if (conversationPending) return;
   if (!state.current) return;
   if (state.dirty) { showToast("Save or discard canvas edits before starting a conversation about the saved file."); return; }
-  const button = $("#conversation-button");
-  button.disabled = true;
+  conversationPending = true;
+  $("#conversation-button").disabled = $("#conversation-menu-toggle").disabled = true;
   try {
-    const result = await api("/api/start-conversation", { method: "POST", body: JSON.stringify({ path: state.current.path }) });
-    showToast(result.agent
-      ? "Conversation requested with Product Manager Advisor. The agent will attach the file and open the chat."
-      : "Conversation requested with the default agent; Product Manager Advisor is unavailable.");
+    const result = await api("/api/start-conversation", { method: "POST", body: JSON.stringify({ path: state.current.path, target }) });
+    const destination = target === "current" ? "File sent to the current conversation" : "New project conversation requested";
+    showToast(`${destination}${result.agent ? " with Product Manager Advisor." : "; Product Manager Advisor is unavailable."}`);
   } catch (error) { showToast(`Conversation request failed: ${error.message}`); }
-  finally { button.disabled = !state.current; }
+  finally {
+    conversationPending = false;
+    $("#conversation-button").disabled = $("#conversation-menu-toggle").disabled = !state.current;
+  }
 }
 
 let searchTimer;
@@ -259,7 +270,24 @@ async function initialize() {
 $$('.rail-button').forEach((button) => button.addEventListener("click", () => switchView(button.dataset.view)));
 $$('.mode-button').forEach((button) => button.addEventListener("click", () => setMode(button.dataset.mode)));
 $("#save-button").addEventListener("click", saveCurrent);
-$("#conversation-button").addEventListener("click", startConversation);
+$("#conversation-button").addEventListener("click", () => startConversation());
+$("#conversation-menu-toggle").addEventListener("click", () => {
+  const open = $("#conversation-menu").classList.contains("hidden");
+  setConversationMenu(open);
+  if (open) $("#conversation-menu button").focus();
+});
+$$("[data-conversation-target]").forEach((button) => button.addEventListener("click", () => startConversation(button.dataset.conversationTarget)));
+document.addEventListener("click", (event) => { if (!event.target.closest(".conversation-split")) setConversationMenu(false); });
+$(".conversation-split").addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    setConversationMenu(false); $("#conversation-menu-toggle").focus(); event.preventDefault();
+  } else if (["ArrowDown", "ArrowUp"].includes(event.key)) {
+    setConversationMenu(true);
+    const items = $$("#conversation-menu button");
+    const next = (items.indexOf(document.activeElement) + (event.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+    items[next].focus(); event.preventDefault();
+  } else if (event.key === "Tab") setConversationMenu(false);
+});
 $("#refresh-button").addEventListener("click", () => refresh());
 $("#global-search").addEventListener("input", (event) => runSearch(event.target.value));
 $("#connections-open-docs").addEventListener("click", () => switchView("overview"));

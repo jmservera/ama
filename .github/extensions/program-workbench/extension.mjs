@@ -40,7 +40,7 @@ const canvas = createCanvas({
     if (!entry) {
       entry = await startProgramWorkbenchServer({
         initialPath: ctx.input?.initialPath,
-        requestConversation: (path) => requestConversation(session, path),
+        requestConversation: (path, options) => requestConversation(session, path, options),
       });
       servers.set(ctx.instanceId, entry);
     }

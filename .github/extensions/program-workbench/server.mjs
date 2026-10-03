@@ -54,11 +54,16 @@ export async function startProgramWorkbenchServer({ initialPath = "", repository
         if (req.method === "POST" && url.pathname === "/api/refresh") return sendJson(res, 200, { documents: await getIndex(repositoryRoot, true) });
         if (req.method === "POST" && url.pathname === "/api/start-conversation") {
           const body = await readBody(req);
+          const target = body.target ?? "current";
+          if (!["current", "new"].includes(target)) return sendJson(res, 400, { error: "Select current or new conversation." });
           const documents = await getIndex(repositoryRoot, true);
           const document = documents.find((item) => item.path === body.path && item.kind === "markdown");
           if (!document) return sendJson(res, 400, { error: "Select an indexed Markdown document." });
           if (!requestConversation) return sendJson(res, 503, { error: "The conversation handoff is unavailable." });
-          return sendJson(res, 202, { path: document.path, ...await requestConversation(document.path) });
+          return sendJson(res, 202, {
+            path: document.path,
+            ...await requestConversation(document.path, { target, absolutePath: join(repositoryRoot, document.path) }),
+          });
         }
         if (req.method === "GET" && url.pathname === "/api/document") {
           return sendJson(res, 200, await getIndexedDocument(url.searchParams.get("path"), repositoryRoot));

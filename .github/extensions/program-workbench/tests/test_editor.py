@@ -216,6 +216,33 @@ class EditorIntegrationTest(unittest.TestCase):
         self.page.wait_for_timeout(100)
         expect(self.page.locator(".toastui-editor-mode-switch")).to_be_in_viewport()
 
+    def test_conversation_split_button_defaults_and_menu(self):
+        requests = []
+        def reply(route):
+            requests.append(route.request.post_data_json)
+            route.fulfill(status=202, json={"agent": "pm", "messageId": "test"})
+        self.page.route("**/api/start-conversation", reply)
+        self.page.locator("#conversation-button").click()
+        self.assertEqual(requests[-1], {"path": "docs/fixture.md", "target": "current"})
+        self.page.locator("#conversation-menu-toggle").click()
+        expect(self.page.locator("#conversation-menu")).to_be_visible()
+        self.page.get_by_role("menuitem", name="Start new conversation", exact=True).click()
+        self.assertEqual(requests[-1]["target"], "new")
+        expect(self.page.locator("#conversation-menu")).to_be_hidden()
+        self.page.locator("#conversation-menu-toggle").click()
+        self.page.keyboard.press("Escape")
+        expect(self.page.locator("#conversation-menu")).to_be_hidden()
+        expect(self.page.locator("#conversation-menu-toggle")).to_be_focused()
+        self.page.locator("#conversation-menu-toggle").click()
+        self.page.get_by_role("menuitem", name="Start conversation", exact=True).click()
+        self.assertEqual(requests[-1]["target"], "current")
+        self.page.locator("#frontmatter-wrap summary").click()
+        self.page.locator("#frontmatter-editor").fill("---\ntitle: Unsaved\n---\n")
+        count = len(requests)
+        self.page.locator("#conversation-button").click()
+        self.assertEqual(len(requests), count)
+        expect(self.page.locator("#toast")).to_contain_text("Save or discard")
+
 
 if __name__ == "__main__":
     unittest.main()

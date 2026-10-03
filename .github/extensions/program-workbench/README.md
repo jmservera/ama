@@ -20,11 +20,18 @@ editor.
   Markdown mode blocks switching into WYSIWYG.
 * Fill the remaining visible page height in Edit mode. The editor scrolls
   internally; metadata and linked-record context have separate bounded scrolling.
-* Start a standalone chat with the selected saved Markdown file attached.
-  The button asks the current agent to stage a file copy, create a detached
-  chat and navigate to it. It requires an agent turn, not a direct host API.
+* Start conversation sends the selected saved Markdown file directly to the
+  current session, without staging a copy or creating another session. It
+  selects Product Manager Advisor when available, sends a brief acknowledgement
+  prompt with the file attached and asks the agent to focus the conversation.
+* Expand the split-button menu to choose Start conversation or Start new
+  conversation. The latter asks the current agent to stage a saved-file snapshot
+  and create a session inside the current project, not a detached standalone
+  chat. It inherits the project's default branch and selects the advisor for
+  the new session when available.
   Product Manager Advisor is selected by its stable ID when present in the
-  selectable agent list; otherwise the UI reports use of the default agent.
+  selectable agent list; otherwise the UI reports its absence and keeps the
+  current agent (or uses the default agent in a new session).
   Read-only documents can be discussed without relaxing their edit protections.
   Save or discard pending canvas edits first. The attachment is a snapshot,
   not a live repository connection.
@@ -59,7 +66,8 @@ installed. The tests use a temporary repository, never modify project documents,
 and cover mode switching, frontmatter, tables, relative links, source fallback,
 protected documents, saves and refresh while edits are pending.
 Run `node --test tests/conversation.test.mjs` to check advisor selection,
-standalone-chat request construction and conversation endpoint validation.
+current-session attachments, new-project-session request construction and
+conversation endpoint validation.
 
 ## Canvas Identity
 

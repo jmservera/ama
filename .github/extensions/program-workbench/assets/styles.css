@@ -103,6 +103,12 @@ kbd { border: 1px solid var(--line); background: color-mix(in srgb, var(--paper)
 .document-title-row h2 { margin: 7px 0 0; font: 31px/1.1 Georgia, serif; }
 .document-title-row p { margin: 6px 0 0; max-width: 760px; }
 .document-actions { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+.conversation-split { display: flex; position: relative; }
+.conversation-split > button:first-child { border-radius: 3px 0 0 3px; }
+#conversation-menu-toggle { border-radius: 0 3px 3px 0; border-left-color: var(--line); padding-inline: 10px; }
+.conversation-menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 10; min-width: 210px; padding: 4px; background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.conversation-menu button { width: 100%; min-height: 38px; padding: 8px 12px; text-align: left; border: 0; background: transparent; cursor: pointer; }
+.conversation-menu button:hover, .conversation-menu button:focus-visible { background: color-mix(in srgb, var(--moss) 12%, var(--panel)); }
 .segmented { display: flex; padding: 3px; border: 1px solid var(--line); background: var(--panel); border-radius: 4px; }
 .mode-button { min-height: 30px; padding: 4px 12px; border: 0; background: transparent; border-radius: 2px; cursor: pointer; color: var(--muted); }
 .mode-button.active { background: var(--moss); color: white; }
