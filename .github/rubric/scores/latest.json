@@ -1,12 +1,13 @@
 {
   "schema_version": 1,
   "source": "workflow",
-  "scored_at": "2026-10-03T18:08:51+00:00",
-  "commit": "e392f4ee37654ce773d7fcefe4405c7c4c415081",
+  "scored_at": "2026-10-03T20:38:28+00:00",
+  "commit": "22c4b11a68b124dba446964a00673caec0c8a146",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37142761506",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37151961201",
   "fingerprints": {
-    "brd": "ae2295d4ba1f21367730e23cfa0c3addbb727b5734df1bea55d584679f8a43fe"
+    "brd": "ae2295d4ba1f21367730e23cfa0c3addbb727b5734df1bea55d584679f8a43fe",
+    "prd": "0a5f905ec8cbec9a8d3fa5de651ce976c1d1c778d14eb00b942ddd004f578de7"
   },
   "total": 61,
   "sections": {
@@ -40,7 +41,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:963",
         "docs/brds/agentic-retrofit-programme-brd.md:992"
       ],
-      "rationale": "Named legislation, DPIA, segregation-of-duties and AI-risk controls are strong; no explicit attacker/threat model is stated."
+      "rationale": "Named legislation, DPIA, segregation-of-duties and AI-risk controls are strong; no explicit attacker/threat model is stated. PRD diff adds honest disclosure that systems/authority behind Excel coordination are unknown, but does not add a threat model."
     },
     "A4": {
       "score": 1,
@@ -62,14 +63,14 @@
         "docs/brds/agentic-retrofit-programme-brd.md:340",
         "docs/brds/agentic-retrofit-programme-brd.md:810"
       ],
-      "rationale": "Shadow-mode test design per capability is defined with stop criteria, but no evaluation harness exists and model choice is not yet justified."
+      "rationale": "Shadow-mode test design per capability is defined with stop criteria, but no evaluation harness exists and model choice is not yet justified. PRD changes do not add an evaluation harness."
     },
     "A7": {
       "score": 2,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:598"
       ],
-      "rationale": "Agent boundaries (recommend/draft/reconcile/flag) and handoffs are well defined, but no autonomous behaviour has been demonstrated."
+      "rationale": "Agent boundaries (recommend/draft/reconcile/flag) and handoffs are well defined, but no autonomous behaviour has been demonstrated. PRD diff adds no new agentic evidence."
     },
     "B1": {
       "score": 4,
@@ -113,7 +114,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:941",
         "docs/brds/retrofit-flow-discovery-brief.md:1"
       ],
-      "rationale": "Extensive, cross-referenced, traceable documentation across two linked files with identifier schemes; still dense and reader-effort heavy in places, and no accompanying slide deck."
+      "rationale": "Extensive, cross-referenced, traceable documentation; still dense and no accompanying slide deck. PRD adds a clearer, well-structured Open Questions table (docs/prds/proper-warm-retrofit-programme-demonstrator.md:522-545) but this is incremental, not a step-change in navigability."
     },
     "B7": {
       "score": 4,
@@ -129,7 +130,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:530",
         "docs/brds/agentic-retrofit-programme-brd.md:1215"
       ],
-      "rationale": "Stakeholders, constraints, quantified value at stake (GBP 312m scenario) and cost of inaction are explicit and interrogated rather than merely restated."
+      "rationale": "Stakeholders, constraints, quantified value at stake (GBP 312m scenario) and cost of inaction are explicit and interrogated. PRD's new Open Questions table (docs/prds/proper-warm-retrofit-programme-demonstrator.md:522-545) further names real accountable functions and gates but score was already m..."
     },
     "C2": {
       "score": 2,
