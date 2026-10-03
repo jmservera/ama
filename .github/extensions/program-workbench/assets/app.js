@@ -152,6 +152,7 @@ async function openDocument(path) {
     const editButton = $('.mode-button[data-mode="edit"]');
     editButton.disabled = !doc.editable;
     editButton.title = doc.editable ? "Edit this Markdown document" : doc.readOnlyReason;
+    $("#agent-editor-button").disabled = !doc.editable;
     renderContextLinks("#outgoing-links", doc.outgoing || []);
     renderContextLinks("#backlinks", doc.backlinks || []);
     $$(".library-document").forEach((button) => button.classList.toggle("active", button.dataset.path === path));
@@ -178,6 +179,18 @@ async function saveCurrent() {
   } catch (error) { showToast(`Save failed: ${error.message}`); }
 }
 
+async function openEditorViaAgent() {
+  if (!state.current?.editable) return;
+  if (state.dirty) { showToast("Save or discard canvas edits before opening the app editor."); return; }
+  const button = $("#agent-editor-button");
+  button.disabled = true;
+  try {
+    await api("/api/open-editor", { method: "POST", body: JSON.stringify({ path: state.current.path }) });
+    showToast("Editor request sent to the agent. Opening may take an agent turn.");
+  } catch (error) { showToast(`Editor request failed: ${error.message}`); }
+  finally { button.disabled = !state.current?.editable; }
+}
+
 let searchTimer;
 async function runSearch(query) {
   clearTimeout(searchTimer);
@@ -193,9 +206,25 @@ async function runSearch(query) {
   }, 220);
 }
 
-async function refresh() {
-  try { const data = await api("/api/refresh", { method: "POST", body: "{}" }); state.documents = data.documents; renderLibrary(); renderOverview(); showToast("Document index refreshed."); }
+let refreshing = false;
+async function refresh(notify = true) {
+  if (refreshing) return;
+  refreshing = true;
+  const path = state.current?.path;
+  const view = state.view;
+  const scrollTop = $("#main").scrollTop;
+  try {
+    const data = await api("/api/refresh", { method: "POST", body: "{}" });
+    state.documents = data.documents; renderLibrary(); renderOverview();
+    if (path && !state.dirty) {
+      await openDocument(path);
+      switchView(view);
+      $("#main").scrollTop = scrollTop;
+    }
+    if (notify) showToast("Document index refreshed.");
+  }
   catch (error) { showToast(error.message); }
+  finally { refreshing = false; }
 }
 
 async function initialize() {
@@ -209,7 +238,8 @@ $$('.rail-button').forEach((button) => button.addEventListener("click", () => sw
 $$('.mode-button').forEach((button) => button.addEventListener("click", () => setMode(button.dataset.mode)));
 $("#markdown-editor").addEventListener("input", () => setDirty($("#markdown-editor").value !== state.current?.content));
 $("#save-button").addEventListener("click", saveCurrent);
-$("#refresh-button").addEventListener("click", refresh);
+$("#agent-editor-button").addEventListener("click", openEditorViaAgent);
+$("#refresh-button").addEventListener("click", () => refresh());
 $("#global-search").addEventListener("input", (event) => runSearch(event.target.value));
 $("#connections-open-docs").addEventListener("click", () => switchView("overview"));
 window.addEventListener("keydown", (event) => {
@@ -217,4 +247,6 @@ window.addEventListener("keydown", (event) => {
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") { event.preventDefault(); $("#global-search").focus(); }
 });
 window.addEventListener("beforeunload", (event) => { if (state.dirty) { event.preventDefault(); event.returnValue = ""; } });
+window.addEventListener("focus", () => refresh(false));
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(false); });
 initialize();
