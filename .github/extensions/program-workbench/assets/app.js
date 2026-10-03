@@ -1,8 +1,11 @@
+import { createDocumentEditor } from "./markdown-editor.js";
+
 const token = document.querySelector('meta[name="canvas-token"]').content;
 const initialPath = decodeURIComponent(document.querySelector('meta[name="initial-path"]').content || "");
 const state = { documents: [], current: null, dirty: false, mode: "preview", view: "overview" };
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
+const documentEditor = createDocumentEditor((content) => setDirty(content !== state.current?.content));
 const api = async (path, options = {}) => {
   const response = await fetch(path, { ...options, headers: { "Content-Type": "application/json", "X-Canvas-Token": token, ...(options.headers || {}) } });
   const data = await response.json();
@@ -104,6 +107,7 @@ function renderLibrary() {
     const list = button.nextElementSibling; list.classList.toggle("hidden"); button.setAttribute("aria-expanded", String(!list.classList.contains("hidden")));
   }));
   $$(".library-document").forEach((button) => button.addEventListener("click", () => openDocument(button.dataset.path)));
+  $$(".library-document").forEach((button) => button.classList.toggle("active", button.dataset.path === state.current?.path));
 }
 
 function renderOverview() {
@@ -131,19 +135,23 @@ function renderContextLinks(selector, paths) {
   container.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => openDocument(button.dataset.path)));
 }
 
-async function openDocument(path) {
+let documentRequest = 0;
+async function openDocument(path, refreshOnly = false) {
   const summary = state.documents.find((doc) => doc.path === path);
   if (!summary) return;
   if (summary.kind !== "markdown") { showToast("Presentations and visual files are read-only in version one."); return; }
   if (state.dirty && !confirm("Discard unsaved changes and open another document?")) return;
+  const request = ++documentRequest;
   try {
     const doc = await api(`/api/document?path=${encodeURIComponent(path)}`);
+    if (request !== documentRequest) return;
+    if (refreshOnly && (state.dirty || state.current?.path !== path || state.current.content === doc.content)) return;
     state.current = doc; setDirty(false); switchView("documents");
     $("#document-title").textContent = doc.title;
     $("#document-description").textContent = doc.description || doc.excerpt;
     $("#evidence-badge").textContent = doc.evidence;
     $("#breadcrumbs").textContent = doc.path.split("/").slice(0, -1).join("  /  ");
-    $("#markdown-editor").value = doc.content;
+    documentEditor.load(doc.content);
     $("#markdown-preview").innerHTML = renderMarkdown(doc.content);
     $("#meta-updated").textContent = doc.date;
     $("#meta-path").textContent = doc.path;
@@ -157,7 +165,6 @@ async function openDocument(path) {
     renderContextLinks("#backlinks", doc.backlinks || []);
     $$(".library-document").forEach((button) => button.classList.toggle("active", button.dataset.path === path));
     setMode("preview");
-    $("#markdown-preview").querySelectorAll("[data-doc-path]").forEach((link) => link.addEventListener("click", (event) => { event.preventDefault(); openDocument(link.dataset.docPath); }));
   } catch (error) { showToast(error.message); }
 }
 
@@ -167,15 +174,24 @@ function setMode(mode) {
   $$(".mode-button").forEach((button) => button.classList.toggle("active", button.dataset.mode === mode));
   $("#markdown-preview").classList.toggle("hidden", mode !== "preview");
   $("#editor-wrap").classList.toggle("hidden", mode !== "edit");
-  if (mode === "preview" && state.current) $("#markdown-preview").innerHTML = renderMarkdown($("#markdown-editor").value);
-  if (mode === "edit") $("#markdown-editor").focus();
+  if (mode === "preview" && state.current) {
+    $("#markdown-preview").innerHTML = renderMarkdown(documentEditor.getContent());
+    $("#markdown-preview").querySelectorAll("[data-doc-path]").forEach((link) => link.addEventListener("click", (event) => { event.preventDefault(); openDocument(link.dataset.docPath); }));
+  }
+  if (mode === "edit") documentEditor.focus();
 }
 
 async function saveCurrent() {
   if (!state.current?.editable || !state.dirty) return;
   try {
-    const result = await api("/api/document", { method: "PUT", body: JSON.stringify({ path: state.current.path, content: $("#markdown-editor").value }) });
-    state.current.content = $("#markdown-editor").value; state.current.modified = result.savedAt; setDirty(false); showToast("Markdown saved to the repository.");
+    const doc = state.current;
+    const content = documentEditor.getContent();
+    const result = await api("/api/document", { method: "PUT", body: JSON.stringify({ path: doc.path, content }) });
+    if (state.current === doc) {
+      doc.content = content; doc.modified = result.savedAt;
+      setDirty(documentEditor.getContent() !== content);
+    }
+    showToast("Markdown saved to the repository.");
   } catch (error) { showToast(`Save failed: ${error.message}`); }
 }
 
@@ -212,13 +228,15 @@ async function refresh(notify = true) {
   refreshing = true;
   const path = state.current?.path;
   const view = state.view;
+  const mode = state.mode;
   const scrollTop = $("#main").scrollTop;
   try {
     const data = await api("/api/refresh", { method: "POST", body: "{}" });
     state.documents = data.documents; renderLibrary(); renderOverview();
-    if (path && !state.dirty) {
-      await openDocument(path);
+    if (path && !state.dirty && state.current?.path === path) {
+      await openDocument(path, true);
       switchView(view);
+      setMode(mode);
       $("#main").scrollTop = scrollTop;
     }
     if (notify) showToast("Document index refreshed.");
@@ -236,7 +254,6 @@ async function initialize() {
 
 $$('.rail-button').forEach((button) => button.addEventListener("click", () => switchView(button.dataset.view)));
 $$('.mode-button').forEach((button) => button.addEventListener("click", () => setMode(button.dataset.mode)));
-$("#markdown-editor").addEventListener("input", () => setDirty($("#markdown-editor").value !== state.current?.content));
 $("#save-button").addEventListener("click", saveCurrent);
 $("#agent-editor-button").addEventListener("click", openEditorViaAgent);
 $("#refresh-button").addEventListener("click", () => refresh());

@@ -8,7 +8,16 @@ editor.
 
 * Browse the programme spine and the complete documentation library.
 * Search Markdown titles, descriptions, paths and content.
-* Render and edit Markdown with explicit save status and `Ctrl+S`.
+* Render Markdown and edit it with TOAST UI Editor's built-in Markdown/WYSIWYG
+  mode switch, explicit save status and `Ctrl+S`.
+* Keep YAML frontmatter outside the visual editor in an expandable source field.
+  Opening a document or toggling modes without editing preserves the original
+  source, including line endings. Visual edits can normalize Markdown formatting.
+* Use the full-source textarea for detected callouts, diagrams, raw HTML,
+  reference definitions, images and other guarded syntax rather than risk losing
+  it through visual conversion. Detection is conservative, not a guarantee of
+  lossless round-tripping for every Markdown extension. Adding guarded syntax in
+  Markdown mode blocks switching into WYSIWYG.
 * Test an experimental "Open editor via agent" handoff to the app's native
   editor. The button sends a navigation-only request to the current agent;
   it is not a direct Files-tab API and requires an agent turn. Protected
@@ -21,9 +30,24 @@ editor.
   memory from accidental edits.
 * Discover presentation and visual files as read-only version-one records.
 
-The extension has no external runtime dependencies. It binds one ephemeral
+The extension needs no runtime package installation: pinned editor assets are
+bundled locally under `assets/vendor/`, with license notices. Usage telemetry is
+disabled, and rendering uses a separately maintained DOMPurify sanitizer.
+The canvas does not load scripts, images or styles from external hosts.
+It binds one ephemeral
 HTTP server per open canvas instance to `127.0.0.1` and restricts API calls with
 an instance token.
+
+## Building and Checking Editor Assets
+
+From this extension folder, run `npm ci --ignore-scripts` and `npm run build`
+after changing dependencies. The build uses a portable WebAssembly bundler.
+The Copilot SDK remains supplied by the runtime and is not an npm dependency.
+
+Run `python tests/test_editor.py` with Python Playwright and its Chromium browser
+installed. The tests use a temporary repository, never modify project documents,
+and cover mode switching, frontmatter, tables, relative links, source fallback,
+protected documents, saves and refresh while edits are pending.
 
 ## Canvas Identity
 

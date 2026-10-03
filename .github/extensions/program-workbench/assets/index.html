@@ -6,6 +6,7 @@
   <meta name="canvas-token" content="__CANVAS_TOKEN__">
   <meta name="initial-path" content="__INITIAL_PATH__">
   <title>Program Workbench</title>
+  <link rel="stylesheet" href="/vendor/toastui-editor.css">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -92,7 +93,16 @@
         </header>
         <div class="document-layout">
           <article id="markdown-preview" class="markdown-preview" aria-label="Rendered document"></article>
-          <label id="editor-wrap" class="editor-wrap hidden"><span class="sr-only">Markdown editor</span><textarea id="markdown-editor" spellcheck="true"></textarea></label>
+          <section id="editor-wrap" class="editor-wrap hidden" aria-label="Document editor">
+            <p id="editor-note" class="readonly-note hidden" role="note"></p>
+            <details id="frontmatter-wrap" class="frontmatter-wrap hidden">
+              <summary>Document metadata (YAML source)</summary>
+              <label for="frontmatter-editor" class="sr-only">YAML frontmatter including delimiters</label>
+              <textarea id="frontmatter-editor" spellcheck="false"></textarea>
+            </details>
+            <div id="visual-editor"></div>
+            <label id="source-editor-wrap" class="hidden"><span class="sr-only">Markdown source editor</span><textarea id="markdown-editor" spellcheck="false"></textarea></label>
+          </section>
           <aside class="context-panel" aria-label="Document context">
             <section><p class="eyebrow">OUTGOING</p><div id="outgoing-links" class="context-links"></div></section>
             <section><p class="eyebrow">REFERENCED BY</p><div id="backlinks" class="context-links"></div></section>
@@ -112,6 +122,7 @@
     </main>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/vendor/toastui-editor.js"></script>
   <script src="/app.js" type="module"></script>
 </body>
 </html>

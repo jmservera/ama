@@ -1,0 +1,12 @@
+{
+  "name": "program-workbench-assets",
+  "private": true,
+  "scripts": {
+    "build": "node vendor-editor.mjs"
+  },
+  "devDependencies": {
+    "@toast-ui/editor": "3.2.2",
+    "dompurify": "3.4.16",
+    "esbuild-wasm": "0.28.2"
+  }
+}

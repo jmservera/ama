@@ -76,13 +76,18 @@ export async function startProgramWorkbenchServer({ initialPath = "", repository
         return sendJson(res, 404, { error: "Canvas endpoint not found." });
       }
 
-      const assetMap = { "/": "index.html", "/app.js": "app.js", "/styles.css": "styles.css" };
+      const assetMap = {
+        "/": "index.html", "/app.js": "app.js", "/styles.css": "styles.css",
+        "/markdown-editor.js": "markdown-editor.js",
+        "/vendor/toastui-editor.js": "vendor/toastui-editor.js",
+        "/vendor/toastui-editor.css": "vendor/toastui-editor.css",
+      };
       const asset = assetMap[url.pathname];
       if (!asset) { res.writeHead(404); return res.end("Not found"); }
       let content = await readFile(join(assetsDirectory, asset), "utf8");
       if (asset === "index.html") {
         content = content.replace("__CANVAS_TOKEN__", token).replace("__INITIAL_PATH__", encodeURIComponent(initialPath));
-        res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'");
+        res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'");
       }
       const type = extname(asset) === ".js" ? "text/javascript" : extname(asset) === ".css" ? "text/css" : "text/html";
       res.writeHead(200, { "Content-Type": `${type}; charset=utf-8`, "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" });
