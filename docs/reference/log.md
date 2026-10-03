@@ -679,3 +679,20 @@ metadata when the knowledge base was created.
   expanded agent authority is approved by this assessment.
 * Updated the knowledge-base index. The original case study, BRD requirements
   and owner-controlled memory remain unchanged.
+
+## [2026-10-03] create | Draft platform assessment PRD
+
+* Trigger: the owner asked to present full Azure, business-app and mixed
+  approaches to the `company-*` role profiles, then draft a PRD.
+* Consulted the eight role profiles for bounded perspectives on asset,
+  programme delivery, finance, procurement, residents, data, safety and
+  frontline workflow. Their views are labelled as sector-informed hypotheses,
+  not company facts, resident evidence or approvals.
+* Added `docs/project-planning/proper-warm-retrofit-programme-demonstrator.md`
+  and its `.copilot-tracking/prd-sessions/` state file from the canonical PRD
+  template. The draft keeps platform selection open and scopes an options gate
+  plus a synthetic-data, non-production demonstrator.
+* No signed `BRD_TO_PRD_HANDOFF_V1` was available. The PRD records the upstream
+  BRD's draft status and the need to reconcile its latest quality evidence
+  before PRD validation.
+* Updated this index. The PRD is not approved for implementation.

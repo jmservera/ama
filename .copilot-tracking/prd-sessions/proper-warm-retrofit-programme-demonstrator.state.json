@@ -1,0 +1,129 @@
+{
+  "prdFile": "docs/project-planning/proper-warm-retrofit-programme-demonstrator.md",
+  "lastAccessed": "2026-10-03T12:09:35+02:00",
+  "currentPhase": "build",
+  "disclaimerShownAt": "2026-10-03T12:09:35+02:00",
+  "phaseSkillsLoaded": [
+    "prd-author#assess",
+    "prd-author#discover",
+    "prd-author#create",
+    "prd-author#build",
+    "prd-author#integrate"
+  ],
+  "questionsAsked": [
+    "prd-boundary-confirmation"
+  ],
+  "answeredQuestions": {
+    "initiative-name": "Proper Warm Retrofit Programme Demonstrator and Platform Assessment",
+    "business-context": "Draft a product requirements document for a non-production retrofit programme demonstrator and platform comparison, derived from BRD-2026-AMA48-001 version 0.6.0.",
+    "option-set": "Compare full Azure custom development, business apps (Power Apps, Dataverse, Power Automate, Copilot Studio and SharePoint; Dynamics 365 only if present), and an Azure control plane with M365 collaboration/documents and optional Copilot Studio channels.",
+    "owner-platform-preference": "The owner prefers Azure for the AMA capstone and Solution Architect practice, but requested objective assessment of all options. This is not a customer platform decision.",
+    "role-profile-review": "All eight company-* role profiles were asked for a role-specific challenge on 2026-10-03. Their responses are sector-informed hypotheses and unknowns, not company facts, resident evidence or approvals.",
+    "mvp-boundary": "Proposed non-production, synthetic-data demonstrator; compare all options consistently and build only the candidate authorized at a platform decision gate. No production integrations, live resident contact or operational authority."
+  },
+  "referencesProcessed": [
+    {
+      "file": "docs/case_study_48_original.md",
+      "status": "analyzed",
+      "timestamp": "2026-10-03T12:09:35+02:00",
+      "keyFindings": "60,000-home housing association case study; retrofit coordination, grant, resident consent, assessment and quality aspirations. Initial autonomy statements are superseded by later critical assessment and the BRD.",
+      "integratedSections": [
+        "Product Context",
+        "Users and Personas",
+        "Risks and Assumptions"
+      ],
+      "conflicts": [
+        "Initial agent autonomy framing conflicts with later bounded-AI controls; the draft follows the current BRD and addendum."
+      ],
+      "pendingActions": []
+    },
+    {
+      "file": "docs/brds/agentic-retrofit-programme-brd.md",
+      "status": "analyzed",
+      "timestamp": "2026-10-03T12:09:35+02:00",
+      "keyFindings": "Draft v0.6.0 describes non-production demonstrator, deterministic gates, human authority, synthetic or approved de-identified cases, portable evidence, failure controls and option appraisal. No signed BRD_TO_PRD_HANDOFF_V1 payload was located; BRD remains draft.",
+      "integratedSections": [
+        "Product Context",
+        "Functional Requirements",
+        "Non-Functional Requirements",
+        "Constraints",
+        "Traceability Matrix"
+      ],
+      "conflicts": [],
+      "pendingActions": [
+        "Validate against latest BRD quality report and approved handoff before PRD validation."
+      ]
+    },
+    {
+      "file": "docs/case_study_48_addendum.md#implementation-options-and-provisional-platform-recommendation",
+      "status": "analyzed",
+      "timestamp": "2026-10-03T12:09:35+02:00",
+      "keyFindings": "Compares Azure custom, business-platform-led and Azure-led hybrid; recommendation is conditional, with current systems, licences, APIs, operating skills and costs unknown.",
+      "integratedSections": [
+        "Options presented to the Proper Warm role profiles",
+        "Design Decisions",
+        "MVP and Release Framing"
+      ],
+      "conflicts": [],
+      "pendingActions": []
+    },
+    {
+      "file": "docs/reference/research/company/company-profile-research.md",
+      "status": "analyzed",
+      "timestamp": "2026-10-03T12:09:35+02:00",
+      "keyFindings": "Used for company role and company-fact boundaries; platform estate details remain unknown.",
+      "integratedSections": [
+        "Evidence status and source readiness",
+        "Users and Personas",
+        "Risks and Assumptions"
+      ],
+      "conflicts": [],
+      "pendingActions": []
+    },
+    {
+      "file": "company-* role-profile challenge (Asset Executive, Retrofit Programme Manager, Finance and Grants, Procurement and Contracts, Resident Engagement, Data and Performance, Building Safety, Neighbourhood Housing Officer)",
+      "status": "analyzed",
+      "timestamp": "2026-10-03T12:09:35+02:00",
+      "keyFindings": "Role-profile hypotheses converge on an evidence-first comparison: no justified platform winner; mixed is a candidate to test, business apps could win if existing estate fits; require whole-life cost, support, authority, accessibility, source-of-truth and failure-recovery evidence. No direct resident research or company evidence resulted.",
+      "integratedSections": [
+        "Options presented to the Proper Warm role profiles",
+        "Functional Requirements",
+        "Success Metrics",
+        "Risks and Assumptions"
+      ],
+      "conflicts": [],
+      "pendingActions": [
+        "Validate role-profile hypotheses with actual company owners and residents where relevant."
+      ]
+    }
+  ],
+  "nextActions": [
+    "Confirm the product boundary: comparative assessment plus one selected-option demonstrator, or a different scope.",
+    "Name sponsor, product owner, technical lead and control reviewers.",
+    "Obtain the signed BRD_TO_PRD_HANDOFF_V1 payload and current BRD quality findings before Validate.",
+    "Inventory actual systems of record, Dynamics 365/Power Platform/M365/Azure entitlements, APIs, supplier contracts and support capability.",
+    "Agree the option evaluation criteria, scoring weights, cost categories, affordability ceiling and decision authority before scoring.",
+    "Confirm representative journey scenarios and synthetic evidence model with Retrofit, Safety, Finance, Resident Engagement and Data owners.",
+    "Set calendar horizon, test workload, performance targets, accessibility standard, usability protocol and AI evaluation thresholds.",
+    "Validate resident-facing assumptions with direct research before including a live resident product journey.",
+    "Run PRD quality reviewer only after discovery and build gaps are addressed."
+  ],
+  "qualityChecks": [
+    "three-platform-options-explicit",
+    "role-profile-input-labelled-as-hypotheses",
+    "owner-azure-preference-separated-from-customer-decision",
+    "no-signed-brd-handoff-claimed",
+    "no-production-authority-or-live-resident-contact-in-mvp",
+    "functional-requirements-linked-to-acceptance-and-goals",
+    "traceability-coverage-computed",
+    "metrics-marked-provisional-where-baseline-unknown",
+    "disclaimer-displayed-and-included"
+  ],
+  "userPreferences": {
+    "detail-level": "comprehensive",
+    "question-style": "agent-assisted",
+    "working-association-name": "Proper North Homes",
+    "working-programme-name": "Proper Warm",
+    "platform-preference": "Owner prefers Azure for AMA but wants all three approaches objectively assessed."
+  }
+}
