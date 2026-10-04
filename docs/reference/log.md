@@ -929,3 +929,21 @@ metadata when the knowledge base was created.
   payload. The persisted v0.8.0 report remains the latest valid quality
   assessment, not a current v0.12.0 review; Define remains unverified and
   blocked pending a valid paired assessment.
+
+## [2026-10-04] update | Align PRD with BRD v0.12.0 missed-appointment rule
+
+* Reviewed `docs/prds/proper-warm-retrofit-programme-demonstrator.md` against
+  BRD v0.12.0 RULE-006/AC-025. Updated candidate FR-014 and AC-016 to reflect
+  the configurable provisional default of five, strict greater-than trigger,
+  eligible resident no-access event, active-case counting, human-closure
+  reset, audit retention, no adverse inference and urgent-hazard bypass.
+* Limited the acceptance behavior to synthetic, non-production scenarios.
+  Added OQ-009 for company appointment evidence, Housing/Repairs ratification,
+  Resident Engagement review and configuration/change ownership. Five remains
+  an owner-directed provisional value, not a validated sector norm or company
+  policy; operational use remains blocked under BRD OD-40.
+* The owner confirmed that FR-014 should be exercised in synthetic acceptance
+  tests only; no operational approval was inferred.
+* Bumped the PRD to v0.5.0 and updated its session state and this catalog.
+  The PRD remains draft: no signed BRD handoff or current v0.12.0 quality
+  report is available, and OQ-001 to OQ-009 remain open.
