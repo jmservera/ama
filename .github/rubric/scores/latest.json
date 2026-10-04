@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "source": "workflow",
-  "scored_at": "2026-10-04T16:41:01+00:00",
-  "commit": "ecf6fc807f1aa6608f87e128da9cb3f168437839",
+  "scored_at": "2026-10-04T21:27:08+00:00",
+  "commit": "30dd292f84ac98eb7e913ddba7ed53585863bb27",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37217224923",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37235795486",
   "fingerprints": {
-    "brd": "297b8f72f54763e35054d7fa828cf52884327a35e66c6b9a2871dcce75a07236",
+    "brd": "7aa429c9f1652392a4535efac0ed13e4d4388cb7fc5fc6194d229ada77050915",
     "prd": "f78b3dbeb2eadfc80238b767009b3ff7037e9b597345d5551fedff1409e761b6"
   },
   "total": 66,
@@ -25,15 +25,15 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:176",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:182"
       ],
-      "rationale": "Component Contracts and Failure Domains table still names each component's interface, data ownership and fallback behaviour; the changed BRD file does not touch architecture content."
+      "rationale": "BRD change this round touches contract/scope wording, not architecture; prior Component Contracts and Failure Domains table still supports this score."
     },
     "A2": {
       "score": 5,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:312",
-        "docs/brds/agentic-retrofit-programme-brd.md:353"
+        "docs/brds/agentic-retrofit-programme-brd.md:1493",
+        "docs/brds/agentic-retrofit-programme-brd.md:1549"
       ],
-      "rationale": "Cross-functional challenge table naming each agent, alternative and rejection rationale is unchanged by this diff; the RULE-006 escalation detail is a single control refinement, not new trade-off analysis."
+      "rationale": "New role-profile challenge table adds a second review cycle showing trade-offs named, challenged and resolved (RULE-006 semantics) or explicitly left open (BG-011), reinforcing reasoning rigor."
     },
     "A3": {
       "score": 5,
@@ -41,14 +41,14 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:192",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:198"
       ],
-      "rationale": "Threat Model table in the PRD is unaffected by this BRD-only diff; the new OD-30 contract-verification bullet is a scope note, not a security/compliance control."
+      "rationale": "Threat model lives in the PRD, unaffected by this BRD-only change."
     },
     "A4": {
       "score": 1,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:1745"
       ],
-      "rationale": "Still only design documents and a planned non-production demonstrator; nothing in the diff adds working implementation evidence."
+      "rationale": "Still only design documents; no working implementation evidence added."
     },
     "A5": {
       "score": 3,
@@ -56,7 +56,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:363",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:372"
       ],
-      "rationale": "New BG-11 measurement-protocol detail (docs/brds/agentic-retrofit-programme-brd.md:562-573) is a business-KPI measurement plan, not system observability, reliability or cost instrumentation, so it does not move this criterion."
+      "rationale": "Operations evidence lives in the PRD; BRD changes refine BG-011 measurement protocol discussion but add no instrumentation evidence."
     },
     "A6": {
       "score": 4,
@@ -64,7 +64,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:407",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:420"
       ],
-      "rationale": "AI Model Selection and Evaluation Harness section in the PRD is untouched by this BRD-only diff."
+      "rationale": "AI evaluation harness lives in the PRD, unaffected by this BRD-only change."
     },
     "A7": {
       "score": 3,
@@ -72,106 +72,103 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:435",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:443"
       ],
-      "rationale": "Agent Orchestration Pattern section in the PRD is unchanged; the RULE-006 escalation rule is a deterministic control edit, not new orchestration evidence."
+      "rationale": "Orchestration pattern lives in the PRD; BRD's RULE-006 refinement defines a rule's configuration semantics but not autonomous orchestration."
     },
     "B1": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:108",
-        "docs/brds/agentic-retrofit-programme-brd.md:1215"
+        "docs/brds/agentic-retrofit-programme-brd.md:1493"
       ],
-      "rationale": "Board Decision Narrative connects problem, stakes, options and recommendation; no live delivery evidence exists to assess argument landing with an audience."
+      "rationale": "Live criterion; no live delivery evidence exists, keep baseline from written narrative coherence."
     },
     "B2": {
       "score": 3,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:623"
       ],
-      "rationale": "Document explicitly designs explanations for resident, staff, funder/regulator/Board audiences, but this is written register calibration, not observed live delivery."
+      "rationale": "Live criterion; written register calibration unchanged by this diff, no live delivery evidence."
     },
     "B3": {
       "score": 1,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:697"
       ],
-      "rationale": "No demo exists yet; only a plan for a future non-production demonstrator is described."
+      "rationale": "Live criterion; still only a plan for a future demonstrator, no demo evidence."
     },
     "B4": {
       "score": 2,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:427"
+        "docs/brds/agentic-retrofit-programme-brd.md:1549"
       ],
-      "rationale": "Sponsor discovery questions anticipate challenge areas, but there is no live Q&A evidence to assess composure under pressure."
+      "rationale": "Live criterion; new Executive Reviewer CHANGES_REQUESTED cycle shows anticipated challenge handling in writing, but no live Q&A evidence exists."
     },
     "B5": {
       "score": 1,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:1"
       ],
-      "rationale": "No timed delivery or rehearsal evidence exists in the repository."
+      "rationale": "Live criterion; no timed delivery or rehearsal evidence in the repository."
     },
     "B6": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:941",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:661"
+        "docs/brds/agentic-retrofit-programme-brd.md:1493",
+        "docs/brds/agentic-retrofit-programme-brd.md:1558"
       ],
-      "rationale": "New CHANGES_REQUESTED narrative (docs/brds/agentic-retrofit-programme-brd.md:553-573) adds further reader-effort-heavy prose with no accompanying slide deck, consistent with the existing baseline assessment."
+      "rationale": "New Owner Direction and Role-Profile Challenge section and expanded RULE-006/OD-40 rows add dense, well cross-referenced documentation, but remain reader-effort heavy prose tables with no deck."
     },
     "B7": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:447",
-        "docs/brds/agentic-retrofit-programme-brd.md:553"
+        "docs/brds/agentic-retrofit-programme-brd.md:1122",
+        "docs/brds/agentic-retrofit-programme-brd.md:1558"
       ],
-      "rationale": "BG-007 and BG-011 wording refinements keep quantified data points carefully labelled as owner statements and an unratified reviewer decision, not new interpreted evidence or visuals."
+      "rationale": "RULE-006 now carries precise quantified configuration semantics (threshold, comparator, event categories) clearly labelled as owner-directed draft, not new interpreted evidence or visuals."
     },
     "C1": {
       "score": 5,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:530",
-        "docs/brds/agentic-retrofit-programme-brd.md:562"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:665"
       ],
-      "rationale": "New OD-18 ratification checklist (population, baseline, MDE) adds further named, accountable discovery criteria, reinforcing the already-strong Open Questions framing."
+      "rationale": "Stakeholders, constraints and quantified value at stake remain explicit; new OD-40 and role-profile table keep naming accountable owners per gap."
     },
     "C2": {
       "score": 2,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:312"
+        "docs/brds/agentic-retrofit-programme-brd.md:1549"
       ],
-      "rationale": "Written role-agent challenge shows disagreement being recorded and addressed, but there is no live session evidence of real-time listening or disagreement navigation."
+      "rationale": "Live criterion; written record of disagreement (CHANGES_REQUESTED cycles) resolved across versions shows good process discipline, but still no live-session evidence of real-time listening or disagreement navigation."
     },
     "C3": {
       "score": 5,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:553",
-        "docs/brds/agentic-retrofit-programme-brd.md:559"
+        "docs/brds/agentic-retrofit-programme-brd.md:1536",
+        "docs/brds/agentic-retrofit-programme-brd.md:1558"
       ],
-      "rationale": "New passage explicitly states the Executive Reviewer's CHANGES_REQUESTED decision and clarifies owner confirmation is not company approval, reinforcing intellectual honesty already at the ceiling score."
+      "rationale": "New text explicitly states public evidence does not validate the five-event threshold and keeps owner direction distinct from ratified company practice, reinforcing intellectual honesty."
     },
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:251",
-        "docs/brds/agentic-retrofit-programme-brd.md:562"
+        "docs/brds/agentic-retrofit-programme-brd.md:1493",
+        "docs/brds/agentic-retrofit-programme-brd.md:1558"
       ],
-      "rationale": "New OD-18 ratification criteria list is further original internal design synthesis, but remains internal design work rather than direct company engagement evidence, unchanged from baseline category."
+      "rationale": "New multi-round role-profile challenge and refined rule semantics are substantial original synthesis actionable by another architect, still grounded in internal design rather than direct company engagement."
     },
     "D2": {
       "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:2",
         "docs/brds/agentic-retrofit-programme-brd.md:2"
       ],
-      "rationale": "Version bump to 0.9.0 with updated last_updated date continues clear revision tracking, consistent with baseline; still not a standalone publishable piece."
+      "rationale": "Structured, cited, version-controlled (v0.12.0) with clear revision tracking, but still not a standalone publishable piece separate from the BRD/PRD apparatus."
     },
     "D3": {
       "score": 1,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1",
-        "docs/reference/method/ama-capstone-assessment-guide.md:140"
+        "docs/brds/agentic-retrofit-programme-brd.md:1"
       ],
-      "rationale": "No publication, filing or external dissemination path is recorded anywhere in the repository; produced for the rubric and internal programme use only."
+      "rationale": "No publication, filing or external dissemination path recorded anywhere in the repository."
     }
   }
 }
