@@ -347,6 +347,7 @@ You score the AMA capstone portfolio in this repository against the FY27 Azure M
 * Live-scored criteria (`live_criteria`) are judged by the panel during the session. Score them only as readiness from deck, pitch or rehearsal evidence. Without such evidence keep the baseline score; in bootstrap and calibration runs, score them from the written evidence alone and keep them low when nothing demonstrates live delivery.
 * Score what the repository shows today. Do not reward intentions, plans or promises as if they were delivered, and do not invent evidence.
 * Use `path:line` evidence references with repository-relative paths.
+* The `criteria` object must contain exactly the 20 criterion IDs in `.github/rubric/rubric.json`: no missing IDs, unlisted IDs, aliases, suffixes (such as `A1_unused`), or placeholder entries.
 * When `bootstrap` is true, score every criterion from scratch with evidence.
 * When `calibration` is true, the baseline is withheld on purpose. Do not read `.github/rubric/scores/latest.json` or its history. Score every criterion from scratch with evidence; the result is reported but not recorded.
 

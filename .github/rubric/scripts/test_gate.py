@@ -61,6 +61,20 @@ def test_given_equal_scores_when_evaluated_then_passes():
     assert (result["passed"], result["total"]) == (True, 61)
 
 
+def test_given_unknown_criterion_when_evaluated_then_fails_with_actionable_error():
+    # Arrange
+    criteria = seed_scores()
+    criteria["A1_unused"] = None
+    items = scorecard_items(criteria)
+
+    # Act
+    result = run(workflow_baseline(), items)
+
+    # Assert
+    assert result["valid"] is False
+    assert result["error"] == "unknown criteria: A1_unused"
+
+
 def test_given_supported_drop_when_evaluated_then_fails_with_warning():
     # Arrange
     scores = seed_scores() | {"A2": 4}
