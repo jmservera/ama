@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-03
+ms.date: 2026-10-04
 ms.topic: reference
 ---
 
@@ -48,6 +48,8 @@ preserved in this addendum:
 * The supporting baseline-research reference and its limitations
 * The reference to the modelled customer profile in company research, whose
   values are modelled estimates, not company facts
+* The research-backed caveat and owner-directed provisional missed-appointment
+  escalation rule, pending company evidence and Housing/Repairs ratification
 * The executive challenge, modernised retrofit delivery objective, digital
   foundation for agents, delivery gates, success measures, trade-offs and
   conditional recommendation
@@ -114,6 +116,39 @@ GBP 7,500 cap.
 
 Full sources, limitations and alternative sensitivities are recorded in
 [UK Social Housing Baseline Research](./reference/research/sector/uk-social-housing-baseline-research.md).
+
+### Missed-Appointment Escalation Evidence (2026-10-04)
+
+The public evidence reviewed does not validate five missed appointments as a
+UK housing-sector threshold. The [Inside Housing/Localz survey](https://www.insidehousing.co.uk/sponsored/counting-the-cost-of-missed-repairs-appointments)
+reports organisation-level missed-appointment bands, while [Aspire Housing's
+published no-access figures](https://www.aspirehousing.co.uk/you-and-your-home/myhome/myhome-summer-26/no-access/)
+are provider-specific and do not establish repeated-event criteria. [Stevenage
+Borough Council's no-access policy](https://www.stevenage.gov.uk/documents/housing/policies-and-strategies/no-access-policy.pdf)
+uses a three-contact sequence for statutory compliance checks, not a general
+missed-repair threshold. The [government resident-panel report](https://www.gov.uk/government/publications/social-housing-resident-panel-reports-2022-to-2023/repairs-maintenance-and-awaabs-law-resident-panel-report-accessible-version)
+is explicitly not statistically representative; the [RSH Tenant Satisfaction
+Measures technical requirements](https://www.gov.uk/government/publications/tenant-satisfaction-measures-technical-requirements)
+and [Housing Ombudsman repairs guidance](https://www.housing-ombudsman.org.uk/centre-for-learning/learning-hub/knowledge-and-information-management/)
+do not establish a comparable repeat no-access measure or numeric threshold.
+These sources differ in definitions, populations and denominators and must
+not be pooled as a benchmark.
+
+The owner directs a configurable default of five, with a strict greater-than
+comparator: the sixth eligible event triggers human review. Count only a
+confirmed appointment with a verified resident no-access outcome. Record
+provider/contractor no-shows, cancellations and reschedules separately; they
+do not count. Count events while the same case remains active and reset the
+counter only when a human closes the case, retaining the event history for
+audit. The rule triggers investigation and corrective action, not a finding
+of refusal or non-cooperation, and must not delay an urgent hazard response.
+
+This is a provisional owner-directed draft rule, not a validated sector norm
+or Proper North Homes policy approval. Housing and Repairs must ratify the
+event definition, case lifecycle, configuration/change authority and handoff
+arrangements against the association's own appointment records, with
+Resident Engagement review. No company baseline or operational approval has
+been supplied.
 
 A modelled profile of Proper North Homes, covering its likely archetype,
 tenure mix, leaseholders and resident indicators, is recorded in the
@@ -367,6 +402,12 @@ capstone preference, not evidence that Azure is the best customer investment.
 The recommendation below is a proposal, not an approved architecture,
 procurement decision or validated company requirement.
 
+On 4 October 2026 the owner directed that Azure-led hybrid be used only as the
+provisional baseline for a non-production demonstrator. The customer and
+production architecture remain open for the Phase 0 options appraisal under
+BRD OD-16 and OD-20. This direction is not customer architecture, procurement
+or investment approval.
+
 On 3 October 2026 the owner confirmed that Proper North Homes currently uses
 Excel files for this coordination and does not have Dataverse or Dynamics 365.
 This is owner-confirmed company context. The existing Microsoft 365 tenant,
@@ -565,6 +606,13 @@ resident needs and competent capacity.
 | Funding | Installed scope, accepted evidence, claim recommendation, Finance decision and cash receipt reconciled separately |
 | Financial control | Cost per accepted home, peak cash, match funding, contingency and covenant headroom within approved tolerances |
 | AI safety and value | Zero autonomous controlled approvals; no missed critical exception in agreed tests; draft acceptance and review effort demonstrate incremental value |
+
+On 4 October 2026 the owner confirmed assessment-to-ready-to-install elapsed
+time as the primary BG-011 cycle-time measure; accepted handover is reported
+separately as an outcome. The event definitions, denominator, cohort, case
+handling, baseline and MDE remain open under OD-18. The 20% and 25% values
+remain proposed targets after the owner-delegated Executive Reviewer requested
+changes; this direction does not ratify them.
 
 Measurement-design note: the pilot should use the updated comparison proposal
 from the

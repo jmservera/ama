@@ -858,3 +858,74 @@ metadata when the knowledge base was created.
   approval boundaries in the BRD v0.9.0 and its session state. OD-18 and OD-36
   remain open; no actual company approval, waiver or measurement authority is
   inferred. The BRD remains draft and its Define gate remains blocked.
+
+## [2026-10-04] review | Record BRD role-panel challenge and owner directions
+
+* Consulted the Proper North Homes Executive Reviewer and Asset, Retrofit
+  Programme, Finance and Grants, Resident Engagement, Building Safety,
+  Procurement, Data and Performance, and Neighbourhood Housing role profiles
+  on BRD v0.9.0. Recorded their evidence gaps and accountable follow-ups in
+  the BRD. These are research-role perspectives, not actual employee
+  statements, company records or approvals.
+* Recorded the owner's direction to use Azure-led hybrid only as a provisional
+  non-production demonstrator baseline, leaving customer/production
+  architecture for the Phase 0 appraisal. Recorded the owner's choice of
+  assessment-to-ready-to-install as BG-011's primary cycle-time endpoint,
+  with accepted handover reported separately.
+* The Executive Reviewer retained `CHANGES_REQUESTED` for BG-011 target
+  ratification. Updated the BRD to v0.10.0, its session state, the addendum and
+  this catalog. OD-16, OD-17, OD-18, OD-20 and applicable evidence, privacy,
+  legal, safety, resident, finance and procurement approvals remain open;
+  the BRD remains draft and the latest quality report still covers v0.8.0.
+
+## [2026-10-04] update | Clarify required pilot contract participation
+
+* The owner clarified that every current contract/framework is required to
+  participate in live pilot delivery. Recorded this as an owner-directed scope
+  condition in BRD v0.11.0, not as evidence of supplier capacity or contractual
+  permission.
+* Added the explicit gate that Procurement and Legal must verify each
+  agreement, authority, data/measurement terms and readiness before supplier
+  activity. A failed contract gate blocks live-pilot approval; the owner
+  direction waives no legal, safety, privacy or contract control. OD-17/OD-30
+  remain open for evidence and approval.
+* Updated the session state and knowledge-base catalog. The BRD remains draft;
+  the latest persisted quality report remains the v0.8.0 assessment.
+
+## [2026-10-04] update | Clarify missed-appointment threshold direction
+
+* Completed a bounded public-evidence review of missed appointments and
+  repeated no-access. The sources use different definitions and denominators;
+  none validates five as a sector-wide repeated-event threshold. The
+  researcher lane remains marked partial because it did not recover
+  attributable provider-policy or forum sources within its access boundary.
+* Recorded the owner's directions in BRD v0.12.0: configurable provisional
+  default five; strict `>` comparator (sixth eligible event triggers human
+  review); only a confirmed appointment with verified resident no-access
+  counts; provider/contractor no-shows, cancellations and reschedules are
+  separate; count only while the case is active and reset only on human
+  closure, retaining the event history.
+* Consulted the Executive Reviewer, Asset Executive, Resident Engagement and
+  Retrofit Programme Manager role profiles. The Executive Reviewer
+  `CHANGES_REQUESTED` outcome applied to the earlier incomplete wording.
+  Profiles identified company appointment history, Housing/Repairs
+  ratification, resident-impact review, named handoff ownership and
+  configuration/change governance as remaining requirements. These are
+  simulated perspectives, not actual company approvals or resident evidence.
+* Integrated the caveat and owner direction into the case-study addendum,
+  updated the project index and session state, and added OD-40 for company
+  ratification and rule governance. OD-08/OD-09 and OD-40 remain open; no
+  live-use approval is implied.
+
+## [2026-10-04] review | Record threshold follow-up and quality-review blocker
+
+* The Executive Reviewer follow-up found the owner's comparator, event
+  categories and case-reset semantics resolved in RULE-006/AC-025, and asked
+  that audit history and configuration version remain explicit. Added those
+  controls to the requirement; no actual company approval was inferred.
+* Invoked the BRD Quality Reviewer for v0.12.0. It confirmed the threshold
+  control is covered but could not access the authoritative payload contracts
+  in its execution environment and did not emit either required quality
+  payload. The persisted v0.8.0 report remains the latest valid quality
+  assessment, not a current v0.12.0 review; Define remains unverified and
+  blocked pending a valid paired assessment.

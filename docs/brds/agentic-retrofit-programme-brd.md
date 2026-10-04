@@ -6,7 +6,7 @@ ms.date: 2026-10-04
 ms.topic: reference
 brd_id: "BRD-2026-AMA48-001"
 status: "draft"
-version: "0.9.0"
+version: "0.12.0"
 owners: ["AMA Research Team"]
 reviewers: ["Executive Director of Assets (proposed sponsor)", "Named Proper North Homes control owners (to be confirmed)"]
 created_date: "2026-09-11"
@@ -532,7 +532,7 @@ remains the Phase 0 readiness gate (OD-06, OD-33) before pilot mobilisation.
 | BG-008 | OBJ-08 | Maintain affordability | Minimum liquidity and covenant headroom | Sector warning comparators only; provider position unknown | Remain within board-approved tolerances | Requires company data |
 | BG-009 | OBJ-09 | Improve resident outcomes | Energy-cost, comfort, satisfaction and complaint measures | Repairs 73.6%; listens and acts 61.6%; complaint handling 35.5% | Validated improvement without increased harm | Provisional sector medians |
 | BG-010 | OBJ-10 | Improve accountability | Exception handoffs accepted by a named human owner | Unknown | 100% accepted or escalated within approved times | Proposed |
-| BG-011 | OBJ-11 | Reduce avoidable coordination effort and delay | Assessment-to-ready-to-install elapsed time and manual coordination hours per accepted home, net of review and assurance | Measure in Phase 0 using a comparable cohort | Owner-confirmed proposed pilot improvements: at least 20% lower cycle time and 25% fewer coordination hours per accepted home against the measured baseline | Owner-delegated reviewer requested changes before draft-target ratification; OD-18 remains open |
+| BG-011 | OBJ-11 | Reduce avoidable coordination effort and delay | Primary cycle-time measure: assessment-to-ready-to-install elapsed time. Also measure manual coordination hours per accepted home, net of review and assurance. Report accepted handover separately as an outcome. | Measure in Phase 0 using a comparable cohort | Owner-confirmed proposed pilot improvements: at least 20% lower cycle time and 25% fewer coordination hours per accepted home against the measured baseline | Owner-delegated reviewer requested changes before draft-target ratification; endpoint direction recorded, OD-18 remains open |
 | BG-012 | OBJ-12 | Demonstrate proportionate technology value | Incremental benefit, whole-life cost, draft accuracy, overrides and critical exceptions versus non-agentic alternatives | Establish options and shadow-mode baseline | Positive attributable value before scale; zero autonomous controlled approvals and no missed critical exceptions in agreed tests | Proposed scale gate, not proof of zero live risk |
 
 Every FR, RULE and NFR requirement row carries one canonical identifier, its
@@ -550,7 +550,11 @@ These goals fail the SMART check until the owners supply the values. This BRD
 does not invent them.
 
 No objective will be considered achieved solely because an automated action was
-completed or an installation volume increased. The owner confirmed the BG-011
+completed or an installation volume increased. On 4 October 2026 the owner
+directed that assessment-to-ready-to-install elapsed time remain the primary
+BG-011 cycle-time endpoint, with accepted handover reported separately. This
+clarifies the measure but does not set its event definitions or close OD-18.
+The owner confirmed the BG-011
 values as proposed, but the owner-delegated Executive Reviewer recorded
 `CHANGES_REQUESTED` on 4 October 2026: the repository provides no directly
 comparable target for these measures, no forecast establishes the proposed
@@ -1115,7 +1119,7 @@ against the official source online.
 | FR-016 | BR-017 | Automated progression shall stop for safety, damp and mould, safeguarding, disputed consent, vulnerability, failed access, complaint, quality, data-conflict or privacy exceptions, including unclassifiable or insufficient-evidence cases. | BG-003, BG-004, BG-005, BG-010 | Residents, housing, repairs, safety, retrofit | AC-022: Each exception creates a traceable human handoff and prevents inappropriate progression; missing classification cannot permit progression or suppress urgent response. | Must |
 | FR-017 | BR-018 | Each handoff shall contain the resident's description, desired outcome, risk, urgency, applicable deadline, consent status, necessary adjustments, prior activity, evidence, receiving team and required decision. | BG-010 | Receiving teams, residents | AC-023: The receiving team can act without asking the resident to repeat information already held, subject to access controls. | Must |
 | FR-018 | BR-019 | A handoff shall count as complete only when a named human accepts ownership, acknowledges urgency, confirms the next resident update and records the resulting action, escalation or justified closure. | BG-010 | All receiving teams | AC-024: Referral creation or message delivery alone cannot close the handoff. Unowned and overdue cases are reported. | Must |
-| RULE-006 | BR-020 | Failed access shall not be treated automatically as resident refusal or non-cooperation. A case with more than five missed appointments shall be escalated for human investigation of the root cause and corrective action. | BG-005, BG-009, BG-011 | Residents, housing, contractors, repairs | AC-025: Repeated failed access receives human review of notice, attendance, accessibility, contact and resident circumstances before classification. When more than five missed appointments are recorded for one case, the case is escalated to a named human owner who records the root-cause investigation and corrective action, and confirms the next resident update; the escalation does not delay an urgent hazard response. | Must |
+| RULE-006 | BR-020 | Failed access shall not be treated automatically as resident refusal or non-cooperation. A configurable threshold shall have a provisional default of five. Only a confirmed appointment with a verified resident no-access outcome counts; provider or contractor no-shows, cancellations and reschedules shall be recorded separately and shall not count. Count eligible events while the same case is active and reset the counter only when a human closes the case; retain the event history and threshold/configuration version for audit. When the count is greater than the configured threshold, the case shall be escalated for human investigation and corrective action. | BG-005, BG-009, BG-011 | Residents, housing, contractors, repairs | AC-025: With the provisional default of five, the sixth eligible event on an active case triggers review by a named human owner. The owner checks appointment confirmation, notice, attendance, accessibility and adjustment arrangements, contact history and relevant resident circumstances before classifying the cause; records the investigation, corrective action and next resident update; and records any case closure that resets the active counter without deleting the event history or configuration version. The counter alone does not establish refusal or non-cooperation, impose a consequence, or delay an urgent hazard response. | Must |
 
 ### Supplier Capacity and Contract Control
 
@@ -1460,9 +1464,9 @@ would risk double counting.
 | OD-13 | Material-change rules, defect severity and payment or claim holds | Quality and Finance | Remediation |
 | OD-14 | Lawful basis, DPIA, retention and data-sharing rules | Data Protection Officer | Data controls |
 | OD-15 | Board risk appetite and downside tolerances | Board | Programme approval |
-| OD-16 | Measured binding constraints and selection among process, existing-platform, workflow and AI options | Programme, Digital and Finance | Phase 0 exit |
-| OD-17 | Pilot locality, archetypes, representative residents, exclusions, budget, schedule and existing named accountable owners | Sponsor and Programme with control owners | Shadow and live-pilot scope |
-| OD-18 | Comparable baseline, metric definitions, benefits owners, critical-exception tests and ratified 20% cycle-time and 25% effort targets | Programme, Finance and independent assurance | Evaluation protocol before Phase 0 capture and shadow testing |
+| OD-16 | Measured binding constraints and selection among process, existing-platform, workflow and AI options; owner directs Azure-led hybrid only as a provisional non-production demonstrator baseline, with customer/production architecture open pending Phase 0 appraisal | Programme, Digital and Finance | Phase 0 exit |
+| OD-17 | Pilot locality, archetypes, representative residents, exclusions, budget, schedule and existing named accountable owners; owner directs every current contract/framework to participate in live pilot delivery, subject to contract-level Procurement/Legal clearance before any supplier activity | Sponsor and Programme with control owners | Shadow and live-pilot scope |
+| OD-18 | Comparable baseline, primary endpoint event definitions, metric definitions, benefits owners, critical-exception tests and ratified 20% cycle-time and 25% effort targets; assessment-to-ready-to-install is the owner-directed primary cycle-time measure, with accepted handover reported separately | Programme, Finance and independent assurance | Evaluation protocol before Phase 0 capture and shadow testing |
 | OD-19 | Allow/deny matrix, initial human-review workload and later authority-change procedure | Digital and all control owners | Live-pilot and automation release |
 | OD-20 | Interfaces, reconciliation, recovery limits, manual fallback, model and rule change control, support and exit terms | Digital service owner, data owners and Procurement | Live service readiness |
 | OD-21 | Cost inclusions within GBP 20,000, actual grant averaging rules, and separate incremental technology economics | Finance | Investment and tranche affordability |
@@ -1484,6 +1488,87 @@ would risk double counting.
 | OD-37 | Supplier data duties in existing pilot contracts and whether adding pilot measurement duties requires contract variations | Procurement and Legal | Blocks pilot protocol and supplier data capture |
 | OD-38 | Who funds recording time for frontline and matched-locality staff, including housing officers | Programme and Housing | Blocks Phase 0 capture budget and effort measurement |
 | OD-39 | Obtain dated local snapshots of the Transparency, Influence and Accountability Standard, the Housing Ombudsman Complaint Handling Code, the Governance and Financial Viability Standard and ICO guidance on explaining decisions made with AI before they are relied on | Legal, Compliance and DPO | Blocks reliance on those sources for operational rules, external assurance or release gates |
+| OD-40 | Ratify the configurable no-access threshold and event codes, counting only while a case is active and resetting only on human case closure; name the policy/configuration owner and approve change, audit and resident-review controls | Housing and Repairs leads, with Resident Engagement review and Programme/Digital input | Blocks operational use of RULE-006 |
+
+### Owner Direction and Company Role-Profile Challenge (2026-10-04)
+
+The owner made two project-level design directions after reviewing the
+company-role perspectives:
+
+* **Demonstrator architecture:** Use an Azure-led hybrid only as the
+  provisional, non-production demonstrator baseline. Keep the customer and
+  production architecture open until the Phase 0 options appraisal compares
+  process redesign, existing-platform configuration, conventional workflow
+  integration and bounded AI on measured constraints, whole-life cost,
+  adoption/support capability, integrations and control needs. This is not a
+  customer architecture, procurement or investment approval; OD-16 and OD-20
+  remain open.
+* **BG-011 endpoint:** Keep assessment-to-ready-to-install elapsed time as the
+  primary cycle-time measure and report accepted handover separately. This
+  resolves the owner-level choice of primary measure only. It does not define
+  event clocks, denominator, cohort, case handling or MDE and does not change
+  the Executive Reviewer's `CHANGES_REQUESTED` target-ratification decision.
+  OD-18 remains open.
+
+The owner clarified that every current contract/framework is required to
+participate in live pilot delivery. This is an owner-directed scope condition,
+not evidence that any agreement permits the work or that suppliers have
+capacity. No supplier may be included in live activity until Procurement and
+Legal verify each agreement, applicable authority and required data/measurement
+terms, and the relevant readiness gates pass. If any contract fails those
+gates, live pilot approval is blocked until the gap is resolved; the owner
+direction does not waive a contract, safety, privacy or legal control. OD-17
+and OD-30 remain open for the required pilot details and evidence.
+
+The owner also clarified the missed-appointment escalation direction:
+
+* Set the threshold as configurable, with five as a provisional default and
+  escalation only when the eligible count is greater than the configured
+  value. At the default, the sixth eligible event triggers human review.
+* Count only a confirmed appointment with a verified resident no-access
+  outcome. Record provider/contractor no-shows, cancellations and reschedules
+  as distinct outcomes that do not count toward the threshold.
+* Count eligible outcomes while the same case remains active; reset the
+  counter only when a human closes that case. Keep the event history for audit.
+
+These are owner-directed draft rules, not a sector benchmark or company policy
+approval. Public evidence reviewed for this control does not establish five
+as a standard. The Executive Reviewer returned `CHANGES_REQUESTED` on the
+earlier wording because it omitted the event categories and case-count
+semantics; the requirement above incorporates the owner's clarifications.
+Housing and Repairs must still ratify the rule against company appointment
+records, with Resident Engagement review. OD-08, OD-09 and OD-40 remain open;
+the rule does not authorize operational use or delay urgent hazard response.
+
+The following perspectives were gathered from company role profiles. They
+are consultation hypotheses and recommendations, not statements from actual
+employees, company approvals or verified company evidence:
+
+| Profile | Challenge recorded | Accountable follow-up |
+| --- | --- | --- |
+| Executive Reviewer | Retained `CHANGES_REQUESTED` for BG-011. The endpoint choice clarifies the measure but leaves direct comparability, forecast plausibility, frozen cohort, case handling, effort scope and MDE unresolved. Recommended prioritizing pilot scope, asset baseline/capital plan, competent capacity, grant and affordability evidence, safety/resident controls and lawful measurement approvals. | Programme and Finance with independent assurance; relevant control owners for their decisions |
+| Asset Executive | Establish address-level EPC/condition and building data, plan-linked trajectory and capital envelope, affordability downside, and resident/tenure impact. Do not substitute sector figures or grant eligibility for asset priorities. | Asset, Finance and Board within their actual delegations |
+| Retrofit Programme Manager | Reconcile locality/archetype boundaries with all-current-contract direction; evidence named PAS 2035 competence and capacity; distinguish pilot volume, primary cycle time and accepted handover. | Programme, Sponsor, Procurement and competent technical roles |
+| Finance and Grants | Verify the reported award and eligibility, match, deadlines, cash and clawback; separate retrofit capital from technology economics; do not treat released capacity as cash savings. | Finance and Grants, with Asset and Board approvals as applicable |
+| Resident Engagement | Validate measure-specific choice, accessibility, challenge and non-digital journeys with residents; evidence fair appointment recovery and avoid measurement burden. | Resident Engagement and Housing, with DPO where processing applies |
+| Building Safety | Evidence building/hazard baselines, hazard service handoffs and named stop, hold and restart authorities; keep safety and quality gates independent of throughput. | Building Safety, Repairs, competent professionals and Sponsor for the distinct decisions |
+| Procurement | Inventory the contract/framework universe, terms, named authorities, capacity, data duties and potential variation needs before supplier participation. | Procurement and Legal; do not infer permission from owner scope direction |
+| Data and Performance | Freeze cohort, comparison, estimand, event/pause rules and MDE; record effort symmetrically, including shifted, recording, review and assurance effort; separate operational dashboard from assured scorecard. | Programme, Data and Performance, Finance, DPO and independent assurance |
+| Neighbourhood Housing Officer | Test real handoffs, appointment recovery, resident updates, non-digital fallback and frontline recording burden with staff and residents. | Housing and Resident Engagement with service owners |
+| Executive Reviewer (missed-appointment review) | Returned `CHANGES_REQUESTED` on the prior RULE-006 wording because it did not define the configurable default, strict-greater-than comparator or eligible event categories. Follow-up review found those semantics resolved in v0.12.0 and requested that event history remain auditable after counter reset; this is now explicit. Public evidence does not validate five. | Housing and Repairs leads, with Resident Engagement review; Programme/Digital for configuration and audit controls |
+| Asset Executive (missed-appointment review) | Supported recording five only as a provisional human-review trigger; required reliable company event history, named service ownership and no adverse resident treatment from the count alone. | Housing and Repairs, with Asset oversight as applicable |
+| Resident Engagement (missed-appointment review) | Supported human review only, with verified event records, accessible notice/adjustment checks, correction and complaint routes, privacy minimisation and a separate urgent-hazard path. No resident evidence was supplied to validate the trigger. | Resident Engagement and Housing/Repairs; DPO for data controls |
+| Retrofit Programme Manager (missed-appointment review) | Confirmed the sixth qualifying event can be expressed operationally, subject to distinct outcome codes, evidence provenance, active-case counting, human closure/reset and a staffed handoff. No technical choice for the owner remains; operational owners must ratify the configuration. | Housing and Repairs, Resident Engagement, Programme and Digital |
+
+Minimum follow-up evidence from the panel is recorded as open work, not as
+approval: validated asset/building and hazard baselines; actual systems and
+data ownership; pilot cohort and contract register/terms; competent PAS and
+assurance capacity; grant and affordability records; resident journey
+validation; frozen OD-18 protocol and OD-36 DPIA/lawful measurement basis;
+named stop/restart authority; and technical options appraisal. The
+owner-delegated reviewer can decide only whether to ratify BG-011 for draft
+planning or request changes. It cannot close company decisions or exercise
+actual executive authority.
 
 ### TypeSafe Batch Review of Open Decisions
 
