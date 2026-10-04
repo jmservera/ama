@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-09-30
+ms.date: 2026-10-04
 ms.topic: reference
 ---
 
@@ -808,6 +808,7 @@ metadata when the knowledge base was created.
   description); the four BRD-declined items (survey/install capacity,
   pilot building dependencies, tenure/lease share, LA stock distribution)
   remain fully open and are not modelled from role-profile hypotheses.
+
 * Added a Risk Register row warning that owner-provided planning direction
   must not be mistaken for named-function verified evidence or a ratified
   operational rule, and requiring the accountable function to supply and
@@ -818,3 +819,42 @@ metadata when the knowledge base was created.
   remain outstanding and require separate, non-documentation work.
 * Updated the PRD's session-state file, this log and the knowledge-base
   catalog entry above. PRD bumped to version 0.4.0.
+
+## [2026-10-04] query | Restore BRD objective and refresh Define review
+
+* Traced OBJ-11/BG-011 through Git history. Taxonomy migration commit
+  `c3e423a` removed the existing objective row while leaving BG-012/OBJ-12
+  present and inserting explanatory prose inside the objective table. No
+  intentional removal rationale was recorded.
+* Restored BG-011/OBJ-11 from the pre-migration row with its assessment-to-
+  ready-to-install cycle-time and net coordination-effort measures. Kept the
+  20% and 25% targets explicitly unvalidated pending OD-18 and omitted the
+  obsolete RULE-023 label. Repaired the table and incorporated the owner-
+  directed missed-appointment escalation and all-current-contract pilot
+  scope, with Housing/repairs ratification and OD-30 evidence still pending.
+* Updated `../brds/agentic-retrofit-programme-brd.md` to v0.8.0 and recorded
+  the undocumented owner-reported grant award without changing its controlled
+  funding status.
+* Refreshed the Define quality review in
+  `.copilot-tracking/brd-sessions/agentic-retrofit-programme.quality-review-0.8.0.yml`.
+  FR-to-AC and FR-to-BG coverage are both 100%; all 12 goals fail the SMART
+  check on missing owner-approved evidence, so Define remains blocked.
+  OD-01 to OD-39 remain open and no approval or waiver is recorded.
+* Updated the BRD session state and this catalog. The BRD remains a draft;
+  Govern and BRD-to-PRD handoff were not entered.
+
+## [2026-10-04] review | Record delegated BG-011 target decision
+
+* Updated `.github/agents/company-executive-reviewer.agent.md` with the owner's
+  bounded delegation to either ratify a proposed target for draft planning or
+  request changes. The profile explicitly excludes actual company approval,
+  waiver, measurement authorization and operational authority.
+* The reviewer assessed BG-011/OBJ-11 and returned `CHANGES_REQUESTED`: the
+  20% cycle-time and 25% net coordination-effort values remain owner-confirmed
+  proposals, but no direct comparator or supporting forecast was found and
+  the measurement proposal lacks frozen population, event, baseline, case
+  handling, effort-shift and MDE definitions.
+* Recorded the decision, exact protocol evidence still required, and open
+  approval boundaries in the BRD v0.9.0 and its session state. OD-18 and OD-36
+  remain open; no actual company approval, waiver or measurement authority is
+  inferred. The BRD remains draft and its Define gate remains blocked.

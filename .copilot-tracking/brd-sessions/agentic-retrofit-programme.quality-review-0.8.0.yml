@@ -1,0 +1,552 @@
+---
+schema_version: BRD_STANDARD_FINDINGS_V1
+assessment_id: requirements-quality-BRD-2026-AMA48-001-20261003T221722Z
+assessed_at: "2026-10-03T22:17:22Z"
+brd:
+  id: BRD-2026-AMA48-001
+  version: "0.8.0"
+  phase: Define
+  artifact_path: docs/brds/agentic-retrofit-programme-brd.md
+standard:
+  skill_name: requirements-quality
+  skill_version: "1.0"
+mode: plan
+assessment_outcome: plan
+overall_status: RISK
+summary_counts:
+  RISK: 12
+  CAUTION: 3
+  COVERED: 9
+  NOT_APPLICABLE: 0
+findings:
+  - finding_id: req-qual-001
+    checklist_item: taxonomy-identifier-validation
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Requirement Identifier Scheme; Business Objectives and Success Metrics; Requirements Traceability"
+    finding: "The current draft distinguishes canonical RULE identifiers from legacy BR aliases and uses the declared FR, AC, NFR, CON, RULE, and BG namespaces. BG-011/OBJ-11 and BG-012/OBJ-12 are present, and the goal mapping includes BG-011."
+    recommendation: null
+  - finding_id: req-qual-002
+    checklist_item: constraint-imposed-source-boundary-and-nonnegotiability
+    requirement_id: CON-001
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Imposed Constraints"
+    finding: "CON-001 identifies its legislative source and date, affected hazard-response boundary, non-negotiable condition, and category. It keeps applicability interpretation with Legal and identifies a verification condition for Phase 2."
+    recommendation: null
+  - finding_id: req-qual-003
+    checklist_item: constraint-imposed-source-boundary-and-nonnegotiability
+    requirement_id: CON-002
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Imposed Constraints"
+    finding: "CON-002 identifies the regulatory source, affected property and safety-data boundary, category, and non-negotiable condition. The stated exception authority is none."
+    recommendation: null
+  - finding_id: req-qual-004
+    checklist_item: constraint-imposed-source-boundary-and-nonnegotiability
+    requirement_id: CON-003
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Imposed Constraints"
+    finding: "CON-003 identifies the data-protection sources, affected personal-data processing boundary, category, and non-negotiable live-use condition. It assigns accountability and source-amendment checks without treating the DPO as the controller."
+    recommendation: null
+  - finding_id: req-qual-005
+    checklist_item: constraint-imposed-source-boundary-and-nonnegotiability
+    requirement_id: CON-004
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Imposed Constraints"
+    finding: "CON-004 identifies the legal sources, affected leaseholder and contract boundaries, category, and non-negotiable consultation condition. Legal is assigned applicability and source validation."
+    recommendation: null
+  - finding_id: req-qual-006
+    checklist_item: constraint-imposed-source-boundary-and-nonnegotiability
+    requirement_id: CON-005
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Imposed Constraints"
+    finding: "CON-005 identifies the funding-condition source, affected route and eligibility boundary, category, and conditions that apply once an award is evidenced. It does not present an allocation to the association as established."
+    recommendation: null
+  - finding_id: req-qual-007
+    checklist_item: constraint-imposed-source-boundary-and-nonnegotiability
+    requirement_id: CON-006
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Imposed Constraints"
+    finding: "CON-006 identifies the case-study source, affected resident, investment, and grant-decision boundaries, organizational category, non-negotiable decision owners, and the scheme-of-delegation route for changes."
+    recommendation: null
+  - finding_id: req-qual-008
+    checklist_item: smart-business-goal
+    requirement_id: BG-001
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-001 names a portfolio outcome and a 2030 horizon, but its target is only a future Board-approved reduction; the baseline is a provisional sector estimate rather than a validated company comparator. It therefore fails Measurable and Achievable."
+    recommendation: "Obtain the owner-approved address-level baseline and numeric target, or retain the unknowns explicitly and do not represent the goal as SMART."
+  - finding_id: req-qual-009
+    checklist_item: smart-business-goal
+    requirement_id: BG-002
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-002 gives a proposed pilot handover count and candidate range, but actual throughput is unknown and no measured baseline or comparator is stated. Feasibility also remains unsubstantiated while committed capacity is unknown."
+    recommendation: "Set the goal against an owner-approved measured throughput comparator and assess the proposed pilot target against verified capacity; do not substitute the sector trajectory for company evidence."
+  - finding_id: req-qual-010
+    checklist_item: smart-business-goal
+    requirement_id: BG-003
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-003 has a zero target and a relevant safety outcome, but its baseline is unknown and no measurement window is specified. It fails Measurable and Time-bound."
+    recommendation: "Have the accountable safety owner specify the baseline or comparator and measurement window without weakening the zero-tolerance control."
+  - finding_id: req-qual-011
+    checklist_item: smart-business-goal
+    requirement_id: BG-004
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-004 provides a 100% target tied to applicable response requirements, but the baseline is unknown and no company comparator is stated. It fails Measurable despite the applicable statutory time limits."
+    recommendation: "Record a validated company baseline or explicit comparator and retain the applicable statutory response windows as the goal's time bounds."
+  - finding_id: req-qual-012
+    checklist_item: smart-business-goal
+    requirement_id: BG-005
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-005 has a zero target for work started without a valid decision or authorised exception, but no baseline or measurement window is given. It fails Measurable and Time-bound."
+    recommendation: "Define the measurement window and establish the company baseline or comparator with the resident-control owner; keep the zero target intact."
+  - finding_id: req-qual-013
+    checklist_item: smart-business-goal
+    requirement_id: BG-006
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-006 identifies quality measures, but its 90% value is only an initial scenario-testing assumption and the operative threshold is deferred to Board approval. It fails Measurable and Achievable as a current goal."
+    recommendation: "Obtain a quality-owner and Board-approved baseline, numeric target, and feasibility rationale before treating BG-006 as SMART."
+  - finding_id: req-qual-014
+    checklist_item: smart-business-goal
+    requirement_id: BG-007
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-007 specifies separate grant-state reporting but no numeric target or deadline. The reported executed award remains undocumented, so the goal is not currently measurable or demonstrably achievable."
+    recommendation: "Use documented award, eligibility, claim, and receipt evidence to set a measurable target and time horizon; keep RULE-009 evidence-controlled and do not promote the owner report to a verified award."
+  - finding_id: req-qual-015
+    checklist_item: smart-business-goal
+    requirement_id: BG-008
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-008 refers to Board-approved liquidity and covenant tolerances but supplies neither their values nor a measurement deadline; provider financial position is unknown. It fails Measurable, Achievable, and Time-bound."
+    recommendation: "Have Finance and the Board provide the applicable baselines, numeric tolerances, and review window; do not infer financial headroom."
+  - finding_id: req-qual-016
+    checklist_item: smart-business-goal
+    requirement_id: BG-009
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-009 names outcome measures but only sets a qualitative improvement direction, without an approved baseline, numeric target, or time horizon. Provisional sector medians are not a company baseline."
+    recommendation: "Have Resident Engagement and the relevant owners approve company baselines, numeric improvement targets, and a measurement window, retaining adverse-outcome safeguards."
+  - finding_id: req-qual-017
+    checklist_item: smart-business-goal
+    requirement_id: BG-010
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-010 states a 100% handoff target, but the baseline is unknown and the response times are still pending OD-09; no measurement window is stated. It fails Measurable and Time-bound."
+    recommendation: "Have Housing and repairs ratify the baseline/comparator, named ownership, handoff time targets, and measurement window under OD-09 before scoring the goal as SMART."
+  - finding_id: req-qual-018
+    checklist_item: smart-business-goal
+    requirement_id: BG-011
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-011 is present and mapped, with the historical assessment-to-ready-to-install elapsed-time and manual-coordination-hours measures, net of review and assurance. Its proposed 20% and 25% targets have a Phase 0 comparable-baseline method, but remain explicitly unvalidated and pending OD-18 owner ratification, so Achievable is not established."
+    recommendation: "Keep both targets explicitly proposed; obtain the Phase 0 comparable baseline and OD-18 owner ratification before treating either target as validated or using it as a pass/fail claim."
+  - finding_id: req-qual-019
+    checklist_item: smart-business-goal
+    requirement_id: BG-012
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-012 gives a broad value measure and a positive-value-before-scale condition, but no numeric baseline, target value, or measurement window. Its achievable value is also unsubstantiated pending options and shadow-mode evidence."
+    recommendation: "Set an owner-approved comparator, numeric value threshold, and measurement window using the options and shadow-mode evidence; do not count proposed controls as proof of achieved value."
+  - finding_id: req-qual-020
+    checklist_item: iso-25010-category-presence
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: "Non-Functional Requirement Categories"
+    finding: "The BRD explicitly maps compatibility, usability, reliability, security, maintainability, and portability to NFRs. Functional suitability is mapped to FR rows rather than an NFR, and no NFR addresses performance efficiency, so those two categories are absent under the NFR-presence test."
+    recommendation: "Review the ISO/IEC 25010 mapping and decide with stakeholders whether measurable functional-suitability or performance-efficiency NFRs are needed; derive any thresholds from company evidence rather than inventing them."
+  - finding_id: req-qual-021
+    checklist_item: iso-29148-verifiable
+    requirement_id: FR-003
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: "Safety and Regulatory Control"
+    finding: "FR-003 and AC-005 identify the hazard-referral behavior and timestamp evidence, but escalation limits are left for repairs and safety owners to set under OD-09. That leaves an operational pass condition incomplete pending owner decisions."
+    recommendation: "Keep OD-09 open and have the repairs and safety owners set and record the escalation limits before protocol freeze or live use."
+  - finding_id: req-qual-022
+    checklist_item: fr-ac-coverage
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Requirements Traceability — FR-to-AC and FR-to-BG Coverage"
+    finding: "The current traceability matrix reports 44 of 44 FRs with at least one linked acceptance criterion, matching the listed FR rows and exceeding the 80.0% threshold."
+    recommendation: null
+  - finding_id: req-qual-023
+    checklist_item: fr-bg-traceability
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Requirements Traceability — Business Goal Alignment; FR-to-AC and FR-to-BG Coverage"
+    finding: "The current matrix links all 44 FRs to at least one of the 12 valid BG identifiers. BG-011 appears in the goal alignment and FR mappings; coverage is 100.0%."
+    recommendation: null
+  - finding_id: req-qual-024
+    checklist_item: define-decision-evidence-readiness
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: "Assumptions and Open Decisions; Validation and Approval Criteria"
+    finding: "The draft records OD-01 through OD-39 as unresolved and identifies approval evidence needed for later phases. No sponsor/control-owner approvals, waivers, grant documents, or company measurements were supplied for this review."
+    recommendation: "Keep each decision and approval status explicit; close an OD or record a waiver only when its named owner supplies the required evidence and authority."
+iso_29148_attributes:
+  necessary: 2
+  appropriate: 3
+  unambiguous: 2
+  complete: 2
+  singular: 2
+  feasible: 2
+  verifiable: 2
+  correct: 2
+  conforming: 3
+iso_25010_categories:
+  functional_suitability: false
+  performance_efficiency: false
+  compatibility: true
+  usability: true
+  reliability: true
+  security: true
+  maintainability: true
+  portability: true
+smart_business_goals:
+  - goal_id: BG-001
+    statement: Improve portfolio energy performance
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: true
+    overall: FAIL
+  - goal_id: BG-002
+    statement: Increase safe retrofit throughput
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: true
+    overall: FAIL
+  - goal_id: BG-003
+    statement: Protect resident health and safety
+    specific: true
+    measurable: false
+    achievable: true
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: BG-004
+    statement: Meet hazard response obligations
+    specific: true
+    measurable: false
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: FAIL
+  - goal_id: BG-005
+    statement: Preserve resident control
+    specific: true
+    measurable: false
+    achievable: true
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: BG-006
+    statement: Improve quality
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: true
+    overall: FAIL
+  - goal_id: BG-007
+    statement: Improve grant conversion
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: BG-008
+    statement: Maintain affordability
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: BG-009
+    statement: Improve resident outcomes
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: BG-010
+    statement: Improve accountability
+    specific: true
+    measurable: false
+    achievable: true
+    relevant: true
+    time_bound: false
+    overall: FAIL
+  - goal_id: BG-011
+    statement: Reduce avoidable coordination effort and delay
+    specific: true
+    measurable: true
+    achievable: false
+    relevant: true
+    time_bound: true
+    overall: FAIL
+  - goal_id: BG-012
+    statement: Demonstrate proportionate technology value
+    specific: true
+    measurable: false
+    achievable: false
+    relevant: true
+    time_bound: true
+    overall: FAIL
+fr_ac_coverage:
+  fr_total: 44
+  fr_with_ac: 44
+  coverage_pct: 100.0
+notes: "Review assessed the current version 0.8.0 document, not Git history. The draft's explicit RULE namespace and legacy BR aliases were treated according to its declared taxonomy. Proposed and historical targets, including BG-011's 20% and 25% targets, were not treated as validated company outcomes."
+---
+schema_version: BRD_QUALITY_REPORT_V1
+report_id: BRD-2026-AMA48-001-quality-20261003T221722Z
+generated_at: "2026-10-03T22:17:22Z"
+brd:
+  id: BRD-2026-AMA48-001
+  version: "0.8.0"
+  phase: Define
+  artifact_path: docs/brds/agentic-retrofit-programme-brd.md
+overall_status: FAIL
+decision_thresholds:
+  iso_29148_core_min_score: 2
+  fr_to_ac_min_pct: 80.0
+  fr_to_bg_target_pct: 100.0
+gate_decisions:
+  define_exit: BLOCKED
+  govern_exit: NOT_EVALUATED
+summary_counts:
+  RISK: 12
+  CAUTION: 3
+  COVERED: 9
+  NOT_APPLICABLE: 0
+severity_breakdown:
+  CRITICAL: 0
+  HIGH: 12
+  MEDIUM: 3
+  LOW: 0
+standards_assessed:
+  - skill_name: requirements-quality
+    skill_version: "1.0"
+    overall_status: RISK
+    findings_ref: .copilot-tracking/brd-sessions/agentic-retrofit-programme.quality-review-0.8.0.yml
+    findings_count: 24
+category_summaries:
+  iso_29148:
+    average_score: 2.22
+    weakest_attribute: necessary
+    weakest_attribute_score: 2
+  iso_25010:
+    covered_categories: 6
+    missing_categories:
+      - functional_suitability
+      - performance_efficiency
+  smart:
+    goals_total: 12
+    goals_passing: 0
+    pass_rate_pct: 0.0
+  fr_ac_coverage:
+    fr_total: 44
+    fr_with_ac: 44
+    coverage_pct: 100.0
+    threshold_pct: 80.0
+  fr_bg_coverage:
+    fr_total: 44
+    fr_with_bg: 44
+    bg_total: 12
+    coverage_pct: 100.0
+    target_pct: 100.0
+    waiver_required: false
+top_findings:
+  - finding_id: req-qual-008
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-001 lacks an owner-approved numeric target and validated company baseline; its achievable status is not established."
+    recommendation: "Obtain the address-level baseline and numeric target from the accountable owner, or retain the unknowns explicitly and do not represent the goal as SMART."
+  - finding_id: req-qual-009
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-002 proposes a pilot handover target, but actual throughput and a measured comparator are unknown, and delivery capacity is unverified."
+    recommendation: "Set the goal against an owner-approved measured comparator and assess the pilot target against verified capacity."
+  - finding_id: req-qual-010
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-003 has a zero target but no baseline or measurement window."
+    recommendation: "Specify the baseline or comparator and measurement window without weakening the zero-tolerance control."
+  - finding_id: req-qual-011
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-004 has a 100% target but no company baseline or comparator."
+    recommendation: "Record the company baseline or explicit comparator and retain the statutory response windows."
+  - finding_id: req-qual-012
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-005 has a zero target but no baseline or measurement window."
+    recommendation: "Define the measurement window and establish a company baseline or comparator with the resident-control owner."
+  - finding_id: req-qual-013
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-006's 90% figure remains a scenario assumption and the operative quality threshold is deferred."
+    recommendation: "Obtain an owner-approved baseline, numeric target, and feasibility rationale."
+  - finding_id: req-qual-014
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-007 has no numeric target or deadline, and the reported award remains undocumented."
+    recommendation: "Use documented award and funding evidence to set a measurable target and horizon; keep RULE-009 evidence-controlled."
+  - finding_id: req-qual-015
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-008 has no stated numeric liquidity or covenant thresholds, and provider financial position is unknown."
+    recommendation: "Have Finance and the Board supply the applicable baselines, tolerances, and review window."
+  - finding_id: req-qual-016
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-009 lacks approved numeric improvement targets and a measurement window; sector medians are not company baselines."
+    recommendation: "Obtain owner-approved company baselines, numeric targets, and measurement windows while retaining adverse-outcome safeguards."
+  - finding_id: req-qual-017
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Business Objectives and Success Metrics"
+    finding: "BG-010's baseline and OD-09 response targets remain unknown, and no measurement window is specified."
+    recommendation: "Have Housing and repairs ratify the baseline, handoff targets, and measurement window under OD-09."
+recommendations:
+  - id: REC-001
+    priority: P1
+    target_section: "Business Objectives and Success Metrics"
+    action: "For BG-001 through BG-010 and BG-012, obtain the named owners' evidence and decisions for baselines or comparators, numeric targets, feasibility, and measurement windows. Do not fill gaps with sector benchmarks or unapproved assumptions."
+    related_finding_ids:
+      - req-qual-008
+      - req-qual-009
+      - req-qual-010
+      - req-qual-011
+      - req-qual-012
+      - req-qual-013
+      - req-qual-014
+      - req-qual-015
+      - req-qual-016
+      - req-qual-017
+      - req-qual-019
+  - id: REC-002
+    priority: P1
+    target_section: "Business Objectives and Success Metrics; Assumptions and Open Decisions"
+    action: "Keep BG-011's 20% cycle-time and 25% effort improvements explicitly proposed and unvalidated. Obtain the comparable Phase 0 baseline and OD-18 owner ratification before using the targets as pass/fail criteria or reporting them as validated."
+    related_finding_ids:
+      - req-qual-018
+  - id: REC-003
+    priority: P2
+    target_section: "Non-Functional Requirement Categories"
+    action: "Review the ISO/IEC 25010 mapping and decide whether functional-suitability or performance-efficiency NFRs are needed; derive any thresholds from owner-approved company evidence."
+    related_finding_ids:
+      - req-qual-020
+  - id: REC-004
+    priority: P2
+    target_section: "Safety and Regulatory Control; Assumptions and Open Decisions"
+    action: "Keep OD-09 open and have the repairs and safety owners specify and record the escalation limits needed to verify AC-005."
+    related_finding_ids:
+      - req-qual-021
+  - id: REC-005
+    priority: P2
+    target_section: "Assumptions and Open Decisions; Validation and Approval Criteria"
+    action: "Keep each OD, approval, and evidence status explicit. Record closure only when the named owner provides the required evidence and authority; do not infer approval, grant documentation, or company measurements."
+    related_finding_ids:
+      - req-qual-024
+warnings:
+  - id: WARN-001
+    severity: WARNING
+    message: "OD-01 through OD-39 remain unresolved. No sponsor/control-owner approvals, waivers, grant documents, or company measurements were supplied; retain the phase-specific gates and do not treat proposed directions as approvals."
+    related_finding_ids:
+      - req-qual-018
+      - req-qual-024
+  - id: WARN-002
+    severity: ADVISORY
+    message: "The owner-reported executed award covering roughly half of potentially eligible homes remains undocumented. The draft appropriately keeps RULE-009 evidence-controlled; do not report the owner statement as an evidenced award, claimable amount, or cash."
+    related_finding_ids:
+      - req-qual-014
+  - id: WARN-003
+    severity: ADVISORY
+    message: "BG-011's historical 20% and 25% target values remain unvalidated and pending OD-18 ratification; do not present them as achieved or owner-approved."
+    related_finding_ids:
+      - req-qual-018
+notes: "This review assessed the current version 0.8.0 document. The Define gate is blocked by SMART failures; the traceability tables show 100.0% FR-to-AC and FR-to-BG coverage, and the six CON items meet the imposed-constraint field checks."

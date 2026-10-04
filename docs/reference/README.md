@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-03
+ms.date: 2026-10-04
 ms.topic: overview
 ---
 
@@ -78,7 +78,7 @@ management: short pages that point to clusters of related material.
 | --- | --- | --- |
 | [Original Case Study 48](../case_study_48_original.md) | Initial problem specification. Preserved unchanged | 2026-09-10 |
 | [Case Study 48 Addendum](../case_study_48_addendum.md) | Evolving critical assessment, agent-led modernisation proposal with a business value measure per agent capability, trade-offs and business value; Azure, business-platform and hybrid implementation comparison with a conditional Azure-led recommendation | 2026-10-03 |
-| [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | Business requirements for safe, resident-centred and financially controlled retrofit delivery, including a Board decision narrative, an end-to-end non-production demonstrator, controlled operational validation, tenure, eligibility, hazard-awareness, contractor-instruction, explainability and transparency controls, the pilot measurement protocol, and an owner-provided-direction record of the Sponsor Discovery Questions answers with a PAS 2035 role-profile hypothesis; uses canonical FR, AC, NFR, CON, RULE and BG identifiers with a legacy BR and OBJ alias map | 2026-10-03 |
+| [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | Business requirements for safe, resident-centred and financially controlled retrofit delivery, including a Board decision narrative, an end-to-end non-production demonstrator, controlled operational validation, tenure, eligibility, hazard-awareness, contractor-instruction, explainability and transparency controls, the pilot measurement protocol, owner-provided Sponsor Discovery Question directions and a PAS 2035 role-profile hypothesis; restores BG-011/OBJ-11, records the proposed missed-appointment escalation and all-current-contract pilot scope, and records the owner-delegated reviewer’s changes-requested decision on BG-011 target ratification; uses canonical FR, AC, NFR, CON, RULE and BG identifiers with a legacy BR and OBJ alias map | 2026-10-04 |
 | [Proper Warm Hybrid Retrofit Programme Demonstrator PRD](../prds/proper-warm-retrofit-programme-demonstrator.md) | Draft product requirements for an Azure-led hybrid demonstrator (v0.4.0), with a comparative Options Gate Scoring Framework, synthetic Excel import, component contracts/failure domains, an illustrative threat model, an AI model selection and evaluation harness, an agent orchestration pattern, a log-schema/SLO observability design, conditional M365 document collaboration, a candidate missed-appointment escalation requirement traced to BRD v0.7.0 owner direction, and an eight-row cross-functional Open Questions register narrowed but not closed by that owner direction; owner confirms Excel-based coordination with no Dataverse or Dynamics 365 estate (other systems and authority unknown) | 2026-10-03 |
 | [Capstone Rubric Review of the Agentic Retrofit Programme BRD](./research/company/capstone-brd-rubric-review.md) | Criterion-by-criterion readiness assessment of the BRD against the FY27 AMA capstone rubric, with floor analysis and a four-gate remediation plan | 2026-09-30 |
 | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) | Evidence, team and bounded assistant requirements for finding delivery constraints | 2026-09-19 |
@@ -134,6 +134,7 @@ official links for every snapshot. Check it before relying on any file below.
 | Agents | Purpose |
 | --- | --- |
 | `company-*` in [.github/agents/](../../.github/agents/) | Proper North Homes role agents for interrogating the problem. Grounded in [Company Profile Research](./research/company/company-profile-research.md) |
+| [company-executive-reviewer.agent.md](../../.github/agents/company-executive-reviewer.agent.md) | Owner-delegated, draft-only target ratification or changes-requested decision; not company approval or operational authority |
 | `ama-*` in [.github/agents/](../../.github/agents/) | AMA helper agents for solution orchestration and presentation communications |
 
 ## Maintenance
