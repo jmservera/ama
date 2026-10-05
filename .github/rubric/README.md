@@ -32,11 +32,12 @@ Scores are readiness estimates from repository evidence. Live-scored criteria (B
 |------------------------------------------------------|-------------------------------------------------------------|
 | [rubric.json](rubric.json)                           | Criteria, sections, floors and outcome bands                |
 | [artifacts.json](artifacts.json)                     | Registry of scored artifact types, globs and criteria       |
-| [scores/latest.json](scores/latest.json)             | Current baseline; seeded from the manual review (61/100)    |
+| [scores/latest.json](scores/latest.json)             | Current rubric baseline loaded from the base branch         |
 | [scripts/prepare.py](scripts/prepare.py)             | Fingerprints, scoring decision, agent context, PPTX text    |
 | [scripts/gate.py](scripts/gate.py)                   | Deterministic validation, carry-forward and comparison      |
 | [scripts/test_gate.py](scripts/test_gate.py)         | Unit tests for the gate                                     |
 | [scripts/test_prepare.py](scripts/test_prepare.py)   | Change-detection tests on temporary git repositories        |
+| [prototype-validation.yml](../workflows/prototype-validation.yml) | Separate, secretless validation for the local prototype |
 
 ## Owner Setup
 
@@ -103,6 +104,47 @@ push to trigger a new run. The run then uses the merged active registry to
 assess prototype evidence against the current baseline. An earlier
 `rubric/score` success reporting "No scored artifact changed" is a skipped
 assessment, not a prototype score. Neither PR should be merged automatically.
+
+### Scorer execution and complete scorecards
+
+The scoring agent is a read-only reviewer, not a test runner. It receives no
+application secrets and must inspect JSON and repository content with the
+provided `jq` and read/search tools. It must not install packages, run Python
+or pip, execute candidate code or tests, attempt live Azure inference, or
+repeatedly retry a denied command. The trusted prepare and gate jobs run their
+own scripts outside the agent. Python and pip remain outside the agent's
+allowlist.
+
+Trusted context generation adds `scorecard_template` to
+`/tmp/gh-aw/agent/rubric/context.json`. In an incremental run it contains all
+20 rubric IDs and copies each known baseline score, evidence and rationale;
+`change_reason` starts empty. The agent preserves closed criteria and assesses
+open criteria from the evidence. Bootstrap and calibration templates instead
+show `score: null` and an `UNSCORED` rationale for every criterion, so no grade
+is fabricated or carried forward; calibration also withholds baseline scores.
+The output must replace every placeholder and contain exactly A1-A7, B1-B7,
+C1-C3 and D1-D3. `gate.py` remains strict: missing IDs, unknown IDs, invalid
+scores and malformed scorecards fail closed before any carry-forward.
+
+### Separate prototype validation
+
+The ordinary
+[Prototype validation workflow](../workflows/prototype-validation.yml) runs
+after checkout with `contents: read`, no OIDC permissions, no persisted
+checkout credentials and no Azure or application secrets. Dependency
+installation and test execution happen only in this isolated job, not in the
+scoring agent. When `prototype/` is present it installs the declared
+requirements through pip with normal TLS, compiles the Python package, runs
+the standard-library unittest suite, executes `evaluate_agent.py` without
+`--live` and checks browser JavaScript syntax. It does not deploy Bicep or
+contact Azure. When the directory is absent, the job summary explicitly says
+that no prototype checks or test evidence were produced; detection occurs
+after checkout so the check activates when prototype files arrive.
+
+On this repair branch, `prototype/` is absent. Merge the scorer repair to
+`main` first, then synchronize prototype PR #15 with `main` and push to trigger
+the base-branch workflow against its checked-out prototype. The resulting
+validation is independent of rubric scoring and is not deployment approval.
 
 ## Limits and Risks
 
