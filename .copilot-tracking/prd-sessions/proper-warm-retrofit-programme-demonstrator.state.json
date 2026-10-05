@@ -1,6 +1,7 @@
 {
   "prdFile": "docs/prds/proper-warm-retrofit-programme-demonstrator.md",
-  "lastAccessed": "2026-10-05T23:29:12+02:00",
+  "lastAccessed": "2026-10-06T00:01:40+02:00",
+  "prdVersion": "0.6.1",
   "currentPhase": "build",
   "disclaimerShownAt": "2026-10-03T12:09:35+02:00",
   "phaseSkillsLoaded": [
@@ -15,7 +16,8 @@
     "role-profile-open-question-synthesis",
     "rubric-aligned-review-pass",
     "prd-brd-v0-12-alignment",
-    "whole-workbench-workflow-coverage-2026-10-05"
+    "whole-workbench-workflow-coverage-2026-10-05",
+    "rubric-regression-restoration-2026-10-06"
   ],
   "answeredQuestions": {
     "initiative-name": "Proper Warm Retrofit Programme Demonstrator and Platform Assessment",
@@ -183,6 +185,29 @@
         "Obtain a signed BRD handoff and current valid BRD quality report before PRD Validate.",
         "Validate profile tasks, permissions, workflows, baselines and forecast assumptions with named company owners and representative users."
       ]
+    },
+    {
+      "file": "Capstone Rubric Scorer run 37377066834 and PR #20 feedback",
+      "status": "analyzed",
+      "timestamp": "2026-10-06T00:01:40+02:00",
+      "keyFindings": "Identified PRD rewrite regression: prior component contracts/failure domains, threat model, observability/SLO method, AI evaluation harness and agent orchestration pattern had been deleted, lowering A1, A3, A5, A6 and A7. Restored and adapted these as unimplemented design proposals in PRD v0.6.1, plus proposed options gate and synthetic-only missed-appointment scenario FR-031/AC-033.",
+      "integratedSections": [
+        "Proposed platform boundary",
+        "Component Contracts and Failure Domains",
+        "Threat Model",
+        "Design Decisions and Options Gate",
+        "Observability and SLO Measurement Method",
+        "AI Model Selection and Evaluation Harness",
+        "Bounded-Agent Orchestration Pattern",
+        "Functional Requirements",
+        "Acceptance Criteria",
+        "Traceability Matrix"
+      ],
+      "conflicts": [],
+      "pendingActions": [
+        "Rerun the Capstone Rubric Scorer after the PR update and confirm whether the cited design-evidence regression is resolved.",
+        "Do not treat restored design proposals as implementation, test results, approved targets or operational authority."
+      ]
     }
   ],
   "nextActions": [
@@ -195,10 +220,11 @@
     "Set calendar horizon, test workload, bulk-edit limits, performance targets, accessibility standard, usability protocol, dashboard definitions, forecast method and AI evaluation thresholds.",
     "Validate resident-facing assumptions with direct research before including a live resident product journey (OQ-008).",
     "Obtain accountable-function evidence to close each row in the Open Questions register (OQ-001 to OQ-014).",
-    "Obtain company appointment evidence, Housing/Repairs ratification, Resident Engagement review, and a named configuration/change owner before operational use of FR-014.",
+    "Obtain company appointment evidence, Housing/Repairs ratification, Resident Engagement review, and a named configuration/change owner before any operational consideration of synthetic candidate FR-031 (AC-033).",
     "Assign weights and run the Options Gate Scoring Framework once cost, support and evidence inputs are available; it is currently criteria-only (TBD weights).",
     "Address the A4 (no working demonstrator evidence) and D3 (no publication path) floor-violation gaps separately; these cannot be closed by further PRD document edits.",
-    "Run the PRD quality reviewer only after discovery and build gaps are addressed."
+    "Run the PRD quality reviewer only after discovery and build gaps are addressed.",
+    "Rerun the Capstone Rubric Scorer after PR #20 receives the evidence-restoration update."
   ],
   "qualityChecks": [
     "three-platform-options-explicit",
@@ -224,7 +250,13 @@
     "individual-and-bulk-edit-controls-and-audit-defined",
     "return-reopen-and-affected-approval-invalidation-defined",
     "coordinator-heatmap-funnel-timeline-and-uncertainty-aware-forecast-defined",
-    "single-PRD-justified-by-shared-case-and-workflow-foundation"
+    "single-PRD-justified-by-shared-case-and-workflow-foundation",
+    "A1-component-contracts-and-failure-domains-retained-as-proposed",
+    "A3-illustrative-threat-model-and-mitigations-retained",
+    "A5-OpenTelemetry-aligned-telemetry-and-SLO-measurement-method-retained",
+    "A6-paired-model-selection-and-evaluation-method-retained",
+    "A7-deterministic-state-graph-and-bounded-tool-orchestration-retained",
+    "missed-appointment-rule-preserved-as-synthetic-only-candidate"
   ],
   "userPreferences": {
     "detail-level": "comprehensive",
@@ -233,7 +265,9 @@
     "working-programme-name": "Proper Warm",
     "fr014-synthetic-test-scope": "Owner confirms exercise the provisional RULE-006 behavior in synthetic acceptance tests only; this is not operational or company policy approval.",
     "whole-workbench-workflow-coverage-2026-10-05": "Rewrite the existing PRD as one role-based retrofit workbench spanning all nine BRD workflows, with profile-specific screens over shared data, new/priority/stale/attention queues, individual and permitted multi-case edits, traceable handoffs and returns/reopens, coordinator heatmap/funnel/timeline/uncertainty-aware forecasts, and bounded source-linked next-step suggestions. One PRD is retained because workflows share case, authority, handoff and evidence foundations.",
+    "rubric-regression-restoration-2026-10-06": "The Capstone Rubric Scorer run 37377066834 and PR #20 feedback identified deleted design evidence for A1/A3/A5/A6/A7. Restored component contracts and failure domains, illustrative threat model, OpenTelemetry-aligned observability/SLO measurement method, AI model evaluation harness, bounded-agent orchestration and proposed options gate. Also restored the owner-directed missed-appointment behavior as candidate synthetic-only FR-031/AC-033. These are design proposals, not implementation/results or operational approval.",
     "platform-preference": "Owner requested the hybrid as PRD demonstrator baseline and confirmed Excel-based coordination with no Dataverse/Dynamics; other systems and authority unknown. Retain the other options as comparators. This is not production or procurement approval.",
-    "prd-scope": "One PRD for the role-based Proper Warm retrofit workbench; workflow areas are modules and release increments over shared cases, permissions, handoffs and evidence, not separate products."
+    "prd-scope": "One PRD for the role-based Proper Warm retrofit workbench; workflow areas are modules and release increments over shared cases, permissions, handoffs and evidence, not separate products.",
+    "rubric-regression-restoration": "Restore deleted A1/A3/A5/A6/A7 design evidence without reversing the expanded nine-workflow workbench or claiming implementation or validation results."
   }
 }

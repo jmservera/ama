@@ -2,15 +2,15 @@
 title: "Proper Warm Retrofit Programme Workbench"
 description: "Product requirements for a role-based retrofit delivery workbench covering the Proper Warm workflow portfolio"
 author: AMA Research Team
-ms.date: "2026-10-05"
+ms.date: "2026-10-06"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "draft"
-version: "0.6.0"
+version: "0.6.1"
 owners: ["AMA Research Team (draft custodian); product owner to be named"]
 reviewers: ["Product sponsor, Asset, Digital, Finance, Retrofit, Safety, Procurement, Resident Engagement (to be confirmed)"]
 created_date: "2026-10-03"
-last_updated: "2026-10-05"
+last_updated: "2026-10-06"
 product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003", "GOAL-004"]
 product_goal_smart_status: "deferred"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -29,7 +29,7 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-> **PRD-2026-AMA48-001** | Status: draft | Version: 0.6.0 | Last Updated: 2026-10-05
+> **PRD-2026-AMA48-001** | Status: draft | Version: 0.6.1 | Last Updated: 2026-10-06
 
 ## Executive Summary
 
@@ -122,6 +122,45 @@ approved production architecture:
 * No Dataverse or Dynamics 365 dependency is in scope unless a later approved
   decision changes the baseline. Other existing systems remain unknown.
 
+### Component Contracts and Failure Domains
+
+The following is a proposed demonstrator decomposition, not a selected Azure
+service plan or an implemented architecture. Each boundary needs a contract
+and a tested failure/recovery path before build acceptance. A component
+failure must not create an unrecorded transition or imply approval.
+
+| Component | Contract and owned responsibility | Failure domain and required fallback |
+| --- | --- | --- |
+| Workbench and domain API | The API is the only write path for case edits, handoffs, returns, approvals and accepted suggestions. It enforces identity, field/action permissions, deterministic gates, optimistic concurrency and audit creation; UI views do not authorize actions. | If unavailable, no controlled transition or edit is committed. Permitted reads may be read-only; users see the affected action and a manual recovery route. |
+| Programme state store | Stores versioned home/building relationships, workflow state, source references, transition history, tasks, handoffs and approval records. The API owns the schema contract; other components do not write state directly. | If unavailable or inconsistent, writes fail closed. Reconcile from durable audit/events before retry; do not replay a transition without idempotency protection. |
+| Workflow orchestrator | Executes deterministic stage sequencing, due-date/hold tasks, handoff waits, return/reopen routing and retryable work. The programme API remains authoritative for state and permissions. | Interrupted steps resume from a durable checkpoint with idempotency keys; exhausted retries create a visible owned exception rather than advancing the case. |
+| Bounded AI task service | Receives least-privilege, source-referenced inputs and returns a typed proposal for extraction, reconciliation, summarisation, drafting or raise-only review. It cannot write to the state store or invoke a consequential transition. | Timeout, invalid schema, missing citation, unsupported output or disabled model yields an explicit failure or workflow-only task. It never presents an empty or failed result as success. |
+| Evidence document store | Stores synthetic evidence documents; the programme store keeps stable references, versions and review/approval links, not a second approval record. SharePoint is conditional; controlled Blob storage is the proposed synthetic fallback. | A missing, stale or inaccessible reference blocks the dependent review and enters an owned exception. Switching store is a configuration decision, not an assumed transparent runtime failover. |
+| Synthetic workbook import | Profiles declared Excel structures, validates row-level mappings and stages proposed case updates for review; source workbooks remain unchanged. | A workbook or row that fails validation is quarantined with reason and source lineage. No unreported partial batch commit is allowed. |
+| Identity, authorization and telemetry | Identity claims are verified at the API; role/record/field rules and audit/telemetry are applied across screens, bulk actions, exports and AI context. | Identity or policy service uncertainty denies controlled writes and exports. Operations retains a privacy-safe diagnostic path and documents recovery before replay. |
+
+Service names and placement are options to compare, not requirements. Azure
+Container Apps, Azure SQL, Durable Functions, Azure AI Foundry, SharePoint and
+Blob Storage were prior candidate examples; verify current availability,
+support, tenancy, cost and data residency before selecting them.
+
+### Threat Model (illustrative, not validated)
+
+These threat scenarios focus review of the synthetic demonstrator's
+workbench, imports, exports, evidence and bounded AI. They are design
+hypotheses, not a completed threat assessment or evidence of implemented
+controls. Security, privacy and control owners must validate the threat model
+before any release gate.
+
+| Threat scenario | Boundary / affected workflow | Mitigation and verification evidence |
+| --- | --- | --- |
+| Instructions embedded in workbook cells or imported reports manipulate a model into changing its task or ignoring policy. | Synthetic import and AI context across stock, resident-service, provider and finance workflows. | Treat imported text as untrusted data; delimit it from instructions; accept only schema-validated proposals; deny AI write credentials. Test with seeded injection strings and verify no state mutation. |
+| A user or AI output exposes resident, financial or supplier information outside the recipient's role. | Case search, AI context, bulk views, exports and stakeholder reporting. | Apply server-side record/field filtering before data reaches a model or export; use synthetic-only data; audit export scope; test cross-role and cross-case access denial. |
+| A hallucinated or stale statement creates false reassurance, unfair priority or an unsupported resident/provider action. | Eligibility, hazard awareness, resident choice, invoice matching, quality and next-step suggestions. | Require source references, freshness, explicit unknowns and human review; AI can only propose; test seeded missing/conflicting evidence and critical false-negative/false-positive cases. |
+| Spoofed identity, confused-deputy behavior or bulk-edit scope bypasses decision rights. | API write path, returns/reopens, approvals, bulk edit and provider-submitted evidence. | Re-authorize every record and action at the API; separate proposer, reviewer and approver roles; never grant by UI perspective; test forged claims, privilege escalation, stale versions and mixed-permission batches. |
+| Programme state and document versions diverge, or a retry duplicates a transition/payment recommendation. | Evidence links, long-running handoffs, import retries and finance/quality review. | Keep one authoritative state store; version evidence references; use idempotency keys and reconciliation queues; inject store/document/orchestrator failures and verify no duplicate or silent transition. |
+| Heatmap, cohort export or forecast reveals sensitive patterns or disguises exclusions through an unstable denominator. | Coordinator and stakeholder analytics. | Enforce audience permissions, minimum-necessary fields, approved aggregation and explicit filters/denominators; test small cohorts, missing records, changed filters and export permissions. |
+
 ### Evidence status
 
 The upstream [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md)
@@ -172,6 +211,43 @@ synthetic scenarios and later validated through direct, accessible research.
 targets, usability protocol and approval authority are not validated. The
 BRD's proposed 20% cycle-time and 25% net coordination-effort improvements
 remain unratified targets under OD-18, not PRD commitments.
+
+## Design Decisions and Options Gate
+
+These are draft product decisions for the synthetic demonstrator, not
+production, procurement or company approvals.
+
+| Decision | Proposed direction | Rationale and condition |
+| --- | --- | --- |
+| DD-001: Demonstrator platform | Use the Azure-led hybrid as the comparison baseline while retaining full Azure custom and greenfield business applications as alternatives. | The owner requested this demonstrator direction, but cost, support, tenant, control and source-system evidence remain open. The gate may reject the hybrid. |
+| DD-002: Data boundary | Use synthetic data and synthetic adapters/mocks for the MVP. | No production data, live resident contact or live operational action is authorized. |
+| DD-003: Decision authority | Keep deterministic workflow and human authority separate from bounded AI proposals. | Shared case data does not transfer decision rights. AI output cannot satisfy an approval or controlled state transition. |
+| DD-004: Excel boundary | Treat Excel as a source for profiled and validated imports, not as the target workflow or approval authority. | Preserve source workbooks and expose row-level mapping/conflict outcomes. |
+| DD-005: Options appraisal | Compare all three platform options against equivalent workflows, controls and workload using predeclared criteria. | Set weights and evidence thresholds before scoring; no option has been scored or selected for production. |
+| DD-006: Appointment scenario | Retain the owner-directed missed-appointment rule only as a candidate synthetic test. | Count only confirmed appointments with verified resident no-access while a case is active; route for human investigation only when the eligible count is greater than the configurable threshold (provisional default five). Exclude provider/contractor no-shows, cancellations and reschedules; human closure resets the active counter but preserves history. Do not infer refusal or delay urgent hazard response. Five is not a validated threshold or operational rule; evidence, Resident Engagement review and configuration governance remain open under OQ-014. |
+
+### Options Gate Scoring Framework
+
+This is a decision instrument, not a completed appraisal. The architecture
+lead and sponsor must approve weights, minimum gates, comparable scope and
+evidence sources before scoring. A high aggregate score cannot compensate
+for failure of a mandatory safety, privacy, authorization, accessibility or
+recovery control.
+
+| Criterion | What the evidence must establish | Weight |
+| --- | --- | --- |
+| Control and workflow coverage | Whether each option supports the nine synthetic scenarios, server-enforced authority, returns, bulk controls, evidence lineage and auditable state. | TBD |
+| Whole-life cost and affordability | Comparable implementation, licensing, migration, support, operations, renewal and exit costs against an owner-approved workload and affordability envelope. | TBD |
+| Supportability and recovery | Named skills, ownership, failure containment, manual fallback, recovery testing, service lifecycle and exit path. | TBD |
+| Data and integration fit | Source-of-record boundaries, identifiers, interfaces, tenant prerequisites, reconciliation and portability. | TBD |
+| Resident and accessibility readiness | Accessible staff workflows, future resident research, non-digital routes and no unapproved resident-facing dependencies. | TBD |
+| Evidence confidence | Number and materiality of unresolved assumptions or external prerequisites each option depends on. | TBD |
+
+The platform options remain full Azure custom, greenfield business
+applications and the proposed Azure-led hybrid. Current Excel-based
+coordination does not establish which systems are authoritative; M365,
+SharePoint and licensing are unverified. The comparison must not treat an
+unverified estate or role-profile hypothesis as a customer fact.
 
 ## Workflow Coverage
 
@@ -228,6 +304,7 @@ owner, named control owners and affected users before implementation approval.
 | FR-028 | The product shall provide a workflow-only path for every AI-assisted task and preserve failure, fallback, review, correction and override evidence for comparison. | AI unavailable, disabled or evaluated | AC-030 | GOAL-004 |
 | FR-029 | The product shall import declared synthetic Excel structures with row-level preview, lineage, mapping/conflict resolution and explicit disposition without modifying source workbooks. | Data analyst previews an import | AC-031 | GOAL-001, GOAL-002 |
 | FR-030 | The product shall export interpretable synthetic case, event, decision and evidence-reference data, retaining version, source, approval and supersession history independently of the AI provider. | Authorised user exports data | AC-032 | GOAL-001, GOAL-002, GOAL-003 |
+| FR-031 | For synthetic scenarios only, the product shall apply a configurable missed-appointment threshold, provisionally defaulted to five, and create a human-investigation task only when the eligible active-case count is strictly greater than the configured threshold; it shall preserve event/configuration history, exclude provider/contractor no-shows, cancellations and reschedules, never infer refusal, and never delay urgent hazard response. | Synthetic appointment outcome is recorded | AC-033 | GOAL-001, GOAL-002 |
 
 ## Non-Functional Requirements
 
@@ -284,6 +361,102 @@ from the case-study portfolio size.
 * **NFR-013 Bulk-edit safety:** Bulk operations shall preview scope and
   effects, validate permissions and rules per case, report each case's result
   and retain a batch audit record. No hidden partial success is permitted.
+
+### Observability and SLO Measurement Method
+
+This is a proposed measurement contract for NFR-004, NFR-006, NFR-009 and
+NFR-011, not an implemented telemetry system. Use OpenTelemetry data-model
+and semantic-convention names where applicable; do not create vendor-specific
+names or unbounded metric dimensions.
+
+* Spans shall follow the relevant HTTP, database, messaging, GenAI or
+  serverless semantic conventions. Other operation names shall use the
+  `verb.resource` pattern. Configure the required service resource attributes
+  `service.name`, `service.version`, `deployment.environment`,
+  `telemetry.sdk.name`, `telemetry.sdk.language` and `telemetry.sdk.version`.
+* Structured logs shall use the OpenTelemetry log fields, including
+  `timestamp`, `severity_text`, `severity_number`, `body`, `attributes` and
+  `resource`. When emitted within a span, logs shall carry `trace_id` and
+  `span_id`. A scenario identifier belongs in the access-controlled audit
+  record; any custom telemetry attribute for scenario correlation must be
+  proposed through the shared telemetry vocabulary before use.
+* Keep the business audit record distinct from diagnostic telemetry. Audit
+  records retain the case/event/version/actor/decision needed to reconstruct
+  controlled changes; telemetry must not copy resident contact, address,
+  health, free-text or raw case identifiers. Apply the telemetry PII denylist
+  and an explicit redaction strategy before emitting any joinable identifier.
+* Measure scenario completion duration as a histogram in seconds, with
+  p50/p95 reported by a defined scenario class and release. Calculate failure
+  rate from failed or explicitly escalated runs divided by started runs over
+  the same window; document treatment of cancelled, retried and incomplete
+  scenarios. Attribute model/provider usage cost to the protected audit
+  scenario record rather than a high-cardinality metric dimension.
+* Establish target values, test workload, windows and alert thresholds with
+  the product and operations owners before acceptance. Targets are TBD; until
+  agreed and measured, report observations and method only, not SLO attainment.
+  Retain error traces and a representative sample of successful traces; verify
+  cardinality, access, retention and redaction in telemetry tests.
+
+### AI Model Selection and Evaluation Harness
+
+This proposed method supports FR-027 and FR-028 and GOAL-004. No model has
+been selected, no test has been run and no performance or value result is
+claimed.
+
+* For each proposed bounded task, compare at least one smaller/lower-cost
+  candidate and one more capable candidate on the same held-out synthetic
+  cases. Record task quality, source-support rate, false-positive and
+  false-negative rates for flags, p95 latency, refusal/invalid-output rate
+  and cost per invocation. Select the smallest candidate that meets
+  pre-approved task-specific quality and critical-control thresholds.
+* Pair AI-assisted and workflow-only runs on the same scenarios, evidence
+  and acceptance conditions. Capture accuracy against a labelled synthetic
+  reference, precision/recall where classification applies, unsupported-claim
+  rate, missed critical exceptions, reviewer override/correction rate,
+  review-minutes delta and end-to-end task duration.
+* Define the synthetic sample, labels, exclusions, versioned prompts/models,
+  metrics and thresholds before evaluation. Product, Safety, Data Protection
+  and Assurance owners must approve thresholds for the relevant task.
+  Sample sizes and numerical pass thresholds remain TBD.
+* Record failure modes separately: missed critical exception, false positive,
+  unsupported source reference, stale evidence, malformed output, refusal,
+  privacy leakage and operator override. Report results by task and workflow;
+  do not combine unlike tasks into one aggregate accuracy score.
+* Zero undetected critical-control failures is a release condition for the
+  evaluated task. Any failure blocks that task's AI path until corrected and
+  retested; the workflow-only path remains available. The evaluator records
+  evidence and does not grant operational approval.
+
+### Bounded-Agent Orchestration Pattern
+
+Orchestration is a deterministic, reviewable state graph, not an open-ended
+agent loop. It supports source-linked next-step suggestions while preserving
+the shared case state and human decision rights.
+
+1. The workflow engine selects an eligible task from the current authorized
+   case state and records the task, version and prerequisites.
+2. The task broker provides the model only the minimum permitted, source-linked
+   context and a typed read/propose tool contract. No credential or tool can
+   commit a case transition, contact a resident/provider, issue a work order,
+   approve expenditure, submit a claim or release payment.
+3. The model returns a typed proposal with source references, rationale,
+   uncertainties and a proposed next task/owner. Schema validation and
+   source-reference checks reject malformed or unsupported proposals to a
+   visible human queue. A model self-check may identify missing support; it
+   is not treated as independent verification.
+4. The API rechecks identity, permissions, current case version and
+   deterministic gates when a human accepts or edits a proposal. Acceptance
+   creates a draft or task only. Human approval remains a separate recorded
+   action.
+5. Each step is idempotent and auditable. Failure, timeout, stale input,
+   refusal or disabled AI leaves the case in its prior controlled state and
+   routes to workflow-only handling or an owned exception. A human can return
+   or reopen work with the reason and affected approvals captured.
+
+This design deliberately avoids autonomous stage selection or an agent-owned
+case lifecycle. The value question is whether the proposal step improves the
+measured task against workflow-only handling, not whether the agent can act
+without a reviewer.
 
 ## Constraints
 
@@ -370,6 +543,7 @@ technical, control and user representatives before acceptance.
 | AC-030 | Given AI is disabled, unavailable or produces an unsupported output, when the task runs, then a workflow-only or human queue path remains available, failure is explicit, no success-shaped fallback is presented and no controlled state is changed. | FR-027, FR-028 | Not Started |
 | AC-031 | Given a synthetic workbook has duplicate, unmapped, stale or conflicting rows, when it is imported, then users can preview every row disposition and source lineage, resolve through an authorised owner and verify the source workbook was unchanged. | FR-029 | Not Started |
 | AC-032 | Given an authorised user exports a case or cohort, when the export is inspected independently, then event, source, version, approval, return/reopen and supersession history remain interpretable without the AI provider. | FR-030 | Not Started |
+| AC-033 | Given a synthetic case has confirmed appointments with verified resident no-access outcomes, when its active-case count exceeds the configured threshold, then the product creates a human-investigation task with the counted events and rule version; provider/contractor no-shows, cancellations and reschedules do not count, human closure resets only the active counter while preserving history, no refusal is inferred, and hazard response is not delayed. | FR-031 | Not Started |
 
 ## Traceability Matrix
 
@@ -386,16 +560,17 @@ technical, control and user representatives before acceptance.
 | FR-020 to FR-024 | AC-023 to AC-027 | Covered |
 | FR-025 to FR-028 | AC-028 to AC-030 | Covered |
 | FR-029 to FR-030 | AC-031 to AC-032 | Covered |
+| FR-031 | AC-033 | Covered |
 
-Coverage: 30/30 FRs linked to at least one acceptance criterion (100%). Final
+Coverage: 31/31 FRs linked to at least one acceptance criterion (100%). Final
 review must verify this hand-maintained matrix against the identifiers.
 
 ### FR-to-goal alignment
 
 | Requirements | Goals |
 | --- | --- |
-| FR-001 to FR-006, FR-011, FR-024 to FR-026, FR-029 to FR-030 | GOAL-001 |
-| FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-030 | GOAL-002 |
+| FR-001 to FR-006, FR-011, FR-024 to FR-026, FR-029 to FR-031 | GOAL-001 |
+| FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-031 | GOAL-002 |
 | FR-004, FR-020 to FR-024, FR-030 | GOAL-003 |
 | FR-025 to FR-028 | GOAL-004 |
 
@@ -407,7 +582,7 @@ All goals have linked requirements; all FRs map to at least one goal (100%).
 | --- | --- |
 | Case Study 48 original problem and requested agents | Product context, workflow coverage, role views and product goals; initial autonomy wording does not override later BRD controls |
 | Case Study 48 Addendum, Modernised Retrofit Delivery Objective and Digital Foundation | Shared case, property/building linkage, deterministic gates, bounded AI and accountable human authority |
-| BRD v0.14.0, Operating Model for a Home-Centred Workbench and Workflow Portfolio and Business Value | FR-001 to FR-030, profile screens, stage/return model, finance and resident/provider paths, heatmap/funnel/timeline/forecast and value measures |
+| BRD v0.14.0, Operating Model for a Home-Centred Workbench and Workflow Portfolio and Business Value | FR-001 to FR-031, profile screens, stage/return model, finance and resident/provider paths, heatmap/funnel/timeline/forecast and value measures |
 | BRD BG-001 to BG-012 and RULE-001 to RULE-024 | GOAL-001 to GOAL-004, permission and transition gates, resident/safety/finance controls, and evaluation guardrails |
 | BRD Comparison 1 and Comparison 2; OD-18 | GOAL-003/004 and metrics; comparison definitions and targets remain open and unratified |
 | Synthetic Retrofit Evidence Pack data dictionary | Synthetic identifiers, home/building joins, lifecycle events, contacts, appointments, safety holds, quality evidence, grant and finance fields; realistic data defects inform import and stale/conflict scenarios |
@@ -557,6 +732,6 @@ users, and run the PRD Quality Reviewer.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-05
+* **Last Updated:** 2026-10-06
 * **Authoring Status:** Draft
 * **Next Review:** Before PRD Validate

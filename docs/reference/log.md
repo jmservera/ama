@@ -997,3 +997,20 @@ metadata when the knowledge base was created.
   calibration or operational approval is claimed.
 * Updated the PRD session state and catalog entry. No legal or regulatory
   source was newly verified.
+
+## [2026-10-06] review | Restore PRD architecture and evaluation evidence
+
+* Read the Capstone Rubric Scorer job log and PR #20 feedback. The reviewer
+  identified that the full-workbench rewrite had removed design evidence for
+  component contracts/failure domains (A1), a named threat model (A3),
+  observability and SLO measurement (A5), AI selection/evaluation (A6), and
+  bounded-agent orchestration (A7).
+* Restored those areas in PRD v0.6.1, adapting them to the shared role-based
+  workbench, bulk edits, returns/reopens, portfolio views and synthetic-only
+  boundary. Reintroduced a proposed options gate and the synthetic-only
+  missed-appointment scenario. The platform/services, threat model and
+  methods remain proposed; no implementation, test result, model selection,
+  target, company approval or production authority is claimed.
+* Aligned telemetry vocabulary to the shared OpenTelemetry foundations:
+  semantic conventions, resource/log fields, trace correlation, bounded
+  metric cardinality and PII redaction. Updated PRD state and catalog counts.
