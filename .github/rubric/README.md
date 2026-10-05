@@ -1,7 +1,7 @@
 ---
 title: Capstone Rubric Gate
 description: How the rubric-score agentic workflow scores the capstone against the FY27 AMA rubric and blocks pull requests that lower the score
-ms.date: 2026-10-02
+ms.date: 2026-10-05
 ms.topic: how-to
 ---
 
@@ -66,7 +66,43 @@ Scores are readiness estimates from repository evidence. Live-scored criteria (B
 
 Edit [artifacts.json](artifacts.json) in its own pull request: set the entry's `status` to `active` and check its `include` globs and `criteria`. Registry and rubric changes take effect after they merge, because the gate reads them from `main`. The next pull request that touches those files scores them.
 
-PRDs under `docs/prds/**/*.md` are active scoring artifacts. Planned entries remain for ADRs, solution code, infrastructure, the capstone deck (`docs/capstone/deck/*.pptx`), pitch transcripts (`docs/capstone/pitch/`) and the thought leadership artifact. PPTX files are converted to slide and speaker-note text before scoring.
+BRDs, PRDs, solution code and infrastructure are active scoring artifacts.
+Planned entries remain for ADRs, the capstone deck
+(`docs/capstone/deck/*.pptx`), pitch transcripts (`docs/capstone/pitch/`) and
+the thought leadership artifact. PPTX files are converted to slide and
+speaker-note text before scoring.
+
+### Proper Warm Prototype
+
+The existing `solution-code` entry preserves `src/**/*` and also includes the
+prototype's Python implementation (`prototype/properwarm/`), web UI, Python
+tests and build scripts, `Dockerfile`, `requirements.txt`, `README.md` and
+Excalidraw architecture diagram. It informs A1, A3, A4, A5, A6 and A7, plus B6:
+the README is capstone documentation, whose completeness and navigability are
+explicitly assessed by B6 in the [assessment guide](../../docs/reference/method/ama-capstone-assessment-guide.md).
+Criteria are mapped per artifact, not per file, so any solution-code change
+reopens those seven criteria; a score move still needs relevant changed-file
+evidence. This mapping does not establish implementation completeness or AI
+quality, and does not map the prototype to Section D thought leadership.
+
+The existing `infrastructure` entry preserves `infra/**/*` and includes
+`prototype/deploy/**/*.bicep`, informing A1, A3 and A5. Bicep is not included
+in `solution-code`. Generated fixtures and the import workbook under
+`prototype/seed/` are excluded; their generator scripts remain implementation
+evidence.
+
+Pull request preparation and gating load `artifacts.json` from the base branch
+(`origin/main`), not the proposed registry in the pull request. The registry
+activation PR therefore cannot use its newly activated entries to score the
+prototype. A registry edit reopens all criteria under the existing scoring
+instrument rules, but does not by itself produce a prototype score.
+
+After the owner merges the registry activation PR, the owner must rerun the
+rubric workflow for prototype PR #15 or synchronize that PR with `main` and
+push to trigger a new run. The run then uses the merged active registry to
+assess prototype evidence against the current baseline. An earlier
+`rubric/score` success reporting "No scored artifact changed" is a skipped
+assessment, not a prototype score. Neither PR should be merged automatically.
 
 ## Limits and Risks
 
@@ -77,4 +113,7 @@ PRDs under `docs/prds/**/*.md` are active scoring artifacts. Planned entries rem
 * Each scored run consumes AI credits. The scoring agent is capped at 300 per run by `max-ai-credits`; the threat-detection job has its own separate default cap.
 * GitHub Agentic Workflows are in public preview and may change. Recompile deliberately after upgrading the extension.
 
-Run the gate tests locally with `uv run --with pytest pytest .github/rubric/scripts`.
+Run the gate tests locally in a Python virtual environment with
+`python -m pip install pytest`, then
+`python -m pytest .github/rubric/scripts`. Use the configured company proxy
+for package retrieval; do not bypass proxy or TLS controls.
