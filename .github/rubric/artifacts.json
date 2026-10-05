@@ -32,18 +32,28 @@
     {
       "id": "solution-code",
       "title": "Solution source code",
-      "status": "planned",
+      "status": "active",
       "extractor": "text",
-      "include": ["src/**/*"],
-      "exclude": ["**/node_modules/**", "**/.venv/**", "**/__pycache__/**", "**/bin/**", "**/obj/**", "**/dist/**"],
-      "criteria": ["A1", "A3", "A4", "A5", "A6", "A7"]
+      "include": [
+        "src/**/*",
+        "prototype/properwarm/**/*.py",
+        "prototype/web/**/*",
+        "prototype/tests/**/*.py",
+        "prototype/scripts/**/*.py",
+        "prototype/Dockerfile",
+        "prototype/requirements.txt",
+        "prototype/README.md",
+        "prototype/architecture/*.excalidraw"
+      ],
+      "exclude": ["**/node_modules/**", "**/.venv/**", "**/__pycache__/**", "**/bin/**", "**/obj/**", "**/dist/**", "prototype/seed/**"],
+      "criteria": ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]
     },
     {
       "id": "infrastructure",
       "title": "Infrastructure as code",
-      "status": "planned",
+      "status": "active",
       "extractor": "text",
-      "include": ["infra/**/*"],
+      "include": ["infra/**/*", "prototype/deploy/**/*.bicep"],
       "exclude": ["**/.terraform/**"],
       "criteria": ["A1", "A3", "A5"]
     },

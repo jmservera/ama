@@ -184,6 +184,109 @@ def test_given_unchanged_main_when_computed_then_no_scoring(tmp_path):
     assert state["should_score"] is False
 
 
+@pytest.mark.parametrize(
+    ("path", "artifact_id", "criteria"),
+    [
+        ("prototype/properwarm/domain.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
+        ("prototype/web/app.js", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
+        ("prototype/tests/test_domain.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
+        ("prototype/scripts/build_container_seed.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
+        ("prototype/Dockerfile", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
+        ("prototype/requirements.txt", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
+        ("prototype/README.md", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
+        ("prototype/architecture/proper-warm-local-prototype.excalidraw", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
+        ("prototype/deploy/main.bicep", "infrastructure", ["A1", "A3", "A5"]),
+        ("src/app.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
+        ("infra/main.bicep", "infrastructure", ["A1", "A3", "A5"]),
+    ],
+)
+def test_given_registered_implementation_change_when_computed_then_expected_criteria_open(
+    tmp_path, path, artifact_id, criteria
+):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "checkout", "-b", "feature")
+    candidate = root / path
+    candidate.parent.mkdir(parents=True, exist_ok=True)
+    candidate.write_text("implementation evidence\n", encoding="utf-8")
+    git(root, "add", path)
+    git(root, "commit", "-m", "add implementation evidence")
+
+    # Act
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Assert
+    assert state["should_score"] is True
+    assert state["instrument_changed"] is False
+    assert state["changed_artifacts"] == [artifact_id]
+    assert state["changed_files"] == [path]
+    assert state["open_criteria"] == criteria
+    assert state["artifacts"][artifact_id]["files"] == [path]
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "prototype/seed/container-source/candidate-lifecycle.csv",
+        "prototype/seed/container-source/safety-holds.csv",
+        "prototype/seed/demo-import.xlsx",
+        "prototype/properwarm/__pycache__/domain.py",
+        "prototype/web/node_modules/library/index.js",
+    ],
+)
+def test_given_generated_prototype_file_when_computed_then_no_scoring(tmp_path, path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "checkout", "-b", "feature")
+    candidate = root / path
+    candidate.parent.mkdir(parents=True, exist_ok=True)
+    candidate.write_bytes(b"generated fixture")
+    git(root, "add", path)
+    git(root, "commit", "-m", "add generated fixture")
+
+    # Act
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Assert
+    assert state["should_score"] is False
+    assert state["changed_artifacts"] == []
+    assert state["changed_files"] == []
+    assert state["open_criteria"] == []
+    assert all(path not in artifact["files"] for artifact in state["artifacts"].values())
+
+
+def test_given_registry_activation_in_pr_when_computed_then_base_registry_still_used(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    registry_path = root / ".github" / "rubric" / "artifacts.json"
+    active_registry = registry_path.read_text(encoding="utf-8")
+    planned_registry = json.loads(active_registry)
+    for artifact in planned_registry["artifacts"]:
+        if artifact["id"] in ("solution-code", "infrastructure"):
+            artifact["status"] = "planned"
+    registry_path.write_text(json.dumps(planned_registry), encoding="utf-8")
+    git(root, "commit", "-am", "planned registry on main")
+    git(root, "checkout", "-b", "feature")
+    registry_path.write_text(active_registry, encoding="utf-8")
+    candidate = root / "prototype" / "properwarm" / "domain.py"
+    candidate.parent.mkdir(parents=True)
+    candidate.write_text("implementation evidence\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "activate registry and add prototype")
+
+    # Act
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Assert
+    assert state["instrument_changed"] is True
+    assert state["should_score"] is True
+    assert len(state["open_criteria"]) == 20
+    assert state["changed_artifacts"] == []
+    assert state["changed_files"] == []
+    assert "solution-code" not in state["artifacts"]
+    assert "infrastructure" not in state["artifacts"]
+
+
 def test_given_pr_deleting_scored_file_when_gated_then_drop_counts(tmp_path):
     # Arrange
     root = make_repo(tmp_path)
