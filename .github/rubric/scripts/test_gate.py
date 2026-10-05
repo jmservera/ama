@@ -75,6 +75,30 @@ def test_given_unknown_criterion_when_evaluated_then_fails_with_actionable_error
     assert result["error"] == "unknown criteria: A1_unused"
 
 
+def test_given_missing_criterion_when_evaluated_then_fails_with_actionable_error():
+    criteria = seed_scores()
+    del criteria["A2"]
+
+    result = run(workflow_baseline(), scorecard_items(criteria))
+
+    assert result["valid"] is False
+    assert result["error"] == "criterion A2 is missing"
+
+
+def test_given_unscored_template_placeholder_when_evaluated_then_fails_closed():
+    criteria = seed_scores()
+    criteria["A2"] = None
+    items = [{"type": gate.TOOL_TYPE, "scorecard": json.dumps({"criteria": {
+        **{cid: {"score": score, "evidence": [], "rationale": "r"} for cid, score in criteria.items() if score is not None},
+        "A2": {"score": None, "evidence": [], "rationale": "UNSCORED"},
+    }})}]
+
+    result = run(workflow_baseline(), items)
+
+    assert result["valid"] is False
+    assert result["error"] == "criterion A2 score must be an integer from 1 to 5"
+
+
 def test_given_supported_drop_when_evaluated_then_fails_with_warning():
     # Arrange
     scores = seed_scores() | {"A2": 4}

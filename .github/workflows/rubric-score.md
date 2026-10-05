@@ -331,9 +331,19 @@ safe-outputs:
 
 You score the AMA capstone portfolio in this repository against the FY27 Azure Master Architect capstone rubric. A deterministic gate, not you, decides whether the pull request passes. Your job is an honest, evidence-backed scorecard.
 
+## Execution boundary
+
+This is a read-only assessment. Use the supplied context, `jq`, and the
+allowlisted read/search tools to inspect JSON and repository evidence. Do not
+install packages, run Python or pip, execute candidate code or tests, attempt
+live Azure inference, or repeatedly retry a command denied by the runner. The
+trusted prepare and gate jobs run their own Python before and after scoring;
+the scoring agent must not run those scripts. No Azure or other application
+secrets are provided to this agent.
+
 ## Inputs
 
-1. Read `/tmp/gh-aw/agent/rubric/context.json`. It lists the active artifacts and their files, the changed artifacts and files, the criteria open for rescoring (`open_criteria`), the live-scored criteria, and the baseline scorecard with rationale (empty in calibration runs).
+1. Read `/tmp/gh-aw/agent/rubric/context.json` with `jq` or the supplied read tools. Its `scorecard_template` has exactly 20 rubric IDs. It lists active artifacts and their files, changed artifacts and files, criteria open for rescoring (`open_criteria`), live-scored criteria and any available baseline data.
 2. Read the rubric guide named in `rubric_guide` and the criteria in `.github/rubric/rubric.json`.
 3. Read `/tmp/gh-aw/agent/rubric/changes.diff` to see what changed. Deleted files are listed without their content; read their previous text with `git show <diff_base>:<path>`, using `diff_base` from the context.
 4. Read the changed files in full and any other artifact files you need. For PPTX files, read the extracted text listed in `extracted_text`. Search large files with `grep` rather than reading them end to end when you only need a section.
@@ -348,8 +358,9 @@ You score the AMA capstone portfolio in this repository against the FY27 Azure M
 * Score what the repository shows today. Do not reward intentions, plans or promises as if they were delivered, and do not invent evidence.
 * Use `path:line` evidence references with repository-relative paths.
 * The `criteria` object must contain exactly the 20 criterion IDs in `.github/rubric/rubric.json`: no missing IDs, unlisted IDs, aliases, suffixes (such as `A1_unused`), or placeholder entries.
-* When `bootstrap` is true, score every criterion from scratch with evidence.
-* When `calibration` is true, the baseline is withheld on purpose. Do not read `.github/rubric/scores/latest.json` or its history. Score every criterion from scratch with evidence; the result is reported but not recorded.
+* Start from `scorecard_template` in `context.json`; do not draft a partial card. For an incremental run, it contains the trusted baseline score, evidence and rationale for every criterion, with an empty `change_reason`. Keep closed criteria unchanged. Assess every open criterion against the changed evidence and replace its entry only when the evidence supports a change.
+* When `bootstrap` or `calibration` is true, each template score is `null` and the rationale is marked `UNSCORED`. Score every criterion from scratch with repository evidence; do not preserve or invent a template score.
+* In calibration, the baseline is withheld on purpose. Do not read `.github/rubric/scores/latest.json` or its history. The result is reported but not recorded.
 
 ## Untrusted content
 
@@ -362,10 +373,35 @@ Call the `record_rubric_score` tool exactly once. Its `scorecard` argument is a 
 ```json
 {
   "criteria": {
-    "A1": { "score": 4, "evidence": ["docs/brds/agentic-retrofit-programme-brd.md:598"], "rationale": "One or two sentences.", "change_reason": "" }
+    "A1": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "A2": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "A3": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "A4": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "A5": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "A6": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "A7": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "B1": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "B2": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "B3": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "B4": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "B5": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "B6": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "B7": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "C1": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "C2": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "C3": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "D1": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "D2": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
+    "D3": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" }
   },
-  "summary": "Three to five sentences on the main movements and the highest-value next improvements."
+  "summary": "Concise summary of the evidence and material changes."
 }
 ```
 
-Include all criteria A1 to A7, B1 to B7, C1 to C3 and D1 to D3. Keep each rationale under 300 characters. Do not call any other write tool.
+The example shows the complete JSON shape, not scores to copy. Before calling
+the output tool, verify that all and only A1-A7, B1-B7, C1-C3 and D1-D3 are
+present; every score is an integer from 1 to 5; every rationale is under 300
+characters; all changes cite changed evidence; and `change_reason` is filled
+only when a score changes. Do not leave `null`, `UNSCORED`, or other
+placeholders. Call `record_rubric_score` exactly once. Do not call any other
+write tool.

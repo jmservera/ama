@@ -338,6 +338,41 @@ def extract_pptx_text(path: Path) -> str:
     return "\n".join(lines)
 
 
+def build_scorecard_template(
+    rubric: dict[str, Any],
+    baseline: dict[str, Any] | None,
+    bootstrap: bool,
+    calibration: bool,
+) -> dict[str, Any]:
+    """Build the complete scorecard scaffold from trusted rubric and baseline data."""
+    use_baseline = not (bootstrap or calibration)
+    baseline_criteria = (baseline or {}).get("criteria", {}) if use_baseline else {}
+    criteria: dict[str, dict[str, Any]] = {}
+    for criterion in rubric["criteria"]:
+        cid = criterion["id"]
+        previous = baseline_criteria.get(cid)
+        if (
+            isinstance(previous, dict)
+            and isinstance(previous.get("score"), int)
+            and not isinstance(previous.get("score"), bool)
+            and 1 <= previous["score"] <= 5
+        ):
+            criteria[cid] = {
+                "score": previous["score"],
+                "evidence": list(previous.get("evidence", [])),
+                "rationale": previous.get("rationale", ""),
+                "change_reason": "",
+            }
+        else:
+            criteria[cid] = {
+                "score": None,
+                "evidence": [],
+                "rationale": "UNSCORED: assess from the rubric and repository evidence.",
+                "change_reason": "",
+            }
+    return {"criteria": criteria, "summary": ""}
+
+
 def write_context(root: Path, state: dict[str, Any], out_dir: Path) -> Path:
     """Write the agent context bundle and return the context.json path."""
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -364,7 +399,7 @@ def write_context(root: Path, state: dict[str, Any], out_dir: Path) -> Path:
     else:
         diff_path.write_text("", encoding="utf-8")
 
-    baseline = {} if state["force"] else (state["baseline"] or {})
+    baseline = {} if state["force"] or state["bootstrap"] else (state["baseline"] or {})
     diff_base = ""
     if state["diff_args"]:
         first = state["diff_args"][0]
@@ -399,6 +434,12 @@ def write_context(root: Path, state: dict[str, Any], out_dir: Path) -> Path:
         },
         "extracted_text": extracted,
         "live_criteria": [c["id"] for c in state["rubric"]["criteria"] if c.get("live")],
+        "scorecard_template": build_scorecard_template(
+            state["rubric"],
+            baseline,
+            state["bootstrap"],
+            state["force"],
+        ),
         "baseline": {
             "source": baseline.get("source"),
             "total": baseline.get("total"),
