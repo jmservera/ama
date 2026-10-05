@@ -1,6 +1,6 @@
 {
   "brdFile": "docs/brds/agentic-retrofit-programme-brd.md",
-  "lastAccessed": "2026-10-03T22:50:00+02:00",
+  "lastAccessed": "2026-10-04T22:52:45+02:00",
   "currentPhase": "Define",
   "questionsAsked": [
     "safety-stop-condition",
@@ -18,7 +18,11 @@
     "quality-absence-of-flag-and-sign-offs",
     "pilot-measurement-design",
     "modernisation-framing",
-    "sponsor-discovery-owner-direction-2026-10-03"
+    "sponsor-discovery-owner-direction-2026-10-03",
+    "bg-011-owner-delegated-review-2026-10-04",
+    "owner-decisions-and-company-role-panel-2026-10-04",
+    "owner-pilot-contract-scope-2026-10-04",
+    "missed-appointment-threshold-clarification-2026-10-04"
   ],
   "answeredQuestions": {
     "safety-stop-condition": "Block progression for missing, stale, contradictory or unresolved safety evidence until accountable human release.",
@@ -36,7 +40,11 @@
     "quality-absence-of-flag-and-sign-offs": "Retrofit Programme Manager role agent: absence of flag or alert is not evidence; sensor validity rules; separate assessor and coordinator sign-offs; three-arm shadow test for L4 versus recommend (BR-067, BR-068, OD-31).",
     "pilot-measurement-design": "User approved integrating the 2026-09-26 pilot measurement challenge. The owner later reframed it as Comparison 1 (existing teams with agents versus matched locality without agents) and Comparison 2 (per-capability task-level evidence), with frozen cohort and definitions, operational dashboard versus assured benefits scorecard, guardrails, effort measurement and five open decisions.",
     "modernisation-framing": "Owner decided on 2026-09-26 to frame Proper Warm as agent-led modernisation of the existing retrofit model: existing teams, suppliers, professional roles and systems remain; agents take on coordination, chasing, re-keying, reconciliation and evidence assembly; the pilot uses existing teams and suppliers in one locality; Comparison 1 and Comparison 2 measure agent value; OD-34 is proposed resolved pending Sponsor, Executive Director of Assets and Finance confirmation.",
-    "sponsor-discovery-owner-direction-2026-10-03": "Owner answered the 12 Sponsor Discovery Questions on 2026-10-03: accepted a mixed/unseparated delay-cause for elapsed time; directed a new >5-missed-appointment escalation control (candidate RULE-006/FR-016 addition, pending ratification); delegated the PAS 2035 role recommendation to the Housing Retrofit Programme Manager role-profile agent (six named roles proposed as a hypothesis, not confirmed staffing); declined an educated-guess survey/install/quality capacity figure for lack of any grounding evidence; confirmed a grant award exists covering roughly half the eligible homes (terms still unverified); declined a pilot-building-dependency statistical estimate for lack of a building register; offered the existing Rolling-stock-surveys sector benchmark only as an illustrative, non-evidential reference point for stock-survey coverage; described current hazard-reporting practice (technician write-up or resident phone call, then technician audit) without resolving the awareness-date-tracking question; declined tenure/lease-verification and local-authority-distribution statistical estimates for lack of any grounding data; stated the pilot would use all current contracts/frameworks; offered the existing no-access (10%) and refusal/withdrawal (5-10%) sector benchmarks only as an illustrative substitute pending real 12-month records. No open decision (OD-01 to OD-39) was marked resolved; all remain open pending named accountable-function evidence."
+    "sponsor-discovery-owner-direction-2026-10-03": "Owner answered the 12 Sponsor Discovery Questions on 2026-10-03: accepted a mixed/unseparated delay-cause for elapsed time; directed a new >5-missed-appointment escalation control (candidate RULE-006/FR-016 addition, pending ratification); delegated the PAS 2035 role recommendation to the Housing Retrofit Programme Manager role-profile agent (six named roles proposed as a hypothesis, not confirmed staffing); declined an educated-guess survey/install/quality capacity figure for lack of any grounding evidence; confirmed a grant award exists covering roughly half the eligible homes (terms still unverified); declined a pilot-building-dependency statistical estimate for lack of a building register; offered the existing Rolling-stock-surveys sector benchmark only as an illustrative, non-evidential reference point for stock-survey coverage; described current hazard-reporting practice (technician write-up or resident phone call, then technician audit) without resolving the awareness-date-tracking question; declined tenure/lease-verification and local-authority-distribution statistical estimates for lack of any grounding data; stated the pilot would use all current contracts/frameworks; offered the existing no-access (10%) and refusal/withdrawal (5-10%) sector benchmarks only as an illustrative substitute pending real 12-month records. No open decision (OD-01 to OD-39) was marked resolved; all remain open pending named accountable-function evidence.",
+    "bg-011-owner-delegated-review-2026-10-04": "Owner confirmed the 20% lower assessment-to-ready-to-install elapsed-time and 25% fewer net coordination-hours values as proposed. The owner-delegated Executive Reviewer decided CHANGES_REQUESTED for draft-target ratification because there is no direct comparator or supporting forecast and the protocol is incomplete. Required OD-18 evidence: population/denominator, event and elapsed-time definitions, baseline/cohort, window and case handling, effort-shift and review/assurance treatment, and variance-based MDE. This is a drafting decision only; OD-18, OD-36, actual company approvals and measurement authorization remain open.",
+    "owner-decisions-and-company-role-panel-2026-10-04": "Owner directed Azure-led hybrid as a provisional non-production demonstrator baseline only, keeping customer/production architecture open pending Phase 0 options appraisal; owner chose assessment-to-ready-to-install as BG-011 primary cycle-time endpoint, with accepted handover reported separately. Company role-profile consultation (Executive Reviewer, Asset Executive, Retrofit Programme Manager, Finance and Grants, Resident Engagement, Building Safety, Procurement, Data and Performance, Neighbourhood Housing) identified remaining evidence/approval needs: reconcile one-locality/small-archetype pilot with all-current-contract direction; validate asset/building/hazard baseline and data ownership; name competent PAS/assurance roles and capacity; verify grant/affordability/cash and contract records; validate resident journeys; freeze OD-18 comparator, cohort, clock, effort and MDE; approve OD-36 DPIA/lawful measurement basis; name distinct hold/stop/restart authorities. Role agents are research perspectives, not real employees or company approvals. Executive Reviewer retained CHANGES_REQUESTED for BG-011; endpoint direction does not close OD-18.",
+    "owner-pilot-contract-scope-2026-10-04": "Owner clarified that every current contract/framework is required to participate in live pilot delivery. This is an owner-directed scope condition only; no contract is presumed to permit participation, and supplier activity is blocked until Procurement/Legal confirm agreement authority, required data/measurement terms and capacity/readiness. If a contract fails a gate, live pilot approval is blocked until resolved; no control is waived.",
+    "missed-appointment-threshold-clarification-2026-10-04": "Owner confirmed the missed-appointment control is configurable with provisional default 5; preserve strict greater-than so the sixth eligible event triggers human review; count only a confirmed appointment with verified resident no-access; record provider/contractor no-shows, cancellations and reschedules separately; count only while the same case is active and reset the counter only when a human closes the case. Public evidence does not validate five. Executive Reviewer, Asset Executive, Resident Engagement and Retrofit Programme Manager role-profile reviews support human investigation only and identify company records, Housing/Repairs ratification, Resident Engagement review, named handoff and configuration/change governance as open. These are drafting directions and simulated perspectives, not company policy approval, resident evidence or live-use authorization."
   },
   "referencesProcessed": [
     {
@@ -98,25 +106,39 @@
       "file": "docs/reference/regulatory/social-housing-regulation/awaabs-law-phase-2-guidance-2026.md",
       "status": "analyzed",
       "keyFindings": "Section 3 cites the Transparency, Influence and Accountability Standard as a secondary reference pending a local snapshot."
+    },
+    {
+      "file": ".copilot-tracking/research/2026-10-04/missed-appointment-threshold-research.md",
+      "status": "updated",
+      "keyFindings": "Public evidence does not validate five as a sector threshold; recorded owner direction on comparator, event categories and active-case reset, plus role-profile review and company approval gaps."
+    },
+    {
+      "file": "docs/case_study_48_addendum.md#missed-appointment-escalation-evidence-2026-10-04",
+      "status": "updated",
+      "keyFindings": "Added cited public-evidence caveat and owner-directed provisional rule while preserving company ratification and live-use gates."
     }
   ],
   "nextActions": [
-    "Ratify or reject the owner-directed >5-missed-appointment escalation control with Housing and repairs leads (candidate RULE-006/FR-016 addition)",
+    "Obtain the association's 12-month appointment outcomes by event cause, party, channel and adjustment need; Housing/Repairs must ratify RULE-006 with Resident Engagement review, and OD-40 must name the policy/configuration owner and change controls",
     "Obtain control-owner review of the six-role PAS 2035 hypothesis (Retrofit Coordinator, Assessor, Adviser/Designer, Evaluator, installer quality role, programme assurance) before the sponsor's presentation names real people or suppliers",
     "Obtain the documented grant award evidence (eligible-property schedule, match funding, deadlines, clawback) now the owner has confirmed an award exists for roughly half the eligible homes",
     "Obtain the pilot building register and dependency evidence; no statistical estimate is available without it",
     "Name the authoritative property/EPC system and obtain the real stock-condition survey coverage; the rolling-stock-surveys sector benchmark is illustrative only",
     "Obtain tenure/lease verification-rate data and stock-by-local-authority geography; no sector benchmark supports a responsible estimate for either",
     "Confirm named contract managers and authority limits across all current contracts/frameworks, now the owner has confirmed the pilot uses all of them",
-    "Obtain the association's own 12-month no-access and withdrawal records to replace the illustrative sector benchmarks",
-    "Parent to run the BRD Quality Reviewer after the modernisation-framing edits; leave the eight accepted RISK findings unresolved by design",
+    "Resolve SMART-goal blockers with accountable owners and company evidence; do not substitute sector figures or proposed targets",
+    "Resolve OD-17/OD-30 by building the full contract/framework register and verifying participation authority, supplier capacity, data/measurement terms and required Procurement/Legal clearance for every contract; owner requires all to participate, and no activity may start before gates pass",
+    "Complete the OD-18 protocol using assessment-to-ready-to-install as primary BG-011 cycle-time measure and accepted handover as a separate outcome; include comparator, cohort, clock, effort scope, case handling and MDE, then request a fresh draft-target decision",
+    "Keep Azure-led hybrid limited to the non-production demonstrator baseline; complete the Phase 0 options appraisal before customer/production architecture selection under OD-16 and OD-20",
+    "Obtain the role-panel evidence and approvals recorded in BRD v0.12.0: asset/building/hazard baselines, named competent capacity, grant/affordability and contract evidence, resident journey validation, OD-36 DPIA/lawful measurement basis, and stop/restart authority",
+    "Obtain a valid paired BRD_STANDARD_FINDINGS_V1 and BRD_QUALITY_REPORT_V1 assessment for v0.12.0; the reviewer invocation confirmed RULE-006 coverage but could not access the contracts, so the persisted v0.8.0 report remains the latest valid quality evidence and Define stays blocked",
     "Obtain Sponsor, Executive Director of Assets and Finance confirmation of the OD-34 proposed resolution in the RULE-019 protocol",
     "Name the OD-35 guardrail restart authority and restart evidence before live-pilot approval under RULE-020 and RULE-024",
     "Approve the OD-36 DPIA and lawful measurement basis before any Phase 0 pilot or matched-locality event capture",
     "Ratify OD-18 with Comparison 1, Comparison 2, minimum detectable effect and counterfactual design",
     "Confirm Awaab's Law Phase 2 scope and current official source before freezing the pilot protocol",
     "Set NFR-009 service-time thresholds (OD-09, OD-25) and add performance-efficiency NFRs from readiness data",
-    "Assign owners and dates to OD-26 to OD-38",
+    "Assign owners and dates to OD-26 to OD-40",
     "Obtain Legal review of lease, consultation, procurement modification, payment notice, contractor-awareness and supplier measurement duties",
     "Check the national DESNZ WH:SHF Wave 3 guidance for the 30% non-social rule",
     "Validate portfolio and throughput baselines, resident requirements, regulatory controls, grant and affordability model, and company evidence for provisional sector benchmarks",
@@ -141,7 +163,9 @@
     "fr-to-bg-coverage-100",
     "explainability-transparency-review-integrated",
     "identifier-counts-validated",
-    "new-acceptance-criteria-traced"
+    "new-acceptance-criteria-traced",
+    "missed-appointment-threshold-direction-recorded",
+    "company-role-profile-threshold-challenge-recorded"
   ],
   "userPreferences": {
     "detail-level": "comprehensive",
@@ -154,17 +178,17 @@
     "brd-author#define"
   ],
   "latestQualityReport": {
-    "path": ".copilot-tracking/brd-sessions/agentic-retrofit-programme.quality-report.yml",
-    "run": 2,
+    "path": ".copilot-tracking/brd-sessions/agentic-retrofit-programme.quality-review-0.8.0.yml",
+    "run": 3,
     "overallStatus": "FAIL",
     "defineExit": "BLOCKED",
     "governExit": "NOT_EVALUATED",
-    "generatedAt": "2026-09-26T16:47:10Z",
-    "primaryCause": "7 business goals lack a numeric target, a timeframe, or both pending company data (OD-01, OD-08, OD-09, OD-11, OD-12, OD-13, OD-15, OD-18); NFR-009 thresholds pending OD-09 and OD-25",
+    "generatedAt": "2026-10-03T22:17:22Z",
+    "primaryCause": "All 12 business goals fail SMART evidence checks; no sponsor/control-owner approvals, company measurements or grant documents were supplied. BG-011/OBJ-11 was restored from Git history; its proposed targets remain unvalidated pending OD-18.",
     "metrics": {
       "frToAcCoveragePct": 100.0,
       "frToBgCoveragePct": 100.0,
-      "smartPassRatePct": 41.67,
+      "smartPassRatePct": 0.0,
       "iso25010CategoriesCovered": 6
     }
   },
@@ -184,7 +208,7 @@
       "NFR": 9,
       "CON": 6,
       "RULE": 24,
-      "OD": 39
+      "OD": 40
     },
     "legacyAliases": "BR-001..BR-068, OBJ-01..OBJ-12 kept in Legacy ID columns and Legacy Identifier Map",
     "splits": [
@@ -195,8 +219,8 @@
     ]
   },
   "latestRevision": {
-    "version": "0.7.0",
-    "updatedAt": "2026-10-03T22:50:00+02:00",
-    "summary": "Added an Owner-Provided Direction subsection under Sponsor Discovery Questions recording the owner's 2026-10-03 answers to all 12 questions, plus a role-profile-agent PAS 2035 role hypothesis. Owner statements and sector-benchmark illustrative references are clearly labelled as not verified company evidence; no Open Decision (OD-01 to OD-39) was marked resolved."
+    "version": "0.12.0",
+    "updatedAt": "2026-10-04T22:52:45+02:00",
+    "summary": "Recorded owner-defined missed-appointment control semantics in RULE-006/AC-025: configurable provisional default five, strict >, verified resident no-access at confirmed appointments only, separate provider no-shows/cancellations/reschedules, and active-case counting reset only on human closure with event/configuration audit history retained. Added the company role-profile challenge and OD-40 for actual Housing/Repairs ratification and configuration/change governance; OD-08/OD-09 and OD-40 remain open. Public evidence does not validate five. BG-011 remains CHANGES_REQUESTED; the BRD remains draft. The v0.12.0 quality reviewer confirmed the control but could not emit the required paired payload because the contracts were unavailable in that execution environment; v0.8.0 remains the latest valid quality report."
   }
 }

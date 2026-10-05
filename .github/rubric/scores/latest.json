@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
   "source": "workflow",
-  "scored_at": "2026-10-03T21:26:13+00:00",
-  "commit": "dc44e2e78da48d2635b1997e69f69ba77473fa9e",
+  "scored_at": "2026-10-04T22:16:01+00:00",
+  "commit": "6cbe47c4661eb6d8ba39879788372ace7f703097",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37154712636",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37238998956",
   "fingerprints": {
-    "brd": "7e62a05ba1d9b49075e4093bb35fa579b812646644a84a95d2988565f5b1d4d3",
-    "prd": "f78b3dbeb2eadfc80238b767009b3ff7037e9b597345d5551fedff1409e761b6"
+    "brd": "7aa429c9f1652392a4535efac0ed13e4d4388cb7fc5fc6194d229ada77050915",
+    "prd": "48107012686e7dd5855178eafcf0c5ffc775c167c5053d44bfc300ac984fda8d"
   },
   "total": 66,
   "sections": {
@@ -25,7 +25,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:176",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:182"
       ],
-      "rationale": "New Component Contracts and Failure Domains table names each component's interface, data ownership and fallback behaviour, closing the gap the baseline flagged."
+      "rationale": "Component Contracts and Failure Domains table remains unchanged by this diff; RULE-006 precision gain does not add new component-boundary evidence."
     },
     "A2": {
       "score": 5,
@@ -33,7 +33,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:312",
         "docs/brds/agentic-retrofit-programme-brd.md:353"
       ],
-      "rationale": "Cross-functional challenge table still names each agent, the alternative considered and why it was rejected or bounded instead."
+      "rationale": "Cross-functional challenge table stays the primary evidence; the new 2026-10-04 role-profile challenge table reinforces but does not exceed the existing maximum."
     },
     "A3": {
       "score": 5,
@@ -41,22 +41,22 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:192",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:198"
       ],
-      "rationale": "New Threat Model table states prompt-injection, exfiltration, hallucination, spoofing and drift scenarios against named boundaries with mitigations, closing the stated-threat-model gap."
+      "rationale": "Threat Model table is untouched by this diff; no change to security/compliance evidence."
     },
     "A4": {
       "score": 1,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:1745"
       ],
-      "rationale": "Still only design documents and a planned non-production demonstrator; no working implementation evidence exists anywhere in the changed files."
+      "rationale": "Still only design documents and refined requirement wording; no working implementation anywhere in the changed files."
     },
     "A5": {
       "score": 3,
       "evidence": [
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:363",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:372"
+        "docs/brds/agentic-retrofit-programme-brd.md:1119"
       ],
-      "rationale": "New log-schema/correlation-ID envelope and named latency/failure-rate/cost metrics with a fixed measurement method move past purely qualitative discussion, though nothing is yet instrumented or measured."
+      "rationale": "RULE-006 now specifies event-history and configuration-version audit retention, a narrow observability addition, but nothing is instrumented or measured; overall operational picture unchanged."
     },
     "A6": {
       "score": 4,
@@ -64,7 +64,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:407",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:420"
       ],
-      "rationale": "New AI Model Selection and Evaluation Harness section defines comparison criteria against smaller/larger models and a paired baseline evaluation harness with metrics and failure-mode taxonomy, though no model choice or evaluation has actually run."
+      "rationale": "AI Model Selection and Evaluation Harness section is untouched by this diff."
     },
     "A7": {
       "score": 3,
@@ -72,7 +72,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:435",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:443"
       ],
-      "rationale": "New Agent Orchestration Pattern section specifies a state-graph handoff, reflection/self-check step and tool-scoped authorization, a deliberate coordination design, but no autonomous behaviour is demonstrated."
+      "rationale": "RULE-006 changes refine a deterministic business rule, not agent orchestration; the Agent Orchestration Pattern evidence is unchanged and no autonomous behaviour is demonstrated."
     },
     "B1": {
       "score": 4,
@@ -80,28 +80,28 @@
         "docs/brds/agentic-retrofit-programme-brd.md:108",
         "docs/brds/agentic-retrofit-programme-brd.md:1215"
       ],
-      "rationale": "Board Decision Narrative connects problem, stakes, options and recommendation; no live delivery evidence exists to assess argument landing with an audience."
+      "rationale": "No live delivery evidence was added; baseline retained for this live-scored criterion."
     },
     "B2": {
       "score": 3,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:623"
       ],
-      "rationale": "Document explicitly designs explanations for resident, staff, funder/regulator/Board audiences, but this is written register calibration, not observed live delivery."
+      "rationale": "No live delivery evidence was added; baseline retained for this live-scored criterion."
     },
     "B3": {
       "score": 1,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:697"
       ],
-      "rationale": "No demo exists yet; only a plan for a future non-production demonstrator is described."
+      "rationale": "No demo exists; still only a plan for a future non-production demonstrator."
     },
     "B4": {
       "score": 2,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:427"
       ],
-      "rationale": "Sponsor discovery questions anticipate challenge areas, but there is no live Q&A evidence to assess composure under pressure."
+      "rationale": "No live Q&A evidence; baseline retained for this live-scored criterion."
     },
     "B5": {
       "score": 1,
@@ -113,32 +113,32 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:941",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:661"
+        "docs/brds/agentic-retrofit-programme-brd.md:1488",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:683"
       ],
-      "rationale": "Documentation grows denser with cross-referenced tables (Open Questions register, owner-direction cross-references) but remains reader-effort heavy with no accompanying slide deck."
+      "rationale": "Documentation grows denser still, adding the role-profile challenge table and OQ-009, reinforcing the baseline's reader-effort-heavy, no-slide-deck assessment."
     },
     "B7": {
       "score": 4,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:447"
       ],
-      "rationale": "Owner-direction table adds quantified data points (grant coverage, missed-appointment threshold) but these are carefully labelled as owner statements, not new interpreted evidence or visuals."
+      "rationale": "Owner-direction data point table is unchanged by this diff."
     },
     "C1": {
       "score": 5,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:530",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:665"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:683"
       ],
-      "rationale": "Stakeholders, constraints and quantified value at stake remain explicit and interrogated; new Open Questions register further names accountable functions per gap."
+      "rationale": "New OQ-009 names Housing and Repairs as accountable for missed-appointment evidence, reinforcing the already-strong discovery framing at its existing maximum."
     },
     "C2": {
       "score": 2,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:312"
       ],
-      "rationale": "Written role-agent challenge shows disagreement being recorded and addressed, but there is no live session evidence of real-time listening or disagreement navigation."
+      "rationale": "No live session evidence of real-time listening or disagreement navigation was added; baseline retained for this live-scored criterion."
     },
     "C3": {
       "score": 5,
@@ -146,15 +146,15 @@
         "docs/brds/agentic-retrofit-programme-brd.md:120",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:654"
       ],
-      "rationale": "Recommendation and risk disclosure remain clear; new risk row explicitly flags the danger of mistaking owner direction for verified evidence, reinforcing intellectual honesty."
+      "rationale": "New text keeps explicit caveats that role-profile panels are hypotheses, not company evidence, and that the reviewer cannot exercise actual executive authority, reinforcing honesty at the existing maximum."
     },
     "D1": {
       "score": 4,
       "evidence": [
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:251",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:661"
+        "docs/brds/agentic-retrofit-programme-brd.md:1488"
       ],
-      "rationale": "New scoring framework, threat model, evaluation harness and open-questions register are substantial original synthesis actionable by another architect, but still grounded in internal design work rather than direct company engagement evidence."
+      "rationale": "The refined RULE-006 rule and new role-profile challenge table add original synthesis, but the baseline's core gap (no direct company engagement evidence) is unchanged."
     },
     "D2": {
       "score": 4,
@@ -162,15 +162,14 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:2",
         "docs/brds/agentic-retrofit-programme-brd.md:2"
       ],
-      "rationale": "Structured, cited and version-controlled with clear revision tracking, but still not a standalone publishable piece separate from the BRD/PRD apparatus."
+      "rationale": "Structured, cited and version-controlled with clear revision tracking (v0.12.0/v0.5.0); still not a standalone publishable piece separate from the BRD/PRD apparatus."
     },
     "D3": {
       "score": 1,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1",
-        "docs/reference/method/ama-capstone-assessment-guide.md:140"
+        "docs/brds/agentic-retrofit-programme-brd.md:1"
       ],
-      "rationale": "No publication, filing or external dissemination path is recorded anywhere in the repository; produced for the rubric and internal programme use only."
+      "rationale": "No publication, filing or external dissemination path is recorded anywhere in the repository."
     }
   }
 }

@@ -2,12 +2,12 @@
 prd_id: "PRD-2026-AMA48-001"
 title: "Proper Warm Hybrid Retrofit Programme Demonstrator"
 status: "draft"
-version: "0.4.0"
+version: "0.5.0"
 owners: ["AMA Research Team (draft custodian); product owner to be named"]
 reviewers: ["Product sponsor, Asset, Digital, Finance, Retrofit, Safety, Procurement, Resident Engagement (to be confirmed)"]
 created_date: "2026-10-03"
-last_updated: "2026-10-03"
-ms.date: "2026-10-03"
+last_updated: "2026-10-04"
+ms.date: "2026-10-04"
 product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003"]
 product_goal_smart_status: "deferred"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -28,7 +28,7 @@ license: "CC-BY 4.0 (Microsoft HVE-Core)"
 
 # Proper Warm Hybrid Retrofit Programme Demonstrator
 
-> **PRD-2026-AMA48-001** | Status: draft | Version: 0.4.0 | Last Updated: 2026-10-03
+> **PRD-2026-AMA48-001** | Status: draft | Version: 0.5.0 | Last Updated: 2026-10-04
 
 ## Executive Summary
 
@@ -208,17 +208,15 @@ replace a named security/DPO review before any live-use gate (AC-011).
 
 The upstream
 [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md)
-is draft version 0.7.0, which adds an "Owner-Provided Direction on Sponsor
-Discovery Questions (2026-10-03)" subsection and a PAS 2035 role-profile
-hypothesis. No signed `BRD_TO_PRD_HANDOFF_V1` payload was present for this
-authoring session. The BRD session state records a prior quality report with
-Define exit blocked; confirm the latest formal BRD quality and approval
-status before treating its requirements as an approved baseline. This PRD is
-therefore an initial draft derived from the current BRD and case study, not a
-governed handoff. Owner-provided direction in the BRD is treated the same way
-as the role-profile hypotheses in this PRD's Open Questions register: it
-narrows a question, it does not close it, and it is not a substitute for
-named-function verified evidence (see Risks and Assumptions).
+is draft version 0.12.0. RULE-006/AC-025 now specifies the owner-directed
+missed-appointment rule, while OD-40 keeps company ratification and
+configuration governance open. No signed `BRD_TO_PRD_HANDOFF_V1` payload was
+present for this authoring session, and the latest valid persisted BRD quality
+report assesses v0.8.0 rather than v0.12.0. This PRD remains an initial draft,
+not a governed handoff or approved baseline. Owner direction narrows product
+requirements but does not replace named-function evidence or company
+approval; the missed-appointment rule remains a candidate for synthetic
+demonstration only until its open approval conditions are met.
 
 ## Users and Personas
 
@@ -246,7 +244,7 @@ demonstrator. No resident-facing live journey is authorised in this scope.
 | DD-003 | Separate deterministic controls from bounded AI and compare agent-assisted tasks against workflow-only handling. | The BRD requires accountable human decisions and evidence that any AI adds incremental value. | Product and control owners to confirm | Proposed |
 | DD-004 | Treat Excel workbooks as import sources to profile and validate, not as the target programme workflow or approval authority. | Owner confirms current coordination uses Excel files; the demonstrator needs to test migration mapping without altering source records. | Data owner and product owner to confirm | Proposed |
 | DD-005 | Score the options gate against a weighted, pre-declared criteria set (below) rather than a narrative recommendation. | A reviewer with no prior context should be able to reproduce how the hybrid baseline was reached or rejected; this is a decision instrument, not a scored result. | Architecture lead and sponsor to confirm weights before scoring | Proposed |
-| DD-006 | Add a candidate missed-appointment escalation control (FR-014) that routes a case for investigation after a to-be-confirmed repeated-miss threshold, illustratively 5. | Owner directed an escalation path on 2026-10-03 for repeated missed appointments associated with unresolved hazard follow-up; the exact threshold and investigation owner are not yet ratified. | Retrofit Programme Manager and Building Safety to confirm threshold and owner | Candidate |
+| DD-006 | Include the owner-directed missed-appointment rule (FR-014) as a candidate, synthetic-only control: configurable threshold, provisional default 5, with human review only when eligible events exceed the configured threshold. | BRD v0.12.0 RULE-006/AC-025 defines eligible events, active-case counting, human-closure reset and audit retention. Public evidence does not validate five; company event history, Housing/Repairs ratification and configuration governance remain open under OD-40. The owner confirmed synthetic-test inclusion on 2026-10-04; operational use remains blocked. | Owner for synthetic test scope; Housing and Repairs policy/configuration owners, with Resident Engagement review, for operational use | Candidate |
 
 ### Options Gate Scoring Framework (draft criteria and weights)
 
@@ -259,7 +257,7 @@ option is scored; no option has been scored against this framework yet.
 | Control coverage | Share of CON-001 to CON-008 and FR-004/FR-005 gates the option can enforce without a bespoke build | TBD | Architecture comparison matrix |
 | Whole-life cost confidence | Share of agreed cost categories with a sourced estimate rather than a gap (Success Metrics: Whole-life cost confidence) | TBD | Finance costing log |
 | Support and exit | Named support model, contract term, renewal/exit path and in-house skill availability | TBD | Procurement and Digital input |
-| Evidence quality and unknowns | Count of unresolved Open Questions or unverified prerequisites the option depends on | TBD | Open Questions register; OQ-001 to OQ-008 |
+| Evidence quality and unknowns | Count of unresolved Open Questions or unverified prerequisites the option depends on | TBD | Open Questions register; OQ-001 to OQ-009 |
 | Resident and accessibility readiness | Whether the option's resident-facing path (if any) has a defined research and accessibility plan before productisation | TBD | NFR-010; Resident Engagement input |
 
 ## Product Goals
@@ -291,13 +289,18 @@ achievability require sponsor and Finance input.
 | FR-011 | When the options gate is reviewed, the system shall record the recommendation, alternatives, criteria, evidence, dissent, approvers and decision status. | Sponsor and designated reviewers; gate review | Decision record; remains open if evidence or authority is insufficient | AC-001, AC-002 | GOAL-001 |
 | FR-012 | Before any resident-facing communication or live operational use is enabled, the system shall require a separately approved release configuration and the applicable data-protection, safety, service and authority gates. | Product / control owners; release configuration | Non-production draft cannot silently become operational | AC-010 | GOAL-002, GOAL-003 |
 | FR-013 | When a reviewer opens a linked collaboration document, the system shall resolve a controlled M365 document reference to the approved file location and version, or clearly report that M365 capability is unavailable; it shall not create a competing approval record. | Programme reviewer; document access | Azure state retains the decision reference while the document store remains explicitly identified | AC-009, AC-015 | GOAL-002 |
-| FR-014 (candidate) | When a synthetic case records more than a to-be-confirmed number of missed appointments (illustratively 5), the system shall route the case to an investigation queue with a named owner and shall not silently continue the standard journey. | Workflow; repeated-miss threshold reached | Visible escalation and investigation ownership instead of an unexamined repeated miss | AC-016 | GOAL-002 |
+| FR-014 (candidate) | For synthetic scenarios only, the system shall apply a configurable missed-appointment threshold with a provisional default of 5. It shall count only confirmed appointments with a verified resident no-access outcome while the case is active, and route the case for human investigation only when the eligible count is greater than the configured threshold. Provider/contractor no-shows, cancellations and reschedules shall be recorded separately and excluded. Human case closure resets the active counter but shall not delete event or configuration history. | Workflow; eligible appointment outcome recorded | Traceable human investigation without inferring refusal or non-cooperation, imposing a consequence, or delaying an urgent hazard response | AC-016 | GOAL-002 |
 
-FR-014 reflects owner direction on 2026-10-03 (see BRD Owner-Provided
-Direction subsection) and is labelled **candidate** because the exact
-threshold, investigation owner and root-cause process are not yet confirmed
-by Retrofit Programme Manager and Building Safety functions; do not treat the
-illustrative "5" as an approved operational threshold.
+FR-014 reflects the owner-directed rule in BRD v0.12.0 RULE-006/AC-025. It
+remains **candidate** because Housing and Repairs have not ratified it against
+company appointment records, the configuration/change owner and handoff are
+not approved, and Resident Engagement review remains necessary (OQ-009;
+BRD OD-40). Five is a provisional default, not a sector benchmark or approved
+operational threshold. The acceptance test is limited to synthetic,
+non-production scenarios and does not authorize operational use.
+The owner confirmed on 2026-10-04 that this candidate behavior should be
+exercised in the synthetic acceptance suite; this does not close OQ-009 or
+authorize live use.
 
 All requirements are draft candidates. The implementation team and product
 owner must validate actors, system boundaries and acceptance evidence.
@@ -512,7 +515,7 @@ technical and control owners.
 | AC-013 | Given synthetic data is loaded, when privacy checks run, then no real resident identifier, address, contact detail or health-history text is present. | FR-003, FR-012 | Not Started |
 | AC-014 | Given an Excel import contains an unknown column, duplicate row, unmapped value or conflicting identifier, when validation runs, then the source file remains unchanged, the import does not silently resolve the conflict and each rejected row is available for human review. | FR-003 | Not Started |
 | AC-015 | Given M365/SharePoint is proposed for a managed document, when tenant, license, permission and version checks are run, then the integration is enabled only if all checks pass; otherwise the demonstrator uses the documented controlled Blob Storage fallback and records the M365 gap. | FR-013 | Not Started |
-| AC-016 (candidate) | Given a synthetic case exceeds the to-be-confirmed missed-appointment threshold, when the threshold is reached, then the case is routed to an investigation queue with a named owner and is visibly flagged rather than continuing silently. | FR-014 | Not Started |
+| AC-016 (candidate) | Given a synthetic active case has an authorized test threshold, when eligible outcomes are recorded, then escalation occurs only when the count is greater than that threshold; at the provisional default of 5, the sixth eligible event routes the case to human investigation. Provider/contractor no-shows, cancellations and reschedules do not increment the count; human closure resets the active counter while preserving event and configuration history. The case is not labelled refusal or non-cooperation, no consequence is applied, and urgent hazard handling is not delayed. | FR-014 | Not Started |
 
 ## Traceability Matrix
 
@@ -568,8 +571,10 @@ Coverage: 14/14 requirements linked, **100%**. Target: 100.0%.
 | BRD RULE-018, RULE-022, RULE-024 | FR-007, FR-008, FR-012; CON-003 to CON-006 |
 | Case Study 48 Addendum, “Implementation Options and Provisional Platform Recommendation” | FR-001, FR-002, FR-009, FR-011; DD-001 |
 | Owner confirmation, 2026-10-03: coordination uses Excel files; no Dataverse or Dynamics 365 | Product Context, DD-001, DD-004, FR-003, CON-007, AC-012, AC-014 |
+| Owner confirmation, 2026-10-04: exercise candidate RULE-006 behavior in synthetic acceptance tests only | DD-006, FR-014, AC-016; operational use remains blocked by OQ-009/BRD OD-40 |
 | Eight company-role profile option challenges, 2026-10-03 | Product Context; Open Questions OQ-001 to OQ-008; decision criteria only, not company evidence |
-| BRD v0.7.0 Owner-Provided Direction subsection (2026-10-03): missed-appointment escalation direction, partial grant award, "all contracts/frameworks" pilot scope, hazard-reporting description, PAS 2035 role-profile hypothesis | FR-014 (candidate), DD-005, DD-006, Options Gate Scoring Framework; Open Questions OQ-002, OQ-003, OQ-004, OQ-006 |
+| BRD v0.12.0 RULE-006/AC-025 and owner-direction section (2026-10-04): configurable provisional threshold, eligible event definition, active-case reset and audit; company ratification remains open under OD-40 | FR-014 (candidate), AC-016, DD-006, OQ-009; synthetic tests only, no operational approval |
+| BRD v0.7.0 Owner-Provided Direction subsection (2026-10-03): partial grant award, "all contracts/frameworks" pilot scope, hazard-reporting description, PAS 2035 role-profile hypothesis | DD-005, Options Gate Scoring Framework; Open Questions OQ-002, OQ-003, OQ-004, OQ-006 |
 
 ## MVP and Release Framing
 
@@ -651,7 +656,7 @@ resident-benefit claims.
 | --- | --- | --- | --- |
 | Azure preference predetermines the appraisal | Medium | High | Freeze criteria before scoring; cost business apps as greenfield and document the decision authority and reasons for the hybrid baseline. |
 | Role-agent hypotheses are mistaken for company or resident evidence | Medium | High | Label their status; validate with actual stakeholders and residents before commitment. |
-| Owner-provided direction (for example the missed-appointment escalation threshold, the grant award status, or "all contracts/frameworks" scope) is treated as named-function verified evidence, a financial/legal sign-off, or a ratified operational rule | Medium | High | Keep owner direction labelled as planning direction in the BRD and as Open in the PRD's Open Questions register; require the accountable function (Retrofit, Finance, Procurement or Building Safety) to supply and ratify the actual evidence before FR-014 or any related control is built. |
+| Owner-provided direction (for example the missed-appointment rule, grant award status, or "all contracts/frameworks" scope) is treated as named-function verified evidence, a financial/legal sign-off, or a ratified operational rule | Medium | High | Keep the rule candidate and its demonstration synthetic-only; require company appointment evidence, Housing/Repairs ratification, Resident Engagement review and an approved configuration/change owner before operational use under OQ-009/OD-40. |
 | Incomplete BRD handoff or unresolved upstream quality issues propagate into the PRD | High | High | Obtain latest BRD quality report, coverage/waiver context and named approvals before Validate. |
 | Split authority across Azure and SharePoint creates conflicting approvals or evidence | Medium | High | Keep Azure SQL as programme-state authority; define SharePoint document authority only if verified; test links, versioning, export and reconciliation. |
 | Product demo passes while operational support or failure recovery is inadequate | Medium | High | Require runbooks, owner, recovery exercise and support model before any later live gate. |
@@ -678,20 +683,21 @@ resident contact regardless of how these questions resolve.
 | OQ-006 | Who is the named safety/hazard-service authority, how is synthetic/mock isolation enforced, and what evidence demonstrates no-bypass gates and tested recovery? | Building Safety; named hazard-service owner, isolation design and recovery-test evidence | CON-006; FR-004, FR-005, FR-010; AC-004, AC-005, AC-010 | Open |
 | OQ-007 | What are the validated frontline task, handoff, exception, usability and fallback needs for programme and resident-facing staff? | Neighbourhood Housing Officer; frontline task observation, usability session findings and fallback-process evidence | NFR-010 usability acceptance; FR-006 case view design | Open |
 | OQ-008 | Who owns the resident-service relationship, what later accessibility/inclusion research is planned, and what are the resident channel, choice, redress and privacy-readiness requirements? | Resident Engagement; named resident-service owner, accessibility research plan, channel inventory and redress/privacy controls | FR-012 release gate; AC-011; NFR-005, NFR-010 | Open |
+| OQ-009 | Do company appointment records support the owner-directed eligible-event codes and active-case lifecycle, and who owns threshold approval, configuration changes, audit and resident review? | Housing and Repairs; company appointment history and event-code mapping; named policy/configuration owner; Resident Engagement review; Programme/Digital configuration and audit design | Operational use of FR-014; BRD OD-08, OD-09 and OD-40 | Open |
 
-All eight rows remain unresolved as of this draft. Close an item only when the
+All nine rows remain unresolved as of this draft. Close an item only when the
 accountable function supplies verified, sourced evidence; do not mark a row
 resolved on the strength of a role-profile hypothesis alone.
 
-### Owner-direction cross-references (2026-10-03)
+### Owner-direction cross-references (2026-10-03 to 2026-10-04)
 
 The BRD's "Owner-Provided Direction on Sponsor Discovery Questions" subsection
 (v0.7.0) narrows, but does not close, three of the rows above. Each remains
 **Open** because owner direction is not named-function verified evidence.
 
 * **OQ-002** (validated journey): the BRD records a PAS 2035 role-profile
-  hypothesis (six illustrative roles) and an owner-directed escalation
-  control for repeated missed appointments (reflected as candidate FR-014).
+  hypothesis (six illustrative roles) and an owner-directed missed-appointment
+  control, now precisely defined in v0.12.0 and reflected as candidate FR-014.
   Neither is a validated workflow walkthrough or an accepted-handover
   protocol; the row stays Open pending Retrofit Programme Manager evidence.
 * **OQ-003** (grant evidence): the owner confirms a grant award exists and
@@ -708,6 +714,11 @@ The BRD's "Owner-Provided Direction on Sponsor Discovery Questions" subsection
   a technician audit of severity) but did not name a hazard-service authority
   or supply isolation/recovery-test evidence; the row stays Open pending
   Building Safety evidence.
+* **OQ-009** (missed-appointment rule): owner direction now defines the
+  provisional threshold and event semantics, but public evidence does not
+  validate five and company appointment data, Housing/Repairs ratification,
+  Resident Engagement review and configuration/change governance remain
+  outstanding under BRD OD-40. Keep FR-014 synthetic-only and candidate.
 
 Four other owner-direction items (survey/install/quality capacity, pilot
 building dependencies, tenure/lease data share, local-authority stock
