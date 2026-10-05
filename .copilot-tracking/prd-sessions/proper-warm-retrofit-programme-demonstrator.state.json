@@ -1,6 +1,6 @@
 {
   "prdFile": "docs/prds/proper-warm-retrofit-programme-demonstrator.md",
-  "lastAccessed": "2026-10-04T23:37:37+02:00",
+  "lastAccessed": "2026-10-05T23:29:12+02:00",
   "currentPhase": "build",
   "disclaimerShownAt": "2026-10-03T12:09:35+02:00",
   "phaseSkillsLoaded": [
@@ -14,7 +14,8 @@
     "prd-boundary-confirmation",
     "role-profile-open-question-synthesis",
     "rubric-aligned-review-pass",
-    "prd-brd-v0-12-alignment"
+    "prd-brd-v0-12-alignment",
+    "whole-workbench-workflow-coverage-2026-10-05"
   ],
   "answeredQuestions": {
     "initiative-name": "Proper Warm Retrofit Programme Demonstrator and Platform Assessment",
@@ -159,18 +160,41 @@
         "Ratify or withdraw FR-014/AC-016 once Retrofit and Building Safety confirm the escalation threshold and owning function.",
         "Obtain the 4 explicitly-declined data points (survey/install capacity, pilot dependencies, tenure/lease share, LA stock distribution) from the accountable functions; do not model them from role-profile or statistical hypothesis."
       ]
+    },
+    {
+      "file": "docs/brds/agentic-retrofit-programme-brd.md v0.14.0",
+      "status": "analyzed",
+      "timestamp": "2026-10-05T23:29:12+02:00",
+      "keyFindings": "Adds the home-centred workbench operating model and nine-workflow portfolio with problem hypotheses, accountable roles, bounded agent opportunities and proposed business-value evidence. No company operating process or benefit is validated.",
+      "integratedSections": [
+        "Executive Summary",
+        "Product Context",
+        "Users and Personas",
+        "Workflow Coverage",
+        "Functional Requirements",
+        "Traceability Matrix",
+        "MVP and Release Framing",
+        "Success Metrics",
+        "Risks and Assumptions",
+        "Open Questions"
+      ],
+      "conflicts": [],
+      "pendingActions": [
+        "Obtain a signed BRD handoff and current valid BRD quality report before PRD Validate.",
+        "Validate profile tasks, permissions, workflows, baselines and forecast assumptions with named company owners and representative users."
+      ]
     }
   ],
   "nextActions": [
     "Name the gate authority that may accept, revise or reject the proposed hybrid demonstrator baseline (OQ-001).",
     "Name sponsor, product owner, technical lead and control reviewers.",
-    "Obtain the signed BRD_TO_PRD_HANDOFF_V1 payload and a valid current BRD quality report before PRD Validate.",
+    "Obtain the signed BRD_TO_PRD_HANDOFF_V1 payload and a valid current BRD quality report for BRD v0.14.0 before PRD Validate.",
     "Inventory actual systems of record, M365/SharePoint entitlement and governance, Azure capability, APIs, supplier contracts and support capability; no Dataverse or Dynamics 365 is present per owner confirmation (OQ-004, OQ-005).",
     "Agree the option evaluation criteria, scoring weights, cost categories, affordability ceiling and decision authority before scoring; treat business apps as greenfield adoption (OQ-003).",
-    "Confirm representative journey scenarios and synthetic evidence model with Retrofit, Safety, Finance, Resident Engagement and Data owners (OQ-002).",
-    "Set calendar horizon, test workload, performance targets, accessibility standard, usability protocol and AI evaluation thresholds.",
+    "Confirm all nine synthetic workflow scenarios, representative profile tasks and shared evidence model with Retrofit, Safety, Finance, Resident Engagement, Procurement, Quality and Data owners (OQ-002, OQ-004).",
+    "Set calendar horizon, test workload, bulk-edit limits, performance targets, accessibility standard, usability protocol, dashboard definitions, forecast method and AI evaluation thresholds.",
     "Validate resident-facing assumptions with direct research before including a live resident product journey (OQ-008).",
-    "Obtain accountable-function evidence to close each row in the Open Questions register (OQ-001 to OQ-009).",
+    "Obtain accountable-function evidence to close each row in the Open Questions register (OQ-001 to OQ-014).",
     "Obtain company appointment evidence, Housing/Repairs ratification, Resident Engagement review, and a named configuration/change owner before operational use of FR-014.",
     "Assign weights and run the Options Gate Scoring Framework once cost, support and evidence inputs are available; it is currently criteria-only (TBD weights).",
     "Address the A4 (no working demonstrator evidence) and D3 (no publication path) floor-violation gaps separately; these cannot be closed by further PRD document edits.",
@@ -194,7 +218,13 @@
     "candidate-missed-appointment-control-aligned-to-BRD-v0.12.0-and-kept-synthetic-only",
     "owner-confirmed-FR-014-synthetic-acceptance-tests-only",
     "OQ-009-records-company-ratification-and-configuration-governance",
-    "new-rubric-targeted-content-is-methodology-or-candidate-not-fabricated-results"
+    "new-rubric-targeted-content-is-methodology-or-candidate-not-fabricated-results",
+    "all-nine-BRD-workflows-have-screen-and-scenario-coverage",
+    "role-workspaces-share-common-data-and-server-enforced-permissions",
+    "individual-and-bulk-edit-controls-and-audit-defined",
+    "return-reopen-and-affected-approval-invalidation-defined",
+    "coordinator-heatmap-funnel-timeline-and-uncertainty-aware-forecast-defined",
+    "single-PRD-justified-by-shared-case-and-workflow-foundation"
   ],
   "userPreferences": {
     "detail-level": "comprehensive",
@@ -202,6 +232,8 @@
     "working-association-name": "Proper North Homes",
     "working-programme-name": "Proper Warm",
     "fr014-synthetic-test-scope": "Owner confirms exercise the provisional RULE-006 behavior in synthetic acceptance tests only; this is not operational or company policy approval.",
-    "platform-preference": "Owner requested the hybrid as PRD demonstrator baseline and confirmed Excel-based coordination with no Dataverse/Dynamics; other systems and authority unknown. Retain the other options as comparators. This is not production or procurement approval."
+    "whole-workbench-workflow-coverage-2026-10-05": "Rewrite the existing PRD as one role-based retrofit workbench spanning all nine BRD workflows, with profile-specific screens over shared data, new/priority/stale/attention queues, individual and permitted multi-case edits, traceable handoffs and returns/reopens, coordinator heatmap/funnel/timeline/uncertainty-aware forecasts, and bounded source-linked next-step suggestions. One PRD is retained because workflows share case, authority, handoff and evidence foundations.",
+    "platform-preference": "Owner requested the hybrid as PRD demonstrator baseline and confirmed Excel-based coordination with no Dataverse/Dynamics; other systems and authority unknown. Retain the other options as comparators. This is not production or procurement approval.",
+    "prd-scope": "One PRD for the role-based Proper Warm retrofit workbench; workflow areas are modules and release increments over shared cases, permissions, handoffs and evidence, not separate products."
   }
 }

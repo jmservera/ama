@@ -947,3 +947,53 @@ metadata when the knowledge base was created.
 * Bumped the PRD to v0.5.0 and updated its session state and this catalog.
   The PRD remains draft: no signed BRD handoff or current v0.12.0 quality
   report is available, and OQ-001 to OQ-009 remain open.
+
+## [2026-10-05] query | Define the home-centred retrofit workbench flow
+
+* Reviewed the case study, addendum, BRD, discovery brief, PRD, synthetic data
+  dictionary and the restored `feat/proper-warm-prototype` branch at
+  `5e52ceb`.
+* Expanded the BRD's future-state process with linked building and home
+  records, separated safety/eligibility/capital prioritisation, role-oriented
+  queues and accepted handoffs, resident complaint/service/defect intake,
+  provider work orders and invoice matching, distinct grant claims, budget and
+  work approval gates, and source-linked agent next-step suggestions.
+* Added a connected workflow portfolio covering stock and prioritisation,
+  assessment/design readiness, resident access and choice, procurement and
+  capacity, hazard response, quality and defects, invoice/payment and grant
+  reconciliation, case orchestration, and portfolio investment. Each maps the
+  underlying problem hypothesis to owners, bounded AI opportunities and
+  proposed business-value evidence, with end-to-end and task-level comparison
+  kept distinct.
+* The product direction is a proposed home-centred case workbench, not an
+  approved company process. The resident intake scope is limited to service,
+  complaint and defect/repair reports, not compensation or reimbursement.
+* Updated the BRD to v0.14.0, its catalog entry and this log. Company systems,
+  named service owners, resident channels, response targets, delegated limits,
+  contract/payment terms and resident research remain open. No fixed payment
+  timing or compensation process was inferred.
+* No legal or regulatory source was newly verified; the local evidence remains
+  subject to the existing register and live-use checks.
+
+## [2026-10-05] query | Rewrite PRD for the full retrofit workbench
+
+* Replaced the narrow demonstrator PRD framing with one role-based Proper Warm
+  Retrofit Programme Workbench PRD, using the BRD v0.14.0 home-centred model
+  and nine-workflow portfolio.
+* Represented every workflow with a workbench module/screen and synthetic
+  scenario coverage. Added profile workspaces over shared case data, queue
+  signals for new/priority/stale/blocked/attention work, individual and
+  guarded bulk edits, auditable handoffs and return/reopen behavior, and
+  coordinator heatmap, funnel, timeline, stakeholder progress and
+  uncertainty-aware forecast views.
+* Kept one PRD because workflows share case identity, permissions, evidence,
+  authority controls, handoffs and reporting; staged implementation through
+  four increments. Retained bounded, source-linked agent suggestions and
+  workflow-only paths.
+* Updated the PRD to v0.6.0 with 30 functional requirements, 32 acceptance
+  criteria, 13 non-functional requirements, 8 constraints and 14 open
+  questions. The PRD remains draft and synthetic-only. No signed BRD handoff,
+  current valid BRD quality report, confirmed company process, forecast
+  calibration or operational approval is claimed.
+* Updated the PRD session state and catalog entry. No legal or regulatory
+  source was newly verified.
