@@ -1,17 +1,19 @@
 {
   "schema_version": 1,
   "source": "workflow",
-  "scored_at": "2026-10-05T09:58:34+00:00",
-  "commit": "f5ed380744fff7bc9d4c761f0245d2a19e493bd1",
+  "scored_at": "2026-10-05T13:02:30+00:00",
+  "commit": "a66c2b56ae0e336fc1107337539f6af415ef2ce8",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37293019396",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37312550942",
   "fingerprints": {
     "brd": "7aa429c9f1652392a4535efac0ed13e4d4388cb7fc5fc6194d229ada77050915",
-    "prd": "48107012686e7dd5855178eafcf0c5ffc775c167c5053d44bfc300ac984fda8d"
+    "prd": "48107012686e7dd5855178eafcf0c5ffc775c167c5053d44bfc300ac984fda8d",
+    "solution-code": "e3ed25294c9bbf2a920b8cd1bdfb5f2c019c2df4760baf5016e686b9c588c6a1",
+    "infrastructure": "e339aadfc3d729adacf647db1cb0e04f62b3e4f9d8ea7dce1564f2a2d9dd4dbb"
   },
-  "total": 66,
+  "total": 65,
   "sections": {
-    "A": 26,
+    "A": 25,
     "B": 19,
     "C": 12,
     "D": 9
@@ -20,12 +22,13 @@
   "outcome": "Not Yet Met (floor)",
   "criteria": {
     "A1": {
-      "score": 5,
+      "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:176",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:182"
+        "prototype/properwarm/domain.py:1",
+        "prototype/properwarm/storage.py:1",
+        "prototype/deploy/main.bicep:84"
       ],
-      "rationale": "Component Contracts and Failure Domains table unchanged; this PR only touches rubric tooling files, not BRD/PRD content."
+      "rationale": "Clean domain/storage/imports/server/web separation with documented contracts, but the Bicep caps the app at a single replica on ephemeral SQLite with no scaling path."
     },
     "A2": {
       "score": 5,
@@ -38,41 +41,45 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:192",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:198"
+        "prototype/properwarm/server.py:46",
+        "prototype/properwarm/storage.py:58",
+        "prototype/properwarm/imports.py:120"
       ],
-      "rationale": "Threat Model table untouched; this diff only modifies rubric scoring scripts/config."
+      "rationale": "CSP/no-store/nosniff headers, loopback-only binding, parameterized SQL, fail-closed safety-hold load, and synthetic-only CHECK constraints show concrete, stated controls against a clear threat model."
     },
     "A4": {
-      "score": 1,
-      "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1745"
-      ],
-      "rationale": "Still only design documents; no working implementation added, and this PR is rubric tooling only."
-    },
-    "A5": {
-      "score": 3,
-      "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:363",
-        "docs/brds/agentic-retrofit-programme-brd.md:1119"
-      ],
-      "rationale": "Operational observability evidence unchanged; no artifact content changed in this PR."
-    },
-    "A6": {
       "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:407",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:420"
+        "prototype/properwarm/server.py:1",
+        "prototype/tests/test_storage.py:1",
+        "prototype/README.md:93"
       ],
-      "rationale": "AI Model Selection and Evaluation Harness section untouched by this rubric-tooling-only PR."
+      "rationale": "Case search, stage-gated advance, appointment/escalation, import/export and audit log are all implemented end to end with unit tests, and known gaps (ephemeral storage, no auth, untested IaC) are disclosed proactively."
+    },
+    "A5": {
+      "score": 4,
+      "evidence": [
+        "prototype/properwarm/server.py:46",
+        "prototype/properwarm/storage.py:49",
+        "prototype/deploy/main.bicep:27"
+      ],
+      "rationale": "Structured logging, an audit-log table, WAL journaling, explicit size/row caps, and a wired Log Analytics workspace with stated container CPU/memory show instrumentation and bounded cost, but no measured SLOs or traces."
+    },
+    "A6": {
+      "score": 2,
+      "evidence": [
+        "prototype/README.md:9",
+        "prototype/properwarm/domain.py:1"
+      ],
+      "rationale": "The shipped demonstrator is entirely deterministic rule-based workflow code with no model call, prompt, or evaluation harness anywhere in it, and the README states explicitly there is no external AI integration."
     },
     "A7": {
-      "score": 3,
+      "score": 1,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:435",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:443"
+        "prototype/README.md:9",
+        "prototype/properwarm/domain.py:139"
       ],
-      "rationale": "Agent Orchestration Pattern evidence unchanged; no new autonomous behaviour demonstrated."
+      "rationale": "Stage advancement is a plain conditional state machine with fixed gate checks; there is no autonomous agent, no LLM-driven decision, and no handoff/reflection pattern anywhere in the shipped code."
     },
     "B1": {
       "score": 4,
@@ -113,10 +120,10 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1488",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:683"
+        "prototype/README.md:1",
+        "prototype/README.md:77"
       ],
-      "rationale": "Documentation density assessment unchanged; this PR does not modify BRD/PRD text."
+      "rationale": "The new prototype README is clearly structured, navigable and standalone (safety boundaries, run instructions, workbench flow, limitations), reinforcing the existing capstone documentation quality."
     },
     "B7": {
       "score": 4,
