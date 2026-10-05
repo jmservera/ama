@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-04
+ms.date: 2026-10-06
 ms.topic: reference
 ---
 
@@ -1014,3 +1014,19 @@ metadata when the knowledge base was created.
 * Aligned telemetry vocabulary to the shared OpenTelemetry foundations:
   semantic conventions, resource/log fields, trace correlation, bounded
   metric cardinality and PII redaction. Updated PRD state and catalog counts.
+
+## [2026-10-06] query | Clarify capstone case framing and exercise-data provenance
+
+* At the owner's direction, present Proper North Homes as the real customer
+  case and attendees as its stakeholders in their actual roles. Clarified
+  that the constructed exercise records are not evidence of company
+  performance, resident outcomes, systems or operating decisions.
+* Updated the BRD to v0.14.1 and the workbench PRD to v0.6.2; aligned the
+  index and PRD session state. The underlying operating-data exercise pack
+  was not renamed or changed.
+* Files touched: `../brds/agentic-retrofit-programme-brd.md`,
+  `../prds/proper-warm-retrofit-programme-demonstrator.md`, `README.md`,
+  `.copilot-tracking/prd-sessions/proper-warm-retrofit-programme-demonstrator.state.json`
+  and this log.
+* No regulatory claims, process authority, company baselines or operating
+  outcomes were added or validated.
