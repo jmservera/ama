@@ -342,6 +342,39 @@ def test_given_force_when_context_written_then_baseline_withheld(tmp_path):
 
     # Assert
     assert (context["calibration"], context["baseline"]) == (True, {"source": None, "total": None, "sections": None, "criteria": {}})
+    rubric = prepare.load_trusted_json(root, "HEAD", prepare.RUBRIC_PATH)[0]
+    assert list(context["scorecard_template"]["criteria"]) == [criterion["id"] for criterion in rubric["criteria"]]
+    assert all(entry["score"] is None and entry["rationale"].startswith("UNSCORED:") for entry in context["scorecard_template"]["criteria"].values())
+
+
+def test_given_incremental_context_when_scaffold_built_then_all_baseline_fields_are_copied_without_mutation(tmp_path):
+    root = make_repo(tmp_path)
+    state = prepare.compute_state(root, "HEAD", "push")
+    baseline = json.loads(json.dumps(state["baseline"]))
+    template = prepare.build_scorecard_template(state["rubric"], state["baseline"], False, False)
+
+    assert list(template["criteria"]) == [criterion["id"] for criterion in state["rubric"]["criteria"]]
+    assert template["criteria"]["A2"] == {
+        "score": baseline["criteria"]["A2"]["score"],
+        "evidence": baseline["criteria"]["A2"]["evidence"],
+        "rationale": baseline["criteria"]["A2"]["rationale"],
+        "change_reason": "",
+    }
+    assert state["baseline"] == baseline
+
+
+def test_given_bootstrap_context_when_written_then_template_is_unscored_and_seed_is_withheld(tmp_path):
+    root = make_repo(tmp_path)
+    git(root, "rm", ".github/rubric/scores/latest.json")
+    git(root, "commit", "-m", "remove baseline for bootstrap")
+    state = prepare.compute_state(root, "HEAD", "push")
+
+    context = json.loads(prepare.write_context(root, state, tmp_path / "out").read_text(encoding="utf-8"))
+
+    assert context["bootstrap"] is True
+    assert context["baseline"]["criteria"] == {}
+    assert list(context["scorecard_template"]["criteria"]) == [criterion["id"] for criterion in state["rubric"]["criteria"]]
+    assert all(entry["score"] is None and entry["rationale"].startswith("UNSCORED:") for entry in context["scorecard_template"]["criteria"].values())
 
 
 def test_given_pr_when_context_written_then_diff_base_is_merge_base(tmp_path):
