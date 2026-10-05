@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "source": "workflow",
-  "scored_at": "2026-10-04T22:16:01+00:00",
-  "commit": "6cbe47c4661eb6d8ba39879788372ace7f703097",
+  "scored_at": "2026-10-05T09:58:34+00:00",
+  "commit": "f5ed380744fff7bc9d4c761f0245d2a19e493bd1",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37238998956",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37293019396",
   "fingerprints": {
     "brd": "7aa429c9f1652392a4535efac0ed13e4d4388cb7fc5fc6194d229ada77050915",
     "prd": "48107012686e7dd5855178eafcf0c5ffc775c167c5053d44bfc300ac984fda8d"
@@ -25,7 +25,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:176",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:182"
       ],
-      "rationale": "Component Contracts and Failure Domains table remains unchanged by this diff; RULE-006 precision gain does not add new component-boundary evidence."
+      "rationale": "Component Contracts and Failure Domains table unchanged; this PR only touches rubric tooling files, not BRD/PRD content."
     },
     "A2": {
       "score": 5,
@@ -33,7 +33,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:312",
         "docs/brds/agentic-retrofit-programme-brd.md:353"
       ],
-      "rationale": "Cross-functional challenge table stays the primary evidence; the new 2026-10-04 role-profile challenge table reinforces but does not exceed the existing maximum."
+      "rationale": "Cross-functional challenge table unchanged; no BRD/PRD content changed in this PR."
     },
     "A3": {
       "score": 5,
@@ -41,14 +41,14 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:192",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:198"
       ],
-      "rationale": "Threat Model table is untouched by this diff; no change to security/compliance evidence."
+      "rationale": "Threat Model table untouched; this diff only modifies rubric scoring scripts/config."
     },
     "A4": {
       "score": 1,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:1745"
       ],
-      "rationale": "Still only design documents and refined requirement wording; no working implementation anywhere in the changed files."
+      "rationale": "Still only design documents; no working implementation added, and this PR is rubric tooling only."
     },
     "A5": {
       "score": 3,
@@ -56,7 +56,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:363",
         "docs/brds/agentic-retrofit-programme-brd.md:1119"
       ],
-      "rationale": "RULE-006 now specifies event-history and configuration-version audit retention, a narrow observability addition, but nothing is instrumented or measured; overall operational picture unchanged."
+      "rationale": "Operational observability evidence unchanged; no artifact content changed in this PR."
     },
     "A6": {
       "score": 4,
@@ -64,7 +64,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:407",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:420"
       ],
-      "rationale": "AI Model Selection and Evaluation Harness section is untouched by this diff."
+      "rationale": "AI Model Selection and Evaluation Harness section untouched by this rubric-tooling-only PR."
     },
     "A7": {
       "score": 3,
@@ -72,7 +72,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:435",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:443"
       ],
-      "rationale": "RULE-006 changes refine a deterministic business rule, not agent orchestration; the Agent Orchestration Pattern evidence is unchanged and no autonomous behaviour is demonstrated."
+      "rationale": "Agent Orchestration Pattern evidence unchanged; no new autonomous behaviour demonstrated."
     },
     "B1": {
       "score": 4,
@@ -80,14 +80,14 @@
         "docs/brds/agentic-retrofit-programme-brd.md:108",
         "docs/brds/agentic-retrofit-programme-brd.md:1215"
       ],
-      "rationale": "No live delivery evidence was added; baseline retained for this live-scored criterion."
+      "rationale": "No live delivery evidence added; baseline retained for this live-scored criterion."
     },
     "B2": {
       "score": 3,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:623"
       ],
-      "rationale": "No live delivery evidence was added; baseline retained for this live-scored criterion."
+      "rationale": "No live delivery evidence added; baseline retained for this live-scored criterion."
     },
     "B3": {
       "score": 1,
@@ -116,14 +116,14 @@
         "docs/brds/agentic-retrofit-programme-brd.md:1488",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:683"
       ],
-      "rationale": "Documentation grows denser still, adding the role-profile challenge table and OQ-009, reinforcing the baseline's reader-effort-heavy, no-slide-deck assessment."
+      "rationale": "Documentation density assessment unchanged; this PR does not modify BRD/PRD text."
     },
     "B7": {
       "score": 4,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:447"
       ],
-      "rationale": "Owner-direction data point table is unchanged by this diff."
+      "rationale": "Owner-direction data point table unchanged by this diff."
     },
     "C1": {
       "score": 5,
@@ -131,14 +131,14 @@
         "docs/brds/agentic-retrofit-programme-brd.md:530",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:683"
       ],
-      "rationale": "New OQ-009 names Housing and Repairs as accountable for missed-appointment evidence, reinforcing the already-strong discovery framing at its existing maximum."
+      "rationale": "Discovery framing evidence unchanged; already at existing maximum."
     },
     "C2": {
       "score": 2,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:312"
       ],
-      "rationale": "No live session evidence of real-time listening or disagreement navigation was added; baseline retained for this live-scored criterion."
+      "rationale": "No live session evidence added; baseline retained for this live-scored criterion."
     },
     "C3": {
       "score": 5,
@@ -146,7 +146,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:120",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:654"
       ],
-      "rationale": "New text keeps explicit caveats that role-profile panels are hypotheses, not company evidence, and that the reviewer cannot exercise actual executive authority, reinforcing honesty at the existing maximum."
+      "rationale": "Honesty-caveat evidence unchanged; already at existing maximum."
     },
     "D1": {
       "score": 4,
@@ -154,7 +154,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:251",
         "docs/brds/agentic-retrofit-programme-brd.md:1488"
       ],
-      "rationale": "The refined RULE-006 rule and new role-profile challenge table add original synthesis, but the baseline's core gap (no direct company engagement evidence) is unchanged."
+      "rationale": "Core gap (no direct company engagement evidence) unchanged; this PR only touches rubric tooling."
     },
     "D2": {
       "score": 4,
@@ -162,14 +162,14 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:2",
         "docs/brds/agentic-retrofit-programme-brd.md:2"
       ],
-      "rationale": "Structured, cited and version-controlled with clear revision tracking (v0.12.0/v0.5.0); still not a standalone publishable piece separate from the BRD/PRD apparatus."
+      "rationale": "Structured, cited, version-controlled; still not a standalone publishable piece. Unchanged by this PR."
     },
     "D3": {
       "score": 1,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:1"
       ],
-      "rationale": "No publication, filing or external dissemination path is recorded anywhere in the repository."
+      "rationale": "No publication or external dissemination path recorded; unchanged by this PR."
     }
   }
 }
