@@ -1,14 +1,17 @@
 ---
+title: "Proper Warm Retrofit Programme Workbench"
+description: "Product requirements for a role-based retrofit delivery workbench covering the Proper Warm workflow portfolio"
+author: AMA Research Team
+ms.date: "2026-10-06"
+ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
-title: "Proper Warm Hybrid Retrofit Programme Demonstrator"
 status: "draft"
-version: "0.5.0"
+version: "0.6.2"
 owners: ["AMA Research Team (draft custodian); product owner to be named"]
 reviewers: ["Product sponsor, Asset, Digital, Finance, Retrofit, Safety, Procurement, Resident Engagement (to be confirmed)"]
 created_date: "2026-10-03"
-last_updated: "2026-10-04"
-ms.date: "2026-10-04"
-product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003"]
+last_updated: "2026-10-06"
+product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003", "GOAL-004"]
 product_goal_smart_status: "deferred"
 fr_to_ac_coverage_threshold_pct: 80.0
 fr_to_goal_coverage_threshold_pct: 100.0
@@ -26,759 +29,724 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-# Proper Warm Hybrid Retrofit Programme Demonstrator
-
-> **PRD-2026-AMA48-001** | Status: draft | Version: 0.5.0 | Last Updated: 2026-10-04
+> **PRD-2026-AMA48-001** | Status: draft | Version: 0.6.2 | Last Updated: 2026-10-06
 
 ## Executive Summary
 
-Proper Warm needs to modernise retrofit programme coordination while preserving
-resident choice, safety, competent professional authority and financial
-controls. The source BRD describes a 60,000-home case-study in which a small
-team coordinates assessment, funding, procurement, resident engagement and
-quality through spreadsheets. It also cautions that spreadsheets have not
-been established as the binding delivery constraint.
+Proper Warm needs a shared product surface for the connected retrofit
+workflows, not one isolated home screen or five end-to-end agents. The
+proposed product is a home-centred workbench with linked building, scheme,
+work-package and service cases. People use role-specific screens and queues
+over the same governed case data to see new work, approved priority, stale
+evidence, blockers, handoffs, progress and suggested next actions.
 
-The owner confirms that current coordination uses Excel files and that Proper
-North Homes has no Dataverse or Dynamics 365. The M365 tenant, SharePoint
-availability and licences remain unverified. This changes the business-apps
-option from a potential reuse of an incumbent estate to a greenfield platform
-adoption.
+The scope is one PRD because the workflows share property/building identity,
+case lifecycle, evidence provenance, authority checks, handoffs, audit and
+reporting. The workbench will represent the full workflow portfolio in
+end-to-end exercise scenarios for the Proper North Homes case. Delivery is
+staged: establish the shared case, role workspaces and safe workflow controls first; then complete the
+domain scenarios and portfolio analytics. The stages are delivery increments
+of one product, not separate products or PRDs.
 
-This PRD uses an Azure-led hybrid as the proposed demonstrator baseline:
-Azure hosts the programme control plane, structured lifecycle data,
-deterministic gates, integrations and bounded AI; M365 may provide managed
-documents and staff collaboration after tenant capability, licensing and
-governance are verified. Azure is not assumed to replace existing authoritative
-housing, repairs, safety, finance or contractor systems. The design will avoid
-Dataverse and Dynamics 365 dependencies unless a later approved decision
-changes the scope.
+The workbench covers stock and prioritisation, technical assessment/design,
+resident service and measure decisions, provider capacity and work release,
+hazard referrals, quality/defects/handover, provider invoices and grant
+claims, cross-team case orchestration, and portfolio progress, investment and
+forecasting. It is a coordination and evidence product. Existing systems and
+accountable people retain authoritative decisions; the demonstrator does not
+make live resident contact, instruct suppliers, approve work, submit claims,
+or release payment.
 
-The appraisal will compare the hybrid with full Azure custom and a greenfield
-business-apps alternative, but only the hybrid is the proposed build target.
-Synthetic data will be used to prove one representative property journey,
-including controlled import of representative Excel workbook structures and
-failure/exception paths. This does not authorize live Excel cutover, resident
-contact, production integration or operational use. If the hybrid cannot meet
-the controls or its support and whole-life costs cannot be justified, the
-architecture decision must return to the authorized reviewers.
+The owner directed an Azure-led hybrid only as a proposed non-production
+demonstrator baseline. Azure programme-state authority, integrations,
+deterministic gates and bounded AI remain subject to the options and approval
+gates. SharePoint/M365 capability is unverified; Excel-based coordination is
+confirmed, while other company systems and their authority are unknown.
+Records used in the non-production exercise are constructed for the
+demonstration and do not establish actual company performance, resident
+outcomes or operational decisions. Any use of real personal or operational
+data requires a separate release decision.
 
-The primary success signals are an evidence-backed comparison of all three
-approaches and a non-production hybrid scenario suite. Safety, consent,
-authority, recovery and evidence traceability are release conditions, not
-tradeable throughput targets. Calendar dates, cost ceilings, performance
-thresholds, baselines and named approvers remain to be established.
+### Case and presentation framing
+
+For the capstone presentation, Proper North Homes is treated as the real
+customer case and attendees are addressed as its stakeholders in their actual
+roles. This presentation framing does not establish unverified company
+systems, baselines, staffing, delegated authority or operating outcomes.
+Records used to exercise the workbench are constructed examples, not evidence
+of actual company performance or resident outcomes.
 
 ## Product Context
 
 ### Problem and opportunity
 
-The business problem is fragmented coordination across a property lifecycle,
-not simply the existence of spreadsheets. Programme teams need to understand
-which homes are ready, what is blocking progress, who owns the next action,
-which evidence is authoritative, and whether capacity, resident decisions,
-funding and safety conditions allow progression. The source BRD requires
-existing authoritative housing, asset, repairs, finance, procurement and
-contractor services to retain their accountability.
+Case Study 48 asks for agents to improve a small team's coordination of
+assessments, grant applications, procurement, resident consent and quality.
+Later analysis challenges the idea that autonomous agents own those
+workflows. The core product problem is that work crosses home, building,
+resident, professional, supplier, safety and finance boundaries, while each
+role needs a different working view and accountable decisions must remain
+visible and controlled.
 
-The project owner prefers Azure for the AMA capstone and their Solution
-Architect practice, while explicitly requesting an objective assessment of
-business-app and mixed options. The owner also confirms that current
-coordination uses Excel files and that Dataverse and Dynamics 365 are absent.
-These are owner-provided inputs; the latter updates the options baseline but
-does not confirm M365 tenant capabilities, licences or SharePoint readiness.
-The capstone preference is not itself a platform approval or proof that Azure
-is the best customer investment.
+The BRD identifies nine connected workflow areas and proposed value evidence.
+They are evidence-backed problem hypotheses, not confirmed operational
+failures at Proper North Homes. Phase 0 must establish which constraints
+actually bind. The product must therefore make missing evidence and unknown
+ownership visible, support conventional workflow without AI, and avoid
+presenting its forecasts or suggestions as approved commitments.
 
-### Options presented to the Proper Warm role profiles
+### Product boundary and single-product rationale
 
-The eight `company-*` role profiles were asked to challenge the same three
-options from their defined perspectives: Asset Executive, Retrofit Programme
-Manager, Finance and Grants, Procurement and Contracts, Resident Engagement,
-Data and Performance, Building Safety, and Neighbourhood Housing Officer.
-These profiles are sector-informed research instruments, not actual
-employees, customers, residents or decision-makers. Their output is not
-company evidence, resident research, approval or legal advice.
+This PRD describes one modular workbench because the workflows share:
 
-| Option | Candidate boundary | Role-profile challenge |
-| --- | --- | --- |
-| Full Azure custom | Azure workbench, APIs, programme data and deterministic workflow, integrations, and bounded Foundry-based AI | Offers maximum control over bespoke lifecycle contracts, but requires the strongest evidence for build cost, engineering support, operations, maintenance and exit. It does not create competent or supplier capacity. |
-| Business apps | Greenfield Power Apps, Dataverse, Power Automate, Copilot Studio and SharePoint adoption; there is no current Dataverse or Dynamics 365 estate to reuse | Could provide a managed low-code platform if adopted, licensed and supported. It must prove server-side authority, evidence retention/export, failure recovery, affordability and cross-system fit; resident suitability is not established. |
-| Azure-led hybrid (proposed build target) | Azure programme control plane, structured state, integrations and bounded AI; M365 managed documents and staff collaboration only where verified | A plausible starting architecture for the demonstrator. It adds identity, permissions, support, evidence-authority and integration boundaries that must be demonstrated end to end. |
+* A versioned home case linked to its building, scheme, work package and
+  relevant resident-service, hazard, supplier, quality and finance records
+* Shared identity resolution, evidence lineage, lifecycle, task ownership,
+  permissions, audit and deterministic transition controls
+* Role-specific queues and dashboards over the same records
+* Cross-domain dependencies, handoffs, returned work and common progress
+  reporting
 
-The role-profile synthesis is deliberately conditional:
+Splitting these into separate products would create competing case status,
+handoff, evidence and audit views. The modules may be delivered in increments
+and may integrate with separate systems of record, but they remain one
+product experience and one PRD. External provider and resident interactions
+are bounded channels or intake records, not assumptions that those groups use
+the internal workbench directly.
 
-* Asset found no customer-wide platform winner without the asset plan, capital
-  envelope and whole-life-cost evidence.
-* Retrofit and frontline profiles considered a mixed approach a candidate,
-  but noted that existing business applications could be preferable if they
-  meet the same controls with less effort and cost.
-* Finance and Procurement required equivalent whole-life costing, real
-  entitlement and contract evidence, explicit support ownership and a
-  testable exit path.
-* Resident Engagement found no resident preference evidence and called for
-  direct research, accessible and non-digital routes, measure-specific
-  decisions and human-authorised consequential contact.
-* Data and Performance required source ownership, stable identifiers,
-  event-level evidence, reproducible measures and portable exports.
-* Building Safety found no inherently safer platform and required the hazard
-  service, human safety authority, fail-closed controls and tested recovery to
-  remain effective across all options.
+### Proposed platform boundary
 
-The owner subsequently confirmed Excel-based current coordination and no
-Dataverse or Dynamics 365; other systems and authority behind that
-coordination remain unknown. Accordingly, business apps must be costed as a
-greenfield adoption, not as reuse. The hybrid is the requested PRD baseline;
-M365/SharePoint capability remains to be verified. The full option comparison in the
-[Case Study 48 Addendum](../case_study_48_addendum.md#implementation-options-and-provisional-platform-recommendation)
-provides the architecture rationale. The hybrid is proposed for the
-non-production demonstrator but remains subject to the appraisal and approval
-gate before implementation commitments or production use.
+The owner's requested Azure-led hybrid is the demonstrator baseline, not an
+approved production architecture:
 
-### Proposed hybrid boundary
-
-* **Azure programme control plane:** a web workbench and domain API on Azure
-  Container Apps; Azure SQL Database as the authoritative store for
-  demonstrator programme state, controlled transitions, approval references,
-  handoffs and reconciliation; Durable Functions on Azure Functions for
-  long-running handoffs and explicit human-review waits where needed.
-* **Evidence documents:** a governed SharePoint document library is the
-  proposed M365 location for managed collaboration documents only if tenant
-  capability, licensing, retention, access and support are confirmed. The
-  Azure programme store holds identifiers, metadata, version references and
-  approval relationships, not duplicate document approvals. If SharePoint is
-  not available or suitable, keep the demonstrator's synthetic files in
-  controlled Azure Blob Storage and record that the M365 integration remains
-  unproven.
-* **Bounded AI:** Azure AI Foundry models may perform sourced extraction,
-  reconciliation, drafting and raise-only flags through tool APIs. Authorization
-  and state transitions are enforced by the domain API, not by agent
-  instructions.
-* **Identity and operations:** Microsoft Entra ID authentication, managed
-  identities for service-to-service access, role-based least privilege,
-  versioned configuration, deployment automation, correlated telemetry,
-  disablement and tested manual/reconciliation fallback.
-* **Existing systems:** Excel workbooks are the current coordination
-  artefacts. In the demonstrator, representative synthetic workbook structures
-  are imported through a validated mapping and exception queue; the source
-  files are preserved unchanged. No production workbook migration or live
-  integration is authorized. Asset, repairs, safety, finance, procurement and
-  contractor records remain authoritative in their existing systems.
-
-This is a candidate service allocation, not a final service commitment.
-Validate Azure region and feature availability, service lifecycle/support,
-M365 tenant and SharePoint configuration, data residency, cost, network and
-identity boundaries, disaster recovery and operating ownership before build
-approval. Avoid Service Bus, Azure AI Search, Document Intelligence and
-Copilot Studio in the initial slice unless a tested requirement justifies the
-additional service and support surface.
+* Azure-hosted web workbench, domain API, structured programme state,
+  deterministic workflow and bounded AI, subject to a comparable options
+  appraisal against full Azure custom and greenfield business applications.
+* Excel is an import source for validated, traceable exercise records, not
+  the target workflow or approval authority. Source workbooks remain unchanged.
+* SharePoint may hold managed collaboration documents only if tenant,
+  licensing, governance and support checks pass. Otherwise use the documented
+  controlled Azure Blob Storage fallback for the demonstrator.
+* Asset, housing, repairs, hazard, finance, procurement and supplier systems
+  retain their authority. The demonstrator uses exercise adapters or mocks;
+  it is not a live integration or source-system replacement.
+* No Dataverse or Dynamics 365 dependency is in scope unless a later approved
+  decision changes the baseline. Other existing systems remain unknown.
 
 ### Component Contracts and Failure Domains
 
-Each component below is treated as a separately deployable, separately
-failing unit. Naming a contract and a failure domain does not imply the
-contract is implemented or the failure behaviour is tested; both remain
-demonstrator design work.
+The following is a proposed demonstrator decomposition, not a selected Azure
+service plan or an implemented architecture. Each boundary needs a contract
+and a tested failure/recovery path before build acceptance. A component
+failure must not create an unrecorded transition or imply approval.
 
-| Component | Contract (interface and data owned) | Failure domain and fallback |
+| Component | Contract and owned responsibility | Failure domain and required fallback |
 | --- | --- | --- |
-| Domain API (Azure Container Apps) | Exposes the only write path for controlled state transitions, approvals and AI-proposal acceptance; all other components call it rather than writing Azure SQL directly. | If unavailable, no transition can occur; reads from Azure SQL may remain available read-only. No agent or workflow bypasses the API to change state. |
-| Azure SQL Database (programme state) | Authoritative store for lifecycle state, transition history, handoff and evidence-link records; schema versioned with the domain API. | If unavailable, the domain API fails closed (CON-006, NFR-008); no transition is accepted until the store is reachable and reconciled. |
-| Durable Functions (long-running handoffs) | Owns orchestration of multi-step handoffs and human-review waits; emits events to the domain API, does not hold authoritative state itself. | An interrupted orchestration must be resumable from the last durable checkpoint without duplicating a transition; idempotency keys are required on every resumed step. |
-| Bounded AI (Azure AI Foundry) | Receives a tool-scoped request with source references and returns a proposal (extraction, reconciliation, draft or flag) plus a confidence/rationale field; never calls the domain API directly. | If the model is unavailable, degraded or exceeds a defined latency/error threshold, the workflow falls back to workflow-only (no-AI) handling for that task and records the fallback (AC-007, AC-010). |
-| Document store (SharePoint or Blob fallback) | Holds synthetic documents and version/approval metadata referenced, not duplicated, by the domain API. | If SharePoint prerequisites are unverified or the service is unavailable, the demonstrator uses the controlled Blob Storage fallback automatically at configuration time, not as an untested runtime failover (NFR-011, CON-008). |
-| Excel import pipeline | Validates and maps a representative workbook against a declared schema; writes only to a staging area and the exception queue, never to the source file. | A malformed or partially mapped workbook is rejected row-by-row into the exception queue; the pipeline does not partially commit a workbook (AC-014). |
+| Workbench and domain API | The API is the only write path for case edits, handoffs, returns, approvals and accepted suggestions. It enforces identity, field/action permissions, deterministic gates, optimistic concurrency and audit creation; UI views do not authorize actions. | If unavailable, no controlled transition or edit is committed. Permitted reads may be read-only; users see the affected action and a manual recovery route. |
+| Programme state store | Stores versioned home/building relationships, workflow state, source references, transition history, tasks, handoffs and approval records. The API owns the schema contract; other components do not write state directly. | If unavailable or inconsistent, writes fail closed. Reconcile from durable audit/events before retry; do not replay a transition without idempotency protection. |
+| Workflow orchestrator | Executes deterministic stage sequencing, due-date/hold tasks, handoff waits, return/reopen routing and retryable work. The programme API remains authoritative for state and permissions. | Interrupted steps resume from a durable checkpoint with idempotency keys; exhausted retries create a visible owned exception rather than advancing the case. |
+| Bounded AI task service | Receives least-privilege, source-referenced inputs and returns a typed proposal for extraction, reconciliation, summarisation, drafting or raise-only review. It cannot write to the state store or invoke a consequential transition. | Timeout, invalid schema, missing citation, unsupported output or disabled model yields an explicit failure or workflow-only task. It never presents an empty or failed result as success. |
+| Evidence document store | Stores exercise evidence documents; the programme store keeps stable references, versions and review/approval links, not a second approval record. SharePoint is conditional; controlled Blob storage is the proposed non-production fallback. | A missing, stale or inaccessible reference blocks the dependent review and enters an owned exception. Switching store is a configuration decision, not an assumed transparent runtime failover. |
+| Exercise workbook import | Profiles declared Excel structures, validates row-level mappings and stages proposed case updates for review; source workbooks remain unchanged. | A workbook or row that fails validation is quarantined with reason and source lineage. No unreported partial batch commit is allowed. |
+| Identity, authorization and telemetry | Identity claims are verified at the API; role/record/field rules and audit/telemetry are applied across screens, bulk actions, exports and AI context. | Identity or policy service uncertainty denies controlled writes and exports. Operations retains a privacy-safe diagnostic path and documents recovery before replay. |
 
-### Threat Model (illustrative, not yet validated)
+Service names and placement are options to compare, not requirements. Azure
+Container Apps, Azure SQL, Durable Functions, Azure AI Foundry, SharePoint and
+Blob Storage were prior candidate examples; verify current availability,
+support, tenancy, cost and data residency before selecting them.
 
-The following threat scenarios are a design-stage hypothesis to focus NFR-003
-and NFR-004 controls on the bounded-AI and document boundaries. They are
-illustrative risk categories, not a completed security assessment, and do not
-replace a named security/DPO review before any live-use gate (AC-011).
+### Threat Model (illustrative, not validated)
 
-| Threat | Boundary | Illustrative mitigation to test |
+These threat scenarios focus review of the non-production demonstrator's
+workbench, imports, exports, evidence and bounded AI. They are design
+hypotheses, not a completed threat assessment or evidence of implemented
+controls. Security, privacy and control owners must validate the threat model
+before any release gate.
+
+| Threat scenario | Boundary / affected workflow | Mitigation and verification evidence |
 | --- | --- | --- |
-| Prompt injection via workbook free-text or resident-style synthetic notes altering AI output or instructions | Bounded AI tool input | Treat all ingested text as untrusted data, not instructions; constrain the model's tool surface so it can only return a structured proposal, never invoke a transition directly. |
-| Data exfiltration through an export or AI response that reveals more than the requesting role is entitled to see | Export (NFR-012) and AI proposal responses | Apply role-based field filtering at the domain API before data reaches the export or AI context; log every export and AI read for review. |
-| Model hallucination producing an unsupported flag or false reassurance on a safety- or eligibility-relevant case | Bounded AI output | Require every material AI output to cite its source reference (AC-007); route low-confidence or unsupported outputs to mandatory human review rather than auto-acceptance. |
-| Identity spoofing or privilege misuse at an approval or override step | Domain API authorization | Enforce authorization and transition rules in the domain API using Entra ID roles, not client-side checks or agent instructions (A7 orchestration note below). |
-| Silent drift between Azure SQL state and SharePoint/Blob document metadata | Document store boundary | Treat the Azure SQL reference as authoritative; reconcile or flag any document-metadata mismatch rather than resolving it silently (NFR-011). |
+| Instructions embedded in workbook cells or imported reports manipulate a model into changing its task or ignoring policy. | Exercise import and AI context across stock, resident-service, provider and finance workflows. | Treat imported text as untrusted data; delimit it from instructions; accept only schema-validated proposals; deny AI write credentials. Test with seeded injection strings and verify no state mutation. |
+| A user or AI output exposes resident, financial or supplier information outside the recipient's role. | Case search, AI context, bulk views, exports and stakeholder reporting. | Apply server-side record/field filtering before data reaches a model or export; use constructed, non-identifying exercise records; audit export scope; test cross-role and cross-case access denial. |
+| A hallucinated or stale statement creates false reassurance, unfair priority or an unsupported resident/provider action. | Eligibility, hazard awareness, resident choice, invoice matching, quality and next-step suggestions. | Require source references, freshness, explicit unknowns and human review; AI can only propose; test seeded missing/conflicting evidence and critical false-negative/false-positive cases. |
+| Spoofed identity, confused-deputy behavior or bulk-edit scope bypasses decision rights. | API write path, returns/reopens, approvals, bulk edit and provider-submitted evidence. | Re-authorize every record and action at the API; separate proposer, reviewer and approver roles; never grant by UI perspective; test forged claims, privilege escalation, stale versions and mixed-permission batches. |
+| Programme state and document versions diverge, or a retry duplicates a transition/payment recommendation. | Evidence links, long-running handoffs, import retries and finance/quality review. | Keep one authoritative state store; version evidence references; use idempotency keys and reconciliation queues; inject store/document/orchestrator failures and verify no duplicate or silent transition. |
+| Heatmap, cohort export or forecast reveals sensitive patterns or disguises exclusions through an unstable denominator. | Coordinator and stakeholder analytics. | Enforce audience permissions, minimum-necessary fields, approved aggregation and explicit filters/denominators; test small cohorts, missing records, changed filters and export permissions. |
 
-### Evidence status and source readiness
+### Evidence status
 
-The upstream
-[Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md)
-is draft version 0.12.0. RULE-006/AC-025 now specifies the owner-directed
-missed-appointment rule, while OD-40 keeps company ratification and
-configuration governance open. No signed `BRD_TO_PRD_HANDOFF_V1` payload was
-present for this authoring session, and the latest valid persisted BRD quality
-report assesses v0.8.0 rather than v0.12.0. This PRD remains an initial draft,
-not a governed handoff or approved baseline. Owner direction narrows product
-requirements but does not replace named-function evidence or company
-approval; the missed-appointment rule remains a candidate for synthetic
-demonstration only until its open approval conditions are met.
+The upstream [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md)
+is draft v0.14.1. No signed `BRD_TO_PRD_HANDOFF_V1` or current valid BRD
+quality report was available for this revision; the latest valid BRD quality
+assessment remains v0.8.0. The source BRD's workflow descriptions, goals,
+authority rules and targets are requirements inputs, not company operating
+evidence or approval. Company systems, baselines, residents' needs, owners,
+service targets, budgets, contract terms and delegated authorities remain
+open. The earlier proposal for a missed-appointment threshold remains an
+exercise-only candidate test.
 
 ## Users and Personas
 
-The following are provisional role archetypes inferred from the BRD. Direct
-observation, company validation and resident research have not been completed.
+These are provisional product roles inferred from the BRD, not confirmed job
+titles, staffing or delegated authorities. Screen content varies by task and
+permission; selecting a perspective is not authentication.
 
-| Persona | Primary job | Pain point or risk to validate | Success outcome |
-| --- | --- | --- | --- |
-| Asset decision-maker | Compare investment options and understand portfolio consequences | Current asset plan, portfolio data, affordability and decision rights are unknown | A traceable platform recommendation and decision record within delegated governance |
-| Retrofit programme manager | Progress a property through assessment, resident, supplier, funding and quality handoffs | Current workflow, PAS 2035 capacity, queues and binding constraint are unknown | One journey with explicit state, evidence, hold, owner and next action |
-| Finance and grants reviewer | Test affordability, whole-life cost and evidence status | Actual licences, budget, awards, match funding and cash profile are unknown | Comparable cost assumptions; opportunities, awards, claims and cash remain distinct |
-| Digital / architecture lead | Validate security, integration, operability and support feasibility | Existing systems, APIs, platform skills and support model are unknown | An option appraisal and testable target boundary without duplicate authoritative records |
-| Safety and repairs owner | Preserve hazard routing, clocks and safety holds | Current hazard integrations and operational recovery are unknown | No demonstrator transition bypasses a hold or replaces the existing hazard service |
-| Resident-facing staff and resident representatives | Keep communications, adjustments, decisions and redress accessible | Actual channels, needs, trust and resident preferences are unknown | Demonstrated staff handoff and documented research needs; no assumed resident endorsement |
+| Role workspace | Primary work in the product | Key information/actions |
+| --- | --- | --- |
+| Asset and investment | Form and explain candidate cohorts, see asset/building dependencies and investment progress | Approved priority and reason codes, condition freshness, shared works, budget envelope, cost and forecast scenarios |
+| Programme coordinator | Coordinate the end-to-end flow and prepare stakeholder progress views | Cross-workflow queue, new/priority/stale work, blockers, handoff acceptance, cases returned, heatmap, funnel, timeline and forecast |
+| Retrofit case team | Progress home cases through readiness, resident, supplier, delivery and aftercare stages | Home/building links, next task, evidence, resident decision status, dependencies, appointments, holds and change history |
+| Retrofit Assessor, designer and Coordinator | Complete and review technical stages within competent scope | Sourced survey facts, missing evidence, design version, return reasons, separate sign-offs and material-change re-review |
+| Housing and Resident Engagement | Coordinate accessible information, service requests, complaints, repair/defect reports, decisions and contact | Minimum-necessary resident context, preferences/adjustments, safe contact and representative details, decision history and next-update commitment |
+| Repairs and Building Safety | Review hazard referrals and linked retrofit holds without making retrofit the hazard system | Awareness source/time, referral receipt/acceptance, service owner, linked hold and evidence for accountable release |
+| Procurement and contract manager | Confirm contract route, capacity, work order, provider exceptions and instruction authority | Contract/call-off, committed capacity, appointment outcomes, work-order version, variation and escalation task |
+| Provider / contractor contact | Submit or respond to authorised work-package information through approved intake channels | Work-order scope, schedule, evidence checklist, appointment outcomes, completion pack and invoice submission status; no self-approval |
+| Quality and assurance | Independently review work/evidence, defects and handover | Positive per-measure checklist, inspection/evidence, defects, remediation, audit and systemic-pattern review |
+| Finance and Grants | Review investment, budget, invoice, claim and cash records | Budget line, commitment, invoice match, payment status, grant state, claim evidence, cash exposure and approval history |
+| Digital operator and auditor | Resolve imports, integrations, access and recovery; reconstruct decisions | Exception queue, component health, audit trail, versions, exports and failed/replayed operations |
 
-Residents are affected stakeholders but are not users of this non-production
-demonstrator. No resident-facing live journey is authorised in this scope.
-
-## Design Decisions
-
-| Decision ID | Draft decision | Rationale | Decision maker | Status |
-| --- | --- | --- | --- | --- |
-| DD-001 | Use the Azure-led hybrid as the proposed non-production demonstrator baseline; compare full Azure custom and a greenfield business-apps alternative, and permit the decision gate to reject the hybrid if evidence fails. | Owner requests a hybrid PRD direction and confirms Excel-based coordination with no Dataverse or Dynamics 365; other systems and authority remain unknown. M365/SharePoint capability and whole-life value remain unverified. | Sponsor and named architecture authority to confirm | Proposed |
-| DD-002 | Use synthetic data for the initial demonstrator. | Avoids implying access or authority to process resident or production data while testing the workflow. | Product, Data and DPO reviewers to confirm | Proposed |
-| DD-003 | Separate deterministic controls from bounded AI and compare agent-assisted tasks against workflow-only handling. | The BRD requires accountable human decisions and evidence that any AI adds incremental value. | Product and control owners to confirm | Proposed |
-| DD-004 | Treat Excel workbooks as import sources to profile and validate, not as the target programme workflow or approval authority. | Owner confirms current coordination uses Excel files; the demonstrator needs to test migration mapping without altering source records. | Data owner and product owner to confirm | Proposed |
-| DD-005 | Score the options gate against a weighted, pre-declared criteria set (below) rather than a narrative recommendation. | A reviewer with no prior context should be able to reproduce how the hybrid baseline was reached or rejected; this is a decision instrument, not a scored result. | Architecture lead and sponsor to confirm weights before scoring | Proposed |
-| DD-006 | Include the owner-directed missed-appointment rule (FR-014) as a candidate, synthetic-only control: configurable threshold, provisional default 5, with human review only when eligible events exceed the configured threshold. | BRD v0.12.0 RULE-006/AC-025 defines eligible events, active-case counting, human-closure reset and audit retention. Public evidence does not validate five; company event history, Housing/Repairs ratification and configuration governance remain open under OD-40. The owner confirmed synthetic-test inclusion on 2026-10-04; operational use remains blocked. | Owner for synthetic test scope; Housing and Repairs policy/configuration owners, with Resident Engagement review, for operational use | Candidate |
-
-### Options Gate Scoring Framework (draft criteria and weights)
-
-This framework operationalises FR-001/FR-011 and AC-001/AC-002/AC-012. Weights
-are placeholders for the architecture lead and sponsor to set before any
-option is scored; no option has been scored against this framework yet.
-
-| Criterion | What is scored | Illustrative weight | Evidence source |
-| --- | --- | --- | --- |
-| Control coverage | Share of CON-001 to CON-008 and FR-004/FR-005 gates the option can enforce without a bespoke build | TBD | Architecture comparison matrix |
-| Whole-life cost confidence | Share of agreed cost categories with a sourced estimate rather than a gap (Success Metrics: Whole-life cost confidence) | TBD | Finance costing log |
-| Support and exit | Named support model, contract term, renewal/exit path and in-house skill availability | TBD | Procurement and Digital input |
-| Evidence quality and unknowns | Count of unresolved Open Questions or unverified prerequisites the option depends on | TBD | Open Questions register; OQ-001 to OQ-009 |
-| Resident and accessibility readiness | Whether the option's resident-facing path (if any) has a defined research and accessibility plan before productisation | TBD | NFR-010; Resident Engagement input |
+Residents are affected stakeholders, not users of this non-production MVP.
+No resident-facing production journey or live outbound communication is
+authorised. Their service intake and measure decisions must be represented in
+constructed exercise scenarios and later validated through direct, accessible
+research.
 
 ## Product Goals
 
-| Goal | Outcome | Priority | KPI and target | Status |
+| Goal | Outcome | Priority | Candidate success signal | Status |
 | --- | --- | --- | --- | --- |
-| GOAL-001 | Enable accountable decision-makers to compare the proposed hybrid with full Azure custom and greenfield business apps on equivalent scope and evidence. | MUST | One appraisal covers all 3 approaches, the same mandatory controls, explicit unknowns and whole-life cost categories before build commitment. Baseline: no completed appraisal in evidence. | Candidate |
-| GOAL-002 | Demonstrate the Azure-led hybrid property-control journey end to end in a non-production environment. | MUST | All agreed representative scenarios execute or block as expected; 100% of prohibited transitions are blocked in the acceptance suite. Baseline: no PRD hybrid demonstrator delivered. | Candidate |
-| GOAL-003 | Determine whether bounded AI adds measurable task value over workflow-only handling without weakening safeguards. | SHOULD | Paired evaluation records task quality, unsupported claims, review effort, overrides and missed critical exceptions; owner-set thresholds are approved before evaluation. No numeric quality threshold is established yet. | Candidate |
+| GOAL-001 | Give each authorised role a useful view of the same governed work, evidence and next action across the whole workflow portfolio. | MUST | Every agreed profile scenario finds new, prioritized, stale, blocked and owned work; case edits and handoffs are reconstructable. Baseline and usability threshold TBD. | Candidate |
+| GOAL-002 | Demonstrate the nine connected workflows end to end with explicit authority, returns, shared building dependencies and finance/quality gates. | MUST | Every approved exercise scenario reaches its expected state or explicit safe block; all prohibited transitions are denied in the acceptance suite. | Candidate |
+| GOAL-003 | Help coordinators and stakeholders understand current progress, historical flow and plausible delivery scenarios. | MUST | Heatmap, funnel, timeline and forecast reconcile to case/event records and disclose filters, definitions, unknowns and uncertainty. | Candidate |
+| GOAL-004 | Establish whether bounded agents improve selected tasks over workflow-only handling without weakening resident, safety, quality or financial controls. | SHOULD | Paired tests report quality, review effort, errors, overrides and attributable value against pre-set owner thresholds; no undetected critical error. | Candidate |
 
-**SMART status:** Deferred. Scope and candidate signals are stated, but
-baselines, calendar horizon, cost ceiling, evaluation thresholds, owners and
-achievability require sponsor and Finance input.
+**SMART status:** Deferred. Company baselines, owners, timeframe, workload,
+targets, usability protocol and approval authority are not validated. The
+BRD's proposed 20% cycle-time and 25% net coordination-effort improvements
+remain unratified targets under OD-18, not PRD commitments.
+
+## Design Decisions and Options Gate
+
+These are draft product decisions for the non-production demonstrator, not
+production, procurement or company approvals.
+
+| Decision | Proposed direction | Rationale and condition |
+| --- | --- | --- |
+| DD-001: Demonstrator platform | Use the Azure-led hybrid as the comparison baseline while retaining full Azure custom and greenfield business applications as alternatives. | The owner requested this demonstrator direction, but cost, support, tenant, control and source-system evidence remain open. The gate may reject the hybrid. |
+| DD-002: Data boundary | Use constructed, non-identifying exercise records and exercise adapters/mocks for the MVP. | The records do not substantiate company performance or resident outcomes; no live resident contact or operational action is authorized. |
+| DD-003: Decision authority | Keep deterministic workflow and human authority separate from bounded AI proposals. | Shared case data does not transfer decision rights. AI output cannot satisfy an approval or controlled state transition. |
+| DD-004: Excel boundary | Treat Excel as a source for profiled and validated imports, not as the target workflow or approval authority. | Preserve source workbooks and expose row-level mapping/conflict outcomes. |
+| DD-005: Options appraisal | Compare all three platform options against equivalent workflows, controls and workload using predeclared criteria. | Set weights and evidence thresholds before scoring; no option has been scored or selected for production. |
+| DD-006: Appointment scenario | Retain the owner-directed missed-appointment rule only as a candidate exercise test. | Count only confirmed appointments with verified resident no-access while a case is active; route for human investigation only when the eligible count is greater than the configurable threshold (provisional default five). Exclude provider/contractor no-shows, cancellations and reschedules; human closure resets the active counter but preserves history. Do not infer refusal or delay urgent hazard response. Five is not a validated threshold or operational rule; evidence, Resident Engagement review and configuration governance remain open under OQ-014. |
+
+### Options Gate Scoring Framework
+
+This is a decision instrument, not a completed appraisal. The architecture
+lead and sponsor must approve weights, minimum gates, comparable scope and
+evidence sources before scoring. A high aggregate score cannot compensate
+for failure of a mandatory safety, privacy, authorization, accessibility or
+recovery control.
+
+| Criterion | What the evidence must establish | Weight |
+| --- | --- | --- |
+| Control and workflow coverage | Whether each option supports the nine exercise scenarios, server-enforced authority, returns, bulk controls, evidence lineage and auditable state. | TBD |
+| Whole-life cost and affordability | Comparable implementation, licensing, migration, support, operations, renewal and exit costs against an owner-approved workload and affordability envelope. | TBD |
+| Supportability and recovery | Named skills, ownership, failure containment, manual fallback, recovery testing, service lifecycle and exit path. | TBD |
+| Data and integration fit | Source-of-record boundaries, identifiers, interfaces, tenant prerequisites, reconciliation and portability. | TBD |
+| Resident and accessibility readiness | Accessible staff workflows, future resident research, non-digital routes and no unapproved resident-facing dependencies. | TBD |
+| Evidence confidence | Number and materiality of unresolved assumptions or external prerequisites each option depends on. | TBD |
+
+The platform options remain full Azure custom, greenfield business
+applications and the proposed Azure-led hybrid. Current Excel-based
+coordination does not establish which systems are authoritative; M365,
+SharePoint and licensing are unverified. The comparison must not treat an
+unverified estate or role-profile hypothesis as a customer fact.
+
+## Workflow Coverage
+
+| BRD workflow | Workbench module and core screen | Roles | Progress/value evidence |
+| --- | --- | --- | --- |
+| Stock data, safety triage and fair prioritisation | Portfolio/cohort screen; property and building records; data-quality and eligibility queues | Asset, Safety, Finance, data owner, Coordinator | Source freshness, conflicts, eligibility unknowns, cohort reasons, viability after survey, overrides |
+| Technical assessment and design readiness | Home technical workspace; survey/design checklist; return and reapproval queue | Assessor, designer, Retrofit Coordinator, Programme | Assessment-to-ready-to-install time, first-pass completeness, return loops, review effort |
+| Resident service, access, choice and redress | Resident-service inbox and home resident tab; measure decision history; contact/update tasks | Housing, Resident Engagement, Repairs, Coordinator | Appointments kept, adjustments met, repeat contacts, time to decision, complaint/service resolution |
+| Procurement, committed capacity and work release | Supplier/capacity board; contract/work-package screen; controlled work-order view | Procurement, contract manager, Programme, provider contact | Committed vs delivered capacity, provider-caused failures, capacity gap age, accepted work |
+| Hazard awareness and damp-and-mould response | Referral/hold queue linked to the existing repairs/hazard case, not a replacement service | Repairs, Building Safety, Programme | Awareness-to-referral, accepted referral age and applicable response/update performance |
+| Quality acceptance, defects and handover | Quality pack, inspection/evidence review, defect and remediation queue, handover checklist | Quality, competent inspector, provider, Resident Engagement | Right-first-time evidence/physical acceptance, defect severity, recurrence, rework, handover |
+| Budget, provider invoice, grant claim and cash reconciliation | Investment/budget view; invoice intake and match queue; separate grant ledger/claim pack | Finance, Grants, contract manager, Quality | Invoice exceptions, review effort, claim acceptance/rejection, receipt time, cash exposure |
+| Programme handoffs and case orchestration | Cross-role work queue, case timeline, handoff and return/reopen workspace | Coordinator and every receiving team | Owned handoffs, overdue queues, return loops, stage timing and coordination effort |
+| Portfolio investment, performance and scale decisions | Portfolio dashboard with heatmap, funnel, history/timeline and forecast scenarios | Asset, Finance, Programme, Sponsor/Board, Assurance | Accepted outcomes, cost, grant state, resident/safety/quality guardrails, forecast variance |
+
+Every row above has a product representation in the MVP's exercise scenario
+suite. Live integrations, external portals, formal user research and
+operational authority remain separately gated.
 
 ## Functional Requirements
 
-| ID | Requirement | Actor / trigger | Expected outcome | Acceptance criteria | Goals |
-| --- | --- | --- | --- | --- | --- |
-| FR-001 | When the product team begins the options gate, the system shall assess full Azure custom, a greenfield business-apps adoption and the proposed Azure-led hybrid against one approved set of scope, control, cost, support, evidence and exit criteria. | Architecture lead; options gate | A comparable, sourced appraisal for all three options, with hybrid designated as the proposed demonstrator baseline | AC-001, AC-002, AC-012 | GOAL-001 |
-| FR-002 | When an option score or cost assumption is entered, the system shall record its source, owner, date, confidence/evidence status and unresolved gap. | Finance, Digital or control owner; appraisal update | Reviewers can distinguish evidence, estimate and unknown | AC-002 | GOAL-001 |
-| FR-003 | When a synthetic Excel workbook is imported, the system shall validate its mapping, assign or resolve synthetic property and building identifiers, retain source-row lineage and route unmapped or conflicting values to an exception queue without changing the source file. | Data analyst; workbook import | Controlled, auditable synthetic migration into the hybrid programme state | AC-003, AC-009, AC-013, AC-014 | GOAL-002 |
-| FR-004 | When a lifecycle transition is requested, the system shall evaluate deterministic evidence, hold, role and approval gates before changing state. | Programme user or test harness; transition request | Allowed transition or explicit block with reason and owner | AC-004, AC-005 | GOAL-002 |
-| FR-005 | If safety, consent, professional approval, funding, capacity or required evidence is missing, stale, contradictory or unresolved, then the system shall block the affected demonstrator transition and identify the unresolved condition. | Workflow; gate evaluation | Fail-closed transition, with no inferred approval | AC-004, AC-005 | GOAL-002 |
-| FR-006 | When an approved synthetic scenario is run, the Azure workbench shall show property readiness, current stage, holds, evidence status, next-action owner and handoff state using the Azure programme store as the demonstrator state authority. | Programme manager; scenario run | A reviewable end-to-end case view | AC-003, AC-006 | GOAL-002 |
-| FR-007 | Where bounded AI is included, the system shall produce only source-linked extraction, reconciliation, draft or raise-only flag outputs for human review. | Named reviewer; AI task invocation | Reviewable suggestion; no consequential action | AC-007, AC-008 | GOAL-003 |
-| FR-008 | When an AI output is generated or reviewed, the system shall retain the applicable source, output, model/configuration version, reviewer decision and correction or override. | Reviewer; output review | Reproducible task-level evaluation evidence | AC-008, AC-009 | GOAL-003 |
-| FR-009 | When a scenario, option appraisal or evidence pack is exported, the system shall include its source links, versions, approval state and explicit unresolved items. | Sponsor, Finance or assurance reviewer; export | Portable, interpretable decision evidence | AC-009 | GOAL-001, GOAL-002 |
-| FR-010 | When a demonstrator component or integration fails, the system shall expose the affected work, block unverified state changes and support controlled reconciliation before restart. | Digital operator; failure injection | Visible, recoverable failure; no silent progression | AC-005, AC-010 | GOAL-002 |
-| FR-011 | When the options gate is reviewed, the system shall record the recommendation, alternatives, criteria, evidence, dissent, approvers and decision status. | Sponsor and designated reviewers; gate review | Decision record; remains open if evidence or authority is insufficient | AC-001, AC-002 | GOAL-001 |
-| FR-012 | Before any resident-facing communication or live operational use is enabled, the system shall require a separately approved release configuration and the applicable data-protection, safety, service and authority gates. | Product / control owners; release configuration | Non-production draft cannot silently become operational | AC-010 | GOAL-002, GOAL-003 |
-| FR-013 | When a reviewer opens a linked collaboration document, the system shall resolve a controlled M365 document reference to the approved file location and version, or clearly report that M365 capability is unavailable; it shall not create a competing approval record. | Programme reviewer; document access | Azure state retains the decision reference while the document store remains explicitly identified | AC-009, AC-015 | GOAL-002 |
-| FR-014 (candidate) | For synthetic scenarios only, the system shall apply a configurable missed-appointment threshold with a provisional default of 5. It shall count only confirmed appointments with a verified resident no-access outcome while the case is active, and route the case for human investigation only when the eligible count is greater than the configured threshold. Provider/contractor no-shows, cancellations and reschedules shall be recorded separately and excluded. Human case closure resets the active counter but shall not delete event or configuration history. | Workflow; eligible appointment outcome recorded | Traceable human investigation without inferring refusal or non-cooperation, imposing a consequence, or delaying an urgent hazard response | AC-016 | GOAL-002 |
+All requirements are draft candidates and shall be validated by the product
+owner, named control owners and affected users before implementation approval.
 
-FR-014 reflects the owner-directed rule in BRD v0.12.0 RULE-006/AC-025. It
-remains **candidate** because Housing and Repairs have not ratified it against
-company appointment records, the configuration/change owner and handoff are
-not approved, and Resident Engagement review remains necessary (OQ-009;
-BRD OD-40). Five is a provisional default, not a sector benchmark or approved
-operational threshold. The acceptance test is limited to synthetic,
-non-production scenarios and does not authorize operational use.
-The owner confirmed on 2026-10-04 that this candidate behavior should be
-exercised in the synthetic acceptance suite; this does not close OQ-009 or
-authorize live use.
-
-All requirements are draft candidates. The implementation team and product
-owner must validate actors, system boundaries and acceptance evidence.
+| ID | Requirement | Actor / trigger | Acceptance criteria | Goals |
+| --- | --- | --- | --- | --- |
+| FR-001 | The product shall maintain one versioned home case linked to its building, scheme, work package and relevant resident-service, hazard, provider, quality and finance records. | Any authorised user opens or updates a case | AC-001, AC-002 | GOAL-001, GOAL-002 |
+| FR-002 | The product shall show building-level shared systems, dependencies, holds, works and costs separately from each home's evidence, decision, cost allocation and outcome. | User reviews a building or linked home | AC-002, AC-003 | GOAL-001, GOAL-002 |
+| FR-003 | The product shall present task-focused screens and queues by authenticated role, with field/action permissions enforced by the service rather than by a selectable view label. | User signs in or changes task context | AC-004, AC-005 | GOAL-001 |
+| FR-004 | The shared work queue shall identify newly arrived work, approved priority, stale evidence, blockers, overdue tasks, unowned handoffs and cases needing extra human attention using visible definitions and filters. | User opens a permitted queue | AC-006 | GOAL-001, GOAL-003 |
+| FR-005 | The product shall allow authorised users to view and edit case fields, evidence references, task owners, due dates and permitted workflow details, preserving source, version, actor, timestamp and reason for each change. | User edits an individual case | AC-007, AC-008 | GOAL-001, GOAL-002 |
+| FR-006 | The product shall support bulk updates of explicitly permitted fields across selected cases, with a preview of the target records, proposed changes, validation failures and resulting per-case outcomes. | User selects multiple cases and requests an allowed change | AC-009 | GOAL-001, GOAL-002 |
+| FR-007 | Bulk actions shall not approve or release technical work, consent, safety decisions, procurement instructions, budget commitments, invoices, payments, claims, quality acceptance, defect closure or complaints. | User attempts a bulk action | AC-009, AC-010 | GOAL-002 |
+| FR-008 | The product shall enforce deterministic evidence, eligibility, authority, safety, resident, funding, capacity, quality and finance gates before a controlled state transition. | User or workflow requests a transition | AC-010, AC-011 | GOAL-002 |
+| FR-009 | An authorised reviewer shall be able to return a case or work item to an earlier lifecycle stage, request missing/corrected information, or reopen it when evidence, scope, condition, resident circumstances or status changes. | Reviewer returns/reopens a case | AC-012 | GOAL-001, GOAL-002 |
+| FR-010 | Returning or reopening work shall record the reason, source, initiating authority, receiving owner and next action; preserve prior state/history; and invalidate only affected downstream approvals for human reassessment. | Case return, reopen or material change | AC-012, AC-013 | GOAL-002 |
+| FR-011 | The product shall maintain role-owned handoffs with sent, received, accepted, rejected/returned, escalated and completed status; record urgency, named receiver, due date and next resident-update date where relevant. | A case crosses a team boundary | AC-014 | GOAL-001, GOAL-002 |
+| FR-012 | The product shall represent stock-data reconciliation, eligibility pass/fail/unknown, prioritisation policy version, reason codes and review exceptions without allowing missing data to silently exclude a home. | Cohort or property record is prepared | AC-015 | GOAL-002 |
+| FR-013 | The product shall represent assessment, separate competent sign-offs, design version, building dependency, evidence completeness, return and reapproval states. | Technical stage is updated | AC-016 | GOAL-002 |
+| FR-014 | The product shall represent resident service/complaint/repair/defect intake, accessible contact requirements, measure-specific decisions, pauses, withdrawal, appointment outcomes and redress ownership. | Resident-related exercise intake or case update | AC-017 | GOAL-001, GOAL-002 |
+| FR-015 | The product shall represent hazard source and awareness time, referral to the existing hazard service, referral acceptance, linked retrofit hold and accountable release evidence without owning the hazard service's clock, classification or closure. | Potential hazard is identified | AC-018 | GOAL-002 |
+| FR-016 | The product shall represent contract/call-off, committed capacity, work-package readiness, controlled work-order versions, provider appointment outcomes, completion submission and supplier exceptions. | Procurement or delivery activity occurs | AC-019 | GOAL-002 |
+| FR-017 | The product shall represent quality checklist evidence, independent acceptance, defects, remediation/reinspection, resident handover and aftercare, with provider submission separate from approval. | Work evidence is submitted or reviewed | AC-020 | GOAL-002 |
+| FR-018 | The product shall represent approved budgets, commitments, provider invoice/valuation intake, line-level match exceptions, payment holds/status and Finance disposition, without executing payment in the demonstrator. | Invoice or budget record is entered | AC-021 | GOAL-002 |
+| FR-019 | The product shall maintain distinct, evidence-linked grant states for opportunity, award, claimable, submitted, accepted/rejected and cash received, separately from provider invoices and payments. | Finance updates grant evidence | AC-022 | GOAL-002 |
+| FR-020 | The coordinator dashboard shall provide a filterable heatmap of cases by approved geography/building/archetype and stage, with counts, denominator, holds, priority and data-coverage cues. | Coordinator or authorised stakeholder selects heatmap | AC-023 | GOAL-003 |
+| FR-021 | The coordinator dashboard shall provide a funnel of cases through lifecycle stages, showing entries, exits, returns, holds and exclusions with consistent definitions and drill-through to records. | Coordinator views funnel | AC-024 | GOAL-003 |
+| FR-022 | The product shall provide historical views of case and cohort progression from timestamped events, including stage duration, handoff, pause, return, reopen and decision history. | Coordinator or assurance user selects a time range | AC-025 | GOAL-003 |
+| FR-023 | The product shall generate delivery forecasts from declared cohort, stage, event, committed-capacity, dependency and scenario assumptions, show uncertainty and data limits, and distinguish forecast from target, approved plan and actual outcome. | Coordinator or Asset/Finance user requests forecast | AC-026 | GOAL-003 |
+| FR-024 | The product shall support role-appropriate stakeholder progress views and exportable evidence for a selected cohort and as-of date, with definitions, sources, filters, unresolved items and approval status visible. | Coordinator prepares a progress review | AC-027 | GOAL-001, GOAL-003 |
+| FR-025 | The product shall offer source-linked next-step suggestions based on case state, approved rules and relevant evidence, showing rationale, proposed owner, prerequisite, due-date basis and unknowns. | User reviews a case or queue | AC-028 | GOAL-001, GOAL-004 |
+| FR-026 | A user shall be able to accept, edit or reject a suggestion with a reason; accepting creates a task or draft only and does not satisfy an approval or execute an external action. | User reviews an agent suggestion | AC-028, AC-029 | GOAL-001, GOAL-004 |
+| FR-027 | Bounded AI may extract, reconcile, summarise, draft or raise a signal from approved exercise sources; each material output shall cite its source and remain visibly unapproved until human review. | AI task is invoked | AC-029, AC-030 | GOAL-004 |
+| FR-028 | The product shall provide a workflow-only path for every AI-assisted task and preserve failure, fallback, review, correction and override evidence for comparison. | AI unavailable, disabled or evaluated | AC-030 | GOAL-004 |
+| FR-029 | The product shall import declared exercise Excel structures with row-level preview, lineage, mapping/conflict resolution and explicit disposition without modifying source workbooks. | Data analyst previews an import | AC-031 | GOAL-001, GOAL-002 |
+| FR-030 | The product shall export interpretable exercise case, event, decision and evidence-reference data, retaining version, source, approval and supersession history independently of the AI provider. | Authorised user exports data | AC-032 | GOAL-001, GOAL-002, GOAL-003 |
+| FR-031 | For exercise scenarios only, the product shall apply a configurable missed-appointment threshold, provisionally defaulted to five, and create a human-investigation task only when the eligible active-case count is strictly greater than the configured threshold; it shall preserve event/configuration history, exclude provider/contractor no-shows, cancellations and reschedules, never infer refusal, and never delay urgent hazard response. | Exercise appointment outcome is recorded | AC-033 | GOAL-001, GOAL-002 |
 
 ## Non-Functional Requirements
 
-Thresholds dependent on real company workload, service objectives, platform
-licences or accessibility standards remain open; they must be set before the
-relevant validation gate, not guessed in this draft.
+Thresholds dependent on company workload, service objectives, approved
+accessibility standard, tenant capabilities and support model remain TBD.
+They must be set by accountable owners before the relevant gate, not inferred
+from the case-study portfolio size.
 
-### Performance and Capacity
+* **NFR-001 Usability and accessibility:** Representative role users shall
+  complete their agreed tasks in usability testing. The product shall support
+  keyboard access, clear focus, readable status, accessible charts with
+  equivalent tabular views, and a documented accessibility assessment.
+  Participant count, conformance target and acceptance thresholds require
+  owner approval.
+* **NFR-002 Performance and capacity:** Before acceptance, the product owner
+  shall approve case volume, concurrent users, bulk selection limits, import
+  size, chart/forecast workload and response-time targets. Test results shall
+  report against them; numeric targets are TBD.
+* **NFR-003 Security and authorization:** Authentication and server-enforced
+  role, record and field permissions shall be tested for every user profile
+  and controlled action. A UI perspective switch shall never grant access.
+* **NFR-004 Auditability:** Case edits, bulk changes, imports, exports,
+  handoffs, returns, approvals, overrides, agent outputs and failures shall be
+  attributable, timestamped, versioned and reconstructable.
+* **NFR-005 Privacy:** MVP data shall consist of constructed,
+  non-identifying exercise records only. Personal data shall
+  not be ingested without separate lawful-basis, data-protection and release
+  approval. Exercise records shall not contain real identifiers, addresses,
+  contacts or health histories.
+* **NFR-006 Reliability and recovery:** Component failure shall stop
+  unverified controlled transitions, expose affected work and owner, and
+  provide a tested reconcile/restart path. Hazard response remains available
+  outside the workbench.
+* **NFR-007 Forecast explainability:** Every forecast shall identify as-of
+  time, included cohort, event definitions, capacity/dependency assumptions,
+  exclusions, data coverage, scenario version and uncertainty representation.
+  An authorised reviewer shall be able to reproduce the same output from the
+  same inputs and version.
+* **NFR-008 Data quality and interoperability:** Each imported or integrated
+  field shall retain source authority, identifier mapping, timestamp/version,
+  validation status, conflict owner and reconciliation outcome.
+* **NFR-009 AI safety and evaluation:** AI tasks shall use least-privilege
+  read/propose tools, source citations and human review. Every task shall have
+  a workflow-only comparator, error taxonomy, review-effort capture and
+  owner-defined thresholds before evaluation.
+* **NFR-010 Portability:** Case, event, approval, audit, forecast-input and
+  evidence-reference exports shall remain interpretable without the selected
+  AI provider or optional M365 document store.
+* **NFR-011 Operability:** Each release shall identify configuration,
+  integration and service owner, monitored failure states, disable procedure,
+  manual fallback, retention and tested rollback.
+* **NFR-012 Chart integrity:** Dashboards shall disclose denominator,
+  filters, missing/stale records and measure definitions; colour alone shall
+  not encode status. Charts shall have accessible tabular equivalents.
+* **NFR-013 Bulk-edit safety:** Bulk operations shall preview scope and
+  effects, validate permissions and rules per case, report each case's result
+  and retain a batch audit record. No hidden partial success is permitted.
 
-* **NFR-001:** Before performance acceptance, the product owner shall approve
-  representative scenario volume, concurrency and response-time targets.
-  The demonstrator shall report measured results against those targets.
-  Numeric targets are **TBD**.
+### Observability and SLO Measurement Method
 
-### Reliability and Resilience
+This is a proposed measurement contract for NFR-004, NFR-006, NFR-009 and
+NFR-011, not an implemented telemetry system. Use OpenTelemetry data-model
+and semantic-convention names where applicable; do not create vendor-specific
+names or unbounded metric dimensions.
 
-* **NFR-002:** If a model, workflow component or integration is unavailable
-  during a failure-injection test, the system shall not complete an
-  unverified controlled transition and shall expose affected work for
-  reconciliation before restart.
-
-### Security
-
-* **NFR-003:** All demonstrator users and service identities shall be
-  authenticated and least-privilege authorization shall be tested for each
-  role and controlled action before acceptance.
-* **NFR-004:** Every approval, state transition, override and exported
-  decision record shall be attributable to a user or service identity and
-  timestamp; unauthorized change attempts shall be denied and recorded.
-
-### Privacy
-
-* **NFR-005:** The MVP shall use synthetic data only. Production and resident
-  personal data shall not be ingested unless a separate documented lawful
-  basis, data-protection review, approved controls and release decision exist.
-* **NFR-006:** Synthetic cases shall not contain real names, addresses,
-  contact details, identifiers or free-text health histories.
-
-### Scalability and Elasticity
-
-* **NFR-007:** Before option selection, each candidate's supported scale,
-  capacity and cost assumptions shall be recorded for the same approved
-  workload. A production-scale requirement is not established by the
-  60,000-home case-study portfolio figure alone. The hybrid demonstrator must
-  test against an owner-approved synthetic workload.
-
-### Maintainability and Operability
-
-* **NFR-008:** Every demonstrator release shall identify its configuration,
-  integration contract and operating owner; configuration or model changes
-  shall be versioned and have a documented rollback or disable procedure.
-
-### Observability
-
-* **NFR-009:** The demonstrator shall provide traceable records of scenario
-  execution, state transitions, handoffs, failure, recovery and AI review,
-  with identifiers sufficient to correlate events without logging
-  unnecessary resident data.
-
-**Log schema and correlation-ID convention (design, not yet implemented).**
-Every event the demonstrator emits is proposed to carry a common envelope:
-`timestamp`, `correlation_id` (one per scenario run, propagated through every
-handoff and AI call), `scenario_id`, `actor_type` (resident-proxy, workflow,
-bounded-AI, reviewer), `event_type` (state-transition, failure, recovery,
-AI-review, escalation), `status` and `duration_ms`. No resident-identifying
-fields are included in the envelope; any payload field that could identify a
-real person is excluded by schema, not by convention.
-
-**Named metrics and SLO measurement methodology (targets TBD, method fixed).**
-Three metrics are proposed as the demonstrator's baseline instrumentation,
-each with a measurement method the owner can later attach a target to:
-scenario completion latency (p50/p95 of `duration_ms` across a rolling
-window of completed runs), scenario failure rate (failed or escalated runs
-divided by started runs, over the same window) and AI-task cost per
-scenario (provider-reported token or call cost attributed to the
-`correlation_id`, summed per run). None of these have an agreed target yet;
-the method is fixed so a target can be set without re-engineering the
-instrumentation.
-
-### Usability and Accessibility
-
-* **NFR-010:** Before acceptance, representative programme and frontline
-  users shall complete the agreed demonstrator tasks in a review session;
-  blocking usability and accessibility issues shall be recorded and
-  dispositioned. Participant count and formal conformance target are **TBD**.
-* No resident-facing production experience is in scope; resident needs must
-  be researched before productizing any resident channel.
-
-### Compatibility and Interoperability
-
-* **NFR-011:** Each proposed integration shall document source authority,
-  identifiers, schema, access, conflict handling, failure behavior and
-  reconciliation. MVP integrations to M365 SharePoint, if available, shall
-  use a test library; other company integrations shall use mocks, synthetic
-  interfaces or explicitly approved test environments.
-
-### Portability
-
-* **NFR-012:** Reviewers shall be able to export the complete synthetic
-  appraisal and demonstrator evidence, including source references,
-  versions, approvals and supersession links, in a documented format that
-  remains interpretable without the selected AI provider.
+* Spans shall follow the relevant HTTP, database, messaging, GenAI or
+  serverless semantic conventions. Other operation names shall use the
+  `verb.resource` pattern. Configure the required service resource attributes
+  `service.name`, `service.version`, `deployment.environment`,
+  `telemetry.sdk.name`, `telemetry.sdk.language` and `telemetry.sdk.version`.
+* Structured logs shall use the OpenTelemetry log fields, including
+  `timestamp`, `severity_text`, `severity_number`, `body`, `attributes` and
+  `resource`. When emitted within a span, logs shall carry `trace_id` and
+  `span_id`. A scenario identifier belongs in the access-controlled audit
+  record; any custom telemetry attribute for scenario correlation must be
+  proposed through the shared telemetry vocabulary before use.
+* Keep the business audit record distinct from diagnostic telemetry. Audit
+  records retain the case/event/version/actor/decision needed to reconstruct
+  controlled changes; telemetry must not copy resident contact, address,
+  health, free-text or raw case identifiers. Apply the telemetry PII denylist
+  and an explicit redaction strategy before emitting any joinable identifier.
+* Measure scenario completion duration as a histogram in seconds, with
+  p50/p95 reported by a defined scenario class and release. Calculate failure
+  rate from failed or explicitly escalated runs divided by started runs over
+  the same window; document treatment of cancelled, retried and incomplete
+  scenarios. Attribute model/provider usage cost to the protected audit
+  scenario record rather than a high-cardinality metric dimension.
+* Establish target values, test workload, windows and alert thresholds with
+  the product and operations owners before acceptance. Targets are TBD; until
+  agreed and measured, report observations and method only, not SLO attainment.
+  Retain error traces and a representative sample of successful traces; verify
+  cardinality, access, retention and redaction in telemetry tests.
 
 ### AI Model Selection and Evaluation Harness
 
-This is a design methodology for FR-007/FR-008 and GOAL-003; it defines how a
-model choice will be justified and how the paired evaluation (Success
-Metrics: AI incremental task value) will be measured. No model has been
-selected and no evaluation has been run; the figures below are placeholder
-criteria, not results.
+This proposed method supports FR-027 and FR-028 and GOAL-004. No model has
+been selected, no test has been run and no performance or value result is
+claimed.
 
-* **Model selection criteria.** Before a candidate model or model tier is
-  proposed for a bounded task, record a one-page comparison against at least
-  one smaller/cheaper model and one larger/more capable model on: task
-  accuracy on a held-out synthetic sample, p95 latency, cost per invocation,
-  and failure mode (silent wrong answer vs. refusal vs. low-confidence flag).
-  Prefer the smallest model that meets an owner-approved accuracy threshold,
-  consistent with a cost-conscious, AMA-aligned design.
-* **Evaluation harness.** For each bounded AI task in scope (extraction,
-  reconciliation, drafting, raise-only flag), define before running any
-  evaluation: the paired workflow-only baseline, the synthetic test-case set
-  and its size, the metrics to capture (precision/recall against a labelled
-  synthetic answer key, unsupported-claim rate, reviewer override rate,
-  review-minutes delta), and a documented failure-mode taxonomy (e.g.
-  missed critical exception, false positive flag, hallucinated source
-  reference). Thresholds for "pass" are set by product, safety and
-  assurance owners before evaluation, per Success Metrics.
-* **What this does not claim.** No accuracy, latency or cost numbers are
-  asserted here; this subsection defines the method that will produce them,
-  satisfying FR-007/FR-008 traceability without fabricating a result.
+* For each proposed bounded task, compare at least one smaller/lower-cost
+  candidate and one more capable candidate on the same held-out exercise
+  cases. Record task quality, source-support rate, false-positive and
+  false-negative rates for flags, p95 latency, refusal/invalid-output rate
+  and cost per invocation. Select the smallest candidate that meets
+  pre-approved task-specific quality and critical-control thresholds.
+* Pair AI-assisted and workflow-only runs on the same scenarios, evidence
+  and acceptance conditions. Capture accuracy against a labelled exercise
+  reference, precision/recall where classification applies, unsupported-claim
+  rate, missed critical exceptions, reviewer override/correction rate,
+  review-minutes delta and end-to-end task duration.
+* Define the exercise sample, labels, exclusions, versioned prompts/models,
+  metrics and thresholds before evaluation. Product, Safety, Data Protection
+  and Assurance owners must approve thresholds for the relevant task.
+  Sample sizes and numerical pass thresholds remain TBD.
+* Record failure modes separately: missed critical exception, false positive,
+  unsupported source reference, stale evidence, malformed output, refusal,
+  privacy leakage and operator override. Report results by task and workflow;
+  do not combine unlike tasks into one aggregate accuracy score.
+* Zero undetected critical-control failures is a release condition for the
+  evaluated task. Any failure blocks that task's AI path until corrected and
+  retested; the workflow-only path remains available. The evaluator records
+  evidence and does not grant operational approval.
 
-### Agent Orchestration Pattern
+### Bounded-Agent Orchestration Pattern
 
-The bounded AI capability follows an explicit orchestration pattern rather
-than an open-ended agent loop, to keep autonomy auditable and consistent with
-CON-003 and DD-003.
+Orchestration is a deterministic, reviewable state graph, not an open-ended
+agent loop. It supports source-linked next-step suggestions while preserving
+the shared case state and human decision rights.
 
-* **State-graph handoff.** Each task moves through named stages — extraction,
-  reconciliation, draft, raise-only flag, human review — with the domain API
-  recording the stage transition (Component Contracts and Failure Domains,
-  above). The model is invoked per stage with a narrow tool contract; it does
-  not choose its own next stage.
-* **Reflection/self-check step.** Before a flag or draft reaches a human
-  reviewer, the task definition includes a self-check pass that compares the
-  proposed output against its cited source reference and rejects (routes to
-  manual review) an output that cannot cite one, rather than auto-escalating
-  an unsupported claim.
-* **Tool-scoped authorization, not agent trust.** Every tool the model can
-  call is scoped to read or propose, never to commit a transition; the domain
-  API independently re-checks authorization and gate conditions on any
-  accepted proposal (AC-007, AC-008). This keeps the enforcement boundary at
-  the API, not at the model's instructions, addressing the identity-spoofing
-  and privilege-misuse threat above.
-* **Workflow-only fallback as a first-class path.** The orchestration treats
-  "do not use AI for this task" as a valid, tested path (DD-003), not an
-  error state, so the paired evaluation in the harness above has a genuine
-  baseline to compare against.
+1. The workflow engine selects an eligible task from the current authorized
+   case state and records the task, version and prerequisites.
+2. The task broker provides the model only the minimum permitted, source-linked
+   context and a typed read/propose tool contract. No credential or tool can
+   commit a case transition, contact a resident/provider, issue a work order,
+   approve expenditure, submit a claim or release payment.
+3. The model returns a typed proposal with source references, rationale,
+   uncertainties and a proposed next task/owner. Schema validation and
+   source-reference checks reject malformed or unsupported proposals to a
+   visible human queue. A model self-check may identify missing support; it
+   is not treated as independent verification.
+4. The API rechecks identity, permissions, current case version and
+   deterministic gates when a human accepts or edits a proposal. Acceptance
+   creates a draft or task only. Human approval remains a separate recorded
+   action.
+5. Each step is idempotent and auditable. Failure, timeout, stale input,
+   refusal or disabled AI leaves the case in its prior controlled state and
+   routes to workflow-only handling or an owned exception. A human can return
+   or reopen work with the reason and affected approvals captured.
+
+This design deliberately avoids autonomous stage selection or an agent-owned
+case lifecycle. The value question is whether the proposal step improves the
+measured task against workflow-only handling, not whether the agent can act
+without a reviewer.
 
 ## Constraints
 
-| ID | Constraint | Imposing source | Boundary and impact |
+| ID | Constraint | Source | Boundary |
 | --- | --- | --- | --- |
-| CON-001 | The MVP shall run in a non-production environment and shall not exercise live authority over a resident, contractor, payment, grant claim or safety decision. | BRD v0.6 draft, Executive Summary and Phase 0D; PRD scope decision proposed | Environment and release: no operational action or production dependency. |
-| CON-002 | Existing asset, housing, repairs, safety, finance, procurement and contractor systems retain their authoritative responsibilities unless a separately approved change says otherwise. | BRD v0.6, Digital Foundation and Authority | Architecture: the demonstrator may link or simulate; it must not silently replace source systems. |
-| CON-003 | Residents retain measure-specific decision rights; safety, statutory hazard handling, professional judgement, investment, procurement, grant submission, payment and quality acceptance remain with accountable human roles. | Case Study 48 Addendum; BRD FR-036, RULE-018 and imposed constraints | Authority: AI and flows cannot satisfy a human approval gate. |
-| CON-004 | The initial demonstrator shall use synthetic data; any future personal-data processing requires separate approval and applicable privacy controls. | PRD MVP boundary; BRD RULE-022 | Data: no production or resident personal data in MVP. |
-| CON-005 | No platform choice is approved until equivalent-scope options evidence, whole-life cost, supportability and required control tests are reviewed by named authorities. | Owner request and BRD RULE-016 / AC-053 | Technology and governance: architecture decision remains open. |
-| CON-006 | The demonstrator must not delay, pause, reset or close the separate statutory hazard response. | BRD CON-001 and RULE-003 | Safety: hazard-service authority remains outside the retrofit demonstrator. |
-| CON-007 | The baseline hybrid design shall not depend on Dataverse or Dynamics 365; their absence and Excel-based coordination are owner-confirmed as of 2026-10-03, but the other systems and authority behind that coordination are unknown. | Owner statement on 2026-10-03 | Architecture: any later change requires an explicit scope and options-appraisal revision. |
-| CON-008 | SharePoint, OneDrive, Teams and M365 licensing/configuration are not assumed available for this solution until tenant and governance checks pass. | Current tenant capability is unknown | Architecture/operations: use a controlled Azure document store fallback in the demonstrator and record the M365 integration gap. |
+| CON-001 | The MVP is non-production and uses constructed, non-identifying exercise records; it exercises no live authority over residents, providers, payment, grants or safety. | BRD v0.14.1 and owner direction | No live decisions, instructions, submissions or external integrations. |
+| CON-002 | Existing asset, housing, repairs, hazard, finance, procurement and provider systems retain their authoritative responsibilities unless separately approved. | BRD v0.14.1 | Workbench coordinates and links; it does not silently replace systems of record. |
+| CON-003 | Residents retain measure-specific decisions; qualified professionals, Safety, Asset, Procurement, Finance, Quality and Board/delegated authorities retain their respective decisions. | Case Study 48 and BRD | Agent suggestions and UI actions cannot substitute for approval. |
+| CON-004 | The hybrid is a proposed demonstrator baseline only; full Azure custom and greenfield business applications remain comparators until an approved gate. | Owner direction and addendum | No production/platform/procurement approval inferred. |
+| CON-005 | Dataverse and Dynamics 365 are not assumed present; M365/SharePoint availability, licensing and governance remain unverified. | Owner statement and PRD evidence status | Use exercise files and documented Blob fallback unless prerequisites pass. |
+| CON-006 | Retrofit tooling shall not delay, pause, reset, classify or close the existing statutory hazard response. | BRD CON-001, RULE-003 | Hazard service retains its own record, clock and authority. |
+| CON-007 | No bulk action may satisfy a controlled approval, consent, instruction, payment, claim or closure decision. | BRD authority matrix and this PRD | Each consequential decision remains separately authorised and auditable. |
+| CON-008 | Forecasts are scenarios, not guarantees, approved plans or commitments. | BRD evidence/value controls | Expose assumptions, uncertainty and stale/missing inputs. |
 
 ## Process Models
 
+### Case lifecycle, role handoffs and return path
+
 ```mermaid
-flowchart LR
-    A[Confirm scope, controls and appraisal criteria] --> B[Assess full Azure custom option]
-    A --> C[Assess greenfield business-apps option]
-    A --> D[Assess Azure-led hybrid baseline]
-    B --> E[Compare evidence, cost, support, risk and exit]
-    C --> E
-    D --> E
-    E --> F{Hybrid passes controls, cost and support gate?}
-    F -- No or insufficient evidence --> G[Record gaps; revisit architecture with approvers]
-    F -- Yes --> H[Configure non-production Azure and verified M365 boundary]
-    H --> I[Run synthetic property scenarios]
-    I --> J[Review controls, recovery, usability and AI task evidence]
-    J --> K[Document result; no production release implied]
+flowchart TD
+    A[Identify and link home to building] --> B[Validate source data and eligibility]
+    B --> C{Hazard or safety signal?}
+    C -- Yes --> D[Refer to existing hazard service; human triage]
+    D --> E[Link retrofit hold and owner]
+    C -- No --> F[Approved prioritisation and cohort review]
+    E --> F
+    F --> G[Assessment and separate professional review]
+    G --> H[Design and building dependency review]
+    H --> I[Resident information and measure-specific decision]
+    I --> J[Budget, funding, contract and capacity gates]
+    J --> K[Authorised work-package release]
+    K --> L[Provider delivery and evidence submission]
+    L --> M[Independent quality, defect and handover review]
+    M --> N[Invoice match and separate grant-claim evidence]
+    N --> O[Aftercare, outcomes and portfolio reporting]
+    G -. insufficient or changed .-> R[Return to prior affected stage with reason]
+    H -. material change .-> R
+    I -. pause or withdrawal .-> R
+    L -. failed evidence or defect .-> R
+    R --> Q[Preserve history; invalidate affected approvals; assign owner]
+    Q --> G
 ```
+
+The actual regulated safety response remains outside this retrofit sequence.
+An external hazard referral may create a linked hold; no retrofit workflow
+controls the hazard clock or its closure.
 
 ## Acceptance Criteria
 
-All criteria are **Not Started** and require review by the named product,
-technical and control owners.
+All criteria are **Not Started**. They require review by the named product,
+technical, control and user representatives before acceptance.
 
 | ID | Given / When / Then | Covers | Status |
 | --- | --- | --- | --- |
-| AC-001 | Given the three approaches are in scope, when the options gate is reviewed, then one decision pack compares full Azure, greenfield business apps and the Azure-led hybrid against the same approved criteria and records the proposed hybrid baseline, alternatives and decision authority. | FR-001, FR-011 | Not Started |
-| AC-002 | Given an appraisal contains a cost, capability or risk claim, when a reviewer inspects it, then its source or explicit unknown status, owner, date and assumptions are visible. | FR-001, FR-002, FR-011 | Not Started |
-| AC-003 | Given a representative synthetic Excel workbook is imported, when the lifecycle is displayed, then each accepted event can be reconstructed by source workbook, sheet/row, synthetic property/building identifier, stage, source and evidence version, with rejected mappings routed to an exception queue. | FR-003, FR-006 | Not Started |
-| AC-004 | Given a required approval, safety hold, resident decision or evidence item is absent, stale or contradictory, when progression is requested, then the transition is blocked with the unmet condition and responsible role shown. | FR-004, FR-005 | Not Started |
-| AC-005 | Given safety, consent, professional approval, funding or capacity is unresolved, when a direct API, workflow or agent tool attempts a prohibited action, then the action is denied and no controlled state is changed. | FR-004, FR-005, FR-010 | Not Started |
-| AC-006 | Given an authorized synthetic journey is run, when the programme manager opens its case view, then stage, evidence status, hold reason, next-action owner and handoff state are available without implying that work is approved for production. | FR-006 | Not Started |
-| AC-007 | Given bounded AI is enabled for a test task, when it extracts, reconciles, drafts or flags, then every material output links to its source and is visibly a proposal for human review. | FR-007 | Not Started |
-| AC-008 | Given an AI proposal is accepted, edited, overridden or rejected, when the task is evaluated, then output/configuration version, reviewer action, review effort and error classification are retained. | FR-007, FR-008 | Not Started |
-| AC-009 | Given the decision pack or scenario evidence is exported, when another reviewer opens the export without the AI provider, then source links, evidence versions, approval state, unresolved items and supersession history remain interpretable. | FR-003, FR-008, FR-009 | Not Started |
-| AC-010 | Given a model, workflow or integration failure is injected, when the scenario is exercised, then controlled progression stops, affected work and owner are visible, and restart requires reconciliation; the failure cannot affect a live hazard service. | FR-010, FR-012 | Not Started |
-| AC-011 | Given a proposed move from non-production to any live use, when release readiness is reviewed, then separate approval records exist for product, data protection, safety, resident service, finance, procurement and technical authority as applicable; otherwise live release remains blocked. | FR-012 | Not Started |
-| AC-012 | Given three platform candidates and an owner-confirmed Excel-based coordination baseline with no Dataverse or Dynamics 365 (other systems and authority unknown), when the option matrix is scored, then the business-apps option is costed as greenfield and the hybrid baseline's thresholds and decision authority are documented; no platform is selected solely because of the capstone owner's preference. | FR-001, FR-011 | Not Started |
-| AC-013 | Given synthetic data is loaded, when privacy checks run, then no real resident identifier, address, contact detail or health-history text is present. | FR-003, FR-012 | Not Started |
-| AC-014 | Given an Excel import contains an unknown column, duplicate row, unmapped value or conflicting identifier, when validation runs, then the source file remains unchanged, the import does not silently resolve the conflict and each rejected row is available for human review. | FR-003 | Not Started |
-| AC-015 | Given M365/SharePoint is proposed for a managed document, when tenant, license, permission and version checks are run, then the integration is enabled only if all checks pass; otherwise the demonstrator uses the documented controlled Blob Storage fallback and records the M365 gap. | FR-013 | Not Started |
-| AC-016 (candidate) | Given a synthetic active case has an authorized test threshold, when eligible outcomes are recorded, then escalation occurs only when the count is greater than that threshold; at the provisional default of 5, the sixth eligible event routes the case to human investigation. Provider/contractor no-shows, cancellations and reschedules do not increment the count; human closure resets the active counter while preserving event and configuration history. The case is not labelled refusal or non-cooperation, no consequence is applied, and urgent hazard handling is not delayed. | FR-014 | Not Started |
+| AC-001 | Given a home belongs to a block, when either record is opened, then the user can navigate between building-level shared context and home-specific evidence, decisions, costs, holds and outcomes without merging them. | FR-001, FR-002 | Not Started |
+| AC-002 | Given one shared building work package affects multiple homes, when readiness is shown, then each home retains its own technical, resident, funding, quality and closure gates and only affected homes/scopes are blocked. | FR-001, FR-002 | Not Started |
+| AC-003 | Given two apartments in one building have different status or consent, when the building view is displayed, then neither apartment inherits the other's decision, approval or evidence. | FR-002 | Not Started |
+| AC-004 | Given a user selects a task perspective, when they view or attempt to edit a record, then the server enforces that user's permissions independently of the selected screen. | FR-003 | Not Started |
+| AC-005 | Given each agreed user profile, when the profile scenario is completed, then its role screen exposes only its permitted queues, fields and actions while linking to the same underlying case history. | FR-003 | Not Started |
+| AC-006 | Given records meet an owner-approved definition of new, prioritized, stale, blocked or overdue, when a queue is opened, then each record shows the applicable reason, source/as-of date, owner and next action, and the user can filter and sort without changing its state. | FR-004 | Not Started |
+| AC-007 | Given an authorised user edits a permitted case field, when the change is saved, then prior value, new value, source/version, actor, timestamp and reason are retained and shown in history. | FR-005 | Not Started |
+| AC-008 | Given evidence becomes stale or a material case status changes, when the case is reopened, then affected downstream tasks/approvals are visibly marked for review without deleting prior evidence or decisions. | FR-005, FR-009 | Not Started |
+| AC-009 | Given a user selects multiple cases for a permitted bulk edit, when they preview and apply it, then the preview lists affected records, field changes, permission/rule failures and per-record results; no failure is hidden and the batch is auditable. | FR-006, FR-007 | Not Started |
+| AC-010 | Given a selected bulk action is an approval, consent, safety release, procurement instruction, financial commitment, payment, claim submission, quality acceptance or case closure, when the user attempts it, then the action is unavailable or denied and no case changes. | FR-007 | Not Started |
+| AC-011 | Given a required gate is absent, stale, conflicting or unauthorised, when a user or workflow requests a controlled transition, then the product blocks it with the unmet condition, responsible owner and correction route. | FR-008 | Not Started |
+| AC-012 | Given a reviewer returns or reopens a case, when the action is confirmed, then the system records the prior/current stage, return reason, initiating authority, receiving owner and next step, preserves history and reports the result. | FR-009, FR-010 | Not Started |
+| AC-013 | Given a material change affects only some prior approvals, when the case is returned, then only affected downstream approvals are invalidated and all other history remains intact; the owner must explicitly re-review affected approvals. | FR-010 | Not Started |
+| AC-014 | Given work is handed to another role, when the handoff is sent, then it remains unaccepted until a named receiver accepts it; rejection/return, urgency, due date and next resident update are visible. | FR-011 | Not Started |
+| AC-015 | Given prioritisation inputs are missing, conflicting or ineligible, when the cohort is computed, then the result is unknown/held or an explained policy outcome, never a silent exclusion; hazards route independently. | FR-012 | Not Started |
+| AC-016 | Given an assessment/design scenario runs, when a required observation or separate professional sign-off is missing, then the technical stage cannot pass and the missing item is assigned to a competent role. | FR-013 | Not Started |
+| AC-017 | Given an exercise resident service request, complaint, repair/defect report or measure decision is recorded, when the case is reviewed, then its type, desired outcome, owner, accessibility/representative needs, status and next update are visible without treating contact or access as consent. | FR-014 | Not Started |
+| AC-018 | Given a potential hazard is recorded through an exercise channel, when the referral is created, then source and awareness time are retained, the existing-service handoff is visible, and retrofit cannot pause/reset/close the hazard response or its clock. | FR-015 | Not Started |
+| AC-019 | Given a provider work package is proposed, when the work order is shown, then contract/call-off, scope/version, confirmed capacity, authorised issuer, schedule and evidence requirements are visible; a draft is marked not an instruction. | FR-016 | Not Started |
+| AC-020 | Given completion evidence is incomplete or a defect exists, when quality review occurs, then the provider cannot self-accept it, the affected case is returned/reopened with an owner, and payment/claim recommendations remain blocked where applicable. | FR-017 | Not Started |
+| AC-021 | Given a provider invoice is imported, when matching is run, then line items link to supplier, contract, work order, home/building allocation, approved budget, accepted milestone evidence and prior payments; exceptions enter a human Finance queue and no payment executes. | FR-018 | Not Started |
+| AC-022 | Given a grant record is updated, when finance status is reported, then opportunity, award, claimable, submitted, accepted/rejected and cash received remain distinct from provider invoice/payment status, each with source and approver history. | FR-019 | Not Started |
+| AC-023 | Given a coordinator opens the heatmap, when filters or as-of date change, then the map and equivalent table show reconciled counts/denominators, stage, holds, priority and data coverage and allow drill-through to permitted records. | FR-020 | Not Started |
+| AC-024 | Given lifecycle events include entry, pause, return, reopen, exclusion or closure, when the funnel is displayed, then each stage count and conversion/exit definition is visible and drill-through reconciles to the same cases and filters. | FR-021 | Not Started |
+| AC-025 | Given historical case events exist, when a user opens timeline/history, then stage durations, handoffs, pauses, returns, reopens and decisions are shown in event order with source, actor and version; corrected data does not erase prior events. | FR-022 | Not Started |
+| AC-026 | Given a forecast is requested, when the user chooses a cohort and scenario, then the product shows a reproducible projection, range or explicit uncertainty, as-of date, capacity/dependency assumptions, stale/missing inputs and a clear distinction from target, approved plan and actuals. | FR-023 | Not Started |
+| AC-027 | Given the coordinator exports a stakeholder view, when it is opened, then selected period/cohort, definitions, sources, filters, unresolved items, actuals versus forecast and approval status are included and sensitive fields follow role permissions. | FR-024 | Not Started |
+| AC-028 | Given a case or queue has a suggested next step, when the suggestion is shown, then source records, rationale, proposed owner, prerequisite, due-date basis, unknowns and draft/proposal status are visible; accepting it creates a task only. | FR-025, FR-026 | Not Started |
+| AC-029 | Given an AI proposal is accepted, edited or rejected, when it is reviewed, then the reviewer, reason, source references, model/configuration version, output and review effort are retained; no approval gate is satisfied by the proposal. | FR-026, FR-027 | Not Started |
+| AC-030 | Given AI is disabled, unavailable or produces an unsupported output, when the task runs, then a workflow-only or human queue path remains available, failure is explicit, no success-shaped fallback is presented and no controlled state is changed. | FR-027, FR-028 | Not Started |
+| AC-031 | Given an exercise workbook has duplicate, unmapped, stale or conflicting rows, when it is imported, then users can preview every row disposition and source lineage, resolve through an authorised owner and verify the source workbook was unchanged. | FR-029 | Not Started |
+| AC-032 | Given an authorised user exports a case or cohort, when the export is inspected independently, then event, source, version, approval, return/reopen and supersession history remain interpretable without the AI provider. | FR-030 | Not Started |
+| AC-033 | Given an exercise case has confirmed appointments with verified resident no-access outcomes, when its active-case count exceeds the configured threshold, then the product creates a human-investigation task with the counted events and rule version; provider/contractor no-shows, cancellations and reschedules do not count, human closure resets only the active counter while preserving history, no refusal is inferred, and hazard response is not delayed. | FR-031 | Not Started |
 
 ## Traceability Matrix
 
-### FR-to-AC Coverage
+### FR-to-AC coverage
 
-| Source ID | Requirement | Acceptance criteria | Coverage |
-| --- | --- | --- | --- |
-| FR-001 | Compare all implementation options | AC-001, AC-002, AC-012 | 3 |
-| FR-002 | Record evidence status and assumptions | AC-002 | 1 |
-| FR-003 | Import synthetic Excel rows with traceability | AC-003, AC-009, AC-013, AC-014 | 4 |
-| FR-004 | Enforce transition gates | AC-004, AC-005 | 2 |
-| FR-005 | Fail closed on unresolved conditions | AC-004, AC-005 | 2 |
-| FR-006 | Show case state and ownership | AC-003, AC-006 | 2 |
-| FR-007 | Bound AI output to source-linked review proposals | AC-007, AC-008 | 2 |
-| FR-008 | Retain AI evaluation and reviewer evidence | AC-008, AC-009 | 2 |
-| FR-009 | Export interpretable evidence | AC-009 | 1 |
-| FR-010 | Expose and reconcile failures | AC-005, AC-010 | 2 |
-| FR-011 | Record the option decision | AC-001, AC-002, AC-012 | 3 |
-| FR-012 | Gate live-use configuration | AC-010, AC-011, AC-013 | 3 |
-| FR-013 | Resolve controlled M365 document reference | AC-009, AC-015 | 2 |
-| FR-014 (candidate) | Escalate repeated missed appointments | AC-016 | 1 |
+| Requirement | Acceptance criteria | Coverage |
+| --- | --- | --- |
+| FR-001 to FR-002 | AC-001 to AC-003 | Covered |
+| FR-003 to FR-004 | AC-004 to AC-006 | Covered |
+| FR-005 to FR-007 | AC-007 to AC-010 | Covered |
+| FR-008 to FR-011 | AC-011 to AC-014 | Covered |
+| FR-012 to FR-016 | AC-015 to AC-019 | Covered |
+| FR-017 to FR-019 | AC-020 to AC-022 | Covered |
+| FR-020 to FR-024 | AC-023 to AC-027 | Covered |
+| FR-025 to FR-028 | AC-028 to AC-030 | Covered |
+| FR-029 to FR-030 | AC-031 to AC-032 | Covered |
+| FR-031 | AC-033 | Covered |
 
-Coverage: 14/14 requirements linked, **100%**. Threshold: 80.0%.
+Coverage: 31/31 FRs linked to at least one acceptance criterion (100%). Final
+review must verify this hand-maintained matrix against the identifiers.
 
-### FR-to-GOAL Alignment
+### FR-to-goal alignment
 
-| Source ID | Requirement | Product goals | Coverage |
-| --- | --- | --- | --- |
-| FR-001 | Compare all implementation options | GOAL-001 | 1 |
-| FR-002 | Record evidence status and assumptions | GOAL-001 | 1 |
-| FR-003 | Import synthetic Excel rows with traceability | GOAL-002 | 1 |
-| FR-004 | Enforce transition gates | GOAL-002 | 1 |
-| FR-005 | Fail closed on unresolved conditions | GOAL-002 | 1 |
-| FR-006 | Show case state and ownership | GOAL-002 | 1 |
-| FR-007 | Bound AI output to review proposals | GOAL-003 | 1 |
-| FR-008 | Retain AI evaluation evidence | GOAL-003 | 1 |
-| FR-009 | Export interpretable evidence | GOAL-001, GOAL-002 | 2 |
-| FR-010 | Expose and reconcile failures | GOAL-002 | 1 |
-| FR-011 | Record the option decision | GOAL-001 | 1 |
-| FR-012 | Gate live-use configuration | GOAL-002, GOAL-003 | 2 |
-| FR-013 | Resolve controlled M365 document reference | GOAL-002 | 1 |
-| FR-014 (candidate) | Escalate repeated missed appointments | GOAL-002 | 1 |
-
-Coverage: 14/14 requirements linked, **100%**. Target: 100.0%.
-
-### Requirement-to-source trace
-
-| Source | Relevant requirement area |
+| Requirements | Goals |
 | --- | --- |
-| BRD FR-036, RULE-016, AC-053 | FR-001, FR-004, FR-005, FR-011; DD-001 |
-| BRD NFR-002 to NFR-007 | FR-003, FR-008, FR-009, FR-010; NFR-002 to NFR-009, NFR-011, NFR-012 |
-| BRD CON-001, CON-003, RULE-003, FR-002 to FR-004 | FR-004, FR-005, FR-010, FR-012; CON-003, CON-006 |
-| BRD RULE-018, RULE-022, RULE-024 | FR-007, FR-008, FR-012; CON-003 to CON-006 |
-| Case Study 48 Addendum, “Implementation Options and Provisional Platform Recommendation” | FR-001, FR-002, FR-009, FR-011; DD-001 |
-| Owner confirmation, 2026-10-03: coordination uses Excel files; no Dataverse or Dynamics 365 | Product Context, DD-001, DD-004, FR-003, CON-007, AC-012, AC-014 |
-| Owner confirmation, 2026-10-04: exercise candidate RULE-006 behavior in synthetic acceptance tests only | DD-006, FR-014, AC-016; operational use remains blocked by OQ-009/BRD OD-40 |
-| Eight company-role profile option challenges, 2026-10-03 | Product Context; Open Questions OQ-001 to OQ-008; decision criteria only, not company evidence |
-| BRD v0.12.0 RULE-006/AC-025 and owner-direction section (2026-10-04): configurable provisional threshold, eligible event definition, active-case reset and audit; company ratification remains open under OD-40 | FR-014 (candidate), AC-016, DD-006, OQ-009; synthetic tests only, no operational approval |
-| BRD v0.7.0 Owner-Provided Direction subsection (2026-10-03): partial grant award, "all contracts/frameworks" pilot scope, hazard-reporting description, PAS 2035 role-profile hypothesis | DD-005, Options Gate Scoring Framework; Open Questions OQ-002, OQ-003, OQ-004, OQ-006 |
+| FR-001 to FR-006, FR-011, FR-024 to FR-026, FR-029 to FR-031 | GOAL-001 |
+| FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-031 | GOAL-002 |
+| FR-004, FR-020 to FR-024, FR-030 | GOAL-003 |
+| FR-025 to FR-028 | GOAL-004 |
+
+All goals have linked requirements; all FRs map to at least one goal (100%).
+
+### BRD and evidence trace
+
+| Source | Product coverage |
+| --- | --- |
+| Case Study 48 original problem and requested agents | Product context, workflow coverage, role views and product goals; initial autonomy wording does not override later BRD controls |
+| Case Study 48 Addendum, Modernised Retrofit Delivery Objective and Digital Foundation | Shared case, property/building linkage, deterministic gates, bounded AI and accountable human authority |
+| BRD v0.14.1, Operating Model for a Home-Centred Workbench and Workflow Portfolio and Business Value | FR-001 to FR-031, profile screens, stage/return model, finance and resident/provider paths, heatmap/funnel/timeline/forecast and value measures |
+| BRD BG-001 to BG-012 and RULE-001 to RULE-024 | GOAL-001 to GOAL-004, permission and transition gates, resident/safety/finance controls, and evaluation guardrails |
+| BRD Comparison 1 and Comparison 2; OD-18 | GOAL-003/004 and metrics; comparison definitions and targets remain open and unratified |
+| Retrofit operating-data exercise pack and data dictionary | Constructed identifiers, home/building joins, lifecycle events, contacts, appointments, safety holds, quality evidence, grant and finance fields; realistic data defects inform import and stale/conflict scenarios. The records do not establish actual company performance or resident outcomes. |
+| Prototype on `feat/proper-warm-prototype` at `5e52ceb` | Four role-based task perspectives and bounded case-review suggestions inform interaction direction only; view labels are not authorization, and implemented surfaces are not proof of production readiness |
 
 ## MVP and Release Framing
 
 ### MVP learning goal
 
-Determine whether one candidate architecture can satisfy the minimum
-cross-system control, evidence, recovery and operability needs at a credible
-whole-life cost, and whether a bounded AI task improves on workflow-only
-handling. Option comparison precedes any architecture lock.
+Show that one coherent product can represent every BRD workflow over shared
+constructed home/building exercise records, provide useful role-specific
+workspaces, enforce controlled handoffs and returns, and make
+progress/history/forecast views
+reconcilable to source events. Determine whether selected bounded AI
+suggestions improve tasks over the same workflow without AI.
 
-### MVP slice
+### Release increments within this PRD
 
-* Deliver a decision pack for full Azure custom, greenfield business apps and
-  the Azure-led hybrid using identical criteria, documented evidence and
-  explicit unknowns. The hybrid is the proposed demonstrator baseline; the
-  gate may reject it if controls, support or whole-life value do not pass.
-* Deliver one non-production hybrid demonstrator with an Azure-owned synthetic
-  property lifecycle, representative Excel import mapping, and M365 document
-  collaboration only where tenant, licensing and governance checks pass.
-  Provide a controlled Blob Storage fallback and record any unproven M365
-  boundary.
-* Compare at least one bounded AI task with workflow-only handling in paired
-  test cases if AI is justified by the appraisal; document the result even if
-  the decision is not to use AI.
-* Demonstrate export, role boundaries, failure handling and a no-bypass
-  acceptance suite.
+| Increment | Product content | Exit evidence |
+| --- | --- | --- |
+| 1. Shared workbench foundation | Exercise-record import; linked home/building case model; authenticated role permissions; common queue with new/priority/stale/blocked; case edit/history; task/handoff; return/reopen controls | Role scenarios, import/error cases, access tests, audit reconstruction and no-bypass suite pass |
+| 2. Workflow portfolio coverage | Exercise scenario screens for prioritisation, technical readiness, resident/service, supplier/capacity, hazard referral, quality/defects, invoices/grants and portfolio decisions | Every workflow in the coverage map reaches its expected terminal state or explicit safe block; cross-role handoffs and reversals are tested |
+| 3. Coordinator insight | Heatmap, funnel, event timeline, stakeholder export and scenario forecasts | Views reconcile to the same source cohort/events; definitions, denominators and forecast assumptions are reviewable |
+| 4. Bounded-agent comparison | Source-linked next-step, reconciliation, extraction, draft or raise-only tasks where justified | Paired workflow-only tests meet owner-approved quality, critical-error, review-effort and value thresholds; no live action |
 
-This slice has learning value and limits risk, but does not establish
-operational outcomes or prove readiness for live validation. The sample size,
-calendar, implementation cost and user-research plan require discovery.
+All four increments belong to this single PRD and non-production exercise
+boundary. The exercise records are constructed and are not company evidence.
+Implementation sequencing may change after dependency and options appraisal,
+but no workflow is represented only in prose: each receives at least one
+screen/queue and one acceptance scenario.
 
 ### Out of scope
 
-* Production deployment, portfolio rollout, capital acceleration or live
-  integrations to resident, safety, finance or contractor systems.
-* Live resident contact, collecting consent, or autonomous appointment,
-  works, payment, funding, hazard or quality decisions.
-* Replacing housing-management, asset, repairs, finance, safety, procurement
-  or contractor systems of record.
-* Treating agent output, missing alerts or synthetic evaluation as evidence of
-  legal compliance, professional approval or achieved customer benefits.
-* Building all three options as production-grade implementations; compare all
-  three consistently and implement only the hybrid demonstrator baseline
-  authorized at the gate.
+* Production rollout, live resident communications, resident login, real
+  personal data, or live integrations to safety, finance, provider or housing
+  systems.
+* Autonomous prioritisation policy, hazard diagnosis/classification, resident
+  consent, professional approval, investment, procurement, provider instruction,
+  invoice/payment approval, grant eligibility/submission, quality acceptance,
+  complaint closure or defect/safety closure.
+* A provider portal or scheduling API as a prerequisite; intake may be
+  demonstrated through constructed uploads and approved channel-neutral records.
+* A resident compensation/reimbursement workflow. Resident service intake in
+  scope means complaints, service requests and repair/defect reports.
+* Treating a forecast as a committed delivery plan, a grant opportunity as
+  award/cash, or agent activity and exercise results as achieved benefits.
+* Replacing authoritative systems or implementing all platform options as
+  production systems.
 
 ## Success Metrics
 
-| Metric | Definition | Baseline | Target | Window / source | Owner |
-| --- | --- | --- | --- | --- | --- |
-| Option appraisal completeness | Count of candidate options assessed against each approved criterion with evidence or an explicit gap | No completed comparative appraisal evidenced | 3/3 options; full Azure custom, greenfield business apps and hybrid assessed before build authorization | Architecture gate; decision pack | Product owner and architecture lead, to be named |
-| Critical transition control pass rate | Prohibited or unresolved transitions blocked / total negative control tests | No PRD demo test suite | 100%; zero unauthorized controlled transitions in the agreed suite | Each demonstrator release; versioned test results | Safety and technical authority, to be named |
-| Scenario completion | Approved end-to-end hybrid scenarios that reach expected terminal state or explicit safe block / total approved scenarios | No PRD hybrid demonstrator delivered | 100% of the agreed scenario suite | Demonstrator acceptance; scenario evidence | Retrofit product owner, to be named |
-| Excel import disposition | Source rows imported with traceable mapping or explicitly rejected for human review / total source rows | Current coordination uses Excel files; workbook structure and row quality unknown | 100% of test rows have a visible disposition; zero silent drops or overwrites | Synthetic migration test; import log | Data owner, to be named |
-| Evidence export completeness | Required synthetic records whose source, version, approval and supersession metadata survive export / required records | Unknown | 100% of required synthetic test records | Each export acceptance run | Data owner, to be named |
-| AI incremental task value | Paired comparison of output quality, unsupported-claim rate, review minutes, overrides and missed critical exceptions versus workflow-only | No measured PRD task baseline | Thresholds set by owners before evaluation; zero undetected critical safety, eligibility or consent errors accepted | Shadow evaluation only; paired test record | Product, safety and assurance owners |
-| Whole-life cost confidence | Major cost categories with sourced estimate or explicit gap / required categories | Unknown; no company platform inventory or comparable quotation | All agreed categories shown for each option; Finance validates before decision | Options gate; estimate and evidence log | Finance |
+| Metric | Definition | Baseline | Candidate target / acceptance | Owner |
+| --- | --- | --- | --- | --- |
+| Workflow representation | BRD workflow rows with at least one product screen/queue and one exercise acceptance scenario | No complete multi-workflow workbench established | 9/9 represented and tested; each reaches expected state or safe block | Product owner and workflow owners to be named |
+| Role-task completion | Agreed profile tasks completed without permission breach or unexplained dead-end | No validated user research | Tasks and pass thresholds set before usability sessions | Product/Resident Engagement |
+| Case and handoff integrity | Exercise transitions/handoffs with valid authority, history, owner and next action | No approved suite | All critical acceptance cases pass; zero silent loss or unauthorized transition | Product, control owners |
+| Multi-case edit integrity | Permitted bulk edits with visible preview, per-case disposition and audit | No approved suite | All seeded allowed/denied cases visible; zero hidden partial success | Product/Data |
+| Dashboard reconciliation | Heatmap/funnel/timeline values reconcilable to selected cohort/event data | No product dashboard | 100% of agreed exercise reconciliation checks pass | Data and Performance |
+| Forecast calibration/readability | Forecasts reproduce from versioned inputs and disclose uncertainty, assumptions and limits | No forecast baseline | Method and owner-approved tolerance set before forecast evaluation; no forecast shown as certainty | Programme/Asset/Finance |
+| Assessment-to-ready-to-install | Elapsed time using future approved clock, cohort and case handling | Establish in Phase 0; OD-18 open | BRD's 20% lower target remains unratified and is not an MVP promise | Programme/Data/Finance |
+| Net coordination effort | Effort per accepted home including review, assurance, recording and shifted work | Establish in Phase 0; OD-18 open | BRD's 25% reduction remains unratified | Programme/Finance |
+| AI incremental task value | Paired quality, review time, unsupported claims, overrides and missed critical exceptions versus workflow-only | No measured product result | Thresholds approved before test; zero undetected critical error accepted | Product, Safety and Assurance |
+| Safety/resident/quality/finance guardrails | Critical negative tests and outcome measures by applicable cohort | Company baselines unknown | Zero prohibited controlled approvals in the test suite; live guardrail targets require named owners | Relevant control owners |
 
-Any quantitative target beyond the defined test pass criteria is provisional
-until the product sponsor, Finance and relevant control owners approve it.
-Do not convert this demonstrator scorecard into operational throughput or
-resident-benefit claims.
+The target values above are candidates or deterministic demonstrator test
+criteria, not forecasts of live customer outcomes. No user-research result,
+business benefit or operational performance is claimed until measured and
+approved.
 
 ## Risks and Assumptions
 
-### Key Assumptions
+### Key assumptions
 
-| Assumption | Impact if false | Mitigation |
+| Assumption | If false | Treatment |
 | --- | --- | --- |
-| The BRD's proposed end-to-end demonstrator is the intended PRD scope, with the Azure-led hybrid as the baseline. | High | Confirm product boundary, architecture gate, and evidence needed to reject or proceed with the hybrid. |
-| Each of the three options can be described against a common control and evidence model. | Medium | Architecture lead to define neutral criteria and disclose any unequal evidence quality. |
-| Synthetic data is sufficient to test representative flows and failure paths. | Medium | Data and programme roles review scenario validity; no claim of live-user validation. |
-| Foundry/agent evaluation is relevant only if a bounded task demonstrates value over conventional workflow. | Medium | Include workflow-only baseline and permit an explicit no-AI recommendation. |
-| A non-production prototype can use mocks or test adapters for unknown company systems and representative synthetic Excel workbooks. | High | Inventory system/API and workbook constraints; record mock and import limitations. |
-| M365 SharePoint can be used for managed demonstrator documents. | High | Verify tenant, license, permissions, retention and operating ownership; use the Blob fallback if any prerequisite fails. |
+| One shared case model can serve the related workflow portfolio without replacing existing systems of record. | Integration design or product boundary changes. | Validate identifiers, authorities and domain ownership in Phase 0; preserve explicit links and mocks in MVP. |
+| Role-specific screens over common data reduce coordination effort. | Extra views may add complexity without benefit. | Test tasks with representative real users before live use; retain common data and configurable task queues. |
+| All nine workflows can be shown through constructed exercise cases within one coherent MVP. | Delivery may need further increments or a narrower demonstrator slice. | Keep release increments explicit; do not split PRDs unless discovery reveals independent product ownership or separate source-of-truth/control boundaries. |
+| Event history and capacity data are adequate for a useful exercise timeline and forecast demonstration. | Forecasts may be illustrative only. | Label data coverage and assumptions; require calibrated company data before operational forecasting. |
+| Some bounded agent tasks may add value. | Conventional workflow may be better. | Workflow-only path is first-class; no AI is a valid outcome. |
+| Provider and resident service intake can be demonstrated without direct access for those external users. | External channels and permissions may require separate product decisions. | Use controlled exercise intake; validate future channels, privacy, accessibility and contracts before productising. |
+| The Azure-led hybrid is a suitable demonstrator baseline. | Full Azure or greenfield business apps may better meet controls/cost/support. | Keep options gate open and compare equivalent controls and whole-life costs. |
 
-### Risk Register
+### Risk register
 
 | Risk | Probability | Impact | Mitigation |
 | --- | --- | --- | --- |
-| Azure preference predetermines the appraisal | Medium | High | Freeze criteria before scoring; cost business apps as greenfield and document the decision authority and reasons for the hybrid baseline. |
-| Role-agent hypotheses are mistaken for company or resident evidence | Medium | High | Label their status; validate with actual stakeholders and residents before commitment. |
-| Owner-provided direction (for example the missed-appointment rule, grant award status, or "all contracts/frameworks" scope) is treated as named-function verified evidence, a financial/legal sign-off, or a ratified operational rule | Medium | High | Keep the rule candidate and its demonstration synthetic-only; require company appointment evidence, Housing/Repairs ratification, Resident Engagement review and an approved configuration/change owner before operational use under OQ-009/OD-40. |
-| Incomplete BRD handoff or unresolved upstream quality issues propagate into the PRD | High | High | Obtain latest BRD quality report, coverage/waiver context and named approvals before Validate. |
-| Split authority across Azure and SharePoint creates conflicting approvals or evidence | Medium | High | Keep Azure SQL as programme-state authority; define SharePoint document authority only if verified; test links, versioning, export and reconciliation. |
-| Product demo passes while operational support or failure recovery is inadequate | Medium | High | Require runbooks, owner, recovery exercise and support model before any later live gate. |
-| Synthetic success is presented as actual delivery benefit | Medium | High | Label every output synthetic and separate feasibility evidence from the BRD's operational Comparisons 1 and 2. |
-| Unverified resident needs or platform channels exclude people | Medium | High | Conduct direct resident research and accessibility testing before any resident-facing product scope. |
+| Screens imply authority a profile does not hold | Medium | High | Server-enforced permissions, explicit decision types, separate approval records and negative tests. |
+| Bulk edit creates hidden partial changes or bypasses stage controls | Medium | High | Preview, per-record validation and results, no bulk consequential approvals, immutable batch audit. |
+| Returning a case erases history or incorrectly rolls back unrelated approvals | Medium | High | Append-only events, explicit reason, dependency-based invalidation and human review. |
+| Stale status is subjective or creates unfair prioritisation | Medium | High | Show field age/source and owner-approved staleness definitions; stale data triggers review, not automatic deprioritisation. |
+| Heatmap/funnel visuals hide missing cases or denominator changes | Medium | High | As-of date, cohort, filters, exclusions, denominator and accessible table; reconciliation tests. |
+| Forecast is mistaken for a commitment or overstates throughput | Medium | High | Separate actual/target/approved plan/forecast; expose uncertainty, capacity, holds and data limits. |
+| Role-profile hypotheses are mistaken for company or resident evidence | Medium | High | Label evidence classes and validate with named owners and residents. |
+| Agent suggestions are followed without scrutiny | Medium | High | Source links, unknowns, review disposition and no direct commit tools; evaluate automation-bias indicators. |
+| PRD scope is mistaken for an approved business or platform decision | Medium | High | Keep draft status, open questions, options gate and separate live-use approvals explicit. |
 
 ## Open Questions
 
-The eight `company-*` role profiles each reviewed the proposed hybrid baseline
-on 2026-10-03 from their defined perspective. Their output is a set of
-role-profile discovery prompts and hypotheses, not company facts, resident
-research or approvals; no answer below should be inferred or assumed on the
-company's behalf. Every question below stays **Open** until an accountable
-function supplies verified evidence. MVP remains synthetic-only with no live
-resident contact regardless of how these questions resolve.
+The following remain unresolved and block the corresponding live-use or
+product-approval decision. They do not block an exercise demonstration of
+screen behavior where explicitly stated.
 
-| ID | Question | Accountable function / evidence to obtain | Decision or gate blocked | Status |
-| --- | --- | --- | --- | --- |
-| OQ-001 | Is the non-production demonstrator authorization separate from the customer platform choice, and who holds cost/effort authority over each? | Asset Executive; asset plan, capital envelope, delegated authority and decision-rights record | DD-001 confirmation; options gate (FR-001, FR-011) | Open |
-| OQ-002 | What is the validated representative property journey, and how are stage, handoff, exception and accepted-handover defined for it? | Retrofit Programme Manager; current workflow walkthrough, PAS 2035 capacity evidence and the BRD's accepted-handover protocol | Scenario design for FR-003, FR-006; AC-003, AC-006 | Open |
-| OQ-003 | What comparable whole-life cost, affordability and grant evidence exists for each option, and who owns the costing baseline and decision? | Finance and Grants; sourced cost model, budget ceiling, award/match-funding data and named decision owner | Options gate (FR-001, FR-002, FR-011); Whole-life cost confidence metric | Open |
-| OQ-004 | For a greenfield business-apps option, what are the actual licensing entitlements, contract/API terms, procurement route, exit path and ongoing operating support? | Procurement and Contracts; licence inventory, contract terms, procurement policy and support/exit commitments | Options gate (FR-001, FR-011); CON-005, CON-008 | Open |
-| OQ-005 | Is Excel the sole source of record, or does other current coordination tooling exist, and what is the workbook profile (identifiers, conflicts, volume), expected workload/performance and retention requirement? | Data and Performance; workbook inventory, identifier scheme, conflict examples, workload profile and retention policy | FR-003 import design; AC-003, AC-013, AC-014; NFR-007 | Open |
-| OQ-006 | Who is the named safety/hazard-service authority, how is synthetic/mock isolation enforced, and what evidence demonstrates no-bypass gates and tested recovery? | Building Safety; named hazard-service owner, isolation design and recovery-test evidence | CON-006; FR-004, FR-005, FR-010; AC-004, AC-005, AC-010 | Open |
-| OQ-007 | What are the validated frontline task, handoff, exception, usability and fallback needs for programme and resident-facing staff? | Neighbourhood Housing Officer; frontline task observation, usability session findings and fallback-process evidence | NFR-010 usability acceptance; FR-006 case view design | Open |
-| OQ-008 | Who owns the resident-service relationship, what later accessibility/inclusion research is planned, and what are the resident channel, choice, redress and privacy-readiness requirements? | Resident Engagement; named resident-service owner, accessibility research plan, channel inventory and redress/privacy controls | FR-012 release gate; AC-011; NFR-005, NFR-010 | Open |
-| OQ-009 | Do company appointment records support the owner-directed eligible-event codes and active-case lifecycle, and who owns threshold approval, configuration changes, audit and resident review? | Housing and Repairs; company appointment history and event-code mapping; named policy/configuration owner; Resident Engagement review; Programme/Digital configuration and audit design | Operational use of FR-014; BRD OD-08, OD-09 and OD-40 | Open |
+| ID | Question | Accountable function / evidence | Impact |
+| --- | --- | --- | --- |
+| OQ-001 | Who is product owner and who approves product, option, scope and cost decisions? | Sponsor, Asset, Finance; named delegation and decision record | Product governance and budget |
+| OQ-002 | What is the validated end-to-end case lifecycle, including event definitions, returns, reopen and accepted handover? | Retrofit Programme; process walkthrough and approved event dictionary | State machine, history and metrics |
+| OQ-003 | Which systems are authoritative for each data domain and what identifiers/interfaces exist? | Data owners; source register, system/API inventory | Case linking and integration |
+| OQ-004 | Which resident, provider and employee tasks, channels, access needs and escalation paths are validated by direct research? | Resident Engagement, Housing, Procurement; user research and contract evidence | Screen detail, external access and live communications |
+| OQ-005 | What are company-authorised role/field permissions, approval limits and separation-of-duties rules? | All control owners, Digital, Legal | Role workspaces, approvals and audit |
+| OQ-006 | What is the validated cohort, prioritisation policy, data freshness rule and interpretation of missing/unknown data? | Asset, Safety, Finance, Data; approved policy and source-quality baseline | Priority and stale queues |
+| OQ-007 | What are the contract terms, committed capacity, payment milestones, payment notices and invoice evidence requirements? | Procurement, Legal, Finance; contract register and approved terms | Supplier release and finance workflows |
+| OQ-008 | What are approved service targets, hold escalation, handoff SLAs and staffing capacity? | Housing, Repairs, Safety, Programme; owner-approved service model | Queue aging, notification and priority |
+| OQ-009 | What event coverage, cohort and variance support forecast methods and tolerances? | Programme, Asset, Finance, Data and Performance | Historical and forecast accuracy |
+| OQ-010 | Which cost, cash, grant, liquidity and covenant thresholds may be exposed to each profile? | Finance, Asset, Board/delegated authority | Financial screens and stakeholder export |
+| OQ-011 | What are the accessibility standard, resident explanation tests, languages and non-digital service validation plan? | Resident Engagement, DPO | Future resident-facing readiness |
+| OQ-012 | Do Azure, M365/SharePoint and alternatives meet tenant, licensing, identity, data residency, support, recovery and whole-life cost requirements? | Digital, Procurement, Finance | Architecture decision |
+| OQ-013 | Which heatmap geography, funnel denominator, time windows and resident-outcome breakdowns are approved for each audience? | Programme, Data and Performance, DPO, Resident Engagement | Dashboard definitions and disclosure |
+| OQ-014 | What approval and change governance applies to the owner-directed missed-appointment exercise scenario before any operational consideration? | Housing, Repairs, Resident Engagement, Programme/Digital under BRD OD-40 | Operational use remains prohibited |
 
-All nine rows remain unresolved as of this draft. Close an item only when the
-accountable function supplies verified, sourced evidence; do not mark a row
-resolved on the strength of a role-profile hypothesis alone.
+## Sign-Off and Handoff Readiness
 
-### Owner-direction cross-references (2026-10-03 to 2026-10-04)
+This PRD remains a **draft**. No product, platform, business, resident,
+financial, legal, professional or operational approval is implied. No signed
+upstream BRD-to-PRD handoff payload or current valid BRD quality report was
+available during this revision. Before Validate/approval, obtain the required
+handoff and current quality evidence, close or disposition open questions,
+review requirements and acceptance criteria with named owners and representative
+users, and run the PRD Quality Reviewer.
 
-The BRD's "Owner-Provided Direction on Sponsor Discovery Questions" subsection
-(v0.7.0) narrows, but does not close, three of the rows above. Each remains
-**Open** because owner direction is not named-function verified evidence.
+### Approval checklist
 
-* **OQ-002** (validated journey): the BRD records a PAS 2035 role-profile
-  hypothesis (six illustrative roles) and an owner-directed missed-appointment
-  control, now precisely defined in v0.12.0 and reflected as candidate FR-014.
-  Neither is a validated workflow walkthrough or an accepted-handover
-  protocol; the row stays Open pending Retrofit Programme Manager evidence.
-* **OQ-003** (grant evidence): the owner confirms a grant award exists and
-  covers roughly half of the homes that could have received it. Award terms,
-  eligible-property schedule, match funding and clawback conditions remain
-  unknown; the row stays Open pending Finance and Grants evidence.
-* **OQ-004** (licensing/contract route): the owner directs that the pilot
-  would use all available contracts/frameworks rather than a single named
-  route. Named contract managers, authority limits, expiry and delegated
-  authority per contract remain unknown; the row stays Open pending
-  Procurement and Contracts evidence.
-* **OQ-006** (hazard authority): the owner describes the current hazard
-  reporting route (technician write-up, or a resident phone call followed by
-  a technician audit of severity) but did not name a hazard-service authority
-  or supply isolation/recovery-test evidence; the row stays Open pending
-  Building Safety evidence.
-* **OQ-009** (missed-appointment rule): owner direction now defines the
-  provisional threshold and event semantics, but public evidence does not
-  validate five and company appointment data, Housing/Repairs ratification,
-  Resident Engagement review and configuration/change governance remain
-  outstanding under BRD OD-40. Keep FR-014 synthetic-only and candidate.
-
-Four other owner-direction items (survey/install/quality capacity, pilot
-building dependencies, tenure/lease data share, local-authority stock
-distribution) were explicitly **declined** by the owner as statistical
-estimates rather than answered, because no grounding data exists in this
-repository; they are not reflected as PRD evidence and remain fully
-unresolved, most closely touching OQ-002 (capacity), OQ-006 (building
-dependencies), OQ-005 (tenure/lease data) and OQ-001 (stock geography)
-respectively.
-
-## Glossary
-
-| Term | Definition |
-| --- | --- |
-| Azure-led hybrid | Proposed demonstrator architecture in which Azure provides programme state and control, while verified M365 services may support managed documents and staff collaboration. |
-| Business apps | Greenfield Power Platform and M365 adoption; Proper North Homes has no Dataverse or Dynamics 365 estate to reuse, per owner confirmation on 2026-10-03. |
-| Control plane | Programme-specific lifecycle, gates, evidence links, handoffs and status coordination; it does not replace existing authoritative systems. |
-| Demonstrator | Non-production implementation used to prove representative technical paths and controls, not operational benefits. |
-| Foundry | Azure AI platform candidate for bounded AI capabilities; specific model, availability, region and deployment are undecided. |
-| Accepted handover | BRD outcome separating installation, physical acceptance, evidence acceptance and resident handover; operational definition remains subject to BRD and protocol approval. |
-| Synthetic data | Clearly fictional test data with no real resident identifiers or personal information. |
-| Threat model | A design-stage list of plausible attack or misuse scenarios against a stated boundary, used to target controls; illustrative until a named security review validates it. |
-| Evaluation harness | The defined set of paired test cases, metrics and failure-mode taxonomy used to compare a bounded AI task against workflow-only handling; a method, not a result. |
-| Options Gate Scoring Framework | The weighted, pre-declared criteria set used to score the three implementation options at the architecture gate, so the comparison is reproducible rather than narrative. |
-
-## Sign-Off
-
-### Approval Checklist
-
-* Product Sponsor: To be named.
-* Product Owner: To be named.
-* Technical Lead: To be named.
-* Quality Lead: To be named.
-* Legal/Compliance and DPO: To be named for applicable review.
-* Resident Engagement and safety control owners: To be named.
-* Finance and Procurement reviewers: To be named.
-
-Approval date: Not approved; draft for discovery and review.
-
-### Waivers
-
-None requested. Requirements and targets remain draft; missing approval is not
-a waiver.
-
-### Handoff Readiness
-
-Not ready for implementation handoff. No signed upstream BRD-to-PRD handoff,
-named product owner, approved platform decision, formal user research,
-verified cost model or completed PRD quality review is recorded. Before
-Validate, reconcile this draft against the current BRD version, approved
-handoff payload and latest quality findings.
+* [ ] Named product owner and decision authority
+* [ ] Signed/current BRD handoff and quality evidence reviewed
+* [ ] All nine workflows represented and exercise scenarios approved
+* [ ] Role permissions and decision rights reviewed by control owners
+* [ ] Case edit, bulk edit, return/reopen and audit behaviors accepted
+* [ ] Dashboard definitions and forecast method validated
+* [ ] Accessibility and representative user tasks reviewed
+* [ ] Options, whole-life cost, support and recovery gate passed
+* [ ] AI tasks justified against workflow-only alternatives or explicitly removed
+* [ ] No unresolved blocking quality findings
 
 ## Disclaimer
 
-> [!CAUTION]
 > **Disclaimer:** This agent is an assistive tool only. It does not provide product management approval, technical feasibility validation, or business sign-off and does not replace product managers, engineering leads, business stakeholders, or other qualified human reviewers. The output consists of suggested requirements, acceptance criteria, and product specifications to support a user's own product planning and decision-making. All Product Requirements Documents, functional requirements, non-functional requirements, and constraint definitions generated by this tool must be independently reviewed and validated by appropriate product and engineering reviewers before adoption. Outputs from this tool do not constitute product approval, requirements sign-off, or engineering commitment.
 
 ## Document Metadata
 
-* Template Version: 1.0.0.
-* Canonical Template: `requirements-author/templates/prd/prd-full.md`.
-* License: CC-BY 4.0 (Microsoft HVE-Core).
-* Attribution: Microsoft HVE-Core Team.
+* **Template Version:** 1.0.0
+* **Created:** 2026-10-03
+* **Last Updated:** 2026-10-06
+* **Authoring Status:** Draft
+* **Next Review:** Before PRD Validate

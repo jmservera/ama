@@ -2,15 +2,15 @@
 title: Agentic Retrofit Programme Business Requirements Document
 description: Business requirements for safe, resident-centred and financially controlled retrofit delivery
 author: AMA Research Team
-ms.date: 2026-10-04
+ms.date: 2026-10-06
 ms.topic: reference
 brd_id: "BRD-2026-AMA48-001"
 status: "draft"
-version: "0.12.0"
+version: "0.14.1"
 owners: ["AMA Research Team"]
 reviewers: ["Executive Director of Assets (proposed sponsor)", "Named Proper North Homes control owners (to be confirmed)"]
 created_date: "2026-09-11"
-last_updated: "2026-10-04"
+last_updated: "2026-10-06"
 business_goal_ids: ["BG-001", "BG-002", "BG-003", "BG-004", "BG-005", "BG-006", "BG-007", "BG-008", "BG-009", "BG-010", "BG-011", "BG-012"]
 business_goal_smart_status: "fail"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -103,6 +103,11 @@ safe property progression, valid and accessible resident decisions, committed
 delivery capacity, evidence-based grant reporting, controlled quality and an
 affordable portfolio trajectory.
 
+For the capstone presentation, Proper North Homes is treated as the real
+customer case and attendees are addressed as its stakeholders in their actual
+roles. The records constructed for the exercise do not establish actual
+company performance, resident outcomes, systems or operating decisions.
+
 The immediate investment request is a capped readiness stage followed by
 an end-to-end non-production demonstrator and separately authorised shadow and
 live validation. The underlying retrofit capital case and the incremental
@@ -129,10 +134,11 @@ We recommend that the Board sponsor a complete end-to-end demonstrator of the
 target operating model, followed by controlled operational validation. The
 demonstrator will connect one property journey from readiness and assessment
 through resident engagement, supplier coordination, quality evidence, grant
-reconciliation and portfolio reporting. It will use synthetic or approved
-de-identified cases in a non-production environment, so the architecture can
-be built, tested and demonstrated without exercising live authority over a
-resident, contractor, payment, grant claim or safety decision.
+reconciliation and portfolio reporting. It will use constructed exercise
+records or approved de-identified cases in a non-production environment, so
+the architecture can be built, tested and demonstrated without exercising
+live authority over a resident, contractor, payment, grant claim or safety
+decision.
 
 The proposition is not five autonomous agents replacing existing teams. It is
 one controlled property lifecycle with bounded agents removing coordination,
@@ -319,9 +325,10 @@ requested agent's "owns end-to-end" line for its real problem, cheaper
 alternatives, bounded AI fit, required foundation, value test and stop
 criteria. The findings are recorded in the
 [Agent Request Challenge](../reference/research/company/agent-request-challenge.md).
-These fictional role profiles are research instruments grounded in the
-case-study evidence and sector research. Their convergence is a
-sector-informed recommendation, not proof of company stakeholder agreement.
+These `company-*` role profiles are research instruments grounded in the
+case-study evidence and sector research, not the capstone attendees
+themselves. Their convergence is a sector-informed hypothesis, not proof of
+company stakeholder agreement.
 
 No perspective supported five end-to-end agents as an implementation
 commitment. Each request combines three kinds of work: deterministic control
@@ -742,7 +749,7 @@ decisions remain prohibited.
 | Phase | Proposed scope and timing | Evidence and authority to proceed |
 | --- | --- | --- |
 | 0. Readiness | Indicative 6 to 8 weeks; validate pilot-area stock and building data, twelve-month throughput, delay causes, resident journeys, competence, suppliers, funding, headroom and platform options; after the frozen protocol and the OD-36 DPIA and lawful measurement basis are approved, switch on identical event capture for the proposed pilot locality and matched locality before resident contact | Sponsor and Finance authorise a capped discovery envelope; relevant control owners accept the baseline, options appraisal, Comparison 1 and Comparison 2 evaluation protocol, guardrails and data-protection gates before any Phase 0 pilot or comparison event capture. Shadow testing additionally requires the shadow-mode entry evidence listed for Phase 1 |
-| 0D. End-to-end demonstrator | Build and self-test the complete target workflow in a non-production environment using synthetic or approved de-identified cases; include representative successful, safety-hold, consent, eligibility, missing-evidence and integration-failure paths | Sponsor accepts demonstrator scope and cost; architecture, security, data and control owners accept that no live authority or production dependency is implied. Progression to shadow mode requires documented component contracts, threat controls, evaluation results, observability, known gaps and tested fallback |
+| 0D. End-to-end demonstrator | Build and self-test the complete target workflow in a non-production environment using constructed exercise records or approved de-identified cases; include representative successful, safety-hold, consent, eligibility, missing-evidence and integration-failure paths | Sponsor accepts demonstrator scope and cost; architecture, security, data and control owners accept that no live authority or production dependency is implied. Progression to shadow mode requires documented component contracts, threat controls, evaluation results, observability, known gaps and tested fallback |
 | 1. Shadow mode | Recommendations, drafts and exception tests without live commitments or resident contact; duration agreed after readiness; run paired agent outputs against the same cases handled by workflow-only teams where lawful | Sponsor authorises live pilot only after safety, technical, resident, finance, procurement, data and digital owners accept controls, comparison results, DPIA, continuity tests, guardrail stop triggers and pilot budget |
 | 2. Controlled live pilot | Indicative 6 to 9 months; existing teams and suppliers in one locality, a few understood archetypes, named accountable owners, agents operating within recommend, draft, reconcile and flag boundaries, 80 to 100 candidate homes and at least 50 accepted handovers proposed; assurance capacity needed for safety remains a control | Control owners and independent assurance review the frozen benefits scorecard, operating dashboard exceptions and guardrail breaches; Board authorises any acceleration beyond the existing annual plan under RULE-011 |
 | 3. Repeatable schemes | Approved archetype patterns, geographic packages, planned-maintenance alignment, supplier scorecards and risk-based inspection | Next tranche requires accepted quality, resident, capacity, funding and financial evidence within the approved envelope |
@@ -781,7 +788,8 @@ The main design tension is that the evaluation rubric requires a complete,
 end-to-end architecture demonstration, while the staged-implementation logic
 requires controlled evidence before live use. The solution separates technical
 completeness from operational authority. The demonstrator implements the
-complete architecture in a non-production environment with synthetic or
+complete architecture in a non-production environment with constructed
+exercise records or
 approved de-identified cases. Shadow and live validation then test whether the
 same capabilities create attributable value in the operating context. A
 complete demo therefore does not imply a portfolio-wide autonomous
@@ -817,17 +825,17 @@ professional sign-off, supplier instruction, grant approval, payment and quality
 acceptance.
 
 The adoption plan lowers resistance to change by showing user value before
-asking the organisation to change live work. The demonstrator should contain a
-representative synthetic case pack covering straightforward journeys,
-resident-contact-heavy journeys, supplier dependencies, missing or conflicting
-data and controlled failures. Staff can test those journeys and influence the
+asking the organisation to change live work. The demonstrator should contain a representative constructed exercise case
+pack covering straightforward journeys, resident-contact-heavy journeys,
+supplier dependencies, missing or conflicting data and controlled failures.
+Staff can test those journeys and influence the
 design without affecting a resident or live decision. The later operational
 cohort should cover one locality, a limited number of archetypes and a bounded
 set of completion routes, with a matched comparison group.
 
 | Demonstration objective | Proposed design | Value to users | Approval gate |
 | --- | --- | --- | --- |
-| End-to-end architecture proof | Non-production implementation of the full lifecycle from intake to handover, with deterministic workflow, bounded agent functions and synthetic or approved de-identified cases | Team sees one path through an otherwise fragmented system without the spreadsheet shuffle | Sponsor accepts the scope; architecture, security and control owners accept the evidence and known gaps |
+| End-to-end architecture proof | Non-production implementation of the full lifecycle from intake to handover, with deterministic workflow, bounded agent functions and constructed exercise records or approved de-identified cases | Team sees one path through an otherwise fragmented system without the spreadsheet shuffle | Sponsor accepts the scope; architecture, security and control owners accept the evidence and known gaps |
 | User-value proof | Staff test current pain points: duplicate data entry, missing evidence, queue ambiguity, resident communication and manual rework | Users experience fewer manual steps, clearer ownership and faster escalation in a safe proving environment | Process owners validate the scenarios and usability findings |
 | Adoption and trust | Human approval gates, evidence lineage, explanations, overrides and failure recovery are visible during the demo | Staff can see where the workflow helps and where human judgement still matters | Data, DPO, resident engagement and technical owners accept progression to shadow mode |
 | Operational value | One locality and a matched comparison group validate the demonstrated capabilities against current delivery | Teams learn from real cases without unbounded operational risk | Sponsor approves the cohort, lawful measurement basis, measures and stop criteria |
@@ -1022,6 +1030,227 @@ Early funding and capacity screens are provisional; final confirmation remains
 mandatory before works release. Resident engagement continues throughout, and
 material design or circumstance changes trigger affected decisions to be
 reviewed again.
+
+### Operating Model for a Home-Centred Workbench
+
+The next product should coordinate work around one versioned home case,
+connected to its building, scheme, work package, provider and resident-service
+cases. It should present role-specific queues over the same governed records,
+not create separate versions of the truth for each profile. The local
+prototype's four task perspectives show the value of changing emphasis by
+task; they are not identity or authorisation controls. A production service
+must enforce permissions server-side.
+
+This is a proposed operating model, not a description of current company
+practice. Named service owners, source systems, response targets, approval
+limits, contract terms, payment milestones and resident channels remain to be
+validated. The resident intake described here covers complaints, service
+requests and repair or defect reports. It does not define resident
+compensation or reimbursement claims.
+
+#### Two linked levels of property context
+
+The building or block record is the parent for shared context and decisions:
+
+* Stable building identity and links to every included home
+* Shared fabric and systems, building archetype, access and common-area
+  constraints, and applicable building-safety or other shared holds
+* Planned-maintenance dependencies, shared surveys or designs, consultation
+  status where applicable, and building-level sequencing decisions
+* Shared work packages, contract and capacity commitments, common costs and
+  decisions that apply to more than one home
+
+Each apartment or house has its own home case and retains its own evidence and
+decisions:
+
+* Property identity, tenure or lease status, condition, EPC and source dates
+* In-home systems, assessment, design version, measure-level funding and cost
+* Resident communication preferences, adjustments, representative authority,
+  access arrangements and a separate decision for each proposed measure
+* Home-specific holds, appointments, accepted evidence, defects, invoice
+  allocation, handover and aftercare
+
+A shared intervention may have one building work package but still needs
+property-specific readiness, technical review, resident decision, cost
+allocation, quality evidence and closure. A building-level dependency blocks
+only the affected scope and homes; the relationship and reason must be
+recorded. It must not silently transfer one apartment's consent, condition or
+approval to another.
+
+#### Prioritisation and readiness
+
+Use three distinct decisions rather than one opaque ranking:
+
+1. Route known hazards, emergencies and statutory response clocks through the
+   existing safety or repairs service. They do not wait in a retrofit queue or
+   compete with discretionary investment scoring.
+2. Apply versioned, deterministic eligibility and readiness checks. Missing or
+   conflicting identity, tenure, condition, building dependency, safety,
+   technical, resident, funding or supplier evidence is `unknown` or a named
+   hold, not an assumed pass or a silent exclusion.
+3. Apply only the published, approved capital-prioritisation policy to the
+   remaining discretionary choices. Show the score, source freshness, reason
+   codes, dependencies and what could change the order. Group homes for shared
+   works only after preserving home-specific gates. A resident's support need
+   or a missing adjustment must prompt support and review, not a lower
+   priority.
+
+The minimum prioritisation record therefore needs authoritative property and
+building identifiers; condition and energy evidence with dates and provenance;
+planned-maintenance and shared-system dependencies; hazard and hold references;
+tenure and funding-route evidence; measure scope and cost; resident decision
+and adjustment status with minimum necessary detail; committed competent and
+provider capacity; rule versions; and an inclusion, deferral or exclusion
+reason. Asset and safety owners approve the policy and exceptions. Data owners
+resolve conflicts; agents may surface discrepancies but cannot set the
+priority.
+
+#### Team coordination and resident/provider contact
+
+The shared case should expose role-oriented work queues, not require every
+function to review every home at every step:
+
+* Programme coordination owns the case timeline, next-action owner, due date,
+  cross-team dependencies and confirmation that a handoff was accepted.
+* Asset and competent retrofit roles review cohort, building dependencies,
+  assessment, design and technical changes within their authority.
+* Housing or Resident Engagement owns the resident relationship and supported
+  contact; Building Safety and Repairs own hazard categorisation and response;
+  Procurement and the named contract manager own supplier authority;
+  Quality owns independent evidence acceptance; Finance and Grants own budget,
+  invoice and grant decisions.
+* Digital operators see import, integration, access and recovery exceptions;
+  assurance reviewers see decisions, sources, versions, overrides and audit
+  history.
+
+A handoff is not complete when a message is sent. The receiving team must
+accept it, acknowledge urgency, own the next action, state when the resident
+will next be updated and record the outcome. Routine case coordination can be
+async through these queues; linked-building decisions, overdue holds, material
+changes and disputed handoffs trigger a named cross-functional review. The
+review cadence and escalation targets require company validation.
+
+Residents need an accessible, non-digital route as well as any approved digital
+channel. Staff record the resident's words, desired outcome, property,
+accessibility needs, relevant evidence, safe callback method and permission to
+use a representative. A first human triage checks for an urgent hazard and
+routes it immediately to the existing service without waiting for the retrofit
+workflow. Other complaints, service requests and defect reports receive a
+reference, named owner, next-update date and a traceable investigation,
+remedy, complaint or appeal route. A service report is not consent to a
+measure; a complaint is not closed merely because a retrofit stage advances.
+
+The provider-facing path is separate. The contract manager sends a controlled
+work order only after technical, resident, safety, funding, budget and capacity
+gates pass. It identifies the home or shared work package, approved scope and
+version, schedule, evidence checklist, approved contact route and change
+process. Provider appointment outcomes, hazards, variations, completion packs
+and invoices enter through contract-approved channels; an API or provider
+portal is not assumed. Provider-caused failures are coded separately from
+resident access outcomes. Only the authorised contract manager can issue an
+instruction or approve a variation, suspension or reallocation.
+
+#### Work, budget, invoice and grant controls
+
+Keep four approvals visible and distinct:
+
+1. The competent roles approve the property-specific technical scope and
+   design.
+2. The resident makes and may change the decision for each discretionary
+   measure, with accessible information and a recorded pause or withdrawal.
+3. Asset and Finance approve the investment and funding against delegated
+   authority, an identified budget line, whole-life cost, match and cash
+   exposure. Procurement confirms the contract or call-off route and the
+   contract manager confirms committed capacity.
+4. The Retrofit Coordinator releases the approved work package after the
+   deterministic gates pass. The released instruction, approved design,
+   budget ceiling and funding references are version-linked. A scope, cost,
+   building condition, resident circumstance or funding change returns the
+   affected decisions for review before more work proceeds.
+
+Provider invoice intake is an accounts-payable workflow, not a grant claim.
+Capture the supplier, contract/call-off and work-order references, home or
+building allocation, invoice and line-item amounts, applicable milestone or
+valuation, tax details required by the finance process, supporting completion
+evidence and any change authority. Match the submission to the authorised
+scope, approved budget, recorded work, accepted milestone evidence, prior
+payments and open defects or holds. Route unmatched, duplicate, over-budget,
+unsupported or disputed lines to a named human queue. The provider cannot
+approve its own work or payment. Finance verifies the match, applies the
+contract's payment and notice terms, obtains the required independent approval,
+records the due date and any lawful/contractual hold, executes payment and
+reconciles the ledger and remittance. No fixed payment interval, retention
+percentage or milestone is set by this BRD; Legal and Finance must validate
+the governing contract and applicable payment rules before operational use.
+A defect or hold is not authority to withhold an unrelated amount unless the
+contract and legal review permit it.
+
+Grant claims are a separate Finance-controlled path. The programme can assemble
+property- and measure-linked evidence only after the funding route and award
+are evidenced, eligibility passes, work and quality evidence are accepted,
+and the claim schedule is satisfied. Finance reviews, certifies and submits;
+award, claimable value, submitted claim, accepted claim and cash receipt remain
+separate ledger states. A provider invoice or its payment status is not proof
+that a grant claim is eligible or reimbursed.
+
+#### Agent assistance and next-step interaction
+
+The main screen should explain the current gate, its evidence and blocker, then
+offer a short, role-relevant next-step suggestion. Each suggestion shows its
+source records, rule or model version, why it is relevant, proposed owner,
+prerequisites, due-date basis and what remains unknown. The user can accept,
+edit or reject it with a reason; acceptance creates or updates a task, not an
+approval.
+
+Agents may reconcile records, extract cited fields from documents, summarise a
+resident or provider report, draft an accessible response for review, identify
+possible duplicate intake, flag missing invoice evidence, prepare a claim pack
+and suggest a handoff. A deterministic workflow owns mandatory ordering,
+timers, eligibility, authority, budget checks and state changes. An agent
+cannot diagnose a hazard, infer consent, choose who deserves investment,
+contact a resident or provider without authorised review, issue a work order,
+approve an invoice or claim, release payment or close a complaint, defect or
+safety case. Failure or stale evidence leaves the work visibly blocked and
+owned.
+
+### Workflow Portfolio and Business Value
+
+The workbench is the shared coordination surface, not the whole solution and
+not one giant agent workflow. The underlying business is a set of connected
+workflows, each with a different control owner, outcome and value test. The
+problems below are the case-study challenge and role-agent analysis: they are
+research-backed problem hypotheses, not verified findings about Proper North
+Homes' current operations. Phase 0 must show which are material constraints.
+
+| Workflow and problem to solve | End-to-end outcome and accountable roles | Where agents may help; what remains deterministic or human-owned | Business value evidence |
+| --- | --- | --- | --- |
+| Stock data, safety triage and fair prioritisation. The requested ranking assumes reconciled condition, energy, building, tenure and hazard data and an approved cohort policy; neither data quality nor policy is established. | Reconcile home and building records; route hazards to the existing service; determine eligibility as pass, fail or unknown; apply the approved investment policy; review the cohort, exceptions and resident questions. Asset owns investment policy with Safety, Finance and data owners for their domains. | Reconcile conflicting records, extract sourced facts and draft explanations. Identity resolution, eligibility, weights, hazard routing, exceptions and final cohort decisions are controlled rules and named human decisions. | Homes remaining viable after survey; critical conflicts found before survey; time and rework to form a cohort; reasons for deferral; outcome and override patterns by relevant resident groups. Supports BG-001, BG-002, BG-005, BG-007 and BG-012. |
+| Technical assessment and design readiness. The challenge is not to have AI perform a PAS 2035 assessment; it is to get complete, reliable evidence to competent roles and avoid preventable returns while respecting assessor and coordinator responsibilities. | Gather property/building evidence; complete the site survey; record the Retrofit Assessor's sign-off; coordinate technical review and risk path; resolve dependencies; approve a versioned design; re-review affected decisions after material change. Competent assessors, designers and Retrofit Coordinator own professional outputs; Programme coordinates. | Pre-fill only sourced facts, flag conflicts and missing checklist items, and prepare review packs. Site observations, technical judgement, professional approval and design release stay with competent people. | Assessment-to-ready-to-install elapsed time; first-pass completeness; returned/re-approved assessments and designs; pre-fill error rate; review effort net of checking. Supports BG-002, BG-003, BG-006 and BG-011. |
+| Resident service, access, choice and redress. The research identifies fragmented contacts, unclear disruption information and a risk of treating failed access as refusal; actual channels, rates and resident experience need validation. | Receive and triage service requests, complaints and repair/defect reports; route urgent hazards; provide accessible information and support; record a separate decision per measure; arrange/recover appointments; honour pauses and withdrawals; investigate, remedy and keep the resident updated. Housing and Resident Engagement own the relationship and redress; Repairs/Safety own their service cases; the resident owns discretionary measure choices. | Classify inbound messages to staffed queues and draft accessible responses from approved facts for human review. No automated persuasion, inferred consent/refusal, unsupported vulnerability inference or unreviewed consequential contact. | First-time appointments kept; adjustments met; repeat contacts; time to a resident decision; complaint and service resolution; resident-reported disruption, comfort and affordability, disaggregated where lawful and appropriate. Supports BG-005 and BG-009. |
+| Procurement, committed provider capacity and work release. Scheduling cannot solve missing installers, incomplete work orders or contract ambiguity; actual available capacity and contract permissions are unknown. | Verify the contract/call-off and authority; confirm competent capacity, subcontractors and contingency; prepare a complete work order; match work to capacity and resident availability; approve and issue the instruction; track delivery, exceptions and recovery. Procurement and the authorised contract manager own contractual acts; Programme owns release gates and coordination. | Reconcile provider schedules and emails to controlled capacity records, detect likely clashes, and suggest slots within confirmed capacity. A person confirms commitments, instructions, variations and supplier reallocation. | Committed versus delivered capacity; provider-caused cancellations/no-shows and abortive visits; first-time appointment performance; time to resolve capacity gaps; accepted homes by supplier, quality and cost. Supports BG-002, BG-006, BG-009 and BG-011. |
+| Hazard awareness and damp-and-mould response. The case and analysis identify a risk that reports from residents, visits and providers do not become one timestamped, owned response; the actual company pathway remains open for validation. | Capture the source and awareness time; send the referral to the existing hazard/repairs service; obtain human acceptance; investigate and act under that service's rules; link any retrofit hold and only release it on accountable evidence. Repairs and Building Safety own categorisation, clocks, action and closure. | A raise-only scan may surface possible missed signals in text for human triage, subject to capacity and legal/privacy gates. The existing service owns clock calculation, classification, resident updates, statutory decisions and closure; the retrofit workbench cannot pause or reset them. | Awareness-to-referral time; unaccepted referral ageing; cases meeting applicable investigation, action and update requirements; missed critical reports in agreed tests. Supports BG-003, BG-004 and BG-010. |
+| Quality acceptance, defects and resident handover. The underlying risk is paying, claiming or handing over incomplete work, late discovery of defects, or loss of the link from scope to evidence; independent capacity and current evidence quality are unknown. | Collect per-measure completion evidence; run the positive checklist; perform independent inspection or sampling; accept or return evidence; track defects, remediation and reinspection; provide accessible handover and aftercare; reopen the affected case when required. Competent Quality authority accepts work and controls defect closure; providers submit evidence but do not self-approve. | Compare photos and documents with a fixed checklist, identify missing/mismatched evidence and raise possible systemic patterns. A competent person determines compliance, accepts or rejects work, grades defects and closes them. | Right-first-time physical and evidence acceptance; defect rate and severity; false/missed flags against human review; evidence review effort; rework and remediation cost; recurrence and resident aftercare outcomes. Supports BG-003, BG-006, BG-007 and BG-009. |
+| Budget, provider invoice, grant claim and cash reconciliation. A work invoice, a grant claim and cash received are different events. The real issue is linking approved scope and completed evidence to valid payment and funding records, not generating claim prose. | Approve the investment and budget; record commitments; intake and match provider invoices/valuations to contract, work order, approved scope, milestone evidence, prior payments and defects; Finance reviews and pays under applicable terms; separately assemble, certify and submit eligible grant claims; reconcile receipts and clawbacks. Finance and Grants own financial decisions; Procurement/Legal own contract interpretation and the contract manager owns instructions. | Reconcile documents and ledgers, identify missing evidence or duplicate lines, and draft packs from controlled values. Rules calculate eligibility and amounts; Finance validates, approves, submits and records cash; the authorised payment process executes payment. | Invoice match exceptions and first-pass acceptance; time and effort per invoice and claim net of review; claim acceptance/rejection and clawback; time from accepted evidence to submission/receipt; grant by opportunity, award, claimable, submitted and cash states; cost per accepted home and peak cash exposure. Supports BG-007, BG-008, BG-011 and BG-012. |
+| Programme handoffs and case orchestration. The role analysis finds no single view of each home's state, blocker, owner and next step; actual queue and delay data must establish the scale and cause. | Maintain linked home/building/scheme cases, lifecycle states, clocks, named queues and dependencies; ensure handoffs are accepted; escalate overdue or unowned work; keep residents informed; recover from failures; reopen work when evidence or circumstances change. Programme owns the operating workflow; each receiving team owns its decision and action. | Summarise case evidence, surface stale or missing records, draft next-step suggestions and detect unowned handoffs. Deterministic workflow enforces state transitions, timers, authority and escalation; a human accepts, edits or rejects suggestions and owns exceptions. | Assessment-to-ready-to-install elapsed time; accepted handoff and overdue/unowned queue rates; coordination hours per accepted home net of review, assurance and shifted effort; repeat work and elapsed wait by cause. Supports BG-010, BG-011 and BG-012. |
+| Portfolio investment, performance and scale decisions. The executive question is whether retrofit produces safe, resident-accepted outcomes within real capital, cash, covenant, quality and capacity limits; estimates in the case study are not a validated investment case. | Reconcile stock trajectory, approved cohorts, accepted outcomes, grant states, programme and technology costs, cash exposure, risks and resident outcomes; compare against an agreed baseline; decide whether to pause, change or release the next investment tranche. Asset and Finance prepare the decision; the Board or delegated authority approves the envelope and scale. | Generate traceable summaries and scenario packs from controlled data after the underlying records are validated. Forecast assumptions, risk appetite, investment choice, tolerances and scale decisions remain human-owned. | Homes reaching intended outcomes and accepted handover; quality-adjusted cost per home; grant and cash reconciled by state; peak cash/liquidity/covenant headroom; resident outcomes and guardrails; attributable value versus the non-agent alternative. Supports BG-001 through BG-009 and BG-012. |
+
+This portfolio makes the business-value chain explicit: reliable evidence and
+fair selection feed competent, resident-ready designs; committed capacity and
+authorised funding enable work; independently accepted quality supports
+handover and eligible claims; and the shared workflow reduces avoidable delay
+without relaxing safety, resident choice or financial control. These links are
+testable hypotheses, not guaranteed causal benefits.
+
+Measure value at two levels. Comparison 1 tests the end-to-end operating model
+with existing teams and agents against a matched locality without agents.
+Comparison 2 tests each proposed agent task against the same workflow without
+that agent, counting review, assurance, recording and shifted effort. Report
+resident and safety guardrails alongside accepted outcomes; starts, agent
+activity and unreviewed hours-saved estimates are not benefits. The owner-
+directed 20% cycle-time and 25% coordination-effort figures remain proposed
+targets, not ratified forecasts, while OD-18 remains open. Scale a capability
+only when the relevant workflow has a valid baseline, a named human owner,
+measured incremental value and no agreed critical-control failure.
 
 ## Business Requirements
 
@@ -1942,6 +2171,18 @@ requirements were checked against the local snapshots on 26 September 2026,
 not against the official sources online. Specialist input is not
 organisational approval; named human owners must validate this BRD before the
 relevant release.
+
+The 5 October 2026 operating-model review adds a proposed home-centred
+workbench flow with linked building, home, work-package and service-case
+records; distinct resident service/defect intake, provider invoice and Finance
+grant-claim paths; role-oriented queues; and source-linked agent next-step
+suggestions. It draws on the constructed retrofit operating-data exercise
+dictionary and
+the `feat/proper-warm-prototype` review at commit `5e52ceb`. These are design
+proposals, not company-validated process or authority. Payment milestones,
+contract terms, resident channels, service ownership, response targets and
+approval limits remain open; no payment timing or compensation process is
+assumed.
 
 The 26 September 2026 explainability and transparency review updated CON-003,
 RULE-022, FR-034, FR-040, NFR-006, FR-041, RULE-019 and RULE-024, and added

@@ -1,6 +1,6 @@
 {
   "brdFile": "docs/brds/agentic-retrofit-programme-brd.md",
-  "lastAccessed": "2026-10-04T22:52:45+02:00",
+  "lastAccessed": "2026-10-05T23:17:47+02:00",
   "currentPhase": "Define",
   "questionsAsked": [
     "safety-stop-condition",
@@ -22,7 +22,8 @@
     "bg-011-owner-delegated-review-2026-10-04",
     "owner-decisions-and-company-role-panel-2026-10-04",
     "owner-pilot-contract-scope-2026-10-04",
-    "missed-appointment-threshold-clarification-2026-10-04"
+    "missed-appointment-threshold-clarification-2026-10-04",
+    "workflow-portfolio-and-business-value-2026-10-05"
   ],
   "answeredQuestions": {
     "safety-stop-condition": "Block progression for missing, stale, contradictory or unresolved safety evidence until accountable human release.",
@@ -44,7 +45,9 @@
     "bg-011-owner-delegated-review-2026-10-04": "Owner confirmed the 20% lower assessment-to-ready-to-install elapsed-time and 25% fewer net coordination-hours values as proposed. The owner-delegated Executive Reviewer decided CHANGES_REQUESTED for draft-target ratification because there is no direct comparator or supporting forecast and the protocol is incomplete. Required OD-18 evidence: population/denominator, event and elapsed-time definitions, baseline/cohort, window and case handling, effort-shift and review/assurance treatment, and variance-based MDE. This is a drafting decision only; OD-18, OD-36, actual company approvals and measurement authorization remain open.",
     "owner-decisions-and-company-role-panel-2026-10-04": "Owner directed Azure-led hybrid as a provisional non-production demonstrator baseline only, keeping customer/production architecture open pending Phase 0 options appraisal; owner chose assessment-to-ready-to-install as BG-011 primary cycle-time endpoint, with accepted handover reported separately. Company role-profile consultation (Executive Reviewer, Asset Executive, Retrofit Programme Manager, Finance and Grants, Resident Engagement, Building Safety, Procurement, Data and Performance, Neighbourhood Housing) identified remaining evidence/approval needs: reconcile one-locality/small-archetype pilot with all-current-contract direction; validate asset/building/hazard baseline and data ownership; name competent PAS/assurance roles and capacity; verify grant/affordability/cash and contract records; validate resident journeys; freeze OD-18 comparator, cohort, clock, effort and MDE; approve OD-36 DPIA/lawful measurement basis; name distinct hold/stop/restart authorities. Role agents are research perspectives, not real employees or company approvals. Executive Reviewer retained CHANGES_REQUESTED for BG-011; endpoint direction does not close OD-18.",
     "owner-pilot-contract-scope-2026-10-04": "Owner clarified that every current contract/framework is required to participate in live pilot delivery. This is an owner-directed scope condition only; no contract is presumed to permit participation, and supplier activity is blocked until Procurement/Legal confirm agreement authority, required data/measurement terms and capacity/readiness. If a contract fails a gate, live pilot approval is blocked until resolved; no control is waived.",
-    "missed-appointment-threshold-clarification-2026-10-04": "Owner confirmed the missed-appointment control is configurable with provisional default 5; preserve strict greater-than so the sixth eligible event triggers human review; count only a confirmed appointment with verified resident no-access; record provider/contractor no-shows, cancellations and reschedules separately; count only while the same case is active and reset the counter only when a human closes the case. Public evidence does not validate five. Executive Reviewer, Asset Executive, Resident Engagement and Retrofit Programme Manager role-profile reviews support human investigation only and identify company records, Housing/Repairs ratification, Resident Engagement review, named handoff and configuration/change governance as open. These are drafting directions and simulated perspectives, not company policy approval, resident evidence or live-use authorization."
+    "missed-appointment-threshold-clarification-2026-10-04": "Owner confirmed the missed-appointment control is configurable with provisional default 5; preserve strict greater-than so the sixth eligible event triggers human review; count only a confirmed appointment with verified resident no-access; record provider/contractor no-shows, cancellations and reschedules separately; count only while the same case is active and reset the counter only when a human closes the case. Public evidence does not validate five. Executive Reviewer, Asset Executive, Resident Engagement and Retrofit Programme Manager role-profile reviews support human investigation only and identify company records, Housing/Repairs ratification, Resident Engagement review, named handoff and configuration/change governance as open. These are drafting directions and simulated perspectives, not company policy approval, resident evidence or live-use authorization.",
+    "workflow-portfolio-and-business-value-2026-10-05": "Owner asks how to cover the other workflows from Case Study 48 and the role-agent analysis, including where the business value lies. BRD v0.14.1 maps stock prioritisation, assessment/design readiness, resident service and access, supplier capacity and procurement, hazard response, quality/defects, invoice/payment and grant reconciliation, programme orchestration, and portfolio investment to problem hypotheses, human decision owners, bounded AI assistance, and proposed business-value measures. End-to-end comparison and task-level agent comparison remain distinct; proposed targets are not validated forecasts.",
+    "capstone-case-presentation-framing-2026-10-06": "Owner directs the capstone to present Proper North Homes as the real customer case and attendees as its stakeholders in their actual roles. The records constructed for the exercise do not establish actual company performance, resident outcomes, systems or operating decisions. Role-profile agents remain research instruments, not the attendees or evidence of stakeholder agreement."
   },
   "referencesProcessed": [
     {
@@ -116,6 +119,16 @@
       "file": "docs/case_study_48_addendum.md#missed-appointment-escalation-evidence-2026-10-04",
       "status": "updated",
       "keyFindings": "Added cited public-evidence caveat and owner-directed provisional rule while preserving company ratification and live-use gates."
+    },
+    {
+      "file": "docs/reference/research/company/agent-request-challenge.md",
+      "status": "analyzed",
+      "keyFindings": "Reviewed role-agent problem statements, alternatives, bounded AI opportunities, human authorities, shared foundation and value tests across the requested agents, programme supervision and damp-and-mould loop; research perspectives remain hypotheses, not company findings."
+    },
+    {
+      "file": "origin/feat/proper-warm-prototype at 5e52ceb",
+      "status": "analyzed",
+      "keyFindings": "Prototype has four role-based task perspectives using constructed exercise records and bounded read-only case-review agent suggestions; view labels are not authentication or authorization. Used as interaction evidence only."
     }
   ],
   "nextActions": [
@@ -144,7 +157,9 @@
     "Validate portfolio and throughput baselines, resident requirements, regulatory controls, grant and affordability model, and company evidence for provisional sector benchmarks",
     "DPO to check official UK GDPR source for automated-decision amendments and commencement before release",
     "Obtain OD-39 local snapshots before relying on the Transparency, Influence and Accountability Standard, Complaint Handling Code, Governance and Financial Viability Standard or ICO AI explanation guidance",
-    "Owners to set explanation comprehension, automation-bias and AI assurance cadence thresholds before live use"
+    "Owners to set explanation comprehension, automation-bias and AI assurance cadence thresholds before live use",
+    "Validate the proposed workflow portfolio against named owners, company evidence, resident research, baseline measures, decision authority and current contracts before approval",
+    "Complete the end-to-end and per-capability value protocols under OD-18, including review, assurance, recording and shifted effort"
   ],
   "qualityChecks": [
     "required-sections-complete",
@@ -165,7 +180,9 @@
     "identifier-counts-validated",
     "new-acceptance-criteria-traced",
     "missed-appointment-threshold-direction-recorded",
-    "company-role-profile-threshold-challenge-recorded"
+    "company-role-profile-threshold-challenge-recorded",
+    "workflow-portfolio-mapped-to-business-goals-and-value-hypotheses",
+    "company-facts-hypotheses-and-open-evidence-gaps-distinguished"
   ],
   "userPreferences": {
     "detail-level": "comprehensive",
@@ -219,8 +236,8 @@
     ]
   },
   "latestRevision": {
-    "version": "0.12.0",
-    "updatedAt": "2026-10-04T22:52:45+02:00",
-    "summary": "Recorded owner-defined missed-appointment control semantics in RULE-006/AC-025: configurable provisional default five, strict >, verified resident no-access at confirmed appointments only, separate provider no-shows/cancellations/reschedules, and active-case counting reset only on human closure with event/configuration audit history retained. Added the company role-profile challenge and OD-40 for actual Housing/Repairs ratification and configuration/change governance; OD-08/OD-09 and OD-40 remain open. Public evidence does not validate five. BG-011 remains CHANGES_REQUESTED; the BRD remains draft. The v0.12.0 quality reviewer confirmed the control but could not emit the required paired payload because the contracts were unavailable in that execution environment; v0.8.0 remains the latest valid quality report."
+    "version": "0.14.0",
+    "updatedAt": "2026-10-05T23:17:47+02:00",
+    "summary": "Added a proposed home-centred workbench operating model and a connected workflow portfolio covering stock prioritisation, assessment/design readiness, resident service and access, supplier capacity, hazard response, quality/defects, invoice and grant finance, case orchestration and portfolio investment. Mapped research-derived problem hypotheses to human owners, bounded AI assistance and proposed business-value evidence. Comparison 1 and Comparison 2 remain distinct; targets remain unratified and OD-18 remains open. Company processes, service owners, systems, channels, authority and contract/payment terms remain open. BRD remains draft; v0.8.0 is the latest valid quality report."
   }
 }

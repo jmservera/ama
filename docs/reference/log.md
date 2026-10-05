@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-04
+ms.date: 2026-10-06
 ms.topic: reference
 ---
 
@@ -947,3 +947,86 @@ metadata when the knowledge base was created.
 * Bumped the PRD to v0.5.0 and updated its session state and this catalog.
   The PRD remains draft: no signed BRD handoff or current v0.12.0 quality
   report is available, and OQ-001 to OQ-009 remain open.
+
+## [2026-10-05] query | Define the home-centred retrofit workbench flow
+
+* Reviewed the case study, addendum, BRD, discovery brief, PRD, synthetic data
+  dictionary and the restored `feat/proper-warm-prototype` branch at
+  `5e52ceb`.
+* Expanded the BRD's future-state process with linked building and home
+  records, separated safety/eligibility/capital prioritisation, role-oriented
+  queues and accepted handoffs, resident complaint/service/defect intake,
+  provider work orders and invoice matching, distinct grant claims, budget and
+  work approval gates, and source-linked agent next-step suggestions.
+* Added a connected workflow portfolio covering stock and prioritisation,
+  assessment/design readiness, resident access and choice, procurement and
+  capacity, hazard response, quality and defects, invoice/payment and grant
+  reconciliation, case orchestration, and portfolio investment. Each maps the
+  underlying problem hypothesis to owners, bounded AI opportunities and
+  proposed business-value evidence, with end-to-end and task-level comparison
+  kept distinct.
+* The product direction is a proposed home-centred case workbench, not an
+  approved company process. The resident intake scope is limited to service,
+  complaint and defect/repair reports, not compensation or reimbursement.
+* Updated the BRD to v0.14.0, its catalog entry and this log. Company systems,
+  named service owners, resident channels, response targets, delegated limits,
+  contract/payment terms and resident research remain open. No fixed payment
+  timing or compensation process was inferred.
+* No legal or regulatory source was newly verified; the local evidence remains
+  subject to the existing register and live-use checks.
+
+## [2026-10-05] query | Rewrite PRD for the full retrofit workbench
+
+* Replaced the narrow demonstrator PRD framing with one role-based Proper Warm
+  Retrofit Programme Workbench PRD, using the BRD v0.14.0 home-centred model
+  and nine-workflow portfolio.
+* Represented every workflow with a workbench module/screen and synthetic
+  scenario coverage. Added profile workspaces over shared case data, queue
+  signals for new/priority/stale/blocked/attention work, individual and
+  guarded bulk edits, auditable handoffs and return/reopen behavior, and
+  coordinator heatmap, funnel, timeline, stakeholder progress and
+  uncertainty-aware forecast views.
+* Kept one PRD because workflows share case identity, permissions, evidence,
+  authority controls, handoffs and reporting; staged implementation through
+  four increments. Retained bounded, source-linked agent suggestions and
+  workflow-only paths.
+* Updated the PRD to v0.6.0 with 30 functional requirements, 32 acceptance
+  criteria, 13 non-functional requirements, 8 constraints and 14 open
+  questions. The PRD remains draft and synthetic-only. No signed BRD handoff,
+  current valid BRD quality report, confirmed company process, forecast
+  calibration or operational approval is claimed.
+* Updated the PRD session state and catalog entry. No legal or regulatory
+  source was newly verified.
+
+## [2026-10-06] review | Restore PRD architecture and evaluation evidence
+
+* Read the Capstone Rubric Scorer job log and PR #20 feedback. The reviewer
+  identified that the full-workbench rewrite had removed design evidence for
+  component contracts/failure domains (A1), a named threat model (A3),
+  observability and SLO measurement (A5), AI selection/evaluation (A6), and
+  bounded-agent orchestration (A7).
+* Restored those areas in PRD v0.6.1, adapting them to the shared role-based
+  workbench, bulk edits, returns/reopens, portfolio views and synthetic-only
+  boundary. Reintroduced a proposed options gate and the synthetic-only
+  missed-appointment scenario. The platform/services, threat model and
+  methods remain proposed; no implementation, test result, model selection,
+  target, company approval or production authority is claimed.
+* Aligned telemetry vocabulary to the shared OpenTelemetry foundations:
+  semantic conventions, resource/log fields, trace correlation, bounded
+  metric cardinality and PII redaction. Updated PRD state and catalog counts.
+
+## [2026-10-06] query | Clarify capstone case framing and exercise-data provenance
+
+* At the owner's direction, present Proper North Homes as the real customer
+  case and attendees as its stakeholders in their actual roles. Clarified
+  that the constructed exercise records are not evidence of company
+  performance, resident outcomes, systems or operating decisions.
+* Updated the BRD to v0.14.1 and the workbench PRD to v0.6.2; aligned the
+  index and PRD session state. The underlying operating-data exercise pack
+  was not renamed or changed.
+* Files touched: `../brds/agentic-retrofit-programme-brd.md`,
+  `../prds/proper-warm-retrofit-programme-demonstrator.md`, `README.md`,
+  `.copilot-tracking/prd-sessions/proper-warm-retrofit-programme-demonstrator.state.json`
+  and this log.
+* No regulatory claims, process authority, company baselines or operating
+  outcomes were added or validated.
