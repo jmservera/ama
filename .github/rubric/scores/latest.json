@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
   "source": "workflow",
-  "scored_at": "2026-10-05T21:51:20+00:00",
-  "commit": "44e51be650b4e604ddfbb549c439c7a4ebf7da94",
+  "scored_at": "2026-10-05T22:32:36+00:00",
+  "commit": "006428345f2553e8c1f0cd86f5799b3192f862c5",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37377066834",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37381882119",
   "fingerprints": {
-    "brd": "b84fe9c19ffeccec6b6aeea7f92120b54513b35330c49de2d7d20933e7812586",
-    "prd": "308910597780aad983c9ed5f5d8005522e4d1b3968056eb06e15c5a8a7b0e97d"
+    "brd": "7947aff0475c769010747917eaddd2a01589d7fb89b4cb51eaacfe048373f3fb",
+    "prd": "dd744f8bd6deca43325b35d2fa880333afe9e9b88c6a9d7c4766ac7a0556725c"
   },
-  "total": 61,
+  "total": 66,
   "sections": {
-    "A": 21,
+    "A": 26,
     "B": 19,
     "C": 12,
     "D": 9
@@ -20,58 +20,53 @@
   "outcome": "Not Yet Met (floor)",
   "criteria": {
     "A1": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:106",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:122"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:136"
       ],
-      "rationale": "The Component Contracts and Failure Domains table (named components, contracts, failure/fallback behaviour) was deleted and replaced by brief prose bullets on platform boundary with no explicit contracts or failure domains. Architecture detail is materially reduced."
+      "rationale": "Component Contracts and Failure Domains table is now even more granular (workbench/API, state store, orchestrator, bounded-AI task service, evidence store, import, identity/telemetry) with explicit failure domains; already at the rubric ceiling, no change possible."
     },
     "A2": {
       "score": 5,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:312",
-        "docs/brds/agentic-retrofit-programme-brd.md:353"
+        "docs/brds/agentic-retrofit-programme-brd.md:360"
       ],
-      "rationale": "Cross-functional challenge table in the BRD, the primary trade-off evidence for this criterion, is unchanged by this PR."
+      "rationale": "Cross-functional challenge table and options framing retained and reinforced; already at ceiling."
     },
     "A3": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:249",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:122"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:158"
       ],
-      "rationale": "The illustrative Threat Model table (prompt injection, exfiltration, hallucination, spoofing, drift, with named mitigations) was deleted. Only a one-line NFR-003 security bullet remains, with no named threats or mitigations."
+      "rationale": "Threat Model table expanded (6 scenarios incl. analytics/export exposure) and NFR-003 added; still a documented design posture, already at ceiling."
     },
     "A4": {
       "score": 1,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1745"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:615"
       ],
-      "rationale": "Still only design documents; no working implementation exists in the repository."
+      "rationale": "Still only design documents (release increments, acceptance criteria) with no working implementation delivered in this PR; the referenced prototype lives on an unmerged branch, not in this diff."
     },
     "A5": {
-      "score": 2,
-      "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:271",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:278"
-      ],
-      "rationale": "The named log schema/correlation-ID envelope and SLO measurement methodology (p50/p95 latency, failure rate, AI cost per scenario) were deleted, leaving only brief NFR-009/NFR-011 bullets with no measurement method defined."
-    },
-    "A6": {
       "score": 3,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:271"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:378"
       ],
-      "rationale": "The AI Model Selection and Evaluation Harness section (model comparison criteria, defined evaluation harness, failure-mode taxonomy) was deleted and replaced by one brief NFR-009 bullet with no named metrics or comparison method."
+      "rationale": "New Observability and SLO Measurement Method section adds OpenTelemetry conventions, structured log fields and histogram/SLO definitions, but explicitly states targets are TBD and nothing is measured yet, matching the qualitative-only band."
+    },
+    "A6": {
+      "score": 4,
+      "evidence": [
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:413"
+      ],
+      "rationale": "Evaluation harness and failure-mode taxonomy are more exhaustive, but the document still states no model has been selected or justified against alternatives with real numbers, so it does not clear the top band's model-choice-justified bar."
     },
     "A7": {
-      "score": 2,
+      "score": 3,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:271",
-        "docs/brds/agentic-retrofit-programme-brd.md:1208"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:443"
       ],
-      "rationale": "The Agent Orchestration Pattern section (state-graph handoff, reflection/self-check, tool-scoped authorization, workflow-only fallback) was deleted entirely; remaining text only asserts bounded AI generically with no orchestration pattern described."
+      "rationale": "New Bounded-Agent Orchestration Pattern is a tighter deterministic state graph, but the text explicitly disclaims autonomous stage selection, reinforcing a scripted-flow characterization rather than demonstrated autonomy."
     },
     "B1": {
       "score": 4,
@@ -112,26 +107,25 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1488",
+        "docs/brds/agentic-retrofit-programme-brd.md:1034",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1"
       ],
-      "rationale": "Documents remain structured, cross-referenced and version-controlled; the PRD was substantially rewritten but retains clear headings, tables and traceability, consistent with prior density assessment."
+      "rationale": "Both documents are well organised with clear headings and tables and gained new frontmatter (title/description/author on the PRD); still working documents rather than audience-ready deck/doc craft, so baseline retained."
     },
     "B7": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1488",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:458"
+        "docs/brds/agentic-retrofit-programme-brd.md:447"
       ],
-      "rationale": "Success Metrics table with named owners and candidate targets continues; evidence use is unchanged in kind by this PR."
+      "rationale": "Owner-direction data point table unchanged; new success-metrics/evidence provenance rules reinforce rigor but remain prose, not demonstrated data storytelling."
     },
     "C1": {
       "score": 5,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:530",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:458"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1"
       ],
-      "rationale": "Discovery framing (BG-001 to BG-012 business-goal table, success metrics) is unchanged by this PR; already at existing maximum."
+      "rationale": "Discovery framing evidence already at the existing maximum; new workflow portfolio table reinforces but does not exceed ceiling."
     },
     "C2": {
       "score": 2,
@@ -144,25 +138,25 @@
       "score": 5,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:120",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:125"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1"
       ],
-      "rationale": "Honesty caveats (draft status, unresolved evidence gaps, unratified targets) continue throughout the rewritten PRD; already at existing maximum."
+      "rationale": "Honesty-caveat evidence (constructed exercise records, draft status, unratified targets) reinforced across both files; already at existing maximum."
     },
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:251",
-        "docs/brds/agentic-retrofit-programme-brd.md:1488"
+        "docs/brds/agentic-retrofit-programme-brd.md:1034",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:615"
       ],
-      "rationale": "Core gap (no direct company engagement evidence) unchanged; the operating-model rewrite remains research synthesis, not new primary engagement evidence."
+      "rationale": "New Home-Centred Workbench operating model and workflow portfolio add detail and originality, but the core gap (no direct company engagement evidence, still role-profile hypotheses) remains unchanged."
     },
     "D2": {
       "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:2",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
         "docs/brds/agentic-retrofit-programme-brd.md:2"
       ],
-      "rationale": "Structured, cited, version-controlled; still not a standalone publishable piece. The rewrite does not change publish-readiness."
+      "rationale": "Structured, cited, version-controlled with improved frontmatter; still not a standalone publishable piece outside the repository context."
     },
     "D3": {
       "score": 1,
