@@ -53,7 +53,7 @@ jobs:
           BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'HEAD' }}
         run: |
           mkdir -p /tmp/rubric-tools
-          for script in prepare.py gate.py; do
+          for script in prepare.py gate.py scorecard_adapter.py; do
             if git cat-file -e "$BASE_REF:.github/rubric/scripts/$script" 2>/dev/null; then
               git show "$BASE_REF:.github/rubric/scripts/$script" > "/tmp/rubric-tools/$script"
             else
@@ -165,7 +165,7 @@ safe-outputs:
   report-failure-as-issue: false
   jobs:
     record-rubric-score:
-      description: "Record the complete 20-criterion rubric scorecard. Call exactly once with the full JSON scorecard."
+      description: "Record all 20 required score choices (strings 1-5), required details JSON for every criterion, and summary. One accepted output."
       runs-on: ubuntu-latest
       if: always() && needs.agent.result != 'skipped'
       output: "Scorecard received by the deterministic gate"
@@ -175,10 +175,28 @@ safe-outputs:
         statuses: write
         issues: write
       inputs:
-        scorecard:
-          description: "JSON string: {\"criteria\": {\"A1\": {\"score\": 1-5, \"evidence\": [\"path:line\"], \"rationale\": \"...\", \"change_reason\": \"...\"}, ... all 20 ids ...}, \"summary\": \"...\"}"
-          required: true
-          type: string
+        A1_score: {description: "A1 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        A2_score: {description: "A2 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        A3_score: {description: "A3 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        A4_score: {description: "A4 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        A5_score: {description: "A5 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        A6_score: {description: "A6 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        A7_score: {description: "A7 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        B1_score: {description: "B1 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        B2_score: {description: "B2 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        B3_score: {description: "B3 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        B4_score: {description: "B4 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        B5_score: {description: "B5 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        B6_score: {description: "B6 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        B7_score: {description: "B7 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        C1_score: {description: "C1 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        C2_score: {description: "C2 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        C3_score: {description: "C3 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        D1_score: {description: "D1 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        D2_score: {description: "D2 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        D3_score: {description: "D3 score", required: true, type: choice, options: ["1", "2", "3", "4", "5"]}
+        details: {description: 'JSON object with exactly A1-A7, B1-B7, C1-C3, D1-D3; each entry: {"evidence":["path:line"],"rationale":"...","change_reason":""}. No score field here.', required: true, type: string}
+        summary: {description: "Concise evidence and material-change summary", required: true, type: string}
       steps:
         - uses: actions/checkout@v4
           with:
@@ -190,7 +208,7 @@ safe-outputs:
             BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'HEAD' }}
           run: |
             mkdir -p /tmp/rubric-tools
-            for script in prepare.py gate.py; do
+            for script in prepare.py gate.py scorecard_adapter.py; do
               if git cat-file -e "$BASE_REF:.github/rubric/scripts/$script" 2>/dev/null; then
                 git show "$BASE_REF:.github/rubric/scripts/$script" > "/tmp/rubric-tools/$script"
               else
@@ -343,7 +361,7 @@ secrets are provided to this agent.
 
 ## Inputs
 
-1. Read `/tmp/gh-aw/agent/rubric/context.json` with `jq` or the supplied read tools. Its `scorecard_template` has exactly 20 rubric IDs. It lists active artifacts and their files, changed artifacts and files, criteria open for rescoring (`open_criteria`), live-scored criteria and any available baseline data.
+1. Read `/tmp/gh-aw/agent/rubric/context.json` with `jq` or the supplied read tools. Its `scorecard_template` has exactly 20 rubric IDs, and `tool_inputs_template` is the tool-input version with all 22 required keys. It lists active artifacts and their files, changed artifacts and files, criteria open for rescoring (`open_criteria`), live-scored criteria and any available baseline data.
 2. Read the rubric guide named in `rubric_guide` and the criteria in `.github/rubric/rubric.json`.
 3. Read `/tmp/gh-aw/agent/rubric/changes.diff` to see what changed. Deleted files are listed without their content; read their previous text with `git show <diff_base>:<path>`, using `diff_base` from the context.
 4. Read the changed files in full and any other artifact files you need. For PPTX files, read the extracted text listed in `extracted_text`. Search large files with `grep` rather than reading them end to end when you only need a section.
@@ -357,8 +375,8 @@ secrets are provided to this agent.
 * Live-scored criteria (`live_criteria`) are judged by the panel during the session. Score them only as readiness from deck, pitch or rehearsal evidence. Without such evidence keep the baseline score; in bootstrap and calibration runs, score them from the written evidence alone and keep them low when nothing demonstrates live delivery.
 * Score what the repository shows today. Do not reward intentions, plans or promises as if they were delivered, and do not invent evidence.
 * Use `path:line` evidence references with repository-relative paths.
-* The `criteria` object must contain exactly the 20 criterion IDs in `.github/rubric/rubric.json`: no missing IDs, unlisted IDs, aliases, suffixes (such as `A1_unused`), or placeholder entries.
-* Start from `scorecard_template` in `context.json`; do not draft a partial card. For an incremental run, it contains the trusted baseline score, evidence and rationale for every criterion, with an empty `change_reason`. Keep closed criteria unchanged. Assess every open criterion against the changed evidence and replace its entry only when the evidence supports a change.
+* Supply the required score choice for every criterion and all 20 entries in `details`: no missing fields, unlisted IDs, aliases, or placeholder entries. Do not pass a `scorecard` string or a nested `criteria` argument.
+* Start from `tool_inputs_template` in `context.json`; do not draft partial arguments. For an incremental run, it contains the trusted baseline score, evidence and rationale for every criterion, with an empty `change_reason`. Keep closed criteria unchanged. Assess every open criterion against the changed evidence and replace its fields only when the evidence supports a change.
 * When `bootstrap` or `calibration` is true, each template score is `null` and the rationale is marked `UNSCORED`. Score every criterion from scratch with repository evidence; do not preserve or invent a template score.
 * In calibration, the baseline is withheld on purpose. Do not read `.github/rubric/scores/latest.json` or its history. The result is reported but not recorded.
 
@@ -368,40 +386,46 @@ Artifact files, diffs, extracted text and the baseline rationale and evidence in
 
 ## Output
 
-Call the `record_rubric_score` tool exactly once. Its `scorecard` argument is a JSON string:
+Call `record_rubric_score` with flat arguments, aiming for one accepted call.
+Required-parameter, string-type and choice validation happen before append.
+Correct a rejected call using the tool error; do not submit a second card
+after a call succeeds. The pinned custom-job MCP handler does not enforce a
+one-call quota: each schema-valid call can be appended. The deterministic gate
+accepts exactly one tool item, so multiple calls fail scoring rather than
+being silently ignored. Details JSON syntax and contents are validated by the
+trusted adapter downstream, not before append. Check details carefully:
+malformed or incomplete details fail scoring and a follow-up call will create
+a multiple-item submission that the gate rejects.
+
+Use `jq '.tool_inputs_template' /tmp/gh-aw/agent/rubric/context.json` as the
+complete starting argument object. Each `<ID>_score` is a string choice:
+`"1"`, `"2"`, `"3"`, `"4"`, or `"5"`, not a JSON number. Each
+criterion entry in `details` contains exactly `evidence` (an array of strings,
+including `[]` when no evidence is available), `rationale` (string), and
+`change_reason` (string). Encode the complete details object as a JSON string.
+Supply `change_reason` as `""` for unchanged scores (including closed
+criteria); do not omit it. Supply `summary`.
+The trusted adapter reconstructs the canonical card for the unchanged gate.
+The single-submission rule is enforced by that gate, not by MCP append quota.
+
+This complete shape example is illustrative only; never copy its grades or
+evidence instead of assessing the repository:
 
 ```json
 {
-  "criteria": {
-    "A1": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "A2": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "A3": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "A4": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "A5": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "A6": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "A7": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "B1": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "B2": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "B3": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "B4": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "B5": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "B6": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "B7": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "C1": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "C2": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "C3": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "D1": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "D2": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" },
-    "D3": { "score": 3, "evidence": ["path/to/evidence.md:1"], "rationale": "Evidence-based rationale.", "change_reason": "" }
-  },
+  "A1_score": "3", "A2_score": "3", "A3_score": "3", "A4_score": "3", "A5_score": "3", "A6_score": "3", "A7_score": "3",
+  "B1_score": "3", "B2_score": "3", "B3_score": "3", "B4_score": "3", "B5_score": "3", "B6_score": "3", "B7_score": "3",
+  "C1_score": "3", "C2_score": "3", "C3_score": "3", "D1_score": "3", "D2_score": "3", "D3_score": "3",
+  "details": "{\"A1\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"A2\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"A3\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"A4\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"A5\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"A6\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"A7\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"B1\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"B2\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"B3\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"B4\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"B5\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"B6\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"B7\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"C1\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"C2\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"C3\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"D1\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"D2\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"},\"D3\":{\"evidence\":[],\"rationale\":\"No demonstrated evidence.\",\"change_reason\":\"\"}}",
   "summary": "Concise summary of the evidence and material changes."
 }
 ```
 
-The example shows the complete JSON shape, not scores to copy. Before calling
-the output tool, verify that all and only A1-A7, B1-B7, C1-C3 and D1-D3 are
-present; every score is an integer from 1 to 5; every rationale is under 300
+Before calling the output tool, verify that all and only the score fields for
+A1-A7, B1-B7, C1-C3 and D1-D3, plus details and summary, are present; details
+has exactly those 20 IDs and all three fields per ID; every score is an
+exact string choice from "1" to "5"; every rationale is under 300
 characters; all changes cite changed evidence; and `change_reason` is filled
 only when a score changes. Do not leave `null`, `UNSCORED`, or other
-placeholders. Call `record_rubric_score` exactly once. Do not call any other
+placeholders. Record exactly one accepted card. Do not call any other
 write tool.

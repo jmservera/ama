@@ -23,6 +23,8 @@ from pathlib import Path
 from typing import Any
 from xml.etree import ElementTree
 
+import scorecard_adapter
+
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
 EXIT_ERROR = 2
@@ -31,7 +33,11 @@ RUBRIC_PATH = ".github/rubric/rubric.json"
 REGISTRY_PATH = ".github/rubric/artifacts.json"
 SCORES_PATH = ".github/rubric/scores/latest.json"
 WORKFLOW_PATH = ".github/workflows/rubric-score.md"
-SCRIPT_PATHS = (".github/rubric/scripts/prepare.py", ".github/rubric/scripts/gate.py")
+SCRIPT_PATHS = (
+    ".github/rubric/scripts/prepare.py",
+    ".github/rubric/scripts/gate.py",
+    ".github/rubric/scripts/scorecard_adapter.py",
+)
 INSTRUMENT_PATHS = (RUBRIC_PATH, REGISTRY_PATH, WORKFLOW_PATH, *SCRIPT_PATHS)
 MAX_DIFF_BYTES = 400_000
 MAX_PPTX_UNCOMPRESSED = 200_000_000
@@ -448,6 +454,9 @@ def write_context(root: Path, state: dict[str, Any], out_dir: Path) -> Path:
         },
     }
     context_path = out_dir / "context.json"
+    context["tool_inputs_template"] = scorecard_adapter.to_inputs(
+        context["scorecard_template"], [criterion["id"] for criterion in state["rubric"]["criteria"]]
+    )
     context_path.write_text(json.dumps(context, indent=2), encoding="utf-8")
     return context_path
 

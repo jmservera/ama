@@ -21,6 +21,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import prepare  # noqa: E402
+import scorecard_adapter  # noqa: E402
 
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
@@ -85,7 +86,19 @@ def parse_scorecard(items: list[dict[str, Any]], criterion_ids: list[str]) -> tu
     calls = [item for item in items if item.get("type") == TOOL_TYPE]
     if len(calls) != 1:
         return None, f"expected exactly one {TOOL_TYPE} call, found {len(calls)}"
-    raw = calls[0].get("scorecard")
+    call = calls[0]
+    if "scorecard" not in call:
+        try:
+            raw = scorecard_adapter.from_inputs(
+                {key: value for key, value in call.items() if key != "type"}, criterion_ids
+            )
+        except ValueError as error:
+            return None, str(error)
+    else:
+        # Previously recorded canonical cards remain readable during main-first activation.
+        if set(call) != {"type", "scorecard"}:
+            return None, "canonical scorecard call contains unknown fields"
+        raw = call["scorecard"]
     try:
         scorecard = json.loads(raw) if isinstance(raw, str) else raw
     except json.JSONDecodeError as error:

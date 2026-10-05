@@ -35,6 +35,9 @@ Scores are readiness estimates from repository evidence. Live-scored criteria (B
 | [scores/latest.json](scores/latest.json)             | Current rubric baseline loaded from the base branch         |
 | [scripts/prepare.py](scripts/prepare.py)             | Fingerprints, scoring decision, agent context, PPTX text    |
 | [scripts/gate.py](scripts/gate.py)                   | Deterministic validation, carry-forward and comparison      |
+| [scripts/scorecard_adapter.py](scripts/scorecard_adapter.py) | Strict score-choice and details reconstruction |
+| [scripts/test_scorecard_adapter.py](scripts/test_scorecard_adapter.py) | Adapter, canonical gate and unscored scaffold tests |
+| [scripts/test_safe_output_runtime.py](scripts/test_safe_output_runtime.py) | Generated-schema and pinned real MCP runtime tests |
 | [scripts/test_gate.py](scripts/test_gate.py)         | Unit tests for the gate                                     |
 | [scripts/test_prepare.py](scripts/test_prepare.py)   | Change-detection tests on temporary git repositories        |
 | [prototype-validation.yml](../workflows/prototype-validation.yml) | Separate, secretless validation for the local prototype |
@@ -122,9 +125,49 @@ Trusted context generation adds `scorecard_template` to
 open criteria from the evidence. Bootstrap and calibration templates instead
 show `score: null` and an `UNSCORED` rationale for every criterion, so no grade
 is fabricated or carried forward; calibration also withholds baseline scores.
+Context also contains `tool_inputs_template`: twenty required score choices
+(`A1_score` through `D3_score`), `details` and `summary`. The choices are
+strings `"1"` through `"5"`, not numbers. `details` is a JSON string with
+exactly all twenty IDs, each containing only `evidence` (array of strings),
+`rationale` and `change_reason` (strings). An unchanged criterion supplies an
+empty `change_reason`; this does not introduce a new grading rule. The adapter
+rejects missing, unknown, duplicate or mistyped detail fields, explicitly
+maps exact choice strings to integers, and never invents scores or details.
+The canonical template remains available; bootstrap/calibration tool-input
+templates retain null scores and unscored rationales, not submittable grades.
+
+The owner selected this 22-input contract after the pinned v0.89.21 compiler
+rejected the original 81-input design with `maxProperties: got 81, want 25`.
+MCP required/type/choice checks protect score completeness and allowed values
+before append. The pinned custom-job MCP handler does not enforce a
+one-call quota; multiple schema-valid items can be appended. The trusted gate
+accepts exactly one item and rejects multiple submissions. Details syntax and
+semantic shape validation happen only in the trusted adapter downstream, so
+malformed details fail scoring and a second corrected call creates a
+multiple-item submission that the gate rejects. Do not describe details as a
+nested MCP schema or claim the adapter can trigger a protected pre-append
+retry.
+
 The output must replace every placeholder and contain exactly A1-A7, B1-B7,
 C1-C3 and D1-D3. `gate.py` remains strict: missing IDs, unknown IDs, invalid
 scores and malformed scorecards fail closed before any carry-forward.
+Previously recorded canonical `scorecard` items remain readable for
+compatibility; the new tool no longer advertises that string argument.
+The adapter is loaded with the prepare and gate scripts from the base branch
+and is part of scoring-instrument change detection. Merge this repair to main
+only after owner approval, then synchronize prototype PR #15: before that,
+its trusted base scripts cannot consume the new input contract.
+
+`test_safe_output_runtime.py` exercises the compiled tool schema and the real
+stdio and HTTP MCP servers. It verifies required/type/choice/unknown-key
+rejections do not append, a corrected retry is accepted, a second valid call
+is appended but rejected by `gate.parse_scorecard`, and malformed details
+JSON reaches the adapter only downstream. The test pins runtime source blobs
+from github/gh-aw-actions commit
+`924af5fdc64061cfbf66fb584c8b07e2ac230c60`; set `GH_AW_RUNTIME_DIR` to that
+checkout's `setup/js` directory to run it. It skips if the runtime is absent.
+This confirms single-item acceptance at the trusted gate, not a transport
+quota.
 
 ### Separate prototype validation
 
