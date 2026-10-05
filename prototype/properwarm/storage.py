@@ -105,6 +105,12 @@ class Store:
                     actor_label TEXT NOT NULL,
                     imported_at TEXT NOT NULL
                 );
+                CREATE TABLE IF NOT EXISTS agent_runs (
+                    run_id TEXT PRIMARY KEY,
+                    candidate_id TEXT NOT NULL REFERENCES cases(candidate_id),
+                    record_json TEXT NOT NULL,
+                    created_at TEXT NOT NULL
+                );
                 """
             )
             db.execute(
@@ -246,6 +252,8 @@ class Store:
             if row is None:
                 return None
             case = dict(row)
+            case["is_synthetic"] = bool(case["is_synthetic"])
+            case["safety_hold_active"] = bool(case["safety_hold_active"])
             events = [
                 dict(event)
                 for event in db.execute(
@@ -286,7 +294,73 @@ class Store:
                     (candidate_id,),
                 )
             ]
+            case["agent_runs"] = self.agent_runs(candidate_id, db)
             return case
+
+    def agent_runs(self, candidate_id: str, db: sqlite3.Connection) -> list[dict[str, Any]]:
+        return [
+            json.loads(row["record_json"])
+            for row in db.execute(
+                "SELECT record_json FROM agent_runs WHERE candidate_id = ? ORDER BY created_at DESC, rowid DESC LIMIT 20",
+                (candidate_id,),
+            )
+        ]
+
+    def save_agent_run(self, run: dict[str, Any], actor: str) -> dict[str, Any]:
+        actor = clean_actor(actor)
+        run = {**run, "created_at": utc_now(), "requested_by": actor}
+        with self.connection() as db:
+            db.execute("BEGIN IMMEDIATE")
+            existing = db.execute(
+                "SELECT record_json FROM agent_runs WHERE run_id = ?", (run["run_id"],),
+            ).fetchone()
+            if existing:
+                previous = json.loads(existing["record_json"])
+                if (previous["state"] != "running" or run["state"] not in {"awaiting_review", "failed"}
+                        or previous["candidate_id"] != run["candidate_id"]):
+                    raise ValueError("Only an active run can be completed once.")
+                run.update(created_at=previous["created_at"], requested_by=previous["requested_by"])
+                db.execute("UPDATE agent_runs SET record_json = ? WHERE run_id = ?", (json.dumps(run), run["run_id"]))
+            else:
+                db.execute(
+                    "INSERT INTO agent_runs(run_id, candidate_id, record_json, created_at) VALUES(?, ?, ?, ?)",
+                    (run["run_id"], run["candidate_id"], json.dumps(run), run["created_at"]),
+                )
+            event = "agent_run_started" if run["state"] == "running" else "agent_proposal_recorded"
+            self._audit(db, run["candidate_id"], event, actor, {
+                "run_id": run["run_id"], "state": run["state"], "model": run["model"],
+                "prompt_version": run["prompt_version"], "no_domain_state_changed": True,
+            })
+        return run
+
+    def review_agent_run(self, candidate_id: str, run_id: str, decision: str, actor: str) -> dict[str, Any]:
+        from .agents import safe_snapshot, snapshot_digest
+        actor = clean_actor(actor)
+        if decision not in {"accepted", "rejected"}:
+            raise ValueError("Choose accepted or rejected for the proposal review.")
+        with self.connection() as db:
+            # Prevent another writer from changing the source while this review is reconciled.
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute(
+                "SELECT record_json FROM agent_runs WHERE run_id = ? AND candidate_id = ?",
+                (run_id, candidate_id),
+            ).fetchone()
+            if row is None:
+                raise KeyError("Agent run was not found for this case.")
+            run = json.loads(row["record_json"])
+            if run["state"] != "awaiting_review":
+                raise ValueError("Only an unreviewed validated proposal can be reviewed.")
+            case = self.get_case(candidate_id)
+            if case is None:
+                raise KeyError("Synthetic case was not found.")
+            if decision == "accepted" and snapshot_digest(safe_snapshot(case)) != run["snapshot_digest"]:
+                raise ValueError("Proposal is stale. Run the agent again against current case evidence.")
+            run.update(state=decision, reviewed_by=actor, reviewed_at=utc_now())
+            db.execute("UPDATE agent_runs SET record_json = ? WHERE run_id = ?", (json.dumps(run), run_id))
+            self._audit(db, candidate_id, "agent_proposal_reviewed", actor, {
+                "run_id": run_id, "decision": decision, "no_domain_state_changed": True,
+            })
+        return run
 
     @staticmethod
     def _is_case_active(db: sqlite3.Connection, candidate_id: str) -> bool:
@@ -357,7 +431,15 @@ class Store:
             sql = f"SELECT * FROM cases WHERE {' AND '.join(predicates)} ORDER BY candidate_id LIMIT ?"
             args.append(1000)
             rows = db.execute(sql, args).fetchall()
-            threshold, _ = self.threshold(db)
+            threshold, version = self.threshold(db)
+            pending_proposals = {
+                row["candidate_id"]: row["count"]
+                for row in db.execute(
+                    """SELECT candidate_id, COUNT(*) AS count FROM agent_runs
+                       WHERE json_extract(record_json, '$.state') = 'awaiting_review'
+                       GROUP BY candidate_id"""
+                )
+            }
             selected: list[dict[str, Any]] = []
             for row in rows:
                 case = dict(row)
@@ -370,17 +452,21 @@ class Store:
                     )
                 ]
                 escalation = escalation_status(events, threshold, active)
+                review_required = self._investigation_pending(
+                    db, case["candidate_id"], escalation.required, escalation.eligible_count, version,
+                )
                 if status == "active" and not active:
                     continue
                 if status == "held" and not case["safety_hold_active"]:
                     continue
-                if status == "escalated" and not escalation.required:
+                if status == "escalated" and not review_required:
                     continue
                 case.update(
                     {
                         "active": active,
                         "eligible_count": escalation.eligible_count,
-                        "review_required": escalation.required,
+                        "review_required": review_required,
+                        "pending_agent_reviews": pending_proposals.get(case["candidate_id"], 0),
                     }
                 )
                 selected.append(case)
@@ -784,6 +870,10 @@ class Store:
                 "cases": cases,
                 "appointment_events": events,
                 "audit_log": audit,
+                "agent_runs": [
+                    json.loads(row["record_json"])
+                    for row in db.execute("SELECT record_json FROM agent_runs ORDER BY created_at, rowid")
+                ],
                 "m365": {"enabled": False, "reason": "Not configured; no tenant credentials used."},
             }
 

@@ -16,8 +16,8 @@
         <span class="brand-name">Proper Warm <span>delivery desk</span></span>
       </a>
       <div class="header-tools">
-        <label class="actor-picker">Working as
-          <select id="actor" aria-label="Synthetic reviewer label"></select>
+        <label class="actor-picker">Actor label (demo)
+          <select id="actor" aria-label="Demo actor label"></select>
         </label>
         <span class="local-badge"><span aria-hidden="true"></span> <span id="network-mode-label">Local only</span></span>
       </div>
@@ -40,6 +40,23 @@
       <section class="guardrail" aria-label="Data safety notice">
         <span class="guardrail-icon" aria-hidden="true">!</span>
         <p id="data-safety-note"><strong>Synthetic data only.</strong> Do not enter real resident, staff, address or contact information. This demonstrator has no M365 connection and binds only to this computer.</p>
+      </section>
+
+      <section class="perspective-switch" aria-labelledby="perspective-title">
+        <div class="perspective-heading">
+          <div>
+            <p class="eyebrow">Choose a task view</p>
+            <h2 id="perspective-title">One synthetic workbench, four perspectives</h2>
+          </div>
+          <p class="perspective-boundary">These view labels only change the screen. They are not authentication, authorization or an audited identity. The demo actor label stays separate and unchanged.</p>
+        </div>
+        <div class="perspective-options" role="group" aria-label="Task perspective">
+          <button class="perspective-button is-selected" type="button" data-view="programme" aria-pressed="true">Programme delivery</button>
+          <button class="perspective-button" type="button" data-view="frontline" aria-pressed="false">Frontline coordination</button>
+          <button class="perspective-button" type="button" data-view="assurance" aria-pressed="false">Assurance &amp; review</button>
+          <button class="perspective-button" type="button" data-view="operator" aria-pressed="false">Operator &amp; intake</button>
+        </div>
+        <div id="perspective-summary" class="perspective-summary" aria-live="polite"></div>
       </section>
 
       <section class="metric-strip" aria-label="Programme snapshot">
@@ -82,7 +99,40 @@
         </section>
       </section>
 
-      <section class="import-section panel" aria-labelledby="import-title">
+      <section class="handoff-map" aria-label="Agent and human responsibility hand-offs">
+        <article class="handoff-card">
+          <p class="card-kicker">Prototype agent boundary</p>
+          <h3>Case Review Agent · configured runs only</h3>
+          <p>Reads one synthetic case through bounded read-only tools and may return a source-linked proposal. A human reviewer checks sources and records accept/reject; <strong>only separate human controls</strong> can record appointments, alter gates, complete investigations or change case stage. Failed and unfinished runs remain visible even without a proposal.</p>
+        </article>
+        <article class="handoff-card">
+          <p class="card-kicker">Future proposal · not implemented</p>
+          <h3>Stock Prioritisation Agent</h3>
+          <p>Could rank candidate homes for programme review. Asset leadership would decide investment and sequencing; a ranking is not eligibility or an approval.</p>
+        </article>
+        <article class="handoff-card">
+          <p class="card-kicker">Future proposal · not implemented</p>
+          <h3>Assessment Agent</h3>
+          <p>Could draft assessment content from survey evidence. A qualified retrofit professional would validate it; it cannot certify a PAS 2035 assessment.</p>
+        </article>
+        <article class="handoff-card is-proposed">
+          <p class="card-kicker">Future proposal · not implemented</p>
+          <h3>Grant &amp; Funding Agent</h3>
+          <p>Could prepare application drafts and evidence lists. Finance verifies figures and eligibility and submits any application.</p>
+        </article>
+        <article class="handoff-card is-proposed">
+          <p class="card-kicker">Future proposal · not implemented</p>
+          <h3>Contractor &amp; Resident Coordination Agent</h3>
+          <p>Could propose scheduling and communication within resident preferences. People confirm consent and any external action before it is taken.</p>
+        </article>
+        <article class="handoff-card is-proposed">
+          <p class="card-kicker">Future proposal · not implemented</p>
+          <h3>Quality Verification Agent</h3>
+          <p>Could flag evidence gaps for professional review. It cannot certify works or replace independent quality assurance.</p>
+        </article>
+      </section>
+
+      <section id="import-section" class="import-section panel" aria-labelledby="import-title">
         <div class="section-head">
           <div><p class="eyebrow">Controlled intake</p><h2 id="import-title">Preview an Excel workbook</h2></div>
           <span class="section-index">01 / IMPORT</span>

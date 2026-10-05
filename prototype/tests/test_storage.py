@@ -91,12 +91,17 @@ class StorageTests(unittest.TestCase):
             for _ in range(6)
         ]
         self.assertEqual([result["review_required"] for result in results], [False] * 5 + [True])
+        self.assertEqual(
+            [case["candidate_id"] for case in self.store.list_cases(status="escalated")],
+            ["CAND-TEST-0001"],
+        )
         with self.assertRaisesRegex(ValueError, "human investigation"):
             self.store.close_case(
                 "CAND-TEST-0001", "Local reviewer", "human_review_completed"
             )
 
         self.store.record_review("CAND-TEST-0001", "Local reviewer")
+        self.assertEqual(self.store.list_cases(status="escalated"), [])
         self.store.close_case(
             "CAND-TEST-0001", "Local reviewer", "human_review_completed"
         )

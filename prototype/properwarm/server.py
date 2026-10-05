@@ -20,12 +20,13 @@ from urllib.parse import parse_qs, unquote, urlparse
 from .domain import ACTOR_LABELS, CLOSURE_REASONS, EVENT_OUTCOMES, GATE_LABELS
 from .imports import MAX_WORKBOOK_BYTES, parse_workbook
 from .storage import Store
+from .agents import PROMPT_VERSION, configured_model, run_agent
 
 LOG = logging.getLogger("properwarm")
 PACKAGE_DIR = Path(__file__).resolve().parent
 WEB_DIR = PACKAGE_DIR.parent / "web"
 MAX_JSON_BYTES = (MAX_WORKBOOK_BYTES + 2) // 3 * 4 + 1_000_000
-CASE_ROUTE = re.compile(r"^/api/cases/([^/]+)/(appointment|close|reopen|review|controls|advance)$")
+CASE_ROUTE = re.compile(r"^/api/cases/([^/]+)/(appointment|close|reopen|review|controls|advance|agent-run|agent-review)$")
 
 
 class PrototypeServer(ThreadingHTTPServer):
@@ -36,6 +37,8 @@ class PrototypeServer(ThreadingHTTPServer):
         self.store = store
         self.pending_imports: dict[str, tuple[float, Any]] = {}
         self.pending_lock = threading.Lock()
+        self.model = configured_model()
+        self.agent_lock = threading.Lock()
         super().__init__(address, RequestHandler)
 
 
@@ -43,12 +46,17 @@ class RequestHandler(BaseHTTPRequestHandler):
     server: PrototypeServer
 
     def log_message(self, format_string: str, *args: Any) -> None:
-        LOG.info("%s - %s", self.address_string(), format_string % args)
+        LOG.info(json.dumps({
+            "event": "http_request", "request_id": getattr(self, "request_id", None),
+            "message": format_string % args,
+            "duration_ms": round((time.perf_counter() - getattr(self, "request_start", time.perf_counter())) * 1000, 2),
+        }))
 
     def end_headers(self) -> None:
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "no-referrer")
         self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Request-ID", getattr(self, "request_id", "not-recorded"))
         self.send_header(
             "Content-Security-Policy",
             "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
@@ -57,6 +65,8 @@ class RequestHandler(BaseHTTPRequestHandler):
         super().end_headers()
 
     def do_GET(self) -> None:
+        self.request_id = uuid.uuid4().hex
+        self.request_start = time.perf_counter()
         parsed = urlparse(self.path)
         try:
             if parsed.path == "/api/health":
@@ -71,6 +81,14 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
             elif parsed.path == "/api/overview":
                 self._json(HTTPStatus.OK, self.server.store.overview())
+            elif parsed.path == "/api/agents":
+                self._json(HTTPStatus.OK, {
+                    "configured": self.server.model is not None,
+                    "model": self.server.model.model if self.server.model else None,
+                    "prompt_version": PROMPT_VERSION,
+                    "reason": "Azure configuration present; connectivity and quality require evaluation."
+                    if self.server.model else "Set AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_DEPLOYMENT; authenticate with Entra ID.",
+                })
             elif parsed.path == "/api/cases":
                 query = parse_qs(parsed.query)
                 self._json(
@@ -125,6 +143,8 @@ class RequestHandler(BaseHTTPRequestHandler):
             self._error(HTTPStatus.INTERNAL_SERVER_ERROR, "Unexpected local prototype error.")
 
     def do_POST(self) -> None:
+        self.request_id = uuid.uuid4().hex
+        self.request_start = time.perf_counter()
         try:
             body = self._read_json()
             path = urlparse(self.path).path
@@ -145,7 +165,37 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self._error(HTTPStatus.NOT_FOUND, "Route was not found.")
                 return
             candidate_id, action = unquote(match.group(1)), match.group(2)
-            if action == "appointment":
+            if action == "agent-run":
+                if self.server.model is None:
+                    self._error(HTTPStatus.SERVICE_UNAVAILABLE, "Azure model is not configured; no AI proposal was generated.")
+                    return
+                if body.get("actor") not in ACTOR_LABELS:
+                    raise ValueError("Choose a supported synthetic reviewer label.")
+                case = self.server.store.get_case(candidate_id)
+                if case is None:
+                    raise KeyError("Synthetic case was not found.")
+                if not self.server.agent_lock.acquire(blocking=False):
+                    self._error(HTTPStatus.CONFLICT, "Another bounded agent run is active; wait before retrying.")
+                    return
+                try:
+                    run = run_agent(
+                        case, self.server.model,
+                        on_started=lambda started: self.server.store.save_agent_run(started, body["actor"]),
+                    )
+                    saved = self.server.store.save_agent_run(run, body["actor"])
+                    LOG.info(json.dumps({
+                        "event": "agent_run", "request_id": self.request_id,
+                        "run_id": saved["run_id"], "state": saved["state"],
+                        "duration_ms": saved["duration_ms"], "usage": saved["usage"],
+                    }))
+                    self._json(HTTPStatus.OK, saved)
+                finally:
+                    self.server.agent_lock.release()
+            elif action == "agent-review":
+                self._json(HTTPStatus.OK, self.server.store.review_agent_run(
+                    candidate_id, str(body.get("run_id", "")), str(body.get("decision", "")), body.get("actor", ""),
+                ))
+            elif action == "appointment":
                 result = self.server.store.record_appointment(
                     candidate_id,
                     body.get("outcome", ""),

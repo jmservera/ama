@@ -15,6 +15,76 @@ param containerImage string
 @description('Infrastructure subnet resource ID in a virtual network configured for Azure Container Apps.')
 param infrastructureSubnetId string
 
+@description('Separate private-endpoint subnet, not the Container Apps infrastructure subnet.')
+param modelPrivateEndpointSubnetId string
+@description('Virtual network resource ID used for the private DNS link.')
+param virtualNetworkId string
+param modelAccountName string
+param modelDeploymentName string = 'case-review'
+param modelName string = 'gpt-4.1-mini'
+param modelVersion string = '2025-04-14'
+
+resource agentIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+  name: '${containerAppName}-agent'
+  location: location
+}
+
+module model './model.bicep' = {
+  name: 'properwarm-private-model'
+  params: {
+    location: location
+    accountName: modelAccountName
+    deploymentName: modelDeploymentName
+    modelName: modelName
+    modelVersion: modelVersion
+    principalId: agentIdentity.properties.principalId
+  }
+}
+
+resource modelDns 'Microsoft.Network/privateDnsZones@2024-06-01' = {
+  name: 'privatelink.openai.azure.com'
+  location: 'global'
+}
+resource modelDnsLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2024-06-01' = {
+  parent: modelDns
+  name: '${containerAppName}-model'
+  location: 'global'
+  properties: {
+    registrationEnabled: false
+    virtualNetwork: {
+      id: virtualNetworkId
+    }
+  }
+}
+resource modelEndpoint 'Microsoft.Network/privateEndpoints@2024-05-01' = {
+  name: '${modelAccountName}-private'
+  location: location
+  properties: {
+    subnet: {
+      id: modelPrivateEndpointSubnetId
+    }
+    privateLinkServiceConnections: [{
+      name: 'model'
+      properties: {
+        privateLinkServiceId: model.outputs.accountId
+        groupIds: ['account']
+      }
+    }]
+  }
+}
+resource modelDnsGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-05-01' = {
+  parent: modelEndpoint
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [{
+      name: 'openai'
+      properties: {
+        privateDnsZoneId: modelDns.id
+      }
+    }]
+  }
+}
+
 @description('Tags to apply to demo resources.')
 param tags object = {
   purpose: 'proper-warm-synthetic-demo'
@@ -56,6 +126,12 @@ resource app 'Microsoft.App/containerApps@2026-01-01' = {
   name: containerAppName
   location: location
   tags: tags
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${agentIdentity.id}': {}
+    }
+  }
   properties: {
     environmentId: environment.id
     configuration: {
@@ -73,6 +149,18 @@ resource app 'Microsoft.App/containerApps@2026-01-01' = {
           name: 'proper-warm'
           image: containerImage
           env: [
+            {
+              name: 'AZURE_CLIENT_ID'
+              value: agentIdentity.properties.clientId
+            }
+            {
+              name: 'AZURE_OPENAI_ENDPOINT'
+              value: model.outputs.endpoint
+            }
+            {
+              name: 'AZURE_OPENAI_DEPLOYMENT'
+              value: model.outputs.deploymentName
+            }
             {
               name: 'APP_PORT'
               value: '8080'
