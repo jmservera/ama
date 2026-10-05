@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
   "source": "workflow",
-  "scored_at": "2026-10-05T13:02:30+00:00",
-  "commit": "a66c2b56ae0e336fc1107337539f6af415ef2ce8",
+  "scored_at": "2026-10-05T20:07:29+00:00",
+  "commit": "d0ea4d4af785fbc89f71122371fbb8bae9fe3545",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37312550942",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37361755610",
   "fingerprints": {
     "brd": "7aa429c9f1652392a4535efac0ed13e4d4388cb7fc5fc6194d229ada77050915",
     "prd": "48107012686e7dd5855178eafcf0c5ffc775c167c5053d44bfc300ac984fda8d",
-    "solution-code": "e3ed25294c9bbf2a920b8cd1bdfb5f2c019c2df4760baf5016e686b9c588c6a1",
-    "infrastructure": "e339aadfc3d729adacf647db1cb0e04f62b3e4f9d8ea7dce1564f2a2d9dd4dbb"
+    "solution-code": "16d07444b9d3aa3982a99899bc4b93a91fa289ad0f0140566bdba599e407c000",
+    "infrastructure": "9a9c8dcb404fb0c59c5edc3117b9b9cd7b14e0900cc1976ee7b24374a6cb1c46"
   },
-  "total": 65,
+  "total": 73,
   "sections": {
-    "A": 25,
+    "A": 33,
     "B": 19,
     "C": 12,
     "D": 9
@@ -22,13 +22,13 @@
   "outcome": "Not Yet Met (floor)",
   "criteria": {
     "A1": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "prototype/properwarm/domain.py:1",
-        "prototype/properwarm/storage.py:1",
-        "prototype/deploy/main.bicep:84"
+        "prototype/README.md:213",
+        "prototype/architecture/proper-warm-local-prototype.excalidraw:1",
+        "prototype/properwarm/server.py:1"
       ],
-      "rationale": "Clean domain/storage/imports/server/web separation with documented contracts, but the Bicep caps the app at a single replica on ephemeral SQLite with no scaling path."
+      "rationale": "Decoupled server/storage/domain/agent layers, documented diagram, explicit scaling-path table with failure domains (fail-closed gates, ephemeral-storage risk disclosed)."
     },
     "A2": {
       "score": 5,
@@ -41,45 +41,48 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "prototype/properwarm/server.py:46",
-        "prototype/properwarm/storage.py:58",
-        "prototype/properwarm/imports.py:120"
+        "prototype/properwarm/agents.py:176",
+        "prototype/README.md:9",
+        "prototype/tests/test_agents.py:95"
       ],
-      "rationale": "CSP/no-store/nosniff headers, loopback-only binding, parameterized SQL, fail-closed safety-hold load, and synthetic-only CHECK constraints show concrete, stated controls against a clear threat model."
+      "rationale": "SSRF-guarded Azure endpoint validation, Entra-only auth with no API keys, private endpoint/DNS, synthetic-only input gate, bearer never logged, tested host-restriction and injection-style failure cases."
     },
     "A4": {
       "score": 4,
       "evidence": [
         "prototype/properwarm/server.py:1",
-        "prototype/tests/test_storage.py:1",
-        "prototype/README.md:93"
+        "prototype/properwarm/storage.py:1",
+        "prototype/README.md:166",
+        "prototype/tests/test_agents.py:1"
       ],
-      "rationale": "Case search, stage-gated advance, appointment/escalation, import/export and audit log are all implemented end to end with unit tests, and known gaps (ephemeral storage, no auth, untested IaC) are disclosed proactively."
+      "rationale": "Working end-to-end local app (server, storage, domain, agent, UI), 25 passing tests, documented live Azure run, and proactively disclosed gaps (multi-user, durable agent work not implemented)."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "prototype/properwarm/server.py:46",
-        "prototype/properwarm/storage.py:49",
-        "prototype/deploy/main.bicep:27"
+        "prototype/properwarm/server.py:50",
+        "prototype/README.md:166",
+        "prototype/deploy/main.bicep:89"
       ],
-      "rationale": "Structured logging, an audit-log table, WAL journaling, explicit size/row caps, and a wired Log Analytics workspace with stated container CPU/memory show instrumentation and bounded cost, but no measured SLOs or traces."
+      "rationale": "Structured JSON request logging with request IDs, Log Analytics workspace, and measured latency/cost (median/p95, token usage) recorded in README; resilience shown via fail-closed error handling, though cost is still only token-based, not full unit-cost modelling."
     },
     "A6": {
-      "score": 2,
+      "score": 5,
       "evidence": [
-        "prototype/README.md:9",
-        "prototype/properwarm/domain.py:1"
+        "prototype/scripts/evaluate_agent.py:14",
+        "prototype/README.md:141",
+        "prototype/tests/test_agents.py:46"
       ],
-      "rationale": "The shipped demonstrator is entirely deterministic rule-based workflow code with no model call, prompt, or evaluation harness anywhere in it, and the README states explicitly there is no external AI integration."
+      "rationale": "Evaluation harness with six paired fictional cases, defined metrics (contract pass rate, latency, tokens), documented model choice rationale (gpt-4.1-mini provisional vs gpt-4.1 alternative), live Azure run results and failure-injection regression tests documenting failure modes."
     },
     "A7": {
-      "score": 1,
+      "score": 5,
       "evidence": [
-        "prototype/README.md:9",
-        "prototype/properwarm/domain.py:139"
+        "prototype/properwarm/agents.py:17",
+        "prototype/properwarm/agents.py:243",
+        "prototype/tests/test_agents.py:46"
       ],
-      "rationale": "Stage advancement is a plain conditional state machine with fixed gate checks; there is no autonomous agent, no LLM-driven decision, and no handoff/reflection pattern anywhere in the shipped code."
+      "rationale": "Agent autonomously orders/combines three read-only tools within a bounded budget (4 model/6 tool calls), validates its own proposal against grounded evidence, and cannot write state; tested against nonproductive loops and unauthorized tool use."
     },
     "B1": {
       "score": 4,
@@ -120,10 +123,10 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "prototype/README.md:1",
-        "prototype/README.md:77"
+        "docs/brds/agentic-retrofit-programme-brd.md:1488",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:683"
       ],
-      "rationale": "The new prototype README is clearly structured, navigable and standalone (safety boundaries, run instructions, workbench flow, limitations), reinforcing the existing capstone documentation quality."
+      "rationale": "Capstone deck and BRD/PRD documentation untouched by this PR; prototype README is supporting technical documentation, not the scored capstone deck artifact."
     },
     "B7": {
       "score": 4,
