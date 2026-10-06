@@ -1,0 +1,1042 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A non-production, constructed-data prototype of the Proper Warm retrofit programme workbench.">
+  <title>Proper Warm | Programme workbench prototype</title>
+  <link rel="icon" href="data:,">
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+      --font-ui: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: Consolas, "Courier New", Courier, monospace;
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 86% 2%, var(--cp-accent-soft), transparent 22rem),
+        var(--cp-bg);
+      color: var(--cp-text);
+      font: 15px/1.45 var(--font-ui);
+    }
+    button, input, select { font: inherit; }
+    button, select { color: inherit; }
+    a { color: var(--cp-link); }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid var(--cp-accent);
+      outline-offset: 3px;
+    }
+    .skip-link {
+      position: fixed;
+      z-index: 10;
+      top: 0.5rem;
+      left: 0.5rem;
+      padding: 0.7rem 1rem;
+      transform: translateY(-160%);
+      background: var(--cp-surface);
+      border: 1px solid var(--cp-border-strong);
+      border-radius: 0.625rem;
+    }
+    .skip-link:focus { transform: translateY(0); }
+    .app-shell {
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      padding: 1.35rem 1rem;
+      background: var(--cp-bg-elevated);
+      border-right: 1px solid var(--cp-border);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.25rem 0.45rem;
+    }
+    .brand-mark {
+      display: grid;
+      width: 2.5rem;
+      height: 2.5rem;
+      place-items: center;
+      border-radius: 0.625rem;
+      background: var(--cp-accent);
+      color: var(--cp-accent-fg);
+      font-weight: 800;
+      letter-spacing: -0.08em;
+    }
+    .brand-title { display: block; font-size: 1rem; font-weight: 750; letter-spacing: -0.02em; }
+    .brand-subtitle { color: var(--cp-text-muted); font-size: 0.76rem; }
+    .nav-label {
+      margin: 0.15rem 0 0.55rem;
+      padding: 0 0.55rem;
+      color: var(--cp-text-soft);
+      font-size: 0.68rem;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .nav-list { display: grid; gap: 0.25rem; }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      min-height: 2.6rem;
+      padding: 0.5rem 0.65rem;
+      border-radius: 0.625rem;
+      color: var(--cp-text-muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .nav-link:hover, .nav-link[aria-current="page"] {
+      background: var(--cp-accent-soft);
+      color: var(--cp-accent);
+    }
+    .nav-glyph {
+      width: 1.25rem;
+      text-align: center;
+      font-weight: 800;
+    }
+    .sidebar-note {
+      margin-top: auto;
+      padding: 0.85rem;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      color: var(--cp-text-muted);
+      font-size: 0.78rem;
+    }
+    .sidebar-note strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: var(--cp-text);
+      font-size: 0.83rem;
+    }
+    .main-area { min-width: 0; }
+    .topbar {
+      position: sticky;
+      z-index: 5;
+      top: 0;
+      display: flex;
+      min-height: 3.5rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.55rem clamp(1rem, 3vw, 2.5rem);
+      background: var(--cp-panel-strong);
+      border-bottom: 1px solid var(--cp-border);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-context { display: flex; align-items: center; gap: 0.65rem; }
+    .crumb { color: var(--cp-text-muted); font-size: 0.84rem; }
+    .separator { color: var(--cp-border-strong); }
+    .exercise-tag, .draft-tag, .status-pill, .phase-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      min-height: 1.6rem;
+      padding: 0.18rem 0.58rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 750;
+      line-height: 1.2;
+    }
+    .exercise-tag {
+      background: var(--cp-accent-soft);
+      color: var(--cp-accent);
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+    }
+    .draft-tag {
+      border: 1px solid var(--cp-border);
+      background: var(--cp-surface);
+      color: var(--cp-text-muted);
+    }
+    .topbar-actions { display: flex; align-items: center; gap: 0.6rem; }
+    .quiet-button {
+      min-height: 2.25rem;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      cursor: pointer;
+    }
+    .quiet-button:hover { border-color: var(--cp-border-strong); }
+    main {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 1.6rem clamp(1rem, 3vw, 2.5rem) 3rem;
+    }
+    .page-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin: 0.25rem 0 1.2rem;
+    }
+    .eyebrow {
+      margin: 0 0 0.35rem;
+      color: var(--cp-accent);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin-bottom: 0.28rem;
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-weight: 760;
+      letter-spacing: -0.045em;
+      line-height: 1.05;
+    }
+    .lede { max-width: 52rem; margin: 0; color: var(--cp-text-muted); }
+    .role-switcher {
+      display: grid;
+      min-width: min(100%, 22rem);
+      gap: 0.35rem;
+      padding: 0.7rem 0.85rem;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.75rem;
+      background: var(--cp-surface);
+    }
+    .role-switcher label { color: var(--cp-text-soft); font-size: 0.7rem; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; }
+    .role-switcher select {
+      width: 100%;
+      min-height: 2.2rem;
+      padding: 0.2rem 2rem 0.2rem 0;
+      border: 0;
+      background: transparent;
+      font-weight: 700;
+    }
+    .role-note {
+      margin: 0;
+      color: var(--cp-text-muted);
+      font-size: 0.74rem;
+    }
+    .boundary-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin: 1.15rem 0 1.25rem;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--cp-border);
+      border-left: 4px solid var(--cp-accent);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      color: var(--cp-text-muted);
+      font-size: 0.84rem;
+    }
+    .boundary-banner strong { color: var(--cp-text); }
+    .banner-mark { color: var(--cp-accent); font-weight: 900; }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin: 1rem 0 1.25rem;
+    }
+    .metric-card, .panel, .workflow-card, .increment-card {
+      background: var(--cp-surface);
+      border: 1px solid var(--cp-border);
+      border-radius: 1rem;
+    }
+    .metric-card { min-height: 7.4rem; padding: 1rem; }
+    .metric-label { margin: 0 0 0.65rem; color: var(--cp-text-muted); font-size: 0.8rem; }
+    .metric-row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
+    .metric-value { margin: 0; font-size: 1.7rem; font-weight: 780; letter-spacing: -0.04em; line-height: 1; }
+    .metric-context { color: var(--cp-text-soft); font-size: 0.71rem; text-align: right; }
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(18rem, 0.8fr);
+      align-items: start;
+      gap: 1rem;
+    }
+    .stack { display: grid; gap: 1rem; min-width: 0; }
+    .panel { overflow: hidden; }
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.8rem;
+      padding: 1rem 1rem 0.75rem;
+    }
+    .panel-header h2 { margin: 0 0 0.15rem; font-size: 1rem; letter-spacing: -0.02em; }
+    .panel-header p { margin: 0; color: var(--cp-text-muted); font-size: 0.77rem; }
+    .section-kicker { color: var(--cp-text-soft); font-size: 0.7rem; font-weight: 750; letter-spacing: 0.09em; text-transform: uppercase; }
+    .profile-summary {
+      display: grid;
+      gap: 0.85rem;
+      padding: 0.2rem 1rem 1rem;
+    }
+    .profile-copy { margin: 0; color: var(--cp-text-muted); font-size: 0.84rem; }
+    .profile-focus {
+      padding: 0.8rem;
+      border-radius: 0.75rem;
+      background: var(--cp-accent-soft);
+    }
+    .profile-focus .section-kicker { color: var(--cp-accent); }
+    .profile-focus p { margin: 0.28rem 0 0; font-size: 0.88rem; font-weight: 650; }
+    .task-list { display: grid; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
+    .task-list li { display: flex; align-items: flex-start; gap: 0.55rem; color: var(--cp-text); font-size: 0.83rem; }
+    .task-dot {
+      flex: 0 0 0.45rem;
+      width: 0.45rem;
+      height: 0.45rem;
+      margin-top: 0.43rem;
+      border-radius: 50%;
+      background: var(--cp-accent);
+    }
+    .table-wrap { overflow-x: auto; border-top: 1px solid var(--cp-border); }
+    .table-scroll-note { display: none; margin: 0; padding: 0.45rem 1rem; color: var(--cp-text-soft); font-size: 0.69rem; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    caption {
+      padding: 0.55rem 1rem;
+      color: var(--cp-text-muted);
+      font-size: 0.73rem;
+      text-align: left;
+    }
+    th, td { padding: 0.72rem 0.85rem; border-top: 1px solid var(--cp-border); vertical-align: middle; }
+    th { color: var(--cp-text-soft); font-size: 0.69rem; font-weight: 750; letter-spacing: 0.07em; text-transform: uppercase; white-space: nowrap; }
+    td { font-size: 0.8rem; }
+    .work-table tbody tr:hover { background: var(--cp-surface-soft); }
+    .home-code { display: block; font-family: var(--font-mono); font-size: 0.76rem; font-weight: 700; white-space: nowrap; }
+    .home-kind { color: var(--cp-text-soft); font-size: 0.69rem; }
+    .stage-label { display: inline-flex; align-items: center; gap: 0.38rem; }
+    .stage-dot { width: 0.45rem; height: 0.45rem; flex: 0 0 0.45rem; border-radius: 50%; background: var(--cp-warning); }
+    .stage-dot.is-good { background: var(--cp-success); }
+    .stage-dot.is-alert { background: var(--cp-danger); }
+    .table-action {
+      min-height: 2rem;
+      padding: 0.25rem 0.55rem;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .table-action:hover { border-color: var(--cp-accent); color: var(--cp-accent); }
+    .empty-state { padding: 1rem; color: var(--cp-text-muted); font-size: 0.85rem; }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0 1rem 0.75rem;
+    }
+    .search-field {
+      width: min(100%, 18rem);
+      min-height: 2.25rem;
+      padding: 0.35rem 0.65rem;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-bg-elevated);
+      color: var(--cp-text);
+    }
+    .search-field::placeholder { color: var(--cp-text-soft); opacity: 1; }
+    .count-note { margin-left: auto; color: var(--cp-text-muted); font-size: 0.72rem; white-space: nowrap; }
+    .case-detail { padding: 0 1rem 1rem; }
+    .case-id {
+      margin: 0.1rem 0 0.2rem;
+      font-family: var(--font-mono);
+      font-size: 1.18rem;
+      font-weight: 750;
+    }
+    .case-caption { margin: 0 0 0.9rem; color: var(--cp-text-muted); font-size: 0.77rem; }
+    .fact-list { display: grid; grid-template-columns: 1fr auto; gap: 0.58rem 0.7rem; margin: 0; font-size: 0.78rem; }
+    .fact-list dt { color: var(--cp-text-muted); }
+    .fact-list dd { margin: 0; font-weight: 650; text-align: right; }
+    .status-pill { border: 1px solid var(--cp-border); background: var(--cp-surface-soft); color: var(--cp-text-muted); }
+    .status-pill.is-alert { border-color: var(--cp-danger); background: var(--cp-accent-soft); color: var(--cp-danger); }
+    .source-note {
+      margin: 0.95rem 0 0;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--cp-border);
+      color: var(--cp-text-muted);
+      font-size: 0.73rem;
+    }
+    .suggestion {
+      margin: 0.9rem 0 0;
+      padding: 0.85rem;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.75rem;
+      background: var(--cp-bg-elevated);
+    }
+    .suggestion-heading { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.45rem; }
+    .suggestion-heading h3 { margin: 0; font-size: 0.83rem; }
+    .phase-pill { min-height: 1.35rem; padding: 0.15rem 0.45rem; background: var(--cp-accent-soft); color: var(--cp-accent); font-size: 0.65rem; }
+    .suggestion p { margin: 0; color: var(--cp-text-muted); font-size: 0.77rem; }
+    details { margin-top: 0.65rem; }
+    summary { width: fit-content; color: var(--cp-accent); cursor: pointer; font-size: 0.75rem; font-weight: 700; }
+    .details-copy { margin: 0.55rem 0 0; color: var(--cp-text-muted); font-size: 0.74rem; }
+    .history { margin-top: 0.9rem; padding-top: 0.7rem; border-top: 1px solid var(--cp-border); }
+    .history summary { font-size: 0.78rem; }
+    .history-note { margin: 0.45rem 0; color: var(--cp-text-soft); font-size: 0.7rem; }
+    .history-list { display: grid; gap: 0.55rem; margin: 0.6rem 0 0; padding: 0 0 0 1.2rem; }
+    .history-list li { padding-left: 0.15rem; color: var(--cp-text-muted); font-size: 0.74rem; }
+    .history-list strong { display: block; margin-bottom: 0.1rem; color: var(--cp-text); font-size: 0.75rem; }
+    .history-source { display: block; margin-top: 0.15rem; color: var(--cp-text-soft); font-size: 0.68rem; }
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.65rem;
+      padding: 0 1rem 1rem;
+    }
+    .workflow-card {
+      display: grid;
+      min-height: 8.3rem;
+      align-content: start;
+      gap: 0.45rem;
+      padding: 0.8rem;
+      color: var(--cp-text);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 140ms ease, transform 140ms ease, background 140ms ease;
+    }
+    .workflow-card:hover { transform: translateY(-2px); border-color: var(--cp-accent); }
+    .workflow-card[aria-pressed="true"] { border-color: var(--cp-accent); background: var(--cp-accent-soft); }
+    .workflow-number { color: var(--cp-accent); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 800; }
+    .workflow-title { font-size: 0.8rem; font-weight: 730; line-height: 1.25; }
+    .workflow-owner { color: var(--cp-text-soft); font-size: 0.68rem; }
+    .workflow-detail {
+      margin: 0 1rem 1rem;
+      padding: 0.85rem;
+      border-left: 3px solid var(--cp-accent);
+      background: var(--cp-bg-elevated);
+    }
+    .workflow-detail h3 { margin: 0 0 0.35rem; font-size: 0.9rem; }
+    .workflow-detail p { margin: 0; color: var(--cp-text-muted); font-size: 0.78rem; }
+    .portfolio-table td, .portfolio-table th { padding: 0.62rem 0.72rem; }
+    .progress-wrap { display: flex; align-items: center; gap: 0.5rem; min-width: 8rem; }
+    progress { width: 4.5rem; height: 0.55rem; accent-color: var(--cp-accent); }
+    .progress-wrap span { color: var(--cp-text-muted); font-size: 0.72rem; white-space: nowrap; }
+    .table-footnote { margin: 0; padding: 0 1rem 0.9rem; color: var(--cp-text-muted); font-size: 0.72rem; }
+    .increment-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.7rem;
+      padding: 0 1rem 1rem;
+    }
+    .increment-card { min-height: 8.5rem; padding: 0.85rem; }
+    .increment-card h3 { margin: 0.5rem 0 0.3rem; font-size: 0.84rem; }
+    .increment-card p { margin: 0; color: var(--cp-text-muted); font-size: 0.73rem; }
+    .increment-card .increment-state { color: var(--cp-accent); font-size: 0.66rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .increment-card.is-later { background: var(--cp-bg-elevated); }
+    .footer-note {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--cp-border);
+      color: var(--cp-text-soft);
+      font-size: 0.72rem;
+    }
+    .live-region {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    @media (max-width: 1120px) {
+      .app-shell { grid-template-columns: 205px minmax(0, 1fr); }
+      .content-grid { grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr); }
+      .workflow-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .increment-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 820px) {
+      .app-shell { display: block; }
+      .sidebar {
+        position: static;
+        height: auto;
+        gap: 0.75rem;
+        padding: 0.7rem 0.9rem;
+        border-right: 0;
+        border-bottom: 1px solid var(--cp-border);
+      }
+      .brand { padding: 0.1rem 0.25rem; }
+      .sidebar nav { width: 100%; min-width: 0; overflow-x: auto; }
+      .sidebar .nav-label, .sidebar-note { display: none; }
+      .nav-list { display: flex; min-width: max-content; }
+      .nav-link { min-height: 2.2rem; padding: 0.4rem 0.6rem; font-size: 0.76rem; }
+      .page-heading { align-items: stretch; flex-direction: column; }
+      .role-switcher { width: 100%; }
+      .content-grid { grid-template-columns: 1fr; }
+      .topbar { position: static; }
+    }
+    @media (max-width: 560px) {
+      main { padding-top: 1rem; }
+      .topbar-context { flex-wrap: wrap; }
+      .crumb { font-size: 0.74rem; }
+      .exercise-tag { font-size: 0.64rem; }
+      .topbar-actions .quiet-button { min-height: 2rem; padding-inline: 0.5rem; font-size: 0.75rem; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem; }
+      .metric-card { min-height: 6.7rem; padding: 0.75rem; }
+      .metric-value { font-size: 1.45rem; }
+      .metric-context { font-size: 0.64rem; }
+      .workflow-grid, .increment-grid { grid-template-columns: 1fr; }
+      .workflow-card { min-height: auto; }
+      .work-table { table-layout: fixed; }
+      .table-scroll-note { display: block; }
+      .toolbar { align-items: stretch; flex-direction: column; }
+      .search-field { width: 100%; }
+      .count-note { margin-left: 0; }
+      .footer-note { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Programme navigation">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">PW</span>
+        <span>
+          <span class="brand-title">Proper Warm</span>
+          <span class="brand-subtitle">Retrofit programme</span>
+        </span>
+      </div>
+      <nav aria-label="Primary">
+        <p class="nav-label">Workbench</p>
+        <div class="nav-list">
+          <a class="nav-link" href="#overview" aria-current="page"><span class="nav-glyph" aria-hidden="true">◫</span>Overview</a>
+          <a class="nav-link" href="#work-queue"><span class="nav-glyph" aria-hidden="true">≡</span>Work queue</a>
+          <a class="nav-link" href="#workflows"><span class="nav-glyph" aria-hidden="true">⌘</span>Workflow map</a>
+          <a class="nav-link" href="#portfolio"><span class="nav-glyph" aria-hidden="true">▥</span>Portfolio insight</a>
+          <a class="nav-link" href="#increments"><span class="nav-glyph" aria-hidden="true">↗</span>Release increments</a>
+        </div>
+      </nav>
+      <div class="sidebar-note">
+        <strong>Exercise workspace</strong>
+        All records are constructed for demonstration. No company or resident data is connected.
+      </div>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="topbar-context" aria-label="Current product context">
+          <span class="crumb">Programme</span>
+          <span class="separator" aria-hidden="true">/</span>
+          <span class="crumb">Retrofit delivery</span>
+          <span class="exercise-tag">Constructed exercise</span>
+          <span class="draft-tag">PRD draft v0.6.2</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="quiet-button" id="theme-toggle" type="button" aria-label="Switch to dark theme">Dark theme</button>
+        </div>
+      </header>
+
+      <main id="main-content">
+        <section id="overview" aria-labelledby="page-title">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">Shared workbench / demonstrator</p>
+              <h1 id="page-title">Programme workbench</h1>
+              <p class="lede">One home-centred case, many accountable teams. Use this prototype to explore role-specific work over shared, constructed records.</p>
+            </div>
+            <div class="role-switcher">
+              <label for="profile-select">Explore a workspace</label>
+              <select id="profile-select" aria-describedby="role-note"></select>
+              <p class="role-note" id="role-note">A sample queue filter only. Selecting a profile does not authenticate a user or grant permission.</p>
+            </div>
+          </div>
+
+          <div class="boundary-banner" role="note">
+            <span class="banner-mark" aria-hidden="true">!</span>
+            <span><strong>Non-production prototype.</strong> Every measure, case and activity below is constructed. No action changes a record, contacts a resident or provider, approves work, submits a claim or releases payment.</span>
+          </div>
+
+          <div class="metric-grid" aria-label="Illustrative portfolio measures">
+            <article class="metric-card">
+              <p class="metric-label">Homes in this exercise</p>
+              <div class="metric-row"><p class="metric-value">128</p><span class="metric-context">constructed set</span></div>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">Active case journeys</p>
+              <div class="metric-row"><p class="metric-value">42</p><span class="metric-context">exercise records</span></div>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">Open holds / reviews</p>
+              <div class="metric-row"><p class="metric-value">07</p><span class="metric-context">not an SLA measure</span></div>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">Homes at handover stage</p>
+              <div class="metric-row"><p class="metric-value">19</p><span class="metric-context">constructed snapshot</span></div>
+            </article>
+          </div>
+        </section>
+
+        <div class="content-grid">
+          <div class="stack">
+            <section class="panel" id="work-queue" aria-labelledby="queue-title">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Current workspace</p>
+                  <h2 id="queue-title">Your work queue</h2>
+                  <p id="queue-caption">Profile-specific work over shared exercise cases.</p>
+                </div>
+                <span class="status-pill">Sample only</span>
+              </div>
+              <div class="profile-summary">
+                <p class="profile-copy" id="profile-description"></p>
+                <div class="profile-focus">
+                  <span class="section-kicker">Role focus</span>
+                  <p id="profile-focus"></p>
+                </div>
+                <ul class="task-list" id="role-tasks" aria-label="Representative role tasks"></ul>
+              </div>
+              <div class="toolbar">
+                <label class="live-region" for="case-search">Search constructed cases</label>
+                <input class="search-field" id="case-search" type="search" placeholder="Search case, stage or status">
+                <button class="quiet-button" id="queue-scope-toggle" type="button" aria-controls="case-rows" aria-describedby="queue-caption" aria-pressed="false">All cases</button>
+                <span class="count-note" id="case-count" aria-live="polite"></span>
+              </div>
+              <div class="table-wrap" role="region" aria-label="Scrollable constructed case table" tabindex="0">
+                <table class="work-table">
+                  <caption>Constructed home cases. Select “View case” to inspect the exercise detail.</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Home / building</th>
+                      <th scope="col">Current stage</th>
+                      <th scope="col">Next owner</th>
+                      <th scope="col">State</th>
+                      <th scope="col"><span class="live-region">Case detail</span></th>
+                    </tr>
+                  </thead>
+                  <tbody id="case-rows"></tbody>
+                </table>
+                <p class="table-scroll-note">Scroll horizontally to view all case columns.</p>
+                <p class="empty-state" id="empty-state" hidden>No constructed case matches that search. Try a stage or status keyword.</p>
+              </div>
+            </section>
+
+            <section class="panel" id="workflows" aria-labelledby="workflow-title">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Nine connected areas</p>
+                  <h2 id="workflow-title">Workflow map</h2>
+                  <p>Choose an area to inspect its exercise boundary and team handoff.</p>
+                </div>
+                <span class="draft-tag">Common case record</span>
+              </div>
+              <div class="workflow-grid" id="workflow-grid" aria-label="Nine workbench workflow areas"></div>
+              <div class="workflow-detail" id="workflow-detail" aria-live="polite"></div>
+            </section>
+
+            <section class="panel" id="portfolio" aria-labelledby="portfolio-title">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Portfolio lens</p>
+                  <h2 id="portfolio-title">Scenario progress</h2>
+                  <p>Illustrative cohort only. Actual baseline and approved targets are unknown.</p>
+                </div>
+                <span class="status-pill">No forecast shown</span>
+              </div>
+              <div class="table-wrap" role="region" aria-label="Scrollable constructed portfolio table" tabindex="0">
+                <table class="portfolio-table">
+                  <caption>Constructed example by workflow stage; values are not company performance.</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Stage group</th>
+                      <th scope="col">Exercise homes</th>
+                      <th scope="col">Scenario share</th>
+                      <th scope="col">Open exception</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row">Readiness</th><td>38 / 128</td><td><div class="progress-wrap"><progress value="30" max="100" aria-label="Readiness scenario share: 30 percent"></progress><span>30%</span></div></td><td>Evidence gaps</td></tr>
+                    <tr><th scope="row">Design</th><td>31 / 128</td><td><div class="progress-wrap"><progress value="24" max="100" aria-label="Design scenario share: 24 percent"></progress><span>24%</span></div></td><td>Review required</td></tr>
+                    <tr><th scope="row">Delivery</th><td>40 / 128</td><td><div class="progress-wrap"><progress value="31" max="100" aria-label="Delivery scenario share: 31 percent"></progress><span>31%</span></div></td><td>Capacity varies</td></tr>
+                    <tr><th scope="row">Handover</th><td>19 / 128</td><td><div class="progress-wrap"><progress value="15" max="100" aria-label="Handover scenario share: 15 percent"></progress><span>15%</span></div></td><td>Quality evidence</td></tr>
+                  </tbody>
+                </table>
+                <p class="table-scroll-note">Scroll horizontally to view all portfolio columns.</p>
+              </div>
+              <p class="table-footnote">Method: fixed constructed cohort of 128 exercise homes; categories show an illustrative snapshot, not a validated lifecycle denominator. No delivery forecast is inferred.</p>
+            </section>
+          </div>
+
+          <aside class="stack" aria-label="Selected case and programme context">
+            <section class="panel" aria-labelledby="case-detail-title">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Selected exercise record</p>
+                  <h2 id="case-detail-title">Case snapshot</h2>
+                  <p>Home / building link</p>
+                </div>
+                <span class="status-pill is-alert" id="case-state-pill">Review hold</span>
+              </div>
+              <div class="case-detail" id="case-detail" aria-live="polite"></div>
+            </section>
+
+            <section class="panel" aria-labelledby="suggestion-title">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Bounded proposal</p>
+                  <h2 id="suggestion-title">Suggested next step</h2>
+                  <p>Draft for a person to review; no state change.</p>
+                </div>
+                <span class="phase-pill">Exercise only</span>
+              </div>
+              <div class="case-detail">
+                <div class="suggestion">
+                  <div class="suggestion-heading">
+                    <span class="banner-mark" aria-hidden="true">↗</span>
+                    <h3 id="suggestion-heading">Reconcile a missing evidence reference</h3>
+                  </div>
+                  <p id="suggestion-copy">A constructed survey entry refers to a design pack that is not linked in this sample case. Route it for owner review before a technical readiness decision.</p>
+                  <details>
+                    <summary>Why is this suggested?</summary>
+                    <p class="details-copy">The exercise record includes a source note and a missing-link state. This proposal is illustrative, unapproved and cannot satisfy a gate, issue an instruction or modify the case.</p>
+                  </details>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel" aria-labelledby="increments-title">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">One PRD / four increments</p>
+                  <h2 id="increments-title">Delivery sequence</h2>
+                  <p>Scope context from the draft PRD, not release approval.</p>
+                </div>
+              </div>
+              <div class="increment-grid" id="increments">
+                <article class="increment-card">
+                  <span class="increment-state">Increment 01 · scope context</span>
+                  <h3>Shared workbench foundation</h3>
+                  <p>Home/building links, role views, queues, evidence and history.</p>
+                </article>
+                <article class="increment-card is-later">
+                  <span class="increment-state">Increment 02 · concept</span>
+                  <h3>Workflow portfolio coverage</h3>
+                  <p>Representative scenarios across resident, technical, supplier, safety and finance work.</p>
+                </article>
+                <article class="increment-card is-later">
+                  <span class="increment-state">Increment 03 · concept</span>
+                  <h3>Coordinator insight</h3>
+                  <p>Reconciled history, filters and scenario views with visible assumptions.</p>
+                </article>
+                <article class="increment-card is-later">
+                  <span class="increment-state">Increment 04 · concept</span>
+                  <h3>Bounded-agent comparison</h3>
+                  <p>Source-linked proposals beside a workflow-only path; no live action.</p>
+                </article>
+              </div>
+            </section>
+          </aside>
+        </div>
+
+        <footer class="footer-note">
+          <span>Proper Warm workbench · non-production concept · constructed data only</span>
+          <span>Role perspective is not authentication · human authority remains outside this prototype</span>
+        </footer>
+        <p id="announcement" class="live-region" aria-live="polite"></p>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const profiles = [
+      { id: "asset", name: "Asset and investment", focus: "Review constructed stock-data conflicts and portfolio stage context.", description: "The portfolio and data-conflict examples are constructed; company baselines, approved investment and priority values are unknown.", tasks: ["Inspect the constructed stock-source conflict and unknown eligibility.", "Review an example shared-building capacity dependency.", "Read stage counts as a scenario snapshot; no forecast is shown."], workflow: ["stock", "supplier", "finance"] },
+      { id: "coordinator", name: "Programme coordinator", focus: "Review cross-workflow case states, returns and next-owner context.", description: "Cross-workflow coordination view. Handoffs and dates are exercise values; no service-level target has been validated.", tasks: ["Scan constructed case states and next owners.", "Review returned work and open dependencies.", "Read scenario stage counts with no forecast shown."], workflow: [] },
+      { id: "case-team", name: "Retrofit case team", focus: "Follow linked home cases through technical, resident, supplier and aftercare examples.", description: "Home-centred case view with linked building context. A profile selection changes this demonstration view only.", tasks: ["Inspect a sample home/building link and current stage.", "Review evidence gaps, holds and the next exercise task.", "Keep handoff context and unknowns visible."], workflow: ["technical", "resident", "supplier", "quality", "orchestration", "hazard"] },
+      { id: "technical", name: "Retrofit Assessor, designer and Coordinator", focus: "Review the constructed survey reference gap and professional sign-off boundary.", description: "Technical stages stay within competent professional scope. This prototype cannot approve an assessment or design.", tasks: ["Inspect the sample design-review evidence gap.", "See which design reference is not supplied.", "Keep assessor, designer and coordinator sign-offs distinct."], workflow: "technical" },
+      { id: "resident", name: "Housing and Resident Engagement", focus: "Review the constructed resident-service record and its missing decision/access details.", description: "Resident service is represented with constructed records only. No resident identity or contact route is connected.", tasks: ["Inspect the sample resident-service case state.", "See that measure-specific meaning and access details are not supplied.", "Keep resident contact and consent outside this prototype."], workflow: "resident" },
+      { id: "safety", name: "Repairs and Building Safety", focus: "Review the constructed hazard referral state and linked retrofit hold.", description: "Hazard response remains in its authoritative service. This workbench illustrates referral awareness only; it cannot classify, close or reset a safety clock.", tasks: ["Inspect the sample referral and linked hold.", "See that receipt and receiving service are unconfirmed here.", "Keep hazard ownership in the authoritative service."], workflow: "hazard" },
+      { id: "procurement", name: "Procurement and contract manager", focus: "Review the constructed capacity exception and instruction boundary.", description: "Only an accountable contract manager may instruct work. Supplier values below are constructed and no provider is contacted.", tasks: ["Inspect the sample capacity-check case.", "See that offered capacity and package scope are unconfirmed.", "Review the exception without issuing an instruction."], workflow: "supplier" },
+      { id: "provider", name: "Provider / contractor contact", focus: "Explore the constructed supplier-capacity example in a staff-facing view.", description: "This is a staff-facing demonstrator view, not a provider portal. Submitted evidence cannot be self-approved.", tasks: ["Inspect the sample supplier-capacity entry.", "See which package details are not represented here.", "Keep provider submission and independent review separate."], workflow: "supplier" },
+      { id: "quality", name: "Quality and assurance", focus: "Review the constructed incomplete quality-evidence example.", description: "Quality acceptance remains independent human authority. A missing alert is not proof that work is complete or safe.", tasks: ["Inspect the sample incomplete completion pack.", "See that per-measure evidence is incomplete.", "Keep acceptance and safety decisions with human reviewers."], workflow: "quality" },
+      { id: "finance", name: "Finance and Grants", focus: "Review the constructed invoice exception and payment boundary.", description: "No payment or grant submission occurs here. Opportunity, award, claim and cash remain separate states.", tasks: ["Inspect the sample invoice quantity exception.", "See that grant and cash details are not represented in this case.", "Keep payment and claim actions outside this prototype."], workflow: "finance" },
+      { id: "digital", name: "Digital operator and auditor", focus: "Inspect the constructed source conflict and returned handoff examples.", description: "The prototype has no source-system integration. System-health and audit events are constructed for discussion only.", tasks: ["Inspect the sample source-data conflict and returned handoff.", "See that live integration and recovery state are not represented.", "Review context without replaying a transition."], workflow: ["stock", "orchestration"] }
+    ];
+
+    const workflows = [
+      { id: "stock", title: "Stock data, safety triage and fair prioritisation", owners: "Asset · Safety · Data", description: "Resolve source conflicts and expose eligibility as pass, fail or unknown. Missing data remains visible for owner review; it does not silently deprioritise a home." },
+      { id: "technical", title: "Technical assessment and design readiness", owners: "Assessor · Designer · Retrofit Coordinator", description: "Keep survey facts, design versions, building dependencies, returns and each competent sign-off distinct. A changed design may require re-review." },
+      { id: "resident", title: "Resident service, access, choice and redress", owners: "Housing · Resident Engagement", description: "Show measure-specific decisions, adjustments, pauses, contact ownership and service/complaint routing. The prototype sends no resident communication." },
+      { id: "supplier", title: "Procurement, committed capacity and work release", owners: "Procurement · Contract Manager · Provider", description: "Distinguish offered capacity from a commitment, and provider submission from an authorised work instruction. No schedule or work order is issued." },
+      { id: "hazard", title: "Hazard awareness and damp-and-mould response", owners: "Repairs · Building Safety", description: "Preserve awareness source/time and referral ownership in the existing hazard service. This workbench does not own its clock, classification or closure." },
+      { id: "quality", title: "Quality acceptance, defects and handover", owners: "Quality · Competent Inspector · Provider", description: "Use positive per-measure checks, inspection evidence, defect/remediation history and separate human acceptance. No absence of a flag implies approval." },
+      { id: "finance", title: "Budget, provider invoice, grant claim and cash reconciliation", owners: "Finance · Grants · Contract Manager", description: "Keep approved budget, invoice match, payment status, grant award, claim and received cash as separate records. Nothing is submitted or paid." },
+      { id: "orchestration", title: "Programme handoffs and case orchestration", owners: "Coordinator · Receiving Team", description: "Make sender, receiver, accepted/returned state, next task and history visible. A return preserves earlier evidence and routes work to a named owner." },
+      { id: "portfolio", title: "Portfolio investment, performance and scale decisions", owners: "Asset · Finance · Programme · Assurance", description: "Show cohort definitions, denominators, holds, history and scenario assumptions. A dashboard steers discussion; it is not proof of attributable benefit or a commitment." }
+    ];
+
+    const cases = [
+      { id: "EX-HOME-104", building: "EX-BLDG-12", kind: "Building-linked home", stage: "Design review", owner: "Retrofit Coordinator", state: "Evidence gap", stateType: "alert", workflow: "technical", evidence: "Survey pack v2 · constructed", next: "Check missing design reference", priority: "Review needed", hold: "Technical review hold", context: "Design pack reference is not supplied; technical readiness remains for human review.", source: "Exercise survey row 104 and design pack link (sample only).", history: [{ title: "Survey example added", detail: "A constructed survey row is available for review.", source: "Exercise survey row 104" }, { title: "Design reference check", detail: "The linked design-pack reference is not supplied in this example.", source: "Exercise design-pack link" }, { title: "Current snapshot", detail: "Technical readiness remains for human review; no transition is committed.", source: "Selected case state" }] },
+      { id: "EX-HOME-208", building: "EX-BLDG-08", kind: "Individual home", stage: "Resident service", owner: "Housing team", state: "Decision scope unknown", stateType: "neutral", workflow: "resident", evidence: "Decision log · constructed", next: "Confirm next update owner", priority: "Decision detail review", hold: "No retrofit hold shown", context: "Measure-specific meaning and communication/access details are not supplied; do not infer wider consent.", source: "Exercise service note 208 and measure decision entry (sample only).", history: [{ title: "Service example added", detail: "A constructed service note is present.", source: "Exercise service note 208" }, { title: "Measure decision recorded", detail: "The broader decision meaning and access details are not represented.", source: "Exercise measure decision entry" }, { title: "Current snapshot", detail: "The decision scope remains unknown; no resident contact is made.", source: "Selected case state" }] },
+      { id: "EX-HOME-317", building: "EX-BLDG-21", kind: "Shared-system dependency", stage: "Capacity check", owner: "Contract manager", state: "Dependency open", stateType: "alert", workflow: "supplier", evidence: "Capacity sheet v1 · constructed", next: "Reconcile offered capacity", priority: "Dependency review", hold: "Building dependency review", context: "Offered capacity is unconfirmed; period and work-package scope are not shown.", source: "Exercise capacity row 317 and building link (sample only).", history: [{ title: "Capacity example added", detail: "A constructed capacity entry is associated with the shared-system example.", source: "Exercise capacity row 317" }, { title: "Building dependency noted", detail: "The related building dependency remains open; capacity scope is not confirmed.", source: "Exercise building link" }, { title: "Current snapshot", detail: "No work instruction or schedule is issued.", source: "Selected case state" }] },
+      { id: "EX-HOME-422", building: "EX-BLDG-21", kind: "Building-linked home", stage: "Quality evidence", owner: "Quality reviewer", state: "Pack incomplete", stateType: "alert", workflow: "quality", evidence: "Completion pack v1 · constructed", next: "Check per-measure photo list", priority: "Independent review", hold: "Handover not accepted", context: "Per-measure evidence is incomplete; no acceptance or safety decision is shown.", source: "Exercise quality checklist 422 (sample only).", history: [{ title: "Completion example added", detail: "A constructed completion pack is available for review.", source: "Exercise completion pack v1" }, { title: "Evidence review", detail: "Per-measure evidence remains incomplete in this example.", source: "Exercise quality checklist 422" }, { title: "Current snapshot", detail: "Handover is not accepted; no safety or quality approval is implied.", source: "Selected case state" }] },
+      { id: "EX-HOME-531", building: "EX-BLDG-04", kind: "Individual home", stage: "Hazard referral", owner: "Repairs service", state: "Referral awaiting receipt", stateType: "alert", workflow: "hazard", evidence: "Referral note · constructed", next: "Confirm receiving service", priority: "Human triage", hold: "Linked retrofit hold", context: "Receipt and receiving service are not confirmed here; hazard ownership remains in the authoritative service.", source: "Exercise referral note 531 and awareness timestamp (sample only).", history: [{ title: "Hazard awareness example", detail: "A constructed awareness note is present; it does not classify the hazard.", source: "Exercise awareness timestamp" }, { title: "Referral example noted", detail: "Receipt and receiving service are not confirmed in this workbench.", source: "Exercise referral note 531" }, { title: "Current snapshot", detail: "Hazard ownership remains in the authoritative service.", source: "Selected case state" }] },
+      { id: "EX-HOME-646", building: "EX-BLDG-17", kind: "Portfolio candidate", stage: "Data reconciliation", owner: "Asset data owner", state: "Source conflict", stateType: "alert", workflow: "stock", evidence: "Stock extract v3 · constructed", next: "Resolve conflicting EPC field", priority: "Data review", hold: "Eligibility unknown", context: "Two constructed source values conflict; eligibility remains unknown pending owner review.", source: "Exercise stock row 646 with two conflicting values (sample only).", history: [{ title: "Stock example added", detail: "A constructed stock-source row is available for review.", source: "Exercise stock extract v3" }, { title: "Source values compared", detail: "Two example values conflict; eligibility remains unknown.", source: "Exercise conflicting field values" }, { title: "Current snapshot", detail: "Owner review remains pending in this illustration.", source: "Selected case state" }] },
+      { id: "EX-HOME-752", building: "EX-BLDG-02", kind: "Finance-linked home", stage: "Invoice match", owner: "Finance reviewer", state: "Match exception", stateType: "alert", workflow: "finance", evidence: "Invoice record v1 · constructed", next: "Review quantity difference", priority: "Payment hold", hold: "Payment not authorised", context: "Invoice quantity is under review; no payment or grant status is inferred.", source: "Exercise invoice line 752 and approved-scope reference (sample only).", history: [{ title: "Invoice example added", detail: "A constructed invoice line is available for review.", source: "Exercise invoice line 752" }, { title: "Quantity check", detail: "The example quantity difference remains unresolved.", source: "Exercise approved-scope reference" }, { title: "Current snapshot", detail: "Payment is not authorised and no grant status is inferred.", source: "Selected case state" }] },
+      { id: "EX-HOME-863", building: "EX-BLDG-11", kind: "Work package", stage: "Handoff review", owner: "Programme coordinator", state: "Returned for detail", stateType: "alert", workflow: "orchestration", evidence: "Handoff event · constructed", next: "Assign a receiving owner", priority: "Queue review", hold: "No transition committed", context: "Return reason and receiving owner are not supplied in this example; no transition is committed.", source: "Exercise handoff event 863 with return reason (sample only).", history: [{ title: "Handoff example created", detail: "A constructed work-package handoff is shown for discussion.", source: "Exercise handoff event 863" }, { title: "Returned for detail", detail: "The return reason and receiving owner are not supplied in this example.", source: "Exercise return note" }, { title: "Current snapshot", detail: "No transition is committed; a receiving owner remains unassigned.", source: "Selected case state" }] }
+    ];
+
+    let selectedWorkflow = "all";
+    let selectedCaseId = "EX-HOME-104";
+    let viewAllCases = false;
+    const profileSelect = document.getElementById("profile-select");
+    const caseSearch = document.getElementById("case-search");
+    const announcement = document.getElementById("announcement");
+    const queueScopeToggle = document.getElementById("queue-scope-toggle");
+
+    function currentProfile() {
+      return profiles.find((profile) => profile.id === profileSelect.value) || profiles[1];
+    }
+
+    function currentProfileWorkflows() {
+      const profileWorkflow = currentProfile().workflow;
+      return Array.isArray(profileWorkflow) ? profileWorkflow : profileWorkflow ? [profileWorkflow] : [];
+    }
+
+    function renderProfiles() {
+      profileSelect.innerHTML = profiles.map((profile) =>
+        `<option value="${profile.id}">${profile.name}</option>`
+      ).join("");
+      profileSelect.value = "coordinator";
+    }
+
+    function renderProfile() {
+      const profile = currentProfile();
+      document.getElementById("profile-description").textContent = profile.description;
+      document.getElementById("profile-focus").textContent = profile.focus;
+      document.getElementById("role-tasks").innerHTML = profile.tasks.map((task) =>
+        `<li><span class="task-dot" aria-hidden="true"></span><span>${task}</span></li>`
+      ).join("");
+      document.getElementById("queue-caption").textContent = `${profile.name} perspective · sample tasks over shared exercise cases.`;
+      announcement.textContent = `${profile.name} workspace view selected. This does not grant access or change any case.`;
+    }
+
+    function renderWorkflows() {
+      const workflowGrid = document.getElementById("workflow-grid");
+      workflowGrid.innerHTML = workflows.map((workflow, index) => `
+        <button class="workflow-card" type="button" data-workflow="${workflow.id}" aria-pressed="${selectedWorkflow === workflow.id}">
+          <span class="workflow-number">0${index + 1}</span>
+          <span class="workflow-title">${workflow.title}</span>
+          <span class="workflow-owner">${workflow.owners}</span>
+        </button>
+      `).join("");
+      const selected = workflows.find((workflow) => workflow.id === selectedWorkflow);
+      const detail = document.getElementById("workflow-detail");
+      if (selected) {
+        detail.innerHTML = `<h3>${selected.title}</h3><p>${selected.description}</p>`;
+        announcement.textContent = `${selected.title} workflow selected. Exercise view only.`;
+      } else {
+        detail.innerHTML = "<h3>All connected workflow areas</h3><p>One shared case record connects the nine areas. Choose a card to inspect its purpose and authority boundary.</p>";
+      }
+    }
+
+    function filteredCases() {
+      const query = caseSearch.value.trim().toLowerCase();
+      const profileWorkflows = currentProfileWorkflows();
+      const useProfileScope = selectedWorkflow === "all" && !viewAllCases && profileWorkflows.length > 0;
+      return cases.filter((item) => {
+        const matchesWorkflow = selectedWorkflow === "all"
+          ? !useProfileScope || profileWorkflows.includes(item.workflow)
+          : item.workflow === selectedWorkflow;
+        const matchesQuery = !query || [item.id, item.building, item.kind, item.stage, item.owner, item.state, item.next, item.evidence]
+          .some((value) => value.toLowerCase().includes(query));
+        return matchesWorkflow && matchesQuery;
+      });
+    }
+
+    function renderCases() {
+      const rows = filteredCases();
+      document.getElementById("case-count").textContent = `${rows.length} constructed ${rows.length === 1 ? "case" : "cases"} shown`;
+      document.getElementById("empty-state").hidden = rows.length > 0;
+      const profile = currentProfile();
+      const profileWorkflows = currentProfileWorkflows();
+      const scopeText = selectedWorkflow !== "all"
+        ? `Filtered to the selected workflow.`
+        : viewAllCases || profileWorkflows.length === 0
+          ? "Showing all constructed cases."
+          : "Showing cases for this workspace's illustrative focus areas.";
+      document.getElementById("queue-caption").textContent = `${profile.name} perspective · ${scopeText} Profile selection changes this view only, not access.`;
+      queueScopeToggle.hidden = profileWorkflows.length === 0;
+      queueScopeToggle.setAttribute("aria-pressed", String(viewAllCases));
+      document.getElementById("case-rows").innerHTML = rows.map((item) => `
+        <tr>
+          <td><span class="home-code">${item.id}</span><span class="home-kind">${item.building} · ${item.kind}</span></td>
+          <td>${item.stage}</td>
+          <td>${item.owner}</td>
+          <td><span class="stage-label"><span class="stage-dot ${item.stateType === "good" ? "is-good" : item.stateType === "alert" ? "is-alert" : ""}" aria-hidden="true"></span>${item.state}</span></td>
+          <td><button class="table-action" type="button" data-case="${item.id}" aria-label="View constructed case ${item.id}">View case</button></td>
+        </tr>
+      `).join("");
+      if (!rows.some((item) => item.id === selectedCaseId) && rows.length) selectedCaseId = rows[0].id;
+      if (rows.length) {
+        renderCaseDetail();
+      } else {
+        document.getElementById("case-state-pill").textContent = "No case selected";
+        document.getElementById("case-state-pill").classList.remove("is-alert");
+        document.getElementById("case-detail").innerHTML = "<p class=\"empty-state\">No constructed case matches this view. Clear the search or show all cases.</p>";
+        document.getElementById("suggestion-heading").textContent = "No matching exercise case";
+        document.getElementById("suggestion-copy").textContent = "Adjust the queue filter to inspect a constructed case. No record is changed.";
+      }
+    }
+
+    function renderCaseDetail() {
+      const item = cases.find((record) => record.id === selectedCaseId) || cases[0];
+      document.getElementById("case-state-pill").textContent = item.state;
+      document.getElementById("case-state-pill").classList.toggle("is-alert", item.stateType === "alert");
+      document.getElementById("case-detail").innerHTML = `
+        <p class="case-id">${item.id}</p>
+        <p class="case-caption">${item.building} · ${item.kind} · ${item.stage}</p>
+        <dl class="fact-list">
+          <dt>Current owner</dt><dd>${item.owner}</dd>
+          <dt>Evidence reference</dt><dd>${item.evidence}</dd>
+          <dt>Next exercise task</dt><dd>${item.next}</dd>
+          <dt>Priority context</dt><dd>${item.priority}</dd>
+          <dt>Linked hold</dt><dd>${item.hold}</dd>
+          <dt>Open detail / unknown</dt><dd>${item.context}</dd>
+        </dl>
+        <p class="source-note"><strong>Source trace:</strong> ${item.source} This is a fabricated sample, not a resident or property record.</p>
+        <details class="history">
+          <summary>Constructed case history (illustrative)</summary>
+          <p class="history-note">Example sequence for discussion only. Entries are constructed and do not represent live audit events or committed transitions.</p>
+          <ol class="history-list">
+            ${item.history.map((entry) => `<li><strong>${entry.title}</strong>${entry.detail}<span class="history-source">Source context: ${entry.source} · constructed</span></li>`).join("")}
+          </ol>
+        </details>
+      `;
+      const suggestionHeading = item.stateType === "good" ? "Review the next update commitment" : "Reconcile the open evidence or handoff";
+      document.getElementById("suggestion-heading").textContent = suggestionHeading;
+      document.getElementById("suggestion-copy").textContent = `${item.next}. This is a constructed suggestion for human review; it cannot clear a hold or commit a transition.`;
+    }
+
+    renderProfiles();
+    renderProfile();
+    renderWorkflows();
+    renderCases();
+    announcement.textContent = `${currentProfile().name} workspace view selected. This does not grant access or change any case.`;
+
+    profileSelect.addEventListener("change", () => {
+      selectedWorkflow = "all";
+      viewAllCases = false;
+      renderProfile();
+      renderWorkflows();
+      renderCases();
+    });
+    caseSearch.addEventListener("input", renderCases);
+    queueScopeToggle.addEventListener("click", () => {
+      viewAllCases = !viewAllCases;
+      selectedWorkflow = "all";
+      renderWorkflows();
+      renderCases();
+      announcement.textContent = viewAllCases
+        ? "All constructed cases shown. This view filter does not change access or records."
+        : `${currentProfile().name} illustrative queue shown. This does not grant access or change any case.`;
+    });
+    document.getElementById("workflow-grid").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-workflow]");
+      if (!button) return;
+      const workflowId = button.dataset.workflow;
+      selectedWorkflow = selectedWorkflow === workflowId ? "all" : workflowId;
+      renderWorkflows();
+      renderCases();
+      document.querySelector(`.workflow-card[data-workflow="${workflowId}"]`)?.focus();
+      announcement.textContent = selectedWorkflow === "all"
+        ? `${currentProfile().name} illustrative queue shown. This does not grant access or change any case.`
+        : `${workflows.find((workflow) => workflow.id === workflowId).title} workflow selected. Exercise view only.`;
+    });
+    document.getElementById("case-rows").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-case]");
+      if (!button) return;
+      selectedCaseId = button.dataset.case;
+      renderCaseDetail();
+      announcement.textContent = `Exercise case ${selectedCaseId} selected. No record was changed.`;
+    });
+    document.getElementById("theme-toggle").addEventListener("click", (event) => {
+      const root = document.documentElement;
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      event.currentTarget.textContent = next === "dark" ? "Light theme" : "Dark theme";
+      event.currentTarget.setAttribute("aria-label", `Switch to ${next === "dark" ? "light" : "dark"} theme`);
+      announcement.textContent = `${next} theme enabled.`;
+    });
+    if (document.documentElement.getAttribute("data-theme") === "dark") {
+      document.getElementById("theme-toggle").textContent = "Light theme";
+      document.getElementById("theme-toggle").setAttribute("aria-label", "Switch to light theme");
+    }
+  </script>
+</body>
+</html>

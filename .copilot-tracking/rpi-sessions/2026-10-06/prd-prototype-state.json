@@ -1,0 +1,90 @@
+{
+  "task_id": "prd-prototype-2026-10-06",
+  "task_slug": "prd-prototype",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-06/prd-prototype-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-06/prd-prototype-plan.md",
+    "details": ".copilot-tracking/details/2026-10-06/prd-prototype-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-06/prd-prototype-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-06/prd-prototype-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-06/prd-prototype-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition: executed; Planning Readiness: Ready for a non-production prototype covering every named profile and workflow.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-10-06/prd-prototype-research.md (C1-C10; completed balanced three-wave cycle)"
+    },
+    {
+      "decision": "Plan is implementation-ready after one complete critique; the only finding, PC-001, was resolved by adding an explicit four-increment acceptance and validation inventory.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-10-06/prd-prototype-plan.md; .copilot-tracking/details/2026-10-06/prd-prototype-phase-details.md; .copilot-tracking/reviews/plans/2026-10-06/prd-prototype-plan-critique.md"
+    },
+    {
+      "decision": "UX/UI Designer completed design critique for all 11 provisional PRD profiles; eight company-role perspectives were received and treated as bounded hypotheses, not validated user research. Accepted low-scope improvements to role-relevant view filters, explicit unknowns, truthful scenario labels and accessibility; deferred detailed operational ledgers and company-specific preferences.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-10-06/prd-prototype-changes.md (P01-T02 profile matrix and dispositions); browser-tested prototype source"
+    },
+    {
+      "decision": "At the earlier manual Implement closeout, original implementation and profile validation were recorded complete and the user had not yet advanced to Review.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-10-06/prd-prototype-changes.md; .copilot-tracking/plans/2026-10-06/prd-prototype-plan.md; .copilot-tracking/details/2026-10-06/prd-prototype-phase-details.md"
+    },
+    {
+      "decision": "RPI continuation mode changed to automatic because the user explicitly invoked /hve-core-all:rpi with mode=auto. Resume implementation from Review finding RV-001.",
+      "status": "confirmed",
+      "evidence": "Current user invocation; .copilot-tracking/reviews/logs/2026-10-06/prd-prototype-review.md"
+    },
+    {
+      "decision": "Review execution completed with outcome Defects found; RV-001 identifies the missing inspectable case history and routes it to P01-T01 implementation. A later implementation of the finding does not require another Review.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-06/prd-prototype-review.md (RV-001)"
+    },
+    {
+      "decision": "RV-001 implementation completed: every constructed case now includes three illustrative history entries; all eight histories, the native keyboard disclosure, and 320px/390px overflow were validated. The recorded Review outcome remains Defects found as the historical one-pass outcome; no second Review is performed.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-10-06/prd-prototype-changes.md (RV-001 Case History Continuation and Validation Record); .copilot-tracking/prototypes/2026-10-06/proper-warm-retrofit-workbench.html"
+    },
+    {
+      "decision": "The user instructed autonomous continuation until the requested task is complete. The prototype request and the only routed in-scope Review finding are complete; stop the automatic session without starting optional follow-up work.",
+      "status": "confirmed",
+      "evidence": "Current user instruction; P01 completion markers; .copilot-tracking/reviews/logs/2026-10-06/prd-prototype-review.md (RV-001); .copilot-tracking/changes/2026-10-06/prd-prototype-changes.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "follow-up-selection",
+      "summary": "The user is unavailable to choose among the ranked post-Review follow-ups or stop/switch the automatic session.",
+      "resolution": "Resume the automatic session when the user selects a ranked work item, Stop automatic session, or Switch to manual mode."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Transition the automatic session to stopped: the user instructed autonomous completion of the requested task, and the prototype plus RV-001 implementation are complete; leave optional ranked follow-ups unstarted."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Run direct prototype usability sessions with representative staff across the 11 profile journeys",
+      "rationale": "This is the most immediate way to check role-task clarity and workflow usability with actual users; effort is bounded to evaluating the existing prototype and it closes an explicitly acknowledged evidence limitation.",
+      "evidence": "docs/prds/proper-warm-retrofit-programme-demonstrator.md identifies direct user validation as open; .copilot-tracking/research/2026-10-06/prd-prototype-research.md C3/C9 and Open Questions; .copilot-tracking/changes/2026-10-06/prd-prototype-changes.md states agent perspectives are not user research."
+    },
+    {
+      "rank": 2,
+      "task": "Research and define actual role ownership, permissions, and human approval boundaries",
+      "rationale": "These decisions are foundational before any operational design; current evidence says roles and authority remain provisional, so resolving the evidence is higher leverage than adding production-like behavior.",
+      "evidence": ".copilot-tracking/plans/2026-10-06/prd-prototype-plan.md What You May Not Know and Remaining provisional question; .copilot-tracking/research/2026-10-06/prd-prototype-research.md C3/C6/C8 and Open Questions."
+    },
+    {
+      "rank": 3,
+      "task": "Research portfolio baselines, denominators, targets, and forecast definitions",
+      "rationale": "A bounded evidence exercise can validate the dashboard's measures and prevent illustrative counts from being mistaken for company performance; it is less foundational than direct role validation and authority decisions.",
+      "evidence": ".copilot-tracking/prototypes/2026-10-06/proper-warm-retrofit-workbench.html labels portfolio values constructed and shows no forecast; .copilot-tracking/research/2026-10-06/prd-prototype-research.md C2/C5 and Open Questions; .copilot-tracking/plans/2026-10-06/prd-prototype-plan.md acceptance criteria."
+    }
+  ]
+}

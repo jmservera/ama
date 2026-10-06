@@ -1030,3 +1030,54 @@ metadata when the knowledge base was created.
   and this log.
 * No regulatory claims, process authority, company baselines or operating
   outcomes were added or validated.
+
+## [2026-10-06] query | Review prototype with all company profiles and UX
+
+* Launched all nine `company-*` role agents in parallel against the current
+  constructed-data prototype, including the Executive Reviewer. Collected
+  their own-role critiques, then obtained an eleven-profile UX synthesis
+  and four relayed discussions with Procurement, Resident Engagement,
+  Building Safety and Data/Performance.
+* Added `research/ux/proper-warm-prototype-profile-review.md`, updated
+  `README.md` and reconciled the working research record at
+  `../../.copilot-tracking/research/2026-10-06/proper-warm-profile-journey-critique-research.md`.
+* Corrected previous working-record claims that dispatch was unavailable
+  and workflow cards only displayed descriptions. They also filter cases.
+  Recorded actual ownership/rationale inconsistencies, filter recovery,
+  independent snapshot populations and missing portfolio example.
+* UX recommends correctness and evidence scope first, then a synthetic
+  exception-to-accountable-owner slice before a broader home lifecycle.
+  The resident-update model was amended to include purpose, safe-route
+  reference and sent evidence, independently of operational acceptance.
+* Role agents are research instruments, not employee interviews or company
+  authority. Adjacent provider, quality and operator lenses do not validate
+  those actual users. No prototype, PRD, original case, regulatory snapshot
+  or owner memory was changed; no production control or real-user
+  accessibility conformance was established.
+
+## [2026-10-06] update | Integrate prototype review and challenge PRD v0.7.0
+
+* Integrated the nine-company-role review, eleven-profile UX synthesis and
+  four relayed discussions into the existing workbench PRD, now draft v0.7.0.
+  Added explicit profile journeys, ownership/rationale/source consistency,
+  visible filter/reset semantics, independent metric populations and
+  resident-update continuity; retained the full MVP architecture and controls.
+* Defined read-only prototype slices A/B/C with a versioned fixture manifest,
+  complete per-profile defaults, independently reportable acceptance checks,
+  evidence comparisons and safe endpoints. This prepares a later prototype;
+  no HTML was changed or regenerated.
+* Obtained an independent PRD Quality Reviewer challenge and addressed slice
+  applicability, hidden conflict inputs, reset oracles, exact traceability,
+  receipt/acceptance examples, composite checks and constraint classification.
+  Follow-up exposed incomplete defaults and reflow criteria; both were
+  corrected and confirmed in a bounded final follow-up.
+* Preserved challenge disposition and paired reviewer payloads in
+  `../../.copilot-tracking/reviews/2026-10-06/proper-warm-prd-v0-7-0/`.
+  PASS covers only the two final amendments, not full PRD quality or approval.
+  Validate remains BLOCKED; Finalize is NOT_EVALUATED. Unknown company
+  processes, baselines, owners and human approvals remain open.
+* Updated the PRD session state and this catalog. The revision has 35 FRs,
+  43 ACs, 13 NFRs, 8 constraints and 14 open questions. Reviewed reciprocal
+  requirement/criterion links, exact matrix agreement and fixture defaults;
+  Markdown lint excludes MD013 to retain existing long-table style.
+  No original case, memory, regulatory snapshot or production rule changed.

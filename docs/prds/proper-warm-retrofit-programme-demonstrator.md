@@ -6,7 +6,7 @@ ms.date: "2026-10-06"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "draft"
-version: "0.6.2"
+version: "0.7.0"
 owners: ["AMA Research Team (draft custodian); product owner to be named"]
 reviewers: ["Product sponsor, Asset, Digital, Finance, Retrofit, Safety, Procurement, Resident Engagement (to be confirmed)"]
 created_date: "2026-10-03"
@@ -29,7 +29,7 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-> **PRD-2026-AMA48-001** | Status: draft | Version: 0.6.2 | Last Updated: 2026-10-06
+> **PRD-2026-AMA48-001** | Status: draft | Version: 0.7.0 | Last Updated: 2026-10-06
 
 ## Executive Summary
 
@@ -184,6 +184,34 @@ service targets, budgets, contract terms and delegated authorities remain
 open. The earlier proposal for a missed-appointment threshold remains an
 exercise-only candidate test.
 
+### Prototype-review evidence and integration
+
+The [2026-10-06 profile review](../reference/research/ux/proper-warm-prototype-profile-review.md)
+contains fresh own-role critiques from all nine `company-*` agents, an
+eleven-profile UX synthesis and four relayed discussions. These are research
+instruments and design hypotheses, not employee/resident interviews, company
+approvals or accessibility conformance evidence. Provider, Quality and Digital
+Operator perspectives have adjacent role lenses, not direct representative
+validation. The owner requested integration for a subsequent prototype;
+this does not approve the PRD, actual company processes or production use.
+
+The reviewed HTML has eleven perspectives, nine workflow filters, eight
+constructed case examples and narrative histories. Workflow selection filters
+the queue as well as showing descriptions. It does not advance cases.
+The portfolio workflow has no matching example; fixed 128/42/7/19 snapshot
+figures are separate from those eight records. Ownership labels, generic
+suggestion rationale and return-source wording have demonstrable
+inconsistencies. This revision makes those lessons testable without treating
+missing product capabilities as already delivered.
+
+An independent [draft-stage PRD challenge and disposition](../../.copilot-tracking/reviews/2026-10-06/proper-warm-prd-v0-7-0/challenge-disposition.md)
+led to explicit slice applicability, conflict inputs, per-profile reset
+oracles, exact traceability, receipt/acceptance examples, separately reportable
+checks and constraint classification. The final bounded follow-up found no
+remaining defect in the amended default-manifest and reflow paragraphs.
+This is not full PRD approval: Validate remains blocked by upstream evidence
+and named human review; Finalize was not evaluated.
+
 ## Users and Personas
 
 These are provisional product roles inferred from the BRD, not confirmed job
@@ -275,9 +303,12 @@ unverified estate or role-profile hypothesis as a customer fact.
 | Programme handoffs and case orchestration | Cross-role work queue, case timeline, handoff and return/reopen workspace | Coordinator and every receiving team | Owned handoffs, overdue queues, return loops, stage timing and coordination effort |
 | Portfolio investment, performance and scale decisions | Portfolio dashboard with heatmap, funnel, history/timeline and forecast scenarios | Asset, Finance, Programme, Sponsor/Board, Assurance | Accepted outcomes, cost, grant state, resident/safety/quality guardrails, forecast variance |
 
-Every row above has a product representation in the MVP's exercise scenario
-suite. Live integrations, external portals, formal user research and
-operational authority remain separately gated.
+Every row above shall have a product representation in the full MVP's
+exercise scenario suite; this is required coverage, not a statement that the
+current HTML implements it. The next read-only prototype is a learning slice
+with an explicit scenario manifest and unavailable-feature labels, described
+under MVP and Release Framing. Live integrations, external portals, formal
+user research and operational authority remain separately gated.
 
 ## Functional Requirements
 
@@ -286,30 +317,30 @@ owner, named control owners and affected users before implementation approval.
 
 | ID | Requirement | Actor / trigger | Acceptance criteria | Goals |
 | --- | --- | --- | --- | --- |
-| FR-001 | The product shall maintain one versioned home case linked to its building, scheme, work package and relevant resident-service, hazard, provider, quality and finance records. | Any authorised user opens or updates a case | AC-001, AC-002 | GOAL-001, GOAL-002 |
-| FR-002 | The product shall show building-level shared systems, dependencies, holds, works and costs separately from each home's evidence, decision, cost allocation and outcome. | User reviews a building or linked home | AC-002, AC-003 | GOAL-001, GOAL-002 |
+| FR-001 | The product shall maintain one versioned home case linked to its building, scheme, work package and relevant resident-service, hazard, provider, quality and finance records. | Any authorised user opens or updates a case | AC-001, AC-002, AC-043 | GOAL-001, GOAL-002 |
+| FR-002 | The product shall show building-level shared systems, dependencies, holds, works and costs separately from each home's evidence, decision, cost allocation and outcome; a shared building ID alone shall not establish package applicability or transfer a home-specific gate. | User reviews a building or linked home | AC-001, AC-002, AC-003, AC-043 | GOAL-001, GOAL-002 |
 | FR-003 | The product shall present task-focused screens and queues by authenticated role, with field/action permissions enforced by the service rather than by a selectable view label. | User signs in or changes task context | AC-004, AC-005 | GOAL-001 |
 | FR-004 | The shared work queue shall identify newly arrived work, approved priority, stale evidence, blockers, overdue tasks, unowned handoffs and cases needing extra human attention using visible definitions and filters. | User opens a permitted queue | AC-006 | GOAL-001, GOAL-003 |
 | FR-005 | The product shall allow authorised users to view and edit case fields, evidence references, task owners, due dates and permitted workflow details, preserving source, version, actor, timestamp and reason for each change. | User edits an individual case | AC-007, AC-008 | GOAL-001, GOAL-002 |
 | FR-006 | The product shall support bulk updates of explicitly permitted fields across selected cases, with a preview of the target records, proposed changes, validation failures and resulting per-case outcomes. | User selects multiple cases and requests an allowed change | AC-009 | GOAL-001, GOAL-002 |
 | FR-007 | Bulk actions shall not approve or release technical work, consent, safety decisions, procurement instructions, budget commitments, invoices, payments, claims, quality acceptance, defect closure or complaints. | User attempts a bulk action | AC-009, AC-010 | GOAL-002 |
 | FR-008 | The product shall enforce deterministic evidence, eligibility, authority, safety, resident, funding, capacity, quality and finance gates before a controlled state transition. | User or workflow requests a transition | AC-010, AC-011 | GOAL-002 |
-| FR-009 | An authorised reviewer shall be able to return a case or work item to an earlier lifecycle stage, request missing/corrected information, or reopen it when evidence, scope, condition, resident circumstances or status changes. | Reviewer returns/reopens a case | AC-012 | GOAL-001, GOAL-002 |
+| FR-009 | An authorised reviewer shall be able to return a case or work item to an earlier lifecycle stage, request missing/corrected information, or reopen it when evidence, scope, condition, resident circumstances or status changes. | Reviewer returns/reopens a case | AC-008, AC-012 | GOAL-001, GOAL-002 |
 | FR-010 | Returning or reopening work shall record the reason, source, initiating authority, receiving owner and next action; preserve prior state/history; and invalidate only affected downstream approvals for human reassessment. | Case return, reopen or material change | AC-012, AC-013 | GOAL-002 |
-| FR-011 | The product shall maintain role-owned handoffs with sent, received, accepted, rejected/returned, escalated and completed status; record urgency, named receiver, due date and next resident-update date where relevant. | A case crosses a team boundary | AC-014 | GOAL-001, GOAL-002 |
-| FR-012 | The product shall represent stock-data reconciliation, eligibility pass/fail/unknown, prioritisation policy version, reason codes and review exceptions without allowing missing data to silently exclude a home. | Cohort or property record is prepared | AC-015 | GOAL-002 |
+| FR-011 | The product shall maintain role-owned handoffs with distinct sent, received, accepted, rejected/returned, escalated and completed states; show current accountable owner, destination, proposed/confirmed receiver, chase owner, urgency, due date and next action separately, with unknown/unassigned values explicit and receipt not implying acceptance. | A case crosses a team boundary | AC-014, AC-036 | GOAL-001, GOAL-002 |
+| FR-012 | The product shall represent stock-data reconciliation, eligibility pass/fail/unknown, prioritisation policy version, reason codes and review exceptions; a conflict shall expose both compared values, source identifiers, dates/versions, validation state and resolution owner without silently excluding or resolving a home. | Cohort or property record is prepared | AC-015, AC-040 | GOAL-002 |
 | FR-013 | The product shall represent assessment, separate competent sign-offs, design version, building dependency, evidence completeness, return and reapproval states. | Technical stage is updated | AC-016 | GOAL-002 |
-| FR-014 | The product shall represent resident service/complaint/repair/defect intake, accessible contact requirements, measure-specific decisions, pauses, withdrawal, appointment outcomes and redress ownership. | Resident-related exercise intake or case update | AC-017 | GOAL-001, GOAL-002 |
-| FR-015 | The product shall represent hazard source and awareness time, referral to the existing hazard service, referral acceptance, linked retrofit hold and accountable release evidence without owning the hazard service's clock, classification or closure. | Potential hazard is identified | AC-018 | GOAL-002 |
-| FR-016 | The product shall represent contract/call-off, committed capacity, work-package readiness, controlled work-order versions, provider appointment outcomes, completion submission and supplier exceptions. | Procurement or delivery activity occurs | AC-019 | GOAL-002 |
-| FR-017 | The product shall represent quality checklist evidence, independent acceptance, defects, remediation/reinspection, resident handover and aftercare, with provider submission separate from approval. | Work evidence is submitted or reviewed | AC-020 | GOAL-002 |
-| FR-018 | The product shall represent approved budgets, commitments, provider invoice/valuation intake, line-level match exceptions, payment holds/status and Finance disposition, without executing payment in the demonstrator. | Invoice or budget record is entered | AC-021 | GOAL-002 |
+| FR-014 | The product shall represent distinct resident service/complaint/repair/defect/hazard intake routes, desired outcome and redress owner, minimum-necessary accessible-contact/representative references, measure/scope/version-specific decisions, pauses, withdrawal and appointment outcomes; contact/access shall not imply consent. | Resident-related exercise intake or case update | AC-017, AC-037 | GOAL-001, GOAL-002 |
+| FR-015 | The product shall represent hazard source and awareness time, referral destination and sent reference/time, separately evidenced receipt and acceptance, owned follow-up, affected retrofit hold scope/source/status and read-only authoritative human release-decision/evidence references; the workbench shall not judge release sufficiency or own the hazard service's clock, classification or closure. | Potential hazard is identified | AC-018, AC-038 | GOAL-002 |
+| FR-016 | The product shall represent package period and scope/version, contract/call-off, offered versus evidenced committed capacity, controlled work-order versions, issuer, provider appointment outcomes, completion/correction submission and supplier exceptions; draft readiness shall show unknown/unmet prerequisites and named next reviewer, never imply instruction, booking or contractual commitment. | Procurement or delivery activity occurs | AC-019, AC-039 | GOAL-002 |
+| FR-017 | The product shall represent positive per-measure checklist evidence and versions, independent acceptance, defect/remediation owner, return reasons, reinspection, resident handover and aftercare, with provider submission/correction/acknowledgement separate from reviewer disposition and approval. | Work evidence is submitted or reviewed | AC-020, AC-042 | GOAL-002 |
+| FR-018 | The product shall represent approved budgets, commitments, provider invoice/valuation intake, line-level match exceptions, payment holds/status and Finance disposition, without executing payment in the demonstrator. | Invoice or budget record is entered | AC-021, AC-042 | GOAL-002 |
 | FR-019 | The product shall maintain distinct, evidence-linked grant states for opportunity, award, claimable, submitted, accepted/rejected and cash received, separately from provider invoices and payments. | Finance updates grant evidence | AC-022 | GOAL-002 |
 | FR-020 | The coordinator dashboard shall provide a filterable heatmap of cases by approved geography/building/archetype and stage, with counts, denominator, holds, priority and data-coverage cues. | Coordinator or authorised stakeholder selects heatmap | AC-023 | GOAL-003 |
 | FR-021 | The coordinator dashboard shall provide a funnel of cases through lifecycle stages, showing entries, exits, returns, holds and exclusions with consistent definitions and drill-through to records. | Coordinator views funnel | AC-024 | GOAL-003 |
-| FR-022 | The product shall provide historical views of case and cohort progression from timestamped events, including stage duration, handoff, pause, return, reopen and decision history. | Coordinator or assurance user selects a time range | AC-025 | GOAL-003 |
+| FR-022 | The product shall provide historical views of case and cohort progression from timestamped events, including stage duration, handoff, pause, return, reopen and decision history; narrative illustrations shall be labelled separately and shall not establish auditability or durations where event times are unknown. | Coordinator or assurance user selects a time range | AC-025, AC-043 | GOAL-003 |
 | FR-023 | The product shall generate delivery forecasts from declared cohort, stage, event, committed-capacity, dependency and scenario assumptions, show uncertainty and data limits, and distinguish forecast from target, approved plan and actual outcome. | Coordinator or Asset/Finance user requests forecast | AC-026 | GOAL-003 |
-| FR-024 | The product shall support role-appropriate stakeholder progress views and exportable evidence for a selected cohort and as-of date, with definitions, sources, filters, unresolved items and approval status visible. | Coordinator prepares a progress review | AC-027 | GOAL-001, GOAL-003 |
+| FR-024 | The product shall support role-appropriate stakeholder progress views and exportable evidence for a selected cohort and as-of date, with definitions, sources, denominators, filter impact, unresolved items and approval status visible; a separate illustrative snapshot shall disclose that it is not derived from the inspectable case sample and shall not imply case drill-through or accepted handover. | Coordinator prepares a progress review | AC-027, AC-041 | GOAL-001, GOAL-003 |
 | FR-025 | The product shall offer source-linked next-step suggestions based on case state, approved rules and relevant evidence, showing rationale, proposed owner, prerequisite, due-date basis and unknowns. | User reviews a case or queue | AC-028 | GOAL-001, GOAL-004 |
 | FR-026 | A user shall be able to accept, edit or reject a suggestion with a reason; accepting creates a task or draft only and does not satisfy an approval or execute an external action. | User reviews an agent suggestion | AC-028, AC-029 | GOAL-001, GOAL-004 |
 | FR-027 | Bounded AI may extract, reconcile, summarise, draft or raise a signal from approved exercise sources; each material output shall cite its source and remain visibly unapproved until human review. | AI task is invoked | AC-029, AC-030 | GOAL-004 |
@@ -317,6 +348,10 @@ owner, named control owners and affected users before implementation approval.
 | FR-029 | The product shall import declared exercise Excel structures with row-level preview, lineage, mapping/conflict resolution and explicit disposition without modifying source workbooks. | Data analyst previews an import | AC-031 | GOAL-001, GOAL-002 |
 | FR-030 | The product shall export interpretable exercise case, event, decision and evidence-reference data, retaining version, source, approval and supersession history independently of the AI provider. | Authorised user exports data | AC-032 | GOAL-001, GOAL-002, GOAL-003 |
 | FR-031 | For exercise scenarios only, the product shall apply a configurable missed-appointment threshold, provisionally defaulted to five, and create a human-investigation task only when the eligible active-case count is strictly greater than the configured threshold; it shall preserve event/configuration history, exclude provider/contractor no-shows, cancellations and reschedules, never infer refusal, and never delay urgent hazard response. | Exercise appointment outcome is recorded | AC-033 | GOAL-001, GOAL-002 |
+| FR-032 | Queue views shall display active perspective, workflow, search and all-cases scope, explain workflow-over-profile precedence, and provide a single reset to the versioned default result set, order and selection for that perspective; reset shall retain logical focus and announce results, while empty results distinguish no matching fixture from no representative scenario supplied. | User changes profile/workflow/search or resets filters | AC-034 | GOAL-001 |
+| FR-033 | The product shall represent an independent resident-update commitment with purpose/linked issue, owner, due date/basis, minimum-necessary safe-route/adjustment reference or explicit unknown, outstanding/proposed/sent state and sent time/evidence; operational receipt, acceptance or return shall not silently reassign or clear it, and sending shall not imply resident receipt or understanding. | User reviews an update commitment or operational handoff | AC-035 | GOAL-001, GOAL-002 |
+| FR-034 | Queue, case, history, source trace and suggestion views shall agree on recorded ownership, reason, evidence/version and explicit unknowns; selecting a case shall refresh its rationale and proposed reviewer/prerequisite without reusing another case's explanation. | User opens a case or changes selection | AC-036, AC-040 | GOAL-001, GOAL-004 |
+| FR-035 | Each prototype iteration shall include a versioned constructed-scenario manifest identifying its active slice, independently reportable applicable/deferred checks, eleven profile paths, nine workflow representations, fixture links, per-profile default IDs/count/order/selection, expected safe endpoints, deliberately unknown fields and implemented versus unavailable behaviors; same-home lifecycles and shared-building impacts shall be explicitly linked rather than inferred from unrelated examples. | Prototype is generated or reviewed | AC-043 | GOAL-001, GOAL-002 |
 
 ## Non-Functional Requirements
 
@@ -330,7 +365,18 @@ from the case-study portfolio size.
   keyboard access, clear focus, readable status, accessible charts with
   equivalent tabular views, and a documented accessibility assessment.
   Participant count, conformance target and acceptance thresholds require
-  owner approval.
+  owner approval. For the next prototype, proposed engineering checks include
+  WCAG 2.2 AA text contrast, non-color state meaning, 24-by-24 CSS pixel
+  targets or documented permitted exceptions, 200% text zoom, keyboard
+  focus/return, narrow-layout/reflow with recorded viewport and
+  screen-reader labels/status updates. Record actual checks
+  and limitations; they do not establish conformance or validated device needs.
+  The proposed read-only fixture check uses 320, 390 and 1280 CSS pixel
+  viewport widths and 200% text zoom: no clipped/lost content or page-level
+  horizontal overflow; a genuinely two-dimensional case table may scroll
+  within its labelled keyboard-focusable region. Record browser, viewport,
+  zoom, exception and result. These are prototype engineering checks, not
+  approved company accessibility thresholds or a WCAG conformance claim.
 * **NFR-002 Performance and capacity:** Before acceptance, the product owner
   shall approve case volume, concurrent users, bulk selection limits, import
   size, chart/forecast workload and response-time targets. Test results shall
@@ -369,8 +415,10 @@ from the case-study portfolio size.
   integration and service owner, monitored failure states, disable procedure,
   manual fallback, retention and tested rollback.
 * **NFR-012 Chart integrity:** Dashboards shall disclose denominator,
-  filters, missing/stale records and measure definitions; colour alone shall
-  not encode status. Charts shall have accessible tabular equivalents.
+  as-of date, filters and their effect, missing/stale records and measure
+  definitions; colour alone shall not encode status. Charts shall have
+  accessible tabular equivalents. Separate illustrative populations shall
+  be labelled independent of case samples, never presented as reconciled data.
 * **NFR-013 Bulk-edit safety:** Bulk operations shall preview scope and
   effects, validate permissions and rules per case, report each case's result
   and retain a batch audit record. No hidden partial success is permitted.
@@ -473,16 +521,16 @@ without a reviewer.
 
 ## Constraints
 
-| ID | Constraint | Source | Boundary |
-| --- | --- | --- | --- |
-| CON-001 | The MVP is non-production and uses constructed, non-identifying exercise records; it exercises no live authority over residents, providers, payment, grants or safety. | BRD v0.14.1 and owner direction | No live decisions, instructions, submissions or external integrations. |
-| CON-002 | Existing asset, housing, repairs, hazard, finance, procurement and provider systems retain their authoritative responsibilities unless separately approved. | BRD v0.14.1 | Workbench coordinates and links; it does not silently replace systems of record. |
-| CON-003 | Residents retain measure-specific decisions; qualified professionals, Safety, Asset, Procurement, Finance, Quality and Board/delegated authorities retain their respective decisions. | Case Study 48 and BRD | Agent suggestions and UI actions cannot substitute for approval. |
-| CON-004 | The hybrid is a proposed demonstrator baseline only; full Azure custom and greenfield business applications remain comparators until an approved gate. | Owner direction and addendum | No production/platform/procurement approval inferred. |
-| CON-005 | Dataverse and Dynamics 365 are not assumed present; M365/SharePoint availability, licensing and governance remain unverified. | Owner statement and PRD evidence status | Use exercise files and documented Blob fallback unless prerequisites pass. |
-| CON-006 | Retrofit tooling shall not delay, pause, reset, classify or close the existing statutory hazard response. | BRD CON-001, RULE-003 | Hazard service retains its own record, clock and authority. |
-| CON-007 | No bulk action may satisfy a controlled approval, consent, instruction, payment, claim or closure decision. | BRD authority matrix and this PRD | Each consequential decision remains separately authorised and auditable. |
-| CON-008 | Forecasts are scenarios, not guarantees, approved plans or commitments. | BRD evidence/value controls | Expose assumptions, uncertainty and stale/missing inputs. |
+| ID | Category | Constraint | Imposing source | Boundary |
+| --- | --- | --- | --- | --- |
+| CON-001 | Scope / data | The MVP is non-production and uses constructed, non-identifying exercise records; it exercises no live authority over residents, providers, payment, grants or safety. | BRD v0.14.1, demonstrator scope; owner direction | No live decisions, instructions, submissions or external integrations. |
+| CON-002 | Integration / authority | Existing asset, housing, repairs, hazard, finance, procurement and provider systems retain authoritative responsibilities unless separately approved. | BRD v0.14.1, home-centred operating model | Workbench coordinates and links; it does not silently replace systems of record. |
+| CON-003 | Human decision rights | Residents retain measure-specific decisions; qualified professionals, Safety, Asset, Procurement, Finance, Quality and Board/delegated authorities retain respective decisions. | Original case, governance brief; BRD authority matrix | Agent suggestions and UI actions cannot substitute for approval. |
+| CON-004 | Governance / appraisal | No production/platform/procurement approval shall be inferred from the owner's demonstrator preference; alternatives remain subject to the options gate. | Addendum, Implementation Options and Provisional Platform Recommendation; owner direction | Hybrid design is DD-001, not a mandate for production selection. |
+| CON-005 | Estate / evidence | Dataverse and Dynamics 365 are not assumed present; M365/SharePoint availability, licensing and governance remain unverified. | Owner estate statement, recorded in Product Context and OQ-012 | No unverified estate dependency; proposed document-store fallback is a design option under Component Contracts, not a company constraint. |
+| CON-006 | Safety / authority | Retrofit tooling shall not delay, pause, reset, classify or close the existing statutory hazard response. | BRD CON-001, RULE-003 | Hazard service retains its own record, clock and authority. |
+| CON-007 | Workflow / separation of duties | No bulk action may satisfy a controlled approval, consent, instruction, payment, claim or closure decision. | BRD authority matrix; FR-007 | Each consequential decision remains separately authorised and auditable. |
+| CON-008 | Reporting / evidence | Forecasts are scenarios, not guarantees, approved plans or commitments. | BRD evidence/value controls; FR-023 | Expose assumptions, uncertainty and stale/missing inputs. |
 
 ## Process Models
 
@@ -533,7 +581,7 @@ technical, control and user representatives before acceptance.
 | AC-007 | Given an authorised user edits a permitted case field, when the change is saved, then prior value, new value, source/version, actor, timestamp and reason are retained and shown in history. | FR-005 | Not Started |
 | AC-008 | Given evidence becomes stale or a material case status changes, when the case is reopened, then affected downstream tasks/approvals are visibly marked for review without deleting prior evidence or decisions. | FR-005, FR-009 | Not Started |
 | AC-009 | Given a user selects multiple cases for a permitted bulk edit, when they preview and apply it, then the preview lists affected records, field changes, permission/rule failures and per-record results; no failure is hidden and the batch is auditable. | FR-006, FR-007 | Not Started |
-| AC-010 | Given a selected bulk action is an approval, consent, safety release, procurement instruction, financial commitment, payment, claim submission, quality acceptance or case closure, when the user attempts it, then the action is unavailable or denied and no case changes. | FR-007 | Not Started |
+| AC-010 | Given a selected bulk action is an approval, consent, safety release, procurement instruction, financial commitment, payment, claim submission, quality acceptance or case closure, when the user attempts it, then the action is unavailable or denied and no case changes. | FR-007, FR-008 | Not Started |
 | AC-011 | Given a required gate is absent, stale, conflicting or unauthorised, when a user or workflow requests a controlled transition, then the product blocks it with the unmet condition, responsible owner and correction route. | FR-008 | Not Started |
 | AC-012 | Given a reviewer returns or reopens a case, when the action is confirmed, then the system records the prior/current stage, return reason, initiating authority, receiving owner and next step, preserves history and reports the result. | FR-009, FR-010 | Not Started |
 | AC-013 | Given a material change affects only some prior approvals, when the case is returned, then only affected downstream approvals are invalidated and all other history remains intact; the owner must explicitly re-review affected approvals. | FR-010 | Not Started |
@@ -557,6 +605,36 @@ technical, control and user representatives before acceptance.
 | AC-031 | Given an exercise workbook has duplicate, unmapped, stale or conflicting rows, when it is imported, then users can preview every row disposition and source lineage, resolve through an authorised owner and verify the source workbook was unchanged. | FR-029 | Not Started |
 | AC-032 | Given an authorised user exports a case or cohort, when the export is inspected independently, then event, source, version, approval, return/reopen and supersession history remain interpretable without the AI provider. | FR-030 | Not Started |
 | AC-033 | Given an exercise case has confirmed appointments with verified resident no-access outcomes, when its active-case count exceeds the configured threshold, then the product creates a human-investigation task with the counted events and rule version; provider/contractor no-shows, cancellations and reschedules do not count, human closure resets only the active counter while preserving history, no refusal is inferred, and hazard response is not delayed. | FR-031 | Not Started |
+| AC-034 | Given a search is active when perspective or workflow changes, when the queue is rendered, then perspective, workflow, query and scope precedence are visible and announced; reset clears search/workflow/all-cases overrides and returns the selected perspective's default queue without changing a record; an unrepresented portfolio fixture is distinguished from a query with zero matches. | FR-032 | Not Started |
+| AC-035 | Given a constructed update commitment and a rejected/unaccepted operational handoff, when either is inspected, then purpose, owner, illustrative due date/basis and safe-route/adjustment reference or unknown are visible; the outstanding update stays with its owner until sent or explicitly reassigned, reassignment preserves the commitment/history, and sent time/evidence never implies receipt or understanding. | FR-033 | Not Started |
+| AC-036 | Given a current owner but an unassigned receiver or missing return reason, when queue, detail, source and history are inspected, then labels consistently distinguish current owner, destination, proposed/confirmed receiver and chase owner; absent receiver/reason stays unknown, receipt does not imply acceptance, and source wording does not claim evidence absent from the fixture. | FR-011, FR-034 | Not Started |
+| AC-037 | Given separate constructed measures with different decision versions and an accessible service/complaint/defect request, when one measure is paused or withdrawn in the fixture, then other measures do not inherit its choice, contact/access is not consent, desired outcome and distinct service/redress owners are visible, and safe-route/representative/adjustment references disclose only necessary details or unknowns. | FR-014 | Not Started |
+| AC-038 | Given a constructed referral with unconfirmed receipt and a linked retrofit hold, when the referral is inspected, then awareness source/time, sent reference/time, destination, chase owner and follow-up are visible; received/accepted role/time require separate evidence; hold scope/source/status and any authoritative human release reference are read-only and no workbench action classifies, closes, resets a hazard clock or authorizes release. | FR-015 | Not Started |
+| AC-039 | Given a draft constructed package with unconfirmed capacity, when readiness is reviewed, then period, scope/version, call-off/work-order reference, offered versus committed state, unknown/unmet prerequisites and next reviewer are visible; provider submission/correction remains distinct from independent review and readiness is not an instruction, booking, commitment, acceptance or payment. | FR-016 | Not Started |
+| AC-040 | Given the designated source-conflict fixture and the capacity, quality and invoice fixtures, when users compare sources and switch between cases, then the conflict shows two different constructed values with supplied source identifiers/dates/versions, validation state and resolution owner, authority/resolution/eligibility remain explicitly unknown, and each case's rationale cites its own unresolved condition and evidence rather than a generic missing-link explanation. | FR-012, FR-034 | Not Started |
+| AC-041 | Given fixed illustrative portfolio figures alongside inspectable cases, when filters change or a metric is opened, then population, as-of basis, denominator and filter impact remain explicit; the figures reconcile to declared records or are labelled a separate illustrative cohort with no implied drill-through, and handover stage is distinct from accepted handover. | FR-024 | Not Started |
+| AC-042 | Given a constructed incomplete completion pack and quantity-mismatch invoice, when provider correction, quality and Finance views are inspected, then positive per-measure evidence/version, defect/return/reinspection owner and independent disposition are visible; invoice lines compare authorized scope/work-order, budget and accepted-milestone evidence or explicit unknowns; submission never implies acceptance and no payment or grant state is inferred. | FR-017, FR-018 | Not Started |
+| AC-043 | Given an iteration manifest declaring its active slice and check applicability, when eleven perspective paths and nine workflow entries are inspected, then each is represented by fixtures/expected endpoints or explicitly unrepresented/deferred and unavailable behavior is not claimed; Slice A passes its correctness/orientation checks, Slice B additionally has a connected exception-to-owner path and independent shared-building gates, and Slice C additionally uses one explicitly linked home with labelled constructed lifecycle events; deferred labels never satisfy full MVP coverage. | FR-035, FR-001, FR-002, FR-022 | Not Started |
+
+### Independently reportable review checks
+
+Parent AC identifiers remain stable. Test reports shall record each named
+subcheck below separately as pass/fail/not-applicable with fixture reference
+and observed output; applicability is versioned by active slice, not silently
+waived. Unimplemented required checks are failures, not not-applicable.
+
+| Parent | Subcheck | Fixture and independent result |
+| --- | --- | --- |
+| AC-034 | scope / reset / selection-focus | For each profile, compare active scope and reset IDs/count/order to the default manifest. Check selected case and focus/announcement separately, including no matches. |
+| AC-036 | owner / reason-source / receipt-acceptance | Keep the incomplete return fixture; in Slice B add static received-but-unaccepted and explicitly accepted snapshots, each with separate time/evidence/receiver and retained or explicitly transferred chase owner. Receipt alone never transfers ownership. |
+| AC-040 | conflict-comparison | Two distinct constructed values with source/date/version are mandatory in the designated fixture; unresolved authority and eligibility are valid, invisible comparison inputs are not. |
+| AC-040 | case-rationale | Independently inspect all eight original fixtures, or their manifest-declared replacements, for selection-specific evidence/rationale and source/context agreement. |
+| AC-042 | quality-review | Completion pack has per-measure evidence/version, defect/return/reinspection owner and independent disposition; provider correction is not acceptance. |
+| AC-042 | invoice-comparison | Slice B invoice shows constructed supplier/contract, scope/work-order, home/building allocation, budget, accepted-milestone and prior-payment comparison references. Each missing input is explicitly unknown and blocks a match; payment remains unavailable. |
+| AC-043 | manifest-coverage | All eleven paths and nine entries have declared coverage, active slice, required/deferred checks, fixture/version and endpoint. |
+| AC-043 | connected-exception | Required in Slice B/C: exception -> evidence -> accountable reviewer with owned unknown; not required for Slice A. |
+| AC-043 | independent-building | Required in Slice B/C: distinct home gates; shared ID alone does not prove package applicability. |
+| AC-043 | same-home-events | Required in Slice C: one explicitly linked home, event order, constructed time/source/actor/version and unknown intervals; not required for A/B. |
 
 ## Traceability Matrix
 
@@ -564,28 +642,55 @@ technical, control and user representatives before acceptance.
 
 | Requirement | Acceptance criteria | Coverage |
 | --- | --- | --- |
-| FR-001 to FR-002 | AC-001 to AC-003 | Covered |
-| FR-003 to FR-004 | AC-004 to AC-006 | Covered |
-| FR-005 to FR-007 | AC-007 to AC-010 | Covered |
-| FR-008 to FR-011 | AC-011 to AC-014 | Covered |
-| FR-012 to FR-016 | AC-015 to AC-019 | Covered |
-| FR-017 to FR-019 | AC-020 to AC-022 | Covered |
-| FR-020 to FR-024 | AC-023 to AC-027 | Covered |
-| FR-025 to FR-028 | AC-028 to AC-030 | Covered |
-| FR-029 to FR-030 | AC-031 to AC-032 | Covered |
-| FR-031 | AC-033 | Covered |
+| FR-001 | AC-001, AC-002, AC-043 | Linked |
+| FR-002 | AC-001, AC-002, AC-003, AC-043 | Linked |
+| FR-003 | AC-004, AC-005 | Linked |
+| FR-004 | AC-006 | Linked |
+| FR-005 | AC-007, AC-008 | Linked |
+| FR-006 | AC-009 | Linked |
+| FR-007 | AC-009, AC-010 | Linked |
+| FR-008 | AC-010, AC-011 | Linked |
+| FR-009 | AC-008, AC-012 | Linked |
+| FR-010 | AC-012, AC-013 | Linked |
+| FR-011 | AC-014, AC-036 | Linked |
+| FR-012 | AC-015, AC-040 | Linked |
+| FR-013 | AC-016 | Linked |
+| FR-014 | AC-017, AC-037 | Linked |
+| FR-015 | AC-018, AC-038 | Linked |
+| FR-016 | AC-019, AC-039 | Linked |
+| FR-017 | AC-020, AC-042 | Linked |
+| FR-018 | AC-021, AC-042 | Linked |
+| FR-019 | AC-022 | Linked |
+| FR-020 | AC-023 | Linked |
+| FR-021 | AC-024 | Linked |
+| FR-022 | AC-025, AC-043 | Linked |
+| FR-023 | AC-026 | Linked |
+| FR-024 | AC-027, AC-041 | Linked |
+| FR-025 | AC-028 | Linked |
+| FR-026 | AC-028, AC-029 | Linked |
+| FR-027 | AC-029, AC-030 | Linked |
+| FR-028 | AC-030 | Linked |
+| FR-029 | AC-031 | Linked |
+| FR-030 | AC-032 | Linked |
+| FR-031 | AC-033 | Linked |
+| FR-032 | AC-034 | Linked |
+| FR-033 | AC-035 | Linked |
+| FR-034 | AC-036, AC-040 | Linked |
+| FR-035 | AC-043 | Linked |
 
-Coverage: 31/31 FRs linked to at least one acceptance criterion (100%). Final
-review must verify this hand-maintained matrix against the identifiers.
+Link coverage: 35/35 FRs linked to at least one criterion (100%); this matrix
+matches both requirement and criterion tables. Behavioral acceptance remains
+Not Started. Links and named subchecks are not proof that every behavior has
+been implemented or tested.
 
 ### FR-to-goal alignment
 
 | Requirements | Goals |
 | --- | --- |
-| FR-001 to FR-006, FR-011, FR-024 to FR-026, FR-029 to FR-031 | GOAL-001 |
-| FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-031 | GOAL-002 |
+| FR-001 to FR-006, FR-011, FR-024 to FR-026, FR-029 to FR-035 | GOAL-001 |
+| FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-031, FR-033, FR-035 | GOAL-002 |
 | FR-004, FR-020 to FR-024, FR-030 | GOAL-003 |
-| FR-025 to FR-028 | GOAL-004 |
+| FR-025 to FR-028, FR-034 | GOAL-004 |
 
 All goals have linked requirements; all FRs map to at least one goal (100%).
 
@@ -600,6 +705,23 @@ All goals have linked requirements; all FRs map to at least one goal (100%).
 | BRD Comparison 1 and Comparison 2; OD-18 | GOAL-003/004 and metrics; comparison definitions and targets remain open and unratified |
 | Retrofit operating-data exercise pack and data dictionary | Constructed identifiers, home/building joins, lifecycle events, contacts, appointments, safety holds, quality evidence, grant and finance fields; realistic data defects inform import and stale/conflict scenarios. The records do not establish actual company performance or resident outcomes. |
 | Prototype on `feat/proper-warm-prototype` at `5e52ceb` | Four role-based task perspectives and bounded case-review suggestions inform interaction direction only; view labels are not authorization, and implemented surfaces are not proof of production readiness |
+| [2026-10-06 nine-role/eleven-profile UX review](../reference/research/ux/proper-warm-prototype-profile-review.md) | Candidate journey contract, next-prototype slice and FR-011/012/014-017/024/032-035 with AC-034-043; source-based observations and proposed UX tests, not company/user validation |
+
+### Review-learning disposition
+
+| Review learning | Incorporated product/test contract | Deferred validation or boundary |
+| --- | --- | --- |
+| Current owner mislabeled next owner; generic rationale and contradictory return source | FR-011/034; AC-036/040; first correctness slice | No assignment or permission from a perspective switch |
+| Hidden retained search, workflow/profile precedence and empty portfolio queue | FR-032/035; AC-034/043 | Full MVP still requires all nine scenario representations |
+| Fixed metrics disconnected from cases; handover stage not acceptance | FR-024, NFR-012; AC-041 | Company baselines, dashboard definitions and forecasting OQ-009/013 |
+| Stock values hidden and investment evidence absent | FR-012; AC-040; Asset journey | Real source authority/priority/budget OQ-003/006/010; unknown is valid |
+| Same-home lifecycle missing; shared-building relationship does not prove package impact | FR-001/002/022/035; AC-001-003/025/043 | Actual lifecycle and package applicability OQ-002/007 |
+| Update continuity needs purpose, safe-route reference and sent evidence, not owner/date alone | FR-014/033; AC-035/037 | Synthetic responsibility model, Housing/Programme validation OQ-008; direct resident research OQ-004/011 |
+| Hazard receipt confused with ownership; hold scope/release evidence missing | FR-011/015; AC-036/038 | Real service/clock/release authority OQ-003/005/008; never workbench-owned |
+| Offered capacity, draft readiness and provider submission need independent review | FR-016/017; AC-039/042 | Actual provider channels/terms/authority OQ-004/005/007 |
+| Quality checklist/returns and invoice match evidence need depth before new ledgers | FR-017/018/019; AC-020-022/042 | Keep independent acceptance and invoice/payment/grant/cash distinct |
+| Narrative timeline lacks audit fields; original examples cannot establish durations | FR-022, NFR-004; AC-025/043 | Constructed events labelled as such; operational audit/recovery deferred |
+| Eleven perspectives not eleven validated journeys; adjacent provider/quality/operator lenses insufficient | FR-035, NFR-001; profile journey contract | Direct representative/device/accessibility research OQ-004/011; no conformance claimed |
 
 ## MVP and Release Framing
 
@@ -614,6 +736,81 @@ suggestions improve tasks over the same workflow without AI.
 
 ### Release increments within this PRD
 
+#### Next read-only prototype generation contract
+
+This learning slice precedes the four full MVP increments below. It does not
+waive their authentication, controlled-edit, event, integration-test or
+analytics requirements. Generating this slice requires no live systems or
+personal data. It shall not be presented as a working implementation of the
+whole PRD or as approval to implement operational behavior.
+
+| Slice | Required content and expected checks | Explicit exclusions |
+| --- | --- | --- |
+| A: Correctness and orientation (first) | Current-owner/receiver labels, per-case rationale, consistent return source/context, visible filter/reset and portfolio unrepresented state; AC-034/036/040/041 against all existing fixtures | No fixture state mutation, actual permissions or metrics-to-case drill-through claim |
+| B: Exception-to-accountable-owner (next) | Queue -> evidence comparison -> owned unknown/safe block -> linked home/building/package -> return to queue. Deepen stock conflict, draft package and invoice match; scoped referral/update and independent quality states. AC-035/037-039/042; shared-building AC-001-003. | No instruction, consent capture, resident contact, hazard decision, acceptance or payment; actual authority remains unknown |
+| C: Connected lifecycle (later) | One explicitly linked constructed home with dated/source/actor/version-labelled example events, returns, choice and independent stage gates, plus separate second-home building dependency; AC-025/043 | Static examples are not durable audit events; cannot infer durations where times are unknown |
+
+The generated artifact shall include a visible capability/scenario manifest
+(FR-035), listing every profile and workflow as represented, unavailable or
+deferred. Retain all eleven profile perspectives. For Slice A, the portfolio
+queue may explicitly say no representative case supplied; Slice B shall add
+a constructed portfolio context/exception route with missing investment
+inputs shown as unknown, not invent a cohort-to-metric link. Before full MVP
+acceptance, all nine workflows require screen and scenario coverage; a
+deferred label alone does not pass that gate.
+
+The baseline manifest uses the default fixture sets in the Profile Journey
+Contract; Coordinator includes all eight IDs 104/208/317/422/531/646/752/863.
+Sort by full fixture ID ascending. With workflow unset and all-cases off,
+profile focus selects its declared set; all-cases bypasses that focus; an
+explicit workflow overrides profile focus and all-cases; trimmed,
+case-insensitive search is applied to the resulting set. These are view
+rules, not permissions. The manifest shall list exact expected IDs/counts
+for each baseline and changed fixture version.
+
+Baseline fixture manifest v1 below is exhaustive for Slice A. Suffixes
+abbreviate EX-HOME-; reset selects the first listed ID. Slice B/C may add
+linked fixtures, but shall publish a new manifest with complete IDs/counts,
+order and selected-ID expectations before running AC-034/043. An example
+mentioned in a journey is not an implicit default.
+
+| Perspective ID | Default ordered fixture suffixes | Count | Reset selection |
+| --- | --- | --- | --- |
+| asset | 317, 646, 752 | 3 | EX-HOME-317 |
+| coordinator | 104, 208, 317, 422, 531, 646, 752, 863 | 8 | EX-HOME-104 |
+| case-team | 104, 208, 317, 422, 531, 863 | 6 | EX-HOME-104 |
+| technical | 104 | 1 | EX-HOME-104 |
+| resident | 208 | 1 | EX-HOME-208 |
+| safety | 531 | 1 | EX-HOME-531 |
+| procurement | 317 | 1 | EX-HOME-317 |
+| provider | 317 | 1 | EX-HOME-317 |
+| quality | 422 | 1 | EX-HOME-422 |
+| finance | 752 | 1 | EX-HOME-752 |
+| digital | 646, 863 | 2 | EX-HOME-646 |
+
+A profile change clears workflow/all-cases but retains visibly disclosed
+search. Reset clears workflow/search/all-cases and selects the first case
+in the restored default set; if none exists, no case is selected. Other
+filter changes retain the selected case only if it remains visible, otherwise
+select the first result or clear selection. Reset keeps focus on its button;
+profile/workflow activation retains focus on its control and announces
+scope/count and selected case or empty state. Case selection announces the
+case without forcing focus into details; related-record navigation shall
+provide a labelled return to the originating context.
+
+For the synthetic handoff/update model, current chase and next-update owners
+remain responsible while operational receipt/acceptance is pending.
+Receipt does not equal acceptance. A return does not silently clear an
+update; sent evidence completes only the send commitment, not resident receipt
+or understanding, and explicit reassignment preserves outstanding work and
+history. This is an exercise assumption to test, not validated company policy;
+actual activation is blocked by OQ-008 and named Housing/Programme approval.
+
+The proposed engineering checks in NFR-001 apply to all eleven paths, including
+keyboard focus/return, accessible related-record links, textual unknowns and
+status/filter announcements. Record supported browser/viewport/assistive-tool
+checks separately from user validation and accessibility conformance.
+
 | Increment | Product content | Exit evidence |
 | --- | --- | --- |
 | 1. Shared workbench foundation | Exercise-record import; linked home/building case model; authenticated role permissions; common queue with new/priority/stale/blocked; case edit/history; task/handoff; return/reopen controls | Role scenarios, import/error cases, access tests, audit reconstruction and no-bypass suite pass |
@@ -623,9 +820,10 @@ suggestions improve tasks over the same workflow without AI.
 
 All four increments belong to this single PRD and non-production exercise
 boundary. The exercise records are constructed and are not company evidence.
-Implementation sequencing may change after dependency and options appraisal,
-but no workflow is represented only in prose: each receives at least one
-screen/queue and one acceptance scenario.
+Implementation sequencing may change after dependency and options appraisal.
+For full MVP acceptance, no workflow may be represented only in prose: each
+receives at least one screen/queue and one acceptance scenario. A next-prototype
+unavailable-feature label is transparent scope, not evidence of full delivery.
 
 ### Out of scope
 
@@ -665,6 +863,38 @@ criteria, not forecasts of live customer outcomes. No user-research result,
 business benefit or operational performance is claimed until measured and
 approved.
 
+## Profile Journey Contract for the Next Prototype
+
+The following are proposed, constructed walkthroughs, not observed user
+behavior. Each perspective shall expose an entry, evidence inspection, safe
+endpoint, recovery route and accountable handoff over linked records
+(FR-003/004/035). Fixture identifiers such as EX-HOME-646 describe the
+reviewed examples, not company properties; new fixtures may replace them if
+the same checks remain reproducible. The existing separate home examples
+shall not be relabelled as stages of one home.
+
+| Perspective | Entry and evidence task | Safe endpoint and recovery/handoff |
+| --- | --- | --- |
+| Asset and investment | Asset queue -> compare the stock conflict (646), source age and missing investment inputs; separately inspect portfolio scope. | Eligibility remains unknown, with resolution owner; budgets, approved priorities and forecasts remain unknown unless supplied as explicitly constructed fixtures. No investment approval. |
+| Programme coordinator | Shared queue -> inspect returned work (863), filter scope, sender/current owner and proposed receiver. | Return reason, acceptance and next action visible or unknown; chase/update responsibility retained separately. Reset recovers the default view without changing records. |
+| Retrofit case team | Home -> linked building/package -> independent technical, resident, delivery, quality and finance states. | Inspect a connected exception first, then a read-only lifecycle for one newly linked fixture home; missing gates stay blocked and specialist review remains explicit. |
+| Retrofit Assessor, designer and Coordinator | Technical queue -> source facts, design version, missing reference (104) and separate sign-offs. | Missing/stale evidence cannot demonstrate readiness; route a specific return to a competent reviewer, not a generic approval. |
+| Housing and Resident Engagement | Resident queue -> measure/version-specific choice (208), accessible service issue and linked update commitment. | Pause/withdrawal distinct from contact/access; update purpose, owner, safe-route reference and sent evidence separate from operational acceptance. No resident contact. |
+| Repairs and Building Safety | Referral queue -> awareness time/source, destination, sent/received/accepted states and scoped hold (531). | Pending receipt has an owned follow-up; release shows authoritative human decision evidence only. No hazard classification, clock, closure or work authorization by this UI. |
+| Procurement and contract manager | Package queue -> period, scope/version, offered/committed capacity and call-off/work-order reference (317). | Draft readiness only; unmet prerequisites and next reviewer visible. No instruction, booking or contractual commitment. |
+| Provider / contractor contact | Staff-facing constructed package intake -> submission, correction and evidence checklist. | Submission/acknowledgement separate from independent review and acceptance. No provider portal, identity claim or self-approval. |
+| Quality and assurance | Quality queue -> positive per-measure evidence, defect owner, return/reinspection (422). | Incomplete evidence blocks handover; independent acceptance and provider correction remain separate. No safety conclusion from absence of an alert. |
+| Finance and Grants | Invoice queue -> compare quantities/scope/version/budget and accepted milestone evidence (752). | Explain exception and Finance reviewer; payment remains unavailable. Opportunity/award/claim/cash shown as separate linked states, not inferred from invoice. |
+| Digital operator and auditor | Conflict/return queue -> both source values/provenance (646), illustrative event metadata and recovery context (863). | Preserve unresolved eligibility and original source; no replay, silent correction or claim that narrative history is an operational audit trail. |
+
+All paths shall retain textual state meaning, keyboard-operable navigation,
+logical focus, labelled controls and status announcements. Missing resident
+route/adjustment data shall be shown as unknown rather than fabricated as
+company fact. A staff view may link minimum-necessary related hazard, defect
+or return context without implying that a profile label grants permissions.
+Direct staff/provider/resident research must validate tasks, priority,
+device/environment, accessibility and actual decision rights (OQ-004/005/011).
+
 ## Risks and Assumptions
 
 ### Key assumptions
@@ -684,6 +914,7 @@ approved.
 | Risk | Probability | Impact | Mitigation |
 | --- | --- | --- | --- |
 | Screens imply authority a profile does not hold | Medium | High | Server-enforced permissions, explicit decision types, separate approval records and negative tests. |
+| Read-only learning slice is mistaken for full MVP or a validated company process | Medium | High | Visible capability/scenario manifest, separate slice checks/full MVP gates, labelled constructed history/metrics and outstanding user/control-owner validation. |
 | Bulk edit creates hidden partial changes or bypasses stage controls | Medium | High | Preview, per-record validation and results, no bulk consequential approvals, immutable batch audit. |
 | Returning a case erases history or incorrectly rolls back unrelated approvals | Medium | High | Append-only events, explicit reason, dependency-based invalidation and human review. |
 | Stale status is subjective or creates unfair prioritisation | Medium | High | Show field age/source and owner-approved staleness definitions; stale data triggers review, not automatic deprioritisation. |
@@ -702,16 +933,16 @@ screen behavior where explicitly stated.
 | ID | Question | Accountable function / evidence | Impact |
 | --- | --- | --- | --- |
 | OQ-001 | Who is product owner and who approves product, option, scope and cost decisions? | Sponsor, Asset, Finance; named delegation and decision record | Product governance and budget |
-| OQ-002 | What is the validated end-to-end case lifecycle, including event definitions, returns, reopen and accepted handover? | Retrofit Programme; process walkthrough and approved event dictionary | State machine, history and metrics |
+| OQ-002 | What is the validated end-to-end case lifecycle, including event definitions, returns, reopen and accepted handover, and what evidence establishes shared-package impact per home? | Retrofit Programme and Procurement/Quality; process walkthrough, package applicability and approved event dictionary | State machine, independent home gates, history and metrics |
 | OQ-003 | Which systems are authoritative for each data domain and what identifiers/interfaces exist? | Data owners; source register, system/API inventory | Case linking and integration |
 | OQ-004 | Which resident, provider and employee tasks, channels, access needs and escalation paths are validated by direct research? | Resident Engagement, Housing, Procurement; user research and contract evidence | Screen detail, external access and live communications |
 | OQ-005 | What are company-authorised role/field permissions, approval limits and separation-of-duties rules? | All control owners, Digital, Legal | Role workspaces, approvals and audit |
 | OQ-006 | What is the validated cohort, prioritisation policy, data freshness rule and interpretation of missing/unknown data? | Asset, Safety, Finance, Data; approved policy and source-quality baseline | Priority and stale queues |
 | OQ-007 | What are the contract terms, committed capacity, payment milestones, payment notices and invoice evidence requirements? | Procurement, Legal, Finance; contract register and approved terms | Supplier release and finance workflows |
-| OQ-008 | What are approved service targets, hold escalation, handoff SLAs and staffing capacity? | Housing, Repairs, Safety, Programme; owner-approved service model | Queue aging, notification and priority |
+| OQ-008 | What are approved service targets, hold escalation, handoff SLAs, staffing capacity and chase/update ownership while receipt/acceptance is pending, including explicit reassignment and sent-evidence completion rules? | Housing, Repairs, Safety, Programme; approved service model and update-continuity walkthrough | Synthetic continuity remains an assumption; operational queue aging, notification and ownership blocked |
 | OQ-009 | What event coverage, cohort and variance support forecast methods and tolerances? | Programme, Asset, Finance, Data and Performance | Historical and forecast accuracy |
 | OQ-010 | Which cost, cash, grant, liquidity and covenant thresholds may be exposed to each profile? | Finance, Asset, Board/delegated authority | Financial screens and stakeholder export |
-| OQ-011 | What are the accessibility standard, resident explanation tests, languages and non-digital service validation plan? | Resident Engagement, DPO | Future resident-facing readiness |
+| OQ-011 | What are the approved accessibility standard, staff/provider device and assistive-tool contexts, resident explanation tests, languages and non-digital service validation plan? | Product, Resident Engagement, Digital, DPO; direct accessible research and assessment plan | Prototype engineering checks do not establish conformance or live readiness |
 | OQ-012 | Do Azure, M365/SharePoint and alternatives meet tenant, licensing, identity, data residency, support, recovery and whole-life cost requirements? | Digital, Procurement, Finance | Architecture decision |
 | OQ-013 | Which heatmap geography, funnel denominator, time windows and resident-outcome breakdowns are approved for each audience? | Programme, Data and Performance, DPO, Resident Engagement | Dashboard definitions and disclosure |
 | OQ-014 | What approval and change governance applies to the owner-directed missed-appointment exercise scenario before any operational consideration? | Housing, Repairs, Resident Engagement, Programme/Digital under BRD OD-40 | Operational use remains prohibited |
@@ -724,7 +955,9 @@ upstream BRD-to-PRD handoff payload or current valid BRD quality report was
 available during this revision. Before Validate/approval, obtain the required
 handoff and current quality evidence, close or disposition open questions,
 review requirements and acceptance criteria with named owners and representative
-users, and run the PRD Quality Reviewer.
+users, and run the PRD Quality Reviewer. A draft-stage independent challenge
+of v0.7.0 is permitted now to find defects; it does not authorize Validate exit,
+waive upstream evidence or count as human sign-off.
 
 ### Approval checklist
 
