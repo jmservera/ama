@@ -1116,7 +1116,7 @@ metadata when the knowledge base was created.
 * Added the PoC to this index and the root README. Preserved the original,
   addendum, owner memory, regulatory snapshots and prior read-only prototype.
 * Resource creation and measured validation are recorded in
-  [Proper Warm Resource and Validation Ledger](../architecture/proper-warm-resources.md).
+  [Proper Warm Resource and Validation Ledger](https://github.com/jmservera/ama/blob/51d8ae41caaa4535ad53c7268f874ce5334242ee/docs/architecture/proper-warm-resources.md).
   Azure/M365 resources are not needed and none is created.
 * Full PRD MVP coverage, company benefits and capstone floor readiness are
   not claimed. The complete-rubric challenge records unknown live/stakeholder
@@ -1136,7 +1136,7 @@ metadata when the knowledge base was created.
 
 * Owner requested explicit database, cloud hosting, managed identity and
   Foundry agents in the PoC architecture. Expanded
-  [the architecture](../architecture/proper-warm-poc.md#azure-poc-deployment-architecture)
+  [the architecture](https://github.com/jmservera/ama/blob/51d8ae41caaa4535ad53c7268f874ce5334242ee/docs/architecture/proper-warm-poc.md#azure-poc-deployment-architecture)
   with Container Apps, Azure SQL, registry, separate managed identities,
   Foundry account/project/model/agents and standard-setup dependencies.
 * Added data/identity/tool boundaries, agent responsibility and human decision
@@ -1167,3 +1167,17 @@ metadata when the knowledge base was created.
 * Updated `README.md` routing/catalog. No original case, addendum, PRD, memory,
   prototype code, generated resident data or tracking artifacts changed.
   No runtime inspection, operational approval or user-tested success claimed.
+
+## [2026-10-08] update | Split PoC architecture and operations from implementation
+
+* Owner requested architecture, resource teardown and important documentation
+  in another PR. Transferred architecture and resource/validation ledger to
+  [documentation PR #27](https://github.com/jmservera/ama/pull/27); the full
+  application runbook now lives there under docs/architecture.
+* Removed duplicate architecture/ledger files from implementation PR #24.
+  Its app README is now a short pointer using pinned documentation links;
+  updated discovery/catalog and fixed historical log links without changing
+  their evidence. The destination PR contains documentation only, independent
+  of application commits.
+* No runtime resources were moved, stopped or deleted. Teardown guidance was
+  preserved, not executed; existing container, volume and local data remain.
