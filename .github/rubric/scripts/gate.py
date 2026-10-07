@@ -71,8 +71,10 @@ def evidence_path(reference: str) -> str:
     return "" if value == "." else value
 
 
-def outcome_label(rubric: dict[str, Any], total: int, floors_met: bool) -> str:
+def outcome_label(rubric: dict[str, Any], total: int, floors_met: bool, submitted: bool = True) -> str:
     """Return the rubric outcome band, honouring the floor check first."""
+    if not submitted:
+        return rubric["submission_required"]["outcome"]
     if not floors_met:
         return "Not Yet Met (floor)"
     for band in sorted(rubric["outcome_bands"], key=lambda item: item["min"], reverse=True):
@@ -140,6 +142,7 @@ def evaluate(
     detection_result: str,
     removed_files: list[str] | None = None,
     calibration: bool = False,
+    artifact_counts: dict[str, int] | None = None,
 ) -> dict[str, Any]:
     """Pure gate decision; see module docstring.
 
@@ -190,11 +193,25 @@ def evaluate(
             continue
         final[cid] = proposed
 
+    if artifact_counts is not None:
+        for cid, rule in prepare.unmet_requirements(rubric, artifact_counts).items():
+            if final[cid]["score"] > rule["max"]:
+                reason = "required artifact not provided: " + ", ".join(rule["missing"])
+                result["warnings"].append(f"{cid}: score forced from {final[cid]['score']} to {rule['max']}, {reason}")
+                final[cid] = {
+                    **final[cid],
+                    "score": rule["max"],
+                    "evidence": [] if rule["max"] == 0 else final[cid]["evidence"],
+                    "rationale": f"Not demonstrable: {reason}. Maximum {rule['max']} until it is committed.",
+                }
+
     sections = {key: 0 for key in rubric["sections"]}
     for criterion in rubric["criteria"]:
         sections[criterion["section"]] += final[criterion["id"]]["score"]
     total = sum(sections.values())
-    floors_met = all(sections[key] >= value["floor"] for key, value in rubric["sections"].items()) and all(
+    required = rubric.get("submission_required") or {}
+    submitted = not required or artifact_counts is None or bool(artifact_counts.get(required["artifact"], 0))
+    floors_met = submitted and all(sections[key] >= value["floor"] for key, value in rubric["sections"].items()) and all(
         entry["score"] > 1 for entry in final.values()
     )
     drops = [
@@ -213,7 +230,7 @@ def evaluate(
             "total": total,
             "sections": sections,
             "floors_met": floors_met,
-            "outcome": outcome_label(rubric, total, floors_met),
+            "outcome": outcome_label(rubric, total, floors_met, submitted),
             "criteria": final,
             "drops": drops,
             "summary": scorecard["summary"],
@@ -270,10 +287,13 @@ def render_report(rubric: dict[str, Any], baseline: dict[str, Any] | None, resul
     return "\n".join(lines) + "\n"
 
 
-def build_scores_file(result: dict[str, Any], fingerprints: dict[str, str], commit: str, model: str, run_url: str) -> dict[str, Any]:
+def build_scores_file(
+    result: dict[str, Any], fingerprints: dict[str, str], commit: str, model: str, run_url: str, rubric_version: int | None = None
+) -> dict[str, Any]:
     """Build the next latest.json content."""
     return {
         "schema_version": 1,
+        "rubric_version": rubric_version,
         "source": "workflow",
         "scored_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "commit": commit or None,
@@ -346,12 +366,13 @@ def main() -> int:
         args.detection_result,
         state["removed_files"],
         args.force,
+        {key: len(value["files"]) for key, value in state["artifacts"].items()},
     )
     args.out_dir.mkdir(parents=True, exist_ok=True)
     report = render_report(state["rubric"], state["baseline"], result, args.run_url)
     (args.out_dir / "report.md").write_text(report, encoding="utf-8")
     if result["valid"] and not args.force:
-        scores = build_scores_file(result, state["fingerprints"], args.commit, args.model, args.run_url)
+        scores = build_scores_file(result, state["fingerprints"], args.commit, args.model, args.run_url, state["rubric"].get("rubric_version"))
         (args.out_dir / "latest.json").write_text(json.dumps(scores, indent=2) + "\n", encoding="utf-8")
     decision = {
         key: result.get(key)

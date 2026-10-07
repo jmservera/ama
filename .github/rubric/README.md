@@ -70,11 +70,28 @@ Scores are readiness estimates from repository evidence. Live-scored criteria (B
 
 Edit [artifacts.json](artifacts.json) in its own pull request: set the entry's `status` to `active` and check its `include` globs and `criteria`. Registry and rubric changes take effect after they merge, because the gate reads them from `main`. The next pull request that touches those files scores them.
 
-BRDs, PRDs, solution code and infrastructure are active scoring artifacts.
-Planned entries remain for ADRs, the capstone deck
+BRDs, PRDs, solution code, infrastructure, ADRs, the capstone deck
 (`docs/capstone/deck/*.pptx`), pitch transcripts (`docs/capstone/pitch/`) and
-the thought leadership artifact. PPTX files are converted to slide and
+the thought leadership artifact (`docs/capstone/thought-leadership/`) are active
+artifacts. [docs/capstone/README.md](../../docs/capstone/README.md) is the
+storage map for every capstone asset. PPTX files are converted to slide and
 speaker-note text before scoring.
+
+### Required evidence
+
+A criterion can only score what is committed. [rubric.json](rubric.json) gives
+criteria a `requires_any` list of artifact ids. When none of them holds a file,
+the gate records 0 whatever the model submitted (the model is told to submit 1),
+lists the override as a warning and counts the criterion as failing its floor.
+`cap_without` caps a score instead: B6 is capped at 3 without a deck.
+The Section D artifact must also be submitted; without it the outcome is
+"Incomplete" even if the totals clear the floors. BRDs, PRDs and code never
+count toward B1 to B5, B7, C2, C3 or Section D, because the guide scores those
+on the live session and on a separate artifact.
+
+Changing `rubric_version` makes the next run rescore from scratch without a
+comparison with the previous baseline, so a stricter rubric does not fail as a
+regression. The gate stamps the version into `latest.json`.
 
 ### Proper Warm Prototype
 

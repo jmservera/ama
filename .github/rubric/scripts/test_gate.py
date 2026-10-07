@@ -39,7 +39,7 @@ def run(baseline: dict, items: list[dict], *, bootstrap: bool = False, open_crit
     return gate.evaluate(RUBRIC, baseline, bootstrap, IDS if open_criteria is None else open_criteria, changed, items, agent, detection, removed, calibration)
 
 
-def test_given_seed_baseline_when_summed_then_total_is_61():
+def test_given_seed_baseline_when_summed_then_total_is_66():
     # Arrange
     scores = seed_scores()
 
@@ -47,7 +47,7 @@ def test_given_seed_baseline_when_summed_then_total_is_61():
     total = sum(scores.values())
 
     # Assert
-    assert total == SEED["total"] == 61
+    assert total == SEED["total"] == 66
 
 
 def test_given_equal_scores_when_evaluated_then_passes():
@@ -58,7 +58,7 @@ def test_given_equal_scores_when_evaluated_then_passes():
     result = run(workflow_baseline(), items)
 
     # Assert
-    assert (result["passed"], result["total"]) == (True, 61)
+    assert (result["passed"], result["total"]) == (True, 66)
 
 
 def test_given_unknown_criterion_when_evaluated_then_fails_with_actionable_error():
@@ -108,7 +108,7 @@ def test_given_supported_drop_when_evaluated_then_fails_with_warning():
     result = run(workflow_baseline(), items, changed=[BRD])
 
     # Assert
-    assert (result["passed"], result["total"], result["drops"]) == (False, 60, ["A2"])
+    assert (result["passed"], result["total"], result["drops"]) == (False, 65, ["A2"])
 
 
 def test_given_change_without_changed_evidence_when_evaluated_then_baseline_kept():
@@ -152,7 +152,7 @@ def test_given_drop_citing_removed_file_when_evaluated_then_fails():
     result = run(workflow_baseline(), items, removed=[BRD])
 
     # Assert
-    assert (result["passed"], result["total"]) == (False, 59)
+    assert (result["passed"], result["total"]) == (False, 64)
 
 
 def test_given_increase_citing_removed_file_when_evaluated_then_baseline_kept():
@@ -241,3 +241,34 @@ def test_given_evidence_reference_variant_when_normalised_then_repository_path(r
 
     # Assert
     assert path == BRD
+
+
+def test_given_no_pitch_or_thought_leadership_when_scored_then_gate_forces_zero():
+    # Arrange
+    scores = {cid: 4 for cid in IDS}
+    counts = {"brd": 1, "prd": 1, "capstone-deck": 0, "pitch": 0, "thought-leadership": 0}
+
+    # Act
+    result = gate.evaluate(RUBRIC, None, True, IDS, [], scorecard_items(scores), "success", "success", [], False, counts)
+
+    # Assert
+    zeroed = {cid for cid, entry in result["criteria"].items() if entry["score"] == 0}
+    assert zeroed == {"B1", "B2", "B3", "B4", "B5", "B7", "C2", "C3", "D1", "D2", "D3"}
+    assert result["criteria"]["B6"]["score"] == 3
+    assert result["sections"]["D"] == 0
+    assert result["floors_met"] is False
+    assert result["outcome"] == RUBRIC["submission_required"]["outcome"]
+
+
+def test_given_deck_only_when_scored_then_pitch_criteria_stay_zero_and_deck_criteria_count():
+    # Arrange
+    scores = {cid: 4 for cid in IDS}
+    counts = {"brd": 1, "capstone-deck": 1, "pitch": 0, "thought-leadership": 1}
+
+    # Act
+    result = gate.evaluate(RUBRIC, None, True, IDS, [], scorecard_items(scores), "success", "success", [], False, counts)
+
+    # Assert
+    assert [cid for cid in ("B1", "B2", "B3", "B4", "B5", "B7", "C2", "C3") if result["criteria"][cid]["score"] == 0] == ["B3", "B4", "B5", "C2", "C3"]
+    assert result["criteria"]["B6"]["score"] == 4
+    assert result["sections"]["D"] == 12

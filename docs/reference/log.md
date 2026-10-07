@@ -1081,3 +1081,17 @@ metadata when the knowledge base was created.
   requirement/criterion links, exact matrix agreement and fixture defaults;
   Markdown lint excludes MD013 to retain existing long-table style.
   No original case, memory, regulatory snapshot or production rule changed.
+
+## [2026-10-07] update | Require committed evidence for rubric criteria
+
+* Reviewed how the rubric gate scored against the capstone assessment guide.
+  Section D and the live criteria (B1 to B5, B7, C2, C3) were scored from BRDs
+  and PRDs although the guide scores them on a separate artifact and the live
+  session, neither of which is committed.
+* Added `requires_any`, `cap_without`, `submission_required` and
+  `rubric_version` to the rubric, so the gate forces 0 where required evidence
+  is absent, caps B6 without a deck and reports an incomplete outcome without
+  a thought leadership artifact. Removed D1, D2, C3 and B7 from the BRD mapping
+  and activated the deck, pitch and thought leadership registry entries.
+* Added `docs/capstone/README.md` as the storage map for every capstone asset
+  and updated the catalog. Existing scores are rebaselined on the next run.
