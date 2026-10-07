@@ -2,17 +2,17 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-07T21:49:17+00:00",
-  "commit": "97312ecc80a9b3b3fbf29cddec4dad6811df391c",
+  "scored_at": "2026-10-07T22:11:44+00:00",
+  "commit": "29a998894e1269739443bf712ab5f48add91769a",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37691079606",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37693866795",
   "fingerprints": {
     "brd": "7947aff0475c769010747917eaddd2a01589d7fb89b4cb51eaacfe048373f3fb",
     "prd": "1fca7a2496be84d875fe88cfb906fb117e68b60d8daaada4ff27c72c497b3d8c"
   },
-  "total": 22,
+  "total": 25,
   "sections": {
-    "A": 15,
+    "A": 18,
     "B": 3,
     "C": 4,
     "D": 0
@@ -25,15 +25,14 @@
       "evidence": [
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:143-158"
       ],
-      "rationale": "Documented component contracts with named failure domains and fallback for each boundary; no implemented architecture or scaling evidence, only a proposed decomposition."
+      "rationale": "Component Contracts table names decoupled components (workbench/API, state store, orchestrator, bounded AI service, document store, import, identity) with explicit failure domains; scaling path is discussed in general terms (Azure Container Apps candidates) but not evidenced with load/scale data...."
     },
     "A2": {
       "score": 3,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:260-267",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269-290"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:255"
       ],
-      "rationale": "Design Decisions table and Options Gate name alternatives (full Azure custom, greenfield, hybrid) and rationale, but weights are TBD and no option is scored."
+      "rationale": "Options Gate Scoring Framework lists alternatives (full Azure custom, greenfield, hybrid) and named criteria, but weights are TBD and no option has actually been scored, so trade-off argument is incomplete."
     },
     "A3": {
       "score": 3,
@@ -41,35 +40,33 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:158-175",
         "docs/brds/agentic-retrofit-programme-brd.md:1290"
       ],
-      "rationale": "Explicit illustrative threat model (prompt injection, data exposure, hallucination, spoofing) and GDPR/DPIA constraints, but self-labelled as not validated and controls not implemented or tested."
+      "rationale": "Threat model table names specific AI risks (prompt injection, data leakage, hallucination, spoofed identity) with mitigations, but it is explicitly labelled illustrative/not validated and core controls are not implemented."
     },
     "A4": {
       "score": 1,
-      "evidence": [
-        "docs/capstone/README.md:1-30"
-      ],
-      "rationale": "No solution code or working demonstrator exists in the repository; only planning documents. Implementation is fragmentary/non-existent against the required capability."
+      "evidence": [],
+      "rationale": "No solution-code artifact exists (file_count 0); nothing is built end to end. Implementation completeness cannot be scored above the floor from planning documents alone."
     },
     "A5": {
-      "score": 1,
-      "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:426-456"
-      ],
-      "rationale": "Observability method proposes OpenTelemetry conventions and SLO measurement approach, but explicitly states no implemented telemetry, targets TBD, nothing measured."
-    },
-    "A6": {
       "score": 2,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:461-490"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:426"
       ],
-      "rationale": "Evaluation harness design compares candidate models on cost/latency/quality with defined failure-mode taxonomy, but explicitly no model selected, no test run, no results."
+      "rationale": "Observability/SLO method is proposed (OpenTelemetry conventions, cost attribution) but explicitly not implemented; no instrumentation, measurement or cost data exists."
+    },
+    "A6": {
+      "score": 3,
+      "evidence": [
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:461"
+      ],
+      "rationale": "AI Model Selection and Evaluation Harness names a sound comparative method (smaller vs capable candidate, metrics, thresholds) but explicitly states no model has been selected and no test has been run."
     },
     "A7": {
       "score": 2,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:491-520"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:491"
       ],
-      "rationale": "Bounded-Agent Orchestration Pattern is a deterministic state graph with typed propose-only agent steps; design deliberately avoids autonomous stage selection, so agentic autonomy is limited by design and unimplemented."
+      "rationale": "Bounded-Agent Orchestration Pattern is a deliberately designed deterministic state graph with typed proposals, human-in-the-loop acceptance and idempotent recovery; well-reasoned design but not yet demonstrated in running code."
     },
     "B1": {
       "score": 0,
@@ -99,9 +96,10 @@
     "B6": {
       "score": 3,
       "evidence": [
-        "docs/capstone/README.md:1-30"
+        "docs/brds/agentic-retrofit-programme-brd.md:29",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1"
       ],
-      "rationale": "No capstone deck is committed to docs/capstone/deck/, so B6 is capped at 3 regardless of BRD/PRD documentation quality per the cap_without rule."
+      "rationale": "BRD and PRD are structured, navigable and complete with traceability, status tables and evidence classification, but no capstone deck exists; cap_without caps this score at 3."
     },
     "B7": {
       "score": 0,
@@ -111,10 +109,10 @@
     "C1": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:528-555",
-        "docs/brds/agentic-retrofit-programme-brd.md:1577-1598"
+        "docs/brds/agentic-retrofit-programme-brd.md:528",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269"
       ],
-      "rationale": "Names real stakeholders, quantifies provisional value at stake (GBP 40m grant, 15,600 homes) while explicitly flagging which figures are unvalidated hypotheses rather than fact."
+      "rationale": "Business Objectives table names real stakeholders (Executive Director of Assets, control owners), quantifies value at stake (GBP 40m grant opportunity, 15,600 homes below EPC C, cycle-time targets) and flags unvalidated figures honestly rather than overclaiming."
     },
     "C2": {
       "score": 0,
