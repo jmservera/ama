@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "source": "workflow",
-  "scored_at": "2026-10-06T10:14:03+00:00",
-  "commit": "c0f7c08aec514597af86528caf1bdad4b7250246",
+  "scored_at": "2026-10-07T20:48:53+00:00",
+  "commit": "f81d4f0fc9b2deefc11e2cd9bf0b6e8b336b5d3d",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37447210920",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37684302967",
   "fingerprints": {
     "brd": "7947aff0475c769010747917eaddd2a01589d7fb89b4cb51eaacfe048373f3fb",
     "prd": "1fca7a2496be84d875fe88cfb906fb117e68b60d8daaada4ff27c72c497b3d8c"
@@ -24,7 +24,7 @@
       "evidence": [
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:136"
       ],
-      "rationale": "Component Contracts and Failure Domains table is now even more granular (workbench/API, state store, orchestrator, bounded-AI task service, evidence store, import, identity/telemetry) with explicit failure domains; already at the rubric ceiling, no change possible."
+      "rationale": "Component Contracts and Failure Domains table is granular (workbench/API, state store, orchestrator, bounded-AI task service, evidence store, import, identity/telemetry) with explicit failure domains; already at the rubric ceiling."
     },
     "A2": {
       "score": 5,
@@ -45,28 +45,28 @@
       "evidence": [
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:615"
       ],
-      "rationale": "Still only design documents (release increments, acceptance criteria) with no working implementation delivered in this PR; the referenced prototype lives on an unmerged branch, not in this diff."
+      "rationale": "Still only design documents (release increments, acceptance criteria) with no working implementation delivered; referenced prototype lives on an unmerged branch, not in this diff."
     },
     "A5": {
       "score": 3,
       "evidence": [
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:378"
       ],
-      "rationale": "New Observability and SLO Measurement Method section adds OpenTelemetry conventions, structured log fields and histogram/SLO definitions, but explicitly states targets are TBD and nothing is measured yet, matching the qualitative-only band."
+      "rationale": "Observability and SLO Measurement Method section adds OpenTelemetry conventions and histogram/SLO definitions, but targets are TBD and nothing is measured yet, matching the qualitative-only band."
     },
     "A6": {
       "score": 4,
       "evidence": [
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:413"
       ],
-      "rationale": "Evaluation harness and failure-mode taxonomy are more exhaustive, but the document still states no model has been selected or justified against alternatives with real numbers, so it does not clear the top band's model-choice-justified bar."
+      "rationale": "Evaluation harness and failure-mode taxonomy are exhaustive, but no model has been selected or justified against alternatives with real numbers, so it does not clear the top band."
     },
     "A7": {
       "score": 3,
       "evidence": [
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:443"
       ],
-      "rationale": "Bounded-Agent Orchestration Pattern is a tighter deterministic state graph, but the text explicitly disclaims autonomous stage selection, reinforcing a scripted-flow characterization rather than demonstrated autonomy."
+      "rationale": "Bounded-Agent Orchestration Pattern is a deterministic state graph; text explicitly disclaims autonomous stage selection, reinforcing a scripted-flow characterization."
     },
     "B1": {
       "score": 4,
@@ -110,14 +110,14 @@
         "docs/brds/agentic-retrofit-programme-brd.md:1034",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1"
       ],
-      "rationale": "Both documents are well organised with clear headings and tables and gained new frontmatter (title/description/author on the PRD); still working documents rather than audience-ready deck/doc craft, so baseline retained."
+      "rationale": "Both documents are well organised with clear headings, tables and frontmatter; still working documents rather than audience-ready deck/doc craft."
     },
     "B7": {
       "score": 4,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:447"
       ],
-      "rationale": "Owner-direction data point table unchanged; new success-metrics/evidence provenance rules reinforce rigor but remain prose, not demonstrated data storytelling."
+      "rationale": "Owner-direction data point table unchanged; success-metrics/evidence provenance rules reinforce rigor but remain prose, not demonstrated data storytelling."
     },
     "C1": {
       "score": 5,
@@ -125,7 +125,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:530",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1"
       ],
-      "rationale": "Discovery framing evidence already at the existing maximum; new workflow portfolio table reinforces but does not exceed ceiling."
+      "rationale": "Discovery framing evidence already at the existing maximum; workflow portfolio table reinforces but does not exceed ceiling."
     },
     "C2": {
       "score": 2,
@@ -148,7 +148,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:1034",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:615"
       ],
-      "rationale": "New Home-Centred Workbench operating model and workflow portfolio add detail and originality, but the core gap (no direct company engagement evidence, still role-profile hypotheses) remains unchanged."
+      "rationale": "Home-Centred Workbench operating model and workflow portfolio add detail and originality, but core gap (no direct company engagement evidence, still role-profile hypotheses) remains unchanged."
     },
     "D2": {
       "score": 4,
