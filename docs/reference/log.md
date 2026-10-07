@@ -1124,3 +1124,14 @@ metadata when the knowledge base was created.
 * Updated `README.md` routing/catalog. No original case, addendum, PRD, memory,
   prototype code, generated resident data or tracking artifacts changed.
   No runtime inspection, operational approval or user-tested success claimed.
+
+## [2026-10-08] update | Propose Azure architecture and Bicep
+
+* Added `docs/adrs/0001-azure-architecture.md` and Bicep under `infra/`
+  proposing Container Apps hosting, bounded agent placement, Azure SQL with
+  ledger, Blob evidence, a two-tier Foundry model deployment, private
+  endpoints, managed identities, monitoring and audit controls, derived from
+  the PRD component contracts, threat model and NFRs.
+* Status is proposed and unverified: Bicep builds and lints, but nothing was
+  deployed, and model versions, quotas and region availability are unchecked.
+* Updated the `README.md` catalog.
