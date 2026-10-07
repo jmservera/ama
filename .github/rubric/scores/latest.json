@@ -23,7 +23,7 @@
     "A1": {
       "score": 3,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:136"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:143-158"
       ],
       "rationale": "Component Contracts table names decoupled components (workbench/API, state store, orchestrator, bounded AI service, document store, import, identity) with explicit failure domains; scaling path is discussed in general terms (Azure Container Apps candidates) but not evidenced with load/scale data...."
     },
@@ -37,7 +37,8 @@
     "A3": {
       "score": 3,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:158"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:158-175",
+        "docs/brds/agentic-retrofit-programme-brd.md:1290"
       ],
       "rationale": "Threat model table names specific AI risks (prompt injection, data leakage, hallucination, spoofed identity) with mitigations, but it is explicitly labelled illustrative/not validated and core controls are not implemented."
     },
@@ -61,7 +62,7 @@
       "rationale": "AI Model Selection and Evaluation Harness names a sound comparative method (smaller vs capable candidate, metrics, thresholds) but explicitly states no model has been selected and no test has been run."
     },
     "A7": {
-      "score": 3,
+      "score": 2,
       "evidence": [
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:491"
       ],

@@ -424,6 +424,14 @@ evidence instead of assessing the repository:
 }
 ```
 
+Most failed runs come from a `details` object with 19 entries (one criterion
+dropped, B7 in a past run). Build `details` from the 20 keys of
+`tool_inputs_template` instead of retyping them, include an entry for every
+criterion even when its score is forced or unchanged, and count the keys
+(`jq 'keys | length'` on the parsed details must print 20) before calling the
+tool. A criterion with a missing artifact still needs its entry, with
+`evidence` `[]`.
+
 Before calling the output tool, verify that all and only the score fields for
 A1-A7, B1-B7, C1-C3 and D1-D3, plus details and summary, are present; details
 has exactly those 20 IDs and all three fields per ID; every score is an
