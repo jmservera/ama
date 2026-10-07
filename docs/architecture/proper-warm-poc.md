@@ -1,7 +1,7 @@
 ---
 title: Proper Warm Architecture and Local Proof of Concept
 description: Implemented boundaries, provisional Azure-led target, trade-offs and release gaps
-ms.date: 2026-10-07
+ms.date: 2026-10-08
 ms.topic: architecture
 ---
 
@@ -68,40 +68,74 @@ container and browser. No arrow represents a resident contact or live approval.
 * Hazard response authority is external; the PoC displays holds and records
   simulated referral receipt without releasing holds or controlling clocks.
 
-## Proposed Azure-Led Hybrid Architecture
+## Azure PoC Deployment Architecture
+
+Owner direction on 2026-10-08 requires explicit Azure services and Foundry
+agents in the PoC architecture, rather than only a generic future model adapter.
+The following is the concrete deployment design for the next cloud PoC.
+It is not a claim that those resources exist: the running implementation
+remains local Node/SQLite with an offline simulator. No Azure resource has
+been created by this architecture update.
 
 ```mermaid
 flowchart TB
-    staff["Staff browser / optional Teams channel"]
-    entra["Entra ID - human identity / conditional access"]
-    systems["Asset / repairs / finance / suppliers - authoritative systems"]
-    subgraph azure["Proposed Azure boundary - not deployed"]
-        aca["Container Apps - workbench and domain API"]
-        sql[("Managed relational programme store")]
-        evidence[("Blob evidence authority if selected")]
-        worker["Durable execution - retries / long waits / outbox"]
-        foundry["Foundry model adapter - draft / flag only"]
-        telemetry["Application telemetry / cost / alerts"]
-        identity["Managed identity - least-privilege service access"]
+    staff["Staff browser - synthetic cases"]
+    entra["Entra ID - staff sign-in / API token"]
+    systems["Existing authoritative systems - not connected"]
+    subgraph azure["Azure PoC resource group - design, not deployed"]
+        acr["Azure Container Registry - versioned image"]
+        subgraph compute["Azure Container Apps environment"]
+            aca["Workbench / domain API - HTTPS ingress"]
+            worker["Internal agent broker / outbox worker"]
+            appmi["App user-assigned managed identity"]
+            workermi["Broker user-assigned managed identity"]
+        end
+        sql[("Azure SQL Database - cases / events / replay / outbox")]
+        evidence[("Blob Storage - versioned synthetic evidence")]
+        vault["Key Vault - exceptional non-Entra secrets only"]
+        telemetry["Application Insights / Log Analytics"]
+        subgraph ai["Microsoft Foundry account / project"]
+            foundry["Foundry Agent Service - bounded tools"]
+            model["Agent-compatible model deployment"]
+            projectmi["Foundry project managed identity"]
+        end
+        search[("Azure AI Search - approved evidence index")]
+        cosmos[("Cosmos DB - agent state, not programme truth")]
+        agentfiles[("Agent Blob Storage - files / intermediate data")]
     end
-    m365["Governed SharePoint evidence alternative / collaboration"]
+    m365["SharePoint - optional governed collaboration"]
     staff --> entra
-    entra --> aca
+    staff --> aca
+    aca -->|validate token and authorise case/action| entra
+    acr -->|image pull| aca
+    acr -->|image pull| worker
+    aca --> appmi
     aca --> sql
-    aca --> identity
+    aca --> evidence
     aca --> telemetry
-    aca -. approved tasks .-> worker
-    worker -. warranted integration .-> systems
-    aca -. bounded evaluated tasks .-> foundry
-    aca -. selected authority .-> evidence
-    aca -. selected authority .-> m365
+    aca -->|owned draft request| worker
+    worker --> workermi
+    worker -->|case-scoped evidence tool / outbox| sql
+    worker --> foundry
+    worker --> telemetry
+    worker -. exceptional secret .-> vault
+    foundry --> model
+    foundry --> projectmi
+    projectmi --> search
+    projectmi --> cosmos
+    projectmi --> agentfiles
+    evidence -->|reviewed index ingestion| search
+    foundry -->|allowlisted read-only tool| worker
+    worker -. later approved integration .-> systems
+    aca -. later governed link .-> m365
 ```
 
 ### Legend
 
-Solid arrows show required target dependencies. Dotted arrows are conditional,
-subject to contracts, authority and release evidence. This is a proposal,
-not a diagram of provisioned resources.
+Solid arrows show designed dependencies or data flow, not automatic permission.
+Dotted arrows are deferred integrations or exceptional secret access. Subgraphs
+are deployment/administrative boundaries, not proof of network isolation.
+Private endpoints, DNS and routing must be designed and tested before release.
 
 ### Key Relationships
 
@@ -121,6 +155,105 @@ not a diagram of provisioned resources.
 * SQL-backed persistence and real identity must precede scale-out. The current
   SQLite adapter is intentionally one-process/local and has no Azure migration
   implementation or tested cloud availability claim.
+
+### Concrete Service and Data Responsibilities
+
+| Service | PoC responsibility | Deployment / verification boundary |
+| --- | --- | --- |
+| Azure Container Apps environment and workbench app | Run versioned workbench/API image with HTTPS; validate staff token and domain authority | Select Container Apps for this Docker-based design; App Service is an alternative, not a second required host. Never expose demo impersonation on public ingress |
+| Internal Container App broker/worker | Authorise case-scoped agent requests, serve narrow read-only evidence tools, validate output and retain owned tasks | Independent identity; no anonymous public tool endpoint; enforce token audience, caller identity, case scope, deadlines and request budgets |
+| Azure Container Registry | Store immutable deployment image references | Managed-identity image pull; documented digest, revision and rollback, no registry password in source |
+| Azure SQL logical server and database | Transactional cases, versions, events, idempotency responses and later outbox | Replace SQLite adapter; Entra database users and granular database grants, not subscription Contributor as data permission |
+| Programme Blob Storage | Versioned synthetic documents and evidence provenance | App identity scoped to required containers; retention and upload checks explicit; no real resident records in PoC |
+| Foundry account, project and model deployment | Host bounded agents and selected compatible model | Record actual region, availability, runtime/API/SDK/model versions, quotas and budget before provisioning; no model choice is implied by this diagram |
+| Foundry Agent Service standard setup | Customer-managed agent state/files/retrieval dependencies | Distinct from SQL programme truth; runtime-specific capability settings and roles verified before creation |
+| Cosmos DB for NoSQL | Agent run/conversation/definition state under selected standard setup | Never the lifecycle/consent/approval authority; separate retention, access and cost controls |
+| Agent Blob Storage and Azure AI Search | Agent files/intermediate data and approved retrieval index | Separate from original evidence authority; document project connections, index schema and provenance; retrieval does not grant permission |
+| App, broker and Foundry project managed identities | Secretless service authentication | Separate principals and resource-scoped roles; service authentication never replaces human consent or delegated authority |
+| Key Vault | Exceptional integration secrets when Entra is unavailable | Do not create application passwords where managed identity suffices; grant only the necessary secret permission |
+| Application Insights and Log Analytics | Correlated requests, agent runs, tool outcomes, latency, errors and costs | Redact contact details, tokens, draft content and sensitive source text; health/readiness and alerts have named owners |
+
+### Managed Identity and Access Contract
+
+* The app identity pulls its image and accesses only its programme database and
+  evidence containers. It must not administer Foundry or subscription resources.
+* The broker identity invokes the selected Foundry project and reads only
+  authorised case context. If it persists drafts/tasks, use a narrow application
+  procedure/API or explicit database grant; do not expose generic SQL to agents.
+* The Foundry project identity accesses its configured agent-state, file and
+  retrieval resources. It has no programme mutation, payment, claim, release,
+  consent, safety or supplier-instruction permission.
+* A read-only agent tool still checks the requesting staff's case/field scope.
+  A service identity alone must not widen a person's visibility. Do not pass
+  contact data to a model unless that particular task requires it.
+* Deploying identity and runtime identities have different permissions.
+  Record exact principal IDs and role scopes in the private deployment ledger;
+  resource names, purpose and non-sensitive outputs belong in project docs.
+* Standard Foundry setup can require broader service-specific roles than a
+  simple reader. Check the selected runtime's official requirements and record
+  the exception rather than labelling every dependency "least privilege".
+
+### Foundry Agent Responsibilities and Human Boundaries
+
+Start with one agent-backed use case, then enable additional agents only after
+their own evaluation passes. Agent definitions are versioned artefacts, not nine
+independent authorities or nine unnecessary compute services.
+
+| Agent definition | Inputs and tools | Output / supported decision | Autonomy limit |
+| --- | --- | --- | --- |
+| Evidence and readiness assistant | Authorised case snapshot; approved source/date/version; read-only evidence retrieval | Cited gap/conflict summary and review-ready pack for assessor/coordinator | Retrieve, compare and draft within run limits; cannot approve assessment/design or advance |
+| Resident-service drafting assistant | Minimum-necessary contact preference/adjustment references and approved programme facts | Accessible draft update and questions for resident officer review | No outbound contact, consent inference, refusal classification or safety advice |
+| Coordination and handoff assistant | Current/chase/receiving owner, unresolved tasks and pending handoff events | Suggested next task, recipient and missing acceptance evidence | May recommend, not transfer ownership or accept a handoff |
+| Finance/evidence assistant | Approved package, invoice/grant records and current approved scheme evidence | Reconciliation discrepancy summary and draft evidence checklist | No award, investment approval, payment, eligibility determination or claim submission |
+
+The broker supplies a versioned case snapshot, maximum time/tool/token/cost
+budgets and a closed response schema. Tool results carry source provenance;
+retrieved text is data, not instructions. Drafts record agent/model/prompt/tool/
+source versions and the case version. Changed source or case state makes a
+draft stale for review. Disablement, exhausted budget, invalid citations,
+permission denial and model/tool failure create explicit owned manual work,
+never a fabricated successful decision. Model evaluation must compare against
+the deterministic baseline before any autonomy or quality claim.
+
+### Cloud PoC Implementation Sequence and Acceptance
+
+1. Create a scoped infrastructure definition and inventory: resource group,
+   region, tags/owner, resource names, planned SKUs, budgets and safe teardown.
+   Check naming collisions, service availability and model quota first.
+2. Implement SQL adapter and verify transaction/version/replay/fault semantics
+   against managed persistence; load only validated synthetic fixtures.
+3. Implement Entra staff sign-in and case/action/field authority; negative
+   token/audience/role tests and denied reads/writes must pass before ingress.
+4. Provision registry, compute, data stores, managed identities and telemetry;
+   assign resource/data-plane permissions and test allowed/denied paths.
+5. Configure the selected Foundry runtime, project dependencies and compatible
+   model. Add only allowlisted case-scoped retrieval tools; no domain command
+   tools. Evaluate the first evidence assistant against fixed cited fixtures.
+6. Connect app to broker, retain manual fallback and demonstrate sourced draft,
+   forbidden-tool denial, stale-context rejection, timeout/budget exhaustion,
+   persistent restart, exact replay and independently recorded human action.
+7. Record actual endpoint, resource IDs/scopes, deployed revisions, model and
+   costs in the ledger. Cloud acceptance requires observed tests, cleanup/
+   rollback instructions and named human release review; a diagram is not a
+   deployed PoC.
+
+The existing container cannot satisfy this sequence unchanged. This architecture
+update specifies missing cloud components; SQL/identity/tool/model integration
+and infrastructure provisioning remain unexecuted implementation work.
+
+### Official Platform Evidence
+
+Reviewed on 2026-10-08:
+[Foundry standard agent setup](https://learn.microsoft.com/azure/foundry/agents/concepts/standard-agent-setup)
+documents customer-managed Storage, AI Search and Cosmos DB, model deployment,
+project managed identities, capability settings and runtime roles.
+The retrieved page distinguishes Classic and New runtime containers but mixes
+five-container/1000-RU statements with three-container/3000-RU guidance and
+mentions serverless as supported. Do not infer an exact throughput/SKU or
+container count from this inconsistent page. Verify the chosen runtime template,
+current quota/capability documentation and actual provisioning outputs first.
+Project capability settings cannot simply be edited after creation; choose
+state resources before project provisioning and plan recreation deliberately.
 
 ## Contracts and Authority
 

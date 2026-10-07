@@ -1131,3 +1131,18 @@ metadata when the knowledge base was created.
   pass; rebuilt owned container passed isolated invariant regression and
   retained persistent history. No cloud, tenant or additional Docker resource
   was created; original Review remains historical evidence.
+
+## [2026-10-08] update | Specify Azure services and Foundry agents for the PoC
+
+* Owner requested explicit database, cloud hosting, managed identity and
+  Foundry agents in the PoC architecture. Expanded
+  [the architecture](../architecture/proper-warm-poc.md#azure-poc-deployment-architecture)
+  with Container Apps, Azure SQL, registry, separate managed identities,
+  Foundry account/project/model/agents and standard-setup dependencies.
+* Added data/identity/tool boundaries, agent responsibility and human decision
+  matrix, cloud implementation sequence and acceptance evidence. App Service
+  remains an alternative hosting choice, not duplicate compute.
+* Checked official Foundry standard-setup documentation and flagged conflicting
+  runtime container/throughput guidance for pre-provisioning verification.
+  This is a deployment design, not created infrastructure or evaluated AI.
+  Local app and cloud/tenant resource inventory remain unchanged.

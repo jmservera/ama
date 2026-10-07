@@ -1,7 +1,7 @@
 ---
 title: Proper Warm PoC Resource and Validation Ledger
 description: Actual created artefacts, local runtime resources and safe teardown
-ms.date: 2026-10-07
+ms.date: 2026-10-08
 ms.topic: reference
 ---
 
@@ -10,6 +10,14 @@ ms.topic: reference
 This ledger belongs to the 2026-10-07 Proper Warm architecture/PoC task.
 No cloud or tenant creation is necessary for this local synthetic implementation.
 Permission to create resources has not been mistaken for a need to create them.
+
+The 2026-10-08 architecture update specifies a concrete Azure PoC deployment
+design: Container Apps, Azure SQL, registry, managed identities, Foundry
+account/project/model/agents, Cosmos DB, agent Storage/Search and telemetry.
+These are planned components, not created resources. No endpoint, role
+assignment, model deployment or cloud charge is claimed for this update.
+See [the implementation sequence](./proper-warm-poc.md#cloud-poc-implementation-sequence-and-acceptance)
+for the work required to turn that design into an observed cloud PoC.
 
 Before creation, the task checked Compose project `proper-warm-poc` containers,
 volumes/networks and TCP port 3410: none existed/listened. No existing resources
