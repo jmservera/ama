@@ -71,8 +71,10 @@ def evidence_path(reference: str) -> str:
     return "" if value == "." else value
 
 
-def outcome_label(rubric: dict[str, Any], total: int, floors_met: bool) -> str:
+def outcome_label(rubric: dict[str, Any], total: int, floors_met: bool, submitted: bool = True) -> str:
     """Return the rubric outcome band, honouring the floor check first."""
+    if not submitted:
+        return rubric["submission_required"]["outcome"]
     if not floors_met:
         return "Not Yet Met (floor)"
     for band in sorted(rubric["outcome_bands"], key=lambda item: item["min"], reverse=True):
@@ -140,6 +142,7 @@ def evaluate(
     detection_result: str,
     removed_files: list[str] | None = None,
     calibration: bool = False,
+    artifact_counts: dict[str, int] | None = None,
 ) -> dict[str, Any]:
     """Pure gate decision; see module docstring.
 
@@ -190,11 +193,25 @@ def evaluate(
             continue
         final[cid] = proposed
 
+    if artifact_counts is not None:
+        for cid, rule in prepare.unmet_requirements(rubric, artifact_counts).items():
+            if final[cid]["score"] > rule["max"]:
+                reason = "required artifact not provided: " + ", ".join(rule["missing"])
+                result["warnings"].append(f"{cid}: score forced from {final[cid]['score']} to {rule['max']}, {reason}")
+                final[cid] = {
+                    **final[cid],
+                    "score": rule["max"],
+                    "evidence": [] if rule["max"] == 0 else final[cid]["evidence"],
+                    "rationale": f"Not demonstrable: {reason}. Maximum {rule['max']} until it is committed.",
+                }
+
     sections = {key: 0 for key in rubric["sections"]}
     for criterion in rubric["criteria"]:
         sections[criterion["section"]] += final[criterion["id"]]["score"]
     total = sum(sections.values())
-    floors_met = all(sections[key] >= value["floor"] for key, value in rubric["sections"].items()) and all(
+    required = rubric.get("submission_required") or {}
+    submitted = not required or artifact_counts is None or bool(artifact_counts.get(required["artifact"], 0))
+    floors_met = submitted and all(sections[key] >= value["floor"] for key, value in rubric["sections"].items()) and all(
         entry["score"] > 1 for entry in final.values()
     )
     drops = [
@@ -213,7 +230,7 @@ def evaluate(
             "total": total,
             "sections": sections,
             "floors_met": floors_met,
-            "outcome": outcome_label(rubric, total, floors_met),
+            "outcome": outcome_label(rubric, total, floors_met, submitted),
             "criteria": final,
             "drops": drops,
             "summary": scorecard["summary"],
@@ -270,10 +287,13 @@ def render_report(rubric: dict[str, Any], baseline: dict[str, Any] | None, resul
     return "\n".join(lines) + "\n"
 
 
-def build_scores_file(result: dict[str, Any], fingerprints: dict[str, str], commit: str, model: str, run_url: str) -> dict[str, Any]:
+def build_scores_file(
+    result: dict[str, Any], fingerprints: dict[str, str], commit: str, model: str, run_url: str, rubric_version: int | None = None
+) -> dict[str, Any]:
     """Build the next latest.json content."""
     return {
         "schema_version": 1,
+        "rubric_version": rubric_version,
         "source": "workflow",
         "scored_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "commit": commit or None,
@@ -293,6 +313,36 @@ def build_scores_file(result: dict[str, Any], fingerprints: dict[str, str], comm
             for cid, entry in result["criteria"].items()
         },
     }
+
+
+def badge_colour(scores: dict[str, Any]) -> str:
+    """Pick a badge colour from the recorded outcome."""
+    outcome = str(scores.get("outcome", ""))
+    if outcome.startswith(("Incomplete", "Not Yet Met")):
+        return "#e05d44" if scores.get("total", 0) < 66 else "#dfb317"
+    return "#4c1" if outcome in ("Distinction", "Pass with Merit") else "#a4a61d"
+
+
+def render_badge(scores: dict[str, Any]) -> str:
+    """Render a static shields-style SVG badge with the recorded rubric total."""
+    label, value = "rubric score", f"{scores['total']}/100"
+    label_width, value_width = 6 * len(label) + 10, 6 * len(value) + 10
+    width = label_width + value_width
+    text = f"{label}: {value}, {scores.get('outcome', '')}"
+    title = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="20" role="img" aria-label="{title}">'
+        f"<title>{title}</title>"
+        f'<linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/>'
+        f'<stop offset="1" stop-opacity=".1"/></linearGradient>'
+        f'<clipPath id="r"><rect width="{width}" height="20" rx="3" fill="#fff"/></clipPath>'
+        f'<g clip-path="url(#r)"><rect width="{label_width}" height="20" fill="#555"/>'
+        f'<rect x="{label_width}" width="{value_width}" height="20" fill="{badge_colour(scores)}"/>'
+        f'<rect width="{width}" height="20" fill="url(#s)"/></g>'
+        f'<g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" font-size="11">'
+        f'<text x="{label_width / 2}" y="14">{label}</text>'
+        f'<text x="{label_width + value_width / 2}" y="14">{value}</text></g></svg>\n'
+    )
 
 
 def load_items(agent_output: Path | None) -> list[dict[str, Any]]:
@@ -346,13 +396,15 @@ def main() -> int:
         args.detection_result,
         state["removed_files"],
         args.force,
+        {key: len(value["files"]) for key, value in state["artifacts"].items()},
     )
     args.out_dir.mkdir(parents=True, exist_ok=True)
     report = render_report(state["rubric"], state["baseline"], result, args.run_url)
     (args.out_dir / "report.md").write_text(report, encoding="utf-8")
     if result["valid"] and not args.force:
-        scores = build_scores_file(result, state["fingerprints"], args.commit, args.model, args.run_url)
+        scores = build_scores_file(result, state["fingerprints"], args.commit, args.model, args.run_url, state["rubric"].get("rubric_version"))
         (args.out_dir / "latest.json").write_text(json.dumps(scores, indent=2) + "\n", encoding="utf-8")
+        (args.out_dir / "badge.svg").write_text(render_badge(scores), encoding="utf-8")
     decision = {
         key: result.get(key)
         for key in ("valid", "passed", "bootstrap", "calibration", "total", "baseline_total", "outcome", "drops", "error")

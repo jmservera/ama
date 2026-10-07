@@ -2,17 +2,15 @@
   "schema_version": 1,
   "max_file_bytes": 2000000,
   "artifacts": [
-    {
-      "id": "brd",
+    {"id": "brd",
       "title": "Business requirements document",
       "status": "active",
       "extractor": "text",
       "include": ["docs/brds/**/*.md"],
       "exclude": [],
-      "criteria": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "B6", "B7", "C1", "C3", "D1", "D2"]
+      "criteria": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "B6", "C1"]
     },
-    {
-      "id": "prd",
+    {"id": "prd",
       "title": "Product requirements documents",
       "status": "active",
       "extractor": "text",
@@ -20,36 +18,23 @@
       "exclude": [],
       "criteria": ["A1", "A2", "A3", "A6", "A7", "B6", "C1"]
     },
-    {
-      "id": "adr",
+    {"id": "adr",
       "title": "Architecture decision records",
-      "status": "planned",
+      "status": "active",
       "extractor": "text",
       "include": ["docs/adrs/**/*.md", "docs/planning/adrs/**/*.md"],
       "exclude": [],
       "criteria": ["A1", "A2", "A3", "B6"]
     },
-    {
-      "id": "solution-code",
+    {"id": "solution-code",
       "title": "Solution source code",
       "status": "active",
       "extractor": "text",
-      "include": [
-        "src/**/*",
-        "prototype/properwarm/**/*.py",
-        "prototype/web/**/*",
-        "prototype/tests/**/*.py",
-        "prototype/scripts/**/*.py",
-        "prototype/Dockerfile",
-        "prototype/requirements.txt",
-        "prototype/README.md",
-        "prototype/architecture/*.excalidraw"
-      ],
+      "include": ["src/**/*", "prototype/properwarm/**/*.py", "prototype/web/**/*", "prototype/tests/**/*.py", "prototype/scripts/**/*.py", "prototype/Dockerfile", "prototype/requirements.txt", "prototype/README.md", "prototype/architecture/*.excalidraw"],
       "exclude": ["**/node_modules/**", "**/.venv/**", "**/__pycache__/**", "**/bin/**", "**/obj/**", "**/dist/**", "prototype/seed/**"],
       "criteria": ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]
     },
-    {
-      "id": "infrastructure",
+    {"id": "infrastructure",
       "title": "Infrastructure as code",
       "status": "active",
       "extractor": "text",
@@ -57,30 +42,35 @@
       "exclude": ["**/.terraform/**"],
       "criteria": ["A1", "A3", "A5"]
     },
-    {
-      "id": "capstone-deck",
+    {"id": "capstone-deck",
       "title": "Final capstone presentation deck",
-      "status": "planned",
+      "status": "active",
       "extractor": "pptx",
       "include": ["docs/capstone/deck/*.pptx"],
       "exclude": [],
       "criteria": ["B1", "B2", "B3", "B5", "B6", "B7"]
     },
-    {
-      "id": "pitch",
+    {"id": "pitch",
       "title": "Pitch rehearsal transcripts and notes",
-      "status": "planned",
+      "status": "active",
       "extractor": "text",
       "include": ["docs/capstone/pitch/**/*.md", "docs/capstone/pitch/**/*.vtt", "docs/capstone/pitch/**/*.txt"],
       "exclude": [],
       "criteria": ["B1", "B2", "B3", "B4", "B5", "B7", "C2", "C3"]
     },
-    {
-      "id": "thought-leadership",
+    {"id": "thought-leadership-deck",
+      "title": "Thought leadership slides, scored only with written notes or a transcript",
+      "status": "active",
+      "extractor": "pptx",
+      "include": ["docs/capstone/thought-leadership/**/*.pptx"],
+      "exclude": [],
+      "criteria": ["D1", "D2", "D3"]
+    },
+    {"id": "thought-leadership",
       "title": "Thought leadership artifact and dissemination evidence",
-      "status": "planned",
+      "status": "active",
       "extractor": "text",
-      "include": ["docs/capstone/thought-leadership/**/*.md"],
+      "include": ["docs/capstone/thought-leadership/**/*.md", "docs/capstone/thought-leadership/**/*.txt", "docs/capstone/thought-leadership/**/*.vtt"],
       "exclude": [],
       "criteria": ["D1", "D2", "D3"]
     }

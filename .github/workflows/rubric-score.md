@@ -258,9 +258,11 @@ safe-outputs:
           run: |
             if [ ! -f /tmp/rubric-out/latest.json ]; then exit 0; fi
             cp /tmp/rubric-out/latest.json .github/rubric/scores/latest.json
+            if [ -f /tmp/rubric-out/badge.svg ]; then cp /tmp/rubric-out/badge.svg .github/rubric/scores/badge.svg; fi
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add .github/rubric/scores/latest.json
+            if [ -f .github/rubric/scores/badge.svg ]; then git add .github/rubric/scores/badge.svg; fi
             if git diff --cached --quiet; then exit 0; fi
             git commit -m "chore(rubric): record score $(jq -r .total /tmp/rubric-out/latest.json)/100"
             if git -c core.hooksPath=/dev/null push "https://x-access-token:${PUSH_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git" "HEAD:$HEAD_REF"; then
@@ -373,6 +375,7 @@ secrets are provided to this agent.
 * For open criteria, keep the baseline score unless the changed content materially improves or weakens the evidence for that criterion. When you change a score, cite at least one changed file in `evidence` as `path:line` and explain the change in `change_reason`. The gate discards changes without a cited changed file.
 * Files in `removed_files` were deleted, renamed out of scope or became too large to score. Treat lost evidence as a change: lower the affected criteria and cite the removed path. A removed path can justify a lower score only, never a higher one.
 * Live-scored criteria (`live_criteria`) are judged by the panel during the session. Score them only as readiness from deck, pitch or rehearsal evidence. Without such evidence keep the baseline score; in bootstrap and calibration runs, score them from the written evidence alone and keep them low when nothing demonstrates live delivery.
+* Required evidence: `unmet_requirements` in `context.json` lists criteria whose required artifact is not committed (for example the capstone deck, pitch transcript or thought leadership artifact). Those criteria are not demonstrable: submit `"1"` and cite no evidence, and the gate records 0. Never score them from BRDs, PRDs, code or plans, and never treat a plan or outline for a missing artifact as the artifact. A deck without notes or a transcript is not a thought leadership artifact. When `cap_without` applies (B6 without a deck) the gate caps the score.
 * Score what the repository shows today. Do not reward intentions, plans or promises as if they were delivered, and do not invent evidence.
 * Use `path:line` evidence references with repository-relative paths.
 * Supply the required score choice for every criterion and all 20 entries in `details`: no missing fields, unlisted IDs, aliases, or placeholder entries. Do not pass a `scorecard` string or a nested `criteria` argument.

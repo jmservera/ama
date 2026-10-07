@@ -5,6 +5,10 @@ description: Research and solution design for the Proper Warm retrofit programme
 
 ## Repository Purpose
 
+![Capstone rubric score](./.github/rubric/scores/badge.svg)
+
+The badge shows the latest recorded [capstone rubric score](./.github/rubric/README.md).
+
 This repository develops Case Study 48 into a research-backed proposal,
 business requirements, agent architecture, delivery plan and presentation for
 the Proper Warm retrofit programme at Proper North Homes.
