@@ -1,11 +1,17 @@
 ---
 title: Proper Warm Prototype Profile Review
-description: Fresh company-role critique, UX discussion and proposed next iteration for all eleven prototype perspectives
-ms.date: 2026-10-06
+description: Company-role critique, dated owner usability feedback and proposed next-prototype acceptance checks
+ms.date: 2026-10-07
 ms.topic: reference
 ---
 
 ## Outcome and Evidence Boundary
+
+The source-inspected findings below describe the 2026-10-06 HTML artifact,
+not every subsequent prototype. The separate
+[2026-10-07 owner feedback](#owner-usability-feedback-2026-10-07) records
+reported impressions of a later application without inspecting its code or
+independently reproducing its behavior. Proposed checks are not passed tests.
 
 All nine repository `company-*` profiles were launched in parallel to review
 the current [constructed-data prototype](../../../../.copilot-tracking/prototypes/2026-10-06/proper-warm-retrofit-workbench.html).
@@ -136,3 +142,85 @@ reviewers are excluded from this review's participation and agreement claims.
 Four recommendation discussions were actually relayed and answered; this is
 not nine-way consensus or real-user validation. No original case, PRD,
 prototype, regulatory snapshot or owner memory was changed.
+
+## Owner Usability Feedback (2026-10-07)
+
+### Source, Status and Scope
+
+The project owner supplied the following feedback on 2026-10-07 while reviewing
+the application served at `localhost:3410`. The related prototype
+[PR #24](https://github.com/jmservera/ama/pull/24) is provenance only, not a
+dependency or a merge prerequisite for these learnings. The URL identifies the
+review context; it is not a durable evidence artifact.
+
+This section captures owner-reported observations and requested direction,
+not independently verified implementation facts, representative staff or
+resident research, approved production requirements or user-tested success.
+No runtime inspection, UI implementation, resident-data generation or prototype
+code import accompanies this documentation capture. The original case,
+addendum, PRD and owner memory remain unchanged.
+
+The earlier source review found that workflow selection filtered the HTML
+queue. The owner now reports that changing role or workflow does not visibly
+change the UI or filters in the later application. These statements concern
+different review contexts and evidence types. Do not silently replace either
+with a universal implementation claim; verify the next artifact directly.
+
+### Owner's Notes
+
+> Take these notes: I like the style, logo, fonts and colors. Page seems clear,
+> but the red or redish colors are appearing in multiple places and seem like
+> they are errors when they are not. When we change the role or the workflow,
+> the UI or the filters do not change, it must be clear when is it perpared to
+> the next step, who takes the case, what will the agent do with the data or
+> what decisions will us help with. Furthermore we should be able to open a
+> case full screen, and having full address, phone of the resident, all the
+> data needed at hand to fulfill the necessary data and steps. Review this,
+> take the notes and store them in a new branch & PR where we could merge this
+> information to influence the next prototype, but without storing the current
+> code, just the learnings.
+
+### Design Direction Derived from the Notes
+
+| Owner feedback | Proposed next-prototype direction | Boundary |
+| --- | --- | --- |
+| Style, logo, fonts, colors and general page clarity are liked. | Preserve the brand identity, typography, general palette and clear page structure; correct semantic color use rather than redesign the brand. | A positive owner impression is not a general usability or accessibility finding. |
+| Red/reddish elements look like errors where none are intended. | Reserve reddish operational status/action emphasis for genuine errors or blocking conditions. Use neutral informational/selection styling elsewhere; pair every state with explicit text and an appropriate icon, never color alone. | Retaining brand artwork does not justify error-like emphasis on routine metrics, selection or normal progress. Contrast still needs checking. |
+| Role/workflow changes do not make the UI or filters visibly different. | Make active role/perspective, workflow, scope and result count visible. Contextualize queues, filters, evidence and available actions; explain unchanged/shared results, unavailable scenarios and pending, empty, loading or failed states. | A selectable prototype perspective is not authenticated authorization and changing context never changes case state. |
+| Readiness and the person taking the case must be clear. | Show current stage, next step, missing/stale/conflicting evidence, readiness basis, current accountable owner, proposed destination and receiving owner. Distinguish sent, received and explicitly accepted handoffs, retaining an accountable chase owner while acceptance is pending. | Readiness for human review is not permission to release work. Unknown/unassigned ownership stays explicit; never infer acceptance from receipt. |
+| Explain what the agent does with data and which decisions it supports. | Show agent purpose, permitted inputs with source/date/version, intended output, rationale, uncertainty and next human reviewer. Separate extraction, reconciliation, drafts, recommendations and raise-only flags from decisions and actions. | No agent approval of safety, professional work, consent, investment, procurement, payment, claims or quality; no external action merely because a suggestion is accepted. |
+| Open a case full screen with address, phone and necessary working data at hand. | Provide a full-screen case workspace with case/home identity, full synthetic address, resident phone, contact preference, necessary accessibility adjustments or explicit unknowns, evidence, tasks, blockers, owners and next step. Provide a clear return to the originating queue. | Use only synthetic, clearly labelled records in the prototype. Production disclosure must follow role, case and field permissions and minimum-necessary purpose; do not expose sensitive histories by default or invent missing values. |
+
+The contact request means sufficient information for the permitted task, not
+unrestricted resident disclosure. Safe contact, preferences and adjustments
+must be distinguishable from consent to a measure; no phone number, accessible
+route or appointment record establishes consent. No real PII is recorded here.
+Actual contact details, company access rules and adjustment needs remain
+unknown pending authorized validation.
+
+### Proposed Acceptance Checks for the Next Prototype
+
+These checks translate the owner notes into candidate walkthroughs. All are
+unexecuted; they supplement rather than approve or silently revise the
+[PRD](../../../prds/proper-warm-retrofit-programme-demonstrator.md).
+Publish the next artifact's scenario manifest and expected results before
+running them. Static/mock states must be labelled as such.
+
+| Check | Scenario and expected evidence | Related PRD anchor |
+| --- | --- | --- |
+| UX-01: Preserve identity, correct status color | Compare the next artifact with the reviewed brand reference: logo, type and general palette remain recognizable. Inspect normal, selected, informational, error and blocked examples: only genuine error/blocking states use reddish operational emphasis, and each state remains understandable without color through text/icons. Check text contrast and keyboard-visible focus, not appearance alone. | NFR-001; owner-requested semantic-color refinement |
+| UX-02: Context has visible effect | Switch between two represented perspectives and two workflows using pointer and keyboard. Check visible context, expected case IDs/counts, applicable filters, evidence and actions against the manifest. Shared results are explained; unavailable actions state why. Announce updated scope/results without unexpected focus movement. An incompatible retained filter or selected case is cleared or explicitly explained. | FR-003/004/032/035; AC-005/006/034 |
+| UX-03: Honest state and recovery | Exercise pending handoff, loading, no matches, no representative scenario and load failure through labelled mocks if needed. Each has distinct text; loading/failure never looks like success or zero actual work. Reset returns the declared perspective defaults with a usable focus position. | FR-032/035; AC-034; NFR-001/006 |
+| UX-04: Readiness is evidence-based | Open ready-for-review and blocked/unknown examples. Identify current stage, next task, evidence/source/version, unmet prerequisite and responsible role without guessing. Missing evidence or approval keeps the step blocked/unknown; ready-for-review wording never claims authorized release or professional acceptance. | FR-008/025; AC-011/016/028 |
+| UX-05: Ownership survives a handoff | Compare unassigned, sent, received, accepted and returned synthetic examples. Current owner, destination, proposed/confirmed receiver, chase owner and next-update owner are separately labelled. Receipt alone is not acceptance; an accepted state names its receiver and supporting event, and a pending/returned case still has an accountable follow-up. | FR-011/033; AC-014/035/036 |
+| UX-06: Agent contribution is inspectable | Inspect a draft, a recommendation and a raise-only flag. Explain which permitted inputs/sources were used, what the agent produces, which decision it supports, what is unknown, who reviews it and what it cannot do. Unsupported inputs remain unknown; accepting a suggestion creates at most the permitted task/draft, not approval or external action. Include the explicit workflow-only/failure route. | FR-025-028; AC-028-030 |
+| UX-07: Full-screen case is recoverable | From a filtered queue open a case full screen by keyboard; identity, evidence, tasks, readiness and owners remain accessible. Return restores role/workflow/search/filter/sort context, selection, queue position and focus to the originating control. Check logical headings, focus order/visibility, a labelled return/close control, narrow layout and 200% text zoom; no required task depends on hover or pointer alone. | FR-001/002/032; NFR-001; owner-requested full-screen refinement |
+| UX-08: Necessary contact context, not invented data | Inspect a complete synthetic contact example and an incomplete one. Full address including postcode, resident phone, preferred/safe contact route and necessary adjustment references are available for the represented permitted task; missing fields say unknown/not supplied and name a follow-up, not fabricated values. Label all examples synthetic and provide no real contact actions. For production, require separate role/case/field access-denial checks across case detail, search, exports and AI inputs before release; hiding fields in a demo is not authorization evidence. | FR-003/014; AC-005/017/037; NFR-002/005 |
+
+Use UX-01 to UX-03 for orientation first, UX-04 to UX-06 for an
+exception-to-accountable-owner walkthrough, and UX-07 to UX-08 for the expanded
+case workspace. Record artifact version, fixture IDs, expected versus actual
+results and remaining gaps when these checks are eventually run. No timing,
+completion-rate or satisfaction threshold is invented from this feedback.
+Staff and accessible resident validation, production authority and privacy
+review remain separate future gates.
