@@ -1102,3 +1102,25 @@ metadata when the knowledge base was created.
   `latest.json`, the workflow commits both, and the root `README.md` embeds
   the badge. The lock file was edited by hand to match the workflow source;
   recompile it with `gh aw compile rubric-score` to refresh its hashes.
+
+## [2026-10-07] query | Capture owner prototype usability learnings
+
+* Source: owner feedback on the later application at `localhost:3410`, relayed
+  for documentation-only capture; prototype PR #24 is provenance, not a
+  dependency or merge prerequisite.
+* Updated `research/ux/proper-warm-prototype-profile-review.md` in place with
+  the verbatim notes, separate evidence classification, proposed design
+  direction and eight unexecuted next-prototype acceptance checks.
+* Preserve style, logo, typography, general palette and clarity; correct
+  error-like reddish emphasis, role/workflow scope, readiness, accountable
+  handoff acceptance and agent input/output/human-decision explanations.
+* Record the requested full-screen case, recoverable queue context and
+  necessary synthetic address/phone/contact/adjustment/evidence/task context,
+  with explicit unknowns and production role/case/field privacy boundaries.
+* Difference flagged: the 2026-10-06 source review found workflow filtering
+  in its HTML artifact; the owner reports no visible context/filter change in
+  the later application. Neither is generalized across artifacts or silently
+  treated as superseding the other.
+* Updated `README.md` routing/catalog. No original case, addendum, PRD, memory,
+  prototype code, generated resident data or tracking artifacts changed.
+  No runtime inspection, operational approval or user-tested success claimed.

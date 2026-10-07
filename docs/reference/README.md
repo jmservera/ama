@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-06
+ms.date: 2026-10-07
 ms.topic: overview
 ---
 
@@ -60,6 +60,7 @@ management: short pages that point to clusters of related material.
 | Design EPC C, energy standard or grant logic | [energy-efficiency/](./regulatory/energy-efficiency/) and [retrofit-standards-and-funding/](./regulatory/retrofit-standards-and-funding/) | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) |
 | Handle resident data, consent or automated decisions | [data-protection/](./regulatory/data-protection/) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
 | Write or review requirements | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) |
+| Refine prototype usability from owner feedback | [Owner Usability Feedback (2026-10-07)](./research/ux/proper-warm-prototype-profile-review.md#owner-usability-feedback-2026-10-07) | [Proper Warm Workbench PRD](../prds/proper-warm-retrofit-programme-demonstrator.md); reported impressions and proposed checks are not verified implementation or acceptance |
 | Compare Azure development with M365 and business-platform implementation | [Implementation Options and Provisional Platform Recommendation](../case_study_48_addendum.md#implementation-options-and-provisional-platform-recommendation) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) and [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) |
 | Evaluate a new idea | [Idea Register](../ideas/idea-register.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Challenge whether a requested agent is needed, or decide what to build instead | [Agent Request Challenge](./research/company/agent-request-challenge.md) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
@@ -101,7 +102,7 @@ management: short pages that point to clusters of related material.
 | [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | Role-agent challenge of measuring acceleration with a dashboard, short history and non-pilot comparison, plus the owner's modernisation decision: Comparison 1 and 2, frozen protocol, benefits scorecard, guardrails, vanity metrics and history sources | 2026-09-26 |
 | [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md) | Version 2.0.0: fifteen months of constructed operating records for 980 candidate homes. The case presents a professional team aware of bottlenecks but not where they occur. The pack covers the tracker, stage event log, property register, CRM contacts, supplier appointments, safety holds, QA and evidence, grant and finance, capacity, board reports and issues log, with realistic record-keeping imperfections, a data dictionary and a manifest. These records are for the exercise and are not evidence of actual company performance. The answer key and generator are held outside the knowledge base so analysis can stay blind | 2026-10-06 |
 | [Program Manager Document Workspace Journey](./research/ux/program-manager-document-workspace-journey.md) | Stakeholder-informed JTBD analysis, journey map, accessibility requirements and design handoff for the repository-backed Program Workbench canvas. All behavioural findings remain reported or assumed pending direct user research | 2026-10-02 |
-| [Proper Warm Prototype Profile Review](./research/ux/proper-warm-prototype-profile-review.md) | Fresh parallel critiques from all nine company-role agents, UX synthesis across eleven PRD perspectives and four relayed recommendation discussions. Prioritizes ownership/rationale correctness, filter and metric scope, then a synthetic exception-to-owner slice; no real-user validation or prototype changes | 2026-10-06 |
+| [Proper Warm Prototype Profile Review](./research/ux/proper-warm-prototype-profile-review.md) | Nine company-role critiques, eleven-perspective UX synthesis and four relayed discussions, plus separately dated owner feedback on a later application: preserve brand/clarity, correct reddish status meaning, contextualize role/workflow, expose readiness/ownership/agent boundaries and provide a full-screen case with minimum-necessary synthetic contact context. Eight proposed next-prototype checks; no prototype changes or passed usability claims | 2026-10-07 |
 
 ### Regulatory Sources
 
