@@ -315,6 +315,36 @@ def build_scores_file(
     }
 
 
+def badge_colour(scores: dict[str, Any]) -> str:
+    """Pick a badge colour from the recorded outcome."""
+    outcome = str(scores.get("outcome", ""))
+    if outcome.startswith(("Incomplete", "Not Yet Met")):
+        return "#e05d44" if scores.get("total", 0) < 66 else "#dfb317"
+    return "#4c1" if outcome in ("Distinction", "Pass with Merit") else "#a4a61d"
+
+
+def render_badge(scores: dict[str, Any]) -> str:
+    """Render a static shields-style SVG badge with the recorded rubric total."""
+    label, value = "rubric score", f"{scores['total']}/100"
+    label_width, value_width = 6 * len(label) + 10, 6 * len(value) + 10
+    width = label_width + value_width
+    text = f"{label}: {value}, {scores.get('outcome', '')}"
+    title = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="20" role="img" aria-label="{title}">'
+        f"<title>{title}</title>"
+        f'<linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/>'
+        f'<stop offset="1" stop-opacity=".1"/></linearGradient>'
+        f'<clipPath id="r"><rect width="{width}" height="20" rx="3" fill="#fff"/></clipPath>'
+        f'<g clip-path="url(#r)"><rect width="{label_width}" height="20" fill="#555"/>'
+        f'<rect x="{label_width}" width="{value_width}" height="20" fill="{badge_colour(scores)}"/>'
+        f'<rect width="{width}" height="20" fill="url(#s)"/></g>'
+        f'<g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" font-size="11">'
+        f'<text x="{label_width / 2}" y="14">{label}</text>'
+        f'<text x="{label_width + value_width / 2}" y="14">{value}</text></g></svg>\n'
+    )
+
+
 def load_items(agent_output: Path | None) -> list[dict[str, Any]]:
     """Read safe-output items; a missing or unreadable file yields no items."""
     if agent_output is None or not agent_output.is_file():
@@ -374,6 +404,7 @@ def main() -> int:
     if result["valid"] and not args.force:
         scores = build_scores_file(result, state["fingerprints"], args.commit, args.model, args.run_url, state["rubric"].get("rubric_version"))
         (args.out_dir / "latest.json").write_text(json.dumps(scores, indent=2) + "\n", encoding="utf-8")
+        (args.out_dir / "badge.svg").write_text(render_badge(scores), encoding="utf-8")
     decision = {
         key: result.get(key)
         for key in ("valid", "passed", "bootstrap", "calibration", "total", "baseline_total", "outcome", "drops", "error")

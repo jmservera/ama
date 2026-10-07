@@ -2132,9 +2132,11 @@ jobs:
         run: |
           if [ ! -f /tmp/rubric-out/latest.json ]; then exit 0; fi
           cp /tmp/rubric-out/latest.json .github/rubric/scores/latest.json
+          if [ -f /tmp/rubric-out/badge.svg ]; then cp /tmp/rubric-out/badge.svg .github/rubric/scores/badge.svg; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .github/rubric/scores/latest.json
+          if [ -f .github/rubric/scores/badge.svg ]; then git add .github/rubric/scores/badge.svg; fi
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "chore(rubric): record score $(jq -r .total /tmp/rubric-out/latest.json)/100"
           if git -c core.hooksPath=/dev/null push "https://x-access-token:${PUSH_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git" "HEAD:$HEAD_REF"; then

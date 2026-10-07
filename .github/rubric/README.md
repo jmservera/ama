@@ -33,6 +33,7 @@ Scores are readiness estimates from repository evidence. Live-scored criteria (B
 | [rubric.json](rubric.json)                           | Criteria, sections, floors and outcome bands                |
 | [artifacts.json](artifacts.json)                     | Registry of scored artifact types, globs and criteria       |
 | [scores/latest.json](scores/latest.json)             | Current rubric baseline loaded from the base branch         |
+| [scores/badge.svg](scores/badge.svg)                 | Score badge generated with latest.json, linked from the root README |
 | [scripts/prepare.py](scripts/prepare.py)             | Fingerprints, scoring decision, agent context, PPTX text    |
 | [scripts/gate.py](scripts/gate.py)                   | Deterministic validation, carry-forward and comparison      |
 | [scripts/scorecard_adapter.py](scripts/scorecard_adapter.py) | Strict score-choice and details reconstruction |
@@ -76,6 +77,10 @@ the thought leadership artifact (`docs/capstone/thought-leadership/`) are active
 artifacts. [docs/capstone/README.md](../../docs/capstone/README.md) is the
 storage map for every capstone asset. PPTX files are converted to slide and
 speaker-note text before scoring.
+
+### Score badge
+
+Whenever the gate records `latest.json` it also renders `badge.svg` (rubric score out of 100, coloured by outcome) and the workflow commits both together. The root README embeds it with a relative link, so it renders for anyone who can read the repository. The gate script that renders it loads from `main`, so the first badge update follows the first run after this change merges.
 
 ### Required evidence
 

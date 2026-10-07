@@ -1095,3 +1095,10 @@ metadata when the knowledge base was created.
   and activated the deck, pitch and thought leadership registry entries.
 * Added `docs/capstone/README.md` as the storage map for every capstone asset
   and updated the catalog. Existing scores are rebaselined on the next run.
+
+## [2026-10-07] update | Add rubric score badge
+
+* The rubric gate now renders `.github/rubric/scores/badge.svg` beside
+  `latest.json`, the workflow commits both, and the root `README.md` embeds
+  the badge. The lock file was edited by hand to match the workflow source;
+  recompile it with `gh aw compile rubric-score` to refresh its hashes.

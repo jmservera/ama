@@ -272,3 +272,14 @@ def test_given_deck_only_when_scored_then_pitch_criteria_stay_zero_and_deck_crit
     assert [cid for cid in ("B1", "B2", "B3", "B4", "B5", "B7", "C2", "C3") if result["criteria"][cid]["score"] == 0] == ["B3", "B4", "B5", "C2", "C3"]
     assert result["criteria"]["B6"]["score"] == 4
     assert result["sections"]["D"] == 12
+
+
+def test_given_scores_when_badge_rendered_then_svg_shows_total_and_escapes_text():
+    # Arrange
+    scores = {"total": 34, "outcome": "Not Yet Met (floor) <x>"}
+
+    # Act
+    svg = gate.render_badge(scores)
+
+    # Assert
+    assert svg.startswith("<svg") and ">34/100<" in svg and "<x>" not in svg and "#e05d44" in svg
