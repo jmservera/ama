@@ -222,6 +222,9 @@ def compute_state(root: Path, base_ref: str, event: str, force: bool = False) ->
     elif baseline.get("source") == "manual-seed":
         bootstrap = True
         reasons.append("baseline is the manual seed")
+    if baseline is not None and baseline.get("rubric_version") != rubric.get("rubric_version"):
+        bootstrap = True
+        reasons.append("rubric version changed; baseline is rescored without comparison")
     if not (rubric_from_base and registry_from_base):
         bootstrap = True
         reasons.append("rubric configuration not yet on the base branch")
@@ -344,20 +347,47 @@ def extract_pptx_text(path: Path) -> str:
     return "\n".join(lines)
 
 
+def unmet_requirements(rubric: dict[str, Any], artifact_counts: dict[str, int]) -> dict[str, dict[str, Any]]:
+    """Map each criterion whose required evidence is absent to its forced treatment.
+
+    `requires_any` lists artifact ids of which at least one must hold files; otherwise the
+    criterion is not demonstrable and is recorded as 0. `cap_without` caps the score when one
+    artifact is missing. Artifacts that are not active in the registry count as absent.
+    """
+    unmet: dict[str, dict[str, Any]] = {}
+    for criterion in rubric["criteria"]:
+        required = criterion.get("requires_any")
+        cap = criterion.get("cap_without")
+        if required and not any(artifact_counts.get(artifact, 0) for artifact in required):
+            unmet[criterion["id"]] = {"max": 0, "missing": list(required), "mode": "any of"}
+        elif cap and not artifact_counts.get(cap["artifact"], 0):
+            unmet[criterion["id"]] = {"max": int(cap["max"]), "missing": [cap["artifact"]], "mode": "cap"}
+    return unmet
+
+
 def build_scorecard_template(
     rubric: dict[str, Any],
     baseline: dict[str, Any] | None,
     bootstrap: bool,
     calibration: bool,
+    artifact_counts: dict[str, int] | None = None,
 ) -> dict[str, Any]:
     """Build the complete scorecard scaffold from trusted rubric and baseline data."""
     use_baseline = not (bootstrap or calibration)
     baseline_criteria = (baseline or {}).get("criteria", {}) if use_baseline else {}
+    unmet = unmet_requirements(rubric, artifact_counts) if use_baseline and artifact_counts is not None else {}
     criteria: dict[str, dict[str, Any]] = {}
     for criterion in rubric["criteria"]:
         cid = criterion["id"]
         previous = baseline_criteria.get(cid)
-        if (
+        if unmet.get(cid, {}).get("max") == 0:
+            criteria[cid] = {
+                "score": 1,
+                "evidence": [],
+                "rationale": "Required artifact not provided (" + ", ".join(unmet[cid]["missing"]) + "): submit 1; the gate records 0.",
+                "change_reason": "",
+            }
+        elif (
             isinstance(previous, dict)
             and isinstance(previous.get("score"), int)
             and not isinstance(previous.get("score"), bool)
@@ -440,11 +470,15 @@ def write_context(root: Path, state: dict[str, Any], out_dir: Path) -> Path:
         },
         "extracted_text": extracted,
         "live_criteria": [c["id"] for c in state["rubric"]["criteria"] if c.get("live")],
+        "unmet_requirements": unmet_requirements(
+            state["rubric"], {key: len(value["files"]) for key, value in state["artifacts"].items()}
+        ),
         "scorecard_template": build_scorecard_template(
             state["rubric"],
             baseline,
             state["bootstrap"],
             state["force"],
+            {key: len(value["files"]) for key, value in state["artifacts"].items()},
         ),
         "baseline": {
             "source": baseline.get("source"),

@@ -40,7 +40,7 @@ def make_repo(root: Path) -> Path:
     git(root, "add", ".")
     git(root, "commit", "-m", "content")
     files, _ = prepare.match_files(root, ["docs/brds/**/*.md"], [], MAX_BYTES)
-    baseline = dict(SEED, source="workflow", fingerprints={"brd": prepare.fingerprint_files(root, files)})
+    baseline = dict(SEED, source="workflow", rubric_version=json.loads((RUBRIC_DIR / "rubric.json").read_text(encoding="utf-8")).get("rubric_version"), fingerprints={"brd": prepare.fingerprint_files(root, files)})
     (config / "scores" / "latest.json").write_text(json.dumps(baseline), encoding="utf-8")
     git(root, "add", ".")
     git(root, "commit", "-m", "baseline")
@@ -305,7 +305,7 @@ def test_given_pr_deleting_scored_file_when_gated_then_drop_counts(tmp_path):
     )
 
     # Assert
-    assert (state["removed_files"], result["passed"], result["total"]) == ([REMOVED], False, 59)
+    assert (state["removed_files"], result["passed"], result["total"]) == ([REMOVED], False, 64)
 
 
 def test_given_direct_push_deleting_scored_file_when_computed_then_removed_detected(tmp_path):
