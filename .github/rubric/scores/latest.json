@@ -2,17 +2,19 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-07T22:11:44+00:00",
-  "commit": "29a998894e1269739443bf712ab5f48add91769a",
+  "scored_at": "2026-10-07T23:15:05+00:00",
+  "commit": "a39b70d51d410eef2902895da2ff028b74232cc8",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37693866795",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37700358796",
   "fingerprints": {
     "brd": "7947aff0475c769010747917eaddd2a01589d7fb89b4cb51eaacfe048373f3fb",
-    "prd": "1fca7a2496be84d875fe88cfb906fb117e68b60d8daaada4ff27c72c497b3d8c"
+    "prd": "1fca7a2496be84d875fe88cfb906fb117e68b60d8daaada4ff27c72c497b3d8c",
+    "adr": "9d0269cdd0e0b28014f441647036870bfcd057648aef3a98a70df86a0b007cc2",
+    "infrastructure": "e29096cff203d15e8cb7993e04e7e4c419009b96f1d3057c265a56153a5acfef"
   },
-  "total": 25,
+  "total": 29,
   "sections": {
-    "A": 18,
+    "A": 22,
     "B": 3,
     "C": 4,
     "D": 0
@@ -21,26 +23,30 @@
   "outcome": "Incomplete (thought leadership artifact not submitted)",
   "criteria": {
     "A1": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:143-158"
+        "docs/adrs/0001-azure-architecture.md:31-32",
+        "infra/modules/containerapps.bicep:116-118",
+        "infra/modules/containerapps.bicep:193-212"
       ],
-      "rationale": "Component Contracts table names decoupled components (workbench/API, state store, orchestrator, bounded AI service, document store, import, identity) with explicit failure domains; scaling path is discussed in general terms (Azure Container Apps candidates) but not evidenced with load/scale data...."
+      "rationale": "ADR 0001 decision table documents per-workload hosting rationale and failure domains; Bicep implements decoupled Container Apps/jobs per workload with concrete HTTP and KEDA queue scale rules (0-5, 1-4), making contracts and scaling explicit rather than general discussion."
     },
     "A2": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:255"
+        "docs/adrs/0001-azure-architecture.md:31-33",
+        "docs/adrs/0001-azure-architecture.md:76"
       ],
-      "rationale": "Options Gate Scoring Framework lists alternatives (full Azure custom, greenfield, hybrid) and named criteria, but weights are TBD and no option has actually been scored, so trade-off argument is incomplete."
+      "rationale": "ADR decision table names concrete alternatives per decision (App Service vs Container Apps, Durable Functions vs Container Apps job, SharePoint vs Blob) with explicit rejection reasons, stronger than the PRD options framework alone, though not every choice is argued this way."
     },
     "A3": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:158-175",
-        "docs/brds/agentic-retrofit-programme-brd.md:1290"
+        "docs/adrs/0001-azure-architecture.md:40-48",
+        "docs/adrs/0001-azure-architecture.md:58-63",
+        "infra/modules/identity.bicep:1-32"
       ],
-      "rationale": "Threat model table names specific AI risks (prompt injection, data leakage, hallucination, spoofed identity) with mitigations, but it is explicitly labelled illustrative/not validated and core controls are not implemented."
+      "rationale": "Per-workload managed identities with least-privilege grants (agents has no SQL/blob/Key Vault access), private endpoints on every service, local auth disabled, deny-by-default NSGs and SQL ledger/audit are implemented in Bicep, not just proposed; AI threat model remains PRD-only and unvalidated."
     },
     "A4": {
       "score": 1,
@@ -48,11 +54,13 @@
       "rationale": "No solution-code artifact exists (file_count 0); nothing is built end to end. Implementation completeness cannot be scored above the floor from planning documents alone."
     },
     "A5": {
-      "score": 2,
+      "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:426"
+        "infra/modules/monitoring.bicep:1-67",
+        "infra/main.bicep:170-215",
+        "infra/modules/sql.bicep:38-45"
       ],
-      "rationale": "Observability/SLO method is proposed (OpenTelemetry conventions, cost attribution) but explicitly not implemented; no instrumentation, measurement or cost data exists."
+      "rationale": "Diagnostic settings to one Log Analytics workspace from every service, App Insights wiring, and metric alerts (Foundry throttling, SQL CPU) are implemented; SQL auto-pause and scale-to-zero jobs evidence cost design; no live measurement or cost-per-value model exists since nothing is deployed."
     },
     "A6": {
       "score": 3,
