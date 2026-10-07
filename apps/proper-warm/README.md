@@ -43,6 +43,31 @@ only loopback. Do not change it to public ingress: there is no real identity.
 Check the inventory first if project names, volume or port already exist.
 Never adopt or delete another user's Compose resources.
 
+### Synthetic Data Generator
+
+The owner's generator is available under
+`support\synthetic-data\retrofit-flow\proper-warm-year-one\generator`.
+It was exercised with seed `1341953496` and `--dry-run`: 980 candidates,
+13 observed tables and 23,528 total rows, with zero generator validation
+errors. No existing pack or private answer key was overwritten.
+
+The existing [year-one pack](../../docs/reference/research/retrofit-synthetic-data/manifest.json)
+is analytical evidence, not an authority to approve work. This transaction PoC
+deliberately retains the nine versioned, constructed acceptance fixtures.
+It does not silently translate tracker status, contact outcomes or generated
+ground truth into consent, safety clearance or release decisions. A reviewed
+import/quarantine adapter remains a disclosed PRD gap.
+
+To validate the local generator without writing any data, run from the root:
+
+```powershell
+python .\support\synthetic-data\retrofit-flow\proper-warm-year-one\generator\generate_pack.py --seed 1341953496 --dry-run
+```
+
+The generator is private working material and is not copied into the app or
+container. Generation without `--dry-run` writes a pack and separate answer
+key; use explicit new output paths rather than overwriting existing evidence.
+
 ```powershell
 docker compose -f .\apps\proper-warm\compose.yaml ps
 docker compose -f .\apps\proper-warm\compose.yaml logs --tail 20 app

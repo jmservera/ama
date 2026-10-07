@@ -106,8 +106,8 @@ remain out-of-scope release blockers, disclosed in documentation.
 | --- | --- |
 | Research | .copilot-tracking/research/2026-10-07/retrofit-application-poc-research.md |
 | Changes | .copilot-tracking/changes/2026-10-07/retrofit-application-poc-changes.md |
-| Critique | one final-candidate run, pending |
-| Continuation | automatic RPI parent to Implement after dispositions |
+| Critique | one final-candidate run executed; PC-001-PC-009 disposed |
+| Continuation | automatic RPI parent completes publication, then one Review |
 
 ## Sources
 

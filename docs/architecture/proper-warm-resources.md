@@ -58,6 +58,7 @@ remain locally cached independently of the application image.
 | Python Playwright | sourced command, blocked hazard advancement, draft/failure, exact lost-response replay, export, drilldown, 390px reflow, no page errors | synthetic UI interaction, not user/accessibility certification |
 | Container restart | EX-HOME-900 version12, 12 events and update due 2026-10-10T16:00:00Z preserved | browser-generated history retained, no reseed |
 | Documentation hygiene | relative links and Git whitespace reviewed | original/addendum/memory/snapshots untouched |
+| Existing synthetic generator | seed 1341953496; 980 candidates, 13 tables, 23,528 rows; zero validation errors | dry-run only; existing pack/private answer key unchanged; not imported into transactional approval state |
 
 The browser test intentionally created update and deduplicated assistant
 fallback events in EX-HOME-900; failed hazard progression created no approval.

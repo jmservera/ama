@@ -31,7 +31,7 @@ scope changed; one critique/one Review contracts retained.
 
 ## Validation
 
-Pending implementation.
+Complete for the bounded synthetic implementation; measured evidence below.
 
 ## P02: Workbench Delivered
 
@@ -100,3 +100,19 @@ No production load, real model or company-benefit claims.
 Resource ledger records actual app image/container/volume/network and screenshots;
 Azure/M365 creations remain zero. Screenshot files retained in session files.
 App is intentionally left running and healthy for user use; no helper service.
+
+## Publication Preparation and Owner Update
+
+Final regression run passed all 39 tests, including cross-site GET navigation.
+126 relative documentation links resolved before publication. Commit e9658bf
+contains the bounded implementation. The updated base was merged without
+rewriting history in 2204fa0; the sole log conflict preserved both upstream
+rubric entries and appended this task's entry. Application code was unaffected.
+
+The owner identified support/synthetic-data and explicitly requested a PR.
+Exercised the existing generator with seed1341953496 and --dry-run: 980
+candidates, 13 tables, 23528 rows, zero validation errors. No pack, ground
+truth or existing synthetic data was overwritten. Nine constructed acceptance
+fixtures remain distinct from the analytical pack; importing tracker records
+as approved operational state is not authorised by generation. Documented the
+generator path, reproduction and import boundary in the runbook/resource ledger.
