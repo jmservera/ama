@@ -229,6 +229,36 @@ test('quality return at completion reverses handover and new evidence is require
   assert.ok(store.detail(home).tasks.some(task => task.kind === 'reinspection' && task.status === 'resolved'));
 });
 
+test('accepted quality replacement invalidates completed handover until independently reaccepted', t => {
+  const store = fixture(t);
+  happyJourney(store);
+  const before = store.detail(home);
+  const completedCount = () => portfolio(store.list(), {}, '2026-10-10T12:00:00Z')
+    .metrics.find(metric => metric.id === 'handed_over').numerator;
+  assert.equal(completedCount(), 1);
+  const body = intent(store, home, 'quality_reviewer', 'record_quality', {
+    outcome: 'accepted', evidenceId: 'EX-QUALITY-REPLACEMENT', designVersion: 1,
+  });
+  const result = store.execute(home, 'quality_reviewer', body).case;
+  assert.equal(result.stage, 'quality_accepted');
+  assert.equal(result.facts.quality.outcome, 'accepted');
+  assert.equal(result.facts.handover, null);
+  assert.ok(result.blockers.some(blocker => blocker.code === 'HANDOVER_ACCEPTANCE'));
+  assert.equal(completedCount(), 0);
+  assert.deepEqual(result.facts.invoice, before.facts.invoice);
+  assert.deepEqual(result.residentUpdate, before.residentUpdate);
+  assert.ok(before.evidence.every(item => result.evidence.some(saved => saved.id === item.id)));
+  assert.equal(result.events.length, before.events.length + 1);
+  assert.equal(store.execute(home, 'quality_reviewer', body).replayed, true);
+  assert.equal(store.detail(home).events.length, result.events.length);
+  assert.throws(() => execute(store, home, 'programme_manager', 'advance'), is('GATE_BLOCKED'));
+  execute(store, home, 'quality_reviewer', 'accept_handover', { evidenceId: 'EX-HANDOVER-REACCEPTED' });
+  assert.equal(completedCount(), 0);
+  execute(store, home, 'programme_manager', 'advance');
+  assert.equal(store.detail(home).stage, 'handed_over');
+  assert.equal(completedCount(), 1);
+});
+
 test('return targets enforce target-specific authority', t => {
   const store = fixture(t);
   assert.throws(() => execute(store, 'EX-HOME-422', 'coordinator', 'return_case', { target: 'installed' }), is('FORBIDDEN'));

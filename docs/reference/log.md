@@ -1121,3 +1121,13 @@ metadata when the knowledge base was created.
 * Full PRD MVP coverage, company benefits and capstone floor readiness are
   not claimed. The complete-rubric challenge records unknown live/stakeholder
   criteria and open human release gates.
+
+## [2026-10-07] update | Complete PoC quality and handover validity
+
+* Owner-directed completion addressed the Review's accepted-quality replacement
+  defect. Separate handover acceptance is invalidated and completed stage
+  returns to quality_accepted until independent reacceptance and progression.
+* Updated the application runbook and resource ledger. Forty contract tests
+  pass; rebuilt owned container passed isolated invariant regression and
+  retained persistent history. No cloud, tenant or additional Docker resource
+  was created; original Review remains historical evidence.

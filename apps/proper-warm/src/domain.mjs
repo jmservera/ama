@@ -242,6 +242,7 @@ export function mutate(home, action, payload, role, timestamp) {
         home.stage = 'installed';
         addTask(home, 'reinspection', 'quality_reviewer', 'New independent quality evidence is required for reinspection.', timestamp);
       } else {
+        if (home.stage === 'handed_over') home.stage = 'quality_accepted';
         for (const task of home.tasks.filter(item => item.kind === 'reinspection')) task.status = 'resolved';
       }
       break;

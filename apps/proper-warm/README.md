@@ -132,6 +132,12 @@ missing evidence as the appropriate demo actor, refresh and retry. Do not
 describe a denied action as a technical failure or bypass the gate for the demo.
 The automated test suite exercises the longer happy path reproducibly.
 
+Replacing accepted quality evidence after handover invalidates the separate
+handover acceptance and returns the case to quality_accepted. It no longer
+counts as a completed handover until new independent handover evidence is
+accepted and the programme actor explicitly advances it again. Existing
+history, invoice match and resident-update commitment are preserved.
+
 ## API and Retry Contract
 
 GET `/api/config` is the canonical role/action/field/workflow contract.

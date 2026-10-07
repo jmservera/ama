@@ -15,7 +15,17 @@
 | P01 | Domain API | Complete; 39 tests and five simulator fixtures pass |
 | P02 | UI | Complete; real browser interaction and mobile reflow pass |
 | P03 | Architecture/container documentation | Complete; created resources inventoried |
-| P04 | Validation/publication/review | Implementation complete; PR24 published, one RPI Review pending |
+| P04 | Validation/publication/review | Complete; PR24 published, historical Review found RV-001 |
+| P05 | Owner-directed RV-001 implementation | Complete; regression and actual rebuilt container pass; no repeat Review |
+
+## P05: Accepted Quality Replacement
+
+After handed_over, recording new accepted quality evidence invalidates separate
+handover acceptance and returns the current stage to quality_accepted. Historical
+evidence/events, current invoice, resident-update ownership and unrelated facts
+survive. New independent handover evidence and explicit advance are required.
+Test completed count 1 -> 0 -> 1 and original-intent replay without duplicate
+events. Rebuild the owned container without resetting its existing volume.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Controlled Domain API

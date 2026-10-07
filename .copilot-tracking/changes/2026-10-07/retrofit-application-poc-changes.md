@@ -126,3 +126,30 @@ history rewrite. All plan markers/details reconciled with measured validation
 and actual resources. Hosted checks remain pending until observed.
 One post-implementation RPI Review assesses bounded acceptance, not production
 release or full PRD conformance. No repeated critique or Review is authorised.
+
+## P05: Owner-Directed Completion
+
+Owner explicitly requested continued autonomous implementation until complete.
+Declared later scope is RV-001, preserving approved authority/stage contracts.
+Plan P05-T01/details updated before source changes. Source boundary:
+domain.mjs and domain regression, runbook/resource evidence and lifecycle state.
+No production feature expansion, new resource, repeated critique or Review.
+First add the missing regression and observe failure, then restore stage
+consistency, verify all tests and owned runtime, publish on existing PR.
+
+### P05-T01: Implemented and Verified
+
+New regression first failed with handed_over vs expected quality_accepted.
+domain.mjs now downgrades completed stage when new accepted quality evidence
+invalidates separate handover. Regression checks immutable retained history,
+invoice/update continuity, idempotent replay with no duplicate events,
+denied premature advance and completed-count 1 -> 0 -> 1 after independent
+handover reacceptance and explicit advance.
+
+All 40 tests and five simulator evaluation fixtures pass. Existing owned
+container rebuilt healthy without deleting/resetting its volume. Isolated
+in-memory regression passed inside the actual rebuilt image; persistent
+EX-HOME-900 remains version12/event12. Latest 100-request runtime sample
+p50 27.44ms/p95 61.52ms, below 250ms. Ledger updated with actual image ID/size.
+No additional resources or approvals; original Review preserved as historical
+evidence. RV-001 is implemented by this later invocation, not a second Review.

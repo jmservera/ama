@@ -212,5 +212,23 @@ corrections, resolved before implementation; no second critique.
 
 ## Handoff
 
-Ready for Implement. Critique executed once; PC-001 through PC-009 disposed
-with concrete frozen contracts and acceptance oracles. No user decision required.
+Original P01-P04 delivered and reviewed once. The owner subsequently directed
+autonomous completion. Later bounded implementation addresses RV-001 only;
+no second critique or Review is required. Production follow-ups stay excluded.
+
+<!-- rpi:phase id=P05 -->
+### [x] P05: Complete owner-directed review defect implementation
+
+<!-- rpi:task id=P05-T01 -->
+#### [x] P05-T01: Restore handover validity after accepted quality replacement
+
+* Scope: RV-001; domain mutation, regression and directly related documentation.
+* Preserve accepted quality, invalidate independent handover and downgrade
+  handed_over to quality_accepted. Require a new handover acceptance and explicit
+  progression before counting completion again.
+* Validation: regression must fail before fix; all tests/evaluation pass after
+  fix; rebuild existing owned container without resetting its volume; publish
+  on the existing PR and observe final CI.
+* Evidence: regression failed before fix; 40 tests and simulator evaluation
+  pass after fix; rebuilt container passed isolated regression, persisted
+  history retained, latest runtime p95 61.52ms <=250ms.

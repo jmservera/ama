@@ -39,40 +39,39 @@
       "decision": "One post-implementation Review executed; outcome Defects found; RV-001 Medium remains routed",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-07/retrofit-application-poc-review.md; accepted quality replacement leaves handed_over with null handover; no fix or repeat Review in this task."
+    },
+    {
+      "decision": "Owner directed autonomous completion; later bounded implementation resolved RV-001 without repeating Review",
+      "status": "confirmed",
+      "evidence": "P05-T01 changes: regression failed before fix; 40 tests and five simulator fixtures pass; actual rebuilt image regression passes with persistent volume/history retained. Historical Review outcome remains unchanged."
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Await user choice; do not start child work before selection. Rank1 RV-001 fix recommended; Stop/manual remain available."
+    "action": "Persist completed bounded implementation; publish on existing PR and observe CI. No broader production task is required for this PoC."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Fix RV-001 quality/handover consistency",
-      "rationale": "Small bounded correction; prevents stale accepted-handover reporting and removes recovery ambiguity with one invariant regression.",
-      "evidence": "Review RV-001; domain.mjs record_quality and portfolio; reproduced in memory."
-    },
-    {
-      "rank": 2,
       "task": "Implement reviewed synthetic-pack import/quarantine",
       "rationale": "Uses the owner's existing generator for richer demonstrations; explicit lineage and unknown-approval mapping avoids treating tracker history as authority.",
       "evidence": "Owner support/synthetic-data direction; generator dry-run 980 candidates/13 tables/23528 rows; PRD import remains deferred."
     },
     {
-      "rank": 3,
+      "rank": 2,
       "task": "Build Entra identity and managed persistence before Azure deployment",
       "rationale": "High release leverage but broader than the bounded defect/import; essential before public ingress or scale-out.",
       "evidence": "Plan Follow-Up Items; architecture identity/SQLite boundaries and unchecked release gates."
     },
     {
-      "rank": 4,
+      "rank": 3,
       "task": "Evaluate a real bounded model",
       "rationale": "Adds genuine AI evidence after approved corpus/tasks; simulator checks do not establish model quality or autonomy.",
       "evidence": "Plan Follow-Up Items; architecture AI Evaluation and Autonomy Boundary."
     },
     {
-      "rank": 5,
+      "rank": 4,
       "task": "Prepare operating-model and control-ratification evidence pack",
       "rationale": "Structures required human decisions without impersonating professional approval; remains outside synthetic acceptance.",
       "evidence": "Plan Follow-Up Items; architecture unchecked human approval gates."
