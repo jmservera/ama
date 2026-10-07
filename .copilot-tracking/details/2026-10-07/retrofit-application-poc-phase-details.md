@@ -12,10 +12,10 @@
 
 | ID | Name | Status |
 | --- | --- | --- |
-| P01 | Domain API | Ready candidate |
-| P02 | UI | Complete; runtime integration in P04 |
-| P03 | Architecture/container documentation | Ready |
-| P04 | Validation/publication/review | Ready |
+| P01 | Domain API | Complete; 39 tests and five simulator fixtures pass |
+| P02 | UI | Complete; real browser interaction and mobile reflow pass |
+| P03 | Architecture/container documentation | Complete; created resources inventoried |
+| P04 | Validation/publication/review | Implementation complete; PR24 published, one RPI Review pending |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Controlled Domain API

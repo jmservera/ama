@@ -8,7 +8,7 @@
 * Scope: full plan P01-P04.
 * Plan: .copilot-tracking/plans/2026-10-07/retrofit-application-poc-plan.md
 * Details: .copilot-tracking/details/2026-10-07/retrofit-application-poc-phase-details.md
-* Execution: active, automatic.
+* Execution: implementation complete, automatic; one Review pending.
 * Blockers: none for synthetic local implementation.
 * Critique: executed once, Revise with PC-001-PC-009 directly disposed.
 
@@ -75,8 +75,9 @@ screenshots go to explicit session artefacts. Run awaits backend/container.
 
 ## Remaining Work and Review Readiness
 
-P01/P02/P03 and P04-T01 complete. Publication P04-T02 remains; one Review after
-publication/reconciliation. No implementation test blockers.
+P01-P04 complete, including publication P04-T02. One Review is next.
+No implementation test blockers. Human operational release approval remains
+unchecked; this bounded synthetic delivery does not satisfy those gates.
 
 ## P01 and P04-T01: Verified Application
 
@@ -116,3 +117,12 @@ truth or existing synthetic data was overwritten. Nine constructed acceptance
 fixtures remain distinct from the analytical pack; importing tracker records
 as approved operational state is not authorised by generation. Documented the
 generator path, reproduction and import boundary in the runbook/resource ledger.
+
+## Publication and Review Handoff
+
+Commits e9658bf, 2204fa0 and f953a8d pushed on the task branch; PR24 opened
+against main: https://github.com/jmservera/ama/pull/24. No merge, force push or
+history rewrite. All plan markers/details reconciled with measured validation
+and actual resources. Hosted checks remain pending until observed.
+One post-implementation RPI Review assesses bounded acceptance, not production
+release or full PRD conformance. No repeated critique or Review is authorised.

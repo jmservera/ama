@@ -151,7 +151,7 @@ remain out-of-scope release blockers, disclosed in documentation.
 * Completion: discoverable documentation, index/log updated, existing original and memory unchanged.
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Validate, publish and review
+### [x] P04: Validate, publish and review
 
 <!-- rpi:task id=P04-T01 -->
 #### [x] P04-T01: Run tests, container journey/persistence and browser checks
@@ -161,13 +161,15 @@ remain out-of-scope release blockers, disclosed in documentation.
 * Completion: unit/API/evaluation pass, container healthy and responsive, browser and restart verified.
 
 <!-- rpi:task id=P04-T02 -->
-#### [ ] P04-T02: Commit coherent change, open PR and prepare one Review
+#### [x] P04-T02: Commit coherent change, open PR and prepare one Review
 
 * Owner: parent; automatic RPI parent subsequently owns the one Review.
 * Dependencies: P04-T01.
 * Completion: committed/pushed PR and reconciled review-ready evidence; no merge.
   Review execution/outcome and routed follow-ups belong to the subsequent RPI
   Review phase, not an implementation prerequisite for itself.
+* Evidence: commits e9658bf, 2204fa0 and f953a8d published; PR24 targets main.
+  Implementation evidence reconciled; one subsequent RPI Review is pending.
 
 ## Locked Change and Test Boundary
 
