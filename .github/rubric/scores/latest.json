@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
   "source": "workflow",
-  "scored_at": "2026-10-05T22:32:36+00:00",
-  "commit": "006428345f2553e8c1f0cd86f5799b3192f862c5",
+  "scored_at": "2026-10-06T10:14:03+00:00",
+  "commit": "c0f7c08aec514597af86528caf1bdad4b7250246",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37381882119",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37447210920",
   "fingerprints": {
     "brd": "7947aff0475c769010747917eaddd2a01589d7fb89b4cb51eaacfe048373f3fb",
-    "prd": "dd744f8bd6deca43325b35d2fa880333afe9e9b88c6a9d7c4766ac7a0556725c"
+    "prd": "1fca7a2496be84d875fe88cfb906fb117e68b60d8daaada4ff27c72c497b3d8c"
   },
   "total": 66,
   "sections": {
@@ -66,7 +66,7 @@
       "evidence": [
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:443"
       ],
-      "rationale": "New Bounded-Agent Orchestration Pattern is a tighter deterministic state graph, but the text explicitly disclaims autonomous stage selection, reinforcing a scripted-flow characterization rather than demonstrated autonomy."
+      "rationale": "Bounded-Agent Orchestration Pattern is a tighter deterministic state graph, but the text explicitly disclaims autonomous stage selection, reinforcing a scripted-flow characterization rather than demonstrated autonomy."
     },
     "B1": {
       "score": 4,

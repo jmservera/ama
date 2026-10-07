@@ -1,0 +1,63 @@
+schema_version: PRD_QUALITY_REPORT_V1
+report_id: PRD-2026-AMA48-001-quality-followup-20261006T094249Z
+generated_at: "2026-10-06T09:42:49Z"
+prd:
+  id: PRD-2026-AMA48-001
+  version: 0.7.0
+  phase: Build
+  artifact_path: docs/prds/proper-warm-retrofit-programme-demonstrator.md
+overall_status: PASS
+decision_thresholds:
+  iso_29148_core_min_score: 2
+  fr_to_ac_min_pct: 80.0
+  fr_to_goal_target_pct: 100.0
+gate_decisions:
+  validate_exit: BLOCKED
+  finalize_exit: NOT_EVALUATED
+summary_counts:
+  RISK: 0
+  CAUTION: 0
+  COVERED: 2
+  NOT_APPLICABLE: 0
+severity_breakdown:
+  CRITICAL: 0
+  HIGH: 0
+  MEDIUM: 0
+  LOW: 0
+standards_assessed:
+  - skill_name: requirements-quality
+    skill_version: "1.1"
+    overall_status: COVERED
+    findings_count: 2
+category_summaries:
+  iso_29148:
+    average_score: 2.44
+    weakest_attribute: unambiguous
+    weakest_attribute_score: 2
+  nist_800_160:
+    covered_categories: 9
+    missing_categories:
+      - scalability_and_elasticity
+  smart:
+    goals_total: 0
+    goals_passing: 0
+    pass_rate_pct: 100.0
+  fr_ac_coverage:
+    fr_total: 35
+    fr_with_ac: 35
+    coverage_pct: 100.0
+    threshold_pct: 80.0
+  fr_goal_coverage:
+    fr_total: 35
+    fr_with_goal: 35
+    goal_total: 4
+    coverage_pct: 100.0
+    target_pct: 100.0
+    waiver_required: false
+top_findings: []
+recommendations: []
+warnings:
+  - id: WARN-001
+    severity: WARNING
+    message: "Formal Validate remains blocked pending the signed/current upstream BRD handoff and quality evidence, named product/control owners, and required human review. This bounded follow-up does not authorize Validate exit or Finalize approval."
+notes: "PASS applies only to the two amended paragraphs assessed in this follow-up. The report is not a full PRD quality assessment; its empty SMART partition summary does not represent a reassessment of the four PRD goals. The NIST rollup records category presence, not completion of TBD thresholds or owner approvals."
