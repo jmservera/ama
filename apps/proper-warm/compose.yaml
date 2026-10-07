@@ -1,0 +1,28 @@
+name: proper-warm-poc
+services:
+  app:
+    image: proper-warm-poc:2026-10-07
+    build: .
+    ports:
+      - "127.0.0.1:3410:3410"
+    volumes:
+      - data:/data
+    environment:
+      HOST: 0.0.0.0
+      PORT: "3410"
+      DB_PATH: /data/proper-warm.db
+    labels:
+      org.proper-warm.purpose: synthetic-demonstrator
+      org.proper-warm.task: 4aaf9ee3-da69-4ebb-812a-edccc5637af7
+    init: true
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: "no"
+volumes:
+  data:
+    labels:
+      org.proper-warm.purpose: synthetic-demonstrator
+      org.proper-warm.task: 4aaf9ee3-da69-4ebb-812a-edccc5637af7

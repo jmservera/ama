@@ -1,0 +1,53 @@
+name: Proper Warm PoC validation
+
+on:
+  pull_request:
+    paths:
+      - "apps/proper-warm/**"
+      - ".github/workflows/proper-warm-poc.yml"
+  push:
+    branches: [main]
+    paths:
+      - "apps/proper-warm/**"
+      - ".github/workflows/proper-warm-poc.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: proper-warm-poc-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/proper-warm
+    steps:
+      - name: Check out without persisted credentials
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up validated Node runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+      - name: Semantic and API tests
+        run: npm test
+      - name: Simulator contract evaluation
+        run: npm run evaluate
+      - name: Browser script syntax
+        run: node --check public/app.js
+      - name: Container health smoke
+        run: |
+          docker compose config --quiet
+          docker compose up --build -d --wait --wait-timeout 90
+          curl --fail http://127.0.0.1:3410/health
+          curl --fail http://127.0.0.1:3410/api/cases > /dev/null
+          node scripts/verify-runtime.mjs
+      - name: Stop scoped test container
+        if: always()
+        run: docker compose down

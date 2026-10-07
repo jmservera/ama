@@ -1,0 +1,106 @@
+{
+  "version": "poc-1",
+  "fixtureVersion": "constructed-nine-v1",
+  "classification": "Synthetic constructed local-only exercise, not imported company records",
+  "runtime": { "node": "24", "dependencies": [], "host": "127.0.0.1", "port": 3410, "database": "data/proper-warm.db" },
+  "authority": "x-demo-role is local impersonation only; reads are unrestricted synthetic exercise data, not field-level privacy",
+  "endpoints": {
+    "read": ["/health", "/metrics", "/api/config", "/api/cases", "/api/cases/:id", "/api/portfolio", "/api/export"],
+    "command": "POST /api/cases/:id/commands",
+    "assistant": "POST /api/cases/:id/assistant",
+    "staticAllowlist": ["/", "/index.html", "/styles.css", "/app.js"]
+  },
+  "workflows": [
+    {
+      "id": "prioritisation", "label": "Stock and prioritisation", "fixture": "EX-HOME-646",
+      "actions": ["resolve_conflict", "advance"],
+      "expectedEndpoints": ["GET /api/cases?workflow=prioritisation", "GET /api/cases/EX-HOME-646", "POST /api/cases/EX-HOME-646/commands"],
+      "expected": "Unresolved compared source values block advancement; only data_owner records resolution.",
+      "tests": ["tests/domain.test.mjs: file restart preserves exact state including quotes without SQL interpolation", "tests/api.test.mjs: all nine workflow representations expose sourced fixtures and safe terminal/block states over API"],
+      "coverage": "partial"
+    },
+    {
+      "id": "technical_readiness", "label": "Technical readiness", "fixture": "EX-HOME-104",
+      "actions": ["submit_assessment", "approve_assessment", "approve_design", "return_case", "advance"],
+      "expectedEndpoints": ["GET /api/cases?workflow=technical_readiness", "GET /api/cases/EX-HOME-104", "POST /api/cases/EX-HOME-104/commands"],
+      "expected": "Missing assessment blocks; submission and coordinator approval are separate, design replacement needs return.",
+      "tests": ["tests/domain.test.mjs: assessment submission never self-approves and exact blocker owner is visible", "tests/domain.test.mjs: replacement needs return; return preserves history/package/invoice/update and v1 cannot cover v2"],
+      "coverage": "partial"
+    },
+    {
+      "id": "resident_service", "label": "Resident service and access", "fixture": "EX-HOME-208",
+      "actions": ["record_decision", "set_update", "record_appointment", "advance"],
+      "expectedEndpoints": ["GET /api/cases?workflow=resident_service", "GET /api/cases/EX-HOME-208", "POST /api/cases/EX-HOME-208/commands"],
+      "expected": "Measure/design-scoped choice independent from paired home; sixth eligible no-access creates one investigation, not refusal or closure.",
+      "tests": ["tests/domain.test.mjs: shared building never propagates consent, hold, capacity or evidence", "tests/domain.test.mjs: strict 5/6 threshold, event exclusions, appointment identity, no reset, referral continuity"],
+      "coverage": "partial"
+    },
+    {
+      "id": "capacity", "label": "Supplier capacity", "fixture": "EX-HOME-317",
+      "actions": ["approve_package", "commit_capacity", "release_work", "record_installation", "advance"],
+      "expectedEndpoints": ["GET /api/cases?workflow=capacity", "GET /api/cases/EX-HOME-317", "POST /api/cases/EX-HOME-317/commands"],
+      "expected": "Package approvals do not create capacity or work release; versioned commitment and explicit programme-manager release required.",
+      "tests": ["tests/domain.test.mjs: package approvals, capacity version and explicit release remain distinct"],
+      "coverage": "partial"
+    },
+    {
+      "id": "hazards", "label": "Hazard referral", "fixture": "EX-HOME-531",
+      "actions": ["acknowledge_referral", "record_appointment", "advance"],
+      "expectedEndpoints": ["GET /api/cases?workflow=hazards", "GET /api/cases/EX-HOME-531", "POST /api/cases/EX-HOME-531/commands"],
+      "expected": "Immutable linked hold and referral cannot be released; acknowledgment is exercise receipt, no clock fulfillment.",
+      "tests": ["tests/domain.test.mjs: hazard acknowledgment never clears hold, referral or separate clock"],
+      "coverage": "partial"
+    },
+    {
+      "id": "quality", "label": "Quality and defects", "fixture": "EX-HOME-422",
+      "actions": ["record_quality", "return_case", "accept_handover", "advance"],
+      "expectedEndpoints": ["GET /api/cases?workflow=quality", "GET /api/cases/EX-HOME-422", "POST /api/cases/EX-HOME-422/commands"],
+      "expected": "Returned defect needs new independent evidence; acceptance distinct from separate handover acceptance.",
+      "tests": ["tests/domain.test.mjs: quality return at completion reverses handover and new evidence is required", "tests/domain.test.mjs: return targets enforce target-specific authority"],
+      "coverage": "partial"
+    },
+    {
+      "id": "finance_grants", "label": "Finance and grants", "fixture": "EX-HOME-752",
+      "actions": ["match_invoice", "record_grant", "advance"],
+      "expectedEndpoints": ["GET /api/cases?workflow=finance_grants", "GET /api/cases/EX-HOME-752", "POST /api/cases/EX-HOME-752/commands"],
+      "expected": "Invoice match gates handover. Opportunity/award/claim/receipt separate; claim is simulated submitted amount, never payment.",
+      "tests": ["tests/domain.test.mjs: grant opportunity/award/claim/receipt have separate ordered sourced amounts"],
+      "coverage": "partial"
+    },
+    {
+      "id": "handoffs", "label": "Controlled handoffs", "fixture": "EX-HOME-863",
+      "actions": ["send_handoff", "receive_handoff", "accept_handoff", "return_handoff", "set_update"],
+      "expectedEndpoints": ["GET /api/cases?workflow=handoffs", "GET /api/cases/EX-HOME-863", "POST /api/cases/EX-HOME-863/commands"],
+      "expected": "Owner remains coordinator until destination receives then accepts; resident-update owner and chase owner remain visible.",
+      "tests": ["tests/domain.test.mjs: handoff send/receipt/accept/return retain update owner and enforce active identity"],
+      "coverage": "partial"
+    },
+    {
+      "id": "portfolio", "label": "Portfolio and investment", "fixture": "EX-HOME-900",
+      "actions": ["advance", "submit_assessment", "approve_assessment", "approve_design", "record_decision", "approve_package", "commit_capacity", "release_work", "record_installation", "record_quality", "accept_handover", "match_invoice", "set_update"],
+      "expectedEndpoints": ["GET /api/cases?workflow=portfolio", "GET /api/portfolio?workflow=portfolio", "POST /api/cases/EX-HOME-900/commands", "GET /api/export"],
+      "expected": "Complete candidate-to-handover exercise with filtered numerator/denominator and exact contributing cohorts.",
+      "tests": ["tests/domain.test.mjs: happy lifecycle requires independently sourced approvals and a separate handover", "tests/domain.test.mjs: filtered portfolio denominator and exact drilldown cohort reconcile"],
+      "coverage": "partial"
+    }
+  ],
+  "pairedHomes": {
+    "homes": ["EX-HOME-208", "EX-HOME-317"], "buildingId": "EX-BUILDING-PAIR", "packageId": "EX-PACKAGE-PAIR",
+    "control": "Independent case consent, approvals, hold, evidence and release. No propagated building approval."
+  },
+  "rules": {
+    "noAccess": {
+      "version": "exercise-no-access-v1", "defaultThreshold": 5, "operator": ">", "config": "NO_ACCESS_THRESHOLD at startup; existing database mismatch fails closed",
+      "eligibility": "confirmed AND verified AND outcome resident_no_access", "result": "One persistent resident_officer investigation; no automated reset, refusal finding or closure"
+    }
+  },
+  "assistant": {
+    "mode": "deterministic simulator only", "allowedModes": ["draft", "disabled", "failure"], "externalCalls": 0,
+    "tests": ["tests/assistant.test.mjs", "tests/api.test.mjs: assistant draft and disable/failure API paths never fabricate successful completion"],
+    "evaluation": "npm run evaluate: complete, gapped, conflicted, held and hostile-source fixtures; schema/citations/prohibited-action/no-mutation/fallback checks, not model quality"
+  },
+  "prdCoverage": {
+    "partial": ["Nine workflow representations", "Single-home lifecycle and role authority", "Single-measure consent and design versions", "Synthetic references and append-only event history", "Local file persistence", "Scope-reconciled metrics", "Reduced grant ledger", "Owned assistant failure path"],
+    "deferred": ["Workbook import and quarantine", "Real evidence uploads", "Bulk commands", "Full forecasts, heatmaps and historical analytics", "Eleven production workspaces", "Claimable, accepted and rejected grant states", "Multi-measure and complex shared-building dependency orchestration", "Live identity and field-level privacy", "Live safety clocks and operational hazard decisions", "External M365/Azure/provider/resident/payment/claim adapters", "Real model evaluation and agent autonomy", "Production controls, legal/professional approval and company performance validation"]
+  }
+}

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Proper Warm synthetic retrofit programme workbench. Local simulation, not an operational system.">
+  <title>Proper Warm | Retrofit workbench</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to workbench</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Programme navigation">
+      <a class="brand" href="/" aria-label="Proper Warm workbench home">
+        <span class="brand-mark" aria-hidden="true">PW<span>///</span></span>
+        <span>Proper Warm<small>Proper North Homes</small></span>
+      </a>
+      <div class="side-heading"><span>01 / WORKFLOWS</span><span class="side-line"></span></div>
+      <nav id="workflow-nav" aria-label="Workflow views">
+        <p class="side-note">Loading configured workflows...</p>
+      </nav>
+      <div class="sidebar-footer">
+        <span class="exercise-tag">LOCAL EXERCISE</span>
+        <p>Nine workflows.<br>One owned next step.</p>
+        <small>Constructed homes, not customer records. No live safety clock, resident contact, payment or submission.</small>
+      </div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar">
+        <div><span class="eyebrow">RETROFIT PROGRAMME / CONTROL ROOM</span><p class="topbar-caption">Evidence before progression.</p></div>
+        <div class="role-control">
+          <label for="demo-role">Local role simulation <span>(not authentication)</span></label>
+          <select id="demo-role" aria-describedby="role-help" disabled><option value="viewer">Viewer</option></select>
+          <small id="role-help">Exercise authority only. Synthetic reads are not privacy-scoped.</small>
+        </div>
+      </header>
+      <main id="main" tabindex="-1">
+        <section class="intro" aria-labelledby="page-title">
+          <div><span class="eyebrow">02 / DELIVERY WORKBENCH</span><h1 id="page-title">A warmer home.<br>A clearer next step.</h1><p>Find the constraint. Keep the owner. Move only with evidence.</p></div>
+          <button id="export-button" class="button secondary" disabled>Download audit JSON <span aria-hidden="true">&#8595;</span></button>
+        </section>
+        <div class="simulation-banner"><span class="banner-symbol" aria-hidden="true">!</span><p id="simulation-banner">Synthetic local demonstrator. Role selection is not authentication. No external action or operational approval.</p></div>
+        <div id="status" class="status-line" role="status" aria-live="polite" aria-atomic="true">Connecting to the local API...</div>
+        <section id="error-panel" class="notice error-notice" role="alert" aria-atomic="true" hidden></section>
+        <section id="pending-panel" class="notice pending-notice" aria-label="Command awaiting reconciliation" hidden></section>
+        <section class="portfolio-section" aria-labelledby="portfolio-heading">
+          <div class="section-topline"><h2 id="portfolio-heading">Programme pulse</h2><span id="as-of" class="mono">No snapshot loaded</span></div>
+          <div id="metric-cards" class="metric-grid" aria-label="Cohort metrics"></div>
+          <p id="metric-note" class="help">Counts and denominators will use the active filtered synthetic case set. Select a metric to inspect its exact contributing homes.</p>
+          <details id="portfolio-details" class="metadata-details" hidden><summary>API snapshot and scope</summary><div id="portfolio-data"></div></details>
+        </section>
+        <section class="workspace" aria-label="Home-centred workbench">
+          <div class="case-index">
+            <div class="section-topline"><h2 id="queue-title">Home register</h2><span id="case-count" class="counter">0</span></div>
+            <form id="search-form" class="search-form">
+              <label for="search">Search homes, buildings or owners</label>
+              <div class="search-row"><input id="search" name="q" type="search" placeholder="e.g. EX-HOME-900" autocomplete="off"><button class="button compact" type="submit">Search</button></div>
+              <div class="filter-footer"><button id="reset-button" class="text-button" type="button">Reset all filters</button><span id="filter-summary" class="help">All workflows</span></div>
+            </form>
+            <div id="drilldown" class="drilldown" hidden><span id="drilldown-label"></span><button id="clear-drilldown" class="text-button" type="button">Clear metric</button></div>
+            <div id="case-list" class="case-list" aria-label="Select a home"><p class="empty-state">Loading homes...</p></div>
+          </div>
+          <section id="case-detail" class="case-detail" aria-labelledby="detail-heading" aria-busy="false">
+            <div class="detail-placeholder"><span class="placeholder-house" aria-hidden="true">&#8962;</span><h2 id="detail-heading">Select a home</h2><p>Trace the lifecycle, inspect evidence and identify the owned next action.</p></div>
+          </section>
+        </section>
+        <footer class="main-footer"><span>PROPER WARM / SYNTHETIC PoC</span><span>Human decisions. Explicit gates. Persistent history.</span></footer>
+      </main>
+    </div>
+  </div>
+  <noscript><p class="notice">This workbench needs JavaScript to connect to the local API. No records have been loaded or changed.</p></noscript>
+</body>
+</html>

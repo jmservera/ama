@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-06
+ms.date: 2026-10-07
 ms.topic: reference
 ---
 
@@ -1081,3 +1081,22 @@ metadata when the knowledge base was created.
   requirement/criterion links, exact matrix agreement and fixture defaults;
   Markdown lint excludes MD013 to retain existing long-table style.
   No original case, memory, regulatory snapshot or production rule changed.
+
+## [2026-10-07] query | Build Proper Warm architecture and transactional PoC
+
+* Added a runnable local synthetic application, architecture, runbook and
+  resource ledger under `../../apps/proper-warm/` and `../architecture/`.
+  Nine represented workflows share a versioned case, API-enforced gates,
+  persistent history, owned exceptions and safe retry boundaries.
+* The architecture distinguishes the implemented single-instance local
+  container from the provisional undeployed Azure-led hybrid target.
+  Demo role selection is not authentication; the evidence assistant is an
+  offline simulator, not a selected model or demonstrated agentic autonomy.
+* Added the PoC to this index and the root README. Preserved the original,
+  addendum, owner memory, regulatory snapshots and prior read-only prototype.
+* Resource creation and measured validation are recorded in
+  [Proper Warm Resource and Validation Ledger](../architecture/proper-warm-resources.md).
+  Azure/M365 resources are not needed and none is created.
+* Full PRD MVP coverage, company benefits and capstone floor readiness are
+  not claimed. The complete-rubric challenge records unknown live/stakeholder
+  criteria and open human release gates.

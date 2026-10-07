@@ -5,3 +5,7 @@ __pycache__/
 *.pyd
 # Synthetic-data answer keys stay local so analysis can remain blind
 support/synthetic-data/**/answer-key/
+# Local PoC state and isolated owned test databases are never source evidence
+apps/proper-warm/data/
+apps/proper-warm/.test-data/
+apps/proper-warm/node_modules/
