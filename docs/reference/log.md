@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-06
+ms.date: 2026-10-08
 ms.topic: reference
 ---
 
@@ -1124,3 +1124,18 @@ metadata when the knowledge base was created.
 * Updated `README.md` routing/catalog. No original case, addendum, PRD, memory,
   prototype code, generated resident data or tracking artifacts changed.
   No runtime inspection, operational approval or user-tested success claimed.
+
+## [2026-10-08] restructure | Split Proper Warm PoC documentation from implementation
+
+* Transferred the architecture, resource/validation ledger and application
+  runbook into `docs/architecture/` from source commit `40e248a`.
+* Updated the runbook's documentation links and made clear that application
+  commands require a checkout of the separate implementation PR #24.
+  Application, manifest, Docker, workflow and verifier references are pinned
+  to the source commit; no implementation or private support files were copied.
+* Added README and knowledge-base routing/catalog entries. The ledger retains
+  the reported local inventory and teardown instructions; no teardown or other
+  runtime-resource action was performed. Azure and M365 resources remain
+  explicitly not provisioned.
+* Files touched: root `README.md`, the three `docs/architecture/` pages,
+  `docs/reference/README.md` and this log.
