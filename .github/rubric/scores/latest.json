@@ -2,19 +2,19 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T07:22:14+00:00",
-  "commit": "222d11ff4565db1431a0d89a7ae2dee08ba4ec99",
+  "scored_at": "2026-10-08T09:14:52+00:00",
+  "commit": "a572bb2ca9996e575586b0974b8e0dbdfe4f1ca1",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37742170237",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37754454592",
   "fingerprints": {
     "brd": "7947aff0475c769010747917eaddd2a01589d7fb89b4cb51eaacfe048373f3fb",
-    "prd": "89f26c6b3c145ae00e68dc614b2b9a58ad3a204249bd58e3f7be21506956b4d2",
-    "adr": "9a245f555f7d35ec335eaea0765d6a2b7941989a4c182996b185b37a7daff405",
-    "infrastructure": "9ba09fc0c8c7cfe15d26054560a2fdc53ea5ff19cb039c4bfe33e6900732e4f4"
+    "prd": "d61ada59263e9f119b02100ba3855844dc7d7fa892d9b5e0965756c25d45b58b",
+    "adr": "f5a158701ff9c96771435088811681da9492c7e8a48023db567f5f9d7dcc3056",
+    "infrastructure": "c5971a2bd3aaea17a2d9676147ff7b0b7bec5cf3be41ec471d1243a27ffd402b"
   },
-  "total": 29,
+  "total": 27,
   "sections": {
-    "A": 22,
+    "A": 20,
     "B": 3,
     "C": 4,
     "D": 0
@@ -25,28 +25,27 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:66-73",
-        "infra/modules/containerapps.bicep:121-124",
-        "infra/modules/containerapps.bicep:198-201"
+        "docs/adrs/0001-azure-architecture.md:120-128",
+        "infra/modules/containerapps.bicep:208",
+        "infra/modules/containerapps.bicep:290",
+        "infra/README.md:33-35"
       ],
-      "rationale": "New ADR Failure domains and scaling table makes scaling path and failure behaviour explicit per component, and the claims are backed by real Bicep scale rules (min/maxReplicas, KEDA queue triggers), not just prose. Moves from general discussion to documented, partially evidenced scaling."
+      "rationale": "New ADR and deployed Bicep realise the decoupled components as real per-workload Container Apps with concrete KEDA queue scaling (agents 0-5 on agent-tasks, import 0-2 on import-jobs) and a failure-domain table with specific behaviours per component; validated by an actual what-if and resource gr..."
     },
     "A2": {
-      "score": 4,
+      "score": 3,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:31-32"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:255"
       ],
-      "rationale": "ADR Decisions table now names rejected alternatives with reasons (e.g. App Service vs Container Apps, Durable Functions vs scheduled job), moving from default pattern use to deliberate, argued trade-offs."
+      "rationale": "Options Gate Scoring Framework lists alternatives (full Azure custom, greenfield, hybrid) and named criteria, but weights are TBD and no option has actually been scored, so trade-off argument is incomplete."
     },
     "A3": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:56-64",
-        "docs/adrs/0001-azure-architecture.md:77-84",
-        "infra/modules/sql.bicep:21-29",
-        "infra/modules/foundry.bicep:23-24"
+        "docs/adrs/0001-azure-architecture.md:131-140",
+        "infra/modules/foundry.bicep:14-24"
       ],
-      "rationale": "ADR adds an explicit threat-model-to-control mapping table and security control list; Bicep modules implement the named controls (Entra-only SQL, disabled local auth on Foundry, private endpoints), so controls are no longer just described but encoded in deployable infrastructure."
+      "rationale": "Threat model mapping now ties each PRD threat to a concrete deployed control (no public Foundry endpoint, no keys/shared keys/SQL logins, per-workload identity, NSG deny-by-default, SQL ledger), verified by an actual deployment rather than being illustrative/unvalidated as before."
     },
     "A4": {
       "score": 1,
@@ -54,28 +53,27 @@
       "rationale": "No solution-code artifact exists (file_count 0); nothing is built end to end. Implementation completeness cannot be scored above the floor from planning documents alone."
     },
     "A5": {
-      "score": 3,
+      "score": 2,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:56-64",
-        "infra/main.bicep (budget and metric alert resources)"
+        "docs/adrs/0001-azure-architecture.md:142-146"
       ],
-      "rationale": "Diagnostic settings, metric alerts and a budget resource are now actually configured in Bicep (structured instrumentation), moving beyond qualitative discussion, but the ADR itself states no runtime, load or cost measurement exists yet."
+      "rationale": "Operational targets are explicitly labelled proposed and unmeasured; no instrumentation, load or cost data exists yet despite alerting being configured in Bicep. The stated gap persists unchanged."
     },
     "A6": {
       "score": 3,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:461",
-        "docs/adrs/0001-azure-architecture.md:37"
+        "docs/adrs/0001-azure-architecture.md:37",
+        "infra/README.md:33-35"
       ],
-      "rationale": "Foundry now has two named model tiers wired as configuration, but the PRD's evaluation harness still has not been run and no model has been selected on measured criteria."
+      "rationale": "Two Foundry model tiers (gpt-4.1-mini, gpt-4.1) were actually deployed and confirmed provisioned per the validation notes, giving the evaluation harness real infrastructure to run against, though no evaluation or model selection test has yet been executed."
     },
     "A7": {
       "score": 3,
       "evidence": [
-        "infra/modules/containerapps.bicep:162-165",
-        "infra/modules/containerapps.bicep:280-296"
+        "docs/adrs/0001-azure-architecture.md:120-128",
+        "infra/README.md:33-35"
       ],
-      "rationale": "The bounded-agent pattern is now enforced at the infrastructure/identity level (agents identity has no DB/blob/Key Vault role, queue-triggered scale to zero), a real guardrail rather than only a design narrative, though no running agent code demonstrates autonomy yet."
+      "rationale": "The bounded-agent orchestration pattern now has deployed infrastructure (scheduled Container Apps job, SQL-checkpointed idempotency, agents isolated with no write credentials) verified by an actual deployment, partially addressing the prior gap of a design not demonstrated in running code; applic..."
     },
     "B1": {
       "score": 0,
@@ -108,7 +106,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:29",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1"
       ],
-      "rationale": "BRD, PRD and now ADR/infra README are structured and navigable, but no capstone deck exists; cap_without caps this score at 3 regardless of documentation quality improvements."
+      "rationale": "BRD and PRD remain structured, navigable and complete with traceability; infra/README.md adds further organised documentation, but no capstone deck exists so cap_without caps this score at 3 regardless."
     },
     "B7": {
       "score": 0,
@@ -121,7 +119,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:528",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269"
       ],
-      "rationale": "Business Objectives table names real stakeholders, quantifies value at stake, and flags unvalidated figures honestly; the changed files are architecture-focused and do not add or weaken business-framing evidence."
+      "rationale": "Business Objectives table names real stakeholders, quantifies value at stake (GBP 40m grant opportunity, 15,600 homes below EPC C, cycle-time targets) and flags unvalidated figures honestly; this diff is infrastructure-focused and adds no new business-framing evidence."
     },
     "C2": {
       "score": 0,
