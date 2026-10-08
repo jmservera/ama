@@ -307,8 +307,27 @@ Trust measures to observe in the demonstrator (thresholds need owner approval): 
 
 Demonstration plan (about 15 minutes, no new services): import a constructed workbook with a preview and an untouched source; edit a case and show its history; show one case under two roles with a denied attempt and log entry; raise an AI draft that a human accepts or rejects; trigger a business rule (RULE-006 or RULE-008); tamper with a scratch copy and show the integrity check fail; export to Excel with no AI involved; show the restore drill result; close with the data page and the residency statement.
 
+## Data handling and retention alignment
+
+The addendum Data Handling and Retention Baseline (proposed, 2026-10-08) turns into these architecture rules. All remain proposals for DPO and Legal approval.
+
+| Baseline rule | Architecture response | Status |
+| --- | --- | --- |
+| Storage limitation, deletion and erasure | A scheduled retention job per data class with owner approval and a log of deletions only; SQL ledger tables record history, so deletion of personal content needs a design that keeps the hash chain valid, such as storing personal content outside the ledger and hashing references. | Not built. Open design item |
+| Audit survives deletion without personal content | Audit events hold identifiers and hashes, not free text. | Prototype follows this; needs verification |
+| Backups and restore | SQL point-in-time restore window set to the approved period; restores re-apply deletions. | Window not set from an approved schedule |
+| Logs and telemetry | Log Analytics and Application Insights retention set to a short operational default; the immutable `audit-archive` container carries the longer security and audit record. Immutable storage conflicts with erasure, so it must hold no personal content. | Retention values need owner approval |
+| Transfers and residency | Region recorded per service in this ADR; inference may process outside the UK in `uksouth`, so no personal data goes to model deployments until approved (DH-006). | Constructed data only |
+| Processors | Microsoft and any model or contractor service needs a written processor agreement before real data. | Not evidenced |
+| Evidence a reviewer expects | Approved schedule, record of processing, DPIA, processor and transfer records, deletion and restore tests. | None exist yet |
+
+Deployment note (2026-10-08): the first `uksouth` deployment into the recreated `ama` resource group failed with `VaultAlreadyExists`. The Key Vault name was derived from the resource group ID, which is identical when a group is recreated, and an earlier purge-protected vault held the name. The name now also hashes the location and a version salt.
+
+Result: the redeploy `warm-dev2` into `ama` (`uksouth`, `allowPublicNetworkAccess=true`, default gpt-4.1 and gpt-4.1-mini at GlobalStandard) succeeded in 9 min 13 s.
+
 ## Open items
 
+* Approve the retention schedule and resolve how ledger tables and immutable audit storage coexist with erasure.
 * Azure Policy assignments and subscription-level Defender plans.
 * Add Front Door Premium, WAF and the Private Link origin to the internal environment, plus an Entra app registration, once a public edge is needed.
 * Confirm the Foundry model names, versions, SKUs and quotas in the chosen region, and set `modelDeployments` from the PRD evaluation results.

@@ -36,6 +36,9 @@ param zoneRedundant bool = false
 
 @description('Development only. When true, resources also accept connections from external networks (public endpoints, wide-open SQL firewall, external Container Apps environment). Keep false for anything but a throwaway dev stack.')
 param allowPublicNetworkAccess bool = false
+
+@description('Development only. False sets a 7 day Key Vault soft delete without purge protection so the name can be purged and reused.')
+param keyVaultPurgeProtection bool = true
 @description('CanNotDelete locks on stateful resources.')
 param enableLocks bool = false
 @description('Model deployments. The standard tier is the default; the capable tier is used only where the PRD model evaluation shows the standard tier misses a task threshold.')
@@ -60,7 +63,7 @@ param sqlLocation string = location
 param tags object = {}
 
 var prefix = '${workload}-${environmentName}'
-var unique = take(uniqueString(resourceGroup().id), 5)
+var unique = take(uniqueString(resourceGroup().id, location, 'v2'), 5)
 var compact = replace(prefix, '-', '')
 var allTags = union(tags, {
   workload: 'proper-warm-demonstrator'
@@ -101,6 +104,7 @@ module keyvault 'modules/keyvault.bicep' = {
   name: 'keyvault'
   params: {
     allowPublicNetworkAccess: allowPublicNetworkAccess
+    purgeProtection: keyVaultPurgeProtection
     name: 'kv-${compact}-${unique}'
     location: location
     tags: allTags
