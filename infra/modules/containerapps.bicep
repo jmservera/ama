@@ -17,6 +17,9 @@ param modelDeploymentNames object
 param keyVaultUri string
 param entraClientId string
 param zoneRedundant bool = false
+@allowed(['blob', 'sharepoint'])
+param evidenceStore string = 'blob'
+param sharePointSiteId string = ''
 param apiImage string
 param agentImage string
 param orchestratorImage string
@@ -104,6 +107,8 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
             { name: 'BLOB_ENDPOINT', value: blobEndpoint }
             { name: 'QUEUE_ENDPOINT', value: queueEndpoint }
             { name: 'KEY_VAULT_URI', value: keyVaultUri }
+            { name: 'EVIDENCE_STORE', value: evidenceStore }
+            { name: 'SHAREPOINT_SITE_ID', value: sharePointSiteId }
             { name: 'ENTRA_TENANT_ID', value: tenant().tenantId }
             { name: 'ENTRA_CLIENT_ID', value: entraClientId }
           ])
@@ -317,3 +322,4 @@ output environmentId string = environmentResource.id
 output environmentName string = environmentResource.name
 output apiFqdn string = api.properties.configuration.ingress.fqdn
 output apiName string = api.name
+output apiId string = api.id

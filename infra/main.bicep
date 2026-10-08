@@ -9,6 +9,16 @@ param environmentName string = 'dev'
 param location string = resourceGroup().location
 @description('Mailbox for platform alerts.')
 param alertEmail string
+@description('Optional Teams Workflows webhook URL for operations alerts.')
+@secure()
+param teamsWebhookUrl string = ''
+@description('Evidence document store. blob is the default; sharepoint needs the M365 steps in the ADR and infra/scripts/grant-sharepoint-access.sh.')
+@allowed(['blob', 'sharepoint'])
+param evidenceStore string = 'blob'
+param sharePointSiteId string = ''
+@description('Monthly budget in the billing currency, with alerts at 80 and 100 percent forecast and actual.')
+param monthlyBudget int = 300
+param budgetStartDate string = utcNow('yyyy-MM-01')
 @description('Entra security group that administers the SQL server (no SQL logins exist).')
 param sqlAdminGroupName string
 param sqlAdminGroupObjectId string
@@ -73,6 +83,7 @@ module monitoring 'modules/monitoring.bicep' = {
     location: location
     tags: allTags
     alertEmail: alertEmail
+    teamsWebhookUrl: teamsWebhookUrl
     peSubnetId: network.outputs.peSubnetId
     zoneIds: network.outputs.zoneIds
   }
@@ -187,6 +198,8 @@ module apps 'modules/containerapps.bicep' = {
     keyVaultUri: 'https://${keyvault.outputs.name}${environment().suffixes.keyvaultDns}'
     entraClientId: entraClientId
     zoneRedundant: zoneRedundant
+    evidenceStore: evidenceStore
+    sharePointSiteId: sharePointSiteId
     apiImage: apiImage
     agentImage: agentImage
     orchestratorImage: orchestratorImage
@@ -247,6 +260,87 @@ resource sqlCpu 'Microsoft.Insights/metricAlerts@2018-03-01' = {
     actions: [{ actionGroupId: monitoring.outputs.actionGroupId }]
   }
   dependsOn: [sql]
+}
+
+resource apiErrors 'Microsoft.Insights/metricAlerts@2018-03-01' = {
+  name: 'alert-${prefix}-api-5xx'
+  location: 'global'
+  tags: allTags
+  properties: {
+    severity: 2
+    enabled: true
+    scopes: [apps.outputs.apiId]
+    evaluationFrequency: 'PT1M'
+    windowSize: 'PT5M'
+    criteria: {
+      'odata.type': 'Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria'
+      allOf: [
+        {
+          name: 'server-errors'
+          metricName: 'Requests'
+          dimensions: [{ name: 'statusCodeCategory', operator: 'Include', values: ['5xx'] }]
+          operator: 'GreaterThan'
+          threshold: 5
+          timeAggregation: 'Total'
+          criterionType: 'StaticThresholdCriterion'
+        }
+      ]
+    }
+    actions: [{ actionGroupId: monitoring.outputs.actionGroupId }]
+  }
+}
+
+resource apiRestarts 'Microsoft.Insights/metricAlerts@2018-03-01' = {
+  name: 'alert-${prefix}-api-restarts'
+  location: 'global'
+  tags: allTags
+  properties: {
+    severity: 3
+    enabled: true
+    scopes: [apps.outputs.apiId]
+    evaluationFrequency: 'PT5M'
+    windowSize: 'PT15M'
+    criteria: {
+      'odata.type': 'Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria'
+      allOf: [
+        {
+          name: 'restarts'
+          metricName: 'RestartCount'
+          operator: 'GreaterThan'
+          threshold: 3
+          timeAggregation: 'Total'
+          criterionType: 'StaticThresholdCriterion'
+        }
+      ]
+    }
+    actions: [{ actionGroupId: monitoring.outputs.actionGroupId }]
+  }
+}
+
+resource budget 'Microsoft.Consumption/budgets@2023-05-01' = {
+  name: 'budget-${prefix}'
+  properties: {
+    category: 'Cost'
+    amount: monthlyBudget
+    timeGrain: 'Monthly'
+    timePeriod: { startDate: budgetStartDate }
+    notifications: {
+      actual80: {
+        enabled: true
+        operator: 'GreaterThan'
+        threshold: 80
+        thresholdType: 'Actual'
+        contactEmails: [alertEmail]
+      }
+      forecast100: {
+        enabled: true
+        operator: 'GreaterThan'
+        threshold: 100
+        thresholdType: 'Forecasted'
+        contactEmails: [alertEmail]
+      }
+    }
+  }
 }
 
 output apiInternalFqdn string = apps.outputs.apiFqdn

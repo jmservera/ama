@@ -2,11 +2,11 @@
 title: "Proper Warm Retrofit Programme Workbench"
 description: "Product requirements for a role-based retrofit delivery workbench covering the Proper Warm workflow portfolio"
 author: AMA Research Team
-ms.date: "2026-10-06"
+ms.date: "2026-10-08"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "draft"
-version: "0.7.0"
+version: "0.8.0"
 owners: ["AMA Research Team (draft custodian); product owner to be named"]
 reviewers: ["Product sponsor, Asset, Digital, Finance, Retrofit, Safety, Procurement, Resident Engagement (to be confirmed)"]
 created_date: "2026-10-03"
@@ -154,6 +154,29 @@ Service names and placement are options to compare, not requirements. Azure
 Container Apps, Azure SQL, Durable Functions, Azure AI Foundry, SharePoint and
 Blob Storage were prior candidate examples; verify current availability,
 support, tenancy, cost and data residency before selecting them.
+
+### Proposed Azure and M365 realisation (2026-10-08)
+
+[ADR 0001](../adrs/0001-azure-architecture.md) and the Bicep in
+[`infra/`](../../infra/README.md) now realise the component contracts above as
+a proposed, not deployed, demonstrator design. The service choices remain
+options pending OQ-012.
+
+| Component | Proposed realisation |
+| --- | --- |
+| Workbench and domain API | Container App behind Entra app authentication; only identity with SQL and Blob write access |
+| Programme state store | Azure SQL Database with ledger tables, Entra-only authentication |
+| Workflow orchestrator | Scheduled Container Apps job, checkpointed through the API; no data credentials |
+| Bounded AI task service | Container App scaled by an `agent-tasks` queue; Foundry access only, with no SQL, Blob or Key Vault role |
+| Evidence document store | Blob storage by default (`evidenceStore=blob`); SharePoint site through Microsoft Graph with `Sites.Selected` when OQ-012 checks pass |
+| Exercise workbook import | Queue-triggered Container Apps job with a quarantine container |
+| Identity and telemetry | Per-workload managed identities, Log Analytics, Application Insights, SQL auditing, alerts and budget |
+
+M365 is limited to three roles in the demonstrator, each conditional on OQ-012:
+Entra ID as the identity provider and role source, a SharePoint site as the
+optional evidence store, and Teams as a notification and review channel. No
+M365 service becomes a system of record, approval authority or write path
+around the API, and Dataverse and Dynamics 365 remain out of scope (CON-005).
 
 ### Threat Model (illustrative, not validated)
 
@@ -980,6 +1003,6 @@ waive upstream evidence or count as human sign-off.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-06
+* **Last Updated:** 2026-10-08
 * **Authoring Status:** Draft
 * **Next Review:** Before PRD Validate

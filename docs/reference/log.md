@@ -1135,3 +1135,17 @@ metadata when the knowledge base was created.
 * Status is proposed and unverified: Bicep builds and lints, but nothing was
   deployed, and model versions, quotas and region availability are unchecked.
 * Updated the `README.md` catalog.
+
+## [2026-10-08] update | Revise Azure architecture after PR 28 review
+
+* Responded to the rubric score on PR 28 (A1 to A5 held below Excellent for
+  lack of failure domains, measured operations and deployment evidence). ADR
+  0001 gained failure domains and scaling, threat model mapping, operational
+  targets and a cost model, and an M365 section covering Entra ID, optional
+  SharePoint (`Sites.Selected`) and Teams.
+* Bicep gained API 5xx and restart alerts, a budget, a Teams webhook receiver
+  and evidence store parameters. PRD v0.8.0 records the proposed Azure and M365
+  realisation under the platform boundary.
+* Validation: build, lint, ARM validate and what-if only. The deployment was
+  not applied because the only writable resource group belongs to another
+  project and the template would modify its private DNS zones.

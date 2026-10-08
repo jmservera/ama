@@ -15,6 +15,9 @@ Proposed, non-production infrastructure. The design and its rationale are in
 * `main.bicepparam`: dev parameters; replace the placeholder alert email and Entra group.
 * `modules/`: identity, network (VNet, NSGs, private DNS), monitoring (Log Analytics, App Insights, AMPLS), Key Vault, storage, registry, SQL, Foundry, Container Apps and the generic private endpoint.
 * `scripts/create-sql-users.sql`: contained SQL users for the managed identities.
+* `scripts/grant-sharepoint-access.sh`: optional Graph `Sites.Selected` grant for the SharePoint evidence store.
+
+Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `monthlyBudget`. See the M365 section of the ADR.
 
 ## Deploy
 

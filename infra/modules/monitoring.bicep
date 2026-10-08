@@ -3,6 +3,9 @@ param location string
 param tags object
 param retentionInDays int = 90
 param alertEmail string
+@description('Optional Teams Workflows webhook URL for operations alerts.')
+@secure()
+param teamsWebhookUrl string = ''
 param peSubnetId string
 param zoneIds object
 
@@ -86,6 +89,13 @@ resource actionGroup 'Microsoft.Insights/actionGroups@2023-01-01' = {
       {
         name: 'operations'
         emailAddress: alertEmail
+        useCommonAlertSchema: true
+      }
+    ]
+    webhookReceivers: empty(teamsWebhookUrl) ? [] : [
+      {
+        name: 'teams-operations'
+        serviceUri: teamsWebhookUrl
         useCommonAlertSchema: true
       }
     ]
