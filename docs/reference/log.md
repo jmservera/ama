@@ -1241,3 +1241,11 @@ metadata when the knowledge base was created.
 * Dataset builder now adds seeded document records and funding routes.
 * Limits: files live on ephemeral disk in the demo, sign-in is a shared
   password, funding routes and statuses are illustrative.
+
+## 2026-10-08 MVP usability pass
+
+* MVP: filters moved to a left panel that loads from the API without page
+  reloads, so the AI briefing is fetched once and cached server-side until
+  case data changes. Overview now has a zoomable OpenStreetMap (bundled
+  Leaflet, BSD-2) with resident-name tooltips, and the KPI tiles filter the
+  map. Tiles are the only external request and are allowed in the CSP.

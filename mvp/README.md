@@ -16,7 +16,10 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   and any open safety issue must all be confirmed. Unknown never passes.
 * Filter the list by stage, local authority, wave, owner or flag, and sort by
   urgency, longest wait, last contact, name or next visit.
-* Overview: counts, a map of open cases (teal normal, amber waiting 60+ days,
+* Filters sit in a left panel and update the list without reloading the page.
+  The briefing is cached until case data changes.
+* Overview: counts that filter the map when clicked, a zoomable OpenStreetMap
+  of open cases (Leaflet bundled in `web/vendor`; names show on hover; teal normal, amber waiting 60+ days,
   red open safety issue), charts by stage, authority, wave and waiting time,
   contractor and team workload. Visits lists booked appointments by day.
 * "Who could take this on": top three colleagues with plain reasons (role
@@ -66,6 +69,8 @@ history ends today and prints no real personal data.
   `AI_DEPLOYMENT_STRONG`) and a managed identity with the Cognitive Services
   OpenAI User role. Without them the app uses plain templates. Nothing is
   sent; there is no live integration with housing or repairs systems.
+* The map loads tiles from tile.openstreetmap.org (the only external request,
+  allowed in the CSP). Production would use a licensed tile service.
 * Uploaded files and live changes sit on local disk. On Azure Container Apps
   that disk is lost on restart, so run one replica and treat it as a demo;
   production would use Blob Storage and Azure SQL.

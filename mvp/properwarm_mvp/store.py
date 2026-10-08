@@ -43,6 +43,8 @@ class Store:
         self.last_hash = self._tail_hash()
         self.docs_dir = os.path.join(os.path.dirname(self.live_path), "docs")
         self.ai = Ai()
+        self.version = 0
+        self._briefings = {}
 
     def _tail_hash(self):
         h = "0" * 64
@@ -54,6 +56,7 @@ class Store:
         return h
 
     def save(self):
+        self.version += 1
         tmp = self.live_path + ".tmp"
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(self.data, f)
@@ -328,6 +331,10 @@ class Store:
 
     def briefing(self, user):
         with self.lock:
+            hit = self._briefings.get(user["code"])
+            if hit and hit[0] == self.version:
+                return hit[1]
+            ver = self.version
             mine = [c for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]]
             mine.sort(key=lambda c: (not any(not h["released"] for h in c["hazards"]), -c["days_in_stage"]))
             top = mine[:8]
@@ -336,7 +343,11 @@ class Store:
         r = self.ai.run("briefing", "You write a friendly three-sentence morning briefing for a housing officer. Use only the facts. "
                         "Safety issues first, then longest waits. No invented facts.", facts, tmpl)
         self.audit(user["email"], "ai_run", "-", f"briefing source={r['source']} model={r['model']}")
-        return dict(r, label="AI-drafted" if r["source"] == "ai" else "Summary by rules")
+        out = dict(r, label="AI-drafted" if r["source"] == "ai" else "Summary by rules")
+        with self.lock:
+            if ver == self.version:
+                self._briefings[user["code"]] = (ver, out)
+        return out
 
     # ---- funding: a person approves and submits; the system never does
     FUND_FLOW = ("Not started", "To prepare", "Draft ready", "Approved", "Submitted", "Confirmed")

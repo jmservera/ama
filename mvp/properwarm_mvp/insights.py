@@ -57,6 +57,10 @@ def matches(c, f):
         return False
     if flag == "nodecision" and c["decision"]["status"] in ("Accepted", "Declined"):
         return False
+    if flag == "fundingprog" and c["funding"]["status"] in ("To prepare", "Draft ready", "Approved", "Submitted"):
+        return True
+    if flag == "fundingprog":
+        return False
     if flag == "funding" and c["funding"]["status"] == "Confirmed":
         return False
     return True

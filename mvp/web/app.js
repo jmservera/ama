@@ -74,56 +74,71 @@ function route() {
 
 const listState = { q: "", stage: "", area: "", flag: "", sort: "urgent", wave: "", owner: "" };
 const qs = (o) => Object.entries(o).filter(([, v]) => v).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
-const sel = (label, key, opts, onchange) => {
-  const el = h("select", { "aria-label": label }, h("option", { value: "" }, label), opts.map(([v, t]) => h("option", { value: v, selected: listState[key] === v }, t)));
-  el.addEventListener("change", () => { listState[key] = el.value; onchange(); });
-  return el;
-};
+const isManager = () => ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
+const FLAGS = [["hazard", "Safety issue open"], ["support", "Needs extra support"], ["long", "Waiting 60+ days"], ["nodecision", "No resident decision yet"], ["funding", "Funding not confirmed"]];
 
 function aiBox() {
   const box = h("section", { class: "card ai" }, h("h2", {}, "Today's briefing"), h("p", { class: "muted" }, "Reading your cases..."));
-  api("/api/briefing").then((b) => box.replaceChildren(h("h2", {}, "Today's briefing"), h("p", {}, b.text), h("p", { class: "muted" }, `${b.label}. Suggestions only.`)))
+  api("/api/briefing").then((b) => box.replaceChildren(h("h2", {}, "Today's briefing"), h("p", {}, b.text), h("p", { class: "muted" }, `${b.label}. Suggestions only. Refreshed when your cases change.`)))
     .catch(() => box.remove());
   return box;
 }
 
+let briefingBox = null;
 async function listView(view) {
-  const isMgr = ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
-  const [rows, fx] = await Promise.all([api(`/api/cases?view=${view}&${qs(listState)}`), api("/api/facets")]);
-  const hz = rows.filter((r) => r.hazard).length;
-  const go = () => listView(view);
-  const search = h("input", { type: "search", "aria-label": "Find a resident, address or postcode", placeholder: "Find a resident, address or postcode", value: listState.q });
-  search.addEventListener("keydown", (e) => { if (e.key === "Enter") { listState.q = search.value; go(); } });
-  const items = rows.slice(0, 100).map((r) => h("li", {},
-    h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
-      h("div", {}, h("span", { class: "name" }, r.resident),
-        r.hazard && h("span", { class: "flag danger" }, "Safety issue open"),
-        r.support && h("span", { class: "flag" }, "Needs extra support"),
-        h("div", {}, `${r.address}, ${r.town} ${r.postcode}`),
-        h("div", { class: "status" }, r.status)),
-      h("div", { class: "meta" }, h("div", {}, r.stage), h("div", {}, `${r.days} days in this stage`), h("div", {}, `Last contact: ${ago(r.last_contact)}`),
-        r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`)))));
-  const filtersOn = ["q", "stage", "area", "flag", "wave", "owner"].some((k) => listState[k]);
-  show(
-    aiBox(),
-    h("div", { class: "row between" },
-      h("h1", {}, view === "mine" ? "My cases today" : "All open cases"),
-      h("div", { class: "row" },
-        isMgr && h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See everyone's cases" : "See my cases"),
-        h("a", { class: "btn alt", href: "#/import" }, "Check a spreadsheet"),
-        h("a", { class: "btn alt", href: `/api/cases.csv?view=${view}&${qs(listState)}`, download: "cases.csv" }, "Download for Excel"))),
-    h("div", { class: "row filters" }, search,
-      sel("Any stage", "stage", fx.stages.map((x) => [x, x]), go),
-      sel("Any area", "area", fx.areas.map((x) => [x, x]), go),
-      sel("Any wave", "wave", fx.waves.map((x) => [x, x]), go),
-      view === "all" && sel("Any owner", "owner", me.staff.map((x) => [x.code, x.name]), go),
-      sel("Everything", "flag", [["hazard", "Safety issue open"], ["support", "Needs extra support"], ["long", "Waiting 60+ days"], ["nodecision", "No resident decision yet"], ["funding", "Funding not confirmed"]], go),
-      h("select", { "aria-label": "Sort by", onchange: (e) => { listState.sort = e.target.value; go(); } },
-        Object.entries(fx.sorts).map(([k, t]) => h("option", { value: k, selected: listState.sort === k }, t))),
-      filtersOn && h("button", { class: "alt", onclick: () => { Object.assign(listState, { q: "", stage: "", area: "", flag: "", wave: "", owner: "" }); go(); } }, "Clear filters")),
-    h("p", { class: "muted" }, `${rows.length} cases${hz ? `, ${hz} with a safety issue open` : ""}`),
-    h("ul", { class: "list" }, items.length ? items : h("li", { class: "card" }, "Nothing here. You are all caught up.")),
-    rows.length > 100 && h("p", { class: "muted" }, "Showing the first 100. Use the filters to narrow the list."));
+  const fx = await api("/api/facets");
+  if (!briefingBox) briefingBox = aiBox();
+  const results = h("div", { "aria-live": "polite" });
+  const title = h("h1", {}, view === "mine" ? "My cases today" : "All open cases");
+  const csv = h("a", { class: "btn alt", download: "cases.csv" }, "Download for Excel");
+  let timer = 0, seq = 0;
+  const load = async () => {
+    const my = ++seq;
+    const rows = await api(`/api/cases?view=${view}&${qs(listState)}`);
+    if (my !== seq) return;
+    csv.href = `/api/cases.csv?view=${view}&${qs(listState)}`;
+    const hz = rows.filter((r) => r.hazard).length;
+    results.replaceChildren(...[
+      h("p", { class: "muted" }, `${rows.length} ${rows.length === 1 ? "case" : "cases"}${hz ? `, ${hz} with a safety issue open` : ""}`),
+      h("ul", { class: "list" }, rows.length ? rows.slice(0, 100).map((r) => h("li", {},
+        h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
+          h("div", {}, h("span", { class: "name" }, r.resident),
+            r.hazard && h("span", { class: "flag danger" }, "Safety issue open"),
+            r.support && h("span", { class: "flag" }, "Needs extra support"),
+            h("div", {}, `${r.address}, ${r.town} ${r.postcode}`),
+            h("div", { class: "status" }, r.status)),
+          h("div", { class: "meta" }, h("div", {}, r.stage), h("div", {}, `${r.days} days in this stage`), h("div", {}, `Last contact: ${ago(r.last_contact)}`),
+            r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "card" }, "Nothing matches. Try clearing a filter.")),
+      rows.length > 100 ? h("p", { class: "muted" }, "Showing the first 100. Use the filters to narrow the list.") : null].filter(Boolean));
+  };
+  const field = (label, key, opts) => {
+    const el = h("select", { id: `f-${key}` }, h("option", { value: "" }, "Any"), opts.map(([v, t]) => h("option", { value: v }, t)));
+    el.value = listState[key];
+    el.addEventListener("change", () => { listState[key] = el.value; load(); });
+    return [h("label", { for: `f-${key}` }, label), el];
+  };
+  const search = h("input", { id: "f-q", type: "search", placeholder: "Name, address or postcode" });
+  search.value = listState.q;
+  search.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(() => { listState.q = search.value; load(); }, 250); });
+  const sort = h("select", { id: "f-sort" }, Object.entries(fx.sorts).map(([k, t]) => h("option", { value: k }, t)));
+  sort.value = listState.sort;
+  sort.addEventListener("change", () => { listState.sort = sort.value; load(); });
+  const side = h("aside", { class: "side", "aria-label": "Filters" }, h("h2", {}, "Filter"),
+    h("label", { for: "f-q" }, "Find"), search,
+    field("Stage", "stage", fx.stages.map((x) => [x, x])),
+    field("Local authority", "area", fx.areas.map((x) => [x, x])),
+    field("Wave", "wave", fx.waves.map((x) => [x, x])),
+    view === "all" && field("Owner", "owner", me.staff.map((x) => [x.code, x.name])),
+    field("Show only", "flag", FLAGS),
+    h("label", { for: "f-sort" }, "Sort by"), sort,
+    h("p", {}, h("button", { class: "alt", onclick: () => { Object.assign(listState, { q: "", stage: "", area: "", flag: "", wave: "", owner: "" }); listView(view); } }, "Clear filters")));
+  show(h("div", { class: "layout" }, side, h("div", { class: "main" },
+    briefingBox,
+    h("div", { class: "row between" }, title, h("div", { class: "row" },
+      isManager() && h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See everyone's cases" : "See my cases"),
+      h("a", { class: "btn alt", href: "#/import" }, "Check a spreadsheet"), csv)),
+    results)));
+  load();
 }
 
 async function caseView(id) {
@@ -132,7 +147,7 @@ async function caseView(id) {
   const openHaz = c.hazards.filter((x) => !x.released);
   const msg = h("div", { role: "status" });
   const refresh = async (fn) => {
-    try { await fn(); await caseView(id); } catch (e) {
+    try { await fn(); briefingBox = null; await caseView(id); } catch (e) {
       msg.replaceChildren(h("p", { class: "err" }, e.message), ...(e.reasons || []).map((x) => h("p", {}, x)));
     }
   };
@@ -293,7 +308,7 @@ function importView() {
     h("label", { for: "f" }, "Spreadsheet (CSV)"), file, out);
 }
 
-document.getElementById("signout").addEventListener("click", async () => { await api("/api/logout", {}); me = null; login(); });
+document.getElementById("signout").addEventListener("click", async () => { await api("/api/logout", {}); me = null; briefingBox = null; login(); });
 window.addEventListener("hashchange", () => me && route());
 start().catch(() => login());
 
@@ -319,42 +334,58 @@ function bars(title, data, link) {
   return h("section", { class: "card" }, h("h2", {}, title), g, link);
 }
 
-function mapView(points) {
-  const lats = points.map((p) => p.lat), lons = points.map((p) => p.lon);
-  const minLa = Math.min(...lats), maxLa = Math.max(...lats), minLo = Math.min(...lons), maxLo = Math.max(...lons);
-  const W = 640, H = 420, pad = 20;
-  const kx = Math.cos(((minLa + maxLa) / 2) * Math.PI / 180);
-  const spanX = Math.max(1e-6, (maxLo - minLo) * kx), spanY = Math.max(1e-6, maxLa - minLa);
-  const scale = Math.min((W - 2 * pad) / spanX, (H - 2 * pad) / spanY);
-  const info = h("p", { class: "muted", role: "status" }, "Select a dot to see the home.");
-  const dots = points.map((p) => {
-    const x = pad + (p.lon - minLo) * kx * scale, y = H - pad - (p.lat - minLa) * scale;
-    const d = svg("circle", { cx: x.toFixed(1), cy: y.toFixed(1), r: p.kind === "hazard" ? 6 : 4, class: `dot ${p.kind}`, tabindex: 0, role: "link", "aria-label": `${p.name}, ${p.address}` });
-    const open = () => { info.replaceChildren(h("a", { href: `#/case/${encodeURIComponent(p.id)}` }, `${p.name}, ${p.address}`), ` (${p.stage})`); };
-    d.addEventListener("click", open);
-    d.addEventListener("keydown", (e) => { if (e.key === "Enter") location.hash = `#/case/${encodeURIComponent(p.id)}`; });
-    d.addEventListener("focus", open);
-    return d;
-  });
-  return h("section", { class: "card" }, h("h2", {}, `Map of open cases (${points.length})`),
+const OV_TILES = [["", "Open cases"], ["hazard", "Safety issues open"], ["long", "Waiting 60+ days"], ["nodecision", "Awaiting resident decision"], ["fundingprog", "Funding in progress"], ["support", "Residents needing extra support"]];
+const ovState = { flag: "", area: "" };
+
+function mapPanel() {
+  const el = h("div", { id: "leaflet", class: "leafmap", role: "region", "aria-label": "Map of open cases. Zoom with the buttons, mouse wheel or pinch." });
+  const info = h("p", { class: "muted", role: "status" });
+  const open = h("a", { href: "#/all" }, "Show these as a list");
+  let map = null, layer = null;
+  const KIND = { normal: "#0b5d6b", long: "#d98a00", hazard: "#b42318" };
+  const draw = async () => {
+    const pts = await api(`/api/map?${qs(ovState)}`);
+    info.textContent = `${pts.length} homes shown`;
+    open.onclick = () => { Object.assign(listState, { flag: ovState.flag === "fundingprog" ? "funding" : ovState.flag, area: ovState.area }); };
+    if (!map) {
+      map = L.map(el, { scrollWheelZoom: true }).setView([54.9, -1.6], 9);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
+      layer = L.layerGroup().addTo(map);
+    }
+    layer.clearLayers();
+    const bounds = [];
+    pts.forEach((p) => {
+      const m = L.circleMarker([p.lat, p.lon], { radius: p.kind === "hazard" ? 8 : 6, color: "#fff", weight: 1.5, fillColor: KIND[p.kind], fillOpacity: 0.9 });
+      m.bindTooltip(`${p.name}`, { direction: "top" });
+      m.on("click", () => { location.hash = `#/case/${encodeURIComponent(p.id)}`; });
+      m.addTo(layer);
+      bounds.push([p.lat, p.lon]);
+    });
+    if (bounds.length) map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 });
+  };
+  const box = h("section", { class: "card" }, h("h2", {}, "Map of open cases"),
     h("p", {}, h("span", { class: "key normal" }, "Normal"), h("span", { class: "key long" }, "Waiting 60+ days"), h("span", { class: "key hazard" }, "Safety issue open")),
-    svg("svg", { viewBox: `0 0 ${W} ${H}`, class: "map", role: "group", "aria-label": "Map of open cases" }, svg("rect", { width: W, height: H, class: "mapbg" }), dots), info);
+    el, h("div", { class: "row between" }, info, open));
+  return { box, draw, size: () => map && map.invalidateSize() };
 }
 
 async function overviewView() {
-  const [st, pts] = await Promise.all([api("/api/stats"), api(`/api/map?${qs({ area: listState.area })}`)]);
+  const st = await api("/api/stats");
   const k = st.kpis;
-  const tile = (n, label, href, cls = "") => h("a", { class: `tile ${cls}`, href }, h("strong", {}, String(n)), h("span", {}, label));
+  const counts = { "": k.open, hazard: k.hazards, long: k.long, nodecision: k.nodecision, fundingprog: k.funding, support: k.support };
+  const mp = mapPanel();
+  const tiles = h("div", { class: "tiles", role: "group", "aria-label": "Choose what the map shows" });
+  const paint = () => tiles.replaceChildren(...OV_TILES.map(([f, label]) => h("button", { class: `tile${f === "hazard" ? " danger" : ""}`, "aria-pressed": String(ovState.flag === f),
+    onclick: () => { ovState.flag = f; paint(); mp.draw(); } }, h("strong", {}, String(counts[f])), h("span", {}, label))),
+    h("div", { class: "tile static" }, h("strong", {}, String(k.completed)), h("span", {}, "Completed")));
+  paint();
+  const area = h("select", { id: "mapArea", onchange: (e) => { ovState.area = e.target.value; mp.draw(); } },
+    h("option", { value: "" }, "All areas"), st.areas.map((a) => h("option", { value: a.label }, a.label)));
+  area.value = ovState.area;
   show(
-    h("h1", {}, "Overview"),
-    h("div", { class: "tiles" },
-      tile(k.open, "Open cases", "#/all"), tile(k.hazards, "Safety issues open", "#/all", k.hazards ? "danger" : ""),
-      tile(k.long, "Waiting 60+ days", "#/all"), tile(k.nodecision, "Awaiting resident decision", "#/all"),
-      tile(k.funding, "Funding in progress", "#/funding"), tile(k.support, "Residents needing extra support", "#/all"), tile(k.completed, "Completed", "#/all")),
-    h("div", { class: "row" }, h("label", { for: "mapArea" }, "Show map for"),
-      h("select", { id: "mapArea", onchange: (e) => { listState.area = e.target.value; overviewView(); } },
-        h("option", { value: "" }, "All areas"), st.areas.map((a) => h("option", { value: a.label, selected: listState.area === a.label }, a.label)))),
-    pts.length ? mapView(pts) : h("p", {}, "No homes to show."),
+    h("h1", {}, "Overview"), tiles,
+    h("div", { class: "row" }, h("label", { for: "mapArea" }, "Show map for"), area), mp.box,
     h("div", { class: "grid" }, bars("Cases by stage", st.stages), bars("Cases by local authority", st.areas)),
     h("div", { class: "grid" }, bars("How long cases have waited", st.ages), bars("Cases by wave", st.waves)),
     h("div", { class: "grid" }, bars("Funding status", st.funding),
@@ -362,6 +393,8 @@ async function overviewView() {
         h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("td", {}, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long))))))),
     h("section", { class: "card" }, h("h2", {}, "Team workload"), h("table", {}, h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", {}, x)))),
       h("tbody", {}, st.team.map((t) => h("tr", {}, h("td", {}, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards)))))));
+  await mp.draw();
+  mp.size();
 }
 
 async function visitsView() {

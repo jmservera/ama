@@ -85,6 +85,22 @@ class ImproveTests(unittest.TestCase):
         self.store.funding_step(self.pam, "PW-1", "confirm")
         self.assertTrue(self.store.detail("PW-1")["funding_ok"])
 
+    def test_briefing_cached_until_data_changes(self):
+        calls = []
+        self.store.ai.endpoint = "http://x"
+        self.store.ai._chat = lambda *a, **k: calls.append(1) or "All good today."
+        self.store.briefing(self.sam)
+        self.store.briefing(self.sam)
+        self.assertEqual(len(calls), 1)
+        self.store.log_call(self.sam, "PW-1", "Spoke", "")
+        self.store.briefing(self.sam)
+        self.assertEqual(len(calls), 2)
+
+    def test_funding_in_progress_filter(self):
+        self.store.funding_draft(self.sam, "PW-1")
+        ids = [p["id"] for p in self.store.map_points({"flag": "fundingprog"})]
+        self.assertEqual(ids, ["PW-1"])
+
     def test_ai_falls_back_to_template_and_is_audited(self):
         r = self.store.ai_run(self.sam, "PW-1", "message")
         self.assertEqual(r["source"], "template")
