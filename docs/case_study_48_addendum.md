@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-04
+ms.date: 2026-10-08
 ms.topic: reference
 ---
 
@@ -214,6 +214,73 @@ Automation must not trade speed for rights or safety. A source update, sensor
 reading, missed contact or generated interpretation cannot diagnose a hazard,
 infer consent, remove a resident's priority, satisfy a statutory duty, approve
 professional work or certify an external submission.
+
+### Data Handling and Retention Baseline (Proposed)
+
+This is a proposed baseline for the demonstrator and any later production design. It is not legal advice and not an approved policy. The local corpus contains no numeric retention periods and Proper North Homes' own policies are not in the repository, so every period below is a proposed default for the Data Protection Officer (DPO), Legal and the record owners to confirm or replace. Statements are labelled by authority, using the hierarchy in the [regulatory README](./reference/regulatory/README.md). Provision references are to the local copies retrieved on 19 September 2026; check the official source before relying on them.
+
+The aim is one set of simple rules that satisfies the strictest applicable source, so staff do not have to reconcile separate regimes.
+
+#### Core data-handling rules
+
+| Rule | What staff and the system must do | Authority and local source |
+| --- | --- | --- |
+| Purpose and lawful basis | Record a specified purpose and a lawful basis for each data class before collection. Do not reuse data for an incompatible purpose. | Legislation: UK GDPR Articles 5(1)(a), 5(1)(b) and 6 ([uk-gdpr-current-text.md](./reference/regulatory/data-protection/uk-gdpr-current-text.md)) |
+| Special category data | Treat health, vulnerability and similar information as special category. Process it only under an Article 9 condition and the Data Protection Act 2018 Schedule 1 condition, with an appropriate policy document where Schedule 1 requires one. Name the condition per data class; do not infer it. | Legislation: UK GDPR Article 9; [data-protection-act-2018.md](./reference/regulatory/data-protection/data-protection-act-2018.md) Schedule 1. Exact condition: unknown, DPO to decide |
+| Minimum necessary | Collect and show only the fields a role needs. Contractors receive the minimum needed to do the work (for example "needs notice and a named contact", not the reason). | Legislation: Article 5(1)(c), Article 25 |
+| Accuracy | Correct or erase inaccurate data without delay. Imported values stay marked unverified until confirmed. | Legislation: Article 5(1)(d), Article 16. Internal rule: ADR 0001 import tagging |
+| Storage limitation | Keep identifiable data only as long as the purpose needs it, then delete, anonymise or archive it under an approved schedule. Every data class has a named owner and a retention trigger. | Legislation: Article 5(1)(e) |
+| Security | Encrypt in transit and at rest, enforce least privilege and server-side role checks, and keep a tested ability to restore. | Legislation: Article 32. Design: ADR 0001 |
+| Accountability | Keep a record of processing, a DPIA before high-risk processing, a named DPO and evidence that these rules are followed. | Legislation: Articles 5(2), 24, 30, 35, 37 |
+| Processors and suppliers | Contractors, Microsoft services and model providers that process personal data need a written processor agreement and the minimum data. | Legislation: Article 28 |
+| Location and transfers | Record where data is stored and processed. A transfer outside the UK needs an adequacy basis or safeguards. Model inference may process data outside the UK (ADR 0001), so no resident personal data goes to a model deployment until the transfer position is approved. | Legislation: Articles 44 to 46. Open: OQ-012 |
+| Individual rights | Answer access, rectification, erasure, restriction, portability and objection requests within one month of receipt, free of charge unless the exception applies. Route requests to the DPO. | Legislation: Articles 12, 15 to 18, 20, 21 |
+| Breaches | Staff report suspected breaches to the DPO immediately. The DPO decides on notification to the Information Commissioner within 72 hours of awareness and on informing affected residents. Processors notify the controller without undue delay. | Legislation: Articles 33, 34 |
+| Automated decisions | Agents recommend, draft or raise flags only. No agent output makes a significant decision about a person. Humans give meaningful review. | Legislation: Articles 22A to 22C. Internal rule: RULE-018, RULE-022 |
+| Resident consent and choice | Consent to works is the resident's choice and is never inferred, including from failed access. Keep consent separate from data-sharing agreement. | Internal rule: CON-006, original case study |
+| Demonstrator data | Use constructed, non-identifying data only until a DPIA, lawful basis, retention schedule and processor terms are approved. | Internal rule: NFR-005 |
+
+#### Proposed retention defaults
+
+Retention runs from a trigger event, not from creation. A legal hold overrides deletion. Where two sources give different periods, apply the longer one that is lawful and necessary, and record why.
+
+| Data class | Proposed default retention | Basis and status |
+| --- | --- | --- |
+| Hazard reports, investigation, safety summaries, works and closure records | Life of the home or tenancy plus a period set by Legal; at least the period needed to evidence reasonable steps under Awaab's Law | Guidance: Phase 1 and 2 guidance tell landlords to keep clear records of engagement, investigations, communications and actions. No period stated. Proposed default, Legal to set |
+| Stock condition and property records | Life of the asset | Regulatory standard: Safety and Quality Standard 1.1.1 requires accurate, up-to-date, evidenced stock condition understanding. Proposed default |
+| Retrofit assessment, design, installation and quality evidence | Life of the measure or the funder or scheme requirement, whichever is longer | Funding condition and PAS 2035 retention terms are not in the local copies; obtain the licensed standard, award letter and grant agreement. Unknown |
+| Resident contact, preferences and consent records | Duration of the tenancy and retrofit programme plus a short, owner-set period for complaints and queries | Legislation: Article 5(1)(e). Proposed default, DPO to set |
+| Special category and vulnerability information | Shortest period that meets the safety purpose; review at each contact and at tenancy end; delete from working views when no longer needed | Legislation: Articles 5(1)(c), 5(1)(e), 9. Proposed default, DPO to set |
+| Agent proposals, prompts and explanation records | Keep with the case record they support; keep prompts free of unnecessary personal data | Internal rule: FR-034, FR-044 |
+| Audit trail (who did what, when, why) | At least as long as the records it covers, held immutably | Legislation: Article 5(2) accountability. Design: ADR 0001 |
+| Imported source workbook snapshots | Until reconciliation is signed off, then archive or delete per owner decision; never alter the source file | Internal rule: FR-029, ADR 0001 |
+| Complaints and disputes | Until resolved plus a limitation-related period set by Legal | Period outside the local corpus; Legal to confirm |
+| Contractor and supplier contract records | Contract term plus a limitation-related period set by Legal | Period outside the local corpus; Legal to confirm |
+| System logs and monitoring telemetry | Short operational period; security-relevant logs longer, as the security owner sets | Legislation: Article 32. Proposed default |
+| Backups | Rolling period; deleted data leaves backups on expiry, and restores re-apply deletions | Legislation: Articles 5(1)(e), 17. Proposed default |
+
+Common-sense limits, flagged as outside the local corpus and for Legal to verify before use: contract and tort claim limitation periods under the Limitation Act 1980 often drive "end of contract plus six years", and building and fire safety records commonly need to be kept for the life of the building. Do not adopt these figures without Legal confirmation.
+
+#### Deletion, erasure and exceptions
+
+* Deletion is scheduled and evidenced: a retention job lists due records, the owner approves, and the deletion is logged without keeping the deleted content.
+* An erasure request does not override a record the organisation must keep to meet a legal obligation, such as safety records. The DPO documents the exception and tells the resident.
+* Anonymised or aggregated data can be kept for reporting only if re-identification is not reasonably likely. The DPO decides.
+* An audit entry may remain after the data it describes is deleted, but it must not contain the deleted personal content.
+
+#### Evidence an assurance reviewer would expect
+
+* Approved retention schedule with named owners and the review date.
+* Record of processing activities, DPIA outcome and appropriate policy document.
+* Processor agreements, transfer assessments and the per-service region table.
+* Deletion and restore test results, and the date of the last access review.
+* Breach log and rights-request log with response times.
+
+#### Approvals and open items
+
+* The DPO, Legal and each data-class owner must approve this baseline before any production use. Until then it is a design input only.
+* Open: the organisation's own retention and data-handling policies, whether current spreadsheets hold vulnerability data and who can open them, the funder and PAS 2035 evidence retention terms, the residency and transfer position (OQ-012), and the tenant retention-label capability.
+* Do not claim compliance. Use "designed to support" until named human approval is recorded.
 
 ### What We Are Challenging
 

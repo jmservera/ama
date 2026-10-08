@@ -1183,3 +1183,10 @@ metadata when the knowledge base was created.
   advisor, Housing Officer, Data and Performance, Building Safety and Resident
   Engagement role views) in ADR 0001 and proposed trust requirements TR-001 to
   TR-007 in the PRD. Role views are hypotheses, not company facts.
+
+* Added a proposed data handling and retention baseline to the addendum,
+  derived from the UK GDPR and Data Protection Act 2018 local copies, the
+  Safety and Quality Standard and Awaab's Law guidance. The corpus has no
+  numeric retention periods, so every period is a proposed default for the DPO
+  and Legal to confirm; limitation and building-life figures are flagged as
+  outside the local corpus.
