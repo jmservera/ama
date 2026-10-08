@@ -1282,3 +1282,15 @@ metadata when the knowledge base was created.
   targets pilot readiness. Thought leadership options and the pending OD-14,
   OD-17, OD-19 and OD-36 questions are recorded in
   [Gap Analysis and Next Build](research/gap-analysis-next-build.md).
+
+## 2026-10-08 Owner direction on OD-14, OD-17, OD-19 and OD-36
+
+* Lawful basis: contract for service delivery, consent for works. Vulnerability
+  reasons hidden from contractors. Retention defaults accepted as the design
+  baseline. Audit entries kept in full for the legal period (the addendum now
+  says so, DPO to confirm). Individual staff time capture allowed with staff
+  knowledge and a DPIA. Whole stock of about 60,000 homes to be loaded with
+  staff choosing priorities, which differs from the BRD pilot size. AI limited
+  to recommend, draft, reconcile and flag. Recorded in
+  [Gap Analysis and Next Build](research/gap-analysis-next-build.md); none is
+  approved by the DPO, Legal or Board.

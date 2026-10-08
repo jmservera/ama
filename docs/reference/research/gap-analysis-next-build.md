@@ -176,22 +176,34 @@ Recommendation: write option 1 as the artifact and link option 2 as the working
 code. D3 needs a real publication or delivery beyond the cohort with link and
 date, so choose the venue first.
 
-## Pending decisions for named humans
+## Owner direction on OD-14, OD-17, OD-19 and OD-36 (2026-10-08)
 
-These could not be asked interactively, so they are recorded as open. Proposed
-defaults are the design baseline only and are not approvals.
+The owner answered these questions on 2026-10-08. They are owner direction for
+the design baseline, not DPO, Legal or Board approval, and none is recorded as
+ratified.
 
-| ID | Question | Proposed default for design | Decider |
+| ID | Question | Owner direction | Follow-up needed |
 | --- | --- | --- | --- |
-| OD-14 | Lawful basis for case management data | Public task or legitimate interests for service delivery; consent only for decisions on works | DPO |
-| OD-14 | Vulnerability and health data | Contractors see only "needs notice and a named contact"; the reason is shown only to roles that need it | DPO, Resident Engagement |
-| OD-14 | Retention defaults in the addendum | Accept as the design baseline pending DPO and Legal approval | DPO, Legal |
-| OD-14 | Erasure against records that must be kept | Audit entries keep identifiers and action only, with personal content removed | DPO |
-| OD-36 | Pilot measurement level | Team and case level only; no individual staff-level monitoring | DPO |
-| OD-17 | Pilot locality and archetypes | One local authority area with few archetypes | Sponsor, Programme |
-| OD-19 | Allow and deny matrix for AI | Recommend, draft, reconcile and flag only | Digital and control owners |
+| OD-14 | Lawful basis for case management data | Contract (tenancy agreement) for service delivery; consent for decisions on works | DPO to confirm the basis fits each data class and the Article 9 condition |
+| OD-14 | Vulnerability and health data | Contractors see only "needs notice and a named contact", never the reason; staff see the reason only with a role need | Define which roles have a need; test it in the role permission model |
+| OD-14 | Retention defaults | Accept the addendum defaults as the design baseline | DPO and Legal approval; Legal to set limitation-related periods |
+| OD-14 | Audit entries and erasure | Keep everything for the legal retention period | Differs from the addendum, which said audit entries must not hold deleted personal content. The DPO must confirm that an erasure request can be refused for audit data under Article 17(3), and the addendum and ADR are updated to say so |
+| OD-36 | Pilot measurement | Individual staff time capture, with the staff's knowledge and a DPIA | Needs a DPIA before capture, a staff notice and a union or staff consultation view; use it for process measurement, not performance management |
+| OD-17 | Pilot scope | Load the whole stock (about 60,000 homes); staff decide what to prioritise | Differs from the BRD pilot of 80 to 100 candidate homes. Needs a decision on which homes are in live scope; the product must not rank homes for staff |
+| OD-19 | AI authority | Recommend, draft, reconcile and flag only; a person approves every action | Detailed allow and deny matrix still to be approved by control owners |
 
-Pilot-readiness work that does not depend on these answers can start now:
-durable storage, Entra ID sign-in and role permissions, return and reopen,
-safety referral and the AI evaluation harness. Retention jobs, staff-level
-measurement and vulnerability display rules should wait for the answers above.
+Consequences for the build:
+
+* Persistence must hold the audit data for the legal period, so the retention
+  job must not delete audit content on an erasure request. Document the legal
+  exception per request.
+* Staff time capture needs an explicit staff notice, a DPIA and a consent-free
+  basis agreed with the DPO. Capture is blocked until the DPIA exists.
+* The data layer, search, map and filters must handle about 60,000 homes: paging,
+  indexes, and map clustering instead of drawing every home.
+* Prioritisation stays a staff choice. Filters, sorts and saved views are
+  allowed; an automatic ranking of which homes to prioritise is not.
+
+Pilot-readiness work that does not wait on approval can start now: durable
+storage, Entra ID sign-in and role permissions, return and reopen, safety
+referral, the AI evaluation harness and scale for 60,000 homes.

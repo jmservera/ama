@@ -267,6 +267,7 @@ Common-sense limits, flagged as outside the local corpus and for Legal to verify
 * An erasure request does not override a record the organisation must keep to meet a legal obligation, such as safety records. The DPO documents the exception and tells the resident.
 * Anonymised or aggregated data can be kept for reporting only if re-identification is not reasonably likely. The DPO decides.
 * An audit entry may remain after the data it describes is deleted, but it must not contain the deleted personal content.
+* Owner direction (2026-10-08): keep the full audit entry for the legal retention period, including personal content. The DPO must confirm that Article 17(3) allows refusing erasure for these entries, and each refusal is documented and told to the resident. This replaces the earlier proposal to strip personal content from audit entries.
 
 #### Evidence an assurance reviewer would expect
 
