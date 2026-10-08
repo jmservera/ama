@@ -1350,3 +1350,20 @@ metadata when the knowledge base was created.
 * Status per item is in the Implementation status section of
   [ADR 0002](../adrs/0002-pilot-readiness-architecture.md). Nothing was run in
   Azure; Entra, Azure SQL and Blob are designed and documented, not verified.
+
+## 2026-10-08 MVP build slice 3: remaining gaps from slice 2
+
+* `mvp/` gained screens for return, reopen (manager "Closed cases" page),
+  handoff and safety referral, and contractor screens that show only "needs
+  notice" and a named contact (server-side projection; rank also removed from
+  the contractor list).
+* Added a `DocumentStore` interface with local and Azure Blob (urllib, SAS or
+  managed identity) implementations, limits, role checks and audit entries;
+  time capture now also needs a consultation reference and a staff notice
+  acknowledgement; sqlite list reads, search, sorts and counts run in SQL with
+  keyset paging and a 60,000-case timing test; tests for the map list and
+  `PW_TILE_URL`; and a manual Playwright check (`mvp/tests/browser_check.py`).
+* Unverified: nothing ran in Azure, the Blob store ran only against a fake
+  transport, there is no time capture screen, case detail, map and stats still
+  read the in-memory copy, and no screen reader run was done. Status per item is
+  in [ADR 0002](../adrs/0002-pilot-readiness-architecture.md).
