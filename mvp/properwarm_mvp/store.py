@@ -30,6 +30,8 @@ class Store:
         base = os.path.dirname(data_path)
         self.live_path = live_path or os.path.join(base, "live.json")
         self.audit_path = audit_path or os.path.join(base, "audit.jsonl")
+        os.makedirs(os.path.dirname(self.live_path) or ".", exist_ok=True)
+        os.makedirs(os.path.dirname(self.audit_path) or ".", exist_ok=True)
         src = self.live_path if os.path.exists(self.live_path) else data_path
         with open(src, encoding="utf-8") as f:
             self.data = json.load(f)
