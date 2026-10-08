@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T10:29:41+00:00",
-  "commit": "82d68354a011d92fba823bfa9ce4f4d89c2627fa",
+  "scored_at": "2026-10-08T15:48:33+00:00",
+  "commit": "b65610f6748024dfafadb8e33251b205471a39f0",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37762797894",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37802495819",
   "fingerprints": {
     "brd": "7947aff0475c769010747917eaddd2a01589d7fb89b4cb51eaacfe048373f3fb",
     "prd": "d61ada59263e9f119b02100ba3855844dc7d7fa892d9b5e0965756c25d45b58b",
     "adr": "8701ed3c9e2a89aa1e4b008a6e2881f19232d4432d53ee67a4f6c5a14e4b3072",
     "solution-code": "f2ae4fda6d5cd59d0c046195ba3363c856d935d6f35598cfe7c212841c0a938b",
-    "infrastructure": "c5971a2bd3aaea17a2d9676147ff7b0b7bec5cf3be41ec471d1243a27ffd402b"
+    "infrastructure": "cf5b6e5b83e2d01ff9c41190240dd4261cdd25b87ecaebdaf958ff25e2c503fb"
   },
   "total": 31,
   "sections": {
@@ -26,60 +26,60 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:120-129",
-        "infra/modules/containerapps.bicep:121-209"
+        "docs/adrs/0001-azure-architecture.md:120-130",
+        "infra/main.bicep:1-20"
       ],
-      "rationale": "Component contracts now paired with a deployed architecture: failure-domain table with concrete per-component scaling (KEDA min/max replicas) matching the actual bicep, plus observed deployment timings. Scaling path now evidenced, not just discussed in general terms."
+      "rationale": "New ADR failure-domains table makes scaling trigger and failure behaviour explicit per component (api, agents, orchestrator, import, SQL, Foundry), and the design is now realised as 16 Bicep files with clear component boundaries, validated by build/lint and an actual deployment. Scaling is still ..."
     },
     "A2": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:167-178"
+        "docs/adrs/0001-azure-architecture.md:167-193"
       ],
-      "rationale": "Provisional options appraisal now scores four named alternatives against weighted criteria with explicit reasoning for why each option wins or loses (control gate failure for Excel-only, low evidence confidence for greenfield), a fuller trade-off argument than before."
+      "rationale": "New Provisional options appraisal scores four named alternatives (Azure custom, greenfield, hybrid, Excel-only) against six weighted criteria and explains why each loses (D fails a mandatory gate, B has low evidence confidence, A vs C margin discussed), with cost caveats disclosed honestly."
     },
     "A3": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:131-138",
-        "prototype/properwarm/domain.py:94-103",
-        "prototype/tests/test_domain.py:67-74"
+        "docs/adrs/0001-azure-architecture.md:42-63",
+        "docs/adrs/0001-azure-architecture.md:131-137",
+        "infra/modules/keyvault.bicep"
       ],
-      "rationale": "Threat model mapping now pairs each AI risk with an implemented control (no agent data role, managed identities only, private endpoints), and the forbidden-field/citation checks are enforced and unit-tested in running code, not just described as illustrative."
+      "rationale": "ADR adds an explicit Identities and access table, a Security and audit controls section (private endpoints, NSG deny-by-default, local auth disabled, SQL ledger) and a Threat model mapping table tying named PRD threats to controls, now backed by deployed Bicep modules (identity, network, keyvault..."
     },
     "A4": {
-      "score": 3,
+      "score": 2,
       "evidence": [
         "prototype/properwarm/domain.py:1-125",
         "prototype/properwarm/server.py:1-73",
-        "prototype/tests/test_domain.py:1-99",
-        "prototype/tests/test_server.py:1-63"
+        "prototype/tests/test_domain.py:16-99",
+        "prototype/tests/test_server.py:20-63"
       ],
-      "rationale": "A solution-code artifact now exists: a working in-memory domain model, HTTP API and passing unit/integration tests covering transitions, proposals and audit tamper-detection. It is a narrow prototype slice with disclosed limits (in-memory, no deployed image), not a full build."
+      "rationale": "A solution-code artifact now exists: an in-memory state machine enforcing role gates, approval and idempotency, a stdlib HTTP API reading platform identity, and unit/API tests exercising the rules. It is explicitly a small non-deployed prototype slice, not the end-to-end workbench (no SQL/Blob in..."
     },
     "A5": {
       "score": 3,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:200-209",
-        "infra/modules/monitoring.bicep:12-81",
-        "prototype/properwarm/server.py:61-68"
+        "docs/adrs/0001-azure-architecture.md:224-231",
+        "prototype/properwarm/server.py:60-62"
       ],
-      "rationale": "Basic structured logging exists in the prototype; Log Analytics/App Insights/alerting infra is deployed; real deployment timings and cost-driver list are observed. Cost per unit of business value and load-tested performance remain unmeasured."
+      "rationale": "Observed deployment measurements table gives real measured deployment durations and list-price cost data from an actual deployment, and server.py emits structured JSON logs with severity and attributes. Runtime performance, SLO attainment and application-level cost per unit of value remain unmeas..."
     },
     "A6": {
       "score": 3,
       "evidence": [
         "docs/adrs/0001-azure-architecture.md:230"
       ],
-      "rationale": "Both Foundry model-tier deployments are now provisioned, but no model has been selected or evaluated against the PRD's evaluation harness; evaluate_agent.py remains an offline contract check only, not a model-quality evaluation."
+      "rationale": "Both Foundry model deployments (gpt-4.1-mini, gpt-4.1) are now actually provisioned in the validated deployment, but the evaluation harness still has not been run and evaluate_agent.py explicitly states it 'does not call a model and is not a measure of model quality'; model choice remains unjusti..."
     },
     "A7": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "prototype/properwarm/domain.py:72-103",
-        "prototype/tests/test_server.py:51-60"
+        "prototype/properwarm/domain.py:60-100",
+        "prototype/tests/test_domain.py:16-57",
+        "prototype/tests/test_server.py:40-47"
       ],
-      "rationale": "The bounded-agent guardrail pattern (service roles cannot transition, agent proposals limited to allowed tasks/citations, human-only acceptance) is now demonstrated in running, tested code at domain and HTTP layers, not only described."
+      "rationale": "The deterministic state-graph, bounded-agent guardrails are now demonstrated in running code and tests: service roles cannot transition cases, proposals reject forbidden write fields, gated stages require a second named human approver, and idempotency keys prevent double-apply, verified at both t..."
     },
     "B1": {
       "score": 0,
@@ -111,9 +111,9 @@
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:29",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
-        "infra/README.md:1-42"
+        "docs/adrs/0001-azure-architecture.md:1"
       ],
-      "rationale": "Documentation (BRD, PRD, new ADR, infra README) remains structured, navigable and now more complete with the realised-architecture section, but no capstone deck exists; cap_without caps this score at 3."
+      "rationale": "BRD, PRD and the new ADR remain structured, navigable and complete with traceability and evidence classification, but no capstone deck exists; cap_without caps this score at 3 regardless of documentation quality."
     },
     "B7": {
       "score": 0,
@@ -126,7 +126,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:528",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269"
       ],
-      "rationale": "Business Objectives table names real stakeholders, quantifies value at stake (GBP 40m grant opportunity, 15,600 homes below EPC C) and flags unvalidated figures honestly. No new business-framing evidence in this diff."
+      "rationale": "Business Objectives table names real stakeholders, quantifies value at stake and flags unvalidated figures honestly; the changed files in this PR (ADR, infra, code) do not add new business-framing evidence, so the score is unchanged."
     },
     "C2": {
       "score": 0,
