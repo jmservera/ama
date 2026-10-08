@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T18:58:53+00:00",
-  "commit": "905c3b5768da1a2a476bdcd9bc64d93ac981d0ac",
+  "scored_at": "2026-10-08T20:19:22+00:00",
+  "commit": "584bdece6910ef4ebfc4e63070a990b7a2705320",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37827659677",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37837540977",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
     "prd": "7cf0f848865f394e48b522d8185545b5a6251a014e15e6347639c6376d8fd328",
@@ -29,14 +29,14 @@
         "infra/modules/containerapps.bicep:123-126",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table is explicit per component and matches deployed Bicep scale rules. This diff adds a deploymentProfile switch consolidating existing dev/prod toggles in infra/main.bicep and registry.bicep; it is an operational convenience over already-scored controls, not new modularity or sca..."
+      "rationale": "Failure-domain table is now explicit per component and matches deployed Bicep scale rules (api minReplicas 1 maxReplicas 4, agents queue-scaled 0-5); modular identity split enforced in infra. Scaling path considered but not load-tested, so Good not Excellent."
     },
     "A2": {
       "score": 4,
       "evidence": [
         "docs/adrs/0001-azure-architecture.md:167-198"
       ],
-      "rationale": "Provisional options appraisal scores named alternatives against weighted criteria with argued rejection reasons. This diff adds a deployment-profile parameter and README table, not a new alternative or trade-off argument; unchanged."
+      "rationale": "Provisional options appraisal scores named alternatives against weighted criteria with argued rejection reasons. This diff only adds a dev/prod deployment-profile switch in infra, no new alternatives or trade-off argument; unchanged."
     },
     "A3": {
       "score": 4,
@@ -45,7 +45,7 @@
         "prototype/properwarm/domain.py:84-99",
         "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Threat model maps AI risks to controls in deployed design and code-enforced tests. The diff adds a development profile that disables registry quarantine and relaxes Key Vault purge protection and network isolation by design (opt-in, clearly labelled, default remains production-safe), so existing ..."
+      "rationale": "Threat model maps AI risks to controls in deployed design and code-enforced tests. This diff adds a deploymentProfile parameter that bundles existing public-access, registry quarantine and Key Vault purge-protection switches, and documents that the development profile must not be used as evidence..."
     },
     "A4": {
       "score": 3,
@@ -62,7 +62,7 @@
       "evidence": [
         "docs/adrs/0001-azure-architecture.md:142-146"
       ],
-      "rationale": "Targets and cost drivers remain explicitly labelled proposed/unmeasured; the diff only adds a deployment-profile toggle to infra and documents it, with no new instrumentation, measured performance data or cost-per-unit evidence. Unchanged."
+      "rationale": "Targets and cost drivers are still explicitly labelled proposed/unmeasured; monitoring infra (alerts, action group) exists but no instrumentation data or cost-per-unit evidence has been produced. This diff only touches network/registry/Key Vault isolation toggles, not observability or cost; uncha..."
     },
     "A6": {
       "score": 3,
@@ -70,7 +70,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:496-514",
         "prototype/scripts/evaluate_agent.py:1-51"
       ],
-      "rationale": "Offline contract-evaluation script exists but does not call a model; model selection and live evaluation harness remain undone. This infra-only diff is unrelated to model selection or evaluation; unchanged."
+      "rationale": "Offline contract-evaluation script exists but does not call a model; model selection and live evaluation harness remain undone. This diff is infra-only and unrelated to model/evaluation evidence; unchanged."
     },
     "A7": {
       "score": 4,
@@ -79,7 +79,7 @@
         "prototype/tests/test_domain.py:16-21",
         "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Bounded-agent orchestration demonstrated in running, tested code: roles code-enforced, proposals schema- and citation-gated, acceptance never auto-advances. This diff is infra-only and adds no agent-code evidence; unchanged."
+      "rationale": "Bounded-agent orchestration demonstrated in running, tested code: roles code-enforced, proposals schema- and citation-gated, acceptance never auto-advances. Diff adds no new agent-code evidence; unchanged."
     },
     "B1": {
       "score": 0,
@@ -113,7 +113,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
         "infra/README.md:1-54"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable. The diff adds a clear 'Deployment profile' table to infra/README.md that is well organised, but no capstone deck exists so cap_without caps this at 3; unchanged."
+      "rationale": "BRD, PRD and infra/README.md remain structured and navigable. This diff adds a clear deployment-profile table to infra/README.md, consistent with existing documentation quality, but no capstone deck exists so cap_without caps this at 3."
     },
     "B7": {
       "score": 0,
@@ -126,7 +126,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:528",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269"
       ],
-      "rationale": "Business Objectives table still names real stakeholders and quantifies value honestly. This infra-only diff adds no new stakeholder, constraint or quantified value-at-stake evidence; unchanged."
+      "rationale": "Business Objectives table still names real stakeholders and quantifies value honestly. This diff is infra-only (deployment profile switch) and adds no new stakeholder, constraint or quantified value-at-stake evidence; unchanged."
     },
     "C2": {
       "score": 0,
