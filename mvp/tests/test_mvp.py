@@ -133,9 +133,14 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(rows[0]["id"], "PW-4")
         self.assertTrue(rows[0]["status"].startswith("Stopped until Bea Safe"))
 
-    def test_manager_sees_all_but_staff_cannot(self):
+    def test_all_cases_open_to_everyone_mine_is_scoped_with_role_focus(self):
         self.assertEqual(len(self.store.list_cases(self.pam, "all")), 5)
-        self.assertEqual(len(self.store.list_cases(self.sam, "all")), 4)
+        self.assertEqual(len(self.store.list_cases(self.sam, "all")), 5)
+        self.assertNotIn("focus", self.store.list_cases(self.sam, "all")[0])
+        mine = self.store.list_cases(self.sam)
+        self.assertEqual(len(mine), 4)
+        self.assertTrue(all(r["focus"] for r in mine))
+        self.assertNotEqual(mine[0]["focus"], self.store.list_cases(self.pam)[0]["focus"])
 
     def test_gate_blocks_until_everything_confirmed(self):
         from properwarm_mvp.store import GateError

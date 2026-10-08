@@ -1258,3 +1258,11 @@ metadata when the knowledge base was created.
   `strict-origin-when-cross-origin` (only the origin leaves the site), the
   Leaflet layer sets `referrerPolicy`, and attribution links to the OSM
   copyright page. Production should use a licensed tile provider.
+
+## 2026-10-08 MVP: all cases for everyone, role-tailored My cases
+
+* All cases is now open to every signed-in user with the Owner filter and
+  shows other people's cases. My cases lists only the user's own cases and
+  each card shows facts for their role (for example contractor and works for a
+  Retrofit Coordinator, funding and missing evidence for a Grants and Evidence
+  Officer).

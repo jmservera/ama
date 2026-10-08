@@ -123,15 +123,45 @@ class Store:
         f = filters or {}
         with self.lock:
             rows = [c for c in self.cases.values() if not c["closed"] and insights.matches(c, f)]
-            if view == "mine" or user["role"] not in MANAGER_ROLES:
+            if view == "mine":
                 rows = [c for c in rows if c["owner_code"] == user["code"]]
             if q:
                 ql = q.lower()
                 rows = [c for c in rows if ql in " ".join([c["resident"]["name"], c["home"]["address"],
                                                            c["home"]["postcode"], c["id"]]).lower()]
             out = [self.summary(c) for c in rows]
+            if view == "mine":
+                for r, c in zip(out, rows):
+                    r["focus"] = self.focus(c, user["role"])
         out.sort(key=insights.sort_key(sort))
         return out
+
+    def focus(self, c, role):
+        """Role-specific facts for the card, as label/value pairs."""
+        nxt = next((a for a in c["appointments"] if a["outcome"] == "Booked"), None)
+        open_h = [h for h in c["hazards"] if not h["released"]]
+        ev = {d["kind"] for d in c["documents"]}
+        missing = [k for k in self.EVIDENCE if k not in ev]
+        rs = c["resident"]
+        if role == "Resident Liaison Officer":
+            return [("Resident prefers", rs["preferred"]),
+                    ("Extra support", "Yes" if rs["priority_support"] else (rs["adjustment"] if rs["adjustment"] != "None" else "None recorded")),
+                    ("Decision on works", c["decision"]["status"]),
+                    ("Next visit", nxt["date"] if nxt else "None booked")]
+        if role == "Retrofit Coordinator":
+            return [("Contractor", c["contractor"]["name"]), ("Works", c["measures"]),
+                    ("Next visit", nxt["date"] if nxt else "None booked")]
+        if role == "Building Safety Liaison":
+            return [("Open safety issues", "; ".join(f"{h['category']} ({h['owner']})" for h in open_h) or "None"),
+                    ("Works", c["measures"])]
+        if role == "Grants and Evidence Officer":
+            return [("Funding", f"{c['funding']['route']}, {c['funding']['status']}"),
+                    ("Evidence missing", ", ".join(missing) or "Nothing missing")]
+        if role == "Quality Inspector":
+            return [("Works", c["measures"]), ("Contractor", c["contractor"]["name"]),
+                    ("Stage", c["stage"])]
+        return [("Wave", c["wave"]), ("Funding", c["funding"]["status"]),
+                ("Decision on works", c["decision"]["status"]), ("Contractor", c["contractor"]["name"])]
 
     def counts(self, user):
         with self.lock:
@@ -227,7 +257,7 @@ class Store:
 
     def visits(self, user, view="mine"):
         with self.lock:
-            own = None if view == "all" and user["role"] in MANAGER_ROLES else user["code"]
+            own = None if view == "all" else user["code"]
             return insights.visits(list(self.cases.values()), own)
 
     # ---- documents

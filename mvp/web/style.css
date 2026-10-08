@@ -77,3 +77,4 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .main{min-width:0}
 @media(max-width:900px){.layout{grid-template-columns:1fr}.side{position:static}}
 .tile:hover{background:#fff}
+.focus{grid-template-columns:8rem 1fr;font-size:.9rem;margin-top:.4rem}.focus dt{color:#555}

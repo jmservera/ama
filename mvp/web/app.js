@@ -106,7 +106,9 @@ async function listView(view) {
             r.hazard && h("span", { class: "flag danger" }, "Safety issue open"),
             r.support && h("span", { class: "flag" }, "Needs extra support"),
             h("div", {}, `${r.address}, ${r.town} ${r.postcode}`),
-            h("div", { class: "status" }, r.status)),
+            h("div", { class: "status" }, r.status),
+            view === "all" && h("div", { class: "muted" }, `Owner: ${r.owner}`),
+            r.focus && h("dl", { class: "focus" }, r.focus.flatMap(([k, v]) => [h("dt", {}, k), h("dd", {}, /^\d{4}-\d\d-\d\d$/.test(v) ? fmtDate(v) : v)]))),
           h("div", { class: "meta" }, h("div", {}, r.stage), h("div", {}, `${r.days} days in this stage`), h("div", {}, `Last contact: ${ago(r.last_contact)}`),
             r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "card" }, "Nothing matches. Try clearing a filter.")),
       rows.length > 100 ? h("p", { class: "muted" }, "Showing the first 100. Use the filters to narrow the list.") : null].filter(Boolean));
@@ -135,7 +137,7 @@ async function listView(view) {
   show(h("div", { class: "layout" }, side, h("div", { class: "main" },
     briefingBox,
     h("div", { class: "row between" }, title, h("div", { class: "row" },
-      isManager() && h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See everyone's cases" : "See my cases"),
+      h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See all cases" : "See my cases"),
       h("a", { class: "btn alt", href: "#/import" }, "Check a spreadsheet"), csv)),
     results)));
   load();
