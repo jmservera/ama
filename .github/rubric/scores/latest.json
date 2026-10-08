@@ -2,20 +2,20 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T21:30:03+00:00",
-  "commit": "bd1cea0a23904ae2c53bb60063215b0be424ed4b",
+  "scored_at": "2026-10-08T22:13:34+00:00",
+  "commit": "1919fb988af5704736f5d490f2fbdf66c5218878",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37844994527",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37850973055",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
-    "prd": "7cf0f848865f394e48b522d8185545b5a6251a014e15e6347639c6376d8fd328",
-    "adr": "06619f12ac51f5dd8c70d3db655d8c0db4e2894a8c7d13a711bf4a91504e8dad",
+    "prd": "b5cc6a07fde37e41029f42310b8a264a395778344a88247d95725dc305287989",
+    "adr": "e3c44e4e29ed59e8a4d73f54267169eaa2be076874e3a86b81fe69bf35293dc7",
     "solution-code": "f2ae4fda6d5cd59d0c046195ba3363c856d935d6f35598cfe7c212841c0a938b",
     "infrastructure": "e88376bd4127361b1b10cf9be9b3bc35a947dbd7e7127e141ef466e6b4c45890"
   },
-  "total": 31,
+  "total": 35,
   "sections": {
-    "A": 24,
+    "A": 28,
     "B": 3,
     "C": 4,
     "D": 0
@@ -24,52 +24,56 @@
   "outcome": "Incomplete (thought leadership artifact not submitted)",
   "criteria": {
     "A1": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "infra/modules/containerapps.bicep:123-126",
-        "docs/adrs/0001-azure-architecture.md:120-129"
+        "docs/adrs/0002-pilot-readiness-architecture.md:81-99",
+        "docs/adrs/0002-pilot-readiness-architecture.md:317-325"
       ],
-      "rationale": "Failure-domain table and modular identity split unchanged; registry swap to mvp/ adds no new architecture evidence beyond README notes."
+      "rationale": "ADR 0001 failure-domain table plus ADR 0002 Store interface contract, indexes/keyset paging at scale, and stateless multi-replica deployment with health checks make the scaling path and failure domains explicit."
     },
     "A2": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:167-198"
+        "docs/adrs/0001-azure-architecture.md:167-198",
+        "docs/adrs/0002-pilot-readiness-architecture.md:123-131",
+        "docs/adrs/0002-pilot-readiness-architecture.md:260-268"
       ],
-      "rationale": "Options appraisal unchanged; no new alternatives considered."
+      "rationale": "ADR 0001 options appraisal plus ADR 0002 added trade-off tables for store, identity, ranking, map and deployment decisions each name alternatives and argue specific rejection reasons."
     },
     "A3": {
       "score": 4,
       "evidence": [
         "docs/adrs/0001-azure-architecture.md:131-140",
-        "mvp/properwarm_mvp/ai.py:1-10"
+        "prototype/properwarm/domain.py:84-99",
+        "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Threat model and AI bounding (fallback templates, forbidden-phrase check) still present in mvp/ai.py; unchanged level."
+      "rationale": "Threat model maps AI risks to controls in deployed design and tests. Diff adds infra/main.bicep:37-39,69-72 deploymentProfile param relaxing network isolation, registry quarantine and Key Vault purge protection under an explicit development label, documented as non-production."
     },
     "A4": {
       "score": 3,
       "evidence": [
-        "mvp/properwarm_mvp/server.py:1-60",
-        "mvp/properwarm_mvp/store.py:1-60",
-        "mvp/README.md:68-82",
-        "mvp/tests/test_mvp.py:1-30"
+        "prototype/properwarm/domain.py:1-125",
+        "prototype/properwarm/server.py:1-73",
+        "prototype/tests/test_domain.py:1-99",
+        "prototype/tests/test_server.py:1-63"
       ],
-      "rationale": "Registry now scores the mvp/ app: a fuller end-to-end UI, auth, funding, documents, AI drafting and tests than the prior prototype, but README discloses local-disk storage (not SQL/Blob), single shared password (not Entra ID) and no live integrations. Core capabilities work with disclosed gaps; s..."
+      "rationale": "A solution-code artifact now exists with working domain rules, an HTTP API, and passing-looking unit/API tests covering transitions, proposals and audit. It is in-memory only, not integrated with SQL/Blob/Foundry and not deployed, so key paths remain incomplete."
     },
     "A5": {
-      "score": 2,
-      "evidence": [
-        "docs/adrs/0001-azure-architecture.md:142-146"
-      ],
-      "rationale": "No instrumentation data or cost evidence for mvp/ either; unchanged."
-    },
-    "A6": {
       "score": 3,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:496-514",
-        "prototype/scripts/evaluate_agent.py:1-51"
+        "docs/adrs/0001-azure-architecture.md:142-146",
+        "docs/adrs/0002-pilot-readiness-architecture.md:317-325"
       ],
-      "rationale": "Offline contract-evaluation script exists but does not call a model; model selection and live evaluation harness remain undone. Diff is infra-only; unchanged."
+      "rationale": "Targets and cost remain unmeasured, but ADR 0002 newly specifies resilience patterns (stateless replicas, health probes, fail-closed) and CI operational gates, moving past no instrumentation to a qualitative operations discussion."
+    },
+    "A6": {
+      "score": 4,
+      "evidence": [
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:496-514",
+        "docs/adrs/0002-pilot-readiness-architecture.md:244-259"
+      ],
+      "rationale": "Model selection is still undone, but the evaluation harness design is now broad and metric-defined (top-k overlap, critical misses, citation validity, reviewer rates), beyond the prior narrow offline script."
     },
     "A7": {
       "score": 4,
@@ -110,10 +114,9 @@
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:29",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
-        "infra/README.md:1-54",
-        "mvp/README.md:1-85"
+        "infra/README.md:1-54"
       ],
-      "rationale": "BRD, PRD, infra/README.md and the new mvp/README.md remain structured and navigable, honestly disclosing limits. No capstone deck exists so cap_without caps this at 3 regardless of documentation quality."
+      "rationale": "BRD, PRD and infra/README.md remain structured and navigable. Diff adds a clear 'Deployment profile' table to infra/README.md:33-44 documenting the new switch, consistent with existing documentation quality; no capstone deck exists so cap_without caps this at 3 regardless."
     },
     "B7": {
       "score": 0,
@@ -126,7 +129,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:528",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269"
       ],
-      "rationale": "Business Objectives table names stakeholders and quantifies value; unchanged by the registry swap or gap-analysis doc."
+      "rationale": "Business Objectives table names real stakeholders and quantifies value honestly. Diff is infra-only (dev/prod deployment profile), adds no new stakeholder, constraint or quantified value-at-stake evidence; unchanged."
     },
     "C2": {
       "score": 0,
