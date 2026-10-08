@@ -5,3 +5,6 @@ __pycache__/
 *.pyd
 # Synthetic-data answer keys stay local so analysis can remain blind
 support/synthetic-data/**/answer-key/
+
+# MVP working data holds real map addresses and must never be committed
+/mvp/data/

@@ -1203,3 +1203,18 @@ metadata when the knowledge base was created.
   six company-role agents, and proposed PRD requirements SA-001 to SA-010. The
   PRs stay unmerged as evidence. Role views are hypotheses; no staff
   usability study exists.
+
+## [2026-10-08] build | Proper Warm MVP and name generator
+
+* Added `mvp/`, a working case-management application following SA-001 to
+  SA-010: sign-in to "My cases today", full-screen case card, plain status
+  line, call log, resident decision recorded separately, server-side
+  ready-to-book gate, hash-chained audit, Excel export and a forgiving
+  spreadsheet check. Drafts are templates; nothing is sent.
+* Extended the synthetic data generator with `pw_names.py` (seeded names,
+  Ofcom drama-range phone numbers, example email domains, named contractors and
+  staff) and `build_mvp_dataset.py`, which places homes on addresses from the
+  private stock-geography register. The built data is git-ignored and local
+  only because it pairs real map addresses with invented residents.
+* Product screens do not label the data as constructed; the README and this
+  log do. Sign-in is a shared local password, not Entra ID.

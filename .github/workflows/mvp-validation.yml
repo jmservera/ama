@@ -1,0 +1,39 @@
+name: MVP validation
+
+on:
+  pull_request:
+    paths: ["mvp/**", ".github/workflows/mvp-validation.yml"]
+  push:
+    branches: [main]
+    paths: ["mvp/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mvp-validation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile
+        run: python -m compileall -q mvp/properwarm_mvp
+      - name: Unit and API tests
+        working-directory: mvp
+        env:
+          PYTHONPATH: .
+        run: python -m unittest discover -s tests -v
+      - name: Check browser JavaScript syntax
+        run: node --check mvp/web/app.js
+      - name: Refuse committed working data
+        run: test -z "$(git ls-files mvp/data)"

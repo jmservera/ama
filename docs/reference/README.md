@@ -105,6 +105,7 @@ management: short pages that point to clusters of related material.
 | [Program Manager Document Workspace Journey](./research/ux/program-manager-document-workspace-journey.md) | Stakeholder-informed JTBD analysis, journey map, accessibility requirements and design handoff for the repository-backed Program Workbench canvas. All behavioural findings remain reported or assumed pending direct user research | 2026-10-02 |
 | [Proper Warm Prototype Profile Review](./research/ux/proper-warm-prototype-profile-review.md) | Nine company-role critiques, eleven-perspective UX synthesis and four relayed discussions, plus separately dated owner feedback on a later application: preserve brand/clarity, correct reddish status meaning, contextualize role/workflow, expose readiness/ownership/agent boundaries and provide a full-screen case with minimum-necessary synthetic contact context. Eight proposed next-prototype checks; no prototype changes or passed usability claims | 2026-10-07 |
 | [Prototype Learnings and Simplicity Review](./research/ux/prototype-learnings-and-simplicity-review.md) | Learnings from open PRs 19, 24 and 27 and an eight-angle critique (UX, Design Thinking, company roles) on making the move from Excel genuinely easy; proposed simplification, must-keep controls and ease measures |
+| [Proper Warm MVP](../../mvp/README.md) | Local case-management MVP built to SA-001 to SA-010 on realistic constructed data placed on private stock-geography addresses; run instructions, privacy limits and honest scope | 2026-10-08 |
 
 ### Regulatory Sources
 
