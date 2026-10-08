@@ -1274,3 +1274,11 @@ metadata when the knowledge base was created.
   together. Key findings: capstone deck, pitch and thought leadership assets
   are missing, the rubric registry does not include `mvp/`, durable storage and
   Entra sign-in are not built, and several PRD lifecycle workflows are open.
+
+## 2026-10-08 Owner decisions on build direction
+
+* The MVP replaces the prototype as scored solution code
+  (`.github/rubric/artifacts.json`, rubric and capstone READMEs). The next build
+  targets pilot readiness. Thought leadership options and the pending OD-14,
+  OD-17, OD-19 and OD-36 questions are recorded in
+  [Gap Analysis and Next Build](research/gap-analysis-next-build.md).

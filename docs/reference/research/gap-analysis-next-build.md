@@ -152,11 +152,46 @@ Not recommended yet: Azure AI Search, Cosmos DB, a provider portal, live
 integrations and payment execution. The documents defer or exclude them, and the
 research gives no evidence that they are the binding constraint.
 
-## Decisions needed from the owner
+## Owner decisions (2026-10-08)
 
-* Which thought leadership format to produce and where to publish it.
-* Whether `mvp/` replaces `prototype/` as the scored solution code.
-* Whether the next build targets the capstone pitch first (items 1 to 2) or the
-  pilot-readiness path (items 3 to 7).
-* Who can answer OD-14 and OD-36 so persistence and measurement work is not
-  built against an unapproved retention and DPIA position.
+* `mvp/` replaces `prototype/` as the scored solution code. Done in
+  `.github/rubric/artifacts.json`; `prototype/` is no longer read by the scorer.
+* The next build targets pilot readiness (items 3 to 7 above), not the pitch
+  first. Items 1 and 2 still matter for the rubric and run alongside.
+* The thought leadership artifact is still to be chosen. Options below.
+
+### Thought leadership options
+
+Each is built from work already in the repository, so it adds evidence rather
+than invention. The strongest candidates for D1 to D3 are the first two.
+
+| Option | Idea | Format and audience | Effort |
+| --- | --- | --- | --- |
+| 1 | "Leaving Excel without losing control": how a housing association moves case management off spreadsheets with AI drafts, human approval and a data-handling baseline staff can trust | Technical blog post of 800+ words, or white paper of 2,000+ words, for housing digital leads and the AMA community | Low to medium |
+| 2 | Reference accelerator: a case-management starter with role-tailored cards, a human-gated funding workflow, bounded Azure OpenAI drafts and a hash-chained audit log, built on constructed data | Repository with README (purpose, architecture, setup, limits) and a public link, for architects and partners | Medium |
+| 3 | "Design for the person leaving Excel": the simplicity review and prototype learnings as architecture guidance | White paper, for product and design leads in social housing | Medium |
+| 4 | Conference or community session on bounded agents in regulated housing delivery, using the pilot gate and paired-comparison design | Slides plus written notes and a recording link | Medium, needs a venue |
+
+Recommendation: write option 1 as the artifact and link option 2 as the working
+code. D3 needs a real publication or delivery beyond the cohort with link and
+date, so choose the venue first.
+
+## Pending decisions for named humans
+
+These could not be asked interactively, so they are recorded as open. Proposed
+defaults are the design baseline only and are not approvals.
+
+| ID | Question | Proposed default for design | Decider |
+| --- | --- | --- | --- |
+| OD-14 | Lawful basis for case management data | Public task or legitimate interests for service delivery; consent only for decisions on works | DPO |
+| OD-14 | Vulnerability and health data | Contractors see only "needs notice and a named contact"; the reason is shown only to roles that need it | DPO, Resident Engagement |
+| OD-14 | Retention defaults in the addendum | Accept as the design baseline pending DPO and Legal approval | DPO, Legal |
+| OD-14 | Erasure against records that must be kept | Audit entries keep identifiers and action only, with personal content removed | DPO |
+| OD-36 | Pilot measurement level | Team and case level only; no individual staff-level monitoring | DPO |
+| OD-17 | Pilot locality and archetypes | One local authority area with few archetypes | Sponsor, Programme |
+| OD-19 | Allow and deny matrix for AI | Recommend, draft, reconcile and flag only | Digital and control owners |
+
+Pilot-readiness work that does not depend on these answers can start now:
+durable storage, Entra ID sign-in and role permissions, return and reopen,
+safety referral and the AI evaluation harness. Retention jobs, staff-level
+measurement and vulnerability display rules should wait for the answers above.
