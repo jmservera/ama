@@ -34,6 +34,10 @@ param importImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 @description('Enable zone redundancy where the region supports it.')
 param zoneRedundant bool = false
 
+@description('Deployment profile. production (default) enforces network isolation, registry image quarantine and Key Vault purge protection. development relaxes all three so a throwaway stack is reachable and iterable.')
+@allowed(['production', 'development'])
+param deploymentProfile string = 'production'
+
 @description('Development only. When true, resources also accept connections from external networks (public endpoints, wide-open SQL firewall, external Container Apps environment). Keep false for anything but a throwaway dev stack.')
 param allowPublicNetworkAccess bool = false
 
@@ -62,6 +66,10 @@ param modelDeployments array = [
 param sqlLocation string = location
 param tags object = {}
 
+var isDev = deploymentProfile == 'development'
+var publicAccess = isDev || allowPublicNetworkAccess
+var purgeProtection = !isDev && keyVaultPurgeProtection
+
 var prefix = '${workload}-${environmentName}'
 var unique = take(uniqueString(resourceGroup().id, location, 'v2'), 5)
 var compact = replace(prefix, '-', '')
@@ -89,7 +97,7 @@ module network 'modules/network.bicep' = {
 module monitoring 'modules/monitoring.bicep' = {
   name: 'monitoring'
   params: {
-    allowPublicNetworkAccess: allowPublicNetworkAccess
+    allowPublicNetworkAccess: publicAccess
     prefix: prefix
     location: location
     tags: allTags
@@ -103,8 +111,8 @@ module monitoring 'modules/monitoring.bicep' = {
 module keyvault 'modules/keyvault.bicep' = {
   name: 'keyvault'
   params: {
-    allowPublicNetworkAccess: allowPublicNetworkAccess
-    purgeProtection: keyVaultPurgeProtection
+    allowPublicNetworkAccess: publicAccess
+    purgeProtection: purgeProtection
     name: 'kv-${compact}-${unique}'
     location: location
     tags: allTags
@@ -119,7 +127,7 @@ module keyvault 'modules/keyvault.bicep' = {
 module storage 'modules/storage.bicep' = {
   name: 'storage'
   params: {
-    allowPublicNetworkAccess: allowPublicNetworkAccess
+    allowPublicNetworkAccess: publicAccess
     name: 'st${compact}${unique}'
     location: location
     tags: allTags
@@ -142,7 +150,8 @@ module storage 'modules/storage.bicep' = {
 module registry 'modules/registry.bicep' = {
   name: 'registry'
   params: {
-    allowPublicNetworkAccess: allowPublicNetworkAccess
+    allowPublicNetworkAccess: publicAccess
+    quarantine: !isDev
     name: 'cr${compact}${unique}'
     location: location
     tags: allTags
@@ -162,7 +171,7 @@ module registry 'modules/registry.bicep' = {
 module sql 'modules/sql.bicep' = {
   name: 'sql'
   params: {
-    allowPublicNetworkAccess: allowPublicNetworkAccess
+    allowPublicNetworkAccess: publicAccess
     name: 'sql-${prefix}-${unique}'
     databaseName: 'retrofit'
     location: sqlLocation
@@ -182,7 +191,7 @@ module sql 'modules/sql.bicep' = {
 module foundry 'modules/foundry.bicep' = {
   name: 'foundry'
   params: {
-    allowPublicNetworkAccess: allowPublicNetworkAccess
+    allowPublicNetworkAccess: publicAccess
     name: 'aif-${prefix}-${unique}'
     projectName: 'proper-warm-agents'
     location: location
@@ -198,7 +207,7 @@ module foundry 'modules/foundry.bicep' = {
 module apps 'modules/containerapps.bicep' = {
   name: 'containerapps'
   params: {
-    allowPublicNetworkAccess: allowPublicNetworkAccess
+    allowPublicNetworkAccess: publicAccess
     prefix: prefix
     location: location
     tags: allTags

@@ -30,6 +30,20 @@ az deployment group create -g rg-proper-warm-dev -f infra/main.bicep -p infra/ma
 Then run the SQL script from a host with private network access, push the
 application images to the registry and update the image parameters.
 
+## Deployment profile
+
+`deploymentProfile` is the general switch. It defaults to `production`, so a plain deployment keeps every isolation control.
+
+| Control | production (default) | development |
+|---|---|---|
+| Network access | Private endpoints only, internal Container Apps environment | Also accepts external networks and gives the API a public FQDN (as `allowPublicNetworkAccess=true`) |
+| Registry quarantine | Enabled: pushed images wait for scan and release | Disabled: new images can be pulled at once |
+| Key Vault | 90 day soft delete with purge protection | 7 day soft delete, no purge protection |
+
+`allowPublicNetworkAccess` and `keyVaultPurgeProtection` still work on their own to relax a single control in a production profile. Do not use the development profile as evidence for the private-network claims in ADR 0001.
+
+Example: `az deployment group create -g ama -f main.bicep -p main.bicepparam -p deploymentProfile=development`.
+
 ## Development access from external networks
 
 `allowPublicNetworkAccess` (default `false`) is a development switch. When `true`, the private endpoints stay in place but the following also accept external connections:

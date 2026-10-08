@@ -1203,3 +1203,66 @@ metadata when the knowledge base was created.
   six company-role agents, and proposed PRD requirements SA-001 to SA-010. The
   PRs stay unmerged as evidence. Role views are hypotheses; no staff
   usability study exists.
+
+## [2026-10-08] build | Proper Warm MVP and name generator
+
+* Added `mvp/`, a working case-management application following SA-001 to
+  SA-010: sign-in to "My cases today", full-screen case card, plain status
+  line, call log, resident decision recorded separately, server-side
+  ready-to-book gate, hash-chained audit, Excel export and a forgiving
+  spreadsheet check. Drafts are templates; nothing is sent.
+* Extended the synthetic data generator with `pw_names.py` (seeded names,
+  Ofcom drama-range phone numbers, example email domains, named contractors and
+  staff) and `build_mvp_dataset.py`, which places homes on addresses from the
+  private stock-geography register. The built data is git-ignored and local
+  only because it pairs real map addresses with invented residents.
+* Product screens do not label the data as constructed; the README and this
+  log do. Sign-in is a shared local password, not Entra ID.
+
+## [2026-10-08] update | Bicep deployment profile
+
+* Added `deploymentProfile` (`production` default, `development`) to
+  `infra/main.bicep`. Development enables external network access, disables
+  registry image quarantine and drops Key Vault purge protection; production
+  keeps every isolation control. Documented in `infra/README.md`. Observed
+  during the MVP deployment: a quarantined ACR image could not be pulled by
+  Container Apps until released.
+
+## 2026-10-08 MVP improvement loop
+
+* Extended `mvp/` after owner feedback: list filters and sorting, an Overview
+  screen with a map, charts and workload, a Visits screen, handover
+  suggestions with stated reasons, document upload with an evidence
+  checklist, and a funding application workflow with human approval gates.
+* Added bounded AI assistance (`ai.py`): briefing, drafted messages, case
+  summary, funding wording and document reading. Output is validated, every
+  run is audited, templates are the fallback, and nothing is sent or
+  submitted by the system. Labelled "AI-drafted, human-approved".
+* Dataset builder now adds seeded document records and funding routes.
+* Limits: files live on ephemeral disk in the demo, sign-in is a shared
+  password, funding routes and statuses are illustrative.
+
+## 2026-10-08 MVP usability pass
+
+* MVP: filters moved to a left panel that loads from the API without page
+  reloads, so the AI briefing is fetched once and cached server-side until
+  case data changes. Overview now has a zoomable OpenStreetMap (bundled
+  Leaflet, BSD-2) with resident-name tooltips, and the KPI tiles filter the
+  map. Tiles are the only external request and are allowed in the CSP.
+
+## 2026-10-08 MVP map tile policy fix
+
+* OpenStreetMap blocked the demo's tile requests: the app sent
+  `Referrer-Policy: no-referrer`, but the tile usage policy requires a
+  Referer (https://osm.wiki/Blocked). The header is now
+  `strict-origin-when-cross-origin` (only the origin leaves the site), the
+  Leaflet layer sets `referrerPolicy`, and attribution links to the OSM
+  copyright page. Production should use a licensed tile provider.
+
+## 2026-10-08 MVP: all cases for everyone, role-tailored My cases
+
+* All cases is now open to every signed-in user with the Owner filter and
+  shows other people's cases. My cases lists only the user's own cases and
+  each card shows facts for their role (for example contractor and works for a
+  Retrofit Coordinator, funding and missing evidence for a Grants and Evidence
+  Officer).
