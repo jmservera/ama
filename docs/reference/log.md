@@ -1197,3 +1197,9 @@ metadata when the knowledge base was created.
   collision fix. All retention periods remain proposals pending DPO and Legal.
 
 * Added the `keyVaultPurgeProtection` development parameter to the Bicep and documented it in `infra/README.md`.
+
+* Added the Prototype Learnings and Simplicity Review (research/ux) from open
+  PRs 19, 24 and 27, critiqued by the UX designer, Design Thinking coach and
+  six company-role agents, and proposed PRD requirements SA-001 to SA-010. The
+  PRs stay unmerged as evidence. Role views are hypotheses; no staff
+  usability study exists.
