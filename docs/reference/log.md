@@ -1301,3 +1301,10 @@ metadata when the knowledge base was created.
   prioritisation is a recommendation only and never changes the ranking.
   Replaces the earlier note that the product must not rank homes. See
   [Gap Analysis and Next Build](research/gap-analysis-next-build.md).
+
+## 2026-10-08 PRD v0.10.0
+
+* PRD records owner direction as PR-001 to PR-008 (lawful basis, contractor
+  visibility, retention, staff time capture, 60,000-home scale, deterministic
+  ranking, AI recommendation only) and changes DH-007 to keep audit entries in
+  full. Pilot-readiness scope replaces read-only slices as the next step.
