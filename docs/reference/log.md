@@ -1336,3 +1336,17 @@ metadata when the knowledge base was created.
   server-side and the map clusters, tested on 60,000 constructed cases (PR-005).
   Deviations from ADR 0002: offset paging, in-memory ranking cache, policy as
   code. Not deployed; front end checked by syntax only.
+
+## 2026-10-08 MVP build slice 2: pilot-readiness backlog built in-repo
+
+* `mvp/` gained a sqlite-backed SQL store behind the `Store` interface (row
+  versions, append-only full-content ledger, hash-chain verify command and
+  endpoint, local digests), server-side role projection with a role-matrix test,
+  return/reopen, handoff and safety referral workflows, an offline AI
+  evaluation harness, an off-by-default time capture gated on `DPIA_APPROVED`,
+  an auth provider abstraction (Entra trusted-proxy headers and dev password),
+  an accessible map list and configurable tile provider, a hardened Dockerfile
+  and `.github/workflows/mvp-ci.yml`.
+* Status per item is in the Implementation status section of
+  [ADR 0002](../adrs/0002-pilot-readiness-architecture.md). Nothing was run in
+  Azure; Entra, Azure SQL and Blob are designed and documented, not verified.

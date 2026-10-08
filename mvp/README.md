@@ -51,9 +51,88 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 * Funding: a person moves each application through draft, approved,
   submitted and confirmed. Approval needs complete evidence and the Grants
   and Evidence Officer or a manager. The system never submits anything.
-* A hash-chained audit log records every change.
+* A hash-chained audit log records every change. `GET /api/audit-check`
+  (manager) and `python -m properwarm_mvp.ledger` verify the chain; a digest of
+  the head can be written to `PW_DIGEST_DIR` (`POST /api/ledger/digest`) and is
+  re-checked on verify. The digest is a local file, not yet an immutable Blob.
+* Role-based field projection is enforced on the server (`projection.py`).
+  Contractors see only their own cases with "needs notice" and a named contact
+  (the case owner), never the vulnerability reason, resident name or contact
+  details. Staff see the reason only for the roles in `PW_REASON_ROLES`
+  (default Resident Liaison Officer, Building Safety Liaison, Retrofit Programme
+  Manager); others see "Extra support noted". Every role is tested against every
+  endpoint (`tests/test_role_matrix.py`). Free-text notes are not redacted.
+* Workflows, API only (no screens yet): return a case to an earlier stage with a
+  reason, reopen (manager), offer, accept, decline or withdraw a handoff, and
+  safety referral (raise, refer, record repair, release by a different person).
+* The map has a "Show the map areas as a list" alternative: a keyboard and
+  screen reader list of clusters (zoom in) or homes (open case), with a polite
+  live status line. The tile provider comes from `PW_TILE_URL` (https only) and
+  the CSP follows it. With `PW_ENV=production` and no `PW_TILE_URL` no tiles
+  load and only the list works.
+* AI evaluation harness, offline: `PYTHONPATH=. python3 -m properwarm_mvp.ai_eval`
+  runs golden scenarios (`evals/ai_priority_golden.json`) with a scripted model
+  and checks that ranking and case data never change, the output stays Proposed
+  and needs a person's reason to edit or reject.
+* Staff time capture (PR-004) is off by default. It records only when
+  `PW_TIME_CAPTURE=on` and `DPIA_APPROVED` holds a reference; own entries only;
+  reports are manager-only, aggregated and suppress groups under
+  `PW_TIME_MIN_GROUP` (default 5). It uses its own database, never the case store.
 * Download any list for Excel, and check a spreadsheet: columns are matched
   for you, rows to fix are listed and the file is never changed.
+
+## Configuration
+
+| Variable | Purpose |
+| --- | --- |
+| `PW_STORE` | `json` (default) or `sqlite` (durable SQL store, see below) |
+| `PW_SQLITE`, `PW_STATE`, `PW_DATA`, `PW_DIGEST_DIR` | database file, state folder, seed data, ledger digests |
+| `PW_AUTH` | `password` (dev, default) or `trusted-proxy` (Entra) |
+| `PW_ENV` | `production` refuses the password provider and the OSM tile default |
+| `PW_SESSION_KEY` | signs dev session cookies; set the same value on every replica |
+| `PW_ENTRA_TENANT_ID`, `PW_TRUSTED_PROXY`, `PW_ROLE_MAP`, `PW_AUTH_EMAIL_FALLBACK` | Entra provider |
+| `PW_REASON_ROLES` | roles that may see a vulnerability reason |
+| `PW_TILE_URL`, `PW_TILE_ATTRIBUTION` | map tile provider |
+| `PW_TIME_CAPTURE`, `DPIA_APPROVED`, `PW_TIME_DB`, `PW_TIME_MIN_GROUP` | time capture |
+
+### SQL store
+
+`PW_STORE=sqlite` uses `sqlstore.py` on stdlib sqlite3 as the dev and test
+driver, with the same `Store` interface. Each case row has a row version and a
+save is `UPDATE ... WHERE rowversion = ?`; a lost race returns HTTP 409, and
+nothing is written. The audit table is full-content, append-only (triggers
+refuse update and delete) and hash-chained. Indexes cover the list filters,
+owner, open safety issues, postcode, address and the ledger sequence, and a test
+checks the query plans use them. No per-process state is needed for
+correctness: a second process catches up from a database sequence before every
+operation, and dev sign-in cookies are signed, not held in memory.
+
+Azure SQL mapping (designed, not run): `rowversion` becomes a `ROWVERSION`
+column or an explicit `BIGINT` incremented in the same `UPDATE`; the append-only
+triggers become `INSTEAD OF` triggers or a role with `INSERT` only on the ledger
+schema, with SQL ledger tables an option; JSON text columns become `NVARCHAR(MAX)`
+with `ISJSON`; `BEGIN IMMEDIATE` becomes a transaction at `SERIALIZABLE` or an
+`UPDLOCK` on the head row; digests go to immutable Blob storage; the per-year
+ledger table question in ADR 0002 stays open.
+
+### Entra ID on Container Apps
+
+Code: `auth.py`. Nothing below has been done or run in Azure.
+
+* Create an app registration (single tenant) and define app roles whose values
+  match the map (default `ProperWarm.Coordinator`, `.LiaisonOfficer`,
+  `.ProgrammeManager`, `.Contractor` and so on, see `DEFAULT_ROLE_MAP`) or
+  supply `PW_ROLE_MAP` JSON. Assign users and groups to them.
+* Enable built-in authentication on the Container App with "require
+  authentication" so unauthenticated requests are blocked, and make the ingress
+  the only route to the container so `X-MS-CLIENT-PRINCIPAL` cannot be forged.
+* Set `PW_AUTH=trusted-proxy`, `PW_TRUSTED_PROXY=1`, `PW_ENTRA_TENANT_ID` and
+  `PW_ENV=production`. A token must be `aad`, from that tenant, with exactly
+  one mapped role; the role comes from the token, never the staff file.
+* Provision each staff record with the Entra object id (`oid`). Email matching
+  is off unless `PW_AUTH_EMAIL_FALLBACK=1`. Contractor guests need the same.
+* Sign-out redirects to `/.auth/logout`. State-changing requests need an
+  `X-PW-CSRF` header under this provider.
 
 ## Run it locally
 
@@ -78,16 +157,16 @@ history ends today and prints no real personal data.
 * The data is constructed. The generator (`pw_names.py`, `build_mvp_dataset.py`)
   makes names, phone numbers on Ofcom drama ranges and example email domains.
   The product screens do not say so; this README and the repository do.
-* Sign-in is a single shared local password for staff accounts. It is not
-  Entra ID. Production would use Entra ID, the Azure design in
-  [ADR 0001](../docs/adrs/0001-azure-architecture.md) and the controls in the
-  data-handling baseline.
+* Dev sign-in is a single shared password. The Entra provider is tested only
+  with hand-built principal headers, never against a real tenant or Container
+  Apps authentication. The contractor view exists in the API but the front end
+  has no contractor screens.
 * AI needs `AI_ENDPOINT` (and optionally `AI_DEPLOYMENT`,
   `AI_DEPLOYMENT_STRONG`) and a managed identity with the Cognitive Services
   OpenAI User role. Without them the app uses plain templates. Nothing is
   sent; there is no live integration with housing or repairs systems.
-* The map loads tiles from tile.openstreetmap.org (the only external request,
-  allowed in the CSP). Production would use a licensed tile service.
+* In development the map loads tiles from tile.openstreetmap.org unless
+  `PW_TILE_URL` is set. No licensed provider has been chosen or tested.
 * Uploaded files and live changes sit on local disk. On Azure Container Apps
   that disk is lost on restart, so run one replica and treat it as a demo;
   production would use Blob Storage and Azure SQL.
@@ -101,6 +180,16 @@ history ends today and prints no real personal data.
 * Ranking snapshots are not yet stored per run and the policy is a Python
   constant, not a signed-off policy file. AI value against the deterministic
   order is only captured as the overlap on each recommendation record.
+* The SQL store is verified only on sqlite. Reads are still served from an
+  in-memory copy and list paging is still offset based, so ADR 0002 keyset
+  paging in SQL is not done. Documents stay on local disk, not Blob.
+* The workflow endpoints and time capture have no screens. Time capture is
+  enabled by environment, not an audited admin action, and lacks the staff
+  notice and consultation checks in the ADR. The AI evaluation uses a scripted
+  model, so it checks behaviour, not model quality.
+* The Dockerfile pins a base digest and runs as uid 10001 with no data baked in.
+  It was built and started locally with Docker; it has not been deployed. The
+  `mvp-ci.yml` workflow has not run on GitHub.
 * Retention periods and legal bases remain proposals for the DPO and Legal.
 
 ## Tests
@@ -109,5 +198,5 @@ history ends today and prints no real personal data.
 cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests -v
 ```
 
-Tests use small fixtures and a generated 60,000-case dataset, and need no
+The tests also cover the SQL store, ledger, role matrix, workflows, auth and time capture. They use small fixtures and a generated 60,000-case dataset, and need no
 private data. The AI priority tests use the template path (no model).

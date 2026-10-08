@@ -419,3 +419,24 @@ time capture.
 * [Proper Warm Workbench PRD v0.10.0](../prds/proper-warm-retrofit-programme-demonstrator.md)
 * [Gap Analysis and Next Build](../reference/research/gap-analysis-next-build.md)
 * [Proper Warm MVP](../../mvp/README.md)
+
+## Implementation status
+
+Status at 2026-10-08 on branch `feat/mvp-deterministic-ranking`. "Done" means
+built and covered by tests in `mvp/tests` or by a local run; nothing was run in
+Azure and no decision in this ADR is approved by this work.
+
+| Item | Status | Deviations |
+| --- | --- | --- |
+| Ranking policy and AI recommendation (decision 4) | Done in slice 1 | Offset paging, in-memory ranking cache, policy as code |
+| Store interface hardening and durable SQL store (decision 1) | Partial | sqlite3 stand-in, not Azure SQL; reads from an in-memory copy; offset paging, not keyset; mapping to Azure SQL documented only |
+| Ledger hash chain and verify (decisions 1, 2) | Partial | Verify command and endpoint done; digests are local files, not immutable Blob |
+| Field projection by role (decision 3) | Done | Free-text notes are not redacted; no contractor screens |
+| Return, reopen, handoff, safety referral | Done (API) | No front-end screens |
+| AI evaluation harness (decision 4) | Partial | Offline, scripted model, five golden cases; no live-model measurement |
+| Accessible map alternative and tile provider (decision 5) | Partial | List view and env-configured provider done; no licensed provider chosen; front end checked by syntax and server tests only, no screen reader run |
+| Dockerfile and CI (decision 6) | Partial | Image built and started locally; workflow not yet run on GitHub; not deployed; no scan or multi-replica test |
+| Staff time capture (decision 7) | Partial | Off by default, needs `DPIA_APPROVED`; enabled by env, no staff notice or consultation checks, no audited admin action |
+| Entra ID provider (decision 3) | Partial | Header parsing and role mapping tested with synthetic principals only; Azure configuration documented in the README, not done |
+| Blob documents (decision 2) | Not done | Documents stay on local disk |
+| Azure provisioning, replicas, region, load test (decision 6) | Not done | Out of scope without Azure |
