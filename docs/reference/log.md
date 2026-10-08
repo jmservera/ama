@@ -1149,3 +1149,15 @@ metadata when the knowledge base was created.
 * Validation: build, lint, ARM validate and what-if only. The deployment was
   not applied because the only writable resource group belongs to another
   project and the template would modify its private DNS zones.
+
+## [2026-10-08] query | Review hybrid M365 Excel transition and deploy test stack
+
+* Researched the hybrid Azure and M365 design (Graph Excel API, `Sites.Selected`,
+  Graph without Private Link, Teams Workflows replacing connectors, E3 versus E5
+  compliance) and challenged it with the Neighbourhood Housing Officer, Data and
+  Performance Lead and Executive Director Assets agents. Added a staged Excel
+  transition, measures and open options to ADR 0001 and a summary to the PRD.
+  Role views are hypotheses, not company facts.
+* Deployed the Bicep to resource group `ama` in `uksouth` after fixing the
+  Foundry ordering; `swedencentral` lacked Container Apps capacity. Placeholder
+  images only, nothing measured.

@@ -44,6 +44,7 @@ resource project 'Microsoft.CognitiveServices/accounts/projects@2025-06-01' = {
 @batchSize(1)
 resource models 'Microsoft.CognitiveServices/accounts/deployments@2025-06-01' = [for model in deployments: {
   parent: account
+  dependsOn: [project]
   name: model.name
   sku: {
     name: model.skuName

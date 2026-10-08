@@ -7,6 +7,8 @@ param peSubnetId string
 param zoneId string
 param entraAdminGroupName string
 param entraAdminGroupObjectId string
+@allowed(['Group', 'User', 'Application'])
+param entraAdminPrincipalType string = 'Group'
 param enableLock bool
 param zoneRedundant bool = false
 @description('Serverless vCores keep a non-production demonstrator cheap; raise for production.')
@@ -22,7 +24,7 @@ resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {
     restrictOutboundNetworkAccess: 'Disabled'
     administrators: {
       administratorType: 'ActiveDirectory'
-      principalType: 'Group'
+      principalType: entraAdminPrincipalType
       login: entraAdminGroupName
       sid: entraAdminGroupObjectId
       tenantId: tenant().tenantId

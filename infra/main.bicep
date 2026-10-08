@@ -22,6 +22,8 @@ param budgetStartDate string = utcNow('yyyy-MM-01')
 @description('Entra security group that administers the SQL server (no SQL logins exist).')
 param sqlAdminGroupName string
 param sqlAdminGroupObjectId string
+@allowed(['Group', 'User', 'Application'])
+param sqlAdminPrincipalType string = 'Group'
 @description('Entra app registration client ID protecting the workbench API. Leave empty to deploy without app authentication (not for shared use).')
 param entraClientId string = ''
 @description('Container images. The default placeholder lets infrastructure deploy before application images exist.')
@@ -156,6 +158,7 @@ module sql 'modules/sql.bicep' = {
     zoneId: network.outputs.zoneIds.sql
     entraAdminGroupName: sqlAdminGroupName
     entraAdminGroupObjectId: sqlAdminGroupObjectId
+    entraAdminPrincipalType: sqlAdminPrincipalType
     enableLock: enableLocks
     zoneRedundant: zoneRedundant
   }

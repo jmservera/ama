@@ -63,6 +63,60 @@ is set). SQL contained users are created with
 * Defender alert policy on SQL, metric alerts for Foundry client errors and SQL CPU to the action group, optional `CanNotDelete` locks.
 * Constructed, non-identifying data only. Production would need a data protection impact assessment and a new approval, which this record does not provide.
 
+## Hybrid M365 and Excel transition
+
+Review on 2026-10-08 by web research (cited below) and the Neighbourhood Housing
+Officer, Data and Performance Lead and Executive Director Assets role agents.
+No design-thinking coach agent exists in this repository, so the challenge was
+synthesised here. Role views are research instruments, not company facts. The
+company's tenant, licences, workbook formats and owners are unknown.
+
+### Is the hybrid feasible and convenient
+
+Feasible, with conditions. Convenient only if staff do not carry double entry.
+
+* Feasible: Graph can read a workbook in place on SharePoint (Graph Excel API, `workbook/tables`), and `Sites.Selected` scopes the app to one site. Source: Microsoft Graph Excel API and permissions reference on learn.microsoft.com, accessed 2026-10-08.
+* Convenient: staff keep a familiar surface during transition, and Excel ends as a read-only report fed from the API (Power Query or an export), not a write surface.
+* Hazard: Excel co-authoring has no record locking or audit trail, so a workbook and the API both being writable (dual write) is the highest-risk state.
+* Constraint: Microsoft Graph has no Private Link. The private-only design needs controlled egress to `graph.microsoft.com` and `*.sharepoint.com` for the import job (Azure Firewall or NAT gateway with FQDN rules) or the import falls back to uploaded files in Blob. Not yet built; an open item.
+* Teams: Office 365 connector webhooks are retired (Microsoft 365 Dev Blog, 2026), so alerts use a Teams Workflows webhook, which posts under a generic bot identity.
+* Licensing: manual labels, basic DLP and retention are expected to be covered by M365 E3 (Microsoft compliance licensing comparison); auto-labelling and Teams DLP need E5 or add-ons. Unverified for the tenant (OQ-012).
+
+### Staged transition (proposed, thresholds to be set by owners)
+
+| Stage | Excel | Workbench | Exit criteria |
+|---|---|---|---|
+| 0 Shadow | Unchanged, still the working record | One-way, repeated, idempotent snapshot imports keyed by file hash and row business key. Imported values tagged unverified source assertions | Workbook structures profiled, owners named, quarantine owner and age limit set |
+| 1 Parallel run, short and fixed | Named import owners edit; others read-only through SharePoint permissions | Staff record new decisions, handoffs and hazards in the workbench; frontline views show appointments, contractor and flags | Reconciliation, quarantine and drift measures below meet owner-set targets for N consecutive cycles |
+| 2 Read-only | Stamped superseded; exceptions through a named owner | System of record | Staff sign-off, tested out-of-hours route, rollback defined, data protection approval for real data |
+| 3 Retire | Workbooks become API-fed reports | Sole write path | No post-cut-over workbook edits |
+
+Rules from the role challenge: imports are one-way (no write back to Excel); a
+decision, approval or hazard recorded only in Excel is invalid; hazard and
+safeguarding cases never rely on Teams nudges and need a named owner and
+out-of-hours route; vulnerability data goes to SharePoint only after data
+protection and access review.
+
+### Transition measures
+
+* Reconciliation rate by field and batch, with stratified and sampled manual audit so a high rate cannot hide a systematic mapping error.
+* Quarantine rate, age and reason mix, with a named owner.
+* Post-snapshot source edits, as the drift indicator.
+* Unmatched or duplicate property identifiers.
+* Evidence reference resolution to the expected version or hash.
+* Teams nudge to recorded workbench action conversion and time.
+* Time to update a case and handoff acceptance time against the workbook baseline.
+
+### Options still to compare (Executive challenge)
+
+Excel-only improvement, M365-only (SharePoint lists and Power Platform), full
+Azure with hard cut-over and the hybrid have not been costed on the same basis.
+A board-level approval would need that appraisal, Excel baselines (volume,
+quality, error rate), measured demonstrator cost per assessed home, written exit
+criteria and confirmation that Awaab's Law clocks hold throughout transition.
+Hard cut-over is rejected here because a failed switch could breach statutory
+timescales. These remain open (OQ-012).
+
 ## Failure domains and scaling
 
 | Component | Scales by | Failure behaviour |
@@ -122,8 +176,8 @@ resource group.
 
 ## Validation performed
 
-* `az bicep build` and `az bicep lint` are clean on `main.bicep` and every module; `main.bicepparam` compiles.
-* `az deployment group validate` (ARM preflight) succeeded and `what-if` reported 91 creates against the only resource group the available service principal can write to.
-* The deployment was not applied. That principal can write only to the unrelated `squadscope-podcaster` resource group, and `what-if` showed the template would modify its existing `privatelink.blob` and `privatelink.queue` private DNS zones. Deploying there would alter another project, so a deployment needs a dedicated subscription or resource group, plus Entra permissions to resolve the SQL admin group.
-* Design consequence: the private DNS zones should become parameters so a landing zone can reuse existing zones instead of creating them.
-* No runtime, load or cost measurement exists, so A4 and A5 evidence remains design-only.
+* `az bicep build` and `az bicep lint` are clean on `main.bicep` and every module.
+* `az deployment group what-if` reported 93 creates, then the stack was deployed to resource group `ama` as `warm-test` in `uksouth`: all modules succeeded, both Container Apps are running, and both model deployments (`gpt-4.1-mini`, `gpt-4.1`) provisioned.
+* Deployment findings fixed in the template: Foundry project and model deployments conflicted when created in parallel (now serialised); the SQL admin principal type is a parameter. The Container Apps environment failed with `AKSCapacityHeavyUsage` twice in `swedencentral`, so the validated region is `uksouth`. Region capacity is therefore a real deployment risk.
+* The container images are the placeholder quickstart image, so no application behaviour, load, latency or cost has been measured. A4 and A5 evidence remains design and deployment only.
+* The SQL contained-user script, the Entra app registration, the SharePoint site and the Teams webhook have not been exercised.

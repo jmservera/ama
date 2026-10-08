@@ -30,6 +30,10 @@ az deployment group create -g rg-proper-warm-dev -f infra/main.bicep -p infra/ma
 Then run the SQL script from a host with private network access, push the
 application images to the registry and update the image parameters.
 
+## Tested deployment
+
+Deployed on 2026-10-08 to resource group `ama` with `location=uksouth environmentName=test`. `swedencentral` returned `AKSCapacityHeavyUsage` for the Container Apps environment, so keep `location` a parameter. The SQL admin can be a user, group or application (`sqlAdminPrincipalType`).
+
 ## Validate locally
 
 ```bash

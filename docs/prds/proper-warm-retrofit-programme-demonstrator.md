@@ -172,6 +172,16 @@ options pending OQ-012.
 | Exercise workbook import | Queue-triggered Container Apps job with a quarantine container |
 | Identity and telemetry | Per-workload managed identities, Log Analytics, Application Insights, SQL auditing, alerts and budget |
 
+Excel transition (reviewed 2026-10-08, hypotheses pending OQ-012 and owner
+baselines): the hybrid is feasible but only convenient if it avoids double
+entry. The proposed path is a staged strangler: shadow one-way snapshot imports,
+a short fixed parallel run with named Excel editors, read-only workbooks, then
+API-fed reports. Cut-over is judged on reconciliation, quarantine, post-import
+workbook edits, evidence reference resolution and case-update effort against the
+workbook baseline, with Awaab's Law clocks protected throughout and hazard
+cases never routed through Teams nudges. Detail and sources are in the ADR
+section Hybrid M365 and Excel transition.
+
 M365 is limited to three roles in the demonstrator, each conditional on OQ-012:
 Entra ID as the identity provider and role source, a SharePoint site as the
 optional evidence store, and Teams as a notification and review channel. No
