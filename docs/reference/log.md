@@ -1266,3 +1266,11 @@ metadata when the knowledge base was created.
   each card shows facts for their role (for example contractor and works for a
   Retrofit Coordinator, funding and missing evidence for a Grants and Evidence
   Officer).
+
+## 2026-10-08 Gap analysis and next build
+
+* Added [Gap Analysis and Next Build](research/gap-analysis-next-build.md):
+  BRD, PRD, ADR, addendum, research, rubric score and the MVP reviewed
+  together. Key findings: capstone deck, pitch and thought leadership assets
+  are missing, the rubric registry does not include `mvp/`, durable storage and
+  Entra sign-in are not built, and several PRD lifecycle workflows are open.
