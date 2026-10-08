@@ -8,3 +8,4 @@ param sqlAdminGroupObjectId = '00000000-0000-0000-0000-000000000000'
 param entraClientId = ''
 param zoneRedundant = false
 param enableLocks = false
+param deploymentProfile = 'production'

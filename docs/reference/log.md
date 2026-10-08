@@ -1218,3 +1218,12 @@ metadata when the knowledge base was created.
   only because it pairs real map addresses with invented residents.
 * Product screens do not label the data as constructed; the README and this
   log do. Sign-in is a shared local password, not Entra ID.
+
+## [2026-10-08] update | Bicep deployment profile
+
+* Added `deploymentProfile` (`production` default, `development`) to
+  `infra/main.bicep`. Development enables external network access, disables
+  registry image quarantine and drops Key Vault purge protection; production
+  keeps every isolation control. Documented in `infra/README.md`. Observed
+  during the MVP deployment: a quarantined ACR image could not be pulled by
+  Container Apps until released.

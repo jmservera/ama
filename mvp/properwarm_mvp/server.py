@@ -16,7 +16,7 @@ WEB = Path(__file__).resolve().parents[1] / "web"
 TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
          ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml"}
 SECURITY = {"Content-Security-Policy": "default-src 'self'; frame-ancestors 'none'",
-            "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer", "Cache-Control": "no-store"}
+            "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer", "Cache-Control": "no-store", "Strict-Transport-Security": "max-age=31536000"}
 
 
 def pw_hash(password, salt):
@@ -114,7 +114,7 @@ def make_handler(app):
                 tok = app.login(body.get("email"), body.get("password"))
                 if not tok:
                     return self._json(401, {"error": "Email or password not recognised."})
-                ck = f"pw_session={tok}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800"
+                ck = f"pw_session={tok}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800" + ("; Secure" if os.environ.get("PW_SECURE_COOKIE") else "")
                 return self._json(200, {"ok": True}, {"Set-Cookie": ck})
             u = self._user()
             if not u:
@@ -159,8 +159,11 @@ def main():
     if not os.path.exists(data):
         sys.exit("No data file. Run build_mvp_dataset.py first (see mvp/README.md).")
     password = os.environ.get("PW_PASSWORD") or secrets.token_urlsafe(9)
-    app = App(Store(data), password)
-    host, port = "127.0.0.1", int(os.environ.get("PORT", "8088"))
+    state = os.environ.get("PW_STATE")
+    store = Store(data, os.path.join(state, "live.json") if state else None,
+                  os.path.join(state, "audit.jsonl") if state else None)
+    app = App(store, password)
+    host, port = os.environ.get("PW_BIND", "127.0.0.1"), int(os.environ.get("PORT", "8088"))
     print(f"Proper Warm is running at http://{host}:{port}")
     if not os.environ.get("PW_PASSWORD"):
         print(f"Sign in with any staff email and the password {password}")

@@ -9,6 +9,8 @@ param pullPrincipalIds array
 param zoneRedundant bool = false
 @description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
 param allowPublicNetworkAccess bool = false
+@description('Quarantine pushed images until scanned and released. Turn off for development so new images can be pulled immediately.')
+param quarantine bool = true
 
 resource registry 'Microsoft.ContainerRegistry/registries@2025-04-01' = {
   name: name
@@ -23,7 +25,7 @@ resource registry 'Microsoft.ContainerRegistry/registries@2025-04-01' = {
     zoneRedundancy: zoneRedundant ? 'Enabled' : 'Disabled'
     dataEndpointEnabled: true
     policies: {
-      quarantinePolicy: { status: 'enabled' }
+      quarantinePolicy: { status: quarantine ? 'enabled' : 'disabled' }
       retentionPolicy: { status: 'enabled', days: 30 }
       exportPolicy: { status: allowPublicNetworkAccess ? 'enabled' : 'disabled' }
       azureADAuthenticationAsArmPolicy: { status: 'enabled' }
