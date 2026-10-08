@@ -1124,3 +1124,57 @@ metadata when the knowledge base was created.
 * Updated `README.md` routing/catalog. No original case, addendum, PRD, memory,
   prototype code, generated resident data or tracking artifacts changed.
   No runtime inspection, operational approval or user-tested success claimed.
+
+## [2026-10-08] update | Propose Azure architecture and Bicep
+
+* Added `docs/adrs/0001-azure-architecture.md` and Bicep under `infra/`
+  proposing Container Apps hosting, bounded agent placement, Azure SQL with
+  ledger, Blob evidence, a two-tier Foundry model deployment, private
+  endpoints, managed identities, monitoring and audit controls, derived from
+  the PRD component contracts, threat model and NFRs.
+* Status is proposed and unverified: Bicep builds and lints, but nothing was
+  deployed, and model versions, quotas and region availability are unchecked.
+* Updated the `README.md` catalog.
+
+## [2026-10-08] update | Revise Azure architecture after PR 28 review
+
+* Responded to the rubric score on PR 28 (A1 to A5 held below Excellent for
+  lack of failure domains, measured operations and deployment evidence). ADR
+  0001 gained failure domains and scaling, threat model mapping, operational
+  targets and a cost model, and an M365 section covering Entra ID, optional
+  SharePoint (`Sites.Selected`) and Teams.
+* Bicep gained API 5xx and restart alerts, a budget, a Teams webhook receiver
+  and evidence store parameters. PRD v0.8.0 records the proposed Azure and M365
+  realisation under the platform boundary.
+* Validation: build, lint, ARM validate and what-if only. The deployment was
+  not applied because the only writable resource group belongs to another
+  project and the template would modify its private DNS zones.
+
+## [2026-10-08] query | Review hybrid M365 Excel transition and deploy test stack
+
+* Researched the hybrid Azure and M365 design (Graph Excel API, `Sites.Selected`,
+  Graph without Private Link, Teams Workflows replacing connectors, E3 versus E5
+  compliance) and challenged it with the Neighbourhood Housing Officer, Data and
+  Performance Lead and Executive Director Assets agents. Added a staged Excel
+  transition, measures and open options to ADR 0001 and a summary to the PRD.
+  Role views are hypotheses, not company facts.
+* Deployed the Bicep to resource group `ama` in `uksouth` after fixing the
+  Foundry ordering; `swedencentral` lacked Container Apps capacity. Placeholder
+  images only, nothing measured.
+
+* Added the `prototype/` constructed-data code slice (workflow authority,
+  bounded agent proposals, hash-chained audit, offline contract evaluation), a
+  provisional weighted options appraisal and observed `warm-test` deployment
+  timings to ADR 0001. Weights and scores are architect proposals pending
+  sponsor approval; the prototype image is not deployed.
+
+* Added the development-only `allowPublicNetworkAccess` Bicep parameter
+  (default false) to `infra/`, documented in `infra/README.md`. It opens public
+  endpoints alongside the private endpoints for a throwaway dev stack only.
+
+* Added an architecture challenge section to ADR 0001 (Azure SQL kept, ledger
+  digest gap, cross-region SQL trade-offs, deferred AI Search, later Document
+  Intelligence, Design Thinking experiments) and recorded the North Europe dev
+  deployment findings. Agent views are judgement, not company facts.
+
+* Recorded the region selection (uksouth recommended, EU data-zone fallbacks untested) in ADR 0001.

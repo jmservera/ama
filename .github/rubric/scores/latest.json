@@ -2,17 +2,20 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-07T22:11:44+00:00",
-  "commit": "29a998894e1269739443bf712ab5f48add91769a",
+  "scored_at": "2026-10-08T16:54:15+00:00",
+  "commit": "670519d938646ee5de6205000f9a8005af80f726",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37693866795",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37811189011",
   "fingerprints": {
     "brd": "7947aff0475c769010747917eaddd2a01589d7fb89b4cb51eaacfe048373f3fb",
-    "prd": "1fca7a2496be84d875fe88cfb906fb117e68b60d8daaada4ff27c72c497b3d8c"
+    "prd": "d61ada59263e9f119b02100ba3855844dc7d7fa892d9b5e0965756c25d45b58b",
+    "adr": "8057c89bb8e17638f3232bfbb835d02066bbef4fa8bf60421cf4689b196495c4",
+    "solution-code": "f2ae4fda6d5cd59d0c046195ba3363c856d935d6f35598cfe7c212841c0a938b",
+    "infrastructure": "0a850fd6be08d25623fe69d8acd1b5124a36d4c045b4fb8120ac0f3e6bfb817d"
   },
-  "total": 25,
+  "total": 31,
   "sections": {
-    "A": 18,
+    "A": 24,
     "B": 3,
     "C": 4,
     "D": 0
@@ -21,52 +24,62 @@
   "outcome": "Incomplete (thought leadership artifact not submitted)",
   "criteria": {
     "A1": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:143-158"
+        "infra/modules/containerapps.bicep:123-126",
+        "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Component Contracts table names decoupled components (workbench/API, state store, orchestrator, bounded AI service, document store, import, identity) with explicit failure domains; scaling path is discussed in general terms (Azure Container Apps candidates) but not evidenced with load/scale data...."
+      "rationale": "Failure-domain table is now explicit per component and matches deployed Bicep scale rules (api minReplicas 1 maxReplicas 4, agents queue-scaled 0-5); modular identity split enforced in infra. Scaling path considered but not load-tested, so Good not Excellent."
     },
     "A2": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:255"
+        "docs/adrs/0001-azure-architecture.md:167-198"
       ],
-      "rationale": "Options Gate Scoring Framework lists alternatives (full Azure custom, greenfield, hybrid) and named criteria, but weights are TBD and no option has actually been scored, so trade-off argument is incomplete."
+      "rationale": "Provisional options appraisal now scores named alternatives (Azure custom, greenfield, hybrid, Excel-only) against weighted criteria and explains why each loses (D fails mandatory gate, B has low evidence confidence), an actual argued trade-off rather than TBD weights."
     },
     "A3": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:158-175",
-        "docs/brds/agentic-retrofit-programme-brd.md:1290"
+        "docs/adrs/0001-azure-architecture.md:131-140",
+        "prototype/properwarm/domain.py:84-99",
+        "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Threat model table names specific AI risks (prompt injection, data leakage, hallucination, spoofed identity) with mitigations, but it is explicitly labelled illustrative/not validated and core controls are not implemented."
+      "rationale": "Threat model now maps each PRD AI risk to a concrete control in the deployed design, and the prototype enforces and tests the agent/forbidden-field boundary and audit tamper detection in running code, not just a stated model."
     },
     "A4": {
-      "score": 1,
-      "evidence": [],
-      "rationale": "No solution-code artifact exists (file_count 0); nothing is built end to end. Implementation completeness cannot be scored above the floor from planning documents alone."
+      "score": 3,
+      "evidence": [
+        "prototype/properwarm/domain.py:1-125",
+        "prototype/properwarm/server.py:1-73",
+        "prototype/tests/test_domain.py:1-99",
+        "prototype/tests/test_server.py:1-63"
+      ],
+      "rationale": "A solution-code artifact now exists with working domain rules, an HTTP API, and passing-looking unit/API tests covering transitions, proposals and audit. It is in-memory only, not integrated with SQL/Blob/Foundry and not deployed, so key paths remain incomplete."
     },
     "A5": {
       "score": 2,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:426"
+        "docs/adrs/0001-azure-architecture.md:142-146"
       ],
-      "rationale": "Observability/SLO method is proposed (OpenTelemetry conventions, cost attribution) but explicitly not implemented; no instrumentation, measurement or cost data exists."
+      "rationale": "Targets and cost drivers are still explicitly labelled proposed/unmeasured; monitoring infra (alerts, action group) exists but no instrumentation data or cost-per-unit evidence has been produced."
     },
     "A6": {
       "score": 3,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:461"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:496-514",
+        "prototype/scripts/evaluate_agent.py:1-51"
       ],
-      "rationale": "AI Model Selection and Evaluation Harness names a sound comparative method (smaller vs capable candidate, metrics, thresholds) but explicitly states no model has been selected and no test has been run."
+      "rationale": "An offline contract-evaluation script now exists and runs, but it explicitly does not call a model and is not a measure of model quality; model selection and the live evaluation harness remain undone as stated in the PRD."
     },
     "A7": {
-      "score": 2,
+      "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:491"
+        "prototype/properwarm/domain.py:67-99",
+        "prototype/tests/test_domain.py:16-21",
+        "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Bounded-Agent Orchestration Pattern is a deliberately designed deterministic state graph with typed proposals, human-in-the-loop acceptance and idempotent recovery; well-reasoned design but not yet demonstrated in running code."
+      "rationale": "Bounded-agent orchestration is now demonstrated in running, tested code: service roles are code-enforced to never transition state, proposals are schema- and citation-gated, and acceptance never auto-advances the case, giving real guardrailed autonomy rather than only a documented pattern."
     },
     "B1": {
       "score": 0,
@@ -97,9 +110,10 @@
       "score": 3,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:29",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
+        "infra/README.md:1-54"
       ],
-      "rationale": "BRD and PRD are structured, navigable and complete with traceability, status tables and evidence classification, but no capstone deck exists; cap_without caps this score at 3."
+      "rationale": "BRD, PRD and new infra/README.md remain structured and navigable, but no capstone deck exists; cap_without caps this score at 3 regardless of added documentation quality."
     },
     "B7": {
       "score": 0,
@@ -112,7 +126,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:528",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269"
       ],
-      "rationale": "Business Objectives table names real stakeholders (Executive Director of Assets, control owners), quantifies value at stake (GBP 40m grant opportunity, 15,600 homes below EPC C, cycle-time targets) and flags unvalidated figures honestly rather than overclaiming."
+      "rationale": "Business Objectives table still names real stakeholders and quantifies value at stake honestly; this run's changes (ADR, infra, prototype) are technical and do not add or weaken business-framing evidence."
     },
     "C2": {
       "score": 0,
