@@ -2,22 +2,22 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T22:16:42+00:00",
-  "commit": "ab926f6efbc6505813471d2ce33f54908c751efd",
+  "scored_at": "2026-10-08T22:30:04+00:00",
+  "commit": "ba403b9665132ef145c4d76b437905b722017fc2",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37851915266",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37852530835",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
-    "prd": "7cf0f848865f394e48b522d8185545b5a6251a014e15e6347639c6376d8fd328",
-    "adr": "06619f12ac51f5dd8c70d3db655d8c0db4e2894a8c7d13a711bf4a91504e8dad",
-    "solution-code": "f2ae4fda6d5cd59d0c046195ba3363c856d935d6f35598cfe7c212841c0a938b",
+    "prd": "b5cc6a07fde37e41029f42310b8a264a395778344a88247d95725dc305287989",
+    "adr": "e3c44e4e29ed59e8a4d73f54267169eaa2be076874e3a86b81fe69bf35293dc7",
+    "solution-code": "99880897d90d1a99545aa26d608c4c96fd1b91872b364cd3f6c4d90914af8578",
     "infrastructure": "e88376bd4127361b1b10cf9be9b3bc35a947dbd7e7127e141ef466e6b4c45890"
   },
-  "total": 31,
+  "total": 34,
   "sections": {
-    "A": 24,
+    "A": 26,
     "B": 3,
-    "C": 4,
+    "C": 5,
     "D": 0
   },
   "floors_met": false,
@@ -29,23 +29,25 @@
         "infra/modules/containerapps.bicep:123-126",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. No evidence changes in this diff (instrument-only update); unchanged."
+      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. ADR 0002 adds design detail (indexes, keyset paging, clustering) but remains proposal, not evidenced deployment; unchanged."
     },
     "A2": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:167-198"
+        "docs/adrs/0002-pilot-readiness-architecture.md:57-67",
+        "docs/adrs/0002-pilot-readiness-architecture.md:123-131",
+        "docs/adrs/0002-pilot-readiness-architecture.md:194-203",
+        "docs/adrs/0002-pilot-readiness-architecture.md:260-267"
       ],
-      "rationale": "Options appraisal scores named alternatives against weighted criteria with argued rejection reasons. No evidence changes in this diff; unchanged."
+      "rationale": "ADR 0002 adds seven independently reasoned decision areas (store, sign-in, ranking, map, deployment) each with a trade-off table naming rejected alternatives and why, deepening the already-argued ADR 0001 appraisal."
     },
     "A3": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:131-140",
-        "prototype/properwarm/domain.py:84-99",
-        "prototype/tests/test_domain.py:60-73"
+        "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-329"
       ],
-      "rationale": "Threat model maps AI risks to controls in deployed design and tests. No evidence changes in this diff; unchanged."
+      "rationale": "ADR 0002 names a specific AI leakage threat (vulnerability reason reaching contractor views or AI prompts) and states a concrete mitigation (server-side field projection, prompt isolation, planned matrix test AC-004/AC-005), plus named compliance articles (GDPR 9, 17(3), 44-46) and Entra-enforced..."
     },
     "A4": {
       "score": 3,
@@ -55,22 +57,23 @@
         "prototype/tests/test_domain.py:1-99",
         "prototype/tests/test_server.py:1-63"
       ],
-      "rationale": "Solution-code artifact exists with working domain rules, an HTTP API, and passing-looking unit/API tests. In-memory only, not deployed; key paths remain incomplete. Unchanged."
+      "rationale": "No code changed in this diff; it is a design-only ADR/PRD update describing future SQL/Entra build work, not delivered implementation. Implementation completeness evidence is unchanged."
     },
     "A5": {
-      "score": 2,
+      "score": 3,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:142-146"
+        "docs/adrs/0002-pilot-readiness-architecture.md:308-340"
       ],
-      "rationale": "Targets and cost drivers remain labelled proposed/unmeasured; monitoring infra exists but no instrumentation data or cost-per-unit evidence. Unchanged."
+      "rationale": "ADR 0002 section 6 adds reasoned discussion of replicas, zone redundancy, health/readiness probes, image hardening and CI gates, expanding the qualitative ops and cost narrative beyond the prior minimal treatment."
     },
     "A6": {
       "score": 3,
       "evidence": [
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:496-514",
-        "prototype/scripts/evaluate_agent.py:1-51"
+        "prototype/scripts/evaluate_agent.py:1-51",
+        "docs/adrs/0002-pilot-readiness-architecture.md:244-258"
       ],
-      "rationale": "Offline contract-evaluation script exists but does not call a model; model selection and live evaluation harness remain undone. Unchanged."
+      "rationale": "ADR 0002 describes a future evaluation harness design (top-k overlap, critical misses, citation validity) with defined metrics, but no harness code or measured run exists in this diff; it remains a documented plan, not delivered evaluation evidence. Unchanged."
     },
     "A7": {
       "score": 4,
@@ -79,7 +82,7 @@
         "prototype/tests/test_domain.py:16-21",
         "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Bounded-agent orchestration demonstrated in running, tested code. No new agent-code evidence in this diff; unchanged."
+      "rationale": "No new agent-orchestration code in this diff; the ADR describes a future AI-recommendation-only workflow design but adds no running agentic code. Unchanged."
     },
     "B1": {
       "score": 0,
@@ -113,7 +116,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
         "infra/README.md:1-54"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable. No capstone deck exists so cap_without caps this at 3 regardless. Unchanged."
+      "rationale": "BRD, PRD and infra/README.md remain structured and navigable, now with an expanded PRD (v0.10.0) and new ADR 0002. No capstone deck exists so cap_without caps this at 3 regardless. Unchanged."
     },
     "B7": {
       "score": 0,
@@ -121,12 +124,13 @@
       "rationale": "Not demonstrable: required artifact not provided: capstone-deck, pitch. Maximum 0 until it is committed."
     },
     "C1": {
-      "score": 4,
+      "score": 5,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:528",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-336"
       ],
-      "rationale": "Business Objectives table names real stakeholders and quantifies value honestly. No new evidence in this diff; unchanged."
+      "rationale": "The new owner-direction table (PR-001 to PR-008) names real stakeholders (DPO, Legal, policy owner, contractors, staff), concrete constraints (DPIA, retention law, GDPR conditions) and success measures (deterministic reproducibility, evaluation metrics, 60,000-home scale), quantifying value and r..."
     },
     "C2": {
       "score": 0,
