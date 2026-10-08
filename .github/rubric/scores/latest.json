@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T20:50:31+00:00",
-  "commit": "40307b2fb23ef46849d7a1e3d0e68eccdaabe839",
+  "scored_at": "2026-10-08T22:16:42+00:00",
+  "commit": "ab926f6efbc6505813471d2ce33f54908c751efd",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37841345550",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37851915266",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
     "prd": "7cf0f848865f394e48b522d8185545b5a6251a014e15e6347639c6376d8fd328",
@@ -29,14 +29,14 @@
         "infra/modules/containerapps.bicep:123-126",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. This diff adds a deploymentProfile switch (main.bicep, registry.bicep) affecting network/registry/KeyVault posture, not architecture modularity or scaling evidence; unchanged."
+      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. No evidence changes in this diff (instrument-only update); unchanged."
     },
     "A2": {
       "score": 4,
       "evidence": [
         "docs/adrs/0001-azure-architecture.md:167-198"
       ],
-      "rationale": "Options appraisal scores named alternatives against weighted criteria with argued rejection reasons. Diff adds an infra dev/prod profile toggle, no new alternatives or trade-off argument; unchanged."
+      "rationale": "Options appraisal scores named alternatives against weighted criteria with argued rejection reasons. No evidence changes in this diff; unchanged."
     },
     "A3": {
       "score": 4,
@@ -45,7 +45,7 @@
         "prototype/properwarm/domain.py:84-99",
         "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Threat model maps AI risks to controls in deployed design and tests. Diff adds infra/main.bicep:37-39,69-72 deploymentProfile param that relaxes network isolation, registry quarantine and Key Vault purge protection under an explicit development label, documented with a caution not to treat it as ..."
+      "rationale": "Threat model maps AI risks to controls in deployed design and tests. No evidence changes in this diff; unchanged."
     },
     "A4": {
       "score": 3,
@@ -55,14 +55,14 @@
         "prototype/tests/test_domain.py:1-99",
         "prototype/tests/test_server.py:1-63"
       ],
-      "rationale": "A solution-code artifact now exists with working domain rules, an HTTP API, and passing-looking unit/API tests covering transitions, proposals and audit. It is in-memory only, not integrated with SQL/Blob/Foundry and not deployed, so key paths remain incomplete."
+      "rationale": "Solution-code artifact exists with working domain rules, an HTTP API, and passing-looking unit/API tests. In-memory only, not deployed; key paths remain incomplete. Unchanged."
     },
     "A5": {
       "score": 2,
       "evidence": [
         "docs/adrs/0001-azure-architecture.md:142-146"
       ],
-      "rationale": "Targets and cost drivers remain labelled proposed/unmeasured; monitoring infra exists but no instrumentation data or cost-per-unit evidence. Diff only adds a deployment-profile toggle for network/registry/KeyVault settings, no observability or cost evidence; unchanged."
+      "rationale": "Targets and cost drivers remain labelled proposed/unmeasured; monitoring infra exists but no instrumentation data or cost-per-unit evidence. Unchanged."
     },
     "A6": {
       "score": 3,
@@ -70,7 +70,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:496-514",
         "prototype/scripts/evaluate_agent.py:1-51"
       ],
-      "rationale": "Offline contract-evaluation script exists but does not call a model; model selection and live evaluation harness remain undone. Diff is infra-only; unchanged."
+      "rationale": "Offline contract-evaluation script exists but does not call a model; model selection and live evaluation harness remain undone. Unchanged."
     },
     "A7": {
       "score": 4,
@@ -79,7 +79,7 @@
         "prototype/tests/test_domain.py:16-21",
         "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Bounded-agent orchestration demonstrated in running, tested code. Diff adds no agent-code evidence; unchanged."
+      "rationale": "Bounded-agent orchestration demonstrated in running, tested code. No new agent-code evidence in this diff; unchanged."
     },
     "B1": {
       "score": 0,
@@ -113,7 +113,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
         "infra/README.md:1-54"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable. Diff adds a clear 'Deployment profile' table to infra/README.md:33-44 documenting the new switch, consistent with existing documentation quality; no capstone deck exists so cap_without caps this at 3 regardless."
+      "rationale": "BRD, PRD and infra/README.md remain structured and navigable. No capstone deck exists so cap_without caps this at 3 regardless. Unchanged."
     },
     "B7": {
       "score": 0,
@@ -126,7 +126,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:528",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269"
       ],
-      "rationale": "Business Objectives table names real stakeholders and quantifies value honestly. Diff is infra-only (dev/prod deployment profile), adds no new stakeholder, constraint or quantified value-at-stake evidence; unchanged."
+      "rationale": "Business Objectives table names real stakeholders and quantifies value honestly. No new evidence in this diff; unchanged."
     },
     "C2": {
       "score": 0,

@@ -30,8 +30,8 @@
       "title": "Solution source code",
       "status": "active",
       "extractor": "text",
-      "include": ["src/**/*", "prototype/properwarm/**/*.py", "prototype/web/**/*", "prototype/tests/**/*.py", "prototype/scripts/**/*.py", "prototype/Dockerfile", "prototype/requirements.txt", "prototype/README.md", "prototype/architecture/*.excalidraw"],
-      "exclude": ["**/node_modules/**", "**/.venv/**", "**/__pycache__/**", "**/bin/**", "**/obj/**", "**/dist/**", "prototype/seed/**"],
+      "include": ["src/**/*", "mvp/properwarm_mvp/**/*.py", "mvp/web/*", "mvp/tests/**/*.py", "mvp/Dockerfile", "mvp/README.md", "support/synthetic-data/retrofit-flow/proper-warm-year-one/generator/*.py"],
+      "exclude": ["**/node_modules/**", "**/.venv/**", "**/__pycache__/**", "**/bin/**", "**/obj/**", "**/dist/**", "mvp/data/**", "mvp/web/vendor/**"],
       "criteria": ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]
     },
     {"id": "infrastructure",
