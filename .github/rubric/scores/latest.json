@@ -2,14 +2,14 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T16:21:56+00:00",
-  "commit": "22f3c01786685c3c47d24ba15ac0c80a909195d2",
+  "scored_at": "2026-10-08T16:54:15+00:00",
+  "commit": "670519d938646ee5de6205000f9a8005af80f726",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37807064308",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37811189011",
   "fingerprints": {
     "brd": "7947aff0475c769010747917eaddd2a01589d7fb89b4cb51eaacfe048373f3fb",
     "prd": "d61ada59263e9f119b02100ba3855844dc7d7fa892d9b5e0965756c25d45b58b",
-    "adr": "02c650b34fc15248ca26ab536992bedbe162725a8a42d957c7f6a8cf648ef27c",
+    "adr": "8057c89bb8e17638f3232bfbb835d02066bbef4fa8bf60421cf4689b196495c4",
     "solution-code": "f2ae4fda6d5cd59d0c046195ba3363c856d935d6f35598cfe7c212841c0a938b",
     "infrastructure": "0a850fd6be08d25623fe69d8acd1b5124a36d4c045b4fb8120ac0f3e6bfb817d"
   },
@@ -26,58 +26,60 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:120-129",
-        "docs/adrs/0001-azure-architecture.md:42-46"
+        "infra/modules/containerapps.bicep:123-126",
+        "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "New ADR adds an explicit failure-domain/scaling table per component (replica ranges, KEDA queue scale, poison-queue behaviour) and identity contracts; infra/README confirms a tested dev deployment. Scaling path and failure domains are now explicit."
+      "rationale": "Failure-domain table is now explicit per component and matches deployed Bicep scale rules (api minReplicas 1 maxReplicas 4, agents queue-scaled 0-5); modular identity split enforced in infra. Scaling path considered but not load-tested, so Good not Excellent."
     },
     "A2": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:28-38"
+        "docs/adrs/0001-azure-architecture.md:167-198"
       ],
-      "rationale": "ADR Decisions table names concrete alternatives per concern (e.g. App Service vs Container Apps) and states why each was rejected, which the PRD's TBD-weighted options gate alone did not evidence. Raised from 3 to reflect deliberate, argued trade-offs now on record."
+      "rationale": "Provisional options appraisal now scores named alternatives (Azure custom, greenfield, hybrid, Excel-only) against weighted criteria and explains why each loses (D fails mandatory gate, B has low evidence confidence), an actual argued trade-off rather than TBD weights."
     },
     "A3": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0001-azure-architecture.md:131-138",
-        "prototype/properwarm/domain.py:60-85"
+        "docs/adrs/0001-azure-architecture.md:131-140",
+        "prototype/properwarm/domain.py:84-99",
+        "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Threat model mapping ties each PRD AI risk to an implemented control (agent identity has no data role, forbidden proposal fields enforced in code, private-only Foundry/SQL/network). Core controls are now in code and infra, not just illustrative text. Raised from 3 to 4."
+      "rationale": "Threat model now maps each PRD AI risk to a concrete control in the deployed design, and the prototype enforces and tests the agent/forbidden-field boundary and audit tamper detection in running code, not just a stated model."
     },
     "A4": {
       "score": 3,
       "evidence": [
         "prototype/properwarm/domain.py:1-125",
-        "prototype/tests/test_server.py:1-63",
-        "prototype/README.md:1-44"
+        "prototype/properwarm/server.py:1-73",
+        "prototype/tests/test_domain.py:1-99",
+        "prototype/tests/test_server.py:1-63"
       ],
-      "rationale": "A working end-to-end slice exists: domain state machine, HTTP API reading platform identity, Dockerfile, passing unit/API tests covering gating, idempotency, audit-chain tamper detection. README discloses in-memory state and no live deployment yet."
+      "rationale": "A solution-code artifact now exists with working domain rules, an HTTP API, and passing-looking unit/API tests covering transitions, proposals and audit. It is in-memory only, not integrated with SQL/Blob/Foundry and not deployed, so key paths remain incomplete."
     },
     "A5": {
-      "score": 4,
-      "evidence": [
-        "infra/modules/monitoring.bicep:1-111",
-        "infra/README.md:45-54"
-      ],
-      "rationale": "Diagnostic settings, Log Analytics/App Insights (private-only AMPLS), SQL auditing, Defender alerts and a monthly budget with 80/100 percent thresholds are now implemented as code and partly deployed. Cost-per-unit-of-value is still not measured."
-    },
-    "A6": {
       "score": 2,
       "evidence": [
-        "infra/modules/foundry.bicep:1-60",
-        "prototype/scripts/evaluate_agent.py:1-20"
+        "docs/adrs/0001-azure-architecture.md:142-146"
       ],
-      "rationale": "Foundry infra deploys two named model tiers for the smallest-model rule, but evaluate_agent.py is explicitly an offline contract check, not a model-quality evaluation; PRD still records no model selected and no evaluation run."
+      "rationale": "Targets and cost drivers are still explicitly labelled proposed/unmeasured; monitoring infra (alerts, action group) exists but no instrumentation data or cost-per-unit evidence has been produced."
+    },
+    "A6": {
+      "score": 3,
+      "evidence": [
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:496-514",
+        "prototype/scripts/evaluate_agent.py:1-51"
+      ],
+      "rationale": "An offline contract-evaluation script now exists and runs, but it explicitly does not call a model and is not a measure of model quality; model selection and the live evaluation harness remain undone as stated in the PRD."
     },
     "A7": {
       "score": 4,
       "evidence": [
-        "prototype/properwarm/domain.py:60-100",
-        "prototype/tests/test_domain.py:1-60"
+        "prototype/properwarm/domain.py:67-99",
+        "prototype/tests/test_domain.py:16-21",
+        "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "The previously design-only bounded-agent pattern (typed proposals, forbidden write fields, human-only transitions, idempotent replay, gated approvals) is now demonstrated in running, tested code, including rejected agent/service-role transitions."
+      "rationale": "Bounded-agent orchestration is now demonstrated in running, tested code: service roles are code-enforced to never transition state, proposals are schema- and citation-gated, and acceptance never auto-advances the case, giving real guardrailed autonomy rather than only a documented pattern."
     },
     "B1": {
       "score": 0,
@@ -108,9 +110,10 @@
       "score": 3,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:29",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1"
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
+        "infra/README.md:1-54"
       ],
-      "rationale": "BRD and PRD remain structured, navigable and complete with traceability, now reinforced by a new ADR and infra README, but no capstone deck exists; cap_without caps this score at 3 regardless of added evidence."
+      "rationale": "BRD, PRD and new infra/README.md remain structured and navigable, but no capstone deck exists; cap_without caps this score at 3 regardless of added documentation quality."
     },
     "B7": {
       "score": 0,
@@ -123,7 +126,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:528",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269"
       ],
-      "rationale": "Business Objectives table names real stakeholders, quantifies value at stake (GBP 40m grant opportunity, 15,600 homes below EPC C, cycle-time targets) and flags unvalidated figures honestly; unaffected by this PR's infra/code/ADR changes."
+      "rationale": "Business Objectives table still names real stakeholders and quantifies value at stake honestly; this run's changes (ADR, infra, prototype) are technical and do not add or weaken business-framing evidence."
     },
     "C2": {
       "score": 0,
