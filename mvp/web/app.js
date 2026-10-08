@@ -349,8 +349,8 @@ function mapPanel() {
     open.onclick = () => { Object.assign(listState, { flag: ovState.flag === "fundingprog" ? "funding" : ovState.flag, area: ovState.area }); };
     if (!map) {
       map = L.map(el, { scrollWheelZoom: true }).setView([54.9, -1.6], 9);
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19,
-        attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, referrerPolicy: "strict-origin-when-cross-origin",
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
       layer = L.layerGroup().addTo(map);
     }
     layer.clearLayers();

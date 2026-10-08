@@ -18,7 +18,7 @@ WEB = Path(__file__).resolve().parents[1] / "web"
 TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
          ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png"}
 SECURITY = {"Content-Security-Policy": "default-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; frame-ancestors 'none'",
-            "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer", "Cache-Control": "no-store", "Strict-Transport-Security": "max-age=31536000"}
+            "X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin", "Cache-Control": "no-store", "Strict-Transport-Security": "max-age=31536000"}
 
 
 def pw_hash(password, salt):

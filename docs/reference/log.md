@@ -1249,3 +1249,12 @@ metadata when the knowledge base was created.
   case data changes. Overview now has a zoomable OpenStreetMap (bundled
   Leaflet, BSD-2) with resident-name tooltips, and the KPI tiles filter the
   map. Tiles are the only external request and are allowed in the CSP.
+
+## 2026-10-08 MVP map tile policy fix
+
+* OpenStreetMap blocked the demo's tile requests: the app sent
+  `Referrer-Policy: no-referrer`, but the tile usage policy requires a
+  Referer (https://osm.wiki/Blocked). The header is now
+  `strict-origin-when-cross-origin` (only the origin leaves the site), the
+  Leaflet layer sets `referrerPolicy`, and attribution links to the OSM
+  copyright page. Production should use a licensed tile provider.
