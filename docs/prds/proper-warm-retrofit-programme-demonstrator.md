@@ -6,7 +6,7 @@ ms.date: "2026-10-08"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "draft"
-version: "0.8.0"
+version: "0.9.0"
 owners: ["AMA Research Team (draft custodian); product owner to be named"]
 reviewers: ["Product sponsor, Asset, Digital, Finance, Retrofit, Safety, Procurement, Resident Engagement (to be confirmed)"]
 created_date: "2026-10-03"
@@ -299,7 +299,19 @@ These are proposed requirements from the 2026-10-08 consultation, not approved s
 | TR-006 | A documented statement says what the audit log is for and who may read it, agreed with staff. | Later | New; needs HR and staff input. |
 | TR-007 | An offline list of open hazard and vulnerable cases supports an outage. | Later | NFR-004, hazard clock rules. |
 
-New open questions: which retention, residency and data-handling rules apply to staff data (the organisation's own rules are not in the repository); whether current spreadsheets hold vulnerability data and who can access them; whether staff and residents have been consulted. New risk: over-claiming compliance. Wording rule: say "designed to support", never "compliant" or "certified", without named approval.
+Retention and data-handling baseline (proposed, 2026-10-08): the [addendum baseline](../case_study_48_addendum.md) sets the rules the demonstrator must follow. Each requirement below is designed to support UK GDPR and the other local sources and needs DPO, Legal and record-owner approval before production use.
+
+| ID | Requirement | Release | Trace |
+| --- | --- | --- | --- |
+| DH-001 | Every data class has a recorded purpose, lawful basis, owner and retention trigger before collection; special category data names its Article 9 and Schedule 1 condition. | Later | CON-003, RULE-022, OD-14. |
+| DH-002 | The demonstrator holds constructed, non-identifying data only until a DPIA, retention schedule and processor terms are approved. | MVP | NFR-005. |
+| DH-003 | A scheduled retention job lists records past their trigger, requires owner approval and logs deletion without keeping deleted content; a legal hold blocks deletion. | Later | Article 5(1)(e). |
+| DH-004 | Access, rectification, erasure and restriction requests are logged with receipt date and answered within one month; erasure exceptions for legally required records are documented. | Later | Articles 12, 15 to 18. |
+| DH-005 | Backup restores re-apply deletions, and the restore and deletion are tested before any production use. | Later | Article 32, NFR-004. |
+| DH-006 | No resident personal data reaches a model deployment until the transfer position for its processing region is approved. | MVP | Articles 44 to 46, OQ-012. |
+| DH-007 | Audit entries survive deletion of the data they describe but never contain the deleted personal content. | MVP | NFR-003, TR-002. |
+
+New open questions: the retention periods in the baseline are defaults, not approved periods; funder, PAS 2035 and limitation-period retention terms are unknown. Which retention, residency and data-handling rules apply to staff data (the organisation's own rules are not in the repository); whether current spreadsheets hold vulnerability data and who can access them; whether staff and residents have been consulted. New risk: over-claiming compliance. Wording rule: say "designed to support", never "compliant" or "certified", without named approval.
 
 ## Design Decisions and Options Gate
 
@@ -1029,6 +1041,6 @@ waive upstream evidence or count as human sign-off.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-08
+* **Last Updated:** 2026-10-08 (v0.9.0, data handling baseline)
 * **Authoring Status:** Draft
 * **Next Review:** Before PRD Validate

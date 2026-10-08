@@ -1190,3 +1190,8 @@ metadata when the knowledge base was created.
   numeric retention periods, so every period is a proposed default for the DPO
   and Legal to confirm; limitation and building-life figures are flagged as
   outside the local corpus.
+
+* Regenerated BRD (v0.15.0), PRD (v0.9.0, requirements DH-001 to DH-007) and
+  ADR 0001 from the data handling and retention baseline: updated CON-003 and
+  OD-14, added an ADR retention alignment table and the Key Vault name
+  collision fix. All retention periods remain proposals pending DPO and Legal.

@@ -60,7 +60,7 @@ param sqlLocation string = location
 param tags object = {}
 
 var prefix = '${workload}-${environmentName}'
-var unique = take(uniqueString(resourceGroup().id), 5)
+var unique = take(uniqueString(resourceGroup().id, location, 'v2'), 5)
 var compact = replace(prefix, '-', '')
 var allTags = union(tags, {
   workload: 'proper-warm-demonstrator'
