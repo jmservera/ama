@@ -6,6 +6,8 @@ param peSubnetId string
 param zoneId string
 param secretsUserPrincipalIds array
 param enableLock bool
+@description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
+param allowPublicNetworkAccess bool = false
 
 resource vault 'Microsoft.KeyVault/vaults@2024-11-01' = {
   name: name
@@ -18,9 +20,9 @@ resource vault 'Microsoft.KeyVault/vaults@2024-11-01' = {
     enableSoftDelete: true
     softDeleteRetentionInDays: 90
     enablePurgeProtection: true
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: allowPublicNetworkAccess ? 'Enabled' : 'Disabled'
     networkAcls: {
-      defaultAction: 'Deny'
+      defaultAction: allowPublicNetworkAccess ? 'Allow' : 'Deny'
       bypass: 'None'
     }
   }

@@ -8,6 +8,8 @@ param alertEmail string
 param teamsWebhookUrl string = ''
 param peSubnetId string
 param zoneIds object
+@description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
+param allowPublicNetworkAccess bool = false
 
 resource workspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: 'log-${prefix}'
@@ -20,8 +22,8 @@ resource workspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
       disableLocalAuth: true
       enableLogAccessUsingOnlyResourcePermissions: true
     }
-    publicNetworkAccessForIngestion: 'Disabled'
-    publicNetworkAccessForQuery: 'Disabled'
+    publicNetworkAccessForIngestion: allowPublicNetworkAccess ? 'Enabled' : 'Disabled'
+    publicNetworkAccessForQuery: allowPublicNetworkAccess ? 'Enabled' : 'Disabled'
   }
 }
 
@@ -34,8 +36,8 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
     Application_Type: 'web'
     WorkspaceResourceId: workspace.id
     DisableLocalAuth: true
-    publicNetworkAccessForIngestion: 'Disabled'
-    publicNetworkAccessForQuery: 'Disabled'
+    publicNetworkAccessForIngestion: allowPublicNetworkAccess ? 'Enabled' : 'Disabled'
+    publicNetworkAccessForQuery: allowPublicNetworkAccess ? 'Enabled' : 'Disabled'
   }
 }
 

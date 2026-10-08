@@ -27,6 +27,8 @@ param importImage string
 
 var queueEndpoint = 'https://${storageAccountName}.queue.${environment().suffixes.storage}'
 var blobEndpoint = 'https://${storageAccountName}.blob.${environment().suffixes.storage}'
+@description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
+param allowPublicNetworkAccess bool = false
 
 resource environmentResource 'Microsoft.App/managedEnvironments@2025-07-01' = {
   name: 'cae-${prefix}'
@@ -34,9 +36,9 @@ resource environmentResource 'Microsoft.App/managedEnvironments@2025-07-01' = {
   tags: tags
   properties: {
     zoneRedundant: zoneRedundant
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: allowPublicNetworkAccess ? 'Enabled' : 'Disabled'
     vnetConfiguration: {
-      internal: true
+      internal: !allowPublicNetworkAccess
       infrastructureSubnetId: infrastructureSubnetId
     }
     workloadProfiles: [
@@ -57,7 +59,7 @@ resource diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' 
   }
 }
 
-module dns 'envDns.bicep' = {
+module dns 'envDns.bicep' = if (!allowPublicNetworkAccess) {
   name: 'dns-${prefix}'
   params: {
     prefix: prefix

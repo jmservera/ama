@@ -1167,3 +1167,7 @@ metadata when the knowledge base was created.
   provisional weighted options appraisal and observed `warm-test` deployment
   timings to ADR 0001. Weights and scores are architect proposals pending
   sponsor approval; the prototype image is not deployed.
+
+* Added the development-only `allowPublicNetworkAccess` Bicep parameter
+  (default false) to `infra/`, documented in `infra/README.md`. It opens public
+  endpoints alongside the private endpoints for a throwaway dev stack only.

@@ -13,6 +13,8 @@ param enableLock bool
 param zoneRedundant bool = false
 @description('Serverless vCores keep a non-production demonstrator cheap; raise for production.')
 param maxVCores int = 2
+@description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
+param allowPublicNetworkAccess bool = false
 
 resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {
   name: name
@@ -20,7 +22,7 @@ resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {
   tags: tags
   properties: {
     minimalTlsVersion: '1.2'
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: allowPublicNetworkAccess ? 'Enabled' : 'Disabled'
     restrictOutboundNetworkAccess: 'Disabled'
     administrators: {
       administratorType: 'ActiveDirectory'
@@ -132,3 +134,12 @@ module endpoint 'privateEndpoint.bicep' = {
 output id string = server.id
 output fqdn string = server.properties.fullyQualifiedDomainName
 output databaseName string = database.name
+
+resource devFirewall 'Microsoft.Sql/servers/firewallRules@2024-05-01-preview' = if (allowPublicNetworkAccess) {
+  parent: server
+  name: 'dev-external-access'
+  properties: {
+    startIpAddress: '0.0.0.0'
+    endIpAddress: '255.255.255.255'
+  }
+}

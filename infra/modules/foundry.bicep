@@ -9,6 +9,8 @@ param zoneIds object
 param userPrincipalIds array
 @description('Model deployments. Two tiers support the PRD rule to select the smallest model that meets task thresholds.')
 param deployments array
+@description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
+param allowPublicNetworkAccess bool = false
 
 resource account 'Microsoft.CognitiveServices/accounts@2025-06-01' = {
   name: name
@@ -21,9 +23,9 @@ resource account 'Microsoft.CognitiveServices/accounts@2025-06-01' = {
     customSubDomainName: name
     allowProjectManagement: true
     disableLocalAuth: true
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: allowPublicNetworkAccess ? 'Enabled' : 'Disabled'
     networkAcls: {
-      defaultAction: 'Deny'
+      defaultAction: allowPublicNetworkAccess ? 'Allow' : 'Deny'
       bypass: 'None'
     }
   }

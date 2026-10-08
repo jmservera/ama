@@ -7,6 +7,8 @@ param zoneId string
 @description('Principals that pull images (workload identities).')
 param pullPrincipalIds array
 param zoneRedundant bool = false
+@description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
+param allowPublicNetworkAccess bool = false
 
 resource registry 'Microsoft.ContainerRegistry/registries@2025-04-01' = {
   name: name
@@ -16,7 +18,7 @@ resource registry 'Microsoft.ContainerRegistry/registries@2025-04-01' = {
   properties: {
     adminUserEnabled: false
     anonymousPullEnabled: false
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: allowPublicNetworkAccess ? 'Enabled' : 'Disabled'
     networkRuleBypassOptions: 'None'
     zoneRedundancy: zoneRedundant ? 'Enabled' : 'Disabled'
     dataEndpointEnabled: true

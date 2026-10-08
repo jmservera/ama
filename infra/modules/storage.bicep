@@ -10,6 +10,8 @@ param auditImmutabilityDays int = 365
 @description('Array of { principalId, roleDefinitionId, scope } where scope is blob or queue.')
 param roleAssignments array
 param zoneRedundant bool = false
+@description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
+param allowPublicNetworkAccess bool = false
 
 resource account 'Microsoft.Storage/storageAccounts@2024-01-01' = {
   name: name
@@ -23,9 +25,9 @@ resource account 'Microsoft.Storage/storageAccounts@2024-01-01' = {
     defaultToOAuthAuthentication: true
     minimumTlsVersion: 'TLS1_2'
     supportsHttpsTrafficOnly: true
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: allowPublicNetworkAccess ? 'Enabled' : 'Disabled'
     networkAcls: {
-      defaultAction: 'Deny'
+      defaultAction: allowPublicNetworkAccess ? 'Allow' : 'Deny'
       bypass: 'None'
     }
     encryption: {
