@@ -157,3 +157,47 @@ class PasswordProviderTests(Base):
         short = auth.PasswordProvider(self.store, "pw", key="k1", ttl=-1)
         self.assertIsNone(b.authenticate({"Cookie": "pw_session=" + short.login("sam@example.test", "pw")}))
         self.assertIsNone(b.authenticate({}))
+
+
+class TileConfigTests(Base):
+    def test_default_dev_uses_osm_and_csp_allows_only_it(self):
+        from properwarm_mvp.server import tile_config
+        t = tile_config({})
+        self.assertIn("tile.openstreetmap.org", t["url"])
+
+    def test_production_without_url_has_no_tiles(self):
+        from properwarm_mvp.server import tile_config
+        t = tile_config({"PW_ENV": "production"})
+        self.assertEqual((t["url"], t["host"]), (None, None))
+
+    def test_custom_provider_and_validation(self):
+        from properwarm_mvp.server import tile_config
+        t = tile_config({"PW_TILE_URL": "https://{s}.tiles.example.org/{z}/{x}/{y}.png", "PW_TILE_ATTRIBUTION": "Example"})
+        self.assertEqual(t["host"], "https://a.tiles.example.org")
+        with self.assertRaises(SystemExit):
+            tile_config({"PW_TILE_URL": "http://insecure.example.org/{z}/{x}/{y}.png"})
+
+    def test_csp_header_and_me_payload_follow_config(self):
+        import properwarm_mvp.server as srv
+        old = os.environ.get("PW_TILE_URL"), os.environ.get("PW_ENV")
+        os.environ["PW_TILE_URL"] = "https://tiles.example.org/{z}/{x}/{y}.png"
+        try:
+            app = App(self.store, "pw")
+        finally:
+            for k, v in zip(("PW_TILE_URL", "PW_ENV"), old):
+                os.environ.pop(k, None) if v is None else os.environ.__setitem__(k, v)
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        try:
+            base = f"http://127.0.0.1:{httpd.server_address[1]}"
+            with urllib.request.urlopen(base + "/") as r:
+                csp = r.headers["Content-Security-Policy"]
+            self.assertIn("img-src 'self' data: https://tiles.example.org;", csp)
+            self.assertNotIn("openstreetmap", csp)
+            tok = app.provider.login("sam@example.test", "pw")
+            req = urllib.request.Request(base + "/api/me", headers={"Cookie": f"pw_session={tok}"})
+            with urllib.request.urlopen(req) as r:
+                self.assertEqual(json.loads(r.read())["map"]["tiles"], "https://tiles.example.org/{z}/{x}/{y}.png")
+        finally:
+            httpd.shutdown()
+            httpd.server_close()

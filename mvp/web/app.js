@@ -389,9 +389,22 @@ const ovState = { flag: "", area: "" };
 
 function mapPanel() {
   const el = h("div", { id: "leaflet", class: "leafmap", role: "region", "aria-label": "Map of open cases. Zoom with the buttons, mouse wheel or pinch." });
-  const info = h("p", { class: "muted", role: "status" });
+  const info = h("p", { class: "muted", role: "status", "aria-live": "polite" });
   const open = h("a", { href: "#/all" }, "Show these as a list");
   let map = null, layer = null;
+  const listHead = h("summary", { id: "maplist-h" }, "Show the map areas as a list (keyboard and screen reader friendly)");
+  const listUl = h("ul", { "aria-labelledby": "maplist-h", class: "plainlist" });
+  const listBox = h("details", { class: "maplist" }, listHead, listUl);
+  const renderList = (d) => {
+    listUl.replaceChildren(...d.items.map((p) => {
+      if (d.mode === "clusters") {
+        const label = `${p.count} homes${p.hazards ? `, ${p.hazards} with a safety issue open` : ""}`;
+        return h("li", {}, h("button", { type: "button", class: "linkbtn", "aria-label": `${label}. Zoom in to this area`,
+          onclick: () => { map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18)); listHead.focus(); } }, label));
+      }
+      return h("li", {}, h("a", { href: `#/case/${encodeURIComponent(p.id)}` }, `${p.name}${p.kind === "hazard" ? ", safety issue open" : p.kind === "long" ? ", waiting 60+ days" : ""}`));
+    }));
+  };
   const KIND = { normal: "#0b5d6b", long: "#d98a00", hazard: "#b42318" };
   let fitting = false, seq = 0;
   const draw = async (fit) => {
@@ -399,8 +412,9 @@ function mapPanel() {
     open.onclick = () => { Object.assign(listState, { flag: ovState.flag === "fundingprog" ? "funding" : ovState.flag, area: ovState.area }); };
     if (!map) {
       map = L.map(el, { scrollWheelZoom: true }).setView([54.9, -1.6], 9);
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, referrerPolicy: "strict-origin-when-cross-origin",
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
+      if (me.map && me.map.tiles) {
+        L.tileLayer(me.map.tiles, { maxZoom: 19, referrerPolicy: "strict-origin-when-cross-origin", attribution: me.map.attribution || "" }).addTo(map);
+      }
       layer = L.layerGroup().addTo(map);
       map.on("moveend", () => { if (!fitting) draw(false); });
     }
@@ -411,6 +425,7 @@ function mapPanel() {
     info.textContent = d.mode === "clusters"
       ? `${d.total} homes in this view, grouped into ${d.shown} areas. Zoom in to see each home.`
       : `${d.total} ${d.total === 1 ? "home" : "homes"} shown`;
+    renderList(d);
     layer.clearLayers();
     d.items.forEach((p) => {
       if (d.mode === "clusters") {
@@ -434,7 +449,7 @@ function mapPanel() {
   };
   const box = h("section", { class: "card" }, h("h2", {}, "Map of open cases"),
     h("p", {}, h("span", { class: "key normal" }, "Normal"), h("span", { class: "key long" }, "Waiting 60+ days"), h("span", { class: "key hazard" }, "Safety issue open")),
-    el, h("div", { class: "row between" }, info, open));
+    el, listBox, h("div", { class: "row between" }, info, open));
   return { box, draw, size: () => map && map.invalidateSize() };
 }
 

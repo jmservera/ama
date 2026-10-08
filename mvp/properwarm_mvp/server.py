@@ -18,14 +18,31 @@ from .store import MANAGER_ROLES, ConflictError, GateError
 WEB = Path(__file__).resolve().parents[1] / "web"
 TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
          ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png"}
-SECURITY = {"Content-Security-Policy": "default-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; frame-ancestors 'none'",
-            "X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin", "Cache-Control": "no-store", "Strict-Transport-Security": "max-age=31536000"}
+OSM_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+SECURITY = {"X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin", "Cache-Control": "no-store", "Strict-Transport-Security": "max-age=31536000"}
+
+
+def tile_config(env=None):
+    """Map tile provider from PW_TILE_URL. Production never falls back to the public OSM servers."""
+    env = os.environ if env is None else env
+    url = (env.get("PW_TILE_URL") or "").strip()
+    if not url:
+        if env.get("PW_ENV") == "production":
+            return dict(url=None, attribution="", host=None)
+        return dict(url=OSM_URL, attribution=OSM_ATTRIBUTION, host="https://tile.openstreetmap.org")
+    parts = urlparse(url.replace("{s}", "a").replace("{z}", "0").replace("{x}", "0").replace("{y}", "0"))
+    if parts.scheme != "https" or not parts.netloc:
+        sys.exit("PW_TILE_URL must be an https URL such as https://tiles.example.org/{z}/{x}/{y}.png")
+    return dict(url=url, attribution=env.get("PW_TILE_ATTRIBUTION", ""), host=f"https://{parts.netloc}")
 
 
 class App:
     def __init__(self, store, password=None, timecap=None, provider=None):
         self.store = store
         self.time = timecap or TimeCapture()
+        self.tiles = tile_config()
+        self.csp = "default-src 'self'; img-src 'self' data:" + (f" {self.tiles['host']}" if self.tiles["host"] else "") + "; frame-ancestors 'none'"
         self.provider = provider or auth.make_provider(store, password or secrets.token_urlsafe(9))
 
 
@@ -84,7 +101,7 @@ def make_handler(app):
             self.send_response(code)
             self.send_header("Content-Type", ctype)
             self.send_header("Content-Length", str(len(raw)))
-            for k, v in {**SECURITY, **(extra or {})}.items():
+            for k, v in {**SECURITY, "Content-Security-Policy": app.csp, **(extra or {})}.items():
                 self.send_header(k, v)
             self.end_headers()
             self.wfile.write(raw)
@@ -125,7 +142,9 @@ def make_handler(app):
             if not projection.allowed(u, get_kind(url.path)):
                 return self._json(403, {"error": "Your role does not include this."})
             if url.path == "/api/me":
-                return self._json(200, projection.me_payload(u, s.counts(u), list(s.staff.values())))
+                out = projection.me_payload(u, s.counts(u), list(s.staff.values()))
+                out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
+                return self._json(200, out)
             if url.path in ("/api/cases", "/api/cases.csv"):
                 view, text, sort = q.get("view", ["mine"])[0], q.get("q", [""])[0], q.get("sort", ["urgent"])[0]
                 if url.path.endswith(".csv"):

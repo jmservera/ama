@@ -80,3 +80,9 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .focus{grid-template-columns:8rem 1fr;font-size:.9rem;margin-top:.4rem}.focus dt{color:#555}
 .cluster{width:34px;height:34px;border-radius:50%;background:#0b5d6b;color:#fff;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.8rem;box-shadow:0 0 0 2px rgba(11,93,107,.35)}
 .cluster.hazard{background:#b42318;box-shadow:0 0 0 2px rgba(180,35,24,.35)}
+.maplist{margin:.6rem 0}
+.maplist summary{cursor:pointer;font-weight:600}
+.plainlist{list-style:none;padding:0;margin:.4rem 0;max-height:16rem;overflow:auto}
+.plainlist li{margin:.2rem 0}
+.linkbtn{background:none;border:0;padding:.25rem 0;color:var(--link,#0b5d6b);text-decoration:underline;cursor:pointer;font:inherit;text-align:left}
+.linkbtn:focus-visible,.maplist summary:focus-visible{outline:3px solid #1a73e8;outline-offset:2px}
