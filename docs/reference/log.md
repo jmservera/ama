@@ -1326,3 +1326,13 @@ metadata when the knowledge base was created.
   Dockerfile, README, generator scripts) and no longer reads `prototype/`.
   Private data and vendored libraries are excluded. Storage map updated in
   `docs/capstone/README.md`.
+
+## 2026-10-08 MVP build slice 1: deterministic ranking and scale
+
+* `mvp/` now ranks cases with a versioned policy (`ranking.py`, v1.0.0, owner
+  to be named) with reason codes and a fixed tie-break, per PRD PR-006. AI
+  prioritisation is a separate, audited recommendation that can be accepted,
+  edited or rejected and never changes the ranking (PR-007). Case lists page
+  server-side and the map clusters, tested on 60,000 constructed cases (PR-005).
+  Deviations from ADR 0002: offset paging, in-memory ranking cache, policy as
+  code. Not deployed; front end checked by syntax only.

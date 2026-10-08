@@ -46,6 +46,27 @@ def filt(q):
     return {k: q[k][0] for k in ("stage", "area", "wave", "owner", "contractor", "flag") if q.get(k) and q[k][0]}
 
 
+def num(q, key, default, lo, hi):
+    if not q.get(key) or q[key][0] == "":
+        return default
+    try:
+        v = int(q[key][0])
+    except ValueError:
+        raise ValueError(f"{key} must be a whole number.")
+    return max(lo, min(hi, v))
+
+
+def bbox(q):
+    raw = q.get("bbox", [""])[0]
+    if not raw:
+        return None
+    try:
+        s, w, n, e = (float(x) for x in raw.split(","))
+    except ValueError:
+        raise ValueError("bbox must be south,west,north,east.")
+    return (min(s, n), min(w, e), max(s, n), max(w, e))
+
+
 def make_handler(app):
     class H(BaseHTTPRequestHandler):
         server_version = "ProperWarm"
@@ -98,17 +119,30 @@ def make_handler(app):
             if url.path == "/api/me":
                 return self._json(200, dict(user=u, counts=s.counts(u), staff=list(s.staff.values())))
             if url.path in ("/api/cases", "/api/cases.csv"):
-                rows = s.list_cases(u, q.get("view", ["mine"])[0], q.get("q", [""])[0], filt(q), q.get("sort", ["urgent"])[0])
+                view, text, sort = q.get("view", ["mine"])[0], q.get("q", [""])[0], q.get("sort", ["urgent"])[0]
                 if url.path.endswith(".csv"):
+                    rows = s.list_cases(u, view, text, filt(q), sort)
                     return self._send(200, s.export_csv(rows), "text/csv; charset=utf-8",
                                       {"Content-Disposition": 'attachment; filename="cases.csv"'})
-                return self._json(200, rows)
+                try:
+                    limit, offset = num(q, "limit", 50, 1, 100), num(q, "offset", 0, 0, 10**9)
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+                return self._json(200, s.page_cases(u, view, text, filt(q), sort, limit, offset))
+            if url.path == "/api/ranking/policy":
+                return self._json(200, s.ranking_policy())
+            if url.path == "/api/ai/priority":
+                return self._json(200, {"recommendation": s.latest_priority(u)})
             if url.path == "/api/facets":
                 return self._json(200, s.facets())
             if url.path == "/api/stats":
                 return self._json(200, s.stats())
             if url.path == "/api/map":
-                return self._json(200, s.map_points(filt(q)))
+                try:
+                    z = num(q, "zoom", None, 0, 20)
+                    return self._json(200, s.map_view(filt(q), bbox(q), z))
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
             if url.path == "/api/visits":
                 return self._json(200, s.visits(u, q.get("view", ["mine"])[0]))
             if url.path == "/api/funding":
@@ -153,6 +187,10 @@ def make_handler(app):
             try:
                 if url.path == "/api/import-check":
                     return self._json(200, s.import_check(body.get("text", "")))
+                if url.path == "/api/ai/priority":
+                    return self._json(200, s.ai_priority(u, body.get("n", 5)))
+                if len(parts) == 5 and parts[:3] == ["api", "ai", "priority"]:
+                    return self._json(200, s.resolve_priority(u, parts[3], parts[4], body.get("reason", ""), body.get("items")))
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
                     cid, act = parts[2], parts[3]
                     if act == "call":

@@ -9,7 +9,7 @@ import threading
 import uuid
 from datetime import datetime
 
-from . import insights
+from . import insights, ranking
 from .ai import Ai
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
@@ -45,6 +45,8 @@ class Store:
         self.ai = Ai()
         self.version = 0
         self._briefings = {}
+        self._ranks = None
+        self.data.setdefault("recommendations", [])
 
     def _tail_hash(self):
         h = "0" * 64
@@ -119,22 +121,56 @@ class Store:
                     support=c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None",
                     closed=c["closed"])
 
-    def list_cases(self, user, view="mine", q="", filters=None, sort="urgent"):
-        f = filters or {}
+    def _ranking(self):
+        """Ranking of all open cases for the current policy, rebuilt only when case data changes."""
+        if self._ranks is None or self._ranks[0] != self.version:
+            entries = ranking.rank([c for c in self.cases.values() if not c["closed"]], ranking.CURRENT)
+            self._ranks = (self.version, {e["id"]: e for e in entries})
+        return self._ranks[1]
+
+    def ranking_policy(self):
+        return ranking.describe(ranking.CURRENT)
+
+    def _filtered(self, user, view, q, f):
+        rows = [c for c in self.cases.values() if not c["closed"] and insights.matches(c, f)]
+        if view == "mine":
+            rows = [c for c in rows if c["owner_code"] == user["code"]]
+        if q:
+            ql = q.lower()
+            rows = [c for c in rows if ql in " ".join([c["resident"]["name"], c["home"]["address"],
+                                                       c["home"]["postcode"], c["id"]]).lower()]
+        return rows
+
+    def page_cases(self, user, view="mine", q="", filters=None, sort="urgent", limit=None, offset=0):
+        """One page of the filtered, sorted list plus the total. limit None returns everything."""
         with self.lock:
-            rows = [c for c in self.cases.values() if not c["closed"] and insights.matches(c, f)]
-            if view == "mine":
-                rows = [c for c in rows if c["owner_code"] == user["code"]]
-            if q:
-                ql = q.lower()
-                rows = [c for c in rows if ql in " ".join([c["resident"]["name"], c["home"]["address"],
-                                                           c["home"]["postcode"], c["id"]]).lower()]
-            out = [self.summary(c) for c in rows]
-            if view == "mine":
-                for r, c in zip(out, rows):
+            ranks = self._ranking()
+            rows = self._filtered(user, view, q, filters or {})
+            total = len(rows)
+            if sort in ("urgent", "", None) or sort not in insights.SORTS:
+                rows.sort(key=lambda c: ranks[c["id"]]["rank"])
+                page = rows if limit is None else rows[offset:offset + limit]
+                out = [self.summary(c) for c in page]
+            else:
+                out = [self.summary(c) for c in rows]
+                for r in out:
+                    r["rank"] = ranks[r["id"]]["rank"]
+                out.sort(key=lambda r: (insights.sort_key(sort)(r), r["rank"]))
+                page = None
+                if limit is not None:
+                    out = out[offset:offset + limit]
+                by_id = self.cases
+                page = [by_id[r["id"]] for r in out]
+            for r, c in zip(out, page):
+                e = ranks[c["id"]]
+                r["rank"], r["reasons"] = e["rank"], e["reasons"]
+                if view == "mine":
                     r["focus"] = self.focus(c, user["role"])
-        out.sort(key=insights.sort_key(sort))
-        return out
+            return dict(items=out, total=total, limit=limit, offset=offset, sort=sort,
+                        policy_version=ranking.CURRENT["version"], ranked_total=len(ranks))
+
+    def list_cases(self, user, view="mine", q="", filters=None, sort="urgent"):
+        return self.page_cases(user, view, q, filters, sort)["items"]
 
     def focus(self, c, role):
         """Role-specific facts for the card, as label/value pairs."""
@@ -255,6 +291,10 @@ class Store:
         with self.lock:
             return insights.map_points(list(self.cases.values()), f)
 
+    def map_view(self, f, bbox=None, zoom=None):
+        with self.lock:
+            return insights.map_view(self.cases.values(), f, bbox, zoom)
+
     def visits(self, user, view="mine"):
         with self.lock:
             own = None if view == "all" else user["code"]
@@ -366,7 +406,8 @@ class Store:
                 return hit[1]
             ver = self.version
             mine = [c for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]]
-            mine.sort(key=lambda c: (not any(not h["released"] for h in c["hazards"]), -c["days_in_stage"]))
+            ranks = self._ranking()
+            mine.sort(key=lambda c: ranks[c["id"]]["rank"])
             top = mine[:8]
             facts = "\n".join(f"{c['id']} {c['resident']['name']}: {c['stage']}, {c['days_in_stage']} days. {self.status_line(c)}" for c in top)
             tmpl = "Start with: " + "; ".join(f"{c['resident']['name']} ({c['stage'].lower()}, {c['days_in_stage']} days)" for c in top[:3]) if top else "No open cases."
@@ -378,6 +419,130 @@ class Store:
             if ver == self.version:
                 self._briefings[user["code"]] = (ver, out)
         return out
+
+    # ---- AI priority recommendation: advice beside the deterministic order, never part of it
+    REC_LABEL = "AI-drafted, human-approved"
+    REC_ACTIONS = {"accept": "Accepted", "edit": "Edited", "reject": "Rejected"}
+
+    def _rec_view(self, rec):
+        ranks = self._ranking()
+        def row(cid, reason=None):
+            c = self.cases[cid]
+            r = dict(case_id=cid, resident=c["resident"]["name"], address=c["home"]["address"], stage=c["stage"],
+                     rank=ranks[cid]["rank"] if cid in ranks else None)
+            if reason is not None:
+                r["reason"] = reason
+            return r
+        return dict(rec, label=self.REC_LABEL,
+                    items=[row(i["case_id"], i["reason"]) for i in rec["items"]],
+                    final_items=[row(i["case_id"], i["reason"]) for i in rec["final_items"]] if rec.get("final_items") is not None else None,
+                    deterministic=[row(cid) for cid in rec["deterministic"]])
+
+    def ai_priority(self, user, n=5):
+        n = max(1, min(10, int(n)))
+        with self.lock:
+            ranks = self._ranking()
+            mine = sorted((c for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]),
+                          key=lambda c: ranks[c["id"]]["rank"])
+            if not mine:
+                raise ValueError("You have no open cases to prioritise.")
+            det = [c["id"] for c in mine[:n]]
+            cand = mine[:40]
+            ids = {c["id"] for c in cand}
+            facts = "\n".join(f"{c['id']}: {self._facts(c)}" for c in cand)
+            tmpl_items = self._heuristic_priority(cand, n)
+            policy_version = ranking.CURRENT["version"]
+        tmpl = json.dumps(tmpl_items)
+        sysmsg = ("You advise a UK housing association retrofit officer which of their cases to work on first today. You only "
+                  "recommend; a person decides. Use only the facts given and only the case ids listed. Never invent facts. "
+                  f"Reply with JSON only: a list of exactly {n} objects with keys case_id and reason (one short plain sentence "
+                  "citing a fact such as an open safety issue, extra support need, days waiting or a missing resident decision).")
+
+        def valid(text):
+            try:
+                got = json.loads(text)
+            except ValueError:
+                return False
+            return (isinstance(got, list) and 1 <= len(got) <= n and len({g.get("case_id") for g in got if isinstance(g, dict)}) == len(got)
+                    and all(isinstance(g, dict) and g.get("case_id") in ids and isinstance(g.get("reason"), str) and g["reason"].strip()
+                            for g in got))
+        self.audit(user["email"], "ai_run_start", "-", f"priority_recommendation n={n}")
+        r = self.ai.run("priority", sysmsg, f"Pick the top {n}.\n\nCases:\n{facts}", tmpl, True, check=valid)
+        try:
+            items = json.loads(r["text"])
+        except ValueError:
+            items = tmpl_items
+        items = [dict(case_id=i["case_id"], reason=i["reason"].strip()[:300]) for i in items]
+        with self.lock:
+            rec = dict(id=uuid.uuid4().hex[:12], user=user["email"], created=datetime.now().isoformat(timespec="seconds"),
+                       status="Proposed", source=r["source"], model=r["model"], validated=r["validated"], n=n,
+                       items=items, deterministic=det, policy_version=policy_version, final_items=None,
+                       resolved_by=None, resolved_at=None, reason="",
+                       overlap=len({i["case_id"] for i in items} & set(det)))
+            self.data["recommendations"].append(rec)
+            self.audit(user["email"], "ai_run_end", "-", f"priority_recommendation {rec['id']} source={r['source']} model={r['model']} validated={r['validated']}")
+            self.save()
+            return self._rec_view(rec)
+
+    def _heuristic_priority(self, cand, n):
+        """Template used when no model is available: a different, simpler view from the ranking policy."""
+        def score(c):
+            s = 0
+            s += 100 if any(not h["released"] for h in c["hazards"]) else 0
+            s += 30 if c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None" else 0
+            s += 20 if c["decision"]["status"] in ("Not yet asked", "Waiting") else 0
+            return s + min(c["days_in_stage"], 120) / 4
+        out = []
+        for c in sorted(cand, key=lambda c: (-score(c), c["id"]))[:n]:
+            why = []
+            if any(not h["released"] for h in c["hazards"]):
+                why.append("an open safety issue")
+            if c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None":
+                why.append("the resident needs extra support")
+            if c["decision"]["status"] in ("Not yet asked", "Waiting"):
+                why.append("no resident decision yet")
+            why.append(f"{c['days_in_stage']} days at '{c['stage'].lower()}'")
+            out.append(dict(case_id=c["id"], reason="Because of " + ", ".join(why) + "."))
+        return out
+
+    def latest_priority(self, user):
+        with self.lock:
+            mine = [r for r in self.data["recommendations"] if r["user"] == user["email"]]
+            return self._rec_view(mine[-1]) if mine else None
+
+    def resolve_priority(self, user, rec_id, action, reason="", items=None):
+        if action not in self.REC_ACTIONS:
+            raise ValueError("Choose accept, edit or reject.")
+        reason = (reason or "").strip()[:300]
+        if action in ("edit", "reject") and not reason:
+            raise ValueError("Say why.")
+        with self.lock:
+            rec = next((r for r in self.data["recommendations"] if r["id"] == rec_id), None)
+            if not rec:
+                raise KeyError(rec_id)
+            if rec["user"] != user["email"]:
+                raise PermissionError("This suggestion was made for someone else.")
+            if rec["status"] != "Proposed":
+                raise ValueError("This suggestion has already been answered.")
+            final = None
+            if action == "accept":
+                final = rec["items"]
+            elif action == "edit":
+                mine = {c["id"] for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]}
+                final = []
+                for i in items or []:
+                    cid = i.get("case_id") if isinstance(i, dict) else None
+                    if cid not in mine or any(f["case_id"] == cid for f in final):
+                        raise ValueError("Choose each of your own open cases at most once.")
+                    final.append(dict(case_id=cid, reason=str(i.get("reason", ""))[:300]))
+                if not final or len(final) > 10:
+                    raise ValueError("Keep between 1 and 10 cases.")
+            rec.update(status=self.REC_ACTIONS[action], final_items=final, reason=reason,
+                       resolved_by=user["email"], resolved_at=datetime.now().isoformat(timespec="seconds"))
+            ids = ",".join(i["case_id"] for i in final) if final else "-"
+            self.audit(user["email"], f"ai_priority_{action}", "-", f"{rec_id} {reason} cases={ids}".strip())
+            self.save()
+            return self._rec_view(rec)
 
     # ---- funding: a person approves and submits; the system never does
     FUND_FLOW = ("Not started", "To prepare", "Draft ready", "Approved", "Submitted", "Confirmed")

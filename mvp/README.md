@@ -16,6 +16,23 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   and any open safety issue must all be confirmed. Unknown never passes.
 * Filter the list by stage, local authority, wave, owner or flag, and sort by
   urgency, longest wait, last contact, name or next visit.
+* The default "Most urgent first" order is a deterministic ranking
+  (`properwarm_mvp/ranking.py`): open safety issue, then priority support or an
+  adjustment, then longest time in stage, then earlier stage, then case id as
+  the fixed tie-break. Each card shows its rank and plain reasons, the list
+  header shows the policy version, and `GET /api/ranking/policy` returns the
+  versioned rules. The policy owner is "to be named" and the rule order is an
+  unsigned draft.
+* "Suggest my top 5" on My cases asks AI for a second opinion beside the
+  rule-based order, labelled "AI-drafted, human-approved", with a cited reason
+  per case. It is stored in a separate recommendations list and is never read
+  by the ranking, owners, stages or queues. A person accepts, edits (untick
+  cases) or rejects it, with a reason for edit and reject, and the answer goes
+  in the audit log. Without a model a rules-based template is used.
+* The case list loads 50 at a time ("Show more"; the API allows up to 100 and
+  returns the total). The Overview map is requested by viewport and shows grid
+  clusters with counts when more than 500 homes are in view. List and map totals
+  agree for the same filter. The CSV download still returns the whole filtered list.
 * Filters sit in a left panel and update the list without reloading the page.
   The briefing is cached until case data changes.
 * Overview: counts that filter the map when clicked, a zoomable OpenStreetMap
@@ -74,6 +91,16 @@ history ends today and prints no real personal data.
 * Uploaded files and live changes sit on local disk. On Azure Container Apps
   that disk is lost on restart, so run one replica and treat it as a demo;
   production would use Blob Storage and Azure SQL.
+* Scale is checked only in memory. A test builds 60,000 synthetic cases and a
+  filtered page returns in tens of milliseconds on a development machine
+  (about 0.6 s for the first, cold ranking build). That is not a production
+  latency: the store is still one JSON file and one process, ranking is rebuilt
+  after any change, non-default sorts and the CSV export scan every case, and
+  paging uses an offset, not the keyset paging planned in
+  [ADR 0002](../docs/adrs/0002-pilot-readiness-architecture.md).
+* Ranking snapshots are not yet stored per run and the policy is a Python
+  constant, not a signed-off policy file. AI value against the deterministic
+  order is only captured as the overlap on each recommendation record.
 * Retention periods and legal bases remain proposals for the DPO and Legal.
 
 ## Tests
@@ -82,4 +109,5 @@ history ends today and prints no real personal data.
 cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests -v
 ```
 
-Tests use a small fixture and need no private data.
+Tests use small fixtures and a generated 60,000-case dataset, and need no
+private data. The AI priority tests use the template path (no model).

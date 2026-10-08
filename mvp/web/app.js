@@ -84,6 +84,45 @@ function aiBox() {
   return box;
 }
 
+function priorityPanel() {
+  const box = h("section", { class: "card ai", "aria-label": "AI priority suggestion" });
+  const rowsOf = (items, withReason) => h("ol", {}, items.map((i) => h("li", {},
+    h("a", { href: `#/case/${encodeURIComponent(i.case_id)}` }, `${i.resident}, ${i.address}`), ` (rank ${i.rank})`,
+    withReason && i.reason ? h("div", { class: "muted" }, i.reason) : null)));
+  const paint = (rec, msg) => {
+    const kids = [h("h2", {}, "Which cases first? A second opinion"),
+      h("p", { class: "muted" }, "The rule-based order below is the list order. The AI suggestion is advice only: it never changes the ranking, owners, stages or queues.")];
+    if (msg) kids.push(h("p", { role: "alert" }, msg));
+    if (!rec) {
+      kids.push(h("p", {}, h("button", { class: "alt", onclick: ask }, "Suggest my top 5")));
+    } else {
+      kids.push(h("div", { class: "grid" },
+        h("div", {}, h("h3", {}, `Rule-based order (policy ${rec.policy_version})`), rowsOf(rec.deterministic, false)),
+        h("div", {}, h("h3", {}, `Suggestion: ${rec.label}`), rowsOf(rec.items, true),
+          h("p", { class: "muted" }, `${rec.source === "ai" ? "Written by AI" : "Written by rules, AI not available"}. ${rec.overlap} of ${rec.items.length} match the rule-based top ${rec.n}.`))));
+      if (rec.status === "Proposed") {
+        const why = h("input", { id: "pri-why", type: "text", placeholder: "Reason (needed to edit or reject)", maxlength: 300 });
+        const keep = rec.items.map((i) => h("input", { type: "checkbox", checked: true, "aria-label": `Keep ${i.resident}` }));
+        const act = (action) => async () => {
+          const items = rec.items.filter((_, n) => keep[n].checked).map((i) => ({ case_id: i.case_id, reason: i.reason }));
+          try { paint(await api(`/api/ai/priority/${rec.id}/${action}`, { reason: why.value, items })); } catch (e) { paint(rec, e.message); }
+        };
+        kids.push(h("div", { class: "row" }, h("label", { for: "pri-why" }, "Your reason"), why),
+          h("div", { class: "row" }, h("span", { class: "muted" }, "To edit, untick cases to drop:"), rec.items.map((i, n) => h("label", {}, keep[n], ` ${i.resident}`))),
+          h("div", { class: "row" }, h("button", { onclick: act("accept") }, "Accept"), h("button", { class: "alt", onclick: act("edit") }, "Edit"),
+            h("button", { class: "alt", onclick: act("reject") }, "Reject")));
+      } else {
+        kids.push(h("p", {}, `${rec.status}${rec.reason ? `: ${rec.reason}` : ""}. Recorded in the audit log.`),
+          h("p", {}, h("button", { class: "alt", onclick: ask }, "Suggest again")));
+      }
+    }
+    box.replaceChildren(...kids);
+  };
+  const ask = async () => { box.setAttribute("aria-busy", "true"); try { paint(await api("/api/ai/priority", { n: 5 })); } catch (e) { paint(null, e.message); } box.removeAttribute("aria-busy"); };
+  api("/api/ai/priority").then((d) => paint(d.recommendation && d.recommendation.status === "Proposed" ? d.recommendation : null)).catch(() => paint(null));
+  return box;
+}
+
 let briefingBox = null;
 async function listView(view) {
   const fx = await api("/api/facets");
@@ -92,26 +131,34 @@ async function listView(view) {
   const title = h("h1", {}, view === "mine" ? "My cases today" : "All open cases");
   const csv = h("a", { class: "btn alt", download: "cases.csv" }, "Download for Excel");
   let timer = 0, seq = 0;
-  const load = async () => {
-    const my = ++seq;
-    const rows = await api(`/api/cases?view=${view}&${qs(listState)}`);
-    if (my !== seq) return;
-    csv.href = `/api/cases.csv?view=${view}&${qs(listState)}`;
-    const hz = rows.filter((r) => r.hazard).length;
+  let rows = [], total = 0, policy = "";
+  const PAGE = 50;
+  const render = () => {
     results.replaceChildren(...[
-      h("p", { class: "muted" }, `${rows.length} ${rows.length === 1 ? "case" : "cases"}${hz ? `, ${hz} with a safety issue open` : ""}`),
-      h("ul", { class: "list" }, rows.length ? rows.slice(0, 100).map((r) => h("li", {},
+      h("p", { class: "muted" }, `${total} ${total === 1 ? "case" : "cases"}${listState.sort === "urgent" ? `. Ranked by policy version ${policy}, a fixed rule order (safety first). The order is the same every time.` : ""}`),
+      h("ul", { class: "list" }, rows.length ? rows.map((r) => h("li", {},
         h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
           h("div", {}, h("span", { class: "name" }, r.resident),
             r.hazard && h("span", { class: "flag danger" }, "Safety issue open"),
             r.support && h("span", { class: "flag" }, "Needs extra support"),
             h("div", {}, `${r.address}, ${r.town} ${r.postcode}`),
             h("div", { class: "status" }, r.status),
+            h("div", { class: "muted" }, `Rank ${r.rank}: ${r.reasons.slice(0, 3).join("; ")}`),
             view === "all" && h("div", { class: "muted" }, `Owner: ${r.owner}`),
             r.focus && h("dl", { class: "focus" }, r.focus.flatMap(([k, v]) => [h("dt", {}, k), h("dd", {}, /^\d{4}-\d\d-\d\d$/.test(v) ? fmtDate(v) : v)]))),
           h("div", { class: "meta" }, h("div", {}, r.stage), h("div", {}, `${r.days} days in this stage`), h("div", {}, `Last contact: ${ago(r.last_contact)}`),
             r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "card" }, "Nothing matches. Try clearing a filter.")),
-      rows.length > 100 ? h("p", { class: "muted" }, "Showing the first 100. Use the filters to narrow the list.") : null].filter(Boolean));
+      rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null].filter(Boolean));
+  };
+  const load = async (more) => {
+    const my = ++seq;
+    const d = await api(`/api/cases?view=${view}&${qs(listState)}&limit=${PAGE}&offset=${more ? rows.length : 0}`);
+    if (my !== seq) return;
+    csv.href = `/api/cases.csv?view=${view}&${qs(listState)}`;
+    rows = more ? rows.concat(d.items) : d.items;
+    total = d.total;
+    policy = d.policy_version;
+    render();
   };
   const field = (label, key, opts) => {
     const el = h("select", { id: `f-${key}` }, h("option", { value: "" }, "Any"), opts.map(([v, t]) => h("option", { value: v }, t)));
@@ -136,6 +183,7 @@ async function listView(view) {
     h("p", {}, h("button", { class: "alt", onclick: () => { Object.assign(listState, { q: "", stage: "", area: "", flag: "", wave: "", owner: "" }); listView(view); } }, "Clear filters")));
   show(h("div", { class: "layout" }, side, h("div", { class: "main" },
     briefingBox,
+    view === "mine" && priorityPanel(),
     h("div", { class: "row between" }, title, h("div", { class: "row" },
       h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See all cases" : "See my cases"),
       h("a", { class: "btn alt", href: "#/import" }, "Check a spreadsheet"), csv)),
@@ -345,26 +393,44 @@ function mapPanel() {
   const open = h("a", { href: "#/all" }, "Show these as a list");
   let map = null, layer = null;
   const KIND = { normal: "#0b5d6b", long: "#d98a00", hazard: "#b42318" };
-  const draw = async () => {
-    const pts = await api(`/api/map?${qs(ovState)}`);
-    info.textContent = `${pts.length} homes shown`;
+  let fitting = false, seq = 0;
+  const draw = async (fit) => {
+    const my = ++seq;
     open.onclick = () => { Object.assign(listState, { flag: ovState.flag === "fundingprog" ? "funding" : ovState.flag, area: ovState.area }); };
     if (!map) {
       map = L.map(el, { scrollWheelZoom: true }).setView([54.9, -1.6], 9);
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, referrerPolicy: "strict-origin-when-cross-origin",
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
       layer = L.layerGroup().addTo(map);
+      map.on("moveend", () => { if (!fitting) draw(false); });
     }
+    const b = map.getBounds();
+    const view = fit ? "" : `&bbox=${[b.getSouth(), b.getWest(), b.getNorth(), b.getEast()].join(",")}`;
+    const d = await api(`/api/map?${qs(ovState)}&zoom=${map.getZoom()}${view}`);
+    if (my !== seq) return;
+    info.textContent = d.mode === "clusters"
+      ? `${d.total} homes in this view, grouped into ${d.shown} areas. Zoom in to see each home.`
+      : `${d.total} ${d.total === 1 ? "home" : "homes"} shown`;
     layer.clearLayers();
-    const bounds = [];
-    pts.forEach((p) => {
+    d.items.forEach((p) => {
+      if (d.mode === "clusters") {
+        const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "", html: `<div class="cluster${p.hazards ? " hazard" : ""}">${p.count}</div>`, iconSize: [34, 34] }),
+          keyboard: false, title: `${p.count} homes${p.hazards ? `, ${p.hazards} with a safety issue open` : ""}` });
+        m.on("click", () => map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18)));
+        m.addTo(layer);
+        return;
+      }
       const m = L.circleMarker([p.lat, p.lon], { radius: p.kind === "hazard" ? 8 : 6, color: "#fff", weight: 1.5, fillColor: KIND[p.kind], fillOpacity: 0.9 });
       m.bindTooltip(`${p.name}`, { direction: "top" });
       m.on("click", () => { location.hash = `#/case/${encodeURIComponent(p.id)}`; });
       m.addTo(layer);
-      bounds.push([p.lat, p.lon]);
     });
-    if (bounds.length) map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 });
+    if (fit && d.bounds) {
+      fitting = true;
+      map.fitBounds([[d.bounds[0], d.bounds[1]], [d.bounds[2], d.bounds[3]]], { padding: [30, 30], maxZoom: 15, animate: false });
+      fitting = false;
+      draw(false);
+    }
   };
   const box = h("section", { class: "card" }, h("h2", {}, "Map of open cases"),
     h("p", {}, h("span", { class: "key normal" }, "Normal"), h("span", { class: "key long" }, "Waiting 60+ days"), h("span", { class: "key hazard" }, "Safety issue open")),
@@ -379,10 +445,10 @@ async function overviewView() {
   const mp = mapPanel();
   const tiles = h("div", { class: "tiles", role: "group", "aria-label": "Choose what the map shows" });
   const paint = () => tiles.replaceChildren(...OV_TILES.map(([f, label]) => h("button", { class: `tile${f === "hazard" ? " danger" : ""}`, "aria-pressed": String(ovState.flag === f),
-    onclick: () => { ovState.flag = f; paint(); mp.draw(); } }, h("strong", {}, String(counts[f])), h("span", {}, label))),
+    onclick: () => { ovState.flag = f; paint(); mp.draw(true); } }, h("strong", {}, String(counts[f])), h("span", {}, label))),
     h("div", { class: "tile static" }, h("strong", {}, String(k.completed)), h("span", {}, "Completed")));
   paint();
-  const area = h("select", { id: "mapArea", onchange: (e) => { ovState.area = e.target.value; mp.draw(); } },
+  const area = h("select", { id: "mapArea", onchange: (e) => { ovState.area = e.target.value; mp.draw(true); } },
     h("option", { value: "" }, "All areas"), st.areas.map((a) => h("option", { value: a.label }, a.label)));
   area.value = ovState.area;
   show(
@@ -395,8 +461,8 @@ async function overviewView() {
         h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("td", {}, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long))))))),
     h("section", { class: "card" }, h("h2", {}, "Team workload"), h("table", {}, h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", {}, x)))),
       h("tbody", {}, st.team.map((t) => h("tr", {}, h("td", {}, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards)))))));
-  await mp.draw();
   mp.size();
+  await mp.draw(true);
 }
 
 async function visitsView() {
