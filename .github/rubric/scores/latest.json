@@ -2,14 +2,14 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T16:54:15+00:00",
-  "commit": "670519d938646ee5de6205000f9a8005af80f726",
+  "scored_at": "2026-10-08T17:13:19+00:00",
+  "commit": "70b4a1f8d4b120cd8be548c342fb5ea8a729cddd",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37811189011",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37813894861",
   "fingerprints": {
     "brd": "7947aff0475c769010747917eaddd2a01589d7fb89b4cb51eaacfe048373f3fb",
-    "prd": "d61ada59263e9f119b02100ba3855844dc7d7fa892d9b5e0965756c25d45b58b",
-    "adr": "8057c89bb8e17638f3232bfbb835d02066bbef4fa8bf60421cf4689b196495c4",
+    "prd": "226419d7061cfef7f70bcd2aff68b30bdce7989989ff35b55fc404ec208cee2c",
+    "adr": "4df5d51c62e5a71bb51a46f29e3db2cd844acba6600815aca7c224266e2d6ea5",
     "solution-code": "f2ae4fda6d5cd59d0c046195ba3363c856d935d6f35598cfe7c212841c0a938b",
     "infrastructure": "0a850fd6be08d25623fe69d8acd1b5124a36d4c045b4fb8120ac0f3e6bfb817d"
   },
@@ -36,7 +36,7 @@
       "evidence": [
         "docs/adrs/0001-azure-architecture.md:167-198"
       ],
-      "rationale": "Provisional options appraisal now scores named alternatives (Azure custom, greenfield, hybrid, Excel-only) against weighted criteria and explains why each loses (D fails mandatory gate, B has low evidence confidence), an actual argued trade-off rather than TBD weights."
+      "rationale": "Provisional options appraisal scores named alternatives against weighted criteria with argued rejection reasons. This diff adds staff-trust narrative only, no new alternatives or trade-off argument; unchanged."
     },
     "A3": {
       "score": 4,
@@ -45,7 +45,7 @@
         "prototype/properwarm/domain.py:84-99",
         "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Threat model now maps each PRD AI risk to a concrete control in the deployed design, and the prototype enforces and tests the agent/forbidden-field boundary and audit tamper detection in running code, not just a stated model."
+      "rationale": "Threat model maps AI risks to controls in deployed design and code-enforced tests. New staff-trust section (docs/adrs/0001-azure-architecture.md:261-307) adds narrative on compliance claims and gaps but introduces no new enforced control or test evidence, so the Good rating stands."
     },
     "A4": {
       "score": 3,
@@ -70,7 +70,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:496-514",
         "prototype/scripts/evaluate_agent.py:1-51"
       ],
-      "rationale": "An offline contract-evaluation script now exists and runs, but it explicitly does not call a model and is not a measure of model quality; model selection and the live evaluation harness remain undone as stated in the PRD."
+      "rationale": "Offline contract-evaluation script exists but does not call a model; model selection and live evaluation harness remain undone."
     },
     "A7": {
       "score": 4,
@@ -79,7 +79,7 @@
         "prototype/tests/test_domain.py:16-21",
         "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Bounded-agent orchestration is now demonstrated in running, tested code: service roles are code-enforced to never transition state, proposals are schema- and citation-gated, and acceptance never auto-advances the case, giving real guardrailed autonomy rather than only a documented pattern."
+      "rationale": "Bounded-agent orchestration demonstrated in running, tested code: roles code-enforced, proposals schema- and citation-gated, acceptance never auto-advances. Diff adds no new agent-code evidence; unchanged."
     },
     "B1": {
       "score": 0,
@@ -113,7 +113,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
         "infra/README.md:1-54"
       ],
-      "rationale": "BRD, PRD and new infra/README.md remain structured and navigable, but no capstone deck exists; cap_without caps this score at 3 regardless of added documentation quality."
+      "rationale": "BRD, PRD and infra/README.md remain structured and navigable; new staff-trust sections (docs/adrs/0001-azure-architecture.md:261-307, docs/prds/...:285-301) are clear and well-organised, but no capstone deck exists so cap_without caps this at 3."
     },
     "B7": {
       "score": 0,
@@ -126,7 +126,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:528",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269"
       ],
-      "rationale": "Business Objectives table still names real stakeholders and quantifies value at stake honestly; this run's changes (ADR, infra, prototype) are technical and do not add or weaken business-framing evidence."
+      "rationale": "Business Objectives table still names real stakeholders and quantifies value honestly. This run's changes add governance/trust framing (staff concerns, TR-001..TR-007) but do not add new stakeholder, constraint or quantified value-at-stake evidence beyond what was already scored; unchanged."
     },
     "C2": {
       "score": 0,

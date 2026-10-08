@@ -1178,3 +1178,8 @@ metadata when the knowledge base was created.
   deployment findings. Agent views are judgement, not company facts.
 
 * Recorded the region selection (uksouth recommended, EU data-zone fallbacks untested) in ADR 0001.
+
+* Recorded the staff data trust and control consultation (architect, product
+  advisor, Housing Officer, Data and Performance, Building Safety and Resident
+  Engagement role views) in ADR 0001 and proposed trust requirements TR-001 to
+  TR-007 in the PRD. Role views are hypotheses, not company facts.

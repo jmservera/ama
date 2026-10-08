@@ -261,6 +261,52 @@ Checked 2026-10-08 from `az cognitiveservices model list`; capacity and quota in
 * Fallback if an EU inference boundary is required: `westeurope` or `francecentral` list `DataZoneStandard` for both models. SQL and Container Apps capacity there is untested, so probe before committing. `germanywestcentral`, `polandcentral`, `italynorth` and `spaincentral` list data-zone models but have no pay-as-you-go `gpt-4.1-mini` data-zone evidence beyond the model list and were not tested further.
 * The `warm-dev` stack in `northeurope` with SQL in `uksouth` is a development stack only.
 
+## Staff data trust and control
+
+The owner's position (2026-10-08): staff value is the top goal, technical excellence must still be shown, and staff used to on-prem Excel will feel they lose control of their data in the cloud. The design must therefore make staff confident their data is safe, secure and compliant with their own rules (BRD Business Rule Enforcement, RULE-001 to RULE-024). The architect, product advisor and the Housing Officer, Data and Performance, Building Safety and Resident Engagement role agents were consulted. Their views are judgement and sector hypotheses, not company facts; staff rules, retention schedules, workbook owners and the DPIA status are unknown.
+
+Staff concern to control mapping:
+
+| Staff concern | Control in the design | Gap |
+| --- | --- | --- |
+| Loss of control | Named rules enforced by server-side gates and an authority matrix (FR-036); Excel is an import source and source workbooks are never modified (FR-029, DD-004). | Transition path is a hypothesis pending OQ-012. |
+| Where is my data | `uksouth` recommended for the whole stack; constructed data only (NFR-005). | No single residency claim until OQ-012; `uksouth` has no data-zone model so inference may be processed outside the UK. |
+| Who can see it | Server-side role, record and field rules (NFR-003); Entra-only access; per-workload identities. | Entra roles, SQL contained users and cross-role denial are unexercised. |
+| Can I get it back | FR-030, NFR-006, NFR-010 export with history; SQL point-in-time restore. | AC-032 not started; no restore drill; no Excel-shaped export. |
+| Can it be changed silently | SQL ledger, immutable `audit-archive`, versioned rules. | Ledger digest upload and scheduled verification are not configured. |
+| Does AI touch it | Agents have no data-store role and only post proposals; AI output labelled and needs human approval. | Not yet visible to staff. |
+| Am I being watched | Audit records decisions and handoffs. | Staff need a written statement of who may read logs and for what, agreed with staff and HR (unknown). |
+| System down | Tested out-of-hours route and rollback required before Excel retirement. | An offline break-glass list for hazard and vulnerable cases is needed; clocks do not pause for outages. |
+
+Make visible to staff (proposed, MVP unless stated):
+
+* A plain-language "your data" page: what is held, where, who holds which role, what AI can and cannot do, and the rule that governs each point. Each compliance statement carries a status of verified, designed or unknown.
+* Per-case history showing who viewed or changed a record and why, including imports and exports.
+* Export of a user's caseload to Excel or CSV with source, version and history, usable without the workbench or an AI provider.
+* A read-only Excel mirror and an import preview showing every row disposition with the source file untouched.
+* "AI-drafted, human-approved" labels and explanation records.
+* A verify-integrity action that runs the ledger check and shows the result (later, after digest storage exists).
+
+Keep invisible: private endpoints, managed identities, NSGs and cost controls, summarised in one line.
+
+Gaps to close first, in order:
+
+1. Ledger digest storage to an immutable container and scheduled verification.
+2. Exit and export path (AC-032) and a round-trip test.
+3. One point-in-time restore drill with the date, recovery time and record-count match recorded.
+4. Residency decision (OQ-012): record `uksouth` with the inference caveat and remove stale split-region wording.
+5. Exercise the identity path: Entra roles, SQL user script and a cross-role denial test.
+6. A staff-facing surface for items 1 to 4.
+7. Defer Front Door and WAF, Graph egress and AI Search until real personal data is planned.
+
+Claims not to make without named human legal, compliance or DPO approval: "compliant" with UK GDPR, Awaab's Law or the RSH standard; "tamper-proof" or "immutable" audit (the ledger is tamper-evident); "UK-resident" or "private-only"; "DPIA done", "consent managed" or "AI is overseen"; "Excel retired" before staff sign-off, a rehearsed fallback and data protection approval. Use "designed to support" instead.
+
+Adoption red lines raised by the role views: double entry, dual write with no source of truth, audit logs used for individual performance management without agreement, silent AI edits to staff or vulnerability records, and no tested fallback. Staff messaging hypothesis: the spreadsheet becomes a read-only view of one governed record, and the audit trail protects residents and staff. This needs testing with staff.
+
+Trust measures to observe in the demonstrator (thresholds need owner approval): task completion on the export, history and provenance tasks against the current Excel method; whether staff can state where data lives and who sees it; reconciliation rate and unmatched counts; audit completeness; restore-test age and result; parallel-run divergence; export round-trip result; residency attestation per service. A synthetic dataset can test that these measures detect problems; it cannot show the organisation's own rules are met.
+
+Demonstration plan (about 15 minutes, no new services): import a constructed workbook with a preview and an untouched source; edit a case and show its history; show one case under two roles with a denied attempt and log entry; raise an AI draft that a human accepts or rejects; trigger a business rule (RULE-006 or RULE-008); tamper with a scratch copy and show the integrity check fail; export to Excel with no AI involved; show the restore drill result; close with the data page and the residency statement.
+
 ## Open items
 
 * Azure Policy assignments and subscription-level Defender plans.
