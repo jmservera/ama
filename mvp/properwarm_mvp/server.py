@@ -11,6 +11,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from . import auth, projection
+from .documents import DocumentStoreError
 from .factory import open_store
 from .timecapture import TimeCapture
 from .store import MANAGER_ROLES, ConflictError, GateError
@@ -155,7 +156,10 @@ def make_handler(app):
                     limit, offset = num(q, "limit", 50, 1, 100), num(q, "offset", 0, 0, 10**9)
                 except ValueError as e:
                     return self._json(400, {"error": str(e)})
-                return self._json(200, s.page_cases(u, view, text, filt(q), sort, limit, offset))
+                try:
+                    return self._json(200, s.page_cases(u, view, text, filt(q), sort, limit, offset))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
             if url.path == "/api/ranking/policy":
                 return self._json(200, s.ranking_policy())
             if url.path == "/api/ai/priority":
@@ -192,9 +196,13 @@ def make_handler(app):
             if url.path.startswith("/api/docs/"):
                 try:
                     _, _, _, cid, did = url.path.split("/")
-                    name, mime, raw = s.get_document(cid, did)
+                    name, mime, raw = s.get_document(cid, did, u)
                 except (KeyError, ValueError):
                     return self._json(404, {"error": "File not found."})
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except DocumentStoreError:
+                    return self._json(502, {"error": "The document store is not available. Try again shortly."})
                 safe = "".join(ch for ch in name if ch.isalnum() or ch in " ._-")
                 return self._send(200, raw, mime, {"Content-Disposition": f'attachment; filename="{safe}"'})
             if url.path.startswith("/api/cases/"):
@@ -295,6 +303,8 @@ def make_handler(app):
                     else:
                         return self._json(404, {"error": "Not found."})
                     return self._json(200, s.detail(cid, u))
+            except DocumentStoreError:
+                return self._json(502, {"error": "The document store is not available. Try again shortly."})
             except ConflictError:
                 return self._json(409, {"error": "Someone else changed this at the same moment. Reload and try again."})
             except GateError as e:

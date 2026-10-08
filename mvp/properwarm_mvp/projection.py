@@ -23,7 +23,7 @@ CONTRACTOR_GET = ("me", "cases", "case")
 CONTRACTOR_POST = ("logout",)
 
 SUMMARY_FIELDS = ("id", "address", "town", "postcode", "stage", "status", "next_visit", "needs_notice", "named_contact",
-                  "rank", "closed")
+                  "closed")
 DETAIL_FIELDS = ("id", "stage", "status", "measures", "needs_notice", "named_contact")
 
 

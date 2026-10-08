@@ -58,13 +58,20 @@ function login(msg) {
 async function start() {
   me = await api("/api/me");
   document.getElementById("who").textContent = `${me.user.name}, ${me.user.role}`;
-  document.getElementById("nav").hidden = false;
+  const nav = document.getElementById("nav");
+  const contractor = me.user.role === "Contractor";
+  nav.querySelectorAll("a").forEach((a) => { if (a.dataset.dyn) a.remove(); else a.hidden = contractor; });
+  if (contractor) nav.prepend(h("a", { href: "#/", "data-dyn": "1" }, "My jobs"));
+  else if (isManager()) nav.querySelector("a[href='#/funding']").after(h("a", { href: "#/closed", "data-dyn": "1" }, "Closed cases"));
+  nav.hidden = false;
   route();
 }
 
 function route() {
   const m = location.hash.match(/^#\/case\/(.+)$/);
+  if (me.user.role === "Contractor") return m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView();
   if (m) return caseView(decodeURIComponent(m[1]));
+  if (location.hash === "#/closed") return closedView();
   if (location.hash === "#/import") return importView();
   if (location.hash === "#/overview") return overviewView();
   if (location.hash === "#/visits") return visitsView();
@@ -120,6 +127,18 @@ function priorityPanel() {
   };
   const ask = async () => { box.setAttribute("aria-busy", "true"); try { paint(await api("/api/ai/priority", { n: 5 })); } catch (e) { paint(null, e.message); } box.removeAttribute("aria-busy"); };
   api("/api/ai/priority").then((d) => paint(d.recommendation && d.recommendation.status === "Proposed" ? d.recommendation : null)).catch(() => paint(null));
+  return box;
+}
+
+function pendingHandoffs() {
+  const box = h("section", { class: "card", "aria-label": "Handoffs waiting for you", hidden: true });
+  api("/api/handoffs").then((rows) => {
+    if (!rows.length) return;
+    box.hidden = false;
+    box.replaceChildren(h("h2", {}, "Handoffs waiting for you"), h("ul", { class: "list" }, rows.map((x) => h("li", {},
+      h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, `${x.resident}, ${x.address}`),
+      h("div", { class: "muted" }, `Offered by ${x.from_name}${x.note ? `: ${x.note}` : ""}. Open the case to accept or decline.`)))));
+  }).catch(() => {});
   return box;
 }
 
@@ -183,6 +202,7 @@ async function listView(view) {
     h("p", {}, h("button", { class: "alt", onclick: () => { Object.assign(listState, { q: "", stage: "", area: "", flag: "", wave: "", owner: "" }); listView(view); } }, "Clear filters")));
   show(h("div", { class: "layout" }, side, h("div", { class: "main" },
     briefingBox,
+    view === "mine" && pendingHandoffs(),
     view === "mine" && priorityPanel(),
     h("div", { class: "row between" }, title, h("div", { class: "row" },
       h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See all cases" : "See my cases"),
@@ -254,9 +274,9 @@ async function caseView(id) {
           h("dt", {}, "Contractor"), h("dd", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
           h("dt", {}, "Home"), h("dd", {}, `${hm.type}, built ${hm.built}, EPC ${hm.epc}, ${hm.tenure}`),
           h("dt", {}, "Resident decision"), h("dd", {}, `${c.decision.status}${c.decision.by ? ` (recorded by ${c.decision.by})` : ""}`)))),
-    openHaz.length > 0 && h("section", { class: "card" }, h("h2", {}, "Safety issues"),
-      h("ul", { class: "list" }, openHaz.map((x) => h("li", {},
-        `${x.category}, noticed ${fmtDate(x.noticed)} (${Math.max(0, Math.floor((Date.now() - new Date(x.noticed)) / 864e5))} days open). Owner: ${x.owner}. ${x.referred ? `Passed to repairs ${fmtDate(x.referred)}.` : "Not yet passed to repairs."}`)))),
+    returnPanel(c, id, refresh),
+    handoffPanel(c, id, refresh),
+    safetyPanel(c, id, refresh),
     h("section", { class: "card" }, h("h2", {}, "Log a call"),
       h("label", { for: "outcome" }, "What happened"), outcome,
       h("label", {}, "How you spoke"), channel,
@@ -285,6 +305,141 @@ async function caseView(id) {
     h("section", { class: "card" }, h("h2", {}, "History"),
       c.contacts.length ? h("ul", { class: "tl" }, c.contacts.slice(0, 15).map((k) => h("li", {},
         h("strong", {}, `${fmtDate(k.at)} ${k.channel}: ${k.outcome}`), h("div", { class: "muted" }, `${k.by}${k.note ? `. ${k.note}` : ""}`)))) : h("p", {}, "No contact recorded yet.")));
+}
+
+const STAGES_ORDER = ["Home identified", "Checking lease", "Rescheduled", "Contacting resident", "Contact paused", "Survey being booked", "Survey booked", "Survey write-up", "Design starting", "Design in progress", "Design awaiting approval", "Design being corrected", "Waiting on other works", "Waiting for resident decision", "Resident paused works", "Funding check", "Final checks before ordering", "Waiting for block programme", "With contractor", "Install booked", "Works under way", "Handover to arrange", "Quality check", "Closing down", "Aftercare issue"];
+const SAFETY_ROLES = ["Building Safety Liaison", "Retrofit Programme Manager", "Programme Support Officer"];
+const HAZ_CATEGORIES = ["Damp and mould", "Structural", "Electrical", "Other"];
+const HAZ_PRIORITIES = ["Emergency", "Significant", "Routine"];
+const post = (id, act, body) => api(`/api/cases/${encodeURIComponent(id)}/${act}`, body);
+
+function returnPanel(c, id, refresh) {
+  const why = h("input", { id: "ret-why", type: "text", maxlength: 300, required: true });
+  if (c.closed) {
+    if (!isManager()) return h("section", { class: "card" }, h("h2", {}, "Closed case"), h("p", {}, "This case is closed. A manager can reopen it."));
+    return h("section", { class: "card" }, h("h2", {}, "Reopen this case"),
+      h("p", { class: "muted" }, "Only a manager can reopen a closed case. Your reason is kept in the audit log."),
+      h("label", { for: "ret-why" }, "Why it is being reopened"), why,
+      h("p", {}, h("button", { onclick: () => refresh(() => post(id, "reopen", { reason: why.value })) }, "Reopen case")));
+  }
+  const earlier = STAGES_ORDER.slice(0, Math.max(0, STAGES_ORDER.indexOf(c.stage)));
+  if (!earlier.length) return null;
+  const to = h("select", { id: "ret-to" }, earlier.map((x) => h("option", { value: x, selected: x === earlier[earlier.length - 1] }, x)));
+  return h("section", { class: "card" }, h("h2", {}, "Send this case back"),
+    h("p", { class: "muted" }, "Use this when something earlier needs redoing. A case can only go back to an earlier stage, and the reason is kept in the audit log."),
+    h("label", { for: "ret-to" }, "Back to which stage"), to,
+    h("label", { for: "ret-why" }, "Why it is going back"), why,
+    h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "return", { to_stage: to.value, reason: why.value })) }, "Send back")),
+    c.returns && c.returns.length ? h("ul", { class: "tl" }, c.returns.slice(-5).reverse().map((x) => h("li", {},
+      h("strong", {}, `${fmtDate(x.at)} ${x.reopened ? "Reopened" : "Returned"}: ${x.from_stage} to ${x.to_stage}`), h("div", { class: "muted" }, `${x.by}. ${x.reason}`)))) : null);
+}
+
+function handoffPanel(c, id, refresh) {
+  const hd = c.handoff;
+  const open = hd && hd.state === "Offered";
+  const kids = [h("h2", {}, "Handoff to a colleague")];
+  if (open) {
+    kids.push(h("p", { role: "status" }, `Offered to ${hd.to_name} by ${hd.offered_by} on ${fmtDate(hd.offered_at)}. Waiting for an answer. The case stays with ${hd.from_name} until it is accepted.`),
+      hd.note && h("p", { class: "muted" }, hd.note));
+    const why = h("input", { id: "ho-why", type: "text", maxlength: 300 });
+    if (hd.to_code === me.user.code) {
+      kids.push(h("div", { class: "row" }, h("button", { onclick: () => refresh(() => post(id, "accept-handoff", {})) }, "Accept this case")),
+        h("div", { class: "row" }, h("label", { for: "ho-why" }, "Reason if you cannot take it"), why,
+          h("button", { class: "alt", onclick: () => refresh(() => post(id, "decline-handoff", { reason: why.value })) }, "Decline")));
+    }
+    if (hd.from_code === me.user.code || isManager()) kids.push(h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "withdraw-handoff", {})) }, "Withdraw the offer")));
+  } else {
+    if (hd) kids.push(h("p", { class: "muted" }, `Last handoff to ${hd.to_name}: ${hd.state}${hd.answer_note ? `. ${hd.answer_note}` : ""}.`));
+    if (!c.closed && (c.owner_code === me.user.code || isManager())) {
+      const to = h("select", { id: "ho-to" }, me.staff.filter((s) => s.code !== c.owner_code && s.role !== "Contractor").map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
+      const note = h("input", { id: "ho-note", type: "text", maxlength: 300 });
+      kids.push(h("p", { class: "muted" }, "Offer the case. It only moves when the other person accepts."),
+        h("label", { for: "ho-to" }, "Offer to"), to, h("label", { for: "ho-note" }, "Note for them (optional)"), note,
+        h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "offer-handoff", { to: to.value, note: note.value })) }, "Offer the case")));
+    }
+  }
+  if (c.handoff_log && c.handoff_log.length) {
+    kids.push(h("ul", { class: "tl" }, c.handoff_log.slice(-5).reverse().map((x) => h("li", {}, `${fmtDate(x.answered_at)}: ${x.from_name} to ${x.to_name}, ${x.state}`))));
+  }
+  return h("section", { class: "card" }, ...kids);
+}
+
+function hazardState(x) {
+  return x.released ? "Released" : x.repaired ? "Repaired, awaiting release" : x.referred ? "Referred" : "Raised";
+}
+
+function safetyPanel(c, id, refresh) {
+  const canRelease = SAFETY_ROLES.includes(me.user.role);
+  const safeStaff = me.staff.filter((s) => SAFETY_ROLES.includes(s.role));
+  const items = c.hazards.map((x, i) => {
+    const st = hazardState(x);
+    const job = h("input", { type: "text", maxlength: 40, "aria-label": `Repair job reference for ${x.category}` });
+    const to = h("select", { "aria-label": `Refer ${x.category} to` }, safeStaff.map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
+    const note = h("input", { type: "text", maxlength: 300, "aria-label": `Release note for ${x.category}` });
+    return h("li", {},
+      h("strong", {}, `${x.category}, ${x.priority || ""}`.replace(/, $/, "")), ` ${st}. Noticed ${fmtDate(x.noticed)}. Owner: ${x.owner}.`,
+      x.job && ` Job ${x.job}.`,
+      st === "Raised" && h("div", { class: "row" }, to, job, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-refer", { index: i, to: to.value, job: job.value })) }, "Refer for repair")),
+      st === "Referred" && h("div", { class: "row" }, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-repaired", { index: i })) }, "Record that the repair is done")),
+      st === "Repaired, awaiting release" && (canRelease
+        ? h("div", { class: "row" }, note, h("button", { onclick: () => refresh(() => post(id, "hazard-release", { index: i, note: note.value })) }, "Release (needs someone other than who raised or repaired it)"))
+        : h("div", { class: "muted" }, "The Building Safety Liaison or a manager releases it.")));
+  });
+  const cat = h("select", { id: "hz-cat" }, HAZ_CATEGORIES.map((x) => h("option", {}, x)));
+  const pri = h("select", { id: "hz-pri" }, HAZ_PRIORITIES.map((x) => h("option", {}, x)));
+  const note = h("input", { id: "hz-note", type: "text", maxlength: 300 });
+  return h("section", { class: "card" }, h("h2", {}, "Safety issues"),
+    items.length ? h("ul", { class: "list" }, items) : h("p", {}, "No safety issues recorded."),
+    !c.closed && h("div", {}, h("h3", {}, "Raise a safety issue"),
+      h("p", { class: "muted" }, "An Emergency is flagged for the Building Safety Liaison the same day. The case stops until it is released."),
+      h("label", { for: "hz-cat" }, "What kind"), cat, h("label", { for: "hz-pri" }, "How urgent"), pri, h("label", { for: "hz-note" }, "What you saw"), note,
+      h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-raise", { category: cat.value, priority: pri.value, note: note.value })) }, "Raise safety issue"))));
+}
+
+async function closedView() {
+  if (!isManager()) return show(h("p", {}, "Only a manager sees closed cases."));
+  const d = await api("/api/cases?view=closed&limit=100");
+  show(h("h1", {}, "Closed cases"), h("p", { class: "muted" }, `${d.total} closed. Open one to reopen it with a reason.`),
+    h("ul", { class: "list" }, d.items.length ? d.items.map((r) => h("li", {}, h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
+      h("div", {}, h("span", { class: "name" }, r.resident), h("div", {}, `${r.address}, ${r.town} ${r.postcode}`)), h("div", { class: "meta" }, r.stage)))) : h("li", { class: "card" }, "No closed cases.")));
+}
+
+async function contractorListView() {
+  const PAGE = 50;
+  let rows = [], total = 0;
+  const out = h("div", { "aria-live": "polite" });
+  const render = () => out.replaceChildren(
+    h("p", { class: "muted" }, `${total} ${total === 1 ? "job" : "jobs"}`),
+    h("ul", { class: "list" }, rows.length ? rows.map((r) => h("li", {}, h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
+      h("div", {}, h("span", { class: "name" }, `${r.address}, ${r.town} ${r.postcode}`), h("div", { class: "status" }, r.status),
+        r.needs_notice ? h("span", { class: "flag" }, "Needs notice") : h("span", { class: "muted" }, "No extra notice needed"),
+        h("div", {}, `Named contact: ${r.named_contact}`)),
+      h("div", { class: "meta" }, h("div", {}, r.stage), r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "card" }, "No jobs assigned to you.")),
+    rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null);
+  const load = async (more) => {
+    const d = await api(`/api/cases?limit=${PAGE}&offset=${more ? rows.length : 0}`);
+    rows = more ? rows.concat(d.items) : d.items;
+    total = d.total;
+    render();
+  };
+  show(h("h1", {}, "Your jobs"), h("p", { class: "muted" }, "You see the address, the works and a named contact. Where a resident needs notice before a visit it says so; the reason is not shared with contractors."), out);
+  await load();
+}
+
+async function contractorCaseView(id) {
+  let c;
+  try { c = await api(`/api/cases/${encodeURIComponent(id)}`); } catch (e) { return show(h("a", { class: "back", href: "#/" }, "Back to your jobs"), h("p", { class: "err" }, e.message)); }
+  show(h("a", { class: "back", href: "#/" }, "Back to your jobs"),
+    h("h1", {}, `${c.home.address}, ${c.home.town} ${c.home.postcode}`),
+    h("div", { class: "status-line", role: "status" }, c.status),
+    h("section", { class: `card${c.needs_notice ? " ai" : ""}` }, h("h2", {}, "Before you visit"),
+      h("p", { class: "big" }, c.needs_notice ? "Needs notice" : "No extra notice needed"),
+      h("p", {}, `Named contact: ${c.named_contact}`)),
+    h("section", { class: "card" }, h("h2", {}, "The job"),
+      h("dl", {}, h("dt", {}, "Works"), h("dd", {}, c.measures), h("dt", {}, "Stage"), h("dd", {}, c.stage),
+        h("dt", {}, "Home"), h("dd", {}, c.home.type), h("dt", {}, "Your contact"), h("dd", {}, `${c.contractor.name}, ${c.contractor.contact}`))),
+    h("section", { class: "card" }, h("h2", {}, "Visits"),
+      c.appointments.length ? h("ul", { class: "list" }, c.appointments.map((a) => h("li", {}, `${fmtDate(a.date)} ${a.slot}: ${a.type} (${a.outcome})`))) : h("p", {}, "No visits booked.")));
 }
 
 function documentsPanel(c, id, refresh) {

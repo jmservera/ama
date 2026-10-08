@@ -10,6 +10,7 @@ from datetime import datetime
 
 from . import insights, ledger, projection, ranking
 from .ai import Ai
+from .documents import ACCEPTED, MAX_BYTES, DocumentStoreError, open_document_store
 from .workflows import MANAGER_ROLES, WorkflowMixin
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
@@ -46,6 +47,7 @@ class Store(WorkflowMixin):
         self.last_hash = self._tail_hash()
         self.digest_dir = os.environ.get("PW_DIGEST_DIR") or os.path.join(base, "digests")
         self.docs_dir = os.path.join(os.path.dirname(self.live_path), "docs")
+        self.docstore = open_document_store(self.docs_dir)
         self.ai = Ai()
         self.version = 0
         self._briefings = {}
@@ -148,6 +150,10 @@ class Store(WorkflowMixin):
         return ranking.describe(ranking.CURRENT)
 
     def _filtered(self, user, view, q, f):
+        if view == "closed":
+            if user["role"] not in MANAGER_ROLES:
+                raise PermissionError("Only a manager can see closed cases.")
+            return sorted((c for c in self.cases.values() if c["closed"] and insights.matches(c, f)), key=lambda c: c["id"])
         rows = [c for c in self.cases.values() if not c["closed"] and insights.matches(c, f)]
         if projection.is_contractor(user):
             rows = [c for c in rows if projection.own_case(user, c)]
@@ -167,6 +173,10 @@ class Store(WorkflowMixin):
             ranks = self._ranking()
             rows = self._filtered(user, view, q, filters or {})
             total = len(rows)
+            if view == "closed":
+                page = rows if limit is None else rows[offset:offset + limit]
+                return dict(items=[self.summary(c) for c in page], total=total, limit=limit, offset=offset, sort="id",
+                            policy_version=ranking.CURRENT["version"], ranked_total=len(ranks))
             if sort in ("urgent", "", None) or sort not in insights.SORTS:
                 rows.sort(key=lambda c: ranks[c["id"]]["rank"])
                 page = rows if limit is None else rows[offset:offset + limit]
@@ -330,19 +340,21 @@ class Store(WorkflowMixin):
 
     # ---- documents
     EVIDENCE = ("EPC", "Survey", "Design", "Consent")
-    EXT = {"pdf": "application/pdf", "png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg",
-           "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-           "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-           "csv": "text/csv", "txt": "text/plain"}
+    EXT = ACCEPTED
     KINDS = ("EPC", "Survey", "Design", "Consent", "Funding evidence", "Photo", "Other")
-    MAX_BYTES = 5 * 1024 * 1024
+    MAX_BYTES = MAX_BYTES
 
     @staticmethod
     def checklist(c):
         have = {d["kind"] for d in c["documents"]}
         return [dict(kind=k, present=k in have) for k in Store.EVIDENCE]
 
+    def _doc_role(self, user, what):
+        if user is not None and user.get("role") not in projection.STAFF_ROLES:
+            raise PermissionError(f"Your role cannot {what} documents.")
+
     def add_document(self, user, case_id, name, kind, data):
+        self._doc_role(user, "add")
         name = os.path.basename((name or "").strip())[:120]
         ext = name.rsplit(".", 1)[-1].lower() if "." in name else ""
         if ext not in self.EXT:
@@ -354,25 +366,33 @@ class Store(WorkflowMixin):
         with self.lock:
             c = self._case(case_id)
             did = uuid.uuid4().hex[:12]
-            folder = os.path.join(self.docs_dir, case_id)
-            os.makedirs(folder, exist_ok=True)
-            with open(os.path.join(folder, did), "wb") as f:
-                f.write(data)
+            try:
+                self.docstore.put(case_id, did, data, mime)
+            except DocumentStoreError as e:
+                self.audit(user["email"], "upload_document_failed", case_id, f"{kind}: {name}: {e}")
+                raise
             doc = dict(id=did, name=name, kind=kind, at=datetime.now().date().isoformat(), by=user["name"],
                        generated=False, mime=mime, summary="")
             c["documents"].append(doc)
             self.audit(user["email"], "upload_document", case_id, f"{kind}: {name}")
-            self.save()
+            try:
+                self.save()
+            except BaseException:
+                try:
+                    self.docstore.delete(case_id, did)
+                except DocumentStoreError:
+                    pass
+                raise
         return doc
 
     def read_document(self, user, case_id, doc_id):
+        self._doc_role(user, "read")
         with self.lock:
             c = self._case(case_id)
             doc = next((d for d in c["documents"] if d["id"] == doc_id and not d["generated"]), None)
             if not doc:
                 raise KeyError(doc_id)
-            with open(os.path.join(self.docs_dir, case_id, doc_id), "rb") as f:
-                data = f.read()
+            data = self.docstore.get(case_id, doc_id)
         self.audit(user["email"], "ai_run_start", case_id, f"read_document {doc['name']}")
         r = self.ai.look_at(doc["name"], data, doc["mime"])
         with self.lock:
@@ -382,7 +402,9 @@ class Store(WorkflowMixin):
             self.save()
         return r
 
-    def get_document(self, case_id, doc_id):
+    def get_document(self, case_id, doc_id, user=None):
+        """Bytes of one document. Pass the signed-in user so the role is checked and the download is audited."""
+        self._doc_role(user, "download")
         with self.lock:
             c = self._case(case_id)
             doc = next((d for d in c["documents"] if d["id"] == doc_id), None)
@@ -392,8 +414,10 @@ class Store(WorkflowMixin):
                 text = (f"{doc['name']}\nCase {c['id']}: {c['home']['address']}, {c['home']['postcode']}\n"
                         f"Filed {doc['at']} by {doc['by']}\nType: {doc['kind']}\n")
                 return doc["name"].rsplit(".", 1)[0] + ".txt", "text/plain", text.encode()
-            with open(os.path.join(self.docs_dir, case_id, doc_id), "rb") as f:
-                return doc["name"], doc["mime"], f.read()
+            data = self.docstore.get(case_id, doc_id)
+            if user is not None:
+                self.audit(user["email"], "download_document", case_id, f"{doc['kind']}: {doc['name']}")
+            return doc["name"], doc["mime"], data
 
     # ---- AI drafting (always a draft for a person)
     def _facts(self, c, reason_ok=False):
