@@ -12,6 +12,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
+from . import projection
 from .factory import open_store
 from .store import MANAGER_ROLES, ConflictError, GateError
 
@@ -41,6 +42,22 @@ class App:
         token = secrets.token_urlsafe(32)
         self.sessions[token] = u
         return token
+
+
+def get_kind(path):
+    if path == "/api/me":
+        return "me"
+    if path == "/api/cases":
+        return "cases"
+    if path == "/api/cases.csv":
+        return "cases.csv"
+    if path.startswith("/api/cases/"):
+        return "case"
+    if path.startswith("/api/docs/"):
+        return "doc"
+    return {"/api/ranking/policy": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
+            "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
+            "/api/audit-check": "audit"}.get(path, "unknown")
 
 
 def filt(q):
@@ -119,8 +136,10 @@ def make_handler(app):
                 return self._json(401, {"error": "Please sign in."})
             q = parse_qs(url.query)
             s = app.store
+            if not projection.allowed(u, get_kind(url.path)):
+                return self._json(403, {"error": "Your role does not include this."})
             if url.path == "/api/me":
-                return self._json(200, dict(user=u, counts=s.counts(u), staff=list(s.staff.values())))
+                return self._json(200, projection.me_payload(u, s.counts(u), list(s.staff.values())))
             if url.path in ("/api/cases", "/api/cases.csv"):
                 view, text, sort = q.get("view", ["mine"])[0], q.get("q", [""])[0], q.get("sort", ["urgent"])[0]
                 if url.path.endswith(".csv"):
@@ -161,7 +180,7 @@ def make_handler(app):
                 safe = "".join(ch for ch in name if ch.isalnum() or ch in " ._-")
                 return self._send(200, raw, mime, {"Content-Disposition": f'attachment; filename="{safe}"'})
             if url.path.startswith("/api/cases/"):
-                d = s.detail(url.path.rsplit("/", 1)[1])
+                d = s.detail(url.path.rsplit("/", 1)[1], u)
                 return self._json(200, d) if d else self._json(404, {"error": "Case not found."})
             if url.path == "/api/audit-check":
                 return self._json(200, s.verify_ledger())
@@ -186,6 +205,8 @@ def make_handler(app):
                 app.sessions.pop(self._cookie(), None)
                 return self._json(200, {"ok": True}, {"Set-Cookie": "pw_session=; Max-Age=0; Path=/"})
             s = app.store
+            if not projection.allowed(u, "post", "POST"):
+                return self._json(403, {"error": "Your role does not include this."})
             parts = url.path.strip("/").split("/")
             try:
                 if url.path == "/api/ledger/digest":
@@ -228,7 +249,7 @@ def make_handler(app):
                         return self._json(200, s.draft(cid, body.get("kind", "update")))
                     else:
                         return self._json(404, {"error": "Not found."})
-                    return self._json(200, s.detail(cid))
+                    return self._json(200, s.detail(cid, u))
             except ConflictError:
                 return self._json(409, {"error": "Someone else changed this at the same moment. Reload and try again."})
             except GateError as e:

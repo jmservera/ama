@@ -8,7 +8,7 @@ import threading
 import uuid
 from datetime import datetime
 
-from . import insights, ledger, ranking
+from . import insights, ledger, projection, ranking
 from .ai import Ai
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
@@ -149,12 +149,16 @@ class Store:
 
     def _filtered(self, user, view, q, f):
         rows = [c for c in self.cases.values() if not c["closed"] and insights.matches(c, f)]
-        if view == "mine":
+        if projection.is_contractor(user):
+            rows = [c for c in rows if projection.own_case(user, c)]
+        elif view == "mine":
             rows = [c for c in rows if c["owner_code"] == user["code"]]
         if q:
             ql = q.lower()
-            rows = [c for c in rows if ql in " ".join([c["resident"]["name"], c["home"]["address"],
-                                                       c["home"]["postcode"], c["id"]]).lower()]
+            # a contractor cannot search on the resident's name: that would reveal who lives where
+            fields = (lambda c: [c["home"]["address"], c["home"]["postcode"], c["id"]]) if projection.is_contractor(user) \
+                else (lambda c: [c["resident"]["name"], c["home"]["address"], c["home"]["postcode"], c["id"]])
+            rows = [c for c in rows if ql in " ".join(fields(c)).lower()]
         return rows
 
     def page_cases(self, user, view="mine", q="", filters=None, sort="urgent", limit=None, offset=0):
@@ -177,18 +181,21 @@ class Store:
                     out = out[offset:offset + limit]
                 by_id = self.cases
                 page = [by_id[r["id"]] for r in out]
-            for r, c in zip(out, page):
+            for i, (r, c) in enumerate(zip(out, page)):
                 e = ranks[c["id"]]
                 r["rank"], r["reasons"] = e["rank"], e["reasons"]
-                if view == "mine":
-                    r["focus"] = self.focus(c, user["role"])
+                if projection.is_contractor(user):
+                    r.pop("reasons")
+                    out[i] = projection.contractor_summary(c, r)
+                elif view == "mine":
+                    r["focus"] = self.focus(c, user["role"], projection.can_see_reason(user))
             return dict(items=out, total=total, limit=limit, offset=offset, sort=sort,
                         policy_version=ranking.CURRENT["version"], ranked_total=len(ranks))
 
     def list_cases(self, user, view="mine", q="", filters=None, sort="urgent"):
         return self.page_cases(user, view, q, filters, sort)["items"]
 
-    def focus(self, c, role):
+    def focus(self, c, role, reason_ok=True):
         """Role-specific facts for the card, as label/value pairs."""
         nxt = next((a for a in c["appointments"] if a["outcome"] == "Booked"), None)
         open_h = [h for h in c["hazards"] if not h["released"]]
@@ -221,10 +228,11 @@ class Store:
             return dict(mine=len(mine), hazards=sum(any(not h["released"] for h in c["hazards"]) for c in mine),
                         open=sum(not c["closed"] for c in self.cases.values()))
 
-    def detail(self, case_id):
+    def detail(self, case_id, user=None):
+        """Case card. Pass the signed-in user so the role's projection is applied; None returns everything (internal use)."""
         with self.lock:
             c = self.cases.get(case_id)
-            if not c:
+            if not c or (user is not None and projection.is_contractor(user) and not projection.own_case(user, c)):
                 return None
             d = json.loads(json.dumps(c))
             d["status"] = self.status_line(c)
@@ -233,7 +241,11 @@ class Store:
         d["suggestions"] = insights.recommend_handover(c, list(self.cases.values()), self.data["staff"])
         d["checklist"] = self.checklist(c)
         d["contacts"] = list(reversed(d["contacts"]))[:40]
-        return d
+        if user is None:
+            return d
+        if projection.is_contractor(user):
+            return projection.contractor_detail(c, d)
+        return projection.redact_staff_detail(user, d)
 
     def log_call(self, user, case_id, outcome, note, channel="Phone"):
         outcome = (outcome or "").strip()[:80]
@@ -384,11 +396,12 @@ class Store:
                 return doc["name"], doc["mime"], f.read()
 
     # ---- AI drafting (always a draft for a person)
-    def _facts(self, c):
+    def _facts(self, c, reason_ok=False):
         r = c["resident"]
+        adjust = r["adjustment"] if reason_ok else ("extra support needed" if projection.needs_notice(c) else "None")
         return (f"Case {c['id']}. Resident: {r['name']}. Home: {c['home']['address']}, {c['home']['town']}. "
                 f"Stage: {c['stage']} for {c['days_in_stage']} days. Waiting on {c['waiting_on']} {c['reason']}. "
-                f"Resident adjustments: {r['adjustment']}. Resident prefers: {r['preferred']}. "
+                f"Resident adjustments: {adjust}. Resident prefers: {r['preferred']}. "
                 f"Resident decision: {c['decision']['status']}. Funding: {c['funding']['route']} ({c['funding']['status']}). "
                 f"Open safety issues: {sum(not h['released'] for h in c['hazards'])}. "
                 f"Recent contacts: " + "; ".join(f"{k['at'][:10]} {k['outcome']}" for k in c["contacts"][-4:]))
@@ -396,7 +409,7 @@ class Store:
     def ai_run(self, user, case_id, task):
         with self.lock:
             c = self._case(case_id)
-            facts = self._facts(c)
+            facts = self._facts(c, projection.can_see_reason(user))
             fallback = self.draft(case_id, "visit" if task == "message" else "update")["text"]
             summary = self.status_line(c)
             owner, who = c["owner"], c["resident"]["name"]
@@ -466,7 +479,8 @@ class Store:
             det = [c["id"] for c in mine[:n]]
             cand = mine[:40]
             ids = {c["id"] for c in cand}
-            facts = "\n".join(f"{c['id']}: {self._facts(c)}" for c in cand)
+            ok = projection.can_see_reason(user)
+            facts = "\n".join(f"{c['id']}: {self._facts(c, ok)}" for c in cand)
             tmpl_items = self._heuristic_priority(cand, n)
             policy_version = ranking.CURRENT["version"]
         tmpl = json.dumps(tmpl_items)
@@ -583,7 +597,7 @@ class Store:
         with self.lock:
             c = self._case(case_id)
             missing = [x["kind"] for x in self.checklist(c) if not x["present"]]
-            facts = self._facts(c) + f" Built: {c['home']['built']}. Type: {c['home']['type']}. EPC band: {c['home']['epc']}. " \
+            facts = self._facts(c, projection.can_see_reason(user)) + f" Built: {c['home']['built']}. Type: {c['home']['type']}. EPC band: {c['home']['epc']}. " \
                 f"Measures: {', '.join(c['measures']) if isinstance(c['measures'], list) else c['measures']}."
             route = c["funding"]["route"]
             tmpl = (f"Funding application draft for {c['home']['address']} ({route})\n\nProperty: {c['home']['type']}, built "
