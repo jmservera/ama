@@ -164,6 +164,56 @@ registration, Teams webhook and SharePoint site are created manually or by
 script, not by this Bicep, because they live in the tenant and not in the
 resource group.
 
+## Provisional options appraisal
+
+This is a worked illustration of the PRD Options Gate, not an approved
+decision. The weights below are architect proposals pending sponsor approval,
+and the scores are architect judgements on a 1 to 5 scale (5 is best). The
+only measured evidence is the `warm-test` deployment and the `prototype/`
+tests, so every score for cost, support and company fit stays provisional.
+A high aggregate cannot offset a failed mandatory control gate.
+
+| Criterion | Weight | A Azure custom, hard cut-over | B Greenfield business apps | C Azure-led hybrid, staged | D Excel hardening only |
+| --- | --- | --- | --- | --- | --- |
+| Control and workflow coverage | 25 | 5 | 3 | 5 | 1 |
+| Whole-life cost and affordability | 20 | 2 | 3 | 2 | 5 |
+| Supportability and recovery | 15 | 2 | 3 | 3 | 4 |
+| Data and integration fit | 15 | 3 | 3 | 4 | 2 |
+| Resident and accessibility readiness | 10 | 3 | 3 | 3 | 2 |
+| Evidence confidence | 15 | 4 | 2 | 3 | 4 |
+| Weighted score (out of 5) | 100 | 3.30 | 2.85 | 3.45 | 2.95 |
+
+Reading the result:
+
+* C leads A mainly on data fit, because staff keep their workbooks during a
+  transition, and on supportability, because a hard cut-over has no manual
+  fallback. The margin (0.15) is small and sensitive to the cost weight.
+* D fails the mandatory control gate (no server-enforced approval authority),
+  so its score is not eligible regardless of the aggregate.
+* B is scored with low evidence confidence because no tenant, licence or
+  Power Platform capability has been verified (OQ-012).
+* Cost scores rest on retail list prices only. The deployed stack runs a
+  Premium registry, a private-endpoint-heavy network and a Container Apps
+  environment, so it is not a cheap option. A sponsor affordability envelope
+  is still missing.
+
+## Observed deployment measurements
+
+Observed on 2026-08-26 from the `warm-test` deployment in `uksouth` (single
+run, not a statistical sample, no load applied):
+
+| Observation | Value |
+| --- | --- |
+| Full deployment duration | 12 min 38 s |
+| Slowest module | containerapps, 6 min 9 s |
+| Next slowest | monitoring 3 min 36 s, sql 2 min 46 s, network 1 min 47 s |
+| SQL database | GP_S_Gen5 serverless, 0.5 to 2 vCores, auto-pause 60 min |
+| Container registry | Premium (needed for private endpoints), about 1.67 per day list price |
+| Container Apps environment | list price shows a 0.125 per hour management and private endpoint meter |
+
+These are observations, not SLO attainment. Targets in the operational
+section remain proposals until a load and failure test is run.
+
 ## Open items
 
 * Azure Policy assignments and subscription-level Defender plans.

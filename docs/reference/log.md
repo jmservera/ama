@@ -1161,3 +1161,9 @@ metadata when the knowledge base was created.
 * Deployed the Bicep to resource group `ama` in `uksouth` after fixing the
   Foundry ordering; `swedencentral` lacked Container Apps capacity. Placeholder
   images only, nothing measured.
+
+* Added the `prototype/` constructed-data code slice (workflow authority,
+  bounded agent proposals, hash-chained audit, offline contract evaluation), a
+  provisional weighted options appraisal and observed `warm-test` deployment
+  timings to ADR 0001. Weights and scores are architect proposals pending
+  sponsor approval; the prototype image is not deployed.
