@@ -1195,3 +1195,5 @@ metadata when the knowledge base was created.
   ADR 0001 from the data handling and retention baseline: updated CON-003 and
   OD-14, added an ADR retention alignment table and the Key Vault name
   collision fix. All retention periods remain proposals pending DPO and Legal.
+
+* Added the `keyVaultPurgeProtection` development parameter to the Bicep and documented it in `infra/README.md`.

@@ -8,6 +8,8 @@ param secretsUserPrincipalIds array
 param enableLock bool
 @description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
 param allowPublicNetworkAccess bool = false
+@description('Development only. False allows a 7 day soft delete and purge so disposable environments can reuse names. Once enabled on a vault, purge protection cannot be turned off.')
+param purgeProtection bool = true
 
 resource vault 'Microsoft.KeyVault/vaults@2024-11-01' = {
   name: name
@@ -18,8 +20,8 @@ resource vault 'Microsoft.KeyVault/vaults@2024-11-01' = {
     sku: { family: 'A', name: 'standard' }
     enableRbacAuthorization: true
     enableSoftDelete: true
-    softDeleteRetentionInDays: 90
-    enablePurgeProtection: true
+    softDeleteRetentionInDays: purgeProtection ? 90 : 7
+    enablePurgeProtection: purgeProtection ? true : null
     publicNetworkAccess: allowPublicNetworkAccess ? 'Enabled' : 'Disabled'
     networkAcls: {
       defaultAction: allowPublicNetworkAccess ? 'Allow' : 'Deny'
