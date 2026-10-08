@@ -1319,3 +1319,10 @@ metadata when the knowledge base was created.
   staff time capture. Owner direction (PR-001 to PR-008, DH-007) is cited;
   nothing is recorded as approved.
 * Added a Supersedes/amends note to ADR 0001 and an index row in the README.
+
+## 2026-10-08 Rubric scores the Proper Warm MVP
+
+* `.github/rubric/artifacts.json` solution-code now reads `mvp/` (code, tests,
+  Dockerfile, README, generator scripts) and no longer reads `prototype/`.
+  Private data and vendored libraries are excluded. Storage map updated in
+  `docs/capstone/README.md`.
