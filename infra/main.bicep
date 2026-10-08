@@ -55,6 +55,8 @@ param modelDeployments array = [
     capacity: 30
   }
 ]
+@description('Region for the Azure SQL server when the primary region is not accepting new SQL servers. The private endpoint stays in the primary VNet.')
+param sqlLocation string = location
 param tags object = {}
 
 var prefix = '${workload}-${environmentName}'
@@ -159,7 +161,8 @@ module sql 'modules/sql.bicep' = {
     allowPublicNetworkAccess: allowPublicNetworkAccess
     name: 'sql-${prefix}-${unique}'
     databaseName: 'retrofit'
-    location: location
+    location: sqlLocation
+    endpointLocation: location
     tags: allTags
     workspaceId: monitoring.outputs.workspaceId
     peSubnetId: network.outputs.peSubnetId

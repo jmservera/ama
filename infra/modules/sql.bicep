@@ -1,6 +1,8 @@
 param name string
 param databaseName string
 param location string
+@description('Region of the private endpoint, which must match the VNet. Defaults to location.')
+param endpointLocation string = location
 param tags object
 param workspaceId string
 param peSubnetId string
@@ -122,7 +124,7 @@ module endpoint 'privateEndpoint.bicep' = {
   name: 'pe-${name}'
   params: {
     name: name
-    location: location
+    location: endpointLocation
     tags: tags
     subnetId: peSubnetId
     targetResourceId: server.id

@@ -214,6 +214,44 @@ run, not a statistical sample, no load applied):
 These are observations, not SLO attainment. Targets in the operational
 section remain proposals until a load and failure test is run.
 
+## Architecture challenge and data store review
+
+On 2026-10-08 the architecture reviewer and Design Thinking coach agents challenged the design. Their views are hypotheses and judgement, not company facts, and pricing and feature limits were not verified.
+
+Data store decision:
+
+* Keep Azure SQL serverless for case state. The domain needs ACID transitions, row-version concurrency, unique idempotency keys and joins over Excel-origin tabular data.
+* PostgreSQL Flexible Server is a credible alternative (row-level security, pgaudit, portability) but has no native ledger, so switching is not justified now. Cosmos DB and Table/Blob-only are rejected for the system of record because strict multi-entity rules and reporting joins would move into application code. Blob stays for evidence.
+* Ledger gives tamper evidence, not prevention. The Bicep does not yet configure ledger digest upload to an immutable container or a scheduled verify run, so the claim is not yet substantiated. Planned change: digest storage plus scheduled verification, and append-only ledger tables only for audit, approvals and transitions.
+* Reconsider if per-row RLS or portability becomes a requirement, or if measured serverless resume latency breaches the API latency target (then disable auto-pause).
+
+Region split:
+
+* North Europe refused new SQL servers (`RegionDoesNotAllowProvisioning`, observed 2026-10-08, re-probed the same day), so `sqlLocation=uksouth` places SQL in the UK with its private endpoint in the North Europe VNet. This adds cross-region latency, a second failure domain and cross-region traffic cost, and is acceptable for the demonstrator only. The reviewer recommends co-locating the whole stack in one region where capacity allows. Round-trip latency is not yet measured.
+* Residency: UK South is UK, North Europe is EU. Do not claim a single residency position until OQ-012 is resolved.
+
+Additional services:
+
+* Azure AI Search: defer until a held-out evaluation shows retrieval is the failure mode (fixed cost, extra private endpoint, security trimming risk).
+* Azure AI Document Intelligence: add later as a narrow import-job step for scanned surveys and EPC PDFs (pay per page); the coach rates document handling a likely real pain point worth a trial.
+* Content Understanding: not now. Storage Queues stay; move to Service Bus if per-case ordering or richer dead-lettering is needed. Container Apps stay, with region as a parameter.
+
+Design Thinking challenge:
+
+* The private-only controls are heavy for a constructed-data demonstrator and are invisible to staff. The riskiest assumption is value and desirability (do role views over one case model reduce coordination effort), not Azure feasibility.
+* Keep the store, model tiers, evidence store, hardening level and import route reversible. Validate the Excel read-only rule and the identifier and ownership model with users first.
+* Proposed cheap experiments: one-week Excel shadowing with 3 to 5 staff; a role-view task test on constructed cases against their current Excel method; a Document Intelligence trial on 20 to 30 redacted or synthetic documents with an accuracy threshold agreed with staff beforehand.
+* Open question for the sponsor: is the controls story itself part of what the demonstrator must show? That answer decides what counts as over-engineering.
+
+## Development deployment in North Europe
+
+Deployed 2026-10-08 as `warm-dev` in resource group `amaFY27` (`northeurope`) with `allowPublicNetworkAccess=true`. Findings:
+
+* `gpt-4.1` and `gpt-4.1-mini` have no pay-as-you-go SKU in `northeurope`, so the tiers were overridden to `gpt-5.4-nano` (standard) and `gpt-5.4` (capable) with `DataZoneStandard`. Both provisioned.
+* ACR requires its export policy enabled when public access is on.
+* The MCAPS subscription policy reverted SQL public access to `Disabled` until the resource group carried the tag `SecurityControl=Ignore`.
+* Both Container Apps run (placeholder images), with a public API FQDN in this mode.
+
 ## Open items
 
 * Azure Policy assignments and subscription-level Defender plans.

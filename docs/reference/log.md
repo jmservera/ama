@@ -1171,3 +1171,8 @@ metadata when the knowledge base was created.
 * Added the development-only `allowPublicNetworkAccess` Bicep parameter
   (default false) to `infra/`, documented in `infra/README.md`. It opens public
   endpoints alongside the private endpoints for a throwaway dev stack only.
+
+* Added an architecture challenge section to ADR 0001 (Azure SQL kept, ledger
+  digest gap, cross-region SQL trade-offs, deferred AI Search, later Document
+  Intelligence, Design Thinking experiments) and recorded the North Europe dev
+  deployment findings. Agent views are judgement, not company facts.

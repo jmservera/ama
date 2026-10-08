@@ -25,7 +25,7 @@ resource registry 'Microsoft.ContainerRegistry/registries@2025-04-01' = {
     policies: {
       quarantinePolicy: { status: 'enabled' }
       retentionPolicy: { status: 'enabled', days: 30 }
-      exportPolicy: { status: 'disabled' }
+      exportPolicy: { status: allowPublicNetworkAccess ? 'enabled' : 'disabled' }
       azureADAuthenticationAsArmPolicy: { status: 'enabled' }
     }
   }

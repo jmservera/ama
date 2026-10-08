@@ -35,12 +35,14 @@ application images to the registry and update the image parameters.
 `allowPublicNetworkAccess` (default `false`) is a development switch. When `true`, the private endpoints stay in place but the following also accept external connections:
 
 * Storage, Key Vault, Foundry, Container Registry, Log Analytics and Application Insights: public network access enabled (network ACL default action `Allow`).
-* Azure SQL: public access enabled with a firewall rule `dev-external-access` covering all addresses. Entra-only authentication still applies.
+* Azure SQL: public access enabled with a firewall rule `dev-external-access` covering all addresses. Entra-only authentication still applies. In the MCAPS subscription an external policy reverts SQL `publicNetworkAccess` to `Disabled` unless the resource group carries the tag `SecurityControl=Ignore` (observed 2026-10-08), so set that tag on the resource group first.
 * Container Apps environment: external (not internal) with public access enabled, so the API gets a public FQDN. The private DNS zone for the environment is not created.
 
-Identity and RBAC controls are unchanged (no keys, no SQL logins). Never set it to `true` outside a throwaway development stack, and do not use it as evidence for the private-network claims in ADR 0001.
+The Container Registry export policy is set to `enabled` in this mode because ACR requires it when public access is on. Identity and RBAC controls are unchanged (no keys, no SQL logins). Never set it to `true` outside a throwaway development stack, and do not use it as evidence for the private-network claims in ADR 0001.
 
 ## Tested deployment
+
+Region notes for `northeurope` (observed 2026-10-08): Azure SQL was not accepting new servers, so set `sqlLocation` (for example `uksouth`; the private endpoint stays in the VNet region), and `gpt-4.1*` has no pay-as-you-go SKU, so override `modelDeployments` (for example `gpt-5.4-nano` and `gpt-5.4` with `DataZoneStandard`).
 
 Deployed on 2026-10-08 to resource group `ama` with `location=uksouth environmentName=test`. `swedencentral` returned `AKSCapacityHeavyUsage` for the Container Apps environment, so keep `location` a parameter. The SQL admin can be a user, group or application (`sqlAdminPrincipalType`).
 
