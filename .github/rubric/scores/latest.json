@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T20:50:31+00:00",
-  "commit": "40307b2fb23ef46849d7a1e3d0e68eccdaabe839",
+  "scored_at": "2026-10-08T21:30:03+00:00",
+  "commit": "bd1cea0a23904ae2c53bb60063215b0be424ed4b",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37841345550",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37844994527",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
     "prd": "7cf0f848865f394e48b522d8185545b5a6251a014e15e6347639c6376d8fd328",
@@ -29,40 +29,39 @@
         "infra/modules/containerapps.bicep:123-126",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. This diff adds a deploymentProfile switch (main.bicep, registry.bicep) affecting network/registry/KeyVault posture, not architecture modularity or scaling evidence; unchanged."
+      "rationale": "Failure-domain table and modular identity split unchanged; registry swap to mvp/ adds no new architecture evidence beyond README notes."
     },
     "A2": {
       "score": 4,
       "evidence": [
         "docs/adrs/0001-azure-architecture.md:167-198"
       ],
-      "rationale": "Options appraisal scores named alternatives against weighted criteria with argued rejection reasons. Diff adds an infra dev/prod profile toggle, no new alternatives or trade-off argument; unchanged."
+      "rationale": "Options appraisal unchanged; no new alternatives considered."
     },
     "A3": {
       "score": 4,
       "evidence": [
         "docs/adrs/0001-azure-architecture.md:131-140",
-        "prototype/properwarm/domain.py:84-99",
-        "prototype/tests/test_domain.py:60-73"
+        "mvp/properwarm_mvp/ai.py:1-10"
       ],
-      "rationale": "Threat model maps AI risks to controls in deployed design and tests. Diff adds infra/main.bicep:37-39,69-72 deploymentProfile param that relaxes network isolation, registry quarantine and Key Vault purge protection under an explicit development label, documented with a caution not to treat it as ..."
+      "rationale": "Threat model and AI bounding (fallback templates, forbidden-phrase check) still present in mvp/ai.py; unchanged level."
     },
     "A4": {
       "score": 3,
       "evidence": [
-        "prototype/properwarm/domain.py:1-125",
-        "prototype/properwarm/server.py:1-73",
-        "prototype/tests/test_domain.py:1-99",
-        "prototype/tests/test_server.py:1-63"
+        "mvp/properwarm_mvp/server.py:1-60",
+        "mvp/properwarm_mvp/store.py:1-60",
+        "mvp/README.md:68-82",
+        "mvp/tests/test_mvp.py:1-30"
       ],
-      "rationale": "A solution-code artifact now exists with working domain rules, an HTTP API, and passing-looking unit/API tests covering transitions, proposals and audit. It is in-memory only, not integrated with SQL/Blob/Foundry and not deployed, so key paths remain incomplete."
+      "rationale": "Registry now scores the mvp/ app: a fuller end-to-end UI, auth, funding, documents, AI drafting and tests than the prior prototype, but README discloses local-disk storage (not SQL/Blob), single shared password (not Entra ID) and no live integrations. Core capabilities work with disclosed gaps; s..."
     },
     "A5": {
       "score": 2,
       "evidence": [
         "docs/adrs/0001-azure-architecture.md:142-146"
       ],
-      "rationale": "Targets and cost drivers remain labelled proposed/unmeasured; monitoring infra exists but no instrumentation data or cost-per-unit evidence. Diff only adds a deployment-profile toggle for network/registry/KeyVault settings, no observability or cost evidence; unchanged."
+      "rationale": "No instrumentation data or cost evidence for mvp/ either; unchanged."
     },
     "A6": {
       "score": 3,
@@ -111,9 +110,10 @@
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:29",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
-        "infra/README.md:1-54"
+        "infra/README.md:1-54",
+        "mvp/README.md:1-85"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable. Diff adds a clear 'Deployment profile' table to infra/README.md:33-44 documenting the new switch, consistent with existing documentation quality; no capstone deck exists so cap_without caps this at 3 regardless."
+      "rationale": "BRD, PRD, infra/README.md and the new mvp/README.md remain structured and navigable, honestly disclosing limits. No capstone deck exists so cap_without caps this at 3 regardless of documentation quality."
     },
     "B7": {
       "score": 0,
@@ -126,7 +126,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:528",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269"
       ],
-      "rationale": "Business Objectives table names real stakeholders and quantifies value honestly. Diff is infra-only (dev/prod deployment profile), adds no new stakeholder, constraint or quantified value-at-stake evidence; unchanged."
+      "rationale": "Business Objectives table names stakeholders and quantifies value; unchanged by the registry swap or gap-analysis doc."
     },
     "C2": {
       "score": 0,
