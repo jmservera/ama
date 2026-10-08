@@ -285,6 +285,22 @@ targets, usability protocol and approval authority are not validated. The
 BRD's proposed 20% cycle-time and 25% net coordination-effort improvements
 remain unratified targets under OD-18, not PRD commitments.
 
+## Staff data trust and control (proposed)
+
+These are proposed requirements from the 2026-10-08 consultation, not approved scope. They make existing controls visible to staff who work in Excel and fear losing control of their data. Existing requirements remain the source of truth: NFR-003, NFR-004, NFR-005, NFR-010, FR-029, FR-030, FR-034 and FR-044.
+
+| Id | Proposed requirement | Priority | Basis |
+| --- | --- | --- | --- |
+| TR-001 | A user can export their permitted cases to Excel or CSV at any time, with source, version and history, and a colleague can open it without the workbench or an AI provider. | MVP | Extends FR-030, NFR-010, AC-032. |
+| TR-002 | A user can see who viewed or changed a case, when and why, including imports and exports. | MVP | Builds on NFR-004, AC-007. |
+| TR-003 | An import preview shows each row disposition and confirms the source workbook was not modified; values are tagged unverified and a decision held only in Excel is flagged invalid. | MVP | FR-029, DD-004, ADR transition rules. |
+| TR-004 | A plain-language data page states what is held, where, who holds which role, what AI can and cannot do and the governing rule; each compliance statement is marked verified, designed or unknown. | MVP | New; static page acceptable. |
+| TR-005 | The workbench shows only permitted fields, enforced by the server. | MVP | FR-003, NFR-003, AC-004, AC-005. |
+| TR-006 | A documented statement says what the audit log is for and who may read it, agreed with staff. | Later | New; needs HR and staff input. |
+| TR-007 | An offline list of open hazard and vulnerable cases supports an outage. | Later | NFR-004, hazard clock rules. |
+
+New open questions: which retention, residency and data-handling rules apply to staff data (the organisation's own rules are not in the repository); whether current spreadsheets hold vulnerability data and who can access them; whether staff and residents have been consulted. New risk: over-claiming compliance. Wording rule: say "designed to support", never "compliant" or "certified", without named approval.
+
 ## Design Decisions and Options Gate
 
 These are draft product decisions for the non-production demonstrator, not
