@@ -14,6 +14,7 @@ from urllib.parse import parse_qs, urlparse
 
 from . import projection
 from .factory import open_store
+from .timecapture import TimeCapture
 from .store import MANAGER_ROLES, ConflictError, GateError
 
 WEB = Path(__file__).resolve().parents[1] / "web"
@@ -28,8 +29,9 @@ def pw_hash(password, salt):
 
 
 class App:
-    def __init__(self, store, password):
+    def __init__(self, store, password, timecap=None):
         self.store = store
+        self.time = timecap or TimeCapture()
         self.salt = secrets.token_bytes(16)
         self.pw = pw_hash(password, self.salt)
         self.sessions = {}
@@ -55,6 +57,8 @@ def get_kind(path):
         return "case"
     if path.startswith("/api/docs/"):
         return "doc"
+    if path.startswith("/api/time/"):
+        return "time"
     return {"/api/ranking/policy": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs"}.get(path, "unknown")
@@ -155,6 +159,17 @@ def make_handler(app):
                 return self._json(200, s.ranking_policy())
             if url.path == "/api/ai/priority":
                 return self._json(200, {"recommendation": s.latest_priority(u)})
+            if url.path == "/api/time/status":
+                return self._json(200, app.time.status())
+            if url.path in ("/api/time/mine", "/api/time/report"):
+                try:
+                    if url.path.endswith("report"):
+                        if u["role"] not in MANAGER_ROLES:
+                            raise PermissionError("Only a manager can see the time report.")
+                        return self._json(200, app.time.report())
+                    return self._json(200, app.time.mine(u))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e), "enabled": app.time.status()["enabled"]})
             if url.path == "/api/handoffs":
                 return self._json(200, s.pending_handoffs(u))
             if url.path == "/api/facets":
@@ -211,6 +226,10 @@ def make_handler(app):
                 return self._json(403, {"error": "Your role does not include this."})
             parts = url.path.strip("/").split("/")
             try:
+                if url.path == "/api/time":
+                    s._case(body.get("case_id"))
+                    app.time.record(u, body.get("case_id"), body.get("minutes"), body.get("activity"))
+                    return self._json(200, {"ok": True})
                 if url.path == "/api/ledger/digest":
                     if u["role"] not in MANAGER_ROLES:
                         raise PermissionError("Only a manager can write a ledger digest.")
