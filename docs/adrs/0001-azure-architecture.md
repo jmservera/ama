@@ -13,6 +13,17 @@ non-identifying data. It is not an approved production architecture. Service
 availability, quotas, model versions and regional capacity are unverified and
 must be checked in the target subscription before deployment.
 
+## Supersedes/amends
+
+[ADR 0002](./0002-pilot-readiness-architecture.md) (proposed, 2026-10-08)
+amends this ADR for the working MVP. It keeps Azure SQL, Blob, `uksouth` and
+Entra-only access, and adds proposals for keeping audit entries in full for the
+legal retention period (it replaces the earlier idea of audit events without
+personal content, per owner direction and DH-007), field-level role visibility,
+deterministic home ranking, map scale for about 60,000 homes, replicas and
+image hardening, and DPIA-gated staff time capture. Where the two differ for
+the MVP, ADR 0002 applies once approved.
+
 ## Context
 
 The [Proper Warm Workbench PRD](../prds/proper-warm-retrofit-programme-demonstrator.md)

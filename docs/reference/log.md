@@ -1308,3 +1308,14 @@ metadata when the knowledge base was created.
   visibility, retention, staff time capture, 60,000-home scale, deterministic
   ranking, AI recommendation only) and changes DH-007 to keep audit entries in
   full. Pilot-readiness scope replaces read-only slices as the next step.
+
+## 2026-10-08 ADR 0002 pilot-readiness architecture
+
+* Added [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) (proposed):
+  durable Azure SQL store behind the `Store` interface with keyset paging,
+  Blob documents and immutable ledger digests, Entra ID with field projections,
+  deterministic ranking with an AI recommendation evaluation harness, server
+  side map clustering and licensed tiles, deployment and CI, and DPIA-gated
+  staff time capture. Owner direction (PR-001 to PR-008, DH-007) is cited;
+  nothing is recorded as approved.
+* Added a Supersedes/amends note to ADR 0001 and an index row in the README.
