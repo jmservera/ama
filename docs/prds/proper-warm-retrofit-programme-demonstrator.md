@@ -350,6 +350,25 @@ coordination does not establish which systems are authoritative; M365,
 SharePoint and licensing are unverified. The comparison must not treat an
 unverified estate or role-profile hypothesis as a customer fact.
 
+## Simplicity and adoption requirements (proposed)
+
+Source: [Prototype Learnings and Simplicity Review](../reference/research/ux/prototype-learnings-and-simplicity-review.md), 2026-10-08. The aim is a genuinely easy move from Excel, not a copy of it. All requirements are proposals, untested with real staff, and need owner and DPO approval. Role views are hypotheses, not company facts.
+
+| ID | Requirement | Release | Trace |
+| --- | --- | --- | --- |
+| SA-001 | The default view is a single list of the signed-in user's cases with one plain status and one next action per case. There is no perspective picker or role simulator in user views. | MVP | FR-003, NFR-003. |
+| SA-002 | A case opens full screen with contact details, preferences and adjustments, flags, last contact, next appointment and next owner, limited to permitted fields. | MVP | TR-005. |
+| SA-003 | Blocked steps show the reason, the named owner and a next action in plain words. Internal terms (gate, hold, provenance, trace) are not used in the core flow and are checked by a copy audit. | MVP | RULE-022. |
+| SA-004 | AI drafts are optional and never on the path to seeing a case. They are labelled "AI-drafted, human-approved", and the draft action is worded so it cannot read as consent or a safety decision. | MVP | FR-034, FR-044. |
+| SA-005 | Import accepts any workbook, maps columns, imports good rows and lists rows to fix with a plain reason. The source file is never modified. | MVP | TR-003, FR-029. |
+| SA-006 | Every list offers an Excel or CSV export. Excel stays one-way read-only; no write back. | MVP | TR-001. |
+| SA-007 | Hazard and safeguarding items show a clock and a named owner and are never hidden by simplification. | MVP | CON-001, TR-007. |
+| SA-008 | Resident decision is a separate, resident-owned field and is never inferred or pre-filled. | MVP | CON-006. |
+| SA-009 | Acceptance: at least 80 percent of 5 to 8 Excel users per role find their case and say the next step and owner in under 5 minutes, unaided; SUS at least 70. Thresholds are proposals. | Later | AC set to be added. |
+| SA-010 | Usability measures are aggregate only and the audit-use statement is agreed with staff before any is reported. | Later | TR-006. |
+
+Open: observe real Excel users first; real workbook shapes, who owns them and what they hold are unknown (OQ-005, OQ-012).
+
 ## Workflow Coverage
 
 | BRD workflow | Workbench module and core screen | Roles | Progress/value evidence |
