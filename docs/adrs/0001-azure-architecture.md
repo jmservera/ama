@@ -252,6 +252,15 @@ Deployed 2026-10-08 as `warm-dev` in resource group `amaFY27` (`northeurope`) wi
 * The MCAPS subscription policy reverted SQL public access to `Disabled` until the resource group carried the tag `SecurityControl=Ignore`.
 * Both Container Apps run (placeholder images), with a public API FQDN in this mode.
 
+## Region selection
+
+Checked 2026-10-08 from `az cognitiveservices model list`; capacity and quota in untested regions were not verified.
+
+* Recommended target: `uksouth` for the whole stack. The full stack deployed there end to end on 2026-08-26 (SQL, Container Apps, `gpt-4.1` and `gpt-4.1-mini` at `GlobalStandard`), UK data at rest suits a UK customer, and it removes the SQL cross-region split. North Europe refused new SQL servers and `swedencentral` lacked Container Apps capacity on the dates observed.
+* Caveat: `uksouth` has no `DataZoneStandard` model option, so inference may be processed outside the UK. Acceptable for constructed data only; revisit before real resident data (OQ-012).
+* Fallback if an EU inference boundary is required: `westeurope` or `francecentral` list `DataZoneStandard` for both models. SQL and Container Apps capacity there is untested, so probe before committing. `germanywestcentral`, `polandcentral`, `italynorth` and `spaincentral` list data-zone models but have no pay-as-you-go `gpt-4.1-mini` data-zone evidence beyond the model list and were not tested further.
+* The `warm-dev` stack in `northeurope` with SQL in `uksouth` is a development stack only.
+
 ## Open items
 
 * Azure Policy assignments and subscription-level Defender plans.

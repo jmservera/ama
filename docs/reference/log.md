@@ -1176,3 +1176,5 @@ metadata when the knowledge base was created.
   digest gap, cross-region SQL trade-offs, deferred AI Search, later Document
   Intelligence, Design Thinking experiments) and recorded the North Europe dev
   deployment findings. Agent views are judgement, not company facts.
+
+* Recorded the region selection (uksouth recommended, EU data-zone fallbacks untested) in ADR 0001.
