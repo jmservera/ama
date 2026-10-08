@@ -1266,3 +1266,10 @@ metadata when the knowledge base was created.
   each card shows facts for their role (for example contractor and works for a
   Retrofit Coordinator, funding and missing evidence for a Grants and Evidence
   Officer).
+
+## 2026-10-08 Rubric scores the Proper Warm MVP
+
+* `.github/rubric/artifacts.json` solution-code now reads `mvp/` (code, tests,
+  Dockerfile, README, generator scripts) and no longer reads `prototype/`.
+  Private data and vendored libraries are excluded. Storage map updated in
+  `docs/capstone/README.md`.
