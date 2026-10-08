@@ -189,7 +189,7 @@ ratified.
 | OD-14 | Retention defaults | Accept the addendum defaults as the design baseline | DPO and Legal approval; Legal to set limitation-related periods |
 | OD-14 | Audit entries and erasure | Keep everything for the legal retention period | Differs from the addendum, which said audit entries must not hold deleted personal content. The DPO must confirm that an erasure request can be refused for audit data under Article 17(3), and the addendum and ADR are updated to say so |
 | OD-36 | Pilot measurement | Individual staff time capture, with the staff's knowledge and a DPIA | Needs a DPIA before capture, a staff notice and a union or staff consultation view; use it for process measurement, not performance management |
-| OD-17 | Pilot scope | Load the whole stock (about 60,000 homes); staff decide what to prioritise | Differs from the BRD pilot of 80 to 100 candidate homes. Needs a decision on which homes are in live scope; the product must not rank homes for staff |
+| OD-17 | Pilot scope and ranking | Load the whole stock (about 60,000 homes). Home ranking is deterministic; AI prioritisation is a recommendation only (clarified 2026-10-08) | Differs from the BRD pilot of 80 to 100 candidate homes. Needs a decision on which homes are in live scope. Ranking rule: see the owner clarification below |
 | OD-19 | AI authority | Recommend, draft, reconcile and flag only; a person approves every action | Detailed allow and deny matrix still to be approved by control owners |
 
 Consequences for the build:
@@ -201,8 +201,15 @@ Consequences for the build:
   basis agreed with the DPO. Capture is blocked until the DPIA exists.
 * The data layer, search, map and filters must handle about 60,000 homes: paging,
   indexes, and map clustering instead of drawing every home.
-* Prioritisation stays a staff choice. Filters, sorts and saved views are
-  allowed; an automatic ranking of which homes to prioritise is not.
+* Home ranking is deterministic. The same data and the same published policy
+  version must always give the same order, with visible reason codes, a
+  versioned rule set owned by a named person, and tie-breaks that are fixed
+  (for example open safety issue, then waiting days, then reference). Staff
+  can still filter, sort and choose what to work on.
+* AI prioritisation is a recommendation only. It sits beside the deterministic
+  order, cites its reasons, can be accepted, edited or rejected with a reason,
+  and never changes the ranking, a case or a queue by itself. It is evaluated
+  against the deterministic order in the AI evaluation harness.
 
 Pilot-readiness work that does not wait on approval can start now: durable
 storage, Entra ID sign-in and role permissions, return and reopen, safety

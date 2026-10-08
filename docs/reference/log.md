@@ -1294,3 +1294,10 @@ metadata when the knowledge base was created.
   to recommend, draft, reconcile and flag. Recorded in
   [Gap Analysis and Next Build](research/gap-analysis-next-build.md); none is
   approved by the DPO, Legal or Board.
+
+## 2026-10-08 Ranking rule clarified
+
+* Owner direction: home ranking must be deterministic and policy-versioned; AI
+  prioritisation is a recommendation only and never changes the ranking.
+  Replaces the earlier note that the product must not rank homes. See
+  [Gap Analysis and Next Build](research/gap-analysis-next-build.md).
