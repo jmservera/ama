@@ -1,6 +1,5 @@
 """Case store: loading, views, actions, gates and the hash-chained audit log."""
 import csv
-import hashlib
 import io
 import json
 import os
@@ -9,7 +8,7 @@ import threading
 import uuid
 from datetime import datetime
 
-from . import insights, ranking
+from . import insights, ledger, ranking
 from .ai import Ai
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
@@ -22,6 +21,10 @@ class GateError(Exception):
     def __init__(self, reasons):
         super().__init__("; ".join(reasons))
         self.reasons = reasons
+
+
+class ConflictError(Exception):
+    """Another writer changed the same record first, so this write was refused."""
 
 
 class Store:
@@ -41,6 +44,7 @@ class Store:
         self.cases = {c["id"]: c for c in self.data["cases"]}
         self.staff = {s["email"].lower(): s for s in self.data["staff"]}
         self.last_hash = self._tail_hash()
+        self.digest_dir = os.environ.get("PW_DIGEST_DIR") or os.path.join(base, "digests")
         self.docs_dir = os.path.join(os.path.dirname(self.live_path), "docs")
         self.ai = Ai()
         self.version = 0
@@ -49,12 +53,9 @@ class Store:
         self.data.setdefault("recommendations", [])
 
     def _tail_hash(self):
-        h = "0" * 64
-        if os.path.exists(self.audit_path):
-            with open(self.audit_path, encoding="utf-8") as f:
-                for line in f:
-                    if line.strip():
-                        h = json.loads(line)["hash"]
+        h = ledger.GENESIS
+        for e in self.audit_entries():
+            h = e["hash"]
         return h
 
     def save(self):
@@ -65,27 +66,42 @@ class Store:
         os.replace(tmp, self.live_path)
 
     def audit(self, who, action, case_id, detail):
-        entry = dict(at=datetime.now().isoformat(timespec="seconds"), who=who, action=action,
-                     case=case_id, detail=detail, prev=self.last_hash)
-        entry["hash"] = hashlib.sha256(json.dumps(entry, sort_keys=True).encode()).hexdigest()
+        entry = ledger.make_entry(who, action, case_id, detail, self.last_hash)
         with open(self.audit_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry) + "\n")
         self.last_hash = entry["hash"]
 
+    def audit_entries(self):
+        if os.path.exists(self.audit_path):
+            with open(self.audit_path, encoding="utf-8") as f:
+                for line in f:
+                    if line.strip():
+                        yield json.loads(line)
+
     def verify_audit(self):
-        prev = "0" * 64
-        if not os.path.exists(self.audit_path):
-            return True
-        with open(self.audit_path, encoding="utf-8") as f:
-            for line in f:
-                if not line.strip():
-                    continue
-                e = json.loads(line)
-                h = e.pop("hash")
-                if e["prev"] != prev or hashlib.sha256(json.dumps(e, sort_keys=True).encode()).hexdigest() != h:
-                    return False
-                prev = h
+        return self.verify_ledger()["intact"]
+
+    def verify_ledger(self):
+        """Verify the chain and, when digests exist, that each digest still matches it."""
+        return ledger.verify_entries(self.audit_entries(), ledger.read_digests(self.digest_dir))
+
+    def ledger_head(self):
+        count, head = 0, ledger.GENESIS
+        for e in self.audit_entries():
+            count, head = count + 1, e["hash"]
+        return count, head
+
+    def write_digest(self):
+        """Write the current head as a digest file. In Azure this is uploaded to an immutable container."""
+        with self.lock:
+            count, head = self.ledger_head()
+            return ledger.write_digest(self.digest_dir, ledger.make_digest(count, head))
+
+    def ready(self):
         return True
+
+    def _touch(self, case_id):
+        """Hook for stores that track which cases a request changed."""
 
     @staticmethod
     def gate_reasons(c):
@@ -348,6 +364,7 @@ class Store:
         self.audit(user["email"], "ai_run_start", case_id, f"read_document {doc['name']}")
         r = self.ai.look_at(doc["name"], data, doc["mime"])
         with self.lock:
+            doc = next(d for d in self._case(case_id)["documents"] if d["id"] == doc_id)
             doc["summary"] = r["text"]
             self.audit(user["email"], "ai_run_end", case_id, f"read_document source={r['source']} model={r['model']}")
             self.save()
@@ -579,6 +596,7 @@ class Store:
         r = self.ai.run("funding_draft", sysmsg, f"Route: {route}\n{facts}\nMissing documents: {', '.join(missing) or 'none'}", tmpl, True,
                         check=lambda t: all(m.lower() in t.lower() for m in missing) or "needs" in t.lower())
         with self.lock:
+            c = self._case(case_id)
             c["funding"]["draft"] = r["text"]
             if c["funding"]["status"] in ("Not started", "To prepare"):
                 c["funding"]["status"] = "Draft ready"
@@ -622,6 +640,7 @@ class Store:
         c = self.cases.get(case_id)
         if not c:
             raise KeyError(case_id)
+        self._touch(case_id)
         return c
 
     def export_csv(self, rows):

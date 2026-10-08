@@ -12,7 +12,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from .store import GateError, Store
+from .factory import open_store
+from .store import MANAGER_ROLES, ConflictError, GateError
 
 WEB = Path(__file__).resolve().parents[1] / "web"
 TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
@@ -104,6 +105,8 @@ def make_handler(app):
         def do_GET(self):
             url = urlparse(self.path)
             if url.path == "/healthz":
+                if not app.store.ready():
+                    return self._send(503, "database unavailable", "text/plain")
                 return self._send(200, "ok", "text/plain")
             if not url.path.startswith("/api/"):
                 name = "index.html" if url.path in ("/", "") else url.path.lstrip("/")
@@ -161,7 +164,7 @@ def make_handler(app):
                 d = s.detail(url.path.rsplit("/", 1)[1])
                 return self._json(200, d) if d else self._json(404, {"error": "Case not found."})
             if url.path == "/api/audit-check":
-                return self._json(200, {"intact": s.verify_audit()})
+                return self._json(200, s.verify_ledger())
             return self._json(404, {"error": "Not found."})
 
         def do_POST(self):
@@ -185,6 +188,10 @@ def make_handler(app):
             s = app.store
             parts = url.path.strip("/").split("/")
             try:
+                if url.path == "/api/ledger/digest":
+                    if u["role"] not in MANAGER_ROLES:
+                        raise PermissionError("Only a manager can write a ledger digest.")
+                    return self._json(200, {"written": os.path.basename(s.write_digest()), "report": s.verify_ledger()})
                 if url.path == "/api/import-check":
                     return self._json(200, s.import_check(body.get("text", "")))
                 if url.path == "/api/ai/priority":
@@ -222,6 +229,8 @@ def make_handler(app):
                     else:
                         return self._json(404, {"error": "Not found."})
                     return self._json(200, s.detail(cid))
+            except ConflictError:
+                return self._json(409, {"error": "Someone else changed this at the same moment. Reload and try again."})
             except GateError as e:
                 return self._json(409, {"error": "Not ready yet.", "reasons": e.reasons})
             except PermissionError as e:
@@ -236,13 +245,11 @@ def make_handler(app):
 
 
 def main():
-    data = os.environ.get("PW_DATA", str(Path(__file__).resolve().parents[1] / "data" / "properwarm.json"))
-    if not os.path.exists(data):
-        sys.exit("No data file. Run build_mvp_dataset.py first (see mvp/README.md).")
     password = os.environ.get("PW_PASSWORD") or secrets.token_urlsafe(9)
-    state = os.environ.get("PW_STATE")
-    store = Store(data, os.path.join(state, "live.json") if state else None,
-                  os.path.join(state, "audit.jsonl") if state else None)
+    try:
+        store = open_store()
+    except FileNotFoundError:
+        sys.exit("No data file. Run build_mvp_dataset.py first (see mvp/README.md).")
     app = App(store, password)
     host, port = os.environ.get("PW_BIND", "127.0.0.1"), int(os.environ.get("PORT", "8088"))
     print(f"Proper Warm is running at http://{host}:{port}")
