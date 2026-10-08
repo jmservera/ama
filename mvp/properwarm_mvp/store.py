@@ -6,7 +6,11 @@ import json
 import os
 import re
 import threading
+import uuid
 from datetime import datetime
+
+from . import insights
+from .ai import Ai
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
@@ -29,9 +33,14 @@ class Store:
         src = self.live_path if os.path.exists(self.live_path) else data_path
         with open(src, encoding="utf-8") as f:
             self.data = json.load(f)
+        for c in self.data["cases"]:
+            c.setdefault("documents", [])
+            c.setdefault("funding", dict(route="Not decided", status="Not started", reference="", draft="", approved_by=None))
         self.cases = {c["id"]: c for c in self.data["cases"]}
         self.staff = {s["email"].lower(): s for s in self.data["staff"]}
         self.last_hash = self._tail_hash()
+        self.docs_dir = os.path.join(os.path.dirname(self.live_path), "docs")
+        self.ai = Ai()
 
     def _tail_hash(self):
         h = "0" * 64
@@ -99,14 +108,16 @@ class Store:
         return dict(id=c["id"], resident=c["resident"]["name"], address=c["home"]["address"],
                     town=c["home"]["town"], postcode=c["home"]["postcode"], phone=c["resident"]["phone"],
                     stage=c["stage"], status=self.status_line(c), owner=c["owner"], days=c["days_in_stage"],
-                    last_contact=last, next_visit=nxt["date"] if nxt else None,
+                    last_contact=last, next_visit=nxt["date"] if nxt else None, area=c["home"]["area"],
+                    wave=c["wave"], funding=c["funding"]["status"], owner_code=c["owner_code"],
                     hazard=any(not h["released"] for h in c["hazards"]),
                     support=c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None",
                     closed=c["closed"])
 
-    def list_cases(self, user, view="mine", q=""):
+    def list_cases(self, user, view="mine", q="", filters=None, sort="urgent"):
+        f = filters or {}
         with self.lock:
-            rows = [c for c in self.cases.values() if not c["closed"]]
+            rows = [c for c in self.cases.values() if not c["closed"] and insights.matches(c, f)]
             if view == "mine" or user["role"] not in MANAGER_ROLES:
                 rows = [c for c in rows if c["owner_code"] == user["code"]]
             if q:
@@ -114,7 +125,7 @@ class Store:
                 rows = [c for c in rows if ql in " ".join([c["resident"]["name"], c["home"]["address"],
                                                            c["home"]["postcode"], c["id"]]).lower()]
             out = [self.summary(c) for c in rows]
-        out.sort(key=lambda s: (not s["hazard"], -s["days"]))
+        out.sort(key=insights.sort_key(sort))
         return out
 
     def counts(self, user):
@@ -132,6 +143,8 @@ class Store:
             d["status"] = self.status_line(c)
             d["gate"] = self.gate_reasons(c)
         d["can_advance"] = c["stage"] == READY_STAGE
+        d["suggestions"] = insights.recommend_handover(c, list(self.cases.values()), self.data["staff"])
+        d["checklist"] = self.checklist(c)
         d["contacts"] = list(reversed(d["contacts"]))[:40]
         return d
 
@@ -193,6 +206,209 @@ class Store:
                     f"'{c['stage'].lower()}'. {c['owner']} is your contact and will be in touch with the next "
                     f"step.\n\nKind regards,\n{c['owner']}\nProper North Homes")
         return dict(text=body, note="Draft for you to read and change. Nothing is sent until you send it.")
+
+    # ---- insight views
+    def facets(self):
+        with self.lock:
+            return insights.facets(list(self.cases.values()))
+
+    def stats(self):
+        with self.lock:
+            return insights.stats(list(self.cases.values()), self.data["staff"])
+
+    def map_points(self, f):
+        with self.lock:
+            return insights.map_points(list(self.cases.values()), f)
+
+    def visits(self, user, view="mine"):
+        with self.lock:
+            own = None if view == "all" and user["role"] in MANAGER_ROLES else user["code"]
+            return insights.visits(list(self.cases.values()), own)
+
+    # ---- documents
+    EVIDENCE = ("EPC", "Survey", "Design", "Consent")
+    EXT = {"pdf": "application/pdf", "png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg",
+           "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+           "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+           "csv": "text/csv", "txt": "text/plain"}
+    KINDS = ("EPC", "Survey", "Design", "Consent", "Funding evidence", "Photo", "Other")
+    MAX_BYTES = 5 * 1024 * 1024
+
+    @staticmethod
+    def checklist(c):
+        have = {d["kind"] for d in c["documents"]}
+        return [dict(kind=k, present=k in have) for k in Store.EVIDENCE]
+
+    def add_document(self, user, case_id, name, kind, data):
+        name = os.path.basename((name or "").strip())[:120]
+        ext = name.rsplit(".", 1)[-1].lower() if "." in name else ""
+        if ext not in self.EXT:
+            raise ValueError("That file type is not accepted. Use pdf, png, jpg, docx, xlsx, csv or txt.")
+        if not data or len(data) > self.MAX_BYTES:
+            raise ValueError("Files must be between 1 byte and 5 MB.")
+        kind = kind if kind in self.KINDS else "Other"
+        mime = self.EXT[ext]
+        with self.lock:
+            c = self._case(case_id)
+            did = uuid.uuid4().hex[:12]
+            folder = os.path.join(self.docs_dir, case_id)
+            os.makedirs(folder, exist_ok=True)
+            with open(os.path.join(folder, did), "wb") as f:
+                f.write(data)
+            doc = dict(id=did, name=name, kind=kind, at=datetime.now().date().isoformat(), by=user["name"],
+                       generated=False, mime=mime, summary="")
+            c["documents"].append(doc)
+            self.audit(user["email"], "upload_document", case_id, f"{kind}: {name}")
+            self.save()
+        return doc
+
+    def read_document(self, user, case_id, doc_id):
+        with self.lock:
+            c = self._case(case_id)
+            doc = next((d for d in c["documents"] if d["id"] == doc_id and not d["generated"]), None)
+            if not doc:
+                raise KeyError(doc_id)
+            with open(os.path.join(self.docs_dir, case_id, doc_id), "rb") as f:
+                data = f.read()
+        self.audit(user["email"], "ai_run_start", case_id, f"read_document {doc['name']}")
+        r = self.ai.look_at(doc["name"], data, doc["mime"])
+        with self.lock:
+            doc["summary"] = r["text"]
+            self.audit(user["email"], "ai_run_end", case_id, f"read_document source={r['source']} model={r['model']}")
+            self.save()
+        return r
+
+    def get_document(self, case_id, doc_id):
+        with self.lock:
+            c = self._case(case_id)
+            doc = next((d for d in c["documents"] if d["id"] == doc_id), None)
+            if not doc:
+                raise KeyError(doc_id)
+            if doc["generated"]:
+                text = (f"{doc['name']}\nCase {c['id']}: {c['home']['address']}, {c['home']['postcode']}\n"
+                        f"Filed {doc['at']} by {doc['by']}\nType: {doc['kind']}\n")
+                return doc["name"].rsplit(".", 1)[0] + ".txt", "text/plain", text.encode()
+            with open(os.path.join(self.docs_dir, case_id, doc_id), "rb") as f:
+                return doc["name"], doc["mime"], f.read()
+
+    # ---- AI drafting (always a draft for a person)
+    def _facts(self, c):
+        r = c["resident"]
+        return (f"Case {c['id']}. Resident: {r['name']}. Home: {c['home']['address']}, {c['home']['town']}. "
+                f"Stage: {c['stage']} for {c['days_in_stage']} days. Waiting on {c['waiting_on']} {c['reason']}. "
+                f"Resident adjustments: {r['adjustment']}. Resident prefers: {r['preferred']}. "
+                f"Resident decision: {c['decision']['status']}. Funding: {c['funding']['route']} ({c['funding']['status']}). "
+                f"Open safety issues: {sum(not h['released'] for h in c['hazards'])}. "
+                f"Recent contacts: " + "; ".join(f"{k['at'][:10]} {k['outcome']}" for k in c["contacts"][-4:]))
+
+    def ai_run(self, user, case_id, task):
+        with self.lock:
+            c = self._case(case_id)
+            facts = self._facts(c)
+            fallback = self.draft(case_id, "visit" if task == "message" else "update")["text"]
+            summary = self.status_line(c)
+            owner, who = c["owner"], c["resident"]["name"]
+        sysmsg = ("You assist a UK housing association retrofit team. Use only the facts given. Never invent dates, amounts, "
+                  "names or promises. Never say anything has been sent. Plain English, short, warm, no jargon.")
+        prompts = {
+            "message": ("Draft a short letter or email from " + owner + " to the resident offering to arrange a visit or giving an "
+                        "update, respecting their adjustments and preferred contact. Sign off with the officer's name.", fallback, False),
+            "summary": ("Catch up a colleague taking over this case in at most 5 short bullets: where it is, what is stuck, "
+                        "what to do next, anything about the resident they must know.", summary, False),
+        }
+        if task not in prompts:
+            raise ValueError("Unknown request.")
+        instr, tmpl, strong = prompts[task]
+        self.audit(user["email"], "ai_run_start", case_id, task)
+        r = self.ai.run(task, sysmsg, instr + "\n\nFacts:\n" + facts, tmpl, strong)
+        self.audit(user["email"], "ai_run_end", case_id, f"{task} source={r['source']} model={r['model']} validated={r['validated']}")
+        return dict(r, label="AI-drafted, for you to check" if r["source"] == "ai" else "Template draft, for you to check")
+
+    def briefing(self, user):
+        with self.lock:
+            mine = [c for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]]
+            mine.sort(key=lambda c: (not any(not h["released"] for h in c["hazards"]), -c["days_in_stage"]))
+            top = mine[:8]
+            facts = "\n".join(f"{c['id']} {c['resident']['name']}: {c['stage']}, {c['days_in_stage']} days. {self.status_line(c)}" for c in top)
+            tmpl = "Start with: " + "; ".join(f"{c['resident']['name']} ({c['stage'].lower()}, {c['days_in_stage']} days)" for c in top[:3]) if top else "No open cases."
+        r = self.ai.run("briefing", "You write a friendly three-sentence morning briefing for a housing officer. Use only the facts. "
+                        "Safety issues first, then longest waits. No invented facts.", facts, tmpl)
+        self.audit(user["email"], "ai_run", "-", f"briefing source={r['source']} model={r['model']}")
+        return dict(r, label="AI-drafted" if r["source"] == "ai" else "Summary by rules")
+
+    # ---- funding: a person approves and submits; the system never does
+    FUND_FLOW = ("Not started", "To prepare", "Draft ready", "Approved", "Submitted", "Confirmed")
+    FUND_ROLES = ("Grants and Evidence Officer",) + MANAGER_ROLES
+
+    def funding_list(self, user):
+        with self.lock:
+            out = []
+            for c in self.cases.values():
+                if c["closed"] or c["funding"]["status"] == "Confirmed":
+                    continue
+                cl = self.checklist(c)
+                out.append(dict(id=c["id"], resident=c["resident"]["name"], address=c["home"]["address"], area=c["home"]["area"],
+                                route=c["funding"]["route"], status=c["funding"]["status"], owner=c["owner"],
+                                have=sum(x["present"] for x in cl), need=len(cl), days=c["days_in_stage"]))
+        order = {s: i for i, s in enumerate(self.FUND_FLOW)}
+        out.sort(key=lambda x: (order[x["status"]] == 0, -x["days"]))
+        return out
+
+    def funding_draft(self, user, case_id):
+        with self.lock:
+            c = self._case(case_id)
+            missing = [x["kind"] for x in self.checklist(c) if not x["present"]]
+            facts = self._facts(c) + f" Built: {c['home']['built']}. Type: {c['home']['type']}. EPC band: {c['home']['epc']}. " \
+                f"Measures: {', '.join(c['measures']) if isinstance(c['measures'], list) else c['measures']}."
+            route = c["funding"]["route"]
+            tmpl = (f"Funding application draft for {c['home']['address']} ({route})\n\nProperty: {c['home']['type']}, built "
+                    f"{c['home']['built']}, EPC {c['home']['epc']}.\nProposed measures: {c['measures']}.\n\n"
+                    + "\n".join(f"Needs: {m} document" for m in missing) + "\nNeeds: costs from the contractor\nNeeds: eligibility check by the Grants Officer")
+        sysmsg = ("You draft the narrative part of a social housing retrofit funding application. Use only the facts given. Do not invent "
+                  "costs, eligibility results or evidence. Where something is missing write 'Needs: ...'. Headings: Property, Proposed work, "
+                  "Evidence held, Evidence still needed. Under 250 words.")
+        self.audit(user["email"], "ai_run_start", case_id, "funding_draft")
+        r = self.ai.run("funding_draft", sysmsg, f"Route: {route}\n{facts}\nMissing documents: {', '.join(missing) or 'none'}", tmpl, True,
+                        check=lambda t: all(m.lower() in t.lower() for m in missing) or "needs" in t.lower())
+        with self.lock:
+            c["funding"]["draft"] = r["text"]
+            if c["funding"]["status"] in ("Not started", "To prepare"):
+                c["funding"]["status"] = "Draft ready"
+            self.audit(user["email"], "ai_run_end", case_id, f"funding_draft source={r['source']} model={r['model']}")
+            self.save()
+        return dict(r, label="AI-drafted, human-approved: nothing is submitted until a person approves and submits it")
+
+    def funding_step(self, user, case_id, action, text=""):
+        if user["role"] not in self.FUND_ROLES:
+            raise PermissionError("Only the Grants and Evidence Officer or a manager can do this.")
+        with self.lock:
+            c = self._case(case_id)
+            f = c["funding"]
+            if action == "save_draft":
+                f["draft"] = (text or "")[:6000]
+            elif action == "approve":
+                if f["status"] != "Draft ready" or not f["draft"].strip():
+                    raise ValueError("Write or generate a draft first.")
+                missing = [x["kind"] for x in self.checklist(c) if not x["present"]]
+                if missing:
+                    raise GateError([f"Missing evidence: {', '.join(missing)}"])
+                f.update(status="Approved", approved_by=user["name"])
+            elif action == "submit":
+                if f["status"] != "Approved":
+                    raise ValueError("Approve the draft first.")
+                ref = (text or "").strip()[:60]
+                if not ref:
+                    raise ValueError("Enter the reference the funder gave you.")
+                f.update(status="Submitted", reference=ref)
+            elif action == "confirm":
+                if f["status"] != "Submitted":
+                    raise ValueError("Record the submission first.")
+                f["status"] = "Confirmed"
+                c["funding_ok"] = True
+            else:
+                raise ValueError("Unknown step.")
+            self.audit(user["email"], f"funding_{action}", case_id, f["status"])
+            self.save()
 
     def _case(self, case_id):
         c = self.cases.get(case_id)

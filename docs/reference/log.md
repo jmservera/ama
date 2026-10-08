@@ -1227,3 +1227,17 @@ metadata when the knowledge base was created.
   keeps every isolation control. Documented in `infra/README.md`. Observed
   during the MVP deployment: a quarantined ACR image could not be pulled by
   Container Apps until released.
+
+## 2026-10-08 MVP improvement loop
+
+* Extended `mvp/` after owner feedback: list filters and sorting, an Overview
+  screen with a map, charts and workload, a Visits screen, handover
+  suggestions with stated reasons, document upload with an evidence
+  checklist, and a funding application workflow with human approval gates.
+* Added bounded AI assistance (`ai.py`): briefing, drafted messages, case
+  summary, funding wording and document reading. Output is validated, every
+  run is audited, templates are the fallback, and nothing is sent or
+  submitted by the system. Labelled "AI-drafted, human-approved".
+* Dataset builder now adds seeded document records and funding routes.
+* Limits: files live on ephemeral disk in the demo, sign-in is a shared
+  password, funding routes and statuses are illustrative.

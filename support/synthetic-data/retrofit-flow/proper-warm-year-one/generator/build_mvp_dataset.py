@@ -224,7 +224,24 @@ def main():
             decision = "Not yet asked" if False else "Waiting"
         else:
             decision = "Not yet asked"
+        route = c.funding_route or ""
+        fund_ok = bool(c.dates.get("funding") and c.dates["funding"] <= SNAP)
+        if fund_ok:
+            fstatus = "Confirmed"
+        elif route.startswith("WH:SHF") or c.state in ("Funding check", "Funding decision", "Awaiting release gate"):
+            fstatus = "To prepare"
+        else:
+            fstatus = "Not started"
+        docs = [("EPC certificate", "EPC", c.identified)]
+        for key, label, kind in (("survey", "Retrofit assessment report", "Survey"), ("design_approved", "Retrofit design", "Design"),
+                                 ("decision", "Resident agreement to works", "Consent"), ("funding", "Funding evidence pack", "Funding evidence")):
+            if key in c.dates and c.dates[key] <= SNAP:
+                docs.append((label, kind, c.dates[key]))
+        documents = [dict(id=f"D{i + 1}", name=f"{nm}.pdf", kind=kind, at=shift(dt, off),
+                          by=owner["name"], generated=True) for i, (nm, kind, dt) in enumerate(docs)]
         cases.append(dict(
+            documents=documents,
+            funding=dict(route=route or "Not decided", status=fstatus, reference="", draft="", approved_by=None),
             id=c.cid.replace("CAND-", "PW-"), wave=c.wave, closed=closed, stage=stage,
             stage_since=shift(since, off), days_in_stage=days_in_stage,
             waiting_on=waiting, reason=reason,
@@ -241,7 +258,7 @@ def main():
             measures=c.measures, contractor=dict(name=con["name"], phone=con["phone"], scope=con["scope"],
                                                  contact=names.operative(seed, c.supplier, c.cid)),
             decision=dict(status=decision, by=None, at=shift(dec, off) if dec and dec <= SNAP else None),
-            funding_ok=bool(c.dates.get("funding") and c.dates["funding"] <= SNAP),
+            funding_ok=fund_ok,
             contacts=contacts, appointments=appts, hazards=hazards, history=[]))
 
     staff = []

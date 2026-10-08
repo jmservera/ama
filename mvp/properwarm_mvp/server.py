@@ -1,5 +1,7 @@
 """HTTP server: sign-in, JSON API and static front end. Binds to loopback."""
 import hashlib
+import base64
+import binascii
 import hmac
 import json
 import os
@@ -40,6 +42,10 @@ class App:
         return token
 
 
+def filt(q):
+    return {k: q[k][0] for k in ("stage", "area", "wave", "owner", "contractor", "flag") if q.get(k) and q[k][0]}
+
+
 def make_handler(app):
     class H(BaseHTTPRequestHandler):
         server_version = "ProperWarm"
@@ -70,7 +76,7 @@ def make_handler(app):
 
         def _body(self):
             n = int(self.headers.get("Content-Length") or 0)
-            if n > 2_000_000:
+            if n > 8_000_000:
                 raise ValueError("Too large")
             return json.loads(self.rfile.read(n) or b"{}")
 
@@ -92,11 +98,31 @@ def make_handler(app):
             if url.path == "/api/me":
                 return self._json(200, dict(user=u, counts=s.counts(u), staff=list(s.staff.values())))
             if url.path in ("/api/cases", "/api/cases.csv"):
-                rows = s.list_cases(u, q.get("view", ["mine"])[0], q.get("q", [""])[0])
+                rows = s.list_cases(u, q.get("view", ["mine"])[0], q.get("q", [""])[0], filt(q), q.get("sort", ["urgent"])[0])
                 if url.path.endswith(".csv"):
                     return self._send(200, s.export_csv(rows), "text/csv; charset=utf-8",
                                       {"Content-Disposition": 'attachment; filename="cases.csv"'})
                 return self._json(200, rows)
+            if url.path == "/api/facets":
+                return self._json(200, s.facets())
+            if url.path == "/api/stats":
+                return self._json(200, s.stats())
+            if url.path == "/api/map":
+                return self._json(200, s.map_points(filt(q)))
+            if url.path == "/api/visits":
+                return self._json(200, s.visits(u, q.get("view", ["mine"])[0]))
+            if url.path == "/api/funding":
+                return self._json(200, s.funding_list(u))
+            if url.path == "/api/briefing":
+                return self._json(200, s.briefing(u))
+            if url.path.startswith("/api/docs/"):
+                try:
+                    _, _, _, cid, did = url.path.split("/")
+                    name, mime, raw = s.get_document(cid, did)
+                except (KeyError, ValueError):
+                    return self._json(404, {"error": "File not found."})
+                safe = "".join(ch for ch in name if ch.isalnum() or ch in " ._-")
+                return self._send(200, raw, mime, {"Content-Disposition": f'attachment; filename="{safe}"'})
             if url.path.startswith("/api/cases/"):
                 d = s.detail(url.path.rsplit("/", 1)[1])
                 return self._json(200, d) if d else self._json(404, {"error": "Case not found."})
@@ -137,6 +163,21 @@ def make_handler(app):
                         s.hand_over(u, cid, body.get("to"), body.get("note", ""))
                     elif act == "advance":
                         s.advance(u, cid)
+                    elif act == "ai":
+                        s._case(cid)
+                        return self._json(200, s.ai_run(u, cid, body.get("task")))
+                    elif act == "upload":
+                        try:
+                            raw = base64.b64decode(body.get("data", ""), validate=True)
+                        except (binascii.Error, ValueError):
+                            raise ValueError("Could not read that file.")
+                        s.add_document(u, cid, body.get("name"), body.get("kind"), raw)
+                    elif act == "read-doc":
+                        return self._json(200, s.read_document(u, cid, body.get("id")))
+                    elif act == "funding-draft":
+                        s.funding_draft(u, cid)
+                    elif act == "funding":
+                        s.funding_step(u, cid, body.get("action"), body.get("text", ""))
                     elif act == "draft":
                         s._case(cid)
                         return self._json(200, s.draft(cid, body.get("kind", "update")))
@@ -145,6 +186,8 @@ def make_handler(app):
                     return self._json(200, s.detail(cid))
             except GateError as e:
                 return self._json(409, {"error": "Not ready yet.", "reasons": e.reasons})
+            except PermissionError as e:
+                return self._json(403, {"error": str(e)})
             except KeyError:
                 return self._json(404, {"error": "Case not found."})
             except ValueError as e:

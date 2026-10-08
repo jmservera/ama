@@ -66,16 +66,34 @@ function route() {
   const m = location.hash.match(/^#\/case\/(.+)$/);
   if (m) return caseView(decodeURIComponent(m[1]));
   if (location.hash === "#/import") return importView();
+  if (location.hash === "#/overview") return overviewView();
+  if (location.hash === "#/visits") return visitsView();
+  if (location.hash === "#/funding") return fundingView();
   return listView(location.hash === "#/all" ? "all" : "mine");
 }
 
-async function listView(view, q = "") {
+const listState = { q: "", stage: "", area: "", flag: "", sort: "urgent", wave: "", owner: "" };
+const qs = (o) => Object.entries(o).filter(([, v]) => v).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
+const sel = (label, key, opts, onchange) => {
+  const el = h("select", { "aria-label": label }, h("option", { value: "" }, label), opts.map(([v, t]) => h("option", { value: v, selected: listState[key] === v }, t)));
+  el.addEventListener("change", () => { listState[key] = el.value; onchange(); });
+  return el;
+};
+
+function aiBox() {
+  const box = h("section", { class: "card ai" }, h("h2", {}, "Today's briefing"), h("p", { class: "muted" }, "Reading your cases..."));
+  api("/api/briefing").then((b) => box.replaceChildren(h("h2", {}, "Today's briefing"), h("p", {}, b.text), h("p", { class: "muted" }, `${b.label}. Suggestions only.`)))
+    .catch(() => box.remove());
+  return box;
+}
+
+async function listView(view) {
   const isMgr = ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
-  const rows = await api(`/api/cases?view=${view}&q=${encodeURIComponent(q)}`);
+  const [rows, fx] = await Promise.all([api(`/api/cases?view=${view}&${qs(listState)}`), api("/api/facets")]);
   const hz = rows.filter((r) => r.hazard).length;
-  const search = h("input", { type: "search", "aria-label": "Find a resident, address or postcode", placeholder: "Find a resident, address or postcode", value: q });
-  const go = () => listView(view, search.value);
-  search.addEventListener("keydown", (e) => { if (e.key === "Enter") go(); });
+  const go = () => listView(view);
+  const search = h("input", { type: "search", "aria-label": "Find a resident, address or postcode", placeholder: "Find a resident, address or postcode", value: listState.q });
+  search.addEventListener("keydown", (e) => { if (e.key === "Enter") { listState.q = search.value; go(); } });
   const items = rows.slice(0, 100).map((r) => h("li", {},
     h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
       h("div", {}, h("span", { class: "name" }, r.resident),
@@ -83,19 +101,29 @@ async function listView(view, q = "") {
         r.support && h("span", { class: "flag" }, "Needs extra support"),
         h("div", {}, `${r.address}, ${r.town} ${r.postcode}`),
         h("div", { class: "status" }, r.status)),
-      h("div", { class: "meta" }, h("div", {}, r.stage), h("div", {}, `Last contact: ${ago(r.last_contact)}`),
+      h("div", { class: "meta" }, h("div", {}, r.stage), h("div", {}, `${r.days} days in this stage`), h("div", {}, `Last contact: ${ago(r.last_contact)}`),
         r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`)))));
+  const filtersOn = ["q", "stage", "area", "flag", "wave", "owner"].some((k) => listState[k]);
   show(
+    aiBox(),
     h("div", { class: "row between" },
       h("h1", {}, view === "mine" ? "My cases today" : "All open cases"),
       h("div", { class: "row" },
         isMgr && h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See everyone's cases" : "See my cases"),
         h("a", { class: "btn alt", href: "#/import" }, "Check a spreadsheet"),
-        h("a", { class: "btn alt", href: `/api/cases.csv?view=${view}&q=${encodeURIComponent(q)}`, download: "cases.csv" }, "Download for Excel"))),
-    h("p", { class: "muted" }, `${rows.length} cases${hz ? `, ${hz} with a safety issue open (shown first)` : ""}`),
-    h("div", { class: "row" }, search, h("button", { onclick: go }, "Find")),
+        h("a", { class: "btn alt", href: `/api/cases.csv?view=${view}&${qs(listState)}`, download: "cases.csv" }, "Download for Excel"))),
+    h("div", { class: "row filters" }, search,
+      sel("Any stage", "stage", fx.stages.map((x) => [x, x]), go),
+      sel("Any area", "area", fx.areas.map((x) => [x, x]), go),
+      sel("Any wave", "wave", fx.waves.map((x) => [x, x]), go),
+      view === "all" && sel("Any owner", "owner", me.staff.map((x) => [x.code, x.name]), go),
+      sel("Everything", "flag", [["hazard", "Safety issue open"], ["support", "Needs extra support"], ["long", "Waiting 60+ days"], ["nodecision", "No resident decision yet"], ["funding", "Funding not confirmed"]], go),
+      h("select", { "aria-label": "Sort by", onchange: (e) => { listState.sort = e.target.value; go(); } },
+        Object.entries(fx.sorts).map(([k, t]) => h("option", { value: k, selected: listState.sort === k }, t))),
+      filtersOn && h("button", { class: "alt", onclick: () => { Object.assign(listState, { q: "", stage: "", area: "", flag: "", wave: "", owner: "" }); go(); } }, "Clear filters")),
+    h("p", { class: "muted" }, `${rows.length} cases${hz ? `, ${hz} with a safety issue open` : ""}`),
     h("ul", { class: "list" }, items.length ? items : h("li", { class: "card" }, "Nothing here. You are all caught up.")),
-    rows.length > 100 && h("p", { class: "muted" }, "Showing the first 100. Use Find to narrow the list."));
+    rows.length > 100 && h("p", { class: "muted" }, "Showing the first 100. Use the filters to narrow the list."));
 }
 
 async function caseView(id) {
@@ -119,6 +147,20 @@ async function caseView(id) {
     draftBox.replaceChildren(h("p", { class: "muted" }, d.note), h("textarea", { "aria-label": "Draft message" }, d.text));
     draftBox.querySelector("textarea").value = d.text;
   };
+  const aiRun = async (task) => {
+    draftBox.replaceChildren(h("p", { class: "muted" }, "Working on it..."));
+    try {
+      const d = await api(`/api/cases/${encodeURIComponent(id)}/ai`, { task });
+      const ta = h("textarea", { "aria-label": "Draft", rows: 9 });
+      ta.value = d.text;
+      draftBox.replaceChildren(h("p", { class: "muted" }, `${d.label}. Nothing is sent. Change it as you like.`), ta);
+    } catch (e) { draftBox.replaceChildren(h("p", { class: "err" }, e.message)); }
+  };
+  const sugg = h("section", { class: "card" }, h("h2", {}, "Who could take this on"),
+    h("p", { class: "muted" }, "Suggested by role and workload rules. You decide."),
+    h("ul", { class: "list" }, c.suggestions.map((x) => h("li", {},
+      h("strong", {}, `${x.name}, ${x.role}`), h("div", { class: "muted" }, x.reasons.join(". ")),
+      h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: x.email })) }, `Hand over to ${x.name.split(" ")[0]}`)))));
   show(
     h("a", { class: "back", href: "#/" }, "Back to the list"),
     h("div", { class: "row between" },
@@ -163,16 +205,73 @@ async function caseView(id) {
       h("section", { class: "card" }, h("h2", {}, "Hand this case to someone"),
         h("label", { for: "to" }, "Who is taking it"), to,
         h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: to.value })) }, "Hand over")))),
+    sugg,
     c.can_advance && h("section", { class: "card" }, h("h2", {}, "Final checks"),
       c.gate.length ? [h("p", {}, "This case cannot move on yet:"), h("ul", {}, c.gate.map((x) => h("li", {}, x)))] : h("p", {}, "Everything is in place."),
       h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/advance`, {})) }, "Ready to book the installation")),
     h("section", { class: "card" }, h("h2", {}, "Write to the resident"),
-      h("div", { class: "row" }, h("button", { class: "alt", onclick: () => kind("visit") }, "Draft a visit request"),
-        h("button", { class: "alt", onclick: () => kind("update") }, "Draft an update")), draftBox),
+      h("div", { class: "row" }, h("button", { onclick: () => aiRun("message") }, "Draft with AI"),
+        h("button", { class: "alt", onclick: () => aiRun("summary") }, "Catch me up on this case"),
+        h("button", { class: "alt", onclick: () => kind("visit") }, "Plain visit template"),
+        h("button", { class: "alt", onclick: () => kind("update") }, "Plain update template")), draftBox),
+    documentsPanel(c, id, refresh),
+    fundingPanel(c, id, refresh),
     msg,
     h("section", { class: "card" }, h("h2", {}, "History"),
       c.contacts.length ? h("ul", { class: "tl" }, c.contacts.slice(0, 15).map((k) => h("li", {},
         h("strong", {}, `${fmtDate(k.at)} ${k.channel}: ${k.outcome}`), h("div", { class: "muted" }, `${k.by}${k.note ? `. ${k.note}` : ""}`)))) : h("p", {}, "No contact recorded yet.")));
+}
+
+function documentsPanel(c, id, refresh) {
+  const kinds = ["EPC", "Survey", "Design", "Consent", "Funding evidence", "Photo", "Other"];
+  const kind = h("select", { "aria-label": "Type of document" }, kinds.map((k) => h("option", {}, k)));
+  const file = h("input", { type: "file", "aria-label": "Choose a file", accept: ".pdf,.png,.jpg,.jpeg,.docx,.xlsx,.csv,.txt" });
+  const out = h("div", { role: "status" });
+  const upload = () => {
+    const f = file.files[0];
+    if (!f) { out.replaceChildren(h("p", { class: "err" }, "Choose a file first.")); return; }
+    const rd = new FileReader();
+    rd.onload = () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/upload`, { name: f.name, kind: kind.value, data: String(rd.result).split(",")[1] }));
+    rd.readAsDataURL(f);
+  };
+  const read = async (d) => {
+    out.replaceChildren(h("p", { class: "muted" }, "Reading..."));
+    try {
+      const r = await api(`/api/cases/${encodeURIComponent(id)}/read-doc`, { id: d.id });
+      out.replaceChildren(h("p", { class: "muted" }, r.source === "ai" ? "AI-read, please check:" : "Note:"), h("p", { class: "pre" }, r.text));
+    } catch (e) { out.replaceChildren(h("p", { class: "err" }, e.message)); }
+  };
+  return h("section", { class: "card" }, h("h2", {}, "Documents"),
+    h("p", {}, c.checklist.map((x) => h("span", { class: `flag${x.present ? "" : " danger"}` }, `${x.present ? "Have" : "Need"}: ${x.kind}`))),
+    c.documents.length ? h("ul", { class: "list" }, c.documents.map((d) => h("li", { class: "row between" },
+      h("span", {}, h("a", { href: `/api/docs/${encodeURIComponent(id)}/${d.id}` }, d.name), ` ${d.kind}, ${fmtDate(d.at)}, ${d.by}`),
+      !d.generated && h("button", { class: "alt", onclick: () => read(d) }, "Read with AI")))) : h("p", {}, "No documents yet."),
+    h("div", { class: "row" }, kind, file, h("button", { onclick: upload }, "Add document")), out);
+}
+
+function fundingPanel(c, id, refresh) {
+  const f = c.funding;
+  const canAct = ["Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
+  const ta = h("textarea", { "aria-label": "Funding application draft", rows: 10 });
+  ta.value = f.draft || "";
+  const ref = h("input", { "aria-label": "Reference from the funder", placeholder: "Reference from the funder" });
+  const step = (action, text) => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/funding`, { action, text }));
+  if (f.status === "Confirmed") {
+    return h("section", { class: "card" }, h("h2", {}, "Funding"), h("p", {}, `Confirmed. Route: ${f.route}${f.reference ? `, reference ${f.reference}` : ""}.`));
+  }
+  const need = c.checklist.filter((x) => !x.present).map((x) => x.kind);
+  return h("section", { class: "card" }, h("h2", {}, "Funding application"),
+    h("p", {}, `Route: ${f.route}. Status: ${f.status}.${need.length ? ` Still needed: ${need.join(", ")}.` : " All evidence is in."}`),
+    h("p", { class: "muted" }, "AI drafts the wording. A person approves it and submits it to the funder. The system never submits."),
+    h("div", { class: "row" }, h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/funding-draft`, {})) }, "Draft application with AI")),
+    ta,
+    canAct ? h("div", { class: "row" },
+      h("button", { class: "alt", onclick: () => step("save_draft", ta.value) }, "Save my changes"),
+      f.status === "Draft ready" && h("button", { onclick: () => step("approve") }, `Approve as ${me.user.name}`),
+      f.status === "Approved" && [ref, h("button", { onclick: () => step("submit", ref.value) }, "Record that I submitted it")],
+      f.status === "Submitted" && h("button", { onclick: () => step("confirm") }, "Funder confirmed the award"))
+      : h("p", { class: "muted" }, "The Grants and Evidence Officer or a manager approves and submits."),
+    f.approved_by && h("p", { class: "muted" }, `Approved by ${f.approved_by}.`));
 }
 
 function importView() {
@@ -197,3 +296,91 @@ function importView() {
 document.getElementById("signout").addEventListener("click", async () => { await api("/api/logout", {}); me = null; login(); });
 window.addEventListener("hashchange", () => me && route());
 start().catch(() => login());
+
+// ---- Overview, Visits, Funding screens
+const NS = "http://www.w3.org/2000/svg";
+const svg = (tag, attrs, ...kids) => {
+  const el = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) el.setAttribute(k, v);
+  kids.flat().forEach((k) => k && el.append(k.nodeType ? k : document.createTextNode(k)));
+  return el;
+};
+
+function bars(title, data, link) {
+  const max = Math.max(1, ...data.map((d) => d.n));
+  const rowH = 24;
+  const g = svg("svg", { viewBox: `0 0 480 ${data.length * rowH + 4}`, class: "chart", role: "img", "aria-label": title },
+    data.map((d, i) => {
+      const bar = svg("g", {}, svg("text", { x: 0, y: i * rowH + 16, class: "lbl" }, d.label),
+        svg("rect", { x: 190, y: i * rowH + 4, width: Math.max(2, (d.n / max) * 240), height: 16, class: "bar" }),
+        svg("text", { x: 190 + (d.n / max) * 240 + 6, y: i * rowH + 16, class: "lbl" }, String(d.n)));
+      return bar;
+    }));
+  return h("section", { class: "card" }, h("h2", {}, title), g, link);
+}
+
+function mapView(points) {
+  const lats = points.map((p) => p.lat), lons = points.map((p) => p.lon);
+  const minLa = Math.min(...lats), maxLa = Math.max(...lats), minLo = Math.min(...lons), maxLo = Math.max(...lons);
+  const W = 640, H = 420, pad = 20;
+  const kx = Math.cos(((minLa + maxLa) / 2) * Math.PI / 180);
+  const spanX = Math.max(1e-6, (maxLo - minLo) * kx), spanY = Math.max(1e-6, maxLa - minLa);
+  const scale = Math.min((W - 2 * pad) / spanX, (H - 2 * pad) / spanY);
+  const info = h("p", { class: "muted", role: "status" }, "Select a dot to see the home.");
+  const dots = points.map((p) => {
+    const x = pad + (p.lon - minLo) * kx * scale, y = H - pad - (p.lat - minLa) * scale;
+    const d = svg("circle", { cx: x.toFixed(1), cy: y.toFixed(1), r: p.kind === "hazard" ? 6 : 4, class: `dot ${p.kind}`, tabindex: 0, role: "link", "aria-label": `${p.name}, ${p.address}` });
+    const open = () => { info.replaceChildren(h("a", { href: `#/case/${encodeURIComponent(p.id)}` }, `${p.name}, ${p.address}`), ` (${p.stage})`); };
+    d.addEventListener("click", open);
+    d.addEventListener("keydown", (e) => { if (e.key === "Enter") location.hash = `#/case/${encodeURIComponent(p.id)}`; });
+    d.addEventListener("focus", open);
+    return d;
+  });
+  return h("section", { class: "card" }, h("h2", {}, `Map of open cases (${points.length})`),
+    h("p", {}, h("span", { class: "key normal" }, "Normal"), h("span", { class: "key long" }, "Waiting 60+ days"), h("span", { class: "key hazard" }, "Safety issue open")),
+    svg("svg", { viewBox: `0 0 ${W} ${H}`, class: "map", role: "group", "aria-label": "Map of open cases" }, svg("rect", { width: W, height: H, class: "mapbg" }), dots), info);
+}
+
+async function overviewView() {
+  const [st, pts] = await Promise.all([api("/api/stats"), api(`/api/map?${qs({ area: listState.area })}`)]);
+  const k = st.kpis;
+  const tile = (n, label, href, cls = "") => h("a", { class: `tile ${cls}`, href }, h("strong", {}, String(n)), h("span", {}, label));
+  show(
+    h("h1", {}, "Overview"),
+    h("div", { class: "tiles" },
+      tile(k.open, "Open cases", "#/all"), tile(k.hazards, "Safety issues open", "#/all", k.hazards ? "danger" : ""),
+      tile(k.long, "Waiting 60+ days", "#/all"), tile(k.nodecision, "Awaiting resident decision", "#/all"),
+      tile(k.funding, "Funding in progress", "#/funding"), tile(k.support, "Residents needing extra support", "#/all"), tile(k.completed, "Completed", "#/all")),
+    h("div", { class: "row" }, h("label", { for: "mapArea" }, "Show map for"),
+      h("select", { id: "mapArea", onchange: (e) => { listState.area = e.target.value; overviewView(); } },
+        h("option", { value: "" }, "All areas"), st.areas.map((a) => h("option", { value: a.label, selected: listState.area === a.label }, a.label)))),
+    pts.length ? mapView(pts) : h("p", {}, "No homes to show."),
+    h("div", { class: "grid" }, bars("Cases by stage", st.stages), bars("Cases by local authority", st.areas)),
+    h("div", { class: "grid" }, bars("How long cases have waited", st.ages), bars("Cases by wave", st.waves)),
+    h("div", { class: "grid" }, bars("Funding status", st.funding),
+      h("section", { class: "card" }, h("h2", {}, "Contractors"), h("table", {}, h("thead", {}, h("tr", {}, ["Contractor", "Open", "On site or booked", "Stuck 60+ days"].map((x) => h("th", {}, x)))),
+        h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("td", {}, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long))))))),
+    h("section", { class: "card" }, h("h2", {}, "Team workload"), h("table", {}, h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", {}, x)))),
+      h("tbody", {}, st.team.map((t) => h("tr", {}, h("td", {}, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards)))))));
+}
+
+async function visitsView() {
+  const isMgr = ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
+  const rows = await api("/api/visits?view=" + (isMgr ? "all" : "mine"));
+  const days = {};
+  rows.forEach((v) => (days[v.date] = days[v.date] || []).push(v));
+  show(h("div", { class: "row between" }, h("h1", {}, "Visits coming up"),
+    h("span", { class: "muted" }, isMgr ? "Everyone's visits" : "Your visits")),
+    rows.length ? Object.entries(days).map(([d, vs]) => h("section", { class: "card" }, h("h2", {}, fmtDate(d)),
+      h("ul", { class: "list" }, vs.map((v) => h("li", {}, h("a", { href: `#/case/${encodeURIComponent(v.id)}` }, `${v.slot} ${v.resident}`),
+        ` ${v.type}. ${v.address}. ${v.who}: ${v.person}.`, v.support && h("span", { class: "flag" }, "Extra support"), ` Call ${v.phone}`))))) : h("p", {}, "No booked visits."));
+}
+
+async function fundingView() {
+  const rows = await api("/api/funding");
+  show(h("h1", {}, "Funding applications"),
+    h("p", { class: "muted" }, "Homes where funding is not yet confirmed. Open one to draft the application with AI, add evidence, and have it approved."),
+    h("table", {}, h("thead", {}, h("tr", {}, ["Resident", "Area", "Route", "Status", "Evidence", "Owner"].map((x) => h("th", {}, x)))),
+      h("tbody", {}, rows.slice(0, 150).map((r) => h("tr", {}, h("td", {}, h("a", { href: `#/case/${encodeURIComponent(r.id)}` }, r.resident)),
+        h("td", {}, r.area), h("td", {}, r.route), h("td", {}, r.status), h("td", {}, `${r.have} of ${r.need}`), h("td", {}, r.owner))))));
+}
