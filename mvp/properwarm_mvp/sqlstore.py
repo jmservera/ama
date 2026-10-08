@@ -16,6 +16,7 @@ import threading
 
 from . import ledger
 from .ai import Ai
+from .documents import open_document_store
 from .store import ConflictError, Store
 
 SCHEMA = """
@@ -94,6 +95,7 @@ class SqlStore(Store):
         self.db.execute("PRAGMA busy_timeout=5000")
         self.db.executescript(SCHEMA)
         self.docs_dir = docs_dir or os.path.join(os.path.dirname(db_path) or ".", "docs")
+        self.docstore = open_document_store(self.docs_dir)
         self.digest_dir = digest_dir or os.environ.get("PW_DIGEST_DIR") or os.path.join(os.path.dirname(db_path) or ".", "digests")
         self.ai = Ai()
         self.version = 0
