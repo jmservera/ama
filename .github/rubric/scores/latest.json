@@ -2,13 +2,13 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T17:50:51+00:00",
-  "commit": "d1b1e29b7fcae99fbfcc2d68c274d1346e3d6c3c",
+  "scored_at": "2026-10-08T18:23:23+00:00",
+  "commit": "be55c2d8f41fdea3feeb9c869e05fc48471436d4",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37817457261",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37823073106",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
-    "prd": "2fc308a1082feef511826db49bf60f9a3d2c682f534df2e90a0065abb9102332",
+    "prd": "7cf0f848865f394e48b522d8185545b5a6251a014e15e6347639c6376d8fd328",
     "adr": "06619f12ac51f5dd8c70d3db655d8c0db4e2894a8c7d13a711bf4a91504e8dad",
     "solution-code": "f2ae4fda6d5cd59d0c046195ba3363c856d935d6f35598cfe7c212841c0a938b",
     "infrastructure": "2b3a702b804fb9a8883fb849523241703b9fb8007b8211fe7571732fc27c1ad1"
@@ -29,14 +29,14 @@
         "infra/modules/containerapps.bicep:123-126",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table is now explicit per component and matches deployed Bicep scale rules (api minReplicas 1 maxReplicas 4, agents queue-scaled 0-5); modular identity split enforced in infra. Scaling path considered but not load-tested, so Good not Excellent."
+      "rationale": "Failure-domain table is explicit per component and matches deployed Bicep scale rules; modular identity split enforced in infra. Scaling path not load-tested, so Good not Excellent."
     },
     "A2": {
       "score": 4,
       "evidence": [
         "docs/adrs/0001-azure-architecture.md:167-198"
       ],
-      "rationale": "Provisional options appraisal scores named alternatives against weighted criteria with argued rejection reasons. This diff adds staff-trust narrative only, no new alternatives or trade-off argument; unchanged."
+      "rationale": "Provisional options appraisal scores named alternatives against weighted criteria with argued rejection reasons. This PR's changes are in mvp/ only and do not touch this evidence; unchanged."
     },
     "A3": {
       "score": 4,
@@ -45,7 +45,7 @@
         "prototype/properwarm/domain.py:84-99",
         "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Threat model maps AI risks to controls in deployed design and code-enforced tests. New staff-trust section (docs/adrs/0001-azure-architecture.md:261-307) adds narrative on compliance claims and gaps but introduces no new enforced control or test evidence, so the Good rating stands."
+      "rationale": "Threat model maps AI risks to controls in deployed design and code-enforced tests. This PR's changes are in mvp/ only and do not add new enforced control or test evidence; unchanged."
     },
     "A4": {
       "score": 3,
@@ -70,7 +70,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:496-514",
         "prototype/scripts/evaluate_agent.py:1-51"
       ],
-      "rationale": "Offline contract-evaluation script exists but does not call a model; model selection and live evaluation harness remain undone."
+      "rationale": "Offline contract-evaluation script exists but does not call a model; model selection and live evaluation harness remain undone. This PR's mvp/ changes do not touch evaluation evidence; unchanged."
     },
     "A7": {
       "score": 4,
@@ -79,7 +79,7 @@
         "prototype/tests/test_domain.py:16-21",
         "prototype/tests/test_domain.py:60-73"
       ],
-      "rationale": "Bounded-agent orchestration demonstrated in running, tested code: roles code-enforced, proposals schema- and citation-gated, acceptance never auto-advances. Diff adds no new agent-code evidence; unchanged."
+      "rationale": "Bounded-agent orchestration demonstrated in running, tested code: roles code-enforced, proposals schema- and citation-gated. This PR adds no new agent-code evidence; unchanged."
     },
     "B1": {
       "score": 0,
@@ -113,7 +113,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
         "infra/README.md:1-54"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable; new staff-trust sections (docs/adrs/0001-azure-architecture.md:261-307, docs/prds/...:285-301) are clear and well-organised, but no capstone deck exists so cap_without caps this at 3."
+      "rationale": "BRD, PRD and infra/README.md remain structured and navigable, but no capstone deck exists so cap_without caps this at 3. This PR's mvp/README.md changes do not affect these cited artifacts; unchanged."
     },
     "B7": {
       "score": 0,
@@ -126,7 +126,7 @@
         "docs/brds/agentic-retrofit-programme-brd.md:528",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269"
       ],
-      "rationale": "Business Objectives table still names real stakeholders and quantifies value honestly. This run's changes add governance/trust framing (staff concerns, TR-001..TR-007) but do not add new stakeholder, constraint or quantified value-at-stake evidence beyond what was already scored; unchanged."
+      "rationale": "Business Objectives table still names real stakeholders and quantifies value honestly. This PR's changes (mvp/, workflow, log) do not add new stakeholder, constraint or quantified value-at-stake evidence; unchanged."
     },
     "C2": {
       "score": 0,
