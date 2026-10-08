@@ -6,15 +6,22 @@ every mutable row has a row version and a write fails closed when it no longer
 matches, the audit ledger is append-only with full content and one chain head,
 and no per-process state is needed for correctness. Each request first catches
 up from the database change sequence, so several processes can share one
-database. Case reads still go through an in-memory copy kept in step with that
-sequence; the indexes serve the SQL filter queries and the 60,000-home plan.
+database.
+
+Reads: the case list (filters, search, every sort, totals, ranks, keyset and
+offset paging) and the header counts are answered by SQL on indexed derived
+columns, and only the page's rows are decoded. The derived `rkey` column is the
+ranking policy as a sortable text key (ranking.sql_key), rebuilt when the policy
+version changes. Case detail, the map, statistics, visits and writes still use
+the in-memory copy kept in step with the change sequence; the full-list export
+and the closed list also fall back to it.
 """
 import json
 import os
 import sqlite3
 import threading
 
-from . import ledger
+from . import insights, ledger, projection, ranking
 from .ai import Ai
 from .documents import open_document_store
 from .store import ConflictError, Store
@@ -26,9 +33,20 @@ CREATE TABLE IF NOT EXISTS cases (
   id TEXT PRIMARY KEY, rowversion INTEGER NOT NULL DEFAULT 1, seq INTEGER NOT NULL,
   stage TEXT NOT NULL, area TEXT NOT NULL, wave TEXT NOT NULL, owner_code TEXT NOT NULL,
   closed INTEGER NOT NULL, hazard INTEGER NOT NULL, postcode TEXT NOT NULL, address TEXT NOT NULL,
-  body TEXT NOT NULL);
+  body TEXT NOT NULL, support INTEGER NOT NULL DEFAULT 0, days INTEGER NOT NULL DEFAULT 0, rkey TEXT NOT NULL DEFAULT '',
+  contractor TEXT NOT NULL DEFAULT '', search TEXT NOT NULL DEFAULT '', search_c TEXT NOT NULL DEFAULT '',
+  surname TEXT NOT NULL DEFAULT '', last_contact TEXT NOT NULL DEFAULT '0000', next_visit TEXT NOT NULL DEFAULT '9999',
+  decision TEXT NOT NULL DEFAULT '', fstatus TEXT NOT NULL DEFAULT '');
+"""
+
+INDEXES = """
 CREATE INDEX IF NOT EXISTS ix_cases_filter ON cases (closed, stage, area, wave, owner_code);
 CREATE INDEX IF NOT EXISTS ix_cases_owner ON cases (owner_code, closed);
+CREATE INDEX IF NOT EXISTS ix_cases_rkey ON cases (closed, rkey, id);
+CREATE INDEX IF NOT EXISTS ix_cases_owner_rkey ON cases (owner_code, closed, rkey);
+CREATE INDEX IF NOT EXISTS ix_cases_contractor_rkey ON cases (contractor, closed, rkey);
+CREATE INDEX IF NOT EXISTS ix_cases_stage_rkey ON cases (closed, stage, rkey);
+CREATE INDEX IF NOT EXISTS ix_cases_days ON cases (closed, days DESC, rkey);
 CREATE INDEX IF NOT EXISTS ix_cases_open_hazard ON cases (id) WHERE hazard = 1 AND closed = 0;
 CREATE INDEX IF NOT EXISTS ix_cases_seq ON cases (seq);
 CREATE INDEX IF NOT EXISTS ix_cases_postcode ON cases (postcode);
@@ -45,6 +63,15 @@ CREATE TABLE IF NOT EXISTS audit_head (id INTEGER PRIMARY KEY CHECK (id = 1), co
 CREATE TRIGGER IF NOT EXISTS audit_no_update BEFORE UPDATE ON audit BEGIN SELECT RAISE(ABORT, 'audit ledger is append-only'); END;
 CREATE TRIGGER IF NOT EXISTS audit_no_delete BEFORE DELETE ON audit BEGIN SELECT RAISE(ABORT, 'audit ledger is append-only'); END;
 """
+
+
+CASE_COLS = ("stage", "area", "wave", "owner_code", "closed", "hazard", "postcode", "address", "body", "support", "days", "rkey",
+             "contractor", "search", "search_c", "surname", "last_contact", "next_visit", "decision", "fstatus")
+
+SORT_SQL = {"urgent": "rkey", "waiting": "days DESC, rkey", "contact": "last_contact, rkey", "name": "surname, rkey", "visit": "next_visit, rkey"}
+FLAG_SQL = {"hazard": "hazard=1", "support": "support=1", "long": f"days>={insights.LONG_WAIT}",
+            "nodecision": "decision NOT IN ('Accepted','Declined')",
+            "fundingprog": "fstatus IN ('To prepare','Draft ready','Approved','Submitted')", "funding": "fstatus!='Confirmed'"}
 
 
 class _SyncLock:
@@ -94,6 +121,8 @@ class SqlStore(Store):
         self.db.execute("PRAGMA journal_mode=WAL")
         self.db.execute("PRAGMA busy_timeout=5000")
         self.db.executescript(SCHEMA)
+        self._migrate()
+        self.db.executescript(INDEXES)
         self.docs_dir = docs_dir or os.path.join(os.path.dirname(db_path) or ".", "docs")
         self.docstore = open_document_store(self.docs_dir)
         self.digest_dir = digest_dir or os.environ.get("PW_DIGEST_DIR") or os.path.join(os.path.dirname(db_path) or ".", "digests")
@@ -110,6 +139,29 @@ class SqlStore(Store):
         with self.lock:
             pass
 
+    # ---- derived columns
+    def _migrate(self):
+        """Add derived columns to a database made by an earlier slice and rebuild them when missing or when the ranking policy changed."""
+        have = {r[1] for r in self.db.execute("PRAGMA table_info(cases)")}
+        for col in CASE_COLS:
+            if col not in have:
+                defaults = {"last_contact": "'0000'", "next_visit": "'9999'", "support": "0", "days": "0"}
+                self.db.execute(f"ALTER TABLE cases ADD COLUMN {col} {'INTEGER' if col in ('support', 'days') else 'TEXT'} NOT NULL DEFAULT {defaults.get(col, chr(39) * 2)}")
+        want = ranking.CURRENT["version"]
+        row = self.db.execute("SELECT value FROM meta WHERE key='rank_policy'").fetchone()
+        stale = (row[0] if row else None) != want or (not have >= set(CASE_COLS))
+        if stale and self.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0]:
+            self.db.execute("BEGIN IMMEDIATE")
+            try:
+                for cid, body in self.db.execute("SELECT id, body FROM cases").fetchall():
+                    r = self._row(json.loads(body))
+                    self.db.execute("UPDATE cases SET " + ", ".join(f"{c}=?" for c in CASE_COLS) + " WHERE id=?", r[1:] + (cid,))
+                self.db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('rank_policy', ?)", (want,))
+                self.db.execute("COMMIT")
+            except BaseException:
+                self.db.execute("ROLLBACK")
+                raise
+
     # ---- load and sync
     def _seed(self, data_path):
         with self.dblock:
@@ -121,8 +173,9 @@ class SqlStore(Store):
                     for c in src["cases"]:
                         c.setdefault("documents", [])
                         c.setdefault("funding", dict(route="Not decided", status="Not started", reference="", draft="", approved_by=None))
-                    self.db.executemany("INSERT INTO cases (id, rowversion, seq, stage, area, wave, owner_code, closed, hazard, postcode, address, body)"
-                                        " VALUES (?,1,1,?,?,?,?,?,?,?,?,?)", [self._row(c) for c in src["cases"]])
+                    self.db.executemany(f"INSERT INTO cases (id, rowversion, seq, {', '.join(CASE_COLS)}) VALUES (?,1,1,{','.join('?' * len(CASE_COLS))})",
+                                        [self._row(c) for c in src["cases"]])
+                    self.db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('rank_policy', ?)", (ranking.CURRENT["version"],))
                     self.db.executemany("INSERT OR IGNORE INTO staff (email, body) VALUES (?,?)",
                                         [(s["email"].lower(), json.dumps(s)) for s in src["staff"]])
                     self.db.execute("INSERT OR IGNORE INTO meta (key, value) VALUES ('seq', '1')")
@@ -134,8 +187,14 @@ class SqlStore(Store):
 
     @staticmethod
     def _row(c):
-        return (c["id"], c["stage"], c["home"]["area"], c["wave"], c["owner_code"], int(bool(c["closed"])),
-                int(any(not h["released"] for h in c["hazards"])), c["home"]["postcode"], c["home"]["address"], json.dumps(c))
+        nxt = next((a["date"] for a in c["appointments"] if a["outcome"] == "Booked"), None)
+        name, home = c["resident"]["name"], c["home"]
+        return (c["id"], c["stage"], home["area"], c["wave"], c["owner_code"], int(bool(c["closed"])),
+                int(any(not h["released"] for h in c["hazards"])), home["postcode"], home["address"], json.dumps(c),
+                int(ranking._support(c)), int(c["days_in_stage"]), ranking.sql_key(c), c["contractor"]["name"],
+                " ".join([name, home["address"], home["postcode"], c["id"]]).lower(), " ".join([home["address"], home["postcode"], c["id"]]).lower(),
+                name.split(" ")[-1].lower(), (c["contacts"][-1]["at"] if c["contacts"] else None) or "0000", nxt or "9999",
+                c["decision"]["status"], c["funding"]["status"])
 
     def _db_seq(self):
         row = self.db.execute("SELECT value FROM meta WHERE key='seq'").fetchone()
@@ -217,9 +276,8 @@ class SqlStore(Store):
                     if body == self._snap.get(cid):
                         continue
                     r = self._row(c)
-                    n = self.db.execute("UPDATE cases SET rowversion=rowversion+1, seq=?, stage=?, area=?, wave=?, owner_code=?, closed=?, hazard=?,"
-                                        " postcode=?, address=?, body=? WHERE id=? AND rowversion=?",
-                                        (new,) + r[1:] + (cid, self._rv[cid])).rowcount
+                    n = self.db.execute("UPDATE cases SET rowversion=rowversion+1, seq=?, " + ", ".join(f"{c}=?" for c in CASE_COLS) +
+                                        " WHERE id=? AND rowversion=?", (new,) + r[1:] + (cid, self._rv[cid])).rowcount
                     if n != 1:
                         raise ConflictError(cid)
                     changed.append((cid, body))
@@ -332,6 +390,69 @@ class SqlStore(Store):
         sql += " ORDER BY id LIMIT ?"
         with self.dblock:
             return [r[0] for r in self.db.execute(sql, args + [limit]).fetchall()]
+
+    # ---- SQL reads
+    def _where(self, user, view, q, f):
+        where, args = ["closed=0"], []
+        for col, key in (("stage", "stage"), ("area", "area"), ("wave", "wave"), ("owner_code", "owner"), ("contractor", "contractor")):
+            if f.get(key):
+                where.append(f"{col}=?")
+                args.append(f[key])
+        flag = f.get("flag")
+        if flag in FLAG_SQL:
+            where.append(FLAG_SQL[flag])
+        if projection.is_contractor(user):
+            where.append("contractor=?")
+            args.append(user.get("contractor") or "")
+        elif view == "mine":
+            where.append("owner_code=?")
+            args.append(user["code"])
+        if q:
+            where.append(f"instr({'search_c' if projection.is_contractor(user) else 'search'}, ?) > 0")
+            args.append(q.lower())
+        return " AND ".join(where), args
+
+    def page_cases(self, user, view="mine", q="", filters=None, sort="urgent", limit=None, offset=0, after=None):
+        """Same result as Store.page_cases, answered by SQL. `after` is a keyset cursor (the last rkey seen) for the default order."""
+        if limit is None or view == "closed":
+            return super().page_cases(user, view, q, filters, sort, limit, offset)
+        asked = sort
+        if sort not in insights.SORTS:
+            sort = "urgent"
+        where, args = self._where(user, view, q, filters or {})
+        order = SORT_SQL[sort]
+        keyset = after if sort == "urgent" and after else None
+        with self.lock, self.dblock:
+            total = self.db.execute(f"SELECT COUNT(*) FROM cases WHERE {where}", args).fetchone()[0]
+            ranked_total = self.db.execute("SELECT COUNT(*) FROM cases WHERE closed=0").fetchone()[0]
+            page_where, page_args = (where + " AND rkey>?", args + [keyset]) if keyset else (where, args)
+            rows = self.db.execute(f"SELECT id, rkey, body FROM cases WHERE {page_where} ORDER BY {order} LIMIT ? OFFSET ?",
+                                   page_args + [limit, 0 if keyset else offset]).fetchall()
+            ranks = {}
+            if rows:
+                marks = ",".join("?" * len(rows))
+                ranks = dict(self.db.execute(f"SELECT id, rk FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY rkey) AS rk FROM cases WHERE closed=0) "
+                                             f"WHERE id IN ({marks})", [r[0] for r in rows]).fetchall())
+        out = []
+        for cid, rkey, body in rows:
+            c = json.loads(body)
+            r = self.summary(c)
+            r["rank"], r["reasons"] = ranks[cid], [t for _, t in ranking.reasons(c)]
+            if projection.is_contractor(user):
+                r.pop("reasons")
+                r = projection.contractor_summary(c, r)
+            elif view == "mine":
+                r["focus"] = self.focus(c, user["role"], projection.can_see_reason(user))
+            out.append(r)
+        nxt = rows[-1][1] if rows and sort == "urgent" and len(rows) == limit else None
+        return dict(items=out, total=total, limit=limit, offset=offset, sort=asked, policy_version=ranking.CURRENT["version"],
+                    ranked_total=ranked_total, next_cursor=nxt)
+
+    def counts(self, user):
+        with self.lock, self.dblock:
+            mine, hazards = self.db.execute("SELECT COUNT(*), COALESCE(SUM(hazard),0) FROM cases WHERE closed=0 AND owner_code=?", (user["code"],)).fetchone()
+            open_ = self.db.execute("SELECT COUNT(*) FROM cases WHERE closed=0").fetchone()[0]
+        return dict(mine=mine, hazards=hazards, open=open_)
 
     def explain(self, sql, args=()):
         with self.dblock:

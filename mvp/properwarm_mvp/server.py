@@ -157,7 +157,8 @@ def make_handler(app):
                 except ValueError as e:
                     return self._json(400, {"error": str(e)})
                 try:
-                    return self._json(200, s.page_cases(u, view, text, filt(q), sort, limit, offset))
+                    after = q.get("after", [""])[0][:100] or None
+                    return self._json(200, s.page_cases(u, view, text, filt(q), sort, limit, offset, after))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
             if url.path == "/api/ranking/policy":
@@ -165,7 +166,7 @@ def make_handler(app):
             if url.path == "/api/ai/priority":
                 return self._json(200, {"recommendation": s.latest_priority(u)})
             if url.path == "/api/time/status":
-                return self._json(200, app.time.status())
+                return self._json(200, app.time.status(u))
             if url.path in ("/api/time/mine", "/api/time/report"):
                 try:
                     if url.path.endswith("report"):
@@ -238,6 +239,10 @@ def make_handler(app):
                 return self._json(403, {"error": "Your role does not include this."})
             parts = url.path.strip("/").split("/")
             try:
+                if url.path == "/api/time/acknowledge":
+                    ver = app.time.acknowledge(u)
+                    s.audit(u["email"], "time_notice_acknowledged", "-", f"notice {ver}")
+                    return self._json(200, app.time.status(u))
                 if url.path == "/api/time":
                     s._case(body.get("case_id"))
                     app.time.record(u, body.get("case_id"), body.get("minutes"), body.get("activity"))

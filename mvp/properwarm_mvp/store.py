@@ -167,7 +167,7 @@ class Store(WorkflowMixin):
             rows = [c for c in rows if ql in " ".join(fields(c)).lower()]
         return rows
 
-    def page_cases(self, user, view="mine", q="", filters=None, sort="urgent", limit=None, offset=0):
+    def page_cases(self, user, view="mine", q="", filters=None, sort="urgent", limit=None, offset=0, after=None):
         """One page of the filtered, sorted list plus the total. limit None returns everything."""
         with self.lock:
             ranks = self._ranking()
@@ -179,6 +179,9 @@ class Store(WorkflowMixin):
                             policy_version=ranking.CURRENT["version"], ranked_total=len(ranks))
             if sort in ("urgent", "", None) or sort not in insights.SORTS:
                 rows.sort(key=lambda c: ranks[c["id"]]["rank"])
+                if after:
+                    rows = [c for c in rows if ranking.sql_key(c) > after]
+                    offset = 0
                 page = rows if limit is None else rows[offset:offset + limit]
                 out = [self.summary(c) for c in page]
             else:
@@ -199,8 +202,9 @@ class Store(WorkflowMixin):
                     out[i] = projection.contractor_summary(c, r)
                 elif view == "mine":
                     r["focus"] = self.focus(c, user["role"], projection.can_see_reason(user))
+            nxt = ranking.sql_key(page[-1]) if limit is not None and page and (sort in ("urgent", "", None) or sort not in insights.SORTS) and len(page) == limit else None
             return dict(items=out, total=total, limit=limit, offset=offset, sort=sort,
-                        policy_version=ranking.CURRENT["version"], ranked_total=len(ranks))
+                        policy_version=ranking.CURRENT["version"], ranked_total=len(ranks), next_cursor=nxt)
 
     def list_cases(self, user, view="mine", q="", filters=None, sort="urgent"):
         return self.page_cases(user, view, q, filters, sort)["items"]

@@ -61,6 +61,25 @@ def _rule_keys(policy):
     return [table[k] for k in codes]
 
 
+def sql_key(c, policy=CURRENT):
+    """Fixed-width text key whose plain string order equals rank() order, so a database can sort and page on it.
+
+    Segments follow the policy's rule order. Days are offset so any realistic value stays positive and 8 digits wide.
+    """
+    order = {s: i for i, s in enumerate(policy["stage_order"])}
+    seg = {
+        "safety_open": lambda: "0" if _hazard(c) else "1",
+        "support": lambda: "0" if _support(c) else "1",
+        "waiting_days": lambda: f"{10 ** 7 - max(-10 ** 6, min(10 ** 7 - 1, c['days_in_stage'])):08d}",
+        "stage_order": lambda: f"{order.get(c['stage'], len(order)):04d}",
+        "case_id": lambda: c["id"],
+    }
+    codes = [r["code"] for r in policy["rules"]]
+    if "case_id" not in codes:
+        codes.append("case_id")
+    return "".join(seg[k]() for k in codes)
+
+
 def reasons(c):
     """Plain-English reasons, paired with a stable code each."""
     out = []

@@ -150,7 +150,7 @@ async function listView(view) {
   const title = h("h1", {}, view === "mine" ? "My cases today" : "All open cases");
   const csv = h("a", { class: "btn alt", download: "cases.csv" }, "Download for Excel");
   let timer = 0, seq = 0;
-  let rows = [], total = 0, policy = "";
+  let rows = [], total = 0, policy = "", cursor = null;
   const PAGE = 50;
   const render = () => {
     results.replaceChildren(...[
@@ -171,8 +171,10 @@ async function listView(view) {
   };
   const load = async (more) => {
     const my = ++seq;
-    const d = await api(`/api/cases?view=${view}&${qs(listState)}&limit=${PAGE}&offset=${more ? rows.length : 0}`);
+    const paging = more && cursor ? `after=${encodeURIComponent(cursor)}` : `offset=${more ? rows.length : 0}`;
+    const d = await api(`/api/cases?view=${view}&${qs(listState)}&limit=${PAGE}&${paging}`);
     if (my !== seq) return;
+    cursor = d.next_cursor || null;
     csv.href = `/api/cases.csv?view=${view}&${qs(listState)}`;
     rows = more ? rows.concat(d.items) : d.items;
     total = d.total;
