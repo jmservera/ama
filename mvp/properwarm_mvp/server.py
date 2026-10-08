@@ -1,8 +1,6 @@
 """HTTP server: sign-in, JSON API and static front end. Binds to loopback."""
-import hashlib
 import base64
 import binascii
-import hmac
 import json
 import os
 import secrets
@@ -12,7 +10,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from . import projection
+from . import auth, projection
 from .factory import open_store
 from .timecapture import TimeCapture
 from .store import MANAGER_ROLES, ConflictError, GateError
@@ -24,26 +22,11 @@ SECURITY = {"Content-Security-Policy": "default-src 'self'; img-src 'self' data:
             "X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin", "Cache-Control": "no-store", "Strict-Transport-Security": "max-age=31536000"}
 
 
-def pw_hash(password, salt):
-    return hashlib.pbkdf2_hmac("sha256", password.encode(), salt, 120_000)
-
-
 class App:
-    def __init__(self, store, password, timecap=None):
+    def __init__(self, store, password=None, timecap=None, provider=None):
         self.store = store
         self.time = timecap or TimeCapture()
-        self.salt = secrets.token_bytes(16)
-        self.pw = pw_hash(password, self.salt)
-        self.sessions = {}
-
-    def login(self, email, password):
-        u = self.store.staff.get((email or "").strip().lower())
-        ok = hmac.compare_digest(pw_hash(password or "", self.salt), self.pw)
-        if not u or not ok:
-            return None
-        token = secrets.token_urlsafe(32)
-        self.sessions[token] = u
-        return token
+        self.provider = provider or auth.make_provider(store, password or secrets.token_urlsafe(9))
 
 
 def get_kind(path):
@@ -114,8 +97,7 @@ def make_handler(app):
             return m.value if m else None
 
         def _user(self):
-            u = app.sessions.get(self._cookie())
-            return dict(u) if u else None
+            return app.provider.authenticate(self.headers)
 
         def _body(self):
             n = int(self.headers.get("Content-Length") or 0)
@@ -210,7 +192,9 @@ def make_handler(app):
             except ValueError:
                 return self._json(400, {"error": "Could not read that."})
             if url.path == "/api/login":
-                tok = app.login(body.get("email"), body.get("password"))
+                if not hasattr(app.provider, "login"):
+                    return self._json(404, {"error": "Sign-in is handled by your organisation's single sign-on."})
+                tok = app.provider.login(body.get("email"), body.get("password"))
                 if not tok:
                     return self._json(401, {"error": "Email or password not recognised."})
                 ck = f"pw_session={tok}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800" + ("; Secure" if os.environ.get("PW_SECURE_COOKIE") else "")
@@ -218,9 +202,10 @@ def make_handler(app):
             u = self._user()
             if not u:
                 return self._json(401, {"error": "Please sign in."})
+            if app.provider.name == "trusted-proxy" and self.headers.get("X-PW-CSRF") != "1":
+                return self._json(403, {"error": "Missing request header."})
             if url.path == "/api/logout":
-                app.sessions.pop(self._cookie(), None)
-                return self._json(200, {"ok": True}, {"Set-Cookie": "pw_session=; Max-Age=0; Path=/"})
+                return self._json(200, app.provider.logout_response(), {"Set-Cookie": "pw_session=; Max-Age=0; Path=/"})
             s = app.store
             if not projection.allowed(u, "post", "POST"):
                 return self._json(403, {"error": "Your role does not include this."})
@@ -315,7 +300,7 @@ def main():
     app = App(store, password)
     host, port = os.environ.get("PW_BIND", "127.0.0.1"), int(os.environ.get("PORT", "8088"))
     print(f"Proper Warm is running at http://{host}:{port}")
-    if not os.environ.get("PW_PASSWORD"):
+    if app.provider.name == "password" and not os.environ.get("PW_PASSWORD"):
         print(f"Sign in with any staff email and the password {password}")
     ThreadingHTTPServer((host, port), make_handler(app)).serve_forever()
 
