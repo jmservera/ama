@@ -10,9 +10,9 @@ from datetime import datetime
 
 from . import insights, ledger, projection, ranking
 from .ai import Ai
+from .workflows import MANAGER_ROLES, WorkflowMixin
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
-MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 READY_STAGE = "Final checks before ordering"
 BOOKED_STAGE = "Install booked"
 
@@ -27,7 +27,7 @@ class ConflictError(Exception):
     """Another writer changed the same record first, so this write was refused."""
 
 
-class Store:
+class Store(WorkflowMixin):
     def __init__(self, data_path, live_path=None, audit_path=None):
         self.lock = threading.RLock()
         base = os.path.dirname(data_path)

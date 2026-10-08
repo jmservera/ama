@@ -57,7 +57,7 @@ def get_kind(path):
         return "doc"
     return {"/api/ranking/policy": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
-            "/api/audit-check": "audit"}.get(path, "unknown")
+            "/api/audit-check": "audit", "/api/handoffs": "handoffs"}.get(path, "unknown")
 
 
 def filt(q):
@@ -155,6 +155,8 @@ def make_handler(app):
                 return self._json(200, s.ranking_policy())
             if url.path == "/api/ai/priority":
                 return self._json(200, {"recommendation": s.latest_priority(u)})
+            if url.path == "/api/handoffs":
+                return self._json(200, s.pending_handoffs(u))
             if url.path == "/api/facets":
                 return self._json(200, s.facets())
             if url.path == "/api/stats":
@@ -227,6 +229,26 @@ def make_handler(app):
                         s.set_decision(u, cid, body.get("status"), body.get("note", ""))
                     elif act == "handover":
                         s.hand_over(u, cid, body.get("to"), body.get("note", ""))
+                    elif act == "return":
+                        s.return_case(u, cid, body.get("to_stage"), body.get("reason"))
+                    elif act == "reopen":
+                        s.reopen_case(u, cid, body.get("reason"))
+                    elif act == "offer-handoff":
+                        s.offer_handoff(u, cid, body.get("to"), body.get("note", ""))
+                    elif act == "accept-handoff":
+                        s.accept_handoff(u, cid)
+                    elif act == "decline-handoff":
+                        s.decline_handoff(u, cid, body.get("reason"))
+                    elif act == "withdraw-handoff":
+                        s.withdraw_handoff(u, cid)
+                    elif act == "hazard-raise":
+                        s.raise_hazard(u, cid, body.get("category"), body.get("priority"), body.get("note", ""))
+                    elif act == "hazard-refer":
+                        s.refer_hazard(u, cid, body.get("index"), body.get("to"), body.get("job"))
+                    elif act == "hazard-repaired":
+                        s.record_repair(u, cid, body.get("index"))
+                    elif act == "hazard-release":
+                        s.release_hazard(u, cid, body.get("index"), body.get("note", ""))
                     elif act == "advance":
                         s.advance(u, cid)
                     elif act == "ai":
