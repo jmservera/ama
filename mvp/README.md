@@ -256,6 +256,27 @@ when `PW_TEST_MSSQL=1` (and `PW_SQL_*` point at a throwaway database).
   `mvp-ci.yml` workflow has not run on GitHub.
 * Retention periods and legal bases remain proposals for the DPO and Legal.
 
+## Container hardening checks in CI
+
+The `image` job in `.github/workflows/mvp-ci.yml` builds the image and checks:
+
+* it runs as UID 10001 and contains no working data;
+* it starts and answers `/healthz` with `--read-only --cap-drop ALL
+  --security-opt no-new-privileges`, with only `/tmp` and `/state` (`PW_STATE`)
+  mounted as tmpfs, the seed data mounted read-only, and writes to `/state`
+  succeed while writes to `/app` and `/` fail;
+* a Trivy scan fails the job on any HIGH or CRITICAL finding that has a fix
+  available (`ignore-unfixed`). Unfixed findings in the pinned Debian base are
+  not blocked, so they are visible in a local `trivy image` run but not
+  gated. The fix for a fixable OS package is the `apt-get upgrade` in the
+  Dockerfile, never an ignore file;
+* an SPDX SBOM (`properwarm-mvp-sbom` artifact) is generated and uploaded.
+
+Actions are pinned by commit SHA. The workflow result on GitHub is what proves
+these checks; running the same commands locally is only a preview. Document
+files default to `PW_STATE/docs`, or set `PW_DOC_DIR`; the app writes nowhere
+else. The SQL Server integration job is not part of this job.
+
 ## Tests
 
 ```bash

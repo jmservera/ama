@@ -1387,3 +1387,11 @@ metadata when the knowledge base was created.
 * Not done: Entra built-in authentication (no permission to create an app
   registration, owner action), Bicep for the MVP app, an Azure load test, direct
   Blob listing (no data-plane role), and the SQL Server CI job.
+
+## 2026-10-09
+
+* `mvp-ci.yml` image job extended (ADR 0002 decision 6): Trivy scan failing on
+  fixable HIGH or CRITICAL findings, SPDX SBOM artifact, and a read-only root
+  file system with all capabilities dropped `/healthz` check. Documented in
+  `mvp/README.md`. Verified locally with Docker and Trivy 0.65.0; the GitHub
+  workflow result is the proof.
