@@ -6,11 +6,11 @@ ms.date: "2026-10-08"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "draft"
-version: "0.9.0"
+version: "0.10.0"
 owners: ["AMA Research Team (draft custodian); product owner to be named"]
 reviewers: ["Product sponsor, Asset, Digital, Finance, Retrofit, Safety, Procurement, Resident Engagement (to be confirmed)"]
 created_date: "2026-10-03"
-last_updated: "2026-10-06"
+last_updated: "2026-10-08"
 product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003", "GOAL-004"]
 product_goal_smart_status: "deferred"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -309,7 +309,32 @@ Retention and data-handling baseline (proposed, 2026-10-08): the [addendum basel
 | DH-004 | Access, rectification, erasure and restriction requests are logged with receipt date and answered within one month; erasure exceptions for legally required records are documented. | Later | Articles 12, 15 to 18. |
 | DH-005 | Backup restores re-apply deletions, and the restore and deletion are tested before any production use. | Later | Article 32, NFR-004. |
 | DH-006 | No resident personal data reaches a model deployment until the transfer position for its processing region is approved. | MVP | Articles 44 to 46, OQ-012. |
-| DH-007 | Audit entries survive deletion of the data they describe but never contain the deleted personal content. | MVP | NFR-003, TR-002. |
+| DH-007 | Audit entries are kept in full for the legal retention period, including personal content (owner direction 2026-10-08; DPO to confirm Article 17(3) before any production use). Each erasure refusal for audit data is logged, justified and told to the resident. Supersedes the earlier rule that audit entries never hold deleted content. | MVP | NFR-003, TR-002, OD-14. |
+
+### Owner direction for pilot readiness (2026-10-08)
+
+Owner direction, not DPO, Legal or Board approval. Each item records the
+decision and the requirement it creates. The MVP in `mvp/` is the build baseline
+and replaces `prototype/`.
+
+| ID | Requirement | Release | Trace |
+| --- | --- | --- | --- |
+| PR-001 | The lawful basis for case management data is assumed to be the tenancy contract, with consent for decisions on works. The DPO confirms it per data class and names the Article 9 condition before production. | MVP | OD-14, DH-001. |
+| PR-002 | Contractors and providers see only "needs notice and a named contact", never the reason for a vulnerability or adjustment. Staff see the reason only where their role needs it, enforced by the server. | MVP | OD-14, TR-005, NFR-003. |
+| PR-003 | The addendum retention defaults are the design baseline pending DPO and Legal approval. | MVP | OD-14, DH-003. |
+| PR-004 | Individual staff time capture is allowed for pilot measurement with the staff's knowledge and a completed DPIA. Capture stays off until the DPIA exists. The data supports process measurement and shall not be used as a performance rating without a separate decision. | Pilot | OD-36. |
+| PR-005 | The product shall load and operate over the whole stock of about 60,000 homes: server-side paging, indexed filters and search, map clustering, and list and map views that agree on the same filter. Staff decide which homes to work on. | Pilot | OD-17. |
+| PR-006 | Home ranking shall be deterministic: the same data and the same published policy version give the same order, with visible reason codes, fixed tie-breaks and a named policy owner. Changing the policy creates a new version and keeps the old one. | Pilot | OD-17, FR-012, AC-015. |
+| PR-007 | AI prioritisation is a recommendation only. It appears beside the deterministic order with cited reasons, can be accepted, edited or rejected with a reason, and never changes a ranking, queue or case. Its value is measured against the deterministic order. | Pilot | OD-19, FR-025, FR-026, FR-028. |
+| PR-008 | AI is limited to recommend, draft, reconcile and flag. A person approves every action. | MVP | OD-19, FR-027. |
+
+Pilot-readiness build scope (replacing the read-only slices A to C as the
+next step, which the MVP already exceeds): durable storage in the ADR
+data store, Entra ID sign-in with role and field permissions, return and
+reopen, distinct handoff states, safety referral and scoped hold, quality
+acceptance and defects, deterministic ranking with reason codes, an AI
+evaluation harness against the deterministic baseline, and 60,000-home scale.
+Retention jobs and staff time capture wait for DPO approval and the DPIA.
 
 New open questions: the retention periods in the baseline are defaults, not approved periods; funder, PAS 2035 and limitation-period retention terms are unknown. Which retention, residency and data-handling rules apply to staff data (the organisation's own rules are not in the repository); whether current spreadsheets hold vulnerability data and who can access them; whether staff and residents have been consulted. New risk: over-claiming compliance. Wording rule: say "designed to support", never "compliant" or "certified", without named approval.
 

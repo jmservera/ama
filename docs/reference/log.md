@@ -1267,6 +1267,59 @@ metadata when the knowledge base was created.
   Retrofit Coordinator, funding and missing evidence for a Grants and Evidence
   Officer).
 
+## 2026-10-08 Gap analysis and next build
+
+* Added [Gap Analysis and Next Build](research/gap-analysis-next-build.md):
+  BRD, PRD, ADR, addendum, research, rubric score and the MVP reviewed
+  together. Key findings: capstone deck, pitch and thought leadership assets
+  are missing, the rubric registry does not include `mvp/`, durable storage and
+  Entra sign-in are not built, and several PRD lifecycle workflows are open.
+
+## 2026-10-08 Owner decisions on build direction
+
+* The MVP replaces the prototype as scored solution code
+  (`.github/rubric/artifacts.json`, rubric and capstone READMEs). The next build
+  targets pilot readiness. Thought leadership options and the pending OD-14,
+  OD-17, OD-19 and OD-36 questions are recorded in
+  [Gap Analysis and Next Build](research/gap-analysis-next-build.md).
+
+## 2026-10-08 Owner direction on OD-14, OD-17, OD-19 and OD-36
+
+* Lawful basis: contract for service delivery, consent for works. Vulnerability
+  reasons hidden from contractors. Retention defaults accepted as the design
+  baseline. Audit entries kept in full for the legal period (the addendum now
+  says so, DPO to confirm). Individual staff time capture allowed with staff
+  knowledge and a DPIA. Whole stock of about 60,000 homes to be loaded with
+  staff choosing priorities, which differs from the BRD pilot size. AI limited
+  to recommend, draft, reconcile and flag. Recorded in
+  [Gap Analysis and Next Build](research/gap-analysis-next-build.md); none is
+  approved by the DPO, Legal or Board.
+
+## 2026-10-08 Ranking rule clarified
+
+* Owner direction: home ranking must be deterministic and policy-versioned; AI
+  prioritisation is a recommendation only and never changes the ranking.
+  Replaces the earlier note that the product must not rank homes. See
+  [Gap Analysis and Next Build](research/gap-analysis-next-build.md).
+
+## 2026-10-08 PRD v0.10.0
+
+* PRD records owner direction as PR-001 to PR-008 (lawful basis, contractor
+  visibility, retention, staff time capture, 60,000-home scale, deterministic
+  ranking, AI recommendation only) and changes DH-007 to keep audit entries in
+  full. Pilot-readiness scope replaces read-only slices as the next step.
+
+## 2026-10-08 ADR 0002 pilot-readiness architecture
+
+* Added [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) (proposed):
+  durable Azure SQL store behind the `Store` interface with keyset paging,
+  Blob documents and immutable ledger digests, Entra ID with field projections,
+  deterministic ranking with an AI recommendation evaluation harness, server
+  side map clustering and licensed tiles, deployment and CI, and DPIA-gated
+  staff time capture. Owner direction (PR-001 to PR-008, DH-007) is cited;
+  nothing is recorded as approved.
+* Added a Supersedes/amends note to ADR 0001 and an index row in the README.
+
 ## 2026-10-08 Rubric scores the Proper Warm MVP
 
 * `.github/rubric/artifacts.json` solution-code now reads `mvp/` (code, tests,
