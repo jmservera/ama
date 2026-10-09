@@ -20,6 +20,7 @@ import json
 import os
 import sqlite3
 import threading
+from datetime import datetime
 
 from . import insights, ledger, projection, ranking
 from .ai import Ai
@@ -136,6 +137,8 @@ class SqlStore(Store):
         self._rv, self._snap = {}, {}
         self._recs = {}
         self._seed(data_path)
+        self.db.execute("INSERT OR IGNORE INTO meta (key, value) VALUES ('as_of', ?)", (os.environ.get("PW_AS_OF") or datetime.now().date().isoformat(),))
+        self.as_of = self.db.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()[0]
         with self.lock:
             pass
 
@@ -446,7 +449,7 @@ class SqlStore(Store):
             out.append(r)
         nxt = rows[-1][1] if rows and sort == "urgent" and len(rows) == limit else None
         return dict(items=out, total=total, limit=limit, offset=offset, sort=asked, policy_version=ranking.CURRENT["version"],
-                    ranked_total=ranked_total, next_cursor=nxt)
+                    policy_hash=ranking.CURRENT["content_hash"], as_of=self.as_of, ranked_total=ranked_total, next_cursor=nxt)
 
     def counts(self, user):
         with self.lock, self.dblock:

@@ -428,7 +428,7 @@ Azure and no decision in this ADR is approved by this work.
 
 | Item | Status | Deviations |
 | --- | --- | --- |
-| Ranking policy and AI recommendation (decision 4) | Done in slice 1 | Offset paging, in-memory ranking cache, policy as code |
+| Ranking policy and AI recommendation (decision 4) | Done | Policy is a hash-checked versioned file with a registry of old versions; ranking snapshot stored as a file and served to managers (not a `ranking_snapshot` table, no scheduled publish step); as_of is the load date of the data, not a per-case stage date; named policy owner and sign-off still open |
 | Store interface hardening and durable SQL store (decision 1) | Partial | sqlite3 stand-in, not Azure SQL; list reads, search, sorts and counts in SQL with keyset paging for the default sort (60,000-case timing tested on sqlite); detail, map, stats, visits, export, closed list and writes still use the in-memory copy; mapping to Azure SQL documented only |
 | Ledger hash chain and verify (decisions 1, 2) | Partial | Verify command and endpoint done; digests are local files, not immutable Blob |
 | Field projection by role (decision 3) | Done | Free-text notes are not redacted; contractor screens built (needs notice and named contact only) and tested through the server, not with a contractor login in a browser |

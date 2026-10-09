@@ -20,9 +20,17 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   (`properwarm_mvp/ranking.py`): open safety issue, then priority support or an
   adjustment, then longest time in stage, then earlier stage, then case id as
   the fixed tie-break. Each card shows its rank and plain reasons, the list
-  header shows the policy version, and `GET /api/ranking/policy` returns the
-  versioned rules. The policy owner is "to be named" and the rule order is an
-  unsigned draft.
+  header shows the policy version, policy hash and as-of date, and
+  `GET /api/ranking/policy` returns the versioned rules. The rules live in
+  versioned files in `policies/` (for example `ranking-v1.json`) with a policy
+  id, version, owner, status, effective date and a SHA-256 content hash over
+  the canonical JSON. Every file is verified when loaded and a mismatch stops
+  the load. Old versions stay in the folder and can be re-run. Ranking takes
+  the case data, a policy and an explicit `as_of` date and reads no clock.
+  `GET /api/ranking/snapshot?policy=1.0.0` (managers only) returns the
+  snapshot: policy version and hash, as-of, and per case the rank, reason codes
+  and deciding rule. It is also written beside the data when it changes. The
+  policy owner is "to be named" and the rule order is an unsigned draft.
 * "Suggest my top 5" on My cases asks AI for a second opinion beside the
   rule-based order, labelled "AI-drafted, human-approved", with a cited reason
   per case. It is stored in a separate recommendations list and is never read
@@ -206,8 +214,12 @@ history ends today and prints no real personal data.
   sqlite store answers list pages, search, sorts and counts in SQL at 60,000
   cases in roughly 50 to 150 ms on a development machine. These are dev
   machine figures, not production latency, and not Azure SQL.
-* Ranking snapshots are not yet stored per run and the policy is a Python
-  constant, not a signed-off policy file. AI value against the deterministic
+* The ranking policy is a hash-checked file but not signed off: no named
+  owner yet. The hash detects edits, it does not prove who approved them.
+  Snapshots are written when a manager requests one and the data has changed,
+  as a file, not on every change or in a database table. The as-of date is the
+  date the store was first loaded, and day counts come from the stored
+  `days_in_stage`, not recomputed from it. AI value against the deterministic
   order is only captured as the overlap on each recommendation record.
 * The SQL store is verified only on sqlite. Lists, search, sorts and counts
   use SQL, but case detail, map, statistics, visits, facets, the CSV export,

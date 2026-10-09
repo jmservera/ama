@@ -6,6 +6,7 @@ RUN apt-get update && apt-get upgrade -y --no-install-recommends \
     && mkdir -p /app /data /state && chown 10001:10001 /state
 WORKDIR /app
 COPY properwarm_mvp ./properwarm_mvp
+COPY policies ./policies
 COPY web ./web
 USER 10001
 # No working data is baked into the image. Mount the dataset at /data and a writable volume at /state.
