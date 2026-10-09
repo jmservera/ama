@@ -1,4 +1,4 @@
-"""Choose the store from the environment: PW_STORE=json (default) or sqlite."""
+"""Choose the store from the environment: PW_STORE=json (default), sqlite or mssql (Azure SQL)."""
 import os
 from pathlib import Path
 
@@ -14,7 +14,10 @@ def open_store(env=None):
     if kind == "sqlite":
         db = env.get("PW_SQLITE") or os.path.join(state or os.path.dirname(data), "properwarm.sqlite")
         return SqlStore(data, db)
+    if kind == "mssql":
+        from .mssqlstore import MssqlStore
+        return MssqlStore(data, env=env, state_dir=state)
     if kind != "json":
-        raise SystemExit(f"Unknown PW_STORE {kind!r}. Use json or sqlite.")
+        raise SystemExit(f"Unknown PW_STORE {kind!r}. Use json, sqlite or mssql.")
     return Store(data, os.path.join(state, "live.json") if state else None,
                  os.path.join(state, "audit.jsonl") if state else None)

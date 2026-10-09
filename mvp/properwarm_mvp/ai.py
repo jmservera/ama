@@ -9,6 +9,7 @@ import base64
 import json
 import os
 import re
+import time
 import urllib.request
 
 SCOPE = "https://cognitiveservices.azure.com"
@@ -51,21 +52,32 @@ class Ai:
         with urllib.request.urlopen(req, timeout=40) as r:
             return json.load(r)["choices"][0]["message"]["content"].strip()
 
-    def run(self, task, system, user, template, strong=False, check=None):
-        """Return dict(text, source, model, validated). Falls back to the template on any failure."""
+    def run(self, task, system, user, template, strong=False, check=None, off=False):
+        """Return dict(text, source, model, validated, reason, latency_ms). Falls back to the template on any failure.
+
+        off=True is the explicit workflow-only mode: the model is not called.
+        """
+        t0 = time.perf_counter()
+
+        def out(**kw):
+            return dict(kw, task=task, latency_ms=round((time.perf_counter() - t0) * 1000, 1))
+        if off:
+            return out(text=template, source="template", model=None, validated=True, reason="workflow-only mode selected")
         if not self.configured:
-            return dict(text=template, source="template", model=None, validated=True, task=task)
+            return out(text=template, source="template", model=None, validated=True, reason="AI is not configured")
         dep = self.strong if strong else self.fast
         try:
             text = self._chat(dep, system, user)
         except Exception as e:  # network, auth, quota: never block the person
-            return dict(text=template, source="template", model=None, validated=True, task=task, error=type(e).__name__)
+            return out(text=template, source="template", model=None, validated=True, error=type(e).__name__,
+                       reason=f"model unavailable ({type(e).__name__})")
         ok = bool(text) and not FORBIDDEN.search(text) and (check(text) if check else True)
         if not ok:
-            return dict(text=template, source="template", model=dep, validated=False, task=task)
-        return dict(text=text, source="ai", model=dep, validated=True, task=task)
+            return out(text=template, source="template", model=dep, validated=False, ai_text=text,
+                       reason="model output failed validation")
+        return out(text=text, source="ai", model=dep, validated=True, reason=None)
 
-    def look_at(self, name, data, mime):
+    def look_at(self, name, data, mime, off=False):
         """Describe an uploaded document. Reads text and images; other types are stored only."""
         system = ("You help a housing association retrofit team file documents. Say what kind of document this is "
                   "(for example EPC, survey, photo of damp, consent form, invoice), list the key facts you can see in at "
@@ -78,12 +90,14 @@ class Ai:
         else:
             return dict(text="This file type is stored but not read. Add a short note about what it is.", source="template",
                         model=None, validated=True, task="read_document")
-        if not self.configured:
+        if off or not self.configured:
             return dict(text="AI reading is not switched on here. The file is stored.", source="template", model=None,
-                        validated=True, task="read_document")
+                        validated=True, task="read_document",
+                        reason="workflow-only mode selected" if off else "AI is not configured")
         try:
             text = self._chat(self.strong, system, content, 500)
             return dict(text=text, source="ai", model=self.strong, validated=True, task="read_document")
         except Exception as e:
             return dict(text="The file is stored. AI could not read it just now.", source="template", model=None,
-                        validated=True, task="read_document", error=type(e).__name__)
+                        validated=True, task="read_document", error=type(e).__name__,
+                        reason=f"model unavailable ({type(e).__name__})")

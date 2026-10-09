@@ -277,3 +277,7 @@ Items 2, 3 and 4 first (small to medium, no Azure or approvals needed), then 5.
 Item 1 needs the owner to authorise Azure work. Items 6 to 8 are the largest
 product gaps against the PRD and should be scoped as separate branches. Item 10
 sessions are the evidence the ADR calls its riskiest assumption.
+
+### Status update (2026-10-09)
+
+Items 1 to 6 above were built after this review and merged to main by PRs #40 to #45: CI hardening and SBOM (#40), ranking policy snapshots (#41), quality and procurement (#42), AI evaluation and citations (#43), finance, grants, sign-offs and resident decisions (#44), and the Azure SQL store with Blob and two replicas (#45). Entra built-in authentication (needs an app registration by the owner), a Bicep module for the MVP app, an Azure load test, the ledger retention and erasure question for the DPIA, and the unverified browser run of the new screens remain open. Status per item is in [ADR 0002](../../adrs/0002-pilot-readiness-architecture.md).

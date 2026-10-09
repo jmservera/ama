@@ -37,6 +37,13 @@ def build():
     return d
 
 
+NEW_POSTS = [("/api/cases/PW-1/quality-" + a, {"index": 0, "measure": "Loft insulation"}) for a in
+             ("submit", "accept", "return", "fix", "reinspect", "handover", "aftercare")] + [
+    ("/api/packages", {"name": "P"}), ("/api/packages/PKG-001/rescope", {}), ("/api/packages/PKG-001/capacity", {}),
+    ("/api/workorders", {"package": "PKG-001", "case_id": "PW-1"})] + [
+    (f"/api/workorders/WO-0001/{a}", {}) for a in ("reissue", "appointment", "complete", "correct", "withdraw")]
+
+
 class Matrix(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -69,9 +76,12 @@ class Matrix(unittest.TestCase):
     GETS = ["/api/me", "/api/cases?view=all", "/api/cases?view=mine", "/api/cases?view=all&sort=name", "/api/cases?view=all&q=Test",
             "/api/cases?view=all&flag=support", "/api/cases.csv?view=all", "/api/cases/PW-1", "/api/cases/PW-2", "/api/ranking/policy",
             "/api/ai/priority", "/api/facets", "/api/stats", "/api/map", "/api/visits?view=all", "/api/funding", "/api/briefing",
-            "/api/audit-check", "/api/docs/PW-1/none", "/api/nothing"]
+            "/api/audit-check", "/api/docs/PW-1/none", "/api/nothing", "/api/packages", "/api/workorders", "/api/workorders?case=PW-1",
+            "/api/checklists", "/api/finance"]
     POSTS = [("/api/ai/priority", {"n": 3}), ("/api/cases/PW-1/ai", {"task": "summary"}), ("/api/cases/PW-1/ai", {"task": "message"}),
-             ("/api/cases/PW-1/draft", {"kind": "update"}), ("/api/cases/PW-1/funding-draft", {}), ("/api/import-check", {"text": "name\\nx"})]
+             ("/api/cases/PW-1/draft", {"kind": "update"}), ("/api/cases/PW-1/funding-draft", {}), ("/api/import-check", {"text": "name\\nx"})] + NEW_POSTS + [
+             ("/api/cases/PW-1/finance", {"action": "budget_propose", "amount": 5}), ("/api/cases/PW-1/grant", {"action": "grant_open", "scheme": "S", "source": "s"}),
+             ("/api/cases/PW-1/technical", {"action": "design_submit", "note": "n"}), ("/api/cases/PW-1/resident", {"action": "decision_record"})]
 
     def test_no_role_other_than_those_with_a_need_sees_the_reason(self):
         for role in ROLES:
@@ -112,9 +122,11 @@ class Matrix(unittest.TestCase):
         self.assertEqual(json.loads(self.call(ck, f"/api/cases?view=all&q=Quentin")[1])["total"], 0)
         self.assertEqual(json.loads(self.call(ck, "/api/cases?view=all&q=1%20Test%20Road")[1])["total"], 4)
         for path in ("/api/stats", "/api/map", "/api/facets", "/api/funding", "/api/visits", "/api/briefing", "/api/cases.csv?view=all",
-                     "/api/audit-check", "/api/ai/priority", "/api/docs/PW-1/x", "/api/ranking/policy"):
+                     "/api/audit-check", "/api/ai/priority", "/api/docs/PW-1/x", "/api/ranking/policy", "/api/packages", "/api/checklists", "/api/finance"):
             self.assertEqual(self.call(ck, path)[0], 403, path)
-        for path, body in [("/api/ai/priority", {}), ("/api/cases/PW-1/call", {"outcome": "x"}), ("/api/cases/PW-1/handover", {"to": "x"})]:
+        for path, body in [("/api/ai/priority", {}), ("/api/cases/PW-1/call", {"outcome": "x"}), ("/api/cases/PW-1/handover", {"to": "x"})] + NEW_POSTS + [
+                           ("/api/cases/PW-1/finance", {"action": "budget_propose", "amount": 5}), ("/api/cases/PW-1/grant", {"action": "grant_open", "scheme": "S", "source": "s"}),
+             ("/api/cases/PW-1/technical", {"action": "design_submit", "note": "n"}), ("/api/cases/PW-1/resident", {"action": "decision_record"})]:
             self.assertEqual(self.call(ck, path, body)[0], 403, path)
         me = json.loads(self.call(ck, "/api/me")[1])
         self.assertEqual(me["staff"], [])
@@ -122,6 +134,29 @@ class Matrix(unittest.TestCase):
     def test_other_contractor_sees_only_theirs(self):
         ck = self.session("other@example.test")
         self.assertEqual({i["id"] for i in json.loads(self.call(ck, "/api/cases?view=all")[1])["items"]}, {"PW-2"})
+
+    FINANCE_ROLES = ("Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer")
+
+    def test_new_endpoints_for_every_role(self):
+        for role in ROLES:
+            ck = self.session(next(s["email"] for s in self.store.data["staff"] if s["role"] == role))
+            code, text = self.call(ck, "/api/finance")
+            self.assertEqual(code, 200 if role in self.FINANCE_ROLES else 403, role)
+            for act, body in (("finance", {"action": "budget_propose", "amount": 5}), ("grant", {"action": "grant_open", "scheme": "S", "source": "s"})):
+                code, _ = self.call(ck, f"/api/cases/PW-3/{act}", body)
+                self.assertEqual(code, 200 if role in self.FINANCE_ROLES else 403, (role, act))
+            code, _ = self.call(ck, "/api/cases/PW-3/finance", {"action": "budget_propose", "amount": 5, "case_ids": ["PW-3"]})
+            self.assertEqual(code, 403, role)
+            code, text = self.call(ck, "/api/cases/PW-3")
+            if role == projection.CONTRACTOR:
+                self.assertNotIn("budget", text)
+            elif role not in self.FINANCE_ROLES:
+                self.assertNotIn("finance", json.loads(text))
+                self.assertNotIn("grants", json.loads(text))
+            code, _ = self.call(ck, "/api/cases/PW-3/technical", {"action": "design_submit", "note": "n"})
+            self.assertIn(code, (403,) if role == projection.CONTRACTOR else (200, 400, 403), role)
+            code, _ = self.call(ck, "/api/cases/PW-3/resident", {"action": "decision_record"})
+            self.assertEqual(code, 403 if role in ("Contractor", "Quality Inspector", "Building Safety Liaison", "Grants and Evidence Officer") else 400, role)
 
     def test_unknown_role_is_denied(self):
         self.store.staff["u0@example.test"]["role"] = "Mystery"
@@ -157,3 +192,34 @@ class Matrix(unittest.TestCase):
             self.assertFalse(projection.can_see_reason(dict(role="Resident Liaison Officer")))
         finally:
             del os.environ["PW_REASON_ROLES"]
+
+    def test_new_endpoints_for_every_role(self):
+        mgr = {s["role"]: s for s in self.store.data["staff"]}["Retrofit Programme Manager"]
+        pid = self.store.create_package(mgr, "Wave", "2026-01-01", "2099-12-31", "Loft", "CALL-1")
+        self.store.set_capacity(mgr, pid, "Test Ltd", 2, 2, "Signed plan")
+        self.store.set_capacity(mgr, pid, "Other Ltd", 2, 2, "Signed plan")
+        w1 = self.store.issue_work_order(mgr, pid, "PW-1")
+        w2 = self.store.issue_work_order(mgr, pid, "PW-2")
+        for role in ROLES:
+            ck = self.session(next(s["email"] for s in self.store.data["staff"] if s["role"] == role))
+            codes = {p: self.call(ck, p)[0] for p in ("/api/packages", "/api/workorders", "/api/checklists")}
+            if role == projection.CONTRACTOR:
+                self.assertEqual(codes, {"/api/packages": 403, "/api/workorders": 200, "/api/checklists": 403})
+            else:
+                self.assertEqual(set(codes.values()), {200}, role)
+            for path, body in NEW_POSTS:
+                code, text = self.call(ck, path, body)
+                self.assertNotIn(code, (200, 500) if role in (projection.CONTRACTOR, "Mystery") else (500,), (role, path))
+                if role == projection.CONTRACTOR:
+                    self.assertEqual(code, 403, path)
+                self.assertNotIn(REASON, text)
+        ck = self.session("u7@example.test")
+        orders = json.loads(self.call(ck, "/api/workorders")[1])
+        self.assertEqual([o["id"] for o in orders], [w1])
+        self.assertNotIn(w2, self.call(ck, "/api/workorders")[1])
+        self.assertTrue(orders[0]["needs_notice"])
+        self.assertNotIn(REASON, json.dumps(orders))
+        self.assertEqual(self.call(ck, "/api/workorders?case=PW-2")[1], "[]")
+        for role, ok in (("Retrofit Coordinator", False), ("Quality Inspector", False), ("Retrofit Programme Manager", True)):
+            ck = self.session(next(s["email"] for s in self.store.data["staff"] if s["role"] == role))
+            self.assertEqual(self.call(ck, f"/api/workorders/{w1}/withdraw", {"reason": "test"})[0] == 200, ok, role)

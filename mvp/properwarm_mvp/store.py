@@ -8,9 +8,15 @@ import threading
 import uuid
 from datetime import datetime
 
-from . import insights, ledger, projection, ranking
+from . import ai_tasks, insights, ledger, projection, ranking
+from .finance import FinanceMixin
+from .grants import GrantMixin, grant_summary
+from .resident_decisions import ResidentDecisionMixin, measure_decision_view
+from .signoffs import SignoffMixin, missing_items, technical_gate
 from .ai import Ai
 from .documents import ACCEPTED, MAX_BYTES, DocumentStoreError, open_document_store
+from .procurement import ProcurementMixin
+from .quality import QualityMixin
 from .workflows import MANAGER_ROLES, WorkflowMixin
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
@@ -28,7 +34,7 @@ class ConflictError(Exception):
     """Another writer changed the same record first, so this write was refused."""
 
 
-class Store(WorkflowMixin):
+class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin):
     def __init__(self, data_path, live_path=None, audit_path=None):
         self.lock = threading.RLock()
         base = os.path.dirname(data_path)
@@ -53,6 +59,7 @@ class Store(WorkflowMixin):
         self._briefings = {}
         self._ranks = None
         self.data.setdefault("recommendations", [])
+        self.as_of = self.data.setdefault("as_of", os.environ.get("PW_AS_OF") or datetime.now().date().isoformat())
 
     def _tail_hash(self):
         h = ledger.GENESIS
@@ -114,7 +121,7 @@ class Store(WorkflowMixin):
             why.append("Funding has not been confirmed.")
         if any(not h["released"] for h in c["hazards"]):
             why.append("A safety issue is still open.")
-        return why
+        return why + technical_gate(c)
 
     @staticmethod
     def status_line(c):
@@ -149,6 +156,34 @@ class Store(WorkflowMixin):
     def ranking_policy(self):
         return ranking.describe(ranking.CURRENT)
 
+    def ranking_snapshot(self, user, policy=None):
+        """Snapshot of the open-case ranking under a policy version, stored beside the data when it changes. Managers only."""
+        if user["role"] not in MANAGER_ROLES:
+            raise PermissionError("Only a manager can see the ranking snapshot.")
+        pol = ranking.POLICIES.get(policy or ranking.CURRENT["version"])
+        if pol is None:
+            raise ValueError(f"Unknown ranking policy version. Known: {', '.join(sorted(ranking.POLICIES))}")
+        with self.lock:
+            cache = self.__dict__.setdefault("_snapcache", {})
+            hit = cache.get(pol["version"])
+            if hit and hit[0] == self.version:
+                return hit[1]
+            snap = ranking.snapshot([c for c in self.cases.values() if not c["closed"]], pol, self.as_of)
+            cache.clear()
+            cache[pol["version"]] = (self.version, snap)
+            path = os.path.join(os.path.dirname(getattr(self, "live_path", None) or self.db_path) or ".", f"ranking-snapshot-{pol['version']}.json")
+            text = ranking.canonical(snap)
+            try:
+                with open(path, encoding="utf-8") as f:
+                    same = f.read() == text
+            except OSError:
+                same = False
+            if not same:
+                with open(path + ".tmp", "w", encoding="utf-8") as f:
+                    f.write(text)
+                os.replace(path + ".tmp", path)
+            return snap
+
     def _filtered(self, user, view, q, f):
         if view == "closed":
             if user["role"] not in MANAGER_ROLES:
@@ -176,7 +211,7 @@ class Store(WorkflowMixin):
             if view == "closed":
                 page = rows if limit is None else rows[offset:offset + limit]
                 return dict(items=[self.summary(c) for c in page], total=total, limit=limit, offset=offset, sort="id",
-                            policy_version=ranking.CURRENT["version"], ranked_total=len(ranks))
+                            policy_version=ranking.CURRENT["version"], policy_hash=ranking.CURRENT["content_hash"], as_of=self.as_of, ranked_total=len(ranks))
             if sort in ("urgent", "", None) or sort not in insights.SORTS:
                 rows.sort(key=lambda c: ranks[c["id"]]["rank"])
                 if after:
@@ -204,7 +239,7 @@ class Store(WorkflowMixin):
                     r["focus"] = self.focus(c, user["role"], projection.can_see_reason(user))
             nxt = ranking.sql_key(page[-1]) if limit is not None and page and (sort in ("urgent", "", None) or sort not in insights.SORTS) and len(page) == limit else None
             return dict(items=out, total=total, limit=limit, offset=offset, sort=sort,
-                        policy_version=ranking.CURRENT["version"], ranked_total=len(ranks), next_cursor=nxt)
+                        policy_version=ranking.CURRENT["version"], policy_hash=ranking.CURRENT["content_hash"], as_of=self.as_of, ranked_total=len(ranks), next_cursor=nxt)
 
     def list_cases(self, user, view="mine", q="", filters=None, sort="urgent"):
         return self.page_cases(user, view, q, filters, sort)["items"]
@@ -254,6 +289,8 @@ class Store(WorkflowMixin):
         d["can_advance"] = c["stage"] == READY_STAGE
         d["suggestions"] = insights.recommend_handover(c, list(self.cases.values()), self.data["staff"])
         d["checklist"] = self.checklist(c)
+        d["technical_missing"] = missing_items(c)
+        d["measure_decisions"] = measure_decision_view(c)
         d["contacts"] = list(reversed(d["contacts"]))[:40]
         if user is None:
             return d
@@ -389,7 +426,7 @@ class Store(WorkflowMixin):
                 raise
         return doc
 
-    def read_document(self, user, case_id, doc_id):
+    def read_document(self, user, case_id, doc_id, mode=None):
         self._doc_role(user, "read")
         with self.lock:
             c = self._case(case_id)
@@ -398,7 +435,7 @@ class Store(WorkflowMixin):
                 raise KeyError(doc_id)
             data = self.docstore.get(case_id, doc_id)
         self.audit(user["email"], "ai_run_start", case_id, f"read_document {doc['name']}")
-        r = self.ai.look_at(doc["name"], data, doc["mime"])
+        r = ai_tasks.run_document(self, user, case_id, doc, data, mode)
         with self.lock:
             doc = next(d for d in self._case(case_id)["documents"] if d["id"] == doc_id)
             doc["summary"] = r["text"]
@@ -434,13 +471,16 @@ class Store(WorkflowMixin):
                 f"Open safety issues: {sum(not h['released'] for h in c['hazards'])}. "
                 f"Recent contacts: " + "; ".join(f"{k['at'][:10]} {k['outcome']}" for k in c["contacts"][-4:]))
 
-    def ai_run(self, user, case_id, task):
+    def ai_run(self, user, case_id, task, mode=None):
         with self.lock:
             c = self._case(case_id)
             facts = self._facts(c, projection.can_see_reason(user))
             fallback = self.draft(case_id, "visit" if task == "message" else "update")["text"]
             summary = self.status_line(c)
             owner, who = c["owner"], c["resident"]["name"]
+            case = c
+            tcites = ai_tasks.cites_for(c, "Stage:", "Preferred contact:", "Unavailable:", reason_ok=projection.can_see_reason(user)) if task == "message" else \
+                ai_tasks.cites_for(c, "Stage:", "Waiting on:", "Open safety issues:")
         sysmsg = ("You assist a UK housing association retrofit team. Use only the facts given. Never invent dates, amounts, "
                   "names or promises. Never say anything has been sent. Plain English, short, warm, no jargon.")
         prompts = {
@@ -453,13 +493,16 @@ class Store(WorkflowMixin):
             raise ValueError("Unknown request.")
         instr, tmpl, strong = prompts[task]
         self.audit(user["email"], "ai_run_start", case_id, task)
-        r = self.ai.run(task, sysmsg, instr + "\n\nFacts:\n" + facts, tmpl, strong)
-        self.audit(user["email"], "ai_run_end", case_id, f"{task} source={r['source']} model={r['model']} validated={r['validated']}")
-        return dict(r, label="AI-drafted, for you to check" if r["source"] == "ai" else "Template draft, for you to check")
+        r = ai_tasks.run_text_task(self, user, task, [case], sysmsg, instr + "\n\nFacts:\n" + facts, tmpl, tcites, strong, mode=mode,
+                                   bullets=task == "summary")
+        self.audit(user["email"], "ai_run_end", case_id, f"{task} source={r['source']} model={r['model']} validated={r['validated']} verified={r['verified']}")
+        return dict(r, label=("AI-drafted, for you to check" if r["source"] == "ai" else "Template draft, for you to check")
+                    + ("" if r["verified"] else ". Unverified: its sources do not match the case record"))
 
-    def briefing(self, user):
+    def briefing(self, user, mode=None):
+        off = ai_tasks.workflow_only(mode)
         with self.lock:
-            hit = self._briefings.get(user["code"])
+            hit = self._briefings.get((user["code"], off))
             if hit and hit[0] == self.version:
                 return hit[1]
             ver = self.version
@@ -469,13 +512,16 @@ class Store(WorkflowMixin):
             top = mine[:8]
             facts = "\n".join(f"{c['id']} {c['resident']['name']}: {c['stage']}, {c['days_in_stage']} days. {self.status_line(c)}" for c in top)
             tmpl = "Start with: " + "; ".join(f"{c['resident']['name']} ({c['stage'].lower()}, {c['days_in_stage']} days)" for c in top[:3]) if top else "No open cases."
-        r = self.ai.run("briefing", "You write a friendly three-sentence morning briefing for a housing officer. Use only the facts. "
-                        "Safety issues first, then longest waits. No invented facts.", facts, tmpl)
-        self.audit(user["email"], "ai_run", "-", f"briefing source={r['source']} model={r['model']}")
-        out = dict(r, label="AI-drafted" if r["source"] == "ai" else "Summary by rules")
+        r = ai_tasks.run_text_task(self, user, "briefing", top, "You write a friendly three-sentence morning briefing for a housing officer. "
+                                   "Use only the facts. Safety issues first, then longest waits. No invented facts.", facts, tmpl,
+                                   [x for c in top[:3] for x in [f"{c['id']}: Stage: {c['stage']}", f"{c['id']}: Days in stage: {c['days_in_stage']}"]],
+                                   mode=mode)
+        self.audit(user["email"], "ai_run", "-", f"briefing source={r['source']} model={r['model']} verified={r['verified']}")
+        out = dict(r, label=("AI-drafted" if r["source"] == "ai" else "Summary by rules")
+                   + ("" if r["verified"] else ". Unverified: its sources do not match the case record"))
         with self.lock:
-            if ver == self.version:
-                self._briefings[user["code"]] = (ver, out)
+            if self.version - ver <= 1:  # only our own comparison record was saved meanwhile
+                self._briefings[(user["code"], off)] = (self.version, out)
         return out
 
     # ---- AI priority recommendation: advice beside the deterministic order, never part of it
@@ -484,19 +530,20 @@ class Store(WorkflowMixin):
 
     def _rec_view(self, rec):
         ranks = self._ranking()
-        def row(cid, reason=None):
+        def row(cid, reason=None, cites=None):
             c = self.cases[cid]
             r = dict(case_id=cid, resident=c["resident"]["name"], address=c["home"]["address"], stage=c["stage"],
                      rank=ranks[cid]["rank"] if cid in ranks else None)
             if reason is not None:
                 r["reason"] = reason
+                r["cites"] = cites or []
             return r
         return dict(rec, label=self.REC_LABEL,
-                    items=[row(i["case_id"], i["reason"]) for i in rec["items"]],
-                    final_items=[row(i["case_id"], i["reason"]) for i in rec["final_items"]] if rec.get("final_items") is not None else None,
+                    items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["items"]],
+                    final_items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["final_items"]] if rec.get("final_items") is not None else None,
                     deterministic=[row(cid) for cid in rec["deterministic"]])
 
-    def ai_priority(self, user, n=5):
+    def ai_priority(self, user, n=5, mode=None):
         n = max(1, min(10, int(n)))
         with self.lock:
             ranks = self._ranking()
@@ -509,41 +556,44 @@ class Store(WorkflowMixin):
             ids = {c["id"] for c in cand}
             ok = projection.can_see_reason(user)
             facts = "\n".join(f"{c['id']}: {self._facts(c, ok)}" for c in cand)
-            tmpl_items = self._heuristic_priority(cand, n)
+            sources = {c["id"]: ai_tasks.source_labels(c, ok) for c in cand}
+            hazard_ids = [c["id"] for c in cand if any(not h["released"] for h in c["hazards"])]
+            tmpl_items = self._heuristic_priority(cand, n, ok)
             policy_version = ranking.CURRENT["version"]
         tmpl = json.dumps(tmpl_items)
         sysmsg = ("You advise a UK housing association retrofit officer which of their cases to work on first today. You only "
                   "recommend; a person decides. Use only the facts given and only the case ids listed. Never invent facts. "
                   f"Reply with JSON only: a list of exactly {n} objects with keys case_id and reason (one short plain sentence "
-                  "citing a fact such as an open safety issue, extra support need, days waiting or a missing resident decision).")
+                  "citing a fact such as an open safety issue, extra support need, days waiting or a missing resident decision) and "
+                  "cites, a list of the facts it relies on copied exactly from that case's citable facts. Always include every case "
+                  "with an open safety issue.")
 
         def valid(text):
-            try:
-                got = json.loads(text)
-            except ValueError:
-                return False
-            return (isinstance(got, list) and 1 <= len(got) <= n and len({g.get("case_id") for g in got if isinstance(g, dict)}) == len(got)
-                    and all(isinstance(g, dict) and g.get("case_id") in ids and isinstance(g.get("reason"), str) and g["reason"].strip()
-                            for g in got))
+            items, _, err = ai_tasks.priority_items(text, n, sources)
+            return err is None and not ai_tasks.critical_misses([i["case_id"] for i in items], hazard_ids, n)
         self.audit(user["email"], "ai_run_start", "-", f"priority_recommendation n={n}")
-        r = self.ai.run("priority", sysmsg, f"Pick the top {n}.\n\nCases:\n{facts}", tmpl, True, check=valid)
-        try:
-            items = json.loads(r["text"])
-        except ValueError:
+        r = self.ai.run("priority", sysmsg, f"Pick the top {n}.\n\nCases:\n{facts}", tmpl, True, check=valid,
+                        off=ai_tasks.workflow_only(mode))
+        items, dropped = None, 0
+        if r["source"] == "ai":
+            items, dropped, _ = ai_tasks.priority_items(r["text"], n, sources)
+        if items is None:
             items = tmpl_items
-        items = [dict(case_id=i["case_id"], reason=i["reason"].strip()[:300]) for i in items]
         with self.lock:
             rec = dict(id=uuid.uuid4().hex[:12], user=user["email"], created=datetime.now().isoformat(timespec="seconds"),
                        status="Proposed", source=r["source"], model=r["model"], validated=r["validated"], n=n,
                        items=items, deterministic=det, policy_version=policy_version, final_items=None,
-                       resolved_by=None, resolved_at=None, reason="",
+                       resolved_by=None, resolved_at=None, reason="", workflow_items=tmpl_items, ai_output=r.get("ai_text") or (r["text"] if r["source"] == "ai" else None),
+                       fallback_reason=r.get("reason"), latency_ms=r.get("latency_ms"), prompt_version=ai_tasks.PROMPT_VERSION,
+                       mode="workflow-only" if r.get("reason") == "workflow-only mode selected" else "ai", dropped_uncited=dropped,
+                       case_ids=[c["id"] for c in cand], hazard_ids=hazard_ids,
                        overlap=len({i["case_id"] for i in items} & set(det)))
             self.data["recommendations"].append(rec)
             self.audit(user["email"], "ai_run_end", "-", f"priority_recommendation {rec['id']} source={r['source']} model={r['model']} validated={r['validated']}")
             self.save()
             return self._rec_view(rec)
 
-    def _heuristic_priority(self, cand, n):
+    def _heuristic_priority(self, cand, n, ok=False):
         """Template used when no model is available: a different, simpler view from the ranking policy."""
         def score(c):
             s = 0
@@ -561,12 +611,13 @@ class Store(WorkflowMixin):
             if c["decision"]["status"] in ("Not yet asked", "Waiting"):
                 why.append("no resident decision yet")
             why.append(f"{c['days_in_stage']} days at '{c['stage'].lower()}'")
-            out.append(dict(case_id=c["id"], reason="Because of " + ", ".join(why) + "."))
+            out.append(dict(case_id=c["id"], reason="Because of " + ", ".join(why) + ".",
+                            cites=ai_tasks.cites_for(c, "Open safety issues:", "Extra support:", "Resident decision:", "Days in stage:", "Stage:", reason_ok=ok)))
         return out
 
     def latest_priority(self, user):
         with self.lock:
-            mine = [r for r in self.data["recommendations"] if r["user"] == user["email"]]
+            mine = [r for r in self.data["recommendations"] if r["user"] == user["email"] and r.get("kind") != "ai_task"]
             return self._rec_view(mine[-1]) if mine else None
 
     def resolve_priority(self, user, rec_id, action, reason="", items=None):
@@ -576,7 +627,7 @@ class Store(WorkflowMixin):
         if action in ("edit", "reject") and not reason:
             raise ValueError("Say why.")
         with self.lock:
-            rec = next((r for r in self.data["recommendations"] if r["id"] == rec_id), None)
+            rec = next((r for r in self.data["recommendations"] if r["id"] == rec_id and r.get("kind") != "ai_task"), None)
             if not rec:
                 raise KeyError(rec_id)
             if rec["user"] != user["email"]:
@@ -616,18 +667,21 @@ class Store(WorkflowMixin):
                 cl = self.checklist(c)
                 out.append(dict(id=c["id"], resident=c["resident"]["name"], address=c["home"]["address"], area=c["home"]["area"],
                                 route=c["funding"]["route"], status=c["funding"]["status"], owner=c["owner"],
-                                have=sum(x["present"] for x in cl), need=len(cl), days=c["days_in_stage"]))
+                                have=sum(x["present"] for x in cl), need=len(cl), days=c["days_in_stage"],
+                                grants=grant_summary(c)))
         order = {s: i for i, s in enumerate(self.FUND_FLOW)}
         out.sort(key=lambda x: (order[x["status"]] == 0, -x["days"]))
         return out
 
-    def funding_draft(self, user, case_id):
+    def funding_draft(self, user, case_id, mode=None):
         with self.lock:
             c = self._case(case_id)
             missing = [x["kind"] for x in self.checklist(c) if not x["present"]]
             facts = self._facts(c, projection.can_see_reason(user)) + f" Built: {c['home']['built']}. Type: {c['home']['type']}. EPC band: {c['home']['epc']}. " \
                 f"Measures: {', '.join(c['measures']) if isinstance(c['measures'], list) else c['measures']}."
             route = c["funding"]["route"]
+            case = c
+            tcites = ai_tasks.cites_for(c, "Address:", "Home type:", "EPC band:", "Built:", "Measures:", "Funding route:")
             tmpl = (f"Funding application draft for {c['home']['address']} ({route})\n\nProperty: {c['home']['type']}, built "
                     f"{c['home']['built']}, EPC {c['home']['epc']}.\nProposed measures: {c['measures']}.\n\n"
                     + "\n".join(f"Needs: {m} document" for m in missing) + "\nNeeds: costs from the contractor\nNeeds: eligibility check by the Grants Officer")
@@ -635,8 +689,9 @@ class Store(WorkflowMixin):
                   "costs, eligibility results or evidence. Where something is missing write 'Needs: ...'. Headings: Property, Proposed work, "
                   "Evidence held, Evidence still needed. Under 250 words.")
         self.audit(user["email"], "ai_run_start", case_id, "funding_draft")
-        r = self.ai.run("funding_draft", sysmsg, f"Route: {route}\n{facts}\nMissing documents: {', '.join(missing) or 'none'}", tmpl, True,
-                        check=lambda t: all(m.lower() in t.lower() for m in missing) or "needs" in t.lower())
+        r = ai_tasks.run_text_task(self, user, "funding_draft", [case], sysmsg,
+                                   f"Route: {route}\n{facts}\nMissing documents: {', '.join(missing) or 'none'}", tmpl, tcites, True,
+                                   check=lambda t: all(m.lower() in t.lower() for m in missing) or "needs" in t.lower(), mode=mode)
         with self.lock:
             c = self._case(case_id)
             c["funding"]["draft"] = r["text"]
@@ -644,7 +699,15 @@ class Store(WorkflowMixin):
                 c["funding"]["status"] = "Draft ready"
             self.audit(user["email"], "ai_run_end", case_id, f"funding_draft source={r['source']} model={r['model']}")
             self.save()
-        return dict(r, label="AI-drafted, human-approved: nothing is submitted until a person approves and submits it")
+        return dict(r, label="AI-drafted, human-approved: nothing is submitted until a person approves and submits it"
+                    + ("" if r["verified"] else ". Unverified: its sources do not match the case record"))
+
+    # ---- review of any AI output, the comparison records and the live report
+    def review_ai(self, user, rec_id, action, reason="", text=None):
+        return ai_tasks.review(self, user, rec_id, action, reason, text)
+
+    def ai_live_report(self):
+        return ai_tasks.live_report(self)
 
     def funding_step(self, user, case_id, action, text=""):
         if user["role"] not in self.FUND_ROLES:

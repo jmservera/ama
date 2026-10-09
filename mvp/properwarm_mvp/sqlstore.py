@@ -20,6 +20,7 @@ import json
 import os
 import sqlite3
 import threading
+from datetime import datetime
 
 from . import insights, ledger, projection, ranking
 from .ai import Ai
@@ -114,15 +115,13 @@ class SqlStore(Store):
     def __init__(self, data_path, db_path, docs_dir=None, digest_dir=None):
         self.db_path = db_path
         os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
-        self.db = sqlite3.connect(db_path, check_same_thread=False, isolation_level=None)
         self.dblock = threading.RLock()
         self.local = threading.local()
         self.lock = _SyncLock(self)
-        self.db.execute("PRAGMA journal_mode=WAL")
-        self.db.execute("PRAGMA busy_timeout=5000")
-        self.db.executescript(SCHEMA)
+        self._open(db_path)
+        self._create_schema()
         self._migrate()
-        self.db.executescript(INDEXES)
+        self._create_indexes()
         self.docs_dir = docs_dir or os.path.join(os.path.dirname(db_path) or ".", "docs")
         self.docstore = open_document_store(self.docs_dir)
         self.digest_dir = digest_dir or os.environ.get("PW_DIGEST_DIR") or os.path.join(os.path.dirname(db_path) or ".", "digests")
@@ -134,15 +133,50 @@ class SqlStore(Store):
         self.cases, self.staff = {}, {}
         self.data = dict(staff=[], recommendations=[])
         self._rv, self._snap = {}, {}
+        self._proc_snap = None
         self._recs = {}
         self._seed(data_path)
+        self._insert_ignore("meta", ["key", "value"], ["as_of", os.environ.get("PW_AS_OF") or datetime.now().date().isoformat()])
+        self.as_of = self.db.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()[0]
         with self.lock:
             pass
+
+    # ---- dialect hooks (SQLite here; MssqlStore overrides them for Azure SQL)
+    dberror = sqlite3.Error
+
+    def _open(self, db_path):
+        os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
+        self.db = sqlite3.connect(db_path, check_same_thread=False, isolation_level=None)
+        self.db.execute("PRAGMA journal_mode=WAL")
+        self.db.execute("PRAGMA busy_timeout=5000")
+
+    def _create_schema(self):
+        self.db.executescript(SCHEMA)
+
+    def _create_indexes(self):
+        self.db.executescript(INDEXES)
+
+    def _columns(self):
+        return {r[1] for r in self.db.execute("PRAGMA table_info(cases)")}
+
+    def _meta_set(self, key, value):
+        self.db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)", (key, value))
+
+    def _insert_ignore(self, table, cols, vals):
+        self.db.execute(f"INSERT OR IGNORE INTO {table} ({', '.join(cols)}) VALUES ({','.join('?' * len(cols))})", vals)
+
+    @staticmethod
+    def _contains(col):
+        return f"instr({col}, ?) > 0"
+
+    @staticmethod
+    def _limit(limit, offset):
+        return " LIMIT ? OFFSET ?", [limit, offset]
 
     # ---- derived columns
     def _migrate(self):
         """Add derived columns to a database made by an earlier slice and rebuild them when missing or when the ranking policy changed."""
-        have = {r[1] for r in self.db.execute("PRAGMA table_info(cases)")}
+        have = self._columns()
         for col in CASE_COLS:
             if col not in have:
                 defaults = {"last_contact": "'0000'", "next_visit": "'9999'", "support": "0", "days": "0"}
@@ -156,7 +190,7 @@ class SqlStore(Store):
                 for cid, body in self.db.execute("SELECT id, body FROM cases").fetchall():
                     r = self._row(json.loads(body))
                     self.db.execute("UPDATE cases SET " + ", ".join(f"{c}=?" for c in CASE_COLS) + " WHERE id=?", r[1:] + (cid,))
-                self.db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('rank_policy', ?)", (want,))
+                self._meta_set("rank_policy", want)
                 self.db.execute("COMMIT")
             except BaseException:
                 self.db.execute("ROLLBACK")
@@ -175,11 +209,11 @@ class SqlStore(Store):
                         c.setdefault("funding", dict(route="Not decided", status="Not started", reference="", draft="", approved_by=None))
                     self.db.executemany(f"INSERT INTO cases (id, rowversion, seq, {', '.join(CASE_COLS)}) VALUES (?,1,1,{','.join('?' * len(CASE_COLS))})",
                                         [self._row(c) for c in src["cases"]])
-                    self.db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('rank_policy', ?)", (ranking.CURRENT["version"],))
-                    self.db.executemany("INSERT OR IGNORE INTO staff (email, body) VALUES (?,?)",
-                                        [(s["email"].lower(), json.dumps(s)) for s in src["staff"]])
-                    self.db.execute("INSERT OR IGNORE INTO meta (key, value) VALUES ('seq', '1')")
-                    self.db.execute("INSERT OR IGNORE INTO audit_head (id, count, hash) VALUES (1, 0, ?)", (ledger.GENESIS,))
+                    self._meta_set("rank_policy", ranking.CURRENT["version"])
+                    for s in src["staff"]:
+                        self._insert_ignore("staff", ("email", "body"), (s["email"].lower(), json.dumps(s)))
+                    self._insert_ignore("meta", ("key", "value"), ("seq", "1"))
+                    self._insert_ignore("audit_head", ("id", "count", "hash"), (1, 0, ledger.GENESIS))
                 self.db.execute("COMMIT")
             except BaseException:
                 self.db.execute("ROLLBACK")
@@ -217,6 +251,7 @@ class SqlStore(Store):
                 else:
                     self.data["recommendations"].append(rec)
                 self._recs[rid] = [rv, rec, body]
+            self._proc_sync()
             if not self.staff:
                 for (body,) in self.db.execute("SELECT body FROM staff").fetchall():
                     s = json.loads(body)
@@ -293,6 +328,7 @@ class SqlStore(Store):
                                            (new, body, rid, known[0])).rowcount != 1:
                             raise ConflictError(rid)
                         recs.append((rid, known[0] + 1, rec, body))
+                proc_body = self._proc_write()
                 self._append_audit(pending)
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
                 self.db.execute("COMMIT")
@@ -303,6 +339,8 @@ class SqlStore(Store):
             except BaseException:
                 self.db.execute("ROLLBACK")
                 raise
+            if proc_body is not None:
+                self._proc_snap = proc_body
             for cid, body in changed:
                 self._rv[cid] += 1
                 self._snap[cid] = body
@@ -329,7 +367,29 @@ class SqlStore(Store):
             rec.update(json.loads(body))
         self._touched().clear()
         self.local.pending.clear()
+        self._proc_sync()
         self._sync()
+
+    # ---- procurement data (packages, capacity, work orders) kept as one checked document
+    def _proc_sync(self):
+        row = self.db.execute("SELECT value FROM meta WHERE key='procurement'").fetchone()
+        self._proc_snap = row[0] if row else None
+        if row:
+            fresh = json.loads(row[0])
+            self.data["procurement"] = fresh
+
+    def _proc_write(self):
+        """Inside the save transaction: write changed procurement data, refusing if someone else changed it first."""
+        if "procurement" not in self.data:
+            return None
+        body = json.dumps(self.data["procurement"])
+        if body == self._proc_snap:
+            return None
+        row = self.db.execute("SELECT value FROM meta WHERE key='procurement'").fetchone()
+        if (row[0] if row else None) != self._proc_snap:
+            raise ConflictError("procurement")
+        self.db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('procurement', ?)", (body,))
+        return body
 
     def _append_audit(self, entries):
         if not entries:
@@ -372,9 +432,9 @@ class SqlStore(Store):
     def ready(self):
         try:
             with self.dblock:
-                self.db.execute("SELECT 1 FROM meta LIMIT 1").fetchone()
+                self._db_seq()
             return True
-        except sqlite3.Error:
+        except self.dberror:
             return False
 
     def query_case_ids(self, stage=None, area=None, wave=None, owner_code=None, after=None, limit=50):
@@ -387,9 +447,9 @@ class SqlStore(Store):
         if after:
             sql += " AND id>?"
             args.append(after)
-        sql += " ORDER BY id LIMIT ?"
+        tail, targs = self._limit(limit, 0)
         with self.dblock:
-            return [r[0] for r in self.db.execute(sql, args + [limit]).fetchall()]
+            return [r[0] for r in self.db.execute(sql + " ORDER BY id" + tail, args + targs).fetchall()]
 
     # ---- SQL reads
     def _where(self, user, view, q, f):
@@ -408,7 +468,7 @@ class SqlStore(Store):
             where.append("owner_code=?")
             args.append(user["code"])
         if q:
-            where.append(f"instr({'search_c' if projection.is_contractor(user) else 'search'}, ?) > 0")
+            where.append(self._contains("search_c" if projection.is_contractor(user) else "search"))
             args.append(q.lower())
         return " AND ".join(where), args
 
@@ -426,12 +486,12 @@ class SqlStore(Store):
             total = self.db.execute(f"SELECT COUNT(*) FROM cases WHERE {where}", args).fetchone()[0]
             ranked_total = self.db.execute("SELECT COUNT(*) FROM cases WHERE closed=0").fetchone()[0]
             page_where, page_args = (where + " AND rkey>?", args + [keyset]) if keyset else (where, args)
-            rows = self.db.execute(f"SELECT id, rkey, body FROM cases WHERE {page_where} ORDER BY {order} LIMIT ? OFFSET ?",
-                                   page_args + [limit, 0 if keyset else offset]).fetchall()
+            tail, targs = self._limit(limit, 0 if keyset else offset)
+            rows = self.db.execute(f"SELECT id, rkey, body FROM cases WHERE {page_where} ORDER BY {order}{tail}", page_args + targs).fetchall()
             ranks = {}
             if rows:
                 marks = ",".join("?" * len(rows))
-                ranks = dict(self.db.execute(f"SELECT id, rk FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY rkey) AS rk FROM cases WHERE closed=0) "
+                ranks = dict(self.db.execute(f"SELECT id, rk FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY rkey) AS rk FROM cases WHERE closed=0) AS r "
                                              f"WHERE id IN ({marks})", [r[0] for r in rows]).fetchall())
         out = []
         for cid, rkey, body in rows:
@@ -446,7 +506,7 @@ class SqlStore(Store):
             out.append(r)
         nxt = rows[-1][1] if rows and sort == "urgent" and len(rows) == limit else None
         return dict(items=out, total=total, limit=limit, offset=offset, sort=asked, policy_version=ranking.CURRENT["version"],
-                    ranked_total=ranked_total, next_cursor=nxt)
+                    policy_hash=ranking.CURRENT["content_hash"], as_of=self.as_of, ranked_total=ranked_total, next_cursor=nxt)
 
     def counts(self, user):
         with self.lock, self.dblock:
