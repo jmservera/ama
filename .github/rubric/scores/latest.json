@@ -2,20 +2,20 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T22:30:04+00:00",
-  "commit": "ba403b9665132ef145c4d76b437905b722017fc2",
+  "scored_at": "2026-10-09T07:40:59+00:00",
+  "commit": "07235d48d50cf9af733023b1713df9bc578ef5de",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37852530835",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37899516714",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
     "prd": "b5cc6a07fde37e41029f42310b8a264a395778344a88247d95725dc305287989",
-    "adr": "e3c44e4e29ed59e8a4d73f54267169eaa2be076874e3a86b81fe69bf35293dc7",
-    "solution-code": "99880897d90d1a99545aa26d608c4c96fd1b91872b364cd3f6c4d90914af8578",
+    "adr": "aa427ffac7656038ef8d44a4caa5d55b5b3cee0e8b0a1eeeb8f74ad7e840c7b8",
+    "solution-code": "b35417b2c3687c7be1028084550e8db36e19da15b62cb817f6ad037b16c513df",
     "infrastructure": "e88376bd4127361b1b10cf9be9b3bc35a947dbd7e7127e141ef466e6b4c45890"
   },
-  "total": 34,
+  "total": 36,
   "sections": {
-    "A": 26,
+    "A": 28,
     "B": 3,
     "C": 5,
     "D": 0
@@ -29,60 +29,54 @@
         "infra/modules/containerapps.bicep:123-126",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. ADR 0002 adds design detail (indexes, keyset paging, clustering) but remains proposal, not evidenced deployment; unchanged."
+      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules. This diff's code/ADR changes do not alter architecture or scaling; unchanged."
     },
     "A2": {
       "score": 5,
       "evidence": [
         "docs/adrs/0002-pilot-readiness-architecture.md:57-67",
-        "docs/adrs/0002-pilot-readiness-architecture.md:123-131",
-        "docs/adrs/0002-pilot-readiness-architecture.md:194-203",
-        "docs/adrs/0002-pilot-readiness-architecture.md:260-267"
+        "docs/adrs/0002-pilot-readiness-architecture.md:123-131"
       ],
-      "rationale": "ADR 0002 adds seven independently reasoned decision areas (store, sign-in, ranking, map, deployment) each with a trade-off table naming rejected alternatives and why, deepening the already-argued ADR 0001 appraisal."
+      "rationale": "ADR 0002's seven trade-off tables are unchanged by this diff (only one line in decision 4's status table was edited); appraisal depth unchanged."
     },
     "A3": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-329"
+        "mvp/properwarm_mvp/ai_tasks.py:90-125",
+        "mvp/properwarm_mvp/ai.py:16,74"
       ],
-      "rationale": "ADR 0002 names a specific AI leakage threat (vulnerability reason reaching contractor views or AI prompts) and states a concrete mitigation (server-side field projection, prompt isolation, planned matrix test AC-004/AC-005), plus named compliance articles (GDPR 9, 17(3), 44-46) and Entra-enforced..."
+      "rationale": "Citation-resolution grounding check (resolve/analyse) is now implemented and enforced server-side, not just an ADR plan, directly mitigating the AI-risk descriptor (grounding). FORBIDDEN leakage guard pre-existing. Moves from design-only toward implemented control."
     },
     "A4": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "prototype/properwarm/domain.py:1-125",
-        "prototype/properwarm/server.py:1-73",
-        "prototype/tests/test_domain.py:1-99",
-        "prototype/tests/test_server.py:1-63"
+        "mvp/properwarm_mvp/ai_tasks.py:179-215",
+        "mvp/tests/test_ai_tasks.py:19-153",
+        "mvp/properwarm_mvp/server.py:196-201"
       ],
-      "rationale": "No code changed in this diff; it is a design-only ADR/PRD update describing future SQL/Entra build work, not delivered implementation. Implementation completeness evidence is unchanged."
+      "rationale": "Citation verification, workflow-only mode, per-task comparison records and a reviewer accept/edit/reject flow are implemented end to end (API, store, UI) and covered by a new test file (JsonTasks/SqlTasks/NegativeControls/Endpoints), closing previously disclosed gaps."
     },
     "A5": {
       "score": 3,
       "evidence": [
         "docs/adrs/0002-pilot-readiness-architecture.md:308-340"
       ],
-      "rationale": "ADR 0002 section 6 adds reasoned discussion of replicas, zone redundancy, health/readiness probes, image hardening and CI gates, expanding the qualitative ops and cost narrative beyond the prior minimal treatment."
+      "rationale": "ADR section 6 (replicas, hardening, CI) is unchanged by this diff; no new observability/ops code was added. Unchanged."
     },
     "A6": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:496-514",
-        "prototype/scripts/evaluate_agent.py:1-51",
-        "docs/adrs/0002-pilot-readiness-architecture.md:244-258"
+        "mvp/properwarm_mvp/ai_eval.py:88-100,285-300",
+        "mvp/tests/test_ai_tasks.py:154-193"
       ],
-      "rationale": "ADR 0002 describes a future evaluation harness design (top-k overlap, critical misses, citation validity) with defined metrics, but no harness code or measured run exists in this diff; it remains a documented plan, not delivered evaluation evidence. Unchanged."
+      "rationale": "The evaluation harness now measures top-k overlap, Spearman correlation, critical misses, citation validity, run-to-run variation, latency, reviewer outcomes and added value, with explicit negative controls proving each check actually fails when broken. This is a materially deeper, implemented (n..."
     },
     "A7": {
       "score": 4,
       "evidence": [
-        "prototype/properwarm/domain.py:67-99",
-        "prototype/tests/test_domain.py:16-21",
-        "prototype/tests/test_domain.py:60-73"
+        "mvp/properwarm_mvp/store.py:519-545"
       ],
-      "rationale": "No new agent-orchestration code in this diff; the ADR describes a future AI-recommendation-only workflow design but adds no running agentic code. Unchanged."
+      "rationale": "Still a single recommend-only call with no autonomous multi-step orchestration, handoff or reflection pattern added; priority/text tasks remain one-shot, human-gated suggestions. Unchanged."
     },
     "B1": {
       "score": 0,
@@ -114,9 +108,9 @@
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:29",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
-        "infra/README.md:1-54"
+        "mvp/README.md:45-58"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable, now with an expanded PRD (v0.10.0) and new ADR 0002. No capstone deck exists so cap_without caps this at 3 regardless. Unchanged."
+      "rationale": "BRD, PRD and README remain structured and navigable; README now documents citations, workflow-only mode and comparison records clearly. No capstone deck exists so cap_without caps this at 3 regardless. Unchanged."
     },
     "B7": {
       "score": 0,
