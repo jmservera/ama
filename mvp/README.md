@@ -100,7 +100,8 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 
 | Variable | Purpose |
 | --- | --- |
-| `PW_STORE` | `json` (default) or `sqlite` (durable SQL store, see below) |
+| `PW_STORE` | `json` (default), `sqlite` or `mssql` (Azure SQL, see below) |
+| `PW_SQL_SERVER`, `PW_SQL_DATABASE`, `PW_SQL_AUTH`, `PW_SQL_CLIENT_ID`, `PW_SQL_PORT`, `PW_SQL_TRUST_CERT`, `PW_SQL_TOKEN`, `PW_SQL_USER`, `PW_SQL_PASSWORD` | Azure SQL connection; `PW_SQL_AUTH` is `msi` (default), `default`, `token` or `password` (CI container only) |
 | `PW_SQLITE`, `PW_STATE`, `PW_DATA`, `PW_DIGEST_DIR` | database file, state folder, seed data, ledger digests |
 | `PW_AUTH` | `password` (dev, default) or `trusted-proxy` (Entra) |
 | `PW_ENV` | `production` refuses the password provider and the OSM tile default |
@@ -178,11 +179,40 @@ example `aisha.rahman@propernorthhomes.example`). Without `PW_PASSWORD` a random
 password is printed at start-up. The data builder shifts all dates so the
 history ends today and prints no real personal data.
 
+### Azure SQL store
+
+`PW_STORE=mssql` uses `mssqlstore.py`, a T-SQL dialect over the same `SqlStore`
+logic, with the pinned `mssql-python` driver (`requirements.txt`, hashes
+checked in the image build; the image adds `libltdl7` and `libkrb5-3`). Writers are
+serialised across replicas by a transaction holding an exclusive application
+lock (the equivalent of SQLite's write lock), every compared text column uses a
+binary collation so ordering matches the other stores, and a connection dropped
+between requests is reopened. Sign-in is Microsoft Entra with the app's managed
+identity (`PW_SQL_AUTH=msi`, plus `PW_SQL_CLIENT_ID` for a user-assigned one), so
+there is no database password. The audit table is an append-only ledger table
+when the database has Azure SQL ledger enabled (the engine refuses update and
+delete), otherwise an `INSTEAD OF` trigger does it. Every other table in a ledger
+database also keeps row history, which matters for erasure and retention
+(DPIA item to resolve before real data).
+
+The first start seeds an empty database from `PW_DATA`; the image carries no data,
+so seed once from an operator machine with `PW_SQL_AUTH=token` and
+`PW_SQL_TOKEN=$(az account get-access-token --resource https://database.windows.net/ --query accessToken -o tsv)`.
+The app identity needs a contained user with `db_datareader`, `db_datawriter` and
+`db_ddladmin` (see `infra/scripts/create-sql-users.sql`). `tests/test_mssqlstore.py`
+runs the SQL store suites and the list-read parity suite against a real SQL Server
+when `PW_TEST_MSSQL=1` (and `PW_SQL_*` point at a throwaway database).
+
 ## Honest limits
 
 * The data is constructed. The generator (`pw_names.py`, `build_mvp_dataset.py`)
   makes names, phone numbers on Ofcom drama ranges and example email domains.
   The product screens do not say so; this README and the repository do.
+* Azure on 2026-10-09 (dev subscription, constructed data): the app ran on Azure SQL with a
+  managed identity, documents in Blob, two replicas, and a restart kept a written record with the
+  ledger intact. Sign-in there is still the shared password because Entra built-in
+  authentication needs an app registration that was not available. Nothing was load tested in
+  Azure and Blob contents were not listed directly (no data-plane role).
 * Dev sign-in is a single shared password. The Entra provider is tested only
   with hand-built principal headers, never against a real tenant or Container
   Apps authentication. The contractor screens are tested through the server and
