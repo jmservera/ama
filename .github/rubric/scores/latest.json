@@ -2,20 +2,20 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T22:30:04+00:00",
-  "commit": "ba403b9665132ef145c4d76b437905b722017fc2",
+  "scored_at": "2026-10-09T07:40:17+00:00",
+  "commit": "aedd405e0955aea7f215f36b2b70094587fea29d",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37852530835",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37899681408",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
     "prd": "b5cc6a07fde37e41029f42310b8a264a395778344a88247d95725dc305287989",
-    "adr": "e3c44e4e29ed59e8a4d73f54267169eaa2be076874e3a86b81fe69bf35293dc7",
-    "solution-code": "99880897d90d1a99545aa26d608c4c96fd1b91872b364cd3f6c4d90914af8578",
+    "adr": "d371bbafdb94626ab746dad6542507e53916c5c6f3f02c50131c8b2501a7019d",
+    "solution-code": "fa2396d5ea79b68fdc971042befcb1a61c33c43d9b2d801be8f5b3f6f717615b",
     "infrastructure": "e88376bd4127361b1b10cf9be9b3bc35a947dbd7e7127e141ef466e6b4c45890"
   },
-  "total": 34,
+  "total": 35,
   "sections": {
-    "A": 26,
+    "A": 27,
     "B": 3,
     "C": 5,
     "D": 0
@@ -50,14 +50,16 @@
       "rationale": "ADR 0002 names a specific AI leakage threat (vulnerability reason reaching contractor views or AI prompts) and states a concrete mitigation (server-side field projection, prompt isolation, planned matrix test AC-004/AC-005), plus named compliance articles (GDPR 9, 17(3), 44-46) and Entra-enforced..."
     },
     "A4": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "prototype/properwarm/domain.py:1-125",
-        "prototype/properwarm/server.py:1-73",
-        "prototype/tests/test_domain.py:1-99",
-        "prototype/tests/test_server.py:1-63"
+        "mvp/properwarm_mvp/finance.py:1-206",
+        "mvp/properwarm_mvp/signoffs.py:1-129",
+        "mvp/properwarm_mvp/resident_decisions.py:1-105",
+        "mvp/properwarm_mvp/grants.py:1-72",
+        "mvp/properwarm_mvp/server.py:179-182",
+        "mvp/tests/test_finance_signoffs.py:63-327"
       ],
-      "rationale": "No code changed in this diff; it is a design-only ADR/PRD update describing future SQL/Entra build work, not delivered implementation. Implementation completeness evidence is unchanged."
+      "rationale": "This diff delivers working end-to-end code for FR-013/014/018/019: finance intake/matching, grants, sign-offs, resident decisions, wired into routes, role projection and UI panels, with 15 new unit tests and honest README limits (constructed data, no browser run). Core capability working with dis..."
     },
     "A5": {
       "score": 3,
