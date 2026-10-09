@@ -121,7 +121,7 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
         }
       ]
       scale: {
-        minReplicas: 1
+        minReplicas: 2
         maxReplicas: 4
         rules: [
           { name: 'http', http: { metadata: { concurrentRequests: '50' } } }
