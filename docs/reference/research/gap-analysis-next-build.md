@@ -214,3 +214,66 @@ Consequences for the build:
 Pilot-readiness work that does not wait on approval can start now: durable
 storage, Entra ID sign-in and role permissions, return and reopen, safety
 referral, the AI evaluation harness and scale for 60,000 homes.
+
+## Review against PRD v0.10.0 and ADRs after PR #36 (2026-10-09)
+
+Reviewed `main` at `c6627e7` (MVP slices 1 to 3 merged) against the
+[PRD](../../prds/proper-warm-retrofit-programme-demonstrator.md) requirements,
+[ADR 0001](../../adrs/0001-azure-architecture.md) and
+[ADR 0002](../../adrs/0002-pilot-readiness-architecture.md). Evidence: MVP unit
+suite (154 tests) passing on the branch before merge, a read of `mvp/`, `infra/`
+and `.github/workflows/mvp-ci.yml`, and keyword probes of the code. This is an
+internal judgement, not company fact. Nothing was run in Azure.
+
+### Closed since the 2026-10-08 gap list
+
+Deterministic ranking with reason codes (PR-006, FR-012 in part), AI
+recommendation kept separate with accept, edit and reject (PR-007, FR-026),
+server-side field projection and a role-by-endpoint matrix (PR-002, FR-003),
+return and reopen (FR-009, FR-010 in part), handoff states and safety referral
+(FR-011, FR-015 in part), keyset paging and server-side map clusters at 60,000
+homes (PR-005), time capture behind flags (PR-004), Entra provider code,
+`DocumentStore` with Blob, accessible map list, import check and CSV export
+(SA-005, SA-006).
+
+### Pending work, ranked
+
+| Rank | Pending item | Requirement or decision | Evidence | Effort |
+| --- | --- | --- | --- | --- |
+| 1 | Run the build in Azure: Azure SQL driver and migration, real Blob, Entra sign-in, 2+ replicas, restart-persistence test. Today SQL is sqlite, Blob ran on a fake transport and `infra/` sets `minReplicas: 1` | ADR 0002 decisions 1, 2, 3, 6; DH-005 | README honest limits; `infra/modules/containerapps.bicep:124` | Large, needs Azure |
+| 2 | CI gaps: image vulnerability scan, SBOM, SQL Server integration job, read-only root and dropped-capability checks. `mvp-ci.yml` has tests, non-root and no-data checks only | ADR 0002 decision 6; ADR 0001 open items | `.github/workflows/mvp-ci.yml` | Small |
+| 3 | Ranking snapshot per run with an explicit as-of input, and the policy as a versioned file with owner, effective date and content hash. Today the policy is a Python constant and the owner is "to be named" | ADR 0002 decision 4; PR-006 | `mvp/properwarm_mvp/ranking.py:18-34` | Medium |
+| 4 | AI evaluation measures: rank correlation, critical-miss count, citation validity, run-to-run variation, latency and cost. Only overlap is recorded, and the harness uses a scripted model | ADR 0002 decision 4; FR-027, FR-028; OD-34 | `mvp/properwarm_mvp/store.py:540`; no matches in `ai_eval.py` | Medium |
+| 5 | Source citations on every AI output (FR-027) and a workflow-only comparison record for each AI task (FR-028) | FR-027, FR-028, AC-029, AC-030 | No citation code found in `mvp/` | Medium |
+| 6 | Quality acceptance, defects, reinspection and handover (FR-017); budget, invoice match and grant ledger (FR-018, FR-019); procurement and capacity board (FR-016); resident decision per measure with versions (FR-014); technical sign-offs (FR-013) | PRD workflows 2 to 8 | No matches for defect, reinspect, budget, capacity or work order | Large |
+| 7 | Coordinator insight: funnel, event timeline, forecast with uncertainty, stakeholder export with as-of date (FR-021 to FR-024) | FR-021 to FR-024, GOAL-003 | No matches for funnel, forecast or timeline; stats and map exist | Medium |
+| 8 | Bulk update with preview and the forbidden-bulk-action rules; missed-appointment task (default 5, strict greater-than) | FR-006, FR-007, FR-031 | No matches for bulk or missed | Medium |
+| 9 | Data-handling controls: retention job with owner approval and legal hold, request log for access and erasure, audit digests to immutable Blob with scheduled verification, per-year ledger table test | DH-003, DH-004, DH-005; ADR 0002 decisions 1, 2 | Digests are local files; no retention code | Medium |
+| 10 | Screen reader and mobile accessibility run, copy audit for internal terms (SA-003), and the usability sessions with 5 to 8 users per role (SA-009) | NFR-001, SA-003, SA-009 | Browser check is desktop Chromium only, run by hand, not in CI | Medium; sessions need people |
+| 11 | Remaining reads and writes on the SQL store: case detail, map, stats, visits, facets, export, closed list and writes still use the in-memory copy | ADR 0002 decision 1 | README SQL store limits | Medium |
+| 12 | Time capture screens and an audited administrator enable action, document malware scan and content sniffing, redaction of free-text notes | ADR 0002 decisions 2, 7; PR-002 | README honest limits | Small to medium |
+
+### Blocked on people, not code
+
+These stay open however much is built: DPO confirmation of lawful basis,
+Article 9 condition and Article 17(3) for audit data; Legal retention period;
+named ranking policy owner and sign-off of the rule order; roles with a need to
+see a vulnerability reason (OD-14, OD-19); contractor identity model and tenant
+consent; live-scope homes out of about 60,000 (OD-17); licensed tile provider;
+DPIA, staff notice and consultation for time capture (OD-36); model transfer
+position for `uksouth` (DH-006, OQ-012). Real resident data stays blocked
+(DH-002) until these close.
+
+### Document consistency to fix
+
+* ADR 0002 and the PRD still list slices A to C and offset paging as deviations
+  in places; refresh the Implementation status table after the next slice.
+* The PRD traceability has no FR-to-`mvp/` coverage column, so requirement and
+  code cannot be compared without this review.
+
+### Recommended order
+
+Items 2, 3 and 4 first (small to medium, no Azure or approvals needed), then 5.
+Item 1 needs the owner to authorise Azure work. Items 6 to 8 are the largest
+product gaps against the PRD and should be scoped as separate branches. Item 10
+sessions are the evidence the ADR calls its riskiest assumption.
