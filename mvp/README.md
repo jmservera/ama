@@ -137,6 +137,29 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 * Download any list for Excel, and check a spreadsheet: columns are matched
   for you, rows to fix are listed and the file is never changed.
 
+* Finance, grants, sign-offs and resident decisions (FR-018, FR-019, FR-013,
+  FR-014; code in `finance.py`, `grants.py`, `signoffs.py`,
+  `resident_decisions.py`, `controls.py`):
+  * Budgets, commitments, invoice or valuation intake, line-level match
+    exceptions, payment holds and a Finance decision are recorded per case
+    (`POST /api/cases/{id}/finance`, queue at `GET /api/finance`). Nothing is
+    ever paid; payment status is a note. Unknown inputs (no budget, no
+    milestone evidence) block a match.
+  * Grant stages (opportunity, award, claimable, submitted, accepted or
+    rejected, cash received) are kept apart from invoices, each with a source
+    and a second approver (`/grant`; also shown in the funding list).
+  * Assessment, design, building and coordination sign-offs by separate roles
+    with a design version; a design change sends only the affected sign-offs
+    back for human reassessment, and missing items join the "ready" checks
+    once a design is recorded (`/technical`).
+  * The resident's answer is recorded per measure with versions, pauses and
+    withdrawals, starts as "Not recorded" and is never inferred; service and
+    complaint requests carry a desired outcome, a redress owner and coded
+    contact needs (`/resident`).
+  * Whoever prepares an approval cannot give it, and these refuse any bulk
+    request. Contractors get none of it and other staff roles do not see
+    finance or grant detail.
+
 ## Configuration
 
 | Variable | Purpose |
@@ -313,6 +336,12 @@ when `PW_TEST_MSSQL=1` (and `PW_SQL_*` point at a throwaway database).
 * The Dockerfile pins a base digest and runs as uid 10001 with no data baked in.
   It was built and started locally with Docker; it has not been deployed. The
   `mvp-ci.yml` workflow has not run on GitHub.
+* Finance and sign-off rules are a proposal on constructed data: the role
+  mapping (for example Quality Inspector for assessment) is a stand-in for the
+  PAS 2035 roles, matching is simple exact comparison, amounts are not tied to a
+  real ledger, there is no supplier or contract master, and the screens were
+  syntax-checked but not run in a browser or with a screen reader. The product
+  has no bulk edit yet, so the bulk refusal is tested on the API only.
 * Retention periods and legal bases remain proposals for the DPO and Legal.
 
 ## Container hardening checks in CI

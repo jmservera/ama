@@ -63,7 +63,7 @@ def get_kind(path):
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/packages": "packages",
-            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report"}.get(path, "unknown")
+            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/finance": "finance_queue"}.get(path, "unknown")
 
 
 QUALITY_ACTIONS = {
@@ -202,6 +202,11 @@ def make_handler(app):
                     return self._json(200, app.time.mine(u))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e), "enabled": app.time.status()["enabled"]})
+            if url.path == "/api/finance":
+                try:
+                    return self._json(200, s.finance_queue(u))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
             if url.path == "/api/handoffs":
                 return self._json(200, s.pending_handoffs(u))
             if url.path == "/api/packages":
@@ -358,6 +363,9 @@ def make_handler(app):
                         s.add_document(u, cid, body.get("name"), body.get("kind"), raw)
                     elif act == "read-doc":
                         return self._json(200, s.read_document(u, cid, body.get("id"), body.get("mode")))
+                    elif act in ("finance", "grant", "technical", "resident"):
+                        getattr(s, {"finance": "finance_action", "grant": "grant_action", "technical": "technical_action",
+                                    "resident": "resident_action"}[act])(u, cid, body)
                     elif act == "funding-draft":
                         return self._json(200, dict(s.detail(cid, u), ai=s.funding_draft(u, cid, body.get("mode"))))
                     elif act == "funding":

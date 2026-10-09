@@ -77,6 +77,7 @@ function route() {
   if (location.hash === "#/overview") return overviewView();
   if (location.hash === "#/visits") return visitsView();
   if (location.hash === "#/funding") return fundingView();
+  if (location.hash === "#/finance") return financeQueueView();
   return listView(location.hash === "#/all" ? "all" : "mine");
 }
 
@@ -336,6 +337,7 @@ async function caseView(id) {
         h("button", { class: "alt", onclick: () => kind("update") }, "Plain update template")), draftBox),
     documentsPanel(c, id, refresh),
     fundingPanel(c, id, refresh),
+    financePanel(c, id, refresh), grantPanel(c, id, refresh), technicalPanel(c, id, refresh), residentPanel(c, id, refresh),
     msg,
     h("section", { class: "card" }, h("h2", {}, "History"),
       c.contacts.length ? h("ul", { class: "tl" }, c.contacts.slice(0, 15).map((k) => h("li", {},

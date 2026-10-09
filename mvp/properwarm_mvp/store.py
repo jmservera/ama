@@ -9,6 +9,10 @@ import uuid
 from datetime import datetime
 
 from . import ai_tasks, insights, ledger, projection, ranking
+from .finance import FinanceMixin
+from .grants import GrantMixin, grant_summary
+from .resident_decisions import ResidentDecisionMixin, measure_decision_view
+from .signoffs import SignoffMixin, missing_items, technical_gate
 from .ai import Ai
 from .documents import ACCEPTED, MAX_BYTES, DocumentStoreError, open_document_store
 from .procurement import ProcurementMixin
@@ -30,7 +34,7 @@ class ConflictError(Exception):
     """Another writer changed the same record first, so this write was refused."""
 
 
-class Store(WorkflowMixin, QualityMixin, ProcurementMixin):
+class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin):
     def __init__(self, data_path, live_path=None, audit_path=None):
         self.lock = threading.RLock()
         base = os.path.dirname(data_path)
@@ -117,7 +121,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin):
             why.append("Funding has not been confirmed.")
         if any(not h["released"] for h in c["hazards"]):
             why.append("A safety issue is still open.")
-        return why
+        return why + technical_gate(c)
 
     @staticmethod
     def status_line(c):
@@ -285,6 +289,8 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin):
         d["can_advance"] = c["stage"] == READY_STAGE
         d["suggestions"] = insights.recommend_handover(c, list(self.cases.values()), self.data["staff"])
         d["checklist"] = self.checklist(c)
+        d["technical_missing"] = missing_items(c)
+        d["measure_decisions"] = measure_decision_view(c)
         d["contacts"] = list(reversed(d["contacts"]))[:40]
         if user is None:
             return d
@@ -661,7 +667,8 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin):
                 cl = self.checklist(c)
                 out.append(dict(id=c["id"], resident=c["resident"]["name"], address=c["home"]["address"], area=c["home"]["area"],
                                 route=c["funding"]["route"], status=c["funding"]["status"], owner=c["owner"],
-                                have=sum(x["present"] for x in cl), need=len(cl), days=c["days_in_stage"]))
+                                have=sum(x["present"] for x in cl), need=len(cl), days=c["days_in_stage"],
+                                grants=grant_summary(c)))
         order = {s: i for i, s in enumerate(self.FUND_FLOW)}
         out.sort(key=lambda x: (order[x["status"]] == 0, -x["days"]))
         return out
