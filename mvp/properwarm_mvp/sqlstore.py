@@ -135,7 +135,7 @@ class SqlStore(Store):
         self._rv, self._snap = {}, {}
         self._recs = {}
         self._seed(data_path)
-        self.db.execute("INSERT OR IGNORE INTO meta (key, value) VALUES ('as_of', ?)", (os.environ.get("PW_AS_OF") or datetime.now().date().isoformat(),))
+        self._insert_ignore("meta", ["key", "value"], ["as_of", os.environ.get("PW_AS_OF") or datetime.now().date().isoformat()])
         self.as_of = self.db.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()[0]
         with self.lock:
             pass
