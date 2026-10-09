@@ -89,6 +89,21 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   next visit, "needs notice" and a named contact. The server projects the data
   (`projection.py`); the screens never request resident detail. The rank and
   reasons are not sent to contractors either.
+* Quality acceptance (FR-017, `quality.py`): per measure, evidence against a
+  versioned checklist (every check needs a note of what was seen), then accept
+  or return with a defect and an owner, fix, reinspect, resident handover and
+  aftercare notes. States move one step at a time on the server and are
+  audited. Whoever accepts must differ from whoever submitted, recorded or
+  fixed the work, and nothing is accepted automatically. Provider submissions
+  are stored as evidence only.
+* Procurement and capacity (FR-016, `procurement.py`): packages with period,
+  versioned scope and contract reference; offered capacity kept apart from
+  capacity committed with evidence; controlled work orders (each change a new
+  version with its issuer, none issued beyond evidenced commitment);
+  appointment outcomes, completion and correction. Managers get "Capacity and
+  work orders"; contractors see only their own orders, with "needs notice" and
+  no reason. Packages and orders are held as one document in the JSON file or
+  the sqlite `meta` table, so they work in both stores.
 * Documents sit behind a `DocumentStore` interface (`documents.py`). The local
   filesystem store is the default (`PW_DOC_STORE=local`, `PW_DOC_DIR`). The Azure
   Blob store (`PW_DOC_STORE=blob`) uses urllib against the Blob REST API with a
@@ -277,6 +292,12 @@ when `PW_TEST_MSSQL=1` (and `PW_SQL_*` point at a throwaway database).
   use SQL, but case detail, map, statistics, visits, facets, the CSV export,
   the closed list and every write still use the in-memory copy that is kept
   in step with the database. Keyset paging covers the default sort only.
+* Quality and procurement: checklists are examples, not signed-off standards;
+  there is no contractor login to submit evidence (a staff member records it on
+  their behalf); capacity is counted in homes, not hours or money; procurement
+  data is one document, so two managers writing at once get a conflict and
+  retry; the screens were syntax-checked and exercised through the API, not
+  run in a browser or with a screen reader.
 * Time capture has no screens, only the API. It is enabled by environment, not
   an audited admin action. The staff notice text is a draft and the
   consultation reference is a flag, not evidence of the consultation. The AI

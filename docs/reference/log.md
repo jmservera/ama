@@ -1368,6 +1368,20 @@ metadata when the knowledge base was created.
   read the in-memory copy, and no screen reader run was done. Status per item is
   in [ADR 0002](../adrs/0002-pilot-readiness-architecture.md).
 
+## 2026-10-09 MVP build: quality acceptance and procurement (FR-016, FR-017)
+
+* `mvp/` gained quality acceptance per measure (versioned checklist evidence,
+  independent acceptance, defects with owners, reinspection, resident handover,
+  aftercare) and procurement and capacity (packages, offered versus evidenced
+  committed capacity, versioned work orders, appointment outcomes, completion
+  and correction). Contractors see only their own work orders, never the
+  vulnerability reason. Tests cover state machines, independence, the role
+  matrix and parity across the JSON and sqlite stores.
+* Covers PRD AC-019, AC-020, AC-039 and AC-042 in the MVP only. Checklists are
+  examples, there is no contractor evidence login, and the screens were not run
+  in a browser. Status row added to
+  [ADR 0002](../adrs/0002-pilot-readiness-architecture.md).
+
 ## 2026-10-09 MVP build: AI evaluation measures and citations
 
 * Extended the offline AI evaluation harness (`mvp/properwarm_mvp/ai_eval.py`,

@@ -62,7 +62,7 @@ async function start() {
   const contractor = me.user.role === "Contractor";
   nav.querySelectorAll("a").forEach((a) => { if (a.dataset.dyn) a.remove(); else a.hidden = contractor; });
   if (contractor) nav.prepend(h("a", { href: "#/", "data-dyn": "1" }, "My jobs"));
-  else if (isManager()) nav.querySelector("a[href='#/funding']").after(h("a", { href: "#/closed", "data-dyn": "1" }, "Closed cases"));
+  else if (isManager()) nav.querySelector("a[href='#/funding']").after(h("a", { href: "#/capacity", "data-dyn": "1" }, "Capacity and work orders"), h("a", { href: "#/closed", "data-dyn": "1" }, "Closed cases"));
   nav.hidden = false;
   route();
 }
@@ -72,6 +72,7 @@ function route() {
   if (me.user.role === "Contractor") return m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView();
   if (m) return caseView(decodeURIComponent(m[1]));
   if (location.hash === "#/closed") return closedView();
+  if (location.hash === "#/capacity") return capacityView();
   if (location.hash === "#/import") return importView();
   if (location.hash === "#/overview") return overviewView();
   if (location.hash === "#/visits") return visitsView();
@@ -310,6 +311,7 @@ async function caseView(id) {
     returnPanel(c, id, refresh),
     handoffPanel(c, id, refresh),
     safetyPanel(c, id, refresh),
+    qualityPanel(c, id, refresh),
     h("section", { class: "card" }, h("h2", {}, "Log a call"),
       h("label", { for: "outcome" }, "What happened"), outcome,
       h("label", {}, "How you spoke"), channel,
@@ -457,6 +459,7 @@ async function contractorListView() {
   };
   show(h("h1", {}, "Your jobs"), h("p", { class: "muted" }, "You see the address, the works and a named contact. Where a resident needs notice before a visit it says so; the reason is not shared with contractors."), out);
   await load();
+  out.after(await contractorOrders());
 }
 
 async function contractorCaseView(id) {

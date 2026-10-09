@@ -10,7 +10,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from . import auth, projection
+from . import auth, projection, quality
 from .documents import DocumentStoreError
 from .factory import open_store
 from .timecapture import TimeCapture
@@ -62,7 +62,26 @@ def get_kind(path):
         return "time"
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
-            "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/ai/report": "ai_report"}.get(path, "unknown")
+            "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/packages": "packages",
+            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report"}.get(path, "unknown")
+
+
+QUALITY_ACTIONS = {
+    "quality-submit": lambda s, u, cid, b: s.submit_quality(u, cid, b.get("measure"), b.get("submitted_by"), b.get("source"), b.get("items")),
+    "quality-accept": lambda s, u, cid, b: s.accept_quality(u, cid, b.get("index"), b.get("note", "")),
+    "quality-return": lambda s, u, cid, b: s.return_quality(u, cid, b.get("index"), b.get("reason"), b.get("defect"), b.get("owner")),
+    "quality-fix": lambda s, u, cid, b: s.record_fix(u, cid, b.get("index"), b.get("fixed_by"), b.get("note", "")),
+    "quality-reinspect": lambda s, u, cid, b: s.reinspect_quality(u, cid, b.get("index"), b.get("result"), b.get("note", "")),
+    "quality-handover": lambda s, u, cid, b: s.hand_over_quality(u, cid, b.get("index"), b.get("note"), b.get("resident_told")),
+    "quality-aftercare": lambda s, u, cid, b: s.add_aftercare(u, cid, b.get("index"), b.get("note")),
+}
+WO_ACTIONS = {
+    "reissue": lambda s, u, wid, b: s.reissue_work_order(u, wid, b.get("scope"), b.get("reason")),
+    "appointment": lambda s, u, wid, b: s.record_wo_appointment(u, wid, b.get("outcome"), b.get("date", "")),
+    "complete": lambda s, u, wid, b: s.complete_work_order(u, wid, b.get("note", "")),
+    "correct": lambda s, u, wid, b: s.correct_work_order(u, wid, b.get("reason"), b.get("scope", "")),
+    "withdraw": lambda s, u, wid, b: s.withdraw_work_order(u, wid, b.get("reason")),
+}
 
 
 def filt(q):
@@ -185,6 +204,12 @@ def make_handler(app):
                     return self._json(403, {"error": str(e), "enabled": app.time.status()["enabled"]})
             if url.path == "/api/handoffs":
                 return self._json(200, s.pending_handoffs(u))
+            if url.path == "/api/packages":
+                return self._json(200, s.list_packages(u))
+            if url.path == "/api/workorders":
+                return self._json(200, s.list_work_orders(u, q.get("case", [None])[0]))
+            if url.path == "/api/checklists":
+                return self._json(200, quality.CHECKLISTS)
             if url.path == "/api/facets":
                 return self._json(200, s.facets())
             if url.path == "/api/stats":
@@ -224,6 +249,23 @@ def make_handler(app):
             if url.path == "/api/audit-check":
                 return self._json(200, s.verify_ledger())
             return self._json(404, {"error": "Not found."})
+
+        def _procurement(self, s, u, parts, body):
+            """Package, capacity and work-order writes. Returns the refreshed list the screen shows."""
+            kind, rest = parts[1], parts[2:]
+            if kind == "packages" and not rest:
+                s.create_package(u, body.get("name"), body.get("period_from"), body.get("period_to"), body.get("scope"), body.get("contract_ref"))
+            elif kind == "packages" and len(rest) == 2 and rest[1] == "rescope":
+                s.rescope_package(u, rest[0], body.get("scope"), body.get("reason"))
+            elif kind == "packages" and len(rest) == 2 and rest[1] == "capacity":
+                s.set_capacity(u, rest[0], body.get("contractor"), body.get("offered"), body.get("committed"), body.get("evidence", ""))
+            elif kind == "workorders" and not rest:
+                s.issue_work_order(u, body.get("package"), body.get("case_id"), body.get("scope", ""))
+            elif kind == "workorders" and len(rest) == 2 and rest[1] in WO_ACTIONS:
+                WO_ACTIONS[rest[1]](s, u, rest[0], body)
+            else:
+                raise KeyError("route")
+            return dict(packages=s.list_packages(u), work_orders=s.list_work_orders(u))
 
         def do_POST(self):
             url = urlparse(self.path)
@@ -269,6 +311,8 @@ def make_handler(app):
                     return self._json(200, s.ai_priority(u, body.get("n", 5), body.get("mode")))
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "review"]:
                     return self._json(200, s.review_ai(u, parts[3], parts[4], body.get("reason", ""), body.get("text")))
+                if parts[:2] == ["api", "packages"] or parts[:2] == ["api", "workorders"]:
+                    return self._json(200, self._procurement(s, u, parts, body))
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "priority"]:
                     return self._json(200, s.resolve_priority(u, parts[3], parts[4], body.get("reason", ""), body.get("items")))
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
@@ -299,6 +343,8 @@ def make_handler(app):
                         s.record_repair(u, cid, body.get("index"))
                     elif act == "hazard-release":
                         s.release_hazard(u, cid, body.get("index"), body.get("note", ""))
+                    elif act in QUALITY_ACTIONS:
+                        QUALITY_ACTIONS[act](s, u, cid, body)
                     elif act == "advance":
                         s.advance(u, cid)
                     elif act == "ai":
