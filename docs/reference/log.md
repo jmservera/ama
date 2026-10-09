@@ -1367,3 +1367,15 @@ metadata when the knowledge base was created.
   transport, there is no time capture screen, case detail, map and stats still
   read the in-memory copy, and no screen reader run was done. Status per item is
   in [ADR 0002](../adrs/0002-pilot-readiness-architecture.md).
+
+## 2026-10-09 MVP build: finance, grants, technical sign-offs and resident decisions
+
+* Built in `mvp/` the PRD v0.10.0 requirements FR-018, FR-019, FR-013 and
+  FR-014 (ACs 016, 017, 021, 022, 037, 042) as mixins over the case record,
+  shared by the JSON and sqlite stores: record-only finance with line-level
+  match exceptions and holds, separate grant stages, role-separated technical
+  sign-offs with design versions, and per-measure resident decisions with a
+  complaint route. Approvals need a different person and refuse bulk requests.
+* Unverified: constructed data only, role mapping is a proposal, screens were
+  syntax-checked but not run in a browser. Status in
+  [ADR 0002](../adrs/0002-pilot-readiness-architecture.md).
