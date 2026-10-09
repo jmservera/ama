@@ -1368,6 +1368,25 @@ metadata when the knowledge base was created.
   read the in-memory copy, and no screen reader run was done. Status per item is
   in [ADR 0002](../adrs/0002-pilot-readiness-architecture.md).
 
+## 2026-10-09 MVP build: AI evaluation measures and citations
+
+* Extended the offline AI evaluation harness (`mvp/properwarm_mvp/ai_eval.py`,
+  `mvp/evals/ai_priority_golden.json`) with top-k overlap, Spearman rank
+  correlation, critical misses (harness fails on any), citation validity,
+  run-to-run variation, latency, model and prompt version, reviewer
+  accept/edit/reject counts with reasons and added value against the
+  deterministic and workflow-only orders. Negative controls cover the new
+  measures.
+* Every AI output now carries citations validated server-side
+  (`ai_tasks.py`): unresolved citations mark it Unverified, uncited items are
+  dropped, and it stays Not reviewed until a person answers. Added a
+  workflow-only mode (`mode` flag or `PW_AI=off`) and a comparison record per
+  AI task in both stores, a review endpoint and a manager-only
+  `GET /api/ai/report`. Updated the ADR 0002 status row for the AI evaluation
+  harness and the mvp README.
+* Unverified: scripted model only, so latency and variation are not live
+  figures; no live-model run, no browser run of the new UI parts.
+
 ## 2026-10-09 MVP ranking policy files and snapshots
 
 * `mvp/policies/ranking-v1.json` replaces the Python policy constant: policy
