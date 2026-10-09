@@ -213,7 +213,7 @@ class ApiTests(unittest.TestCase):
         cookie = hdr["Set-Cookie"].split(";")[0]
         self.assertIn("HttpOnly", hdr["Set-Cookie"])
         code, body, _ = self.call("/api/cases", cookie=cookie)
-        self.assertEqual(len(json.loads(body)), 4)
+        self.assertEqual(len(json.loads(body)["items"]), 4)
         code, body, _ = self.call("/api/cases/PW-2/advance", {}, cookie)
         self.assertEqual(code, 409)
         self.assertEqual(len(json.loads(body)["reasons"]), 2)

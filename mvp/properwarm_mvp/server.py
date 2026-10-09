@@ -1,8 +1,6 @@
 """HTTP server: sign-in, JSON API and static front end. Binds to loopback."""
-import hashlib
 import base64
 import binascii
-import hmac
 import json
 import os
 import secrets
@@ -12,38 +10,84 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from .store import GateError, Store
+from . import auth, projection
+from .documents import DocumentStoreError
+from .factory import open_store
+from .timecapture import TimeCapture
+from .store import MANAGER_ROLES, ConflictError, GateError
 
 WEB = Path(__file__).resolve().parents[1] / "web"
 TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
          ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png"}
-SECURITY = {"Content-Security-Policy": "default-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; frame-ancestors 'none'",
-            "X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin", "Cache-Control": "no-store", "Strict-Transport-Security": "max-age=31536000"}
+OSM_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+SECURITY = {"X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin", "Cache-Control": "no-store", "Strict-Transport-Security": "max-age=31536000"}
 
 
-def pw_hash(password, salt):
-    return hashlib.pbkdf2_hmac("sha256", password.encode(), salt, 120_000)
+def tile_config(env=None):
+    """Map tile provider from PW_TILE_URL. Production never falls back to the public OSM servers."""
+    env = os.environ if env is None else env
+    url = (env.get("PW_TILE_URL") or "").strip()
+    if not url:
+        if env.get("PW_ENV") == "production":
+            return dict(url=None, attribution="", host=None)
+        return dict(url=OSM_URL, attribution=OSM_ATTRIBUTION, host="https://tile.openstreetmap.org")
+    parts = urlparse(url.replace("{s}", "a").replace("{z}", "0").replace("{x}", "0").replace("{y}", "0"))
+    if parts.scheme != "https" or not parts.netloc:
+        sys.exit("PW_TILE_URL must be an https URL such as https://tiles.example.org/{z}/{x}/{y}.png")
+    return dict(url=url, attribution=env.get("PW_TILE_ATTRIBUTION", ""), host=f"https://{parts.netloc}")
 
 
 class App:
-    def __init__(self, store, password):
+    def __init__(self, store, password=None, timecap=None, provider=None):
         self.store = store
-        self.salt = secrets.token_bytes(16)
-        self.pw = pw_hash(password, self.salt)
-        self.sessions = {}
+        self.time = timecap or TimeCapture()
+        self.tiles = tile_config()
+        self.csp = "default-src 'self'; img-src 'self' data:" + (f" {self.tiles['host']}" if self.tiles["host"] else "") + "; frame-ancestors 'none'"
+        self.provider = provider or auth.make_provider(store, password or secrets.token_urlsafe(9))
 
-    def login(self, email, password):
-        u = self.store.staff.get((email or "").strip().lower())
-        ok = hmac.compare_digest(pw_hash(password or "", self.salt), self.pw)
-        if not u or not ok:
-            return None
-        token = secrets.token_urlsafe(32)
-        self.sessions[token] = u
-        return token
+
+def get_kind(path):
+    if path == "/api/me":
+        return "me"
+    if path == "/api/cases":
+        return "cases"
+    if path == "/api/cases.csv":
+        return "cases.csv"
+    if path.startswith("/api/cases/"):
+        return "case"
+    if path.startswith("/api/docs/"):
+        return "doc"
+    if path.startswith("/api/time/"):
+        return "time"
+    return {"/api/ranking/policy": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
+            "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
+            "/api/audit-check": "audit", "/api/handoffs": "handoffs"}.get(path, "unknown")
 
 
 def filt(q):
     return {k: q[k][0] for k in ("stage", "area", "wave", "owner", "contractor", "flag") if q.get(k) and q[k][0]}
+
+
+def num(q, key, default, lo, hi):
+    if not q.get(key) or q[key][0] == "":
+        return default
+    try:
+        v = int(q[key][0])
+    except ValueError:
+        raise ValueError(f"{key} must be a whole number.")
+    return max(lo, min(hi, v))
+
+
+def bbox(q):
+    raw = q.get("bbox", [""])[0]
+    if not raw:
+        return None
+    try:
+        s, w, n, e = (float(x) for x in raw.split(","))
+    except ValueError:
+        raise ValueError("bbox must be south,west,north,east.")
+    return (min(s, n), min(w, e), max(s, n), max(w, e))
 
 
 def make_handler(app):
@@ -58,7 +102,7 @@ def make_handler(app):
             self.send_response(code)
             self.send_header("Content-Type", ctype)
             self.send_header("Content-Length", str(len(raw)))
-            for k, v in {**SECURITY, **(extra or {})}.items():
+            for k, v in {**SECURITY, "Content-Security-Policy": app.csp, **(extra or {})}.items():
                 self.send_header(k, v)
             self.end_headers()
             self.wfile.write(raw)
@@ -71,8 +115,7 @@ def make_handler(app):
             return m.value if m else None
 
         def _user(self):
-            u = app.sessions.get(self._cookie())
-            return dict(u) if u else None
+            return app.provider.authenticate(self.headers)
 
         def _body(self):
             n = int(self.headers.get("Content-Length") or 0)
@@ -83,6 +126,8 @@ def make_handler(app):
         def do_GET(self):
             url = urlparse(self.path)
             if url.path == "/healthz":
+                if not app.store.ready():
+                    return self._send(503, "database unavailable", "text/plain")
                 return self._send(200, "ok", "text/plain")
             if not url.path.startswith("/api/"):
                 name = "index.html" if url.path in ("/", "") else url.path.lstrip("/")
@@ -95,20 +140,54 @@ def make_handler(app):
                 return self._json(401, {"error": "Please sign in."})
             q = parse_qs(url.query)
             s = app.store
+            if not projection.allowed(u, get_kind(url.path)):
+                return self._json(403, {"error": "Your role does not include this."})
             if url.path == "/api/me":
-                return self._json(200, dict(user=u, counts=s.counts(u), staff=list(s.staff.values())))
+                out = projection.me_payload(u, s.counts(u), list(s.staff.values()))
+                out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
+                return self._json(200, out)
             if url.path in ("/api/cases", "/api/cases.csv"):
-                rows = s.list_cases(u, q.get("view", ["mine"])[0], q.get("q", [""])[0], filt(q), q.get("sort", ["urgent"])[0])
+                view, text, sort = q.get("view", ["mine"])[0], q.get("q", [""])[0], q.get("sort", ["urgent"])[0]
                 if url.path.endswith(".csv"):
+                    rows = s.list_cases(u, view, text, filt(q), sort)
                     return self._send(200, s.export_csv(rows), "text/csv; charset=utf-8",
                                       {"Content-Disposition": 'attachment; filename="cases.csv"'})
-                return self._json(200, rows)
+                try:
+                    limit, offset = num(q, "limit", 50, 1, 100), num(q, "offset", 0, 0, 10**9)
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+                try:
+                    after = q.get("after", [""])[0][:100] or None
+                    return self._json(200, s.page_cases(u, view, text, filt(q), sort, limit, offset, after))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+            if url.path == "/api/ranking/policy":
+                return self._json(200, s.ranking_policy())
+            if url.path == "/api/ai/priority":
+                return self._json(200, {"recommendation": s.latest_priority(u)})
+            if url.path == "/api/time/status":
+                return self._json(200, app.time.status(u))
+            if url.path in ("/api/time/mine", "/api/time/report"):
+                try:
+                    if url.path.endswith("report"):
+                        if u["role"] not in MANAGER_ROLES:
+                            raise PermissionError("Only a manager can see the time report.")
+                        return self._json(200, app.time.report())
+                    return self._json(200, app.time.mine(u))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e), "enabled": app.time.status()["enabled"]})
+            if url.path == "/api/handoffs":
+                return self._json(200, s.pending_handoffs(u))
             if url.path == "/api/facets":
                 return self._json(200, s.facets())
             if url.path == "/api/stats":
                 return self._json(200, s.stats())
             if url.path == "/api/map":
-                return self._json(200, s.map_points(filt(q)))
+                try:
+                    z = num(q, "zoom", None, 0, 20)
+                    return self._json(200, s.map_view(filt(q), bbox(q), z))
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
             if url.path == "/api/visits":
                 return self._json(200, s.visits(u, q.get("view", ["mine"])[0]))
             if url.path == "/api/funding":
@@ -118,16 +197,20 @@ def make_handler(app):
             if url.path.startswith("/api/docs/"):
                 try:
                     _, _, _, cid, did = url.path.split("/")
-                    name, mime, raw = s.get_document(cid, did)
+                    name, mime, raw = s.get_document(cid, did, u)
                 except (KeyError, ValueError):
                     return self._json(404, {"error": "File not found."})
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except DocumentStoreError:
+                    return self._json(502, {"error": "The document store is not available. Try again shortly."})
                 safe = "".join(ch for ch in name if ch.isalnum() or ch in " ._-")
                 return self._send(200, raw, mime, {"Content-Disposition": f'attachment; filename="{safe}"'})
             if url.path.startswith("/api/cases/"):
-                d = s.detail(url.path.rsplit("/", 1)[1])
+                d = s.detail(url.path.rsplit("/", 1)[1], u)
                 return self._json(200, d) if d else self._json(404, {"error": "Case not found."})
             if url.path == "/api/audit-check":
-                return self._json(200, {"intact": s.verify_audit()})
+                return self._json(200, s.verify_ledger())
             return self._json(404, {"error": "Not found."})
 
         def do_POST(self):
@@ -137,7 +220,9 @@ def make_handler(app):
             except ValueError:
                 return self._json(400, {"error": "Could not read that."})
             if url.path == "/api/login":
-                tok = app.login(body.get("email"), body.get("password"))
+                if not hasattr(app.provider, "login"):
+                    return self._json(404, {"error": "Sign-in is handled by your organisation's single sign-on."})
+                tok = app.provider.login(body.get("email"), body.get("password"))
                 if not tok:
                     return self._json(401, {"error": "Email or password not recognised."})
                 ck = f"pw_session={tok}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800" + ("; Secure" if os.environ.get("PW_SECURE_COOKIE") else "")
@@ -145,14 +230,33 @@ def make_handler(app):
             u = self._user()
             if not u:
                 return self._json(401, {"error": "Please sign in."})
+            if app.provider.name == "trusted-proxy" and self.headers.get("X-PW-CSRF") != "1":
+                return self._json(403, {"error": "Missing request header."})
             if url.path == "/api/logout":
-                app.sessions.pop(self._cookie(), None)
-                return self._json(200, {"ok": True}, {"Set-Cookie": "pw_session=; Max-Age=0; Path=/"})
+                return self._json(200, app.provider.logout_response(), {"Set-Cookie": "pw_session=; Max-Age=0; Path=/"})
             s = app.store
+            if not projection.allowed(u, "post", "POST"):
+                return self._json(403, {"error": "Your role does not include this."})
             parts = url.path.strip("/").split("/")
             try:
+                if url.path == "/api/time/acknowledge":
+                    ver = app.time.acknowledge(u)
+                    s.audit(u["email"], "time_notice_acknowledged", "-", f"notice {ver}")
+                    return self._json(200, app.time.status(u))
+                if url.path == "/api/time":
+                    s._case(body.get("case_id"))
+                    app.time.record(u, body.get("case_id"), body.get("minutes"), body.get("activity"))
+                    return self._json(200, {"ok": True})
+                if url.path == "/api/ledger/digest":
+                    if u["role"] not in MANAGER_ROLES:
+                        raise PermissionError("Only a manager can write a ledger digest.")
+                    return self._json(200, {"written": os.path.basename(s.write_digest()), "report": s.verify_ledger()})
                 if url.path == "/api/import-check":
                     return self._json(200, s.import_check(body.get("text", "")))
+                if url.path == "/api/ai/priority":
+                    return self._json(200, s.ai_priority(u, body.get("n", 5)))
+                if len(parts) == 5 and parts[:3] == ["api", "ai", "priority"]:
+                    return self._json(200, s.resolve_priority(u, parts[3], parts[4], body.get("reason", ""), body.get("items")))
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
                     cid, act = parts[2], parts[3]
                     if act == "call":
@@ -161,6 +265,26 @@ def make_handler(app):
                         s.set_decision(u, cid, body.get("status"), body.get("note", ""))
                     elif act == "handover":
                         s.hand_over(u, cid, body.get("to"), body.get("note", ""))
+                    elif act == "return":
+                        s.return_case(u, cid, body.get("to_stage"), body.get("reason"))
+                    elif act == "reopen":
+                        s.reopen_case(u, cid, body.get("reason"))
+                    elif act == "offer-handoff":
+                        s.offer_handoff(u, cid, body.get("to"), body.get("note", ""))
+                    elif act == "accept-handoff":
+                        s.accept_handoff(u, cid)
+                    elif act == "decline-handoff":
+                        s.decline_handoff(u, cid, body.get("reason"))
+                    elif act == "withdraw-handoff":
+                        s.withdraw_handoff(u, cid)
+                    elif act == "hazard-raise":
+                        s.raise_hazard(u, cid, body.get("category"), body.get("priority"), body.get("note", ""))
+                    elif act == "hazard-refer":
+                        s.refer_hazard(u, cid, body.get("index"), body.get("to"), body.get("job"))
+                    elif act == "hazard-repaired":
+                        s.record_repair(u, cid, body.get("index"))
+                    elif act == "hazard-release":
+                        s.release_hazard(u, cid, body.get("index"), body.get("note", ""))
                     elif act == "advance":
                         s.advance(u, cid)
                     elif act == "ai":
@@ -183,7 +307,11 @@ def make_handler(app):
                         return self._json(200, s.draft(cid, body.get("kind", "update")))
                     else:
                         return self._json(404, {"error": "Not found."})
-                    return self._json(200, s.detail(cid))
+                    return self._json(200, s.detail(cid, u))
+            except DocumentStoreError:
+                return self._json(502, {"error": "The document store is not available. Try again shortly."})
+            except ConflictError:
+                return self._json(409, {"error": "Someone else changed this at the same moment. Reload and try again."})
             except GateError as e:
                 return self._json(409, {"error": "Not ready yet.", "reasons": e.reasons})
             except PermissionError as e:
@@ -198,17 +326,15 @@ def make_handler(app):
 
 
 def main():
-    data = os.environ.get("PW_DATA", str(Path(__file__).resolve().parents[1] / "data" / "properwarm.json"))
-    if not os.path.exists(data):
-        sys.exit("No data file. Run build_mvp_dataset.py first (see mvp/README.md).")
     password = os.environ.get("PW_PASSWORD") or secrets.token_urlsafe(9)
-    state = os.environ.get("PW_STATE")
-    store = Store(data, os.path.join(state, "live.json") if state else None,
-                  os.path.join(state, "audit.jsonl") if state else None)
+    try:
+        store = open_store()
+    except FileNotFoundError:
+        sys.exit("No data file. Run build_mvp_dataset.py first (see mvp/README.md).")
     app = App(store, password)
     host, port = os.environ.get("PW_BIND", "127.0.0.1"), int(os.environ.get("PORT", "8088"))
     print(f"Proper Warm is running at http://{host}:{port}")
-    if not os.environ.get("PW_PASSWORD"):
+    if app.provider.name == "password" and not os.environ.get("PW_PASSWORD"):
         print(f"Sign in with any staff email and the password {password}")
     ThreadingHTTPServer((host, port), make_handler(app)).serve_forever()
 

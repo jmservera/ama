@@ -1326,3 +1326,44 @@ metadata when the knowledge base was created.
   Dockerfile, README, generator scripts) and no longer reads `prototype/`.
   Private data and vendored libraries are excluded. Storage map updated in
   `docs/capstone/README.md`.
+
+## 2026-10-08 MVP build slice 1: deterministic ranking and scale
+
+* `mvp/` now ranks cases with a versioned policy (`ranking.py`, v1.0.0, owner
+  to be named) with reason codes and a fixed tie-break, per PRD PR-006. AI
+  prioritisation is a separate, audited recommendation that can be accepted,
+  edited or rejected and never changes the ranking (PR-007). Case lists page
+  server-side and the map clusters, tested on 60,000 constructed cases (PR-005).
+  Deviations from ADR 0002: offset paging, in-memory ranking cache, policy as
+  code. Not deployed; front end checked by syntax only.
+
+## 2026-10-08 MVP build slice 2: pilot-readiness backlog built in-repo
+
+* `mvp/` gained a sqlite-backed SQL store behind the `Store` interface (row
+  versions, append-only full-content ledger, hash-chain verify command and
+  endpoint, local digests), server-side role projection with a role-matrix test,
+  return/reopen, handoff and safety referral workflows, an offline AI
+  evaluation harness, an off-by-default time capture gated on `DPIA_APPROVED`,
+  an auth provider abstraction (Entra trusted-proxy headers and dev password),
+  an accessible map list and configurable tile provider, a hardened Dockerfile
+  and `.github/workflows/mvp-ci.yml`.
+* Status per item is in the Implementation status section of
+  [ADR 0002](../adrs/0002-pilot-readiness-architecture.md). Nothing was run in
+  Azure; Entra, Azure SQL and Blob are designed and documented, not verified.
+
+## 2026-10-08 MVP build slice 3: remaining gaps from slice 2
+
+* `mvp/` gained screens for return, reopen (manager "Closed cases" page),
+  handoff and safety referral, and contractor screens that show only "needs
+  notice" and a named contact (server-side projection; rank also removed from
+  the contractor list).
+* Added a `DocumentStore` interface with local and Azure Blob (urllib, SAS or
+  managed identity) implementations, limits, role checks and audit entries;
+  time capture now also needs a consultation reference and a staff notice
+  acknowledgement; sqlite list reads, search, sorts and counts run in SQL with
+  keyset paging and a 60,000-case timing test; tests for the map list and
+  `PW_TILE_URL`; and a manual Playwright check (`mvp/tests/browser_check.py`).
+* Unverified: nothing ran in Azure, the Blob store ran only against a fake
+  transport, there is no time capture screen, case detail, map and stats still
+  read the in-memory copy, and no screen reader run was done. Status per item is
+  in [ADR 0002](../adrs/0002-pilot-readiness-architecture.md).

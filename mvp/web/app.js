@@ -18,7 +18,7 @@ function h(tag, attrs, ...kids) {
 
 async function api(path, body) {
   const res = await fetch(path, body === undefined ? {} : {
-    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+    method: "POST", headers: { "Content-Type": "application/json", "X-PW-CSRF": "1" }, body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
   if (res.status === 401 && path !== "/api/login") { me = null; return login(); }
@@ -58,13 +58,20 @@ function login(msg) {
 async function start() {
   me = await api("/api/me");
   document.getElementById("who").textContent = `${me.user.name}, ${me.user.role}`;
-  document.getElementById("nav").hidden = false;
+  const nav = document.getElementById("nav");
+  const contractor = me.user.role === "Contractor";
+  nav.querySelectorAll("a").forEach((a) => { if (a.dataset.dyn) a.remove(); else a.hidden = contractor; });
+  if (contractor) nav.prepend(h("a", { href: "#/", "data-dyn": "1" }, "My jobs"));
+  else if (isManager()) nav.querySelector("a[href='#/funding']").after(h("a", { href: "#/closed", "data-dyn": "1" }, "Closed cases"));
+  nav.hidden = false;
   route();
 }
 
 function route() {
   const m = location.hash.match(/^#\/case\/(.+)$/);
+  if (me.user.role === "Contractor") return m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView();
   if (m) return caseView(decodeURIComponent(m[1]));
+  if (location.hash === "#/closed") return closedView();
   if (location.hash === "#/import") return importView();
   if (location.hash === "#/overview") return overviewView();
   if (location.hash === "#/visits") return visitsView();
@@ -84,6 +91,57 @@ function aiBox() {
   return box;
 }
 
+function priorityPanel() {
+  const box = h("section", { class: "card ai", "aria-label": "AI priority suggestion" });
+  const rowsOf = (items, withReason) => h("ol", {}, items.map((i) => h("li", {},
+    h("a", { href: `#/case/${encodeURIComponent(i.case_id)}` }, `${i.resident}, ${i.address}`), ` (rank ${i.rank})`,
+    withReason && i.reason ? h("div", { class: "muted" }, i.reason) : null)));
+  const paint = (rec, msg) => {
+    const kids = [h("h2", {}, "Which cases first? A second opinion"),
+      h("p", { class: "muted" }, "The rule-based order below is the list order. The AI suggestion is advice only: it never changes the ranking, owners, stages or queues.")];
+    if (msg) kids.push(h("p", { role: "alert" }, msg));
+    if (!rec) {
+      kids.push(h("p", {}, h("button", { class: "alt", onclick: ask }, "Suggest my top 5")));
+    } else {
+      kids.push(h("div", { class: "grid" },
+        h("div", {}, h("h3", {}, `Rule-based order (policy ${rec.policy_version})`), rowsOf(rec.deterministic, false)),
+        h("div", {}, h("h3", {}, `Suggestion: ${rec.label}`), rowsOf(rec.items, true),
+          h("p", { class: "muted" }, `${rec.source === "ai" ? "Written by AI" : "Written by rules, AI not available"}. ${rec.overlap} of ${rec.items.length} match the rule-based top ${rec.n}.`))));
+      if (rec.status === "Proposed") {
+        const why = h("input", { id: "pri-why", type: "text", placeholder: "Reason (needed to edit or reject)", maxlength: 300 });
+        const keep = rec.items.map((i) => h("input", { type: "checkbox", checked: true, "aria-label": `Keep ${i.resident}` }));
+        const act = (action) => async () => {
+          const items = rec.items.filter((_, n) => keep[n].checked).map((i) => ({ case_id: i.case_id, reason: i.reason }));
+          try { paint(await api(`/api/ai/priority/${rec.id}/${action}`, { reason: why.value, items })); } catch (e) { paint(rec, e.message); }
+        };
+        kids.push(h("div", { class: "row" }, h("label", { for: "pri-why" }, "Your reason"), why),
+          h("div", { class: "row" }, h("span", { class: "muted" }, "To edit, untick cases to drop:"), rec.items.map((i, n) => h("label", {}, keep[n], ` ${i.resident}`))),
+          h("div", { class: "row" }, h("button", { onclick: act("accept") }, "Accept"), h("button", { class: "alt", onclick: act("edit") }, "Edit"),
+            h("button", { class: "alt", onclick: act("reject") }, "Reject")));
+      } else {
+        kids.push(h("p", {}, `${rec.status}${rec.reason ? `: ${rec.reason}` : ""}. Recorded in the audit log.`),
+          h("p", {}, h("button", { class: "alt", onclick: ask }, "Suggest again")));
+      }
+    }
+    box.replaceChildren(...kids);
+  };
+  const ask = async () => { box.setAttribute("aria-busy", "true"); try { paint(await api("/api/ai/priority", { n: 5 })); } catch (e) { paint(null, e.message); } box.removeAttribute("aria-busy"); };
+  api("/api/ai/priority").then((d) => paint(d.recommendation && d.recommendation.status === "Proposed" ? d.recommendation : null)).catch(() => paint(null));
+  return box;
+}
+
+function pendingHandoffs() {
+  const box = h("section", { class: "card", "aria-label": "Handoffs waiting for you", hidden: true });
+  api("/api/handoffs").then((rows) => {
+    if (!rows.length) return;
+    box.hidden = false;
+    box.replaceChildren(h("h2", {}, "Handoffs waiting for you"), h("ul", { class: "list" }, rows.map((x) => h("li", {},
+      h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, `${x.resident}, ${x.address}`),
+      h("div", { class: "muted" }, `Offered by ${x.from_name}${x.note ? `: ${x.note}` : ""}. Open the case to accept or decline.`)))));
+  }).catch(() => {});
+  return box;
+}
+
 let briefingBox = null;
 async function listView(view) {
   const fx = await api("/api/facets");
@@ -92,26 +150,36 @@ async function listView(view) {
   const title = h("h1", {}, view === "mine" ? "My cases today" : "All open cases");
   const csv = h("a", { class: "btn alt", download: "cases.csv" }, "Download for Excel");
   let timer = 0, seq = 0;
-  const load = async () => {
-    const my = ++seq;
-    const rows = await api(`/api/cases?view=${view}&${qs(listState)}`);
-    if (my !== seq) return;
-    csv.href = `/api/cases.csv?view=${view}&${qs(listState)}`;
-    const hz = rows.filter((r) => r.hazard).length;
+  let rows = [], total = 0, policy = "", cursor = null;
+  const PAGE = 50;
+  const render = () => {
     results.replaceChildren(...[
-      h("p", { class: "muted" }, `${rows.length} ${rows.length === 1 ? "case" : "cases"}${hz ? `, ${hz} with a safety issue open` : ""}`),
-      h("ul", { class: "list" }, rows.length ? rows.slice(0, 100).map((r) => h("li", {},
+      h("p", { class: "muted" }, `${total} ${total === 1 ? "case" : "cases"}${listState.sort === "urgent" ? `. Ranked by policy version ${policy}, a fixed rule order (safety first). The order is the same every time.` : ""}`),
+      h("ul", { class: "list" }, rows.length ? rows.map((r) => h("li", {},
         h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
           h("div", {}, h("span", { class: "name" }, r.resident),
             r.hazard && h("span", { class: "flag danger" }, "Safety issue open"),
             r.support && h("span", { class: "flag" }, "Needs extra support"),
             h("div", {}, `${r.address}, ${r.town} ${r.postcode}`),
             h("div", { class: "status" }, r.status),
+            h("div", { class: "muted" }, `Rank ${r.rank}: ${r.reasons.slice(0, 3).join("; ")}`),
             view === "all" && h("div", { class: "muted" }, `Owner: ${r.owner}`),
             r.focus && h("dl", { class: "focus" }, r.focus.flatMap(([k, v]) => [h("dt", {}, k), h("dd", {}, /^\d{4}-\d\d-\d\d$/.test(v) ? fmtDate(v) : v)]))),
           h("div", { class: "meta" }, h("div", {}, r.stage), h("div", {}, `${r.days} days in this stage`), h("div", {}, `Last contact: ${ago(r.last_contact)}`),
             r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "card" }, "Nothing matches. Try clearing a filter.")),
-      rows.length > 100 ? h("p", { class: "muted" }, "Showing the first 100. Use the filters to narrow the list.") : null].filter(Boolean));
+      rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null].filter(Boolean));
+  };
+  const load = async (more) => {
+    const my = ++seq;
+    const paging = more && cursor ? `after=${encodeURIComponent(cursor)}` : `offset=${more ? rows.length : 0}`;
+    const d = await api(`/api/cases?view=${view}&${qs(listState)}&limit=${PAGE}&${paging}`);
+    if (my !== seq) return;
+    cursor = d.next_cursor || null;
+    csv.href = `/api/cases.csv?view=${view}&${qs(listState)}`;
+    rows = more ? rows.concat(d.items) : d.items;
+    total = d.total;
+    policy = d.policy_version;
+    render();
   };
   const field = (label, key, opts) => {
     const el = h("select", { id: `f-${key}` }, h("option", { value: "" }, "Any"), opts.map(([v, t]) => h("option", { value: v }, t)));
@@ -136,6 +204,8 @@ async function listView(view) {
     h("p", {}, h("button", { class: "alt", onclick: () => { Object.assign(listState, { q: "", stage: "", area: "", flag: "", wave: "", owner: "" }); listView(view); } }, "Clear filters")));
   show(h("div", { class: "layout" }, side, h("div", { class: "main" },
     briefingBox,
+    view === "mine" && pendingHandoffs(),
+    view === "mine" && priorityPanel(),
     h("div", { class: "row between" }, title, h("div", { class: "row" },
       h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See all cases" : "See my cases"),
       h("a", { class: "btn alt", href: "#/import" }, "Check a spreadsheet"), csv)),
@@ -206,9 +276,9 @@ async function caseView(id) {
           h("dt", {}, "Contractor"), h("dd", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
           h("dt", {}, "Home"), h("dd", {}, `${hm.type}, built ${hm.built}, EPC ${hm.epc}, ${hm.tenure}`),
           h("dt", {}, "Resident decision"), h("dd", {}, `${c.decision.status}${c.decision.by ? ` (recorded by ${c.decision.by})` : ""}`)))),
-    openHaz.length > 0 && h("section", { class: "card" }, h("h2", {}, "Safety issues"),
-      h("ul", { class: "list" }, openHaz.map((x) => h("li", {},
-        `${x.category}, noticed ${fmtDate(x.noticed)} (${Math.max(0, Math.floor((Date.now() - new Date(x.noticed)) / 864e5))} days open). Owner: ${x.owner}. ${x.referred ? `Passed to repairs ${fmtDate(x.referred)}.` : "Not yet passed to repairs."}`)))),
+    returnPanel(c, id, refresh),
+    handoffPanel(c, id, refresh),
+    safetyPanel(c, id, refresh),
     h("section", { class: "card" }, h("h2", {}, "Log a call"),
       h("label", { for: "outcome" }, "What happened"), outcome,
       h("label", {}, "How you spoke"), channel,
@@ -237,6 +307,141 @@ async function caseView(id) {
     h("section", { class: "card" }, h("h2", {}, "History"),
       c.contacts.length ? h("ul", { class: "tl" }, c.contacts.slice(0, 15).map((k) => h("li", {},
         h("strong", {}, `${fmtDate(k.at)} ${k.channel}: ${k.outcome}`), h("div", { class: "muted" }, `${k.by}${k.note ? `. ${k.note}` : ""}`)))) : h("p", {}, "No contact recorded yet.")));
+}
+
+const STAGES_ORDER = ["Home identified", "Checking lease", "Rescheduled", "Contacting resident", "Contact paused", "Survey being booked", "Survey booked", "Survey write-up", "Design starting", "Design in progress", "Design awaiting approval", "Design being corrected", "Waiting on other works", "Waiting for resident decision", "Resident paused works", "Funding check", "Final checks before ordering", "Waiting for block programme", "With contractor", "Install booked", "Works under way", "Handover to arrange", "Quality check", "Closing down", "Aftercare issue"];
+const SAFETY_ROLES = ["Building Safety Liaison", "Retrofit Programme Manager", "Programme Support Officer"];
+const HAZ_CATEGORIES = ["Damp and mould", "Structural", "Electrical", "Other"];
+const HAZ_PRIORITIES = ["Emergency", "Significant", "Routine"];
+const post = (id, act, body) => api(`/api/cases/${encodeURIComponent(id)}/${act}`, body);
+
+function returnPanel(c, id, refresh) {
+  const why = h("input", { id: "ret-why", type: "text", maxlength: 300, required: true });
+  if (c.closed) {
+    if (!isManager()) return h("section", { class: "card" }, h("h2", {}, "Closed case"), h("p", {}, "This case is closed. A manager can reopen it."));
+    return h("section", { class: "card" }, h("h2", {}, "Reopen this case"),
+      h("p", { class: "muted" }, "Only a manager can reopen a closed case. Your reason is kept in the audit log."),
+      h("label", { for: "ret-why" }, "Why it is being reopened"), why,
+      h("p", {}, h("button", { onclick: () => refresh(() => post(id, "reopen", { reason: why.value })) }, "Reopen case")));
+  }
+  const earlier = STAGES_ORDER.slice(0, Math.max(0, STAGES_ORDER.indexOf(c.stage)));
+  if (!earlier.length) return null;
+  const to = h("select", { id: "ret-to" }, earlier.map((x) => h("option", { value: x, selected: x === earlier[earlier.length - 1] }, x)));
+  return h("section", { class: "card" }, h("h2", {}, "Send this case back"),
+    h("p", { class: "muted" }, "Use this when something earlier needs redoing. A case can only go back to an earlier stage, and the reason is kept in the audit log."),
+    h("label", { for: "ret-to" }, "Back to which stage"), to,
+    h("label", { for: "ret-why" }, "Why it is going back"), why,
+    h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "return", { to_stage: to.value, reason: why.value })) }, "Send back")),
+    c.returns && c.returns.length ? h("ul", { class: "tl" }, c.returns.slice(-5).reverse().map((x) => h("li", {},
+      h("strong", {}, `${fmtDate(x.at)} ${x.reopened ? "Reopened" : "Returned"}: ${x.from_stage} to ${x.to_stage}`), h("div", { class: "muted" }, `${x.by}. ${x.reason}`)))) : null);
+}
+
+function handoffPanel(c, id, refresh) {
+  const hd = c.handoff;
+  const open = hd && hd.state === "Offered";
+  const kids = [h("h2", {}, "Handoff to a colleague")];
+  if (open) {
+    kids.push(h("p", { role: "status" }, `Offered to ${hd.to_name} by ${hd.offered_by} on ${fmtDate(hd.offered_at)}. Waiting for an answer. The case stays with ${hd.from_name} until it is accepted.`),
+      hd.note && h("p", { class: "muted" }, hd.note));
+    const why = h("input", { id: "ho-why", type: "text", maxlength: 300 });
+    if (hd.to_code === me.user.code) {
+      kids.push(h("div", { class: "row" }, h("button", { onclick: () => refresh(() => post(id, "accept-handoff", {})) }, "Accept this case")),
+        h("div", { class: "row" }, h("label", { for: "ho-why" }, "Reason if you cannot take it"), why,
+          h("button", { class: "alt", onclick: () => refresh(() => post(id, "decline-handoff", { reason: why.value })) }, "Decline")));
+    }
+    if (hd.from_code === me.user.code || isManager()) kids.push(h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "withdraw-handoff", {})) }, "Withdraw the offer")));
+  } else {
+    if (hd) kids.push(h("p", { class: "muted" }, `Last handoff to ${hd.to_name}: ${hd.state}${hd.answer_note ? `. ${hd.answer_note}` : ""}.`));
+    if (!c.closed && (c.owner_code === me.user.code || isManager())) {
+      const to = h("select", { id: "ho-to" }, me.staff.filter((s) => s.code !== c.owner_code && s.role !== "Contractor").map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
+      const note = h("input", { id: "ho-note", type: "text", maxlength: 300 });
+      kids.push(h("p", { class: "muted" }, "Offer the case. It only moves when the other person accepts."),
+        h("label", { for: "ho-to" }, "Offer to"), to, h("label", { for: "ho-note" }, "Note for them (optional)"), note,
+        h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "offer-handoff", { to: to.value, note: note.value })) }, "Offer the case")));
+    }
+  }
+  if (c.handoff_log && c.handoff_log.length) {
+    kids.push(h("ul", { class: "tl" }, c.handoff_log.slice(-5).reverse().map((x) => h("li", {}, `${fmtDate(x.answered_at)}: ${x.from_name} to ${x.to_name}, ${x.state}`))));
+  }
+  return h("section", { class: "card" }, ...kids);
+}
+
+function hazardState(x) {
+  return x.released ? "Released" : x.repaired ? "Repaired, awaiting release" : x.referred ? "Referred" : "Raised";
+}
+
+function safetyPanel(c, id, refresh) {
+  const canRelease = SAFETY_ROLES.includes(me.user.role);
+  const safeStaff = me.staff.filter((s) => SAFETY_ROLES.includes(s.role));
+  const items = c.hazards.map((x, i) => {
+    const st = hazardState(x);
+    const job = h("input", { type: "text", maxlength: 40, "aria-label": `Repair job reference for ${x.category}` });
+    const to = h("select", { "aria-label": `Refer ${x.category} to` }, safeStaff.map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
+    const note = h("input", { type: "text", maxlength: 300, "aria-label": `Release note for ${x.category}` });
+    return h("li", {},
+      h("strong", {}, `${x.category}, ${x.priority || ""}`.replace(/, $/, "")), ` ${st}. Noticed ${fmtDate(x.noticed)}. Owner: ${x.owner}.`,
+      x.job && ` Job ${x.job}.`,
+      st === "Raised" && h("div", { class: "row" }, to, job, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-refer", { index: i, to: to.value, job: job.value })) }, "Refer for repair")),
+      st === "Referred" && h("div", { class: "row" }, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-repaired", { index: i })) }, "Record that the repair is done")),
+      st === "Repaired, awaiting release" && (canRelease
+        ? h("div", { class: "row" }, note, h("button", { onclick: () => refresh(() => post(id, "hazard-release", { index: i, note: note.value })) }, "Release (needs someone other than who raised or repaired it)"))
+        : h("div", { class: "muted" }, "The Building Safety Liaison or a manager releases it.")));
+  });
+  const cat = h("select", { id: "hz-cat" }, HAZ_CATEGORIES.map((x) => h("option", {}, x)));
+  const pri = h("select", { id: "hz-pri" }, HAZ_PRIORITIES.map((x) => h("option", {}, x)));
+  const note = h("input", { id: "hz-note", type: "text", maxlength: 300 });
+  return h("section", { class: "card" }, h("h2", {}, "Safety issues"),
+    items.length ? h("ul", { class: "list" }, items) : h("p", {}, "No safety issues recorded."),
+    !c.closed && h("div", {}, h("h3", {}, "Raise a safety issue"),
+      h("p", { class: "muted" }, "An Emergency is flagged for the Building Safety Liaison the same day. The case stops until it is released."),
+      h("label", { for: "hz-cat" }, "What kind"), cat, h("label", { for: "hz-pri" }, "How urgent"), pri, h("label", { for: "hz-note" }, "What you saw"), note,
+      h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-raise", { category: cat.value, priority: pri.value, note: note.value })) }, "Raise safety issue"))));
+}
+
+async function closedView() {
+  if (!isManager()) return show(h("p", {}, "Only a manager sees closed cases."));
+  const d = await api("/api/cases?view=closed&limit=100");
+  show(h("h1", {}, "Closed cases"), h("p", { class: "muted" }, `${d.total} closed. Open one to reopen it with a reason.`),
+    h("ul", { class: "list" }, d.items.length ? d.items.map((r) => h("li", {}, h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
+      h("div", {}, h("span", { class: "name" }, r.resident), h("div", {}, `${r.address}, ${r.town} ${r.postcode}`)), h("div", { class: "meta" }, r.stage)))) : h("li", { class: "card" }, "No closed cases.")));
+}
+
+async function contractorListView() {
+  const PAGE = 50;
+  let rows = [], total = 0;
+  const out = h("div", { "aria-live": "polite" });
+  const render = () => out.replaceChildren(
+    h("p", { class: "muted" }, `${total} ${total === 1 ? "job" : "jobs"}`),
+    h("ul", { class: "list" }, rows.length ? rows.map((r) => h("li", {}, h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
+      h("div", {}, h("span", { class: "name" }, `${r.address}, ${r.town} ${r.postcode}`), h("div", { class: "status" }, r.status),
+        r.needs_notice ? h("span", { class: "flag" }, "Needs notice") : h("span", { class: "muted" }, "No extra notice needed"),
+        h("div", {}, `Named contact: ${r.named_contact}`)),
+      h("div", { class: "meta" }, h("div", {}, r.stage), r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "card" }, "No jobs assigned to you.")),
+    rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null);
+  const load = async (more) => {
+    const d = await api(`/api/cases?limit=${PAGE}&offset=${more ? rows.length : 0}`);
+    rows = more ? rows.concat(d.items) : d.items;
+    total = d.total;
+    render();
+  };
+  show(h("h1", {}, "Your jobs"), h("p", { class: "muted" }, "You see the address, the works and a named contact. Where a resident needs notice before a visit it says so; the reason is not shared with contractors."), out);
+  await load();
+}
+
+async function contractorCaseView(id) {
+  let c;
+  try { c = await api(`/api/cases/${encodeURIComponent(id)}`); } catch (e) { return show(h("a", { class: "back", href: "#/" }, "Back to your jobs"), h("p", { class: "err" }, e.message)); }
+  show(h("a", { class: "back", href: "#/" }, "Back to your jobs"),
+    h("h1", {}, `${c.home.address}, ${c.home.town} ${c.home.postcode}`),
+    h("div", { class: "status-line", role: "status" }, c.status),
+    h("section", { class: `card${c.needs_notice ? " ai" : ""}` }, h("h2", {}, "Before you visit"),
+      h("p", { class: "big" }, c.needs_notice ? "Needs notice" : "No extra notice needed"),
+      h("p", {}, `Named contact: ${c.named_contact}`)),
+    h("section", { class: "card" }, h("h2", {}, "The job"),
+      h("dl", {}, h("dt", {}, "Works"), h("dd", {}, c.measures), h("dt", {}, "Stage"), h("dd", {}, c.stage),
+        h("dt", {}, "Home"), h("dd", {}, c.home.type), h("dt", {}, "Your contact"), h("dd", {}, `${c.contractor.name}, ${c.contractor.contact}`))),
+    h("section", { class: "card" }, h("h2", {}, "Visits"),
+      c.appointments.length ? h("ul", { class: "list" }, c.appointments.map((a) => h("li", {}, `${fmtDate(a.date)} ${a.slot}: ${a.type} (${a.outcome})`))) : h("p", {}, "No visits booked.")));
 }
 
 function documentsPanel(c, id, refresh) {
@@ -310,7 +515,7 @@ function importView() {
     h("label", { for: "f" }, "Spreadsheet (CSV)"), file, out);
 }
 
-document.getElementById("signout").addEventListener("click", async () => { await api("/api/logout", {}); me = null; briefingBox = null; login(); });
+document.getElementById("signout").addEventListener("click", async () => { const r = await api("/api/logout", {}); me = null; briefingBox = null; if (r && r.redirect) { location.href = r.redirect; return; } login(); });
 window.addEventListener("hashchange", () => me && route());
 start().catch(() => login());
 
@@ -341,34 +546,67 @@ const ovState = { flag: "", area: "" };
 
 function mapPanel() {
   const el = h("div", { id: "leaflet", class: "leafmap", role: "region", "aria-label": "Map of open cases. Zoom with the buttons, mouse wheel or pinch." });
-  const info = h("p", { class: "muted", role: "status" });
+  const info = h("p", { class: "muted", role: "status", "aria-live": "polite" });
   const open = h("a", { href: "#/all" }, "Show these as a list");
   let map = null, layer = null;
+  const listHead = h("summary", { id: "maplist-h" }, "Show the map areas as a list (keyboard and screen reader friendly)");
+  const listUl = h("ul", { "aria-labelledby": "maplist-h", class: "plainlist" });
+  const listBox = h("details", { class: "maplist" }, listHead, listUl);
+  const renderList = (d) => {
+    listUl.replaceChildren(...d.items.map((p) => {
+      if (d.mode === "clusters") {
+        const label = `${p.count} homes${p.hazards ? `, ${p.hazards} with a safety issue open` : ""}`;
+        return h("li", {}, h("button", { type: "button", class: "linkbtn", "aria-label": `${label}. Zoom in to this area`,
+          onclick: () => { map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18)); listHead.focus(); } }, label));
+      }
+      return h("li", {}, h("a", { href: `#/case/${encodeURIComponent(p.id)}` }, `${p.name}${p.kind === "hazard" ? ", safety issue open" : p.kind === "long" ? ", waiting 60+ days" : ""}`));
+    }));
+  };
   const KIND = { normal: "#0b5d6b", long: "#d98a00", hazard: "#b42318" };
-  const draw = async () => {
-    const pts = await api(`/api/map?${qs(ovState)}`);
-    info.textContent = `${pts.length} homes shown`;
+  let fitting = false, seq = 0;
+  const draw = async (fit) => {
+    const my = ++seq;
     open.onclick = () => { Object.assign(listState, { flag: ovState.flag === "fundingprog" ? "funding" : ovState.flag, area: ovState.area }); };
     if (!map) {
       map = L.map(el, { scrollWheelZoom: true }).setView([54.9, -1.6], 9);
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, referrerPolicy: "strict-origin-when-cross-origin",
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
+      if (me.map && me.map.tiles) {
+        L.tileLayer(me.map.tiles, { maxZoom: 19, referrerPolicy: "strict-origin-when-cross-origin", attribution: me.map.attribution || "" }).addTo(map);
+      }
       layer = L.layerGroup().addTo(map);
+      map.on("moveend", () => { if (!fitting) draw(false); });
     }
+    const b = map.getBounds();
+    const view = fit ? "" : `&bbox=${[b.getSouth(), b.getWest(), b.getNorth(), b.getEast()].join(",")}`;
+    const d = await api(`/api/map?${qs(ovState)}&zoom=${map.getZoom()}${view}`);
+    if (my !== seq) return;
+    info.textContent = d.mode === "clusters"
+      ? `${d.total} homes in this view, grouped into ${d.shown} areas. Zoom in to see each home.`
+      : `${d.total} ${d.total === 1 ? "home" : "homes"} shown`;
+    renderList(d);
     layer.clearLayers();
-    const bounds = [];
-    pts.forEach((p) => {
+    d.items.forEach((p) => {
+      if (d.mode === "clusters") {
+        const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "", html: `<div class="cluster${p.hazards ? " hazard" : ""}">${p.count}</div>`, iconSize: [34, 34] }),
+          keyboard: false, title: `${p.count} homes${p.hazards ? `, ${p.hazards} with a safety issue open` : ""}` });
+        m.on("click", () => map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18)));
+        m.addTo(layer);
+        return;
+      }
       const m = L.circleMarker([p.lat, p.lon], { radius: p.kind === "hazard" ? 8 : 6, color: "#fff", weight: 1.5, fillColor: KIND[p.kind], fillOpacity: 0.9 });
       m.bindTooltip(`${p.name}`, { direction: "top" });
       m.on("click", () => { location.hash = `#/case/${encodeURIComponent(p.id)}`; });
       m.addTo(layer);
-      bounds.push([p.lat, p.lon]);
     });
-    if (bounds.length) map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 });
+    if (fit && d.bounds) {
+      fitting = true;
+      map.fitBounds([[d.bounds[0], d.bounds[1]], [d.bounds[2], d.bounds[3]]], { padding: [30, 30], maxZoom: 15, animate: false });
+      fitting = false;
+      draw(false);
+    }
   };
   const box = h("section", { class: "card" }, h("h2", {}, "Map of open cases"),
     h("p", {}, h("span", { class: "key normal" }, "Normal"), h("span", { class: "key long" }, "Waiting 60+ days"), h("span", { class: "key hazard" }, "Safety issue open")),
-    el, h("div", { class: "row between" }, info, open));
+    el, listBox, h("div", { class: "row between" }, info, open));
   return { box, draw, size: () => map && map.invalidateSize() };
 }
 
@@ -379,10 +617,10 @@ async function overviewView() {
   const mp = mapPanel();
   const tiles = h("div", { class: "tiles", role: "group", "aria-label": "Choose what the map shows" });
   const paint = () => tiles.replaceChildren(...OV_TILES.map(([f, label]) => h("button", { class: `tile${f === "hazard" ? " danger" : ""}`, "aria-pressed": String(ovState.flag === f),
-    onclick: () => { ovState.flag = f; paint(); mp.draw(); } }, h("strong", {}, String(counts[f])), h("span", {}, label))),
+    onclick: () => { ovState.flag = f; paint(); mp.draw(true); } }, h("strong", {}, String(counts[f])), h("span", {}, label))),
     h("div", { class: "tile static" }, h("strong", {}, String(k.completed)), h("span", {}, "Completed")));
   paint();
-  const area = h("select", { id: "mapArea", onchange: (e) => { ovState.area = e.target.value; mp.draw(); } },
+  const area = h("select", { id: "mapArea", onchange: (e) => { ovState.area = e.target.value; mp.draw(true); } },
     h("option", { value: "" }, "All areas"), st.areas.map((a) => h("option", { value: a.label }, a.label)));
   area.value = ovState.area;
   show(
@@ -395,8 +633,8 @@ async function overviewView() {
         h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("td", {}, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long))))))),
     h("section", { class: "card" }, h("h2", {}, "Team workload"), h("table", {}, h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", {}, x)))),
       h("tbody", {}, st.team.map((t) => h("tr", {}, h("td", {}, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards)))))));
-  await mp.draw();
   mp.size();
+  await mp.draw(true);
 }
 
 async function visitsView() {

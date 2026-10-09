@@ -1,0 +1,46 @@
+name: MVP CI
+
+on:
+  pull_request:
+    paths: ["mvp/**", ".github/workflows/mvp-ci.yml"]
+  push:
+    branches: [main]
+    paths: ["mvp/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mvp-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Unit, API, role matrix, ledger and AI evaluation tests
+        run: cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests
+      - name: Check browser JavaScript syntax
+        run: node --check mvp/web/app.js
+
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Build image
+        run: docker build -t properwarm-mvp:ci mvp
+      - name: Image runs as a non-root user
+        run: test "$(docker run --rm --entrypoint id properwarm-mvp:ci -u)" = "10001"
+      - name: Image contains no working data
+        run: docker run --rm --entrypoint sh properwarm-mvp:ci -c 'test ! -e /app/data && test ! -e /data/properwarm.json'

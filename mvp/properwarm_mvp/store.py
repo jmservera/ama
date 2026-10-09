@@ -1,6 +1,5 @@
 """Case store: loading, views, actions, gates and the hash-chained audit log."""
 import csv
-import hashlib
 import io
 import json
 import os
@@ -9,11 +8,12 @@ import threading
 import uuid
 from datetime import datetime
 
-from . import insights
+from . import insights, ledger, projection, ranking
 from .ai import Ai
+from .documents import ACCEPTED, MAX_BYTES, DocumentStoreError, open_document_store
+from .workflows import MANAGER_ROLES, WorkflowMixin
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
-MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 READY_STAGE = "Final checks before ordering"
 BOOKED_STAGE = "Install booked"
 
@@ -24,7 +24,11 @@ class GateError(Exception):
         self.reasons = reasons
 
 
-class Store:
+class ConflictError(Exception):
+    """Another writer changed the same record first, so this write was refused."""
+
+
+class Store(WorkflowMixin):
     def __init__(self, data_path, live_path=None, audit_path=None):
         self.lock = threading.RLock()
         base = os.path.dirname(data_path)
@@ -41,18 +45,19 @@ class Store:
         self.cases = {c["id"]: c for c in self.data["cases"]}
         self.staff = {s["email"].lower(): s for s in self.data["staff"]}
         self.last_hash = self._tail_hash()
+        self.digest_dir = os.environ.get("PW_DIGEST_DIR") or os.path.join(base, "digests")
         self.docs_dir = os.path.join(os.path.dirname(self.live_path), "docs")
+        self.docstore = open_document_store(self.docs_dir)
         self.ai = Ai()
         self.version = 0
         self._briefings = {}
+        self._ranks = None
+        self.data.setdefault("recommendations", [])
 
     def _tail_hash(self):
-        h = "0" * 64
-        if os.path.exists(self.audit_path):
-            with open(self.audit_path, encoding="utf-8") as f:
-                for line in f:
-                    if line.strip():
-                        h = json.loads(line)["hash"]
+        h = ledger.GENESIS
+        for e in self.audit_entries():
+            h = e["hash"]
         return h
 
     def save(self):
@@ -63,27 +68,42 @@ class Store:
         os.replace(tmp, self.live_path)
 
     def audit(self, who, action, case_id, detail):
-        entry = dict(at=datetime.now().isoformat(timespec="seconds"), who=who, action=action,
-                     case=case_id, detail=detail, prev=self.last_hash)
-        entry["hash"] = hashlib.sha256(json.dumps(entry, sort_keys=True).encode()).hexdigest()
+        entry = ledger.make_entry(who, action, case_id, detail, self.last_hash)
         with open(self.audit_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry) + "\n")
         self.last_hash = entry["hash"]
 
+    def audit_entries(self):
+        if os.path.exists(self.audit_path):
+            with open(self.audit_path, encoding="utf-8") as f:
+                for line in f:
+                    if line.strip():
+                        yield json.loads(line)
+
     def verify_audit(self):
-        prev = "0" * 64
-        if not os.path.exists(self.audit_path):
-            return True
-        with open(self.audit_path, encoding="utf-8") as f:
-            for line in f:
-                if not line.strip():
-                    continue
-                e = json.loads(line)
-                h = e.pop("hash")
-                if e["prev"] != prev or hashlib.sha256(json.dumps(e, sort_keys=True).encode()).hexdigest() != h:
-                    return False
-                prev = h
+        return self.verify_ledger()["intact"]
+
+    def verify_ledger(self):
+        """Verify the chain and, when digests exist, that each digest still matches it."""
+        return ledger.verify_entries(self.audit_entries(), ledger.read_digests(self.digest_dir))
+
+    def ledger_head(self):
+        count, head = 0, ledger.GENESIS
+        for e in self.audit_entries():
+            count, head = count + 1, e["hash"]
+        return count, head
+
+    def write_digest(self):
+        """Write the current head as a digest file. In Azure this is uploaded to an immutable container."""
+        with self.lock:
+            count, head = self.ledger_head()
+            return ledger.write_digest(self.digest_dir, ledger.make_digest(count, head))
+
+    def ready(self):
         return True
+
+    def _touch(self, case_id):
+        """Hook for stores that track which cases a request changed."""
 
     @staticmethod
     def gate_reasons(c):
@@ -119,24 +139,77 @@ class Store:
                     support=c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None",
                     closed=c["closed"])
 
-    def list_cases(self, user, view="mine", q="", filters=None, sort="urgent"):
-        f = filters or {}
-        with self.lock:
-            rows = [c for c in self.cases.values() if not c["closed"] and insights.matches(c, f)]
-            if view == "mine":
-                rows = [c for c in rows if c["owner_code"] == user["code"]]
-            if q:
-                ql = q.lower()
-                rows = [c for c in rows if ql in " ".join([c["resident"]["name"], c["home"]["address"],
-                                                           c["home"]["postcode"], c["id"]]).lower()]
-            out = [self.summary(c) for c in rows]
-            if view == "mine":
-                for r, c in zip(out, rows):
-                    r["focus"] = self.focus(c, user["role"])
-        out.sort(key=insights.sort_key(sort))
-        return out
+    def _ranking(self):
+        """Ranking of all open cases for the current policy, rebuilt only when case data changes."""
+        if self._ranks is None or self._ranks[0] != self.version:
+            entries = ranking.rank([c for c in self.cases.values() if not c["closed"]], ranking.CURRENT)
+            self._ranks = (self.version, {e["id"]: e for e in entries})
+        return self._ranks[1]
 
-    def focus(self, c, role):
+    def ranking_policy(self):
+        return ranking.describe(ranking.CURRENT)
+
+    def _filtered(self, user, view, q, f):
+        if view == "closed":
+            if user["role"] not in MANAGER_ROLES:
+                raise PermissionError("Only a manager can see closed cases.")
+            return sorted((c for c in self.cases.values() if c["closed"] and insights.matches(c, f)), key=lambda c: c["id"])
+        rows = [c for c in self.cases.values() if not c["closed"] and insights.matches(c, f)]
+        if projection.is_contractor(user):
+            rows = [c for c in rows if projection.own_case(user, c)]
+        elif view == "mine":
+            rows = [c for c in rows if c["owner_code"] == user["code"]]
+        if q:
+            ql = q.lower()
+            # a contractor cannot search on the resident's name: that would reveal who lives where
+            fields = (lambda c: [c["home"]["address"], c["home"]["postcode"], c["id"]]) if projection.is_contractor(user) \
+                else (lambda c: [c["resident"]["name"], c["home"]["address"], c["home"]["postcode"], c["id"]])
+            rows = [c for c in rows if ql in " ".join(fields(c)).lower()]
+        return rows
+
+    def page_cases(self, user, view="mine", q="", filters=None, sort="urgent", limit=None, offset=0, after=None):
+        """One page of the filtered, sorted list plus the total. limit None returns everything."""
+        with self.lock:
+            ranks = self._ranking()
+            rows = self._filtered(user, view, q, filters or {})
+            total = len(rows)
+            if view == "closed":
+                page = rows if limit is None else rows[offset:offset + limit]
+                return dict(items=[self.summary(c) for c in page], total=total, limit=limit, offset=offset, sort="id",
+                            policy_version=ranking.CURRENT["version"], ranked_total=len(ranks))
+            if sort in ("urgent", "", None) or sort not in insights.SORTS:
+                rows.sort(key=lambda c: ranks[c["id"]]["rank"])
+                if after:
+                    rows = [c for c in rows if ranking.sql_key(c) > after]
+                    offset = 0
+                page = rows if limit is None else rows[offset:offset + limit]
+                out = [self.summary(c) for c in page]
+            else:
+                out = [self.summary(c) for c in rows]
+                for r in out:
+                    r["rank"] = ranks[r["id"]]["rank"]
+                out.sort(key=lambda r: (insights.sort_key(sort)(r), r["rank"]))
+                page = None
+                if limit is not None:
+                    out = out[offset:offset + limit]
+                by_id = self.cases
+                page = [by_id[r["id"]] for r in out]
+            for i, (r, c) in enumerate(zip(out, page)):
+                e = ranks[c["id"]]
+                r["rank"], r["reasons"] = e["rank"], e["reasons"]
+                if projection.is_contractor(user):
+                    r.pop("reasons")
+                    out[i] = projection.contractor_summary(c, r)
+                elif view == "mine":
+                    r["focus"] = self.focus(c, user["role"], projection.can_see_reason(user))
+            nxt = ranking.sql_key(page[-1]) if limit is not None and page and (sort in ("urgent", "", None) or sort not in insights.SORTS) and len(page) == limit else None
+            return dict(items=out, total=total, limit=limit, offset=offset, sort=sort,
+                        policy_version=ranking.CURRENT["version"], ranked_total=len(ranks), next_cursor=nxt)
+
+    def list_cases(self, user, view="mine", q="", filters=None, sort="urgent"):
+        return self.page_cases(user, view, q, filters, sort)["items"]
+
+    def focus(self, c, role, reason_ok=True):
         """Role-specific facts for the card, as label/value pairs."""
         nxt = next((a for a in c["appointments"] if a["outcome"] == "Booked"), None)
         open_h = [h for h in c["hazards"] if not h["released"]]
@@ -169,10 +242,11 @@ class Store:
             return dict(mine=len(mine), hazards=sum(any(not h["released"] for h in c["hazards"]) for c in mine),
                         open=sum(not c["closed"] for c in self.cases.values()))
 
-    def detail(self, case_id):
+    def detail(self, case_id, user=None):
+        """Case card. Pass the signed-in user so the role's projection is applied; None returns everything (internal use)."""
         with self.lock:
             c = self.cases.get(case_id)
-            if not c:
+            if not c or (user is not None and projection.is_contractor(user) and not projection.own_case(user, c)):
                 return None
             d = json.loads(json.dumps(c))
             d["status"] = self.status_line(c)
@@ -181,7 +255,11 @@ class Store:
         d["suggestions"] = insights.recommend_handover(c, list(self.cases.values()), self.data["staff"])
         d["checklist"] = self.checklist(c)
         d["contacts"] = list(reversed(d["contacts"]))[:40]
-        return d
+        if user is None:
+            return d
+        if projection.is_contractor(user):
+            return projection.contractor_detail(c, d)
+        return projection.redact_staff_detail(user, d)
 
     def log_call(self, user, case_id, outcome, note, channel="Phone"):
         outcome = (outcome or "").strip()[:80]
@@ -255,6 +333,10 @@ class Store:
         with self.lock:
             return insights.map_points(list(self.cases.values()), f)
 
+    def map_view(self, f, bbox=None, zoom=None):
+        with self.lock:
+            return insights.map_view(self.cases.values(), f, bbox, zoom)
+
     def visits(self, user, view="mine"):
         with self.lock:
             own = None if view == "all" else user["code"]
@@ -262,19 +344,21 @@ class Store:
 
     # ---- documents
     EVIDENCE = ("EPC", "Survey", "Design", "Consent")
-    EXT = {"pdf": "application/pdf", "png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg",
-           "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-           "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-           "csv": "text/csv", "txt": "text/plain"}
+    EXT = ACCEPTED
     KINDS = ("EPC", "Survey", "Design", "Consent", "Funding evidence", "Photo", "Other")
-    MAX_BYTES = 5 * 1024 * 1024
+    MAX_BYTES = MAX_BYTES
 
     @staticmethod
     def checklist(c):
         have = {d["kind"] for d in c["documents"]}
         return [dict(kind=k, present=k in have) for k in Store.EVIDENCE]
 
+    def _doc_role(self, user, what):
+        if user is not None and user.get("role") not in projection.STAFF_ROLES:
+            raise PermissionError(f"Your role cannot {what} documents.")
+
     def add_document(self, user, case_id, name, kind, data):
+        self._doc_role(user, "add")
         name = os.path.basename((name or "").strip())[:120]
         ext = name.rsplit(".", 1)[-1].lower() if "." in name else ""
         if ext not in self.EXT:
@@ -286,34 +370,45 @@ class Store:
         with self.lock:
             c = self._case(case_id)
             did = uuid.uuid4().hex[:12]
-            folder = os.path.join(self.docs_dir, case_id)
-            os.makedirs(folder, exist_ok=True)
-            with open(os.path.join(folder, did), "wb") as f:
-                f.write(data)
+            try:
+                self.docstore.put(case_id, did, data, mime)
+            except DocumentStoreError as e:
+                self.audit(user["email"], "upload_document_failed", case_id, f"{kind}: {name}: {e}")
+                raise
             doc = dict(id=did, name=name, kind=kind, at=datetime.now().date().isoformat(), by=user["name"],
                        generated=False, mime=mime, summary="")
             c["documents"].append(doc)
             self.audit(user["email"], "upload_document", case_id, f"{kind}: {name}")
-            self.save()
+            try:
+                self.save()
+            except BaseException:
+                try:
+                    self.docstore.delete(case_id, did)
+                except DocumentStoreError:
+                    pass
+                raise
         return doc
 
     def read_document(self, user, case_id, doc_id):
+        self._doc_role(user, "read")
         with self.lock:
             c = self._case(case_id)
             doc = next((d for d in c["documents"] if d["id"] == doc_id and not d["generated"]), None)
             if not doc:
                 raise KeyError(doc_id)
-            with open(os.path.join(self.docs_dir, case_id, doc_id), "rb") as f:
-                data = f.read()
+            data = self.docstore.get(case_id, doc_id)
         self.audit(user["email"], "ai_run_start", case_id, f"read_document {doc['name']}")
         r = self.ai.look_at(doc["name"], data, doc["mime"])
         with self.lock:
+            doc = next(d for d in self._case(case_id)["documents"] if d["id"] == doc_id)
             doc["summary"] = r["text"]
             self.audit(user["email"], "ai_run_end", case_id, f"read_document source={r['source']} model={r['model']}")
             self.save()
         return r
 
-    def get_document(self, case_id, doc_id):
+    def get_document(self, case_id, doc_id, user=None):
+        """Bytes of one document. Pass the signed-in user so the role is checked and the download is audited."""
+        self._doc_role(user, "download")
         with self.lock:
             c = self._case(case_id)
             doc = next((d for d in c["documents"] if d["id"] == doc_id), None)
@@ -323,15 +418,18 @@ class Store:
                 text = (f"{doc['name']}\nCase {c['id']}: {c['home']['address']}, {c['home']['postcode']}\n"
                         f"Filed {doc['at']} by {doc['by']}\nType: {doc['kind']}\n")
                 return doc["name"].rsplit(".", 1)[0] + ".txt", "text/plain", text.encode()
-            with open(os.path.join(self.docs_dir, case_id, doc_id), "rb") as f:
-                return doc["name"], doc["mime"], f.read()
+            data = self.docstore.get(case_id, doc_id)
+            if user is not None:
+                self.audit(user["email"], "download_document", case_id, f"{doc['kind']}: {doc['name']}")
+            return doc["name"], doc["mime"], data
 
     # ---- AI drafting (always a draft for a person)
-    def _facts(self, c):
+    def _facts(self, c, reason_ok=False):
         r = c["resident"]
+        adjust = r["adjustment"] if reason_ok else ("extra support needed" if projection.needs_notice(c) else "None")
         return (f"Case {c['id']}. Resident: {r['name']}. Home: {c['home']['address']}, {c['home']['town']}. "
                 f"Stage: {c['stage']} for {c['days_in_stage']} days. Waiting on {c['waiting_on']} {c['reason']}. "
-                f"Resident adjustments: {r['adjustment']}. Resident prefers: {r['preferred']}. "
+                f"Resident adjustments: {adjust}. Resident prefers: {r['preferred']}. "
                 f"Resident decision: {c['decision']['status']}. Funding: {c['funding']['route']} ({c['funding']['status']}). "
                 f"Open safety issues: {sum(not h['released'] for h in c['hazards'])}. "
                 f"Recent contacts: " + "; ".join(f"{k['at'][:10]} {k['outcome']}" for k in c["contacts"][-4:]))
@@ -339,7 +437,7 @@ class Store:
     def ai_run(self, user, case_id, task):
         with self.lock:
             c = self._case(case_id)
-            facts = self._facts(c)
+            facts = self._facts(c, projection.can_see_reason(user))
             fallback = self.draft(case_id, "visit" if task == "message" else "update")["text"]
             summary = self.status_line(c)
             owner, who = c["owner"], c["resident"]["name"]
@@ -366,7 +464,8 @@ class Store:
                 return hit[1]
             ver = self.version
             mine = [c for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]]
-            mine.sort(key=lambda c: (not any(not h["released"] for h in c["hazards"]), -c["days_in_stage"]))
+            ranks = self._ranking()
+            mine.sort(key=lambda c: ranks[c["id"]]["rank"])
             top = mine[:8]
             facts = "\n".join(f"{c['id']} {c['resident']['name']}: {c['stage']}, {c['days_in_stage']} days. {self.status_line(c)}" for c in top)
             tmpl = "Start with: " + "; ".join(f"{c['resident']['name']} ({c['stage'].lower()}, {c['days_in_stage']} days)" for c in top[:3]) if top else "No open cases."
@@ -378,6 +477,131 @@ class Store:
             if ver == self.version:
                 self._briefings[user["code"]] = (ver, out)
         return out
+
+    # ---- AI priority recommendation: advice beside the deterministic order, never part of it
+    REC_LABEL = "AI-drafted, human-approved"
+    REC_ACTIONS = {"accept": "Accepted", "edit": "Edited", "reject": "Rejected"}
+
+    def _rec_view(self, rec):
+        ranks = self._ranking()
+        def row(cid, reason=None):
+            c = self.cases[cid]
+            r = dict(case_id=cid, resident=c["resident"]["name"], address=c["home"]["address"], stage=c["stage"],
+                     rank=ranks[cid]["rank"] if cid in ranks else None)
+            if reason is not None:
+                r["reason"] = reason
+            return r
+        return dict(rec, label=self.REC_LABEL,
+                    items=[row(i["case_id"], i["reason"]) for i in rec["items"]],
+                    final_items=[row(i["case_id"], i["reason"]) for i in rec["final_items"]] if rec.get("final_items") is not None else None,
+                    deterministic=[row(cid) for cid in rec["deterministic"]])
+
+    def ai_priority(self, user, n=5):
+        n = max(1, min(10, int(n)))
+        with self.lock:
+            ranks = self._ranking()
+            mine = sorted((c for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]),
+                          key=lambda c: ranks[c["id"]]["rank"])
+            if not mine:
+                raise ValueError("You have no open cases to prioritise.")
+            det = [c["id"] for c in mine[:n]]
+            cand = mine[:40]
+            ids = {c["id"] for c in cand}
+            ok = projection.can_see_reason(user)
+            facts = "\n".join(f"{c['id']}: {self._facts(c, ok)}" for c in cand)
+            tmpl_items = self._heuristic_priority(cand, n)
+            policy_version = ranking.CURRENT["version"]
+        tmpl = json.dumps(tmpl_items)
+        sysmsg = ("You advise a UK housing association retrofit officer which of their cases to work on first today. You only "
+                  "recommend; a person decides. Use only the facts given and only the case ids listed. Never invent facts. "
+                  f"Reply with JSON only: a list of exactly {n} objects with keys case_id and reason (one short plain sentence "
+                  "citing a fact such as an open safety issue, extra support need, days waiting or a missing resident decision).")
+
+        def valid(text):
+            try:
+                got = json.loads(text)
+            except ValueError:
+                return False
+            return (isinstance(got, list) and 1 <= len(got) <= n and len({g.get("case_id") for g in got if isinstance(g, dict)}) == len(got)
+                    and all(isinstance(g, dict) and g.get("case_id") in ids and isinstance(g.get("reason"), str) and g["reason"].strip()
+                            for g in got))
+        self.audit(user["email"], "ai_run_start", "-", f"priority_recommendation n={n}")
+        r = self.ai.run("priority", sysmsg, f"Pick the top {n}.\n\nCases:\n{facts}", tmpl, True, check=valid)
+        try:
+            items = json.loads(r["text"])
+        except ValueError:
+            items = tmpl_items
+        items = [dict(case_id=i["case_id"], reason=i["reason"].strip()[:300]) for i in items]
+        with self.lock:
+            rec = dict(id=uuid.uuid4().hex[:12], user=user["email"], created=datetime.now().isoformat(timespec="seconds"),
+                       status="Proposed", source=r["source"], model=r["model"], validated=r["validated"], n=n,
+                       items=items, deterministic=det, policy_version=policy_version, final_items=None,
+                       resolved_by=None, resolved_at=None, reason="",
+                       overlap=len({i["case_id"] for i in items} & set(det)))
+            self.data["recommendations"].append(rec)
+            self.audit(user["email"], "ai_run_end", "-", f"priority_recommendation {rec['id']} source={r['source']} model={r['model']} validated={r['validated']}")
+            self.save()
+            return self._rec_view(rec)
+
+    def _heuristic_priority(self, cand, n):
+        """Template used when no model is available: a different, simpler view from the ranking policy."""
+        def score(c):
+            s = 0
+            s += 100 if any(not h["released"] for h in c["hazards"]) else 0
+            s += 30 if c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None" else 0
+            s += 20 if c["decision"]["status"] in ("Not yet asked", "Waiting") else 0
+            return s + min(c["days_in_stage"], 120) / 4
+        out = []
+        for c in sorted(cand, key=lambda c: (-score(c), c["id"]))[:n]:
+            why = []
+            if any(not h["released"] for h in c["hazards"]):
+                why.append("an open safety issue")
+            if c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None":
+                why.append("the resident needs extra support")
+            if c["decision"]["status"] in ("Not yet asked", "Waiting"):
+                why.append("no resident decision yet")
+            why.append(f"{c['days_in_stage']} days at '{c['stage'].lower()}'")
+            out.append(dict(case_id=c["id"], reason="Because of " + ", ".join(why) + "."))
+        return out
+
+    def latest_priority(self, user):
+        with self.lock:
+            mine = [r for r in self.data["recommendations"] if r["user"] == user["email"]]
+            return self._rec_view(mine[-1]) if mine else None
+
+    def resolve_priority(self, user, rec_id, action, reason="", items=None):
+        if action not in self.REC_ACTIONS:
+            raise ValueError("Choose accept, edit or reject.")
+        reason = (reason or "").strip()[:300]
+        if action in ("edit", "reject") and not reason:
+            raise ValueError("Say why.")
+        with self.lock:
+            rec = next((r for r in self.data["recommendations"] if r["id"] == rec_id), None)
+            if not rec:
+                raise KeyError(rec_id)
+            if rec["user"] != user["email"]:
+                raise PermissionError("This suggestion was made for someone else.")
+            if rec["status"] != "Proposed":
+                raise ValueError("This suggestion has already been answered.")
+            final = None
+            if action == "accept":
+                final = rec["items"]
+            elif action == "edit":
+                mine = {c["id"] for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]}
+                final = []
+                for i in items or []:
+                    cid = i.get("case_id") if isinstance(i, dict) else None
+                    if cid not in mine or any(f["case_id"] == cid for f in final):
+                        raise ValueError("Choose each of your own open cases at most once.")
+                    final.append(dict(case_id=cid, reason=str(i.get("reason", ""))[:300]))
+                if not final or len(final) > 10:
+                    raise ValueError("Keep between 1 and 10 cases.")
+            rec.update(status=self.REC_ACTIONS[action], final_items=final, reason=reason,
+                       resolved_by=user["email"], resolved_at=datetime.now().isoformat(timespec="seconds"))
+            ids = ",".join(i["case_id"] for i in final) if final else "-"
+            self.audit(user["email"], f"ai_priority_{action}", "-", f"{rec_id} {reason} cases={ids}".strip())
+            self.save()
+            return self._rec_view(rec)
 
     # ---- funding: a person approves and submits; the system never does
     FUND_FLOW = ("Not started", "To prepare", "Draft ready", "Approved", "Submitted", "Confirmed")
@@ -401,7 +625,7 @@ class Store:
         with self.lock:
             c = self._case(case_id)
             missing = [x["kind"] for x in self.checklist(c) if not x["present"]]
-            facts = self._facts(c) + f" Built: {c['home']['built']}. Type: {c['home']['type']}. EPC band: {c['home']['epc']}. " \
+            facts = self._facts(c, projection.can_see_reason(user)) + f" Built: {c['home']['built']}. Type: {c['home']['type']}. EPC band: {c['home']['epc']}. " \
                 f"Measures: {', '.join(c['measures']) if isinstance(c['measures'], list) else c['measures']}."
             route = c["funding"]["route"]
             tmpl = (f"Funding application draft for {c['home']['address']} ({route})\n\nProperty: {c['home']['type']}, built "
@@ -414,6 +638,7 @@ class Store:
         r = self.ai.run("funding_draft", sysmsg, f"Route: {route}\n{facts}\nMissing documents: {', '.join(missing) or 'none'}", tmpl, True,
                         check=lambda t: all(m.lower() in t.lower() for m in missing) or "needs" in t.lower())
         with self.lock:
+            c = self._case(case_id)
             c["funding"]["draft"] = r["text"]
             if c["funding"]["status"] in ("Not started", "To prepare"):
                 c["funding"]["status"] = "Draft ready"
@@ -457,6 +682,7 @@ class Store:
         c = self.cases.get(case_id)
         if not c:
             raise KeyError(case_id)
+        self._touch(case_id)
         return c
 
     def export_csv(self, rows):

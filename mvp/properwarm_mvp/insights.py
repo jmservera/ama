@@ -70,7 +70,7 @@ def sort_key(sort):
     def nxt(s):
         return s["next_visit"] or "9999"
     keys = {
-        "urgent": lambda s: (not s["hazard"], not s["support"] and s["days"] < 60, -s["days"]),
+        "urgent": lambda s: s["rank"],
         "waiting": lambda s: -s["days"],
         "contact": lambda s: s["last_contact"] or "0000",
         "name": lambda s: s["resident"].split(" ")[-1].lower(),
@@ -129,6 +129,47 @@ def map_points(cases, f):
                         address=f"{c['home']['address']}, {c['home']['postcode']}", stage=c["stage"],
                         kind="hazard" if has_hazard(c) else "long" if c["days_in_stage"] >= LONG_WAIT else "normal"))
     return out
+
+
+MAP_CAP = 500
+
+
+def map_view(cases, f, bbox=None, zoom=None, cap=MAP_CAP):
+    """Points when few enough, otherwise grid clusters. bbox is (south, west, north, east)."""
+    pts = []
+    for c in cases:
+        if c["closed"] or not matches(c, f):
+            continue
+        lat, lon = c["home"]["lat"], c["home"]["lon"]
+        if bbox and not (bbox[0] <= lat <= bbox[2] and bbox[1] <= lon <= bbox[3]):
+            continue
+        pts.append((c, lat, lon))
+    total = len(pts)
+    bounds = [min(p[1] for p in pts), min(p[2] for p in pts), max(p[1] for p in pts), max(p[2] for p in pts)] if pts else None
+    if total <= cap:
+        items = [dict(id=c["id"], lat=lat, lon=lon, name=c["resident"]["name"],
+                      address=f"{c['home']['address']}, {c['home']['postcode']}", stage=c["stage"],
+                      kind="hazard" if has_hazard(c) else "long" if c["days_in_stage"] >= LONG_WAIT else "normal")
+                 for c, lat, lon in sorted(pts, key=lambda p: p[0]["id"])]
+        return dict(mode="points", total=total, shown=len(items), cap=cap, bounds=bounds, items=items)
+    z = 8 if zoom is None else max(0, min(20, int(zoom)))
+    cell = 360.0 / (2 ** z) / 4
+    while True:
+        cells = {}
+        for c, lat, lon in pts:
+            k = (int(lat // cell), int(lon // cell))
+            g = cells.setdefault(k, [0, 0.0, 0.0, 0, 0])
+            g[0] += 1
+            g[1] += lat
+            g[2] += lon
+            g[3] += has_hazard(c)
+            g[4] += c["days_in_stage"] >= LONG_WAIT
+        if len(cells) <= cap:
+            break
+        cell *= 2
+    items = [dict(lat=g[1] / g[0], lon=g[2] / g[0], count=g[0], hazards=g[3], long=g[4], key=f"{k[0]}:{k[1]}")
+             for k, g in sorted(cells.items())]
+    return dict(mode="clusters", total=total, shown=len(items), cap=cap, bounds=bounds, items=items)
 
 
 def visits(cases, owner=None):
