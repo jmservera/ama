@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-09T07:34:55+00:00",
-  "commit": "301e69589523c6bfaab02c6925105579571b19e0",
+  "scored_at": "2026-10-09T08:20:46+00:00",
+  "commit": "001e8e08f020c99530cb934d391e474c67a2aeb8",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37899018300",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37903820642",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
     "prd": "b5cc6a07fde37e41029f42310b8a264a395778344a88247d95725dc305287989",
-    "adr": "0b3a924306da685fee63fc649afb8c92db9e1fcc968aede670dfb23b3684ab3e",
-    "solution-code": "e002ef5511bfa1a2c9ad0520b81e9034ad9f1dd0abcf2e0583ab02ab1bcec5a4",
-    "infrastructure": "e88376bd4127361b1b10cf9be9b3bc35a947dbd7e7127e141ef466e6b4c45890"
+    "adr": "ece9516f48868a89f6f1ca198227cef7b3e9c4d1a059e53297714642d95ee8df",
+    "solution-code": "a89a639f156e48a50323490fc9ab6f0eb6ba0ea4db08646ba4d04a79c851b82f",
+    "infrastructure": "e962abd356f81103c78019d3442cd3da2fc2d94a694375c109ac0fbc7c8ad7ea"
   },
   "total": 35,
   "sections": {
@@ -29,7 +29,7 @@
         "infra/modules/containerapps.bicep:123-126",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. ADR 0002 adds design detail (indexes, keyset paging, clustering) but remains proposal, not evidenced deployment; unchanged."
+      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. ADR 0002 adds design detail but remains proposal, not evidenced deployment; unchanged."
     },
     "A2": {
       "score": 5,
@@ -39,7 +39,7 @@
         "docs/adrs/0002-pilot-readiness-architecture.md:194-203",
         "docs/adrs/0002-pilot-readiness-architecture.md:260-267"
       ],
-      "rationale": "ADR 0002 adds seven independently reasoned decision areas (store, sign-in, ranking, map, deployment) each with a trade-off table naming rejected alternatives and why, deepening the already-argued ADR 0001 appraisal."
+      "rationale": "ADR 0002 adds seven independently reasoned decision areas each with a trade-off table naming rejected alternatives and why, deepening the already-argued ADR 0001 appraisal."
     },
     "A3": {
       "score": 4,
@@ -47,7 +47,7 @@
         "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-329"
       ],
-      "rationale": "ADR 0002 names a specific AI leakage threat (vulnerability reason reaching contractor views or AI prompts) and states a mitigation (server-side field projection, prompt isolation, planned matrix test AC-004/AC-005), plus named compliance articles (GDPR 9, 17(3), 44-46)."
+      "rationale": "ADR 0002 names a specific AI leakage threat and states a mitigation, plus named compliance articles (GDPR 9, 17(3), 44-46)."
     },
     "A4": {
       "score": 4,
@@ -57,32 +57,24 @@
         "mvp/tests/test_ranking_policy.py:42-56",
         "docs/adrs/0002-pilot-readiness-architecture.md:431"
       ],
-      "rationale": "ADR 0002 decision 4 status moves from \"Done in slice 1\" to \"Done\": policy is now a hash-verified versioned file with a registry, a manager-only ranking snapshot endpoint ships with deterministic as_of, and JSON/SQL store parity is tested. Named owner sign-off still open, disclosed in README."
+      "rationale": "Policy is a hash-verified versioned file with a registry, a manager-only ranking snapshot endpoint ships with deterministic as_of, and JSON/SQL store parity is tested. Named owner sign-off still open, disclosed in README."
     },
     "A5": {
       "score": 3,
       "evidence": [
         "docs/adrs/0002-pilot-readiness-architecture.md:308-340"
       ],
-      "rationale": "ADR 0002 section 6 adds reasoned discussion of replicas, zone redundancy, health/readiness probes, image hardening and CI gates, expanding the qualitative ops and cost narrative beyond the prior minimal treatment."
+      "rationale": "Operational resilience design discussed with specifics but partial evidenced deployment; unchanged."
     },
     "A6": {
       "score": 3,
-      "evidence": [
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:496-514",
-        "prototype/scripts/evaluate_agent.py:1-51",
-        "docs/adrs/0002-pilot-readiness-architecture.md:244-258"
-      ],
-      "rationale": "ADR 0002 describes a future evaluation harness design (top-k overlap, critical misses, citation validity) with defined metrics, but no harness code or measured run exists in this diff; it remains a documented plan, not delivered evaluation evidence. Unchanged."
+      "evidence": [],
+      "rationale": "Unchanged from baseline; this PR's diff (vendor license notices, dependency override) does not touch solution-code or ADR evidence for this criterion."
     },
     "A7": {
       "score": 4,
-      "evidence": [
-        "prototype/properwarm/domain.py:67-99",
-        "prototype/tests/test_domain.py:16-21",
-        "prototype/tests/test_domain.py:60-73"
-      ],
-      "rationale": "No new agent-orchestration code in this diff; the ADR describes a future AI-recommendation-only workflow design but adds no running agentic code. Unchanged."
+      "evidence": [],
+      "rationale": "Unchanged from baseline; this PR's diff does not touch solution-code or ADR evidence for this criterion."
     },
     "B1": {
       "score": 0,
@@ -116,7 +108,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
         "infra/README.md:1-54"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable, now with an expanded PRD (v0.10.0) and new ADR 0002. No capstone deck exists so cap_without caps this at 3 regardless. Unchanged."
+      "rationale": "BRD, PRD and infra/README.md remain structured and navigable. No capstone deck exists so cap_without caps this at 3 regardless. Unchanged."
     },
     "B7": {
       "score": 0,
