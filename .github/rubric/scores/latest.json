@@ -2,20 +2,20 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-08T22:30:04+00:00",
-  "commit": "ba403b9665132ef145c4d76b437905b722017fc2",
+  "scored_at": "2026-10-09T07:37:00+00:00",
+  "commit": "6b161ccdb1e85dc75c084c59a51eb53717a65289",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37852530835",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37899281251",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
     "prd": "b5cc6a07fde37e41029f42310b8a264a395778344a88247d95725dc305287989",
-    "adr": "e3c44e4e29ed59e8a4d73f54267169eaa2be076874e3a86b81fe69bf35293dc7",
-    "solution-code": "99880897d90d1a99545aa26d608c4c96fd1b91872b364cd3f6c4d90914af8578",
+    "adr": "0704b564b99e51e53034be4973ae977216eb13a9c725c4eda565a11c8186d672",
+    "solution-code": "f7bdff74cff47e008f7ed234aa0522bf065b002e9dced03bbf2bdf2d87fc7559",
     "infrastructure": "e88376bd4127361b1b10cf9be9b3bc35a947dbd7e7127e141ef466e6b4c45890"
   },
-  "total": 34,
+  "total": 35,
   "sections": {
-    "A": 26,
+    "A": 27,
     "B": 3,
     "C": 5,
     "D": 0
@@ -50,14 +50,15 @@
       "rationale": "ADR 0002 names a specific AI leakage threat (vulnerability reason reaching contractor views or AI prompts) and states a concrete mitigation (server-side field projection, prompt isolation, planned matrix test AC-004/AC-005), plus named compliance articles (GDPR 9, 17(3), 44-46) and Entra-enforced..."
     },
     "A4": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "prototype/properwarm/domain.py:1-125",
-        "prototype/properwarm/server.py:1-73",
-        "prototype/tests/test_domain.py:1-99",
-        "prototype/tests/test_server.py:1-63"
+        "mvp/properwarm_mvp/quality.py:42-55",
+        "mvp/properwarm_mvp/procurement.py:44-55",
+        "mvp/properwarm_mvp/server.py:65-67",
+        "mvp/tests/test_quality_procurement.py:45-61",
+        "mvp/README.md:231-237"
       ],
-      "rationale": "No code changed in this diff; it is a design-only ADR/PRD update describing future SQL/Entra build work, not delivered implementation. Implementation completeness evidence is unchanged."
+      "rationale": "Quality acceptance and procurement (FR-016/017) now fully implemented end to end: mixins wired into Store, API routes, both JSON and SQL stores, UI (ops.js), and tests covering lifecycle and role access. Known gaps disclosed in README. Core capability working with minor gaps; other system areas r..."
     },
     "A5": {
       "score": 3,
