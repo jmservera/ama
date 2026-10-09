@@ -20,9 +20,17 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   (`properwarm_mvp/ranking.py`): open safety issue, then priority support or an
   adjustment, then longest time in stage, then earlier stage, then case id as
   the fixed tie-break. Each card shows its rank and plain reasons, the list
-  header shows the policy version, and `GET /api/ranking/policy` returns the
-  versioned rules. The policy owner is "to be named" and the rule order is an
-  unsigned draft.
+  header shows the policy version, policy hash and as-of date, and
+  `GET /api/ranking/policy` returns the versioned rules. The rules live in
+  versioned files in `policies/` (for example `ranking-v1.json`) with a policy
+  id, version, owner, status, effective date and a SHA-256 content hash over
+  the canonical JSON. Every file is verified when loaded and a mismatch stops
+  the load. Old versions stay in the folder and can be re-run. Ranking takes
+  the case data, a policy and an explicit `as_of` date and reads no clock.
+  `GET /api/ranking/snapshot?policy=1.0.0` (managers only) returns the
+  snapshot: policy version and hash, as-of, and per case the rank, reason codes
+  and deciding rule. It is also written beside the data when it changes. The
+  policy owner is "to be named" and the rule order is an unsigned draft.
 * "Suggest my top 5" on My cases asks AI for a second opinion beside the
   rule-based order, labelled "AI-drafted, human-approved", with a cited reason
   per case. It is stored in a separate recommendations list and is never read
@@ -45,7 +53,17 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   message, a "catch me up" summary, funding application wording, and reading
   an uploaded document. It runs on Azure OpenAI through the managed identity.
   Output is checked, every run is audited, and a plain template is used when
-  the model is unavailable.
+  the model is unavailable. Each output carries source citations that must
+  resolve to a real field or record of the case (for example "Stage: Survey
+  booked", "Case history 2026-09-30"). They are checked on the server: output
+  whose citations do not resolve is marked Unverified, uncited summary bullets
+  and uncited priority items are dropped, and the sources are shown beside the
+  AI-drafted label. Output stays "Not reviewed" until a person accepts, edits or
+  rejects it. Workflow-only mode (request flag `mode: "workflow"`, the "Workflow
+  only" tick box, or `PW_AI=off`) skips the model for every task and is
+  recorded. Each task leaves a comparison record (case ids, AI output,
+  workflow-only output, fallback reason, reviewer action and override) in the
+  recommendation store, in both the JSON and the sqlite store.
 * Documents: upload pdf, png, jpg, docx, xlsx, csv or txt (5 MB), see an
   evidence checklist (EPC, survey, design, consent) and download files.
 * Funding: a person moves each application through draft, approved,
@@ -71,6 +89,21 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   next visit, "needs notice" and a named contact. The server projects the data
   (`projection.py`); the screens never request resident detail. The rank and
   reasons are not sent to contractors either.
+* Quality acceptance (FR-017, `quality.py`): per measure, evidence against a
+  versioned checklist (every check needs a note of what was seen), then accept
+  or return with a defect and an owner, fix, reinspect, resident handover and
+  aftercare notes. States move one step at a time on the server and are
+  audited. Whoever accepts must differ from whoever submitted, recorded or
+  fixed the work, and nothing is accepted automatically. Provider submissions
+  are stored as evidence only.
+* Procurement and capacity (FR-016, `procurement.py`): packages with period,
+  versioned scope and contract reference; offered capacity kept apart from
+  capacity committed with evidence; controlled work orders (each change a new
+  version with its issuer, none issued beyond evidenced commitment);
+  appointment outcomes, completion and correction. Managers get "Capacity and
+  work orders"; contractors see only their own orders, with "needs notice" and
+  no reason. Packages and orders are held as one document in the JSON file or
+  the sqlite `meta` table, so they work in both stores.
 * Documents sit behind a `DocumentStore` interface (`documents.py`). The local
   filesystem store is the default (`PW_DOC_STORE=local`, `PW_DOC_DIR`). The Azure
   Blob store (`PW_DOC_STORE=blob`) uses urllib against the Blob REST API with a
@@ -86,7 +119,15 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 * AI evaluation harness, offline: `PYTHONPATH=. python3 -m properwarm_mvp.ai_eval`
   runs golden scenarios (`evals/ai_priority_golden.json`) with a scripted model
   and checks that ranking and case data never change, the output stays Proposed
-  and needs a person's reason to edit or reject.
+  and needs a person's reason to edit or reject. It fails on any critical miss
+  (a case with an open safety issue missing from the AI top-k) and on any cited
+  fact that is not in the case data, and reports top-k overlap, Spearman rank
+  correlation, run-to-run variation on identical input, latency, model and
+  prompt version, reviewer accept/edit/reject counts with reasons, and the
+  AI's added value against the deterministic and workflow-only orders on the
+  same cases. `--json` prints the full report; managers can read it, with the
+  live reviewer counts, at `GET /api/ai/report`. Negative controls in
+  `tests/test_ai_tasks.py` break each property and expect the harness to fail.
 * Staff time capture (PR-004) is off by default. It records only when
   `PW_TIME_CAPTURE=on`, `DPIA_APPROVED` and `PW_TIME_CONSULTATION` each hold a
   reference, and the person has acknowledged the staff notice
@@ -123,7 +164,8 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 
 | Variable | Purpose |
 | --- | --- |
-| `PW_STORE` | `json` (default) or `sqlite` (durable SQL store, see below) |
+| `PW_STORE` | `json` (default), `sqlite` or `mssql` (Azure SQL, see below) |
+| `PW_SQL_SERVER`, `PW_SQL_DATABASE`, `PW_SQL_AUTH`, `PW_SQL_CLIENT_ID`, `PW_SQL_PORT`, `PW_SQL_TRUST_CERT`, `PW_SQL_TOKEN`, `PW_SQL_USER`, `PW_SQL_PASSWORD` | Azure SQL connection; `PW_SQL_AUTH` is `msi` (default), `default`, `token` or `password` (CI container only) |
 | `PW_SQLITE`, `PW_STATE`, `PW_DATA`, `PW_DIGEST_DIR` | database file, state folder, seed data, ledger digests |
 | `PW_AUTH` | `password` (dev, default) or `trusted-proxy` (Entra) |
 | `PW_ENV` | `production` refuses the password provider and the OSM tile default |
@@ -201,11 +243,40 @@ example `aisha.rahman@propernorthhomes.example`). Without `PW_PASSWORD` a random
 password is printed at start-up. The data builder shifts all dates so the
 history ends today and prints no real personal data.
 
+### Azure SQL store
+
+`PW_STORE=mssql` uses `mssqlstore.py`, a T-SQL dialect over the same `SqlStore`
+logic, with the pinned `mssql-python` driver (`requirements.txt`, hashes
+checked in the image build; the image adds `libltdl7` and `libkrb5-3`). Writers are
+serialised across replicas by a transaction holding an exclusive application
+lock (the equivalent of SQLite's write lock), every compared text column uses a
+binary collation so ordering matches the other stores, and a connection dropped
+between requests is reopened. Sign-in is Microsoft Entra with the app's managed
+identity (`PW_SQL_AUTH=msi`, plus `PW_SQL_CLIENT_ID` for a user-assigned one), so
+there is no database password. The audit table is an append-only ledger table
+when the database has Azure SQL ledger enabled (the engine refuses update and
+delete), otherwise an `INSTEAD OF` trigger does it. Every other table in a ledger
+database also keeps row history, which matters for erasure and retention
+(DPIA item to resolve before real data).
+
+The first start seeds an empty database from `PW_DATA`; the image carries no data,
+so seed once from an operator machine with `PW_SQL_AUTH=token` and
+`PW_SQL_TOKEN=$(az account get-access-token --resource https://database.windows.net/ --query accessToken -o tsv)`.
+The app identity needs a contained user with `db_datareader`, `db_datawriter` and
+`db_ddladmin` (see `infra/scripts/create-sql-users.sql`). `tests/test_mssqlstore.py`
+runs the SQL store suites and the list-read parity suite against a real SQL Server
+when `PW_TEST_MSSQL=1` (and `PW_SQL_*` point at a throwaway database).
+
 ## Honest limits
 
 * The data is constructed. The generator (`pw_names.py`, `build_mvp_dataset.py`)
   makes names, phone numbers on Ofcom drama ranges and example email domains.
   The product screens do not say so; this README and the repository do.
+* Azure on 2026-10-09 (dev subscription, constructed data): the app ran on Azure SQL with a
+  managed identity, documents in Blob, two replicas, and a restart kept a written record with the
+  ledger intact. Sign-in there is still the shared password because Entra built-in
+  authentication needs an app registration that was not available. Nothing was load tested in
+  Azure and Blob contents were not listed directly (no data-plane role).
 * Dev sign-in is a single shared password. The Entra provider is tested only
   with hand-built principal headers, never against a real tenant or Container
   Apps authentication. The contractor screens are tested through the server and
@@ -231,15 +302,33 @@ history ends today and prints no real personal data.
   machine figures, not production latency, and not Azure SQL.
 * Ranking snapshots are not yet stored per run and the policy is a Python
   constant, not a signed-off policy file. AI value against the deterministic
+  order is measured only on constructed scenarios, plus overlap on each live recommendation record.
+
+* The ranking policy is a hash-checked file but not signed off: no named
+  owner yet. The hash detects edits, it does not prove who approved them.
+  Snapshots are written when a manager requests one and the data has changed,
+  as a file, not on every change or in a database table. The as-of date is the
+  date the store was first loaded, and day counts come from the stored
+  `days_in_stage`, not recomputed from it. AI value against the deterministic
   order is only captured as the overlap on each recommendation record.
 * The SQL store is verified only on sqlite. Lists, search, sorts and counts
   use SQL, but case detail, map, statistics, visits, facets, the CSV export,
   the closed list and every write still use the in-memory copy that is kept
   in step with the database. Keyset paging covers the default sort only.
+* Quality and procurement: checklists are examples, not signed-off standards;
+  there is no contractor login to submit evidence (a staff member records it on
+  their behalf); capacity is counted in homes, not hours or money; procurement
+  data is one document, so two managers writing at once get a conflict and
+  retry; the screens were syntax-checked and exercised through the API, not
+  run in a browser or with a screen reader.
 * Time capture has no screens, only the API. It is enabled by environment, not
   an audited admin action. The staff notice text is a draft and the
   consultation reference is a flag, not evidence of the consultation. The AI
-  evaluation uses a scripted model, so it checks behaviour, not model quality.
+  evaluation uses a scripted model, so it checks behaviour, not model quality:
+  latency, run-to-run variation and added value are scripted figures, not
+  live-model measurements, and the golden cases are small and constructed.
+  Citations prove a cited fact exists in the case, not that the claim made from
+  it is right, and document reading cites the document record, not a passage.
 * Browser checks: `tests/browser_check.py` drives the real server with
   Playwright (login, list with rank and reasons, show more, return, reopen,
   map list). It is run by hand, is not in the unittest run or CI, and was
@@ -255,6 +344,27 @@ history ends today and prints no real personal data.
   has no bulk edit yet, so the bulk refusal is tested on the API only.
 * Retention periods and legal bases remain proposals for the DPO and Legal.
 
+## Container hardening checks in CI
+
+The `image` job in `.github/workflows/mvp-ci.yml` builds the image and checks:
+
+* it runs as UID 10001 and contains no working data;
+* it starts and answers `/healthz` with `--read-only --cap-drop ALL
+  --security-opt no-new-privileges`, with only `/tmp` and `/state` (`PW_STATE`)
+  mounted as tmpfs, the seed data mounted read-only, and writes to `/state`
+  succeed while writes to `/app` and `/` fail;
+* a Trivy scan fails the job on any HIGH or CRITICAL finding that has a fix
+  available (`ignore-unfixed`). Unfixed findings in the pinned Debian base are
+  not blocked, so they are visible in a local `trivy image` run but not
+  gated. The fix for a fixable OS package is the `apt-get upgrade` in the
+  Dockerfile, never an ignore file;
+* an SPDX SBOM (`properwarm-mvp-sbom` artifact) is generated and uploaded.
+
+Actions are pinned by commit SHA. The workflow result on GitHub is what proves
+these checks; running the same commands locally is only a preview. Document
+files default to `PW_STATE/docs`, or set `PW_DOC_DIR`; the app writes nowhere
+else. The SQL Server integration job is not part of this job.
+
 ## Tests
 
 ```bash
@@ -262,7 +372,7 @@ cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests -v
 ```
 
 The tests also cover the SQL store (including `test_sqlreads.py`), documents, ledger, role matrix, workflows, auth and time capture. They use small fixtures and a generated 60,000-case dataset, and need no
-private data. The AI priority tests use the template path (no model).
+private data. The AI tests use a scripted model or the template path (no network).
 
 Browser check (needs python3 playwright and chromium, and the built dataset):
 `cd mvp && PYTHONPATH=. python3 tests/browser_check.py`.
