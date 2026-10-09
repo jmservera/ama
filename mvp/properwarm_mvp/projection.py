@@ -18,7 +18,7 @@ REDACTED = "Extra support noted"
 STAFF_ROLES = ("Retrofit Coordinator", "Resident Liaison Officer", "Building Safety Liaison", "Grants and Evidence Officer",
                "Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer")
 STAFF_GET = ("me", "cases", "cases.csv", "case", "ranking", "ai_priority", "facets", "stats", "map", "visits",
-             "funding", "briefing", "doc", "audit", "handoffs", "time", "packages", "workorders", "checklists")
+             "funding", "briefing", "doc", "audit", "handoffs", "time", "packages", "workorders", "checklists", "ai_report")
 CONTRACTOR_GET = ("me", "cases", "case", "workorders")
 CONTRACTOR_POST = ("logout",)
 

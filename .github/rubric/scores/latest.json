@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-09T07:37:00+00:00",
-  "commit": "6b161ccdb1e85dc75c084c59a51eb53717a65289",
+  "scored_at": "2026-10-09T07:34:55+00:00",
+  "commit": "301e69589523c6bfaab02c6925105579571b19e0",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37899281251",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/37899018300",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
     "prd": "b5cc6a07fde37e41029f42310b8a264a395778344a88247d95725dc305287989",
-    "adr": "0704b564b99e51e53034be4973ae977216eb13a9c725c4eda565a11c8186d672",
-    "solution-code": "f7bdff74cff47e008f7ed234aa0522bf065b002e9dced03bbf2bdf2d87fc7559",
+    "adr": "0b3a924306da685fee63fc649afb8c92db9e1fcc968aede670dfb23b3684ab3e",
+    "solution-code": "e002ef5511bfa1a2c9ad0520b81e9034ad9f1dd0abcf2e0583ab02ab1bcec5a4",
     "infrastructure": "e88376bd4127361b1b10cf9be9b3bc35a947dbd7e7127e141ef466e6b4c45890"
   },
   "total": 35,
@@ -47,18 +47,17 @@
         "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-329"
       ],
-      "rationale": "ADR 0002 names a specific AI leakage threat (vulnerability reason reaching contractor views or AI prompts) and states a concrete mitigation (server-side field projection, prompt isolation, planned matrix test AC-004/AC-005), plus named compliance articles (GDPR 9, 17(3), 44-46) and Entra-enforced..."
+      "rationale": "ADR 0002 names a specific AI leakage threat (vulnerability reason reaching contractor views or AI prompts) and states a mitigation (server-side field projection, prompt isolation, planned matrix test AC-004/AC-005), plus named compliance articles (GDPR 9, 17(3), 44-46)."
     },
     "A4": {
       "score": 4,
       "evidence": [
-        "mvp/properwarm_mvp/quality.py:42-55",
-        "mvp/properwarm_mvp/procurement.py:44-55",
-        "mvp/properwarm_mvp/server.py:65-67",
-        "mvp/tests/test_quality_procurement.py:45-61",
-        "mvp/README.md:231-237"
+        "mvp/properwarm_mvp/ranking.py:16-52",
+        "mvp/properwarm_mvp/store.py:153-179",
+        "mvp/tests/test_ranking_policy.py:42-56",
+        "docs/adrs/0002-pilot-readiness-architecture.md:431"
       ],
-      "rationale": "Quality acceptance and procurement (FR-016/017) now fully implemented end to end: mixins wired into Store, API routes, both JSON and SQL stores, UI (ops.js), and tests covering lifecycle and role access. Known gaps disclosed in README. Core capability working with minor gaps; other system areas r..."
+      "rationale": "ADR 0002 decision 4 status moves from \"Done in slice 1\" to \"Done\": policy is now a hash-verified versioned file with a registry, a manager-only ranking snapshot endpoint ships with deterministic as_of, and JSON/SQL store parity is tested. Named owner sign-off still open, disclosed in README."
     },
     "A5": {
       "score": 3,

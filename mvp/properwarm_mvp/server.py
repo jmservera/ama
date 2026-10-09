@@ -60,10 +60,10 @@ def get_kind(path):
         return "doc"
     if path.startswith("/api/time/"):
         return "time"
-    return {"/api/ranking/policy": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
+    return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/packages": "packages",
-            "/api/workorders": "workorders", "/api/checklists": "checklists"}.get(path, "unknown")
+            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report"}.get(path, "unknown")
 
 
 QUALITY_ACTIONS = {
@@ -182,6 +182,13 @@ def make_handler(app):
                     return self._json(403, {"error": str(e)})
             if url.path == "/api/ranking/policy":
                 return self._json(200, s.ranking_policy())
+            if url.path == "/api/ranking/snapshot":
+                try:
+                    return self._json(200, s.ranking_snapshot(u, q.get("policy", [""])[0] or None))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
             if url.path == "/api/ai/priority":
                 return self._json(200, {"recommendation": s.latest_priority(u)})
             if url.path == "/api/time/status":
@@ -218,7 +225,12 @@ def make_handler(app):
             if url.path == "/api/funding":
                 return self._json(200, s.funding_list(u))
             if url.path == "/api/briefing":
-                return self._json(200, s.briefing(u))
+                return self._json(200, s.briefing(u, q.get("mode", [None])[0]))
+            if url.path == "/api/ai/report":
+                if u["role"] not in MANAGER_ROLES:
+                    return self._json(403, {"error": "Only a manager can see the AI evaluation report."})
+                from . import ai_eval
+                return self._json(200, {"evaluation": ai_eval.run_eval(), "live": s.ai_live_report()})
             if url.path.startswith("/api/docs/"):
                 try:
                     _, _, _, cid, did = url.path.split("/")
@@ -296,7 +308,9 @@ def make_handler(app):
                 if url.path == "/api/import-check":
                     return self._json(200, s.import_check(body.get("text", "")))
                 if url.path == "/api/ai/priority":
-                    return self._json(200, s.ai_priority(u, body.get("n", 5)))
+                    return self._json(200, s.ai_priority(u, body.get("n", 5), body.get("mode")))
+                if len(parts) == 5 and parts[:3] == ["api", "ai", "review"]:
+                    return self._json(200, s.review_ai(u, parts[3], parts[4], body.get("reason", ""), body.get("text")))
                 if parts[:2] == ["api", "packages"] or parts[:2] == ["api", "workorders"]:
                     return self._json(200, self._procurement(s, u, parts, body))
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "priority"]:
@@ -335,7 +349,7 @@ def make_handler(app):
                         s.advance(u, cid)
                     elif act == "ai":
                         s._case(cid)
-                        return self._json(200, s.ai_run(u, cid, body.get("task")))
+                        return self._json(200, s.ai_run(u, cid, body.get("task"), body.get("mode")))
                     elif act == "upload":
                         try:
                             raw = base64.b64decode(body.get("data", ""), validate=True)
@@ -343,9 +357,9 @@ def make_handler(app):
                             raise ValueError("Could not read that file.")
                         s.add_document(u, cid, body.get("name"), body.get("kind"), raw)
                     elif act == "read-doc":
-                        return self._json(200, s.read_document(u, cid, body.get("id")))
+                        return self._json(200, s.read_document(u, cid, body.get("id"), body.get("mode")))
                     elif act == "funding-draft":
-                        s.funding_draft(u, cid)
+                        return self._json(200, dict(s.detail(cid, u), ai=s.funding_draft(u, cid, body.get("mode"))))
                     elif act == "funding":
                         s.funding_step(u, cid, body.get("action"), body.get("text", ""))
                     elif act == "draft":

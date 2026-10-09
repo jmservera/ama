@@ -3,35 +3,61 @@
 rank() is a pure function of the case data and a versioned policy. The same
 input and the same policy version always give the same order, whatever order
 the cases arrive in, because the last rule is always the case id. A change to
-the rules is a new policy version; old versions stay in POLICIES so their
-output can be reproduced. AI never reads or changes this module's output.
+the rules is a new policy version file in policies/; every file is hash-checked
+when loaded and old versions stay in POLICIES so their output can be reproduced. AI never reads or changes this module's output.
 """
+import hashlib
 import json
+import os
 
-STAGE_ORDER = ["Home identified", "Checking lease", "Rescheduled", "Contacting resident", "Contact paused",
-               "Survey being booked", "Survey booked", "Survey write-up", "Design starting", "Design in progress",
-               "Design awaiting approval", "Design being corrected", "Waiting on other works",
-               "Waiting for resident decision", "Resident paused works", "Funding check",
-               "Final checks before ordering", "Waiting for block programme", "With contractor", "Install booked",
-               "Works under way", "Handover to arrange", "Quality check", "Closing down", "Aftercare issue"]
+POLICY_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "policies")
 
-POLICY_V1 = dict(
-    policy_id="proper-warm-home-ranking",
-    version="1.0.0",
-    owner="to be named",
-    status="Draft rule order, not yet signed off by an owner",
-    rules=[
-        dict(code="safety_open", label="Open safety issue first"),
-        dict(code="support", label="Residents needing priority support or an adjustment next"),
-        dict(code="waiting_days", label="Longest time in the current stage next"),
-        dict(code="stage_order", label="Earlier programme stage next"),
-        dict(code="case_id", label="Case id as the final fixed tie-break"),
-    ],
-    stage_order=STAGE_ORDER,
-)
 
-POLICIES = {POLICY_V1["version"]: POLICY_V1}
-CURRENT = POLICY_V1
+class PolicyError(Exception):
+    """A policy file is unreadable, incomplete or does not match its recorded content hash."""
+
+
+def policy_hash(policy):
+    """SHA-256 of the canonical JSON of the policy without its own content_hash field."""
+    body = {k: v for k, v in policy.items() if k != "content_hash"}
+    return hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def load_policy(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            p = json.load(f)
+    except (OSError, ValueError) as e:
+        raise PolicyError(f"Cannot read ranking policy {path}: {e}")
+    missing = [k for k in ("policy_id", "version", "owner", "status", "effective_date", "rules", "stage_order", "content_hash") if k not in p]
+    if missing:
+        raise PolicyError(f"Ranking policy {path} is missing {', '.join(missing)}")
+    if policy_hash(p) != p["content_hash"]:
+        raise PolicyError(f"Ranking policy {path} does not match its content hash and was refused")
+    return p
+
+
+def load_registry(folder=POLICY_DIR):
+    """Load and verify every policy file in the folder, keyed by version. Old versions stay so they can be re-run."""
+    reg = {}
+    for name in sorted(os.listdir(folder)):
+        if name.endswith(".json"):
+            p = load_policy(os.path.join(folder, name))
+            if p["version"] in reg:
+                raise PolicyError(f"Ranking policy version {p['version']} appears twice")
+            reg[p["version"]] = p
+    if not reg:
+        raise PolicyError(f"No ranking policy files in {folder}")
+    return reg
+
+
+def latest(reg):
+    return reg[max(reg, key=lambda v: tuple(int(x) for x in v.split(".")))]
+
+
+POLICIES = load_registry()
+CURRENT = latest(POLICIES)
+POLICY_V1 = POLICIES["1.0.0"]
 
 
 def _hazard(c):
@@ -93,8 +119,10 @@ def reasons(c):
     return out
 
 
-def rank(cases, policy=CURRENT):
-    """Return entries ordered by the policy: id, rank (from 1), reasons, reason_codes, policy_version."""
+def rank(cases, policy=CURRENT, as_of=None):
+    """as_of is the date the cases' day counts are stated as of. It is passed in, never read from a clock here.
+
+    Return entries ordered by the policy: id, rank (from 1), reasons, reason_codes, policy_version."""
     keys = _rule_keys(policy)
     ordered = sorted(cases, key=lambda c: tuple(k(c) for k in keys))
     out = []
@@ -110,7 +138,31 @@ def canonical(entries):
     return json.dumps(entries, sort_keys=True, separators=(",", ":"))
 
 
+def snapshot(cases, policy, as_of):
+    """Ranking snapshot: policy version and hash, as_of, and per case rank, reason codes and deciding rule.
+
+    The deciding rule is the first rule in policy order that separates a case from the one ranked above it.
+    Nothing here reads a clock, so the same inputs always give byte-identical output.
+    """
+    keys = _rule_keys(policy)
+    codes = [r["code"] for r in policy["rules"]]
+    if "case_id" not in codes:
+        codes.append("case_id")
+    ordered = sorted(cases, key=lambda c: tuple(k(c) for k in keys))
+    rows, prev = [], None
+    for n, c in enumerate(ordered, start=1):
+        mine = [k(c) for k in keys]
+        deciding = None if prev is None else next(code for code, a, b in zip(codes, prev, mine) if a != b)
+        rows.append(dict(id=c["id"], rank=n, reason_codes=[k for k, _ in reasons(c)], deciding_rule=deciding))
+        prev = mine
+    snap = dict(policy_id=policy["policy_id"], policy_version=policy["version"], policy_hash=policy["content_hash"],
+                as_of=as_of, total=len(rows), entries=rows)
+    snap["snapshot_hash"] = hashlib.sha256(canonical(snap).encode("utf-8")).hexdigest()
+    return snap
+
+
 def describe(policy=CURRENT):
     return dict(policy_id=policy["policy_id"], version=policy["version"], owner=policy["owner"], status=policy["status"],
+                effective_date=policy["effective_date"], content_hash=policy["content_hash"],
                 rules=[dict(order=i, **r) for i, r in enumerate(policy["rules"], start=1)],
                 versions=sorted(POLICIES))
