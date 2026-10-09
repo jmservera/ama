@@ -84,10 +84,41 @@ const qs = (o) => Object.entries(o).filter(([, v]) => v).map(([k, v]) => `${k}=$
 const isManager = () => ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
 const FLAGS = [["hazard", "Safety issue open"], ["support", "Needs extra support"], ["long", "Waiting 60+ days"], ["nodecision", "No resident decision yet"], ["funding", "Funding not confirmed"]];
 
+// Workflow-only mode: the person can choose rules and templates instead of AI. It is recorded with each output.
+const aiMode = { workflow: false };
+const modeBody = (o) => (aiMode.workflow ? { ...o, mode: "workflow" } : o);
+
+// Sources, approval state and the review buttons shown beside every AI-drafted output.
+function aiNotes(d, onDone, getText) {
+  if (!d) return null;
+  const kids = [];
+  if (d.verified === false || d.validated === false) kids.push(h("p", { class: "flag danger", role: "status" }, "Unverified: its sources do not match the case record. Check it before use."));
+  const cites = d.citations || [];
+  if (cites.length) kids.push(h("p", { class: "muted" }, "Sources: " + cites.join("; ")));
+  if (d.dropped_uncited) kids.push(h("p", { class: "muted" }, `${d.dropped_uncited} uncited statement(s) removed.`));
+  kids.push(h("p", { class: "muted" }, d.approval === "Not reviewed" ? "Not reviewed by a person yet." : `${d.approval}.`));
+  if (d.record_id && d.approval === "Not reviewed") {
+    const why = h("input", { type: "text", maxlength: 300, placeholder: "Reason (needed to edit or reject)", "aria-label": "Reason for your review" });
+    const go = (action) => async () => {
+      try { await api(`/api/ai/review/${d.record_id}/${action}`, { reason: why.value, text: action === "edit" ? getText && getText() : undefined }); d.approval = REVIEWED[action]; onDone ? onDone() : box.replaceChildren(h("p", { class: "muted" }, `${d.approval}. Recorded in the audit log.`)); }
+      catch (e) { why.setCustomValidity(e.message); why.reportValidity(); }
+    };
+    const box = h("div", { class: "row" }, why, h("button", { class: "alt", onclick: go("accept") }, "Accept as is"),
+      h("button", { class: "alt", onclick: go("edit") }, "I changed it"), h("button", { class: "alt", onclick: go("reject") }, "Reject"));
+    kids.push(box);
+  }
+  return h("div", { class: "aimeta" }, kids);
+}
+const REVIEWED = { accept: "Accepted", edit: "Edited", reject: "Rejected" };
+
 function aiBox() {
   const box = h("section", { class: "card ai" }, h("h2", {}, "Today's briefing"), h("p", { class: "muted" }, "Reading your cases..."));
-  api("/api/briefing").then((b) => box.replaceChildren(h("h2", {}, "Today's briefing"), h("p", {}, b.text), h("p", { class: "muted" }, `${b.label}. Suggestions only. Refreshed when your cases change.`)))
+  const toggle = h("input", { type: "checkbox", id: "wf-mode", checked: aiMode.workflow, onchange: () => { aiMode.workflow = toggle.checked; load(); } });
+  const load = () => api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`).then((b) => box.replaceChildren(h("h2", {}, "Today's briefing"), h("p", {}, b.text),
+    h("p", { class: "muted" }, `${b.label}. Suggestions only. Refreshed when your cases change.`), aiNotes(b),
+    h("p", {}, toggle, h("label", { for: "wf-mode" }, " Workflow only (no AI) for my AI requests"))))
     .catch(() => box.remove());
+  load();
   return box;
 }
 
@@ -95,7 +126,7 @@ function priorityPanel() {
   const box = h("section", { class: "card ai", "aria-label": "AI priority suggestion" });
   const rowsOf = (items, withReason) => h("ol", {}, items.map((i) => h("li", {},
     h("a", { href: `#/case/${encodeURIComponent(i.case_id)}` }, `${i.resident}, ${i.address}`), ` (rank ${i.rank})`,
-    withReason && i.reason ? h("div", { class: "muted" }, i.reason) : null)));
+    withReason && i.reason ? h("div", { class: "muted" }, i.reason, i.cites && i.cites.length ? ` Sources: ${i.cites.join("; ")}.` : "") : null)));
   const paint = (rec, msg) => {
     const kids = [h("h2", {}, "Which cases first? A second opinion"),
       h("p", { class: "muted" }, "The rule-based order below is the list order. The AI suggestion is advice only: it never changes the ranking, owners, stages or queues.")];
@@ -106,7 +137,7 @@ function priorityPanel() {
       kids.push(h("div", { class: "grid" },
         h("div", {}, h("h3", {}, `Rule-based order (policy ${rec.policy_version})`), rowsOf(rec.deterministic, false)),
         h("div", {}, h("h3", {}, `Suggestion: ${rec.label}`), rowsOf(rec.items, true),
-          h("p", { class: "muted" }, `${rec.source === "ai" ? "Written by AI" : "Written by rules, AI not available"}. ${rec.overlap} of ${rec.items.length} match the rule-based top ${rec.n}.`))));
+          h("p", { class: "muted" }, `${rec.source === "ai" ? "Written by AI" : `Written by rules: ${rec.fallback_reason || "AI not available"}`}. ${rec.validated === false ? "Unverified. " : ""}${rec.overlap} of ${rec.items.length} match the rule-based top ${rec.n}.`))));
       if (rec.status === "Proposed") {
         const why = h("input", { id: "pri-why", type: "text", placeholder: "Reason (needed to edit or reject)", maxlength: 300 });
         const keep = rec.items.map((i) => h("input", { type: "checkbox", checked: true, "aria-label": `Keep ${i.resident}` }));
@@ -125,7 +156,7 @@ function priorityPanel() {
     }
     box.replaceChildren(...kids);
   };
-  const ask = async () => { box.setAttribute("aria-busy", "true"); try { paint(await api("/api/ai/priority", { n: 5 })); } catch (e) { paint(null, e.message); } box.removeAttribute("aria-busy"); };
+  const ask = async () => { box.setAttribute("aria-busy", "true"); try { paint(await api("/api/ai/priority", modeBody({ n: 5 }))); } catch (e) { paint(null, e.message); } box.removeAttribute("aria-busy"); };
   api("/api/ai/priority").then((d) => paint(d.recommendation && d.recommendation.status === "Proposed" ? d.recommendation : null)).catch(() => paint(null));
   return box;
 }
@@ -237,10 +268,10 @@ async function caseView(id) {
   const aiRun = async (task) => {
     draftBox.replaceChildren(h("p", { class: "muted" }, "Working on it..."));
     try {
-      const d = await api(`/api/cases/${encodeURIComponent(id)}/ai`, { task });
+      const d = await api(`/api/cases/${encodeURIComponent(id)}/ai`, modeBody({ task }));
       const ta = h("textarea", { "aria-label": "Draft", rows: 9 });
       ta.value = d.text;
-      draftBox.replaceChildren(h("p", { class: "muted" }, `${d.label}. Nothing is sent. Change it as you like.`), ta);
+      draftBox.replaceChildren(h("p", { class: "muted" }, `${d.label}. Nothing is sent. Change it as you like.`), ta, aiNotes(d, null, () => ta.value));
     } catch (e) { draftBox.replaceChildren(h("p", { class: "err" }, e.message)); }
   };
   const sugg = h("section", { class: "card" }, h("h2", {}, "Who could take this on"),
@@ -459,8 +490,8 @@ function documentsPanel(c, id, refresh) {
   const read = async (d) => {
     out.replaceChildren(h("p", { class: "muted" }, "Reading..."));
     try {
-      const r = await api(`/api/cases/${encodeURIComponent(id)}/read-doc`, { id: d.id });
-      out.replaceChildren(h("p", { class: "muted" }, r.source === "ai" ? "AI-read, please check:" : "Note:"), h("p", { class: "pre" }, r.text));
+      const r = await api(`/api/cases/${encodeURIComponent(id)}/read-doc`, modeBody({ id: d.id }));
+      out.replaceChildren(h("p", { class: "muted" }, r.source === "ai" ? "AI-read, please check:" : "Note:"), h("p", { class: "pre" }, r.text), aiNotes(r));
     } catch (e) { out.replaceChildren(h("p", { class: "err" }, e.message)); }
   };
   return h("section", { class: "card" }, h("h2", {}, "Documents"),
@@ -471,11 +502,13 @@ function documentsPanel(c, id, refresh) {
     h("div", { class: "row" }, kind, file, h("button", { onclick: upload }, "Add document")), out);
 }
 
+const fundingAi = {};
 function fundingPanel(c, id, refresh) {
   const f = c.funding;
   const canAct = ["Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
   const ta = h("textarea", { "aria-label": "Funding application draft", rows: 10 });
   ta.value = f.draft || "";
+  const fundNote = h("div", {}, fundingAi[id] ? [h("p", { class: "muted" }, fundingAi[id].label), aiNotes(fundingAi[id])] : null);
   const ref = h("input", { "aria-label": "Reference from the funder", placeholder: "Reference from the funder" });
   const step = (action, text) => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/funding`, { action, text }));
   if (f.status === "Confirmed") {
@@ -485,7 +518,8 @@ function fundingPanel(c, id, refresh) {
   return h("section", { class: "card" }, h("h2", {}, "Funding application"),
     h("p", {}, `Route: ${f.route}. Status: ${f.status}.${need.length ? ` Still needed: ${need.join(", ")}.` : " All evidence is in."}`),
     h("p", { class: "muted" }, "AI drafts the wording. A person approves it and submits it to the funder. The system never submits."),
-    h("div", { class: "row" }, h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/funding-draft`, {})) }, "Draft application with AI")),
+    h("div", { class: "row" }, h("button", { onclick: () => refresh(async () => { fundingAi[id] = (await api(`/api/cases/${encodeURIComponent(id)}/funding-draft`, modeBody({}))).ai; }) }, "Draft application with AI")),
+    fundNote,
     ta,
     canAct ? h("div", { class: "row" },
       h("button", { class: "alt", onclick: () => step("save_draft", ta.value) }, "Save my changes"),

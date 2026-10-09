@@ -45,7 +45,17 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   message, a "catch me up" summary, funding application wording, and reading
   an uploaded document. It runs on Azure OpenAI through the managed identity.
   Output is checked, every run is audited, and a plain template is used when
-  the model is unavailable.
+  the model is unavailable. Each output carries source citations that must
+  resolve to a real field or record of the case (for example "Stage: Survey
+  booked", "Case history 2026-09-30"). They are checked on the server: output
+  whose citations do not resolve is marked Unverified, uncited summary bullets
+  and uncited priority items are dropped, and the sources are shown beside the
+  AI-drafted label. Output stays "Not reviewed" until a person accepts, edits or
+  rejects it. Workflow-only mode (request flag `mode: "workflow"`, the "Workflow
+  only" tick box, or `PW_AI=off`) skips the model for every task and is
+  recorded. Each task leaves a comparison record (case ids, AI output,
+  workflow-only output, fallback reason, reviewer action and override) in the
+  recommendation store, in both the JSON and the sqlite store.
 * Documents: upload pdf, png, jpg, docx, xlsx, csv or txt (5 MB), see an
   evidence checklist (EPC, survey, design, consent) and download files.
 * Funding: a person moves each application through draft, approved,
@@ -86,7 +96,15 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 * AI evaluation harness, offline: `PYTHONPATH=. python3 -m properwarm_mvp.ai_eval`
   runs golden scenarios (`evals/ai_priority_golden.json`) with a scripted model
   and checks that ranking and case data never change, the output stays Proposed
-  and needs a person's reason to edit or reject.
+  and needs a person's reason to edit or reject. It fails on any critical miss
+  (a case with an open safety issue missing from the AI top-k) and on any cited
+  fact that is not in the case data, and reports top-k overlap, Spearman rank
+  correlation, run-to-run variation on identical input, latency, model and
+  prompt version, reviewer accept/edit/reject counts with reasons, and the
+  AI's added value against the deterministic and workflow-only orders on the
+  same cases. `--json` prints the full report; managers can read it, with the
+  live reviewer counts, at `GET /api/ai/report`. Negative controls in
+  `tests/test_ai_tasks.py` break each property and expect the harness to fail.
 * Staff time capture (PR-004) is off by default. It records only when
   `PW_TIME_CAPTURE=on`, `DPIA_APPROVED` and `PW_TIME_CONSULTATION` each hold a
   reference, and the person has acknowledged the staff notice
@@ -208,7 +226,7 @@ history ends today and prints no real personal data.
   machine figures, not production latency, and not Azure SQL.
 * Ranking snapshots are not yet stored per run and the policy is a Python
   constant, not a signed-off policy file. AI value against the deterministic
-  order is only captured as the overlap on each recommendation record.
+  order is measured only on constructed scenarios, plus overlap on each live recommendation record.
 * The SQL store is verified only on sqlite. Lists, search, sorts and counts
   use SQL, but case detail, map, statistics, visits, facets, the CSV export,
   the closed list and every write still use the in-memory copy that is kept
@@ -216,7 +234,11 @@ history ends today and prints no real personal data.
 * Time capture has no screens, only the API. It is enabled by environment, not
   an audited admin action. The staff notice text is a draft and the
   consultation reference is a flag, not evidence of the consultation. The AI
-  evaluation uses a scripted model, so it checks behaviour, not model quality.
+  evaluation uses a scripted model, so it checks behaviour, not model quality:
+  latency, run-to-run variation and added value are scripted figures, not
+  live-model measurements, and the golden cases are small and constructed.
+  Citations prove a cited fact exists in the case, not that the claim made from
+  it is right, and document reading cites the document record, not a passage.
 * Browser checks: `tests/browser_check.py` drives the real server with
   Playwright (login, list with rank and reasons, show more, return, reopen,
   map list). It is run by hand, is not in the unittest run or CI, and was
@@ -233,7 +255,7 @@ cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests -v
 ```
 
 The tests also cover the SQL store (including `test_sqlreads.py`), documents, ledger, role matrix, workflows, auth and time capture. They use small fixtures and a generated 60,000-case dataset, and need no
-private data. The AI priority tests use the template path (no model).
+private data. The AI tests use a scripted model or the template path (no network).
 
 Browser check (needs python3 playwright and chromium, and the built dataset):
 `cd mvp && PYTHONPATH=. python3 tests/browser_check.py`.
