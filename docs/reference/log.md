@@ -1367,3 +1367,11 @@ metadata when the knowledge base was created.
   transport, there is no time capture screen, case detail, map and stats still
   read the in-memory copy, and no screen reader run was done. Status per item is
   in [ADR 0002](../adrs/0002-pilot-readiness-architecture.md).
+
+## 2026-10-09
+
+* `mvp-ci.yml` image job extended (ADR 0002 decision 6): Trivy scan failing on
+  fixable HIGH or CRITICAL findings, SPDX SBOM artifact, and a read-only root
+  file system with all capabilities dropped `/healthz` check. Documented in
+  `mvp/README.md`. Verified locally with Docker and Trivy 0.65.0; the GitHub
+  workflow result is the proof.
