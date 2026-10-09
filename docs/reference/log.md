@@ -1368,6 +1368,26 @@ metadata when the knowledge base was created.
   read the in-memory copy, and no screen reader run was done. Status per item is
   in [ADR 0002](../adrs/0002-pilot-readiness-architecture.md).
 
+## 2026-10-09 MVP on Azure SQL, Blob and two replicas (dev subscription)
+
+* `mvp/properwarm_mvp/mssqlstore.py` adds `PW_STORE=mssql`: the SQL store logic
+  over Azure SQL with Entra managed-identity sign-in, a write lock shared across
+  replicas, binary collation and an append-only ledger table (or trigger). The
+  `mssql-python` driver is pinned with hashes in `mvp/requirements.txt` and the
+  image adds the two runtime libraries it needs.
+* Verified: 26 store and list-read parity tests on SQL Server 2022
+  (`mvp/tests/test_mssqlstore.py`); the dev app `ca-properwarm-mvp` ran on the
+  dev Azure SQL `retrofit` database (980 constructed cases), documents in Blob
+  through a user-assigned managed identity, two replicas, shared sign-in cookie
+  key, a write read back from every replica and after a revision restart, and
+  the ledger check intact. The engine refused update and delete on the audit table.
+* Found: `retrofit` is a ledger-enabled database, so every table keeps row history
+  (note for erasure and retention in the DPIA); replicas need a shared
+  `PW_SESSION_KEY` or sign-in fails on alternate requests.
+* Not done: Entra built-in authentication (no permission to create an app
+  registration, owner action), Bicep for the MVP app, an Azure load test, direct
+  Blob listing (no data-plane role), and the SQL Server CI job.
+
 ## 2026-10-09
 
 * `mvp-ci.yml` image job extended (ADR 0002 decision 6): Trivy scan failing on

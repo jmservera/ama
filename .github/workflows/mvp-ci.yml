@@ -81,3 +81,35 @@ jobs:
         with:
           name: properwarm-mvp-sbom
           path: properwarm-mvp.spdx.json
+
+  mssql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      sql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: "Pw-Test-12345!"
+        ports: ["1433:1433"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install driver system libraries
+        run: sudo apt-get update && sudo apt-get install -y libltdl7 libkrb5-3
+      - name: Install pinned driver
+        run: pip install --require-hashes -r mvp/requirements.txt
+      - name: Store parity tests on SQL Server
+        env:
+          PW_TEST_MSSQL: "1"
+          PW_SQL_SERVER: localhost
+          PW_SQL_DATABASE: master
+          PW_SQL_AUTH: password
+          PW_SQL_USER: sa
+          PW_SQL_PASSWORD: "Pw-Test-12345!"
+          PW_SQL_TRUST_CERT: "1"
+        run: cd mvp && PYTHONPATH=.:tests python3 -m unittest test_mssqlstore
