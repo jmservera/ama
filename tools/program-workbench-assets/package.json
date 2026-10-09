@@ -4,6 +4,11 @@
   "scripts": {
     "build": "node vendor-editor.mjs"
   },
+  "overrides": {
+    "@toast-ui/editor": {
+      "dompurify": "3.4.16"
+    }
+  },
   "devDependencies": {
     "@toast-ui/editor": "3.2.2",
     "dompurify": "3.4.16",
