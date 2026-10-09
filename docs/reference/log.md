@@ -1368,6 +1368,22 @@ metadata when the knowledge base was created.
   read the in-memory copy, and no screen reader run was done. Status per item is
   in [ADR 0002](../adrs/0002-pilot-readiness-architecture.md).
 
+## 2026-10-09 MVP ranking policy files and snapshots
+
+* `mvp/policies/ranking-v1.json` replaces the Python policy constant: policy
+  id, version, owner ("to be named"), status (unsigned draft), effective date,
+  rule order and a SHA-256 content hash over canonical JSON, verified at load
+  with refusal on mismatch. A registry loads every file so old versions re-run.
+* Ranking takes an explicit `as_of` and reads no clock. Managers can read a
+  ranking snapshot (policy version and hash, as-of, rank, reason codes,
+  deciding rule) at `GET /api/ranking/snapshot`; list headers carry policy
+  hash and as-of. Both the JSON and sqlite stores support it.
+* Tests: golden snapshot, byte-identical re-run, tampered file refused, old
+  version re-run, snapshot unchanged after an AI priority call. Updates
+  [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) decision 4 status
+  and the `mvp/README.md` ranking paragraph and limits. Unverified: not run in
+  Azure; no named owner or sign-off.
+
 ## 2026-10-09 MVP on Azure SQL, Blob and two replicas (dev subscription)
 
 * `mvp/properwarm_mvp/mssqlstore.py` adds `PW_STORE=mssql`: the SQL store logic
