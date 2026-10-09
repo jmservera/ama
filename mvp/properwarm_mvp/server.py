@@ -60,7 +60,7 @@ def get_kind(path):
         return "doc"
     if path.startswith("/api/time/"):
         return "time"
-    return {"/api/ranking/policy": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
+    return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/ai/report": "ai_report"}.get(path, "unknown")
 
@@ -163,6 +163,13 @@ def make_handler(app):
                     return self._json(403, {"error": str(e)})
             if url.path == "/api/ranking/policy":
                 return self._json(200, s.ranking_policy())
+            if url.path == "/api/ranking/snapshot":
+                try:
+                    return self._json(200, s.ranking_snapshot(u, q.get("policy", [""])[0] or None))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
             if url.path == "/api/ai/priority":
                 return self._json(200, {"recommendation": s.latest_priority(u)})
             if url.path == "/api/time/status":

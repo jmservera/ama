@@ -1386,3 +1386,47 @@ metadata when the knowledge base was created.
   harness and the mvp README.
 * Unverified: scripted model only, so latency and variation are not live
   figures; no live-model run, no browser run of the new UI parts.
+
+## 2026-10-09 MVP ranking policy files and snapshots
+
+* `mvp/policies/ranking-v1.json` replaces the Python policy constant: policy
+  id, version, owner ("to be named"), status (unsigned draft), effective date,
+  rule order and a SHA-256 content hash over canonical JSON, verified at load
+  with refusal on mismatch. A registry loads every file so old versions re-run.
+* Ranking takes an explicit `as_of` and reads no clock. Managers can read a
+  ranking snapshot (policy version and hash, as-of, rank, reason codes,
+  deciding rule) at `GET /api/ranking/snapshot`; list headers carry policy
+  hash and as-of. Both the JSON and sqlite stores support it.
+* Tests: golden snapshot, byte-identical re-run, tampered file refused, old
+  version re-run, snapshot unchanged after an AI priority call. Updates
+  [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) decision 4 status
+  and the `mvp/README.md` ranking paragraph and limits. Unverified: not run in
+  Azure; no named owner or sign-off.
+
+## 2026-10-09 MVP on Azure SQL, Blob and two replicas (dev subscription)
+
+* `mvp/properwarm_mvp/mssqlstore.py` adds `PW_STORE=mssql`: the SQL store logic
+  over Azure SQL with Entra managed-identity sign-in, a write lock shared across
+  replicas, binary collation and an append-only ledger table (or trigger). The
+  `mssql-python` driver is pinned with hashes in `mvp/requirements.txt` and the
+  image adds the two runtime libraries it needs.
+* Verified: 26 store and list-read parity tests on SQL Server 2022
+  (`mvp/tests/test_mssqlstore.py`); the dev app `ca-properwarm-mvp` ran on the
+  dev Azure SQL `retrofit` database (980 constructed cases), documents in Blob
+  through a user-assigned managed identity, two replicas, shared sign-in cookie
+  key, a write read back from every replica and after a revision restart, and
+  the ledger check intact. The engine refused update and delete on the audit table.
+* Found: `retrofit` is a ledger-enabled database, so every table keeps row history
+  (note for erasure and retention in the DPIA); replicas need a shared
+  `PW_SESSION_KEY` or sign-in fails on alternate requests.
+* Not done: Entra built-in authentication (no permission to create an app
+  registration, owner action), Bicep for the MVP app, an Azure load test, direct
+  Blob listing (no data-plane role), and the SQL Server CI job.
+
+## 2026-10-09
+
+* `mvp-ci.yml` image job extended (ADR 0002 decision 6): Trivy scan failing on
+  fixable HIGH or CRITICAL findings, SPDX SBOM artifact, and a read-only root
+  file system with all capabilities dropped `/healthz` check. Documented in
+  `mvp/README.md`. Verified locally with Docker and Trivy 0.65.0; the GitHub
+  workflow result is the proof.

@@ -53,6 +53,7 @@ class Store(WorkflowMixin):
         self._briefings = {}
         self._ranks = None
         self.data.setdefault("recommendations", [])
+        self.as_of = self.data.setdefault("as_of", os.environ.get("PW_AS_OF") or datetime.now().date().isoformat())
 
     def _tail_hash(self):
         h = ledger.GENESIS
@@ -149,6 +150,34 @@ class Store(WorkflowMixin):
     def ranking_policy(self):
         return ranking.describe(ranking.CURRENT)
 
+    def ranking_snapshot(self, user, policy=None):
+        """Snapshot of the open-case ranking under a policy version, stored beside the data when it changes. Managers only."""
+        if user["role"] not in MANAGER_ROLES:
+            raise PermissionError("Only a manager can see the ranking snapshot.")
+        pol = ranking.POLICIES.get(policy or ranking.CURRENT["version"])
+        if pol is None:
+            raise ValueError(f"Unknown ranking policy version. Known: {', '.join(sorted(ranking.POLICIES))}")
+        with self.lock:
+            cache = self.__dict__.setdefault("_snapcache", {})
+            hit = cache.get(pol["version"])
+            if hit and hit[0] == self.version:
+                return hit[1]
+            snap = ranking.snapshot([c for c in self.cases.values() if not c["closed"]], pol, self.as_of)
+            cache.clear()
+            cache[pol["version"]] = (self.version, snap)
+            path = os.path.join(os.path.dirname(getattr(self, "live_path", None) or self.db_path) or ".", f"ranking-snapshot-{pol['version']}.json")
+            text = ranking.canonical(snap)
+            try:
+                with open(path, encoding="utf-8") as f:
+                    same = f.read() == text
+            except OSError:
+                same = False
+            if not same:
+                with open(path + ".tmp", "w", encoding="utf-8") as f:
+                    f.write(text)
+                os.replace(path + ".tmp", path)
+            return snap
+
     def _filtered(self, user, view, q, f):
         if view == "closed":
             if user["role"] not in MANAGER_ROLES:
@@ -176,7 +205,7 @@ class Store(WorkflowMixin):
             if view == "closed":
                 page = rows if limit is None else rows[offset:offset + limit]
                 return dict(items=[self.summary(c) for c in page], total=total, limit=limit, offset=offset, sort="id",
-                            policy_version=ranking.CURRENT["version"], ranked_total=len(ranks))
+                            policy_version=ranking.CURRENT["version"], policy_hash=ranking.CURRENT["content_hash"], as_of=self.as_of, ranked_total=len(ranks))
             if sort in ("urgent", "", None) or sort not in insights.SORTS:
                 rows.sort(key=lambda c: ranks[c["id"]]["rank"])
                 if after:
@@ -204,7 +233,7 @@ class Store(WorkflowMixin):
                     r["focus"] = self.focus(c, user["role"], projection.can_see_reason(user))
             nxt = ranking.sql_key(page[-1]) if limit is not None and page and (sort in ("urgent", "", None) or sort not in insights.SORTS) and len(page) == limit else None
             return dict(items=out, total=total, limit=limit, offset=offset, sort=sort,
-                        policy_version=ranking.CURRENT["version"], ranked_total=len(ranks), next_cursor=nxt)
+                        policy_version=ranking.CURRENT["version"], policy_hash=ranking.CURRENT["content_hash"], as_of=self.as_of, ranked_total=len(ranks), next_cursor=nxt)
 
     def list_cases(self, user, view="mine", q="", filters=None, sort="urgent"):
         return self.page_cases(user, view, q, filters, sort)["items"]

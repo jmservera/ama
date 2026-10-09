@@ -44,3 +44,72 @@ jobs:
         run: test "$(docker run --rm --entrypoint id properwarm-mvp:ci -u)" = "10001"
       - name: Image contains no working data
         run: docker run --rm --entrypoint sh properwarm-mvp:ci -c 'test ! -e /app/data && test ! -e /data/properwarm.json'
+      - name: Image runs with a read-only root file system and no capabilities
+        run: |
+          mkdir -p "$RUNNER_TEMP/seed"
+          echo '{"cases":[],"staff":[]}' > "$RUNNER_TEMP/seed/properwarm.json"
+          chmod -R a+rX "$RUNNER_TEMP/seed"
+          docker run -d --name pw-ro --read-only --cap-drop ALL --security-opt no-new-privileges \
+            --tmpfs /tmp --tmpfs /state:uid=10001,gid=10001 -p 8088:8088 \
+            -v "$RUNNER_TEMP/seed:/data:ro" properwarm-mvp:ci
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:8088/healthz && ok=1 && break
+            sleep 1
+          done
+          test "${ok:-0}" = 1 || { docker logs pw-ro; docker rm -f pw-ro; exit 1; }
+          docker exec pw-ro sh -c 'touch /state/probe && ! touch /app/probe 2>/dev/null && ! touch /probe 2>/dev/null'
+          docker exec pw-ro sh -c 'grep -q "^CapEff:.0000000000000000$" /proc/1/status'
+          docker rm -f pw-ro
+      - name: Scan image for high and critical vulnerabilities
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          image-ref: properwarm-mvp:ci
+          severity: HIGH,CRITICAL
+          exit-code: "1"
+          vuln-type: os,library
+          ignore-unfixed: true
+      - name: Generate SBOM (SPDX)
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          image-ref: properwarm-mvp:ci
+          format: spdx-json
+          output: properwarm-mvp.spdx.json
+          scan-type: image
+          skip-setup-trivy: true
+      - name: Upload SBOM
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: properwarm-mvp-sbom
+          path: properwarm-mvp.spdx.json
+
+  mssql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      sql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: "Pw-Test-12345!"
+        ports: ["1433:1433"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install driver system libraries
+        run: sudo apt-get update && sudo apt-get install -y libltdl7 libkrb5-3
+      - name: Install pinned driver
+        run: pip install --require-hashes -r mvp/requirements.txt
+      - name: Store parity tests on SQL Server
+        env:
+          PW_TEST_MSSQL: "1"
+          PW_SQL_SERVER: localhost
+          PW_SQL_DATABASE: master
+          PW_SQL_AUTH: password
+          PW_SQL_USER: sa
+          PW_SQL_PASSWORD: "Pw-Test-12345!"
+          PW_SQL_TRUST_CERT: "1"
+        run: cd mvp && PYTHONPATH=.:tests python3 -m unittest test_mssqlstore
