@@ -1368,6 +1368,16 @@ metadata when the knowledge base was created.
   read the in-memory copy, and no screen reader run was done. Status per item is
   in [ADR 0002](../adrs/0002-pilot-readiness-architecture.md).
 
+## 2026-10-09 review | MVP and PRD and ADR pending-work review
+
+* Reviewed `main` after PRs #35 and #36 against PRD v0.10.0, ADR 0001 and ADR 0002.
+  Added a ranked pending-work section to
+  [Gap Analysis and Next Build](./research/gap-analysis-next-build.md).
+* Twelve pending items found; the largest are Azure verification, CI scan and
+  SBOM, ranking snapshots, AI evaluation measures and citations, and the
+  quality, finance and insight workflows. People-dependent approvals are listed
+  separately. Internal judgement; nothing was run in Azure.
+
 ## 2026-10-09 MVP build: finance, grants, technical sign-offs and resident decisions
 
 * Built in `mvp/` the PRD v0.10.0 requirements FR-018, FR-019, FR-013 and
