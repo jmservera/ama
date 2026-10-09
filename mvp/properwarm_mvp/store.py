@@ -11,6 +11,8 @@ from datetime import datetime
 from . import insights, ledger, projection, ranking
 from .ai import Ai
 from .documents import ACCEPTED, MAX_BYTES, DocumentStoreError, open_document_store
+from .procurement import ProcurementMixin
+from .quality import QualityMixin
 from .workflows import MANAGER_ROLES, WorkflowMixin
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
@@ -28,7 +30,7 @@ class ConflictError(Exception):
     """Another writer changed the same record first, so this write was refused."""
 
 
-class Store(WorkflowMixin):
+class Store(WorkflowMixin, QualityMixin, ProcurementMixin):
     def __init__(self, data_path, live_path=None, audit_path=None):
         self.lock = threading.RLock()
         base = os.path.dirname(data_path)
