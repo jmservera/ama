@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Implement",
-  "status": "active",
+  "status": "blocked",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-10/system-one-decision-models-research.md",
@@ -77,8 +77,13 @@
     },
     {
       "decision": "Renewed continuation executes exact two-measure and five-route service/redress/reference contracts. Fixed response projection mutating stored representative versions and missing real form inputs caused by nested DOM arrays. 377-test regression and 57-check native-browser complaint journey pass; fresh local 18-home cold startup separately measured. Exact constructed FR-014/045/046 and AC-017/037/055/056 pass. Full acceptance and real consent/effectiveness not claimed.",
-      "status": "implemented and locally validated; publication pending",
-      "evidence": "acceptance E23/E24; mvp/tests/test_exercise_workbench.py; changes Renewed Resident and Service Acceptance Implementation"
+      "status": "published; exact-source CI succeeded; full acceptance incomplete",
+      "evidence": "acceptance E23/E24; https://github.com/jmservera/ama/pull/58; implementation b68e140, merged source head 7605194b6018d054628a6932ff78cf836832aec5; successful runs 38068654678/38068654793/38068654643"
+    },
+    {
+      "decision": "Renewed exceptional request for gated Azure deployment/billable calls and human-evaluation availability returned user unavailable. No permission inferred from autonomous implementation direction; model/value acceptance remains blocked and no real evaluators or results are invented.",
+      "status": "unavailable; affected live/value acceptance blocked",
+      "evidence": "ask_user model_authorization/human_evaluation returned user unavailable after resident/service source-head CI succeeded"
     }
   ],
   "blockers": [
@@ -95,7 +100,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Publish resident/service/projection/DOM root fixes and exact evidence on existing draft PR #58, inspect exact-head CI and persist delivery. Continue remaining local acceptance; live/human gates require actual operator/participant prerequisites, not fabricated approvals."
+    "action": "Continue remaining local workflow/return/permission/recovery/accessibility acceptance under owner implementation authority. Owner/operator must authorize gated deployment/bounded calls and provide human evaluators before live/value acceptance can proceed. Preserve draft PR #58 and original Review; do not mark full task complete."
   },
   "prioritized_follow_ups": [
     {
