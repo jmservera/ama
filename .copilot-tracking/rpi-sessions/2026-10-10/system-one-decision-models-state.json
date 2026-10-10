@@ -1,0 +1,69 @@
+{
+  "task_id": "cf81a650-d762-4008-9281-4f8f40c9d1ca",
+  "task_slug": "system-one-decision-models",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Research",
+  "status": "active",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-10/system-one-decision-models-research.md",
+    "plan": null,
+    "details": null,
+    "critique": null,
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research-only task; assess every workflow and recommend conditional design inclusion without changing canonical design.",
+      "status": "confirmed",
+      "evidence": "User research request on 2026-10-10; rpi-research write boundary."
+    },
+    {
+      "decision": "Research disposition executed; Wider, Deeper and Contrarian complete. Planning Readiness Ready for conditional design/evaluation planning only.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-10/system-one-decision-models-research.md; C1-C13, W1-W7."
+    },
+    {
+      "decision": "Propose optional Decision 1 scoring within the existing bounded task service. Preserve deterministic ranking, first human hazard triage and human approval of every action.",
+      "status": "proposed; existing authority boundaries retained",
+      "evidence": "Research recommendation; C3-C5, C9-C13, W2-W3."
+    },
+    {
+      "decision": "Deployment, resident-data use and task activation require separate target-serving, privacy and comparative-evaluation evidence.",
+      "status": "pending later gates; not a blocker to planning",
+      "evidence": "Research Open Questions and Planning Readiness; C9-C13, W3-W7."
+    },
+    {
+      "decision": "Plan critique and post-implementation Review have not executed.",
+      "status": "not executed; outside current Research phase",
+      "evidence": "No plan, implementation or review artifact exists for this task."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Plan",
+    "action": "Await explicit /rpi-plan invocation; Research is complete and no phase transition has occurred."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Plan conditional design inclusion and canonical documentation updates.",
+      "rationale": "Highest immediate value with low implementation risk; translates concrete Foundry evidence into reversible bounded design without operational authority.",
+      "evidence": "Research Concrete Design Handoff; C3-C5, C7-C13, W1-W3."
+    },
+    {
+      "rank": 2,
+      "task": "Verify target Decision API deployment, identity/network, residency and synthetic response contract.",
+      "rationale": "Resolves integration feasibility before investment in an adapter or any real-data use; requires separately authorized platform work.",
+      "evidence": "Research Open Questions; W3-W7, C4."
+    },
+    {
+      "rank": 3,
+      "task": "Run owner-approved paired classification/evidence/guardrail comparisons.",
+      "rationale": "Necessary to select or remove each model task; follows labelled scenarios and serving verification rather than vendor benchmark extrapolation.",
+      "evidence": "Research Comparison and Acceptance Evidence; C9-C13, W2-W3."
+    }
+  ]
+}
