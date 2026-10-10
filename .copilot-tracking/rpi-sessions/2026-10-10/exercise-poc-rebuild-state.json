@@ -122,7 +122,7 @@
     },
     {
       "decision": "P05-T01 work-order-version QA/milestone dependencies implemented; exact correction/rescope/ambiguous/wrong-order oracles and independent renewal/restart pass. Model-value answer filed: feasibility observed, incremental benefit unproven. No new deployment or repeated Review.",
-      "status": "396-test regression passed, 26 live SQL skips; source publication pending",
+      "status": "Published source 67afde932a233453e1ee8e9f7ee308f5aba499bd on draft PR58; regression passed; full acceptance incomplete",
       "evidence": "mvp/tests/test_exercise_workbench.py; mvp/tests/test_exercise_forecast.py; docs/ideas/typesafe-system-one-agent-fit.md"
     }
   ],
@@ -135,7 +135,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Publish tested work-order dependency continuation on existing draft PR58; preserve incomplete full-workflow/human/calibration/value gates and deployed revision18."
+    "action": "Continue remaining full-workflow acceptance and human/calibration/paired-value evidence. Tested dependency continuation published on draft PR58; deployed revision18 unchanged. No repeated critique/Review or full completion claim."
   },
   "prioritized_follow_ups": [
     {

@@ -595,3 +595,7 @@ maximum-call upper liability, not reporting that reserve as actual spend.
 Write boundary adds durable MSSQL call reservations, explicit model metadata
 activation, live provider/UX probes and direct documentation/evidence updates.
 Keep human approval and safety/ranking/consent/eligibility controls unchanged.
+
+## Work-Order Continuation Publication
+
+Source 67afde932a233453e1ee8e9f7ee308f5aba499bd pushed and verified as draft PR58 head. PR comment records validation and unchanged deployed revision18. Worktree clean after source publication. Full workflow, human/calibration/paired-value evidence remains incomplete; no Review repeated.
