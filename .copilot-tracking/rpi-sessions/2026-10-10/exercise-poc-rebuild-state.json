@@ -135,20 +135,20 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Continue remaining full-workflow acceptance and human/calibration/paired-value evidence. Tested dependency continuation published on draft PR58; deployed revision18 unchanged. No repeated critique/Review or full completion claim."
+    "action": "Owner now prioritizes decision-model value before further MVP expansion. Four-arm MVE design delivered on draft PR58; design remains proposed because owner review was unavailable. Next stage is experiment approval/resources and execution, not autonomous broad MVP expansion. Deployed revision18 and original Review remain unchanged."
   },
   "prioritized_follow_ups": [
     {
-      "rank": 1,
+      "rank": 2,
       "task": "Complete local workflow and exact acceptance fixtures",
       "rationale": "Required to turn the working one-home slice into defensible full end-to-end capability.",
       "evidence": "RV-005/007 and requirement/evidence register; financial reproductions now pass"
     },
     {
-      "rank": 2,
+      "rank": 1,
       "task": "Complete task-level calibration and paired-effort model-value evaluation",
       "rationale": "Real Foundry scoring/generation is verified; actual task benefit and human evaluation remain separate evidence gates.",
-      "evidence": "RV-006/007; E32 actual provider success does not establish calibration or paired-effort benefit"
+      "evidence": "Owner priority 2026-10-10; .copilot-tracking/mve/2026-10-10/decision-model-value/mve-plan.md; E32 actual provider success does not establish calibration or paired-effort benefit"
     }
   ]
 }
