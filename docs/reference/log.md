@@ -1521,3 +1521,48 @@ metadata when the knowledge base was created.
   quality and approval blockers. Repository merge does not approve
   production use. PR #54 can be closed as superseded once the consolidated
   amendment is safely delivered.
+
+## [2026-10-10] query | Owner-approved exercise assumptions and PRD completion
+
+* The owner clarified that fictional company discovery must not repeatedly
+  block exercise design. Programme, Finance, Resident Engagement and Data/
+  Performance role agents proposed grounded assumptions; the owner approved
+  the reconciled sixteen EXA/OQ dispositions and test targets before edits.
+* Added the assumption register to the
+  [addendum](../case_study_48_addendum.md#owner-approved-exercise-baseline-2026-10-10),
+  with sources, rationale, alternatives, sensitivity/reversal tests and a
+  four-week plan from baseline acceptance. USD 450/month is a technology cap,
+  not a quote; no purchase, deployment or implementation is authorised.
+* Updated the [PRD](../prds/proper-warm-retrofit-programme-demonstrator.md)
+  to v0.12.0 in review for exercise-only acceptance. Defines measurable goals,
+  workload/recovery, real-inference quality/value, forecast/financial oracles
+  and UX engineering checks. Zero unanswered exercise-design questions;
+  sixteen real-world validation questions remain.
+* Real Decision 1 and generative Foundry inference are essential evidence;
+  actual subscription/API/access/processing/cost verification cannot be
+  assumed or replaced by scripted replay. No broad new research phase.
+* Preserved original case study, owner memory, historical failed quality
+  reports and unsigned upstream BRD. No company signatures, legal readiness,
+  direct user validation, measured benefits or passing implementation tests
+  are claimed. Current-version independent review and final owner acceptance
+  follow; historical state/actions are retained as history.
+* Updated the knowledge-base index and PRD session state.
+
+## [2026-10-10] query | Reviewed exercise PRD accepted by owner
+
+* Independent v0.12.0 review identified four actionable source concerns.
+  Corrected canonical resident-choice/withdrawal decomposition, supplementary
+  source aliases, forecast resource/sensitivity semantics and result labels.
+  Targeted closure accepted the substantive corrections; two final editorial
+  residues were applied and locally verified.
+* Current counts: 46 FR, 56 AC, 13 NFR, eight constraints and four SMART
+  exercise goals; reciprocal coverage 100%, all ten NFR categories present.
+  Original formal FAIL/Validate BLOCKED/Finalize NOT_EVALUATED is retained
+  for genuinely absent governed upstream evidence, not fictional discovery.
+* The owner accepted the reviewed v0.12.0 exercise baseline for implementation
+  planning on 2026-10-10, with no changes. Recorded separate exercise
+  acceptance, without company signatures, governed approval or runtime claims.
+* [Review and corrections](../../.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/targeted-closure.md)
+  and [local documentation validation](../../.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/local-validation.md)
+  are preserved. Implementation, actual inference and direct human validation
+  remain later evidence tasks; this change authorises no application work.

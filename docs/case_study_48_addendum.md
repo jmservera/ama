@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-08
+ms.date: 2026-10-10
 ms.topic: reference
 ---
 
@@ -55,6 +55,122 @@ preserved in this addendum:
   conditional recommendation
 * The pilot measurement challenge, including Comparison 1, Comparison 2,
   benefits scorecard, guardrails and counterfactual caveat
+* The owner-approved exercise assumptions and four-week, USD 450/month
+  demonstrator baseline below, distinct from operational readiness
+
+## Owner-Approved Exercise Baseline (2026-10-10)
+
+Proper North Homes is the case customer, not an accessible real organisation
+from which this exercise can obtain missing delegations or operating data.
+The owner approved the following consolidated assumptions and falsifiable
+test targets on 2026-10-10 after proposals from the Programme, Finance,
+Resident Engagement, and Data and Performance role agents. These agents
+are research instruments, not company approvers. Their proposals were
+reconciled before owner approval; incompatible budget allocations and
+fixture suggestions were not adopted wholesale.
+
+This approval permits documentation of an exercise baseline, not purchases,
+deployment, billable inference, implementation, legal sign-off or live use.
+The completed PRD returns to the owner after independent review. No broad
+new research phase is needed for fictional company details. Actual Foundry
+access, API conformance, subscription costs and processing terms remain
+specific verification prerequisites; they cannot be assumed.
+
+After independent review and recorded corrections, the owner accepted
+PRD v0.12.0 as the exercise baseline for implementation planning on
+2026-10-10, with no changes. This satisfies the separate exercise-acceptance
+step; it does not approve formal governed adoption or unexecuted results.
+
+The evidence below supports plausibility, not numerical truth about the
+company. Exact staffing, dates, thresholds, contractual terms and cost
+fixtures are selected exercise assumptions. Original source classifications
+and retrieval dates remain in the linked documents. No new legal or
+regulatory currentness claim is made by this register.
+
+### Evidence Used for the Assumptions
+
+| Reference | Evidence and use |
+| --- | --- |
+| E1 | [Company profile](./reference/research/company/company-profile-research.md), Modelled Customer Profile, Role and Decision Map and Priority Company Gaps: grounded role boundaries and plausible scale, not actual delegations |
+| E2 | [Housing association primer](./reference/research/sector/housing-association-primer.md) and [sector baseline](./reference/research/sector/uk-social-housing-baseline-research.md): resident needs, mission stewardship and illustrative finance; not company results |
+| E3 | [BRD v0.15.0](./brds/agentic-retrofit-programme-brd.md), work/budget/invoice/grant controls, supplier capacity and OD-18/40: upstream intent; draft, not signed handoff |
+| E4 | [Exercise data dictionary](./reference/research/retrofit-synthetic-data/data-dictionary.md): source IDs, events, capacity and coverage limitations; not the private answer key |
+| E5 | [UX profile review](./reference/research/ux/proper-warm-prototype-profile-review.md) and [simplicity review](./reference/research/ux/prototype-learnings-and-simplicity-review.md): rationale for ownership, evidence, non-digital service and clear workspaces; not direct user validation |
+| E6 | [Decision 1 reassessment](./ideas/typesafe-system-one-agent-fit.md): bounded task fit, API/serving limits, comparative evaluation and pricing uncertainty |
+| E7 | [Pilot measurement challenge](./reference/research/company/pilot-measurement-challenge.md): frozen cohorts, paired comparisons, guardrails and attributable rather than assumed benefit |
+| E8 | [ADR 0001](./adrs/0001-azure-architecture.md), [ADR 0002](./adrs/0002-pilot-readiness-architecture.md) and [MVP limits](../mvp/README.md): reusable contracts and production-path alternatives; not full PRD acceptance |
+
+### Assumption and Decision Register
+
+Each EXA identifier dispositions the corresponding PRD OQ for this exercise
+only. Real-world questions remain future validation requirements.
+
+| ID / OQ | Approved exercise assumption | Reason and alternative | Sensitivity or reversal test |
+| --- | --- | --- | --- |
+| EXA-001 / OQ-001 | Programme Manager is product owner, Asset Executive scope sponsor, Finance spending reviewer and Digital technical operator. Use distinct exercise identities and independent preparer/approver roles. The project owner approves the baseline. | E1/E3: explicit accountability is more defensible than simulated corporate signatures; reject one omnipotent approver. | Missing reviewer or self-approval blocks controlled actions; a scope change returns to owner review. |
+| EXA-002 / OQ-002 | One fictional home, linked building/package and sibling test independent applicability. Separate intake, assessment, technical/resident/funding checks, capacity-backed release, provider completion, independent QA, resident handover and financial closure. Main exception is conflicting EPC evidence and dependent form-review invalidation; test QA returns too. | E3/E4/E5: one connected journey demonstrates controls better than disconnected screens; completion alone is not accepted handover. | Changed scope, package or source invalidates only dependent reviews; sibling decisions never transfer; financial closure requires its own evidence. |
+| EXA-003 / OQ-003 | Versioned field-authority matrix and namespace-qualified identifier crosswalk. Property register supplies identity; domain evidence supplies decisions. Missing/ambiguous/conflicting values remain unknown. | E1/E4: simple auditable authority beats fuzzy merging or universal latest-wins precedence. | Seed conflicting identifiers and stale evidence; unresolved mandatory identity blocks dependent work. |
+| EXA-004 / OQ-004 | Staff-facing workbench with synthetic phone, letter, email/text and officer-assisted intake. No live sending or required resident portal; record preferred/safe route and support. | E2/E5: avoid exclusion and channel proliferation; a portal can follow real research. | No digital access, unsafe contact and limited representative authority remain serviceable; silence/access never implies works consent. |
+| EXA-005 / OQ-005 | Server-enforced role/case/field rights; providers receive only assigned scope and necessary adjustment instructions, not diagnoses. Separate technical, quality, Finance and resident decisions; dual roles cannot defeat no-self-approval. | E1/E3/E5: least privilege preserves trust; reject UI-only hiding or agent approval. | API, search, export and model-input denial tests must agree; role switching cannot grant rights. |
+| EXA-006 / OQ-006 | Retain existing deterministic ranking. Review triggers: stock/EPC extract 30 days, assessment 180 days, resident-choice verification 30 days and every scope change, funding/capacity 7 days, safety status 1 day. These are internal freshness triggers, not certificate expiry or legal periods. | E3/E4: transparent rules beat invented model weights; fresh timestamps alone do not establish validity. | Test each boundary and half/double periods; missing/future dates remain unknown. New hazard reports bypass routine waiting and AI never changes priority. |
+| EXA-007 / OQ-007 | Fictional existing contract/call-off and one committed crew, with competence/material/client-side capacity evidence. GBP 18,000 contractor cost, verified milestone payments 20%/70%/10%; no advance or grant-receipt condition. | E1/E3: a declared fixture avoids pretending to procure or prove real terms in four weeks; one final payment tests less control. | Missing commitment prevents release; duplicate invoice, unsupported variation or self-acceptance prevents payment disposition. Any fixture notice timetable must be labelled fictional, never UK legal advice. |
+| EXA-008 / OQ-008 | Sender retains chase responsibility until acceptance; separate case, receiver, chase and resident-update owners. Routine fixture receipt 24h, chase 48h, escalation 72h and resident-update commitment 48h. | E3/E5: receipt is not ownership. These artificial elapsed-hour targets are not statutory clocks and cannot delay independent human hazard intake. | Rejection/reassignment preserves pending commitments; sent evidence does not imply receipt/understanding. Test model-negative/failure and immediate human referral independently. |
+| EXA-009 / OQ-009 | Reproducible four-week capacity-limited simulation: 16 homes, 12 installation-ready, four held, one week per stage and two homes/week central capacity. Show capacity one/three and duration one/two sensitivities. | E4/E7: a transparent scenario beats fitting ML to constructed history. Forecast accepted handovers, not starts or financial closure. | Freeze six scenarios including capacity reduction, hold, withdrawal, QA return and missing input; exact reruns; week-four error at most two homes and weekly cumulative MAE at most one against independent constructed outcomes. |
+| EXA-010 / OQ-010 | GBP 20,000 base: GBP 18,000 contractor plus GBP 2,000 internal allocation; GBP 2,000 contingency gives GBP 22,000 envelope. Eligible cost GBP 16,000; fictional grant GBP 7,500; provider base GBP 12,500. Asset+Finance approve initial budget; cumulative variation over GBP 1,000 adds Sponsor review; envelope breach blocks new commitments. | E2/E3: define inclusions and distinguish award from liquidity; do not invent corporate covenant headroom. | Grant refusal, delayed receipt, reduced eligibility and 10% cost shock; show gross cash exposure, not net receivables as cash. Programme sees scoped budget/readiness; sensitive financial evidence remains role-restricted. |
+| EXA-011 / OQ-011 | WCAG 2.2 AA engineering target; English baseline with owned interpreter/translation and non-digital route. Keyboard, screen-reader, status/errors, contrast, table/chart equivalence, 320/390/1280px checks, text resize and zoom/reflow. | E2/E5: accessible tasks matter more than a scanner score; no validated language list or full conformance claim. | Record each engineering result and exception. Role-agent walkthroughs cannot substitute for later direct human task/comprehension testing. |
+| EXA-012 / OQ-012 | Lean non-production application reuses current contracts; local durable state/evidence or justified minimal cloud hosting. No mandatory premium/private-endpoint-heavy estate or unverified M365. USD 450/month total technology cap: USD 100 hosting/storage, USD 200 inference/comparators, USD 50 diagnostics, USD 100 reserve. | E6/E8: prove workflow and real model value, not service count. These are spending allocations, not quotes; production architecture remains a separate appraisal. | Include existing attributable charges and accrued liabilities; warn/review at USD 360 or projected excess, pause optional work by USD 405 or earlier if remaining liabilities threaten the cap. Unknown price/access blocks billable work; labour reported separately. |
+| EXA-013 / OQ-013 | Keep one-home story, analytical cohort and 60,000-home scale fixture separate. Versioned as-of, numerator/denominator, filters, unknowns and tables; 100% fixture reconciliation. Separate handover, application, award, claim and cash. | E4/E7: reveal missingness rather than fabricate flow; closed does not mean accepted. | Small stakeholder aggregates below ten require suppression with complementary suppression; source mismatch prevents reconciled charts, not silent exclusions. |
+| EXA-014 / OQ-014 | Retain default five and strict greater-than rule: sixth verified eligible no-access event prompts human investigation. Exclude provider failures/cancellations/reschedules; human closure resets active count, retaining history. | E3 and missed-appointment evidence below: owner-directed exercise rule, not sector norm, refusal or sanction. | Test counts four/five/six, exclusions and reset. No hazard delay or automated deprioritisation; operational adoption needs separate governance. |
+| EXA-015 / OQ-015 | Fictional Proper Warm Exercise Fund; separate versioned application/award/claim/cash fixtures. GBP 7,500 maximum and 50% eligible-cost ceiling are selected exercise rules, not complete real scheme terms. Unknown funding route blocks preparation. | E2/E3/E6: a fully declared synthetic route is more honest than claiming a current open round. No live submission/payment; declarations/signatures remain human-only. | Wrong route/template, eligibility change and stale source invalidate pack review; exercise award/claim/cash evidence is visibly fictional. |
+| EXA-016 / OQ-016 | Real Decision 1 for supplied-candidate form selection and evidence-support screening; real generative Foundry inference for cited narrative. Explicit no-match, source-bound proposals, full required-field review. | E6/E7: typed scoring and generation solve different tasks; compare manual/template and parser/rules rather than presume AI value. | Actual access, API, model/version, role, processing terms, quota and costs must be verified. Replay is not real inference; a failed benefit test retains simpler workflow and the measured negative finding. |
+
+### Numerical Targets and Attribution
+
+The forecast assumes independent concurrent installation and QA/handover
+resource pools, not one shared crew. Central weekly cumulative handovers are
+[0, 2, 4, 6]; capacity one/three at each stage gives [0, 1, 2, 3] /
+[0, 3, 6, 9]. With two simultaneous slots per stage occupied for two weeks,
+the stage-duration sensitivity gives [0, 0, 0, 2]. These constructed resources
+are separate from the lead-home contract fixture and imply no real supplier
+capacity. This clarification preserves the approved six-home central target.
+
+The [PRD acceptance contract](./prds/proper-warm-retrofit-programme-demonstrator.md#exercise-acceptance-contract)
+defines the approved performance, recovery, forecast and AI tests. All are
+targets to be tested, not completed tests. The 20% assessment-to-ready cycle
+time and 25% net coordination-effort reductions remain scenario hypotheses.
+No claim of doubled throughput, secured grants, lower energy bills or user
+validation follows from a synthetic demonstration.
+
+The funding arithmetic is explicit: eligible match is GBP 16,000 minus
+GBP 7,500 = GBP 8,500; adding GBP 4,000 ineligible cost gives GBP 12,500
+provider base cost. Fully spent contingency raises provider exposure to
+GBP 14,500. Before grant cash receipt, gross base cash exposure is
+GBP 20,000. If eligible cost falls to GBP 12,000, the fictional 50% ceiling
+limits grant to GBP 6,000 and provider base funding becomes GBP 14,000.
+None is a company balance sheet or real award calculation.
+
+### Four-Week Plan and Tribunal Defence
+
+T0 is acceptance of the reviewed PRD baseline, not approval of assumptions
+alone. Implementation is a separate task. The four weeks describe project
+delivery, not four weeks of physical retrofit; constructed operational dates
+must be visibly distinct.
+
+| Week | Exercise deliverable | Defence evidence |
+| --- | --- | --- |
+| 1 | Freeze versioned source/form/permission/task contracts, fictional fixtures and test oracles; verify real inference prerequisites before billable work | Why these controls, alternative platforms, cost boundary and honest access limitations |
+| 2 | Connected same-home journey through field conflict, correction, independent decisions, handover and financial reconciliation | End-to-end event trace, negative controls and sibling/dependency isolation |
+| 3 | Authorised real Foundry calls and paired comparisons; performance/recovery tests | Model/version/usage evidence, per-task errors, review effort, latency, accrued cost and fallback |
+| 4 | Engineering/accessibility checks, role-agent walkthroughs, report and owner acceptance | Requirements-to-evidence matrix with Pass/Fail/Not run/Blocked/Not applicable results and separate observations; deferred human research; no invented outcomes |
+
+Defend decisions using the chain: customer problem -> evidence or declared
+assumption -> alternatives -> chosen control/capability -> measurable test
+-> observed result or explicit unmet gate -> reversal condition. Separate
+customer-value justification from Azure learning preference. A workflow-only
+outcome that beats AI is valid evidence, but does not satisfy the separately
+required real-inference demonstration. Company approval, professional/legal
+review, actual funding terms and human usability research remain prerequisites
+for operational use, not prerequisites for fictional exercise design.
 
 ## Proper Warm at Proper North Homes
 
