@@ -18,9 +18,9 @@ REDACTED = "Extra support noted"
 STAFF_ROLES = ("Retrofit Coordinator", "Resident Liaison Officer", "Building Safety Liaison", "Grants and Evidence Officer",
                "Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer")
 FINANCE_VIEW = ("Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer")
-STAFF_GET = ("finance_queue", "me", "cases", "cases.csv", "case", "ranking", "ai_priority", "facets", "stats", "map", "visits",
+STAFF_GET = ("exercise", "finance_queue", "me", "cases", "cases.csv", "case", "ranking", "ai_priority", "facets", "stats", "map", "visits",
              "funding", "briefing", "doc", "audit", "handoffs", "time", "packages", "workorders", "checklists", "ai_report")
-CONTRACTOR_GET = ("me", "cases", "case", "workorders")
+CONTRACTOR_GET = ("exercise", "me", "cases", "case", "workorders")
 CONTRACTOR_POST = ("logout",)
 
 SUMMARY_FIELDS = ("id", "address", "town", "postcode", "stage", "status", "next_visit", "needs_notice", "named_contact",
@@ -76,6 +76,17 @@ def redact_staff_detail(user, d):
     if user.get("role") not in FINANCE_VIEW:
         d.pop("finance", None)
         d.pop("grants", None)
+        d.pop("forms", None)
+        if d.get("exercise"):
+            d["exercise"].pop("evidence", None)
+            d["exercise"].pop("fund_events", None)
+            d["exercise"].pop("contract", None)
+            d["exercise"].pop("source_history", None)
+            d["exercise"].pop("narratives", None)
+            d["exercise"].pop("assistance", None)
+    if user.get("role") == "Retrofit Coordinator":
+        d["forms"] = {key: value for key, value in d.get("forms", {}).items()
+                      if value["form_type"] == "technical"}
     return d
 
 

@@ -161,7 +161,8 @@ def _now():
     return datetime.now().isoformat(timespec="seconds")
 
 
-def add_record(store, user, **fields):
+def add_record(store, user, *, persist=True, **fields):
+    """Append a comparison record; transaction-owning callers may defer save."""
     with store.lock:
         rec = dict(id=uuid.uuid4().hex[:12], kind="ai_task", user=user["email"], created=_now(), status=NOT_REVIEWED,
                    prompt_version=PROMPT_VERSION, reviewer_action=None, reviewer_reason="", override_text=None,
@@ -170,13 +171,14 @@ def add_record(store, user, **fields):
         store.audit(user["email"], "ai_record", (rec["case_ids"] or ["-"])[0] if len(rec["case_ids"]) == 1 else "-",
                     f"{rec['task']} {rec['id']} mode={rec['mode']} source={rec['source']} verified={rec['verified']}")
         ranks, v0 = store._ranks, store.version
-        store.save()
+        if persist:
+            store.save()
         if ranks and ranks[0] == v0:  # an AI record changes no case, so the ranking is still valid
             store._ranks = (store.version, ranks[1])
         return rec
 
 
-def finish(store, user, task, case_ids, r, workflow_text, sources, template_cites=None, bullets=False, record_cites=None):
+def finish(store, user, task, case_ids, r, workflow_text, sources, template_cites=None, bullets=False, record_cites=None, *, persist=True):
     """Turn an Ai result into the shown output, with citations checked, plus its comparison record."""
     ai_output = r["text"] if r["source"] == "ai" else r.get("ai_text")
     dropped = 0
@@ -191,9 +193,11 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
         verified = bool(cites) and not bad
     reason = r.get("reason")
     mode = "workflow-only" if reason == "workflow-only mode selected" else "ai"
-    rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
+    rec = add_record(store, user, persist=persist, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
                      latency_ms=r.get("latency_ms"), ai_output=ai_output, workflow_output=workflow_text, shown_output=text,
-                     fallback_reason=reason, verified=verified, citations=cites, unresolved=bad, dropped_uncited=dropped)
+                     fallback_reason=reason, verified=verified, citations=cites, unresolved=bad, dropped_uncited=dropped,
+                     provider_success=r.get("provider_success", r["source"] == "ai"), provenance=r.get("provenance"),
+                     assistance_status=r.get("assistance_status"))
     return dict(r, text=text, citations=cites, unresolved=bad, dropped_uncited=dropped, verified=verified,
                 approval=NOT_REVIEWED, record_id=rec["id"], mode=mode, prompt_version=PROMPT_VERSION)
 
@@ -220,7 +224,7 @@ def run_document(store, user, case_id, doc, data, mode=None):
                   sources, record_cites=[label])
 
 
-def review(store, user, rec_id, action, reason="", text=None):
+def review(store, user, rec_id, action, reason="", text=None, *, persist=True):
     if action not in REVIEW_ACTIONS:
         raise ValueError("Choose accept, edit or reject.")
     reason = (reason or "").strip()[:300]
@@ -232,6 +236,18 @@ def review(store, user, rec_id, action, reason="", text=None):
             raise KeyError(rec_id)
         if rec["user"] != user["email"]:
             raise PermissionError("This AI output was made for someone else.")
+        if rec["task"] == "source_bound_narrative":
+            case = store._case(rec["case_ids"][0])
+            draft = case.get("forms", {}).get(rec.get("form_id"))
+            if draft is None:
+                raise ValueError("The narrative's authorized form snapshot is unavailable.")
+            store._exercise_form_role(user, draft["form_type"])
+            if draft["input_version"] != rec.get("input_version") or any(
+                ref["id"] not in draft["sources"] or
+                any(draft["sources"][ref["id"]][key] != ref[key] for key in ("version", "hash"))
+                for ref in rec.get("source_refs", [])
+            ):
+                raise ValueError("Source-bound narrative is stale; regenerate or use the manual route.")
         if rec["status"] != NOT_REVIEWED:
             raise ValueError("This AI output has already been reviewed.")
         rec.update(status=REVIEW_ACTIONS[action], reviewer_action=action, reviewer_reason=reason,
@@ -239,7 +255,8 @@ def review(store, user, rec_id, action, reason="", text=None):
                    resolved_by=user["email"], resolved_at=_now())
         store.audit(user["email"], f"ai_review_{action}", rec["case_ids"][0] if len(rec["case_ids"]) == 1 else "-",
                     f"{rec['task']} {rec_id} {reason}".strip())
-        store.save()
+        if persist:
+            store.save()
         return dict(rec)
 
 

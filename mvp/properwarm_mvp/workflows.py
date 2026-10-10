@@ -165,6 +165,8 @@ class WorkflowMixin:
                 raise ValueError("This case is closed.")
             c["hazards"].append(dict(category=category, priority=priority, noticed=_today(), referred=None, repaired=None, released=False,
                                      job="", owner=c["owner"], raised_by=user["name"], note=(note or "")[:300]))
+            if c.get("exercise"):
+                c["hazards"][-1]["classification_status"] = "Reported category/urgency only; authoritative classification remains external."
             self.audit(user["email"], "safety_raised", case_id, f"{category} {priority} {note or ''}".strip())
             if priority == "Emergency":
                 self.audit(user["email"], "safety_emergency", case_id, "Emergency safety issue: refer to Building Safety Liaison the same day")
@@ -190,6 +192,8 @@ class WorkflowMixin:
     def record_repair(self, user, case_id, idx):
         with self.lock:
             c = self._case(case_id)
+            if c.get("exercise"):
+                raise PermissionError("Record only the supplied external authority reference; no local hazard closure.")
             h = self._hazard(c, idx)
             if h["released"] or h.get("repaired"):
                 raise ValueError("This repair is already recorded.")
@@ -204,6 +208,8 @@ class WorkflowMixin:
             raise PermissionError("Only the Building Safety Liaison or a manager can release a safety issue.")
         with self.lock:
             c = self._case(case_id)
+            if c.get("exercise"):
+                raise PermissionError("Exercise safety release is external; record only a supplied authority reference.")
             h = self._hazard(c, idx)
             if h["released"]:
                 raise ValueError("This safety issue is already released.")

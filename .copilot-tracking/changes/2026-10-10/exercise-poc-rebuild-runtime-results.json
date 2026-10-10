@@ -1,0 +1,45 @@
+{
+  "kind": "local-http-and-clean-backup-engineering",
+  "population": "18 fictional homes; one HTTP session, one writer; 201 updates on story home",
+  "core_30_minute_workload": "Not run",
+  "scale_30_minute_workload": "Not run",
+  "crash_and_response_loss": "Not run",
+  "rpo_and_reconciliation": "Not run",
+  "results": {
+    "list": {
+      "samples": 200,
+      "warm_http_p95_seconds": 0.0016404310008510947,
+      "threshold_seconds": 1,
+      "result": "Pass"
+    },
+    "detail": {
+      "samples": 200,
+      "warm_http_p95_seconds": 0.0018685469985939562,
+      "threshold_seconds": 1,
+      "result": "Pass"
+    },
+    "dashboard": {
+      "samples": 200,
+      "warm_http_p95_seconds": 0.003643645999545697,
+      "threshold_seconds": 3,
+      "result": "Pass"
+    },
+    "write": {
+      "samples": 200,
+      "warm_http_p95_seconds": 0.009766677001607604,
+      "threshold_seconds": 2,
+      "result": "Pass"
+    },
+    "clean-restart": {
+      "seconds": 0.010806210000737337,
+      "exact_case_retained": true,
+      "integrity": "ok",
+      "result": "Pass"
+    },
+    "backup-restore": {
+      "exact_stored_case": true,
+      "exact_audit_head": true,
+      "result": "Pass"
+    }
+  }
+}

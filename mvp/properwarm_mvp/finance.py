@@ -62,6 +62,11 @@ def match_invoice(c, inv):
             ex.append(dict(line=i, code="quantity", message=f"Quantity {ln['quantity']:g} is above the {com['quantity']:g} authorised."))
         if not ln["milestone_ref"]:
             ex.append(dict(line=i, code="no_milestone", message="Accepted milestone evidence is unknown for this line."))
+        elif c.get("exercise"):
+            allowed = c["exercise"].get("milestones", {})
+            milestone = allowed.get(ln["milestone_ref"])
+            if not milestone or milestone["work_order"] != inv["work_order"] or abs(milestone["amount"] - ln["amount"]) > 0.005:
+                ex.append(dict(line=i, code="unaccepted_milestone", message="Exact accepted same-home milestone/amount evidence is missing."))
     return ex
 
 
@@ -84,8 +89,13 @@ class FinanceMixin:
         if f["budget"] and f["budget"]["status"] == "Approved":
             raise ValueError("The budget is already approved. Ask a manager to change it.")
         amount = k.money(body.get("amount"), "the budget")
+        if c.get("exercise") and amount not in (20000, 22000):
+            raise ValueError("Exercise base is GBP 20000, envelope GBP 22000; variations need unavailable Sponsor authority.")
         f["budget"] = dict(amount=amount, status="Proposed", proposed_by=user["email"], proposed_name=user["name"], at=k.now(),
                            note=k.text(body.get("note"), "a note", 200, False), approved_by=None)
+        if c.get("exercise"):
+            f["budget"].update(base=20000, contingency=2000, envelope=22000,
+                               amount_kind="base" if amount == 20000 else "envelope")
         return f"budget {amount:.2f} proposed"
 
     def _fin_budget_approve(self, user, c, f, body):
@@ -102,6 +112,8 @@ class FinanceMixin:
         if not b or b["status"] != "Approved":
             raise ValueError("A commitment needs an approved budget first.")
         amount = k.money(body.get("amount"), "the commitment")
+        if c.get("exercise") and (amount != 18000 or body.get("contract") != "EX-CALL-OFF-001"):
+            raise ValueError("Exercise commitment must match the fictional GBP 18000 call-off; variations are blocked.")
         if _committed(f) + amount > b["amount"] + 0.005:
             raise ValueError(f"That is more than the budget left (£{b['amount'] - _committed(f):,.2f}).")
         com = dict(id=k.next_id(f["commitments"], "COM"), supplier=k.text(body.get("supplier"), "the supplier", 80),
@@ -171,6 +183,8 @@ class FinanceMixin:
             raise ValueError("Finance has already decided on this one.")
         note = k.text(body.get("note"), "a note for the decision", 300)
         if decision == "Accept for payment":
+            if c.get("exercise") and match_invoice(c, inv):
+                raise ValueError("Current milestone/budget evidence no longer matches; rematch and resolve exceptions.")
             if inv["status"] != "Matched":
                 raise ValueError("Run the match first. It can only be accepted when every line matches.")
             if inv["hold"]:
@@ -189,6 +203,8 @@ class FinanceMixin:
                 raise ValueError("Release the hold first.")
         if status == "Paid outside this system":
             k.different_person(user, inv.get("disposition_email"), "record the payment")
+            if c.get("exercise"):
+                inv["external_payment_evidence"] = k.text(body.get("evidence"), "fictional external payment evidence reference", 300)
         inv["payment_status"] = status
         return f"{inv['id']} payment noted as {status}"
 

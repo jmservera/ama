@@ -1,0 +1,124 @@
+{
+  "version": "properwarm-exercise-manifest-1",
+  "fixture_version": "properwarm-exercise-1",
+  "as_of": "2026-10-10",
+  "classification": "Wholly fictional non-production exercise; not company evidence, legal clearance, delegated authority or live acceptance.",
+  "authority": {
+    "prd": "PRD-2026-AMA48-001 v0.12.0 Exercise Acceptance Contract",
+    "assumptions": ["EXA-001", "EXA-002", "EXA-003", "EXA-004", "EXA-005", "EXA-006", "EXA-007", "EXA-008", "EXA-009", "EXA-010", "EXA-011", "EXA-012", "EXA-013", "EXA-014", "EXA-015", "EXA-016"],
+    "permissions": "Existing service roles only. A perspective is navigation, not authorization. No self-approval, inherited building consent or provider acceptance.",
+    "freshness": "Internal review triggers, not legal periods or certificate expiry."
+  },
+  "active_slice": "Connected local workbench and integration tests; eleven browser orientation profiles and narrow parser/reflow checks executed. Full workflow browser journeys, prescribed workloads, live inference and human acceptance remain Not run/Blocked.",
+  "navigation_notes": "Profile/workflow rows below preserve the original P04 script baseline, including its historical blockers. GET /api/exercise reconciles current P05 implementation status and updated safety/operator blockers. Script execution statuses remain Not run/Blocked; implementation never marks a script passed.",
+  "startup": {
+    "command": "python -m properwarm_mvp.exercise --output <caller-state-directory>/exercise.json",
+    "overwrite": "Refused unless --overwrite is explicitly supplied; only the named seed file is written.",
+    "database": "Previously unimplemented by P04; P05 implements PW_EXERCISE=1 and explicit absolute PW_STATE with isolated SQLite/local evidence. Incompatible seed/database and PW_DATA/external evidence are refused.",
+    "inference": "Blocked: no live provider calls or activation from fixture creation."
+  },
+  "populations": {
+    "story": {"ids": ["EX-HOME-001", "EX-HOME-002"], "building_id": "EX-BUILDING-001", "package_id": "EX-PACKAGE-001", "denominator": 2, "note": "Independent source/choice/approval records; shared building does not establish package applicability."},
+    "forecast": {"id": "EX-COHORT-16", "denominator": 16, "ready": 12, "held": 4, "note": "Separate from story and analytical snapshot; held release dates unknown."},
+    "analytical": {"id": "EX-ANALYTICAL-24", "denominator": 24, "source_version": "analytical-snapshot-1", "accepted_handovers": 10, "not_accepted": 10, "unknown": 4, "note": "Separate synthetic aggregate snapshot, not Store cases or cumulative forecast flow. Stakeholder small cells and complementary totals must be suppressed by integration."},
+    "scale": {"id": "EX-SCALE-60000", "homes": 60000, "events": 600000, "events_per_home": 10, "execution": "Not run: generator shape is not a load/performance result."}
+  },
+  "field_authority": {
+    "version": "exercise-field-authority-1",
+    "identity": "property-register-1 namespace-qualified IDs",
+    "epc": "Same-home EPC candidates; conflicts remain unknown until human source correction",
+    "choice": "Resident's separately recorded decision for this home and measure",
+    "safety": "Supplied external fictional authority/version/evidence only; no local sufficiency judgement",
+    "finance": "Separate application, award, claim, cash and closure evidence",
+    "unknowns": ["actual company staffing", "real delegations", "live funding route", "real supplier capacity", "resident energy outcomes"]
+  },
+  "scheme": {"id": "EX-FUND", "name": "Proper Warm Exercise Fund", "version": "exercise-fund-1", "fictional": true, "currency": "GBP", "maximum": 7500, "eligible_fraction": 0.5, "external_submission": "Blocked"},
+  "lead_contract": {"version": "exercise-contract-1", "contractor": "Imaginary Retrofit Ltd", "contract_ref": "EX-CALL-OFF-001", "crew_count": 1, "contractor_cost": 18000, "internal_allocation": 2000, "contingency": 2000, "envelope": 22000, "eligible_cost": 16000, "grant": 7500, "provider_base": 12500, "gross_cash_before_receipt": 20000, "milestones": [3600, 12600, 1800], "capacity_evidence": "Fictional lead crew only, not forecast resource evidence", "status": "Proposed fixture, no seeded approvals or cash"},
+  "source_baseline_note": "Sources below preserve the original P04 source-candidate baseline. Current form parser evidence is separately versioned labelled field-ID text in each case.exercise.evidence; GET /api/cases/{id}/exercise supplies its exact raw bytes and hash. Baseline locators must not be claimed as current extraction evidence.",
+  "sources": [
+    {"id": "EX-EPC-A", "home_id": "EX-HOME-001", "version": "epc-a-1", "kind": "EPC", "filename": "exercise-epc-a.txt", "raw_text": "Property ID: EX-HOME-001\nEPC rating: D\n", "locator": "line 2", "parser": "labelled-text-1", "status": "Conflicting candidate, Not reviewed"},
+    {"id": "EX-EPC-B", "home_id": "EX-HOME-001", "version": "epc-b-1", "kind": "EPC", "filename": "exercise-epc-b.csv", "raw_text": "property_id,epc_rating\nEX-HOME-001,E\n", "locator": "row 2, epc_rating", "parser": "csv-1", "status": "Conflicting candidate, Not reviewed"},
+    {"id": "EX-EPC-SIBLING", "home_id": "EX-HOME-002", "version": "epc-sibling-1", "kind": "EPC", "filename": "exercise-epc-sibling.txt", "raw_text": "Property ID: EX-HOME-002\nEPC rating: C\n", "locator": "line 2", "parser": "labelled-text-1", "status": "Sibling only, Not reviewed"}
+  ],
+  "roles": [
+    "Retrofit Programme Manager", "Programme Support Officer", "Resident Liaison Officer", "Retrofit Coordinator",
+    "Quality Inspector", "Building Safety Liaison", "Grants and Evidence Officer", "Contractor"
+  ],
+  "profiles": [
+    {"id": "asset", "name": "Asset and investment", "role": "Retrofit Programme Manager", "actor": "EX-PM-02", "default_queue": "all", "workflow": "portfolio", "script": {"case": "EX-HOME-001", "endpoint": "/api/ranking/snapshot", "permitted": "Inspect deterministic ranking", "denied": "Create sponsor authority by changing perspective", "blocker": "Formal investment/sponsor delegation unavailable", "evidence": "exercise-contract-1", "owner": "EX-PM-02", "next_action": "Review fictional envelope; request separate owner approval", "status": "Not run"}},
+    {"id": "programme", "name": "Programme coordinator", "role": "Retrofit Programme Manager", "actor": "EX-PM-01", "default_queue": "mine", "workflow": "handoffs", "script": {"case": "EX-HOME-001", "endpoint": "/api/handoffs", "permitted": "Inspect pending handoffs", "denied": "Self-approve prepared work", "blocker": "Receiver acceptance not recorded", "evidence": "Case history", "owner": "EX-PM-01", "next_action": "Offer a named receiving-team handoff", "status": "Not run"}},
+    {"id": "case_team", "name": "Retrofit case team", "role": "Programme Support Officer", "actor": "EX-PSO-01", "default_queue": "mine", "workflow": "technical", "script": {"case": "EX-HOME-001", "endpoint": "/api/cases/EX-HOME-001", "permitted": "Inspect blocker and next owner", "denied": "Bulk controlled approval", "blocker": "EPC conflict and missing technical reviews", "evidence": "EX-EPC-A and EX-EPC-B", "owner": "EX-RC-01", "next_action": "Request human source correction", "status": "Not run"}},
+    {"id": "technical", "name": "Retrofit Assessor, designer and Coordinator", "role": "Retrofit Coordinator", "actor": "EX-RC-01", "default_queue": "mine", "workflow": "technical", "script": {"case": "EX-HOME-001", "endpoint": "/api/cases/EX-HOME-001/technical", "permitted": "Prepare design", "denied": "Sign own design or infer sibling applicability", "blocker": "Independent sign-offs missing", "evidence": "Versioned design and same-home source candidates", "owner": "EX-RC-02", "next_action": "Obtain independent technical review", "status": "Not run"}},
+    {"id": "resident", "name": "Housing and Resident Engagement", "role": "Resident Liaison Officer", "actor": "EX-RLO-01", "default_queue": "mine", "workflow": "resident", "script": {"case": "EX-HOME-001", "endpoint": "/api/cases/EX-HOME-001/resident", "permitted": "Record accessible contact and resident-owned choice", "denied": "Infer consent from silence or sibling acceptance", "blocker": "Resident choice not yet asked", "evidence": "Preferred phone/officer-assisted route", "owner": "EX-RLO-01", "next_action": "Record a fictional supported-contact task, not send", "status": "Not run"}},
+    {"id": "safety", "name": "Repairs and Building Safety", "role": "Building Safety Liaison", "actor": "EX-BSL-01", "default_queue": "mine", "workflow": "hazards", "script": {"case": "EX-HOME-001", "endpoint": "/api/cases/EX-HOME-001/hazard-refer", "permitted": "Record referral evidence", "denied": "Locally classify or release an external hazard in exercise mode", "blocker": "Exercise external authority integration unimplemented", "evidence": "Supplied external reference required", "owner": "EX-BSL-01", "next_action": "Keep independent human referral route open", "status": "Blocked"}},
+    {"id": "procurement", "name": "Procurement and contract manager", "role": "Retrofit Programme Manager", "actor": "EX-PM-02", "default_queue": "all", "workflow": "procurement", "script": {"case": "EX-HOME-001", "endpoint": "/api/packages", "permitted": "Review package scope and committed capacity", "denied": "Release beyond evidenced capacity", "blocker": "No package or commitment seeded as approved", "evidence": "exercise-contract-1", "owner": "EX-PM-02", "next_action": "Record separate fictional capacity evidence", "status": "Not run"}},
+    {"id": "provider", "name": "Provider / contractor contact", "role": "Contractor", "actor": "EX-CON-01", "default_queue": "mine", "workflow": "procurement", "script": {"case": "EX-HOME-001", "endpoint": "/api/workorders", "permitted": "Inspect own assigned work orders", "denied": "Accept own installation or view restricted finance", "blocker": "Work order not yet issued", "evidence": "Assigned package scope only", "owner": "EX-PM-02", "next_action": "Wait for evidenced authorized release", "status": "Not run"}},
+    {"id": "quality", "name": "Quality and assurance", "role": "Quality Inspector", "actor": "EX-QI-02", "default_queue": "mine", "workflow": "quality", "script": {"case": "EX-HOME-001", "endpoint": "/api/cases/EX-HOME-001/quality-accept", "permitted": "Independently review quality checklist", "denied": "Self-accept submitted or fixed evidence", "blocker": "Completion/inspection pack absent", "evidence": "Positive per-measure quality checklist", "owner": "EX-QI-02", "next_action": "Await completion and independently inspect", "status": "Not run"}},
+    {"id": "finance", "name": "Finance and Grants", "role": "Grants and Evidence Officer", "actor": "EX-GEO-01", "default_queue": "mine", "workflow": "finance", "script": {"case": "EX-HOME-001", "endpoint": "/api/cases/EX-HOME-001/finance", "permitted": "Prepare fictional budget/invoice records", "denied": "Self-approve, submit externally or pay", "blocker": "Separate application/award/claim/cash evidence absent", "evidence": "exercise-fund-1 and exercise-contract-1", "owner": "EX-PM-02", "next_action": "Prepare evidence for independent review", "status": "Not run"}},
+    {"id": "operator", "name": "Digital operator and auditor", "role": "Programme Support Officer", "actor": "EX-PSO-02", "default_queue": "all", "workflow": "portfolio", "script": {"case": "EX-HOME-001", "endpoint": "/api/audit-check", "permitted": "Inspect permitted audit integrity", "denied": "Grant access or activate inference through a profile", "blocker": "Exercise recovery/activation integration unimplemented", "evidence": "Fixture version and audit chain", "owner": "EX-PSO-02", "next_action": "Run separately owned recovery validation", "status": "Blocked"}}
+  ],
+  "workflows": [
+    {"id": "stock", "name": "Stock data, safety triage and fair prioritisation", "fixture": "EX-HOME-001", "endpoint": "/api/ranking/snapshot", "status": "Existing controls; exercise integration Not run", "expected": "Deterministic ranking, conflicting EPC unknown", "blocker": "Unreviewed same-home source conflict", "owner": "EX-PM-02", "next_action": "Correct source with exact version lineage"},
+    {"id": "technical", "name": "Technical assessment and design readiness", "fixture": "EX-HOME-001", "endpoint": "/api/cases/EX-HOME-001/technical", "status": "Existing controls; exercise integration Not run", "expected": "Different preparer and four distinct sign-off identities", "blocker": "No approvals seeded", "owner": "EX-RC-01", "next_action": "Prepare and request independent reviews"},
+    {"id": "resident", "name": "Resident service, access, choice and redress", "fixture": "EX-HOME-001", "endpoint": "/api/cases/EX-HOME-001/resident", "status": "Existing controls; exercise integration Not run", "expected": "Not yet asked is not consent; sibling decision isolated", "blocker": "No resident-owned choice recorded", "owner": "EX-RLO-01", "next_action": "Record supported contact without live sending"},
+    {"id": "procurement", "name": "Procurement, committed capacity and work release", "fixture": "EX-PACKAGE-001", "endpoint": "/api/packages", "status": "Existing controls; exercise integration Not run", "expected": "No release without capacity and separate gates", "blocker": "No evidenced commitment", "owner": "EX-PM-02", "next_action": "Record package/commitment separately"},
+    {"id": "hazards", "name": "Hazard awareness and damp-and-mould response", "fixture": "EX-HOME-001", "endpoint": "/api/cases/EX-HOME-001/hazard-refer", "status": "Blocked: external-authority exercise boundary unimplemented", "expected": "Independent referral; no local safety sufficiency judgement", "blocker": "External authority/reference missing", "owner": "EX-BSL-01", "next_action": "Use independent human referral route"},
+    {"id": "quality", "name": "Quality acceptance, defects and handover", "fixture": "EX-HOME-001", "endpoint": "/api/cases/EX-HOME-001/quality-accept", "status": "Existing controls; exercise integration Not run", "expected": "Completion is not accepted handover; return/reinspect independently", "blocker": "Inspection evidence absent", "owner": "EX-QI-02", "next_action": "Inspect provider completion evidence independently"},
+    {"id": "finance", "name": "Budget, provider invoice, grant claim and cash reconciliation", "fixture": "EX-HOME-001", "endpoint": "/api/cases/EX-HOME-001/finance", "status": "Blocked: connected application/claim/cash/form integration unimplemented", "expected": "Distinct evidence for application, award, claim, cash and close", "blocker": "Missing reviews/evidence", "owner": "EX-GEO-01", "next_action": "Prepare fictional records without submission/payment"},
+    {"id": "handoffs", "name": "Programme handoffs and case orchestration", "fixture": "EX-HOME-001", "endpoint": "/api/handoffs", "status": "Existing controls; exercise integration Not run", "expected": "Sender retains chase until receiver accepts", "blocker": "Receiver acceptance absent", "owner": "EX-PM-01", "next_action": "Record owned handoff and next update"},
+    {"id": "portfolio", "name": "Portfolio investment, performance and scale decisions", "fixture": "EX-COHORT-16", "endpoint": null, "status": "Pure forecast implemented by P04; dashboard/browser/load integration unimplemented", "expected": "Versioned tables, exact independent oracles and honest abstentions", "blocker": "Scale workload, stakeholder suppression and runtime validation Not run", "owner": "EX-PSO-02", "next_action": "Integrate role-filtered tables and run separately declared workloads"}
+  ],
+  "checks": {
+    "required": ["fixture isolation", "source versions", "no new role authority", "exact forecast reruns", "missing/stale input abstention", "independent stage occupancy", "six independent scenario oracles"],
+    "implemented": ["same-home workbench/API", "reviewed form exports", "distinct application/award/claim/cash records", "source correction with exact invalidation", "external safety reference boundary", "stakeholder complementary suppression", "capacity and exact accepted invoice milestones", "SQLite connected integration oracles"],
+    "engineering_executed": ["eleven profile orientation probes", "nine workflow navigation entries", "parser conflict browser state", "320/390/1280px form reflow", "200% root text resize", "keyboard focus and labels", "200 warm HTTP samples each for list/detail/write/dashboard", "clean restart and exact SQLite case/audit-head backup copy"],
+    "not_run": ["complete eleven profile tasks and nine workflow browser journeys", "screen-reader/contrast/target-size/400% zoom assessment", "prescribed crash/RPO/reconciliation drills", "30-minute core workload", "30-minute scale workload"],
+    "blocked": ["real inference", "human evaluation", "live safety clearance", "live funding submission/payment"]
+  },
+  "forecast_input": {
+    "version": "exercise-forecast-input-1",
+    "fixture_version": "properwarm-exercise-1",
+    "as_of": "2026-10-10",
+    "cohort_id": "EX-COHORT-16",
+    "denominator": 16,
+    "weeks": 4,
+    "order": "priority ascending then home ID ascending; no AI",
+    "installation": {"slots": [2, 2, 2, 2], "duration_weeks": 1},
+    "qa_handover": {"slots": [2, 2, 2, 2], "duration_weeks": 1},
+    "sources": {
+      "stock": {"version": "stock-1", "observed_at": "2026-10-10"},
+      "assessment": {"version": "assessment-1", "observed_at": "2026-10-10"},
+      "resident_choice": {"version": "choice-1", "observed_at": "2026-10-10"},
+      "funding": {"version": "funding-1", "observed_at": "2026-10-10"},
+      "capacity": {"version": "capacity-1", "observed_at": "2026-10-10"},
+      "safety": {"version": "safety-1", "observed_at": "2026-10-10"}
+    },
+    "homes": [
+      {"id": "EX-COHORT-001", "priority": 1, "state": "ready"},
+      {"id": "EX-COHORT-002", "priority": 2, "state": "ready"},
+      {"id": "EX-COHORT-003", "priority": 3, "state": "ready"},
+      {"id": "EX-COHORT-004", "priority": 4, "state": "ready"},
+      {"id": "EX-COHORT-005", "priority": 5, "state": "ready"},
+      {"id": "EX-COHORT-006", "priority": 6, "state": "ready"},
+      {"id": "EX-COHORT-007", "priority": 7, "state": "ready"},
+      {"id": "EX-COHORT-008", "priority": 8, "state": "ready"},
+      {"id": "EX-COHORT-009", "priority": 9, "state": "ready"},
+      {"id": "EX-COHORT-010", "priority": 10, "state": "ready"},
+      {"id": "EX-COHORT-011", "priority": 11, "state": "ready"},
+      {"id": "EX-COHORT-012", "priority": 12, "state": "ready"},
+      {"id": "EX-COHORT-013", "priority": 13, "state": "held", "hold_reason": "Assessment evidence missing", "release_week": null},
+      {"id": "EX-COHORT-014", "priority": 14, "state": "held", "hold_reason": "Resident choice not verified", "release_week": null},
+      {"id": "EX-COHORT-015", "priority": 15, "state": "held", "hold_reason": "Capacity evidence missing", "release_week": null},
+      {"id": "EX-COHORT-016", "priority": 16, "state": "held", "hold_reason": "External safety evidence missing", "release_week": null}
+    ],
+    "events": []
+  },
+  "forecast_scenarios": {
+    "steady": {"events": []},
+    "reduced_capacity": {"installation": {"slots": [1, 1, 1, 1], "duration_weeks": 1}, "qa_handover": {"slots": [1, 1, 1, 1], "duration_weeks": 1}, "events": []},
+    "new_hold": {"events": [{"week": 2, "home_id": "EX-COHORT-001", "kind": "hold", "reason": "New unresolved evidence hold"}]},
+    "withdrawal": {"events": [{"week": 2, "home_id": "EX-COHORT-002", "kind": "withdrawal", "reason": "Constructed resident withdrawal, this home only"}]},
+    "qa_return": {"events": [{"week": 2, "home_id": "EX-COHORT-001", "kind": "qa_return", "reason": "Constructed defect requiring one full reinspection stage"}]},
+    "missing_input": {"omit_source": "capacity", "events": []}
+  }
+}

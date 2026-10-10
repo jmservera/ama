@@ -43,11 +43,14 @@ function financePanel(c, id, refresh) {
       actForm("Put an invoice on hold", [["id", "Invoice", pick()], ["reason", "Why"]], (b) => go("hold_place", b), "Put on hold"),
       actForm("Release a hold", [["id", "Invoice", pick()], ["note", "Why it is released"]], (b) => go("hold_release", b), "Release hold"),
       actForm("Finance decision", [["id", "Invoice", pick()], ["decision", "Decision", { options: ["Accept for payment", "Reject and return to provider", "Keep on hold"] }], ["note", "Note"]], (b) => go("disposition", b), "Record decision"),
-      actForm("Note the payment status", [["id", "Invoice", pick()], ["status", "Status", { options: ["Not payable yet", "Awaiting payment run", "Paid outside this system"] }]], (b) => go("payment_status", b), "Save note"),
+      actForm("Note the payment status", [["id", "Invoice", pick()], ["status", "Status", { options: ["Not payable yet", "Awaiting payment run", "Paid outside this system"] }],
+        ...(c.exercise ? [["evidence", "Fictional external payment evidence reference (required for paid)"]] : [])], (b) => go("payment_status", b), "Save note"),
     ] : null);
 }
 
 function grantPanel(c, id, refresh) {
+  if (c.exercise) return h("section", { class: "card" }, h("h2", {}, "Exercise applications and claims"),
+    h("a", { href: `#/exercise/${id}` }, "Open reviewed forms and separate external evidence events"));
   if (!FIN_ROLES.includes(me.user.role)) return null;
   const grants = c.grants || [];
   const go = (action, extra) => refresh(() => caseApi(id, "grant", Object.assign({ action }, extra)));
@@ -86,7 +89,8 @@ function technicalPanel(c, id, refresh) {
 }
 
 function residentPanel(c, id, refresh) {
-  const go = (action, extra) => refresh(() => caseApi(id, "resident", Object.assign({ action }, extra)));
+  const go = (action, extra) => refresh(() => caseApi(id, "resident", Object.assign({ action }, extra,
+    c.exercise && action === "decision_record" ? { scope: extra.measure, design_version: c.technical && c.technical.design_version } : {})));
   const measures = (c.measure_decisions || []);
   const reqs = c.service_requests || [];
   const staff = (me.staff || []).filter((s) => s.role !== "Contractor");

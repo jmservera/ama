@@ -54,9 +54,19 @@ class ResidentDecisionMixin:
         note = k.text(body.get("note"), "what they said, in their words" if status in ("Paused", "Withdrawn", "Declined") else "", 300,
                       required=status in ("Paused", "Withdrawn", "Declined"))
         rep = k.text(body.get("representative_ref"), "the reference for their representative", 80, required=by == ANSWERED_BY[1])
+        if c.get("exercise"):
+            version = (c.get("technical") or {}).get("design_version")
+            if version is None or body.get("design_version") != version or body.get("scope") != measure:
+                raise ValueError("Record the exact measure scope and current design_version.")
+            if by == ANSWERED_BY[1]:
+                authority = c["exercise"].get("representatives", {}).get(rep)
+                if not authority or measure not in authority.get("works_measures", []):
+                    raise PermissionError("Scheduling-only or unknown representatives cannot decide works.")
         versions = c.setdefault("measure_decisions", {}).setdefault(measure, [])
         versions.append(dict(version=len(versions) + 1, status=status, answered_by=by, representative_ref=rep, note=note,
                              next_update=k.text(body.get("next_update"), "", 10, False), recorded_by=user["name"], at=k.now()))
+        if c.get("exercise"):
+            versions[-1].update(design_version=body["design_version"], scope=measure)
         return f"{measure}: {status} v{len(versions)} (told to staff by {by.lower()})"
 
     def _res_service_open(self, user, c, body):

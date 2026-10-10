@@ -64,10 +64,17 @@ async function start() {
   if (contractor) nav.prepend(h("a", { href: "#/", "data-dyn": "1" }, "My jobs"));
   else if (isManager()) nav.querySelector("a[href='#/funding']").after(h("a", { href: "#/capacity", "data-dyn": "1" }, "Capacity and work orders"), h("a", { href: "#/closed", "data-dyn": "1" }, "Closed cases"));
   nav.hidden = false;
+  if (me.exercise) {
+    nav.prepend(h("a", { href: "#/exercise", "data-dyn": "1" }, "Exercise workbench"));
+    if (!location.hash || location.hash === "#/") location.hash = "#/exercise";
+  }
   route();
 }
 
 function route() {
+  if (me.exercise && (location.hash === "#/exercise" || location.hash.startsWith("#/exercise/"))) {
+    return exerciseView(location.hash.split("/")[2]);
+  }
   const m = location.hash.match(/^#\/case\/(.+)$/);
   if (me.user.role === "Contractor") return m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView();
   if (m) return caseView(decodeURIComponent(m[1]));
@@ -318,7 +325,7 @@ async function caseView(id) {
       h("label", {}, "How you spoke"), channel,
       h("label", { for: "note" }, "Notes"), note,
       h("p", {}, h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/call`, { outcome: outcome.value, note: note.value, channel: channel.value })) }, "Save"))),
-    h("div", { class: "grid" },
+    !c.exercise && h("div", { class: "grid" },
       h("section", { class: "card" }, h("h2", {}, "What the resident has told us"),
         h("p", { class: "muted" }, "Record their answer in their words. It is never worked out for them."),
         h("label", { for: "dec" }, "Do they want the works?"), decision,
@@ -326,17 +333,20 @@ async function caseView(id) {
       h("section", { class: "card" }, h("h2", {}, "Hand this case to someone"),
         h("label", { for: "to" }, "Who is taking it"), to,
         h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: to.value })) }, "Hand over")))),
-    sugg,
-    c.can_advance && h("section", { class: "card" }, h("h2", {}, "Final checks"),
+    !c.exercise && sugg,
+    c.exercise && h("section", { class: "card" }, h("h2", {}, "Connected exercise"),
+      h("p", {}, "Whole-case decision, instant handover and funding shortcuts are disabled."),
+      h("a", { href: `#/exercise/${id}` }, "Return to same-home forms and lifecycle workbench")),
+    !c.exercise && c.can_advance && h("section", { class: "card" }, h("h2", {}, "Final checks"),
       c.gate.length ? [h("p", {}, "This case cannot move on yet:"), h("ul", {}, c.gate.map((x) => h("li", {}, x)))] : h("p", {}, "Everything is in place."),
       h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/advance`, {})) }, "Ready to book the installation")),
-    h("section", { class: "card" }, h("h2", {}, "Write to the resident"),
+    !c.exercise && h("section", { class: "card" }, h("h2", {}, "Write to the resident"),
       h("div", { class: "row" }, h("button", { onclick: () => aiRun("message") }, "Draft with AI"),
         h("button", { class: "alt", onclick: () => aiRun("summary") }, "Catch me up on this case"),
         h("button", { class: "alt", onclick: () => kind("visit") }, "Plain visit template"),
         h("button", { class: "alt", onclick: () => kind("update") }, "Plain update template")), draftBox),
     documentsPanel(c, id, refresh),
-    fundingPanel(c, id, refresh),
+    !c.exercise && fundingPanel(c, id, refresh),
     financePanel(c, id, refresh), grantPanel(c, id, refresh), technicalPanel(c, id, refresh), residentPanel(c, id, refresh),
     msg,
     h("section", { class: "card" }, h("h2", {}, "History"),
@@ -406,7 +416,7 @@ function hazardState(x) {
 }
 
 function safetyPanel(c, id, refresh) {
-  const canRelease = SAFETY_ROLES.includes(me.user.role);
+  const canRelease = !c.exercise && SAFETY_ROLES.includes(me.user.role);
   const safeStaff = me.staff.filter((s) => SAFETY_ROLES.includes(s.role));
   const items = c.hazards.map((x, i) => {
     const st = hazardState(x);
@@ -417,7 +427,9 @@ function safetyPanel(c, id, refresh) {
       h("strong", {}, `${x.category}, ${x.priority || ""}`.replace(/, $/, "")), ` ${st}. Noticed ${fmtDate(x.noticed)}. Owner: ${x.owner}.`,
       x.job && ` Job ${x.job}.`,
       st === "Raised" && h("div", { class: "row" }, to, job, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-refer", { index: i, to: to.value, job: job.value })) }, "Refer for repair")),
-      st === "Referred" && h("div", { class: "row" }, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-repaired", { index: i })) }, "Record that the repair is done")),
+      st === "Referred" && (c.exercise
+        ? h("a", { href: `#/exercise/${id}` }, "Record supplied external authority reference (not local clearance)")
+        : h("div", { class: "row" }, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-repaired", { index: i })) }, "Record that the repair is done"))),
       st === "Repaired, awaiting release" && (canRelease
         ? h("div", { class: "row" }, note, h("button", { onclick: () => refresh(() => post(id, "hazard-release", { index: i, note: note.value })) }, "Release (needs someone other than who raised or repaired it)"))
         : h("div", { class: "muted" }, "The Building Safety Liaison or a manager releases it.")));

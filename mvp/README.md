@@ -5,6 +5,206 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 [PRD](../docs/prds/proper-warm-retrofit-programme-demonstrator.md) and the
 [prototype learnings review](../docs/reference/research/ux/prototype-learnings-and-simplicity-review.md).
 
+## Accepted fictional exercise workbench
+
+The accepted PRD v0.12.0 exercise has a separate local startup and connected
+workbench at `#/exercise`. It does not use the private-geography seed or claim
+operational acceptance. Create a fresh state directory under this repository,
+then run from `mvp/`:
+
+```bash
+mkdir -p .exercise-state
+PW_EXERCISE=1 PW_STATE="$PWD/.exercise-state" PW_STORE=sqlite \
+PW_DOC_STORE=local PW_AI=off python3 -m properwarm_mvp.server
+```
+
+Do not set `PW_DATA`, an external document backend or inherited store overrides.
+The factory refuses incompatible seeds/databases without overwriting them.
+Use the server's development sign-in password with the fictional staff emails
+`ex-geo-01@example.test`, `ex-pm-01@example.test`,
+`ex-pm-02@example.test`, `ex-pso-01@example.test`,
+`ex-rc-01@example.test`, `ex-rc-02@example.test`,
+`ex-rlo-01@example.test`, `ex-qi-02@example.test`,
+`ex-bsl-01@example.test` and `ex-con-01@example.test`.
+These are distinct exercise identities, not real delegated officers.
+Perspective navigation never changes the signed-in role.
+
+* Two story homes are separate from sixteen forecast homes. Story approvals,
+  resident choice, awards and cash start absent. Analytical readiness is not
+  permission to release works. Small stakeholder cells and complementary totals
+  are suppressed; the forecast tables describe constructed scenarios, not outcomes.
+* `GET /api/exercise` supplies profiles, workflows, source-versioned forecast
+  tables and explicit unresolved gates. `GET /api/cases/{id}/exercise` supplies
+  role/template-authorized drafts and evidence. `POST` on the latter applies
+  one named `action`; the workbench contains the manual journey instructions.
+* Form actions are `create-form`, `extract`, `select`, `review`, `human-field`,
+  `calculate`, `attachments`, `review-pack` and `export`. Source metadata,
+  route and raw bytes come from the owning case, not candidate JSON sent by
+  the browser. Ordinary field review cannot create a declaration, certification,
+  resident decision or approval. Pack reviewer differs from every current field
+  reviewer. Reviewed JSON downloads reproduce stored snapshots and never submit.
+  The same-home screen also downloads its role-projected case/event/decision
+  and source-version history independently of AI; this is not a cohort export.
+* `source-correct` requires `source_id`, replacement `raw_text` and a reason,
+  preserves prior bytes/versions, invalidates exact dependent reviews and leaves
+  the sibling untouched. Matching corrected EPC sources resolve the source-of-record
+  EPC; a field correction alone does not. Stale external award references suspend
+  funding readiness.
+* `funding-event` records separate `application-submitted`,
+  `application-disposition`, `award`, `claimable`, `claim-submitted`,
+  `claim-disposition` and `cash` evidence. Supply `form_id`, exact current
+  `export_id`, `evidence`, explicit `amount` when required and
+  `disposition: "Accepted"` or `"Rejected"` for dispositions.
+  The predecessor is recorded; disposition is independent from submission.
+  Cumulative cash cannot exceed accepted claim. No external action occurs.
+* `lifecycle` accepts only the next `target`: Intake, Assessment, Funding,
+  Ready, Installation, Provider completed, Independent QA, Handover,
+  Financial closure. Reuse existing design/sign-off, resident, capacity,
+  quality, invoice and handoff panels. Four sign-offs have distinct identities
+  different from the designer. Resident choice binds exact measure/scope and
+  design version; unknown or scheduling-only representatives cannot decide works.
+* Work release checks readiness plus committed capacity. Provider completion
+  cannot satisfy acceptance. Quality returns, fixes, independent reinspection
+  and resident handover remain separate. `milestone` records independently
+  verified mobilisation/installation/handover evidence against a same-home
+  work order. Invoice lines must match exact `WO-id:milestone` references and
+  GBP 3,600/12,600/1,800 amounts, not fabricated reference strings. Closure
+  requires GBP 18,000 provider reconciliation, external invoice-payment
+  records and accepted claim/cash reconciliation.
+* `external-hazard-reference` records supplied fictional `authority`, `version`,
+  `reference`, `evidence`, boolean `released`, and optionally `hazard_index`
+  after referral. It preserves prior references and never evaluates their
+  sufficiency. Legacy local hazard release, whole-case choice, instant handover,
+  funding/claim shortcuts and instant installation advance are denied by API.
+* `resident-update` independently records owner, safe `channel`, `evidence`
+  and `next_update`; it does not imply receipt or understanding. Existing
+  offered/accepted/declined handoffs preserve sender chase until acceptance.
+* Optional `assist`, `support` and `narrative` actions retain source/version/hash bindings,
+  proposal/reviewer status and transport provenance. Inherited `AI_ENDPOINT`
+  never activates exercise calls. Disabled/failure/manual states are explicit;
+  `PW_AI=off` always keeps narrative manual. No billable calls were executed.
+  Decision scoring uses separate explicit `PW_DECISION_ENDPOINT`,
+  `PW_DECISION_DEPLOYMENT` and independently reviewed
+  `PW_DECISION_METADATA_{ENDPOINT,DEPLOYMENT,MODEL,MODEL_VERSION}`,
+  `PW_DECISION_METADATA_REVIEWED=true`, `PW_DECISION_DEPLOYMENT_TYPE`
+  and `PW_DECISION_REGION`. These do not authorize inference: all shared
+  `PW_INFERENCE_*` access/terms/cost/quota/price/spend/task gates still apply.
+  The cached scoring client retains process-local upper-charge reservations;
+  cross-process/provider cost reconciliation remains an operator acceptance
+  prerequisite, not a demonstrated budget ledger.
+  Selection/support context includes only authorized sources with current
+  candidates for the requested field. Support requires an explicit `claim`;
+  it is never evidence verification or an approval.
+* `versions` permits a template owner to record an explicit `schema_version`
+  and/or `rule_version` with a reason. Unknown versions block export; restoring
+  the approved version does not restore stale reviews. Financial dispositions
+  bind their preceding form/export/digest. A corrected rejected submission
+  requires its exact rejected `retry_of` reference and a fresh reviewed export;
+  the rejected attempt remains in history.
+
+### Narrow exercise data portability contract
+
+`GET /api/exercise/data?population=all` downloads independent JSON case, event,
+decision, evidence-reference, source/version and review/supersession histories.
+Population may also be `story`, `forecast` or `scale`; an unknown value is
+rejected. Metadata identifies the version, as-of time, role-projected scope,
+population and count. Contractors receive only their server-owned assigned scope,
+with the existing contractor detail projection: no finance, resident reasons,
+raw evidence, coordination notes, decisions or approvals. Exports are read-only,
+not a new source of authority, and work with AI disabled.
+
+`POST /api/exercise/data` accepts three explicit actions:
+
+* `import-preview`: `filename` ending `.xlsx`, `workbook_base64`, a `reason`
+  of at most 300 characters, and an explicit `fields` selection from
+  `coordination_note` and `task_due_date`. The frozen sheet is `Case updates`.
+  Physical row 1 must contain unique `case_id`, `coordination_note` and
+  `task_due_date` headers; displayed mappings use actual worksheet cell
+  columns. Inline/shared text strings are supported. Dates must be literal
+  `YYYY-MM-DD`, not serial numbers. Notes must be nonempty and at most
+  300 characters. Formula, unsupported cell, unknown ID, duplicate/conflicting
+  ID and controlled-column rows have explicit errors requiring manual repair
+  and a fresh preview. Missing mappings reject the workbook.
+* `bulk-preview`: `case_ids` explicitly selects 1-25 case IDs; `changes`
+  contains only `coordination_note` and/or `task_due_date`, with a `reason`.
+  Every case's exact prior value, change, fingerprint and validation disposition
+  is shown. No ownership changes are permitted: the sender retains ownership
+  until an individually authorised handoff is accepted.
+* `commit`: supply the preview's `token`, `input_hash` and
+  `expected_fingerprints` object keyed by physical row number (bulk previews
+  use selection row numbers). The server persists the trusted preview inside
+  a case and rechecks each full case fingerprint. Commit inputs cannot replace
+  fields, roles or authority. Stale and invalid rows do not change; all per-row
+  outcomes are returned and audited, alongside successful rows. Retrying the
+  same committed token returns its original outcomes without duplicate changes.
+  Preview retention is the latest 20 previews per anchor case.
+
+Only server-rostered Programme Managers and Programme Support Officers may
+preview/commit. Bulk/import cannot write stock, owner, safety, consent,
+declarations, procurement, funding, payments, claims or controlled approvals.
+Changes are labelled unverified coordination metadata, with prior value,
+actor, timestamp, reason, source SHA-256, physical row/mapping, input hash and
+case fingerprint retained in history. The original XLSX bytes are only read
+in memory and remain unchanged.
+
+Limits are 5 MiB compressed, 500 data rows, 20 ZIP entries and 20 MiB total
+expanded contents. Duplicate ZIP entries, external worksheet relationships,
+encrypted archives, DTDs/entities and malformed XML are refused. Arbitrary Excel
+structures, formulas, authoritative stock imports, owner bulk reassignment and
+XLSX export are not supported. This narrower contract does not assert full
+PRD data portability or overall exercise acceptance.
+
+Run the independent data fixtures with
+`TMPDIR="$PWD/.test-scratch" PYTHONPATH=. python3 -m unittest discover -s tests -p test_exercise_data.py -v`
+from `mvp/` after creating `.test-scratch`.
+
+Validation commands (run from `mvp/`, using a repository-local scratch directory
+for legacy tests which use Python temporary-file APIs):
+
+```bash
+mkdir -p .test-scratch
+TMPDIR="$PWD/.test-scratch" PYTHONPATH=. python3 -m unittest discover -s tests -p test_exercise_workbench.py -v
+TMPDIR="$PWD/.test-scratch" PYTHONPATH=. python3 -m unittest discover -s tests -q
+node --check web/exercise.js
+node --check web/app.js
+node --check web/panels.js
+```
+
+Ten connected integration tests exercise same-home SQLite durability, exact
+EPC invalidation/sibling isolation, independent form review/export, separate
+financial states through closure, QA return/fix/reinspection, scoped resident
+choice, capacity/safety blocks, zero-call inherited inference configuration,
+projection, startup isolation and HTTP shortcut denial. These are local
+engineering evidence, not full PRD acceptance. Live Decision 1/generative
+inference, human-adjudicated evaluation and net-effort comparison remain
+blocked. The local browser runner records eleven profile orientation probes,
+nine workflow navigation entries, actual parser conflict, narrow form reflow,
+text resize, keyboard focus and input labels. It is not eleven completed user
+tasks or nine completed workflow browser journeys. Local runtime probes use
+200 warm HTTP samples per list/detail/write/dashboard operation, one session
+and one writer, and an exact clean SQLite restart/backup-copy comparison.
+Prescribed five-session/two-writer and 30-minute/scale workloads, crash/response
+loss/RPO drills and human/screen-reader/contrast/target-size/400% zoom acceptance
+remain unexecuted. Full handoff receipt/escalation/completion and independent
+resident-update commitment state contracts remain incomplete. Arbitrary
+new-source ingestion and full claim resubmission recovery need further validation.
+The labelled event controls and optional JSON editor are manual
+exercise tools, not a validated production form experience.
+
+Run local engineering probes with installed Python Playwright and Google
+Chrome, from `mvp/`. Each state directory must be new; neither script deletes
+existing state. Outputs label the precise workload and missing checks.
+
+```bash
+PYTHONPATH=. python3 tests/exercise_browser_check.py --state "$PWD/.exercise-browser" --output "$PWD/.exercise-browser/results.json"
+PYTHONPATH=. python3 tests/exercise_runtime_check.py --state "$PWD/.exercise-runtime" --output "$PWD/.exercise-runtime/results.json"
+```
+
+The container includes the fictional fixtures and task registry. Exercise
+startup overrides the legacy dataset default with `-e PW_DATA=` and uses
+`-e PW_EXERCISE=1 -e PW_STORE=sqlite -e PW_DOC_STORE=local -e PW_AI=off`.
+Mount an explicitly writable `/state`; the image stays non-root/read-only.
+
 ## What staff see
 
 * Sign in once and land on "My cases today", with open safety issues first.

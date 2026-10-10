@@ -50,6 +50,8 @@ class App:
 def get_kind(path):
     if path == "/api/me":
         return "me"
+    if path in ("/api/exercise", "/api/exercise/data"):
+        return "exercise"
     if path == "/api/cases":
         return "cases"
     if path == "/api/cases.csv":
@@ -164,7 +166,28 @@ def make_handler(app):
             if url.path == "/api/me":
                 out = projection.me_payload(u, s.counts(u), list(s.staff.values()))
                 out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
+                out["exercise"] = any(c.get("exercise") for c in s.cases.values())
                 return self._json(200, out)
+            if url.path == "/api/exercise":
+                try:
+                    return self._json(200, s.exercise_status(u))
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+            if url.path == "/api/exercise/data":
+                try:
+                    return self._json(200, s.exercise_data_export(u, q.get("population", ["all"])[0]),
+                                      {"Content-Disposition": 'attachment; filename="exercise-data.json"'})
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+            if url.path.startswith("/api/cases/") and url.path.endswith("/exercise"):
+                try:
+                    return self._json(200, s.exercise_case(u, url.path.split("/")[3]))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except (KeyError, ValueError) as e:
+                    return self._json(400, {"error": str(e)})
             if url.path in ("/api/cases", "/api/cases.csv"):
                 view, text, sort = q.get("view", ["mine"])[0], q.get("q", [""])[0], q.get("sort", ["urgent"])[0]
                 if url.path.endswith(".csv"):
@@ -298,6 +321,20 @@ def make_handler(app):
                 return self._json(403, {"error": "Your role does not include this."})
             parts = url.path.strip("/").split("/")
             try:
+                if url.path == "/api/exercise/data":
+                    raw = None
+                    if not isinstance(body, dict):
+                        raise ValueError("Data action requires a JSON object.")
+                    if body.get("action") == "import-preview":
+                        s._exercise_data_authority(u)
+                        encoded = body.get("workbook_base64")
+                        if not isinstance(encoded, str) or len(encoded) > 7_000_000:
+                            raise ValueError("Supply base64 XLSX bytes of at most 5 MiB.")
+                        try:
+                            raw = base64.b64decode(encoded, validate=True)
+                        except (binascii.Error, ValueError) as e:
+                            raise ValueError("Invalid base64 XLSX upload.") from e
+                    return self._json(200, s.exercise_data_action(u, body, raw))
                 if url.path == "/api/time/acknowledge":
                     ver = app.time.acknowledge(u)
                     s.audit(u["email"], "time_notice_acknowledged", "-", f"notice {ver}")
@@ -322,6 +359,12 @@ def make_handler(app):
                     return self._json(200, s.resolve_priority(u, parts[3], parts[4], body.get("reason", ""), body.get("items")))
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
                     cid, act = parts[2], parts[3]
+                    if act == "exercise":
+                        return self._json(200, s.exercise_action(u, cid, body))
+                    if s._case(cid).get("exercise") and act in (
+                        "decision", "handover", "advance", "funding", "funding-draft",
+                        "draft", "grant", "hazard-release", "hazard-repaired"):
+                        raise PermissionError("Exercise requires scoped workbench actions; this legacy shortcut is disabled.")
                     if act == "call":
                         s.log_call(u, cid, body.get("outcome"), body.get("note"), body.get("channel", "Phone"))
                     elif act == "decision":

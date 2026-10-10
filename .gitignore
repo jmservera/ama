@@ -8,3 +8,10 @@ support/synthetic-data/**/answer-key/
 
 # MVP working data holds real map addresses and must never be committed
 /mvp/data/
+/mvp/.exercise-state/
+/mvp/.test-scratch/
+/mvp/.exercise-test-state/
+/mvp/.exercise-browser-state/
+/mvp/.acceptance-state/
+/mvp/.exercise-browser/
+/mvp/.exercise-runtime/

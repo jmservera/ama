@@ -11,6 +11,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --require-hashes -r requirements.txt && rm requirements.txt
 COPY properwarm_mvp ./properwarm_mvp
 COPY policies ./policies
+COPY evals ./evals
 COPY web ./web
 USER 10001
 # No working data is baked into the image. Mount the dataset at /data and a writable volume at /state.

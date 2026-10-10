@@ -5,7 +5,10 @@ body{margin:0;font:16px/1.5 "Segoe UI",system-ui,-apple-system,Arial,sans-serif;
 .brand{display:flex;gap:.7rem;align-items:center;color:#fff;text-decoration:none;font-weight:600;font-size:1.15rem}
 .brand small{display:block;font-weight:400;font-size:.75rem;opacity:.85}
 .logo{display:grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:.6rem;background:#fff;color:var(--brand);font-weight:700}
-nav{display:flex;gap:1rem;align-items:center}
+nav{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.top{flex-wrap:wrap;gap:.75rem}
+.top nav{min-width:0;max-width:100%}
+.top nav a,.top nav button{overflow-wrap:anywhere}
 button,.btn{font:inherit;border:1px solid var(--brand);background:var(--brand);color:#fff;padding:.55rem 1rem;border-radius:.45rem;cursor:pointer;text-decoration:none;display:inline-block}
 button:hover,.btn:hover{background:var(--brand-d)}
 button.alt,.btn.alt{background:#fff;color:var(--brand)}
@@ -31,7 +34,7 @@ textarea{width:100%;min-height:5rem}
 .flag.danger{background:#fde8e6;color:var(--warn);font-weight:600}
 .status-line{font-size:1.15rem;padding:.7rem 1rem;border-left:5px solid var(--brand);background:var(--soft);border-radius:.3rem}
 .status-line.danger{border-color:var(--warn);background:#fde8e6}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:1rem}
 dl{margin:0;display:grid;grid-template-columns:9rem 1fr;gap:.25rem .8rem}
 dt{color:var(--muted)}dd{margin:0}
 .big{font-size:1.35rem;font-weight:600}
@@ -86,3 +89,11 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .plainlist li{margin:.2rem 0}
 .linkbtn{background:none;border:0;padding:.25rem 0;color:var(--link,#0b5d6b);text-decoration:underline;cursor:pointer;font:inherit;text-align:left}
 .linkbtn:focus-visible,.maplist summary:focus-visible{outline:3px solid #1a73e8;outline-offset:2px}
+/* Exercise evidence tables remain readable without horizontal page overflow. */
+.exercise-table { overflow-x: auto; max-width: 100%; }
+.exercise-table table { border-collapse: collapse; width: 100%; }
+.exercise-table th, .exercise-table td { padding: .5rem; border: 1px solid #777; text-align: left; }
+#app pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+#exercise-record-payload { width: 100%; box-sizing: border-box; }
+#app .card { min-width: 0; overflow-wrap: anywhere; }
+#app fieldset { min-width: 0; }

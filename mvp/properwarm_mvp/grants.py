@@ -28,6 +28,8 @@ class GrantMixin:
         k.require_role(user, k.FINANCE_ROLES, "the Grants and Evidence Officer or a manager")
         with self.lock:
             c = self._case(case_id)
+            if c.get("exercise"):
+                raise PermissionError("Use separate version-bound exercise application/award/claim/cash events.")
             grants = c.setdefault("grants", [])
             if action == "grant_open":
                 g = dict(id=k.next_id(grants, "GR"), scheme=k.text(body.get("scheme"), "the scheme or funder", 80), state="Not recorded",

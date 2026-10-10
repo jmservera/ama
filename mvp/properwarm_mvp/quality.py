@@ -6,6 +6,8 @@ accepts work itself: a person with the right role accepts it, and that person
 must be someone other than whoever submitted the evidence, recorded it, or
 fixed a defect on it. A provider's submission is kept as evidence only.
 """
+import os
+
 from .workflows import MANAGER_ROLES, _now
 
 QUALITY_ROLES = ("Quality Inspector",) + MANAGER_ROLES
@@ -77,6 +79,11 @@ class QualityMixin:
             raise ValueError("Choose where this evidence came from.")
         with self.lock:
             c = self._case(case_id)
+            if c.get("exercise") and os.environ.get("PW_EXERCISE") == "1":
+                self._need_quality_role(user, "record provider quality evidence")
+                if not any(w["case_id"] == case_id and w["state"] == "Completed"
+                           for w in self._proc()["work_orders"]):
+                    raise ValueError("Record actual provider work-order completion before submitting quality evidence.")
             if c["closed"]:
                 raise ValueError("This case is closed.")
             if measure not in self._measures(c):
@@ -159,6 +166,13 @@ class QualityMixin:
         with self.lock:
             c = self._case(case_id)
             rec = self._qrec(c, idx)
+            if c.get("exercise"):
+                self._need_quality_role(user, "record resident handover")
+                self._independent(rec, user, "record handover")
+                from .store import GateError
+                why = self.exercise_readiness(c)
+                if why:
+                    raise GateError(why)
             self._qmove(rec, HANDED, user, note)
             rec["handover"] = dict(by=user["name"], at=_now(), note=note, resident_told=True)
             self.audit(user["email"], "quality_handover", case_id, f"{rec['measure']} handed over to resident. {note}")

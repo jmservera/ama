@@ -1,0 +1,90 @@
+{
+  "task_id": "exercise-poc-rebuild-2026-10-10",
+  "task_slug": "exercise-poc-rebuild",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Implement",
+  "status": "blocked",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-10/system-one-decision-models-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-10/exercise-poc-rebuild-plan.md",
+    "details": ".copilot-tracking/details/2026-10-10/exercise-poc-rebuild-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-10/exercise-poc-rebuild-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-10/exercise-poc-rebuild-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-10/exercise-poc-rebuild-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research reused: accepted PRD v0.12.0 and Decision 1 research provide design authority; targeted source inspection provides implementation evidence.",
+      "status": "reused",
+      "evidence": "docs/prds/proper-warm-retrofit-programme-demonstrator.md; docs/case_study_48_addendum.md"
+    },
+    {
+      "decision": "Merge PR #57 after current-head checks; rebuild locally against the accepted exercise baseline.",
+      "status": "merged; implementation owner-requested",
+      "evidence": "PR #57 merged as 5a6ec60f885a3e207b6984a725870a48e0d4cf99 after current-head checks; new rebuild branch based on merged main"
+    },
+    {
+      "decision": "Automatic-mode confirmation unavailable; no automatic-session consent inferred. Direct owner implementation request remains the action authority.",
+      "status": "manual-retained",
+      "evidence": "ask_user returned user unavailable"
+    },
+    {
+      "decision": "One final-candidate critique executed; Revise verdict, PC-001 through PC-005 incorporated as direct plan corrections; local implementation ready, no repeat critique.",
+      "status": "executed; five dispositions recorded",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-10/exercise-poc-rebuild-plan-critique.md; plan Critique Disposition"
+    },
+    {
+      "decision": "One post-implementation Review executed; execution Partial, outcome Not accepted; RV-001 through RV-007 routed. Three High financial defects and one Medium rejected-pack defect reproduced. No review regrade or source fixes in review.",
+      "status": "executed; Not accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-10/exercise-poc-rebuild-review.md"
+    },
+    {
+      "decision": "Follow-up implementation selection unavailable; no selected child or phase advancement inferred. Publish only a draft PR under the owner's branch/PR delivery instruction.",
+      "status": "blocked; draft publication permitted, full completion not claimed",
+      "evidence": "ask_user returned user unavailable; user requested PRD merge and end-to-end rebuild; current review Not accepted"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "live-decision-access",
+      "summary": "Existing AMA Foundry account has standard gpt-4.1-mini and capable gpt-4.1 deployments, but no Microsoft Decision 1 deployment. Processing terms, chargeable SKU and billable permission unverified.",
+      "resolution": "Owner/operator verifies Decision 1 deployment and terms/costs and authorizes bounded calls. Continue local implementation without live-success claims."
+    },
+    {
+      "id": "review-financial-integrity",
+      "summary": "RV-001/002/003 High and RV-004 Medium: transitive financial staleness, historical-award readiness, cash ceiling across claim attempts and unchanged rejected-pack retries.",
+      "resolution": "Later rpi-implement owns the four fixes with exact independent invariance tests; do not repeat Review."
+    },
+    {
+      "id": "full-workflow-and-acceptance",
+      "summary": "Full handoff/update/return/fixture contracts and exact workload/recovery/accessibility/live/human acceptance incomplete.",
+      "resolution": "Implement RV-005/007 and clear actual-platform RV-006 prerequisite without relaxing controls or the USD 450 cap."
+    }
+  ],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Publish reviewed partial rebuild as draft PR, then await /rpi-implement for RV-003, RV-001/002 and RV-004 first. Full task blocked; manual mode retained; no automatic session running."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Fix financial predecessor/invalidation/cumulative-cash and corrected retry invariants",
+      "rationale": "Highest risk and directly testable; one coherent financial control correction before further acceptance work.",
+      "evidence": "RV-001 through RV-004 in the canonical review"
+    },
+    {
+      "rank": 2,
+      "task": "Complete local workflow and exact acceptance fixtures",
+      "rationale": "Required to turn the working one-home slice into defensible full end-to-end capability.",
+      "evidence": "RV-005 and requirement/evidence register"
+    },
+    {
+      "rank": 3,
+      "task": "Verify Foundry access/cost ledger and execute bounded actual-model/runtime acceptance",
+      "rationale": "Mandatory platform/value evidence; billable and human prerequisites must remain explicit.",
+      "evidence": "RV-006/007 and no-live-inference metadata"
+    }
+  ]
+}

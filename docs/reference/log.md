@@ -1602,3 +1602,25 @@ metadata when the knowledge base was created.
 * Documentation-only implementation: no runtime/deployment/model calls,
   regulatory snapshot, private data or owner-memory changes. Fresh full-BRD/
   PRD quality and owner acceptance remain separate from RPI outcome review.
+
+## [2026-10-10] query | Connected fictional exercise rebuild and evidence boundaries
+
+* Merged owner-accepted PRD #57 after current-head checks. Rebuilt the local
+  MVP on a topic branch from the merged baseline; preserved the original
+  specification, owner memory and unsigned governance.
+* Added isolated wholly fictional SQLite startup, source-bound text/CSV
+  extraction, six reviewed form templates, human field/pack reviews, exact
+  dependent invalidation and separate external application/award/claim/cash
+  evidence. Optional Decision 1 selection/support and source-bound narrative
+  adapters remain disabled, with manual continuity and explicit cost gates.
+* Added separate deterministic forecast scenarios, eleven profile/nine
+  workflow navigation, narrow XLSX coordination import, safe bulk previews
+  and role-projected JSON histories. Preserved legacy controls and test gates.
+* Filed the [requirement/evidence register](../../.copilot-tracking/changes/2026-10-10/exercise-poc-rebuild-acceptance.md)
+  and updated [MVP instructions](../../mvp/README.md). Local browser orientation,
+  parser/reflow and sampled HTTP/clean-backup checks are engineering evidence,
+  not full workflow acceptance, real model success or measured customer value.
+* Full handoff/update and accepted-scope coverage, prescribed core/scale and
+  failure/RPO/accessibility checks, actual bounded Foundry inference and
+  human-adjudicated effort/UX remain incomplete or blocked. No live resident
+  data, sending, submission, payment, cloud resource or billable call was used.

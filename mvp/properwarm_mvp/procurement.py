@@ -128,6 +128,13 @@ class ProcurementMixin:
         with self.lock:
             p = self._package(pid)
             c = self._case(case_id)
+            if c.get("exercise"):
+                from .store import GateError
+                why = self.exercise_readiness(c)
+                if c["exercise"]["lifecycle"] != "Ready":
+                    why.append("Record the Ready lifecycle step before work release.")
+                if why:
+                    raise GateError(why)
             contractor = c["contractor"]["name"]
             if c["closed"]:
                 raise ValueError("This case is closed.")
@@ -136,6 +143,8 @@ class ProcurementMixin:
             cap = p["capacity"].get(contractor)
             if not cap or not cap["committed"]:
                 raise ValueError(f"{contractor} has no evidenced committed capacity in this package.")
+            if c.get("exercise") and not self.exercise_current(cap.get("at"), 7):
+                raise ValueError("Committed capacity needs a fresh human evidence review (7 day internal trigger).")
             if self._committed_used(p, contractor) >= cap["committed"]:
                 raise ValueError(f"{contractor} is at its evidenced committed capacity. Record more evidenced capacity first.")
             if any(w["case_id"] == case_id and w["package"] == pid and w["state"] in ACTIVE for w in self._proc()["work_orders"]):
@@ -164,6 +173,8 @@ class ProcurementMixin:
             w = self._work_order(wid)
             if w["state"] not in (ISSUED, APPOINTED):
                 raise ValueError(f"This work order is '{w['state']}' and cannot be changed.")
+            if self._case(w["case_id"]).get("exercise"):
+                raise PermissionError("Exercise scope changes require new design and resident choice; withdraw and reissue after review.")
             self._new_version(w, user, scope, reason)
             self.audit(user["email"], "workorder_reissued", w["case_id"], f"{wid} version {len(w['versions'])}: {reason}")
             self.save()
@@ -202,6 +213,8 @@ class ProcurementMixin:
             raise ValueError("Say what needs correcting.")
         with self.lock:
             w = self._work_order(wid)
+            if self._case(w["case_id"]).get("exercise") and scope and scope != w["versions"][-1]["scope"]:
+                raise PermissionError("A changed exercise scope requires new independent design and resident choice.")
             self._wo_move(w, ISSUED, user, f"Correction: {reason}")
             self._new_version(w, user, scope, f"Correction: {reason}")
             w["corrections"].append(dict(reason=reason, by=user["name"], at=_now()))

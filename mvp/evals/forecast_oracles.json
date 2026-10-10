@@ -1,0 +1,53 @@
+{
+  "version": "exercise-forecast-oracles-1",
+  "authorship": "Frozen independently from the scheduling implementation using week-end event ledgers. Constructed outcomes, not observed company data.",
+  "as_of": "2026-10-10",
+  "fixture_version": "properwarm-exercise-1",
+  "denominator": 16,
+  "thresholds": {"week_four_absolute_error_max": 2, "weekly_cumulative_mae_max": 1},
+  "sensitivities": {
+    "central": [0, 2, 4, 6],
+    "capacity_one": [0, 1, 2, 3],
+    "capacity_three": [0, 3, 6, 9],
+    "two_week_stages": [0, 0, 0, 2]
+  },
+  "scenarios": {
+    "steady": {
+      "status": "forecast",
+      "cumulative_handovers": [0, 2, 4, 6],
+      "weekly_accepted_ids": [[], ["EX-COHORT-001", "EX-COHORT-002"], ["EX-COHORT-003", "EX-COHORT-004"], ["EX-COHORT-005", "EX-COHORT-006"]],
+      "ledger": "Week 1 installs 001/002; week 2 hands those over while installing 003/004; the separate pools continue concurrently."
+    },
+    "reduced_capacity": {
+      "status": "forecast",
+      "cumulative_handovers": [0, 1, 2, 3],
+      "weekly_accepted_ids": [[], ["EX-COHORT-001"], ["EX-COHORT-002"], ["EX-COHORT-003"]],
+      "ledger": "Both pools have one slot throughout; the first installation enters QA in week 2."
+    },
+    "new_hold": {
+      "status": "forecast",
+      "cumulative_handovers": [0, 1, 3, 5],
+      "weekly_accepted_ids": [[], ["EX-COHORT-002"], ["EX-COHORT-003", "EX-COHORT-004"], ["EX-COHORT-005", "EX-COHORT-006"]],
+      "ledger": "At the start of week 2 home 001 is held before QA, with no known release. Home 002 alone hands over in week 2."
+    },
+    "withdrawal": {
+      "status": "forecast",
+      "cumulative_handovers": [0, 1, 3, 5],
+      "weekly_accepted_ids": [[], ["EX-COHORT-001"], ["EX-COHORT-003", "EX-COHORT-004"], ["EX-COHORT-005", "EX-COHORT-006"]],
+      "ledger": "At the start of week 2 home 002 withdraws. This stops only that home's future stages and is not a forecast of financial closure."
+    },
+    "qa_return": {
+      "status": "forecast",
+      "cumulative_handovers": [0, 1, 3, 5],
+      "weekly_accepted_ids": [[], ["EX-COHORT-002"], ["EX-COHORT-001", "EX-COHORT-003"], ["EX-COHORT-004", "EX-COHORT-005"]],
+      "ledger": "Home 001 fails its week 2 QA and re-enters QA in week 3 before higher IDs. Reinspection uses one full QA slot-week."
+    },
+    "missing_input": {
+      "status": "abstained",
+      "cumulative_handovers": null,
+      "weekly_accepted_ids": null,
+      "unknown": "sources.capacity",
+      "ledger": "Capacity evidence is absent. There is no prediction, no zero-filled series and no numeric error score."
+    }
+  }
+}

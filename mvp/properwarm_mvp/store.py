@@ -6,7 +6,10 @@ import os
 import re
 import threading
 import uuid
-from datetime import datetime
+from copy import deepcopy
+from hashlib import sha256
+from decimal import Decimal, InvalidOperation
+from datetime import date, datetime
 
 from . import ai_tasks, insights, ledger, projection, ranking
 from .finance import FinanceMixin
@@ -114,6 +117,8 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
 
     @staticmethod
     def gate_reasons(c):
+        if c.get("exercise"):
+            return Store.exercise_readiness(c)
         why = []
         if c["decision"]["status"] != "Accepted":
             why.append("The resident has not confirmed they want the works.")
@@ -122,6 +127,760 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
         if any(not h["released"] for h in c["hazards"]):
             why.append("A safety issue is still open.")
         return why + technical_gate(c)
+
+    @staticmethod
+    def exercise_readiness(c: dict) -> list[str]:
+        """Return deterministic same-home exercise blockers, never approvals."""
+        why = []
+        if not c.get("technical"):
+            why.append("Record a design and independent technical reviews.")
+        why.extend(technical_gate(c))
+        version = (c.get("technical") or {}).get("design_version")
+        for row in measure_decision_view(c):
+            latest = row["versions"][-1] if row["versions"] else {}
+            if row["status"] != "Accepted" or latest.get("design_version") != version:
+                why.append(f"Resident choice for {row['measure']} needs this design version.")
+        if not c["funding_ok"]:
+            why.append("Record separate evidenced award and approved budget.")
+        if c["home"]["epc"] == "Unknown":
+            why.append("Resolve authoritative same-home EPC source conflict.")
+        if any(not h["released"] for h in c["hazards"]):
+            why.append("An external safety hold remains open.")
+        if any(not ref["released"] for ref in c["exercise"].get("hazard_references", [])):
+            why.append("Supplied external safety reference retains a hold.")
+        review_dates = [(f"Source {s['id']}", s.get("at"), 30) for s in c["exercise"].get("evidence", [])
+                        if s["authority"] == "survey" or s["id"].endswith("-IDENTITY")]
+        if c.get("technical"):
+            review_dates.append(("Assessment/design", c["technical"].get("design_at"), 180))
+        for row in measure_decision_view(c):
+            if row["versions"]:
+                review_dates.append((f"Resident choice {row['measure']}", row["versions"][-1].get("at"), 30))
+        review_dates.extend(("Funding evidence", e.get("at"), 7) for e in c["exercise"].get("fund_events", [])
+                            if e["event"] == "award" and not e.get("stale"))
+        review_dates.extend(("External safety reference", r.get("at"), 1)
+                            for r in c["exercise"].get("hazard_references", []))
+        for label, observed, days in review_dates:
+            if not Store.exercise_current(observed, days):
+                why.append(f"{label} requires human freshness review ({days} day internal trigger, not legal expiry).")
+        return why
+
+    @staticmethod
+    def exercise_current(observed: str | None, days: int) -> bool:
+        """Apply the declared internal trigger; missing/future dates fail closed."""
+        try:
+            elapsed = (date.today() - date.fromisoformat(observed[:10])).days
+        except (TypeError, ValueError):
+            return False
+        return 0 <= elapsed <= days
+
+    def exercise_status(self, user: dict) -> dict:
+        """Return navigation and analytical snapshots without granting a role."""
+        from . import exercise, forecast
+        with self.lock:
+            if not any(c.get("exercise") for c in self.cases.values()):
+                raise ValueError("Exercise mode is not active.")
+            public = exercise.manifest()
+            for workflow in public["workflows"]:
+                workflow["status"] = "Local controls and workflow navigation available; full workflow acceptance Not run."
+            for profile in public["profiles"]:
+                if profile["id"] == "safety":
+                    profile["script"]["blocker"] = "Supplied external authority/reference required; no local safety judgement."
+                if profile["id"] == "operator":
+                    profile["script"]["blocker"] = "Runtime/restore acceptance remains Not run; real inference blocked."
+            stories = []
+            for c in self.cases.values():
+                if c.get("exercise", {}).get("population") != "story":
+                    continue
+                if projection.is_contractor(user) and not projection.own_case(user, c):
+                    continue
+                stories.append(dict(id=c["id"], lifecycle=c["exercise"]["lifecycle"],
+                                    owner=c["owner"], blockers=self.exercise_readiness(c),
+                                    next_action="Open the same-home workbench; use separate authorized identities."))
+            return dict(fictional=True, fixture_version=exercise.FIXTURE_VERSION,
+                        profiles=public["profiles"], workflows=public["workflows"], stories=stories,
+                        forecast={name: forecast.forecast(exercise.forecast_input(name))
+                                  for name in public["forecast_scenarios"]},
+                        analytical=dict(cohort="EX-ANALYTICAL-24", source_version="analytical-snapshot-1",
+                                        as_of=exercise.AS_OF, accepted_handovers="Suppressed",
+                                        not_accepted="Suppressed", unknown="Suppressed",
+                                        denominator="Suppressed (complementary totals)",
+                                        note="Separate constructed stakeholder snapshot; all cells/totals suppressed."),
+                        inference="Blocked unless separately authorized; templates/manual work are not model success.",
+                        validation="Local integration and eleven profile orientation probes executed; full nine-workflow browser journeys, live inference and human acceptance Not run/Blocked.",
+                        budget="USD 450/month cap; unknown price blocks inference; no purchases or real payments.")
+
+    @staticmethod
+    def _exercise_form_role(user: dict, form_type: str) -> None:
+        roles = projection.FINANCE_VIEW if form_type != "technical" else (
+            "Retrofit Coordinator", *projection.FINANCE_VIEW)
+        if user.get("role") not in roles:
+            raise PermissionError("This identity cannot access this form or its evidence.")
+
+    @staticmethod
+    def _exercise_sources(c: dict, form_type: str) -> list[dict]:
+        from . import forms
+        fields = forms.SCHEMAS[form_type]["fields"]
+        sources = []
+        for raw in c["exercise"]["evidence"]:
+            allowed = [key for key in raw["field_ids"] if key in fields]
+            if not allowed:
+                continue
+            source = {key: deepcopy(raw[key]) for key in ("id", "version", "authority", "media_type")}
+            source.update(case_id=c["id"], authorized=True, field_ids=allowed,
+                          hash=sha256(raw["raw_text"].encode()).hexdigest())
+            if raw["authority"] == "funding":
+                source.update(scheme_id=forms.SCHEME_ID,
+                              routes=["competitive", "allocation", "award_return", "claim"])
+            sources.append(source)
+        return sources
+
+    def exercise_case(self, user: dict, case_id: str) -> dict:
+        """Read authorized forms and server-owned same-home source bytes."""
+        from . import forms
+        with self.lock:
+            c = self._case(case_id)
+            if not c.get("exercise") or c["exercise"]["population"] != "story":
+                raise ValueError("Choose one of the two fictional story homes.")
+            allowed = []
+            for kind in forms.SCHEMAS:
+                try:
+                    self._exercise_form_role(user, kind)
+                except PermissionError:
+                    continue
+                allowed.append(kind)
+            ids = {s["id"] for kind in allowed for s in self._exercise_sources(c, kind)}
+            evidence = [deepcopy(s) for s in c["exercise"]["evidence"] if s["id"] in ids]
+            if user["role"] not in projection.FINANCE_VIEW:
+                evidence = [s for s in evidence if s["authority"] not in ("funding", "finance", "human")]
+            detail = self.detail(case_id, user)
+            if user["role"] == "Retrofit Coordinator":
+                visible_ids = {key for key, draft in c.get("forms", {}).items() if draft["form_type"] == "technical"}
+                for kind in ("narratives", "assistance"):
+                    detail["exercise"][kind] = [deepcopy(r) for r in c["exercise"].get(kind, [])
+                                               if r.get("form_id") in visible_ids]
+            return dict(case=detail, allowed_forms=allowed,
+                        forms={key: deepcopy(value) for key, value in c.get("forms", {}).items()
+                               if value["form_type"] in allowed},
+                        validations={key: forms.validate_draft(value) for key, value in c.get("forms", {}).items()
+                                     if value["form_type"] in allowed},
+                        sources=evidence, blockers=self.exercise_readiness(c),
+                        events=deepcopy(c["exercise"].get("fund_events", []))
+                        if user["role"] in projection.FINANCE_VIEW else [],
+                        lifecycle=c["exercise"]["lifecycle"])
+
+    def _exercise_data_authority(self, user: dict) -> dict:
+        """Resolve data-edit authority exclusively from the persisted staff roster."""
+        staff = self.staff.get(str(user.get("email", "")).lower())
+        if staff is None or staff["role"] not in MANAGER_ROLES:
+            raise PermissionError("Programme Manager or Programme Support must preview and commit coordination data.")
+        if staff["role"] != user.get("role"):
+            raise PermissionError("Signed-in role does not match the server-owned staff authority.")
+        return staff
+
+    def exercise_data_export(self, user: dict, population: str = "all") -> dict:
+        """Export permitted exercise cases/history without AI or privileged raw data."""
+        from . import exercise
+        from .controls import now
+        staff = self.staff.get(str(user.get("email", "")).lower())
+        if staff is None or staff.get("role") != user.get("role"):
+            raise PermissionError("Export requires the server-owned signed-in staff role and scope.")
+        user = staff
+        if not projection.allowed(user, "exercise"):
+            raise PermissionError("Your role cannot export exercise data.")
+        if population not in ("all", "story", "forecast", "scale"):
+            raise ValueError("Choose all, story, forecast or scale population explicitly.")
+        with self.lock:
+            rows = []
+            for cid in sorted(self.cases):
+                c = self._case(cid)
+                metadata = c.get("exercise", {})
+                if not metadata or (population != "all" and metadata.get("population") != population):
+                    continue
+                if projection.is_contractor(user) and not projection.own_case(user, c):
+                    continue
+                if metadata.get("population") == "story" and not projection.is_contractor(user):
+                    authorized = self.exercise_case(user, cid)
+                    detail = authorized["case"]
+                    sources = authorized["sources"]
+                else:
+                    detail = self.detail(cid, user)
+                    sources = []
+                detail.get("exercise", {}).pop("data_previews", None)
+                if projection.is_contractor(user):
+                    row = dict(case=detail, events=deepcopy(detail.get("appointments", [])),
+                               decisions=[], evidence_references=[], sources=[], reviews=[],
+                               version=exercise.data_fingerprint(detail))
+                else:
+                    detail["contacts"] = deepcopy(c["contacts"])
+                    projected = detail.get("exercise", {})
+                    row = dict(
+                        case=detail, version=exercise.data_fingerprint(detail),
+                        events={key: deepcopy(detail.get(key, [])) for key in
+                                ("history", "contacts", "appointments", "handoffs", "quality")},
+                        decisions={key: deepcopy(detail.get(key, [])) for key in
+                                   ("decision", "measure_decisions", "technical")},
+                        evidence_references=deepcopy(detail.get("documents", [])),
+                        sources=deepcopy(sources),
+                        reviews={key: deepcopy(projected.get(key, [])) for key in
+                                 ("source_history", "fund_events", "hazard_references",
+                                  "hazard_reference_history", "data_history")},
+                    )
+                    row["events"]["data_changes"] = deepcopy(projected.get("data_history", []))
+                rows.append(row)
+            result = dict(
+                metadata=dict(contract_version=exercise.DATA_VERSION, fixture_version=exercise.FIXTURE_VERSION,
+                              exported_at=now(), as_of=self.as_of, population=population,
+                              scope="own contractor scope" if projection.is_contractor(user) else "permitted exercise cases",
+                              count=len(rows), role=user["role"], fictional=True,
+                              status="Read-only snapshot; not approval, submission or authoritative stock update."),
+                cases=rows,
+            )
+            self.audit(user.get("email", user["role"]), "exercise_data_export", "-",
+                       json.dumps(result["metadata"], sort_keys=True))
+            self.save()
+            return result
+
+    def exercise_data_action(self, user: dict, body: dict, workbook: bytes | None = None) -> dict:
+        """Persist a reviewed preview or explicitly commit unchanged per-case snapshots."""
+        from . import exercise
+        from .controls import now, text
+        actor = self._exercise_data_authority(user)
+        if not isinstance(body, dict):
+            raise ValueError("Data action requires a JSON object.")
+        action = body.get("action")
+        with self.lock:
+            if action == "commit":
+                return self._exercise_data_commit(actor, body)
+            if action not in ("import-preview", "bulk-preview"):
+                raise ValueError("Choose import-preview, bulk-preview or commit.")
+            reason = text(body.get("reason"), "coordination change reason", 300)
+            if action == "import-preview":
+                if set(body) - {"action", "reason", "filename", "workbook_base64", "fields"}:
+                    raise ValueError("Import accepts only the frozen workbook contract, not authority or approval metadata.")
+                if not isinstance(body.get("filename"), str) or not body["filename"].lower().endswith(".xlsx"):
+                    raise ValueError("Select a .xlsx Case updates workbook.")
+                fields = body.get("fields")
+                if (not isinstance(fields, list) or not fields or not all(isinstance(field, str) for field in fields)
+                        or len(fields) != len(set(fields))
+                        or any(field not in exercise.DATA_FIELDS for field in fields)):
+                    raise ValueError("Choose coordination_note and/or task_due_date explicitly; owner is immutable.")
+                source = exercise.read_case_updates(workbook)
+                requested = [dict(row=row["row"], case_id=row["case_id"],
+                                  changes={field: row["values"].get(field, "") for field in fields},
+                                  errors=list(row["errors"])) for row in source["rows"]]
+                lineage = {key: source[key] for key in
+                           ("source_sha256", "sheet", "mapping", "parser_version", "source_unchanged")}
+            else:
+                if set(body) - {"action", "reason", "case_ids", "changes"}:
+                    raise ValueError("Bulk coordination data cannot contain controlled actions or authority metadata.")
+                ids, changes = body.get("case_ids"), body.get("changes")
+                if not isinstance(ids, list) or not 1 <= len(ids) <= 25:
+                    raise ValueError("Select between 1 and 25 exact case IDs.")
+                if not isinstance(changes, dict):
+                    raise ValueError("Supply explicit coordination field changes.")
+                requested = [dict(row=index, case_id=cid, changes=deepcopy(changes), errors=[])
+                             for index, cid in enumerate(ids, 1)]
+                lineage = dict(parser_version=exercise.DATA_VERSION, source="explicit bulk input")
+            rows = []
+            ids = [row["case_id"] for row in requested]
+            for row in requested:
+                cid = row["case_id"]
+                errors = row["errors"] + exercise.validate_data_changes(row["changes"])
+                if not isinstance(cid, str) or not cid:
+                    errors.append("case_id: required exact case mapping.")
+                    c = None
+                else:
+                    c = self.cases.get(cid)
+                    if ids.count(cid) > 1:
+                        errors.append("Duplicate/conflicting case rows; repair every duplicate and preview again.")
+                if c is None or not c.get("exercise"):
+                    errors.append("Unknown or non-exercise case ID; no cross-case mapping or stock updates.")
+                    c = None
+                before = {field: deepcopy(c["exercise"].get(field)) for field in row["changes"]
+                          if field in exercise.DATA_FIELDS} if c else {}
+                rows.append(dict(row=row["row"], case_id=cid, errors=errors, before=before,
+                                 changes=row["changes"], status="error" if errors else "ready",
+                                 expected_fingerprint=exercise.data_fingerprint(c) if c else None))
+            input_hash = sha256(json.dumps(dict(rows=rows, lineage=lineage, reason=reason),
+                                           sort_keys=True).encode()).hexdigest()
+            preview = dict(token=uuid.uuid4().hex, actor=actor["email"], action=action,
+                           created_at=now(), reason=reason, input_hash=input_hash, lineage=lineage,
+                           rows=rows, status="Preview only; unverified coordination metadata.",
+                           committed=False)
+            anchor = next((self.cases[row["case_id"]] for row in rows
+                           if isinstance(row["case_id"], str) and row["case_id"] in self.cases
+                           and self.cases[row["case_id"]].get("exercise")), None)
+            if anchor is None:
+                preview["token"] = None
+                self.audit(actor["email"], "exercise_data_preview_rejected", "-",
+                           json.dumps(dict(input_hash=input_hash, rows=rows), sort_keys=True))
+                self.save()
+                return preview
+            self._touch(anchor["id"])
+            previews = anchor["exercise"].setdefault("data_previews", [])
+            previews.append(deepcopy(preview))
+            previews[:] = previews[-20:]
+            self.audit(actor["email"], "exercise_data_preview", anchor["id"], input_hash)
+            self.save()
+            return preview
+
+    def _exercise_data_commit(self, actor: dict, body: dict) -> dict:
+        """Apply only a server-stored preview; report every error/stale row."""
+        from . import exercise
+        from .controls import now
+        if set(body) != {"action", "token", "input_hash", "expected_fingerprints"}:
+            raise ValueError("Commit requires token, input_hash and exact expected_fingerprints only.")
+        preview = None
+        anchor = None
+        for c in self.cases.values():
+            for candidate in c.get("exercise", {}).get("data_previews", []):
+                if candidate["token"] == body["token"]:
+                    anchor, preview = c, candidate
+                    break
+        if preview is None or preview["actor"] != actor["email"]:
+            raise PermissionError("Preview is missing, expired or belongs to another staff identity.")
+        expected = {str(row["row"]): row["expected_fingerprint"] for row in preview["rows"]}
+        if body["input_hash"] != preview["input_hash"] or body["expected_fingerprints"] != expected:
+            raise ValueError("Commit inputs differ from the exact reviewed preview.")
+        if preview["committed"]:
+            return deepcopy(preview["result"])
+        outcomes = []
+        # Validate all snapshots before changing the anchor or any target case.
+        for row in preview["rows"]:
+            c = self.cases.get(row["case_id"]) if isinstance(row["case_id"], str) else None
+            errors = list(row["errors"])
+            if not errors and (c is None or exercise.data_fingerprint(c) != row["expected_fingerprint"]):
+                errors.append("Stale case version; preview the current data again before committing.")
+            outcomes.append(dict(row=row["row"], case_id=row["case_id"], errors=errors,
+                                 status="error" if errors else "committed"))
+        at = now()
+        for row, outcome in zip(preview["rows"], outcomes):
+            if outcome["errors"]:
+                continue
+            c = self._case(row["case_id"])
+            self._touch(c["id"])
+            record = dict(token=preview["token"], row=row["row"], actor=actor["email"], at=at,
+                          reason=preview["reason"], before=deepcopy(row["before"]),
+                          changes=deepcopy(row["changes"]), lineage=deepcopy(preview["lineage"]),
+                          input_hash=preview["input_hash"], prior_fingerprint=row["expected_fingerprint"],
+                          status="Unverified coordination metadata; not source-of-record stock or approval.")
+            c["exercise"].update(row["changes"])
+            c["exercise"].setdefault("data_history", []).append(record)
+            self.audit(actor["email"], "exercise_data_commit", c["id"], json.dumps(record, sort_keys=True))
+        result = dict(token=preview["token"], input_hash=preview["input_hash"], outcomes=outcomes,
+                      committed=sum(row["status"] == "committed" for row in outcomes),
+                      errors=sum(row["status"] == "error" for row in outcomes),
+                      lineage=deepcopy(preview["lineage"]), status="Every row disposition reported.")
+        self._touch(anchor["id"])
+        preview.update(committed=True, result=deepcopy(result))
+        self.audit(actor["email"], "exercise_data_batch_result", anchor["id"], json.dumps(result, sort_keys=True))
+        self.save()
+        return result
+
+    def exercise_action(self, user: dict, case_id: str, body: dict) -> dict:
+        """Apply one attributed exercise action atomically on its owning case."""
+        from . import forms
+        from .controls import refuse_bulk, text, now
+        refuse_bulk(body)
+        with self.lock:
+            original = self._case(case_id)
+            if not original.get("exercise") or original["exercise"]["population"] != "story":
+                raise ValueError("Choose a fictional story home, not an analytical fixture.")
+            c = deepcopy(original)
+            state = c["exercise"]
+            action = body.get("action")
+            if action == "source-correct":
+                self._exercise_correct_source(user, c, body)
+            elif action == "funding-event":
+                self._exercise_funding_event(user, c, body)
+            elif action == "external-hazard-reference":
+                if user["role"] != "Building Safety Liaison":
+                    raise PermissionError("Building Safety records supplied external references only.")
+                ref = {key: text(body.get(key), key, 300) for key in ("authority", "version", "evidence", "reference")}
+                if type(body.get("released")) is not bool:
+                    raise ValueError("Supply the external authority's explicit released flag.")
+                ref.update(released=body["released"], by=user["email"], at=now(),
+                           note="Supplied fictional external decision; no local sufficiency judgement.")
+                refs = state.setdefault("hazard_references", [])
+                state.setdefault("hazard_reference_history", []).extend(
+                    deepcopy(r) for r in refs if r["reference"] == ref["reference"])
+                refs[:] = [r for r in refs if r["reference"] != ref["reference"]]
+                refs.append(ref)
+                if body.get("hazard_index") is not None:
+                    hazard = self._hazard(c, body["hazard_index"])
+                    if not hazard.get("referred"):
+                        raise ValueError("Refer the hazard before recording the supplied external response.")
+                    hazard.update(released=ref["released"], external_reference=deepcopy(ref))
+            elif action == "milestone":
+                if user["role"] not in MANAGER_ROLES:
+                    raise PermissionError("Independent Programme reviewer records accepted milestone evidence.")
+                wid = body.get("work_order")
+                order = self._work_order(wid)
+                if order["case_id"] != case_id:
+                    raise PermissionError("Milestone belongs to a different home.")
+                milestone = body.get("milestone")
+                amounts = {"mobilisation": 3600, "installation": 12600, "handover": 1800}
+                if milestone not in amounts:
+                    raise ValueError("Choose one fictional contract milestone.")
+                if user["name"] == order["versions"][-1]["issued_by"]:
+                    raise PermissionError("Milestone reviewer must differ from work-order issuer.")
+                if milestone == "mobilisation" and order["state"] != "Appointed":
+                    raise ValueError("Verified booked mobilisation evidence is required; no advance payment.")
+                if milestone == "installation" and not all(
+                    any(r["measure"] == measure and r["state"] in ("Accepted", "Handed over")
+                        for r in c.get("quality", [])) for measure in self._measures(c)):
+                    raise ValueError("Independent quality acceptance is required for installation milestone.")
+                if milestone == "handover" and state["lifecycle"] != "Handover":
+                    raise ValueError("Resident handover is required for retention milestone.")
+                evidence = text(body.get("evidence"), "accepted milestone evidence", 300)
+                ref = f"{wid}:{milestone}"
+                if ref in state.get("milestones", {}):
+                    state.setdefault("milestone_history", []).append(dict(reference=ref, **deepcopy(state["milestones"][ref])))
+                state.setdefault("milestones", {})[ref] = dict(work_order=wid, amount=amounts[milestone],
+                                                               by=user["email"], at=now(), evidence=evidence)
+            elif action == "lifecycle":
+                self._exercise_lifecycle(user, c, body)
+            elif action == "resident-update":
+                if user["role"] not in ("Resident Liaison Officer", *MANAGER_ROLES):
+                    raise PermissionError("Resident liaison or the named case team records updates.")
+                state.setdefault("resident_updates", []).append(dict(
+                    owner=user["email"], at=now(), channel=text(body.get("channel"), "safe channel", 80),
+                    evidence=text(body.get("evidence"), "update evidence", 300),
+                    next_update=text(body.get("next_update"), "next update commitment", 80),
+                    status="Recorded, not proof of receipt or understanding"))
+            else:
+                drafts = c.setdefault("forms", {})
+                if action == "create-form":
+                    kind = body.get("form_type")
+                    if kind not in forms.SCHEMAS:
+                        raise ValueError("Select an approved exercise template.")
+                    if body.get("schema_version", forms.SCHEMA_VERSION) != forms.SCHEMA_VERSION:
+                        raise ValueError("Unapproved schema version.")
+                    self._exercise_form_role(user, kind)
+                    sources = self._exercise_sources(c, kind)
+                    route = None
+                    if forms.SCHEMAS[kind]["funding"]:
+                        funding_source = next(s for s in sources if s["id"] == f"{case_id}-FUND")
+                        route = dict(scheme_id=forms.SCHEME_ID, route=kind, version=funding_source["version"],
+                                     source_id=f"{case_id}-FUND")
+                    if "route" in body and body["route"] != route:
+                        raise ValueError("Client-supplied route does not match the server-owned same-home scheme evidence.")
+                    draft = forms.create_draft(case_id, kind, sources=sources, route=route)
+                    fid = f"FORM-{len(drafts) + 1:03d}"
+                    drafts[fid] = draft
+                else:
+                    fid = body.get("form_id")
+                    if fid not in drafts:
+                        raise ValueError("Choose a form on this home.")
+                    draft = drafts[fid]
+                    self._exercise_form_role(user, draft["form_type"])
+                    field = body.get("field")
+                    if action == "extract":
+                        source = next((s for s in self._exercise_sources(c, draft["form_type"])
+                                       if s["id"] == body.get("source_id")), None)
+                        if source is None:
+                            raise PermissionError("Source is unavailable on this home and template.")
+                        raw = next(s for s in state["evidence"] if s["id"] == source["id"])
+                        draft = forms.extract_candidates(draft, source, raw["raw_text"].encode())
+                    elif action == "select":
+                        draft = forms.select_candidate(draft, field, body.get("candidate_id"))
+                    elif action == "review":
+                        if field == "completed" and state["lifecycle"] not in ("Handover", "Financial closure"):
+                            raise ValueError("The constructed completion source is not accepted completion; actual QA/handover must exist.")
+                        draft = forms.review_field(draft, field, body.get("review_action"), user,
+                            value=body.get("value"), unit=body.get("unit"), currency=body.get("currency"),
+                            evidence=body.get("evidence", []), reason=body.get("reason"),
+                            unresolved=body.get("unresolved", False))
+                    elif action == "human-field":
+                        if field == "match_budget_approved" and (
+                                c.get("finance", {}).get("budget") or {}).get("status") != "Approved":
+                            raise ValueError("Independent budget approval must exist first.")
+                        draft = forms.human_field_action(draft, field, user, value=body.get("value"),
+                            evidence=body.get("evidence", []), reason=body.get("reason"))
+                    elif action == "calculate":
+                        draft = forms.recalculate(draft)
+                    elif action == "attachments":
+                        draft = forms.set_attachments(draft, body.get("evidence", []))
+                    elif action == "review-pack":
+                        if draft["form_type"] == "claim" and state["lifecycle"] not in ("Handover", "Financial closure"):
+                            raise ValueError("Claim review requires actual accepted resident handover.")
+                        draft = forms.review_pack(draft, user, evidence=body.get("evidence", []),
+                                                  reason=body.get("reason"))
+                    elif action == "export":
+                        draft = forms.export_pack(draft)
+                    elif action in ("assist", "support"):
+                        proposal = self._exercise_assist(c, draft, field,
+                            task="evidence_support" if action == "support" else "form_candidate_selection",
+                            claim=body.get("claim"))
+                        state.setdefault("assistance", []).append(dict(proposal, form_id=fid, stale=False))
+                    elif action == "versions":
+                        if user["role"] not in MANAGER_ROLES:
+                            raise PermissionError("A template owner records explicit schema/rule version changes.")
+                        text(body.get("reason"), "version change reason", 300)
+                        draft = forms.update_versions(draft, schema_version=body.get("schema_version"),
+                                                      rule_version=body.get("rule_version"))
+                    elif action == "narrative":
+                        result = self.ai.source_narrative(case_id, draft)
+                        result = ai_tasks.finish(self, user, "source_bound_narrative", [case_id], result,
+                            "Manual source-bound narrative; no external action.",
+                            {case_id: result.get("citable_facts", [])},
+                            record_cites=result.get("citations", []), persist=False)
+                        state.setdefault("narratives", []).append(dict(result, form_id=fid, stale=False,
+                                                                     by=user["email"], at=now()))
+                        record = next(r for r in self.data["recommendations"] if r["id"] == result["record_id"])
+                        record.update(form_id=fid, input_version=draft["input_version"],
+                                      source_refs=result.get("source_refs", []))
+                    elif action == "review-narrative":
+                        result = next((r for r in state.get("narratives", [])
+                                       if r.get("record_id") == body.get("record_id") and r["form_id"] == fid), None)
+                        if result is None or result["stale"] or result["input_version"] != draft["input_version"]:
+                            raise ValueError("Choose a current same-home narrative; stale output cannot be reviewed.")
+                        reviewed = ai_tasks.review(self, user, result["record_id"], body.get("review_action"),
+                                                   body.get("reason", ""), body.get("text"), persist=False)
+                        result["approval"] = reviewed["status"]
+                        result["reviewer_reason"] = reviewed["reviewer_reason"]
+                        if reviewed["override_text"] is not None:
+                            result["text"] = reviewed["override_text"]
+                    else:
+                        raise ValueError("Unknown exercise action.")
+                    drafts[fid] = draft
+                for record in [*state.get("assistance", []), *state.get("narratives", [])]:
+                    if record.get("form_id") == fid and str(record.get("input_version", record.get("case_version"))) != str(draft["input_version"]):
+                        record["stale"] = True
+                self._exercise_reconcile_dependents(c)
+            self.audit(user["email"], f"exercise_{action}", case_id,
+                       json.dumps(dict(action=action, form_id=body.get("form_id"), source_id=body.get("source_id"),
+                                       reason=body.get("reason")), sort_keys=True))
+            original.clear()
+            original.update(c)
+            self.save()
+            return self.exercise_case(user, case_id)
+
+    def _exercise_correct_source(self, user: dict, c: dict, body: dict) -> None:
+        from . import forms
+        from .controls import text, now
+        source = next((s for s in c["exercise"]["evidence"] if s["id"] == body.get("source_id")), None)
+        if source is None:
+            raise PermissionError("Source is not on this home.")
+        roles = projection.FINANCE_VIEW if source["authority"] in ("finance", "funding", "human") else (
+            "Retrofit Coordinator", *MANAGER_ROLES)
+        if user["role"] not in roles:
+            raise PermissionError("Ask the source's authorized domain owner to correct it.")
+        reason = text(body.get("reason"), "correction reason", 300)
+        raw = text(body.get("raw_text"), "replacement source bytes", 12000)
+        c["exercise"].setdefault("source_history", []).append(dict(deepcopy(source), reason=reason))
+        source.update(raw_text=raw, version=f"{source['version']}.r{len(c['exercise']['source_history'])}",
+                      by=user["email"], at=now(), reason=reason)
+        for draft in c.get("forms", {}).values():
+            metadata = next((s for s in self._exercise_sources(c, draft["form_type"])
+                             if s["id"] == source["id"]), None)
+            if metadata and source["id"] in draft["sources"]:
+                updated = forms.update_source(draft, metadata)
+                draft.clear()
+                draft.update(updated)
+        if source["authority"] == "survey":
+            values = {s["raw_text"].strip() for s in c["exercise"]["evidence"] if s["authority"] == "survey"}
+            match = re.fullmatch(r"epc_band:\s*([A-G])", next(iter(values))) if len(values) == 1 else None
+            c["home"]["epc"] = match.group(1) if match else "Unknown"
+        self._exercise_reconcile_dependents(c)
+        for record in [*c["exercise"].get("assistance", []), *c["exercise"].get("narratives", [])]:
+            refs = record.get("source_refs", record.get("sources", []))
+            if any(ref["id"] == source["id"] and (
+                    ref["version"] != source["version"] or ref["hash"] != sha256(raw.encode()).hexdigest())
+                   for ref in refs):
+                record["stale"] = True
+
+    @staticmethod
+    def _exercise_reconcile_dependents(c: dict) -> None:
+        """Suspend exactly the external events bound to changed reviewed packs."""
+        from . import forms
+        for event in c["exercise"].get("fund_events", []):
+            try:
+                current = forms.export_pack(c["forms"][event["form_id"]])["exports"][-1]
+                stale = current["finance_review"]["digest"] != event["digest"]
+            except ValueError:
+                stale = True
+            if stale:
+                event["stale"] = True
+                if event["event"] == "award":
+                    c["funding_ok"] = False
+                    c["exercise"]["funding_reassessment"] = "Reviewed evidence changed; historical external award retained, readiness suspended."
+
+    def _exercise_assist(self, c: dict, draft: dict, field: str, *,
+                         task: str = "form_candidate_selection", claim: str | None = None) -> dict:
+        from .decision import DecisionClient, DecisionConfig, InferenceConfig
+        if field not in draft["fields"]:
+            raise ValueError("Choose an approved field.")
+        sources, candidates = [], []
+        for candidate in draft["fields"][field]["candidates"]:
+            if not candidate["stale"]:
+                candidates.append(dict(id=candidate["id"], source_id=candidate["source_id"], text=candidate["raw_value"]))
+        source_ids = {candidate["source_id"] for candidate in candidates}
+        for sid, source in draft["sources"].items():
+            if sid not in source_ids or not source["authorized"] or field not in source["field_ids"]:
+                continue
+            raw = next(s for s in c["exercise"]["evidence"] if s["id"] == sid)
+            sources.append(dict(id=sid, case_id=c["id"], version=source["version"], hash=source["hash"],
+                                locator="supplied labelled text", kind="form_evidence", text=raw["raw_text"]))
+        if "_decision_client" not in self.__dict__:
+            config = DecisionConfig(
+                endpoint=os.environ.get("PW_DECISION_ENDPOINT", ""),
+                deployment=os.environ.get("PW_DECISION_DEPLOYMENT", ""),
+                metadata_reviewed=os.environ.get("PW_DECISION_METADATA_REVIEWED") == "true",
+                metadata_endpoint=os.environ.get("PW_DECISION_METADATA_ENDPOINT", ""),
+                metadata_deployment=os.environ.get("PW_DECISION_METADATA_DEPLOYMENT", ""),
+                metadata_model=os.environ.get("PW_DECISION_METADATA_MODEL", ""),
+                metadata_model_version=os.environ.get("PW_DECISION_METADATA_MODEL_VERSION", ""),
+                deployment_type=os.environ.get("PW_DECISION_DEPLOYMENT_TYPE", ""),
+                region=os.environ.get("PW_DECISION_REGION", ""),
+            )
+            self._decision_client = DecisionClient(config)
+        client = DecisionClient(inference=InferenceConfig()) if ai_tasks.workflow_only() else self._decision_client
+        return client.propose(task, case_id=c["id"],
+            case_version=str(draft["input_version"]), sources=sources, field=field,
+            workflow="technical-forms" if draft["form_type"] == "technical" else
+                     "invoice-forms" if draft["form_type"] == "invoice" else "funding-forms",
+            permissions=("evidence.read", "forms.assist"),
+            candidates=candidates if task == "form_candidate_selection" else (),
+            claim=claim if task == "evidence_support" else None)
+
+    def _exercise_funding_event(self, user: dict, c: dict, body: dict) -> None:
+        from . import forms
+        from .controls import text, now
+        if user["role"] not in projection.FINANCE_VIEW:
+            raise PermissionError("Only Finance identities record external financial evidence.")
+        kind = body.get("event")
+        prerequisites = {"application-submitted": None, "application-disposition": "application-submitted",
+                         "award": "application-disposition", "claimable": "award",
+                         "claim-submitted": "claimable", "claim-disposition": "claim-submitted",
+                         "cash": "claim-disposition"}
+        if kind not in prerequisites:
+            raise ValueError("Choose a separate application, award, claim or cash evidence event.")
+        fid = body.get("form_id")
+        draft = c.get("forms", {}).get(fid)
+        if draft is None:
+            raise ValueError("Anchor this event to a same-home reviewed form export.")
+        current = forms.export_pack(draft)["exports"][-1]
+        exported = next((e for e in draft["exports"] if e["id"] == body.get("export_id")), None)
+        if exported is None or exported["finance_review"]["digest"] != current["finance_review"]["digest"]:
+            raise ValueError("Supply the exact current reviewed export ID; export is not submission.")
+        expected = "claim" if kind.startswith("claim") or kind == "cash" else ("competitive", "allocation", "award_return")
+        if draft["form_type"] not in (expected if isinstance(expected, tuple) else (expected,)):
+            raise ValueError("Wrong template for this financial event.")
+        events = c["exercise"].setdefault("fund_events", [])
+        previous = next((e for e in reversed(events) if e["event"] == prerequisites[kind]
+                         and (prerequisites[kind] == "award" or e["form_id"] == fid)
+                         and (body.get("previous_event") is None or e["id"] == body["previous_event"])), None)
+        retry = next((e for e in reversed(events) if e["event"] == kind and not e.get("stale")), None)
+        if kind in ("application-submitted", "claim-submitted") and retry:
+            rejection = next((e for e in events if e["event"] == (
+                "application-disposition" if kind == "application-submitted" else "claim-disposition")
+                and e["previous_event"] == retry["id"] and e["disposition"] == "Rejected"), None)
+            if not rejection or body.get("retry_of") != rejection["id"]:
+                raise ValueError("A resubmission requires its exact rejected disposition reference.")
+            if fid == retry["form_id"] and exported["id"] == retry["export_id"]:
+                raise ValueError("Re-review and export a corrected pack before resubmitting.")
+        if prerequisites[kind] and not previous:
+            raise ValueError("Record the preceding external evidence event separately.")
+        if previous and previous.get("stale"):
+            raise ValueError("Preceding external event depends on stale reviewed evidence; obtain a fresh review and external response.")
+        if body.get("previous_event") is not None and (
+                previous is None or previous["id"] != body["previous_event"]):
+            raise ValueError("The supplied preceding event ID does not match this home and financial state.")
+        if kind != "cash" and any(e["event"] == kind and not e.get("stale")
+                                 and e["form_id"] == fid and e["export_id"] == exported["id"] for e in events):
+            raise ValueError("This external state is already evidenced; do not duplicate it.")
+        if kind in ("application-disposition", "claim-disposition") and previous["by"] == user["email"]:
+            raise PermissionError("Disposition reviewer must differ from the submission recorder.")
+        if kind in ("application-disposition", "award") and previous and previous["form_id"] != fid:
+            raise ValueError("Application disposition/award must reference the submitted application's exact form.")
+        if previous and prerequisites[kind] != "award" and (
+                previous["export_id"] != exported["id"]
+                or previous["digest"] != exported["finance_review"]["digest"]):
+            raise ValueError("Use the exact preceding reviewed export and digest; changed packs require resubmission.")
+        if previous and previous.get("disposition") == "Rejected":
+            raise ValueError("Rejected external disposition blocks downstream events.")
+        if kind in ("claimable", "claim-submitted", "claim-disposition", "cash") and c["exercise"]["lifecycle"] != "Handover":
+            raise ValueError("Accepted same-home handover is required before claim/cash evidence.")
+        evidence = text(body.get("evidence"), "fictional external evidence reference", 300)
+        amount = None
+        if kind in ("award", "claimable", "claim-submitted", "claim-disposition", "cash"):
+            try:
+                amount = Decimal(str(body.get("amount")))
+            except InvalidOperation as error:
+                raise ValueError("Supply an explicit finite GBP amount.") from error
+            if not amount.is_finite() or amount < 0 or amount > 7500:
+                raise ValueError("Exercise amounts must be finite, non-negative and no more than GBP 7500.")
+            ceiling = Decimal(str(previous["amount"])) if previous and previous.get("amount") is not None else Decimal("7500")
+            reviewed_amount = draft["fields"].get("claim_amount" if draft["form_type"] == "claim" else "grant_amount", {}).get("value")
+            if reviewed_amount is not None:
+                ceiling = min(ceiling, Decimal(str(reviewed_amount)))
+            if amount > ceiling:
+                raise ValueError("Amount exceeds the separately evidenced preceding state.")
+            if kind == "cash":
+                received = sum(Decimal(e["amount"]) for e in events if e["event"] == "cash"
+                               and e["previous_event"] == previous["id"])
+                if received + amount > ceiling:
+                    raise ValueError("Cumulative cash exceeds the accepted claim.")
+        disposition = body.get("disposition")
+        if kind.endswith("disposition") and disposition not in ("Accepted", "Rejected"):
+            raise ValueError("Record the supplied external disposition explicitly.")
+        events.append(dict(id=f"EVENT-{len(events)+1:03d}", event=kind, form_id=fid,
+                           export_id=exported["id"], digest=exported["finance_review"]["digest"],
+                           by=user["email"], at=now(), evidence=evidence,
+                           amount=str(amount) if amount is not None else None, disposition=disposition,
+                           previous_event=previous["id"] if previous else None, stale=False,
+                           retry_of=body.get("retry_of"),
+                           fictional=True, note="Record only; no submission/payment performed."))
+        if kind == "award":
+            c["funding_ok"] = (c.get("finance", {}).get("budget") or {}).get("status") == "Approved"
+
+    def _exercise_lifecycle(self, user: dict, c: dict, body: dict) -> None:
+        if user["role"] not in MANAGER_ROLES:
+            raise PermissionError("The Programme team records lifecycle transitions.")
+        stages = ("Intake", "Assessment", "Funding", "Ready", "Installation", "Provider completed",
+                  "Independent QA", "Handover", "Financial closure")
+        current, target = c["exercise"]["lifecycle"], body.get("target")
+        if current not in stages or stages.index(current) + 1 >= len(stages) or target != stages[stages.index(current)+1]:
+            raise ValueError("Record only the next lifecycle step; approvals cannot be skipped.")
+        why = []
+        if target == "Funding" and (not c.get("technical") or c["home"]["epc"] == "Unknown"):
+            why.append("A versioned design and resolved EPC source are required.")
+        if target in ("Ready", "Installation"):
+            why += self.exercise_readiness(c)
+        orders = [w for w in self._proc()["work_orders"] if w["case_id"] == c["id"]]
+        if target == "Installation" and not any(w["state"] in ("Issued", "Appointed") for w in orders):
+            why.append("Capacity-backed work order is missing.")
+        if target == "Provider completed" and not any(w["state"] == "Completed" for w in orders):
+            why.append("Separately recorded provider completion is missing.")
+        records = c.get("quality", [])
+        if target == "Independent QA" and not records:
+            why.append("Provider quality pack is missing.")
+        if target == "Handover":
+            why += self.exercise_readiness(c)
+            if any(not any(r["measure"] == m and r["state"] == "Handed over" for r in records)
+                   for m in self._measures(c)):
+                why.append("Every measure needs independent QA acceptance and resident handover.")
+        if target == "Financial closure":
+            why += self.exercise_readiness(c)
+            events = c["exercise"].get("fund_events", [])
+            claims = [e for e in events if e["event"] == "claim-disposition"
+                      and e["disposition"] == "Accepted" and not e.get("stale")]
+            cash = sum(Decimal(e["amount"]) for e in events if e["event"] == "cash")
+            invoices = c.get("finance", {}).get("invoices", [])
+            if not claims or cash != Decimal(claims[-1]["amount"]):
+                why.append("Accepted claim and separately received cash must reconcile exactly.")
+            if not invoices or any(i["payment_status"] != "Paid outside this system" for i in invoices):
+                why.append("Every provider invoice needs independent disposition and external payment evidence.")
+            if sum(Decimal(str(ln["amount"])) for i in invoices for ln in i["lines"]) != Decimal("18000"):
+                why.append("Provider invoices must reconcile to the fictional GBP 18000 contract.")
+        if why:
+            raise GateError(why)
+        c["exercise"]["lifecycle"] = target
+        if target == "Ready":
+            c["stage"] = READY_STAGE
+        if target == "Financial closure":
+            c.update(closed=True, stage="Completed")
 
     @staticmethod
     def status_line(c):
@@ -316,6 +1075,8 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
         with self.lock:
             c = self._case(case_id)
             c["decision"] = dict(status=status, by=user["name"], at=datetime.now().date().isoformat())
+            if c.get("exercise"):
+                c["decision"]["note"] = "Legacy whole-home record only; never satisfies scoped exercise readiness."
             self.audit(user["email"], "resident_decision", case_id, f"{status} {note}".strip())
             self.save()
 
@@ -325,6 +1086,8 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
             raise ValueError("Choose who is taking this over.")
         with self.lock:
             c = self._case(case_id)
+            if c.get("exercise"):
+                raise PermissionError("Offer a handoff and wait for receiver acceptance.")
             c.update(owner=to["name"], owner_code=to["code"], owner_role=to["role"], waiting_on=to["name"])
             self.audit(user["email"], "hand_over", case_id, f"to {to['name']} {note}".strip())
             self.save()
@@ -332,6 +1095,8 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
     def advance(self, user, case_id):
         with self.lock:
             c = self._case(case_id)
+            if c.get("exercise"):
+                raise PermissionError("Use capacity-backed exercise lifecycle transitions.")
             if c["stage"] != READY_STAGE:
                 raise ValueError("This case is not at the final checks.")
             why = self.gate_reasons(c)
@@ -714,6 +1479,8 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
             raise PermissionError("Only the Grants and Evidence Officer or a manager can do this.")
         with self.lock:
             c = self._case(case_id)
+            if c.get("exercise"):
+                raise PermissionError("Use separate reviewed forms and external financial evidence events.")
             f = c["funding"]
             if action == "save_draft":
                 f["draft"] = (text or "")[:6000]
