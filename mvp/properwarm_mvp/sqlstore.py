@@ -30,6 +30,10 @@ from .store import ConflictError, Store
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS staff (email TEXT PRIMARY KEY, body TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS stock (
+  id TEXT PRIMARY KEY, area TEXT NOT NULL, epc_group TEXT NOT NULL, address TEXT NOT NULL,
+  lat REAL NOT NULL, lon REAL NOT NULL, body TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS ix_stock_area_epc ON stock (area, epc_group, id);
 CREATE TABLE IF NOT EXISTS cases (
   id TEXT PRIMARY KEY, rowversion INTEGER NOT NULL DEFAULT 1, seq INTEGER NOT NULL,
   stage TEXT NOT NULL, area TEXT NOT NULL, wave TEXT NOT NULL, owner_code TEXT NOT NULL,
@@ -388,7 +392,7 @@ class SqlStore(Store):
         row = self.db.execute("SELECT value FROM meta WHERE key='procurement'").fetchone()
         if (row[0] if row else None) != self._proc_snap:
             raise ConflictError("procurement")
-        self.db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('procurement', ?)", (body,))
+        self._meta_set("procurement", body)
         return body
 
     def _append_audit(self, entries):

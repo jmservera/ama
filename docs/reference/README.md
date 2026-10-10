@@ -7,6 +7,13 @@ ms.topic: overview
 
 ## Purpose
 
+The AMA exercise is the whole learning programme, not an isolated test app.
+New prototypes/PoCs/MVPs iterate the existing Proper Warm solution using the
+same generated 60,000-home stock and 980-case programme baseline, with enabled
+real AI. Small fixtures are regression/evaluation assets only. The addendum
+records the owner's scope correction and current budget override; private
+OpenStreetMap geography and synthetic resident outputs remain out of Git.
+
 This folder is the project's knowledge base, a persistent second brain for the
 Proper Warm research. It gathers the evidence, syntheses, working method and
 project memory that agents and people need, and this index tells them where to
@@ -109,7 +116,7 @@ management: short pages that point to clusters of related material.
 | [Proper Warm Prototype Profile Review](./research/ux/proper-warm-prototype-profile-review.md) | Nine company-role critiques, eleven-perspective UX synthesis and four relayed discussions, plus separately dated owner feedback on a later application: preserve brand/clarity, correct reddish status meaning, contextualize role/workflow, expose readiness/ownership/agent boundaries and provide a full-screen case with minimum-necessary synthetic contact context. Eight proposed next-prototype checks; no prototype changes or passed usability claims | 2026-10-07 |
 | [Prototype Learnings and Simplicity Review](./research/ux/prototype-learnings-and-simplicity-review.md) | Historical eight-angle simplicity critique plus dated #58 real-platform learning: assistance optional per record, real AI mandatory per delivered application; calibration/benefits and direct human usability unproved | 2026-10-11 |
 | [Gap Analysis and Next Build](./research/gap-analysis-next-build.md) | Dated prior gaps retained; current 2026-10-11 direction reuses generated-data MVP and requires real AI/SQL/Azure, not rebuilding already delivered features. Independent platform/control work and experiment-value gates separated | 2026-10-11 |
-| [Proper Warm MVP](../../mvp/README.md) | Connected fictional workbench with independent building/home gates, reviewed forms, separate finance events, explicit handoff/update ownership and scoped versioned returns. Exact resident/service/privacy and 36 earlier-stage return fixtures pass; named milestone re-review blocks stale payment/closure without erasing paid history. Real complaint/return/browser controls and history projection corrected. Native zoom, background/document recovery and exact mixed core/HTTP-rate scale probes executed; pending restore stays offline. Disabled Decision 1 and [requirement/evidence register](../../.copilot-tracking/changes/2026-10-10/exercise-poc-rebuild-acceptance.md) preserve incomplete full-PRD/live/human gates | 2026-10-10 |
+| [Proper Warm MVP](../../mvp/README.md) | Continuing generated-data MVP on Azure SQL/Blob: original 60,000-home OpenStreetMap stock and retained 980-case programme/history. SQL-paged stock/filter/map reconciliation, browser reflow/assets and exact restart persistence checked. Real Decision 1 EPC proposal remains Not reviewed; real GPT-4.1-mini summary is citation-verified. Owner budget override retains usage/task/source controls. Small fixtures remain tests; [requirement/evidence register](../../.copilot-tracking/changes/2026-10-10/exercise-poc-rebuild-acceptance.md) preserves incomplete full-PRD, linkage, calibration/value and human gates | 2026-10-10 |
 
 ### Regulatory Sources
 

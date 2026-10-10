@@ -1,0 +1,150 @@
+{
+  "kind": "Live Azure fictional deployment probe",
+  "base": "https://ca-properwarm-mvp.livelybay-cc3a435c.uksouth.azurecontainerapps.io",
+  "assets": [
+    {
+      "path": "/app.js",
+      "sha256": "bae0988b7db4cb6cf6cef02f4d1038181b92590af00050baa59791d391ad3d47"
+    },
+    {
+      "path": "/exercise.js",
+      "sha256": "e90377ecc1687eca969fa69b7a08866a50c7afaff6f4ac1a21d501f4005e9437"
+    },
+    {
+      "path": "/index.html",
+      "sha256": "ee05b70471d788a2cd120d63f9732fd69074247e42c24a1ef94f9c9dd91c753a"
+    },
+    {
+      "path": "/ops.js",
+      "sha256": "8f56cb1d5e296f65efee1a4c1f0742110266cf84735f953ca6d991fed76ed968"
+    },
+    {
+      "path": "/panels.js",
+      "sha256": "cdcace02093485798ad166916db309206a5b88fff6dfcbdf2db9ab41f7572e96"
+    },
+    {
+      "path": "/style.css",
+      "sha256": "2046873a3b74d864132edb8e12102cb83e79632ec764b797d08bf10c1b33a65c"
+    },
+    {
+      "path": "/vendor/LICENSE",
+      "sha256": "53e8dc25862014e4324741ca18fbe3611e11d42ef69f59f86ea8c5389647d4cb"
+    },
+    {
+      "path": "/vendor/images/layers.png",
+      "sha256": "1dbbe9d028e292f36fcba8f8b3a28d5e8932754fc2215b9ac69e4cdecf5107c6"
+    },
+    {
+      "path": "/vendor/images/marker-icon.png",
+      "sha256": "574c3a5cca85f4114085b6841596d62f00d7c892c7b03f28cbfa301deb1dc437"
+    },
+    {
+      "path": "/vendor/leaflet.css",
+      "sha256": "a7837102824184820dfa198d1ebcd109ff6d0ff9a2672a074b9a1b4d147d04c6"
+    },
+    {
+      "path": "/vendor/leaflet.js",
+      "sha256": "db49d009c841f5ca34a888c96511ae936fd9f5533e90d8b2c4d57596f4e5641a"
+    }
+  ],
+  "upload_response_keys": [
+    "id",
+    "wave",
+    "closed",
+    "stage",
+    "stage_since",
+    "days_in_stage",
+    "waiting_on",
+    "reason",
+    "owner_code",
+    "owner",
+    "owner_role",
+    "resident",
+    "home",
+    "measures",
+    "contractor",
+    "decision",
+    "funding_ok",
+    "contacts",
+    "appointments",
+    "hazards",
+    "history",
+    "exercise",
+    "documents",
+    "funding",
+    "status",
+    "gate",
+    "can_advance",
+    "suggestions",
+    "checklist",
+    "technical_missing",
+    "measure_decisions"
+  ],
+  "document_sha256": "42b189c8f15d31f8a4c19245984e0e97d9de267f0562f8b4f5c814057cae551e",
+  "asset_count": 11,
+  "checks": [
+    "authenticated live exercise page",
+    "actual browser competitive form creation",
+    "live building navigation",
+    "live 390px exercise reflow",
+    "managed-identity Blob round-trip byte hash",
+    "actual browser source parsing preserves D/E conflict without selection or review",
+    "actual revision restart retains every SQL case and exact audit head",
+    "Blob document hash and unresolved form conflict retained after restart",
+    "digest-pinned revision restart retains exact SQL/audit/Blob without DDL grant; download audit occurs after snapshot comparison"
+  ],
+  "document_id": "e5e5e8ee75a4",
+  "before_restart_case_sha256": "fcbb71015197e6621971f5f7e2448606c2b29f05be0435ed7ac681cf04d02f6b",
+  "browser": "Headless Chrome",
+  "human_ux": false,
+  "native_zoom": false,
+  "parsed_sources": 6,
+  "restart_before": {
+    "cases": 18,
+    "case_hash": "6b43ba5453d6cde691101be4b7da02f2ae9fb116f6449968c6c6504a3ec67aae",
+    "audit_head": [
+      23,
+      "1d587b69540c19d2f273247e9404b197b55fea4c39df0e8b41cfb370c8f727c5"
+    ],
+    "as_of": "2026-10-10"
+  },
+  "restart_after": {
+    "cases": 18,
+    "case_hash": "6b43ba5453d6cde691101be4b7da02f2ae9fb116f6449968c6c6504a3ec67aae",
+    "audit_head": [
+      23,
+      "1d587b69540c19d2f273247e9404b197b55fea4c39df0e8b41cfb370c8f727c5"
+    ],
+    "as_of": "2026-10-10"
+  },
+  "revision": "ca-properwarm-mvp--0000011",
+  "sql_ledger": "APPEND_ONLY_LEDGER_TABLE",
+  "sql_database": "properwarm-exercise",
+  "storage_container": "exercise-evidence",
+  "ai": "disabled",
+  "load_test": false,
+  "runtime_sql_roles": [
+    "db_datareader",
+    "db_datawriter"
+  ],
+  "image": "crpropermvp7569.azurecr.io/properwarm@sha256:115d35582cad11492b40e06192a5c97f523725f0fe74ab2c99f5a8b77c05405a",
+  "least_privilege_restart": true,
+  "final_restart_before": {
+    "cases": 18,
+    "case_hash": "6b43ba5453d6cde691101be4b7da02f2ae9fb116f6449968c6c6504a3ec67aae",
+    "audit_head": [
+      24,
+      "e29f99ec71774d98345166706e7b36b538d3b2265eea7e12a1cae16707beb050"
+    ],
+    "as_of": "2026-10-10"
+  },
+  "final_restart_after": {
+    "cases": 18,
+    "case_hash": "6b43ba5453d6cde691101be4b7da02f2ae9fb116f6449968c6c6504a3ec67aae",
+    "audit_head": [
+      24,
+      "e29f99ec71774d98345166706e7b36b538d3b2265eea7e12a1cae16707beb050"
+    ],
+    "as_of": "2026-10-10"
+  }
+}

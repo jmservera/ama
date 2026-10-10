@@ -39,6 +39,13 @@ PYTHONPATH=prototype python3 prototype/scripts/evaluate_agent.py --out /tmp/eval
 
 ## Limits
 
+This historical control slice is not a new isolated exercise deliverable.
+The AMA exercise is the whole programme; further prototypes, PoCs and MVPs
+must iterate the existing Proper Warm solution, reuse the generated stock
+and demonstrate enabled, bounded real AI. This slice's small fixtures and
+offline checks remain regression evidence only and do not meet that delivery
+requirement. See the owner scope correction in the case-study addendum.
+
 The evaluation is an offline contract check (`execution:
 offline-contract-only`). It does not call a model and is not a measure of
 model quality. The image has not been deployed to the `warm-test` stack.

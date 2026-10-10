@@ -8,11 +8,20 @@ ms.date: 2026-10-10
 
 * Task ID: exercise-poc-rebuild-2026-10-10
 * Task slug: exercise-poc-rebuild
-* Planning status: Ready for local implementation; live acceptance blocked
+* Planning status: Local and owner-authorized Azure deployment implemented; full acceptance incomplete
 * Phase details: .copilot-tracking/details/2026-10-10/exercise-poc-rebuild-phase-details.md
 * Critique target: .copilot-tracking/reviews/plans/2026-10-10/exercise-poc-rebuild-plan-critique.md
 
 ## Executive Summary
+
+Owner-directed restart: this is the next iteration of the existing Proper
+Warm MVP within the whole AMA exercise, not a separate 18-case application.
+Reuse the recovered 60,000-home register and 980-case programme baseline,
+preserving existing history and provenance. Retain small fixtures as tests.
+Real bounded AI must be enabled and demonstrated; GPT-4.1-mini summary
+success is observed, Decision 1 authentication remains unresolved.
+Earlier completed small-fixture markers and workload evidence do not accept
+the generated-data deployment. P07 owns the corrected delivery boundary.
 
 Rebuild the demonstration as a connected fictional-home journey, reusing the
 existing Python workbench, durable SQL store and independently checked domain
@@ -26,8 +35,8 @@ The existing app already implements substantial resident, technical, quality,
 procurement and finance controls; a wholesale rewrite would discard useful
 coverage. Its current funding shortcut and template-based AI path do not
 satisfy the new form and actual-inference requirements.
-Exercise startup will explicitly isolate the fictional seed, SQLite database
-and local evidence backend. A shared inference guard will keep both scoring
+Exercise startup isolates the fictional seed and SQLite/local or
+MSSQL/Blob storage. A shared inference guard will keep both scoring
 and generation disabled until separately authorized. Legacy hazard release
 does not represent authoritative external safety clearance.
 
@@ -47,13 +56,35 @@ success. Neither local tests nor a working adapter satisfies live AI acceptance.
 
 ## User Decisions and Requirements
 
+* The exercise is the whole AMA programme. Restart the existing MVP iteration
+  using the same generated 60,000-home stock, not the isolated 18-case seed.
+* Latest owner direction removes the prior USD450 budget constraint for this
+  rebuild. Keep cost/usage telemetry and source/authority/token-bound controls;
+  do not treat budget removal as permission for live resident or financial action.
+* Synthetic state is disposable and can be regenerated/reloaded; use the
+  existing snapshot first for comparability, not as an irreplaceable-data gate.
+* Reuse and preserve the 980-case existing snapshot and retained SQL history;
+  do not regenerate dates/identities or invent completed workflows for stock.
+* Every new prototype, PoC and MVP must demonstrate real enabled bounded AI
+  and realistic customer UX, with sources, uncertainty and human authority.
+
 * Merge accepted PRD #57 and rebuild the PoC end to end.
 * Apply System One where useful, especially extraction/selection and filling of retrofit subsidy forms; scoring never grants decision authority.
 * Use grounded, explicitly fictional company assumptions, not invented company validation or further broad research.
 * Keep the USD 450/month cap and four-week plan; real Foundry scoring and generation remain required.
 * Demonstrate one connected home, source conflict/correction, resident choice, delivery, QA/handover and financial reconciliation with tribunal-defensible evidence.
+* Owner now authorizes real Azure SQL, app and asset deployment. Use existing
+  AMA resources and a separate fictional database/document container; preserve
+  existing retrofit data. Subsequent owner direction explicitly requires
+  actual AI enabled and demonstrated, with the USD450 cap retained.
+* Activate bounded Decision1 proposals and GPT-4.1-mini drafting after
+  deployment/access/pricing checks, with SQL-backed reservations surviving
+  app restarts. Preserve source lineage, human approval and manual continuity.
 
 ## Goals
+
+* Restore generated-data lineage and full-stock visibility alongside the
+  existing programme, with an honest stock/programme/analytical denominator.
 
 * Complete the accepted exercise journey with traceable human decisions.
 * Provide safe optional assistance with manual continuity and exact source lineage.
@@ -61,11 +92,22 @@ success. Neither local tests nor a working adapter satisfies live AI acceptance.
 
 ## Scope and Non-Goals
 
-Local non-production implementation, wholly fictional fixtures, browser
+Owner correction supersedes the private-generator exclusion in earlier
+planning prose: privately reuse the existing generated geography and MVP
+snapshot, preserving their privacy and provenance. Historical small-fixture
+implementation is regression-only evidence, not the deployment baseline.
+
+Non-production local and owner-authorized Azure implementation, wholly fictional fixtures, browser
 workbench, existing durable stores, provider adapters and evidence generation
 are in scope. No real resident data, external sending/submission/payment,
-new cloud resources, unrestricted spend, fake legal/professional approval or
+unrestricted spend, fake legal/professional approval or
 production readiness claims are in scope.
+
+The owner-authorized deployment adds Azure MSSQL/Blob exercise startup,
+managed-identity access, immutable image/static assets, a separate low-cost
+fictional database and evidence container, and HTTPS app deployment on the
+existing Container Apps environment. Validate actual write/read/restart and
+document bytes without migrating existing retrofit databases or activating AI.
 
 ## Functional Requirements
 
@@ -77,13 +119,21 @@ scope/choice isolation and strengthen where source inspection reveals gaps.
 
 ## Non-Functional Requirements
 
-Use SQLite transactional durability for the accepted local demo. Enforce
+Use SQLite transactional durability locally and Azure SQL/Blob durability
+for the deployed exercise. Enforce
 service-side permission checks and no-self-approval, not UI-only restrictions.
 Preserve existing tests and map the PRD performance, recovery, accessibility
 and evaluation thresholds to executed evidence or explicit Not run/Blocked.
 Never infer live model success from fake transports or agent labels.
 
 ## Acceptance Criteria
+
+* Verify exactly 60,000 existing stock IDs and the 980-case programme baseline,
+  with fingerprints, source dates and retained audit/history. No silent reseed.
+* Full-stock browse/filter/count and programme workflows share explicit
+  linkage or visible unknowns; no fabricated case history or consent.
+* Real AI produces a useful source-bound output on generated programme data;
+  failed Decision calls remain visible and cannot be labelled success.
 
 * Same-home lifecycle can be exercised locally with separate identities, independent QA and separate finance events.
 * Conflicting EPC candidates remain visible; manual correction and source changes preserve history and invalidate exactly dependent reviews.
@@ -263,6 +313,45 @@ rights unchanged, 320/390/1280px, keyboard/focus/status and chart tables;
 record checks separately from screen-reader/human evidence. Stakeholder
 aggregates below ten require complementary suppression, not exposure through
 another total.
+
+<!-- rpi:phase id=P07 -->
+### [ ] P07: Restart the existing generated-data MVP iteration
+
+Dependencies: existing P02/P03 domain controls; owner scope correction.
+This is a later implementation amendment, not a repeat critique or Review.
+
+<!-- rpi:task id=P07-T01 -->
+#### [x] P07-T01: Recover and integrate generated stock and programme lineage
+
+Recover 60,000 stock rows and the 980-case baseline without changing IDs,
+dates or private source bytes. Verify retained SQL history and documents.
+Provide durable full-stock storage, paging/filtering and explicit case linkage;
+missing/ambiguous linkage remains unknown. Keep the 18-case seed as tests.
+Executed: copied the retained Azure programme to properwarm-programme,
+imported exactly 60,000 original stock rows and enriched 980 cases without
+changing their prior fields/history. Original four-entry audit head retained
+and verified. Source SHA-256s recorded; no private data committed.
+
+<!-- rpi:task id=P07-T02 -->
+#### [x] P07-T02: Demonstrate real AI and customer workflows on generated data
+
+Reuse enhanced forms and source review controls on generated cases without
+inventing approvals or source evidence. Resolve Decision provider access or
+record the exact blocker while demonstrating successful bounded generation.
+Validate useful matched/abstaining outputs, permissions and spending guards.
+Executed generated-case EPC candidate proposal: real Decision1, validated,
+source-bound and Not reviewed; actual citation-verified generative summary.
+Optional confidence validation and explicit cap override retain task controls.
+Actual browser source-provenance inspection passes. Calibration/paired value
+remain separate incomplete PRD acceptance gates, not this smoke boundary.
+
+<!-- rpi:task id=P07-T03 -->
+#### [ ] P07-T03: Deploy and publish the corrected continuing MVP
+
+Replace the app only after generated-data startup and regression pass;
+verify stock/case counts, source fingerprints, live AI, SQL/Blob persistence,
+browser UX and the exact deployment digest. Publish on existing draft PR #58.
+Keep earlier Review Not accepted and remaining human/full-PRD gates explicit.
 
 ## Validation Ownership and Change Budget
 

@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Implement",
-  "status": "blocked",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-10/system-one-decision-models-research.md",
@@ -15,6 +15,31 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-10/exercise-poc-rebuild-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "P07 generated-data iteration deployed: 60000 existing stock rows, copied 980-case programme/history, OpenStreetMap SQL-paged stock view, live Decision1 EPC proposal Not reviewed and verified GPT-4.1-mini summary. Actual cloud/browser checks pass; original Review remains Not accepted.",
+      "status": "implemented and deployed; publication pending; full PRD/human acceptance incomplete",
+      "evidence": "E31/E32; exercise-poc-rebuild-programme-results.json"
+    },
+    {
+      "decision": "Owner says ignore the budget for the current rebuild, superseding the prior USD450 cap for this invocation. Disable only the spend-cap gate explicitly; retain authorized task/source controls, token bounds, actual usage and SQL liability reservations. Synthetic data is disposable and may be regenerated/reloaded; prefer existing snapshot for comparability, not heavyweight recovery approval.",
+      "status": "owner-directed current implementation",
+      "evidence": "User: ignore the budget; User: all the data is synthetic and generated using a script ... we can always regenerate the data and upload it again to the database"
+    },
+    {
+      "decision": "Owner corrects scope: AMA exercise means the whole programme; restart the continuing MVP with the same generated 60000-home stock and retained 980-case programme history. Small fixtures are tests only. Real enabled AI is mandatory in every new prototype, PoC and MVP.",
+      "status": "owner-directed implementation amendment; P07 active",
+      "evidence": "Current owner scope correction; recovered 60000-row register seed 4820260930 and 980-case snapshot SHA256 db96bd833a608351d9f4d94d769819dfa70a857bba0e9559d92edb9c1836a4ef; read-only retained Azure retrofit counts"
+    },
+    {
+      "decision": "Owner requires real AI enabled and demonstrated in every PoC/MVP. Prior deployment-only permission must not be interpreted as a preference for a workflow-only app. Activate bounded proposal/drafting tasks, preserving source controls and human approval.",
+      "status": "owner-authorized AI activation; verifying prerequisites",
+      "evidence": "User: Why is AI disabled? AI is the whole point of the exercise, every PoC and MVP must have AI enabled and demonstrate its capabilities."
+    },
+    {
+      "decision": "Owner explicitly requests real Azure SQL database and deployment of app and all assets. Reuse existing AMA resources, isolate fictional database/documents, preserve existing retrofit databases, keep model inference disabled and existing USD450/month cap. This authorizes deployment, not human acceptance or billable model activation.",
+      "status": "deployed and verified; source publication pending; full acceptance incomplete",
+      "evidence": "User authorized Azure deployment and whole-MVP replacement; E29/E30; revision ca-properwarm-mvp--0000011, immutable image 115d35582cad11492b40e06192a5c97f523725f0fe74ab2c99f5a8b77c05405a; actual SQL/Blob/browser/restart checks"
+    },
     {
       "decision": "Research reused: accepted PRD v0.12.0 and Decision 1 research provide design authority; targeted source inspection provides implementation evidence.",
       "status": "reused",
@@ -98,11 +123,6 @@
   ],
   "blockers": [
     {
-      "id": "live-decision-access",
-      "summary": "Catalog advertises Microsoft-Decision-1 version 1 GlobalStandard eligibility, but no deployed Decision model. Price metadata is null; processing terms, accrued costs, quota and billable permission unverified. Authorization request returned user unavailable.",
-      "resolution": "Owner/operator verifies Decision 1 deployment and terms/costs and authorizes bounded calls. Continue local implementation without live-success claims."
-    },
-    {
       "id": "full-workflow-and-acceptance",
       "summary": "Focused handoff/update/hazard/building/role/resident/service/privacy/native zoom and interruption/restore probes pass. Exact local core/scale invariants, all 36 versioned earlier-stage returns and scoped sign-off/form/milestone re-review pass. Paid/unpaid stale-milestone continuation is blocked without erasing history. Complete role/workflow/permission and quality/procurement/full milestone-version matrix, scale/cloud cold startup, scheduled RPO/operator reconciliation, screen-reader and human acceptance remain incomplete.",
       "resolution": "Finish feasible local evidence and preserve exact remaining acceptance gates without relaxing controls or the USD 450 cap."
@@ -110,7 +130,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Persist blocked full-plan handoff after exact-source CI success for d5bbd7984d44ac399a1dcbcdceccad695d16f2eb. Continue feasible quality/procurement/full milestone-version, role/workflow, scheduled recovery and screen-reader work; unavailable live/human prerequisites remain blockers. Keep PR #58 draft and original Review unchanged."
+    "action": "P07-T03 finish exact final deployment/restart evidence and publish generated-data iteration on existing draft PR58. Full role/workflow/human/model-value PRD acceptance remains open; no repeated critique/Review or automatic-session consent."
   },
   "prioritized_follow_ups": [
     {

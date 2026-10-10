@@ -176,10 +176,19 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
     def exercise_status(self, user: dict) -> dict:
         """Return navigation and analytical snapshots without granting a role."""
         from . import exercise, forecast
+        from .decision import InferenceConfig, inference_guard
         with self.lock:
             if not any(c.get("exercise") for c in self.cases.values()):
                 raise ValueError("Exercise mode is not active.")
             public = exercise.manifest()
+            programme_mode = os.environ.get("PW_PROGRAMME") == "1"
+            if programme_mode:
+                lead = next((c["id"] for c in self.cases.values() if not c["closed"]), next(iter(self.cases)))
+                for profile in public["profiles"]:
+                    profile["script"]["case"] = lead
+                    profile["script"]["next_action"] = "Open the generated programme case; keep existing history and independent review."
+                    actor = next((s for s in self.staff.values() if s["role"] == profile["role"]), None)
+                    profile["actor"] = actor["code"] if actor else "No existing matching staff identity"
             for workflow in public["workflows"]:
                 workflow["status"] = "Local controls and workflow navigation available; full workflow acceptance Not run."
             for profile in public["profiles"]:
@@ -196,18 +205,30 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                 stories.append(dict(id=c["id"], lifecycle=c["exercise"]["lifecycle"],
                                     owner=c["owner"], blockers=self.exercise_readiness(c),
                                     next_action="Open the same-home workbench; use separate authorized identities."))
+                if programme_mode and len(stories) == 10:
+                    break
+            guard = inference_guard("summary", "generative-drafting",
+                                    permissions=("evidence.read", "drafts.assist"),
+                                    source_kinds=("case_facts",), source_count=1, text_chars=1, field="narrative")
+            live = guard.allowed and self.ai.configured and not ai_tasks.workflow_only()
             return dict(fictional=True, fixture_version=exercise.FIXTURE_VERSION,
                         profiles=public["profiles"], workflows=public["workflows"], stories=stories,
-                        forecast={name: forecast.forecast(exercise.forecast_input(name))
+                        forecast={} if programme_mode else {name: forecast.forecast(exercise.forecast_input(name))
                                   for name in public["forecast_scenarios"]},
-                        analytical=dict(cohort="EX-ANALYTICAL-24", source_version="analytical-snapshot-1",
+                        analytical=(dict(cohort="Existing generated programme", cases=len(self.cases),
+                                         closed_records=sum(bool(c["closed"]) for c in self.cases.values()),
+                                         note="Generated existing records, not verified handover or company outcomes; see portfolio overview.")
+                                    if programme_mode else dict(cohort="EX-ANALYTICAL-24", source_version="analytical-snapshot-1",
                                         as_of=exercise.AS_OF, accepted_handovers="Suppressed",
                                         not_accepted="Suppressed", unknown="Suppressed",
                                         denominator="Suppressed (complementary totals)",
-                                        note="Separate constructed stakeholder snapshot; all cells/totals suppressed."),
-                        inference="Blocked unless separately authorized; templates/manual work are not model success.",
-                        validation="Local integration, eleven controlled role safe-block tasks, independent building/home and handoff/update browser fixtures executed. Full nine-workflow matrix, live inference and human acceptance remain Not run/Blocked.",
-                        budget="USD 450/month cap; unknown price blocks inference; no purchases or real payments.")
+                                        note="Separate constructed stakeholder snapshot; all cells/totals suppressed.")),
+                        inference=("Live AI configured for reviewed tasks; each request still requires source/spend checks and human review."
+                                   if live else f"AI unavailable or disabled ({guard.reason}); templates/manual work are not model success."),
+                        validation="Local integration and focused browser fixtures executed. Full nine-workflow and human acceptance remain incomplete; real provider success is recorded per output.",
+                        budget=("Owner removed the prior budget cap for this rebuild; model usage and reservations remain recorded. No real payments."
+                                if not InferenceConfig.from_env().spend_cap_enforced
+                                else "USD 450/month cap; unknown price blocks inference; no purchases or real payments."))
 
     @staticmethod
     def _exercise_form_role(user: dict, form_type: str) -> None:
@@ -681,7 +702,9 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                     sources = self._exercise_sources(c, kind)
                     route = None
                     if forms.SCHEMAS[kind]["funding"]:
-                        funding_source = next(s for s in sources if s["id"] == f"{case_id}-FUND")
+                        funding_source = next((s for s in sources if s["id"] == f"{case_id}-FUND"), None)
+                        if funding_source is None:
+                            raise ValueError("Record a same-home funding-route source before preparing a funding form.")
                         route = dict(scheme_id=forms.SCHEME_ID, route=kind, version=funding_source["version"],
                                      source_id=f"{case_id}-FUND")
                     if "route" in body and body["route"] != route:

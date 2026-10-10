@@ -7,6 +7,19 @@ applyTo: "**"
 
 ## Repository Purpose and Structure
 
+The AMA exercise is the whole learning programme; Case Study 48 is its
+customer use case. Prototypes, PoCs and MVPs are iterations of the same
+Proper Warm solution, not isolated exercise applications. Reuse the existing
+data generator and generated 60,000-home stock, preserving IDs, source dates,
+versions and existing programme history. Small constructed fixtures remain
+regression/evaluation assets, not replacements for the deployed MVP dataset.
+New iterations must enable and demonstrate real, bounded AI. Manual
+continuity is required, but templates, mocks and disabled AI do not satisfy
+delivery. Keep human approval, resident choice, safety and spending controls.
+Generated geography includes real map addresses with invented residents;
+keep private outputs out of Git and record provenance without claiming real
+company data or observed outcomes.
+
 This repository contains Markdown documentation for an evolving research
 project rather than executable software.
 

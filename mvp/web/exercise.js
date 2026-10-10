@@ -20,7 +20,7 @@ async function exerciseView(caseId) {
   try {
     const status = await api("/api/exercise");
     const banner = h("section", { class: "card", role: "status" },
-      h("h1", {}, "Proper Warm fictional exercise"),
+      h("h1", {}, me.programme ? "Proper Warm programme workbench" : "Proper Warm fictional exercise"),
       h("p", {}, "No live resident contact, safety judgement, submission or payment. Perspectives never change your signed-in authority."),
       h("p", {}, `${status.fixture_version}. ${status.inference} ${status.budget}`),
       h("p", {}, status.validation));
@@ -28,7 +28,7 @@ async function exerciseView(caseId) {
       h("ul", {}, status.profiles.map((profile) => h("li", {},
         `${profile.name}: ${profile.role === me.user.role ? "Matching role; actions still require independence." : "Access restricted; sign in with that role to act."} `,
         profile.script.next_action))));
-    const links = h("section", { class: "card" }, h("h2", {}, "Story homes (not the forecast cohort)"),
+    const links = h("section", { class: "card" }, h("h2", {}, me.programme ? "Generated programme cases (first ten; all cases remain in the case list)" : "Story homes (not the forecast cohort)"),
       status.stories.map((story) => h("article", {},
         h("h3", {}, h("a", { href: `#/exercise/${story.id}` }, story.id)),
         h("p", {}, `${story.lifecycle}. Owner: ${story.owner}. Next: ${story.next_action}`),
@@ -39,14 +39,16 @@ async function exerciseView(caseId) {
       if (location.hash === requestedRoute) show(banner, links, home);
       return;
     }
+
     const workflows = h("section", { class: "card" }, h("h2", {}, "Nine connected workflows"),
       status.workflows.map((workflow) => h("article", {},
         h("h3", {}, workflow.name), h("p", {}, `Owner: ${workflow.owner}. Expected: ${workflow.expected}`),
         workflow.id === "portfolio"
           ? h("button", { class: "alt", onclick: () => { const table = document.getElementById("exercise-forecast"); table.scrollIntoView(); table.focus(); } }, "Open forecast tables")
-          : h("a", { href: workflow.id === "procurement" ? "#/capacity" : "#/exercise/EX-HOME-001" }, "Open relevant work"),
+          : h("a", { href: workflow.id === "procurement" ? "#/capacity" : `#/exercise/${status.stories[0]?.id || ""}` }, "Open relevant work"),
         h("p", {}, `Script validation: ${workflow.status}`))));
-    const forecasts = h("section", { id: "exercise-forecast", class: "card", tabindex: "-1" }, h("h2", {}, "Constructed forecast, not live outcomes"),
+    const forecasts = h("section", { id: "exercise-forecast", class: "card", tabindex: "-1" }, h("h2", {}, me.programme ? "Existing generated portfolio" : "Constructed forecast, not live outcomes"),
+      me.programme && h("p", {}, h("a", { href: "#/overview" }, "Open programme overview"), " | ", h("a", { href: "#/stock" }, "Open the 60,000-home OpenStreetMap stock")),
       Object.entries(status.forecast).map(([name, result]) => h("details", {}, h("summary", {}, `${name}: ${result.status}`),
         h("p", {}, `As of ${result.as_of}; denominator ${result.denominator}; source versions ${JSON.stringify(result.source_versions)}. Held dates unknown; independent installation and QA pools.`),
         exerciseTable(result.tables.weekly, `${name} weekly forecast`),
@@ -158,6 +160,65 @@ async function exerciseView(caseId) {
       previewOutput);
     return card;
   }
+}
+
+async function programmeStockView() {
+  const query = h("input", { id: "stock-search", type: "search", maxlength: 200 });
+  const area = h("select", { id: "stock-area" });
+  const epc = h("select", { id: "stock-epc" });
+  const status = h("p", { role: "status", "aria-live": "polite" });
+  const rows = h("div", {});
+  const mapEl = h("div", { class: "leafmap", role: "region",
+    "aria-label": "OpenStreetMap of the filtered generated stock; circles show grouped homes." });
+  let offset = 0, map = null, markers = null, request = 0;
+  const previous = h("button", { class: "alt", onclick: () => { offset = Math.max(0, offset - 50); load(); } }, "Previous 50");
+  const next = h("button", { class: "alt", onclick: () => { offset += 50; load(); } }, "Next 50");
+  const form = h("form", { class: "row", onsubmit: (event) => {
+    event.preventDefault(); offset = 0; load();
+  } }, h("label", { for: query.id }, "Address or stock ID"), query,
+  h("label", { for: area.id }, "Local authority"), area,
+  h("label", { for: epc.id }, "Modelled EPC need"), epc,
+  h("button", { type: "submit" }, "Apply stock filters"));
+  show(h("h1", {}, "60,000-home stock"),
+    h("p", {}, "The existing generated portfolio, not 60,000 retrofit cases. OpenStreetMap locations are real map anchors; tenancy, condition and occupancy are synthetic, not verified facts about actual buildings or residents."),
+    form, status, mapEl, rows, h("div", { class: "row" }, previous, next));
+  async function load() {
+    const current = ++request;
+    status.textContent = "Loading the same stock filter for map and list...";
+    try {
+      const data = await api(`/api/stock?${qs({ q: query.value, area: area.value, epc_group: epc.value,
+        limit: 50, offset, zoom: map ? Math.min(12, Math.max(4, map.getZoom())) : 6 })}`);
+      if (current !== request || location.hash !== "#/stock") return;
+      if (!area.options.length) {
+        area.append(h("option", { value: "" }, "All local authorities"), ...data.areas.map((value) => h("option", { value }, value)));
+        epc.append(h("option", { value: "" }, "All EPC groups"), ...data.epc_groups.map((value) => h("option", { value }, value)));
+      }
+      status.textContent = `${data.total.toLocaleString()} matching homes; ${data.source.stock_count.toLocaleString()} stock homes and ${data.source.case_count} retained programme cases. Snapshot ${data.source.built}. Map groups reconcile to the filtered count.`;
+      rows.replaceChildren(exerciseTable(data.records.map((record) => ({
+        "Stock ID": record.synthetic_home_id, "Map address": record.map_address,
+        "Local authority": record.local_authority, "Modelled EPC need": record.epc_need_group_model,
+        "Modelled tenure": record.tenure_model, "Programme linkage": "Unverified; not inferred from proximity",
+      })), "Filtered stock: map and table share these filters"), h("p", {}, data.note));
+      previous.disabled = offset === 0;
+      next.disabled = offset + data.records.length >= data.total;
+      if (!map) {
+        map = L.map(mapEl).setView([55, -1.6], 6);
+        if (me.map && me.map.tiles) L.tileLayer(me.map.tiles, {
+          maxZoom: 12, referrerPolicy: "strict-origin-when-cross-origin", attribution: me.map.attribution,
+        }).addTo(map);
+        markers = L.layerGroup().addTo(map);
+        map.on("zoomend", () => load());
+      }
+      markers.clearLayers();
+      for (const cluster of data.clusters) {
+        L.circleMarker([cluster.lat, cluster.lon], { radius: Math.min(22, 4 + Math.log2(cluster.count + 1)) })
+          .bindTooltip(`${cluster.count} generated homes`).addTo(markers);
+      }
+    } catch (error) {
+      if (current === request && location.hash === "#/stock") status.textContent = error.message;
+    }
+  }
+  await load();
 }
 
 async function exerciseBuildingView(id) {
@@ -310,7 +371,7 @@ async function exerciseHome(id, data) {
             action: "review-narrative", form_id: result.form_id, record_id: result.record_id,
             review_action, reason: reason.value }) }, `${review_action} narrative (no field approval)`)));
       }),
-      h("p", {}, "Disabled, failed and no-match proposals require manual handling. Not reviewed output never approves a field. Real inference acceptance remains blocked.")),
+      h("p", {}, "Disabled, failed and no-match proposals require manual handling. Not reviewed output never approves a field. Provider success is recorded per output; human value and workload calibration remain separate.")),
     h("details", {}, h("summary", {}, "Financial events (export is never submission)"), exerciseTable(data.events, "Separate external fictional evidence")));
   return section;
 }

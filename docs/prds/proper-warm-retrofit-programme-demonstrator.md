@@ -77,6 +77,24 @@ data requires a separate release decision.
 
 ### Case and presentation framing
 
+The AMA exercise is the whole learning programme. This use case and the
+prototype/PoC/MVP are successive iterations of the existing Proper Warm
+solution, not a new isolated test application. Reuse the existing generator's
+60,000-home stock and existing 980-case programme snapshot/history, preserving
+identifiers, source versions and dates. Small story/forecast fixtures are
+regression and evaluation assets only. Portfolio stock and active programme
+cases have different denominators; show coverage and unknown/unresolved
+linkage rather than fabricate operating histories for all 60,000 homes.
+
+Real, enabled, bounded AI is a delivery requirement for every new iteration,
+not an optional demonstration switch. Decision 1 remains conditional at the
+individual task level: use it where task fit and evaluation support it, never
+as approval authority. At least useful source-bound AI assistance must be
+demonstrated on the generated-data MVP. Retain manual continuity and visible
+failed/abstaining outputs; disabled AI or templates alone do not meet delivery.
+The owner scope correction in the addendum supersedes interpretations that
+exclude the existing generated data or treat the 18-case seed as the product.
+
 For the capstone presentation, Proper North Homes is treated as the real
 customer case and attendees are addressed as its stakeholders in their actual
 roles. This presentation framing does not establish unverified company

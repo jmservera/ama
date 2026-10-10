@@ -65,6 +65,53 @@ delivery and unconditional Decision 1 task placement are superseded
 prospectively by the 2026-10-11 direction below; its historical budget is
 not silently reapplied to the owner-authorized #58 rebuild.
 
+### Owner Scope Correction: Continuing the Existing MVP
+
+"Exercise" means the entire AMA programme, not an isolated application or
+test. Case Study 48 is a use case within that programme. The owner requires
+the next Proper Warm MVP iteration to reuse the existing generator and its
+60,000-home stock rather than replace it with the 18-case regression seed.
+Keep stock, programme cases and analytical test cohorts distinct, but connect
+the product through explicit property identity and source lineage.
+
+Local recovery found the existing stock register contains exactly 60,000
+rows (manifest seed 4820260930, generated 2026-09-30). The generated MVP
+snapshot, built 2026-10-08, contains 980 programme cases and ten staff
+identities; the retained Azure `retrofit` database also contains 980 cases.
+These are different populations, not contradictory counts. The snapshot's
+SHA-256 is
+`db96bd833a608351d9f4d94d769819dfa70a857bba0e9559d92edb9c1836a4ef`.
+The private generator/output remains under `support/synthetic-data/` and
+`mvp/data/`; do not commit its address or resident payloads. Its geography
+uses real OpenStreetMap map addresses with invented residents. This is
+synthetic operating data, not evidence of actual occupiers or company results.
+
+Every new prototype, PoC and MVP must demonstrate enabled, bounded real AI
+on realistic generated inputs. Apply Decision 1 to appropriate classification,
+candidate selection and evidence-support tasks; apply generative models to
+source-bound drafts and summaries. Demonstrate the useful proposal, its
+sources, uncertainty, human-review boundary and measured result. Templates
+and fake transports remain tests/manual continuity, not a substitute for AI.
+The owner has separately authorized implementation, Azure replacement and
+bounded live inference; the earlier baseline approval paragraph below
+describes that earlier approval only. The USD 450/month cap, consent,
+professional review and prohibition on real sending/submission/payment remain.
+
+The 18-case Azure replacement was a scope error, not the completed MVP
+iteration. Preserve its source-bound controls and regression evidence while
+restarting delivery against the retained generated stock and programme
+history. Exact stock-to-case linkage, full-stock UI/runtime and Decision 1
+provider success must be verified, not inferred from the small fixture or
+the earlier artificial scale workload.
+
+Subsequent owner direction removes the prior USD 450 budget constraint for
+this rebuild and confirms synthetic data may be regenerated and reloaded.
+Reuse the current snapshot first for comparability; do not add heavyweight
+recovery approvals for disposable scripted state. Retain model usage/cost
+telemetry, bounded inputs/tasks, meaningful human review and the prohibition
+on real resident contact, submission and payment. Earlier budget figures
+below remain historical planning assumptions, not this invocation's limit.
+
 Proper North Homes is the case customer, not an accessible real organisation
 from which this exercise can obtain missing delegations or operating data.
 The owner approved the following consolidated assumptions and falsifiable

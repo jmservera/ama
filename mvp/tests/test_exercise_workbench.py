@@ -9,7 +9,7 @@ import subprocess
 import sys
 import threading
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 import urllib.error
 import urllib.request
 import uuid
@@ -1095,6 +1095,61 @@ os._exit(23)
             self.store.db.execute("UPDATE cases SET body=? WHERE id=?", ('{"id":"EX-HOME-001"}', HOME))
         with self.assertRaises(SystemExit):
             open_store()
+
+    def test_azure_exercise_startup_rejects_incompatible_remote_data_before_migration(self):
+        from properwarm_mvp import exercise
+        env = dict(PW_EXERCISE="1", PW_STORE="mssql", PW_STATE=str(self.root),
+                   PW_SQL_SERVER="fictional.database.windows.net", PW_SQL_DATABASE="exercise",
+                   PW_SQL_AUTH="token", PW_SQL_TOKEN="fake-only")
+        for tables, rows, meta in (
+            (["foreign_table"], [], {}),
+            (["cases", "meta", "staff", "audit", "audit_head"], [(HOME, '{"id":"wrong"}')], {}),
+            (["cases", "meta", "staff", "audit", "audit_head"],
+             [(c["id"], json.dumps(c)) for c in exercise.dataset()["cases"]], {"as_of": "2026-10-09"}),
+            (["cases", "meta", "staff", "audit", "audit_head"],
+             [(c["id"], json.dumps(c)) for c in exercise.dataset()["cases"]],
+             {"as_of": exercise.AS_OF, "exercise_recovery_pending": "Supplied unresolved event"}),
+        ):
+            conn = MagicMock()
+            conn.execute.side_effect = [
+                MagicMock(fetchall=lambda: [(name,) for name in tables]),
+                MagicMock(fetchall=lambda: rows),
+                MagicMock(fetchall=lambda: list(meta.items())),
+            ]
+            with patch("properwarm_mvp.mssqlstore._Conn", return_value=conn), \
+                    patch("properwarm_mvp.mssqlstore.MssqlStore") as constructor:
+                with self.assertRaises(SystemExit):
+                    open_store(env)
+                constructor.assert_not_called()
+            conn.raw.close.assert_called_once()
+
+    def test_azure_exercise_startup_uses_explicit_blob_env_and_frozen_date(self):
+        from properwarm_mvp import exercise
+        from properwarm_mvp.documents import AzureBlobDocumentStore
+        env = dict(PW_EXERCISE="1", PW_STORE="mssql", PW_STATE=str(self.root),
+                   PW_SQL_SERVER="fictional.database.windows.net", PW_SQL_DATABASE="exercise",
+                   PW_SQL_AUTH="token", PW_SQL_TOKEN="fake-only", PW_DOC_STORE="azure-blob",
+                   PW_BLOB_ACCOUNT_URL="https://fictional.blob.core.windows.net",
+                   PW_BLOB_CONTAINER="exercise-evidence", PW_BLOB_CLIENT_ID="fictional-client")
+        for existing in (False, True):
+            conn, remote = MagicMock(), MagicMock()
+            conn.execute.side_effect = [
+                MagicMock(fetchall=lambda: [(name,) for name in
+                    (["cases", "meta", "staff", "audit", "audit_head"] if existing else [])]),
+                MagicMock(fetchall=lambda: [(c["id"], json.dumps(c)) for c in exercise.dataset()["cases"]]),
+                MagicMock(fetchall=lambda: [("as_of", exercise.AS_OF)]),
+            ]
+            with patch("properwarm_mvp.mssqlstore._Conn", return_value=conn), \
+                    patch("properwarm_mvp.mssqlstore.MssqlStore", return_value=remote):
+                self.assertIs(open_store(env), remote)
+            self.assertEqual(remote.as_of, exercise.AS_OF)
+            self.assertIsInstance(remote.docstore, AzureBlobDocumentStore)
+            self.assertEqual(remote.docstore.client_id, "fictional-client")
+            if existing:
+                remote._meta_set.assert_not_called()
+            else:
+                remote._meta_set.assert_called_once_with("as_of", exercise.AS_OF)
+            conn.raw.close.assert_called_once()
 
     def test_http_shortcuts_denied_and_scoped_read_available(self):
         server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(self.store, "fictional-test-password")))

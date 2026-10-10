@@ -13,6 +13,30 @@ ms.date: 2026-10-10
 
 ## Execution Status
 
+P07 generated-data restart implemented and deployed on the existing MVP URL.
+E31/E32 record actual 60,000-stock/980-case SQL, browser and real AI proof.
+Decision provider access is resolved by its published services endpoint;
+normalized candidate output remains Not reviewed. The generated snapshot,
+retained history/documents and original OSM geography are reused. Current
+owner budget override disables only cap enforcement, not task/source controls.
+Full accepted PRD and human/model-value gates remain incomplete.
+Final image 0b6b04395c905c6dd6a51520ba8b91d702b4b9b1c6499a4276ed435956307299,
+revision18. Actual restart preserves exact 980-case hash, 60,000 stock count,
+audit head and five AI reservation/source metadata records. Original generated
+document download succeeds. Source publication and current-head CI pending.
+
+Owner-directed scope restart: "exercise" means the whole AMA programme.
+The 18-case Azure replacement was not the requested continuing MVP.
+Recovered private stock: 60,000 rows, seed 4820260930, generated 2026-09-30.
+Recovered MVP JSON: 980 cases, ten staff, built 2026-10-08, SHA-256
+db96bd833a608351d9f4d94d769819dfa70a857bba0e9559d92edb9c1836a4ef.
+Read-only Azure `retrofit` check confirms 980 retained cases and ten staff.
+P07 restarts delivery using those existing assets, not a regenerated seed.
+Historical fixtures and earlier validation remain valid only for their
+recorded boundary. Do not repeat critique/Review or claim full completion.
+Current real generation has succeeded; Decision 1 still fails authentication
+on healthy revision 13 despite confirmed system-identity scoped assignment.
+
 Partial against the complete accepted PRD. P01-P04 complete. P05 has a connected
 local home-to-financial-closure implementation and later financial/handoff/update
 corrections; the complete fixture/role acceptance matrix remains outstanding.
@@ -463,3 +487,77 @@ Rubric `38069962358` was pending at handoff; no score or acceptance inferred.
 This later handoff commit is separate from the validated source snapshot.
 Mode remains manual, automatic session stopped, Implement blocked on incomplete
 full-plan gates. No second Review, merge or full-completion claim.
+
+## Owner-Authorized Azure SQL and Complete Asset Deployment
+
+Owner now explicitly authorizes deployment. Existing AMA SQL servers,
+registries, Blob storage and Container App already exist, but the deployed
+MVP is an older non-exercise image using a different retrofit database.
+Implement isolated MSSQL/Blob exercise startup, create a separate fictional
+database/evidence container, publish all image/static assets and verify actual
+managed-identity persistence plus live browser access. Preserve prior data and
+secret references; keep AI off, bounded compute and USD450 cap. This is a
+confirmed scope addition, not inferred permission or operational acceptance.
+Original critique/Review stay historical; missing human/model gates remain.
+
+Implemented MSSQL exercise preflight before schema migration/seed, rejecting
+foreign schema/case identities, wrong frozen date and pending recovery.
+Explicit environment selects Blob and preserves local fixture checks.
+Two added mocked startup contracts plus full regression pass: 384 tests,
+26 live SQL skips, 189.834s. Missing local SQL driver/runtime libraries were
+handled with the pinned deployment container, not changing dependencies.
+
+Created `properwarm-exercise` on the existing `sql-warm-dev-spw6p` server:
+Basic/5 DTU/2 GB, actual ledger enabled, seven-day local backup retention.
+Created non-public `exercise-evidence` on `stwarmdevspw6p`. Applied validated
+`infra/exercise.bicep` as deployment `properwarm-exercise-data`.
+Existing API identity uses Entra SQL and Blob RBAC; first bootstrap DDL grant
+was removed and the final revision restarted with only SQL datareader/writer.
+Old retrofit databases were preserved despite owner permission to replace MVP.
+
+Built/pushed complete image and replaced the old app, preserving existing
+password/session-key secret references. Image is digest-pinned to
+`115d35582cad11492b40e06192a5c97f523725f0fe74ab2c99f5a8b77c05405a`;
+revision `ca-properwarm-mvp--0000011` is healthy, sole active revision,
+100% HTTPS traffic, maximum one replica. `PW_STATE=/state`; `PW_DATA` and
+`AI_ENDPOINT` cleared, `PW_AI=off`. No model calls or tenant user-auth setup.
+
+Nine finite live E29 checks include authenticated browser form creation,
+six actual source parser controls preserving unresolved normalized D/E values,
+building/mobile navigation, all eleven web-file hashes and managed-identity
+document upload/download. SQL confirms eighteen fictional cases and an
+APPEND_ONLY_LEDGER_TABLE audit. Exact all-case hash/audit head/frozen date
+equality across actual restart and Blob byte hashes pass. Final digest-pinned
+revision restarts successfully after bootstrap DDL removal.
+
+First deployment correctly refused `/tmp/state`; corrected to `/state`.
+Initial CLI ledger boolean was rejected; used documented Enabled setting.
+Browser probe assertions initially confused raw whitespace with normalized
+values and an outdated draft version; corrected to exact value/conflict
+contract/current version. A later snapshot assertion crossed an explicitly
+audited document download: case bytes were unchanged, audit had one expected
+download event. Fresh baselines taken after download give exact restart
+equality, before performing the next audited download. No control/test
+weakening or lost-event fallback. An obsolete-revision deactivate attempt
+found it already automatically deactivated; final list contains only revision11.
+
+Existing development network configuration is not production isolation.
+Basic SQL and bounded replica minimize incremental cost, not a verified total
+subscription invoice/cap result. No cloud load/cold-start/RPO, human UX,
+actual Decision/generation or full-PRD acceptance inferred. All 115 requirement
+rows remain distinct, original Review unchanged, P05/P06 incomplete.
+Owner-requested credentials were displayed only on screen, never in code,
+deployment evidence or repository memory. Local browser/container test
+processes are stopped; the authorized Azure service remains running.
+
+## Owner-Required AI Activation
+
+Owner explicitly rejected permanently disabled AI. Decision1 deployment now
+exists, official pricing retrieved and resource-group cost query succeeds
+(USD23.0986711881913 MTD); initial subscription cost query denied and requested
+cost-bound answer unavailable, resolved by legitimate scoped cost evidence.
+Proceed with conservative USD400 spend-plus-budget reserve and one-cent
+maximum-call upper liability, not reporting that reserve as actual spend.
+Write boundary adds durable MSSQL call reservations, explicit model metadata
+activation, live provider/UX probes and direct documentation/evidence updates.
+Keep human approval and safety/ranking/consent/eligibility controls unchanged.

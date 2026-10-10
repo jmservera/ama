@@ -28,6 +28,9 @@ def _t(n, col="NVARCHAR"):
 TABLES = {
     "meta": f"CREATE TABLE meta ([key] {_t(64)} PRIMARY KEY, value NVARCHAR(MAX) NOT NULL)",
     "staff": f"CREATE TABLE staff (email {_t(200)} PRIMARY KEY, body NVARCHAR(MAX) NOT NULL)",
+    "stock": f"""CREATE TABLE stock (
+  id {_t(64)} PRIMARY KEY, area {_t(100)}, epc_group {_t(100)}, address {_t(400)},
+  lat FLOAT NOT NULL, lon FLOAT NOT NULL, body NVARCHAR(MAX) NOT NULL)""",
     "cases": f"""CREATE TABLE cases (
   id {_t(64)} PRIMARY KEY, rowversion BIGINT NOT NULL DEFAULT 1, seq BIGINT NOT NULL,
   stage {_t(100)}, area {_t(100)}, wave {_t(50)}, owner_code {_t(50)},
@@ -55,7 +58,8 @@ _PROGRESS = re.compile(r"(?i)\bcommunication link\b|connection (?:is )?(?:dead|c
 
 def _indexes():
     """The SQLite INDEXES script as idempotent T-SQL (filtered index for the partial one, brackets not needed)."""
-    out = []
+    out = ["IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name=N'ix_stock_area_epc' "
+           "AND object_id=OBJECT_ID(N'stock')) CREATE INDEX ix_stock_area_epc ON stock (area, epc_group, id)"]
     for line in INDEXES.splitlines():
         m = re.match(r"CREATE INDEX IF NOT EXISTS (\w+) ON (\w+) \((.*?)\)(?: WHERE (.*))?;$", line)
         if m:

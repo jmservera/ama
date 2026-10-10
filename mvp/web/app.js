@@ -64,14 +64,16 @@ async function start() {
   if (contractor) nav.prepend(h("a", { href: "#/", "data-dyn": "1" }, "My jobs"));
   else if (isManager()) nav.querySelector("a[href='#/funding']").after(h("a", { href: "#/capacity", "data-dyn": "1" }, "Capacity and work orders"), h("a", { href: "#/closed", "data-dyn": "1" }, "Closed cases"));
   nav.hidden = false;
+  if (me.programme && !contractor) nav.prepend(h("a", { href: "#/stock", "data-dyn": "1" }, "60,000-home stock"));
   if (me.exercise) {
-    nav.prepend(h("a", { href: "#/exercise", "data-dyn": "1" }, "Exercise workbench"));
-    if (!location.hash || location.hash === "#/") location.hash = "#/exercise";
+    nav.prepend(h("a", { href: "#/exercise", "data-dyn": "1" }, me.programme ? "Programme workbench" : "Exercise workbench"));
+    if (!me.programme && (!location.hash || location.hash === "#/")) location.hash = "#/exercise";
   }
   route();
 }
 
 function route() {
+  if (me.programme && location.hash === "#/stock") return programmeStockView();
   if (me.exercise && (location.hash === "#/exercise" || location.hash.startsWith("#/exercise/"))) {
     if (location.hash.startsWith("#/exercise/building/")) {
       return exerciseBuildingView(location.hash.split("/")[3]);

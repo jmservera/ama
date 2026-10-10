@@ -11,6 +11,21 @@ Proposed, non-production infrastructure. The design and its rationale are in
 
 ## Layout
 
+The current owner-directed MVP iteration reuses the existing generated
+60,000-home stock and 980-case programme. It does not use the 18-case
+regression database as its product baseline. Azure SQL `properwarm-programme`
+was copied from the existing `retrofit` database; the application imports
+the private stock through `properwarm_mvp.programme` and uses the existing
+`evidence` Blob container. See the MVP guide for reproducible commands,
+source fingerprints and current image. `exercise.bicep` records the earlier
+small-fixture database/container. `decision-access.bicep` deploys Decision 1
+and grants only provider inference access to the app identity.
+
+The owner removed the previous budget cap for this rebuild. Cost telemetry
+remains; real AI and the previous OpenStreetMap geography are required.
+This is still synthetic-data demonstration infrastructure, not production
+authentication, network isolation, regulatory compliance or human acceptance.
+
 * `main.bicep`: resource group scope entry point wiring all modules.
 * `main.bicepparam`: dev parameters; replace the placeholder alert email and Entra group.
 * `modules/`: identity, network (VNet, NSGs, private DNS), monitoring (Log Analytics, App Insights, AMPLS), Key Vault, storage, registry, SQL, Foundry, Container Apps and the generic private endpoint.

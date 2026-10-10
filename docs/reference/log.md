@@ -1749,3 +1749,49 @@ metadata when the knowledge base was created.
   Updated guide, index and requirement evidence; no full-requirement upgrade.
   Quality/procurement dependency and complete milestone-version matrices,
   scheduled recovery, live-model and human acceptance remain open.
+
+## [2026-10-10] update | Deploy connected exercise to Azure SQL and Blob
+
+* Owner explicitly authorized real Azure deployment and replacement of the
+  whole MVP. Deployed the complete exercise image/static assets on the existing
+  UK South Container App, backed by a separate Basic Azure SQL ledger database
+  and non-public Blob container. Prior retrofit databases remain untouched.
+* Exercise startup now accepts MSSQL/azure-blob with fixture identity,
+  frozen-date and pending-recovery checks before migration/seed. Managed
+  identity handles SQL/Blob; bootstrap DDL permission was removed after setup.
+* Live HTTPS/browser checks reproduce form creation/source conflict, building
+  navigation and mobile reflow. All eleven bundled web hashes and uploaded
+  document bytes match. Actual revision restart retains every SQL case, audit
+  head, unresolved conflict and Blob document. Image is digest-pinned.
+* Filed database/container IaC in `infra/exercise.bicep` and deployment details
+  in the MVP guide and requirement register. Regression: 384 tests, 26 live
+  SQL skips; separate actual Azure persistence checks supply cloud evidence.
+  AI remains disabled; no cloud load, human acceptance, total-cost compliance
+  or full-PRD acceptance is inferred.
+
+## [2026-10-10] update | Restore generated-data MVP lineage and live AI
+
+* Owner clarified that the exercise is the whole AMA programme, not an
+  isolated test app. New prototypes/PoCs/MVPs must reuse the existing data
+  generator and stock and demonstrate enabled real AI. Updated addendum,
+  BRD, PRD, guides, reference index, owner-requested memory and repository
+  instructions; the initial case study and historical evidence are unchanged.
+* Recovered exactly 60,000 original stock rows and the 980-case generated
+  snapshot; copied retained Azure SQL history and imported stock separately.
+  Preserved original case content/audit; map anchors are real OpenStreetMap
+  geography with synthetic attributes, not occupier/landlord facts. No private
+  record payloads committed. Scripted state may be regenerated/reloaded.
+* Added SQL-paged stock/filter/map reconciliation and generated-case
+  source-bound form assistance. Decision 1 succeeds on the published Foundry
+  services endpoint; the generic cognitive-services host failed. Provider
+  confidence is explicitly validated; normalized probabilities still govern
+  proposals. Live generation produced a source-verified summary.
+* Owner removed the prior budget constraint for this rebuild. Explicit cap
+  override retains authorization, input bounds, SQL liabilities and token
+  telemetry. Human authority, resident choice and no-real-payment controls
+  remain. Historical disabled-AI and cost-cap entries are not current scope.
+* Actual browser stock paging/filters, OpenStreetMap tiles, 390px reflow,
+  expanded Decision provenance and all eleven web asset hashes pass.
+  Regression: 393 tests, 26 live MSSQL skips. Separate actual MSSQL checks
+  reconcile 60,000 stock rows and filtered map/list. Full-PRD/human/model-value
+  acceptance remains incomplete; no repeated Review or accepted-outcome claim.

@@ -1,0 +1,66 @@
+{
+  "classification": "Actual synthetic-data Azure/browser/model checks, not company outcomes or full PRD acceptance",
+  "stock_rows": 60000,
+  "programme_cases": 980,
+  "open_cases": 443,
+  "closed_generated_records": 537,
+  "stock_sha256": "c8d2a9979e242b9407ac0d4a5679bfd6cc376e01b8043b32088fb2c9c60c4ebf",
+  "programme_sha256": "db96bd833a608351d9f4d94d769819dfa70a857bba0e9559d92edb9c1836a4ef",
+  "original_snapshot_built": "2026-10-08",
+  "database": "properwarm-programme",
+  "documents_container": "evidence",
+  "original_case_fields_and_history_retained": true,
+  "original_audit_entries": 4,
+  "original_audit_head": "8030dc202f65c25f5e8931034cd60bf6a515bb3f68dc76efc4a3133a4b5eb3c1",
+  "original_ledger_intact": true,
+  "actual_mssql_stock_and_filtered_map_reconciliation": true,
+  "decision": {
+    "provider": "Microsoft Foundry",
+    "model": "microsoft-decision-1",
+    "endpoint_host": "aif-warm-dev-yu44m.services.ai.azure.com",
+    "status": "proposed",
+    "reason": "thresholds_met",
+    "validated": true,
+    "approval": "Not reviewed",
+    "input_tokens": 249,
+    "output_tokens": 1,
+    "scope": "Same-generated-case EPC field candidate; no field review, approval or source write"
+  },
+  "generation": {
+    "deployment": "standard",
+    "model": "gpt-4.1-mini",
+    "source": "ai",
+    "provider_success": true,
+    "verified": true,
+    "scope": "Source-bound generated-case catch-up summary; no external action or human acceptance"
+  },
+  "browser": {
+    "sql_page_rows": 50,
+    "paging": true,
+    "local_authority_filter": true,
+    "osm_tiles": true,
+    "reflow_390": true,
+    "expanded_decision_provenance_not_reviewed": true,
+    "javascript_errors": 0,
+    "exact_web_asset_hashes": 11
+  },
+  "regression": {"tests": 393, "live_mssql_skips": 26, "result": "OK"},
+  "final_revision": "ca-properwarm-mvp--0000018",
+  "final_image": "sha256:0b6b04395c905c6dd6a51520ba8b91d702b4b9b1c6499a4276ed435956307299",
+  "restart": {
+    "exact_case_and_metadata_equality": true,
+    "stock": 60000,
+    "cases": 980,
+    "retained_ai_reservations": 5,
+    "case_hash": "d2053e6a795cb4fca4d83c68c5402a305883902bfb3f86fbb0dd3885e0193dd3",
+    "metadata_hash": "2ace60316505afae3cfcc5ae7999ec3dea2436f2ace55165d93888fea0af8e6e",
+    "audit_entries": 24,
+    "audit_head": "99f2d3f6b70d3f0ba523cedb0449215a4b48408f49e079eca7534ff78f6260dd"
+  },
+  "original_generated_document_download": {
+    "bytes": 111,
+    "sha256": "47ed637f1787c6e6b68b7bcbe752d0b3ec2f52502cba9d2f2d3c923792cdab3e"
+  },
+  "budget": "Owner explicitly removed prior cap; input/task permissions, usage and SQL liability reservations retained",
+  "remaining": ["Unverified stock-to-case property linkage", "Full PRD runtime/workflow acceptance", "Human UX and paired-effort/model-value evaluation"]
+}

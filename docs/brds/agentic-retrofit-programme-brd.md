@@ -34,6 +34,16 @@ real AI, real SQL and actual Azure deployment in each subsequent accepted
 application exercise build. The historical PRD v0.12.0 acceptance does not
 approve this amendment or operational use.
 
+The AMA exercise is the whole learning programme. This customer use case and
+its prototypes/PoCs/MVPs are iterations of the existing Proper Warm solution,
+not separate test applications. The owner directs reuse of the existing
+generated 60,000-home stock and 980-case programme data, with enabled real AI
+in each new iteration. Small fixtures remain tests; model assistance never
+grants resident, professional, safety or financial approval. Scripted
+operating data can be regenerated/reloaded. The latest owner instruction
+removes the prior budget constraint for the current rebuild, not governance
+for real operations. See the scope correction in the addendum.
+
 | Field | Value |
 | --- | --- |
 | Initiative | Agentic Retrofit Programme Delivery |

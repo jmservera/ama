@@ -13,6 +13,21 @@ ms.topic: reference
 
 ## Purpose
 
+The AMA exercise refers to the whole learning programme, not an isolated test
+application. The owner requires future prototype/PoC/MVP iterations to reuse
+the existing data generator and generated stock, and demonstrate enabled
+bounded AI against realistic generated inputs.
+
+This public operating pack is not the full stock register. The private
+60,000-home geography register (seed 4820260930, generated 2026-09-30) and
+the existing 980-case MVP snapshot (built 2026-10-08) remain separate linked
+data assets, with different denominators. The private MVP generator uses real
+OpenStreetMap map addresses with invented residents; the warning above
+applies to this public pack, not to every geographic anchor in that private
+output. Keep private outputs out of Git, preserve versions/identifiers/history,
+and report missing stock-to-case linkage explicitly. Small constructed
+regression/forecast fixtures do not replace the generated-data MVP.
+
 This pack gives the Proper Warm discovery a realistic body of operating
 records to analyse. It models a competent, busy retrofit team one year into
 delivery. The team knows the programme is behind plan and suspects several

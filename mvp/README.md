@@ -7,6 +7,80 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 
 ## Accepted fictional exercise workbench
 
+The AMA exercise is the whole learning programme; this MVP is its continuing
+Proper Warm customer solution, not an isolated test. The owner has directed
+restarting the iteration with the existing 60,000-home generated stock and
+retained 980 programme cases. `mvp/data/properwarm.json` is the existing
+2026-10-08 snapshot, not a newly generated replacement. The stock register
+and generator live in the owner's private `support/synthetic-data/` area;
+real map addresses have invented residents and must not be committed.
+New prototypes, PoCs and MVPs must demonstrate enabled real AI on that
+generated data, with source provenance and human review. The configuration
+and 18-case launch below are regression fixtures, not the deployment baseline.
+
+### Current continuing MVP
+
+The deployed MVP now uses `properwarm-programme`, a copy of the retained
+980-case `retrofit` database with its original case fields, history and audit
+head. Exactly 60,000 original generated stock rows are imported separately.
+The generated data is disposable and can be reloaded, not an operational
+backup requirement. The stock and programme populations are distinct:
+443 cases are open and 537 closed in the existing snapshot; neither generated
+closure nor map proximity establishes verified handover or property linkage.
+
+Open [the stock map](https://ca-properwarm-mvp.livelybay-cc3a435c.uksouth.azurecontainerapps.io/#/stock)
+or [the programme workbench](https://ca-properwarm-mvp.livelybay-cc3a435c.uksouth.azurecontainerapps.io/#/exercise).
+Sign in with the existing generated staff identities and configured shared
+demo password, not the `ex-*` regression accounts. The current image is
+`crpropermvp7569.azurecr.io/properwarm@sha256:0b6b04395c905c6dd6a51520ba8b91d702b4b9b1c6499a4276ed435956307299`,
+revision `ca-properwarm-mvp--0000018`.
+
+Real Microsoft Decision 1 selected a generated case's source-bound EPC
+candidate, retaining probabilities, input version, source IDs, token usage
+and `Not reviewed`. Real GPT-4.1-mini produced a citation-verified case
+summary. Neither action approved a field, works, funding or resident choice.
+The scoring endpoint is
+`https://aif-warm-dev-yu44m.services.ai.azure.com/providers/microsoft/v1/systemone`;
+the generic `cognitiveservices.azure.com` host returned authentication
+failure for this provider. The optional provider `confidence` field is
+validated, not substituted for selection probability thresholds.
+
+`#/stock` shows SQL pages of 50 homes, local-authority/EPC/search filters and
+OpenStreetMap/Leaflet grouped markers reconciled to the same filter. Original
+OSM anchors/attribution are retained; no simulated tenure or occupant is
+asserted as a fact about the real building. Programme case links remain
+explicitly unverified instead of being inferred from proximity.
+
+The owner removed the prior budget constraint for this rebuild.
+`PW_INFERENCE_ENFORCE_CAP=false` disables only the spend-cap gate;
+task authorization, source bounds, per-call liability reservations and actual
+model usage remain. The earlier USD450 configuration below is historical.
+
+### Reproduce the generated-data import
+
+With operator Entra access to a dedicated SQL database, mount the existing
+private generated data read-only and run:
+
+```bash
+PW_SQL_SERVER=<server>.database.windows.net PW_SQL_DATABASE=properwarm-programme \
+PW_SQL_AUTH=default PW_DOC_STORE=local \
+python3 -m properwarm_mvp.programme --state /state \
+  --data /data/properwarm.json --stock /data/private-north-east-stock-register.csv
+```
+
+For this deployment, the original database was copied using
+`az sql db copy -g ama -s sql-warm-dev-spw6p -n retrofit --dest-name properwarm-programme --service-objective GP_S_Gen5_2`.
+Retained documents use the existing non-public `evidence` Blob container.
+Set `PW_PROGRAMME=1`, `PW_EXERCISE=1` (bounded controls), `PW_AI=on`,
+`PW_STORE=mssql`, `PW_SQL_DATABASE=properwarm-programme`,
+`PW_DOC_STORE=azure-blob`, `PW_BLOB_CONTAINER=evidence`, and the Foundry
+task/access settings. Startup requires reviewed `PW_PROGRAMME_SHA256` and
+`PW_STOCK_SHA256` matching imported metadata. An incompatible database is
+not silently reseeded. A deliberately regenerated dataset requires a new
+reviewed import, not an artificial claim of identical source bytes.
+
+### Historical regression fixture
+
 The accepted PRD v0.12.0 exercise has a separate local startup and connected
 workbench at `#/exercise`. It does not use the private-geography seed or claim
 operational acceptance. Create a fresh state directory under this repository,
@@ -28,6 +102,76 @@ Use the server's development sign-in password with the fictional staff emails
 `ex-bsl-01@example.test` and `ex-con-01@example.test`.
 These are distinct exercise identities, not real delegated officers.
 Perspective navigation never changes the signed-in role.
+
+### Deployed Azure exercise
+
+On 2026-10-10 the owner authorized replacing the previous deployed MVP.
+The connected exercise is available at
+[Proper Warm](https://ca-properwarm-mvp.livelybay-cc3a435c.uksouth.azurecontainerapps.io/#/exercise).
+Use the existing configured demo password and the fictional staff identities
+above; no password is published in the repository. This remains shared demo
+authentication, not production Entra user authentication.
+
+The replacement uses the existing UK South Container App, SQL server and
+storage account. `properwarm-exercise` is a separate Basic (5 DTU, 2 GB) Azure
+SQL ledger database with seven-day backup retention.
+`exercise-evidence` is a non-public Blob container. The old `retrofit`
+databases were not migrated or overwritten. All browser JavaScript, CSS,
+Leaflet assets and runtime/evaluation files are packaged in the complete
+container image; fixture source bytes/forms are retained in SQL, and uploaded
+document bytes use Blob rather than ephemeral app disk.
+
+The deployed image is pinned to
+`crpropermvp7569.azurecr.io/properwarm@sha256:115d35582cad11492b40e06192a5c97f523725f0fe74ab2c99f5a8b77c05405a`.
+This digest records the historical AI-disabled replacement, not the current
+delivery target. The latest corrected AI-enabled revision is
+`ca-properwarm-mvp--0000013`, image SHA-256
+`756793ff0fa073de3bac34ebbb9c85046edcaf870a60b95b2aafe7bf1b54e61a`.
+GPT-4.1-mini has produced a source-verified summary; message generation
+succeeded but its citation verification did not pass. Decision 1 is deployed
+but live calls still return authentication failure despite the scoped role
+assignment. No Decision 1 success or full MVP completion is claimed.
+Only one replica is permitted. The app uses
+the existing user-assigned identity for SQL/Blob, with `db_datareader` and
+`db_datawriter` runtime grants. Bootstrap temporarily required `db_ddladmin`;
+it was removed after initialization, and the next image revision started
+successfully without it. Future schema migrations require an operator to
+grant/revoke the necessary DDL permission, not silent permission escalation.
+
+[Exercise infrastructure](../infra/exercise.bicep) reproduces the separate
+database/container without changing the old databases:
+
+```bash
+az deployment group create -g ama -n properwarm-exercise-data \
+  --template-file infra/exercise.bicep
+```
+
+Historical regression-only configuration (do not use as the new MVP baseline):
+`PW_EXERCISE=1`, `PW_DATA=` (cleared),
+`PW_STORE=mssql`, `PW_SQL_SERVER=sql-warm-dev-spw6p.database.windows.net`,
+`PW_SQL_DATABASE=properwarm-exercise`, `PW_SQL_AUTH=msi`,
+`PW_SQL_CLIENT_ID` set to the existing API identity's client ID,
+`PW_STATE=/state`, `PW_AS_OF=2026-10-10`, `PW_DOC_STORE=azure-blob`,
+`PW_BLOB_ACCOUNT_URL=https://stwarmdevspw6p.blob.core.windows.net`,
+`PW_BLOB_CONTAINER=exercise-evidence`, `PW_BLOB_CLIENT_ID` set to that same
+identity. Real AI now uses `PW_AI=on` and the configured Foundry endpoint,
+approved-task/access flags and SQL-backed liability reservations.
+Do not disable AI to present this fixture as a completed new MVP.
+Preserve existing password
+and session-key secret references. `/tmp` seed paths are intentionally refused.
+Use `az acr login`, build/push the whole `mvp/` Docker context, and update the
+Container App to the resulting immutable image digest.
+
+Live checks verified HTTPS sign-in, all eleven web-file hashes, actual browser
+form creation/parsing with unresolved D/E conflict, building navigation,
+390px reflow, managed-identity document upload/download and exact SQL
+case/audit-head plus Blob-byte retention across a revision restart.
+This is deployment evidence, not Azure load testing, scheduled recovery
+reconciliation, human UX, production security or actual-model acceptance.
+Existing development network access settings were reused, not tightened into
+a production network boundary. Basic SQL and one bounded app replica reduce
+incremental spend; total subscription costs still require operator review
+against the USD 450 monthly cap.
 
 * Two story homes are separate from sixteen forecast homes. Story approvals,
   resident choice, awards and cash start absent. Analytical readiness is not

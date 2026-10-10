@@ -62,6 +62,15 @@ than validated evidence:
 
 ## Standing Preferences
 
+* The AMA exercise is the whole programme; Case Study 48 is its customer
+  use case. Iterate the existing Proper Warm MVP rather than replacing it
+  with an isolated small-fixture app.
+* Use the existing data generator and generated 60,000-home stock. Operating
+  data is synthetic and disposable; regenerate/reload when useful while
+  keeping version/source lineage clear. Retain OpenStreetMap geography.
+* Every new prototype, PoC and MVP must enable and demonstrate real bounded
+  AI, with useful customer UX, source grounding and meaningful human review.
+
 * `support/` is the owner's private working area. `support/cohort.md` is for
   internal use and is not part of the knowledge base. Consult it only when
   the owner asks who could help with a question.

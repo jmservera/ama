@@ -50,6 +50,8 @@ class App:
 def get_kind(path):
     if path == "/api/me":
         return "me"
+    if path == "/api/stock":
+        return "stock"
     if path in ("/api/exercise", "/api/exercise/data") or path.startswith("/api/exercise/buildings/"):
         return "exercise"
     if path == "/api/cases":
@@ -167,7 +169,19 @@ def make_handler(app):
                 out = projection.me_payload(u, s.counts(u), list(s.staff.values()))
                 out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
                 out["exercise"] = any(c.get("exercise") for c in s.cases.values())
+                out["programme"] = os.environ.get("PW_PROGRAMME") == "1"
                 return self._json(200, out)
+            if url.path == "/api/stock":
+                from .programme import page_stock
+                try:
+                    return self._json(200, page_stock(s, u,
+                        {key: q.get(key, [""])[0] for key in ("q", "area", "epc_group")},
+                        num(q, "limit", 50, 1, 100), num(q, "offset", 0, 0, 60000),
+                        num(q, "zoom", 6, 4, 12)))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
             if url.path == "/api/exercise":
                 try:
                     return self._json(200, s.exercise_status(u))

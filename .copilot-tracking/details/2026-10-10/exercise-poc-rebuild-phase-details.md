@@ -12,7 +12,41 @@ ms.date: 2026-10-10
 * Initial direction: reuse current workbench and SQL contracts; inspect gaps rather than rewrite blindly.
 * Readiness: ready for local implementation; one critique executed and five direct corrections incorporated. Live inference acceptance remains blocked.
 
+## Owner-Directed Restart: P07
+
+P07-T01 complete: existing 980-case Azure SQL database copied to
+properwarm-programme; original case fields/history and four-entry audit
+head retained. Exactly 60,000 existing stock records imported, SHA-256
+c8d2a9979e242b9407ac0d4a5679bfd6cc376e01b8043b32088fb2c9c60c4ebf.
+Stock and programme denominators remain distinct. Map anchors are not used
+to guess property linkage. Existing generated field values supply source-bound
+review evidence; added review capabilities do not manufacture approval.
+
+P07-T02/P07-T03 active: use the Foundry services.ai.azure.com inference
+endpoint for Decision 1, not the generic cognitiveservices endpoint.
+Actual managed-identity probe returned HTTP200, microsoft-decision-1,
+input_tokens63/output_tokens1 and a normalized choice vector.
+The observed optional confidence field is explicitly validated; application
+thresholds still use probabilities, not provider confidence.
+Owner removed the prior budget cap for this rebuild; retain input bounds,
+authorization and SQL liability telemetry. Full generated-data runtime,
+browser and publication evidence remains required.
+
+Executed P07-T02: generated EPC proposal and source-verified summary; no
+approval or external action. Executed P07-T03 runtime: revision18/image
+0b6b04395c905c6dd6a51520ba8b91d702b4b9b1c6499a4276ed435956307299,
+exact cases/source-metadata/audit/reservation equality across actual restart,
+original generated document download, eleven bundled asset hashes, actual
+stock list/map/paging/filter and 390px browser reflow. Source publication
+pending. Full PRD and human-value gates remain separate and incomplete.
+
 ## Phase Index
+
+Owner correction: the exercise is the whole AMA programme, and delivery is
+an iteration of the existing generated-data MVP. Earlier instructions to
+exclude the private generator or deploy only 18 cases are superseded.
+P01-P04 markers describe historical regression implementation, not acceptance
+of the corrected product. Preserve the original one-pass critique and Review.
 
 | Phase | Name | State |
 | --- | --- | --- |
@@ -25,6 +59,9 @@ ms.date: 2026-10-10
 
 <!-- rpi:phase id=P01 -->
 ## P01: Exercise contracts
+
+Current dataset boundary: privately reuse the existing generated output;
+never commit its real geographic anchors/invented resident payloads.
 
 <!-- rpi:task id=P01-T01 -->
 ### P01-T01: Fixture, journey and capability map
@@ -232,3 +269,42 @@ Regression is 382 tests with 26 live SQL skips; image
 `f3dbc0af7306b6b2ac51b00116d9ba27d6fc22aedeb0f88f959529ccf64ecd90`
 starts UID10001/read-only with `PW_DATA` explicitly empty and health 200.
 No work-order-version or quality dependency completion is inferred.
+
+## Owner-Authorized Azure Deployment
+
+Implement the owner-requested deployment within P05/P06 without treating cloud
+availability as full acceptance. Extend the exercise factory to explicit
+MSSQL/azure-blob only, retaining seed identity/as-of/recovery interlocks.
+Reuse existing SQL server/registry/storage/Container Apps identity; create a
+separate low-cost fictional database and private evidence container. Upload
+the complete image/static assets and supplied fictional documents. Use Entra
+SQL and Blob managed identity, HTTPS/shared demo authentication with existing
+secret references, one app replica while no distributed inference ledger is
+approved. No billable model call, existing-data overwrite or full-PRD claim.
+Check live SQL/Blob write/read, browser assets and revision restart durability.
+
+Implemented and deployed E29/E30. `properwarm-exercise` is Basic/5-DTU/2-GB
+with ledger enabled and seven-day retention; `exercise-evidence` is non-public.
+Revision `ca-properwarm-mvp--0000011` serves 100% traffic from immutable image
+`115d35582cad11492b40e06192a5c97f523725f0fe74ab2c99f5a8b77c05405a`.
+Only the current revision is active, one replica maximum. All eleven web
+assets match local bytes; nine finite live checks cover browser forms/conflict,
+building/mobile views, SQL/Blob persistence and actual restart.
+Runtime SQL identity has datareader/datawriter only; bootstrap DDL was revoked.
+384-test regression passes with 26 local live-SQL skips; actual cloud checks
+are separately recorded. P05/P06 still lack complete full-workflow/model/human
+acceptance; cloud deployment is no longer an authorization blocker.
+
+## Owner-Required Live AI Activation
+
+The owner explicitly requires real AI, not a permanently disabled app.
+Decision1 is now deployed as `decision`, version1/GlobalStandard/capacity1.
+Resource-group CostManagement reports USD23.0986711881913 month-to-date;
+subscription-level query was denied, but scoped query succeeded. Official
+Microsoft pricing gives Decision1 USD0.042/million input, output free;
+UKSouth retail GPT-4.1-mini Global input/output USD0.40/1.60 per million.
+Use a conservative USD400 high-water spend-plus-budget reserve, USD405 pause,
+USD0.01 maximum-call liability and mini for both generative routes.
+First implement SQL-backed reservations so restarts cannot reset liabilities;
+then activate allowlisted tasks and verify actual provider responses in UI.
+Human value/calibration and corporate/professional approvals remain unclaimed.

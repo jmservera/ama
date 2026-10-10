@@ -14,6 +14,7 @@ import sys
 import uuid
 import unittest
 import urllib.error
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from properwarm_mvp.decision import (
@@ -72,6 +73,85 @@ def support_payload(probability: float = 0.97) -> dict:
 
 
 class DecisionTests(unittest.TestCase):
+    def test_observed_provider_confidence_is_validated_not_used_as_probability(self):
+        payload = choice_payload()
+        payload["answers"]["candidate"]["confidence"] = 0.9993850721366693
+        self.payload = payload
+        result = self.propose()
+        self.assertEqual(result["status"], "proposed")
+        for value in (True, float("nan"), -0.1, 1.1, "0.99"):
+            malformed = deepcopy(payload)
+            malformed["answers"]["candidate"]["confidence"] = value
+            self.assert_malformed(malformed)
+
+    def test_explicit_budget_override_retains_authorization_and_reservations(self):
+        config = replace(INFERENCE, accrued_usd=500, spend_cap_enforced=False)
+        args = dict(config=config, permissions=PERMISSIONS, source_kinds=("form_evidence",),
+                    source_count=1, text_chars=30, field="epc_band", workflow="funding-forms")
+        self.assertTrue(inference_guard(TASK, "decision-scoring", **args).allowed)
+        args["config"] = replace(config, authorized=False)
+        self.assertFalse(inference_guard(TASK, "decision-scoring", **args).allowed)
+        root = Path.cwd() / ".exercise-test-state" / uuid.uuid4().hex
+        root.mkdir(parents=True)
+        try:
+            with patch.dict("os.environ", {}, clear=True):
+                result = reserve_inference_charge(TASK, config, str(root))
+            self.assertTrue(result["allowed"])
+            self.assertEqual(result["reason"], "reserved_budget_override")
+            with sqlite3.connect(root / "inference-liabilities.sqlite") as db:
+                self.assertEqual(db.execute("SELECT COUNT(*) FROM reservations").fetchone()[0], 1)
+        finally:
+            shutil.rmtree(root)
+
+    def test_sql_reservations_survive_connections_and_cannot_lower_baseline(self):
+        root = Path.cwd() / ".exercise-test-state" / uuid.uuid4().hex
+        root.mkdir(parents=True)
+        db_path = root / "remote-fixture.sqlite"
+        with sqlite3.connect(db_path) as db:
+            db.execute("CREATE TABLE meta ([key] TEXT PRIMARY KEY, value TEXT NOT NULL)")
+
+        class Adapter:
+            def __init__(self, _connection_string, _token):
+                self.raw = sqlite3.connect(db_path, timeout=10, isolation_level=None)
+
+            def execute(self, sql, args=()):
+                return self.raw.execute(sql, args)
+
+        try:
+            with patch.dict("os.environ", {"PW_EXERCISE": "1", "PW_STORE": "mssql"}, clear=True), \
+                    patch.dict(sys.modules, {"mssql_python": SimpleNamespace(Error=sqlite3.Error)}), \
+                    patch("properwarm_mvp.mssqlstore.connection_string", return_value="mock-remote"), \
+                    patch("properwarm_mvp.mssqlstore._Conn", Adapter):
+                config = replace(INFERENCE, accrued_usd=400, max_call_charge_usd=1)
+                with ThreadPoolExecutor(max_workers=20) as pool:
+                    results = list(pool.map(lambda _: reserve_inference_charge(TASK, config, str(root)), range(20)))
+                self.assertEqual(sum(r["allowed"] for r in results), 4)
+                denied = reserve_inference_charge(TASK, replace(config, accrued_usd=0), str(root))
+                self.assertFalse(denied["allowed"])
+                self.assertEqual(denied["projected_usd"], 405)
+            with sqlite3.connect(db_path) as db:
+                self.assertEqual(db.execute("SELECT value FROM meta WHERE [key]='inference_liability_base'").fetchone()[0],
+                                 "400000000")
+                rows = db.execute("SELECT value FROM meta WHERE [key] LIKE 'inference_reservation:%'").fetchall()
+                self.assertEqual(len(rows), 4)
+                self.assertEqual(sum(json.loads(row[0])["amount_micro_usd"] for row in rows), 4_000_000)
+            self.assertFalse((root / "inference-liabilities.sqlite").exists())
+        finally:
+            shutil.rmtree(root)
+
+    def test_sql_reservation_connection_failure_is_explicit(self):
+        root = Path.cwd() / ".exercise-test-state" / uuid.uuid4().hex
+        root.mkdir(parents=True)
+        try:
+            with patch.dict("os.environ", {"PW_EXERCISE": "1", "PW_STORE": "mssql"}, clear=True), \
+                    patch.dict(sys.modules, {"mssql_python": SimpleNamespace(Error=sqlite3.Error)}), \
+                    patch("properwarm_mvp.mssqlstore.connection_string", return_value="mock-remote"), \
+                    patch("properwarm_mvp.mssqlstore._Conn", side_effect=sqlite3.OperationalError("unreachable")):
+                with self.assertRaisesRegex(ValueError, "Azure SQL inference liability reservation failed"):
+                    reserve_inference_charge(TASK, INFERENCE, str(root))
+        finally:
+            shutil.rmtree(root)
+
     def test_shared_liability_reservations_survive_processes_and_provider_failures(self):
         root = Path.cwd() / ".exercise-test-state" / uuid.uuid4().hex
         root.mkdir(parents=True)

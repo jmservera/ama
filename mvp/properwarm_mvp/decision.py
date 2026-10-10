@@ -88,6 +88,7 @@ class InferenceConfig:
     pause_at_usd: float = 405.0
     accrued_usd: float | None = None
     max_call_charge_usd: float | None = None
+    spend_cap_enforced: bool = True
 
     @classmethod
     def from_env(cls, environ: Mapping[str, str] | None = None) -> "InferenceConfig":
@@ -116,6 +117,7 @@ class InferenceConfig:
             pause_at_usd=amount("PW_INFERENCE_PAUSE_AT_USD", 405.0),
             accrued_usd=amount("PW_INFERENCE_ACCRUED_USD"),
             max_call_charge_usd=amount("PW_INFERENCE_MAX_CALL_CHARGE_USD"),
+            spend_cap_enforced=env.get("PW_INFERENCE_ENFORCE_CAP", "").lower() != "false",
         )
 
 
@@ -145,7 +147,10 @@ def reserve_inference_charge(task_id: str, config: InferenceConfig, state_dir: s
     def units(value):
         return int((Decimal(str(value)) * 1_000_000).to_integral_value(rounding=ROUND_CEILING))
     base, charge = units(config.accrued_usd), units(config.max_call_charge_usd)
-    pause = min(units(config.pause_at_usd), units(config.monthly_cap_usd), 405_000_000)
+    pause = (min(units(config.pause_at_usd), units(config.monthly_cap_usd), 405_000_000)
+             if config.spend_cap_enforced else None)
+    if os.environ.get("PW_EXERCISE") == "1" and os.environ.get("PW_STORE") == "mssql":
+        return _reserve_sql_charge(task_id, base, charge, pause)
     with sqlite3.connect(path, timeout=5) as connection:
         connection.execute("CREATE TABLE IF NOT EXISTS liability_base (id INTEGER PRIMARY KEY CHECK(id=1), amount INTEGER NOT NULL)")
         connection.execute("CREATE TABLE IF NOT EXISTS reservations (id TEXT PRIMARY KEY, task TEXT NOT NULL, amount INTEGER NOT NULL, at TEXT NOT NULL)")
@@ -155,13 +160,60 @@ def reserve_inference_charge(task_id: str, config: InferenceConfig, state_dir: s
         connection.execute("INSERT OR REPLACE INTO liability_base(id,amount) VALUES(1,?)", (base,))
         reserved = connection.execute("SELECT COALESCE(SUM(amount),0) FROM reservations").fetchone()[0]
         projected = base + reserved + charge
-        if projected >= pause:
+        if pause is not None and projected >= pause:
             connection.commit()
             return dict(allowed=False, reason="shared_liability_pause", projected_usd=projected / 1_000_000)
         reference = uuid.uuid4().hex
         connection.execute("INSERT INTO reservations VALUES(?,?,?,datetime('now'))", (reference, task_id, charge))
         connection.commit()
-    return dict(allowed=True, reason="review_spend" if projected >= 360_000_000 else "reserved",
+    return dict(allowed=True, reason="reserved_budget_override" if pause is None else
+                "review_spend" if projected >= 360_000_000 else "reserved",
+                reservation_id=reference, projected_usd=projected / 1_000_000,
+                reserved_upper_charge_usd=charge / 1_000_000)
+
+
+def _reserve_sql_charge(task_id: str, base: int, charge: int, pause: int | None) -> dict:
+    """Use the exercise database's transaction lock and ledger-backed metadata."""
+    from datetime import datetime, timezone
+    from .mssqlstore import _Conn, connection_string
+    import mssql_python
+
+    connection = None
+    try:
+        connection = _Conn(connection_string(), os.environ.get("PW_SQL_TOKEN"))
+        connection.execute("BEGIN IMMEDIATE")
+        try:
+            previous = connection.execute(
+                "SELECT value FROM meta WHERE [key]=?", ("inference_liability_base",)).fetchone()
+            base = max(base, int(previous[0]) if previous else 0)
+            if previous:
+                connection.execute("UPDATE meta SET value=? WHERE [key]=?",
+                                   (str(base), "inference_liability_base"))
+            else:
+                connection.execute("INSERT INTO meta ([key],value) VALUES (?,?)",
+                                   ("inference_liability_base", str(base)))
+            rows = connection.execute(
+                "SELECT value FROM meta WHERE [key] LIKE 'inference_reservation:%'").fetchall()
+            reserved = sum(json.loads(row[0])["amount_micro_usd"] for row in rows)
+            projected = base + reserved + charge
+            if pause is not None and projected >= pause:
+                connection.execute("COMMIT")
+                return dict(allowed=False, reason="shared_liability_pause", projected_usd=projected / 1_000_000)
+            reference = uuid.uuid4().hex
+            record = dict(task=task_id, amount_micro_usd=charge, at=datetime.now(timezone.utc).isoformat())
+            connection.execute("INSERT INTO meta ([key],value) VALUES (?,?)",
+                               ("inference_reservation:" + reference, json.dumps(record)))
+            connection.execute("COMMIT")
+        except BaseException:
+            connection.execute("ROLLBACK")
+            raise
+    except mssql_python.Error as error:
+        raise ValueError("Azure SQL inference liability reservation failed.") from error
+    finally:
+        if connection is not None and connection.raw is not None:
+            connection.raw.close()
+    return dict(allowed=True, reason="reserved_budget_override" if pause is None else
+                "review_spend" if projected >= 360_000_000 else "reserved",
                 reservation_id=reference, projected_usd=projected / 1_000_000,
                 reserved_upper_charge_usd=charge / 1_000_000)
 
@@ -245,13 +297,15 @@ def inference_guard(
         return deny("spend_paused")
     if cfg.price_known is not True or not _finite(cfg.max_call_charge_usd, positive=True):
         return deny("unknown_price_or_charge")
-    if (not _finite(cfg.monthly_cap_usd, positive=True) or cfg.monthly_cap_usd > 450
+    if not _finite(cfg.accrued_usd):
+        return deny("invalid_cap_or_liability")
+    if cfg.spend_cap_enforced and (not _finite(cfg.monthly_cap_usd, positive=True) or cfg.monthly_cap_usd > 450
             or not _finite(cfg.pause_at_usd, positive=True)
             or cfg.pause_at_usd > min(405, cfg.monthly_cap_usd)
             or not _finite(cfg.accrued_usd)):
         return deny("invalid_cap_or_liability")
     projected = cfg.accrued_usd + cfg.max_call_charge_usd
-    if projected >= cfg.pause_at_usd or projected > cfg.monthly_cap_usd:
+    if cfg.spend_cap_enforced and (projected >= cfg.pause_at_usd or projected > cfg.monthly_cap_usd):
         return deny("spend_limit")
     return InferenceGuard(True, "authorized", reviewer)
 
@@ -590,8 +644,11 @@ class DecisionClient:
         if not isinstance(answer, dict) or answer.get("type") != question["type"]:
             raise DecisionContractError("unexpected_answer_type")
         if question["type"] == "choice":
-            if set(answer) != {"type", "choice", "probabilities"}:
+            if set(answer) not in ({"type", "choice", "probabilities"},
+                                  {"type", "choice", "probabilities", "confidence"}):
                 raise DecisionContractError("unexpected_choice_keys")
+            if "confidence" in answer and (not _finite(answer["confidence"]) or answer["confidence"] > 1):
+                raise DecisionContractError("invalid_choice_confidence")
             probabilities = answer["probabilities"]
             if (not isinstance(probabilities, dict) or set(probabilities) != set(question["criteria"])
                     or not all(_finite(p) and p <= 1 for p in probabilities.values())

@@ -4,13 +4,31 @@ Skipped unless PW_TEST_MSSQL=1 and the PW_SQL_* settings point at a database tha
 (the CI job uses a throwaway SQL Server container; never point this at the pilot database).
 """
 import os
+import json
 import unittest
+from unittest.mock import MagicMock
 
 import test_sqlreads as reads
 import test_sqlstore as base
 
 ON = os.environ.get("PW_TEST_MSSQL") == "1"
 TABLES = ("audit_head", "audit", "recommendations", "cases", "staff", "meta")
+
+
+class MssqlDialectTests(unittest.TestCase):
+    def test_changed_procurement_uses_mssql_metadata_upsert(self):
+        from properwarm_mvp.mssqlstore import MssqlStore
+        store = MssqlStore.__new__(MssqlStore)
+        store.data = {"procurement": {"packages": [], "work_orders": []}}
+        store._proc_snap = None
+        store.db = MagicMock()
+        store.db.execute.return_value.fetchone.return_value = None
+        body = store._proc_write()
+        self.assertEqual(json.loads(body), store.data["procurement"])
+        sql, params = store.db.execute.call_args.args
+        self.assertTrue(sql.startswith("MERGE meta"))
+        self.assertEqual(params, ("procurement", body))
+        self.assertNotIn("INSERT OR REPLACE", sql)
 
 
 def wipe():
