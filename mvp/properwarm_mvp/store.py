@@ -623,11 +623,16 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                 from .signoffs import SIGNOFFS
                 signoffs = body.get("affected_signoffs", [])
                 fields = body.get("affected_form_fields", {})
+                milestones = body.get("affected_milestones", [])
                 if (not isinstance(signoffs, list) or any(not isinstance(key, str) or key not in SIGNOFFS for key in signoffs)
                         or len(signoffs) != len(set(signoffs))):
                     raise ValueError("Name each affected technical sign-off once, or supply an empty list.")
                 if not isinstance(fields, dict):
                     raise ValueError("Affected form fields must map same-home form IDs to explicit field lists.")
+                if (not isinstance(milestones, list)
+                        or any(not isinstance(ref, str) or ref not in state.get("milestones", {}) for ref in milestones)
+                        or len(milestones) != len(set(milestones))):
+                    raise ValueError("Name each existing same-home milestone reference once, or supply an empty list.")
                 for fid, keys in fields.items():
                     draft = c.get("forms", {}).get(fid)
                     if (draft is None or not isinstance(keys, list) or not keys
@@ -638,7 +643,13 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                     self._tech_signoff_return(user, c, dict(type=key, reason=entry["reason"]))
                 entry["affected_signoffs"] = list(signoffs)
                 entry["affected_form_fields"] = deepcopy(fields)
+                entry["affected_milestones"] = list(milestones)
                 entry["invalidation"] = {}
+                for ref in milestones:
+                    milestone = state["milestones"][ref]
+                    state.setdefault("milestone_history", []).append(dict(reference=ref, **deepcopy(milestone)))
+                    milestone.update(stale=True, return_id=entry["id"], reassessment_reason=entry["reason"],
+                                     reassessment_source=entry["source"])
                 for fid, keys in fields.items():
                     draft = c["forms"][fid]
                     updated = forms.update_versions(draft, input_versions={
@@ -1099,6 +1110,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                    for m in self._measures(c)):
                 why.append("Every measure needs independent QA acceptance and resident handover.")
         if target == "Financial closure":
+            from .finance import match_invoice
             why += self.exercise_readiness(c)
             events = c["exercise"].get("fund_events", [])
             claims = [e for e in events if e["event"] == "claim-disposition"
@@ -1109,6 +1121,8 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                 why.append("Accepted claim and separately received cash must reconcile exactly.")
             if not invoices or any(i["payment_status"] != "Paid outside this system" for i in invoices):
                 why.append("Every provider invoice needs independent disposition and external payment evidence.")
+            if any(match_invoice(c, invoice) for invoice in invoices):
+                why.append("Current invoice/commitment/milestone evidence must still reconcile after re-review.")
             if sum(Decimal(str(ln["amount"])) for i in invoices for ln in i["lines"]) != Decimal("18000"):
                 why.append("Provider invoices must reconcile to the fictional GBP 18000 contract.")
         if why:

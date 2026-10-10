@@ -166,6 +166,19 @@ Latest full regression 380 tests/26 live SQL skips, headed native-browser
 60 checks. FR-010/AC-012 complete constructed disposition evidence; full
 quality/procurement/milestone return invalidation remains an open P05 boundary.
 
+Current P05-T01 continuation adds explicit same-home milestone re-review
+scope. A stale milestone must block subsequent invoice acceptance/payment
+status and financial closure, even after a historical accepted disposition.
+Retain prior milestones, invoices and external-payment references; renew only
+through existing independent evidence controls. Test exact stale-ref refusal
+and unaffected milestone/invoice history, with no inferred payment execution.
+
+This continuation is implemented: E27 paid/unpaid journeys and E28 native
+browser scope refusal pass; 382-test regression and read-only container startup
+pass. P05/P05-T01 stay unchecked: quality/procurement dependencies and the full
+milestone-version matrix remain incomplete. P06 remains blocked on live/human
+prerequisites; original Review is not rerun or regraded.
+
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->

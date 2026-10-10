@@ -356,6 +356,14 @@ def main() -> int:
                 record("browser-return-invalid-scope-json-does-not-advance",
                        page.get_by_role("heading", name="EX-HOME-001: Assessment", exact=True).count() == 1)
                 supplied_event(page, "return", dict(target="Intake", receiver="ex-pso-01@example.test",
+                    reason="Supplied milestone re-review", evidence="Fictional milestone scope source",
+                    next_action="Finance checks supplied same-home reference",
+                    affected_milestones="SIBLING-WO:handover", affected_form_fields="{}"))
+                page.get_by_text("Name each existing same-home milestone reference once, or supply an empty list.",
+                                 exact=True).wait_for()
+                record("browser-return-foreign-milestone-does-not-advance",
+                       page.get_by_role("heading", name="EX-HOME-001: Assessment", exact=True).count() == 1)
+                supplied_event(page, "return", dict(target="Intake", receiver="ex-pso-01@example.test",
                     reason="Supplied explicit design re-review", evidence="Fictional scoped return source",
                     next_action="Design role checks only supplied discrepancy",
                     affected_signoffs="design", affected_form_fields="{}"))

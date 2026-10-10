@@ -91,6 +91,12 @@ Perspective navigation never changes the signed-in role.
   `evidence`, reason and owned `next_action`. It preserves history and existing
   evidence; actual evidence changes still require their domain/source action
   and dependent review. It is not a forward transition or approval shortcut.
+  Optional `affected_milestones` is a list of exact existing same-home
+  `WO-id:milestone` references. These become stale with return source/history;
+  current invoice matching, payment-status continuation and financial closure
+  refuse stale references. Renew using the existing independent `milestone`
+  action and its stage/evidence checks. Historical invoice dispositions,
+  external payment references and cash are not erased or executed again.
 * Each story home links to a read-only building page and back to its sibling.
   Building context keeps shared systems/dependencies/holds/cost explicitly
   unknown where no shared evidence exists. Each home retains its own
@@ -259,14 +265,19 @@ process exits before commit/after commit before response. Their complete
 role/browser fixture matrix remains unexecuted. Arbitrary new-source ingestion
 and full claim resubmission recovery need further validation.
 Return controls can name explicit technical sign-offs and same-home form
-fields for re-review. Empty scope is routing-only, never guessed consent or
+fields and milestone references for re-review. Empty scope is routing-only, never guessed consent or
 source invalidation. Named fields use exact input-version dependencies;
 historical financial receipts remain recorded even when readiness is suspended.
 Versioned returns expose source, initiating authority, receiving owner and next
 action, with restricted form details hidden from non-Finance views.
 All 36 earlier-stage pairs and ten invalid-scope shapes have atomic
-fixtures; the latest headed browser passes 60 finite checks. Complete
-quality/procurement/milestone re-review dependencies are still not validated.
+fixtures. Exact paid/unpaid milestone return fixtures retain unaffected
+milestones, invoice/QA/choice/cash history and refuse stale payment/closure
+until independent renewal. Malformed/foreign/duplicate milestone scopes fail
+atomically; non-Finance projections omit restricted milestone details.
+The latest headed browser passes 61 finite checks, including foreign-milestone
+scope refusal. Complete quality/procurement dependency and milestone
+version/re-review matrices are still not validated.
 The labelled event controls and optional JSON editor are manual
 exercise tools, not a validated production form experience.
 

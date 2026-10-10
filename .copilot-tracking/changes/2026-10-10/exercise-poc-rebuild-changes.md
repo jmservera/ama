@@ -418,3 +418,39 @@ are persistent; draft description preserves the outstanding complete-domain,
 operational recovery/accessibility and actual-model/human gates.
 No authorization was inferred from autonomous implementation direction;
 no deployment, billable call, merger or repeated Review was performed.
+
+## Milestone Re-Review and Financial Continuation
+
+P05/P05-T01 resumes within existing return/Finance controls. Add explicitly
+named same-home milestone re-review scope and recheck current milestone
+evidence before payment-status or financial closure continuation. Preserve
+historical milestone/approval/payment records and independent human renewal.
+Write boundary: Store, Finance, return UI/tests and direct evidence;
+validation: exact stale-ref/unchanged-history and renewed-review fixtures.
+
+Implemented `affected_milestones` validation, retained milestone evidence
+history and scoped staleness. Existing invoice matcher refuses stale evidence;
+payment-status continuation rechecks current evidence before mutation, and
+closure uses the same matcher. Existing independent milestone renewal clears
+staleness only through its role/stage/source checks. Paid invoices and external
+cash stay unchanged; restricted milestone details/history/scopes are omitted
+from non-Finance projections.
+
+Exact tests cover paid/unpaid refusal, independent renewal, preserved
+invoice/QA/resident/cash/unaffected milestone history, persistence and
+invalid/foreign/duplicate scope atomicity. Full regression: 382 tests, OK,
+26 live SQL skips, 73.493s. Headed Chrome/Xvfb: 61 checks, zero failures;
+actual milestone input refuses a foreign reference without advancing stage.
+Initial test invocations without module path and headed Chrome without Xvfb
+failed; corrected commands used the existing module path and isolated Xvfb.
+Final image `f3dbc0af7306b6b2ac51b00116d9ba27d6fc22aedeb0f88f959529ccf64ecd90`
+passes UID10001/read-only/no-capabilities startup and health 200. The inherited
+`PW_DATA` first correctly refused exercise startup; the isolated run explicitly
+cleared it. All test browser/server/Xvfb/container processes are stopped.
+
+E27/E28 recorded without promoting incomplete requirements. All 115 requirement
+rows remain unique. Full quality/procurement/milestone-version, role/workflow,
+scheduled recovery, screen-reader, actual-model and human acceptance remain
+open. P05/P06 remain unchecked, original Review stays Partial/Not accepted,
+and draft PR #58 is not ready to merge. Earlier core/scale measurements loaded
+earlier snapshots; they are not evidence for this latest payment/return path.

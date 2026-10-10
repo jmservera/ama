@@ -1734,3 +1734,18 @@ metadata when the knowledge base was created.
   Complete quality/procurement/milestone re-review, other workflow/permission,
   scheduled recovery, screen-reader, real-model and human value gates remain
   open. No consent, approval, payment or full completion is inferred.
+
+## [2026-10-10] update | Scoped milestone re-review protects payment continuation
+
+* Explicit same-home milestone return scopes preserve prior evidence and mark
+  only named references stale. Current invoice matching, payment-status notes
+  and financial closure now reject stale evidence, including after historical
+  accepted dispositions. Existing independent milestone renewal remains required.
+* Paid/unpaid constructed journeys preserve invoice/payment/cash/QA/choice and
+  unrelated milestone history. Invalid, foreign and duplicate scopes fail
+  atomically; restricted milestone details are omitted from non-Finance views.
+* Regression: 382 tests, OK, 26 live SQL skips. Headed Chrome/Xvfb: 61 finite
+  checks, including the actual foreign-milestone input refusal and native zoom.
+  Updated guide, index and requirement evidence; no full-requirement upgrade.
+  Quality/procurement dependency and complete milestone-version matrices,
+  scheduled recovery, live-model and human acceptance remain open.

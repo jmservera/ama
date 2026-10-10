@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Implement",
-  "status": "blocked",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-10/system-one-decision-models-research.md",
@@ -89,6 +89,11 @@
       "decision": "Implemented explicitly scoped returns with existing sign-off/input-version helpers, versioned dispositions and corrected display stage/next action. All 36 earlier-stage pairs, ten invalid-scope atomicity shapes and exact financial ancestry/unchanged cash/source/choice/sibling fixtures pass. Full regression 380 tests, 26 live SQL skips; native-browser 60 checks. FR-010/AC-012 pass constructed disposition contracts; full dependent domain matrix remains incomplete.",
       "status": "published; exact-source CI succeeded; full acceptance incomplete",
       "evidence": "acceptance E25/E26; https://github.com/jmservera/ama/pull/58; source d77937296ffa9df74ba5a98cb4525fe0b9565a0b; successful runs 38069313144/38069313023/38069313054"
+    },
+    {
+      "decision": "Explicit milestone return scopes now block stale paid/unpaid payment continuation and closure until existing independent renewal. Prior payment/cash/QA/choice and unrelated milestones remain unchanged. 382-test regression with 26 live SQL skips, 61 headed native-browser checks and UID10001/read-only exercise container health pass. Full dependency/live/human acceptance remains incomplete.",
+      "status": "implemented locally; publication pending",
+      "evidence": "acceptance E27/E28; changes Milestone Re-Review and Financial Continuation"
     }
   ],
   "blockers": [
@@ -105,7 +110,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Continue remaining local quality/procurement/milestone re-review, role/workflow/permission, scheduled recovery and accessibility acceptance under owner authority. Actual model/value acceptance requires operator-verified terms/costs/quota, explicit deployment/bounded-call authorization and human evaluators. Preserve draft PR #58 and original Review; full task is not complete."
+    "action": "Publish verified milestone re-review batch on existing draft PR #58 and confirm exact-source CI. Then persist blocked full-plan handoff: quality/procurement/full milestone-version, role/workflow, scheduled recovery, screen-reader and unavailable live/human acceptance remain. No Review rerun or full completion."
   },
   "prioritized_follow_ups": [
     {

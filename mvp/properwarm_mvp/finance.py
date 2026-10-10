@@ -65,7 +65,8 @@ def match_invoice(c, inv):
         elif c.get("exercise"):
             allowed = c["exercise"].get("milestones", {})
             milestone = allowed.get(ln["milestone_ref"])
-            if not milestone or milestone["work_order"] != inv["work_order"] or abs(milestone["amount"] - ln["amount"]) > 0.005:
+            if (not milestone or milestone.get("stale") or milestone["work_order"] != inv["work_order"]
+                    or abs(milestone["amount"] - ln["amount"]) > 0.005):
                 ex.append(dict(line=i, code="unaccepted_milestone", message="Exact accepted same-home milestone/amount evidence is missing."))
     return ex
 
@@ -201,6 +202,8 @@ class FinanceMixin:
                 raise ValueError("Finance must accept the invoice for payment first.")
             if inv["hold"]:
                 raise ValueError("Release the hold first.")
+            if c.get("exercise") and match_invoice(c, inv):
+                raise ValueError("Current milestone/budget evidence no longer matches; obtain independent re-review before recording payment.")
         if status == "Paid outside this system":
             k.different_person(user, inv.get("disposition_email"), "record the payment")
             if c.get("exercise"):

@@ -140,6 +140,9 @@ class ExerciseWorkbenchTests(unittest.TestCase):
         self.assertTrue(self.store.verify_ledger()["intact"])
 
     def test_same_home_end_to_end_independent_qa_financial_closure(self):
+        self.complete_journey()
+
+    def complete_journey(self, *, pay_handover=True):
         self.budget()
         self.resolve_epc()
         self.act("lifecycle", user=self.pm, target="Assessment")
@@ -207,8 +210,11 @@ class ExerciseWorkbenchTests(unittest.TestCase):
             self.store.finance_action(self.geo, HOME, dict(action="invoice_match", id=invoice))
             self.store.finance_action(self.asset, HOME, dict(action="disposition", id=invoice,
                 decision="Accept for payment", note="Independent exact match"))
-            self.store.finance_action(self.geo, HOME, dict(action="payment_status", id=invoice,
-                status="Paid outside this system", evidence=f"Fictional external payment {index}"))
+            if milestone != "handover" or pay_handover:
+                self.store.finance_action(self.geo, HOME, dict(action="payment_status", id=invoice,
+                    status="Paid outside this system", evidence=f"Fictional external payment {index}"))
+        if not pay_handover:
+            return
         self.act("lifecycle", user=self.pm, target="Financial closure")
         c = self.store._case(HOME)
         self.assertEqual(c["exercise"]["lifecycle"], "Financial closure")
@@ -219,6 +225,92 @@ class ExerciseWorkbenchTests(unittest.TestCase):
         self.assertEqual(c["forms"][fid]["exports"][0]["fields"]["grant_amount"]["value"], "7500.00")
         self.assertEqual(self.store._case(SIBLING)["exercise"]["lifecycle"], "Intake")
         self.assertTrue(self.store.verify_ledger()["intact"])
+
+    def test_milestone_return_blocks_payment_and_closure_without_erasing_paid_history(self):
+        from properwarm_mvp.finance import match_invoice
+        from properwarm_mvp import projection
+        self.complete_journey()
+        before = deepcopy(self.store._case(HOME))
+        invoice = before["finance"]["invoices"][-1]
+        ref = invoice["lines"][0]["milestone_ref"]
+        wid = invoice["work_order"]
+        for scope in ([ref, ref], ["SIBLING-WO:handover"]):
+            snapshot = deepcopy(self.store._case(HOME))
+            head = self.store.verify_ledger()["head"]
+            with self.assertRaises(ValueError):
+                self.act("return", user=self.pm, target="Handover", receiver=self.geo["email"],
+                    reason="Invalid milestone scope", evidence="Supplied source", next_action="Review",
+                    affected_milestones=scope)
+            self.assertEqual(self.store._case(HOME), snapshot)
+            self.assertEqual(self.store.verify_ledger()["head"], head)
+        self.act("return", user=self.pm, target="Handover", receiver=self.geo["email"],
+            reason="Supplied retention milestone evidence requires re-review",
+            evidence="Fictional later discrepancy", next_action="Independent reviewer verifies current milestone",
+            affected_milestones=[ref])
+        c = self.store._case(HOME)
+        self.assertTrue(c["exercise"]["milestones"][ref]["stale"])
+        self.assertEqual(c["exercise"]["milestone_history"][-1]["reference"], ref)
+        self.assertEqual(c["finance"]["invoices"], before["finance"]["invoices"])
+        self.assertEqual(c["exercise"]["fund_events"], before["exercise"]["fund_events"])
+        self.assertEqual(c["quality"], before["quality"])
+        self.assertEqual(c["measure_decisions"], before["measure_decisions"])
+        for other_ref, milestone in before["exercise"]["milestones"].items():
+            if other_ref != ref:
+                self.assertEqual(c["exercise"]["milestones"][other_ref], milestone)
+        self.assertEqual([e["code"] for e in match_invoice(c, deepcopy(invoice))], ["unaccepted_milestone"])
+        for status in ("Awaiting payment run", "Paid outside this system"):
+            snapshot = deepcopy(self.store._case(HOME))
+            with self.assertRaises(ValueError):
+                self.store.finance_action(self.geo, HOME, dict(action="payment_status", id=invoice["id"],
+                    status=status, evidence="Must not overwrite old receipt with stale evidence"))
+            self.assertEqual(self.store._case(HOME), snapshot)
+        with self.assertRaises(GateError):
+            self.act("lifecycle", user=self.pm, target="Financial closure")
+        for actor in self.users.values():
+            projected = self.store.exercise_case(actor, HOME)["case"]
+            if not projection.is_contractor(actor) and actor["role"] not in projection.FINANCE_VIEW:
+                self.assertNotIn("milestones", projected["exercise"])
+                self.assertNotIn("milestone_history", projected["exercise"])
+                self.assertNotIn("affected_milestones", projected["exercise"]["returns"][-1])
+        with self.assertRaises(PermissionError):
+            self.act("milestone", user=self.asset, work_order=wid, milestone="handover",
+                evidence="Original issuer cannot independently renew accepted milestone")
+        self.act("milestone", user=self.pm, work_order=wid, milestone="handover",
+            evidence="Supplied independent retention re-review")
+        c = self.store._case(HOME)
+        self.assertNotIn("stale", c["exercise"]["milestones"][ref])
+        self.assertEqual(c["finance"]["invoices"], before["finance"]["invoices"])
+        self.act("lifecycle", user=self.pm, target="Financial closure")
+        self.assertTrue(self.store._case(HOME)["closed"])
+        self.store.db.close()
+        self.store = open_store()
+        self.assertEqual(self.store._case(HOME)["finance"]["invoices"], before["finance"]["invoices"])
+        self.assertTrue(self.store.verify_ledger()["intact"])
+
+    def test_stale_accepted_unpaid_milestone_requires_review_before_payment_note(self):
+        self.complete_journey(pay_handover=False)
+        invoice = deepcopy(self.store._case(HOME)["finance"]["invoices"][-1])
+        self.assertEqual(invoice["disposition"], "Accept for payment")
+        self.assertEqual(invoice["payment_status"], "Not payable yet")
+        self.act("return", user=self.pm, target="Independent QA", receiver=self.qi["email"],
+            reason="Retention evidence discrepancy", evidence="Supplied fictional discrepancy",
+            next_action="Re-check handover milestone after quality review",
+            affected_milestones=[invoice["lines"][0]["milestone_ref"]])
+        for status in ("Awaiting payment run", "Paid outside this system"):
+            before = deepcopy(self.store._case(HOME))
+            head = self.store.verify_ledger()["head"]
+            with self.assertRaises(ValueError):
+                self.store.finance_action(self.geo, HOME, dict(action="payment_status", id=invoice["id"],
+                    status=status, evidence="Refused stale payment reference"))
+            self.assertEqual(self.store._case(HOME), before)
+            self.assertEqual(self.store.verify_ledger()["head"], head)
+        self.act("lifecycle", user=self.pm, target="Handover")
+        self.act("milestone", user=self.pm, work_order=invoice["work_order"], milestone="handover",
+            evidence="Independent supplied milestone re-review")
+        self.store.finance_action(self.geo, HOME, dict(action="payment_status", id=invoice["id"],
+            status="Paid outside this system", evidence="New fictional externally supplied payment reference"))
+        self.act("lifecycle", user=self.pm, target="Financial closure")
+        self.assertTrue(self.store._case(HOME)["closed"])
 
     def test_source_authorization_projection_and_inference_zero_calls(self):
         self.act("create-form", form_type="competitive")
@@ -581,6 +673,8 @@ class ExerciseWorkbenchTests(unittest.TestCase):
             {"affected_form_fields": {"FORM-001": []}},
             {"affected_form_fields": {"SIBLING-FORM": ["home_ids"]}},
             {"affected_form_fields": {"FORM-001": [{}]}},
+            {"affected_milestones": "unknown"}, {"affected_milestones": None},
+            {"affected_milestones": [{}]}, {"affected_milestones": ["SIBLING-WO:handover"]},
         ):
             before = deepcopy(self.store._case(HOME))
             head = self.store.verify_ledger()["head"]

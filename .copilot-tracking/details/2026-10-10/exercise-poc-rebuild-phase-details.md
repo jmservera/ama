@@ -218,3 +218,17 @@ cash and ten invalid-scope atomicity shapes are covered. Current display stage
 and reason agree with returned owner/next action. Native-browser 60 checks
 and full 380-test regression pass; complete quality/procurement/milestone
 return dependencies and remaining human/live requirements are not inferred.
+
+Next boundary is milestone re-review after return. Named existing references
+are marked stale with source/history; current invoice matching, payment-status
+and closure must reject their use. Previously paid invoices remain historical
+facts, never reset or automatically repaid. Validate both approved-but-unpaid
+and already-paid cases without new Finance authority or billable calls.
+
+E27 now supplies exact paid/unpaid renewal/refusal fixtures, unchanged
+unaffected milestone/history and invalid/foreign/duplicate scope atomicity.
+E28 supplies 61 finite headed-browser checks, not browser payment execution.
+Regression is 382 tests with 26 live SQL skips; image
+`f3dbc0af7306b6b2ac51b00116d9ba27d6fc22aedeb0f88f959529ccf64ecd90`
+starts UID10001/read-only with `PW_DATA` explicitly empty and health 200.
+No work-order-version or quality dependency completion is inferred.

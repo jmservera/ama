@@ -327,6 +327,7 @@ function exerciseActionEditor(id, data, send) {
       ["receiver", "Receiving owner email"], ["reason", "Return/reopen reason"], ["evidence", "Source reference"],
       ["next_action", "Owned next action"],
       ["affected_signoffs", "Explicit sign-offs for re-review, comma-separated: assessment, design, building, coordination (blank is routing-only)"],
+      ["affected_milestones", "Explicit same-home milestone references for re-review, comma-separated (blank preserves milestones)"],
       ["affected_form_fields", 'Explicit same-home form fields JSON, for example {"FORM-001":["epc_band"]} (blank preserves fields)', "textarea"]],
     handoff: [["step", "Separately evidenced handoff action", ["sent", "received", "accepted", "returned", "escalated", "completed"]],
       ["receiver", "Named receiver email (sending)"], ["reason", "Reason/purpose"], ["evidence", "Explicit action evidence"],
@@ -379,6 +380,7 @@ function exerciseActionEditor(id, data, send) {
     const body = Object.fromEntries(Object.entries(values).filter(([, input]) => input.value !== "").map(([key, input]) => [key, input.value]));
     error.textContent = "";
     if ("affected_signoffs" in body) body.affected_signoffs = body.affected_signoffs.split(",").map((key) => key.trim()).filter(Boolean);
+    if ("affected_milestones" in body) body.affected_milestones = body.affected_milestones.split(",").map((ref) => ref.trim()).filter(Boolean);
     if ("affected_form_fields" in body) {
       try {
         body.affected_form_fields = JSON.parse(body.affected_form_fields);
