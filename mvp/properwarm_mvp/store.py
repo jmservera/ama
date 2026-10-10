@@ -601,6 +601,8 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                 order = self._work_order(wid)
                 if order["case_id"] != case_id:
                     raise PermissionError("Milestone belongs to a different home.")
+                if order["versions"][-1]["scope_version"] != self._package(order["package"])["scope_version"]:
+                    raise ValueError("Milestone evidence must match the current package scope version.")
                 milestone = body.get("milestone")
                 amounts = {"mobilisation": 3600, "installation": 12600, "handover": 1800}
                 if milestone not in amounts:
@@ -611,16 +613,21 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                     raise ValueError("Verified booked mobilisation evidence is required; no advance payment.")
                 if milestone == "installation" and not all(
                     any(r["measure"] == measure and r["state"] in ("Accepted", "Handed over")
+                        and self._quality_current(c, r) and r.get("work_order") == wid
                         for r in c.get("quality", [])) for measure in self._measures(c)):
                     raise ValueError("Independent quality acceptance is required for installation milestone.")
-                if milestone == "handover" and state["lifecycle"] != "Handover":
+                if milestone == "handover" and (state["lifecycle"] != "Handover" or not all(
+                    any(r["measure"] == measure and r["state"] == "Handed over"
+                        and self._quality_current(c, r) and r.get("work_order") == wid
+                        for r in c.get("quality", [])) for measure in self._measures(c))):
                     raise ValueError("Resident handover is required for retention milestone.")
                 evidence = text(body.get("evidence"), "accepted milestone evidence", 300)
                 ref = f"{wid}:{milestone}"
                 if ref in state.get("milestones", {}):
                     state.setdefault("milestone_history", []).append(dict(reference=ref, **deepcopy(state["milestones"][ref])))
                 state.setdefault("milestones", {})[ref] = dict(work_order=wid, amount=amounts[milestone],
-                                                               by=user["email"], at=now(), evidence=evidence)
+                    work_order_version=order["versions"][-1]["version"],
+                    by=user["email"], at=now(), evidence=evidence)
             elif action == "lifecycle":
                 self._exercise_lifecycle(user, c, body)
             elif action == "handoff":
@@ -1125,16 +1132,19 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
         if target == "Provider completed" and not any(w["state"] == "Completed" for w in orders):
             why.append("Separately recorded provider completion is missing.")
         records = c.get("quality", [])
-        if target == "Independent QA" and not records:
+        if target == "Independent QA" and not any(self._quality_current(c, r) for r in records):
             why.append("Provider quality pack is missing.")
         if target == "Handover":
             why += self.exercise_readiness(c)
-            if any(not any(r["measure"] == m and r["state"] == "Handed over" for r in records)
+            if any(not any(r["measure"] == m and r["state"] == "Handed over" and self._quality_current(c, r) for r in records)
                    for m in self._measures(c)):
                 why.append("Every measure needs independent QA acceptance and resident handover.")
         if target == "Financial closure":
             from .finance import match_invoice
             why += self.exercise_readiness(c)
+            if any(not any(r["measure"] == m and r["state"] == "Handed over" and self._quality_current(c, r)
+                           for r in records) for m in self._measures(c)):
+                why.append("Current work-order quality acceptance and resident handover are required.")
             events = c["exercise"].get("fund_events", [])
             claims = [e for e in events if e["event"] == "claim-disposition"
                       and e["disposition"] == "Accepted" and not e.get("stale")]

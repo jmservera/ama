@@ -1795,3 +1795,8 @@ metadata when the knowledge base was created.
   Regression: 393 tests, 26 live MSSQL skips. Separate actual MSSQL checks
   reconcile 60,000 stock rows and filtered map/list. Full-PRD/human/model-value
   acceptance remains incomplete; no repeated Review or accepted-outcome claim.
+
+## [2026-10-10] query | Decision model feasibility versus value
+
+* Updated `docs/ideas/typesafe-system-one-agent-fit.md` and the index to record real Decision 1 inference as technical feasibility, not proven incremental value.
+* Held-out calibration and paired manual/rules-versus-assisted effort, quality and cost evidence remain unexecuted. Historical activation blockers are explicitly distinguished from the later observed live inference.

@@ -205,9 +205,35 @@ self-hosted Kev remain contingencies if approved processing location,
 quality or economics favor them, subject to fresh API, licensing, model-card
 and operational verification.
 
+### Observed Feasibility, Not Proven Incremental Value (2026-10-10)
+
+The continuing generated-data MVP has now executed real Microsoft Decision 1
+inference: a validated source-bound EPC candidate proposal with probability,
+version and usage evidence, displayed as Not reviewed. Real GPT-4.1-mini also
+produced a citation-verified summary. See the
+[MVP delivery evidence](../../mvp/README.md#current-continuing-mvp). This newer
+observation supersedes the deployment/access blockers in the historical
+pre-activation assessment below; it does not establish model calibration or
+business benefit.
+
+The exercise proves technical feasibility and a bounded review UX, not that
+Decision 1 improves decisions or saves effort. No paired manual/rules versus
+Decision 1 trial, human-adjudicated held-out accuracy study or measured grant
+capture improvement has been completed. Deterministic extraction is preferable
+for clear structured fields unless comparison demonstrates incremental benefit.
+The defensible tribunal statement is: real inference is integrated; incremental
+value remains a hypothesis to test on ambiguous source-selection tasks.
+
+Use the identical held-out case families for manual/parser-rule and assisted
+arms. Measure correctness, critical errors, abstention and calibration, total
+preparation plus review/correction effort, latency and cost. Freeze task-specific
+success and stop criteria before executing the comparison. Automated synthetic
+oracles can establish engineering accuracy, but do not stand in for human
+adjudication, usability evidence or real company outcomes.
+
 ### Evaluation and Activation Gate
 
-Read-only implementation verification on 2026-10-10 found the AMA resource's
+Historical pre-activation assessment follows. Read-only implementation verification on 2026-10-10 found the AMA resource's
 model eligibility metadata includes `Microsoft-Decision-1`, format `Microsoft`,
 version `1`, with `GlobalStandard` advertised. The returned SKU cost is null:
 this is neither a price quote nor verified budget clearance. Deployment

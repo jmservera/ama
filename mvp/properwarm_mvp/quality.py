@@ -6,8 +6,6 @@ accepts work itself: a person with the right role accepts it, and that person
 must be someone other than whoever submitted the evidence, recorded it, or
 fixed a defect on it. A provider's submission is kept as evidence only.
 """
-import os
-
 from .workflows import MANAGER_ROLES, _now
 
 QUALITY_ROLES = ("Quality Inspector",) + MANAGER_ROLES
@@ -42,6 +40,19 @@ def _clean(text, n=300):
 
 
 class QualityMixin:
+    def _quality_current(self, c, rec):
+        if not c.get("exercise"):
+            return True
+        order = next((w for w in self._proc()["work_orders"]
+                      if w["id"] == rec.get("work_order") and w["case_id"] == c["id"]), None)
+        return bool(not rec.get("stale") and order and order["state"] == "Completed"
+                    and rec.get("work_order_version") == order["versions"][-1]["version"]
+                    and order["versions"][-1]["scope_version"] == self._package(order["package"])["scope_version"])
+
+    def _need_current_quality(self, c, rec):
+        if not self._quality_current(c, rec):
+            raise ValueError("Quality evidence is not bound to the current completed work-order version; submit fresh evidence for independent review.")
+
     def _quality(self, c):
         return c.setdefault("quality", [])
 
@@ -79,16 +90,21 @@ class QualityMixin:
             raise ValueError("Choose where this evidence came from.")
         with self.lock:
             c = self._case(case_id)
-            if c.get("exercise") and os.environ.get("PW_EXERCISE") == "1":
+            order = None
+            if c.get("exercise"):
                 self._need_quality_role(user, "record provider quality evidence")
-                if not any(w["case_id"] == case_id and w["state"] == "Completed"
-                           for w in self._proc()["work_orders"]):
-                    raise ValueError("Record actual provider work-order completion before submitting quality evidence.")
+                orders = [w for w in self._proc()["work_orders"] if w["case_id"] == case_id
+                          and w["state"] == "Completed"
+                          and w["versions"][-1]["scope_version"] == self._package(w["package"])["scope_version"]]
+                if len(orders) != 1:
+                    raise ValueError("Exactly one current completed same-home work order is required; resolve missing or ambiguous scope before submitting quality evidence.")
+                order = orders[0]
             if c["closed"]:
                 raise ValueError("This case is closed.")
             if measure not in self._measures(c):
                 raise ValueError("Choose one of this case's measures.")
-            if any(r["measure"] == measure and r["state"] != HANDED for r in self._quality(c)):
+            if any(r["measure"] == measure and r["state"] != HANDED and self._quality_current(c, r)
+                   for r in self._quality(c)):
                 raise ValueError("This measure already has a quality record in progress.")
             cl = checklist_for(measure)
             items = items if isinstance(items, dict) else {}
@@ -100,6 +116,8 @@ class QualityMixin:
                        submitted_by=submitted_by, source=source, recorded_by=user["name"], recorded_by_code=user["code"], recorded_at=_now(),
                        history=[dict(at=_now(), by=user["name"], from_state=None, to_state=SUBMITTED, note=f"{source}: {submitted_by}")],
                        defect=None, defects=[], handover=None, aftercare=[])
+            if order:
+                rec.update(work_order=order["id"], work_order_version=order["versions"][-1]["version"])
             self._quality(c).append(rec)
             self.audit(user["email"], "quality_submitted", case_id, f"{measure} {cl['version']} from {source} ({submitted_by})")
             self.save()
@@ -110,6 +128,7 @@ class QualityMixin:
         with self.lock:
             c = self._case(case_id)
             rec = self._qrec(c, idx)
+            self._need_current_quality(c, rec)
             if rec["state"] not in (SUBMITTED, FIXED):
                 raise ValueError(f"This work is '{rec['state']}'. It can only be accepted after it is submitted or reinspected.")
             self._independent(rec, user, "accept this work")
@@ -126,6 +145,7 @@ class QualityMixin:
         with self.lock:
             c = self._case(case_id)
             rec = self._qrec(c, idx)
+            self._need_current_quality(c, rec)
             self._qmove(rec, RETURNED, user, reason)
             rec["defect"] = dict(reason=reason, description=defect, owner=owner, raised_by=user["name"], raised_at=_now())
             rec["defects"].append(dict(rec["defect"]))
@@ -139,6 +159,7 @@ class QualityMixin:
         with self.lock:
             c = self._case(case_id)
             rec = self._qrec(c, idx)
+            self._need_current_quality(c, rec)
             self._qmove(rec, FIXED, user, _clean(note))
             rec.update(fixed_by=fixed_by, fixed_recorded_by=user["name"], fixed_by_code=user["code"], fixed_at=_now())
             rec["defect"].update(fixed_by=fixed_by, fixed_at=rec["fixed_at"])
@@ -167,6 +188,7 @@ class QualityMixin:
             c = self._case(case_id)
             rec = self._qrec(c, idx)
             if c.get("exercise"):
+                self._need_current_quality(c, rec)
                 self._need_quality_role(user, "record resident handover")
                 self._independent(rec, user, "record handover")
                 from .store import GateError

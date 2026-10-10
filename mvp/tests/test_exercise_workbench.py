@@ -142,6 +142,131 @@ class ExerciseWorkbenchTests(unittest.TestCase):
     def test_same_home_end_to_end_independent_qa_financial_closure(self):
         self.complete_journey()
 
+    def test_work_order_correction_stales_only_bound_quality_and_dependent_milestones(self):
+        from properwarm_mvp.finance import match_invoice
+        self.complete_journey()
+        before = deepcopy(self.store._case(HOME))
+        sibling = deepcopy(self.store._case(SIBLING))
+        wid = before["quality"][0]["work_order"]
+        self.assertEqual(before["quality"][0]["work_order_version"], 1)
+        head = self.store.verify_ledger()["head"]
+        with self.assertRaises(ValueError):
+            self.store.correct_work_order(self.asset, wid, "Closed case cannot bypass return")
+        self.assertEqual(self.store._case(HOME), before)
+        self.assertEqual(self.store.verify_ledger()["head"], head)
+        self.act("return", user=self.pm, target="Installation", receiver=self.qi["email"],
+                 reason="Supplied later defect", evidence="Fictional defect reference",
+                 next_action="Correct work and supply fresh independent evidence")
+        self.store.correct_work_order(self.asset, wid, "Supplied hatch defect")
+        c = self.store._case(HOME)
+        self.assertEqual(c["quality"][0]["state"], "Handed over")
+        self.assertTrue(c["quality"][0]["stale"])
+        for key in ("accepted_by", "accepted_at", "handover", "items", "defects", "aftercare"):
+            self.assertEqual(c["quality"][0][key], before["quality"][0][key])
+        self.assertEqual(c["quality"][0]["history"][:-1], before["quality"][0]["history"])
+        self.assertEqual(c["finance"], before["finance"])
+        self.assertEqual(c["exercise"]["fund_events"], before["exercise"]["fund_events"])
+        self.assertEqual(c["measure_decisions"], before["measure_decisions"])
+        self.assertEqual(c["exercise"]["evidence"], before["exercise"]["evidence"])
+        self.assertEqual(self.store._case(SIBLING), sibling)
+        self.assertEqual(c["exercise"]["milestones"][f"{wid}:mobilisation"],
+                         before["exercise"]["milestones"][f"{wid}:mobilisation"])
+        self.assertEqual([entry["reference"] for entry in c["exercise"]["milestone_history"]],
+                         [f"{wid}:installation", f"{wid}:handover"])
+        for kind in ("installation", "handover"):
+            self.assertTrue(c["exercise"]["milestones"][f"{wid}:{kind}"]["stale"])
+        for invoice in c["finance"]["invoices"][1:]:
+            self.assertEqual([e["code"] for e in match_invoice(c, deepcopy(invoice))], ["unaccepted_milestone"])
+            with self.assertRaises(ValueError):
+                self.store.finance_action(self.geo, HOME, dict(action="payment_status", id=invoice["id"],
+                    status="Paid outside this system", evidence="Cannot replace retained payment"))
+        checks = {item["label"]: item["evidence"] for item in before["quality"][0]["items"]}
+        with self.assertRaises(ValueError):
+            self.store.submit_quality(self.asset, HOME, "Loft insulation", "Fictional installer", "Provider submission", checks)
+        self.store.record_wo_appointment(self.asset, wid, "Booked", "2026-10-21")
+        self.store.complete_work_order(self.asset, wid, "Supplied corrected completion")
+        for kind in ("installation", "handover"):
+            with self.assertRaises(ValueError):
+                self.act("milestone", user=self.pm, work_order=wid, milestone=kind,
+                         evidence="Old acceptance must not renew new-version milestone")
+        idx = self.store.submit_quality(self.asset, HOME, "Loft insulation", "Fictional installer", "Provider submission", checks)
+        self.assertEqual(idx, 1)
+        self.assertEqual(self.store._case(HOME)["quality"][idx]["work_order_version"], 2)
+        with self.assertRaises(PermissionError):
+            self.store.accept_quality(self.asset, HOME, idx, "Original recorder cannot approve")
+        self.store.accept_quality(self.qi, HOME, idx, "Independent new-version inspection")
+        self.act("milestone", user=self.pm, work_order=wid, milestone="installation", evidence="New-version independent acceptance")
+        self.store.hand_over_quality(self.qi, HOME, idx, "Corrected handover evidence supplied", True)
+        for target in ("Provider completed", "Independent QA", "Handover"):
+            self.act("lifecycle", user=self.pm, target=target)
+        self.act("milestone", user=self.pm, work_order=wid, milestone="handover", evidence="Corrected independent handover")
+        self.assertEqual(self.store._case(HOME)["exercise"]["milestones"][f"{wid}:handover"]["work_order_version"], 2)
+        self.assertEqual(self.store._case(HOME)["finance"], before["finance"])
+        self.act("lifecycle", user=self.pm, target="Financial closure")
+        after = deepcopy(self.store._case(HOME))
+        self.store.db.close()
+        self.store = open_store()
+        self.assertEqual(self.store._case(HOME), after)
+        self.assertEqual(self.store._case(SIBLING), sibling)
+        self.assertTrue(self.store.verify_ledger()["intact"])
+
+    def test_package_scope_change_blocks_old_quality_milestones_and_completion(self):
+        self.complete_journey()
+        before = deepcopy(self.store._case(HOME))
+        wid = before["quality"][0]["work_order"]
+        self.act("return", user=self.pm, target="Installation", receiver=self.qi["email"],
+                 reason="Package review", evidence="Fictional changed scope",
+                 next_action="Obtain new independent design and resident choice")
+        self.store.rescope_package(self.asset, self.store._work_order(wid)["package"],
+                                   "Changed insulation scope", "Supplied scope revision")
+        c = self.store._case(HOME)
+        self.assertTrue(c["quality"][0]["stale"])
+        snapshot = deepcopy(c)
+        head = self.store.verify_ledger()["head"]
+        for call in (
+            lambda: self.store.correct_work_order(self.asset, wid, "Must not adopt package version silently"),
+            lambda: self.store.complete_work_order(self.asset, wid, "Must not complete superseded scope"),
+            lambda: self.act("milestone", user=self.pm, work_order=wid, milestone="handover", evidence="Old scope"),
+            lambda: self.store.finance_action(self.geo, HOME, dict(action="payment_status", id="INV-3",
+                        status="Awaiting payment run")),
+            lambda: self.store.accept_quality(self.qi, HOME, 0, "Old scope"),
+            lambda: self.store.return_quality(self.qi, HOME, 0, "Old scope", "Defect", "Provider"),
+            lambda: self.store.record_fix(self.asset, HOME, 0, "Provider", "Old scope"),
+            lambda: self.store.hand_over_quality(self.qi, HOME, 0, "Old scope", True),
+        ):
+            with self.assertRaises((ValueError, PermissionError, GateError)):
+                call()
+            self.assertEqual(self.store._case(HOME), snapshot)
+            self.assertEqual(self.store.verify_ledger()["head"], head)
+        self.assertEqual(c["finance"], before["finance"])
+        self.store.db.close()
+        self.store = open_store()
+        self.assertEqual(self.store._case(HOME), snapshot)
+
+    def test_quality_binding_refuses_ambiguous_completion_and_wrong_order_milestone(self):
+        self.complete_journey()
+        self.act("return", user=self.pm, target="Handover", receiver=self.qi["email"],
+                 reason="Additional provider scope", evidence="Fictional review",
+                 next_action="Resolve provider identity before QA")
+        with self.store.lock:
+            original = self.store._proc()["work_orders"][0]
+            other = deepcopy(original)
+            other["id"] = "WO-OTHER"
+            self.store._proc()["work_orders"].append(other)
+            self.store.save()
+        c = self.store._case(HOME)
+        snapshot = deepcopy(c)
+        head = self.store.verify_ledger()["head"]
+        checks = {item["label"]: item["evidence"] for item in c["quality"][0]["items"]}
+        with self.assertRaisesRegex(ValueError, "ambiguous"):
+            self.store.submit_quality(self.asset, HOME, "Loft insulation", "Provider", "Provider submission", checks)
+        for kind in ("installation", "handover"):
+            with self.assertRaises(ValueError):
+                self.act("milestone", user=self.pm, work_order="WO-OTHER", milestone=kind,
+                         evidence="Same-home QA for another order must not count")
+        self.assertEqual(self.store._case(HOME), snapshot)
+        self.assertEqual(self.store.verify_ledger()["head"], head)
+
     def complete_journey(self, *, pay_handover=True):
         self.budget()
         self.resolve_epc()

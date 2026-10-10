@@ -70,6 +70,21 @@ class ProcurementMixin:
     def _committed_used(self, pkg, contractor):
         return sum(1 for w in self._proc()["work_orders"] if w["package"] == pkg["id"] and w["contractor"] == contractor and w["state"] in ACTIVE)
 
+    def _invalidate_work_order_evidence(self, w, user, reason):
+        c = self._case(w["case_id"])
+        if not c.get("exercise"):
+            return
+        for rec in c.get("quality", []):
+            if rec.get("work_order") == w["id"] and not rec.get("stale"):
+                rec.update(stale=True, reassessment_reason=reason)
+                rec["history"].append(dict(at=_now(), by=user["name"], from_state=rec["state"],
+                                          to_state=rec["state"], note=f"Work-order evidence requires fresh review: {reason}"))
+        state = c["exercise"]
+        for ref, milestone in state.get("milestones", {}).items():
+            if milestone["work_order"] == w["id"] and ref in (f"{w['id']}:installation", f"{w['id']}:handover"):
+                state.setdefault("milestone_history", []).append(dict(reference=ref, **milestone))
+                milestone.update(stale=True, reassessment_reason=reason)
+
     # ---- packages and capacity
     def create_package(self, user, name, period_from, period_to, scope, contract_ref):
         self._need_manager(user, "create a package")
@@ -99,6 +114,9 @@ class ProcurementMixin:
             p["scope_version"] += 1
             p["scope"] = scope
             p["scope_history"].append(dict(version=p["scope_version"], scope=scope, by=user["name"], at=_now(), reason=reason))
+            for w in self._proc()["work_orders"]:
+                if w["package"] == pid:
+                    self._invalidate_work_order_evidence(w, user, f"Package scope changed: {reason}")
             self.audit(user["email"], "package_rescoped", "-", f"{pid} scope version {p['scope_version']}: {reason}")
             self.save()
 
@@ -201,6 +219,13 @@ class ProcurementMixin:
         self._need_manager(user, "record completion")
         with self.lock:
             w = self._work_order(wid)
+            if self._case(w["case_id"]).get("exercise"):
+                from .store import GateError
+                why = self.exercise_readiness(self._case(w["case_id"]))
+                if w["versions"][-1]["scope_version"] != self._package(w["package"])["scope_version"]:
+                    why.append("Package scope changed; obtain new design and resident review before release.")
+                if why:
+                    raise GateError(why)
             self._wo_move(w, COMPLETED, user, _clean(note))
             w.update(completed_by=user["name"], completed_at=_now())
             self.audit(user["email"], "workorder_completed", w["case_id"], f"{wid} {_clean(note)}".strip())
@@ -213,11 +238,17 @@ class ProcurementMixin:
             raise ValueError("Say what needs correcting.")
         with self.lock:
             w = self._work_order(wid)
-            if self._case(w["case_id"]).get("exercise") and scope and scope != w["versions"][-1]["scope"]:
-                raise PermissionError("A changed exercise scope requires new independent design and resident choice.")
+            c = self._case(w["case_id"])
+            if c.get("exercise"):
+                if c["closed"]:
+                    raise ValueError("Return the closed case to its owned review workflow before correcting the work order.")
+                if ((scope and scope != w["versions"][-1]["scope"])
+                        or w["versions"][-1]["scope_version"] != self._package(w["package"])["scope_version"]):
+                    raise PermissionError("A changed exercise scope requires new independent design and resident choice.")
             self._wo_move(w, ISSUED, user, f"Correction: {reason}")
             self._new_version(w, user, scope, f"Correction: {reason}")
             w["corrections"].append(dict(reason=reason, by=user["name"], at=_now()))
+            self._invalidate_work_order_evidence(w, user, reason)
             self.audit(user["email"], "workorder_corrected", w["case_id"], f"{wid} version {len(w['versions'])}: {reason}")
             self.save()
 

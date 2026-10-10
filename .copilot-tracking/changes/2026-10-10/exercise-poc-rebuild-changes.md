@@ -13,6 +13,14 @@ ms.date: 2026-10-10
 
 ## Execution Status
 
+Owner-directed continuation resumes full-plan Implement at P05-T01. Immediate
+write boundary: quality/procurement/Store dependency controls, existing tests
+and directly related UI/documentation. Exact version-bound evidence tests and
+full regression are planned. Human evaluation remains unavailable, not waived.
+Current head e68e87d passed MVP CI, MVP validation and Prototype validation;
+historical rubric run38091605078 was cancelled on branch advancement, not failed.
+Current-head rubric38091760398 is still running. No Review is repeated.
+
 P07 generated-data restart implemented and deployed on the existing MVP URL.
 E31/E32 record actual 60,000-stock/980-case SQL, browser and real AI proof.
 Decision provider access is resolved by its published services endpoint;
@@ -50,6 +58,25 @@ corrections; the complete fixture/role acceptance matrix remains outstanding.
 P06 local checks executed and draft PR updated; two prescribed-duration
 workloads pass and live/human acceptance remain open. No full end-to-end
 acceptance or conformant outcome is claimed.
+
+## Work-Order Version Continuation
+
+P05-T01: quality.py/procurement.py/store.py bind new QA and installation/handover
+milestones to exact current completed work-order identity/version and package
+scope. Correction/rescope preserves historical QA, payment, funding/cash,
+resident/source/sibling data but explicitly stales dependent evidence. UI labels
+stale historical records. New exact workbench tests renew independent corrected
+QA through closure/restart and reject ambiguous completion/wrong-order evidence.
+The full suite first found one identity-only forecast fixture missing completion;
+its explicit precondition was added without weakening gates or independence.
+Final `python3 -m unittest discover -s tests -q` from mvp: 396 tests, OK,
+26 live SQL skips, 105.496s. Focused 37 workbench/21 legacy domain/19 forecast
+checks and `node --check web/ops.js` pass. No new cloud deployment or Review.
+
+Filed the owner's model-value question in the existing Decision 1 synthesis and
+knowledge-base index/log: real inference proves feasibility, not incremental
+value. Held-out calibration and paired total-effort/quality/cost evidence remain
+unexecuted. This conclusion does not imply AI should be disabled in the MVP.
 
 ## Completed Work
 

@@ -378,6 +378,15 @@ class ExerciseTests(unittest.TestCase):
         signoffs = store.detail(case_id)["technical"]["signoffs"]
         self.assertEqual(len({record["by_email"] for record in signoffs.values()}), 4)
         items = {label: "Fictional inspection evidence" for label in quality.checklist_for("Loft insulation")["items"]}
+        with self.assertRaisesRegex(ValueError, "completed same-home work order"):
+            store.submit_quality(users["EX-QI-01"], case_id, "Loft insulation",
+                                 users["EX-CON-01"]["name"], "Provider submission", items)
+        # This identity-only fixture supplies completion, not an end-to-end release result.
+        store.data["procurement"] = {
+            "packages": [{"id": "IDENTITY-PKG", "scope_version": 1}],
+            "work_orders": [{"id": "IDENTITY-WO", "case_id": case_id, "package": "IDENTITY-PKG",
+                             "state": "Completed", "versions": [{"version": 1, "scope_version": 1}]}],
+        }
         index = store.submit_quality(users["EX-QI-01"], case_id, "Loft insulation",
                                      users["EX-CON-01"]["name"], "Provider submission", items)
         for code in ("EX-CON-01", "EX-QI-01"):

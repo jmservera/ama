@@ -14,12 +14,22 @@ ms.date: 2026-10-10
 
 ## Executive Summary
 
+P05-T01 continuation executed: new QA and installation/handover milestones
+bind to the exact same-home completed work-order version. Correction and package
+rescope stale dependent evidence without erasing payments, choices or sibling
+records. Fresh independent QA/handover renews the corrected journey through
+closure/restart. Ambiguous completion and wrong-order evidence are refused.
+396-test regression passes with 26 live MSSQL skips; 21 legacy domain tests
+and Node syntax pass. Publication remains draft; deployment remains revision18.
+Human-adjudicated calibration and human/screen-reader acceptance remain external
+evidence prerequisites; autonomous continuation does not manufacture them.
+
 Owner-directed restart: this is the next iteration of the existing Proper
 Warm MVP within the whole AMA exercise, not a separate 18-case application.
 Reuse the recovered 60,000-home register and 980-case programme baseline,
 preserving existing history and provenance. Retain small fixtures as tests.
 Real bounded AI must be enabled and demonstrated; GPT-4.1-mini summary
-success is observed, Decision 1 authentication remains unresolved.
+success and Decision 1 scoring are observed.
 Earlier completed small-fixture markers and workload evidence do not accept
 the generated-data deployment. P07 owns the corrected delivery boundary.
 

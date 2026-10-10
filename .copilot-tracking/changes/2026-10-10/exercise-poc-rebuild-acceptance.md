@@ -83,6 +83,20 @@ actual homes. It is not the strict baseline. E21 uses decimal limits, the
 existing first writer and an accurate fixture label; no failed or deviating
 run is silently promoted.
 
+## Later Work-Order Version Evidence
+
+P05-T01 continuation binds newly supplied QA to one current completed same-home
+work-order version. Three additional exact tests cover corrected paid-history
+journey and independent renewal through closure/restart, package rescope atomic
+refusals, and ambiguous completion/wrong-order milestone rejection. Prior QA,
+choices, sibling, sources, funding/cash and invoice history remain unchanged
+apart from explicit dependent stale/history metadata. Identity-only forecast
+fixture now supplies explicit completion and retains missing-completion refusal
+and all independence denials. Full regression: 396 tests, OK, 26 live MSSQL
+skips, 105.496s. Node syntax and 21 legacy quality/procurement tests pass.
+This is local source evidence, not a new deployed revision, complete workflow
+matrix, human acceptance or a repeat Review.
+
 ## Functional Requirements
 
 | Requirement | Full result | Engineering evidence or remaining boundary |

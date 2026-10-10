@@ -119,18 +119,23 @@
       "decision": "Explicit milestone return scopes now block stale paid/unpaid payment continuation and closure until existing independent renewal. Prior payment/cash/QA/choice and unrelated milestones remain unchanged. 382-test regression with 26 live SQL skips, 61 headed native-browser checks and UID10001/read-only exercise container health pass. Full dependency/live/human acceptance remains incomplete.",
       "status": "published draft; exact-source CI succeeded; full acceptance incomplete",
       "evidence": "acceptance E27/E28; https://github.com/jmservera/ama/pull/58; source d5bbd7984d44ac399a1dcbcdceccad695d16f2eb; successful MVP CI 38069962278, MVP validation 38069962289 and Prototype validation 38069962430; rubric 38069962358 pending at handoff"
+    },
+    {
+      "decision": "P05-T01 work-order-version QA/milestone dependencies implemented; exact correction/rescope/ambiguous/wrong-order oracles and independent renewal/restart pass. Model-value answer filed: feasibility observed, incremental benefit unproven. No new deployment or repeated Review.",
+      "status": "396-test regression passed, 26 live SQL skips; source publication pending",
+      "evidence": "mvp/tests/test_exercise_workbench.py; mvp/tests/test_exercise_forecast.py; docs/ideas/typesafe-system-one-agent-fit.md"
     }
   ],
   "blockers": [
     {
       "id": "full-workflow-and-acceptance",
       "summary": "Focused handoff/update/hazard/building/role/resident/service/privacy/native zoom and interruption/restore probes pass. Exact local core/scale invariants, all 36 versioned earlier-stage returns and scoped sign-off/form/milestone re-review pass. Paid/unpaid stale-milestone continuation is blocked without erasing history. Complete role/workflow/permission and quality/procurement/full milestone-version matrix, scale/cloud cold startup, scheduled RPO/operator reconciliation, screen-reader and human acceptance remain incomplete.",
-      "resolution": "Finish feasible local evidence and preserve exact remaining acceptance gates without relaxing controls or the USD 450 cap."
+      "resolution": "Finish feasible local evidence and preserve exact remaining human/calibration acceptance gates without relaxing controls. The owner removed this rebuild's spend cap."
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "P07 generated-data MVP delivered and published on draft PR58 with exact-source CI success. Continue remaining P05/P06 role/workflow/runtime and human/calibration/value acceptance under a later owner implementation invocation; do not repeat critique/Review or infer automatic-session consent."
+    "action": "Publish tested work-order dependency continuation on existing draft PR58; preserve incomplete full-workflow/human/calibration/value gates and deployed revision18."
   },
   "prioritized_follow_ups": [
     {

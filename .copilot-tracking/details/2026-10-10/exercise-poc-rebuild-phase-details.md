@@ -143,6 +143,13 @@ withdrawal/hold/QA-return isolation, deterministic reruns, versions/denominators
 <!-- rpi:phase id=P05 -->
 ## P05: Connected workbench
 
+P05-T01 continuation executed: exact work-order-version quality/milestone
+dependencies, independent corrected renewal through closure/restart, preserved
+cash/choices/sources/sibling and atomic stale-scope refusals. Ambiguous completion
+and wrong-order evidence are blocked. 396-test full regression passes with 26
+live SQL skips; 21 legacy domain tests and Node syntax pass. Source publication
+on draft PR58 does not replace deployed revision18 or complete human acceptance.
+
 <!-- rpi:task id=P05-T01 -->
 ### P05-T01: Integrate human workflow
 

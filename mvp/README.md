@@ -56,6 +56,18 @@ The owner removed the prior budget constraint for this rebuild.
 task authorization, source bounds, per-call liability reservations and actual
 model usage remain. The earlier USD450 configuration below is historical.
 
+### Work-order evidence version controls
+
+New exercise/programme QA evidence is bound to the unique current completed
+same-home work-order version. Missing or ambiguous completion is refused,
+not inferred from an older record. Work-order correction or package rescope
+marks dependent QA and installation/handover milestones stale while preserving
+historical acceptance, resident choices, invoices and external cash receipts.
+Fresh evidence and independent QA/handover review are required before new
+milestone, payment-status or closure actions. The UI labels stale evidence as
+historical. These continuation controls are source-tested; the deployment
+image recorded above is the earlier generated-data release.
+
 ### Reproduce the generated-data import
 
 With operator Entra access to a dedicated SQL database, mount the existing

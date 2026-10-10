@@ -19,12 +19,14 @@ function qualityPanel(c, id, refresh) {
     const act = (name, body) => refresh(() => post(id, name, Object.assign({ index: i }, body)));
     return h("li", {},
       h("strong", {}, r.measure), ` ${QUALITY_WORDS[r.state] || r.state}. Checked against ${r.checklist_version}. Evidence from ${r.source}: ${r.submitted_by}.`,
+      r.work_order && h("p", { class: "muted" }, `Evidence for ${r.work_order}, version ${r.work_order_version}.`),
+      r.stale && h("p", { class: "err", role: "status" }, `Historical evidence only. Fresh independent review required: ${r.reassessment_reason}.`),
       h("ul", {}, r.items.map((x) => h("li", {}, `${x.label}: ${x.evidence}`))),
       r.defect && r.state !== "Accepted" && r.state !== "Handed over" && h("p", { class: "err" }, `Defect: ${r.defect.description}. Reason: ${r.defect.reason}. Owner: ${r.defect.owner}.`),
       r.accepted_by && h("p", {}, `Accepted by ${r.accepted_by}.`),
       r.handover && h("p", {}, `Handed over by ${r.handover.by}: ${r.handover.note}`),
       r.aftercare.length > 0 && h("ul", {}, r.aftercare.map((a) => h("li", {}, `${fmtDate(a.at)} ${a.by}: ${a.note}`))),
-      (r.state === "Submitted" || r.state === "Fixed, awaiting reinspection") && (canCheck
+      !r.stale && (r.state === "Submitted" || r.state === "Fixed, awaiting reinspection") && (canCheck
         ? h("div", {}, h("p", { class: "muted" }, "You cannot accept work you submitted, recorded or fixed. Nothing is accepted automatically."),
           h("div", { class: "row" }, note,
             h("button", { onclick: () => act(r.state === "Submitted" ? "quality-accept" : "quality-reinspect", { result: "pass", note: note.value }) }, "Accept this work"),
@@ -32,9 +34,9 @@ function qualityPanel(c, id, refresh) {
           r.state === "Submitted" && h("div", { class: "row" }, defect, owner,
             h("button", { class: "alt", onclick: () => act("quality-return", { reason: note.value, defect: defect.value, owner: owner.value }) }, "Return with a defect (add the reason above)")))
         : h("p", { class: "muted" }, "A Quality Inspector or a manager checks this work.")),
-      r.state === "Returned" && h("div", { class: "row" }, fixer, note,
+      !r.stale && r.state === "Returned" && h("div", { class: "row" }, fixer, note,
         h("button", { class: "alt", onclick: () => act("quality-fix", { fixed_by: fixer.value, note: note.value }) }, "Record that it has been put right")),
-      r.state === "Accepted" && h("div", { class: "row" }, note, told, h("label", { for: `told-${i}` }, "The resident has been told"),
+      !r.stale && r.state === "Accepted" && h("div", { class: "row" }, note, told, h("label", { for: `told-${i}` }, "The resident has been told"),
         h("button", { onclick: () => act("quality-handover", { note: note.value, resident_told: told.checked }) }, "Record handover (guarantees, how to use it)")),
       r.state === "Handed over" && h("div", { class: "row" }, note,
         h("button", { class: "alt", onclick: () => act("quality-aftercare", { note: note.value }) }, "Add an aftercare note")));
