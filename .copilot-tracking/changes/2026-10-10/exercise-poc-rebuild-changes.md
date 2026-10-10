@@ -23,7 +23,14 @@ Full accepted PRD and human/model-value gates remain incomplete.
 Final image 0b6b04395c905c6dd6a51520ba8b91d702b4b9b1c6499a4276ed435956307299,
 revision18. Actual restart preserves exact 980-case hash, 60,000 stock count,
 audit head and five AI reservation/source metadata records. Original generated
-document download succeeds. Source publication and current-head CI pending.
+document download succeeds. Publication and exact-source CI results follow.
+
+Publication complete: implementation b388b6a6fc2aa4e4a908a6afaf50e9b97538a23a
+pushed on existing draft PR58. Exact-source MVP CI38091605106,
+MVP validation38091605082 and Prototype validation38091605121 succeeded.
+Rubric38091605078 pending at handoff. P07 is complete for its amended
+generated-data deployment/proposal boundary. P05/P06 full PRD/human/calibration
+acceptance remains incomplete, with original Review unchanged.
 
 Owner-directed scope restart: "exercise" means the whole AMA programme.
 The 18-case Azure replacement was not the requested continuing MVP.

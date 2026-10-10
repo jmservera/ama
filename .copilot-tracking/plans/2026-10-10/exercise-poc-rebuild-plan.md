@@ -315,7 +315,7 @@ aggregates below ten require complementary suppression, not exposure through
 another total.
 
 <!-- rpi:phase id=P07 -->
-### [ ] P07: Restart the existing generated-data MVP iteration
+### [x] P07: Restart the existing generated-data MVP iteration
 
 Dependencies: existing P02/P03 domain controls; owner scope correction.
 This is a later implementation amendment, not a repeat critique or Review.
@@ -346,12 +346,18 @@ Actual browser source-provenance inspection passes. Calibration/paired value
 remain separate incomplete PRD acceptance gates, not this smoke boundary.
 
 <!-- rpi:task id=P07-T03 -->
-#### [ ] P07-T03: Deploy and publish the corrected continuing MVP
+#### [x] P07-T03: Deploy and publish the corrected continuing MVP
 
 Replace the app only after generated-data startup and regression pass;
 verify stock/case counts, source fingerprints, live AI, SQL/Blob persistence,
 browser UX and the exact deployment digest. Publish on existing draft PR #58.
 Keep earlier Review Not accepted and remaining human/full-PRD gates explicit.
+Executed: source b388b6a6fc2aa4e4a908a6afaf50e9b97538a23a published on
+existing draft PR58. Exact-source MVP CI 38091605106, MVP validation
+38091605082 and Prototype validation 38091605121 succeeded. Revision18
+and its pinned image verified; source/case/audit/AI reservations retained
+across actual restart. Rubric run38091605078 is separate and still pending
+at this handoff. P05/P06 full-PRD/human acceptance remains incomplete.
 
 ## Validation Ownership and Change Budget
 

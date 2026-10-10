@@ -219,13 +219,16 @@ Focused financial/handoff/update/return/hazard corrections now pass local
 engineering checks; finish their complete role/workflow fixture acceptance
 without weakening resident, professional, safety or Finance controls.
 Local exact workload shapes are now executed; finish remaining permission,
-cold-start, recovery and accessibility boundaries separately. An operator must
-verify the actual Decision 1 deployment/response
-contract, processing terms/quota/prices and bounded charge authorization, then
-reconcile a shared liability ledger before any billable adapter activation.
-Keep the USD 450 monthly cap, USD 360 warning and USD 405 optional-work pause.
+cold-start, recovery and accessibility boundaries separately. Decision 1
+deployment/response and real generation are now observed under explicit owner
+authority in E32. Comparative calibration and paired model-value evaluation
+remain unexecuted. The latest owner instruction removes the prior spending
+cap for this rebuild; task/source/input controls and durable usage reservations
+remain. Preserve recorded failed calls and distinguish citations from approval.
 No broad new company research is required to finish these engineering gaps.
 
-An explicit deployment/billable authorization and participant request returned
-user unavailable. Read-only catalog eligibility (version 1, GlobalStandard)
-does not clear that blocker; no cloud changes or actual inference were run.
+Earlier deployment/billable questions were unavailable, but later owner
+directions explicitly authorized deployment and bounded real AI. Do not retain
+those superseded questions as current blockers. Real human participants,
+screen-reader evaluation and paired-effort labels remain unavailable; no human
+results, full acceptance or repeated Review are inferred from cloud success.

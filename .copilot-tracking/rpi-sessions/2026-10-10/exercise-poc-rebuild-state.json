@@ -17,8 +17,8 @@
   "confirmed_decisions": [
     {
       "decision": "P07 generated-data iteration deployed: 60000 existing stock rows, copied 980-case programme/history, OpenStreetMap SQL-paged stock view, live Decision1 EPC proposal Not reviewed and verified GPT-4.1-mini summary. Actual cloud/browser checks pass; original Review remains Not accepted.",
-      "status": "implemented and deployed; publication pending; full PRD/human acceptance incomplete",
-      "evidence": "E31/E32; exercise-poc-rebuild-programme-results.json"
+      "status": "P07 implemented, deployed and published; exact-source CI passed; full PRD/human acceptance incomplete",
+      "evidence": "E31/E32; exercise-poc-rebuild-programme-results.json; source b388b6a6fc2aa4e4a908a6afaf50e9b97538a23a; CI38091605106/38091605082/38091605121; draft PR58"
     },
     {
       "decision": "Owner says ignore the budget for the current rebuild, superseding the prior USD450 cap for this invocation. Disable only the spend-cap gate explicitly; retain authorized task/source controls, token bounds, actual usage and SQL liability reservations. Synthetic data is disposable and may be regenerated/reloaded; prefer existing snapshot for comparability, not heavyweight recovery approval.",
@@ -27,12 +27,12 @@
     },
     {
       "decision": "Owner corrects scope: AMA exercise means the whole programme; restart the continuing MVP with the same generated 60000-home stock and retained 980-case programme history. Small fixtures are tests only. Real enabled AI is mandatory in every new prototype, PoC and MVP.",
-      "status": "owner-directed implementation amendment; P07 active",
+      "status": "owner-directed amendment; P07 delivery complete",
       "evidence": "Current owner scope correction; recovered 60000-row register seed 4820260930 and 980-case snapshot SHA256 db96bd833a608351d9f4d94d769819dfa70a857bba0e9559d92edb9c1836a4ef; read-only retained Azure retrofit counts"
     },
     {
       "decision": "Owner requires real AI enabled and demonstrated in every PoC/MVP. Prior deployment-only permission must not be interpreted as a preference for a workflow-only app. Activate bounded proposal/drafting tasks, preserving source controls and human approval.",
-      "status": "owner-authorized AI activation; verifying prerequisites",
+      "status": "owner-authorized; real scoring and generation verified in E32",
       "evidence": "User: Why is AI disabled? AI is the whole point of the exercise, every PoC and MVP must have AI enabled and demonstrate its capabilities."
     },
     {
@@ -130,7 +130,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "P07-T03 finish exact final deployment/restart evidence and publish generated-data iteration on existing draft PR58. Full role/workflow/human/model-value PRD acceptance remains open; no repeated critique/Review or automatic-session consent."
+    "action": "P07 generated-data MVP delivered and published on draft PR58 with exact-source CI success. Continue remaining P05/P06 role/workflow/runtime and human/calibration/value acceptance under a later owner implementation invocation; do not repeat critique/Review or infer automatic-session consent."
   },
   "prioritized_follow_ups": [
     {
@@ -141,9 +141,9 @@
     },
     {
       "rank": 2,
-      "task": "Verify Foundry access/cost ledger and execute bounded actual-model/runtime acceptance",
-      "rationale": "Mandatory platform/value evidence; billable and human prerequisites must remain explicit.",
-      "evidence": "RV-006/007 and no-live-inference metadata"
+      "task": "Complete task-level calibration and paired-effort model-value evaluation",
+      "rationale": "Real Foundry scoring/generation is verified; actual task benefit and human evaluation remain separate evidence gates.",
+      "evidence": "RV-006/007; E32 actual provider success does not establish calibration or paired-effort benefit"
     }
   ]
 }

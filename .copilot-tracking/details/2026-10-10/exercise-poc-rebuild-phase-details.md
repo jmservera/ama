@@ -37,8 +37,13 @@ approval or external action. Executed P07-T03 runtime: revision18/image
 0b6b04395c905c6dd6a51520ba8b91d702b4b9b1c6499a4276ed435956307299,
 exact cases/source-metadata/audit/reservation equality across actual restart,
 original generated document download, eleven bundled asset hashes, actual
-stock list/map/paging/filter and 390px browser reflow. Source publication
-pending. Full PRD and human-value gates remain separate and incomplete.
+stock list/map/paging/filter and 390px browser reflow. Publication results
+follow. Full PRD and human-value gates remain separate and incomplete.
+
+P07 publication complete: source b388b6a6fc2aa4e4a908a6afaf50e9b97538a23a
+pushed to draft PR58. Exact-source MVP CI38091605106, MVP validation
+38091605082 and Prototype validation38091605121 passed. This does not
+clear P05/P06 full-PRD/human gates or change the original Review outcome.
 
 ## Phase Index
 
