@@ -1800,3 +1800,16 @@ metadata when the knowledge base was created.
 
 * Updated `docs/ideas/typesafe-system-one-agent-fit.md` and the index to record real Decision 1 inference as technical feasibility, not proven incremental value.
 * Held-out calibration and paired manual/rules-versus-assisted effort, quality and cost evidence remain unexecuted. Historical activation blockers are explicitly distinguished from the later observed live inference.
+
+## [2026-10-10] query | Design Decision 1 value and agent-complementarity MVE
+
+* Owner prioritizes comparative model value over further MVP expansion.
+* Created context, hypotheses, vetting, detailed experiment design and proposed
+  consolidated plan under
+  `.copilot-tracking/mve/2026-10-10/decision-model-value/`.
+* Four arms compare rules/manual, Decision-assisted, generative-agent and hybrid
+  paths; automated ablations distinguish selection from screening benefit.
+  Retained PRD 120-family split, quality gates and twelve pack comparisons.
+* Updated the existing Decision 1 synthesis and index. Real participants and
+  human-adjudicated labels remain execution prerequisites; no outcomes,
+  company productivity, experiment acceptance or new AI activation are claimed.

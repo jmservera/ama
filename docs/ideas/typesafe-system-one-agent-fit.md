@@ -233,6 +233,15 @@ adjudication, usability evidence or real company outcomes.
 
 ### Evaluation and Activation Gate
 
+The owner's priority on 2026-10-10 is now comparative value before further
+MVP expansion. The proposed
+[Decision Model Value MVE](../../.copilot-tracking/mve/2026-10-10/decision-model-value/mve-plan.md)
+compares rules/manual, Decision-assisted, generative-agent and hybrid paths,
+with selection/screening ablations. It retains the PRD 120-family split and
+12-pack paired-effort baseline. It is an experiment design, not executed
+evidence or authorization to replace agents. Real participant availability
+remains required for human-effort findings.
+
 Historical pre-activation assessment follows. Read-only implementation verification on 2026-10-10 found the AMA resource's
 model eligibility metadata includes `Microsoft-Decision-1`, format `Microsoft`,
 version `1`, with `GlobalStandard` advertised. The returned SKU cost is null:
