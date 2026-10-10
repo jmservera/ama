@@ -1,0 +1,244 @@
+{
+  "schema_version": "PRD_QUALITY_REPORT_V1",
+  "report_id": "PRD-2026-AMA48-001-quality-20261010T092151Z",
+  "generated_at": "2026-10-10T09:21:51.343Z",
+  "prd": {
+    "id": "PRD-2026-AMA48-001",
+    "version": "0.11.0",
+    "phase": "Build",
+    "artifact_path": "docs/prds/proper-warm-retrofit-programme-demonstrator.md"
+  },
+  "overall_status": "FAIL",
+  "decision_thresholds": {
+    "iso_29148_core_min_score": 2,
+    "fr_to_ac_min_pct": 80.0,
+    "fr_to_goal_target_pct": 100.0
+  },
+  "gate_decisions": {
+    "validate_exit": "BLOCKED",
+    "finalize_exit": "NOT_EVALUATED"
+  },
+  "summary_counts": {
+    "RISK": 1,
+    "CAUTION": 6,
+    "COVERED": 7,
+    "NOT_APPLICABLE": 0
+  },
+  "severity_breakdown": {
+    "CRITICAL": 0,
+    "HIGH": 1,
+    "MEDIUM": 6,
+    "LOW": 0
+  },
+  "standards_assessed": [
+    {
+      "skill_name": "requirements-quality",
+      "skill_version": "1.1",
+      "overall_status": "RISK",
+      "findings_count": 14
+    }
+  ],
+  "category_summaries": {
+    "iso_29148": {
+      "average_score": 2.0,
+      "weakest_attribute": "singular",
+      "weakest_attribute_score": 1
+    },
+    "nist_800_160": {
+      "covered_categories": 8,
+      "missing_categories": [
+        "performance_and_capacity",
+        "scalability_and_elasticity"
+      ]
+    },
+    "smart": {
+      "goals_total": 4,
+      "goals_passing": 0,
+      "pass_rate_pct": 0.0
+    },
+    "fr_ac_coverage": {
+      "fr_total": 44,
+      "fr_with_ac": 44,
+      "coverage_pct": 100.0,
+      "threshold_pct": 80.0
+    },
+    "fr_goal_coverage": {
+      "fr_total": 44,
+      "fr_with_goal": 44,
+      "goal_total": 4,
+      "coverage_pct": 100.0,
+      "target_pct": 100.0,
+      "waiver_required": false
+    }
+  },
+  "top_findings": [
+    {
+      "finding_id": "req-qual-001",
+      "standard": "requirements-quality",
+      "severity": "HIGH",
+      "status": "RISK",
+      "location": {
+        "section": "Sign-Off and Handoff Readiness",
+        "line_range": "L1246-L1272"
+      },
+      "finding": "Pre-existing full-document readiness blocker: signed current upstream handoff, current upstream quality evidence, named owners and required human reviews are absent; source-version references also need reconciliation.",
+      "recommendation": "Preserve draft status and obtain the exact upstream revision, signed handoff, current quality evidence and named human reviews before formal validation."
+    },
+    {
+      "finding_id": "req-qual-002",
+      "standard": "requirements-quality",
+      "severity": "MEDIUM",
+      "status": "CAUTION",
+      "location": {
+        "section": "Form Extraction and Assisted Filling; Functional Requirements",
+        "line_range": "L451-L570"
+      },
+      "finding": "Amendment defect: FR-038 imposes a funding-route prerequisite on a form pattern that also applies to technical, work-package and invoice forms.",
+      "recommendation": "Require a versioned form schema universally, but require an evidenced scheme/funding route only for funding forms; add a non-funding AC-046 fixture."
+    },
+    {
+      "finding_id": "req-qual-003",
+      "standard": "requirements-quality",
+      "severity": "MEDIUM",
+      "status": "CAUTION",
+      "location": {
+        "section": "Functional Requirements; Acceptance Criteria",
+        "line_range": "L544-L568"
+      },
+      "finding": "Amendment integration defect: application-versus-claim prose is explicit, but FR-019/AC-022 still expose unqualified submitted/accepted/rejected grant states without an application-versus-claim transition isolation test.",
+      "recommendation": "Type submission/disposition records by application or claim and add independently evidenced fixtures proving that neither changes the other's state or establishes award/cash."
+    },
+    {
+      "finding_id": "req-qual-004",
+      "standard": "requirements-quality",
+      "severity": "MEDIUM",
+      "status": "CAUTION",
+      "location": {
+        "section": "Acceptance Criteria; Independently reportable review checks",
+        "line_range": "L877-L913"
+      },
+      "finding": "Amendment testability defect: AC-047 lacks independent extraction, selection, conflict and recovery subchecks; AC-051 lacks an explicitly required fixture-owned exact invalidation-set oracle.",
+      "recommendation": "Add named AC-047 subchecks and require predeclared exact affected and unaffected dependency sets for AC-051. Preserve stable parent identifiers and report each result independently."
+    },
+    {
+      "finding_id": "req-qual-005",
+      "standard": "requirements-quality",
+      "severity": "MEDIUM",
+      "status": "CAUTION",
+      "location": {
+        "section": "Product Goals"
+      },
+      "finding": "Pre-existing goal-maturity gap: none of four goals passes all five SMART attributes; time horizons and demonstrated achievability are missing.",
+      "recommendation": "Approve owners, targets, measurement protocols and dated decision points before finalization without adopting unratified upstream benefit targets."
+    },
+    {
+      "finding_id": "req-qual-006",
+      "standard": "requirements-quality",
+      "severity": "MEDIUM",
+      "status": "CAUTION",
+      "location": {
+        "section": "Non-Functional Requirements; Observability and SLO Measurement Method",
+        "line_range": "L573-L693"
+      },
+      "finding": "Pre-existing NFR gap: performance/capacity thresholds remain TBD and no canonical NFR defines a scaling dimension and load range.",
+      "recommendation": "Approve a constructed workload, quantitative capacity/latency limits and scaling range before relevant build acceptance; do not claim measured deployment or performance from scenario size."
+    },
+    {
+      "finding_id": "req-qual-007",
+      "standard": "requirements-quality",
+      "severity": "MEDIUM",
+      "status": "CAUTION",
+      "location": {
+        "section": "Staff data trust and control; Owner direction for pilot readiness; Simplicity and adoption requirements"
+      },
+      "finding": "Pre-existing taxonomy gap: additional TR/DH/PR/SA requirement proposals sit outside canonical coverage, including new obligations and deferred ACs.",
+      "recommendation": "Map normative obligations into canonical requirements and ACs, or clearly classify them as non-normative deferred proposals."
+    }
+  ],
+  "recommendations": [
+    {
+      "id": "REC-001",
+      "priority": "P1",
+      "target_section": "Evidence status; Sign-Off and Handoff Readiness",
+      "action": "Preserve the existing validation block. Reconcile the exact upstream revision and obtain signed current handoff/quality evidence, named owners and representative human reviews before requesting formal validation.",
+      "related_finding_ids": [
+        "req-qual-001"
+      ]
+    },
+    {
+      "id": "REC-002",
+      "priority": "P2",
+      "target_section": "FR-038; AC-046; Form Extraction and Assisted Filling",
+      "action": "Separate universal form-schema approval from funding-only route approval; prove a non-funding form can be prepared without a funding route while an unknown-route funding form remains blocked.",
+      "related_finding_ids": [
+        "req-qual-002"
+      ]
+    },
+    {
+      "id": "REC-003",
+      "priority": "P2",
+      "target_section": "FR-019/042; AC-022/050; funding status and export behavior",
+      "action": "Add typed application and claim submission/disposition records with distinct external evidence. Test application rejection and claim acceptance independently, with no inferred award, cross-path transition or cash.",
+      "related_finding_ids": [
+        "req-qual-003"
+      ]
+    },
+    {
+      "id": "REC-004",
+      "priority": "P2",
+      "target_section": "AC-047/051; Independently reportable review checks",
+      "action": "Add extraction/selection/conflict/recovery subcheck names and fixture-owned dependency oracles. Enumerate expected transitive stale sets and unaffected reviews before execution; extend independent reporting across remaining compound canonical obligations before formal validation.",
+      "related_finding_ids": [
+        "req-qual-004"
+      ]
+    },
+    {
+      "id": "REC-005",
+      "priority": "P2",
+      "target_section": "Product Goals; Non-Functional Requirements",
+      "action": "Ratify goal time horizons and measurement protocols, quantitative workload targets and scaling conditions. Keep unknown baselines and observed test results distinct from approvals and benefit claims.",
+      "related_finding_ids": [
+        "req-qual-005",
+        "req-qual-006"
+      ]
+    },
+    {
+      "id": "REC-006",
+      "priority": "P2",
+      "target_section": "Ancillary proposal tables; Traceability Matrix",
+      "action": "Reconcile supplementary proposal identifiers with the canonical taxonomy without silently enlarging the 44-FR denominator or presenting link coverage as full behavioral coverage.",
+      "related_finding_ids": [
+        "req-qual-007"
+      ]
+    }
+  ],
+  "warnings": [
+    {
+      "id": "WARN-001",
+      "severity": "WARNING",
+      "message": "The origin/main diff was unavailable through the read-only file-view tools. Changed-line attribution is not verified; amendment scope follows the caller's specified identifiers and the current draft."
+    },
+    {
+      "id": "WARN-002",
+      "severity": "INFO",
+      "message": "This is an on-request Build-stage challenge, not formal Validate execution or human sign-off. Validate remains BLOCKED; Finalize is NOT_EVALUATED.",
+      "related_finding_ids": [
+        "req-qual-001"
+      ]
+    },
+    {
+      "id": "WARN-003",
+      "severity": "ADVISORY",
+      "message": "Full-document FAIL also follows the core singular score of 1. The compound requirement pattern is broader than this amendment; surgical amendment corrections alone cannot clear the full-document quality threshold.",
+      "related_finding_ids": [
+        "req-qual-004"
+      ]
+    },
+    {
+      "id": "WARN-004",
+      "severity": "INFO",
+      "message": "Canonical coverage is 44/44 FRs with ACs, 54/54 ACs linked to FRs and 44/44 FRs linked to goals. All ACs remain Not Started; no acceptance, deployment, local accuracy or performance result was assessed."
+    }
+  ],
+  "notes": "Amendment assessment is scoped separately from full-document readiness:\nreq-qual-002..004 identify three surgical amendment corrections.\nreq-qual-001 and req-qual-005..007 concern pre-existing full-document readiness,\ngoal/NFR maturity and taxonomy issues. Historical attribution is provisional\nbecause the origin/main diff could not be read.\n\nNIST covered categories are reliability_and_resilience, security, privacy,\nmaintainability_and_operability, observability, usability_and_accessibility,\ncompatibility_and_interoperability and portability. Category presence is not\nevidence of effectiveness, conformance or SLO attainment.\n\nThe draft correctly distinguishes parser/OCR extraction from candidate\nselection; preserves source lineage and explicit unknown/conflicting values;\nprotects declarations/signatures/consent; requires deterministic financial\nchecks and individual review; separates review from controlled approval;\nforbids live submission and indirect authoritative-ranking feedback;\npreserves human-first triage; and makes serving/privacy activation conditional.\nUnknown scheme terms remain unresolved inputs, not company facts.\n\nBoth payloads are returned inline. No findings_ref is supplied because nothing\nwas persisted. No approval of this PRD is claimed."
+}

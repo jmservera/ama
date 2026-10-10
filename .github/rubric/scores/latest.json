@@ -2,13 +2,13 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-09T08:20:46+00:00",
-  "commit": "001e8e08f020c99530cb934d391e474c67a2aeb8",
+  "scored_at": "2026-10-10T10:37:26+00:00",
+  "commit": "10d166513c121f2213f81cdfb5eeedf9ed0e236e",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/37903820642",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38044929574",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
-    "prd": "b5cc6a07fde37e41029f42310b8a264a395778344a88247d95725dc305287989",
+    "prd": "9655f2646380ac499cd762091eb5a5b75ea40c46e28fc705c6303755565205c8",
     "adr": "ece9516f48868a89f6f1ca198227cef7b3e9c4d1a059e53297714642d95ee8df",
     "solution-code": "a89a639f156e48a50323490fc9ab6f0eb6ba0ea4db08646ba4d04a79c851b82f",
     "infrastructure": "e962abd356f81103c78019d3442cd3da2fc2d94a694375c109ac0fbc7c8ad7ea"
@@ -47,7 +47,7 @@
         "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-329"
       ],
-      "rationale": "ADR 0002 names a specific AI leakage threat and states a mitigation, plus named compliance articles (GDPR 9, 17(3), 44-46)."
+      "rationale": "ADR 0002 names a specific AI leakage threat and states a mitigation, plus named compliance articles (GDPR 9, 17(3), 44-46). This PR's new DD-007/FR-036-044 text adds governance detail but does not change the deployed threat-model evidence."
     },
     "A4": {
       "score": 4,
@@ -69,12 +69,12 @@
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged from baseline; this PR's diff (vendor license notices, dependency override) does not touch solution-code or ADR evidence for this criterion."
+      "rationale": "This PR's PRD diff adds DD-007, an evaluation/activation gate and a dated model reassessment (pricing, alternatives, evaluation plan) but introduces no new evaluation harness code or measured results beyond the existing mvp/properwarm_mvp/ai_eval.py baseline. Documentation deepens the proposal; i..."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Unchanged from baseline; this PR's diff does not touch solution-code or ADR evidence for this criterion."
+      "rationale": "Orchestration-pattern text was reworded (capability routing, provider adapter validation) but no new agentic code, handoff/reflection pattern or state-graph implementation was added in this diff. Unchanged."
     },
     "B1": {
       "score": 0,
@@ -108,7 +108,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
         "infra/README.md:1-54"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable. No capstone deck exists so cap_without caps this at 3 regardless. Unchanged."
+      "rationale": "BRD, PRD and infra/README.md remain structured and navigable; the PRD grew more detailed and internally consistent (new DD-007/008, FR-036-044 sections) but no capstone deck exists, so cap_without caps this at 3 regardless. Unchanged."
     },
     "B7": {
       "score": 0,
@@ -122,7 +122,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-336"
       ],
-      "rationale": "The new owner-direction table (PR-001 to PR-008) names real stakeholders (DPO, Legal, policy owner, contractors, staff), concrete constraints (DPIA, retention law, GDPR conditions) and success measures (deterministic reproducibility, evaluation metrics, 60,000-home scale), quantifying value and r..."
+      "rationale": "The owner-direction table (PR-001 to PR-008) and this PR's governance additions (DD-007/008, OQ-015/016) continue to name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures (deterministic reproducib..."
     },
     "C2": {
       "score": 0,

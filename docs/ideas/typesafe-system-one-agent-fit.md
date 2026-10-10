@@ -1,7 +1,7 @@
 ---
 title: System One Decision Models for Retrofit Agents
-description: Research on using typed decision models such as Kev-4B through the TypeSafe System One contract, and where they fit the Case Study 48 agents
-ms.date: 2026-09-24
+description: Dated research on typed decision models, including Microsoft Decision 1 in Foundry, bounded workflow assists and reviewed form extraction/filling
+ms.date: 2026-10-10
 ms.topic: reference
 ---
 
@@ -24,6 +24,191 @@ the [original Case Study 48](../case_study_48_original.md), the
 > No accuracy figure in this document is evidence of performance on Proper
 > North Homes data. Every candidate use needs a labelled test set, a threshold
 > chosen for its consequences and a shadow-mode trial before any live use.
+
+## Microsoft Decision 1 Reassessment (2026-10-10)
+
+The owner requested reassessment across the process after Foundry model
+availability, then specifically requested PRD integration for form
+extraction/filling, retrofit subsidy applications and other AI-assisted
+decisions. The recommendation is an optional scoring capability inside the
+existing bounded task service, not another autonomous agent or replacement
+workflow engine. The [PRD v0.11.0](../prds/proper-warm-retrofit-programme-demonstrator.md)
+records this as proposed DD-007/008 and FR-036 to FR-044, not a production
+selection, deployment result or approved funding process.
+
+### Current Product Evidence and Limits
+
+All sources in this table were checked on 2026-10-10. They are vendor product
+documentation, not regulatory authority or Proper North Homes performance
+evidence. The findings below supersede incompatible automation, SDK or
+ranking suggestions in the retained 2026-09-24 research sections.
+
+| Source / source date | Verified finding | Design consequence |
+| --- | --- | --- |
+| [Microsoft announcement](https://commandline.microsoft.com/microsoft-decision-1-model-foundry/), October 2026 announcement | Decision 1 is offered through Foundry for typed decisions | Availability justifies evaluation, not deployment or local benefit claims; advertised pricing/speed/calibration are not a subscription quote or housing result |
+| [Model catalog](https://ai.azure.com/catalog/models/Microsoft-Decision-1), checked 2026-10-10 | Text-only, closed questions; no generated text/rationale; not intended as sole automated decision-maker for consequential housing decisions, or for individual surveillance/profiling/tracking | Separate parsing/OCR and generation; application-owned evidence explanation; no resident profiling or new model decision rights |
+| [Deployment/API guide](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision), source date 2026-10-07, updated 2026-10-09 | Version 1; POST `/providers/microsoft/v1/systemone`; deployment name in `model`, text/JSON `state`, named typed `questions`, response `answers` plus model identity/usage | Provider-specific adapter; do not assume Chat Completions or the historical TypeSafe SDK's response/confidence fields; prove actual synthetic-response schema before activation |
+| [Deployment types](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/deployment-types) and [regional availability](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability), checked 2026-10-10 | Documented Decision 1 serving uses GlobalStandard or DataZoneStandard in selected regions | A UK resource does not establish UK-only processing; confirm subscription/model availability and permitted processing before any personal-data inference |
+| [Entra configuration](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/configure-entra-id), checked 2026-10-10 | Foundry supports Entra authentication subject to resource/deployment permissions | Verify the actual inference role/scope, local-auth setting, private endpoint/DNS and network route; generic Foundry support is not evidence of this deployment |
+
+Choice selects a defined key with option probabilities. Noul scores a yes/no
+question. Score is a probability-weighted position on supplied ordered
+criteria, not an absolute calibrated technical or hazard severity. Exact
+response fields, probability validation and local abstention thresholds
+remain conformance/evaluation work. Typed output can be confidently wrong
+and may be sensitive to wording, order and unfamiliar data.
+
+### Process-Wide Candidate Map
+
+These are task-shape hypotheses. None is a measured accuracy, savings or
+company-practice finding. All nine workflow families were revisited.
+
+| Workflow | Useful optional judgment | Boundary |
+| --- | --- | --- |
+| Stock, import and prioritisation | Candidate-field selection, record/document classification and conflicts | No model score or inferred feature changes authoritative ranking, queue membership or eligibility; source corrections need separate owner authority |
+| Technical assessment/design | Documentary support, missing observations and version conflicts | No site observation, design suitability, PAS 2035 output or professional sign-off inferred |
+| Resident service/access/choice | Independent multi-intent, complaint, possible pause/withdrawal flags; draft screening | First human urgent triage is independent; no consent/refusal inference, latent vulnerability profile or unreviewed communication |
+| Procurement/capacity/work release | Delay-note categories and proposed-scope mismatch | Scheduling, commitments, instructions and contract judgments remain rules/people |
+| Hazard awareness/response | Supplemental raise-only signal in already routed text | Never suppress, downgrade, defer, reset a clock, release a hold or close; service cannot depend on scorer availability |
+| Quality/defects/handover | Evidence support/contradiction and draft-content checks | No image inspection, physical acceptance, defect grading/closure or inferred resident understanding |
+| Budget/invoice/funding/claim/cash | Candidate fields, section-to-evidence match and unsupported financial narrative | Rules calculate; Finance interprets/reviews; application, award, invoice, claim and cash stay distinct; no submission/payment/certification |
+| Cross-team case orchestration | Exception category or suggested task from permitted candidates | Deterministic state machine, permissions, ownership and accepted handoff remain authoritative |
+| Portfolio investment/performance | Source-support checks and aggregate narrative classification | Statistical forecast, investment, scale and causal benefit decisions remain code/Finance/Board |
+
+The fifteen-step lifecycle was also examined. Candidate documentary tasks
+do not make a step model-owned:
+
+| BRD lifecycle step | Candidate assist / retained authority |
+| --- | --- |
+| 1. Identify/match home | Flag ambiguous documentary identity; owner resolves identifiers |
+| 2. Prioritisation/screens | Advisory conflict/support checks; rules alone rank and screen |
+| 3. Safety/data readiness/access | Missing evidence/contact-request flag; first human triage, clocks and access remain independent |
+| 4. Assessment accepted | Evidence support/omission check; competent reviewer accepts |
+| 5. Options/disruption discussed | Draft-content guardrail; human conversation and explanation |
+| 6. Design approved | Document/version conflict flag; competent designer signs off |
+| 7. Resident decision recorded | Possible pause/withdrawal flag for review; no inferred or prefilled decision |
+| 8. Funding/investment/capacity confirmed | Evidence mismatch checks; approved budgets, deterministic eligibility and named human commitment |
+| 9. Work released/scheduled | Proposed scope check; gates, solver and authorized issuer |
+| 10. Installation hold points | Installer-note categories; physical observation and competent acceptance |
+| 11. Quality evidence accepted | Documentary support/conflict check; independent quality acceptance |
+| 12. Resident handover | Draft omissions/unsupported promises; human delivery and accessibility/understanding validation |
+| 13. Payment/grant reconciliation | Semantic line/evidence checks; arithmetic, Finance approval and external submission |
+| 14. In-use monitoring | Aftercare text classification; numeric analytics and human response |
+| 15. Close/reopen | Possible missing/recurring evidence flag; authorized human decision only |
+
+Supporting uses include delay-note baseline discovery, access-filtered
+retrieval relevance, generated-output pre-screening and categorizing verified
+regulatory differences. These do not validate legal duties, approve rule
+activation, replace independent assurance or create model-owned task routing.
+Static capability selection comes first.
+
+### Form Extraction and Filling Recommendation
+
+Use a reusable, versioned form workspace, first demonstrated with constructed
+retrofit funding applications and separate claims. An evidenced competitive
+application, allocation request, award-delivery return and reimbursement
+claim are not interchangeable. Unknown route blocks funding bid/form
+preparation under BRD FR-027; non-funding forms need an approved schema but
+not a funding route. No open round or actual award terms are assumed.
+
+* Approved structured records and parsers supply candidate values. Scans need
+  separately approved OCR/transcription; preserve its errors, source
+  page/span/cell and document version/hash.
+* Decision 1 may select among cited candidates or classify evidence as
+  supported, contradicted or insufficient. Include no-match/unknown; never
+  invent missing EPCs, measures, costs, co-funding or site observations.
+* Rules compute amounts, dates, limits and eligibility from approved scheme
+  versions and confirmed inputs. Optional generative models draft only cited
+  narrative; a decision score cannot generate a truthful rationale.
+* Show raw/normalized values, alternatives, lineage, uncertainty and each
+  reviewer decision side by side. Selection changes a draft, not a source
+  record, ranking, queue or approval. Review all required fields, not only
+  flags, to counter automation bias.
+* Exclude resident choices, declarations, signatures, certifications and
+  controlled approvals from AI pre-fill and batch acceptance. Finance reviews
+  the pack; exporting it does not submit it, secure an award, certify a claim
+  or establish cash. External submission is outside the demonstrator.
+* Versioned source/schema/rule/input dependencies invalidate affected field
+  and pack reviews, preserving previous values and decisions. Unknown
+  mandatory fields block a reviewed pack; incomplete working copies are
+  visibly incomplete.
+
+### Pricing and Alternatives
+
+The [Microsoft announcement](https://commandline.microsoft.com/microsoft-decision-1-model-foundry/)
+advertised USD 0.042 per million input tokens and free output. The
+2026-10-10 retrieval of the [Azure Microsoft model pricing page](https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/microsoft/)
+did not establish a regional/subscription rate. Illustrative arithmetic only:
+60,000 homes x 20 requests x 1,000 input tokens = 1.2 billion input tokens,
+or USD 50.40 at the announcement rate. This is not a workload forecast,
+subscription quote or programme budget. Whole-life cost includes
+question/context tokens, retries, generation, document processing,
+networking, observability, evaluation and human review.
+
+Foundry is the first new integration candidate because it fits the existing
+platform, not because it has proved superior quality or cost. Hosted Jev and
+self-hosted Kev remain contingencies if approved processing location,
+quality or economics favor them, subject to fresh API, licensing, model-card
+and operational verification.
+
+### Evaluation and Activation Gate
+
+Compare manual/templates, parsers/rules, Decision 1 and appropriate
+generative alternatives on identical, human-adjudicated held-out cases.
+Separate tuning/calibration/test sets by case/building/document family;
+measure exact/normalized field accuracy, provenance, unsupported critical
+values, omission recall, abstention/calibration, OCR-error propagation,
+export fidelity, total preparation/review/correction effort and whole-life
+cost. Test ambiguity, option order, negation, mixed intents, unreadable
+sources, stale schema/input, restricted sources and source-text injection.
+
+Apply adjudicated labels, separate tuning/calibration/held-out sets and
+unflagged-case review to every scoring task, not only forms. Report
+calibration/reliability and coverage, differential false negatives and
+review delays across lawful relevant evaluation slices, retry/throttle
+rates and whole-life cost per correctly handled task. No latent person
+profile or aggregate score may conceal a critical miss. The initial
+research shortlist is delay-note categorization, documentary
+evidence-support/mismatch checks and drafted-communication guardrails;
+inbound complaint/pause flags remain shadow-only behind independent first
+human triage. Task owners confirm or replace this shortlist before testing.
+
+Owner-approved thresholds and critical categories are pre-registered per
+task. Zero missed critical controls in an agreed sample is required but does
+not prove zero population risk. Compare unflagged outputs too. Disable or
+retain manual handling when incremental value or review capacity is absent.
+No automatic training, threshold/policy activation or provider substitution.
+
+The adapter must validate the real provider response and bind source IDs
+through application code, recording explicit timeout, access/throttle,
+missing/invalid-answer and stale-source states rather than empty success.
+Serving version, quota, inference authorization, network/processing terms,
+local performance and subscription pricing remain unverified. Personal-data
+use, control activation and live submission require separate named approval.
+
+Decision 1 context/token/question/option limits, version-pinning and
+retirement behavior, and fine-tuning support were not established by the
+accepted sources. Do not inherit Kev's 8,192-token context, TypeSafe
+option/confidence limits or generic Foundry Batch/provisioned support.
+Validate every expected question ID, answer type, allowed key and finite
+probability vector against the actual provider contract, including any
+documented normalization requirement. Verify the Entra audience and detect
+unavailable or changed model versions; disable the task until regression
+passes rather than silently substituting a provider.
+
+Removing names or contact details does not anonymize health/disability
+content. Before resident-data use, accountable owners must verify applicable
+processing, retention and abuse-monitoring terms, contracts, transfer
+position, lawful basis and DPIA. A UK resource or data-zone deployment is
+not evidence of UK-only inference. These are unresolved approval checks,
+not findings that the deployment or data use is compliant.
+
+## Historical 2026-09-24 Baseline
+
+The remaining sections preserve the earlier Jev/Kev investigation and SDK
+example. They are not a Decision 1 API specification or current permission
+to automate an action. The dated reassessment and current PRD authority
+boundaries take precedence.
 
 ## What a System One Model Is
 
