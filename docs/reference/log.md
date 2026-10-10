@@ -1715,3 +1715,22 @@ metadata when the knowledge base was created.
   FR-014/045/046 and AC-017/037/055/056 pass exact constructed contracts;
   complete remaining workflow/return/permission/recovery/accessibility and
   real-model/human effectiveness gates remain open.
+
+## [2026-10-10] update | Explicit scoped return and versioned disposition
+
+* Return/reopen records now have versioned IDs and explicit named technical
+  sign-off/form-field re-review scopes. Existing dependency helpers suspend
+  exact affected reviews and financial ancestry without changing source
+  bytes, unrelated choices/siblings or historical cash. Empty scope remains
+  routing-only; restricted form details stay hidden from non-Finance views.
+* Reopened case display stage and next-action reason match the actual target.
+  Thirty-six earlier-stage pairs and ten atomic invalid-scope shapes pass.
+  Real browser controls reject malformed JSON, return the named sign-off
+  and show versioned source/owner/next-action history, retaining withdrawal.
+* Updated [MVP guide](../../mvp/README.md), index and
+  [requirement register](../../.copilot-tracking/changes/2026-10-10/exercise-poc-rebuild-acceptance.md).
+  FR-010/AC-012 pass exact constructed contracts. Regression: 380 tests,
+  OK, 26 live SQL skips; headed browser: 60 finite checks.
+  Complete quality/procurement/milestone re-review, other workflow/permission,
+  scheduled recovery, screen-reader, real-model and human value gates remain
+  open. No consent, approval, payment or full completion is inferred.

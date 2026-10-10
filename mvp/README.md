@@ -199,7 +199,7 @@ node --check web/app.js
 node --check web/panels.js
 ```
 
-Twenty-seven connected integration tests exercise same-home SQLite durability, exact
+Thirty connected integration tests exercise same-home SQLite durability, exact
 EPC invalidation/sibling isolation, independent form review/export, separate
 financial states through closure, QA return/fix/reinspection, scoped resident
 choice, capacity/safety blocks, zero-call inherited inference configuration,
@@ -258,6 +258,15 @@ focused tests, including unchanged commitment ownership across handoffs and
 process exits before commit/after commit before response. Their complete
 role/browser fixture matrix remains unexecuted. Arbitrary new-source ingestion
 and full claim resubmission recovery need further validation.
+Return controls can name explicit technical sign-offs and same-home form
+fields for re-review. Empty scope is routing-only, never guessed consent or
+source invalidation. Named fields use exact input-version dependencies;
+historical financial receipts remain recorded even when readiness is suspended.
+Versioned returns expose source, initiating authority, receiving owner and next
+action, with restricted form details hidden from non-Finance views.
+All 36 earlier-stage pairs and ten invalid-scope shapes have atomic
+fixtures; the latest headed browser passes 60 finite checks. Complete
+quality/procurement/milestone re-review dependencies are still not validated.
 The labelled event controls and optional JSON editor are manual
 exercise tools, not a validated production form experience.
 

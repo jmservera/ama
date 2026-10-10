@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Implement",
-  "status": "blocked",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-10/system-one-decision-models-research.md",
@@ -84,6 +84,11 @@
       "decision": "Renewed exceptional request for gated Azure deployment/billable calls and human-evaluation availability returned user unavailable. No permission inferred from autonomous implementation direction; model/value acceptance remains blocked and no real evaluators or results are invented.",
       "status": "unavailable; affected live/value acceptance blocked",
       "evidence": "ask_user model_authorization/human_evaluation returned user unavailable after resident/service source-head CI succeeded"
+    },
+    {
+      "decision": "Implemented explicitly scoped returns with existing sign-off/input-version helpers, versioned dispositions and corrected display stage/next action. All 36 earlier-stage pairs, ten invalid-scope atomicity shapes and exact financial ancestry/unchanged cash/source/choice/sibling fixtures pass. Full regression 380 tests, 26 live SQL skips; native-browser 60 checks. FR-010/AC-012 pass constructed disposition contracts; full dependent domain matrix remains incomplete.",
+      "status": "implemented and locally validated; publication pending",
+      "evidence": "acceptance E25/E26; changes Explicit Return Scope Implementation"
     }
   ],
   "blockers": [
@@ -100,7 +105,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Continue remaining local workflow/return/permission/recovery/accessibility acceptance under owner implementation authority. Owner/operator must authorize gated deployment/bounded calls and provide human evaluators before live/value acceptance can proceed. Preserve draft PR #58 and original Review; do not mark full task complete."
+    "action": "Publish exact scoped-return implementation/evidence to existing draft PR #58 and record exact-source CI. Continue remaining domain/workflow/permission/recovery/accessibility evidence without inferring unavailable live/value authorization or full task completion."
   },
   "prioritized_follow_ups": [
     {

@@ -223,6 +223,9 @@ async function exerciseHome(id, data) {
   section.append(h("section", {}, h("h3", {}, "Independently owned resident-update commitments"),
     h("p", {}, "Operational handoffs never clear or reassign these commitments. Sent evidence is not receipt or understanding."),
     exerciseTable(c.exercise && c.exercise.resident_updates || [], "Resident update purpose, owner, due basis and safe-route history")));
+  section.append(h("section", {}, h("h3", {}, "Versioned returns and explicit re-review scopes"),
+    h("p", {}, "Routing alone does not alter source facts or resident choices. Only named scopes require re-review; historical external events and cash stay recorded."),
+    exerciseTable(c.exercise && c.exercise.returns || [], "Return source, initiating authority, receiving owner and next action")));
   if (data.allowed_forms.length) {
     const type = h("select", { id: "exercise-template" }, data.allowed_forms.map((kind) => h("option", { value: kind }, kind)));
     section.append(h("label", { for: "exercise-template" }, "Approved fictional form template"), type,
@@ -322,7 +325,9 @@ function exerciseActionEditor(id, data, send) {
     lifecycle: [["target", "Next lifecycle step", ["Assessment", "Funding", "Ready", "Installation", "Provider completed", "Independent QA", "Handover", "Financial closure"]]],
     return: [["target", "Earlier exercise stage", ["Intake", "Assessment", "Funding", "Ready", "Installation", "Provider completed", "Independent QA", "Handover"]],
       ["receiver", "Receiving owner email"], ["reason", "Return/reopen reason"], ["evidence", "Source reference"],
-      ["next_action", "Owned next action"]],
+      ["next_action", "Owned next action"],
+      ["affected_signoffs", "Explicit sign-offs for re-review, comma-separated: assessment, design, building, coordination (blank is routing-only)"],
+      ["affected_form_fields", 'Explicit same-home form fields JSON, for example {"FORM-001":["epc_band"]} (blank preserves fields)', "textarea"]],
     handoff: [["step", "Separately evidenced handoff action", ["sent", "received", "accepted", "returned", "escalated", "completed"]],
       ["receiver", "Named receiver email (sending)"], ["reason", "Reason/purpose"], ["evidence", "Explicit action evidence"],
       ["due", "Due date YYYY-MM-DD or Unknown"], ["urgency", "Urgency", ["Routine", "Urgent", "Unknown"]],
@@ -372,6 +377,16 @@ function exerciseActionEditor(id, data, send) {
   paint();
   const save = () => {
     const body = Object.fromEntries(Object.entries(values).filter(([, input]) => input.value !== "").map(([key, input]) => [key, input.value]));
+    error.textContent = "";
+    if ("affected_signoffs" in body) body.affected_signoffs = body.affected_signoffs.split(",").map((key) => key.trim()).filter(Boolean);
+    if ("affected_form_fields" in body) {
+      try {
+        body.affected_form_fields = JSON.parse(body.affected_form_fields);
+      } catch (parseError) {
+        error.textContent = "Affected form fields must be a JSON object mapping same-home form IDs to explicit field lists.";
+        return;
+      }
+    }
     if ("released" in body) body.released = body.released === "true";
     if ("hazard_index" in body) body.hazard_index = Number(body.hazard_index);
     send({ ...body, action: action.value });
@@ -379,9 +394,9 @@ function exerciseActionEditor(id, data, send) {
   return h("details", {}, h("summary", {}, "Record one explicitly supplied exercise event"),
     h("p", {}, "No automatic walkthrough or protected defaults. Record one event; the server enforces current prerequisites and your actual identity."),
     h("label", { for: "exercise-record-action" }, "Event type"), action,
-    controls, h("button", { onclick: save }, "Record one supplied event"),
+    controls, error, h("button", { onclick: save }, "Record one supplied event"),
     h("details", {}, h("summary", {}, "Advanced explicit JSON input"),
-      h("label", { for: "exercise-record-payload" }, "Event details JSON"), payload, error,
+      h("label", { for: "exercise-record-payload" }, "Event details JSON"), payload,
       h("button", { onclick: () => { try { send({ ...JSON.parse(payload.value), action: action.value }); } catch (e) { error.textContent = "Enter a JSON object."; } } }, "Record one JSON event")),
     h("h3", {}, "Manual journey instructions"),
     h("ol", {}, [

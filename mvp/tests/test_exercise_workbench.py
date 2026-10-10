@@ -509,6 +509,124 @@ class ExerciseWorkbenchTests(unittest.TestCase):
         self.assertEqual(self.store._case(HOME)["exercise"]["returns"][-1]["receiver"], self.pso["email"])
         self.assertEqual(self.store._case(SIBLING)["exercise"]["lifecycle"], "Intake")
 
+    def test_scoped_return_invalidates_exact_form_lineage_and_preserves_receipts(self):
+        application, claim = self.financial_fixture()
+        self.event("cash", claim, amount="3000")
+        self.store.technical_action(self.rc, HOME, dict(action="design_submit", note="Fictional return scope"))
+        self.store.technical_action(self.users["EX-RC-02"], HOME,
+                                    dict(action="signoff_give", type="design", note="Supplied independent design review"))
+        self.store.technical_action(self.qi, HOME,
+                                    dict(action="signoff_give", type="assessment", note="Supplied independent survey review"))
+        self.store.resident_action(self.rlo, HOME, dict(action="decision_record", measure="Loft insulation",
+            scope="Loft insulation", design_version=1, status="Accepted", answered_by="The resident"))
+        before = deepcopy(self.store._case(HOME))
+        sibling = deepcopy(self.store._case(SIBLING))
+        self.act("return", user=self.pm, target="Assessment", receiver=self.rc["email"],
+            reason="Supplied exact EPC/technical discrepancy", evidence="Fictional discrepancy source",
+            next_action="Named domain owners review only supplied affected scope",
+            affected_signoffs=["design"], affected_form_fields={application: ["epc_band"]})
+        after = self.store._case(HOME)
+        entry = after["exercise"]["returns"][-1]
+        self.assertEqual((entry["id"], entry["version"]), ("RETURN-001", 1))
+        self.assertEqual(entry["affected_signoffs"], ["design"])
+        self.assertEqual(entry["affected_form_fields"], {application: ["epc_band"]})
+        self.assertEqual(set(entry["invalidation"][application]["fields"]),
+                         {"epc_band", "declaration", "signature"})
+        self.assertEqual(after["technical"]["signoffs"]["design"]["status"], "Returned")
+        self.assertEqual(after["technical"]["signoffs"]["assessment"],
+                         before["technical"]["signoffs"]["assessment"])
+        self.assertEqual(after["forms"][application]["fields"]["home_ids"],
+                         before["forms"][application]["fields"]["home_ids"])
+        self.assertEqual(after["forms"][application]["exports"], before["forms"][application]["exports"])
+        self.assertEqual(after["forms"][claim], before["forms"][claim])
+        self.assertEqual(after["measure_decisions"], before["measure_decisions"])
+        self.assertEqual(after["exercise"]["evidence"], before["exercise"]["evidence"])
+        self.assertEqual(after["exercise"]["fund_events"][-1]["amount"], "3000")
+        self.assertTrue(all(e["stale"] for e in after["exercise"]["fund_events"]))
+        self.assertFalse(after["funding_ok"])
+        self.assertEqual(self.store._case(SIBLING), sibling)
+        from properwarm_mvp import projection
+        for actor in self.users.values():
+            payload = self.store.exercise_case(actor, HOME)
+            if projection.is_contractor(actor):
+                self.assertNotIn("exercise", payload["case"])
+            elif actor["role"] not in projection.FINANCE_VIEW:
+                projected = payload["case"]["exercise"]["returns"][-1]
+                self.assertNotIn("affected_form_fields", projected)
+                self.assertNotIn("invalidation", projected)
+                self.assertIn("Restricted", projected["form_scope_visibility"])
+            else:
+                self.assertEqual(payload["case"]["exercise"]["returns"][-1]["invalidation"], entry["invalidation"])
+        self.act("lifecycle", user=self.pm, target="Funding")
+        with self.assertRaises(GateError):
+            self.act("lifecycle", user=self.pm, target="Ready")
+        self.act("return", user=self.pm, target="Intake", receiver=self.pso["email"],
+            reason="Routing-only information request", evidence="Explicit routing source", next_action="Obtain clarification")
+        newest = self.store._case(HOME)["exercise"]["returns"][-1]
+        self.assertEqual((newest["id"], newest["version"], newest["invalidation"]), ("RETURN-002", 2, {}))
+        self.store.db.close()
+        self.store = open_store()
+        self.assertEqual(self.store._case(HOME)["exercise"]["returns"][-1], newest)
+        self.assertTrue(self.store.verify_ledger()["intact"])
+
+    def test_return_scope_validation_is_atomic_and_never_crosses_home(self):
+        self.act("lifecycle", user=self.pm, target="Assessment")
+        self.act("create-form", form_type="technical")
+        self.store.technical_action(self.rc, HOME, dict(action="design_submit", note="Explicit scope fixture"))
+        for scope in (
+            {"affected_signoffs": ["unknown"]}, {"affected_signoffs": ["design", "design"]},
+            {"affected_signoffs": "design"}, {"affected_signoffs": [{}]},
+            {"affected_form_fields": []}, {"affected_form_fields": {"FORM-001": ["unknown"]}},
+            {"affected_form_fields": {"FORM-001": ["home_ids", "home_ids"]}},
+            {"affected_form_fields": {"FORM-001": []}},
+            {"affected_form_fields": {"SIBLING-FORM": ["home_ids"]}},
+            {"affected_form_fields": {"FORM-001": [{}]}},
+        ):
+            before = deepcopy(self.store._case(HOME))
+            head = self.store.verify_ledger()["head"]
+            with self.assertRaises(ValueError, msg=scope):
+                self.act("return", user=self.pm, target="Intake", receiver=self.pso["email"],
+                    reason="Invalid explicit scope", evidence="Fictional source", next_action="Review", **scope)
+            self.assertEqual(self.store._case(HOME), before)
+            self.assertEqual(self.store.verify_ledger()["head"], head)
+
+    def test_all_earlier_stage_returns_preserve_history_and_role_authority(self):
+        stages = ("Intake", "Assessment", "Funding", "Ready", "Installation", "Provider completed",
+                  "Independent QA", "Handover", "Financial closure")
+        original = deepcopy(self.store._case(HOME))
+        labels = ("Contacting resident", "Design in progress", "Funding check", "Final checks before ordering",
+                  "Works under way", "Quality check", "Quality check", "Handover to arrange")
+        pair_count = 0
+        for index, stage in enumerate(stages):
+            for target in stages[:index]:
+                c = self.store._case(HOME)
+                c["exercise"]["lifecycle"] = stage
+                c["closed"] = stage == "Financial closure"
+                self.store.save()
+                before = deepcopy(self.store._case(HOME))
+                for actor in self.users.values():
+                    if actor["role"] in ("Retrofit Programme Manager", "Programme Support Officer"):
+                        continue
+                    with self.assertRaises(PermissionError):
+                        self.act("return", user=actor, target=target, receiver=self.pso["email"],
+                            reason="Unpermitted actor", evidence="Fictional source", next_action="Review")
+                    self.assertEqual(self.store._case(HOME), before)
+                self.act("return", user=self.pm, target=target, receiver=self.pso["email"],
+                    reason=f"Supplied {stage} to {target} routing", evidence="Fictional routing source",
+                    next_action="Named receiver obtains explicit correction scope")
+                c = self.store._case(HOME)
+                pair_count += 1
+                self.assertEqual(c["exercise"]["lifecycle"], target)
+                self.assertEqual(c["stage"], labels[stages.index(target)])
+                self.assertEqual(c["reason"], "Named receiver obtains explicit correction scope")
+                self.assertFalse(c["closed"])
+                self.assertEqual(c["exercise"]["returns"][-1]["version"], pair_count)
+                self.assertEqual(c["exercise"]["returns"][:-1], before["exercise"].get("returns", []))
+                for key in ("decision", "hazards", "funding", "home"):
+                    self.assertEqual(c[key], original[key])
+        self.assertEqual(pair_count, 36)
+        self.assertTrue(self.store.verify_ledger()["intact"])
+
     def test_process_interruption_before_commit_and_after_commit_before_response(self):
         before = deepcopy(self.store._case(HOME))
         baseline_head = self.store.verify_ledger()["head"]

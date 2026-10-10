@@ -343,6 +343,33 @@ def main() -> int:
                 page.get_by_text("SR-1: Complaint. Closed.", exact=True).wait_for()
                 record("browser-complaint-independent-redress-close",
                        page.get_by_role("cell", name="Withdrawn", exact=True).count() == 1)
+                page.goto(base + "#/exercise/EX-HOME-001")
+                page.get_by_role("heading", name="EX-HOME-001: Intake", exact=True).wait_for()
+                supplied_event(page, "lifecycle", dict(target="Assessment"))
+                page.get_by_role("heading", name="EX-HOME-001: Assessment", exact=True).wait_for()
+                supplied_event(page, "return", dict(target="Intake", receiver="ex-pso-01@example.test",
+                    reason="Supplied explicit design re-review", evidence="Fictional scoped return source",
+                    next_action="Design role checks only supplied discrepancy",
+                    affected_signoffs="design", affected_form_fields="{not valid JSON"))
+                page.get_by_text("Affected form fields must be a JSON object mapping same-home form IDs to explicit field lists.",
+                                 exact=True).wait_for()
+                record("browser-return-invalid-scope-json-does-not-advance",
+                       page.get_by_role("heading", name="EX-HOME-001: Assessment", exact=True).count() == 1)
+                supplied_event(page, "return", dict(target="Intake", receiver="ex-pso-01@example.test",
+                    reason="Supplied explicit design re-review", evidence="Fictional scoped return source",
+                    next_action="Design role checks only supplied discrepancy",
+                    affected_signoffs="design", affected_form_fields="{}"))
+                page.get_by_role("heading", name="EX-HOME-001: Intake", exact=True).wait_for()
+                page.get_by_role("cell", name="RETURN-001", exact=True).wait_for()
+                record("browser-return-versioned-source-owner-next-action",
+                       page.get_by_role("cell", name="Fictional scoped return source", exact=True).count() == 1
+                       and page.get_by_role("cell", name="Design role checks only supplied discrepancy", exact=True).count() == 1,
+                       {"task": "Versioned disposition exposes supplied source and owned next action without hiding history"})
+                page.goto(base + "#/case/EX-HOME-001")
+                page.get_by_role("heading", name="Decision for each measure", exact=True).wait_for()
+                record("browser-scoped-return-preserves-withdrawal-and-requires-review",
+                       page.get_by_role("cell", name="Returned", exact=True).count() == 1
+                       and page.get_by_role("cell", name="Withdrawn", exact=True).count() == 1)
                 session.close()
                 if args.native_zoom:
                     context = browser.new_context(no_viewport=True)

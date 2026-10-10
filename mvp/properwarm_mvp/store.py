@@ -614,15 +614,47 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                 if target not in stages or stages.index(target) >= stages.index(old):
                     raise ValueError("Return to an earlier exercise stage; no forward approval shortcut.")
                 receiver = self._staff_person(body.get("receiver"))
-                entry = dict(from_stage=old, to_stage=target, reason=text(body.get("reason"), "return reason", 300),
+                returns = state.setdefault("returns", [])
+                entry = dict(id=f"RETURN-{len(returns)+1:03d}", version=len(returns)+1,
+                             from_stage=old, to_stage=target, reason=text(body.get("reason"), "return reason", 300),
                              source=text(body.get("evidence"), "return source", 300),
                              by=user["email"], at=now(), receiver=receiver["email"],
                              next_action=text(body.get("next_action"), "owned next action", 300))
-                state.setdefault("returns", []).append(entry)
+                from .signoffs import SIGNOFFS
+                signoffs = body.get("affected_signoffs", [])
+                fields = body.get("affected_form_fields", {})
+                if (not isinstance(signoffs, list) or any(not isinstance(key, str) or key not in SIGNOFFS for key in signoffs)
+                        or len(signoffs) != len(set(signoffs))):
+                    raise ValueError("Name each affected technical sign-off once, or supply an empty list.")
+                if not isinstance(fields, dict):
+                    raise ValueError("Affected form fields must map same-home form IDs to explicit field lists.")
+                for fid, keys in fields.items():
+                    draft = c.get("forms", {}).get(fid)
+                    if (draft is None or not isinstance(keys, list) or not keys
+                            or any(not isinstance(key, str) or key not in draft["fields"] for key in keys)
+                            or len(keys) != len(set(keys))):
+                        raise ValueError("Name known fields once on each existing same-home form; no other home or guessed scope.")
+                for key in signoffs:
+                    self._tech_signoff_return(user, c, dict(type=key, reason=entry["reason"]))
+                entry["affected_signoffs"] = list(signoffs)
+                entry["affected_form_fields"] = deepcopy(fields)
+                entry["invalidation"] = {}
+                for fid, keys in fields.items():
+                    draft = c["forms"][fid]
+                    updated = forms.update_versions(draft, input_versions={
+                        key: draft["fields"][key]["input_version"]+1 for key in keys})
+                    c["forms"][fid] = updated
+                    entry["invalidation"][fid] = deepcopy(updated["last_invalidation"])
+                returns.append(entry)
                 state["lifecycle"] = target
-                c.update(closed=False, waiting_on=receiver["name"])
-                if target in ("Intake", "Assessment", "Funding"):
-                    c["stage"] = "Design in progress"
+                stage_labels = {
+                    "Intake": "Contacting resident", "Assessment": "Design in progress",
+                    "Funding": "Funding check", "Ready": READY_STAGE,
+                    "Installation": "Works under way", "Provider completed": "Quality check",
+                    "Independent QA": "Quality check", "Handover": "Handover to arrange",
+                }
+                c.update(closed=False, waiting_on=receiver["name"], stage=stage_labels[target],
+                         reason=entry["next_action"])
                 self._exercise_reconcile_dependents(c)
             elif action == "resident-update":
                 self._exercise_resident_update(user, c, body)

@@ -152,6 +152,20 @@ native zoom. Fresh 18-home cold startup measured separately; scale/cloud
 startup remains unmeasured. P05/P06 stay open for remaining complete workflow,
 return, permission, recovery, screen-reader and actual-model/human evidence.
 
+Current P05-T01 continuation adds explicit return scopes: named technical
+sign-offs and same-home form fields requiring re-review. Blank scope remains
+a routing-only return, not guessed invalidation or approval. Use existing
+sign-off return and form input-version dependency helpers; preserve sources,
+resident choices, sibling and historical external receipts. Test exact
+invalidation, atomic invalid-scope refusal and return-stage/version matrix.
+
+Executed: all 36 earlier-stage dispositions, ten atomic invalid-scope shapes,
+exact sign-off/form/financial ancestry scope, preserved source/choice/sibling/
+cash and need-based form-scope projection. Real return browser/history passes.
+Latest full regression 380 tests/26 live SQL skips, headed native-browser
+60 checks. FR-010/AC-012 complete constructed disposition evidence; full
+quality/procurement/milestone return invalidation remains an open P05 boundary.
+
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->

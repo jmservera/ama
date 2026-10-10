@@ -376,3 +376,36 @@ returned user unavailable. No consent, deployment, model call, evaluator,
 value outcome or full task completion is inferred. Affected live/value
 acceptance remains blocked; remaining local matrix/return/recovery/accessibility
 work is explicit. Original Review and draft/unmerged boundary are unchanged.
+
+## Explicit Return Scope Implementation
+
+P05/P05-T01 resumes with named technical sign-off and same-home form-field
+re-review scopes on return/reopen. This is an immediately relevant current
+state update under FR-009/010/043, not a new approval workflow: preserve
+source/choice/sibling/history, use existing sign-off and form-version helpers
+and refuse invalid scope atomically. Empty scope remains routing-only.
+Write boundary: existing Store/event UI/tests and directly related evidence;
+validation: exact stale-set, financial ancestry and versioned return oracles.
+
+Implemented explicit `affected_signoffs` and `affected_form_fields` on return.
+Named sign-offs use the existing competent-role return helper; named fields
+advance existing input versions and invalidate exact transitive review/
+calculation/financial lineage. Administrative empty scope remains routing-only.
+Versioned return IDs preserve original reason/source/authority/receiver/next
+action and prior history. Reopened case display stage and status reason now
+match its actual return target/owned next action, not a stale Completed label.
+Sources, resident decisions, unaffected claim draft/sibling and historical cash
+remain intact. Non-Finance views omit restricted form-scope details.
+
+Three new fixtures cover all 36 earlier-stage pairs, per-role denial,
+ten atomic invalid-scope shapes and exact scoped invalidation with GBP 3000
+cash retained. Real browser controls reject malformed JSON without advancing,
+return the named design sign-off and display versioned source/owner/next-action
+history without altering works withdrawal. Final full regression: 380 tests,
+OK, 26 live MSSQL skips, 72.684s. Headed native-browser: 60 checks, zero failed.
+Image 5709b3b6d1dd0325591e1a1f2665c579052426871b9075baa3a6ee7667e5336a
+passes UID 10001/read-only health 200 with 18 fictional homes.
+FR-010 and AC-012 pass exact local disposition contracts. Full quality/
+procurement/milestone return invalidation, other role/workflow coverage,
+scheduled recovery, human/screen-reader and actual-model/value gates remain
+open. Existing Review is unchanged; no full task acceptance is claimed.

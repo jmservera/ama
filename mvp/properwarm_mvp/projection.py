@@ -95,6 +95,10 @@ def redact_staff_detail(user, d):
             d["exercise"].pop("source_history", None)
             d["exercise"].pop("narratives", None)
             d["exercise"].pop("assistance", None)
+            for disposition in d["exercise"].get("returns", []):
+                disposition.pop("affected_form_fields", None)
+                disposition.pop("invalidation", None)
+                disposition["form_scope_visibility"] = "Restricted; ask the authorized form owner for the re-review scope."
     if user.get("role") == "Retrofit Coordinator":
         d["forms"] = {key: value for key, value in d.get("forms", {}).items()
                       if value["form_type"] == "technical"}

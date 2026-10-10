@@ -1,0 +1,411 @@
+{
+  "kind": "local-browser-engineering",
+  "browser": "152.0.7977.75",
+  "human_ux": "Not run",
+  "screen_reader": "Not run",
+  "wcag_conformance": "Not assessed",
+  "checks": [
+    {
+      "check": "initial-cold-exercise-startup",
+      "result": "Pass",
+      "detail": {
+        "seconds_to_first_health_200": 0.42358250899997074,
+        "fixture": "Fresh 18-home SQLite exercise state; no warm-up before initial health",
+        "boundary": "Local initial process startup, not cloud cold scaling or scale-fixture startup"
+      }
+    },
+    {
+      "check": "profile-asset",
+      "result": "Pass",
+      "detail": {
+        "role": "Retrofit Programme Manager",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "building-navigation-asset",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-controlled-safe-block-asset",
+      "result": "Pass",
+      "detail": {
+        "task": "Award without reviewed same-home export must fail without mutation",
+        "expected_refusal": "same-home reviewed form export",
+        "observed": "Anchor this event to a same-home reviewed form export."
+      }
+    },
+    {
+      "check": "profile-programme",
+      "result": "Pass",
+      "detail": {
+        "role": "Retrofit Programme Manager",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "building-navigation-programme",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-controlled-safe-block-programme",
+      "result": "Pass",
+      "detail": {
+        "task": "Award without reviewed same-home export must fail without mutation",
+        "expected_refusal": "same-home reviewed form export",
+        "observed": "Anchor this event to a same-home reviewed form export."
+      }
+    },
+    {
+      "check": "profile-case_team",
+      "result": "Pass",
+      "detail": {
+        "role": "Programme Support Officer",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "building-navigation-case_team",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-controlled-safe-block-case_team",
+      "result": "Pass",
+      "detail": {
+        "task": "Award without reviewed same-home export must fail without mutation",
+        "expected_refusal": "same-home reviewed form export",
+        "observed": "Anchor this event to a same-home reviewed form export."
+      }
+    },
+    {
+      "check": "profile-technical",
+      "result": "Pass",
+      "detail": {
+        "role": "Retrofit Coordinator",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "building-navigation-technical",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-controlled-safe-block-technical",
+      "result": "Pass",
+      "detail": {
+        "task": "Award without reviewed same-home export must fail without mutation",
+        "expected_refusal": "Only Finance identities",
+        "observed": "Only Finance identities record external financial evidence."
+      }
+    },
+    {
+      "check": "profile-resident",
+      "result": "Pass",
+      "detail": {
+        "role": "Resident Liaison Officer",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "building-navigation-resident",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-controlled-safe-block-resident",
+      "result": "Pass",
+      "detail": {
+        "task": "Award without reviewed same-home export must fail without mutation",
+        "expected_refusal": "Only Finance identities",
+        "observed": "Only Finance identities record external financial evidence."
+      }
+    },
+    {
+      "check": "profile-safety",
+      "result": "Pass",
+      "detail": {
+        "role": "Building Safety Liaison",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "building-navigation-safety",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-controlled-safe-block-safety",
+      "result": "Pass",
+      "detail": {
+        "task": "Award without reviewed same-home export must fail without mutation",
+        "expected_refusal": "Only Finance identities",
+        "observed": "Only Finance identities record external financial evidence."
+      }
+    },
+    {
+      "check": "profile-procurement",
+      "result": "Pass",
+      "detail": {
+        "role": "Retrofit Programme Manager",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "building-navigation-procurement",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-controlled-safe-block-procurement",
+      "result": "Pass",
+      "detail": {
+        "task": "Award without reviewed same-home export must fail without mutation",
+        "expected_refusal": "same-home reviewed form export",
+        "observed": "Anchor this event to a same-home reviewed form export."
+      }
+    },
+    {
+      "check": "profile-provider",
+      "result": "Pass",
+      "detail": {
+        "role": "Contractor",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "building-navigation-provider",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-controlled-safe-block-provider",
+      "result": "Pass",
+      "detail": {
+        "task": "No funding event editor for assigned-scope contractor"
+      }
+    },
+    {
+      "check": "profile-quality",
+      "result": "Pass",
+      "detail": {
+        "role": "Quality Inspector",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "building-navigation-quality",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-controlled-safe-block-quality",
+      "result": "Pass",
+      "detail": {
+        "task": "Award without reviewed same-home export must fail without mutation",
+        "expected_refusal": "Only Finance identities",
+        "observed": "Only Finance identities record external financial evidence."
+      }
+    },
+    {
+      "check": "profile-finance",
+      "result": "Pass",
+      "detail": {
+        "role": "Grants and Evidence Officer",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "building-navigation-finance",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-controlled-safe-block-finance",
+      "result": "Pass",
+      "detail": {
+        "task": "Award without reviewed same-home export must fail without mutation",
+        "expected_refusal": "same-home reviewed form export",
+        "observed": "Anchor this event to a same-home reviewed form export."
+      }
+    },
+    {
+      "check": "browser-real-parser-conflict",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "form-reflow-320px",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "form-reflow-390px",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "form-reflow-1280px",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "text-resize-200-percent",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "css-4x-zoom-reflow-probe-not-browser-zoom",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "keyboard-visible-focus",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "form-input-labels",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "no-duplicate-dom-ids",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "visible-form-control-target-size",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "declared-text-palette-contrast",
+      "result": "Pass",
+      "detail": {
+        "ink-on-#ffffff": 14.75506810246732,
+        "muted-on-#ffffff": 5.802870109016086,
+        "brand-on-#ffffff": 7.520743408634852,
+        "brand-d-on-soft": 9.51602895162991,
+        "warn-on-#fde8e6": 5.591842158292674
+      }
+    },
+    {
+      "check": "nine-workflow-navigation",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "forecast-table-equivalent",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-operator",
+      "result": "Pass",
+      "detail": {
+        "role": "Programme Support Officer",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "building-navigation-operator",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-controlled-safe-block-operator",
+      "result": "Pass",
+      "detail": {
+        "task": "Award without reviewed same-home export must fail without mutation",
+        "expected_refusal": "same-home reviewed form export",
+        "observed": "Anchor this event to a same-home reviewed form export."
+      }
+    },
+    {
+      "check": "building-distinct-home-consent-and-design-display",
+      "result": "Pass",
+      "detail": {
+        "fixture": "Supplied fictional withdrawal/design on lead only; sibling retains own unchanged gates"
+      }
+    },
+    {
+      "check": "browser-resident-commitment-owned-independently",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "browser-handoff-receipt-not-inferred",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "browser-handoff-preserves-resident-commitment",
+      "result": "Pass",
+      "detail": {
+        "task": "Sent/received/accepted/completed operational handoff never clears or reassigns resident update"
+      }
+    },
+    {
+      "check": "browser-accessible-service-is-not-consent",
+      "result": "Pass",
+      "detail": {
+        "task": "Open supplied accessible complaint, retaining previously withdrawn works choice"
+      }
+    },
+    {
+      "check": "browser-complaint-independent-close-refusal",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "browser-complaint-independent-redress-close",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "browser-return-invalid-scope-json-does-not-advance",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "browser-return-versioned-source-owner-next-action",
+      "result": "Pass",
+      "detail": {
+        "task": "Versioned disposition exposes supplied source and owned next action without hiding history"
+      }
+    },
+    {
+      "check": "browser-scoped-return-preserves-withdrawal-and-requires-review",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "native-browser-400-percent-home-reflow",
+      "result": "Pass",
+      "detail": {
+        "css_width": 319,
+        "window_width": 1279,
+        "device_pixel_ratio": 4,
+        "css_zoom": "1",
+        "overflow": false
+      }
+    },
+    {
+      "check": "native-browser-400-percent-building-reflow",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "browser-runtime-errors",
+      "result": "Pass",
+      "detail": {
+        "page_errors": [],
+        "server_errors": []
+      }
+    }
+  ]
+}

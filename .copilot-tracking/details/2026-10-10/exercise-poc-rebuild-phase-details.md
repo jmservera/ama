@@ -204,3 +204,17 @@ Executed fixtures pass with projection/history alias and nested DOM rendering
 root fixes. Latest suite 377 tests, 26 live SQL skips; headed browser 57 checks.
 Exact constructed FR-014/045/046 and AC-017/037/055/056 evidence is recorded;
 do not generalize it to real consent/service outcomes or unexecuted roles.
+
+Next P05-T01 boundary is explicit return invalidation. Programme reviewer may
+identify named sign-offs and form fields for re-review, never grant approval.
+Reuse existing dependency/version helpers, preserve raw source/choice/history,
+and record exact dispositions. Administrative routing alone must not infer
+domain changes. Extend event UI with clearly labelled explicit scope and
+test invalid-scope atomicity plus earlier-stage return pairs.
+
+Executed return scope/disposition fixtures pass with existing helper reuse.
+All 36 earlier-stage pairs, role denial, exact stale-set, preserved historical
+cash and ten invalid-scope atomicity shapes are covered. Current display stage
+and reason agree with returned owner/next action. Native-browser 60 checks
+and full 380-test regression pass; complete quality/procurement/milestone
+return dependencies and remaining human/live requirements are not inferred.
