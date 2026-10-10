@@ -132,6 +132,17 @@ Acceptance tests follow the same home and separate identities across phases.
 No real sends, payments, permissions hidden only client-side or artificial
 live/model evaluation claims.
 
+Later owner-directed implementation disposition: exact predecessor staleness,
+latest-award readiness, cumulative cash and corrected rejected retry controls
+now have reproductions, including stale rejected reference retention.
+Explicit handoff stages and independently owned resident commitments have
+focused tests; supplied hazard receipt/acceptance/chase remain separate from
+clock/release authority. General return records source/receiver/next action but
+does not invent domain changes or professional approval. Shared SQLite
+upper-liability reservations persist across inference processes; no automatic
+refund/rollover or invoice reconciliation is claimed. Full role/workflow
+fixture completion remains unexecuted; P05 marker stays open.
+
 <!-- rpi:phase id=P06 -->
 ## P06: Validate and publish
 
@@ -152,3 +163,15 @@ sizes/focus/status/chart equivalence, small-cell complementary suppression,
 recovery drills. Execute feasible local checks without reclassifying a smaller
 run as the prescribed workload. Unknown observations stay unknown.
 Test additions/removals and ownership are frozen in the plan validation budget.
+
+Later validation: 370 tests, OK, 26 live MSSQL skips; fresh browser 25 finite
+checks; image non-root/read-only health 200 with 18 fictional homes. Actual
+process exits before commit and after commit/before response retain exact
+case/audit and safe retry. Separate 500-row import/25-case Store workload passes,
+not concurrent core HTTP import. Two 1800-second HTTP workloads pass, with
+complete samples/errors/thresholds retained beside the acceptance register;
+five/twenty sessions, two writers and five interactions/s, not exactly five
+HTTP requests/s. Native browser
+zoom, screen-reader/human UX, background/RPO drill and actual model/evaluation
+acceptance remain open. Original Partial/Not accepted Review is unchanged;
+later implementation does not regrade it or run a second Review.

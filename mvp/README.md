@@ -76,9 +76,25 @@ Perspective navigation never changes the signed-in role.
   after referral. It preserves prior references and never evaluates their
   sufficiency. Legacy local hazard release, whole-case choice, instant handover,
   funding/claim shortcuts and instant installation advance are denied by API.
-* `resident-update` independently records owner, safe `channel`, `evidence`
-  and `next_update`; it does not imply receipt or understanding. Existing
-  offered/accepted/declined handoffs preserve sender chase until acceptance.
+* `handoff` records explicit `step` values `sent`, `received`, `accepted`,
+  `returned`, `escalated` and `completed`, with separate actor/evidence/reason.
+  Sending requires named receiver, due date or `Unknown`, urgency and owned
+  next action. Receipt never transfers ownership; acceptance requires separately
+  recorded receipt. Sender/current owner retains chase until acceptance.
+  Legacy handoff shortcuts are refused in exercise mode.
+* `resident-update` creates an independently owned commitment with purpose,
+  due/basis, safe channel/adjustment reference or explicit unknown and next update.
+  `proposed`, `sent` and explicit `reassign` use an existing `update_id` and
+  evidence/reason. Handoffs never clear or reassign it. A supplied send reference
+  does not imply resident receipt/understanding and performs no actual contact.
+* `return` records an earlier lifecycle `target`, named `receiver`, source
+  `evidence`, reason and owned `next_action`. It preserves history and existing
+  evidence; actual evidence changes still require their domain/source action
+  and dependent review. It is not a forward transition or approval shortcut.
+* `hazard-followup` records separately supplied external receipt/acceptance/
+  chase evidence against a referred `hazard_index`, authority, external actor
+  or unknown, observed timestamp, reference and owned follow-up. It never
+  releases a hold, changes awareness/classification or closes the external clock.
 * Optional `assist`, `support` and `narrative` actions retain source/version/hash bindings,
   proposal/reviewer status and transport provenance. Inherited `AI_ENDPOINT`
   never activates exercise calls. Disabled/failure/manual states are explicit;
@@ -89,18 +105,26 @@ Perspective navigation never changes the signed-in role.
   `PW_DECISION_METADATA_REVIEWED=true`, `PW_DECISION_DEPLOYMENT_TYPE`
   and `PW_DECISION_REGION`. These do not authorize inference: all shared
   `PW_INFERENCE_*` access/terms/cost/quota/price/spend/task gates still apply.
-  The cached scoring client retains process-local upper-charge reservations;
-  cross-process/provider cost reconciliation remains an operator acceptance
-  prerequisite, not a demonstrated budget ledger.
+  Exercise scoring and generation reserve conservative upper charges atomically
+  in `PW_STATE/inference-liabilities.sqlite`. Existing accrued spend cannot be
+  lowered by another process, retained reservations never auto-refund/roll over,
+  and projected spend at USD 405 blocks transport (USD 360 requires review).
+  Missing/unwritable ledger fails closed. This is tested liability reservation,
+  not actual pricing, invoice reconciliation or billable authorization.
   Selection/support context includes only authorized sources with current
-  candidates for the requested field. Support requires an explicit `claim`;
+  candidates for the requested field, and only its labelled excerpt, with full
+  document hash/source binding retained. Support requires an explicit `claim`;
   it is never evidence verification or an approval.
 * `versions` permits a template owner to record an explicit `schema_version`
   and/or `rule_version` with a reason. Unknown versions block export; restoring
   the approved version does not restore stale reviews. Financial dispositions
   bind their preceding form/export/digest. A corrected rejected submission
   requires its exact rejected `retry_of` reference and a fresh reviewed export;
-  the rejected attempt remains in history.
+  unchanged re-exports/reviews do not count as correction. Upstream staleness
+  propagates through the exact financial predecessor chain. A fresh current
+  award may restore readiness without activating old stale awards. Cash remains
+  cumulative across claims on the one fictional opportunity, even when a claim
+  becomes stale, and duplicate external receipt references are refused.
 
 ### Narrow exercise data portability contract
 
@@ -170,7 +194,7 @@ node --check web/app.js
 node --check web/panels.js
 ```
 
-Ten connected integration tests exercise same-home SQLite durability, exact
+Twenty connected integration tests exercise same-home SQLite durability, exact
 EPC invalidation/sibling isolation, independent form review/export, separate
 financial states through closure, QA return/fix/reinspection, scoped resident
 choice, capacity/safety blocks, zero-call inherited inference configuration,
@@ -179,15 +203,27 @@ engineering evidence, not full PRD acceptance. Live Decision 1/generative
 inference, human-adjudicated evaluation and net-effort comparison remain
 blocked. The local browser runner records eleven profile orientation probes,
 nine workflow navigation entries, actual parser conflict, narrow form reflow,
-text resize, keyboard focus and input labels. It is not eleven completed user
+actual doubled body text, keyboard focus, input labels, visible 24px control
+targets and declared palette contrast. A CSS 4x zoom probe is explicitly not
+native browser zoom. It is not eleven completed user
 tasks or nine completed workflow browser journeys. Local runtime probes use
 200 warm HTTP samples per list/detail/write/dashboard operation, one session
 and one writer, and an exact clean SQLite restart/backup-copy comparison.
-Prescribed five-session/two-writer and 30-minute/scale workloads, crash/response
-loss/RPO drills and human/screen-reader/contrast/target-size/400% zoom acceptance
-remain unexecuted. Full handoff receipt/escalation/completion and independent
-resident-update commitment state contracts remain incomplete. Arbitrary
-new-source ingestion and full claim resubmission recovery need further validation.
+Two 30-minute core/scale runs pass separately, with five/twenty authenticated
+sessions, two coordination writers, >=200 samples/op and no errors. Scale
+contains 60000 fictional homes/600000 embedded linked traces. List/detail/
+dashboard/write p95 are 0.0101/0.0048/0.0063/0.1506s core and
+0.0989/0.0419/0.0490/0.0787s scale. Five scheduled interactions/s is not
+exactly five HTTP requests/s: writes perform preview and commit. A 500-row
+import and 25-case batch pass as a separate Store-level scale probe, not
+concurrent core HTTP imports. Complete mixed-load acceptance remains unexecuted.
+Background/RPO drills, human/screen-reader and
+native 400% browser zoom acceptance remain unexecuted.
+Explicit handoff/update/return and hazard receipt/acceptance contracts now have
+focused tests, including unchanged commitment ownership across handoffs and
+process exits before commit/after commit before response. Their complete
+role/browser fixture matrix remains unexecuted. Arbitrary new-source ingestion
+and full claim resubmission recovery need further validation.
 The labelled event controls and optional JSON editor are manual
 exercise tools, not a validated production form experience.
 

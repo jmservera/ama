@@ -42,6 +42,8 @@ class WorkflowMixin:
             raise ValueError("Say why the case is being returned.")
         with self.lock:
             c = self._case(case_id)
+            if c.get("exercise"):
+                raise ValueError("Use the exercise return action with source, receiving owner and next action.")
             if c["closed"]:
                 raise ValueError("This case is closed. A manager can reopen it.")
             order = insights.STAGE_ORDER
@@ -66,6 +68,8 @@ class WorkflowMixin:
             raise ValueError("Say why the case is being reopened.")
         with self.lock:
             c = self._case(case_id)
+            if c.get("exercise"):
+                raise ValueError("Use the exercise return action; retain explicit owner, source and affected reviews.")
             if not c["closed"]:
                 raise ValueError("This case is already open.")
             was = c["stage"]
@@ -88,6 +92,8 @@ class WorkflowMixin:
         to = self._staff_person(to_email)
         with self.lock:
             c = self._case(case_id)
+            if c.get("exercise"):
+                raise ValueError("Use the exercise handoff action with separate receipt/acceptance and due/owner evidence.")
             if c["closed"]:
                 raise ValueError("This case is closed.")
             if c["owner_code"] != user["code"] and user["role"] not in MANAGER_ROLES:
@@ -103,6 +109,8 @@ class WorkflowMixin:
             self.save()
 
     def _open_offer(self, c, user, who):
+        if c.get("exercise"):
+            raise ValueError("Use the exercise handoff disposition; receipt never implies acceptance.")
         h = c.get("handoff")
         if not h or h["state"] != HANDOFF_OPEN:
             raise ValueError("There is no handoff waiting for an answer.")
@@ -167,6 +175,10 @@ class WorkflowMixin:
                                      job="", owner=c["owner"], raised_by=user["name"], note=(note or "")[:300]))
             if c.get("exercise"):
                 c["hazards"][-1]["classification_status"] = "Reported category/urgency only; authoritative classification remains external."
+                c["hazards"][-1].update(awareness_at=_now(), awareness_source=(note or "Unknown")[:300],
+                                       current_accountable_owner=c["owner"], chase_owner=c["owner"],
+                                       hold_scope=case_id, hold_source="Supplied potential hazard report",
+                                       received_reference=None, accepted_reference=None)
             self.audit(user["email"], "safety_raised", case_id, f"{category} {priority} {note or ''}".strip())
             if priority == "Emergency":
                 self.audit(user["email"], "safety_emergency", case_id, "Emergency safety issue: refer to Building Safety Liaison the same day")
@@ -186,6 +198,10 @@ class WorkflowMixin:
             if h["released"] or h.get("referred"):
                 raise ValueError("This safety issue has already been referred.")
             h.update(referred=_today(), job=job, owner=to["name"], referred_by=user["name"])
+            if c.get("exercise"):
+                h.update(sent_at=_now(), sent_reference=job, destination=to["role"],
+                         proposed_receiver=to["email"], confirmed_receiver=None,
+                         followup="Obtain separately supplied external receipt/acceptance; no inferred transfer.")
             self.audit(user["email"], "safety_referred", case_id, f"{h['category']} to {to['name']} job {job}")
             self.save()
 

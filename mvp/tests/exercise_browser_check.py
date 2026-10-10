@@ -96,10 +96,15 @@ def main() -> int:
                             record(f"form-reflow-{width}px", not overflow)
                             if width == 390:
                                 page.screenshot(path=str(args.output.parent / "exercise-form-390.png"), full_page=True)
-                        page.evaluate("document.documentElement.style.fontSize = '200%'")
+                        page.evaluate("() => {document.documentElement.style.fontSize = '200%'; document.body.style.fontSize = '32px'}")
                         record("text-resize-200-percent",
+                               page.evaluate("parseFloat(getComputedStyle(document.body).fontSize) >= 32")
+                               and not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 1"))
+                        page.evaluate("() => {document.documentElement.style.fontSize = ''; document.body.style.fontSize = ''}")
+                        page.evaluate("document.body.style.zoom = '4'")
+                        record("css-4x-zoom-reflow-probe-not-browser-zoom",
                                not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 1"))
-                        page.evaluate("document.documentElement.style.fontSize = ''")
+                        page.evaluate("document.body.style.zoom = ''")
                         page.keyboard.press("Tab")
                         record("keyboard-visible-focus", page.evaluate(
                             "document.activeElement !== document.body && getComputedStyle(document.activeElement).outlineStyle !== 'none'"))
@@ -109,6 +114,23 @@ def main() -> int:
                         record("no-duplicate-dom-ids", page.evaluate(
                             """(() => {const ids=[...document.querySelectorAll('[id]')].map(e=>e.id);
                             return new Set(ids).size===ids.length})()"""))
+                        record("visible-form-control-target-size", page.evaluate("""() =>
+                            [...document.querySelectorAll('#app button,#app input,#app select,#app summary')]
+                            .filter(e=>e.getClientRects().length)
+                            .every(e=>{const r=e.getBoundingClientRect();return r.width>=24 && r.height>=24})"""))
+                        palette = page.evaluate("""() => {const c=getComputedStyle(document.documentElement);
+                            return Object.fromEntries(['ink','muted','brand','brand-d','warn','soft','bg'].map(k=>[k,c.getPropertyValue('--'+k).trim()]))}""")
+                        def luminance(color):
+                            channels = [int(color[i:i+2], 16) / 255 for i in (1, 3, 5)]
+                            linear = [x / 12.92 if x <= .04045 else ((x + .055) / 1.055) ** 2.4 for x in channels]
+                            return sum(x * coefficient for x, coefficient in zip(linear, (.2126, .7152, .0722)))
+                        ratios = {}
+                        for foreground, background in (("ink", "#ffffff"), ("muted", "#ffffff"),
+                                                       ("brand", "#ffffff"), ("brand-d", "soft"), ("warn", "#fde8e6")):
+                            light, dark = sorted((luminance(palette.get(foreground, foreground)),
+                                                  luminance(palette.get(background, background))), reverse=True)
+                            ratios[foreground + "-on-" + background] = (light + .05) / (dark + .05)
+                        record("declared-text-palette-contrast", all(ratio >= 4.5 for ratio in ratios.values()), ratios)
                         page.goto(base + "#/exercise")
                         page.get_by_role("heading", name="Nine connected workflows", exact=True).wait_for()
                         record("nine-workflow-navigation", page.locator("#app article h3").count() >= 9)

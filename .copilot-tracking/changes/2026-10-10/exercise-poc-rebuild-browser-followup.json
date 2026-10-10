@@ -1,0 +1,176 @@
+{
+  "kind": "local-browser-engineering",
+  "browser": "152.0.7977.75",
+  "human_ux": "Not run",
+  "screen_reader": "Not run",
+  "wcag_conformance": "Not assessed",
+  "checks": [
+    {
+      "check": "profile-asset",
+      "result": "Pass",
+      "detail": {
+        "role": "Retrofit Programme Manager",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "profile-programme",
+      "result": "Pass",
+      "detail": {
+        "role": "Retrofit Programme Manager",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "profile-case_team",
+      "result": "Pass",
+      "detail": {
+        "role": "Programme Support Officer",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "profile-technical",
+      "result": "Pass",
+      "detail": {
+        "role": "Retrofit Coordinator",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "profile-resident",
+      "result": "Pass",
+      "detail": {
+        "role": "Resident Liaison Officer",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "profile-safety",
+      "result": "Pass",
+      "detail": {
+        "role": "Building Safety Liaison",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "profile-procurement",
+      "result": "Pass",
+      "detail": {
+        "role": "Retrofit Programme Manager",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "profile-provider",
+      "result": "Pass",
+      "detail": {
+        "role": "Contractor",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "profile-quality",
+      "result": "Pass",
+      "detail": {
+        "role": "Quality Inspector",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "profile-finance",
+      "result": "Pass",
+      "detail": {
+        "role": "Grants and Evidence Officer",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "browser-real-parser-conflict",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "form-reflow-320px",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "form-reflow-390px",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "form-reflow-1280px",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "text-resize-200-percent",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "css-4x-zoom-reflow-probe-not-browser-zoom",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "keyboard-visible-focus",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "form-input-labels",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "no-duplicate-dom-ids",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "visible-form-control-target-size",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "declared-text-palette-contrast",
+      "result": "Pass",
+      "detail": {
+        "ink-on-#ffffff": 14.75506810246732,
+        "muted-on-#ffffff": 5.802870109016086,
+        "brand-on-#ffffff": 7.520743408634852,
+        "brand-d-on-soft": 9.51602895162991,
+        "warn-on-#fde8e6": 5.591842158292674
+      }
+    },
+    {
+      "check": "nine-workflow-navigation",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "forecast-table-equivalent",
+      "result": "Pass",
+      "detail": null
+    },
+    {
+      "check": "profile-operator",
+      "result": "Pass",
+      "detail": {
+        "role": "Programme Support Officer",
+        "script": "Find owner, blocker and next route"
+      }
+    },
+    {
+      "check": "browser-runtime-errors",
+      "result": "Pass",
+      "detail": {
+        "page_errors": [],
+        "server_errors": []
+      }
+    }
+  ]
+}

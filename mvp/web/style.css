@@ -13,7 +13,7 @@ button,.btn{font:inherit;border:1px solid var(--brand);background:var(--brand);c
 button:hover,.btn:hover{background:var(--brand-d)}
 button.alt,.btn.alt{background:#fff;color:var(--brand)}
 button.link{background:none;border:0;color:#fff;text-decoration:underline;padding:0}
-:focus-visible{outline:3px solid #f2a900;outline-offset:2px}
+:focus-visible{outline:3px solid #000;outline-offset:2px;box-shadow:0 0 0 6px #fff}
 main{max-width:1320px;margin:1.25rem auto;padding:0 1rem}
 h1{font-size:1.5rem;margin:.2rem 0 .8rem}
 h2{font-size:1.1rem;margin:1.2rem 0 .5rem}

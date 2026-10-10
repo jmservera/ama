@@ -1,0 +1,62 @@
+{
+  "kind": "local-http-and-clean-backup-engineering",
+  "population": "18 fictional homes; five sessions/two coordination writers",
+  "core_30_minute_workload": "Steady session recorded; 500-row import/25-case batch not part of this run",
+  "scale_30_minute_workload": "Not run",
+  "crash_and_response_loss": "Not run",
+  "rpo_and_reconciliation": "Not run",
+  "results": {
+    "list": {
+      "samples": 4920,
+      "warm_http_p95_seconds": 0.01012370099851978,
+      "threshold_seconds": 1,
+      "result": "Pass"
+    },
+    "detail": {
+      "samples": 2460,
+      "warm_http_p95_seconds": 0.0047588169982191175,
+      "threshold_seconds": 1,
+      "result": "Pass"
+    },
+    "dashboard": {
+      "samples": 900,
+      "warm_http_p95_seconds": 0.006303687001491198,
+      "threshold_seconds": 3,
+      "result": "Pass"
+    },
+    "write": {
+      "samples": 721,
+      "warm_http_p95_seconds": 0.15062637300070492,
+      "threshold_seconds": 2,
+      "result": "Pass"
+    },
+    "steady-session": {
+      "seconds": 1800.037176394002,
+      "sessions": 5,
+      "writers": 2,
+      "aggregate_scheduled_interactions_per_second": 5,
+      "interactions": 9001,
+      "mix": {
+        "list": 4920,
+        "detail": 2460,
+        "dashboard": 900,
+        "write": 721
+      },
+      "failures": [],
+      "population": 18,
+      "controls": "Only coordination note preview/commit; no inference or controlled approvals",
+      "result": "Pass"
+    },
+    "clean-restart": {
+      "seconds": 0.20775394300289918,
+      "exact_case_retained": true,
+      "integrity": "ok",
+      "result": "Pass"
+    },
+    "backup-restore": {
+      "exact_stored_case": true,
+      "exact_audit_head": true,
+      "result": "Pass"
+    }
+  }
+}

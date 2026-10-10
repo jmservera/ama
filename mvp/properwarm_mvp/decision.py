@@ -25,6 +25,10 @@ from hashlib import sha256
 import json
 import math
 import os
+import sqlite3
+from decimal import Decimal, ROUND_CEILING
+from pathlib import Path
+import uuid
 from pathlib import Path
 import re
 from threading import Lock
@@ -122,6 +126,44 @@ class InferenceGuard:
     allowed: bool
     reason: str
     reviewer: str | None = None
+
+
+def reserve_inference_charge(task_id: str, config: InferenceConfig, state_dir: str) -> dict:
+    """Reserve a conservative upper liability across scoring/generation processes.
+
+    Failed or timed-out calls keep their reservation. No automatic refund or
+    monthly rollover can discard an unresolved charge; reconciliation is human-owned.
+    """
+    state = Path(state_dir)
+    if not state_dir or not state.is_absolute() or not state.is_dir() or state.is_symlink():
+        raise ValueError("An explicit existing absolute inference state directory is required.")
+    path = state / "inference-liabilities.sqlite"
+    if path.is_symlink():
+        raise ValueError("Inference liability database must not be a symlink.")
+    if not _finite(config.accrued_usd) or not _finite(config.max_call_charge_usd, positive=True):
+        raise ValueError("Reviewed accrued spend and maximum call charge are required.")
+    def units(value):
+        return int((Decimal(str(value)) * 1_000_000).to_integral_value(rounding=ROUND_CEILING))
+    base, charge = units(config.accrued_usd), units(config.max_call_charge_usd)
+    pause = min(units(config.pause_at_usd), units(config.monthly_cap_usd), 405_000_000)
+    with sqlite3.connect(path, timeout=5) as connection:
+        connection.execute("CREATE TABLE IF NOT EXISTS liability_base (id INTEGER PRIMARY KEY CHECK(id=1), amount INTEGER NOT NULL)")
+        connection.execute("CREATE TABLE IF NOT EXISTS reservations (id TEXT PRIMARY KEY, task TEXT NOT NULL, amount INTEGER NOT NULL, at TEXT NOT NULL)")
+        connection.execute("BEGIN IMMEDIATE")
+        previous = connection.execute("SELECT amount FROM liability_base WHERE id=1").fetchone()
+        base = max(base, previous[0] if previous else 0)
+        connection.execute("INSERT OR REPLACE INTO liability_base(id,amount) VALUES(1,?)", (base,))
+        reserved = connection.execute("SELECT COALESCE(SUM(amount),0) FROM reservations").fetchone()[0]
+        projected = base + reserved + charge
+        if projected >= pause:
+            connection.commit()
+            return dict(allowed=False, reason="shared_liability_pause", projected_usd=projected / 1_000_000)
+        reference = uuid.uuid4().hex
+        connection.execute("INSERT INTO reservations VALUES(?,?,?,datetime('now'))", (reference, task_id, charge))
+        connection.commit()
+    return dict(allowed=True, reason="review_spend" if projected >= 360_000_000 else "reserved",
+                reservation_id=reference, projected_usd=projected / 1_000_000,
+                reserved_upper_charge_usd=charge / 1_000_000)
 
 
 def _valid_task(task: Mapping[str, object]) -> bool:
@@ -304,6 +346,11 @@ class DecisionClient:
 
     def _configuration_error(self) -> str | None:
         cfg = self.config
+        if any(not isinstance(value, str) for value in
+               (cfg.endpoint, cfg.deployment, cfg.expected_model, cfg.expected_model_version,
+                cfg.metadata_endpoint, cfg.metadata_deployment, cfg.metadata_model,
+                cfg.metadata_model_version, cfg.deployment_type, cfg.region)):
+            return "deployment_metadata_unverified"
         if not cfg.endpoint or not cfg.deployment:
             return "unconfigured"
         endpoint = urllib.parse.urlsplit(cfg.endpoint)
@@ -318,7 +365,7 @@ class DecisionClient:
         if (cfg.metadata_reviewed is not True
                 or cfg.endpoint.rstrip("/") != cfg.metadata_endpoint.rstrip("/")
                 or cfg.deployment != cfg.metadata_deployment
-                or cfg.expected_model != cfg.metadata_model
+                or cfg.expected_model.casefold() != cfg.metadata_model.casefold()
                 or cfg.expected_model_version != cfg.metadata_model_version
                 or cfg.expected_model.casefold() != "microsoft-decision-1"
                 or cfg.expected_model_version != "1"
@@ -400,8 +447,17 @@ class DecisionClient:
                 problem = "invalid_endpoint_or_timeout"
             if problem:
                 return finish("unconfigured" if problem == "unconfigured" else "failed", problem)
-            # Reserve the upper liability even on failure: a timed-out call may be billed.
-            self._reserved_usd += cfg.max_call_charge_usd
+            if os.environ.get("PW_EXERCISE") == "1":
+                try:
+                    reservation = reserve_inference_charge(task_id, self.inference, os.environ.get("PW_STATE", ""))
+                except (OSError, sqlite3.Error, ValueError):
+                    return finish("disabled", "shared_liability_ledger_unavailable")
+                if not reservation["allowed"]:
+                    return finish("disabled", reservation["reason"])
+                envelope["liability_reservation"] = reservation
+            else:
+                # Fake/client-only use outside the exercise retains its local upper bound.
+                self._reserved_usd += cfg.max_call_charge_usd
             envelope["reserved_upper_charge_usd"] = cfg.max_call_charge_usd
         body = {"model": self.config.deployment, "state": state,
                 "questions": {task["question_name"]: question}}

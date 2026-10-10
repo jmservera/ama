@@ -1,17 +1,24 @@
 """Fake-only contract tests; no provider calls, resources or live acceptance."""
 
 from copy import deepcopy
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
 from hashlib import sha256
 import json
 import math
+from pathlib import Path
+import shutil
+import sqlite3
+import subprocess
+import sys
+import uuid
 import unittest
 import urllib.error
 from unittest.mock import patch
 
 from properwarm_mvp.decision import (
-    API_PATH, DecisionClient, DecisionConfig, InferenceConfig, NO_MATCH,
-    PROTECTED_FIELDS, inference_allowed, inference_guard, load_registry,
+    API_PATH, DecisionClient, DecisionConfig, InferenceConfig, InferenceGuard, NO_MATCH,
+    PROTECTED_FIELDS, inference_allowed, inference_guard, load_registry, reserve_inference_charge,
 )
 
 
@@ -65,6 +72,80 @@ def support_payload(probability: float = 0.97) -> dict:
 
 
 class DecisionTests(unittest.TestCase):
+    def test_shared_liability_reservations_survive_processes_and_provider_failures(self):
+        root = Path.cwd() / ".exercise-test-state" / uuid.uuid4().hex
+        root.mkdir(parents=True)
+        try:
+            first = reserve_inference_charge(TASK, replace(INFERENCE, accrued_usd=400, max_call_charge_usd=2),
+                                             str(root))
+            self.assertTrue(first["allowed"])
+            self.assertEqual(first["projected_usd"], 402)
+            program = """
+import json,sys
+from properwarm_mvp.decision import InferenceConfig,reserve_inference_charge
+config=InferenceConfig(accrued_usd=400,max_call_charge_usd=2)
+print(json.dumps(reserve_inference_charge('source_narrative',config,sys.argv[1])))
+"""
+            child = subprocess.run([sys.executable, "-c", program, str(root)], check=True,
+                                   capture_output=True, text=True, timeout=15)
+            self.assertEqual(json.loads(child.stdout)["projected_usd"], 404)
+            third = reserve_inference_charge(TASK, replace(INFERENCE, accrued_usd=0, max_call_charge_usd=1),
+                                             str(root))
+            self.assertFalse(third["allowed"], "A different process/provider cannot lower the recorded baseline.")
+            self.assertEqual(third["projected_usd"], 405)
+            with sqlite3.connect(root / "inference-liabilities.sqlite") as db:
+                self.assertEqual(db.execute("SELECT SUM(amount) FROM reservations").fetchone()[0], 4_000_000)
+        finally:
+            shutil.rmtree(root)
+            try:
+                root.parent.rmdir()
+            except OSError:
+                pass
+
+    def test_shared_ledger_denial_prevents_scoring_transport(self):
+        with patch.dict("os.environ", {"PW_EXERCISE": "1", "PW_STATE": ""}, clear=True):
+            client = self.client()
+            with patch.object(client, "transport", side_effect=AssertionError("No billable call")):
+                result = self.propose(client)
+            self.assertEqual(result["status"], "disabled")
+            self.assertEqual(result["reason"], "shared_liability_ledger_unavailable")
+
+    def test_concurrent_liability_reservations_cannot_overrun_pause(self):
+        root = Path.cwd() / ".exercise-test-state" / uuid.uuid4().hex
+        root.mkdir(parents=True)
+        try:
+            config = replace(INFERENCE, accrued_usd=400, max_call_charge_usd=1)
+            with ThreadPoolExecutor(max_workers=20) as pool:
+                outcomes = list(pool.map(lambda _: reserve_inference_charge(TASK, config, str(root)), range(20)))
+            self.assertEqual(sum(result["allowed"] for result in outcomes), 4)
+            self.assertTrue(all(result["projected_usd"] < 405 for result in outcomes if result["allowed"]))
+            self.assertTrue(all(result["reason"] == "shared_liability_pause" for result in outcomes if not result["allowed"]))
+            with sqlite3.connect(root / "inference-liabilities.sqlite") as db:
+                self.assertEqual(db.execute("SELECT SUM(amount) FROM reservations").fetchone()[0], 4_000_000)
+        finally:
+            shutil.rmtree(root)
+
+    def test_shared_ledger_denial_prevents_generating_or_reading_transport(self):
+        from properwarm_mvp.ai import Ai
+        with patch.dict("os.environ", {"PW_EXERCISE": "1", "PW_STATE": "", "AI_ENDPOINT": ENDPOINT}, clear=True):
+            ai = Ai()
+            with patch.object(ai, "_exercise_guard", return_value=InferenceGuard(True, "authorized")), \
+                 patch("properwarm_mvp.ai.InferenceConfig.from_env", return_value=INFERENCE), \
+                 patch.object(ai, "_chat", side_effect=AssertionError("No billable call")) as chat:
+                generated = ai.run("source_bound_narrative", "System", "Fictional facts", "Manual review")
+                read = ai.look_at("fictional.txt", b"EPC: C", "text/plain")
+            self.assertFalse(generated["provider_success"])
+            self.assertIn("shared_liability_ledger_unavailable", generated["reason"])
+            self.assertFalse(read["provider_success"])
+            self.assertEqual(read["reason"], "shared_liability_ledger_unavailable")
+            chat.assert_not_called()
+
+    def test_provider_catalog_model_casing_preserves_exact_model_identity(self):
+        result = self.propose(self.client(config=replace(CONFIG, metadata_model="Microsoft-Decision-1")))
+        self.assertEqual(result["status"], "proposed")
+        wrong = self.propose(self.client(config=replace(CONFIG, metadata_model="Microsoft-Decision-2")))
+        self.assertEqual(wrong["reason"], "deployment_metadata_unverified")
+
     def setUp(self) -> None:
         self.calls: list[tuple] = []
         self.tokens: list[bool] = []

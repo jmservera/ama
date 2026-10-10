@@ -49,44 +49,43 @@
       "decision": "Reviewed partial rebuild published as draft PR #58, implementation commit 7b4b898. CI launched; draft explicitly lists RV-001 through RV-007 and is not ready to merge.",
       "status": "published draft; not accepted",
       "evidence": "https://github.com/jmservera/ama/pull/58"
+    },
+    {
+      "decision": "Owner requested autonomous continued implementation. Later invocation fixes RV-001 through RV-004 with exact reproductions and extends handoff/update/hazard and shared liability contracts; no repeated Review or automatic-session consent.",
+      "status": "implemented locally; full acceptance incomplete",
+      "evidence": "mvp/tests/test_exercise_workbench.py; mvp/tests/test_decision.py; changes Later Owner-Directed Implementation"
+    },
+    {
+      "decision": "Read-only Azure catalog now confirms Microsoft-Decision-1 version 1 GlobalStandard eligibility, but no deployed Decision model or price quote. Explicit cloud/billable authorization and human evaluation request returned user unavailable.",
+      "status": "activation blocked; no authorization inferred",
+      "evidence": "docs/ideas/typesafe-system-one-agent-fit.md Evaluation and Activation Gate; ask_user returned user unavailable"
     }
   ],
   "blockers": [
     {
       "id": "live-decision-access",
-      "summary": "Existing AMA Foundry account has standard gpt-4.1-mini and capable gpt-4.1 deployments, but no Microsoft Decision 1 deployment. Processing terms, chargeable SKU and billable permission unverified.",
+      "summary": "Catalog advertises Microsoft-Decision-1 version 1 GlobalStandard eligibility, but no deployed Decision model. Price metadata is null; processing terms, accrued costs, quota and billable permission unverified. Authorization request returned user unavailable.",
       "resolution": "Owner/operator verifies Decision 1 deployment and terms/costs and authorizes bounded calls. Continue local implementation without live-success claims."
     },
     {
-      "id": "review-financial-integrity",
-      "summary": "RV-001/002/003 High and RV-004 Medium: transitive financial staleness, historical-award readiness, cash ceiling across claim attempts and unchanged rejected-pack retries.",
-      "resolution": "Later rpi-implement owns the four fixes with exact independent invariance tests; do not repeat Review."
-    },
-    {
       "id": "full-workflow-and-acceptance",
-      "summary": "Full handoff/update/return/fixture contracts and exact workload/recovery/accessibility/live/human acceptance incomplete.",
-      "resolution": "Implement RV-005/007 and clear actual-platform RV-006 prerequisite without relaxing controls or the USD 450 cap."
+      "summary": "Focused explicit handoff/update/return/hazard contracts and interruption tests pass. Two 1800-second workloads pass with no failures. Complete role/workflow matrix, prescribed import-in-core, background/RPO drills, native browser zoom/screen-reader and human acceptance remain incomplete.",
+      "resolution": "Finish feasible local evidence and preserve exact remaining acceptance gates without relaxing controls or the USD 450 cap."
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Draft PR #58 published; await /rpi-implement for RV-003, RV-001/002 and RV-004 first. Full task blocked; manual mode retained; no automatic session running. CI status is separate from review acceptance."
+    "action": "Publish verified local corrections to draft PR #58 and record exact-head CI. Full completion blocked on unavailable operator authorization/pricing/terms and human evaluation; remaining local acceptance matrix explicit. Remain manual Implement, no second Review."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Fix financial predecessor/invalidation/cumulative-cash and corrected retry invariants",
-      "rationale": "Highest risk and directly testable; one coherent financial control correction before further acceptance work.",
-      "evidence": "RV-001 through RV-004 in the canonical review"
+      "task": "Complete local workflow and exact acceptance fixtures",
+      "rationale": "Required to turn the working one-home slice into defensible full end-to-end capability.",
+      "evidence": "RV-005/007 and requirement/evidence register; financial reproductions now pass"
     },
     {
       "rank": 2,
-      "task": "Complete local workflow and exact acceptance fixtures",
-      "rationale": "Required to turn the working one-home slice into defensible full end-to-end capability.",
-      "evidence": "RV-005 and requirement/evidence register"
-    },
-    {
-      "rank": 3,
       "task": "Verify Foundry access/cost ledger and execute bounded actual-model/runtime acceptance",
       "rationale": "Mandatory platform/value evidence; billable and human prerequisites must remain explicit.",
       "evidence": "RV-006/007 and no-live-inference metadata"

@@ -184,6 +184,14 @@ async function exerciseHome(id, data) {
   };
   status.setAttribute("tabindex", "-1");
   section.append(status);
+  if (c.handoff) section.append(h("section", {},
+    h("h3", {}, "Operational handoff: receipt is not acceptance"),
+    h("p", {}, `State ${c.handoff.phase || c.handoff.state}; current owner ${c.owner}; destination ${c.handoff.destination || "Unknown"}; proposed receiver ${c.handoff.proposed_receiver || "Unknown"}; confirmed receiver ${c.handoff.confirmed_receiver || "Unknown"}; chase owner ${c.handoff.chase_owner || "Unknown"}.`),
+    h("p", {}, `Due ${c.handoff.due || "Unknown"}; urgency ${c.handoff.urgency || "Unknown"}; next action ${c.handoff.next_action || "Unknown"}.`),
+    exerciseTable(c.handoff.history || [], "Separately evidenced handoff transitions")));
+  section.append(h("section", {}, h("h3", {}, "Independently owned resident-update commitments"),
+    h("p", {}, "Operational handoffs never clear or reassign these commitments. Sent evidence is not receipt or understanding."),
+    exerciseTable(c.exercise && c.exercise.resident_updates || [], "Resident update purpose, owner, due basis and safe-route history")));
   if (data.allowed_forms.length) {
     const type = h("select", { id: "exercise-template" }, data.allowed_forms.map((kind) => h("option", { value: kind }, kind)));
     section.append(h("label", { for: "exercise-template" }, "Approved fictional form template"), type,
@@ -275,12 +283,19 @@ async function exerciseHome(id, data) {
 
 function exerciseActionEditor(id, data, send) {
   const action = h("select", { id: "exercise-record-action" },
-    ["lifecycle", "source-correct", "versions", "funding-event", "external-hazard-reference", "milestone", "resident-update"].map((value) => h("option", { value }, value)));
+    ["lifecycle", "return", "handoff", "source-correct", "versions", "funding-event", "hazard-followup", "external-hazard-reference", "milestone", "resident-update"].map((value) => h("option", { value }, value)));
   const payload = h("textarea", { id: "exercise-record-payload", rows: 8 });
   const error = h("p", { role: "alert" });
   const controls = h("div", {});
   const definitions = {
     lifecycle: [["target", "Next lifecycle step", ["Assessment", "Funding", "Ready", "Installation", "Provider completed", "Independent QA", "Handover", "Financial closure"]]],
+    return: [["target", "Earlier exercise stage", ["Intake", "Assessment", "Funding", "Ready", "Installation", "Provider completed", "Independent QA", "Handover"]],
+      ["receiver", "Receiving owner email"], ["reason", "Return/reopen reason"], ["evidence", "Source reference"],
+      ["next_action", "Owned next action"]],
+    handoff: [["step", "Separately evidenced handoff action", ["sent", "received", "accepted", "returned", "escalated", "completed"]],
+      ["receiver", "Named receiver email (sending)"], ["reason", "Reason/purpose"], ["evidence", "Explicit action evidence"],
+      ["due", "Due date YYYY-MM-DD or Unknown"], ["urgency", "Urgency", ["Routine", "Urgent", "Unknown"]],
+      ["next_action", "Owned next action (sending)"], ["escalation_owner", "Escalation owner (escalating)"]],
     "source-correct": [["source_id", "Authorized source to correct", data.sources.map((source) => source.id)],
       ["raw_text", "Explicit replacement source bytes", "textarea"], ["reason", "Source-owner correction reason"]],
     versions: [["form_id", "Affected form", Object.keys(data.forms)], ["schema_version", "Explicit schema version"],
@@ -294,10 +309,19 @@ function exerciseActionEditor(id, data, send) {
       ["reference", "External case/reference"], ["evidence", "Supplied external decision evidence"],
       ["released", "Supplied released flag (not your safety judgement)", ["true", "false"]],
       ["hazard_index", "Optional referred hazard index"]],
+    "hazard-followup": [["hazard_index", "Referred hazard index"], ["step", "Separately supplied external event", ["received", "accepted", "chased"]],
+      ["authority", "External authority"], ["external_actor", "Supplied external actor or Unknown"],
+      ["observed_at", "Supplied event ISO timestamp"], ["reference", "Separate external reference"],
+      ["evidence", "Supplied external action evidence"], ["followup", "Owned follow-up; not hazard closure"]],
     milestone: [["work_order", "Same-home work order ID"], ["milestone", "Independently verified milestone", ["mobilisation", "installation", "handover"]],
       ["evidence", "Actual supplied acceptance evidence"]],
     "resident-update": [["channel", "Safe supported contact route", ["Phone", "Letter", "Email", "Text", "Officer-assisted"]],
-      ["evidence", "Recorded update evidence (not assumed understanding)"], ["next_update", "Next owned update commitment"]],
+      ["step", "Commitment action", ["create", "proposed", "sent", "reassign"]],
+      ["update_id", "Existing update ID (not creation)"], ["purpose", "Purpose/linked issue"],
+      ["due", "Due YYYY-MM-DD or Unknown"], ["due_basis", "Due-date basis or Unknown"],
+      ["adjustment_reference", "Minimum necessary safe-route reference or Unknown"],
+      ["evidence", "Recorded update evidence (not assumed understanding)"], ["next_update", "Next owned update commitment"],
+      ["receiver", "Explicit new owner email (reassignment only)"], ["reason", "Action/reassignment reason"]],
   };
   let values = {};
   const paint = () => {

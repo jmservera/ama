@@ -14,9 +14,10 @@ ms.date: 2026-10-10
 ## Execution Status
 
 Partial against the complete accepted PRD. P01-P04 complete. P05 has a connected
-local home-to-financial-closure implementation, but complete handoff/update and
-fixture contracts remain outstanding. P06 local checks executed; complete
-workloads/live/human acceptance and publication remain open. No full end-to-end
+local home-to-financial-closure implementation and later financial/handoff/update
+corrections; the complete fixture/role acceptance matrix remains outstanding.
+P06 local checks executed and draft PR published; two prescribed-duration
+workloads are in progress and live/human acceptance remain open. No full end-to-end
 acceptance or conformant outcome is claimed.
 
 ## Completed Work
@@ -116,6 +117,11 @@ None outside the current plan.
 
 ## Publication and Review Outcome
 
+The owner explicitly requested continued autonomous implementation after draft
+publication. This is a later implementation invocation for routed RV findings,
+not a repeat Review. Resume financial invariants first; retain the original
+Not accepted review as history and do not infer live/billable authorization.
+
 The one independent implementation Review is
 .copilot-tracking/reviews/logs/2026-10-10/exercise-poc-rebuild-review.md:
 execution Partial, outcome Not accepted. RV-001 through RV-004 reproduce
@@ -129,3 +135,84 @@ The draft body lists all blockers and prohibits a ready-to-merge/full-acceptance
 claim. Final publication regression: 355 tests, OK, 26 live MSSQL skips,
 56.257 seconds. CI launched separately; a green pipeline cannot clear the
 open reproduced review findings. No rebuild merge or billable activation.
+
+## Later Owner-Directed Implementation
+
+P05/P05-T01, RV-001 through RV-004: exact financial predecessor staleness now
+propagates through application/award/claim/cash without reactivating history.
+Latest current award controls readiness; cumulative externally recorded cash
+cannot reset across stale claims and duplicate receipt references are denied.
+Unchanged export or pack review cannot correct a rejected submission; even
+staling that rejected attempt preserves its exact retry reference requirement.
+Finance events retain scheme/route/version/input/review bindings. Exact
+reproductions and sibling/rollback invariants pass; original Review remains
+Not accepted historical evidence, not a new assessment.
+
+P05/P05-T01, RV-005: explicit sent/received/accepted/returned/escalated/completed
+handoffs preserve chase and ownership until acceptance. Independently owned
+resident commitments retain purpose/due/basis, proposed/sent state, explicit
+reassignment and history; a handoff never clears them. Supplied external hazard
+receipt/acceptance/chase are separate from awareness/hold/release authority.
+General earlier-stage return records receiver/source/reason/next action;
+domain changes still own version invalidation. Malformed commitment dates
+fail explicitly and atomically. These are focused engineering contracts,
+not the unexecuted full human/profile workflow matrix.
+
+P03/P05, RV-006: scoring and generation share conservative atomic SQLite
+upper-liability reservations. Retained charges survive processes, failure and
+lower environment baselines; no auto refund/monthly rollover. Guard errors
+block transport. Catalog `Microsoft-Decision-1` identity casing is normalized,
+without admitting another model/version. Read-only Azure metadata now confirms
+model eligibility (version 1, GlobalStandard), not a deployment, price quote,
+processing approval or live inference. The returned SKU cost is null. No
+resources or billable calls created; actual activation still blocked.
+
+P06/P06-T01, RV-007: fresh Chrome run passes 25 finite checks including actual
+32px body text, CSS 4x zoom reflow, visible 24px control targets and declared
+palette contrast. CSS zoom is explicitly not native browser zoom; no
+screen-reader/user acceptance claimed. Exact separate scale Store probe passes
+500-row literal-text import and 25-case coordination commit, source-byte hash,
+controlled-field and audit invariants; import preview 0.089397s. Actual process
+termination before commit and after commit/before response retains exact
+case/audit state and safe rejected retry; not a disaster/RPO drill.
+
+Latest focused validation: `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python3 -m
+unittest tests.test_decision tests.test_exercise_workbench -q` from mvp:
+48 tests, OK, 15.149 seconds (28 Decision and 20 workbench tests).
+Browser and data raw outputs currently reside in the session files folder;
+delivery-safe generated summaries now sit beside the acceptance register.
+Both core and scale workloads finished; exact results are below. Full regression now passes:
+370 tests, OK, 26 live MSSQL skips, 67.562 seconds, after adding 20-way
+reservation contention and generation/document zero-transport denial
+(30 Decision tests). Changed browser syntax and
+`git diff --check` pass. Image sha256
+34d79fa11788b453de3b94096788f72377af9cfaccb1468c55fb5516731b306d
+passes non-root UID 10001/read-only health 200 with 18 fictional homes and
+temporary writable state. Current draft publication remains pending for this
+correction batch.
+
+Explicit operator authorization and human-evaluation prerequisites were asked
+after read-only eligibility was verified. User unavailable; no deployment,
+billable calls, false reviewed flags or participant evidence inferred.
+
+### Completed Prescribed-Duration Measurements
+
+Core: 1800.037 seconds, five authenticated sessions/two coordination writers,
+9001 interactions, no failures. List/detail/dashboard/write samples:
+4920/2460/900/721; p95 seconds: 0.010124/0.004759/0.006304/0.150626, below
+1/1/3/2. Exact clean restart 0.207754s, integrity ok, backup case/audit equality.
+Scale: separate 60000 fictional homes/600000 embedded linked traces,
+1800.046s, twenty sessions/two writers, 9001 interactions, no failures.
+Samples 5100/2550/900/451; p95 0.098890/0.041894/0.048979/0.078726s;
+all below thresholds. Restart 3.747456s, integrity ok and exact backup equality.
+Complete raw generated JSON retained beside the acceptance register.
+
+Five scheduled interactions/s includes two HTTP requests per write; actual
+workload requests/s approximately 5.40 core/5.25 scale, excluding login.
+The separate exact 500/25 Store data probe touched other scale homes while
+scale soak ran; it is not the prescribed mixed concurrent core HTTP import.
+Both servers loaded the initial follow-up snapshot before later stale retry,
+date/model-casing and runner corrections; those paths are separately tested,
+not claimed covered by these workload runs. No full NFR-002 or RPO acceptance.
+Both attached workload processes completed with exit zero; no ongoing soak
+process is left running.

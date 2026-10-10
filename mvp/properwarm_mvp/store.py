@@ -511,6 +511,34 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                     if not hazard.get("referred"):
                         raise ValueError("Refer the hazard before recording the supplied external response.")
                     hazard.update(released=ref["released"], external_reference=deepcopy(ref))
+            elif action == "hazard-followup":
+                if user["role"] != "Building Safety Liaison":
+                    raise PermissionError("Building Safety records separately supplied referral evidence.")
+                hazard = self._hazard(c, body.get("hazard_index"))
+                if not hazard.get("referred"):
+                    raise ValueError("Record the sent referral before receipt, acceptance or chase evidence.")
+                step = body.get("step")
+                history = hazard.setdefault("external_history", [])
+                if step not in ("received", "accepted", "chased"):
+                    raise ValueError("Choose received, accepted or chased; no hazard clock/classification/closure action.")
+                if step == "accepted" and not any(e["step"] == "received" for e in history):
+                    raise ValueError("External receipt and acceptance need separate supplied evidence.")
+                event = dict(step=step, by=user["email"], recorded_at=now(),
+                             authority=text(body.get("authority"), "external authority", 80),
+                             actor=text(body.get("external_actor"), "supplied external actor or Unknown", 80),
+                             reference=text(body.get("reference"), "external action reference", 80),
+                             evidence=text(body.get("evidence"), "external action evidence", 300),
+                             followup=text(body.get("followup"), "owned follow-up", 300))
+                observed = text(body.get("observed_at"), "supplied external action timestamp", 80)
+                datetime.fromisoformat(observed.replace("Z", "+00:00"))
+                event["observed_at"] = observed
+                history.append(event)
+                if step == "received":
+                    hazard.update(received_reference=deepcopy(event))
+                elif step == "accepted":
+                    hazard.update(accepted_reference=deepcopy(event))
+                hazard["followup_owner"] = user["email"]
+                hazard["followup"] = event["followup"]
             elif action == "milestone":
                 if user["role"] not in MANAGER_ROLES:
                     raise PermissionError("Independent Programme reviewer records accepted milestone evidence.")
@@ -540,14 +568,30 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                                                                by=user["email"], at=now(), evidence=evidence)
             elif action == "lifecycle":
                 self._exercise_lifecycle(user, c, body)
+            elif action == "handoff":
+                self._exercise_handoff(user, c, body)
+            elif action == "return":
+                from .controls import text
+                if user["role"] not in MANAGER_ROLES:
+                    raise PermissionError("An authorized Programme reviewer returns or reopens exercise work.")
+                stages = ("Intake", "Assessment", "Funding", "Ready", "Installation", "Provider completed",
+                          "Independent QA", "Handover", "Financial closure")
+                old, target = state["lifecycle"], body.get("target")
+                if target not in stages or stages.index(target) >= stages.index(old):
+                    raise ValueError("Return to an earlier exercise stage; no forward approval shortcut.")
+                receiver = self._staff_person(body.get("receiver"))
+                entry = dict(from_stage=old, to_stage=target, reason=text(body.get("reason"), "return reason", 300),
+                             source=text(body.get("evidence"), "return source", 300),
+                             by=user["email"], at=now(), receiver=receiver["email"],
+                             next_action=text(body.get("next_action"), "owned next action", 300))
+                state.setdefault("returns", []).append(entry)
+                state["lifecycle"] = target
+                c.update(closed=False, waiting_on=receiver["name"])
+                if target in ("Intake", "Assessment", "Funding"):
+                    c["stage"] = "Design in progress"
+                self._exercise_reconcile_dependents(c)
             elif action == "resident-update":
-                if user["role"] not in ("Resident Liaison Officer", *MANAGER_ROLES):
-                    raise PermissionError("Resident liaison or the named case team records updates.")
-                state.setdefault("resident_updates", []).append(dict(
-                    owner=user["email"], at=now(), channel=text(body.get("channel"), "safe channel", 80),
-                    evidence=text(body.get("evidence"), "update evidence", 300),
-                    next_update=text(body.get("next_update"), "next update commitment", 80),
-                    status="Recorded, not proof of receipt or understanding"))
+                self._exercise_resident_update(user, c, body)
             else:
                 drafts = c.setdefault("forms", {})
                 if action == "create-form":
@@ -694,7 +738,9 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
     def _exercise_reconcile_dependents(c: dict) -> None:
         """Suspend exactly the external events bound to changed reviewed packs."""
         from . import forms
-        for event in c["exercise"].get("fund_events", []):
+        events = c["exercise"].get("fund_events", [])
+        by_id = {event["id"]: event for event in events}
+        for event in events:
             try:
                 current = forms.export_pack(c["forms"][event["form_id"]])["exports"][-1]
                 stale = current["finance_review"]["digest"] != event["digest"]
@@ -702,9 +748,116 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                 stale = True
             if stale:
                 event["stale"] = True
-                if event["event"] == "award":
-                    c["funding_ok"] = False
-                    c["exercise"]["funding_reassessment"] = "Reviewed evidence changed; historical external award retained, readiness suspended."
+        # Predecessors are recorded before descendants; historical staleness is irreversible.
+        for event in events:
+            previous = event.get("previous_event")
+            if previous and (previous not in by_id or by_id[previous].get("stale")):
+                event["stale"] = True
+        awards = [event for event in events if event["event"] == "award"]
+        if awards:
+            current_award = awards[-1]
+            c["funding_ok"] = not current_award.get("stale") and (
+                c.get("finance", {}).get("budget") or {}).get("status") == "Approved"
+            c["exercise"]["funding_reassessment"] = (
+                "Current reviewed external award and independently approved budget."
+                if c["funding_ok"] else
+                "Reviewed evidence changed; historical external award retained, readiness suspended.")
+
+    def _exercise_handoff(self, user: dict, c: dict, body: dict) -> None:
+        from .controls import text, now
+        step = body.get("step")
+        h = c.get("handoff")
+        reason = text(body.get("reason"), "handoff reason", 300)
+        evidence = text(body.get("evidence"), "separately supplied handoff evidence", 300)
+        if step == "sent":
+            if user["code"] != c["owner_code"] and user["role"] not in MANAGER_ROLES:
+                raise PermissionError("Only the current owner or Programme team sends a handoff.")
+            if h and h.get("phase") not in ("Returned", "Completed", None):
+                raise ValueError("Resolve the existing handoff before sending another.")
+            receiver = self._staff_person(body.get("receiver"))
+            if receiver["code"] == c["owner_code"]:
+                raise ValueError("A handoff needs a different receiver.")
+            due = text(body.get("due"), "handoff due date or Unknown", 80)
+            if due != "Unknown":
+                date.fromisoformat(due)
+            urgency = body.get("urgency")
+            if urgency not in ("Routine", "Urgent", "Unknown"):
+                raise ValueError("Supply Routine, Urgent or Unknown urgency.")
+            h = dict(state="Offered", phase="Sent", from_code=c["owner_code"], from_name=c["owner"],
+                     to_code=receiver["code"], to_name=receiver["name"], destination=receiver["role"],
+                     proposed_receiver=receiver["email"], confirmed_receiver=None, chase_owner=c["owner"],
+                     offered_by=user["name"], offered_at=now(), note=reason, answered_at=None, answer_note="",
+                     due=due, urgency=urgency,
+                     next_action=text(body.get("next_action"), "handoff next action", 300), history=[])
+            c["handoff"] = h
+        else:
+            if not h or "phase" not in h:
+                raise ValueError("Record a separately evidenced sent handoff first.")
+            if step in ("received", "accepted", "returned", "completed") and user["code"] != h["to_code"]:
+                raise PermissionError("Only the named receiver records this handoff disposition.")
+            if step == "received" and h["phase"] in ("Sent", "Escalated"):
+                h.update(phase="Received", received_at=now(), received_by=user["email"])
+            elif step == "accepted" and h["phase"] == "Received":
+                h.update(phase="Accepted", state="Accepted", answered_at=now(),
+                         confirmed_receiver=user["email"], chase_owner=user["name"])
+                c.update(owner=user["name"], owner_code=user["code"], owner_role=user["role"],
+                         waiting_on=user["name"])
+            elif step == "returned" and h["phase"] in ("Sent", "Received", "Escalated"):
+                h.update(phase="Returned", state="Declined", answered_at=now(), answer_note=reason)
+            elif step == "completed" and h["phase"] == "Accepted":
+                h.update(phase="Completed", completed_at=now())
+            elif step == "escalated" and h["phase"] in ("Sent", "Received"):
+                if user["code"] != h["from_code"] and user["role"] not in MANAGER_ROLES:
+                    raise PermissionError("Only the sender/chase owner or Programme reviewer escalates.")
+                h.update(phase="Escalated", escalation_owner=text(body.get("escalation_owner"), "escalation owner", 80))
+            else:
+                raise ValueError("Invalid handoff transition; receipt never implies acceptance.")
+        h["history"].append(dict(step=step, by=user["email"], at=now(), reason=reason, evidence=evidence,
+                                 owner=c["owner"], chase_owner=h["chase_owner"]))
+        c.setdefault("handoff_log", []).append(deepcopy(h))
+
+    def _exercise_resident_update(self, user: dict, c: dict, body: dict) -> None:
+        from .controls import text, now
+        if user["role"] not in ("Resident Liaison Officer", *MANAGER_ROLES):
+            raise PermissionError("Resident liaison or the named case team records update commitments.")
+        updates = c["exercise"].setdefault("resident_updates", [])
+        step = body.get("step", "create")
+        if step == "create":
+            due = text(body.get("due", "Unknown"), "update due date or Unknown", 80)
+            if due != "Unknown":
+                date.fromisoformat(due)
+            record = dict(id=f"UPDATE-{len(updates)+1:03d}", owner=user["email"], at=now(),
+                          purpose=text(body.get("purpose", body.get("next_update")), "purpose/linked issue", 300),
+                          channel=text(body.get("channel"), "safe channel", 80),
+                          evidence=text(body.get("evidence"), "commitment evidence", 300),
+                          next_update=text(body.get("next_update"), "next update commitment", 80),
+                          due=due, due_basis=text(body.get("due_basis", "Unknown"), "due-date basis", 300),
+                          adjustment_reference=text(body.get("adjustment_reference", "Unknown"), "safe adjustment reference", 80),
+                          status="Outstanding", history=[])
+            updates.append(record)
+        else:
+            record = next((r for r in updates if r["id"] == body.get("update_id")), None)
+            if record is None:
+                raise ValueError("Choose an existing independently owned update commitment.")
+            if user["email"] != record["owner"] and user["role"] not in MANAGER_ROLES:
+                raise PermissionError("Only the update owner or authorized Programme team can change it.")
+            evidence = text(body.get("evidence"), "update action evidence", 300)
+            reason = text(body.get("reason"), "update action reason", 300)
+            if step == "reassign" and record["status"] != "Sent":
+                receiver = self._staff_person(body.get("receiver"))
+                if receiver["role"] not in ("Resident Liaison Officer", *MANAGER_ROLES):
+                    raise PermissionError("Choose an authorized resident-update owner.")
+                record["history"].append(dict(owner=record["owner"], status=record["status"],
+                                              by=user["email"], at=now(), evidence=evidence, reason=reason))
+                record["owner"] = receiver["email"]
+            elif step in ("proposed", "sent") and record["status"] in ("Outstanding", "Proposed"):
+                record["status"] = "Proposed" if step == "proposed" else "Sent"
+                record["history"].append(dict(step=step, by=user["email"], at=now(), evidence=evidence, reason=reason))
+                if step == "sent":
+                    record.update(sent_at=now(), sent_evidence=evidence,
+                                  receipt="Unknown", understanding="Unknown")
+            else:
+                raise ValueError("Invalid commitment transition; sending is not resident receipt.")
 
     def _exercise_assist(self, c: dict, draft: dict, field: str, *,
                          task: str = "form_candidate_selection", claim: str | None = None) -> dict:
@@ -720,8 +873,13 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
             if sid not in source_ids or not source["authorized"] or field not in source["field_ids"]:
                 continue
             raw = next(s for s in c["exercise"]["evidence"] if s["id"] == sid)
+            excerpt = "\n".join(line for line in raw["raw_text"].splitlines()
+                                if line.split(":", 1)[0].strip() == field)
+            if not excerpt:
+                raise ValueError("Current candidate source lacks its authorized labelled field excerpt.")
             sources.append(dict(id=sid, case_id=c["id"], version=source["version"], hash=source["hash"],
-                                locator="supplied labelled text", kind="form_evidence", text=raw["raw_text"]))
+                                locator=f"supplied labelled field {field}; hash binds full source bytes",
+                                kind="form_evidence", text=excerpt))
         if "_decision_client" not in self.__dict__:
             config = DecisionConfig(
                 endpoint=os.environ.get("PW_DECISION_ENDPOINT", ""),
@@ -771,15 +929,22 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
         previous = next((e for e in reversed(events) if e["event"] == prerequisites[kind]
                          and (prerequisites[kind] == "award" or e["form_id"] == fid)
                          and (body.get("previous_event") is None or e["id"] == body["previous_event"])), None)
-        retry = next((e for e in reversed(events) if e["event"] == kind and not e.get("stale")), None)
+        retry = next((e for e in reversed(events) if e["event"] == kind), None)
         if kind in ("application-submitted", "claim-submitted") and retry:
             rejection = next((e for e in events if e["event"] == (
                 "application-disposition" if kind == "application-submitted" else "claim-disposition")
                 and e["previous_event"] == retry["id"] and e["disposition"] == "Rejected"), None)
-            if not rejection or body.get("retry_of") != rejection["id"]:
+            if not rejection and not retry.get("stale"):
                 raise ValueError("A resubmission requires its exact rejected disposition reference.")
-            if fid == retry["form_id"] and exported["id"] == retry["export_id"]:
-                raise ValueError("Re-review and export a corrected pack before resubmitting.")
+            if rejection:
+                if body.get("retry_of") != rejection["id"]:
+                    raise ValueError("A resubmission requires its exact rejected disposition reference.")
+                prior_export = next(e for e in c["forms"][retry["form_id"]]["exports"]
+                                    if e["id"] == retry["export_id"])
+                if (exported["finance_review"]["digest"] == retry["digest"]
+                        or (fid == retry["form_id"] and exported["finance_review"]["id"]
+                            == prior_export["finance_review"]["id"])):
+                    raise ValueError("Re-review and export a corrected pack before resubmitting.")
         if prerequisites[kind] and not previous:
             raise ValueError("Record the preceding external evidence event separately.")
         if previous and previous.get("stale"):
@@ -818,15 +983,21 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
             if amount > ceiling:
                 raise ValueError("Amount exceeds the separately evidenced preceding state.")
             if kind == "cash":
-                received = sum(Decimal(e["amount"]) for e in events if e["event"] == "cash"
-                               and e["previous_event"] == previous["id"])
+                # All receipts belong to this home's single fictional funding opportunity.
+                # Staling a claim never reverses externally evidenced cash.
+                received = sum(Decimal(e["amount"]) for e in events if e["event"] == "cash")
                 if received + amount > ceiling:
                     raise ValueError("Cumulative cash exceeds the accepted claim.")
+                if any(e["event"] == "cash" and e["evidence"] == evidence for e in events):
+                    raise ValueError("This external receipt reference is already recorded.")
         disposition = body.get("disposition")
         if kind.endswith("disposition") and disposition not in ("Accepted", "Rejected"):
             raise ValueError("Record the supplied external disposition explicitly.")
         events.append(dict(id=f"EVENT-{len(events)+1:03d}", event=kind, form_id=fid,
                            export_id=exported["id"], digest=exported["finance_review"]["digest"],
+                           scheme_id=draft["funding"]["scheme_id"], route=draft["funding"]["route"],
+                           scheme_version=draft["funding"]["version"], input_version=draft["input_version"],
+                           review_id=exported["finance_review"]["id"],
                            by=user["email"], at=now(), evidence=evidence,
                            amount=str(amount) if amount is not None else None, disposition=disposition,
                            previous_event=previous["id"] if previous else None, stale=False,

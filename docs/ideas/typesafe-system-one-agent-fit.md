@@ -207,6 +207,29 @@ and operational verification.
 
 ### Evaluation and Activation Gate
 
+Read-only implementation verification on 2026-10-10 found the AMA resource's
+model eligibility metadata includes `Microsoft-Decision-1`, format `Microsoft`,
+version `1`, with `GlobalStandard` advertised. The returned SKU cost is null:
+this is neither a price quote nor verified budget clearance. Deployment
+metadata still lists only the existing generative deployments, not Decision 1.
+The eligibility response advertises a 2027-02-04 deprecation date; treat it as
+an operator review trigger, not a prediction of outage or a legal deadline.
+Evidence is the authenticated Azure account `list-models` and `deployment list`
+read on that date, not a performed deployment or model call. No resource
+creation, billable probe, processing-location approval or model quality is
+implied. The [official deployment guide](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision),
+source date 2026-10-07, updated 2026-10-09, rechecked 2026-10-10, continues to
+distinguish global processing from selected-region data-zone serving.
+
+The local exercise now has tested cross-process SQLite upper-liability
+reservations shared by scoring and generation, alongside registry/permission/
+terms/price/quota guards. Failed or timed-out calls do not refund reservations;
+lowering an environment baseline cannot erase retained liabilities and no
+automatic monthly rollover discards them. This conservative engineering control
+does not establish actual prices, invoice reconciliation or owner authorization.
+Actual deployment/response-schema verification, bounded billable permission
+and human-adjudicated evaluation remain mandatory before activation.
+
 Compare manual/templates, parsers/rules, Decision 1 and appropriate
 generative alternatives on identical, human-adjudicated held-out cases.
 Separate tuning/calibration/test sets by case/building/document family;

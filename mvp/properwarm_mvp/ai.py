@@ -15,7 +15,8 @@ from hashlib import sha256
 import urllib.request
 import urllib.error
 
-from .decision import inference_guard
+from .decision import InferenceConfig, inference_guard, reserve_inference_charge
+import sqlite3
 
 SCOPE = "https://cognitiveservices.azure.com"
 FORBIDDEN = re.compile(r"\b(i have sent|has been sent|we have sent|i've sent|email sent|message sent)\b", re.I)
@@ -68,6 +69,7 @@ class Ai:
         self.local.provenance = dict(provider="azure-openai", deployment=deployment,
                                      model=response.get("model"), usage=response.get("usage"),
                                      provider_request_id=response.get("id"),
+                                     liability_reservation=getattr(self.local, "reservation", None),
                                      request_hash=sha256(body).hexdigest())
         return response["choices"][0]["message"]["content"].strip()
 
@@ -84,6 +86,7 @@ class Ai:
                         assistance_status="succeeded" if kw.get("source") == "ai" else "manual",
                         provider_success=kw.get("source") == "ai")
         self.local.provenance = None
+        self.local.reservation = None
         if off:
             return out(text=template, source="template", model=None, validated=True, reason="workflow-only mode selected")
         guard = self._exercise_guard(task, user)
@@ -93,6 +96,16 @@ class Ai:
         if not self.configured:
             return out(text=template, source="template", model=None, validated=True, reason="AI is not configured")
         dep = self.strong if strong else self.fast
+        if guard is not None:
+            try:
+                reservation = reserve_inference_charge(task, InferenceConfig.from_env(), os.environ.get("PW_STATE", ""))
+            except (OSError, sqlite3.Error, ValueError):
+                return out(text=template, source="template", model=None, validated=True,
+                           reason="assistance disabled: shared_liability_ledger_unavailable")
+            if not reservation["allowed"]:
+                return out(text=template, source="template", model=None, validated=True,
+                           reason=f"assistance disabled: {reservation['reason']}")
+            self.local.reservation = reservation
         try:
             text = self._chat(dep, system, user)
         except Exception as e:  # network, auth, quota: never block the person
@@ -137,6 +150,7 @@ class Ai:
 
     def look_at(self, name, data, mime, off=False):
         """Describe an uploaded document. Reads text and images; other types are stored only."""
+        self.local.reservation = None
         system = ("You help a housing association retrofit team file documents. Say what kind of document this is "
                   "(for example EPC, survey, photo of damp, consent form, invoice), list the key facts you can see in at "
                   "most six short bullet points, and flag anything unclear. Do not guess. Plain English.")
@@ -157,6 +171,18 @@ class Ai:
             return dict(text="Document stored. Use manual evidence review.", source="template", model=None,
                         validated=True, task="read_document", provider_success=False,
                         assistance_status="disabled", reason=guard.reason)
+        if guard is not None:
+            try:
+                reservation = reserve_inference_charge("read_document", InferenceConfig.from_env(), os.environ.get("PW_STATE", ""))
+            except (OSError, sqlite3.Error, ValueError):
+                return dict(text="Document stored. Use manual evidence review.", source="template", model=None,
+                            validated=True, task="read_document", provider_success=False,
+                            assistance_status="disabled", reason="shared_liability_ledger_unavailable")
+            if not reservation["allowed"]:
+                return dict(text="Document stored. Use manual evidence review.", source="template", model=None,
+                            validated=True, task="read_document", provider_success=False,
+                            assistance_status="disabled", reason=reservation["reason"])
+            self.local.reservation = reservation
         try:
             text = self._chat(self.strong, system, content, 500)
             return dict(text=text, source="ai", model=self.strong, validated=True, task="read_document")

@@ -1624,3 +1624,31 @@ metadata when the knowledge base was created.
   failure/RPO/accessibility checks, actual bounded Foundry inference and
   human-adjudicated effort/UX remain incomplete or blocked. No live resident
   data, sending, submission, payment, cloud resource or billable call was used.
+
+## [2026-10-10] update | Owner-directed financial and workflow corrections
+
+* Corrected reproduced financial predecessor staleness, latest-award readiness,
+  cumulative cash across claims and unchanged rejected-pack retry, including
+  exact retry lineage after source staleness. Added explicit handoff stages,
+  independently owned resident commitments and supplied external hazard
+  receipt/acceptance/chase without granting clock or release authority.
+* Scoring and generation now share conservative atomic upper-liability
+  reservations across processes. Failed calls do not refund liabilities and
+  lower baselines do not erase them; operator invoice reconciliation remains
+  distinct. Read-only Azure metadata confirms Decision 1 version 1
+  GlobalStandard eligibility, not a deployment, price quote or permission.
+  Updated the [System One synthesis](../ideas/typesafe-system-one-agent-fit.md),
+  [MVP instructions](../../mvp/README.md) and this index.
+* Latest regression: 370 tests, OK, 26 live MSSQL skips. Fresh browser run:
+  25 finite checks, including actual doubled body text, CSS zoom reflow,
+  visible targets and palette contrast; no screen-reader/human/native browser
+  zoom acceptance inferred. Process exits before/after commit retain exact
+  case/audit state. Separate 500-row import and 25-case Store probe pass.
+* Two 1800-second core/scale workloads pass: five/twenty sessions, two writers,
+  >=200 samples/op, no failures and p95 below thresholds. Complete raw results
+  are retained beside the acceptance register. Five interactions/s is not
+  exactly five HTTP requests/s, and the separate import probe is not the
+  complete mixed core workload. Original Review
+  remains Partial/Not accepted history; later implementation is not a regrade.
+  Operator authorization and participants unavailable: no cloud resource,
+  billable call, human evaluation or full acceptance is claimed.

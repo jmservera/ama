@@ -21,6 +21,7 @@ def open_store(env=None):
             raise SystemExit("PW_STATE must name an explicit absolute exercise state directory.")
         state.mkdir(parents=True, exist_ok=True)
         seed, db = state / "exercise.json", state / "properwarm.sqlite"
+        existing_database = db.exists()
         if seed.is_symlink() or db.is_symlink():
             raise SystemExit("Exercise seed/database must not be symlinks.")
         if seed.exists():
@@ -31,6 +32,7 @@ def open_store(env=None):
             with sqlite3.connect(f"file:{db}?mode=ro", uri=True) as connection:
                 try:
                     rows = connection.execute("SELECT id, body FROM cases").fetchall()
+                    observed_as_of = connection.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()
                 except sqlite3.Error as error:
                     raise SystemExit("Incompatible exercise database; choose a new state directory.") from error
             expected = {case["id"] for case in exercise.dataset()["cases"]}
@@ -38,9 +40,14 @@ def open_store(env=None):
                 json.loads(row[1]).get("exercise", {}).get("fixture_version") != exercise.FIXTURE_VERSION for row in rows
             ):
                 raise SystemExit("Exercise database is incompatible; no data was overwritten.")
+            if observed_as_of is None or observed_as_of[0] != exercise.AS_OF:
+                raise SystemExit("Exercise database as-of metadata is incompatible; no silent date migration.")
         if not seed.exists():
             exercise.create_seed(seed)
         store = SqlStore(str(seed), str(db), docs_dir=str(state / "docs"), digest_dir=str(state / "digests"))
+        if not existing_database:
+            store.db.execute("UPDATE meta SET value=? WHERE key='as_of'", (exercise.AS_OF,))
+            store.db.commit()
         store.as_of = exercise.AS_OF
         return store
     data = env.get("PW_DATA", str(Path(__file__).resolve().parents[1] / "data" / "properwarm.json"))

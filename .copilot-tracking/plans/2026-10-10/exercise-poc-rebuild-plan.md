@@ -31,8 +31,10 @@ and local evidence backend. A shared inference guard will keep both scoring
 and generation disabled until separately authorized. Legacy hazard release
 does not represent authoritative external safety clearance.
 
-The AMA Foundry account currently exposes only gpt-4.1-mini and gpt-4.1.
-Decision 1 access and billable authorization remain blocked, not simulated
+The AMA Foundry account currently deploys only gpt-4.1-mini and gpt-4.1.
+Read-only catalog metadata advertises Decision 1 version 1 GlobalStandard
+eligibility, not a deployment or price quote.
+Decision 1 activation and billable authorization remain blocked, not simulated
 success. Neither local tests nor a working adapter satisfies live AI acceptance.
 
 ## Sources
@@ -102,11 +104,20 @@ The bounded validation planner found no cohort forecast or compliant public
 fixture; existing private-geography data is excluded. Existing offline AI and
 browser smoke checks remain regression tests, not full acceptance evidence.
 The connected fictional home reaches independent handover and financial
-closure in tests. Seven data-contract tests and ten connected integration
-tests are included in the 355-test regression run, with 26 live SQL skips.
-Finite browser orientation/reflow, 200 warm HTTP samples per operation and
-clean-backup/image checks pass. P05/P06 remain unchecked because complete
-handoff/update/fixture, exact prescribed workload/recovery/accessibility and
+closure in tests. Later owner-directed implementation fixes financial
+staleness/readiness/cumulative cash/rejected retry and adds explicit
+handoff/update/hazard and shared liability contracts. Latest regression runs
+370 tests, OK, with 26 live SQL skips; focused tests include 30 Decision and
+20 connected workbench tests. Fresh browser run passes 25 finite checks,
+including actual doubled body text, CSS zoom reflow, targets and palette contrast.
+The image again passes non-root/read-only health startup. Separate exact
+500-row/25-case Store probe passes. Two 1800-second workloads pass with no
+failures, >=200 samples/op and p95 below thresholds: five-session core and
+twenty-session 60000-home/600000-trace scale, both two writers. They schedule
+five interactions/s (writes use two HTTP requests); separate Store import is
+not the prescribed concurrent mixed core HTTP import.
+P05/P06 remain unchecked because complete
+role/workflow fixtures, exact prescribed workload/recovery/accessibility and
 actual inference/human acceptance are unfinished. The complete inventory is
 .copilot-tracking/changes/2026-10-10/exercise-poc-rebuild-acceptance.md.
 

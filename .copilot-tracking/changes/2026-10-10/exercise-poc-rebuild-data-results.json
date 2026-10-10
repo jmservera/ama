@@ -1,0 +1,14 @@
+{
+  "kind": "exact-fictional-data-contract",
+  "import_rows": 500,
+  "import_preview_seconds": 0.08939724100127933,
+  "import_committed": 500,
+  "bulk_selected": 25,
+  "bulk_committed": 25,
+  "source_sha256": "41860a19d318040d4773f9159c6102ba21956a7ef1986d8493aabe9102032f31",
+  "source_bytes_unchanged": true,
+  "controlled_fields_unchanged": true,
+  "audit_intact": true,
+  "result": "Pass",
+  "boundary": "Separate Store-level scale-fixture probe, not the concurrent HTTP core import path"
+}

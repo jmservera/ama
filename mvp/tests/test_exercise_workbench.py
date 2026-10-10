@@ -4,6 +4,8 @@ from http.server import ThreadingHTTPServer
 import json
 from pathlib import Path
 import shutil
+import subprocess
+import sys
 import threading
 import unittest
 from unittest.mock import patch
@@ -55,7 +57,7 @@ class ExerciseWorkbenchTests(unittest.TestCase):
             self.store.finance_action(self.geo, HOME, dict(action="budget_approve"))
         self.store.finance_action(self.asset, HOME, dict(action="budget_approve"))
 
-    def complete_form(self, kind="competitive"):
+    def complete_form(self, kind="competitive", *, correction=None):
         before = set(self.store._case(HOME).get("forms", {}))
         self.act("create-form", form_type=kind)
         fid = (set(self.store._case(HOME)["forms"]) - before).pop()
@@ -74,6 +76,11 @@ class ExerciseWorkbenchTests(unittest.TestCase):
             self.act("review", form_id=fid, field=field, review_action="accept",
                      evidence=[], reason=f"Independent supplied {field} source checked")
         self.act("calculate", form_id=fid)
+        if correction:
+            self.act("review", form_id=fid, field="eligible_cost", review_action="correct",
+                     value=correction, unit="GBP", currency="GBP",
+                     evidence=[f"{HOME}-FINANCE"], reason="Corrected externally rejected cost evidence")
+            self.act("calculate", form_id=fid)
         for field in ("match_budget_approved", "declaration"):
             self.act("human-field", user=self.pm, form_id=fid, field=field, value=True,
                      evidence=[f"{HOME}-HUMAN"], reason="Explicit fictional human statement")
@@ -261,7 +268,7 @@ class ExerciseWorkbenchTests(unittest.TestCase):
         self.event("application-disposition", first, user=self.asset, disposition="Rejected")
         with self.assertRaises(ValueError):
             self.event("award", first, amount="7500")
-        second = self.complete_form()
+        second = self.complete_form(correction="15999.00")
         with self.assertRaises(ValueError):
             self.event("application-submitted", second)
         self.event("application-submitted", second, retry_of="EVENT-002")
@@ -277,6 +284,110 @@ class ExerciseWorkbenchTests(unittest.TestCase):
         self.assertEqual(history[2]["retry_of"], history[1]["id"])
         self.assertTrue(self.store._case(HOME)["funding_ok"])
 
+    def test_unchanged_export_or_review_cannot_resubmit_rejected_content(self):
+        self.budget()
+        self.resolve_epc()
+        fid = self.complete_form()
+        self.event("application-submitted", fid)
+        self.event("application-disposition", fid, user=self.asset, disposition="Rejected")
+        self.act("export", form_id=fid)
+        with self.assertRaises(ValueError):
+            self.act("funding-event", event="application-submitted", form_id=fid,
+                     export_id="export-2", retry_of="EVENT-002", evidence="Different submission reference")
+        self.act("review-pack", user=self.pso, form_id=fid, evidence=[f"{HOME}-FINANCE"],
+                 reason="Re-review unchanged content is not a correction")
+        self.act("export", form_id=fid)
+        with self.assertRaises(ValueError):
+            self.act("funding-event", event="application-submitted", form_id=fid,
+                     export_id="export-3", retry_of="EVENT-002", evidence="Third submission reference")
+
+    def test_stale_rejected_attempt_still_requires_exact_retry_reference(self):
+        self.budget()
+        self.resolve_epc()
+        first = self.complete_form()
+        self.event("application-submitted", first)
+        self.event("application-disposition", first, user=self.asset, disposition="Rejected")
+        self.act("review", form_id=first, field="eligible_cost", review_action="correct",
+                 value="15999.00", unit="GBP", currency="GBP", evidence=[f"{HOME}-FINANCE"],
+                 reason="Correct rejected source-bound amount")
+        self.assertTrue(self.store._case(HOME)["exercise"]["fund_events"][0]["stale"])
+        second = self.complete_form(correction="15999.00")
+        with self.assertRaises(ValueError):
+            self.event("application-submitted", second)
+        self.event("application-submitted", second, retry_of="EVENT-002")
+        self.assertEqual(self.store._case(HOME)["exercise"]["fund_events"][-1]["retry_of"], "EVENT-002")
+
+    def test_invalid_update_due_date_is_explicit_and_atomic(self):
+        before = deepcopy(self.store._case(HOME))
+        for due in (None, 123, [], "not-a-date"):
+            with self.assertRaises(ValueError):
+                self.act("resident-update", user=self.rlo, channel="Phone", evidence="Fictional route",
+                         purpose="Scope question", next_update="Explain scope", due=due)
+            self.assertEqual(self.store._case(HOME), before)
+
+    def financial_fixture(self):
+        """Freeze accepted handover for focused financial-chain tests, not journey evidence."""
+        self.budget()
+        self.resolve_epc()
+        application = self.complete_form()
+        self.event("application-submitted", application)
+        self.event("application-disposition", application, user=self.asset, disposition="Accepted")
+        self.event("award", application, amount="7500")
+        with self.store.lock:
+            self.store._case(HOME)["exercise"]["lifecycle"] = "Handover"
+            self.store.save()
+        claim = self.complete_form("claim")
+        self.event("claimable", claim, amount="7500")
+        self.event("claim-submitted", claim, amount="7500")
+        self.event("claim-disposition", claim, user=self.asset, amount="7500", disposition="Accepted")
+        return application, claim
+
+    def test_application_invalidation_stales_exact_financial_descendants(self):
+        application, claim = self.financial_fixture()
+        sibling = deepcopy(self.store._case(SIBLING))
+        self.act("review", form_id=application, field="eligible_cost", review_action="correct",
+                 value="15000.00", unit="GBP", currency="GBP", evidence=[f"{HOME}-FINANCE"],
+                 reason="Only originating application field changed")
+        self.assertTrue(all(e["stale"] for e in self.store._case(HOME)["exercise"]["fund_events"]))
+        with self.assertRaises(ValueError):
+            self.event("cash", claim, amount="7500")
+        self.assertEqual(sibling, self.store._case(SIBLING))
+        self.store.db.close()
+        self.store = open_store()
+        self.assertTrue(all(e["stale"] for e in self.store._case(HOME)["exercise"]["fund_events"]))
+
+    def test_fresh_award_recovers_without_reactivating_historical_award(self):
+        old, _ = self.financial_fixture()
+        self.act("review", form_id=old, field="eligible_cost", review_action="correct",
+                 value="15000.00", unit="GBP", currency="GBP", evidence=[f"{HOME}-FINANCE"],
+                 reason="Invalidate old application")
+        new = self.complete_form()
+        self.event("application-submitted", new)
+        self.event("application-disposition", new, user=self.asset, disposition="Accepted")
+        self.event("award", new, amount="7500")
+        self.act("export", form_id=new)
+        c = self.store._case(HOME)
+        self.assertTrue(c["funding_ok"])
+        self.assertEqual([e["stale"] for e in c["exercise"]["fund_events"] if e["event"] == "award"],
+                         [True, False])
+
+    def test_cash_is_cumulative_across_claims_and_retries_preserve_receipts(self):
+        _, old = self.financial_fixture()
+        self.event("cash", old, amount="7500")
+        self.act("review", form_id=old, field="eligible_cost", review_action="correct",
+                 value="15000.00", unit="GBP", currency="GBP", evidence=[f"{HOME}-FINANCE"],
+                 reason="Correct claim; prior cash remains externally evidenced")
+        claim = self.complete_form("claim")
+        self.event("claimable", claim, amount="7500")
+        self.event("claim-submitted", claim, amount="7500")
+        self.event("claim-disposition", claim, user=self.asset, amount="7500", disposition="Accepted")
+        before = deepcopy(self.store._case(HOME))
+        with self.assertRaises(ValueError):
+            self.event("cash", claim, amount="7500")
+        self.assertEqual(before, self.store._case(HOME))
+        self.assertEqual(sum(float(e["amount"]) for e in before["exercise"]["fund_events"]
+                             if e["event"] == "cash"), 7500)
+
     def test_freshness_boundaries_are_internal_not_legal_expiry(self):
         from datetime import date, timedelta
         today = date.today()
@@ -285,6 +396,127 @@ class ExerciseWorkbenchTests(unittest.TestCase):
             self.assertFalse(self.store.exercise_current((today - timedelta(days=days+1)).isoformat(), days))
         self.assertFalse(self.store.exercise_current((today + timedelta(days=1)).isoformat(), 30))
         self.assertFalse(self.store.exercise_current(None, 30))
+
+    def test_handoff_receipt_acceptance_and_resident_commitment_are_independent(self):
+        owner = self.store._case(HOME)["owner"]
+        self.act("resident-update", user=self.rlo, channel="Phone", evidence="Fictional agreed contact route",
+                 purpose="Answer loft scope question", next_update="Case team explains scope next weekday",
+                 due="2026-10-12", due_basis="Fictional weekday commitment", adjustment_reference="Unknown")
+        self.act("handoff", user=self.pm, step="sent", receiver=self.pso["email"],
+                 reason="Programme review", evidence="Supplied sent reference", due="2026-10-12",
+                 urgency="Routine", next_action="Review scope")
+        with self.assertRaises(ValueError):
+            self.act("handoff", user=self.pso, step="accepted", reason="Cannot infer receipt", evidence="No receipt")
+        self.act("handoff", user=self.pso, step="received", reason="Explicit receipt", evidence="Receiver evidence")
+        c = self.store._case(HOME)
+        self.assertEqual(c["owner"], owner)
+        self.assertEqual(c["handoff"]["chase_owner"], owner)
+        self.assertIsNone(c["handoff"]["confirmed_receiver"])
+        update = deepcopy(c["exercise"]["resident_updates"][0])
+        self.act("handoff", user=self.pso, step="accepted", reason="Explicit acceptance", evidence="Separate acceptance")
+        self.assertEqual(self.store._case(HOME)["owner"], self.pso["name"])
+        self.assertEqual(update, self.store._case(HOME)["exercise"]["resident_updates"][0])
+        self.act("handoff", user=self.pso, step="completed", reason="Review complete", evidence="Completion evidence")
+        self.act("resident-update", user=self.rlo, step="proposed", update_id="UPDATE-001",
+                 evidence="Draft update", reason="Human draft before sending")
+        self.act("resident-update", user=self.pm, step="reassign", update_id="UPDATE-001",
+                 receiver=self.pso["email"], evidence="Explicit owner reassignment", reason="Agreed cover")
+        with self.assertRaises(PermissionError):
+            self.act("resident-update", user=self.rlo, step="sent", update_id="UPDATE-001",
+                     evidence="Former owner cannot clear it", reason="Not current owner")
+        self.act("resident-update", user=self.pso, step="sent", update_id="UPDATE-001",
+                 evidence="Wholly fictional supplied outbound reference", reason="Supplied human send event, no actual contact")
+        record = self.store._case(HOME)["exercise"]["resident_updates"][0]
+        self.assertEqual((record["status"], record["receipt"], record["understanding"]), ("Sent", "Unknown", "Unknown"))
+        self.assertEqual(record["purpose"], update["purpose"])
+        self.assertEqual(record["due"], update["due"])
+        self.assertEqual(len(record["history"]), 3)
+        self.assertEqual(len(self.store._case(HOME)["handoff"]["history"]), 4)
+        self.assertTrue(self.store.verify_ledger()["intact"])
+
+    def test_handoff_escalation_return_and_legacy_shortcuts_cannot_transfer_owner(self):
+        original_owner = self.store._case(HOME)["owner_code"]
+        self.act("handoff", user=self.pm, step="sent", receiver=self.pso["email"],
+                 reason="Review", evidence="Fictional sent", due="Unknown", urgency="Unknown",
+                 next_action="Receiver reviews next")
+        with self.assertRaises(PermissionError):
+            self.act("handoff", user=self.rlo, step="received", reason="Wrong receiver", evidence="Wrong identity")
+        self.act("handoff", user=self.pm, step="escalated", reason="Awaiting receipt",
+                 evidence="Explicit chase", escalation_owner="Programme team")
+        self.act("handoff", user=self.pso, step="returned", reason="Missing source",
+                 evidence="Separately supplied return")
+        self.assertEqual(self.store._case(HOME)["owner_code"], original_owner)
+        self.assertEqual(self.store._case(HOME)["handoff"]["phase"], "Returned")
+        with self.assertRaises(ValueError):
+            self.store.offer_handoff(self.pm, HOME, self.pso["email"], "Legacy shortcut")
+        self.act("lifecycle", user=self.pm, target="Assessment")
+        self.act("return", user=self.pm, target="Intake", receiver=self.pso["email"],
+                 reason="More source evidence required", evidence="Fictional reviewer request", next_action="Obtain source")
+        self.assertEqual(self.store._case(HOME)["exercise"]["lifecycle"], "Intake")
+        self.assertEqual(self.store._case(HOME)["exercise"]["returns"][-1]["receiver"], self.pso["email"])
+        self.assertEqual(self.store._case(SIBLING)["exercise"]["lifecycle"], "Intake")
+
+    def test_process_interruption_before_commit_and_after_commit_before_response(self):
+        before = deepcopy(self.store._case(HOME))
+        baseline_head = self.store.verify_ledger()["head"]
+        program = """
+import os
+from properwarm_mvp.factory import open_store
+s = open_store()
+u = next(u for u in s.staff.values() if u['code'] == 'EX-PM-01')
+original = s.save
+def interrupted():
+    if os.environ['INTERRUPT_POINT'] == 'after':
+        original()
+    os._exit(23)
+s.save = interrupted
+s.exercise_action(u, 'EX-HOME-001', {'action': 'lifecycle', 'target': 'Assessment'})
+"""
+        import os
+        for point in ("before", "after"):
+            outcome = subprocess.run([sys.executable, "-c", program], env=dict(
+                os.environ, INTERRUPT_POINT=point), timeout=30, capture_output=True)
+            self.assertEqual(outcome.returncode, 23, outcome.stderr.decode())
+            self.store.db.close()
+            self.store = open_store()
+            c = self.store._case(HOME)
+            self.assertEqual(c["exercise"]["lifecycle"], "Intake" if point == "before" else "Assessment")
+            self.assertTrue(self.store.verify_ledger()["intact"])
+            if point == "before":
+                self.assertEqual(c, before)
+                self.assertEqual(self.store.verify_ledger()["head"], baseline_head)
+            else:
+                acknowledged = deepcopy(c)
+                ledger_head = self.store.verify_ledger()["head"]
+                with self.assertRaises(ValueError):
+                    self.act("lifecycle", user=self.pm, target="Assessment")
+                self.assertEqual(c, acknowledged)
+                self.assertEqual(self.store.verify_ledger()["head"], ledger_head)
+
+    def test_hazard_receipt_acceptance_does_not_release_hold_or_change_awareness(self):
+        safety = self.users["EX-BSL-01"]
+        index = self.store.raise_hazard(self.rlo, HOME, "Damp and mould", "Routine",
+                                       "Wholly fictional supplied resident report")
+        awareness = self.store._case(HOME)["hazards"][index]["awareness_at"]
+        self.store.refer_hazard(self.rlo, HOME, index, safety["email"], "EXTERNAL-FICTIONAL-001")
+        params = dict(hazard_index=index, authority="Fictional external service",
+                      external_actor="Unknown", reference="EXTERNAL-RECEIPT-001",
+                      observed_at="2026-10-10T12:00:00+00:00", evidence="Supplied receipt evidence",
+                      followup="Safety liaison chases independent external service")
+        with self.assertRaises(ValueError):
+            self.act("hazard-followup", user=safety, step="accepted", **params)
+        self.act("hazard-followup", user=safety, step="received", **params)
+        self.act("hazard-followup", user=safety, step="accepted",
+                 **dict(params, reference="EXTERNAL-ACCEPTANCE-001", evidence="Separate external acceptance"))
+        hazard = self.store._case(HOME)["hazards"][index]
+        self.assertFalse(hazard["released"])
+        self.assertEqual(hazard["awareness_at"], awareness)
+        self.assertEqual([e["step"] for e in hazard["external_history"]], ["received", "accepted"])
+        self.assertNotEqual(hazard["received_reference"]["reference"], hazard["accepted_reference"]["reference"])
+        self.assertIsNone(hazard["confirmed_receiver"])
+        with self.assertRaises(PermissionError):
+            self.store.release_hazard(safety, HOME, index, "Cannot locally release")
+        self.assertFalse(self.store._case(SIBLING)["hazards"])
 
     def test_field_correction_suspends_exact_export_bound_award_without_source_write(self):
         self.budget()
