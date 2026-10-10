@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Implement",
-  "status": "active",
+  "status": "blocked",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-10/system-one-decision-models-research.md",
@@ -67,8 +67,13 @@
     },
     {
       "decision": "Continued local implementation adds independent building/home projections, real controlled profile browser tasks, native zoom, background interruption and offline document restore interlock. Latest regression 374 tests with 26 live MSSQL skips; 53 finite native-browser checks. Focused eleven-profile/six-template/eight protected batch permission matrix passes. Exact five-HTTP-request/s scale and strict mixed HTTP core pass; independent full controlled-field/trace/document/audit comparisons pass. No repeated Review or live/human acceptance.",
-      "status": "implemented locally; publication pending",
+      "status": "published continuation; full acceptance incomplete",
       "evidence": "mvp/tests/test_exercise_workbench.py; acceptance E17-E22; changes Continued Building, Role and Recovery Work"
+    },
+    {
+      "decision": "Continuation implementation c421f7d published on draft PR #58 after safe merge of rubric-only 7a6809f, source head d35e0be75bb58878924f439e34aac36a0341163b. Exact-source-head MVP CI, MVP validation and Prototype validation succeeded. These checks do not clear acceptance, human or billable authorization gates; later documentation/bot heads are separate.",
+      "status": "published draft; exact source checks succeeded",
+      "evidence": "https://github.com/jmservera/ama/pull/58; runs 38067801576/38067801569/38067801672"
     }
   ],
   "blockers": [
@@ -85,7 +90,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Publish reconciled continuation to existing draft PR #58, then persist blocked implementation status and exact delivery/check evidence. Live AI/human prerequisites and complete acceptance remain blocked; no billable permission or second Review inferred."
+    "action": "Continue remaining local role/workflow/domain-return/permission and recovery/accessibility acceptance under owner implementation authority; operator must verify deployment/terms/costs and authorize bounded calls, and supply human evaluators before live/value acceptance. Keep draft PR #58 unmerged and original Review unchanged; task_complete is not justified."
   },
   "prioritized_follow_ups": [
     {

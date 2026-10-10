@@ -315,3 +315,15 @@ b363aa5e87e3151da36079deec472e55e35a06dedc9699ea99b179bf16ee1c4e
 passes UID 10001/read-only startup, health 200 and 18 fictional homes.
 Requirement-level AC-001/003/035 and FR-033 now pass their exact constructed
 fixtures; all unrelated/incomplete full requirements stay Not run/Blocked.
+
+### Continuation publication and exact-head checks
+
+Implementation c421f7d was published to existing draft PR #58 after a safe
+non-rewriting merge of concurrent rubric-only commit 7a6809f. Published source
+head d35e0be75bb58878924f439e34aac36a0341163b passed MVP CI 38067801576,
+MVP validation 38067801569 and Prototype validation 38067801672.
+Later documentation or rubric-bot heads have separate checks; no result is
+inferred for them. Draft description now separates executed local shapes from
+remaining complete matrix, recovery, accessibility, live-model and human
+acceptance. Original Review remains Partial/Not accepted and was not repeated.
+No merge, cloud change, billable call or task completion was performed.
