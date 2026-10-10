@@ -16,8 +16,8 @@ ms.date: 2026-10-10
 Partial against the complete accepted PRD. P01-P04 complete. P05 has a connected
 local home-to-financial-closure implementation and later financial/handoff/update
 corrections; the complete fixture/role acceptance matrix remains outstanding.
-P06 local checks executed and draft PR published; two prescribed-duration
-workloads are in progress and live/human acceptance remain open. No full end-to-end
+P06 local checks executed and draft PR updated; two prescribed-duration
+workloads pass and live/human acceptance remain open. No full end-to-end
 acceptance or conformant outcome is claimed.
 
 ## Completed Work
@@ -99,9 +99,10 @@ They block corresponding acceptance, not local exercise implementation.
 
 ## Remaining Work
 
-P05 complete handoff/update/return/fixture acceptance contracts and P06 prescribed
-workloads, failure/RPO/accessibility, actual models and human evaluation.
-Current branch publication follows one independent review. No completed
+P05 complete role/workflow/return fixture acceptance and P06 complete mixed
+workload, background/RPO/native zoom/screen-reader, actual models and human evaluation.
+Focused handoff/update/hazard and two prescribed-duration measurements now pass.
+Current draft publication preserves one independent review. No completed
 full-PRD or observed-benefit claim.
 
 ## Pre-Review Reconciliation
@@ -216,3 +217,13 @@ date/model-casing and runner corrections; those paths are separately tested,
 not claimed covered by these workload runs. No full NFR-002 or RPO acceptance.
 Both attached workload processes completed with exit zero; no ongoing soak
 process is left running.
+
+### Correction Publication
+
+Published corrections as `0a4de9d9db3d7b0be0436230e14d4f6ca4cd471d` on the
+existing coherent branch and updated draft https://github.com/jmservera/ama/pull/58.
+Exact correction-head MVP CI (38062257646), MVP validation (38062257659) and
+Prototype validation (38062257645) pass. Rubric run 38062257657 remains running
+at this handoff; no rubric acceptance or later-head check inferred.
+Repository is not merged. Full task remains blocked on actual platform/human
+prerequisites and explicit local acceptance gaps; P05/P06 remain open.

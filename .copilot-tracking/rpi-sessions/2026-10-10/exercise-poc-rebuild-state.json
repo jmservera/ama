@@ -59,6 +59,11 @@
       "decision": "Read-only Azure catalog now confirms Microsoft-Decision-1 version 1 GlobalStandard eligibility, but no deployed Decision model or price quote. Explicit cloud/billable authorization and human evaluation request returned user unavailable.",
       "status": "activation blocked; no authorization inferred",
       "evidence": "docs/ideas/typesafe-system-one-agent-fit.md Evaluation and Activation Gate; ask_user returned user unavailable"
+    },
+    {
+      "decision": "Later corrections published as 0a4de9d on existing draft PR #58. Both 1800-second workloads pass with complete raw evidence; 370-test regression and exact-head MVP CI/MVP validation/Prototype validation pass. Rubric workflow still running.",
+      "status": "published draft; full acceptance blocked",
+      "evidence": "https://github.com/jmservera/ama/pull/58; runs 38062257646/38062257659/38062257645; acceptance E09-E16"
     }
   ],
   "blockers": [
@@ -75,7 +80,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Publish verified local corrections to draft PR #58 and record exact-head CI. Full completion blocked on unavailable operator authorization/pricing/terms and human evaluation; remaining local acceptance matrix explicit. Remain manual Implement, no second Review."
+    "action": "Await rubric run 38062257657 and persist publication handoff; operator must supply verified Decision deployment/pricing/terms/quota/accrued liabilities and explicit billable permission plus evaluation participants. Full acceptance/local matrix remains open. Remain manual Implement, no second Review."
   },
   "prioritized_follow_ups": [
     {
