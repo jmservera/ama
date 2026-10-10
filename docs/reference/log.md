@@ -1501,3 +1501,23 @@ metadata when the knowledge base was created.
   [challenge disposition](../../.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-11-0/challenge-disposition.md).
   The original full-document FAIL and formal approval blockers are preserved;
   no independent final regrade or product approval is claimed.
+
+## [2026-10-10] query | Reconcile System One research and PRD branches
+
+* Compared PR #54's research with PR #55's draft design amendment.
+  The nine-workflow/fifteen-step recommendation and form-control boundaries
+  were already integrated; no new high-confidence amendment defect was found.
+* Preserved the original research Markdown byte-for-byte from commit
+  `c9bada6417c05ae961b561078ef1a2b1faa9a17e` in
+  `.copilot-tracking/research/2026-10-10/system-one-decision-models-research.md`.
+  Did not import the obsolete Research-phase RPI session state.
+* Integrated omitted pricing-source assumptions and illustrative arithmetic,
+  hosting alternatives, serving-contract unknowns, privacy approval checks
+  and task-wide evaluation detail into the existing
+  [IDEA-001 synthesis](../ideas/typesafe-system-one-agent-fit.md).
+  Updated this index and PRD reference provenance. No new requirement,
+  deployment, model result or human approval is claimed.
+* PR #55 remains a draft requirements amendment with its existing full-PRD
+  quality and approval blockers. Repository merge does not approve
+  production use. PR #54 can be closed as superseded once the consolidated
+  amendment is safely delivered.

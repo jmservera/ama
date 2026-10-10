@@ -133,6 +133,24 @@ not a funding route. No open round or actual award terms are assumed.
   mandatory fields block a reviewed pack; incomplete working copies are
   visibly incomplete.
 
+### Pricing and Alternatives
+
+The [Microsoft announcement](https://commandline.microsoft.com/microsoft-decision-1-model-foundry/)
+advertised USD 0.042 per million input tokens and free output. The
+2026-10-10 retrieval of the [Azure Microsoft model pricing page](https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/microsoft/)
+did not establish a regional/subscription rate. Illustrative arithmetic only:
+60,000 homes x 20 requests x 1,000 input tokens = 1.2 billion input tokens,
+or USD 50.40 at the announcement rate. This is not a workload forecast,
+subscription quote or programme budget. Whole-life cost includes
+question/context tokens, retries, generation, document processing,
+networking, observability, evaluation and human review.
+
+Foundry is the first new integration candidate because it fits the existing
+platform, not because it has proved superior quality or cost. Hosted Jev and
+self-hosted Kev remain contingencies if approved processing location,
+quality or economics favor them, subject to fresh API, licensing, model-card
+and operational verification.
+
 ### Evaluation and Activation Gate
 
 Compare manual/templates, parsers/rules, Decision 1 and appropriate
@@ -143,6 +161,17 @@ values, omission recall, abstention/calibration, OCR-error propagation,
 export fidelity, total preparation/review/correction effort and whole-life
 cost. Test ambiguity, option order, negation, mixed intents, unreadable
 sources, stale schema/input, restricted sources and source-text injection.
+
+Apply adjudicated labels, separate tuning/calibration/held-out sets and
+unflagged-case review to every scoring task, not only forms. Report
+calibration/reliability and coverage, differential false negatives and
+review delays across lawful relevant evaluation slices, retry/throttle
+rates and whole-life cost per correctly handled task. No latent person
+profile or aggregate score may conceal a critical miss. The initial
+research shortlist is delay-note categorization, documentary
+evidence-support/mismatch checks and drafted-communication guardrails;
+inbound complaint/pause flags remain shadow-only behind independent first
+human triage. Task owners confirm or replace this shortlist before testing.
 
 Owner-approved thresholds and critical categories are pre-registered per
 task. Zero missed critical controls in an agreed sample is required but does
@@ -156,6 +185,23 @@ missing/invalid-answer and stale-source states rather than empty success.
 Serving version, quota, inference authorization, network/processing terms,
 local performance and subscription pricing remain unverified. Personal-data
 use, control activation and live submission require separate named approval.
+
+Decision 1 context/token/question/option limits, version-pinning and
+retirement behavior, and fine-tuning support were not established by the
+accepted sources. Do not inherit Kev's 8,192-token context, TypeSafe
+option/confidence limits or generic Foundry Batch/provisioned support.
+Validate every expected question ID, answer type, allowed key and finite
+probability vector against the actual provider contract, including any
+documented normalization requirement. Verify the Entra audience and detect
+unavailable or changed model versions; disable the task until regression
+passes rather than silently substituting a provider.
+
+Removing names or contact details does not anonymize health/disability
+content. Before resident-data use, accountable owners must verify applicable
+processing, retention and abuse-monitoring terms, contracts, transfer
+position, lawful basis and DPIA. A UK resource or data-zone deployment is
+not evidence of UK-only inference. These are unresolved approval checks,
+not findings that the deployment or data use is compliant.
 
 ## Historical 2026-09-24 Baseline
 
