@@ -223,7 +223,11 @@ process is left running.
 Published corrections as `0a4de9d9db3d7b0be0436230e14d4f6ca4cd471d` on the
 existing coherent branch and updated draft https://github.com/jmservera/ama/pull/58.
 Exact correction-head MVP CI (38062257646), MVP validation (38062257659) and
-Prototype validation (38062257645) pass. Rubric run 38062257657 remains running
-at this handoff; no rubric acceptance or later-head check inferred.
+Prototype validation (38062257645) pass. Rubric run 38062257657 recorded
+40/100 through concurrent bot commit b7d3ae7, then completed as Cancelled
+after branch advancement; no rubric acceptance or later-head check inferred.
+Safely merged that rubric-only commit with the publication record without
+rewriting history; pushed merge bb5c2d1. New-head checks are separate from
+the successful correction-head checks and are not claimed completed here.
 Repository is not merged. Full task remains blocked on actual platform/human
 prerequisites and explicit local acceptance gaps; P05/P06 remain open.

@@ -61,7 +61,7 @@
       "evidence": "docs/ideas/typesafe-system-one-agent-fit.md Evaluation and Activation Gate; ask_user returned user unavailable"
     },
     {
-      "decision": "Later corrections published as 0a4de9d on existing draft PR #58. Both 1800-second workloads pass with complete raw evidence; 370-test regression and exact-head MVP CI/MVP validation/Prototype validation pass. Rubric workflow still running.",
+      "decision": "Later corrections published as 0a4de9d on existing draft PR #58. Both workloads and 370-test regression pass; correction-head MVP CI/MVP validation/Prototype validation pass. Rubric recorded 40/100 then run cancelled after branch advancement; concurrent rubric-only commit safely merged and pushed as bb5c2d1. Later-head CI not inferred.",
       "status": "published draft; full acceptance blocked",
       "evidence": "https://github.com/jmservera/ama/pull/58; runs 38062257646/38062257659/38062257645; acceptance E09-E16"
     }
@@ -80,7 +80,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Await rubric run 38062257657 and persist publication handoff; operator must supply verified Decision deployment/pricing/terms/quota/accrued liabilities and explicit billable permission plus evaluation participants. Full acceptance/local matrix remains open. Remain manual Implement, no second Review."
+    "action": "Operator must supply verified Decision deployment/pricing/terms/quota/accrued liabilities and explicit billable permission plus evaluation participants. Full acceptance/local role/workload/recovery/accessibility matrix remains open. Corrections published to draft PR #58; manual Implement blocked, no second Review or completion claim."
   },
   "prioritized_follow_ups": [
     {
