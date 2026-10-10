@@ -60,12 +60,25 @@ Make all new work on a topic branch and bring it into `main` through a pull
 request. Do not commit or push directly to `main`.
 
 * Before changing files, check `git status --short` and
-  `git branch --show-current`. When on `main`, fetch and create a branch from
-  the latest `origin/main` named `{type}/{short-description}`, where `{type}`
-  is the Conventional Commit type, for example `docs/retrofit-funding-update`
-  or `feat/rubric-gate-context`.
-* Keep each branch to one coherent change. Start a separate branch for
-  unrelated work instead of adding it to an open branch.
+  `git branch --show-current`, then identify any known upstream branch or PR
+  lifecycle and the proposed work's relationship and dependency. Honour an
+  explicit owner branch/base direction within the safeguards below; otherwise
+  select by coherent workstream, not by a new message, document type or phase:
+
+  | Situation | Branch decision |
+  | --- | --- |
+  | No file change, such as a question or explanation | Do not create a branch. |
+  | Known active branch or open PR matches the continuing research, design, PRD, implementation or review workstream | Reuse it by default. Do not routinely ask before continuing a coherent iteration. |
+  | Related work needs independently reviewable isolation or carries material risk or breaking change | Create a child branch from the current topic to preserve unmerged ancestry; use a separate worktree when parallel or isolated working copies are needed. |
+  | On `main` with no matching active topic, unrelated work, work whose prior branch has merged, or an explicit request for a fresh main-based branch | Fetch and create a branch from the latest `origin/main` named `{type}/{short-description}`, where `{type}` is the Conventional Commit type, for example `docs/retrofit-funding-update` or `feat/rubric-gate-context`. |
+
+  For a closed-but-unmerged branch or PR, a detached or unknown branch, or an
+  ambiguous relationship or dependency, pause and ask the owner for the
+  smallest clarification needed. Branch selection uses read-only inspection;
+  it does not authorize discarding, stashing, committing or moving existing
+  work, rewriting history, reopening or merging a PR, deleting a branch, or
+  writing to a remote. Create/switch the selected branch only after this
+  decision and the dirty-worktree safeguard below.
 * When uncommitted changes already exist, do not discard, stash, commit or
   move them without the owner's confirmation. Ask whether to carry them onto
   the new branch or to isolate the new work in a separate `git worktree`.
@@ -78,8 +91,12 @@ request. Do not commit or push directly to `main`.
   If GitHub rejects a push for email privacy, do not disable privacy protection;
   obtain the owner's permission before amending an existing commit.
 * Commit following the commit message conventions, push the branch and open
-  a pull request against `main` with `gh pr create`. Describe the change, the
-  evidence or sources used and the validation performed.
+  a pull request with `gh pr create`. Target `main` for an independent branch;
+  target the parent topic for deliberate stacked work, declaring the dependency
+  in the pull request. After the parent merges, re-evaluate and retarget the
+  child as needed; never silently rebase, force-push, rewrite or merge work
+  merely to manage branch lineage. Describe the change, the evidence or
+  sources used and the validation performed.
 * Let the pull request checks, including the rubric scoring workflow, run
   before merge. Address review feedback with further commits on the same
   branch.
