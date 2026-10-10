@@ -1,15 +1,16 @@
 {
   "prdFile": "docs/prds/proper-warm-retrofit-programme-demonstrator.md",
-  "lastAccessed": "2026-10-10T09:18:31Z",
-  "prdVersion": "0.11.0",
-  "currentPhase": "build",
+  "lastAccessed": "2026-10-10T13:01:07Z",
+  "prdVersion": "0.12.0",
+  "currentPhase": "validate",
   "disclaimerShownAt": "2026-10-03T12:09:35+02:00",
   "phaseSkillsLoaded": [
     "prd-author#assess",
     "prd-author#discover",
     "prd-author#create",
     "prd-author#build",
-    "prd-author#integrate"
+    "prd-author#integrate",
+    "prd-author#validate"
   ],
   "questionsAsked": [
     "prd-boundary-confirmation",
@@ -19,9 +20,15 @@
     "whole-workbench-workflow-coverage-2026-10-05",
     "rubric-regression-restoration-2026-10-06",
     "prototype-review-integration-2026-10-06",
-    "system-one-form-integration-2026-10-10"
+    "system-one-form-integration-2026-10-10",
+    "exercise-owner-choices-2026-10-10",
+    "exercise-assumption-package-approval-2026-10-10",
+    "exercise-final-baseline-acceptance-2026-10-10"
   ],
   "answeredQuestions": {
+    "exercise-final-baseline-acceptance-2026-10-10": "Owner accepted reviewed v0.12.0 as the exercise baseline for implementation planning, with no changes, retaining real-world and unexecuted evidence gates. This is separate from formal governed/company approval; no application changes, purchases, deployments or inference are authorised by the documentation task.",
+    "exercise-owner-choices-2026-10-10": "Owner wants final exercise-baseline acceptance after review; approves assumptions before PRD edits. Four weeks from baseline acceptance; one-home connected demo with exception and financial closure; USD 450/month attributable external technology, lean nonproduction deployment, warn if more needed. Real Foundry inference is essential, not replay. Existing 20% cycle-time/25% net-effort targets remain scenario hypotheses. Engineering/accessibility checks and role-agent walkthroughs now; direct human testing later. Documentation and independent review only; implementation follows separately.",
+    "exercise-assumption-package-approval-2026-10-10": "Owner approved all sixteen consolidated EXA/OQ dispositions and numerical validation targets as falsifiable exercise targets, not measured results, with no changes. Approved documentation in addendum and PRD. Actual Foundry subscription/API/access/cost verification stays an explicit prerequisite; no new research phase. No purchase/deployment/inference permission or final reviewed PRD acceptance was granted by this approval.",
     "system-one-form-integration-2026-10-10": "Owner requested research-based PRD integration of System One decision models wherever justified, especially source extraction and assisted filling of retrofit subsidy-award applications and other AI-assisted decisions. Draft v0.11.0 adds registered optional scoring, a truthful application-owned evidence envelope, versioned form schemas, candidate values/provenance, individual field review, deterministic financial validation, Finance-reviewed application/claim packs and dependency invalidation. No application implementation, Foundry deployment, personal-data inference, funding submission or operational approval requested or implied.",
     "prototype-review-integration-2026-10-06": "Owner requested all fresh company/UX prototype learnings integrated into the existing PRD so a new prototype can later be generated, then independently challenged. Draft v0.7.0 adds eleven-profile paths, scoped read-only slices, ownership/rationale/filter/metric corrections, continuity and source evidence checks. No prototype generation, company process ratification or operational approval requested.",
     "initiative-name": "Proper Warm Retrofit Programme Demonstrator and Platform Assessment",
@@ -280,7 +287,7 @@
       ]
     }
   ],
-  "nextActions": [
+  "historicalNextActionsThroughV0110": [
     "Bounded v0.11.0 challenge and author corrections are recorded; retain draft/build until upstream and human approval gates are met. Original current full-document FAIL and historical v0.7.0 review do not authorize approval.",
     "Finance approves evidenced application/allocation/award-return/claim routes, constructed form schemas, source authorities, critical fields, attachments and review/export criteria (OQ-015).",
     "Register candidate AI tasks, adjudicate held-out evaluations and set probability/abstention/reviewer budgets; verify target response/serving/privacy gates before enabling any Decision 1 adapter (OQ-016).",
@@ -300,6 +307,11 @@
     "Address the A4 (no working demonstrator evidence) and D3 (no publication path) floor-violation gaps separately; these cannot be closed by further PRD document edits.",
     "Resolve discovery/build gaps, signed handoff and current upstream quality evidence before formal Validate; bounded follow-up PASS does not waive these prerequisites.",
     "Rerun the Capstone Rubric Scorer after PR #20 receives the evidence-restoration update."
+  ],
+  "nextActions": [
+    "Publish owner-accepted v0.12.0 exercise baseline and review/validation evidence through a PR; do not merge unless requested.",
+    "A separate implementation task verifies real Foundry access/API/processing/cost prerequisites and executes the four-week evidence plan within USD 450/month.",
+    "Operational adoption separately requires current legal/professional/funding evidence, signed upstream handoff, company delegations and direct human user research."
   ],
   "qualityChecks": [
     "v0.11.0-independent-challenge-original-paired-payloads-retained-author-dispositions-not-final-regrade",
@@ -362,7 +374,7 @@
     "prd-scope": "One PRD for the role-based Proper Warm retrofit workbench; workflow areas are modules and release increments over shared cases, permissions, handoffs and evidence, not separate products.",
     "rubric-regression-restoration": "Restore deleted A1/A3/A5/A6/A7 design evidence without reversing the expanded nine-workflow workbench or claiming implementation or validation results."
   },
-  "currentAmendment": {
+  "historicalSystemOneAmendment": {
     "version": "0.11.0",
     "date": "2026-10-10",
     "status": "draft-challenged-author-corrections-recorded",
@@ -381,5 +393,30 @@
     "finalizeExit": "NOT_EVALUATED",
     "approvalBlockers": ["No current signed upstream BRD handoff and quality evidence", "Named product/control owners and human reviews outstanding", "OQ-015 scheme/schema/critical-field criteria unresolved", "OQ-016 task evaluation and serving/privacy gates unresolved"],
     "historicalStateNotice": "Earlier answeredQuestions, referencesProcessed and qualityChecks retain their original version/date context; they are not evidence of acceptance of v0.11.0."
+  },
+  "currentAmendment": {
+    "version": "0.12.0",
+    "date": "2026-10-10",
+    "status": "owner-accepted-exercise-baseline-formal-governance-in-review",
+    "assumptionApproval": "Owner approved all sixteen consolidated assumptions and test targets through ask_user before PRD editing.",
+    "assumptionRegister": "docs/case_study_48_addendum.md#owner-approved-exercise-baseline-2026-10-10",
+    "requirements": 46,
+    "acceptanceCriteria": 56,
+    "nonFunctionalRequirements": 13,
+    "constraints": 8,
+    "openExerciseQuestions": 0,
+    "futureOperationalQuestions": 16,
+    "reviewStatus": "Original v0.12.0 full-document FAIL retained for unavailable formal upstream governance. Independent targeted closure found substantive source corrections adequate with two editorial residues; both were applied and mechanically verified. Exercise document ready for final owner acceptance, not governed approval.",
+    "reviewFindings": ".copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/standard-findings.json",
+    "reviewReport": ".copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/quality-report.json",
+    "reviewDisposition": ".copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/challenge-disposition.md",
+    "targetedClosure": ".copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/targeted-closure.md",
+    "localValidation": ".copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/local-validation.md",
+    "validateExit": "BLOCKED",
+    "finalizeExit": "NOT_EVALUATED",
+    "finalOwnerAcceptance": "Accepted by project owner on 2026-10-10 with no changes, for exercise implementation planning only",
+    "actualInferenceEvidence": "Not run; actual deployment/API/access/cost verification is required, not assumed",
+    "implementationEvidence": "Not run by this documentation task",
+    "historicalStateNotice": "Earlier question/reference/check/action/amendment records retain their version/date context and do not approve v0.12.0."
   }
 }
