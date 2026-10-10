@@ -2,13 +2,13 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-10T10:37:26+00:00",
-  "commit": "10d166513c121f2213f81cdfb5eeedf9ed0e236e",
+  "scored_at": "2026-10-10T13:21:45+00:00",
+  "commit": "444a084ad42e4d0308ff5255101c7ce4e0fc32bc",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38044929574",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38054831848",
   "fingerprints": {
     "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
-    "prd": "9655f2646380ac499cd762091eb5a5b75ea40c46e28fc705c6303755565205c8",
+    "prd": "97a6d0c9d0e4951636e923d1acd07c1d8a27b83a2aa65357a32562c6313cf80d",
     "adr": "ece9516f48868a89f6f1ca198227cef7b3e9c4d1a059e53297714642d95ee8df",
     "solution-code": "a89a639f156e48a50323490fc9ab6f0eb6ba0ea4db08646ba4d04a79c851b82f",
     "infrastructure": "e962abd356f81103c78019d3442cd3da2fc2d94a694375c109ac0fbc7c8ad7ea"
@@ -47,7 +47,7 @@
         "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-329"
       ],
-      "rationale": "ADR 0002 names a specific AI leakage threat and states a mitigation, plus named compliance articles (GDPR 9, 17(3), 44-46). This PR's new DD-007/FR-036-044 text adds governance detail but does not change the deployed threat-model evidence."
+      "rationale": "ADR 0002 names a specific AI leakage threat and states a mitigation, plus named compliance articles (GDPR 9, 17(3), 44-46). This PR's PRD edits add governance/test detail but do not touch the deployed threat-model evidence or any DD-007 content; unchanged."
     },
     "A4": {
       "score": 4,
@@ -69,12 +69,12 @@
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "This PR's PRD diff adds DD-007, an evaluation/activation gate and a dated model reassessment (pricing, alternatives, evaluation plan) but introduces no new evaluation harness code or measured results beyond the existing mvp/properwarm_mvp/ai_eval.py baseline. Documentation deepens the proposal; i..."
+      "rationale": "This PR adds a detailed Real-Inference Quality test table (splits, macro-F1, thresholds) to the PRD but introduces no new evaluation harness code or measured results beyond the existing mvp/properwarm_mvp/ai_eval.py baseline. Documentation deepens the proposal further; still unexecuted, unchanged..."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Orchestration-pattern text was reworded (capability routing, provider adapter validation) but no new agentic code, handoff/reflection pattern or state-graph implementation was added in this diff. Unchanged."
+      "rationale": "Orchestration-pattern text (capability routing, provider adapter validation, lines 810-817) is untouched by this diff; no new agentic code, handoff/reflection or state-graph implementation was added. Unchanged."
     },
     "B1": {
       "score": 0,
@@ -108,7 +108,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
         "infra/README.md:1-54"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable; the PRD grew more detailed and internally consistent (new DD-007/008, FR-036-044 sections) but no capstone deck exists, so cap_without caps this at 3 regardless. Unchanged."
+      "rationale": "BRD, PRD and infra/README.md remain structured and navigable; the PRD grew more detailed and internally consistent (owner-acceptance narrative, exercise acceptance contract) but no capstone deck exists, so cap_without caps this at 3 regardless. Unchanged."
     },
     "B7": {
       "score": 0,
@@ -122,7 +122,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-336"
       ],
-      "rationale": "The owner-direction table (PR-001 to PR-008) and this PR's governance additions (DD-007/008, OQ-015/016) continue to name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures (deterministic reproducib..."
+      "rationale": "The owner-direction table (PR-001 to PR-008) and governance additions continue to name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures. This PR deepens exercise targets but doesn't change this ev..."
     },
     "C2": {
       "score": 0,
