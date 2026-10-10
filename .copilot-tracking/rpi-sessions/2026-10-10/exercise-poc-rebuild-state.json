@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Implement",
-  "status": "active",
+  "status": "blocked",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-10/system-one-decision-models-research.md",
@@ -87,8 +87,8 @@
     },
     {
       "decision": "Implemented explicitly scoped returns with existing sign-off/input-version helpers, versioned dispositions and corrected display stage/next action. All 36 earlier-stage pairs, ten invalid-scope atomicity shapes and exact financial ancestry/unchanged cash/source/choice/sibling fixtures pass. Full regression 380 tests, 26 live SQL skips; native-browser 60 checks. FR-010/AC-012 pass constructed disposition contracts; full dependent domain matrix remains incomplete.",
-      "status": "implemented and locally validated; publication pending",
-      "evidence": "acceptance E25/E26; changes Explicit Return Scope Implementation"
+      "status": "published; exact-source CI succeeded; full acceptance incomplete",
+      "evidence": "acceptance E25/E26; https://github.com/jmservera/ama/pull/58; source d77937296ffa9df74ba5a98cb4525fe0b9565a0b; successful runs 38069313144/38069313023/38069313054"
     }
   ],
   "blockers": [
@@ -99,13 +99,13 @@
     },
     {
       "id": "full-workflow-and-acceptance",
-      "summary": "Focused handoff/update/return/hazard, building/role/browser, exact resident/service/privacy, native zoom and interruption/document restore probes pass. Exact local core/scale workload invariants pass; local 18-home cold startup measured. Complete role/workflow/domain-return/permission matrix, scale/cloud cold startup, scheduled RPO/operator reconciliation, screen-reader and human acceptance remain incomplete.",
+      "summary": "Focused handoff/update/hazard/building/role/resident/service/privacy/native zoom and interruption/restore probes pass. Exact local core/scale invariants and all 36 versioned earlier-stage returns with named sign-off/form re-review pass. Complete role/workflow/permission and quality/procurement/milestone re-review matrix, scale/cloud cold startup, scheduled RPO/operator reconciliation, screen-reader and human acceptance remain incomplete.",
       "resolution": "Finish feasible local evidence and preserve exact remaining acceptance gates without relaxing controls or the USD 450 cap."
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Publish exact scoped-return implementation/evidence to existing draft PR #58 and record exact-source CI. Continue remaining domain/workflow/permission/recovery/accessibility evidence without inferring unavailable live/value authorization or full task completion."
+    "action": "Continue remaining local quality/procurement/milestone re-review, role/workflow/permission, scheduled recovery and accessibility acceptance under owner authority. Actual model/value acceptance requires operator-verified terms/costs/quota, explicit deployment/bounded-call authorization and human evaluators. Preserve draft PR #58 and original Review; full task is not complete."
   },
   "prioritized_follow_ups": [
     {
