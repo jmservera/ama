@@ -327,3 +327,41 @@ inferred for them. Draft description now separates executed local shapes from
 remaining complete matrix, recovery, accessibility, live-model and human
 acceptance. Original Review remains Partial/Not accepted and was not repeated.
 No merge, cloud change, billable call or task completion was performed.
+
+## Renewed Resident and Service Acceptance Implementation
+
+P05/P05-T01 resumes under the owner's renewed autonomous implementation
+request. Current write boundary is existing resident/technical controls,
+integration fixtures and directly related evidence. Execute exact two-measure
+choice/design/representative and accessible service/redress fixtures, preserving
+history and independent resident decisions. Repair only coupled defects
+with reproductions. Existing critique and Review remain unchanged; actual
+model authorization and human evaluation remain unavailable.
+
+The exact API fixtures exposed unrestricted service accessibility/contact
+references for roles without a recorded need. Projection now minimizes those
+fields and decision representative references, preserving Unknown/None.
+An initial projection fix exposed a shallow resident-decision view alias:
+redacting a response changed stored representative history. Decision views
+now deep-copy versions; tests compare raw state before/after all-role reads
+and exports. Model source labels do not contain contact-reference tokens.
+
+The real browser complaint journey exposed a deeper existing form-rendering
+defect: nested child arrays became literal HTML element strings, leaving
+all `actForm` inputs absent. The shared DOM helper now recursively flattens
+children rather than one level. This is a directly coupled root fix, not a
+weakened test selector. Exact rendered-control assertions remain in the
+browser runner; source/date/authority controls are not bypassed.
+
+Validation: 27 workbench tests pass; full regression 377 tests, OK, 26 live
+MSSQL skips, 69.747 seconds. Final headed Chrome/Xvfb run passes 57 finite
+checks, including actual accessible complaint intake, service-owner closure
+refusal, independent redress closure and native 400% zoom. Fresh 18-home
+initial startup is separately measured at 0.323109s to first health 200; no
+cloud/scale cold-start claim. All virtual display/browser/server processes
+were stopped. Image 8d6799aa548f2c96d4c506816f6050a014502b37f98d0caeaef72158532d5c2e
+passes UID 10001/read-only health 200 with 18 fictional homes.
+FR-014/045/046 and AC-017/037/055/056 pass their exact constructed local
+contracts; full PRD, human effectiveness and real obtained consent are not
+claimed. Published workload results remain historical snapshots before this
+projection/DOM batch; no rerun is inferred for those source changes.

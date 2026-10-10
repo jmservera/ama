@@ -75,6 +75,7 @@ def main() -> int:
         results.append({"check": name, "result": "Pass" if passed else "Fail", "detail": detail})
 
     with (state / "server.log").open("w") as log:
+        cold_started = time.perf_counter()
         server = subprocess.Popen([sys.executable, "-m", "properwarm_mvp.server"],
                                   cwd=ROOT, env=env, stdout=log, stderr=log)
         try:
@@ -89,6 +90,10 @@ def main() -> int:
                     time.sleep(.1)
             else:
                 raise RuntimeError("Exercise health endpoint did not become ready.")
+            record("initial-cold-exercise-startup", True,
+                   {"seconds_to_first_health_200": time.perf_counter() - cold_started,
+                    "fixture": "Fresh 18-home SQLite exercise state; no warm-up before initial health",
+                    "boundary": "Local initial process startup, not cloud cold scaling or scale-fixture startup"})
             with sync_playwright() as playwright:
                 browser = playwright.chromium.launch(channel="chrome", headless=not args.native_zoom,
                                                      args=["--window-size=1280,900"] if args.native_zoom else [])
@@ -290,6 +295,54 @@ def main() -> int:
                        page.get_by_role("cell", name="ex-rlo-01@example.test", exact=True).count() == 1
                        and page.get_by_role("cell", name="Outstanding", exact=True).count() == 1,
                        {"task": "Sent/received/accepted/completed operational handoff never clears or reassigns resident update"})
+                session.close()
+
+                def resident_form(view, title, fields, button):
+                    panel = view.locator("details").filter(has=view.get_by_text(title, exact=True))
+                    if not panel.get_attribute("open"):
+                        panel.locator("summary").click()
+                    for key, value in fields.items():
+                        control = panel.locator(f'[id="f-{title}-{key}"]')
+                        if control.count() != 1:
+                            raise AssertionError({"title": title, "field": key, "panel_html": panel.inner_html()})
+                        if control.evaluate("e=>e.tagName") == "SELECT":
+                            control.select_option(value)
+                        else:
+                            control.fill(value)
+                    panel.get_by_role("button", name=button, exact=True).click()
+
+                session, page = home_session("ex-rlo-01")
+                page.goto(base + "#/case/EX-HOME-001")
+                page.get_by_role("heading", name="Decision for each measure", exact=True).wait_for()
+                resident_form(page, "Open a request or complaint", dict(route="Complaint",
+                    summary="Fictional accessible scope explanation",
+                    desired_outcome="Fictional officer-assisted explanation before deciding",
+                    service_owner="ex-rlo-01@example.test", redress_owner="ex-pm-01@example.test",
+                    accessibility="Safe route needed", representative_ref="BROWSER-CONTACT-REFERENCE",
+                    next_update="2026-10-12"), "Open")
+                page.get_by_text("SR-1: Complaint. Open.", exact=True).wait_for()
+                record("browser-accessible-service-is-not-consent",
+                       "Safe route needed" in page.locator("#app").inner_text()
+                       and "BROWSER-CONTACT-REFERENCE" in page.locator("#app").inner_text()
+                       and page.get_by_role("cell", name="Withdrawn", exact=True).count() == 1,
+                       {"task": "Open supplied accessible complaint, retaining previously withdrawn works choice"})
+                resident_form(page, "Update a request", dict(id="SR-1", status="Resolved",
+                    next_update="2026-10-13", note="Supplied explanation, await redress review"), "Save update")
+                page.get_by_text("SR-1: Complaint. Resolved.", exact=True).wait_for()
+                resident_form(page, "Close a request", dict(id="SR-1",
+                    note="Cannot self-close complaint"), "Close")
+                page.get_by_text("Only the redress owner can close a complaint.", exact=True).wait_for()
+                record("browser-complaint-independent-close-refusal",
+                       page.get_by_text("SR-1: Complaint. Resolved.", exact=True).count() == 1)
+                session.close()
+                session, page = home_session("ex-pm-01")
+                page.goto(base + "#/case/EX-HOME-001")
+                page.get_by_text("SR-1: Complaint. Resolved.", exact=True).wait_for()
+                resident_form(page, "Close a request", dict(id="SR-1",
+                    note="Supplied independent redress outcome"), "Close")
+                page.get_by_text("SR-1: Complaint. Closed.", exact=True).wait_for()
+                record("browser-complaint-independent-redress-close",
+                       page.get_by_role("cell", name="Withdrawn", exact=True).count() == 1)
                 session.close()
                 if args.native_zoom:
                     context = browser.new_context(no_viewport=True)

@@ -20,12 +20,12 @@ The PRD's historical Not run columns are preserved unchanged.
 | E01 | mvp/tests/test_forms.py | 24 tests: six schemas, readable text/CSV, source lineage, conflicts, protected fields, validation, export and stale-set oracles. |
 | E02 | mvp/tests/test_decision.py | 30 fake-only tests: registry/guard/response/abstention, catalog identity casing, retained cross-process liability, 20-way contention and generation/reading zero-transport denial. No actual model run or validated provider response schema. |
 | E03 | mvp/tests/test_exercise_forecast.py | 19 tests: wholly fictional fixtures, exact central/sensitivity oracles, missing-input abstention and stage-pool independence. |
-| E04 | mvp/tests/test_exercise_workbench.py | Twenty-four SQLite/API tests: one-home journey through cash/invoice closure, independent humans, source/sibling invalidation, exact financial reproductions, explicit handoff/commitment/hazard, building projection, atomic invalid-input, foreground/background interruption and offline document restore probes. Includes all eleven profiles against six form-creation permissions and eight protected batch denials, with unchanged denied state and intact audit. Not the complete role/action inventory. Focused finance fixtures explicitly freeze Handover and are not journey evidence. |
+| E04 | mvp/tests/test_exercise_workbench.py | Twenty-seven SQLite/API tests: one-home journey through cash/invoice closure, independent humans, source/sibling invalidation, exact financial reproductions, explicit handoff/commitment/hazard, building projection, atomic invalid-input, foreground/background interruption and offline document restore probes. Includes all eleven profiles against six form-creation permissions and eight protected batch denials, plus exact two-measure version/representative/withdrawal and five-route service/redress/privacy fixtures. Not the complete role/action inventory. Focused finance fixtures explicitly freeze Handover and are not journey evidence. |
 | E05 | mvp/tests/test_exercise_data.py | Local declared-workbook/bulk/export tests; inspect final suite count and implementation review for exact disposition. Narrow contract, not arbitrary stock import or XLSX export. |
 | E06 | exercise-poc-rebuild-browser-results.json | Chrome 152.0.7977.75: 22 checks pass. Eleven role orientation views, nine navigation entries, parser conflict, form reflow at 320/390/1280px, root text resize, keyboard focus, input labels and no duplicate IDs/runtime errors. Not eleven completed role tasks or nine complete browser workflows. |
 | E07 | exercise-poc-rebuild-runtime-results.json | 200 warm HTTP samples each: list p95 0.00164s, detail 0.00187s, dashboard 0.00364s, coordination write 0.00977s. One session/writer, 18 fictional homes and 201 update events; not the prescribed core/scale shape. Exact clean-restart case and backup case/audit-head equality pass. |
 | E08 | mvp/Dockerfile | Image built; non-root/read-only exercise startup with writable temporary state passes. Includes required evals/registry. No deployed service, production readiness or Trivy result inferred. |
-| E09 | Full MVP regression command | Latest continuation: 374 tests, OK, 26 live MSSQL skips, 66.159 seconds. Previous follow-up: 370 tests, OK; original publication: 355 tests, OK. Legacy timing checks are not the new fictional 600,000-event workload. |
+| E09 | Full MVP regression command | Latest resident/service continuation: 377 tests, OK, 26 live MSSQL skips, 69.747 seconds. Previous continuation: 374 tests; previous follow-up: 370; original publication: 355. Legacy timing checks are not the new fictional 600,000-event workload. |
 | E10 | mvp/tests/test_exercise_workbench.py financial reproductions | RV-001 through RV-004 corrected locally: exact predecessor staleness, current award readiness, cumulative cash across stale claims, unchanged rejected content refusal. Stale rejected attempts still require exact retry reference. Original Review remains Partial/Not accepted, not regraded. |
 | E11 | exercise-poc-rebuild-browser-followup.json | Fresh Chrome run: 25 finite checks pass, including actual 32px body text, CSS 4x reflow, visible control targets >=24px and declared palette contrast >=4.5. Not native browser zoom, comprehensive contrast audit, screen-reader or representative human tasks. |
 | E12 | exercise-poc-rebuild-data-results.json | Exact separate Store-level scale probe: 500 imported rows, 25 committed coordination cases, preview 0.089397s, source hash/controlled-field/audit invariants pass. Not concurrent core HTTP import or arbitrary stock ingestion. |
@@ -39,6 +39,8 @@ The PRD's historical Not run columns are preserved unchanged.
 | E20 | exercise-poc-rebuild-scale-http-exact-results.json | Separate exact-rate scale: 60000 fictional homes/600000 embedded linked traces, twenty sessions/two writers, 9000 scheduled HTTP requests over 1800s and 1801.555s including in-flight drain. List/detail/dashboard/write samples 4844/2436/860/430; p95 0.097782/0.043895/0.048567/0.086301s; zero errors. Maximum list/write latencies 1.895766/3.435978s are retained, not hidden by passing p95. Clean restart 3.468051s; case/audit-head backup equality passes. Not separately posted trace events or operational disaster recovery. |
 | E21 | exercise-poc-rebuild-core-http-exact-results.json | Strict mixed core: 518 fictional homes, five sessions/two existing PSO writers, 1800.002s, 500-row HTTP import and 25-case batch committed without row errors; preview 0.056826s. Story home retains 20 documents of 5000000 bytes (100000000 total) and exactly 150 constructed non-approval upload/note events. List/detail/dashboard/write samples 4920/2460/900/720, p95 0.006812/0.002796/0.005147/0.034023s, zero errors. 9000 interactions produce 9720 scheduled HTTP requests plus four import/bulk requests, not a five-request/s core. Clean restart 0.131815s; case/audit-head equality passes. |
 | E22 | exercise-poc-rebuild-core-http-invariants.json; exercise-poc-rebuild-scale-http-invariants.json | Independent read-only comparisons: all 518 core and 60000 scale homes retain eleven controlled field groups; all 600000 scale traces retain exact content. Core retains all twenty exact document hashes and 150 story-home events. Both ledgers verify intact, no row errors, exactly two writer identities. Seed normalization uses only the documented legacy funding default. Not every permission combination or scheduled disaster reconciliation. |
+| E23 | exercise-poc-rebuild-resident-service-browser-results.json | Latest headed Chrome/Xvfb: 57 finite checks pass, including prior native zoom/building/handoff fixtures and actual accessible complaint creation, service-owner close refusal and independent redress-owner closure without changing withdrawn works choice. Separately measured fresh 18-home initial startup reaches first health 200 in 0.323109s, no warm-up. Not cloud/scale cold-start, human UX or screen-reader conformance. |
+| E24 | mvp/tests/test_exercise_workbench.py resident/service fixtures | Two measures have distinct recorded/design versions; scheduling-only/wrong-measure representative, wrong scope and wrong version fail atomically. Exact pause/withdrawal readiness affects only the named measure; unrelated choices, sibling, hazard service and histories remain unchanged after restart. All five service types retain explicit outcome/owners/contact needs/status/update without consent. Need-based reference projection is tested across API/export/model labels, including unchanged stored authority/history and explicit Unknown. |
 
 The raw E06/E07 JSON files sit beside this register. Scripts and fictional
 fixtures are reproducible; measured latencies are machine-specific observations.
@@ -56,9 +58,9 @@ model-casing/test-runner corrections; those later paths are separately covered
 by E02/E04/E09, not claimed exercised by the workload. E20/E21 are later
 continuation snapshots and supersede those proxy workload shapes, not their
 historical measurements. E22 independently verifies their persisted invariants.
-Initial cold-start latency was not separately timed; measured clean restart is
-not relabelled as that observation. Full permission/cold-start/RPO acceptance
-remains incomplete.
+E23 separately times fresh local 18-home initial startup; historical clean
+restart is not relabelled. Scale/cloud initial cold startup, complete
+permission inventory and RPO acceptance remain incomplete.
 
 An earlier mixed-core run used 20 files of 5242880 bytes (100 MiB), a third
 one-off import writer and an inaccurate top-level 18-home label despite 518
@@ -83,7 +85,7 @@ run is silently promoted.
 | FR-011 | Not run | E04 explicit sent/received/accepted/returned/escalated/completed states and independent ownership/chase now tested; full role/browser fixture outstanding. |
 | FR-012 | Not run | E01/E04 source conflict/reconciliation; whole cohort/authority/ranking acceptance outstanding. |
 | FR-013 | Not run | E04 design and independent sign-offs; all professional/building-return variants outstanding. |
-| FR-014 | Not run | Existing resident/service controls; full accessible-service/redress fixture outstanding. |
+| FR-014 | Pass | E23/E24 all five constructed service types preserve outcome, distinct service/redress owners, permitted contact/representative references, status and next update. Real complaint browser journey preserves works withdrawal and independent closure. Local exercise, not human service effectiveness. |
 | FR-015 | Not run | E04 denies local release and tests separate supplied receipt/acceptance without clock changes; full awareness/referral/hold matrix outstanding. |
 | FR-016 | Not run | E04 capacity/release; whole offered/committed/package/version matrix outstanding. |
 | FR-017 | Not run | E04 independent QA, return/fix/reinspection/handover; full measure matrix outstanding. |
@@ -114,8 +116,8 @@ run is silently promoted.
 | FR-042 | Not run | E01/E04 reviewed application/claim packs; complete independent snapshot comparison outstanding. |
 | FR-043 | Not run | E01/E04 exact source/input/version invalidation; whole downstream fixture manifest outstanding. |
 | FR-044 | Not run | E02/E04 optional/off/manual/protected-field checks; complete throttled/provider-availability UX outstanding. |
-| FR-045 | Not run | E04 scheduling-only rejection and existing measure controls; full two-measure fixture outstanding. |
-| FR-046 | Not run | E03/E04 withdrawal/sibling isolation; full discretionary gate/choice oracle outstanding. |
+| FR-045 | Pass | E24 two-measure/home/scope/design/version/source and representative-authority fixture preserves Unknown, rejects scheduling-only/wrong scope/version atomically and retains distinct historical choices. Fictional supplied answers, not obtained resident consent. |
+| FR-046 | Pass | E24 exact named-measure pause/withdrawal readiness and unaffected choice/sibling/history comparison; no sanction, refusal or hazard-service pause inferred. |
 
 ## Acceptance Criteria
 
@@ -137,7 +139,7 @@ run is silently promoted.
 | AC-014 | Not run | E04 urgency/due/next-action and independent update ownership tested; full cross-role fixture. |
 | AC-015 | Not run | E03/E04 missing/conflict handling; full policy/hazard fixture. |
 | AC-016 | Not run | E04 sign-offs; full competent-role assignment matrix. |
-| AC-017 | Not run | Complete accessible service/redress request fixture. |
+| AC-017 | Pass | E23/E24 exact five-route API fixture and actual complaint browser journey preserve type/outcome/owners/needs/status/update without contact-as-consent; denied reference fields remain absent from API/export/model labels. |
 | AC-018 | Not run | E04 external authority boundary; full awareness/referral clock oracle. |
 | AC-019 | Not run | E04 capacity/work order; full package view/version comparison. |
 | AC-020 | Not run | E04 independent QA return/reinspect; all dependent holds. |
@@ -157,7 +159,7 @@ run is silently promoted.
 | AC-034 | Not run | Exact default IDs/order/focus/reset/zero-matches fixture. |
 | AC-035 | Pass | E04/E17 visible independent purpose/owner/due/basis/safe-route or unknown; unaccepted/accepted handoffs preserve ownership, explicit reassignment preserves content/history, and sent time/evidence retain receipt/understanding Unknown. |
 | AC-036 | Not run | E04 distinct destination/receiver/chase/receipt/acceptance/history tests; full cross-view unknown and consistency oracle unexecuted. |
-| AC-037 | Not run | Full two-measure accessible service/redress fixture. |
+| AC-037 | Pass | E24 distinct measure/design/version choice fixtures and five-route accessible service/redress fixture; unrelated choice and sibling remain unchanged, necessary/Unknown contact references project per need. E23 actual complaint refusal/independent closure does not change withdrawn choice. |
 | AC-038 | Not run | E04 supplied external receipt/acceptance preserves original awareness and hold; full referral/clock fixture. |
 | AC-039 | Not run | E04 capacity subset; offered/committed/readiness UI oracle. |
 | AC-040 | Not run | E01/E04/E06 EPC conflict; all designated comparison/rationale fixtures. |
@@ -175,8 +177,8 @@ run is silently promoted.
 | AC-052 | Not run | E02/E04 offline/protected fields; complete disabled/throttled/unavailable browser matrix. |
 | AC-053 | Not run | E01/E02/E04 source denial subset; complete cross-scheme/restricted/injection fixture. |
 | AC-054 | Blocked | E02/E04 fake/default prohibition subset; actual model-answer authority evaluation unavailable. |
-| AC-055 | Not run | E04 scheduling-only denial; exact two-measure design/source fixture. |
-| AC-056 | Not run | E03/E04 isolation subset; exact affected discretionary readiness fixture. |
+| AC-055 | Pass | E24 exact two-measure/design/source fixture leaves unrelated measure Unknown until expressly recorded; scheduling-only/wrong-measure representative cannot create consent. |
+| AC-056 | Pass | E24 exact affected resident-readiness blocker names only the withdrawn measure; independently agreed other measure, sibling and hazards remain unchanged with historical choices retained. |
 
 ## Non-Functional Requirements
 

@@ -136,6 +136,22 @@ comparisons pass. Remaining initial cold-start/complete permissions and
 scheduled recovery/human/live boundaries are not inferred from those results.
 P05/P06 remain open for complete matrix and mandatory human/live gates.
 
+Renewed owner continuation resumes P05-T01 with exact two-measure
+resident scope/design/representative and accessible-service/redress fixtures.
+Runtime writes remain within existing resident/technical APIs and their
+authority boundaries. Preserve independent choices, historical answers and
+service-versus-retrofit controls; fix only coupled defects exposed by these
+fixtures. Validate focused tests before regression and publish on the same
+unmerged topic branch. Live model and human evaluation gates remain blocked.
+
+Exact resident/service fixtures now pass. Coupled fixes minimize contact
+references without mutating stored decision history and repair shared nested
+DOM child rendering. Full regression 377 tests, 26 live SQL skips; headed
+browser 57 checks including actual complaint refusal/independent closure and
+native zoom. Fresh 18-home cold startup measured separately; scale/cloud
+startup remains unmeasured. P05/P06 stay open for remaining complete workflow,
+return, permission, recovery, screen-reader and actual-model/human evidence.
+
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->

@@ -73,6 +73,17 @@ def contractor_detail(c, d):
 def redact_staff_detail(user, d):
     if not can_see_reason(user):
         d["resident"]["adjustment"] = REDACTED if d["resident"]["adjustment"] != "None" else "None"
+        for request in d.get("service_requests", []):
+            needs = request.get("accessibility", ["Unknown"])
+            request["accessibility"] = needs if needs in (["None"], ["Unknown"]) else [REDACTED]
+            if request.get("representative_ref") not in (None, "", "Unknown"):
+                request["representative_ref"] = REDACTED
+        for decision in d.get("measure_decisions", []):
+            for version in decision.get("versions", []):
+                if version.get("representative_ref"):
+                    version["representative_ref"] = REDACTED
+        if d.get("exercise"):
+            d["exercise"].pop("representatives", None)
     if user.get("role") not in FINANCE_VIEW:
         d.pop("finance", None)
         d.pop("grants", None)

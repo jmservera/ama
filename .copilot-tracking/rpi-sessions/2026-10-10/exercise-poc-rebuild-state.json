@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Implement",
-  "status": "blocked",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-10/system-one-decision-models-research.md",
@@ -74,6 +74,11 @@
       "decision": "Continuation implementation c421f7d published on draft PR #58 after safe merge of rubric-only 7a6809f, source head d35e0be75bb58878924f439e34aac36a0341163b. Exact-source-head MVP CI, MVP validation and Prototype validation succeeded. These checks do not clear acceptance, human or billable authorization gates; later documentation/bot heads are separate.",
       "status": "published draft; exact source checks succeeded",
       "evidence": "https://github.com/jmservera/ama/pull/58; runs 38067801576/38067801569/38067801672"
+    },
+    {
+      "decision": "Renewed continuation executes exact two-measure and five-route service/redress/reference contracts. Fixed response projection mutating stored representative versions and missing real form inputs caused by nested DOM arrays. 377-test regression and 57-check native-browser complaint journey pass; fresh local 18-home cold startup separately measured. Exact constructed FR-014/045/046 and AC-017/037/055/056 pass. Full acceptance and real consent/effectiveness not claimed.",
+      "status": "implemented and locally validated; publication pending",
+      "evidence": "acceptance E23/E24; mvp/tests/test_exercise_workbench.py; changes Renewed Resident and Service Acceptance Implementation"
     }
   ],
   "blockers": [
@@ -84,13 +89,13 @@
     },
     {
       "id": "full-workflow-and-acceptance",
-      "summary": "Focused handoff/update/return/hazard, building/role/browser, native zoom and foreground/background interruption/document restore probes pass. Exact-rate scale and strict mixed HTTP core with independent persisted invariants pass. Complete role/workflow/domain-return/permission matrix, initial cold-start observation, scheduled RPO/operator reconciliation, screen-reader and human acceptance remain incomplete.",
+      "summary": "Focused handoff/update/return/hazard, building/role/browser, exact resident/service/privacy, native zoom and interruption/document restore probes pass. Exact local core/scale workload invariants pass; local 18-home cold startup measured. Complete role/workflow/domain-return/permission matrix, scale/cloud cold startup, scheduled RPO/operator reconciliation, screen-reader and human acceptance remain incomplete.",
       "resolution": "Finish feasible local evidence and preserve exact remaining acceptance gates without relaxing controls or the USD 450 cap."
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Continue remaining local role/workflow/domain-return/permission and recovery/accessibility acceptance under owner implementation authority; operator must verify deployment/terms/costs and authorize bounded calls, and supply human evaluators before live/value acceptance. Keep draft PR #58 unmerged and original Review unchanged; task_complete is not justified."
+    "action": "Publish resident/service/projection/DOM root fixes and exact evidence on existing draft PR #58, inspect exact-head CI and persist delivery. Continue remaining local acceptance; live/human gates require actual operator/participant prerequisites, not fabricated approvals."
   },
   "prioritized_follow_ups": [
     {

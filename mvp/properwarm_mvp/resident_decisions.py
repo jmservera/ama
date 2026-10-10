@@ -8,6 +8,8 @@ Service and complaint requests have their own route, desired outcome and a
 named redress owner. Contact needs are held as short coded entries so only the
 minimum necessary is shown.
 """
+from copy import deepcopy
+
 from . import controls as k
 
 DECISION_STATUSES = ("Waiting", "Accepted", "Declined", "Paused", "Withdrawn")
@@ -28,7 +30,7 @@ def case_measures(c):
 def measure_decision_view(c):
     """Every measure with its latest recorded answer, or 'Not recorded'. Nothing is filled in."""
     recorded = c.get("measure_decisions") or {}
-    return [dict(measure=m, status=(recorded[m][-1]["status"] if recorded.get(m) else NOT_RECORDED), versions=recorded.get(m, []))
+    return [dict(measure=m, status=(recorded[m][-1]["status"] if recorded.get(m) else NOT_RECORDED), versions=deepcopy(recorded.get(m, [])))
             for m in case_measures(c)]
 
 

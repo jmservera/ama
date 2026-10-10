@@ -192,3 +192,15 @@ field/trace/document/audit comparisons pass; initial cold startup was not
 separately timed. Latest regression passes 374
 tests with 26 live SQL skips; focused eleven-profile/six-template/eight
 protected batch permission matrix passes, not all role/action combinations.
+
+Current P05-T01 continuation constructs two distinct measure choices and
+tests scoped pause/withdrawal, exact design-version and representative
+authority, accessible contact needs, service/redress ownership and complaint
+closure independence. Fixtures are fictional test inputs, not company facts
+or new resident approvals. Changes stay within existing APIs and tests;
+source fixes require exact reproductions and retain all safety boundaries.
+
+Executed fixtures pass with projection/history alias and nested DOM rendering
+root fixes. Latest suite 377 tests, 26 live SQL skips; headed browser 57 checks.
+Exact constructed FR-014/045/046 and AC-017/037/055/056 evidence is recorded;
+do not generalize it to real consent/service outcomes or unexecuted roles.

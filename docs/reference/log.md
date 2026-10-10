@@ -1693,3 +1693,25 @@ metadata when the knowledge base was created.
   [requirement register](../../.copilot-tracking/changes/2026-10-10/exercise-poc-rebuild-acceptance.md).
   Complete workflow/permission/return, initial cold-start, scheduled recovery,
   screen-reader, actual-model and human value acceptance remain incomplete.
+
+## [2026-10-10] update | Resident scope, accessible service and real forms
+
+* Exact two-measure/design/representative fixtures pass, isolating supplied
+  pause/withdrawal from unrelated choice, sibling and hazard service.
+  Five service types retain explicit outcomes, separate service/redress
+  owners and permitted accessible-contact references without creating consent.
+* Fixed contact-reference projection and shallow decision-view aliasing:
+  need-based redaction no longer changes stored representative history.
+  API/export/model-fact comparisons retain Unknown and minimize references.
+* Real browser complaint journey exposed nested DOM arrays rendered as text
+  rather than form controls. Recursive child flattening fixes the root cause.
+  Actual complaint intake, self-closure refusal and independent redress
+  closure pass while works withdrawal stays unchanged.
+* Latest regression: 377 tests, OK, 26 live SQL skips. Headed browser:
+  57 finite checks, including native 400% zoom and separately measured fresh
+  local 18-home startup at 0.323109s. No cloud/scale cold-start claim.
+* Updated [MVP guide](../../mvp/README.md), this index and the
+  [requirement register](../../.copilot-tracking/changes/2026-10-10/exercise-poc-rebuild-acceptance.md).
+  FR-014/045/046 and AC-017/037/055/056 pass exact constructed contracts;
+  complete remaining workflow/return/permission/recovery/accessibility and
+  real-model/human effectiveness gates remain open.

@@ -199,13 +199,18 @@ node --check web/app.js
 node --check web/panels.js
 ```
 
-Twenty-four connected integration tests exercise same-home SQLite durability, exact
+Twenty-seven connected integration tests exercise same-home SQLite durability, exact
 EPC invalidation/sibling isolation, independent form review/export, separate
 financial states through closure, QA return/fix/reinspection, scoped resident
 choice, capacity/safety blocks, zero-call inherited inference configuration,
 projection, startup isolation and HTTP shortcut denial. A focused matrix covers
 all eleven profiles against six form-creation permissions and eight protected
-batch denials, not every controlled action. These are local
+batch denials, not every controlled action. Exact two-measure fixtures retain
+scope/design/version and representative authority, isolating pause/withdrawal
+from unrelated choice and hazard service. Five service types preserve explicit
+outcome/owners/contact needs/status/update without treating contact as consent.
+Need-based contact-reference projection preserves stored history, including
+Unknown values, and applies to API/export/model facts. These are local
 engineering evidence, not full PRD acceptance. Live Decision 1/generative
 inference, human-adjudicated evaluation and net-effort comparison remain
 blocked. The local browser runner records eleven profile orientation probes,
@@ -241,6 +246,13 @@ human/screen-reader acceptance remain unexecuted. The combined headed browser
 run passes 53 finite checks, including eleven controlled profile safe blocks,
 bidirectional building navigation, distinct sibling consent/design and an
 independently owned resident commitment/operational handoff journey.
+The latest headed run passes 57 checks, adding actual accessible complaint
+intake, service-owner close refusal and independent redress-owner closure;
+works withdrawal remains unchanged. Fresh local 18-home initial startup is
+separately measured at 0.3231s to first health 200, not cloud/scale cold startup.
+Resident panels display exact scope/design version and permitted representative
+references. Shared DOM rendering recursively flattens nested child arrays so
+all labelled form controls are real nodes rather than text.
 Explicit handoff/update/return and hazard receipt/acceptance contracts now have
 focused tests, including unchanged commitment ownership across handoffs and
 process exits before commit/after commit before response. Their complete

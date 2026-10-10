@@ -696,6 +696,149 @@ os._exit(23)
         self.assertEqual(after["forms"][fid]["exports"], before["forms"][fid]["exports"])
         self.assertEqual(self.store._case(SIBLING)["exercise"]["lifecycle"], "Intake")
 
+    def test_two_measure_versions_representative_and_withdrawal_are_independent(self):
+        from properwarm_mvp.resident_decisions import measure_decision_view
+        c = self.store._case(HOME)
+        c["measures"] = ["Loft insulation", "Heat pump"]
+        c["exercise"]["representatives"] = {
+            "Fictional scheduling reference": {"works_measures": []},
+            "Fictional loft authority": {"works_measures": ["Loft insulation"]},
+        }
+        self.store.save()
+        self.store.technical_action(self.rc, HOME, dict(action="design_submit", note="Constructed two-measure design"))
+        self.assertEqual([r["status"] for r in measure_decision_view(self.store._case(HOME))],
+                         ["Not recorded", "Not recorded"])
+        for body, error in (
+            (dict(measure="Loft insulation", scope="Loft insulation", design_version=1,
+                  representative_ref="Fictional scheduling reference"), PermissionError),
+            (dict(measure="Heat pump", scope="Heat pump", design_version=1,
+                  representative_ref="Fictional loft authority"), PermissionError),
+            (dict(measure="Loft insulation", scope="Heat pump", design_version=1,
+                  representative_ref="Fictional loft authority"), ValueError),
+            (dict(measure="Loft insulation", scope="Loft insulation", design_version=2,
+                  representative_ref="Fictional loft authority"), ValueError),
+        ):
+            before = deepcopy(self.store._case(HOME))
+            with self.assertRaises(error):
+                self.store.resident_action(self.rlo, HOME, dict(action="decision_record", status="Accepted",
+                    answered_by="Their representative", **body))
+            self.assertEqual(self.store._case(HOME), before)
+        self.store.resident_action(self.rlo, HOME, dict(action="decision_record", measure="Loft insulation",
+            scope="Loft insulation", design_version=1, status="Accepted", answered_by="Their representative",
+            representative_ref="Fictional loft authority", note="Supplied exact loft works authority"))
+        c = self.store._case(HOME)
+        self.assertNotIn("Heat pump", c["measure_decisions"])
+        original = deepcopy(c["measure_decisions"]["Loft insulation"])
+        self.store.technical_action(self.rc, HOME, dict(action="design_change", note="Supplied heat pump design revision"))
+        self.store.resident_action(self.rlo, HOME, dict(action="decision_record", measure="Heat pump",
+            scope="Heat pump", design_version=2, status="Accepted", answered_by="The resident",
+            note="Supplied heat pump choice against revised design"))
+        c = self.store._case(HOME)
+        self.assertEqual(c["measure_decisions"]["Loft insulation"], original)
+        self.assertIn("Resident choice for Loft insulation needs this design version.", self.store.exercise_readiness(c))
+        self.store.resident_action(self.rlo, HOME, dict(action="decision_record", measure="Loft insulation",
+            scope="Loft insulation", design_version=2, status="Accepted", answered_by="The resident",
+            note="Supplied renewed loft choice"))
+        sibling = deepcopy(self.store._case(SIBLING))
+        other = deepcopy(self.store._case(HOME)["measure_decisions"]["Heat pump"])
+        for status in ("Paused", "Withdrawn"):
+            self.store.resident_action(self.rlo, HOME, dict(action="decision_record", measure="Loft insulation",
+                scope="Loft insulation", design_version=2, status=status, answered_by="The resident",
+                note=f"Supplied fictional {status.lower()} choice"))
+            c = self.store._case(HOME)
+            self.assertEqual(c["measure_decisions"]["Heat pump"], other)
+            self.assertEqual(self.store._case(SIBLING), sibling)
+            blockers = [b for b in self.store.exercise_readiness(c) if b.startswith("Resident choice")]
+            self.assertEqual(blockers, ["Resident choice for Loft insulation needs this design version."])
+            self.assertEqual(c["hazards"], [])
+            self.assertFalse(c["closed"])
+        self.store.db.close()
+        self.store = open_store()
+        self.assertEqual(self.store._case(HOME)["measure_decisions"]["Heat pump"], other)
+        self.assertEqual([r["status"] for r in measure_decision_view(self.store._case(HOME))],
+                         ["Withdrawn", "Accepted"])
+        self.assertTrue(self.store.verify_ledger()["intact"])
+
+    def test_accessible_service_types_redress_and_reference_projection(self):
+        from properwarm_mvp import projection
+        from properwarm_mvp.ai_tasks import source_labels
+        before_choices = deepcopy(self.store._case(HOME).get("measure_decisions", {}))
+        for route in ("Service request", "Complaint", "Repair", "Defect", "Hazard"):
+            self.store.resident_action(self.rlo, HOME, dict(action="service_open", route=route,
+                summary=f"Supplied fictional {route}", desired_outcome=f"Supplied {route} resolution",
+                service_owner=self.rlo["email"], redress_owner=self.pm["email"],
+                accessibility=["Safe route needed", "Representative contact"],
+                representative_ref="FICTIONAL-PRIVATE-CONTACT-REFERENCE", next_update="2026-10-12"))
+        raw = deepcopy(self.store._case(HOME))
+        self.assertEqual(raw.get("measure_decisions", {}), before_choices)
+        self.assertEqual(raw["decision"]["status"], "Not yet asked")
+        for actor in self.users.values():
+            visible = self.store.detail(HOME, actor)
+            if projection.is_contractor(actor):
+                self.assertNotIn("service_requests", visible)
+                continue
+            for req in visible["service_requests"]:
+                self.assertEqual(req["desired_outcome"], f"Supplied {req['route']} resolution")
+                self.assertEqual(req["service_owner_email"], self.rlo["email"])
+                self.assertEqual(req["redress_owner_email"], self.pm["email"])
+                self.assertEqual(req["status"], "Open")
+                self.assertEqual(req["next_update"], "2026-10-12")
+                if projection.can_see_reason(actor):
+                    self.assertEqual(req["accessibility"], ["Safe route needed", "Representative contact"])
+                    self.assertEqual(req["representative_ref"], "FICTIONAL-PRIVATE-CONTACT-REFERENCE")
+                else:
+                    self.assertNotIn("FICTIONAL-PRIVATE-CONTACT-REFERENCE", json.dumps(visible))
+                    self.assertEqual(req["accessibility"], [projection.REDACTED])
+                    self.assertEqual(req["representative_ref"], projection.REDACTED)
+            exported = self.store.exercise_data_export(actor, "story")
+            if not projection.can_see_reason(actor):
+                self.assertNotIn("FICTIONAL-PRIVATE-CONTACT-REFERENCE", json.dumps(exported))
+            labels = source_labels(self.store._case(HOME), reason_ok=projection.can_see_reason(actor))
+            self.assertNotIn("FICTIONAL-PRIVATE-CONTACT-REFERENCE", json.dumps(labels))
+        self.assertEqual(self.store._case(HOME)["service_requests"], raw["service_requests"],
+                         "Projection and export must not mutate stored contact references")
+        complaint = raw["service_requests"][1]["id"]
+        self.store.resident_action(self.rlo, HOME, dict(action="service_update", id=complaint,
+            status="Resolved", next_update="2026-10-13", note="Supplied resolution for independent review"))
+        before = deepcopy(self.store._case(HOME))
+        with self.assertRaises(PermissionError):
+            self.store.resident_action(self.rlo, HOME, dict(action="service_close", id=complaint,
+                note="Service owner cannot independently close complaint"))
+        self.assertEqual(self.store._case(HOME), before)
+        self.store.resident_action(self.pm, HOME, dict(action="service_close", id=complaint,
+            note="Supplied resident outcome independently reviewed by redress owner"))
+        self.assertEqual(self.store._case(HOME)["service_requests"][1]["status"], "Closed")
+        self.assertEqual(self.store._case(HOME).get("measure_decisions", {}), before_choices)
+        self.assertEqual(self.store._case(HOME)["hazards"], [])
+        self.assertTrue(self.store.verify_ledger()["intact"])
+
+    def test_representative_decision_projection_retains_unknown_and_omits_authority_map(self):
+        from properwarm_mvp import projection
+        self.store.technical_action(self.rc, HOME, dict(action="design_submit", note="Fictional loft design"))
+        c = self.store._case(HOME)
+        c["exercise"]["representatives"] = {"FICTIONAL-WORKS-REFERENCE": {"works_measures": ["Loft insulation"]}}
+        self.store.save()
+        self.store.resident_action(self.rlo, HOME, dict(action="decision_record", measure="Loft insulation",
+            scope="Loft insulation", design_version=1, status="Accepted",
+            answered_by="Their representative", representative_ref="FICTIONAL-WORKS-REFERENCE"))
+        before = deepcopy(self.store._case(HOME))
+        for actor in self.users.values():
+            payload = self.store.exercise_case(actor, HOME)
+            if not projection.can_see_reason(actor):
+                self.assertNotIn("FICTIONAL-WORKS-REFERENCE", json.dumps(payload))
+                self.assertNotIn("FICTIONAL-WORKS-REFERENCE", json.dumps(self.store.exercise_data_export(actor, "story")))
+            if not projection.is_contractor(actor):
+                version = payload["case"]["measure_decisions"][0]["versions"][-1]
+                self.assertEqual(version["representative_ref"],
+                                 "FICTIONAL-WORKS-REFERENCE" if projection.can_see_reason(actor) else projection.REDACTED)
+        self.assertEqual(self.store._case(HOME), before)
+        self.store.resident_action(self.rlo, HOME, dict(action="service_open", route="Service request",
+            summary="Unknown contact preference", desired_outcome="Fictional follow-up",
+            service_owner=self.rlo["email"], redress_owner=self.pm["email"], next_update="2026-10-12"))
+        req = self.store.detail(HOME, self.geo)["service_requests"][-1]
+        self.assertEqual(req["accessibility"], ["Unknown"])
+        self.assertEqual(req["representative_ref"], "Unknown")
+
     def test_resident_scope_capacity_safety_and_fabricated_milestones_denied(self):
         self.store.technical_action(self.rc, HOME, dict(action="design_submit", note="Fictional measure"))
         with self.assertRaises(PermissionError):
