@@ -175,3 +175,20 @@ HTTP requests/s. Native browser
 zoom, screen-reader/human UX, background/RPO drill and actual model/evaluation
 acceptance remain open. Original Partial/Not accepted Review is unchanged;
 later implementation does not regrade it or run a second Review.
+
+Further continuation executes actual building/sibling and handoff/resident
+browser fixtures with eleven controlled profile safe-block tasks. Final
+headed Chrome/Xvfb run passes 53 finite checks, including native browser
+400% zoom proven by devicePixelRatio/viewport, not CSS emulation.
+Background batch interruption and isolated exact document-byte restore
+are tested; missing acknowledged event is explicit and pending-recovery
+marker prevents standard launcher startup. This is not scheduled backup
+RPO or completed operator reconciliation. Updated runner starts separate
+five-HTTP-request/s scale and mixed core import/bulk/document/event workload
+for 1800 seconds. Exact scale passes, with raw p50/p95/max/error counts
+retained. Strict mixed core passes with decimal evidence limits, exactly two
+existing writers and 500/25 committed HTTP rows. Independent full controlled
+field/trace/document/audit comparisons pass; initial cold startup was not
+separately timed. Latest regression passes 374
+tests with 26 live SQL skips; focused eleven-profile/six-template/eight
+protected batch permission matrix passes, not all role/action combinations.

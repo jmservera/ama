@@ -99,8 +99,10 @@ They block corresponding acceptance, not local exercise implementation.
 
 ## Remaining Work
 
-P05 complete role/workflow/return fixture acceptance and P06 complete mixed
-workload, background/RPO/native zoom/screen-reader, actual models and human evaluation.
+P05 complete role/workflow/return fixture acceptance and P06 remaining
+permission/cold-start, scheduled RPO/operator reconciliation, screen-reader,
+actual models and human evaluation. Later local mixed workload, background
+interruption and native zoom evidence is recorded below.
 Focused handoff/update/hazard and two prescribed-duration measurements now pass.
 Current draft publication preserves one independent review. No completed
 full-PRD or observed-benefit claim.
@@ -138,6 +140,12 @@ claim. Final publication regression: 355 tests, OK, 26 live MSSQL skips,
 open reproduced review findings. No rebuild merge or billable activation.
 
 ## Later Owner-Directed Implementation
+
+Owner renewed direction to keep implementing after the blocked handoff.
+Resume feasible P05/P06 engineering work, beginning building/home navigation
+and independent role-projected gates (FR-001/002, AC-001/002/003).
+Live activation and participant prerequisites stay blocked; this continuation
+does not authorize cloud spending, fabricate evaluation or repeat Review.
 
 P05/P05-T01, RV-001 through RV-004: exact financial predecessor staleness now
 propagates through application/award/claim/cash without reactivating history.
@@ -231,3 +239,79 @@ rewriting history; pushed merge bb5c2d1. New-head checks are separate from
 the successful correction-head checks and are not claimed completed here.
 Repository is not merged. Full task remains blocked on actual platform/human
 prerequisites and explicit local acceptance gaps; P05/P06 remain open.
+
+## Continued Building, Role and Recovery Work
+
+P05/P05-T01: added read-only building context linked both ways to independent
+story homes. Shared systems/dependencies/holds/cost stay explicitly unknown
+without supplied shared evidence; package identity never proves applicability.
+Each home is independently role-projected and contractors see only assigned
+homes. Exact projected-state equality and sibling withdrawal/design isolation
+are tested. Browser now executes home/building/sibling navigation for eleven
+profiles, eleven actual controlled award safe-block tasks, an individually
+withdrawn lead versus unchanged sibling, and the resident commitment plus
+sent/received/accepted/completed handoff journey. Empty handoff fields now show
+explicit unknown destination/receiver/chase/reason rather than disappearing.
+Async exercise views refuse to render results for an obsolete route; an initial
+browser timeout exposed this race. A separate failed selector was corrected to
+target the actual polite action alert, not an unrelated hidden JSON error.
+
+P06/P06-T01: native browser 400% zoom is now executable using installed Xvfb,
+headed Chrome and real X11 accelerators, not CSS/CDP emulation. A fresh run
+passed 38 finite checks, including actual devicePixelRatio 4, CSS zoom 1 and
+319 CSS-pixel content viewport within 1279-pixel native window. Home/building
+content has no horizontal page overflow. A later headless run passes 51 checks
+with added controlled profile/handoff fixtures. Native display was stopped;
+no human/screen-reader/conformance claim. Failed headless preference and
+accelerator probes were not counted as native zoom evidence.
+
+Actual background bulk-commit thread interruptions before save and after
+commit/before response preserve both homes and the audit chain; safe retries
+return the same two-row outcomes without duplicate events. Separate backup/
+document restore compares exact case/audit and document SHA-256, detects the
+deliberately missing acknowledged Intake-to-Assessment event and marks the
+candidate offline. Factory refuses startup while exercise_recovery_pending
+exists; no controlled work can resume through the standard exercise launcher.
+This is a bounded local restore/blocked-reconciliation probe, not a scheduled
+15-minute backup service or completed operator disaster reconciliation.
+Hazard receipt/acceptance/chase references must be distinct and supplied
+timestamps timezone-qualified; invalid/duplicate evidence leaves state unchanged.
+
+Latest full regression: 374 tests, OK, 26 live MSSQL skips, 66.159 seconds;
+24 focused workbench tests pass. All eleven profiles are tested against six
+form-creation permissions and eight protected batch denials, retaining exact
+denied state and intact audit. This is not the complete role/action inventory.
+Latest image builds as
+038286a2b812a26493fd99a65994b8a310580160da981c20305acce8236abe30
+(superseded by final image below).
+The exact scale HTTP-rate run passes: 9000 scheduled requests over 1800 seconds,
+twenty sessions/two writers, zero errors and p95 below all four thresholds.
+Maximum list/write outliers remain recorded in the raw result; the requirement
+is p95, not maximum latency. Strict mixed core also passes for 1800.002 seconds:
+518 fictional homes, five sessions/two existing writers, 500 imported rows and
+25 bulk cases committed, 20 actual 5000000-byte documents (100000000 total)
+and exactly 150 story-home non-approval upload/note events.
+List/detail/dashboard/write p95 are 0.006812/0.002796/0.005147/0.034023s, with
+zero errors; import preview 0.056826s. Core schedules five interactions/s
+(9720 HTTP requests plus four import/bulk requests), not five requests/s.
+An initial oversized document fixture failed before startup. An intermediate
+run used 100 MiB and a third import writer, with an inaccurate top-level
+population label. Neither is the strict baseline; limits, identity and label
+were corrected before the fresh strict run.
+
+Independent read-only post-run comparisons verify all eleven controlled field
+groups on all 518 core and 60000 scale homes, all 600000 exact scale trace
+contents, twenty document hashes, frozen 150 story-home events, exactly two
+writers and intact full audit chains. Seed comparison applies only the
+documented legacy funding initialization default. Raw results and independent
+invariant reports are retained beside the acceptance register. Initial cold
+startup was not separately timed; clean restart timings are not relabelled.
+
+Final combined headed Chrome/Xvfb run passes 53 finite checks, including
+actual native 400% zoom, eleven controlled role tasks, bidirectional building
+navigation, distinct consent/design and handoff/update journey. Both virtual
+display instances were stopped. Latest image
+b363aa5e87e3151da36079deec472e55e35a06dedc9699ea99b179bf16ee1c4e
+passes UID 10001/read-only startup, health 200 and 18 fictional homes.
+Requirement-level AC-001/003/035 and FR-033 now pass their exact constructed
+fixtures; all unrelated/incomplete full requirements stay Not run/Blocked.

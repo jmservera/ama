@@ -186,7 +186,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                 if profile["id"] == "safety":
                     profile["script"]["blocker"] = "Supplied external authority/reference required; no local safety judgement."
                 if profile["id"] == "operator":
-                    profile["script"]["blocker"] = "Runtime/restore acceptance remains Not run; real inference blocked."
+                    profile["script"]["blocker"] = "Scheduled RPO/operator reconciliation and real inference remain unaccepted; focused interruption/restore probes are not production recovery."
             stories = []
             for c in self.cases.values():
                 if c.get("exercise", {}).get("population") != "story":
@@ -206,7 +206,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                                         denominator="Suppressed (complementary totals)",
                                         note="Separate constructed stakeholder snapshot; all cells/totals suppressed."),
                         inference="Blocked unless separately authorized; templates/manual work are not model success.",
-                        validation="Local integration and eleven profile orientation probes executed; full nine-workflow browser journeys, live inference and human acceptance Not run/Blocked.",
+                        validation="Local integration, eleven controlled role safe-block tasks, independent building/home and handoff/update browser fixtures executed. Full nine-workflow matrix, live inference and human acceptance remain Not run/Blocked.",
                         budget="USD 450/month cap; unknown price blocks inference; no purchases or real payments.")
 
     @staticmethod
@@ -266,7 +266,38 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                         sources=evidence, blockers=self.exercise_readiness(c),
                         events=deepcopy(c["exercise"].get("fund_events", []))
                         if user["role"] in projection.FINANCE_VIEW else [],
-                        lifecycle=c["exercise"]["lifecycle"])
+                        lifecycle=c["exercise"]["lifecycle"],
+                        building_id=c["exercise"]["building_id"])
+
+    def exercise_building(self, user: dict, building_id: str) -> dict:
+        """Project linked home gates independently; shared identity grants no approval."""
+        if not projection.allowed(user, "exercise"):
+            raise PermissionError("This identity cannot view exercise building context.")
+        with self.lock:
+            linked = [c for c in self.cases.values()
+                      if c.get("exercise", {}).get("population") == "story"
+                      and c["exercise"].get("building_id") == building_id]
+            if not linked:
+                raise ValueError("Choose a building linked to a fictional story home.")
+            homes = []
+            for c in linked:
+                if projection.is_contractor(user) and not projection.own_case(user, c):
+                    continue
+                projected = self.exercise_case(user, c["id"])
+                homes.append(dict(id=c["id"], lifecycle=projected["lifecycle"],
+                                  case=projected["case"], blockers=projected["blockers"],
+                                  package_id=c["exercise"].get("package_id", "Unknown"),
+                                  applicability=c["exercise"].get("package_applicability", "Unknown")))
+            if not homes:
+                raise PermissionError("No linked home is assigned to this contractor.")
+            return dict(id=building_id, fictional=True, as_of=self.as_of,
+                        shared_systems="Unknown: no supplied shared-system evidence",
+                        shared_works="Unknown: package identity alone is not reviewed applicability",
+                        shared_dependencies="Unknown: no approved shared dependency scope",
+                        shared_holds="Unknown: home holds below are not a building-wide decision",
+                        shared_cost="Unknown: home costs are not an approved building total",
+                        homes=homes,
+                        note="Each home retains its own evidence, resident choice, funding, quality and closure. Navigation is read-only.")
 
     def _exercise_data_authority(self, user: dict) -> dict:
         """Resolve data-edit authority exclusively from the persisted staff roster."""
@@ -529,8 +560,11 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                              reference=text(body.get("reference"), "external action reference", 80),
                              evidence=text(body.get("evidence"), "external action evidence", 300),
                              followup=text(body.get("followup"), "owned follow-up", 300))
+                if any(e["reference"] == event["reference"] for e in history):
+                    raise ValueError("Receipt, acceptance and chase require distinct external action references; do not duplicate supplied evidence.")
                 observed = text(body.get("observed_at"), "supplied external action timestamp", 80)
-                datetime.fromisoformat(observed.replace("Z", "+00:00"))
+                if datetime.fromisoformat(observed.replace("Z", "+00:00")).tzinfo is None:
+                    raise ValueError("Supply an external event timestamp with an explicit timezone.")
                 event["observed_at"] = observed
                 history.append(event)
                 if step == "received":

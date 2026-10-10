@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Implement",
-  "status": "blocked",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-10/system-one-decision-models-research.md",
@@ -64,6 +64,11 @@
       "decision": "Later corrections published as 0a4de9d on existing draft PR #58. Both workloads and 370-test regression pass; correction-head MVP CI/MVP validation/Prototype validation pass. Rubric recorded 40/100 then run cancelled after branch advancement; concurrent rubric-only commit safely merged and pushed as bb5c2d1. Later-head CI not inferred.",
       "status": "published draft; full acceptance blocked",
       "evidence": "https://github.com/jmservera/ama/pull/58; runs 38062257646/38062257659/38062257645; acceptance E09-E16"
+    },
+    {
+      "decision": "Continued local implementation adds independent building/home projections, real controlled profile browser tasks, native zoom, background interruption and offline document restore interlock. Latest regression 374 tests with 26 live MSSQL skips; 53 finite native-browser checks. Focused eleven-profile/six-template/eight protected batch permission matrix passes. Exact five-HTTP-request/s scale and strict mixed HTTP core pass; independent full controlled-field/trace/document/audit comparisons pass. No repeated Review or live/human acceptance.",
+      "status": "implemented locally; publication pending",
+      "evidence": "mvp/tests/test_exercise_workbench.py; acceptance E17-E22; changes Continued Building, Role and Recovery Work"
     }
   ],
   "blockers": [
@@ -74,13 +79,13 @@
     },
     {
       "id": "full-workflow-and-acceptance",
-      "summary": "Focused explicit handoff/update/return/hazard contracts and interruption tests pass. Two 1800-second workloads pass with no failures. Complete role/workflow matrix, prescribed import-in-core, background/RPO drills, native browser zoom/screen-reader and human acceptance remain incomplete.",
+      "summary": "Focused handoff/update/return/hazard, building/role/browser, native zoom and foreground/background interruption/document restore probes pass. Exact-rate scale and strict mixed HTTP core with independent persisted invariants pass. Complete role/workflow/domain-return/permission matrix, initial cold-start observation, scheduled RPO/operator reconciliation, screen-reader and human acceptance remain incomplete.",
       "resolution": "Finish feasible local evidence and preserve exact remaining acceptance gates without relaxing controls or the USD 450 cap."
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Operator must supply verified Decision deployment/pricing/terms/quota/accrued liabilities and explicit billable permission plus evaluation participants. Full acceptance/local role/workload/recovery/accessibility matrix remains open. Corrections published to draft PR #58; manual Implement blocked, no second Review or completion claim."
+    "action": "Publish reconciled continuation to existing draft PR #58, then persist blocked implementation status and exact delivery/check evidence. Live AI/human prerequisites and complete acceptance remain blocked; no billable permission or second Review inferred."
   },
   "prioritized_follow_ups": [
     {

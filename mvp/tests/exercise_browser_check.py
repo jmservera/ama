@@ -19,12 +19,42 @@ from properwarm_mvp.exercise import manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 
+def native_zoom_keys(repetitions: int, reset: bool = False) -> None:
+    """Send real X11 browser accelerators, not CSS/CDP viewport emulation."""
+    import ctypes
+    import ctypes.util
+    x11 = ctypes.CDLL(ctypes.util.find_library("X11"))
+    xtst = ctypes.CDLL(ctypes.util.find_library("Xtst"))
+    x11.XOpenDisplay.argtypes = [ctypes.c_char_p]
+    x11.XOpenDisplay.restype = ctypes.c_void_p
+    x11.XKeysymToKeycode.argtypes = [ctypes.c_void_p, ctypes.c_ulong]
+    x11.XKeysymToKeycode.restype = ctypes.c_uint
+    x11.XFlush.argtypes = [ctypes.c_void_p]
+    x11.XCloseDisplay.argtypes = [ctypes.c_void_p]
+    xtst.XTestFakeKeyEvent.argtypes = [ctypes.c_void_p, ctypes.c_uint, ctypes.c_int, ctypes.c_ulong]
+    display = x11.XOpenDisplay(None)
+    if not display:
+        raise RuntimeError("Native zoom requires an explicitly available isolated X11 display.")
+    try:
+        control = x11.XKeysymToKeycode(display, 0xffe3)
+        target = x11.XKeysymToKeycode(display, 0x30 if reset else 0x3d)
+        if not control or not target:
+            raise RuntimeError("Native zoom key mapping is unavailable.")
+        for _ in range(repetitions):
+            for key, pressed in ((control, 1), (target, 1), (target, 0), (control, 0)):
+                xtst.XTestFakeKeyEvent(display, key, pressed, 0)
+            x11.XFlush(display)
+            time.sleep(.1)
+    finally:
+        x11.XCloseDisplay(display)
+
 
 def main() -> int:
     """Run browser profiles, parser journey and viewport/focus probes locally."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--state", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--native-zoom", action="store_true", help="Headed Chrome, isolated X11 display and real 400% zoom accelerators")
     args = parser.parse_args()
     state = args.state.resolve()
     if state.exists():
@@ -60,7 +90,8 @@ def main() -> int:
             else:
                 raise RuntimeError("Exercise health endpoint did not become ready.")
             with sync_playwright() as playwright:
-                browser = playwright.chromium.launch(channel="chrome")
+                browser = playwright.chromium.launch(channel="chrome", headless=not args.native_zoom,
+                                                     args=["--window-size=1280,900"] if args.native_zoom else [])
                 errors, bad_responses = [], []
                 version = browser.version
                 for profile in manifest()["profiles"]:
@@ -81,6 +112,37 @@ def main() -> int:
                     text = page.locator("#app").inner_text()
                     record("profile-" + profile["id"], "Owner:" in text and "Blockers" in text,
                            {"role": profile["role"], "script": "Find owner, blocker and next route"})
+                    page.get_by_role("link", name="Open building EX-BUILDING-001 (home gates stay independent)", exact=True).click()
+                    page.get_by_role("heading", name="Building EX-BUILDING-001", exact=True).wait_for()
+                    building_text = page.locator("#app").inner_text()
+                    record("building-navigation-" + profile["id"],
+                           "Independent linked homes" in building_text and "Unknown: home costs" in building_text
+                           and page.get_by_role("link", name="EX-HOME-001", exact=True).count() == 1
+                           and page.get_by_role("link", name="EX-HOME-002", exact=True).count() == 1)
+                    page.get_by_role("link", name="EX-HOME-002", exact=True).click()
+                    page.get_by_role("heading", name="EX-HOME-002: Intake", exact=True).wait_for()
+                    page.get_by_role("link", name="Open building EX-BUILDING-001 (home gates stay independent)", exact=True).click()
+                    page.get_by_role("heading", name="Building EX-BUILDING-001", exact=True).wait_for()
+                    page.get_by_role("link", name="EX-HOME-001", exact=True).click()
+                    page.get_by_role("heading", name="EX-HOME-001: Intake", exact=True).wait_for()
+                    if profile["role"] == "Contractor":
+                        record("profile-controlled-safe-block-" + profile["id"],
+                               page.get_by_text("Read assigned scope only.", exact=False).count() == 1
+                               and page.locator("#exercise-record-action").count() == 0,
+                               {"task": "No funding event editor for assigned-scope contractor"})
+                    else:
+                        page.locator("summary").filter(has_text="Record one explicitly supplied exercise event").click()
+                        page.get_by_label("Event type", exact=True).select_option("funding-event")
+                        page.get_by_label("Separate external evidence state", exact=True).select_option("award")
+                        page.get_by_role("button", name="Record one supplied event", exact=True).click()
+                        page.locator("#app [role=alert][aria-live=polite]").wait_for()
+                        refusal = page.locator("#app [role=alert][aria-live=polite]").inner_text()
+                        finance_role = profile["role"] in ("Grants and Evidence Officer", "Retrofit Programme Manager",
+                                                           "Programme Support Officer")
+                        expected = "same-home reviewed form export" if finance_role else "Only Finance identities"
+                        record("profile-controlled-safe-block-" + profile["id"], expected in refusal,
+                               {"task": "Award without reviewed same-home export must fail without mutation",
+                                "expected_refusal": expected, "observed": refusal})
                     if profile["id"] == "finance":
                         page.get_by_role("button", name="Create one draft", exact=True).click()
                         page.get_by_role("heading", name="FORM-001 competitive", exact=False).wait_for()
@@ -138,6 +200,125 @@ def main() -> int:
                                and "missing_input: abstained" in page.locator("#exercise-forecast").inner_text())
                         page.locator("#exercise-forecast summary").first.click()
                         page.screenshot(path=str(args.output.parent / "exercise-overview.png"), full_page=True)
+                    context.close()
+                context = browser.new_context(viewport={"width": 1280, "height": 900})
+                context.route("**/*", lambda route: route.continue_()
+                              if route.request.url.startswith(base) else route.abort())
+                csrf = {"X-PW-CSRF": "1"}
+                for actor, endpoint, body in (
+                    ("ex-rc-01", "technical", {"action": "design_submit", "note": "Fictional individual loft scope"}),
+                    ("ex-rlo-01", "resident", {"action": "decision_record", "measure": "Loft insulation",
+                     "scope": "Loft insulation", "design_version": 1, "status": "Withdrawn",
+                     "answered_by": "The resident", "note": "Wholly fictional supplied individual withdrawal"}),
+                ):
+                    signed_in = context.request.post(base + "/api/login",
+                        data={"email": actor + "@example.test", "password": password}, headers=csrf)
+                    changed = context.request.post(base + "/api/cases/EX-HOME-001/" + endpoint,
+                                                   data=body, headers=csrf)
+                    if not signed_in.ok or not changed.ok:
+                        raise RuntimeError("Distinct-home fixture action rejected: " + changed.text())
+                page = context.new_page()
+                page.goto(base + "#/exercise/building/EX-BUILDING-001")
+                page.get_by_role("heading", name="Building EX-BUILDING-001", exact=True).wait_for()
+                lead = page.locator("#app article").filter(has=page.get_by_role("link", name="EX-HOME-001", exact=True))
+                sibling = page.locator("#app article").filter(has=page.get_by_role("link", name="EX-HOME-002", exact=True))
+                lead.locator("summary").click()
+                sibling.locator("summary").click()
+                record("building-distinct-home-consent-and-design-display",
+                       "Withdrawn" in lead.inner_text() and "Withdrawn" not in sibling.inner_text()
+                       and '"design_version": 1' in lead.inner_text() and '"design_version": 1' not in sibling.inner_text(),
+                       {"fixture": "Supplied fictional withdrawal/design on lead only; sibling retains own unchanged gates"})
+                context.close()
+
+                def home_session(actor):
+                    session = browser.new_context(viewport={"width": 1280, "height": 900})
+                    session.route("**/*", lambda route: route.continue_()
+                                  if route.request.url.startswith(base) else route.abort())
+                    view = session.new_page()
+                    view.goto(base)
+                    view.locator("#email").fill(actor + "@example.test")
+                    view.locator("#pw").fill(password)
+                    view.locator("button[type=submit]").click()
+                    view.wait_for_function("() => document.getElementById('nav').hidden === false")
+                    view.goto(base + "#/exercise/EX-HOME-001")
+                    view.get_by_role("heading", name="EX-HOME-001: Intake", exact=True).wait_for()
+                    return session, view
+
+                def supplied_event(view, action, fields):
+                    if not view.locator("#exercise-record-action").is_visible():
+                        view.locator("summary").filter(has_text="Record one explicitly supplied exercise event").click()
+                    view.locator("#exercise-record-action").select_option(action)
+                    for key, value in fields.items():
+                        control = view.locator(f"#exercise-event-{action}-{key}")
+                        if control.evaluate("e=>e.tagName") == "SELECT":
+                            control.select_option(value)
+                        else:
+                            control.fill(value)
+                    view.get_by_role("button", name="Record one supplied event", exact=True).click()
+
+                session, page = home_session("ex-rlo-01")
+                supplied_event(page, "resident-update", dict(step="create", channel="Phone",
+                    purpose="Fictional independent scope question", due="Unknown", due_basis="Unknown",
+                    adjustment_reference="Unknown", evidence="Supplied fictional safe contact route",
+                    next_update="Named liaison explains scope"))
+                page.get_by_role("cell", name="UPDATE-001", exact=True).wait_for()
+                record("browser-resident-commitment-owned-independently",
+                       page.get_by_role("cell", name="ex-rlo-01@example.test", exact=True).count() == 1)
+                session.close()
+                session, page = home_session("ex-pm-01")
+                supplied_event(page, "handoff", dict(step="sent", receiver="ex-pso-01@example.test",
+                    reason="Fictional scope review", evidence="Explicit sent reference",
+                    due="Unknown", urgency="Routine", next_action="Receiver reviews scope"))
+                page.get_by_text("State Sent;", exact=False).wait_for()
+                session.close()
+                session, page = home_session("ex-pso-01")
+                supplied_event(page, "handoff", dict(step="accepted", reason="Premature acceptance",
+                    evidence="No separate receipt yet"))
+                page.locator("#app [role=alert][aria-live=polite]").wait_for()
+                record("browser-handoff-receipt-not-inferred",
+                       "receipt never implies acceptance" in page.locator("#app [role=alert][aria-live=polite]").inner_text())
+                supplied_event(page, "handoff", dict(step="received", reason="Supplied receipt",
+                    evidence="Separately supplied receiver receipt"))
+                page.get_by_text("State Received;", exact=False).wait_for()
+                supplied_event(page, "handoff", dict(step="accepted", reason="Supplied acceptance",
+                    evidence="Separate acceptance reference"))
+                page.get_by_text("State Accepted;", exact=False).wait_for()
+                supplied_event(page, "handoff", dict(step="completed", reason="Scope review complete",
+                    evidence="Separately supplied completion reference"))
+                page.get_by_text("State Completed;", exact=False).wait_for()
+                record("browser-handoff-preserves-resident-commitment",
+                       page.get_by_role("cell", name="ex-rlo-01@example.test", exact=True).count() == 1
+                       and page.get_by_role("cell", name="Outstanding", exact=True).count() == 1,
+                       {"task": "Sent/received/accepted/completed operational handoff never clears or reassigns resident update"})
+                session.close()
+                if args.native_zoom:
+                    context = browser.new_context(no_viewport=True)
+                    context.route("**/*", lambda route: route.continue_()
+                                  if route.request.url.startswith(base) else route.abort())
+                    page = context.new_page()
+                    page.goto(base)
+                    page.locator("#email").fill("ex-geo-01@example.test")
+                    page.locator("#pw").fill(password)
+                    page.locator("button[type=submit]").click()
+                    page.wait_for_function("() => document.getElementById('nav').hidden === false")
+                    page.goto(base + "#/exercise/EX-HOME-001")
+                    page.get_by_role("heading", name="EX-HOME-001: Intake", exact=True).wait_for()
+                    page.bring_to_front()
+                    page.get_by_role("heading", name="EX-HOME-001: Intake", exact=True).click()
+                    native_zoom_keys(1, reset=True)
+                    native_zoom_keys(8)
+                    page.wait_for_function("() => devicePixelRatio >= 3.99")
+                    metrics = page.evaluate("""() => ({css_width:innerWidth,window_width:outerWidth,
+                        device_pixel_ratio:devicePixelRatio,css_zoom:getComputedStyle(document.body).zoom,
+                        overflow:document.documentElement.scrollWidth>innerWidth+1})""")
+                    record("native-browser-400-percent-home-reflow",
+                           abs(metrics["device_pixel_ratio"] - 4) < .01 and metrics["css_zoom"] == "1"
+                           and not metrics["overflow"], metrics)
+                    page.get_by_role("link", name="Open building EX-BUILDING-001 (home gates stay independent)", exact=True).click()
+                    page.get_by_role("heading", name="Building EX-BUILDING-001", exact=True).wait_for()
+                    record("native-browser-400-percent-building-reflow",
+                           not page.evaluate("document.documentElement.scrollWidth>innerWidth+1"))
+                    native_zoom_keys(1, reset=True)
                     context.close()
                 record("browser-runtime-errors", not errors and not bad_responses,
                        {"page_errors": errors, "server_errors": bad_responses})

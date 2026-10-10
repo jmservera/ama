@@ -1,0 +1,102 @@
+{
+  "kind": "local-http-and-clean-backup-engineering",
+  "population": "518 fictional homes (18 baseline plus 500 import targets); five sessions/two coordination writers",
+  "core_30_minute_workload": "Mixed HTTP import/bulk and document fixture; inspect exact results",
+  "scale_30_minute_workload": "Not run",
+  "crash_and_response_loss": "Not run",
+  "rpo_and_reconciliation": "Not run",
+  "results": {
+    "core-fixture": {
+      "population": 518,
+      "import_targets": 500,
+      "documents": 20,
+      "bytes_per_document": 5000000,
+      "total_evidence_bytes": 100000000,
+      "supplied_coordination_events": 130,
+      "note": "20 actual document-upload events plus 130 explicitly constructed audit notes; no approvals",
+      "result": "Pass"
+    },
+    "read-warmup": {
+      "requests": 15,
+      "seconds": 0.04397386599885067,
+      "boundary": "Explicit read warm-up; write first-use remains included",
+      "result": "Pass"
+    },
+    "core-http-import-and-bulk": {
+      "import_rows": 500,
+      "import_committed": 500,
+      "preview_seconds": 0.05682555999737815,
+      "source_sha256": "7da3243bc6f30c46f038383d814dae8233dabdd86ee4856bce5112ee57e814dc",
+      "source_bytes_unchanged": true,
+      "bulk_committed": 25,
+      "result": "Pass"
+    },
+    "list": {
+      "samples": 4920,
+      "warm_http_p95_seconds": 0.006811810002545826,
+      "threshold_seconds": 1,
+      "p50_seconds": 0.0061183690013422165,
+      "max_seconds": 1.1580826690005779,
+      "errors": 0,
+      "result": "Pass"
+    },
+    "detail": {
+      "samples": 2460,
+      "warm_http_p95_seconds": 0.002795600001263665,
+      "threshold_seconds": 1,
+      "p50_seconds": 0.002434436999465106,
+      "max_seconds": 0.007091285999194952,
+      "errors": 0,
+      "result": "Pass"
+    },
+    "dashboard": {
+      "samples": 900,
+      "warm_http_p95_seconds": 0.0051473950006766245,
+      "threshold_seconds": 3,
+      "p50_seconds": 0.004737548999401042,
+      "max_seconds": 0.026901920002273982,
+      "errors": 0,
+      "result": "Pass"
+    },
+    "write": {
+      "samples": 720,
+      "warm_http_p95_seconds": 0.03402291800011881,
+      "threshold_seconds": 2,
+      "p50_seconds": 0.010698488000343787,
+      "max_seconds": 1.5749957609987177,
+      "errors": 0,
+      "result": "Pass"
+    },
+    "steady-session": {
+      "seconds": 1800.0019448780004,
+      "sessions": 5,
+      "writers": 2,
+      "rate_basis": "interactions",
+      "aggregate_scheduled_rate": 5.0,
+      "interactions": 9000,
+      "scheduled_http_requests": 9720,
+      "mix": {
+        "list": 4920,
+        "detail": 2460,
+        "dashboard": 900,
+        "write": 720
+      },
+      "failures": [],
+      "population": 518,
+      "trace_events": 0,
+      "controls": "Only coordination note preview/commit; no inference or controlled approvals",
+      "result": "Pass"
+    },
+    "clean-restart": {
+      "seconds": 0.13181531599911978,
+      "exact_case_retained": true,
+      "integrity": "ok",
+      "result": "Pass"
+    },
+    "backup-restore": {
+      "exact_stored_case": true,
+      "exact_audit_head": true,
+      "result": "Pass"
+    }
+  }
+}

@@ -1652,3 +1652,44 @@ metadata when the knowledge base was created.
   remains Partial/Not accepted history; later implementation is not a regrade.
   Operator authorization and participants unavailable: no cloud resource,
   billable call, human evaluation or full acceptance is claimed.
+
+## [2026-10-10] update | Building independence, real browser tasks and recovery probes
+
+* Added read-only building/home/sibling navigation with independently
+  role-projected home records and explicit unknown shared context. Exact
+  differing consent/design fixture shows no approval or evidence transfer.
+* Browser now executes eleven controlled profile safe-block tasks and the
+  independent resident commitment/operational handoff journey. Final headed
+  Chrome/Xvfb run passes 53 finite checks, including true OS-native 400% zoom;
+  no screen-reader/human conformance inferred.
+* Actual background batch interruptions and idempotent retries pass.
+  Isolated backup/document restore retains exact case/audit/byte hashes,
+  identifies one deliberately missing acknowledged event and blocks standard
+  launcher startup while operator reconciliation is pending.
+* Updated the [MVP guide](../../mvp/README.md), its
+  [requirement register](../../.copilot-tracking/changes/2026-10-10/exercise-poc-rebuild-acceptance.md)
+  and this index. AC-001/003/035 and FR-033 pass exact constructed fixtures;
+  broader incomplete requirements remain explicit. Regression: 373 tests,
+  OK, 26 live MSSQL skips. Two new exact-rate/mixed HTTP workload sessions
+  are running; do not substitute earlier proxy runs or claim them passed.
+  Actual Decision 1/generation and human evaluation remain blocked.
+
+## [2026-10-10] update | Exact workload and persisted-invariant evidence
+
+* Completed strict thirty-minute mixed core with five sessions/two existing
+  writers, 500-row HTTP import, 25-case batch, twenty 5000000-byte documents
+  and 150 story-home upload/note events. Separate scale schedules exactly
+  9000 HTTP requests over thirty minutes across twenty sessions and 60000
+  fictional homes/600000 linked traces. Both pass p95 targets without errors;
+  maximum outliers are retained.
+* Independent read-only comparisons verify every controlled field group,
+  exact trace contents, document hashes, writer identities and full audit
+  chains. Intermediate oversized/third-writer proxy runs are not promoted
+  into the strict baseline.
+* Latest regression passes 374 tests with 26 live SQL skips. Focused
+  eleven-profile/six-template/eight protected batch permission matrix passes,
+  not the complete role/action inventory.
+* Updated the [MVP guide](../../mvp/README.md), this index and its
+  [requirement register](../../.copilot-tracking/changes/2026-10-10/exercise-poc-rebuild-acceptance.md).
+  Complete workflow/permission/return, initial cold-start, scheduled recovery,
+  screen-reader, actual-model and human value acceptance remain incomplete.

@@ -4,6 +4,7 @@ from http.server import ThreadingHTTPServer
 import json
 from pathlib import Path
 import shutil
+import sqlite3
 import subprocess
 import sys
 import threading
@@ -247,6 +248,58 @@ class ExerciseWorkbenchTests(unittest.TestCase):
             result = json.dumps(self.store.exercise_case(actor, HOME))
             self.assertNotIn("eligible_cost", result)
             self.assertNotIn("EX-HOME-001-FINANCE", result)
+
+    def test_building_navigation_preserves_independent_home_gates_and_role_projection(self):
+        self.store.technical_action(self.rc, HOME, dict(action="design_submit", note="Fictional individual design"))
+        self.store.resident_action(self.rlo, HOME, dict(action="decision_record", measure="Loft insulation",
+            scope="Loft insulation", design_version=1, status="Withdrawn", answered_by="The resident",
+            note="Fictional individual withdrawal"))
+        self.budget()
+        before = deepcopy(self.store._case(SIBLING))
+        for actor in (self.geo, self.rc, self.rlo, self.users["EX-CON-01"]):
+            building = self.store.exercise_building(actor, "EX-BUILDING-001")
+            self.assertEqual(building["id"], self.store.exercise_case(actor, HOME)["building_id"])
+            self.assertEqual([home["id"] for home in building["homes"]], [HOME, SIBLING])
+            for home in building["homes"]:
+                self.assertEqual(home["case"], self.store.exercise_case(actor, home["id"])["case"])
+            self.assertIn("Unknown", building["shared_cost"])
+            if actor["role"] not in ("Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer"):
+                self.assertNotIn("eligible_cost", json.dumps(building))
+                self.assertNotIn('"finance"', json.dumps(building))
+        self.assertEqual(self.store._case(SIBLING), before)
+        self.assertEqual(before.get("measure_decisions", {}), {})
+        with self.assertRaises(PermissionError):
+            self.store.exercise_building(dict(self.users["EX-CON-01"], contractor="Unassigned supplier"), "EX-BUILDING-001")
+        with self.assertRaises(ValueError):
+            self.store.exercise_building(self.geo, "EX-UNKNOWN")
+        with self.assertRaises(PermissionError):
+            self.store.exercise_building(dict(self.geo, role="Unknown role"), "EX-BUILDING-001")
+
+    def test_all_profile_form_authority_and_protected_batch_matrix(self):
+        from properwarm_mvp.exercise import manifest
+        for profile in manifest()["profiles"]:
+            actor = self.users[profile["actor"]]
+            for kind in forms.SCHEMAS:
+                authorized = (actor["role"] in ("Grants and Evidence Officer", "Retrofit Programme Manager",
+                                               "Programme Support Officer")
+                              or kind == "technical" and actor["role"] == "Retrofit Coordinator")
+                before = deepcopy(self.store._case(HOME))
+                if authorized:
+                    self.act("create-form", user=actor, form_type=kind)
+                    created = next(reversed(self.store._case(HOME)["forms"].values()))
+                    self.assertEqual(created["form_type"], kind)
+                    self.assertEqual(created["case_id"], HOME)
+                else:
+                    with self.assertRaises(PermissionError, msg=(profile["id"], kind)):
+                        self.act("create-form", user=actor, form_type=kind)
+                    self.assertEqual(self.store._case(HOME), before)
+            for action in ("human-field", "review-pack", "funding-event", "milestone",
+                           "lifecycle", "handoff", "return", "external-hazard-reference"):
+                before = deepcopy(self.store._case(HOME))
+                with self.assertRaises(PermissionError, msg=(profile["id"], action)):
+                    self.act(action, user=actor, case_ids=[HOME, SIBLING])
+                self.assertEqual(self.store._case(HOME), before)
+        self.assertTrue(self.store.verify_ledger()["intact"])
 
     def test_explicit_template_changes_block_and_restore_requires_review(self):
         self.act("create-form", form_type="competitive")
@@ -493,6 +546,104 @@ s.exercise_action(u, 'EX-HOME-001', {'action': 'lifecycle', 'target': 'Assessmen
                 self.assertEqual(c, acknowledged)
                 self.assertEqual(self.store.verify_ledger()["head"], ledger_head)
 
+    def test_background_batch_interruption_and_lost_response_are_atomic_and_idempotent(self):
+        import os
+        program = """
+import json,os,sys,threading
+from properwarm_mvp.factory import open_store
+s=open_store()
+u=next(u for u in s.staff.values() if u['code']=='EX-PSO-01')
+body=json.loads(sys.argv[1])
+boundary=threading.Event()
+original=s.save
+def interrupted():
+    if os.environ['INTERRUPT_POINT']=='after':
+        original()
+    boundary.set()
+    threading.Event().wait(30)
+s.save=interrupted
+threading.Thread(target=lambda:s.exercise_data_action(u,body),daemon=True).start()
+if not boundary.wait(15):
+    raise RuntimeError('Background worker did not reach persistence boundary')
+os._exit(23)
+"""
+        for point in ("before", "after"):
+            note = f"Fictional interrupted background batch {point}"
+            preview = self.store.exercise_data_action(self.pso, dict(action="bulk-preview",
+                case_ids=[HOME, SIBLING], changes={"coordination_note": note},
+                reason="Exact interruption fixture"))
+            body = dict(action="commit", token=preview["token"], input_hash=preview["input_hash"],
+                expected_fingerprints={str(row["row"]): row["expected_fingerprint"] for row in preview["rows"]})
+            before = {cid: deepcopy(self.store._case(cid)) for cid in (HOME, SIBLING)}
+            head = self.store.verify_ledger()["head"]
+            outcome = subprocess.run([sys.executable, "-c", program, json.dumps(body)],
+                env=dict(os.environ, INTERRUPT_POINT=point), timeout=25, capture_output=True)
+            self.assertEqual(outcome.returncode, 23, outcome.stderr.decode())
+            self.store.db.close()
+            self.store = open_store()
+            self.assertTrue(self.store.verify_ledger()["intact"])
+            if point == "before":
+                self.assertEqual({cid: self.store._case(cid) for cid in before}, before)
+                self.assertEqual(self.store.verify_ledger()["head"], head)
+            else:
+                for cid in before:
+                    self.assertEqual(self.store._case(cid)["exercise"]["coordination_note"], note)
+            first = self.store.exercise_data_action(self.pso, body)
+            snapshot = {cid: deepcopy(self.store._case(cid)) for cid in before}
+            committed_head = self.store.verify_ledger()["head"]
+            self.assertEqual(first["committed"], 2)
+            self.assertEqual(first["errors"], 0)
+            self.assertEqual(self.store.exercise_data_action(self.pso, body), first)
+            self.assertEqual({cid: self.store._case(cid) for cid in before}, snapshot)
+            self.assertEqual(self.store.verify_ledger()["head"], committed_head)
+
+    def test_backup_restore_preserves_document_bytes_and_detects_missing_acknowledged_event(self):
+        from hashlib import sha256
+        import time
+        doc = self.store.add_document(self.pso, HOME, "fictional-evidence.txt", "Other",
+                                      b"Wholly fictional supplied evidence, not an approval.")
+        baseline = deepcopy(self.store._case(HOME))
+        baseline_head = self.store.verify_ledger()["head"]
+        expected_hash = sha256(self.store.docstore.get(HOME, doc["id"])).hexdigest()
+        restored_state = self.root / "isolated-restore"
+        restored_state.mkdir()
+        shutil.copyfile(self.root / "exercise.json", restored_state / "exercise.json")
+        backup_started = time.monotonic()
+        with sqlite3.connect(restored_state / "properwarm.sqlite") as backup:
+            self.store.db.backup(backup)
+        shutil.copytree(self.root / "docs", restored_state / "docs")
+        backup_finished = time.monotonic()
+        self.act("lifecycle", user=self.pm, target="Assessment")
+        acknowledged = deepcopy(self.store._case(HOME))
+        acknowledged_head = self.store.verify_ledger()["head"]
+        restore_started = time.monotonic()
+        pending = dict(operator=self.pso["email"], source="Wholly fictional independent expected snapshot",
+                       missing_event="Intake to Assessment", expected_head=acknowledged_head,
+                       backup_head=baseline_head, restored_home=HOME,
+                       next_action="Recover or explicitly reconcile missing acknowledged event before startup")
+        with sqlite3.connect(restored_state / "properwarm.sqlite") as candidate:
+            candidate.execute("INSERT INTO meta(key,value) VALUES('exercise_recovery_pending',?)",
+                              (json.dumps(pending),))
+        from properwarm_mvp.sqlstore import SqlStore
+        # Offline inspection only: factory refuses to expose this restore to the server.
+        restored = SqlStore(str(restored_state / "exercise.json"), str(restored_state / "properwarm.sqlite"),
+                            docs_dir=str(restored_state / "docs"))
+        try:
+            self.assertEqual(restored._case(HOME), baseline)
+            self.assertEqual(restored.verify_ledger()["head"], baseline_head)
+            self.assertEqual(sha256(restored.docstore.get(HOME, doc["id"])).hexdigest(), expected_hash)
+            self.assertNotEqual(restored._case(HOME), acknowledged)
+            self.assertNotEqual(restored.verify_ledger()["head"], acknowledged_head)
+            self.assertLess(time.monotonic() - backup_started, 15 * 60)
+            self.assertLess(time.monotonic() - restore_started, 60 * 60)
+            self.assertLess(backup_finished - backup_started, 15 * 60)
+        finally:
+            restored.db.close()
+        with self.assertRaisesRegex(SystemExit, "offline operator reconciliation"):
+            open_store(dict(PW_EXERCISE="1", PW_STATE=str(restored_state)))
+        self.assertEqual(self.store._case(HOME), acknowledged)
+        self.assertEqual(self.store.verify_ledger()["head"], acknowledged_head)
+
     def test_hazard_receipt_acceptance_does_not_release_hold_or_change_awareness(self):
         safety = self.users["EX-BSL-01"]
         index = self.store.raise_hazard(self.rlo, HOME, "Damp and mould", "Routine",
@@ -506,6 +657,14 @@ s.exercise_action(u, 'EX-HOME-001', {'action': 'lifecycle', 'target': 'Assessmen
         with self.assertRaises(ValueError):
             self.act("hazard-followup", user=safety, step="accepted", **params)
         self.act("hazard-followup", user=safety, step="received", **params)
+        receipt_snapshot = deepcopy(self.store._case(HOME))
+        with self.assertRaises(ValueError):
+            self.act("hazard-followup", user=safety, step="accepted", **params)
+        self.assertEqual(self.store._case(HOME), receipt_snapshot)
+        with self.assertRaises(ValueError):
+            self.act("hazard-followup", user=safety, step="chased",
+                     **dict(params, reference="EXTERNAL-CHASE-001", observed_at="2026-10-10T12:00:00"))
+        self.assertEqual(self.store._case(HOME), receipt_snapshot)
         self.act("hazard-followup", user=safety, step="accepted",
                  **dict(params, reference="EXTERNAL-ACCEPTANCE-001", evidence="Separate external acceptance"))
         hazard = self.store._case(HOME)["hazards"][index]
@@ -598,6 +757,8 @@ s.exercise_action(u, 'EX-HOME-001', {'action': 'lifecycle', 'target': 'Assessmen
                 cookie = response.headers["Set-Cookie"].split(";")[0]
             with request(f"/api/cases/{HOME}/exercise", cookie=cookie) as response:
                 self.assertEqual(json.load(response)["lifecycle"], "Intake")
+            with request("/api/exercise/buildings/EX-BUILDING-001", cookie=cookie) as response:
+                self.assertEqual([home["id"] for home in json.load(response)["homes"]], [HOME, SIBLING])
             for action in ("funding", "grant", "decision", "handover", "hazard-release", "draft", "advance"):
                 with self.assertRaises(urllib.error.HTTPError) as caught:
                     request(f"/api/cases/{HOME}/{action}", {}, cookie)

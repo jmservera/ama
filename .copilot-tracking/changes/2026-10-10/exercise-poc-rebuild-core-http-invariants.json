@@ -1,0 +1,52 @@
+{
+  "kind": "strict-mixed-core-post-run-independent-invariants",
+  "population": 518,
+  "controlled_fields_compared": [
+    "home",
+    "resident",
+    "decision",
+    "hazards",
+    "funding",
+    "funding_ok",
+    "finance",
+    "forms",
+    "measure_decisions",
+    "technical",
+    "quality"
+  ],
+  "controlled_field_differences": [],
+  "baseline_normalization": "Only the documented legacy funding default in Store/SqlStore initialization",
+  "documents": 20,
+  "bytes_per_document": 5000000,
+  "total_evidence_bytes": 100000000,
+  "document_bytes_unchanged": true,
+  "document_sha256": "684c76978b10ded3d20e46fbe5df98f383fe6558bb2d2f74ed34970a431acb4b",
+  "audit_counts": {
+    "exercise_data_batch_result": 722,
+    "exercise_data_commit": 1245,
+    "exercise_data_preview": 722,
+    "exercise_fixture_note": 130,
+    "upload_document": 20
+  },
+  "writer_codes": [
+    "EX-PSO-01",
+    "EX-PSO-02"
+  ],
+  "lead_audit_counts": {
+    "exercise_fixture_note": 130,
+    "upload_document": 20
+  },
+  "import_committed": 500,
+  "bulk_committed": 25,
+  "row_errors": 0,
+  "audit_chain": {
+    "intact": true,
+    "entries": 2839,
+    "head": "61e7eeb949d8d3821ea053855dd5348155473d06d651d02d1287bade01e9a7a9",
+    "problem": null,
+    "digests_checked": 0,
+    "digest_mismatches": []
+  },
+  "result": "Pass",
+  "boundary": "Read-only seed/database/document comparison after workload; not every role/action permission or scheduled disaster reconciliation"
+}

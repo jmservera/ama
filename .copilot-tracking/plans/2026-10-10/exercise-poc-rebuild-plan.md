@@ -121,6 +121,21 @@ role/workflow fixtures, exact prescribed workload/recovery/accessibility and
 actual inference/human acceptance are unfinished. The complete inventory is
 .copilot-tracking/changes/2026-10-10/exercise-poc-rebuild-acceptance.md.
 
+Renewed owner continuation adds independently projected building/home/sibling
+navigation and actual differing consent/design browser fixture. Eleven
+controlled profile tasks safely refuse unsupported award recording;
+resident commitment and sent/received/accepted/completed handoff journey
+execute in the browser. Final headed Chrome run passes 53 finite checks,
+including true native 400% zoom. Background batch interruption/retry and
+document-byte restore with detected missing-event launch block pass.
+Latest regression 374 tests, OK, 26 live SQL skips. All eleven profiles/six
+templates/eight protected batch denials have focused permission evidence.
+Exact five-HTTP-request/s scale and strict mixed core 500-row/25-case HTTP
+workloads pass separately. Independent full seed/database/trace/document/audit
+comparisons pass. Remaining initial cold-start/complete permissions and
+scheduled recovery/human/live boundaries are not inferred from those results.
+P05/P06 remain open for complete matrix and mandatory human/live gates.
+
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->

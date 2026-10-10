@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import argparse
+import itertools
+import base64
 from concurrent.futures import ThreadPoolExecutor
 from http.cookiejar import CookieJar
 from http.server import ThreadingHTTPServer
@@ -80,10 +82,13 @@ def main() -> int:
     parser.add_argument("--state", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--duration", type=int, default=0, help="Optional five-session/two-writer steady run in seconds")
-    parser.add_argument("--rate", type=float, default=5, help="Aggregate scheduled interactions/second; writes use preview and commit requests")
+    parser.add_argument("--rate", type=float, default=5, help="Scheduled HTTP requests/second on scale, interactions/second on core")
     parser.add_argument("--scale", action="store_true", help="Generate separate fictional 60,000-home/600,000-event workload with twenty sessions")
+    parser.add_argument("--mixed-core", action="store_true", help="Core session with 500-row HTTP import, 25-case batch, 20 documents and seeded events")
     parser.add_argument("--data-check", action="store_true", help="Probe 500-row/25-case data contracts in an existing caller scale-test directory")
     args = parser.parse_args()
+    if args.mixed_core and (args.scale or args.duration < 1800):
+        raise ValueError("Mixed core requires a separate at-least-1800-second non-scale run.")
     state = args.state.resolve()
     if args.data_check:
         return data_contract_check(state, args.output)
@@ -114,6 +119,32 @@ def main() -> int:
                              docs_dir=str(state / "docs"), digest_dir=str(state / "digests"))
             if len(store.cases) != 60_000 or sum(len(c["exercise"]["scale_events"]) for c in store.cases.values()) != 600_000:
                 raise AssertionError("Scale population must have exactly 60,000 homes and 600,000 distinct linked traces.")
+        elif args.mixed_core:
+            state.mkdir(parents=True)
+            seed = state / "mixed-core.json"
+            baseline = exercise.dataset()
+            extra = list(itertools.islice(exercise.iter_scale_homes(), 500))
+            for home in extra:
+                home["exercise"]["population"] = "core-import"
+            baseline["cases"].extend(extra)
+            seed.write_text(json.dumps(baseline), encoding="utf-8")
+            os.environ["PW_AS_OF"] = exercise.AS_OF
+            store = SqlStore(str(seed), str(state / "properwarm.sqlite"),
+                             docs_dir=str(state / "docs"), digest_dir=str(state / "digests"))
+            actor = next(u for u in store.staff.values() if u["code"] == "EX-PSO-01")
+            document_limit = min(store.MAX_BYTES, 5_000_000)
+            document = (b"Wholly fictional local evidence. " + b"x" * document_limit)[:document_limit]
+            documents = [store.add_document(actor, "EX-HOME-001", f"fictional-{i}.txt", "Other", document)
+                         for i in range(20)]
+            for i in range(130):
+                store.audit(actor["email"], "exercise_fixture_note", "EX-HOME-001",
+                            f"Wholly fictional supplied historical coordination note {i}; no approval")
+            store.save()
+            results["core-fixture"] = dict(population=len(store.cases), import_targets=500,
+                documents=len(documents), bytes_per_document=len(document),
+                total_evidence_bytes=len(document) * len(documents), supplied_coordination_events=130,
+                note="20 actual document-upload events plus 130 explicitly constructed audit notes; no approvals",
+                result="Pass")
         else:
             store = open_store()
         app = App(store, password="fictional-local-only")
@@ -121,6 +152,8 @@ def main() -> int:
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
         base = f"http://127.0.0.1:{server.server_port}"
+        print(json.dumps({"phase": "listening", "loopback_port": server.server_port,
+                          "population": len(store.cases)}), flush=True)
         client = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(CookieJar()))
 
         def request(path, body=None, *, opener=client):
@@ -163,14 +196,26 @@ def main() -> int:
                 samples = {name: [] for name in operations}
                 failures = []
                 session_locks = [threading.Lock() for _ in sessions]
-                ids = sorted(store.cases)
+                ids = sorted(cid for cid in store.cases if not args.mixed_core or cid.startswith("EX-SCALE-HOME-"))
+                warm_start = time.perf_counter()
+                for opener in sessions:
+                    for path in (operations["list"][0], operations["detail"][0], operations["dashboard"][0]):
+                        request(path, opener=opener)
+                results["read-warmup"] = dict(requests=3 * session_count,
+                    seconds=time.perf_counter() - warm_start, boundary="Explicit read warm-up; write first-use remains included",
+                    result="Pass")
                 started = time.perf_counter()
+
+                def interaction_name(sequence):
+                    session = sequence % session_count
+                    cycle = sequence // session_count
+                    return ("write" if session < 2 and cycle % (2 if args.scale else 5) == 0 else
+                            "dashboard" if cycle % 10 == 1 else "detail" if cycle % 3 == 0 else "list")
 
                 def interaction(sequence):
                     session = sequence % session_count
                     cycle = sequence // session_count
-                    name = ("write" if session < 2 and cycle % (2 if args.scale else 5) == 0 else
-                            "dashboard" if cycle % 10 == 1 else "detail" if cycle % 3 == 0 else "list")
+                    name = interaction_name(sequence)
                     path, body, _ = operations[name]
                     if name == "write":
                         cid = ids[(cycle // 5 * 2 + session) % len(ids)]
@@ -181,6 +226,37 @@ def main() -> int:
                     before = time.perf_counter()
                     try:
                         with session_locks[session]:
+                            if args.mixed_core and sequence == 0:
+                                from test_exercise_data import workbook
+                                target_ids = [f"EX-SCALE-HOME-{i:06d}" for i in range(1, 501)]
+                                raw = workbook([[cid, "Fictional core HTTP import", "2026-10-12"] for cid in target_ids])
+                                source_hash = sha256(raw).hexdigest()
+                                import_start = time.perf_counter()
+                                preview = request("/api/exercise/data", dict(action="import-preview",
+                                    filename="core500.xlsx", workbook_base64=base64.b64encode(raw).decode(),
+                                    fields=["coordination_note", "task_due_date"],
+                                    reason="Actual 500-row core HTTP import"), opener=sessions[session])
+                                preview_seconds = time.perf_counter() - import_start
+                                committed = request("/api/exercise/data", dict(action="commit", token=preview["token"],
+                                    input_hash=preview["input_hash"],
+                                    expected_fingerprints={str(row["row"]): row["expected_fingerprint"] for row in preview["rows"]}),
+                                    opener=sessions[session])
+                                batch = request("/api/exercise/data", dict(action="bulk-preview", case_ids=target_ids[-25:],
+                                    changes={"coordination_note": "Explicit 25-case core HTTP batch"},
+                                    reason="Actual core concurrent coordination batch"), opener=sessions[session])
+                                bulk = request("/api/exercise/data", dict(action="commit", token=batch["token"],
+                                    input_hash=batch["input_hash"],
+                                    expected_fingerprints={str(row["row"]): row["expected_fingerprint"] for row in batch["rows"]}),
+                                    opener=sessions[session])
+                                valid = (len(preview["rows"]) == 500 and committed["committed"] == 500
+                                    and committed["errors"] == 0 and bulk["committed"] == 25 and bulk["errors"] == 0
+                                    and preview_seconds <= 10 and sha256(raw).hexdigest() == source_hash)
+                                results["core-http-import-and-bulk"] = dict(import_rows=len(preview["rows"]),
+                                    import_committed=committed["committed"], preview_seconds=preview_seconds,
+                                    source_sha256=source_hash, source_bytes_unchanged=sha256(raw).hexdigest() == source_hash,
+                                    bulk_committed=bulk["committed"], result="Pass" if valid else "Fail")
+                                if not valid:
+                                    raise ValueError("Exact core HTTP import/bulk contract failed.")
                             response = request(path, body, opener=sessions[session])
                             if name == "write":
                                 committed = request(path, dict(action="commit", token=response["token"], input_hash=response["input_hash"],
@@ -196,25 +272,36 @@ def main() -> int:
                 futures = []
                 with ThreadPoolExecutor(max_workers=session_count) as pool:
                     sequence = 0
+                    scheduled_requests = 0
                     while time.perf_counter() - started < args.duration:
-                        target = started + sequence / args.rate
+                        units = scheduled_requests if args.scale else sequence
+                        target = started + units / args.rate
+                        if target >= started + args.duration:
+                            break
                         if target > time.perf_counter():
                             time.sleep(target - time.perf_counter())
                         futures.append(pool.submit(interaction, sequence))
+                        scheduled_requests += 2 if interaction_name(sequence) == "write" else 1
                         sequence += 1
                     for future in futures:
                         name, elapsed, error = future.result()
                         samples[name].append(elapsed)
                         if error:
                             failures.append(dict(operation=name, error=error))
+                if time.perf_counter() < started + args.duration:
+                    time.sleep(started + args.duration - time.perf_counter())
                 for name, timings in samples.items():
                     p95 = sorted(timings)[math.ceil(.95 * len(timings)) - 1] if timings else None
                     threshold = operations[name][2]
+                    op_errors = sum(f["operation"] == name for f in failures)
                     results[name] = dict(samples=len(timings), warm_http_p95_seconds=p95, threshold_seconds=threshold,
+                                         p50_seconds=sorted(timings)[math.ceil(.5 * len(timings)) - 1] if timings else None,
+                                         max_seconds=max(timings) if timings else None, errors=op_errors,
                                          result="Not run" if len(timings) < 200 else
-                                                "Pass" if p95 is not None and p95 <= threshold else "Fail")
+                                                "Pass" if not op_errors and p95 is not None and p95 <= threshold else "Fail")
                 results["steady-session"] = dict(seconds=time.perf_counter() - started, sessions=session_count, writers=2,
-                    aggregate_scheduled_interactions_per_second=args.rate, interactions=sequence,
+                    rate_basis="HTTP requests" if args.scale else "interactions",
+                    aggregate_scheduled_rate=args.rate, interactions=sequence, scheduled_http_requests=scheduled_requests,
                     mix={key: len(value) for key, value in samples.items()}, failures=failures,
                     population=len(store.cases), trace_events=600_000 if args.scale else 0,
                     controls="Only coordination note preview/commit; no inference or controlled approvals",
@@ -224,7 +311,7 @@ def main() -> int:
                 store.db.backup(target)
             start = time.perf_counter()
             store.db.close()
-            reopened = SqlStore(str(seed), str(state / "properwarm.sqlite")) if args.scale else open_store()
+            reopened = SqlStore(str(seed), str(state / "properwarm.sqlite")) if args.scale or args.mixed_core else open_store()
             try:
                 same = reopened._case("EX-HOME-001") == before
                 integrity = reopened.db.execute("PRAGMA integrity_check").fetchone()[0]
@@ -249,9 +336,11 @@ def main() -> int:
     args.output.write_text(json.dumps({
         "kind": "local-http-and-clean-backup-engineering",
         "population": "60,000 fictional homes/600,000 traces; twenty sessions/two coordination writers" if args.scale else
+                      "518 fictional homes (18 baseline plus 500 import targets); five sessions/two coordination writers" if args.mixed_core else
                       "18 fictional homes; five sessions/two coordination writers" if args.duration else
                       "18 fictional homes; one HTTP session, one writer; 201 updates on story home",
-        "core_30_minute_workload": "Steady session recorded; 500-row import/25-case batch not part of this run" if args.duration >= 1800 and not args.scale else "Not run",
+        "core_30_minute_workload": "Mixed HTTP import/bulk and document fixture; inspect exact results" if args.mixed_core else
+            "Steady session recorded; 500-row import/25-case batch not part of this run" if args.duration >= 1800 and not args.scale else "Not run",
         "scale_30_minute_workload": "Executed separate declared scale; inspect per-operation results and integrity" if args.duration >= 1800 and args.scale else "Not run",
         "crash_and_response_loss": "Not run", "rpo_and_reconciliation": "Not run",
         "results": results,

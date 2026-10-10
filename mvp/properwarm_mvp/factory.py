@@ -33,6 +33,7 @@ def open_store(env=None):
                 try:
                     rows = connection.execute("SELECT id, body FROM cases").fetchall()
                     observed_as_of = connection.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()
+                    recovery = connection.execute("SELECT value FROM meta WHERE key='exercise_recovery_pending'").fetchone()
                 except sqlite3.Error as error:
                     raise SystemExit("Incompatible exercise database; choose a new state directory.") from error
             expected = {case["id"] for case in exercise.dataset()["cases"]}
@@ -42,6 +43,8 @@ def open_store(env=None):
                 raise SystemExit("Exercise database is incompatible; no data was overwritten.")
             if observed_as_of is None or observed_as_of[0] != exercise.AS_OF:
                 raise SystemExit("Exercise database as-of metadata is incompatible; no silent date migration.")
+            if recovery is not None:
+                raise SystemExit("Exercise restore awaits offline operator reconciliation. No controlled work may resume; preserve the recovery marker and missing-event evidence.")
         if not seed.exists():
             exercise.create_seed(seed)
         store = SqlStore(str(seed), str(db), docs_dir=str(state / "docs"), digest_dir=str(state / "digests"))

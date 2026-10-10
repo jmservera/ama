@@ -73,6 +73,9 @@ async function start() {
 
 function route() {
   if (me.exercise && (location.hash === "#/exercise" || location.hash.startsWith("#/exercise/"))) {
+    if (location.hash.startsWith("#/exercise/building/")) {
+      return exerciseBuildingView(location.hash.split("/")[3]);
+    }
     return exerciseView(location.hash.split("/")[2]);
   }
   const m = location.hash.match(/^#\/case\/(.+)$/);

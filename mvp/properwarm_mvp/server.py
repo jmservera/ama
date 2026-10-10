@@ -50,7 +50,7 @@ class App:
 def get_kind(path):
     if path == "/api/me":
         return "me"
-    if path in ("/api/exercise", "/api/exercise/data"):
+    if path in ("/api/exercise", "/api/exercise/data") or path.startswith("/api/exercise/buildings/"):
         return "exercise"
     if path == "/api/cases":
         return "cases"
@@ -177,6 +177,13 @@ def make_handler(app):
                 try:
                     return self._json(200, s.exercise_data_export(u, q.get("population", ["all"])[0]),
                                       {"Content-Disposition": 'attachment; filename="exercise-data.json"'})
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+            if url.path.startswith("/api/exercise/buildings/"):
+                try:
+                    return self._json(200, s.exercise_building(u, url.path.removeprefix("/api/exercise/buildings/")))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
                 except ValueError as e:

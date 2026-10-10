@@ -91,6 +91,11 @@ Perspective navigation never changes the signed-in role.
   `evidence`, reason and owned `next_action`. It preserves history and existing
   evidence; actual evidence changes still require their domain/source action
   and dependent review. It is not a forward transition or approval shortcut.
+* Each story home links to a read-only building page and back to its sibling.
+  Building context keeps shared systems/dependencies/holds/cost explicitly
+  unknown where no shared evidence exists. Each home retains its own
+  role-projected choice, evidence, cost and gates; package identity grants no
+  applicability and contractor links show only assigned homes.
 * `hazard-followup` records separately supplied external receipt/acceptance/
   chase evidence against a referred `hazard_index`, authority, external actor
   or unknown, observed timestamp, reference and owned follow-up. It never
@@ -194,11 +199,13 @@ node --check web/app.js
 node --check web/panels.js
 ```
 
-Twenty connected integration tests exercise same-home SQLite durability, exact
+Twenty-four connected integration tests exercise same-home SQLite durability, exact
 EPC invalidation/sibling isolation, independent form review/export, separate
 financial states through closure, QA return/fix/reinspection, scoped resident
 choice, capacity/safety blocks, zero-call inherited inference configuration,
-projection, startup isolation and HTTP shortcut denial. These are local
+projection, startup isolation and HTTP shortcut denial. A focused matrix covers
+all eleven profiles against six form-creation permissions and eight protected
+batch denials, not every controlled action. These are local
 engineering evidence, not full PRD acceptance. Live Decision 1/generative
 inference, human-adjudicated evaluation and net-effort comparison remain
 blocked. The local browser runner records eleven profile orientation probes,
@@ -216,9 +223,24 @@ dashboard/write p95 are 0.0101/0.0048/0.0063/0.1506s core and
 0.0989/0.0419/0.0490/0.0787s scale. Five scheduled interactions/s is not
 exactly five HTTP requests/s: writes perform preview and commit. A 500-row
 import and 25-case batch pass as a separate Store-level scale probe, not
-concurrent core HTTP imports. Complete mixed-load acceptance remains unexecuted.
-Background/RPO drills, human/screen-reader and
-native 400% browser zoom acceptance remain unexecuted.
+concurrent core HTTP imports. Later strict mixed core does execute a 500-row
+HTTP import and 25-case batch during five-session/two-writer load, with twenty
+5000000-byte documents and 150 story-home upload/note events. It passes all
+p95 targets with zero errors; core p95 list/detail/dashboard/write are
+0.0068/0.0028/0.0051/0.0340s and import preview 0.0568s. Later exact-rate scale
+schedules 9000 HTTP requests over thirty minutes, not 9000 interactions:
+p95 0.0978/0.0439/0.0486/0.0863s, zero errors. Maximum latencies remain in the
+raw evidence. Independent comparisons preserve all controlled field groups,
+all scale trace contents, document bytes and both full audit chains.
+These do not establish every permission combination, separately timed initial
+cold startup or cloud capacity.
+Background commit/retry interruption and document-byte restore now have
+focused probes. A headed Chrome/Xvfb run proves native 400% browser zoom
+separately from CSS emulation. Scheduled RPO/disaster reconciliation and
+human/screen-reader acceptance remain unexecuted. The combined headed browser
+run passes 53 finite checks, including eleven controlled profile safe blocks,
+bidirectional building navigation, distinct sibling consent/design and an
+independently owned resident commitment/operational handoff journey.
 Explicit handoff/update/return and hazard receipt/acceptance contracts now have
 focused tests, including unchanged commitment ownership across handoffs and
 process exits before commit/after commit before response. Their complete
@@ -226,6 +248,39 @@ role/browser fixture matrix remains unexecuted. Arbitrary new-source ingestion
 and full claim resubmission recovery need further validation.
 The labelled event controls and optional JSON editor are manual
 exercise tools, not a validated production form experience.
+
+### Offline exercise restore boundary
+
+The exercise operator owns backup, failure, restore and reconciliation during
+weekday 09:00-17:00 UTC coverage; the backup operator covers absence.
+This is not a 24/7 safety service. Hazard response remains outside this app.
+
+Stop controlled work before selecting an isolated restore candidate. Preserve
+the original database, seed, document directory, digests and inference
+liability ledger; never replace them with a blank fixture. Back up SQLite using
+its backup API, not a live raw database-file copy that omits WAL changes.
+Copy document bytes as well as case metadata and record source hashes,
+backup time, audit head and last independently known acknowledged changes.
+The current app does not schedule a 15-minute backup service.
+
+Before exposing a restored database to the server, insert the
+`exercise_recovery_pending` key in its SQLite `meta` table with a JSON record
+of operator, backup/source audit heads, affected cases, missing-event findings
+or explicit unknown, and owned next action. The standard exercise factory
+refuses startup while that key exists. Inspect candidates offline only;
+no agent or UI action clears it. Validate SQLite integrity, exact case/audit
+snapshots and document-byte hashes, and enumerate missing post-backup events.
+Preserve unresolved inference liabilities independently; restore must not
+reset the technology spending baseline or reservations.
+
+Only the named exercise operator may clear the marker after documenting
+recovery/reconciliation of missing acknowledged changes and duplicate checks
+in retained offline evidence. If event sufficiency, document completeness or
+spend remains unknown, keep the candidate offline and use owned manual queues.
+The marker is a local launch interlock, not tamper-resistant production
+recovery approval. Focused tests detect one deliberately missing acknowledged
+event and refuse candidate startup; they do not claim completed disaster
+reconciliation or production availability.
 
 Run local engineering probes with installed Python Playwright and Google
 Chrome, from `mvp/`. Each state directory must be new; neither script deletes

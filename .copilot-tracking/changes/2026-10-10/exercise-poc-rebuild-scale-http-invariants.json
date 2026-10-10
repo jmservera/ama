@@ -1,0 +1,37 @@
+{
+  "kind": "exact-scale-post-run-independent-invariants",
+  "homes": 60000,
+  "linked_traces": 600000,
+  "exact_linked_trace_content": true,
+  "controlled_fields_compared": [
+    "home",
+    "resident",
+    "decision",
+    "hazards",
+    "funding",
+    "funding_ok",
+    "finance",
+    "forms",
+    "measure_decisions",
+    "technical",
+    "quality"
+  ],
+  "controlled_field_differences": [],
+  "baseline_normalization": "Only documented legacy funding initialization default",
+  "audit_chain": {
+    "intact": true,
+    "entries": 1290,
+    "head": "909e6616ec89ad9b2b287a2bf37f0ee4baa3519d5fd5f0be6506292623b88725",
+    "problem": null,
+    "digests_checked": 0,
+    "digest_mismatches": []
+  },
+  "coordination_batches": 430,
+  "row_errors": 0,
+  "writer_codes": [
+    "EX-PSO-01",
+    "EX-PSO-02"
+  ],
+  "result": "Pass",
+  "boundary": "Independent full seed/database comparison and chain verification, not every permission combination or separately posted trace events"
+}

@@ -1,0 +1,83 @@
+{
+  "kind": "local-http-and-clean-backup-engineering",
+  "population": "60,000 fictional homes/600,000 traces; twenty sessions/two coordination writers",
+  "core_30_minute_workload": "Not run",
+  "scale_30_minute_workload": "Executed separate declared scale; inspect per-operation results and integrity",
+  "crash_and_response_loss": "Not run",
+  "rpo_and_reconciliation": "Not run",
+  "results": {
+    "read-warmup": {
+      "requests": 60,
+      "seconds": 2.783393633999367,
+      "boundary": "Explicit read warm-up; write first-use remains included",
+      "result": "Pass"
+    },
+    "list": {
+      "samples": 4844,
+      "warm_http_p95_seconds": 0.09778237899809028,
+      "threshold_seconds": 1,
+      "p50_seconds": 0.058194261000608094,
+      "max_seconds": 1.8957662100001471,
+      "errors": 0,
+      "result": "Pass"
+    },
+    "detail": {
+      "samples": 2436,
+      "warm_http_p95_seconds": 0.04389462299877778,
+      "threshold_seconds": 1,
+      "p50_seconds": 0.028794329999072943,
+      "max_seconds": 0.2934555440006079,
+      "errors": 0,
+      "result": "Pass"
+    },
+    "dashboard": {
+      "samples": 860,
+      "warm_http_p95_seconds": 0.04856659999859403,
+      "threshold_seconds": 3,
+      "p50_seconds": 0.03698368500045035,
+      "max_seconds": 0.09337126800164697,
+      "errors": 0,
+      "result": "Pass"
+    },
+    "write": {
+      "samples": 430,
+      "warm_http_p95_seconds": 0.08630127099968377,
+      "threshold_seconds": 2,
+      "p50_seconds": 0.03773508800077252,
+      "max_seconds": 3.435978018998867,
+      "errors": 0,
+      "result": "Pass"
+    },
+    "steady-session": {
+      "seconds": 1801.5550082120026,
+      "sessions": 20,
+      "writers": 2,
+      "rate_basis": "HTTP requests",
+      "aggregate_scheduled_rate": 5.0,
+      "interactions": 8570,
+      "scheduled_http_requests": 9000,
+      "mix": {
+        "list": 4844,
+        "detail": 2436,
+        "dashboard": 860,
+        "write": 430
+      },
+      "failures": [],
+      "population": 60000,
+      "trace_events": 600000,
+      "controls": "Only coordination note preview/commit; no inference or controlled approvals",
+      "result": "Pass"
+    },
+    "clean-restart": {
+      "seconds": 3.468051370997273,
+      "exact_case_retained": true,
+      "integrity": "ok",
+      "result": "Pass"
+    },
+    "backup-restore": {
+      "exact_stored_case": true,
+      "exact_audit_head": true,
+      "result": "Pass"
+    }
+  }
+}

@@ -16,6 +16,7 @@ function exerciseDownload(snapshot, name, label = "Download reviewed JSON (not s
 }
 
 async function exerciseView(caseId) {
+  const requestedRoute = location.hash;
   try {
     const status = await api("/api/exercise");
     const banner = h("section", { class: "card", role: "status" },
@@ -34,7 +35,8 @@ async function exerciseView(caseId) {
         h("ul", {}, story.blockers.map((blocker) => h("li", {}, blocker))))));
     if (caseId) {
       const data = await api(`/api/cases/${encodeURIComponent(caseId)}/exercise`);
-      show(banner, links, await exerciseHome(caseId, data));
+      const home = await exerciseHome(caseId, data);
+      if (location.hash === requestedRoute) show(banner, links, home);
       return;
     }
     const workflows = h("section", { class: "card" }, h("h2", {}, "Nine connected workflows"),
@@ -51,9 +53,10 @@ async function exerciseView(caseId) {
         h("pre", {}, JSON.stringify({ coverage: result.coverage, unknowns: result.unknowns, exclusions: result.exclusions }, null, 2)))),
       h("h3", {}, "Separate stakeholder analytical snapshot"),
       h("p", {}, JSON.stringify(status.analytical)));
-    show(banner, profiles, links, workflows, forecasts, await exerciseDataPanel());
+    const dataPanel = await exerciseDataPanel();
+    if (location.hash === requestedRoute) show(banner, profiles, links, workflows, forecasts, dataPanel);
   } catch (error) {
-    show(h("h1", {}, "Exercise unavailable"), h("p", { role: "alert" }, error.message));
+    if (location.hash === requestedRoute) show(h("h1", {}, "Exercise unavailable"), h("p", { role: "alert" }, error.message));
   }
 
   async function exerciseDataPanel() {
@@ -157,6 +160,31 @@ async function exerciseView(caseId) {
   }
 }
 
+async function exerciseBuildingView(id) {
+  const requestedRoute = location.hash;
+  try {
+    const data = await api(`/api/exercise/buildings/${encodeURIComponent(id)}`);
+    if (location.hash !== requestedRoute) return;
+    show(h("section", { class: "card" }, h("h1", {}, `Building ${data.id}`),
+      h("p", {}, `Fictional, as of ${data.as_of}. ${data.note}`),
+      h("h2", {}, "Shared building context (not home approval)"),
+      exerciseTable([{
+        systems: data.shared_systems, works: data.shared_works,
+        dependencies: data.shared_dependencies, holds: data.shared_holds, cost: data.shared_cost,
+      }], "Separate shared context and explicit unknowns"),
+      h("h2", {}, "Independent linked homes"),
+      data.homes.map((home) => h("article", {},
+        h("h3", {}, h("a", { href: `#/exercise/${home.id}` }, home.id)),
+        h("p", {}, `Lifecycle ${home.lifecycle}; owner ${home.case.owner || home.case.named_contact}; package ${home.package_id}; applicability ${home.applicability}.`),
+        h("ul", {}, home.blockers.map((blocker) => h("li", {}, blocker))),
+        h("details", {}, h("summary", {}, `${home.id} authorized home-specific context`),
+          h("pre", {}, JSON.stringify(home.case, null, 2))))),
+      h("a", { href: "#/exercise" }, "Return to exercise overview")));
+  } catch (error) {
+    if (location.hash === requestedRoute) show(h("h1", {}, "Building context unavailable"), h("p", { role: "alert" }, error.message));
+  }
+}
+
 async function exerciseHome(id, data) {
   const c = data.case;
   const section = h("section", { class: "card" }, h("h2", {}, `${id}: ${data.lifecycle}`),
@@ -165,6 +193,8 @@ async function exerciseHome(id, data) {
     h("a", { href: `#/case/${id}` }, "Existing resident, technical, quality, finance and handoff controls"));
   section.append(h("p", {}, exerciseDownload(data, `${id}-authorized-case-history.json`,
     "Download authorized case, events, decisions and source/version history")));
+  section.append(h("a", { href: `#/exercise/building/${data.building_id}` },
+    `Open building ${data.building_id} (home gates stay independent)`));
   if (me.user.role === "Contractor") {
     section.append(h("p", {}, "Read assigned scope only. Ask the Programme issuer for release; you cannot review finance or accept work."),
       h("a", { href: "#/" }, "My assigned work"));
@@ -184,11 +214,12 @@ async function exerciseHome(id, data) {
   };
   status.setAttribute("tabindex", "-1");
   section.append(status);
-  if (c.handoff) section.append(h("section", {},
+  const handoff = c.handoff || {};
+  section.append(h("section", {},
     h("h3", {}, "Operational handoff: receipt is not acceptance"),
-    h("p", {}, `State ${c.handoff.phase || c.handoff.state}; current owner ${c.owner}; destination ${c.handoff.destination || "Unknown"}; proposed receiver ${c.handoff.proposed_receiver || "Unknown"}; confirmed receiver ${c.handoff.confirmed_receiver || "Unknown"}; chase owner ${c.handoff.chase_owner || "Unknown"}.`),
-    h("p", {}, `Due ${c.handoff.due || "Unknown"}; urgency ${c.handoff.urgency || "Unknown"}; next action ${c.handoff.next_action || "Unknown"}.`),
-    exerciseTable(c.handoff.history || [], "Separately evidenced handoff transitions")));
+    h("p", {}, `State ${handoff.phase || handoff.state || "Unknown"}; current owner ${c.owner}; destination ${handoff.destination || "Unknown"}; proposed receiver ${handoff.proposed_receiver || "Unknown"}; confirmed receiver ${handoff.confirmed_receiver || "Unknown"}; chase owner ${handoff.chase_owner || "Unknown"}.`),
+    h("p", {}, `Due ${handoff.due || "Unknown"}; urgency ${handoff.urgency || "Unknown"}; next action ${handoff.next_action || "Unknown"}; reason ${handoff.answer_note || handoff.note || "Unknown"}.`),
+    exerciseTable(handoff.history || [], "Separately evidenced handoff transitions")));
   section.append(h("section", {}, h("h3", {}, "Independently owned resident-update commitments"),
     h("p", {}, "Operational handoffs never clear or reassign these commitments. Sent evidence is not receipt or understanding."),
     exerciseTable(c.exercise && c.exercise.resident_updates || [], "Resident update purpose, owner, due basis and safe-route history")));
