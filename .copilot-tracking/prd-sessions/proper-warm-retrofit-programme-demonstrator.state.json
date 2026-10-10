@@ -1,7 +1,7 @@
 {
   "prdFile": "docs/prds/proper-warm-retrofit-programme-demonstrator.md",
-  "lastAccessed": "2026-10-06T09:42:49Z",
-  "prdVersion": "0.7.0",
+  "lastAccessed": "2026-10-10T09:18:31Z",
+  "prdVersion": "0.11.0",
   "currentPhase": "build",
   "disclaimerShownAt": "2026-10-03T12:09:35+02:00",
   "phaseSkillsLoaded": [
@@ -18,9 +18,11 @@
     "prd-brd-v0-12-alignment",
     "whole-workbench-workflow-coverage-2026-10-05",
     "rubric-regression-restoration-2026-10-06",
-    "prototype-review-integration-2026-10-06"
+    "prototype-review-integration-2026-10-06",
+    "system-one-form-integration-2026-10-10"
   ],
   "answeredQuestions": {
+    "system-one-form-integration-2026-10-10": "Owner requested research-based PRD integration of System One decision models wherever justified, especially source extraction and assisted filling of retrofit subsidy-award applications and other AI-assisted decisions. Draft v0.11.0 adds registered optional scoring, a truthful application-owned evidence envelope, versioned form schemas, candidate values/provenance, individual field review, deterministic financial validation, Finance-reviewed application/claim packs and dependency invalidation. No application implementation, Foundry deployment, personal-data inference, funding submission or operational approval requested or implied.",
     "prototype-review-integration-2026-10-06": "Owner requested all fresh company/UX prototype learnings integrated into the existing PRD so a new prototype can later be generated, then independently challenged. Draft v0.7.0 adds eleven-profile paths, scoped read-only slices, ownership/rationale/filter/metric corrections, continuity and source evidence checks. No prototype generation, company process ratification or operational approval requested.",
     "initiative-name": "Proper Warm Retrofit Programme Demonstrator and Platform Assessment",
     "business-context": "Draft a product requirements document for a non-production retrofit programme demonstrator and platform comparison, derived from BRD-2026-AMA48-001 version 0.6.0.",
@@ -36,6 +38,35 @@
     "fr014-exercise-test-scope": "Exercise the provisional RULE-006 behavior using constructed exercise records only; do not enable operational use before company ratification under OD-40."
   },
   "referencesProcessed": [
+    {
+      "file": ".copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-11-0/challenge-disposition.md",
+      "status": "analyzed",
+      "timestamp": "2026-10-10T09:21:51Z",
+      "keyFindings": "Independent draft-stage challenge identified three amendment corrections: restrict funding-route prerequisites to funding forms; distinguish application and claim submission/disposition across FR-019/042 and AC-022/050; add extraction subchecks and exact fixture-owned transitive invalidation oracles. Author corrected all three and preserved original paired payloads unchanged. Original full-document FAIL/Validate BLOCKED reflects upstream/human/goal/NFR/taxonomy blockers; corrections are not a final independent regrade.",
+      "integratedSections": ["Form Extraction and Assisted Filling", "FR-019", "FR-038", "FR-042", "AC-022", "AC-046", "AC-047", "AC-050", "AC-051", "Independently reportable review checks", "Traceability Matrix"],
+      "conflicts": ["Reviewer could not obtain git diff; author checked scope against origin/main.", "Active source label v0.14.1 was stale; current BRD is draft v0.15.0, still unsigned."],
+      "pendingActions": ["Keep original quality report and full approval blockers; no final regrade or approval inferred.", "Reassess full PRD quality once current upstream and named human review prerequisites exist."]
+    },
+    {
+      "file": ".copilot-tracking/research/2026-10-10/system-one-decision-models-research.md",
+      "sourceCommit": "c9bada6417c05ae961b561078ef1a2b1faa9a17e",
+      "sourcePullRequest": "https://github.com/jmservera/ama/pull/54",
+      "status": "analyzed",
+      "timestamp": "2026-10-10T09:18:31Z",
+      "keyFindings": "Completed nine-workflow/fifteen-step reassessment recommends optional typed semantic scoring in the existing bounded task service. Decision 1 is text-only, has a dedicated Foundry API and no rationale. Availability and vendor metrics are not deployment, housing performance or UK-residency evidence. The research artifact belongs to the separate unmerged research PR; this amendment publishes durable findings in the canonical IDEA-001 synthesis rather than linking tracking evidence from the PRD.",
+      "integratedSections": ["Design Decisions", "AI-Assisted Decision Coverage", "Form Extraction and Assisted Filling", "Functional Requirements", "AI Model Selection and Evaluation Harness", "Bounded-Agent Orchestration Pattern", "Acceptance Criteria", "Traceability Matrix", "MVP and Release Framing", "Success Metrics", "Profile Journey Contract", "Risks and Assumptions", "Open Questions"],
+      "conflicts": ["Earlier Jev/Kev SDK shapes and automation examples do not specify the Foundry API or current PRD decision rights.", "A funding allocation, new application, award return and reimbursement claim require different evidenced routes and templates."],
+      "pendingActions": ["Resolve OQ-015 and OQ-016 with named owners before task activation.", "Do not infer deployment or full PRD approval from this draft amendment."]
+    },
+    {
+      "file": "docs/ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10",
+      "status": "analyzed",
+      "timestamp": "2026-10-10T09:18:31Z",
+      "keyFindings": "Canonical dated reassessment with checked Microsoft announcement, catalog, API, deployment/region and Entra sources; preserves historical baseline. Proposed form pattern separates parsing/OCR, candidate selection, rules, cited narrative and Finance/human review.",
+      "integratedSections": ["DD-007", "DD-008", "FR-036 to FR-044", "AC-044 to AC-054", "NFR-009", "BRD and evidence trace"],
+      "conflicts": [],
+      "pendingActions": ["Recheck official product documentation at consequential design/deployment gates; actual response, serving and task performance remain unverified."]
+    },
     {
       "file": ".copilot-tracking/reviews/2026-10-06/proper-warm-prd-v0-7-0/challenge-disposition.md",
       "status": "analyzed",
@@ -250,18 +281,20 @@
     }
   ],
   "nextActions": [
-    "Independent v0.7.0 challenge is complete; retain draft/build until upstream and human approval gates are met. Reassess full PRD quality when formal Validate prerequisites are available.",
+    "Bounded v0.11.0 challenge and author corrections are recorded; retain draft/build until upstream and human approval gates are met. Original current full-document FAIL and historical v0.7.0 review do not authorize approval.",
+    "Finance approves evidenced application/allocation/award-return/claim routes, constructed form schemas, source authorities, critical fields, attachments and review/export criteria (OQ-015).",
+    "Register candidate AI tasks, adjudicate held-out evaluations and set probability/abstention/reviewer budgets; verify target response/serving/privacy gates before enabling any Decision 1 adapter (OQ-016).",
     "For a subsequent prototype task, implement correctness/orientation Slice A, then exception-to-accountable-owner Slice B before connected lifecycle Slice C; visible manifest distinguishes deferred/full MVP requirements.",
     "Validate pending-handoff chase and resident-update purpose/owner/safe-route/sent/reassignment rules with Housing/Programme before operational consideration (OQ-008).",
     "Name the gate authority that may accept, revise or reject the proposed hybrid demonstrator baseline (OQ-001).",
     "Name sponsor, product owner, technical lead and control reviewers.",
-    "Obtain the signed BRD_TO_PRD_HANDOFF_V1 payload and a valid current BRD quality report for BRD v0.14.1 before PRD Validate.",
+    "Obtain the signed BRD_TO_PRD_HANDOFF_V1 payload and a valid current BRD quality report for BRD v0.15.0 before PRD Validate.",
     "Inventory actual systems of record, M365/SharePoint entitlement and governance, Azure capability, APIs, supplier contracts and support capability; no Dataverse or Dynamics 365 is present per owner confirmation (OQ-004, OQ-005).",
     "Agree the option evaluation criteria, scoring weights, cost categories, affordability ceiling and decision authority before scoring; treat business apps as greenfield adoption (OQ-003).",
     "Confirm all nine exercise scenarios, representative profile tasks and shared evidence model with Retrofit, Safety, Finance, Resident Engagement, Procurement, Quality and Data owners (OQ-002, OQ-004).",
     "Set calendar horizon, test workload, bulk-edit limits, performance targets, accessibility standard, usability protocol, dashboard definitions, forecast method and AI evaluation thresholds.",
     "Validate resident-facing assumptions with direct research before including a live resident product journey (OQ-008).",
-    "Obtain accountable-function evidence to close each row in the Open Questions register (OQ-001 to OQ-014).",
+    "Obtain accountable-function evidence to close each row in the Open Questions register (OQ-001 to OQ-016).",
     "Obtain company appointment evidence, Housing/Repairs ratification, Resident Engagement review, and a named configuration/change owner before any operational consideration of exercise candidate FR-031 (AC-033).",
     "Assign weights and run the Options Gate Scoring Framework once cost, support and evidence inputs are available; it is currently criteria-only (TBD weights).",
     "Address the A4 (no working demonstrator evidence) and D3 (no publication path) floor-violation gaps separately; these cannot be closed by further PRD document edits.",
@@ -269,6 +302,11 @@
     "Rerun the Capstone Rubric Scorer after PR #20 receives the evidence-restoration update."
   ],
   "qualityChecks": [
+    "v0.11.0-independent-challenge-original-paired-payloads-retained-author-dispositions-not-final-regrade",
+    "v0.11.0-funding-route-scoped-to-funding-forms-application-and-claim-events-distinct",
+    "v0.11.0-extraction-subchecks-and-exact-fixture-owned-invalidation-oracles-defined",
+    "v0.11.0-44-FRs-54-ACs-reciprocal-matrix-and-goal-links-verified",
+    "v0.11.0-primary-docs-markdownlint-pass-index-log-three-baseline-findings-preserved",
     "independent-challenge-dispositions-and-paired-amendment-payloads-preserved",
     "exhaustive-eleven-profile-default-fixture-oracle-defined",
     "35-FRs-43-ACs-reciprocal-links-and-exact-matrix-verified",
@@ -311,6 +349,7 @@
     "missed-appointment-rule-preserved-as-exercise-only-candidate"
   ],
   "userPreferences": {
+    "system-one-form-integration": "Apply decision models only where justified across application tasks, especially evidence extraction/selection and reviewed pre-fill of retrofit subsidy-award applications; preserve rules, resident choice and accountable human decisions.",
     "prototype-review-integration": "Integrate all company/UX critique learnings into PRD and challenge with a separate agent; do not generate prototype in this request.",
     "detail-level": "comprehensive",
     "question-style": "agent-assisted",
@@ -322,5 +361,25 @@
     "platform-preference": "Owner requested the hybrid as PRD demonstrator baseline and confirmed Excel-based coordination with no Dataverse/Dynamics; other systems and authority unknown. Retain the other options as comparators. This is not production or procurement approval.",
     "prd-scope": "One PRD for the role-based Proper Warm retrofit workbench; workflow areas are modules and release increments over shared cases, permissions, handoffs and evidence, not separate products.",
     "rubric-regression-restoration": "Restore deleted A1/A3/A5/A6/A7 design evidence without reversing the expanded nine-workflow workbench or claiming implementation or validation results."
+  },
+  "currentAmendment": {
+    "version": "0.11.0",
+    "date": "2026-10-10",
+    "status": "draft-challenged-author-corrections-recorded",
+    "reviewFindings": ".copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-11-0/standard-findings.json",
+    "reviewReport": ".copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-11-0/quality-report.json",
+    "reviewDisposition": ".copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-11-0/challenge-disposition.md",
+    "reviewStatus": "Original full-document FAIL preserved; three amendment corrections author-verified, not independently regraded",
+    "requirements": 44,
+    "acceptanceCriteria": 54,
+    "nonFunctionalRequirements": 13,
+    "constraints": 8,
+    "openQuestions": 16,
+    "newRequirements": ["FR-036", "FR-037", "FR-038", "FR-039", "FR-040", "FR-041", "FR-042", "FR-043", "FR-044"],
+    "newCriteria": ["AC-044", "AC-045", "AC-046", "AC-047", "AC-048", "AC-049", "AC-050", "AC-051", "AC-052", "AC-053", "AC-054"],
+    "validateExit": "BLOCKED",
+    "finalizeExit": "NOT_EVALUATED",
+    "approvalBlockers": ["No current signed upstream BRD handoff and quality evidence", "Named product/control owners and human reviews outstanding", "OQ-015 scheme/schema/critical-field criteria unresolved", "OQ-016 task evaluation and serving/privacy gates unresolved"],
+    "historicalStateNotice": "Earlier answeredQuestions, referencesProcessed and qualityChecks retain their original version/date context; they are not evidence of acceptance of v0.11.0."
   }
 }

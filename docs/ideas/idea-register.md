@@ -1,7 +1,7 @@
 ---
 title: Idea Register
 description: Working register of research ideas for Case Study 48 that are not yet validated requirements
-ms.date: 2026-09-24
+ms.date: 2026-10-10
 ms.topic: reference
 ---
 
@@ -41,5 +41,5 @@ before work starts.
 | --- | --- | --- | --- |
 | IDEA-001a | Classify historical free-text delay notes by delay cause to build the Phase 0 baseline | The addendum requires a twelve-month baseline by delay cause, and the notes are likely unstructured | Captured |
 | IDEA-001b | Screen drafted resident communications with typed guardrail questions before a human sends them | The addendum forbids implied consent, universal bill-saving promises and use of the working programme line in hazard, complaint or consent messages | Captured |
-| IDEA-001c | Compare hosted Jev with self-hosted Kev-4B and Kev-9B on synthetic Proper North Homes test sets during shadow mode | Accuracy, calibration, data residency and cost differ between the options | Captured |
+| IDEA-001c | Compare Foundry Decision 1 with manual/rules and generative baselines on constructed classification, evidence-support and form-field-selection tasks; retain Jev/Kev as hosting alternatives if justified | Task quality, calibration, processing location, review effort and whole-life cost remain unmeasured; catalog availability is not deployment or approval | Captured |
 | IDEA-001d | Use typed change classification to support the regulatory source update workflow | Step 3 of the reference update path requires each difference to be classified and linked to affected requirements | Captured |

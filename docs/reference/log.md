@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-06
+ms.date: 2026-10-10
 ms.topic: reference
 ---
 
@@ -1466,3 +1466,38 @@ metadata when the knowledge base was created.
   file system with all capabilities dropped `/healthz` check. Documented in
   `mvp/README.md`. Verified locally with Docker and Trivy 0.65.0; the GitHub
   workflow result is the proof.
+
+## [2026-10-10] query | System One and reviewed funding forms in the PRD
+
+* Integrated the completed Decision 1 reassessment into
+  [IDEA-001 research](../ideas/typesafe-system-one-agent-fit.md), preserving
+  the dated Jev/Kev baseline and making current catalog/API limits explicit.
+  All nine workflow families and fifteen lifecycle steps were revisited;
+  availability is evidence for evaluation, not deployment or housing benefit.
+* Updated the [Proper Warm PRD](../prds/proper-warm-retrofit-programme-demonstrator.md)
+  to draft v0.11.0: nine new requirements and eleven acceptance criteria for
+  registered optional scoring, application-owned evidence explanations,
+  versioned forms, candidate extraction/selection, field review, deterministic
+  validation, Finance-reviewed packs, dependency invalidation and optional
+  assistance without authority-bearing pre-fill.
+* Funding application/export, award, reimbursement claim and cash remain
+  separate. Unknown route blocks preparation; no actual current funding
+  round, template, award terms or eligibility is assumed. Declarations,
+  signatures, resident choices, approval and submission remain human-owned;
+  live funder submission is outside the demonstrator.
+* Updated the idea follow-up, knowledge-base index and PRD session state;
+  reconciled stale PRD banner/metadata, upstream version labels, goal-table
+  references and index counts. Final counts are
+  44 FRs, 54 ACs, 13 NFRs, 8 constraints and 16 open questions.
+* Open evidence: approved scheme/schema and critical-field criteria (OQ-015);
+  response conformance, task thresholds, serving/privacy/network gates and
+  incremental value (OQ-016); existing upstream handoff, named owners and
+  human approval gates. No application implementation, model inference,
+  deployment or production sign-off is claimed.
+* An independent draft challenge identified three amendment gaps: funding
+  route requirements on non-funding forms, application/claim event ambiguity
+  and extraction/invalidation test oracles. All three received author
+  corrections, recorded with original paired reports in the
+  [challenge disposition](../../.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-11-0/challenge-disposition.md).
+  The original full-document FAIL and formal approval blockers are preserved;
+  no independent final regrade or product approval is claimed.
