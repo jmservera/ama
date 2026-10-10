@@ -44,6 +44,11 @@
       "decision": "Follow-up implementation selection unavailable; no selected child or phase advancement inferred. Publish only a draft PR under the owner's branch/PR delivery instruction.",
       "status": "blocked; draft publication permitted, full completion not claimed",
       "evidence": "ask_user returned user unavailable; user requested PRD merge and end-to-end rebuild; current review Not accepted"
+    },
+    {
+      "decision": "Reviewed partial rebuild published as draft PR #58, implementation commit 7b4b898. CI launched; draft explicitly lists RV-001 through RV-007 and is not ready to merge.",
+      "status": "published draft; not accepted",
+      "evidence": "https://github.com/jmservera/ama/pull/58"
     }
   ],
   "blockers": [
@@ -65,7 +70,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Publish reviewed partial rebuild as draft PR, then await /rpi-implement for RV-003, RV-001/002 and RV-004 first. Full task blocked; manual mode retained; no automatic session running."
+    "action": "Draft PR #58 published; await /rpi-implement for RV-003, RV-001/002 and RV-004 first. Full task blocked; manual mode retained; no automatic session running. CI status is separate from review acceptance."
   },
   "prioritized_follow_ups": [
     {

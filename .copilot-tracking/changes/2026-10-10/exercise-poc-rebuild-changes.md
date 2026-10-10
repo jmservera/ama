@@ -113,3 +113,19 @@ on partial delivery and blocked live acceptance. Original critique retained.
 ## Follow-Up Items
 
 None outside the current plan.
+
+## Publication and Review Outcome
+
+The one independent implementation Review is
+.copilot-tracking/reviews/logs/2026-10-10/exercise-poc-rebuild-review.md:
+execution Partial, outcome Not accepted. RV-001 through RV-004 reproduce
+financial-chain/cash/rejected-retry defects; RV-005 through RV-007 preserve
+full workflow, actual platform and exact runtime acceptance gaps. Later
+user-directed rpi-implement owns corrections; no repeated Review or regrade.
+
+Published the partial rebuild as **draft PR #58**:
+https://github.com/jmservera/ama/pull/58, implementation commit 7b4b898.
+The draft body lists all blockers and prohibits a ready-to-merge/full-acceptance
+claim. Final publication regression: 355 tests, OK, 26 live MSSQL skips,
+56.257 seconds. CI launched separately; a green pipeline cannot clear the
+open reproduced review findings. No rebuild merge or billable activation.
