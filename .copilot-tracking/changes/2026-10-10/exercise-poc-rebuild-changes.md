@@ -454,3 +454,12 @@ scheduled recovery, screen-reader, actual-model and human acceptance remain
 open. P05/P06 remain unchecked, original Review stays Partial/Not accepted,
 and draft PR #58 is not ready to merge. Earlier core/scale measurements loaded
 earlier snapshots; they are not evidence for this latest payment/return path.
+
+Published milestone implementation as
+`d5bbd7984d44ac399a1dcbcdceccad695d16f2eb` on existing draft PR #58.
+Exact-source MVP CI `38069962278`, MVP validation `38069962289` and Prototype
+validation `38069962430` succeed, including live SQL/image CI checks.
+Rubric `38069962358` was pending at handoff; no score or acceptance inferred.
+This later handoff commit is separate from the validated source snapshot.
+Mode remains manual, automatic session stopped, Implement blocked on incomplete
+full-plan gates. No second Review, merge or full-completion claim.
