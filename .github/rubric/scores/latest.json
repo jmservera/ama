@@ -2,16 +2,17 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-11T19:15:21+00:00",
-  "commit": "313dafdd9422d3c46ab7780f53e4052f56adade6",
+  "scored_at": "2026-10-11T19:30:51+00:00",
+  "commit": "b1fb0bf49949a9964566ad16aeaf6f3aa785a2ba",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38166931509",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38167675080",
   "fingerprints": {
     "brd": "ad45b46ce2519c3977631b20fa8d76327de50d1acd6306318697134fa18570a5",
     "prd": "e866c8d459306e57952fefdb85c9252b3e5a4fa22022ee5b83257c4e5feb1743",
     "adr": "a7c8e9393aff36bc1ee8700ea9364c7c19d46b869d7f946994bd5fda3914e33a",
     "solution-code": "a89a639f156e48a50323490fc9ab6f0eb6ba0ea4db08646ba4d04a79c851b82f",
-    "infrastructure": "e962abd356f81103c78019d3442cd3da2fc2d94a694375c109ac0fbc7c8ad7ea"
+    "infrastructure": "e962abd356f81103c78019d3442cd3da2fc2d94a694375c109ac0fbc7c8ad7ea",
+    "capstone-deck": "383de1c5efc12107a639bcc4d22ad91add9ba603099794b6dc0d9693173d3572"
   },
   "total": 35,
   "sections": {
@@ -69,12 +70,12 @@
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "This PR adds a detailed Real-Inference Quality test table and a Parallel Decision-Model Experiment Intake section to the PRD, but no new evaluation harness code or measured results. Still unexecuted; unchanged."
+      "rationale": "This PR adds a detailed Real-Inference Quality test table (splits, macro-F1, thresholds) and a Parallel Decision-Model Experiment Intake section to the PRD, but no new evaluation harness code or measured results beyond mvp/properwarm_mvp/ai_eval.py. Still unexecuted; unchanged."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Orchestration-pattern text (capability routing, provider adapter validation) is untouched by this diff; no new agentic code, handoff/reflection or state-graph implementation was added. Unchanged."
+      "rationale": "Orchestration-pattern text (capability routing, provider adapter validation, lines 810-817) is untouched by this diff; no new agentic code, handoff/reflection or state-graph implementation was added. Unchanged."
     },
     "B1": {
       "score": 0,
@@ -108,7 +109,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
         "infra/README.md:1-54"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable; the PRD is detailed and internally consistent but no capstone deck exists, so cap_without caps this at 3 regardless. Unchanged."
+      "rationale": "BRD, PRD and infra/README.md remain structured and navigable; the PRD grew more detailed and internally consistent (owner-acceptance narrative, exercise acceptance contract) but no capstone deck exists, so cap_without caps this at 3 regardless. Unchanged."
     },
     "B7": {
       "score": 0,
@@ -122,7 +123,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-336"
       ],
-      "rationale": "The owner-direction table (PR-001 to PR-008) and governance additions name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures. Unchanged."
+      "rationale": "The owner-direction table (PR-001 to PR-008) and governance additions name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures. This PR deepens exercise targets without changing this evidence."
     },
     "C2": {
       "score": 0,
