@@ -29,6 +29,10 @@ var queueEndpoint = 'https://${storageAccountName}.queue.${environment().suffixe
 var blobEndpoint = 'https://${storageAccountName}.blob.${environment().suffixes.storage}'
 @description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
 param allowPublicNetworkAccess bool = false
+@description('Map tile URL template (https). Empty means no map background in production.')
+param tileUrl string = ''
+@description('Attribution text shown with the map tiles.')
+param tileAttribution string = ''
 
 resource environmentResource 'Microsoft.App/managedEnvironments@2025-07-01' = {
   name: 'cae-${prefix}'
@@ -70,6 +74,8 @@ module dns 'envDns.bicep' = if (!allowPublicNetworkAccess) {
   }
 }
 
+var authEnabled = !empty(entraClientId)
+
 var commonEnv = [
   { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsightsConnectionString }
   { name: 'OTEL_SERVICE_NAMESPACE', value: 'proper-warm' }
@@ -90,11 +96,14 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
       activeRevisionsMode: 'Single'
       ingress: {
         external: true
-        targetPort: 8080
+        targetPort: 8088
         transport: 'auto'
         allowInsecure: false
       }
       registries: [{ server: registryServer, identity: identityIds.api }]
+      secrets: authEnabled ? [
+        { name: 'entra-client-secret', keyVaultUrl: '${keyVaultUri}/secrets/entra-client-secret', identity: identityIds.api }
+      ] : []
     }
     template: {
       containers: [
@@ -113,10 +122,27 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
             { name: 'SHAREPOINT_SITE_ID', value: sharePointSiteId }
             { name: 'ENTRA_TENANT_ID', value: tenant().tenantId }
             { name: 'ENTRA_CLIENT_ID', value: entraClientId }
-          ])
+            // Settings read by the MVP workbench image (mvp/README.md, Configuration).
+            { name: 'PW_TILE_URL', value: tileUrl }
+            { name: 'PW_TILE_ATTRIBUTION', value: tileAttribution }
+            { name: 'PW_STORE', value: 'mssql' }
+            { name: 'PW_SQL_SERVER', value: sqlServerFqdn }
+            { name: 'PW_SQL_DATABASE', value: sqlDatabaseName }
+            { name: 'PW_SQL_AUTH', value: 'msi' }
+            { name: 'PW_SQL_CLIENT_ID', value: identityClientIds.api }
+            { name: 'PW_DOC_STORE', value: 'azure-blob' }
+            { name: 'PW_BLOB_ACCOUNT_URL', value: blobEndpoint }
+            { name: 'PW_BLOB_CONTAINER', value: 'evidence' }
+            { name: 'PW_BLOB_CLIENT_ID', value: identityClientIds.api }
+          ], authEnabled ? [
+            { name: 'PW_AUTH', value: 'trusted-proxy' }
+            { name: 'PW_TRUSTED_PROXY', value: '1' }
+            { name: 'PW_ENTRA_TENANT_ID', value: tenant().tenantId }
+            { name: 'PW_ENV', value: 'production' }
+          ] : [])
           probes: [
-            { type: 'Liveness', httpGet: { path: '/healthz', port: 8080 } }
-            { type: 'Readiness', httpGet: { path: '/readyz', port: 8080 } }
+            { type: 'Liveness', httpGet: { path: '/healthz', port: 8088 } }
+            { type: 'Readiness', httpGet: { path: '/healthz', port: 8088 } }
           ]
         }
       ]
@@ -138,7 +164,8 @@ resource apiAuth 'Microsoft.App/containerApps/authConfigs@2025-07-01' = if (!emp
   properties: {
     platform: { enabled: true }
     globalValidation: {
-      unauthenticatedClientAction: 'Return401'
+      unauthenticatedClientAction: 'RedirectToLoginPage'
+      redirectToProvider: 'azureactivedirectory'
       excludedPaths: ['/healthz', '/readyz']
     }
     identityProviders: {
@@ -147,14 +174,10 @@ resource apiAuth 'Microsoft.App/containerApps/authConfigs@2025-07-01' = if (!emp
         registration: {
           openIdIssuer: '${environment().authentication.loginEndpoint}${tenant().tenantId}/v2.0'
           clientId: entraClientId
+          clientSecretSettingName: 'entra-client-secret'
         }
         validation: {
           allowedAudiences: ['api://${entraClientId}']
-          defaultAuthorizationPolicy: {
-            allowedPrincipals: {
-              identities: [identityClientIds.agents, identityClientIds.orchestrator, identityClientIds.import]
-            }
-          }
         }
       }
     }

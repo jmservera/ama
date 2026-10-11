@@ -1,7 +1,7 @@
 ---
 title: Capstone Rubric Gate
 description: How the rubric-score agentic workflow scores the capstone against the FY27 AMA rubric and blocks pull requests that lower the score
-ms.date: 2026-10-05
+ms.date: 2026-10-11
 ms.topic: how-to
 ---
 
@@ -24,36 +24,38 @@ The pass or fail decision is made by [gate.py](scripts/gate.py), never by the mo
 
 A criterion can only move when an artifact that informs it changes, and every move must cite a changed file. Deleting a scored file, renaming it outside the registry globs or letting it grow past `max_file_bytes` counts as a change: the scorer can lower the affected criteria by citing the removed path, but a removed path never justifies a higher score.
 
+### PPTX Slide Citation Repair
+
 For text, cite `path:line`. For a deck, cite its original repository `.pptx`
 path, optionally followed by `:slideN` (positive slide number), not the
-temporary extracted Markdown path. The gate resolves supported anchors to the
-file before checking that it changed. PR #61's deck was detected and assessed,
-but its `:slide1` and `:slide17` citations were previously treated as filenames,
-so genuine deck score changes were discarded. Slide-anchor support repairs
-that mismatch without relaxing changed-file, artifact-presence or floor rules.
-As with other gate repairs, ordinary PR runs use the base-branch script until
-the owner merges this change. Replaying a saved scorecard verifies the fix;
-it is not a new independent assessment of a revised deck.
+temporary extracted Markdown path. The legacy parser stripped line anchors
+only, so PR #61's `:slide1` and `:slide17` citations were treated as different
+filenames and B1/B2/B6/B7 changes were discarded. Normalising supported slide
+anchors fixes the mismatch without relaxing changed-file, artifact-presence
+or floor rules; unchanged decks and unsupported slide anchors remain rejected.
 
-Validation of the slide-anchor repair passed all 19 targeted citation and
-required-artifact tests. The wider gate/prepare/adapter run had 100 passes,
-one skip and 19 failures. A snapshot of the unchanged pre-repair commit
-reproduced those 19 failures: old tests assume a 66-point seed and active
-prototype paths although the recorded score and solution registry have
-changed. The snapshot's initially omitted workflow fixture caused one extra
-failure; restoring that fixture made its prompt-example test pass. No new
-failure is attributed to the slide-anchor change, and this repair does not
-modify unrelated historical test expectations.
+The regression coverage adds 12 cases. Run the 19 targeted cases with:
 
-The fresh report-only calibration of the revised deck completed successfully
-in [run 38177388117](https://github.com/jmservera/ama/actions/runs/38177388117),
-on commit `6a8b60a`. It assessed B1, B2, B6 and B7 at 4 each and the full
-portfolio at 43/100 (A=23, B=16, C=4, D=0). The gate recorded missing pitch and
-thought-leadership criteria at zero, leaving the outcome Incomplete. This
-forced run used the repaired branch scripts and withheld the baseline; it
-measures the revised artifact but neither overwrites `latest.json` nor supplies
-an incremental comparison. Its full-portfolio total must not be compared as
-a deck regression against the earlier saved-card replay.
+```bash
+python -m pytest .github/rubric/scripts/test_gate.py -q -k 'evidence_reference or changed_deck or unchanged_deck or unsupported_slide or pptx_slide or no_pitch_or_thought'
+```
+
+The wider gate/prepare/adapter suites have 19 confirmed pre-existing failures
+coupled to the historical 66-point seed and retired prototype registry.
+This repair does not change those fixtures, rubric defaults or `latest.json`.
+The recorded PR score was 35; replaying its saved assessment with the repaired
+parser yielded 47, a reproduction rather than a fresh assessment. The separate
+[report-only calibration](https://github.com/jmservera/ama/actions/runs/38177388117)
+on `6a8b60a` measured revised-deck B1/B2/B6/B7 at 4 each and the full portfolio
+at 43/100, Incomplete because pitch and thought leadership evidence was missing.
+Calibration neither updates the baseline nor supplies an incremental comparison.
+
+Ordinary PR runs load the trusted gate from base `main`. The owner must merge
+this independent repair first, then trigger fresh scoring for presentation
+PR #61's current head before deciding whether to merge it. Merge updated
+`origin/main` into the presentation topic and push without rewriting history.
+Rerunning an older head's run can hit the branch-moved guard; merging this
+repair alone does not automatically replace PR #61's score.
 
 Scores are readiness estimates from repository evidence. Live-scored criteria (B1 to B5 and C2) are informed only by the capstone deck and pitch artifacts. They keep their baseline until one of those changes, except in bootstrap and calibration runs, which score every criterion from scratch, and in pull requests that change the rubric, registry, prompt or scripts, which reopen every criterion (moves still need a cited changed artifact file).
 

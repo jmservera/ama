@@ -14,7 +14,9 @@ Proposed, non-production infrastructure. The design and its rationale are in
 * `main.bicep`: resource group scope entry point wiring all modules.
 * `main.bicepparam`: dev parameters; replace the placeholder alert email and Entra group.
 * `modules/`: identity, network (VNet, NSGs, private DNS), monitoring (Log Analytics, App Insights, AMPLS), Key Vault, storage, registry, SQL, Foundry, Container Apps and the generic private endpoint.
-* `scripts/create-sql-users.sql`: contained SQL users for the managed identities.
+* `scripts/create-sql-users.sql`: contained SQL users for the managed identities. `scripts/create-sql-users.py` runs the same grants idempotently from the Azure CLI login.
+* `scripts/create-api-app-registration.sh`: Entra app registration, app roles and secret (Key Vault) for API sign-in.
+* `scripts/configure-m365-provisioner-app.sh`: delegated Graph permissions for the app the m365 CLI uses to set up SharePoint and Teams.
 * `scripts/grant-sharepoint-access.sh`: optional Graph `Sites.Selected` grant for the SharePoint evidence store.
 
 Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `monthlyBudget`. See the M365 section of the ADR.
@@ -63,6 +65,33 @@ The Container Registry export policy is set to `enabled` in this mode because AC
 Region notes for `northeurope` (observed 2026-10-08): Azure SQL was not accepting new servers, so set `sqlLocation` (for example `uksouth`; the private endpoint stays in the VNet region), and `gpt-4.1*` has no pay-as-you-go SKU, so override `modelDeployments` (for example `gpt-5.4-nano` and `gpt-5.4` with `DataZoneStandard`).
 
 Deployed on 2026-10-08 to resource group `ama` with `location=uksouth environmentName=test`. `swedencentral` returned `AKSCapacityHeavyUsage` for the Container Apps environment, so keep `location` a parameter. The SQL admin can be a user, group or application (`sqlAdminPrincipalType`).
+
+## Deploying the workbench image and sign-in
+
+Observed 2026-10-11 in resource group `ama` (`uksouth`, `environmentName=test`, `deploymentProfile=development`):
+
+```bash
+az acr build -r <registry> -t proper-warm-mvp:<tag> mvp
+az login --tenant <tenant> --allow-no-subscriptions          # as an Application or Global Administrator
+infra/scripts/create-api-app-registration.sh -u https://<api-fqdn> -a <admin-upn>:ProgrammeManager -v <key-vault>
+python3 infra/scripts/create-sql-users.py ama <sql-server> retrofit id-warm-test   # as the SQL Entra admin
+az deployment group create ... -p entraClientId=<client id> apiImage=<registry>.azurecr.io/proper-warm-mvp:<tag>
+```
+
+Notes:
+
+* The registry accepts `az acr build` when public access is on (development profile).
+* The image carries no data. Seed the SQL database once from an operator machine (see `mvp/README.md`, Azure SQL store); set `oid` on a staff record to a signed-in user's object id so that user maps to a workbench role.
+* With `entraClientId` set, built-in authentication redirects browsers to sign in and returns 401 to clients that do not look like browsers. Only users assigned an app role can sign in. `/healthz` is excluded. The client secret is a Key Vault secret named `entra-client-secret` read through the API identity.
+* The API listens on 8088 and serves only `/healthz` for probes (there is no `/readyz`). The agents, orchestrator and import workloads still run the placeholder image because no code for them exists yet.
+* `PW_ENV=production` is set when authentication is on, so the map has no background until `tileUrl` is set (for a dev test: `tileUrl=https://tile.openstreetmap.org/{z}/{x}/{y}.png tileAttribution='&copy; OpenStreetMap contributors'`, within the OSM tile usage policy; choose a licensed provider before real use). The CSP follows the tile host.
+* The previous `allowedPrincipals` restriction on the auth config was removed: it listed managed identity client ids where object ids are expected and would have blocked signed-in users. Access is limited by the app role requirement instead.
+
+## Microsoft 365 permissions
+
+The runtime identity needs only Microsoft Graph application permission `Sites.Selected` plus a per-site grant (`scripts/grant-sharepoint-access.sh`, role `write` for the evidence library). Teams alerts use a Workflows webhook, which needs no Graph permission and is created by hand in the channel.
+
+Setting the site and channel up through the m365 CLI needs delegated Graph permissions on the app it signs in with, consented by an administrator: `Sites.FullControl.All`, `Team.Create`, `Channel.Create`, `AppRoleAssignment.ReadWrite.All` and `Application.Read.All`, plus the existing `AllSites.Read`. `scripts/configure-m365-provisioner-app.sh <app id> --consent` adds them. Remove `Sites.FullControl.All` and the consent once the grants are made.
 
 ## Validate locally
 

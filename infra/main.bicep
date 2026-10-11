@@ -64,6 +64,9 @@ param modelDeployments array = [
 ]
 @description('Region for the Azure SQL server when the primary region is not accepting new SQL servers. The private endpoint stays in the primary VNet.')
 param sqlLocation string = location
+@description('Map tile URL template for the workbench map (https). Development may use https://tile.openstreetmap.org/{z}/{x}/{y}.png within its usage policy.')
+param tileUrl string = ''
+param tileAttribution string = ''
 param tags object = {}
 
 var isDev = deploymentProfile == 'development'
@@ -226,6 +229,8 @@ module apps 'modules/containerapps.bicep' = {
     modelDeploymentNames: { standard: 'standard', capable: 'capable' }
     keyVaultUri: 'https://${keyvault.outputs.name}${environment().suffixes.keyvaultDns}'
     entraClientId: entraClientId
+    tileUrl: tileUrl
+    tileAttribution: tileAttribution
     zoneRedundant: zoneRedundant
     evidenceStore: evidenceStore
     sharePointSiteId: sharePointSiteId
