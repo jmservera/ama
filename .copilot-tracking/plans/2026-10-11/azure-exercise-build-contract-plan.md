@@ -5,7 +5,7 @@
 
 * Task ID: AMA-AZURE-EXERCISE-20261011
 * Task slug: azure-exercise-build-contract
-* Planning status: Ready; full-plan implementation in progress after the single final critique
+* Planning status: Full-plan implementation complete; outcome review ready
 * Plan date: 2026-10-11
 * Phase details: .copilot-tracking/details/2026-10-11/azure-exercise-build-contract-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-11/azure-exercise-build-contract-plan-critique.md
@@ -23,7 +23,9 @@ The parallel decision-model benefits experiment remains independent. Its results
 may select or reject individual scoring tasks; uncertainty about decision-model
 benefits must not silently remove the required AI, SQL or Azure deployment.
 The one final critique is complete; its five planner-owned findings are
-disposed below. Canonical BRD/PRD edits have not yet been implemented.
+disposed below. Canonical BRD/PRD and supporting edits are implemented,
+locally validated and published to the existing PR; outcome review is ready.
+Candidate requirements review/owner acceptance and actual build remain separate.
 
 ### What You May Not Know
 
@@ -180,7 +182,7 @@ depend on model availability.
 | Details | .copilot-tracking/details/2026-10-11/azure-exercise-build-contract-phase-details.md |
 | Critique | .copilot-tracking/reviews/plans/2026-10-11/azure-exercise-build-contract-plan-critique.md; complete, findings disposed |
 | Changes role | .copilot-tracking/changes/2026-10-11/azure-exercise-build-contract-changes.md; active implementation evidence |
-| Readiness | Full-plan documentation implementation in progress |
+| Readiness | Full-plan documentation implementation complete; outcome review ready |
 | Continuation | User-directed RPI continuation through implementation and outcome review; no app deployment |
 
 ## Phase Checklist
@@ -223,13 +225,13 @@ depend on model availability.
 * Detail section: P02-T02 in the phase-details artifact.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Validate and publish the documentation handoff
+### [x] P03: Validate and publish the documentation handoff
 
 * Intent: Confirm requirements consistency and publish without executing the build.
 * Dependencies: P02.
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Validate traceability and deliver through a PR
+#### [x] P03-T01: Validate traceability and deliver through a PR
 
 * Requirement and evidence: Mandatory build gates, preserved historical baseline.
 * Expected result: Reviewed diff, link/requirement checks and documentation PR.
@@ -295,6 +297,8 @@ depend on model availability.
 
 ## Follow-Up Items
 
+* Fresh full-BRD/PRD requirements-quality review and owner acceptance of new
+  candidate versions; RPI outcome review does not manufacture these approvals.
 * Actual Azure/SQL/AI build and runtime validation belong to a subsequent build
   plan, not this requirements-documentation implementation.
 * Parallel experiment owner supplies versioned execution results when available;
@@ -303,5 +307,7 @@ depend on model availability.
 ## Handoff
 
 * Implementation artifact: .copilot-tracking/changes/2026-10-11/azure-exercise-build-contract-changes.md
-* Ready task: P01-T01; supplied learning extraction is ready for canonical transfer.
-* Boundary: Implementation of this plan updates documents only; it does not deploy.
+* Ready stage: RPI outcome review after full-plan completion and publication.
+* Completed tasks: P01-T01, P02-T01, P02-T02, P03-T01; none remaining.
+* Boundary: Ten-document implementation complete; no runtime deployment or
+  independently accepted new BRD/PRD version is claimed.
