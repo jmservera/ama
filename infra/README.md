@@ -84,7 +84,7 @@ Notes:
 * The image carries no data. Seed the SQL database once from an operator machine (see `mvp/README.md`, Azure SQL store); set `oid` on a staff record to a signed-in user's object id so that user maps to a workbench role.
 * With `entraClientId` set, built-in authentication redirects browsers to sign in and returns 401 to clients that do not look like browsers. Only users assigned an app role can sign in. `/healthz` is excluded. The client secret is a Key Vault secret named `entra-client-secret` read through the API identity.
 * The API listens on 8088 and serves only `/healthz` for probes (there is no `/readyz`). The agents, orchestrator and import workloads still run the placeholder image because no code for them exists yet.
-* `PW_ENV=production` is set when authentication is on, so the map has no tile provider until `PW_TILE_URL` is set.
+* `PW_ENV=production` is set when authentication is on, so the map has no background until `tileUrl` is set (for a dev test: `tileUrl=https://tile.openstreetmap.org/{z}/{x}/{y}.png tileAttribution='&copy; OpenStreetMap contributors'`, within the OSM tile usage policy; choose a licensed provider before real use). The CSP follows the tile host.
 * The previous `allowedPrincipals` restriction on the auth config was removed: it listed managed identity client ids where object ids are expected and would have blocked signed-in users. Access is limited by the app role requirement instead.
 
 ## Microsoft 365 permissions

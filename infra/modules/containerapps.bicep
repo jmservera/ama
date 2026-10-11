@@ -29,6 +29,10 @@ var queueEndpoint = 'https://${storageAccountName}.queue.${environment().suffixe
 var blobEndpoint = 'https://${storageAccountName}.blob.${environment().suffixes.storage}'
 @description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
 param allowPublicNetworkAccess bool = false
+@description('Map tile URL template (https). Empty means no map background in production.')
+param tileUrl string = ''
+@description('Attribution text shown with the map tiles.')
+param tileAttribution string = ''
 
 resource environmentResource 'Microsoft.App/managedEnvironments@2025-07-01' = {
   name: 'cae-${prefix}'
@@ -119,6 +123,8 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
             { name: 'ENTRA_TENANT_ID', value: tenant().tenantId }
             { name: 'ENTRA_CLIENT_ID', value: entraClientId }
             // Settings read by the MVP workbench image (mvp/README.md, Configuration).
+            { name: 'PW_TILE_URL', value: tileUrl }
+            { name: 'PW_TILE_ATTRIBUTION', value: tileAttribution }
             { name: 'PW_STORE', value: 'mssql' }
             { name: 'PW_SQL_SERVER', value: sqlServerFqdn }
             { name: 'PW_SQL_DATABASE', value: sqlDatabaseName }
