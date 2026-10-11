@@ -2,7 +2,7 @@
 title: ADR 0001 Azure Architecture for the Proper Warm Demonstrator
 description: Proposed Azure hosting, agent placement, data, model and security architecture for the non-production Proper Warm retrofit workbench demonstrator
 author: AMA programme
-ms.date: 2026-10-08
+ms.date: 2026-10-11
 ms.topic: reference
 ---
 
@@ -12,6 +12,24 @@ Proposed. This is a design for a non-production demonstrator using constructed,
 non-identifying data. It is not an approved production architecture. Service
 availability, quotas, model versions and regional capacity are unverified and
 must be checked in the target subscription before deployment.
+
+### Exercise Applicability (2026-10-11)
+
+The owner's [subsequent-build direction](../case_study_48_addendum.md#subsequent-application-exercise-builds-2026-10-11)
+requires real AI, real SQL state and actual Azure hosting for every accepted
+application exercise build (delivered AMA prototype/PoC/MVP or update).
+BRD CON-007/AC-086 and PRD CON-009/AC-057 define version-linked
+workflow, SQL write/read/restart and real inference proof on the continuing
+generated stock/programme. Local/mock checks remain tests, not delivery.
+Per-task Decision placement stays conditional; manual access is independent.
+
+The historical full topology below remains proposed, not all deployed.
+[Pinned #58 learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11)
+records a lean Azure SQL/Blob/AI MVP, not production Entra user login or
+private-only isolation. Keep source/image/revision claims distinct.
+No premium estate, new app rewrite, production option selection, deployment
+authorization or blanket spend override follows from this note. Missing
+effective budget/authorization/evidence blocks acceptance, not mock substitution.
 
 ## Supersedes/amends
 

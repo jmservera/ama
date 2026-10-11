@@ -1,7 +1,7 @@
 ---
 title: System One Decision Models for Retrofit Agents
 description: Dated research on typed decision models, including Microsoft Decision 1 in Foundry, bounded workflow assists and reviewed form extraction/filling
-ms.date: 2026-10-10
+ms.date: 2026-10-11
 ms.topic: reference
 ---
 
@@ -25,6 +25,59 @@ the [original Case Study 48](../case_study_48_original.md), the
 > North Homes data. Every candidate use needs a labelled test set, a threshold
 > chosen for its consequences and a shadow-mode trial before any live use.
 
+## Observed Feasibility and Parallel Value Experiment (2026-10-11)
+
+Evidence boundary: [PR #58](https://github.com/jmservera/ama/pull/58),
+pinned to `5136f192d583a5bf53adeeec4b0f21369b005c9d`, inspected 2026-10-11.
+Its [README, Current continuing MVP](https://github.com/jmservera/ama/blob/5136f192d583a5bf53adeeec4b0f21369b005c9d/mvp/README.md)
+and [decision-model learning](https://github.com/jmservera/ama/blob/5136f192d583a5bf53adeeec4b0f21369b005c9d/docs/ideas/typesafe-system-one-agent-fit.md)
+record real results. These reported observations were inspected, not rerun
+by this documentation amendment. They supersede earlier access-blocked
+conclusions, not historical result rows.
+
+| Observed learning | Interpretation and remaining proof |
+| --- | --- |
+| Real Decision 1 selected a source-bound EPC candidate with normalized option probabilities, model/version/usage and Not reviewed status | Narrow closed-set selection is technically feasible. Held-out accuracy, abstention calibration and net benefit are not demonstrated |
+| Real GPT-4.1-mini produced a citation-verified catch-up summary | Generative integration works for that example; one supported output does not establish general quality or human review savings |
+| Generic cognitive-services host failed; the Foundry services host with `/providers/microsoft/v1/systemone` succeeded | Endpoint/audience/auth conformance was an integration problem, not model infeasibility. [Official API guide](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision), retrieved 2026-10-11, corroborates the provider-specific API |
+| Provider optional confidence validates separately from option probabilities | Validate question/answer IDs, types, allowed keys, finite normalized probability vectors and optional fields; never substitute confidence for task probability/runner-up thresholds |
+| Actual Azure SQL/Blob deployment retains 60,000 generated stock rows and 980 programme cases | Reuse the continuing application/data lineage. Local fixtures or unrelated model calls are not updated-build acceptance |
+| Later work-order controls are source-tested, while recorded deployment is revision `ca-properwarm-mvp--0000018` | Match source, immutable image, config and deployed revision to each claim. Full permissions/workflow/performance/recovery/human acceptance remains unproved |
+| Deployed evidence-support adapter is binary | Binary labels cannot establish supported/contradicted/insufficient macro-F1. Use a separately frozen three-option shadow task or Not evaluated |
+| Owner removed the prior inference cap for this rebuild | Preserve scope of approval, source/task/input bounds, SQL upper-liability reservations and usage telemetry; no blanket future spend authorization |
+
+The owner's [subsequent-build direction](../case_study_48_addendum.md#subsequent-application-exercise-builds-2026-10-11)
+requires actual AI/SQL/Azure for all delivered AMA prototypes/PoCs/MVPs.
+At least one in-scope real model task is required, not a winning Decision
+model in every task. Clear structured fields should use deterministic
+extraction unless comparison demonstrates added semantic-selection value.
+Manual access/failure handling remains mandatory; unsupported AI tasks
+stay disabled rather than bypassing quality gates.
+
+The owner reports an experiment running in parallel. The available
+[MVE protocol](https://github.com/jmservera/ama/blob/5136f192d583a5bf53adeeec4b0f21369b005c9d/.copilot-tracking/mve/2026-10-10/decision-model-value/mve-plan.md)
+is proposed design evidence, not verified participant execution or results.
+It separates R rules/manual, D Decision/templates, A generative agent and
+H agent with Decision tools: A versus D tests narrow replacement; H versus
+A tests complementarity; H versus R tests overhead and benefit. A closed
+scorer cannot replace free-form generation or accountable reviewers.
+
+Reconcile its 120 grouped families, 30 tuning/30 calibration/60 held-out,
+720 dispositions, human adjudicators and counterbalanced full-pack effort
+with [PRD experiment intake](../prds/proper-warm-retrofit-programme-demonstrator.md#parallel-decision-model-experiment-intake).
+Require version/hash-bound source, split, task, model, prompt/question,
+schema and frozen thresholds; exclusions/denominators and failures;
+quality/critical errors, coverage/calibration, complete paired human effort,
+cost/latency and uncertainty. Data reviews method, Finance cost/effort,
+task/control owners placement and the exercise owner adoption. No role-agent
+gold labels or simulated human timings. Insufficient labels, people or
+precision means Inconclusive/Not evaluated, not demonstrated benefit.
+
+Independent platform/control work can continue without waiting for results.
+Value-based task adoption and benefit claims require reviewed evidence; no
+automatic control activation or change to human/resident authority. Historical
+2026-10-10/September material below retains its retrieval-time meaning.
+
 ## Microsoft Decision 1 Reassessment (2026-10-10)
 
 The owner requested reassessment across the process after Foundry model
@@ -32,8 +85,9 @@ availability, then specifically requested PRD integration for form
 extraction/filling, retrofit subsidy applications and other AI-assisted
 decisions. The recommendation is an optional scoring capability inside the
 existing bounded task service, not another autonomous agent or replacement
-workflow engine. The [PRD v0.11.0](../prds/proper-warm-retrofit-programme-demonstrator.md)
-records this as proposed DD-007/008 and FR-036 to FR-044, not a production
+workflow engine. The historical PRD v0.11.0 amendment introduced DD-007/008
+and FR-036 to FR-044; the [current PRD candidate](../prds/proper-warm-retrofit-programme-demonstrator.md)
+retains conditional task placement with mandatory application-level AI, not a production
 selection, deployment result or approved funding process.
 
 ### Current Product Evidence and Limits

@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-10
+ms.date: 2026-10-11
 ms.topic: reference
 ---
 
@@ -59,6 +59,11 @@ preserved in this addendum:
   demonstrator baseline below, distinct from operational readiness
 
 ## Owner-Approved Exercise Baseline (2026-10-10)
+
+This dated register preserves the v0.12.0 approval. Conflicting local-only
+delivery and unconditional Decision 1 task placement are superseded
+prospectively by the 2026-10-11 direction below; its historical budget is
+not silently reapplied to the owner-authorized #58 rebuild.
 
 Proper North Homes is the case customer, not an accessible real organisation
 from which this exercise can obtain missing delegations or operating data.
@@ -171,6 +176,75 @@ outcome that beats AI is valid evidence, but does not satisfy the separately
 required real-inference demonstration. Company approval, professional/legal
 review, actual funding terms and human usability research remain prerequisites
 for operational use, not prerequisites for fictional exercise design.
+
+## Subsequent Application Exercise Builds (2026-10-11)
+
+The owner requires real AI, a real SQL database and an actual Azure
+deployment in the next and every subsequent accepted application exercise
+build. This term means each delivered AMA prototype, PoC or MVP, including
+iterations of the existing Proper Warm application. Documentation-only work,
+unit/CI tests and non-delivery development checks may use local SQLite,
+mocks or small fixtures; those checks are not delivered application acceptance.
+
+Continue the original generated 60,000-home stock and retained 980-case
+programme lineage. The one-home story, sixteen-home forecast and held-out
+model families are test cohorts, not replacement datasets. Preserve histories,
+audit and evidence; unresolved stock-to-case relationships stay unknown.
+Generated records are not company evidence and must not be published merely
+because their resident details are invented.
+
+Use the existing Azure SQL realization as programme-state authority and
+exercise at least one real generative or decision-model task in the permitted
+application path. Case viewing and manual completion remain independent of
+model availability. A rejected Decision 1 task can retain rules/manual
+handling without waiving real AI elsewhere. A real inference call alone
+does not prove its accuracy, calibrated confidence or incremental value.
+Production platform selection, exact topology and live authority remain
+separate appraisals; an expensive multi-service/private-endpoint estate is
+not required merely to satisfy this learning baseline.
+
+BRD CON-007/AC-086 and PRD CON-009/AC-057 require version-linked Azure
+endpoint, workload identity, actual SQL write/read/restart and enabled AI
+evidence, including explicit failure/manual handling. Reuse unchanged Azure
+resources when appropriate, but verify the changed build's real-service
+connections. Local tests, replay or diagrams cannot substitute. Missing
+effective budget, authorization or service evidence means Blocked or Not run,
+never a mock-only Pass. Existing human, resident, safety and financial gates
+remain independent.
+
+The USD 450/month cap, USD 360 review and USD 405 pause in EXA-012 describe
+the earlier approved baseline. Pinned #58 records that the owner removed the
+cap for that rebuild, not for all future spending. Each build records its
+effective scoped approval/override and accrued liabilities, retaining source/
+task permissions, input bounds, reservations and usage/cost telemetry.
+This documentation direction does not authorize new deployments or spending.
+
+### Current Learning and Parallel Experiment
+
+Read [#58](https://github.com/jmservera/ama/pull/58) at
+`5136f192d583a5bf53adeeec4b0f21369b005c9d`, inspected 2026-10-11:
+its [current MVP evidence](https://github.com/jmservera/ama/blob/5136f192d583a5bf53adeeec4b0f21369b005c9d/mvp/README.md)
+records actual Azure SQL/Blob deployment, Decision 1 source-bound EPC
+selection and cited GPT-4.1-mini generation. Earlier endpoint/authentication
+failures are historical. Later source-tested controls are not automatically
+in deployed revision `ca-properwarm-mvp--0000018`. Full workflow, permissions,
+cloud performance/recovery and direct human acceptance remain separate
+unmet gates; this document does not regrade them.
+
+The owner reports a decision-model benefits experiment running in parallel.
+The available [four-arm protocol](https://github.com/jmservera/ama/blob/5136f192d583a5bf53adeeec4b0f21369b005c9d/.copilot-tracking/mve/2026-10-10/decision-model-value/mve-plan.md)
+is proposed design evidence, not proof of executed participants or results.
+It compares rules/manual, Decision/templates, generative agent and hybrid
+agent-with-Decision tools. [The maintained model learning](./ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11)
+and PRD define versioned result intake. The deployed binary support adapter
+cannot meet three-class macro-F1 through collapsed labels. Task placement
+and benefit claims require reviewed quality, full human effort, cost and
+uncertainty evidence; missing evidence remains Inconclusive or Not evaluated.
+Independent platform/control work need not wait for experiment completion.
+
+This direction revises the baseline, not the original case or historical
+v0.12.0 acceptance. BRD v0.16.0 remains draft; PRD v0.13.0 is a candidate
+for fresh requirements review and owner acceptance, not an inherited approval.
 
 ## Proper Warm at Proper North Homes
 

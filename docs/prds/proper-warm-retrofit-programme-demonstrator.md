@@ -2,17 +2,18 @@
 title: "Proper Warm Retrofit Programme Workbench"
 description: "Product requirements for a role-based retrofit delivery workbench covering the Proper Warm workflow portfolio"
 author: AMA Research Team
-ms.date: "2026-10-10"
+ms.date: "2026-10-11"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "in-review"
-exercise_status: "owner-accepted-for-implementation-planning"
-exercise_accepted_date: "2026-10-10"
-version: "0.12.0"
+exercise_status: "candidate-pending-review-and-owner-acceptance"
+historical_exercise_accepted_version: "0.12.0"
+historical_exercise_accepted_date: "2026-10-10"
+version: "0.13.0"
 owners: ["AMA project owner (exercise approval)", "Retrofit Programme Manager (exercise product-owner role)"]
 reviewers: ["Independent PRD Quality Reviewer", "AMA project owner (final exercise acceptance); live control owners remain unconfirmed"]
 created_date: "2026-10-03"
-last_updated: "2026-10-10"
+last_updated: "2026-10-11"
 product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003", "GOAL-004"]
 product_goal_smart_status: "pass"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -31,7 +32,7 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-> **PRD-2026-AMA48-001** | Exercise: owner-accepted for implementation planning; formal governance: in-review | Version: 0.12.0 | Last Updated: 2026-10-10
+> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.13.0 | Last Updated: 2026-10-11
 
 ## Executive Summary
 
@@ -57,15 +58,17 @@ application preparation and separate grant claims, cross-team case orchestration
 forecasting. It is a coordination and evidence product. Existing systems and
 accountable people retain authoritative decisions; the demonstrator does not
 make live resident contact, instruct suppliers, approve work, submit claims,
-or release payment. Optional System One decision models support bounded
+or release payment. Real AI is required in each accepted application exercise
+build; optional per-task System One decision models support bounded
 classification, candidate-value selection and evidence checks, not approvals.
 Form assistance stages source-linked field proposals for human review; it
 does not invent missing facts or submit an application.
 
 The owner directed an Azure-led hybrid only as a proposed non-production
-demonstrator baseline. Azure programme-state authority, integrations,
-deterministic gates and bounded AI remain subject to the options and approval
-gates. SharePoint/M365 capability is unverified; Excel-based coordination is
+production-path design. The 2026-10-11 direction makes actual Azure deployment,
+real SQL state and enabled AI mandatory for subsequent accepted application
+exercise builds. Production options, topology, integrations and live authority
+remain subject to appraisal and approval. SharePoint/M365 capability is unverified; Excel-based coordination is
 confirmed, while other company systems and their authority are unknown.
 Records used in the non-production exercise are constructed for the
 demonstration and do not establish actual company performance, resident
@@ -93,19 +96,37 @@ After independent review and the documented corrections, the owner accepted
 v0.12.0 for exercise implementation planning on 2026-10-10 with no changes.
 That acceptance is separate from formal governed/company approval.
 
-T0 is acceptance of the reviewed baseline. Delivery is planned for four
-weeks from T0, within USD 450/month for attributable external technology.
-Use lean local/minimal-cloud PoC services instead of requiring the full
-production-path ADR topology. The Azure-led control and Foundry capability
-contracts remain; optional M365 and expensive resilience services are not
-demonstrator prerequisites. No purchase, deployment or application change
-is authorised by this documentation task.
+The [subsequent-build direction](../case_study_48_addendum.md#subsequent-application-exercise-builds-2026-10-11)
+supersedes the earlier local-only acceptance option prospectively.
+An accepted application exercise build is each delivered AMA prototype, PoC
+or MVP, including updates of this application. Every such build uses actual
+Azure deployment, real SQL programme-state authority (the existing Azure SQL
+realization), and at least one permitted real generative or decision-model
+task in the exercised application path. Local SQLite, mocks and small
+fixtures remain valid for unit/CI tests and non-delivery development checks,
+not delivered prototypes or acceptance substitutes.
 
-Real Decision 1 scoring and generative Foundry inference on wholly fictional,
-non-identifying sources are essential demonstration evidence. Availability,
-mocked output and scripted replay cannot satisfy that criterion. Actual
-subscription/API/access/processing/cost checks are an explicit implementation
-prerequisite, not a new broad research phase or assumed successful result.
+Continue the existing generated 60,000-home stock and retained 980-case
+programme, histories and evidence; test cohorts are not replacement MVP data.
+Keep unverified stock-to-case links unknown. Real AI is not required for every
+atomic module/test or every home. Task-level rejection of Decision 1 preserves
+rules/manual handling there, not an entirely disabled-AI accepted delivery.
+
+T0 for the four-week delivery target is acceptance of the reviewed baseline,
+not this candidate amendment. Record effective per-build budget and authority.
+EXA-012's USD 450/360/405 limits remain historical; #58 records a scoped
+owner override for its rebuild, not a blanket future spending permission.
+Lean Azure hosting may reuse resources without the full production ADR
+topology; optional M365 and expensive resilience are not prerequisites.
+Missing budget/authorization or real-service evidence means Blocked or Not run,
+not a mock-only Pass. This documentation task authorizes no cloud/model work.
+
+Pinned [#58 feasibility learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11)
+records successful real selection and cited generation on Azure SQL-backed
+deployment. Earlier access failures remain history, not current infeasibility.
+Quality/calibration, three-class screening, net benefit and full application
+acceptance remain unproved. v0.13.0 requires fresh independent requirements
+review and owner acceptance; v0.12.0 acceptance does not transfer.
 
 ## Product Context
 
@@ -123,7 +144,8 @@ The BRD identifies nine connected workflow areas and proposed value evidence.
 They are evidence-backed problem hypotheses, not confirmed operational
 failures at Proper North Homes. Phase 0 must establish which constraints
 actually bind. The product must therefore make missing evidence and unknown
-ownership visible, support conventional workflow without AI, and avoid
+ownership visible, support manual workflow during AI failure or for non-model
+tasks without waiving required deployed AI, and avoid
 presenting its forecasts or suggestions as approved commitments.
 
 ### Product boundary and single-product rationale
@@ -147,12 +169,15 @@ the internal workbench directly.
 
 ### Proposed platform boundary
 
-The owner's requested Azure-led hybrid is the demonstrator baseline, not an
-approved production architecture:
+The owner's requested Azure-led hybrid remains the production-path comparison
+baseline, not approved production architecture. For accepted application
+exercise builds, actual Azure hosting, Azure SQL state and enabled real AI
+are mandatory; topology and other integrations remain proportionate:
 
-* Azure-hosted web workbench, domain API, structured programme state,
-  deterministic workflow and bounded AI, subject to a comparable options
-  appraisal against full Azure custom and greenfield business applications.
+* Azure-hosted web workbench, domain API, actual Azure SQL programme state,
+  deterministic workflow and bounded real AI; production selection remains
+  subject to a comparable options appraisal against full Azure custom and
+  greenfield business applications.
 * Excel is an import source for validated, traceable exercise records, not
   the target workflow or approval authority. Source workbooks remain unchanged.
 * SharePoint may hold managed collaboration documents only if tenant,
@@ -166,8 +191,9 @@ approved production architecture:
 
 ### Component Contracts and Failure Domains
 
-The following is a proposed demonstrator decomposition, not a selected Azure
-service plan or an implemented architecture. Each boundary needs a contract
+The following is a proposed decomposition, not proof of full implementation.
+The required real Azure/SQL/AI baseline does not prescribe all topology
+choices. Each boundary needs a contract
 and a tested failure/recovery path before build acceptance. A component
 failure must not create an unrecorded transition or imply approval.
 
@@ -181,17 +207,20 @@ failure must not create an unrecorded transition or imply approval.
 | Exercise workbook import | Profiles declared Excel structures, validates row-level mappings and stages proposed case updates for review; source workbooks remain unchanged. | A workbook or row that fails validation is quarantined with reason and source lineage. No unreported partial batch commit is allowed. |
 | Identity, authorization and telemetry | Identity claims are verified at the API; role/record/field rules and audit/telemetry are applied across screens, bulk actions, exports and AI context. | Identity or policy service uncertainty denies controlled writes and exports. Operations retains a privacy-safe diagnostic path and documents recovery before replay. |
 
-Service names and placement are options to compare, not requirements. Azure
-Container Apps, Azure SQL, Durable Functions, Azure AI Foundry, SharePoint and
-Blob Storage were prior candidate examples; verify current availability,
-support, tenancy, cost and data residency before selecting them.
+Placement and additional service names remain options. Actual Azure hosting,
+SQL state and real AI are exercise requirements; Azure SQL is the existing
+realization. Durable Functions, SharePoint and advanced resilience are not
+mandatory. Verify applicable availability, identity, cost and processing
+terms for the changed build, not just catalog presence.
 
 ### Proposed Azure and M365 realisation (2026-10-08)
 
 [ADR 0001](../adrs/0001-azure-architecture.md) and the Bicep in
 [`infra/`](../../infra/README.md) now realise the component contracts above as
-a proposed, not deployed, demonstrator design. The service choices remain
-options pending OQ-012.
+a proposed demonstrator topology. This dated full-topology description is
+not the deployed MVP: #58's pinned learning records a lean Azure SQL/Blob/AI
+deployment, not all rows below, production Entra user login or private-only
+isolation. OQ-012 remains an operational appraisal gate.
 
 | Component | Proposed realisation |
 | --- | --- |
@@ -239,7 +268,7 @@ before any release gate.
 ### Evidence status
 
 The upstream [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md)
-is draft v0.15.0. No signed `BRD_TO_PRD_HANDOFF_V1` or current valid BRD
+is draft v0.16.0. No signed `BRD_TO_PRD_HANDOFF_V1` or current valid BRD
 quality report was available for this revision; the latest valid BRD quality
 assessment remains v0.8.0. The source BRD's workflow descriptions, goals,
 authority rules and targets are requirements inputs, not company operating
@@ -399,13 +428,13 @@ production, procurement or company approvals.
 
 | Decision | Proposed direction | Rationale and condition |
 | --- | --- | --- |
-| DD-001: Demonstrator platform | Use the Azure-led hybrid as the comparison baseline while retaining full Azure custom and greenfield business applications as alternatives. | The owner requested this demonstrator direction, but cost, support, tenant, control and source-system evidence remain open. The gate may reject the hybrid. |
+| DD-001: Demonstrator platform | Require real Azure deployment, Azure SQL programme state and real AI in each accepted application exercise build; retain the Azure-led hybrid as the production-path comparison baseline alongside full Azure custom and greenfield business applications. | The owner requires actual platform learning, not production superiority or a premium estate. Production appraisal may reject the hybrid; it does not waive the exercise baseline. Per-build access, identity, cost and version-linked evidence are required under CON-009/AC-057. |
 | DD-002: Data boundary | Use constructed, non-identifying exercise records and exercise adapters/mocks for the MVP. | The records do not substantiate company performance or resident outcomes; no live resident contact or operational action is authorized. |
 | DD-003: Decision authority | Keep deterministic workflow and human authority separate from bounded AI proposals. | Shared case data does not transfer decision rights. AI output cannot satisfy an approval or controlled state transition. |
 | DD-004: Excel boundary | Treat Excel as a source for profiled and validated imports, not as the target workflow or approval authority. | Preserve source workbooks and expose row-level mapping/conflict outcomes. |
 | DD-005: Options appraisal | Compare all three platform options against equivalent workflows, controls and workload using predeclared criteria. | Set weights and evidence thresholds before scoring; no option has been scored or selected for production. |
 | DD-006: Appointment scenario | Retain the owner-directed missed-appointment rule only as a candidate exercise test. | Count only confirmed appointments with verified resident no-access while a case is active; route for human investigation only when the eligible count is greater than the configurable threshold (provisional default five). Exclude provider/contractor no-shows, cancellations and reschedules; human closure resets the active counter but preserves history. Do not infer refusal or delay urgent hazard response. Five is not a validated threshold or operational rule; evidence, Resident Engagement review and configuration governance remain open under OQ-014. |
-| DD-007: Bounded decision scoring | Include Microsoft Decision 1 in Foundry as an optional System One evaluation candidate within the existing bounded task service, alongside rules, generative models and manual handling. | Closed text/JSON judgments fit classification and evidence selection; the model is text-only and produces no rationale. No deployment, housing accuracy, UK-only inference or production selection is claimed. Task activation requires evaluation and serving/privacy gates; see the [dated model reassessment](../ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10). |
+| DD-007: Bounded decision scoring | Include Microsoft Decision 1 as a task-specific evaluation candidate alongside rules, generative models and manual handling; the deployed build must still exercise real AI under CON-009. | #58 records source-bound candidate selection feasibility, not calibrated quality, three-class screening, UK-only inference or net benefit. Closed text/JSON output produces no rationale. Task adoption requires reviewed experiment and serving/privacy evidence; see [current learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11). |
 | DD-008: Form-assistance boundary | Use versioned form schemas and source-linked field proposals, with deterministic validation and an explicit human review/export step. | Funding applications seek awards; claims seek reimbursement under an evidenced award. A draft/export is neither submission nor award. Finance owns the route, template and declarations; no model or bulk action signs or submits. |
 
 ### Options Gate Scoring Framework
@@ -440,7 +469,7 @@ Source: [Prototype Learnings and Simplicity Review](../reference/research/ux/pro
 | SA-001 | The default view is a single list of the signed-in user's cases with one plain status and one next action per case. There is no perspective picker or role simulator in user views. | MVP | FR-003, NFR-003. |
 | SA-002 | A case opens full screen with contact details, preferences and adjustments, flags, last contact, next appointment and next owner, limited to permitted fields. | MVP | TR-005. |
 | SA-003 | Blocked steps show the reason, the named owner and a next action in plain words. Internal terms (gate, hold, provenance, trace) are not used in the core flow and are checked by a copy audit. | MVP | RULE-022. |
-| SA-004 | AI assistance is optional and never on the path to seeing a case. Unreviewed output is labelled "AI suggestion, not approved"; reviewed drafts show reviewer status separately and never imply a controlled approval, consent or safety decision. | MVP | FR-034, FR-044. |
+| SA-004 | Real AI is required in the accepted deployed build; requesting assistance for a record is optional and never required to view a case or complete a permitted manual draft. Unreviewed output is labelled "AI suggestion, not approved"; reviewed drafts never imply a controlled approval, consent or safety decision. | MVP | FR-034, FR-044; CON-009, AC-057. |
 | SA-005 | Import accepts declared supported exercise workbook structures, maps columns, imports good rows and lists rows to fix with a plain reason. The source file is never modified. | MVP | TR-003, FR-029, AC-031. |
 | SA-006 | Every list offers an Excel or CSV export. Excel stays one-way read-only; no write back. | MVP | TR-001. |
 | SA-007 | Hazard and safeguarding items show a clock and a named owner and are never hidden by simplification. | MVP | CON-001, TR-007. |
@@ -582,7 +611,7 @@ owner, named control owners and affected users before implementation approval.
 | FR-002 | The product shall show building-level shared systems, dependencies, holds, works and costs separately from each home's evidence, decision, cost allocation and outcome; a shared building ID alone shall not establish package applicability or transfer a home-specific gate. | User reviews a building or linked home | AC-001, AC-002, AC-003, AC-043 | GOAL-001, GOAL-002 |
 | FR-003 | The product shall present task-focused screens and queues by authenticated role, with field/action permissions enforced by the service rather than by a selectable view label. | User signs in or changes task context | AC-004, AC-005 | GOAL-001 |
 | FR-004 | The shared work queue shall identify newly arrived work, approved priority, stale evidence, blockers, overdue tasks, unowned handoffs and cases needing extra human attention using visible definitions and filters. | User opens a permitted queue | AC-006 | GOAL-001, GOAL-003 |
-| FR-005 | The product shall allow authorised users to view and edit case fields, evidence references, task owners, due dates and permitted workflow details, preserving source, version, actor, timestamp and reason for each change. | User edits an individual case | AC-007, AC-008 | GOAL-001, GOAL-002 |
+| FR-005 | The product shall allow authorised users to view and edit case fields, evidence references, task owners, due dates and permitted workflow details, preserving source, version, actor, timestamp and reason for each change. | User edits an individual case | AC-007, AC-008, AC-057 | GOAL-001, GOAL-002 |
 | FR-006 | The product shall support bulk updates of explicitly permitted fields across selected cases, with a preview of the target records, proposed changes, validation failures and resulting per-case outcomes. | User selects multiple cases and requests an allowed change | AC-009 | GOAL-001, GOAL-002 |
 | FR-007 | Bulk actions shall not approve or release technical work, consent, safety decisions, procurement instructions, budget commitments, invoices, payments, claims, quality acceptance, defect closure or complaints. | User attempts a bulk action | AC-009, AC-010 | GOAL-002 |
 | FR-008 | The product shall enforce deterministic evidence, eligibility, authority, safety, resident, funding, capacity, quality and finance gates before a controlled state transition. | User or workflow requests a transition | AC-010, AC-011 | GOAL-002 |
@@ -599,7 +628,7 @@ owner, named control owners and affected users before implementation approval.
 | FR-019 | The product shall maintain distinct evidence-linked opportunity, application preparation/review/export/submission/disposition, award, claimable, claim-submission/disposition and cash records, separately from provider invoices/payments; each external application or claim event shall identify its scheme/route, pack version and authorized evidence without changing unrelated finance states. | Finance updates grant evidence | AC-022, AC-050 | GOAL-002 |
 | FR-020 | The coordinator dashboard shall provide a filterable heatmap of cases by approved geography/building/archetype and stage, with counts, denominator, holds, priority and data-coverage cues. | Coordinator or authorised stakeholder selects heatmap | AC-023 | GOAL-003 |
 | FR-021 | The coordinator dashboard shall provide a funnel of cases through lifecycle stages, showing entries, exits, returns, holds and exclusions with consistent definitions and drill-through to records. | Coordinator views funnel | AC-024 | GOAL-003 |
-| FR-022 | The product shall provide historical views of case and cohort progression from timestamped events, including stage duration, handoff, pause, return, reopen and decision history; narrative illustrations shall be labelled separately and shall not establish auditability or durations where event times are unknown. | Coordinator or assurance user selects a time range | AC-025, AC-043 | GOAL-003 |
+| FR-022 | The product shall provide historical views of case and cohort progression from timestamped events, including stage duration, handoff, pause, return, reopen and decision history; narrative illustrations shall be labelled separately and shall not establish auditability or durations where event times are unknown. | Coordinator or assurance user selects a time range | AC-025, AC-043, AC-057 | GOAL-003 |
 | FR-023 | The product shall generate delivery forecasts from declared cohort, stage, event, committed-capacity, dependency and scenario assumptions, show uncertainty and data limits, and distinguish forecast from target, approved plan and actual outcome. | Coordinator or Asset/Finance user requests forecast | AC-026 | GOAL-003 |
 | FR-024 | The product shall support role-appropriate stakeholder progress views and exportable evidence for a selected cohort and as-of date, with definitions, sources, denominators, filter impact, unresolved items and approval status visible; a separate illustrative snapshot shall disclose that it is not derived from the inspectable case sample and shall not imply case drill-through or accepted handover. | Coordinator prepares a progress review | AC-027, AC-041 | GOAL-001, GOAL-003 |
 | FR-025 | The product shall offer source-linked next-step suggestions based on case state, approved rules and relevant evidence, showing rationale, proposed owner, prerequisite, due-date basis and unknowns. | User reviews a case or queue | AC-028 | GOAL-001, GOAL-004 |
@@ -613,7 +642,7 @@ owner, named control owners and affected users before implementation approval.
 | FR-033 | The product shall represent an independent resident-update commitment with purpose/linked issue, owner, due date/basis, minimum-necessary safe-route/adjustment reference or explicit unknown, outstanding/proposed/sent state and sent time/evidence; operational receipt, acceptance or return shall not silently reassign or clear it, and sending shall not imply resident receipt or understanding. | User reviews an update commitment or operational handoff | AC-035 | GOAL-001, GOAL-002 |
 | FR-034 | Queue, case, history, source trace and suggestion views shall agree on recorded ownership, reason, evidence/version and explicit unknowns; selecting a case shall refresh its rationale and proposed reviewer/prerequisite without reusing another case's explanation. | User opens a case or changes selection | AC-036, AC-040 | GOAL-001, GOAL-004 |
 | FR-035 | Each prototype iteration shall include a versioned constructed-scenario manifest identifying its active slice, independently reportable applicable/deferred checks, eleven profile paths, nine workflow representations, fixture links, per-profile default IDs/count/order/selection, expected safe endpoints, deliberately unknown fields and implemented versus unavailable behaviors; same-home lifecycles and shared-building impacts shall be explicitly linked rather than inferred from unrelated examples. | Prototype is generated or reviewed | AC-043 | GOAL-001, GOAL-002 |
-| FR-036 | The product shall maintain a versioned registry for every AI-assisted task with workflow/field scope, permitted capability, question/options or prompt, source permissions, accountable reviewer, approved evaluation thresholds, abstention/fallback and enable/disable state; unregistered or unapproved tasks shall use manual/workflow-only handling. | A task is configured or requested | AC-044 | GOAL-002, GOAL-004 |
+| FR-036 | The product shall maintain a versioned registry for every AI-assisted task with workflow/field scope, permitted capability, question/options or prompt, source permissions, accountable reviewer, approved evaluation thresholds, abstention/fallback and enable/disable state; unregistered or unapproved tasks shall use manual/workflow-only handling. | A task is configured or requested | AC-044, AC-057 | GOAL-002, GOAL-004 |
 | FR-037 | For decision-scoring tasks, the product shall return a validated, unapproved proposal envelope containing task/case/source versions, question/criteria version, provider/deployment/model identity, permitted selected value and raw probabilities, abstention/failure, bound evidence references and application-derived explanation, without inventing a model rationale or authoritative fact. | System One adapter returns an answer | AC-045, AC-054 | GOAL-002, GOAL-004 |
 | FR-038 | The product shall bind each assisted form to an approved, versioned type/template schema specifying field types, units/options, required/conditional fields, source authority, evidence, calculation/rule references and reviewer; funding forms additionally require an evidenced scheme/route, while non-funding forms explicitly mark that association not applicable unless required by their schema. | User selects a form or funding route | AC-046 | GOAL-001, GOAL-002 |
 | FR-039 | The product shall stage extracted candidate field values with raw text/value, permitted source ID, document hash/version, locator and parser/OCR lineage; optional semantic selection shall choose only a supplied candidate or explicit no-match and retain all conflicting alternatives. | Approved evidence is parsed for a form | AC-047, AC-053 | GOAL-001, GOAL-004 |
@@ -621,7 +650,7 @@ owner, named control owners and affected users before implementation approval.
 | FR-041 | The product shall report deterministic form-validation results against the selected schema, approved funding/eligibility rules and reviewer-confirmed inputs, with field-specific unknown/conflict/failure reasons that block reviewed-pack readiness for unmet mandatory conditions. | Draft validation or readiness is requested | AC-049 | GOAL-002 |
 | FR-042 | The product shall assemble a reviewable funding application or separate claim pack with field/evidence/attachment links, template/input versions and Finance review history; a reviewed export shall not establish application submission/disposition, award, claim submission/disposition or cash, each requiring its own authorized evidence record. | Finance prepares or exports a pack | AC-022, AC-050, AC-054 | GOAL-001, GOAL-002 |
 | FR-043 | When a source, schema, approved rule or reviewer-confirmed value changes, the product shall mark exactly the dependent proposals, calculations, pack reviews and downstream approvals stale for re-review, preserving prior versions and unrelated decisions. | Version or material input changes | AC-013, AC-051 | GOAL-002 |
-| FR-044 | The product shall keep AI assistance optional, display proposed versus human-reviewed output distinctly, and exclude declarations, signatures, certifications, resident decisions and controlled approvals from AI pre-fill or batch acceptance; permission to view or manually complete a draft shall not depend on model availability. | User opens a case/form or requests assistance | AC-052, AC-054 | GOAL-001, GOAL-002, GOAL-004 |
+| FR-044 | The product shall provide real AI in each accepted deployed application build, while making assistance per record optional, displaying proposed versus human-reviewed output distinctly and excluding declarations, signatures, certifications, resident decisions and controlled approvals from AI pre-fill or batch acceptance; case access and permitted manual draft completion shall not depend on model availability. | User opens a case/form or requests assistance; build acceptance | AC-052, AC-054, AC-057 | GOAL-001, GOAL-002, GOAL-004 |
 | FR-045 | The product shall maintain each resident-owned measure decision against its exact home, measure, scope and design version, with decision source, permitted representative authority and explicit unknown status. | Authorized user records a supplied resident decision | AC-037, AC-055 | GOAL-001, GOAL-002 |
 | FR-046 | The product shall apply a supplied resident pause/withdrawal only to its identified measure/scope and flag dependent discretionary readiness for human review, leaving unrelated measure choices unchanged. | Authorized user records a supplied pause/withdrawal | AC-037, AC-056 | GOAL-001, GOAL-002 |
 
@@ -748,8 +777,9 @@ names or unbounded metric dimensions.
 
 This proposed method supports FR-027/028 and FR-036 to FR-044 under GOAL-004.
 Decision 1 is a candidate under DD-007, not an evaluated production choice.
-No live Decision 1 evaluation, form-assistance test or incremental value
-result is claimed by this amendment.
+The pinned #58 record demonstrates real candidate-selection and generative
+integration, not held-out quality/calibration, three-class screening or
+incremental value. Those targets remain unproved by this amendment.
 
 * For each proposed bounded task, compare at least one smaller/lower-cost
   candidate and one more capable candidate on the same held-out exercise
@@ -817,7 +847,8 @@ the shared case state and human decision rights.
 3. The provider adapter validates all required answers, types, allowed
    options and finite probability bounds; a missing/invalid answer is not
    normalized into a successful result. Decision 1 uses the Microsoft
-   provider's `/providers/microsoft/v1/systemone` endpoint, not the generative
+    provider's Foundry services host and `/providers/microsoft/v1/systemone`
+    endpoint, not a generic cognitive-services host or the generative
    API or an assumed drop-in TypeSafe SDK response. The application binds
    evidence IDs and renders a plain explanation of the question, selected
    source/label, uncertainty and proposed owner. It never claims a generated
@@ -846,7 +877,9 @@ case gates; only authorized human-reviewed draft edits use the API.
 
 ### Exercise Acceptance Contract
 
-The owner approved these falsifiable targets on 2026-10-10. This is a
+The owner approved the original falsifiable targets on 2026-10-10; the
+2026-10-11 real-platform amendment adds AC-057 and awaits fresh acceptance.
+This is a
 requirements/test-design contract, not evidence of passing implementation.
 An unexecuted required check is Not run, not Pass; an unmet prerequisite is
 Blocked. Report each check independently with fixture/version, expected and
@@ -896,12 +929,22 @@ declared warm-up. Record cold starts separately, not excluded without disclosure
 | NFR-011 support | Digital exercise operator and backup roles; weekday 09:00-17:00 UTC coverage, no 24/7 commitment. Owned failure/disable/reconcile/rollback instructions. No live safety dependency on operator availability. |
 | EXA-012 spending | USD 450/month total attributable technology, including existing charges and accrued/unbilled liabilities. Allocations: 100 hosting/storage, 200 inference/comparators, 50 diagnostics, 100 reserve; these are ceilings, not vendor quotes. Warn/review at 360 or projected excess; pause optional work by 405 or earlier when liabilities threaten 450. Unknown price/remaining liability blocks billable batches; budget alerts alone are not a hard cap. Report labour separately. |
 
-Performance profiles beyond these approved workloads can be explored, but
-must not replace or weaken the baseline. Local application plus authorised
-real Foundry endpoint is acceptable. If cloud hosting is chosen, verify its
-identity/state security and cost rather than claiming local observations
-as cloud results. Production private networking, replicas and managed database
-choices remain separate ADR/pilot gates, not mandatory PoC spending.
+Measure NFR-002/006/009/011 against the deployed release and fixed service
+profile for acceptance, with authorized identity, actual Azure SQL and AI
+evidence. Extra profiles and local tests do not replace required workloads.
+Local application plus real Foundry was the v0.12.0 option; it is not
+accepted delivery after the 2026-10-11 direction. Actual managed SQL is now
+mandatory; production private networking, replicas and premium topology
+remain separate ADR/pilot gates.
+
+The EXA-012 spending row above preserves the 2026-10-10 approval, not the
+effective #58 budget: that rebuild has a recorded owner cap override.
+Before each build, record applicable approval/override, scope, accrued/
+unbilled liabilities and remaining permitted spend. Unknown price, missing
+authority or a threatened effective limit blocks billable batches, even
+if inference is required for acceptance. Retain source/task/input limits,
+upper-liability reservations and usage/cost records; mark acceptance Blocked
+or Not run until evidence exists, never pass by replay or silently lift a cap.
 
 #### Forecast, Dashboard and Financial Oracles
 
@@ -946,8 +989,10 @@ real delegations, tax rules, grant entitlement or UK payment-law claims.
 #### Real-Inference Quality and Incremental Value
 
 For FR-036/037/039/040/044 and NFR-009, register versioned form-candidate
-selection and documentary support screening (Decision 1), and source-bound
-narrative (generative Foundry). Required record: task/workflow/field scope,
+selection and documentary support screening as Decision 1 candidate tasks,
+and source-bound narrative as a generative candidate. At least one permitted
+task must use a real model in the exercised application; successful selection
+does not certify screening. Required record: task/workflow/field scope,
 capability, allowed sources/options, prompt/question and model version,
 reviewer, thresholds, usage/time/review budget, failure route and enable state.
 Unregistered/unapproved tasks remain disabled or workflow-only.
@@ -968,7 +1013,7 @@ protected evaluation records; do not emit raw source text into diagnostics.
 | Threshold calibration | Proposed candidate p at least 0.90 with runner-up margin at least 0.20 for selection; support p at least 0.95 with margin at least 0.20 for screening. Set/calibrate on calibration families, freeze before held-out tests; never tune on test failures. A changed threshold needs a new held-out evaluation. Probability is not authority or truth. |
 | Provenance and export | 100% source binding and matching reviewed-export field/attachment manifest. Narrative material claims have cited support; no invented funding, resident or technical fact. Any critical unsupported fact, prohibited fill, restricted-source leakage or silent model failure blocks that task. |
 | Comparative effort | Twelve counterbalanced complete-pack pairs versus manual/template and parser/rules on identical inputs. Measure gathering, preparation, validation, full review, correction and re-review. Hypothesis: median per-pair relative net-effort reduction at least 15% versus parser/rules without quality regression. Report every pair/range and adverse results; no benefit claim from token prices alone. |
-| Actual platform use | Recorded successful Decision 1 selection/screening and generative Foundry calls plus explicit failure/fallback tests. Mocks can test failures but cannot satisfy success. No access or missing provider evidence leaves the essential demonstration Blocked. |
+| Actual platform use | AC-057 requires a real Azure-hosted app, actual SQL durability and at least one registered real generative or Decision task, with explicit failure/manual tests. Report selection, screening and generation separately; #58 selection/generation does not prove screening or every updated build. Mocks test failures, never success. Missing budget, authority or provider evidence leaves acceptance Blocked or Not run. |
 
 All required fields and the complete pack receive human exercise review.
 Zero misses in a finite suite does not prove zero population risk; report
@@ -976,6 +1021,38 @@ sample size and coverage. If measured quality or incremental value fails,
 retain the simpler passing path and report the result honestly. That can
 fulfil GOAL-004's learning outcome; it does not activate a failing AI task
 or substitute for essential real inference.
+
+#### Parallel Decision-Model Experiment Intake
+
+The owner reports parallel experimentation. The available
+[protocol at pinned #58](https://github.com/jmservera/ama/blob/5136f192d583a5bf53adeeec4b0f21369b005c9d/.copilot-tracking/mve/2026-10-10/decision-model-value/mve-plan.md)
+is proposed design, not verified execution/results. Retain four arms:
+R rules/parsers/templates/manual, D Decision with templates, A generative
+agent and H agent with Decision tools. A versus D tests narrow replacement;
+H versus A tests complementarity; H versus R tests overhead and task value,
+not whether to replace all agents.
+
+Keep the 120 grouped families/30 tuning/30 calibration/60 held-out split,
+720 dispositions, two independent human label adjudicators and twelve
+counterbalanced human pack blocks. Intake includes protocol/split/source
+hashes; model/deployment, prompt/question, schema and frozen threshold
+versions; attempts, denominators/exclusions, failures/fallbacks; per-task
+quality, coverage/calibration and critical errors; paired complete
+preparation/review/correction effort, cost, latency and uncertainty.
+Synthetic agent labels or scripted timings cannot substitute for human
+gold labels or effort. Additional comparative margins remain proposed
+until frozen and approved.
+
+The current binary support adapter cannot establish supported/contradicted/
+insufficient macro-F1 by collapsing labels. Evaluate a separately frozen
+three-option shadow task or record screening Not evaluated; do not
+reinterpret the 0.90 target as binary accuracy. Insufficient participants,
+labels, schema or precision means Inconclusive, not benefit demonstrated.
+Product/task owners review placement, Data reviews method and uncertainty,
+Finance reviews costs/effort and the exercise owner decides adoption.
+Operational use still requires named control/legal/DPO approval. Independent
+platform/control work continues where dependencies allow; quality/value
+claims await reviewed results. No automatic model activation.
 
 #### Four-Week Evidence Plan
 
@@ -993,14 +1070,15 @@ decision rather than retroactively calling an unexecuted target passed.
 
 | ID | Category | Constraint | Imposing source | Boundary |
 | --- | --- | --- | --- | --- |
-| CON-001 | Scope / data | The MVP is non-production and uses constructed, non-identifying exercise records; it exercises no live authority over residents, providers, payment, grants or safety. | BRD v0.15.0, demonstrator scope; owner direction | No live decisions, instructions, submissions or external integrations. |
-| CON-002 | Integration / authority | Existing asset, housing, repairs, hazard, finance, procurement and provider systems retain authoritative responsibilities unless separately approved. | BRD v0.15.0, home-centred operating model | Workbench coordinates and links; it does not silently replace systems of record. |
+| CON-001 | Scope / data | The MVP is non-production and uses constructed, non-identifying exercise records; it exercises no live authority over residents, providers, payment, grants or safety. | BRD v0.16.0, demonstrator scope; owner direction | No live decisions, instructions, submissions or external integrations. |
+| CON-002 | Integration / authority | Existing asset, housing, repairs, hazard, finance, procurement and provider systems retain authoritative responsibilities unless separately approved. | BRD v0.16.0, home-centred operating model | Workbench coordinates and links; it does not silently replace systems of record. |
 | CON-003 | Human decision rights | Residents retain measure-specific decisions; qualified professionals, Safety, Asset, Procurement, Finance, Quality and Board/delegated authorities retain respective decisions. | Original case, governance brief; BRD authority matrix | Agent suggestions and UI actions cannot substitute for approval. |
 | CON-004 | Governance / appraisal | No production/platform/procurement approval shall be inferred from the owner's demonstrator preference; alternatives remain subject to the options gate. | Addendum, Implementation Options and Provisional Platform Recommendation; owner direction | Hybrid design is DD-001, not a mandate for production selection. |
 | CON-005 | Estate / evidence | Dataverse and Dynamics 365 are not assumed present; M365/SharePoint availability, licensing and governance remain unverified. | Owner estate statement, recorded in Product Context and OQ-012 | No unverified estate dependency; proposed document-store fallback is a design option under Component Contracts, not a company constraint. |
 | CON-006 | Safety / authority | Retrofit tooling shall not delay, pause, reset, classify or close the existing statutory hazard response. | BRD CON-001, RULE-003 | Hazard service retains its own record, clock and authority. |
 | CON-007 | Workflow / separation of duties | No bulk action may satisfy a controlled approval, consent, instruction, payment, claim or closure decision. | BRD authority matrix; FR-007 | Each consequential decision remains separately authorised and auditable. |
 | CON-008 | Reporting / evidence | Forecasts are scenarios, not guarantees, approved plans or commitments. | BRD evidence/value controls; FR-023 | Expose assumptions, uncertainty and stale/missing inputs. |
+| CON-009 | Exercise delivery / platform | Every accepted application exercise build uses actual Azure hosting, real SQL programme state (existing Azure SQL realization) and at least one registered real AI task on the continuing generated dataset. | Owner direction 2026-10-11; addendum Subsequent Application Exercise Builds; BRD CON-007/AC-086 | Delivered prototypes/PoCs/MVPs and updates, not docs/unit/CI checks; AC-057. Local/mock-only delivery cannot pass; missing authority/budget/evidence blocks acceptance. No production topology or spending approval inferred. |
 
 ## Process Models
 
@@ -1098,6 +1176,7 @@ technical, control and user representatives before acceptance.
 | AC-054 | Given positive/negative model answers, a valid draft and attempts to sign, submit, infer consent, approve eligibility/payment/quality, suppress a hazard/complaint/withdrawal or alter ranking, when assistance/pack actions run, then zero prohibited actions execute, mandatory human routes remain independent, and any authorized external-submission record requires distinct human-entered evidence rather than an export or model score. | FR-037, FR-042, FR-044 | Not run |
 | AC-055 | Given two measures with distinct source/design versions and a scheduling-only representative, when a decision record is entered, then only the expressly evidenced measure/version receives the decision; the other remains unknown and representative scheduling authority cannot create works consent. | FR-045 | Not run |
 | AC-056 | Given an agreed measure and an unrelated agreed sibling measure, when a supplied withdrawal of the first is recorded, then its dependent discretionary readiness requires review while the other choice is unchanged; no refusal, sanction or hazard-service pause is inferred. | FR-046 | Not run |
+| AC-057 | Given an authorized accepted application exercise build on the retained generated stock/programme lineage, when its permitted browser/API workflow runs at its recorded Azure endpoint and source/image/revision/config versions, then the API writes actual Azure SQL with verified least-privilege workload identity, independent before/after SQL checks show acknowledged state/audit survives an app restart, and at least one registered real generative or Decision task records source/model/provider/usage/outcome with citations and Not reviewed authority. Failure/manual paths preserve controls and case access; templates, mocks, local state or unrelated historical calls cannot pass. Missing budget, authorization or service evidence is Blocked or Not run, with separate task-quality/value and full-workflow gates. | FR-005, FR-022, FR-036, FR-044; CON-009 | Not run |
 
 ### Independently reportable review checks
 
@@ -1147,7 +1226,7 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-002 | AC-001, AC-002, AC-003, AC-043 | Linked |
 | FR-003 | AC-004, AC-005 | Linked |
 | FR-004 | AC-006 | Linked |
-| FR-005 | AC-007, AC-008 | Linked |
+| FR-005 | AC-007, AC-008, AC-057 | Linked |
 | FR-006 | AC-009 | Linked |
 | FR-007 | AC-009, AC-010 | Linked |
 | FR-008 | AC-010, AC-011 | Linked |
@@ -1164,7 +1243,7 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-019 | AC-022, AC-050 | Linked |
 | FR-020 | AC-023 | Linked |
 | FR-021 | AC-024 | Linked |
-| FR-022 | AC-025, AC-043 | Linked |
+| FR-022 | AC-025, AC-043, AC-057 | Linked |
 | FR-023 | AC-026 | Linked |
 | FR-024 | AC-027, AC-041 | Linked |
 | FR-025 | AC-028 | Linked |
@@ -1178,7 +1257,7 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-033 | AC-035 | Linked |
 | FR-034 | AC-036, AC-040 | Linked |
 | FR-035 | AC-043 | Linked |
-| FR-036 | AC-044 | Linked |
+| FR-036 | AC-044, AC-057 | Linked |
 | FR-037 | AC-045, AC-054 | Linked |
 | FR-038 | AC-046 | Linked |
 | FR-039 | AC-047, AC-053 | Linked |
@@ -1186,7 +1265,7 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-041 | AC-049 | Linked |
 | FR-042 | AC-022, AC-050, AC-054 | Linked |
 | FR-043 | AC-013, AC-051 | Linked |
-| FR-044 | AC-052, AC-054 | Linked |
+| FR-044 | AC-052, AC-054, AC-057 | Linked |
 | FR-045 | AC-037, AC-055 | Linked |
 | FR-046 | AC-037, AC-056 | Linked |
 
@@ -1212,13 +1291,13 @@ All goals have linked requirements; all FRs map to at least one goal (100%).
 | --- | --- |
 | Case Study 48 original problem and requested agents | Product context, workflow coverage, role views and product goals; initial autonomy wording does not override later BRD controls |
 | Case Study 48 Addendum, Modernised Retrofit Delivery Objective and Digital Foundation | Shared case, property/building linkage, deterministic gates, bounded AI and accountable human authority |
-| BRD v0.15.0, Operating Model for a Home-Centred Workbench and Workflow Portfolio and Business Value | FR-001 to FR-031, profile screens, stage/return model, finance and resident/provider paths, heatmap/funnel/timeline/forecast and value measures; signed handoff and full approval remain outstanding |
+| BRD v0.16.0, Operating Model, Workflow Portfolio and CON-007/AC-086 | FR-001 to FR-031 plus real-platform CON-009/AC-057; profile screens, state, finance, resident/provider paths and value measures; signed handoff and full approval remain outstanding |
 | BRD BG-001 to BG-012 and RULE-001 to RULE-024 | GOAL-001 to GOAL-004, permission and transition gates, resident/safety/finance controls, and evaluation guardrails |
 | BRD Comparison 1 and Comparison 2; OD-18 | GOAL-003/004 and metrics; comparison definitions and targets remain open and unratified |
 | Retrofit operating-data exercise pack and data dictionary | Constructed identifiers, home/building joins, lifecycle events, contacts, appointments, safety holds, quality evidence, grant and finance fields; realistic data defects inform import and stale/conflict scenarios. The records do not establish actual company performance or resident outcomes. |
 | Prototype on `feat/proper-warm-prototype` at `5e52ceb` | Four role-based task perspectives and bounded case-review suggestions inform interaction direction only; view labels are not authorization, and implemented surfaces are not proof of production readiness |
 | [2026-10-06 nine-role/eleven-profile UX review](../reference/research/ux/proper-warm-prototype-profile-review.md) | Candidate journey contract, next-prototype slice and FR-011/012/014-017/024/032-035 with AC-034-043; source-based observations and proposed UX tests, not company/user validation |
-| [System One reassessment, 2026-10-10](../ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10), Microsoft catalog/API documentation | DD-007, FR-036/037/044, AC-044/045/052/054 and NFR-009; optional typed scoring and truthful evidence envelope, not deployment/performance evidence |
+| [System One reassessment, 2026-10-10](../ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10), Microsoft catalog/API documentation and [2026-10-11 learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11) | DD-007, FR-036/037/044, AC-044/045/052/054/057 and NFR-009; API and source-bound selection feasibility, not calibrated screening or comparative value |
 | Owner direction on form extraction/filling and AI-assisted decisions, 2026-10-10; BRD FR-023/024/026/027 and RULE-009/010; proposed form pattern in the model reassessment | DD-008, FR-038 to FR-043, AC-046 to AC-051/053/054 and Finance journey; evidenced route, deterministic eligibility, separate application/award/claim/cash and human submission; schema/terms unresolved under OQ-015 |
 
 ### Review-learning disposition
@@ -1236,6 +1315,7 @@ All goals have linked requirements; all FRs map to at least one goal (100%).
 | Quality checklist/returns and invoice match evidence need depth before new ledgers | FR-017/018/019; AC-020-022/042 | Keep independent acceptance and invoice/payment/grant/cash distinct |
 | Narrative timeline lacks audit fields; original examples cannot establish durations | FR-022, NFR-004; AC-025/043 | Constructed events labelled as such; operational audit/recovery deferred |
 | Eleven perspectives not eleven validated journeys; adjacent provider/quality/operator lenses insufficient | FR-035, NFR-001; profile journey contract | Direct representative/device/accessibility research OQ-004/011; no conformance claimed |
+| #58 actual selection/generation and Azure SQL deployment; endpoint fixed; later source controls not all deployed | CON-009/AC-057, DD-007 and separate source/image/revision records | Narrow feasibility observed, not calibrated screening, benefit or full acceptance; [pinned learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11) |
 
 ## MVP and Release Framing
 
@@ -1251,6 +1331,11 @@ suggestions improve tasks over the same workflow without AI.
 ### Release increments within this PRD
 
 #### Next read-only prototype generation contract
+
+This historical Slice A/B/C contract is retained for UX checks. Static
+examples alone are not a subsequent accepted application exercise build.
+Delivered prototypes use the continuing real-service application under
+CON-009/AC-057; small fixtures remain reproducible tests.
 
 This learning slice precedes the four full MVP increments below. It does not
 waive their authentication, controlled-edit, event, integration-test or
@@ -1334,6 +1419,8 @@ checks separately from user validation and accessibility conformance.
 
 All four increments belong to this single PRD and non-production exercise
 boundary. The exercise records are constructed and are not company evidence.
+Each increment delivered as a prototype/PoC/MVP retains real Azure/SQL/AI;
+staged construction does not postpone all AI to increment 4.
 Implementation sequencing may change after dependency and options appraisal.
 For full MVP acceptance, no workflow may be represented only in prose: each
 receives at least one screen/queue and one acceptance scenario. A next-prototype
@@ -1475,18 +1562,18 @@ dependency and cannot be assumed away.
 | OQ-013 | Which heatmap geography, funnel denominator, time windows and resident-outcome breakdowns are approved for each audience? | Programme, Data and Performance, DPO, Resident Engagement | Dashboard definitions and disclosure |
 | OQ-014 | What approval and change governance applies to the owner-directed missed-appointment exercise scenario before any operational consideration? | Housing, Repairs, Resident Engagement, Programme/Digital under BRD OD-40 | Operational use remains prohibited |
 | OQ-015 | Which evidenced funding routes, current application/award/claim templates, scheme terms, field/attachment authorities and financial-readiness criteria should the form workspace support, and who approves each version? | Finance and Grants, Legal, Data and competent technical owners; scheme/award evidence and approved constructed schema for the exercise | Unknown route blocks bid preparation; no current round, eligibility, award terms or external submission assumed |
-| OQ-016 | Which decision-scoring tasks justify activation, with what adjudicated datasets, probability/abstention thresholds and reviewer budgets, and can the target Foundry deployment meet response-contract, quota, inference-role, network, processing-location/terms and whole-life-cost gates? | Product, task/control owners, Digital, DPO, Procurement and Finance; synthetic conformance and paired evaluation evidence | Decision 1 remains an optional candidate; no deployment, live personal-data inference or production performance claim |
+| OQ-016 | Which decision-scoring tasks justify activation, with what adjudicated datasets, probability/abstention thresholds and reviewer budgets, and can the target Foundry deployment meet response-contract, quota, inference-role, network, processing-location/terms and whole-life-cost gates? | Product, task/control owners, Digital, DPO, Procurement and Finance; conformance and versioned paired-experiment evidence | #58 demonstrates narrow selection/generation feasibility, not calibration, screening, value or production approval. Decision placement remains conditional; whole-app real AI is mandatory under CON-009. |
 
 ## Sign-Off and Handoff Readiness
 
-The owner accepted this reviewed v0.12.0 **exercise-only baseline for
+The owner accepted the reviewed v0.12.0 **exercise-only baseline for
 implementation planning** on 2026-10-10 with no changes, after approving its
 assumptions and targets before editing. Formal governance status remains
 in-review. Neither acceptance approves completed implementation or
 operational use; grounded role agents do not sign for the company, residents
 or competent professionals.
 
-The unsigned BRD v0.15.0 remains upstream intent. No signed handoff or current
+The unsigned BRD v0.16.0 remains upstream intent. No signed handoff or current
 approved upstream quality evidence exists; no payload or signature is
 manufactured. For this bounded exercise the owner-directed assumptions
 explicitly disposition missing company discovery/approval prerequisites,
@@ -1503,7 +1590,7 @@ current legal/technical/funding evidence, signed upstream handoff, actual
 delegations and human stakeholder/user reviews; these are not fictional
 company research tasks that must recur before every exercise iteration.
 
-The [current independent review](../../.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/quality-report.json)
+The [historical v0.12.0 independent review](../../.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/quality-report.json)
 and [targeted correction disposition](../../.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/targeted-closure.md)
 retain the formal upstream limitation. Four actionable source findings were
 corrected, including canonical resident-choice decomposition, supplementary
@@ -1513,7 +1600,7 @@ two editorial edits; both were applied and mechanically verified. Four
 SMART goals, all ten NFR categories and 100% FR/AC and FR/goal coverage were
 reported. No passing implementation or formal governed approval is inferred.
 
-### Approval checklist
+### Historical v0.12.0 Approval Checklist
 
 * [x] Owner-approved exercise assumptions, role accountability and numerical targets
 * [x] All sixteen exercise OQs dispositioned; future operational questions retained
@@ -1522,10 +1609,25 @@ reported. No passing implementation or formal governed approval is inferred.
 * [x] Independent current-version findings dispositioned; upstream governance boundary retained
 * [x] Final reviewed exercise baseline accepted by project owner on 2026-10-10, with no changes
 
-Implementation acceptance is separate and currently unexecuted: nine workflow
+### Current v0.13.0 Candidate Handoff
+
+User direction authorizes the amendment, not independent requirements
+approval or inherited v0.12.0 acceptance.
+
+* [x] Real AI/SQL/Azure scope and evidence recorded in CON-009/AC-057
+* [x] #58 feasibility separated from screening/calibration/value and full delivery
+* [x] Scoped budget history and versioned parallel experiment intake recorded
+* [ ] Fresh independent full-PRD requirements-quality review and disposition
+* [ ] Owner acceptance of this amended exercise candidate
+
+Counts: 46 FRs, 57 ACs, 13 NFRs and 9 constraints; existing IDs preserved.
+Document implementation and RPI outcome review are not formal PRD approval.
+Implementation acceptance is separate: nine workflow
 and eleven profile suites, permission/control/source/bulk/return tests,
 reconciled dashboard/forecast, accessibility checks, real-inference quality/
 value evidence, cost and recovery results. None is marked passed here.
+Pinned #58 observations establish narrow service feasibility only; AC-057
+and complete acceptance remain Not run for this candidate.
 Signed current upstream evidence, company control-owner sign-off, direct
 human user research and live-use approval remain future operational gates.
 
@@ -1537,6 +1639,6 @@ human user research and live-use approval remain future operational gates.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-10 (v0.12.0, owner-approved exercise assumptions and measurable acceptance contract)
-* **Authoring Status:** Complete, owner-accepted exercise baseline; formal governance remains in-review
-* **Next Review:** Implementation evidence against this contract; governed adoption is a separate route
+* **Last Updated:** 2026-10-11 (v0.13.0 candidate, mandatory real-platform acceptance and #58 learning)
+* **Authoring Status:** Amended candidate awaiting requirements review and owner acceptance; formal governance remains in-review
+* **Next Review:** Full-PRD requirement quality and amended exercise acceptance; implementation and governed adoption are separate gates

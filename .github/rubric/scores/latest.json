@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-11T18:09:27+00:00",
-  "commit": "8ac8ee73a3784110059249ceac2552d7221bc3c8",
+  "scored_at": "2026-10-11T09:11:14+00:00",
+  "commit": "5250f55db5a52668d4692ed3589ea31a0a8309fd",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38162060891",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38127029972",
   "fingerprints": {
-    "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
-    "prd": "97a6d0c9d0e4951636e923d1acd07c1d8a27b83a2aa65357a32562c6313cf80d",
-    "adr": "ece9516f48868a89f6f1ca198227cef7b3e9c4d1a059e53297714642d95ee8df",
+    "brd": "ad45b46ce2519c3977631b20fa8d76327de50d1acd6306318697134fa18570a5",
+    "prd": "e866c8d459306e57952fefdb85c9252b3e5a4fa22022ee5b83257c4e5feb1743",
+    "adr": "a7c8e9393aff36bc1ee8700ea9364c7c19d46b869d7f946994bd5fda3914e33a",
     "solution-code": "a89a639f156e48a50323490fc9ab6f0eb6ba0ea4db08646ba4d04a79c851b82f",
-    "infrastructure": "786d4d8cab422925a2a2e07bc24585a3efade8ef8062669bdb5990b9669f7583"
+    "infrastructure": "e962abd356f81103c78019d3442cd3da2fc2d94a694375c109ac0fbc7c8ad7ea"
   },
   "total": 35,
   "sections": {
@@ -44,10 +44,10 @@
     "A3": {
       "score": 4,
       "evidence": [
-        "infra/modules/containerapps.bicep:160-175",
-        "infra/scripts/create-api-app-registration.sh:76-79"
+        "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-329"
       ],
-      "rationale": "Core identity/compliance controls in place (ADR 0002 threat/compliance evidence); this PR additionally fixes a broken allowedPrincipals policy and adds app-role-required sign-in with a Key Vault secret. Threat model still implied rather than fully stated."
+      "rationale": "ADR 0002 names a specific AI leakage threat and states a mitigation, plus named compliance articles (GDPR 9, 17(3), 44-46). This PR's PRD edits add governance/test detail but do not touch the deployed threat-model evidence or any DD-007 content; unchanged."
     },
     "A4": {
       "score": 4,
@@ -62,10 +62,9 @@
     "A5": {
       "score": 3,
       "evidence": [
-        "infra/modules/containerapps.bicep:139-142",
-        "infra/README.md:103-104"
+        "docs/adrs/0002-pilot-readiness-architecture.md:308-340"
       ],
-      "rationale": "Operational resilience design is discussed with specifics (ADR 0002) but remains partially evidenced in deployment; this PR corrects a readiness-probe/endpoint mismatch, a minor but real operational fix, not new measurement or cost modelling."
+      "rationale": "Operational resilience design discussed with specifics but partial evidenced deployment; unchanged."
     },
     "A6": {
       "score": 3,
