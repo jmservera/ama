@@ -1,8 +1,8 @@
 ---
 title: Prototype Learnings and Simplicity Review
-description: Learnings from the open prototype PRs 19, 24 and 27 and an eight-angle critique of how to make the system genuinely easy for Excel users
+description: Historical prototype simplicity review and dated PR58 real-platform and decision-model learning
 author: AMA programme
-ms.date: 2026-10-08
+ms.date: 2026-10-11
 ms.topic: reference
 ---
 
@@ -13,6 +13,35 @@ Open pull requests #19 (Python prototype), #24 (Node proof of concept) and #27 (
 Evidence labels: observed means seen in the PR content; hypothesis means a role or coach view; unknown means no evidence. Role views are research instruments, not company facts. No usability study with real staff has been done, so every ease-of-use claim here is untested. All prototype data is synthetic.
 
 ## What the prototypes proved
+
+### Continuing MVP Learning (2026-10-11)
+
+[#58](https://github.com/jmservera/ama/pull/58) at
+`5136f192d583a5bf53adeeec4b0f21369b005c9d` records real Azure SQL/Blob,
+Decision 1 source-bound EPC selection and cited GPT-4.1-mini generation
+on the original 60,000 generated stock rows/980 programme cases. These
+reported results were inspected, not rerun here. The wrong provider host
+caused an earlier auth failure; its correction demonstrates integration
+feasibility, not calibrated quality or benefit.
+
+The [current model learning](../../../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11)
+and PRD experiment intake separate four-arm comparative evidence from
+successful inference. Binary support does not establish three-class F1;
+missing human labels/effort means Not evaluated/Inconclusive. Later source
+tests are not automatically deployed evidence; no full user-acceptance claim.
+
+The owner now requires real AI/SQL/Azure in every accepted application
+exercise build, including delivered prototypes and iterations. Historical
+static/fake-door tests remain useful UX experiments, not accepted delivery.
+AI remains optional for the individual user's task and unavailable-model
+manual recovery, not optional in the whole deployed application.
+Clear structured fields should use rules unless semantic selection proves
+additional value. Preserve source/human-review labels, unknowns, explicit
+errors and consent/financial/safety authority; do not fake a rationale from
+a closed scorer or hide failed assistance. Independent app/platform work
+need not wait for the parallel experiment; adoption/value claims do.
+
+### Historical Prototype Findings (2026-10-08)
 
 | Learning | Source | Status |
 | --- | --- | --- |
@@ -47,7 +76,7 @@ These are proposals, each from at least five of the eight critics.
 * Open on one list, "My cases today", with the role taken from sign-in. Remove the perspective picker and role simulator from user views. A perspective switch is not authorisation.
 * One full-screen case card: contact details, resident preferences and adjustments, flags, last contact, next appointment, next owner. One plain status line: "Ready", "Waiting on [named person]: [reason]" or "Stopped until [named person] confirms".
 * Plain words in place of internal terms: gate becomes "check before next step", hold becomes "waiting on" or "stopped until", quarantine becomes "rows to fix", Accept becomes "Use this draft". Add a copy audit for the core flow.
-* AI is optional, on demand or background, and never on the path to seeing a case. Show deterministic status instantly. Label drafts "AI-drafted, human-approved". Hide unbuilt agents.
+* Requesting AI per record is optional, on demand or background, and never required to see a case. The subsequent-build rule still requires real AI in the deployed app. Show deterministic status instantly; distinguish "AI suggestion, not approved" from human-reviewed drafts and controlled approvals. Hide unbuilt agents.
 * A forgiving import: drop any workbook, auto-map columns and sheet names, import good rows, show "rows to fix" with a plain reason, and offer an Excel-shaped download of those rows. The source file stays untouched.
 * Neutral colours for waiting; red only for real hazards or errors. Never colour alone.
 * Blocked steps give a reason, an owner and a next action, with a button to ask the owner.

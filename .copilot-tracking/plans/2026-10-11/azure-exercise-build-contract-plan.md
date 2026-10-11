@@ -5,7 +5,7 @@
 
 * Task ID: AMA-AZURE-EXERCISE-20261011
 * Task slug: azure-exercise-build-contract
-* Planning status: Ready; revised after the single final critique
+* Planning status: Ready; full-plan implementation in progress after the single final critique
 * Plan date: 2026-10-11
 * Phase details: .copilot-tracking/details/2026-10-11/azure-exercise-build-contract-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-11/azure-exercise-build-contract-plan-critique.md
@@ -179,20 +179,20 @@ depend on model availability.
 | Plan | .copilot-tracking/plans/2026-10-11/azure-exercise-build-contract-plan.md |
 | Details | .copilot-tracking/details/2026-10-11/azure-exercise-build-contract-phase-details.md |
 | Critique | .copilot-tracking/reviews/plans/2026-10-11/azure-exercise-build-contract-plan-critique.md; complete, findings disposed |
-| Changes role | .copilot-tracking/changes/2026-10-11/azure-exercise-build-contract-changes.md; implementation creates |
-| Readiness | Ready for documentation implementation only |
-| Continuation | Standalone planning; no implementation invoked |
+| Changes role | .copilot-tracking/changes/2026-10-11/azure-exercise-build-contract-changes.md; active implementation evidence |
+| Readiness | Full-plan documentation implementation in progress |
+| Continuation | User-directed RPI continuation through implementation and outcome review; no app deployment |
 
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Extract current learning and freeze requirements delta
+### [x] P01: Extract current learning and freeze requirements delta
 
 * Intent: Translate prospective user direction and pinned #58 learning.
 * Dependencies: None.
 
 <!-- rpi:task id=P01-T01 -->
-#### [ ] P01-T01: Classify PR #58 decision-model and build evidence
+#### [x] P01-T01: Classify PR #58 decision-model and build evidence
 
 * Requirement and evidence: #58 current source/results; parallel experiment user statement.
 * Expected result: Source-pinned learning register, current successful
@@ -200,13 +200,13 @@ depend on model availability.
 * Detail section: P01-T01 in the phase-details artifact.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Update canonical requirements and supporting evidence
+### [x] P02: Update canonical requirements and supporting evidence
 
 * Intent: Apply the documented baseline change consistently.
 * Dependencies: P01.
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Update BRD, PRD and addendum
+#### [x] P02-T01: Update BRD, PRD and addendum
 
 * Requirement and evidence: Prospective real AI/SQL/Azure direction.
 * Expected result: BRD v0.16.0 / PRD v0.13.0 candidate amendments, dated
@@ -215,7 +215,7 @@ depend on model availability.
 * Detail section: P02-T01 in the phase-details artifact.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Integrate learning and experiment handoff into existing knowledge base
+#### [x] P02-T02: Integrate learning and experiment handoff into existing knowledge base
 
 * Requirement and evidence: Pinned learning register and existing decision-model synthesis.
 * Expected result: Indexed findings, immutable historical evidence,

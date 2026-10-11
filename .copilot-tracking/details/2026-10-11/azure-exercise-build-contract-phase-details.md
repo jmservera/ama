@@ -10,16 +10,17 @@
   earlier session review and PR #58 pinned to 5136f192d583a5bf53adeeec4b0f21369b005c9d.
 * This plan is documentation-only. Canonical amendments belong to /rpi-implement;
   the planning phase owns only plan, details and one critique.
-* Readiness: Ready after one final critique and planner-owned dispositions;
-  task status below refers to future implementation, not planning completion.
+* Readiness: Full-plan implementation active after one final critique.
+  First execution boundary is P01-T01; write scope and validation are locked
+  in the related plan. No blockers.
 
 ## Phase Index
 
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
-| P01 | Extract learning and freeze delta | Pending | P01-T01 |
-| P02 | Update canonical requirements | Pending | P02-T01, P02-T02 |
-| P03 | Validate and publish handoff | Pending | P03-T01 |
+| P01 | Extract learning and freeze delta | Complete | P01-T01 |
+| P02 | Update canonical requirements | Complete | P02-T01, P02-T02 |
+| P03 | Validate and publish handoff | In progress | P03-T01 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Extract learning and freeze requirements delta
