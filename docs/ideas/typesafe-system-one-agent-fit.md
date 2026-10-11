@@ -211,7 +211,7 @@ The continuing generated-data MVP has now executed real Microsoft Decision 1
 inference: a validated source-bound EPC candidate proposal with probability,
 version and usage evidence, displayed as Not reviewed. Real GPT-4.1-mini also
 produced a citation-verified summary. See the
-[MVP delivery evidence](../../mvp/README.md#current-continuing-mvp). This newer
+[Decision 1 behaviour specification](../reference/research/decision-1-behaviour-specification.md). This newer
 observation supersedes the deployment/access blockers in the historical
 pre-activation assessment below; it does not establish model calibration or
 business benefit.
@@ -235,7 +235,7 @@ adjudication, usability evidence or real company outcomes.
 
 The owner's priority on 2026-10-10 is now comparative value before further
 MVP expansion. The proposed
-[Decision Model Value MVE](../../.copilot-tracking/mve/2026-10-10/decision-model-value/mve-plan.md)
+[Decision Model Value MVE](https://github.com/jmservera/ama/blob/5136f192d583a5bf53adeeec4b0f21369b005c9d/.copilot-tracking/mve/2026-10-10/decision-model-value/mve-plan.md)
 compares rules/manual, Decision-assisted, generative-agent and hybrid paths,
 with selection/screening ablations. It retains the PRD 120-family split and
 12-pack paired-effort baseline. It is an experiment design, not executed
