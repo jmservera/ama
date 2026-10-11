@@ -60,11 +60,12 @@ def sanitize(text: Any, limit: int = MAX_TEXT) -> str:
 
 
 def evidence_path(reference: str) -> str:
-    """Normalise an evidence reference to a repository-relative POSIX path without line anchors."""
+    """Normalise a repository file reference, including PPTX slide and text line anchors."""
     value = reference.strip().replace("\\", "/")
     workspace = os.environ.get("GITHUB_WORKSPACE", "").replace("\\", "/").rstrip("/")
     if workspace and value.startswith(workspace + "/"):
         value = value[len(workspace) + 1 :]
+    value = re.sub(r"(?i)(\.pptx):slide[1-9]\d*$", r"\1", value)
     value = re.sub(r"#L\d+(-L?\d+)?$", "", value)
     value = re.sub(r"(:L?\d+(-L?\d+)?)+$", "", value)
     value = posixpath.normpath(value.lstrip("/"))
