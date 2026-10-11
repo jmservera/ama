@@ -642,13 +642,44 @@ same deterministic workflow without the agent once review effort is counted.
 Draft acceptance, review minutes and missed critical exceptions apply to every
 agent capability.
 
-Typed decision models that return closed-set answers and probabilities, rather
-than generated text, are an implementation option under research for some of
-these capabilities. The strongest candidate fits are resident and contractor
-message routing and quality evidence flags. This remains an unvalidated
-proposal for Phase 1 shadow-mode comparison, recorded in
-[System One Decision Models for Retrofit Agents](./ideas/typesafe-system-one-agent-fit.md)
-and the [Idea Register](./ideas/idea-register.md).
+#### Decision 1 in the Application Design (2026-10-11)
+
+Microsoft Decision 1 is a bounded scoring capability within the continuing
+Proper Warm application design, not a separate PoC, a standalone programme
+agent or the workflow authority. Preserve this design when rebuilding from
+scratch; keeping #58 in draft does not discard the capability specification.
+Its first specified uses are source-bound form candidate selection and binary
+evidence-support screening for assessment, funding and invoice preparation.
+The [Decision 1 behaviour specification](./reference/research/decision-1-behaviour-specification.md)
+defines the tasks, provider contract, thresholds and failure behaviour.
+Their inclusion in the design is not production approval or proof of benefit.
+
+| Application component | Responsibility and boundary |
+| --- | --- |
+| Workbench and optional agent tools | Request an assist for a permitted field on the current case/form; display proposal, abstention, failure, staleness and review status. An agent may request scoring but cannot approve its own output |
+| Domain API and deterministic workflow | Authenticate the user, authorise the task and sources, build a versioned evidence snapshot, enforce the inference guard and retain all state-transition and approval gates |
+| Decision 1 adapter in the AI service boundary | Call the reviewed Foundry deployment using workload identity; validate the closed-set answer and probabilities; return a source-bound proposal or explicit manual route, never an authoritative field update |
+| Generative Foundry adapter | Draft cited summaries and narrative separately; a Decision 1 answer is not generated prose or a rationale, and a narrative model must not silently substitute for failed scoring |
+| Azure SQL and document/evidence storage | Keep case/form versions, source references, proposal provenance, review records, audit and shared inference liabilities; source text remains subject to existing access and retention controls |
+| Named human reviewer and domain API | Accept, edit or reject through a separate authorised action that rechecks current versions and field authority; Finance owns funding/invoice review and submission |
+
+The end-to-end path is workbench or authorised agent tool -> domain API ->
+permitted evidence snapshot and inference guard -> Decision 1 -> validated
+unreviewed proposal -> human review -> separately authorised deterministic
+field update. Source or form changes invalidate pending proposals. The model
+has no direct SQL write tool, no approval tool and no external-action authority.
+Manual completion remains available when scoring is disabled, unavailable,
+malformed, below threshold or not appropriate to the task.
+
+Stock ranking, eligibility, calculations, resident consent, professional
+sign-off, safety release, quality acceptance, grant state and payments remain
+outside Decision 1's authority. Resident/contractor message routing and quality
+flags are possible later task fits, not behaviour delivered by the two form
+tasks. Each requires its own registered contract and comparative evaluation.
+Retain the deterministic/manual comparator and count review effort, failures,
+cost and uncertainty before adopting or expanding a task. Successful inference
+establishes integration feasibility, not calibrated quality or net benefit;
+see [model learning](./ideas/typesafe-system-one-agent-fit.md).
 
 ### Implementation Options and Provisional Platform Recommendation
 

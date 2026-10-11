@@ -1613,3 +1613,17 @@ metadata when the knowledge base was created.
   the synthetic-data README. The BRD, PRD, addendum, ADR and code changes stay
   in the draft PR until the code is validated on the current infrastructure.
 * Documentation only: nothing re-run and no deployment or model call.
+
+## [2026-10-11] update | Decision 1 integrated into the application design
+
+* Updated the addendum's
+  [agentic architecture](../case_study_48_addendum.md#decision-1-in-the-application-design-2026-10-11)
+  to place Decision 1 inside Proper Warm's workbench/domain API/AI service
+  boundary, not as a separate PoC or approval authority.
+* Linked the [rebuild specification](./research/decision-1-behaviour-specification.md)
+  to the overall design, separating scoring, generation, review and controlled
+  application. Complete human review/application is a rebuild requirement,
+  not an assertion that draft #58 delivered every action.
+* Preserved manual handling, deterministic controls, task-level comparative
+  evaluation and the distinction between design, feasibility and benefit.
+  No runtime changes, deployments, inference or production approval.

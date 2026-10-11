@@ -26,6 +26,40 @@ established: see
 The PR 58 code is not merged. It is kept on the branch as an archive. This page
 is the durable record of the design.
 
+## Place in the Overall Application
+
+This is the scoring-adapter contract for the
+[application's agentic architecture](../../case_study_48_addendum.md#decision-1-in-the-application-design-2026-10-11),
+not an independent application. The rebuild must connect it to the existing
+workbench, domain API, Entra role authorisation, Azure SQL case/form state,
+document evidence and audit. It does not require copying #58's implementation
+or deploying a separate scoring microservice.
+
+Decision 1 supplies closed-set selection and binary support screening;
+generative Foundry models supply cited narrative. Deterministic domain logic
+continues to own calculations, ranking, workflow transitions and approval
+gates. A workbench action or authorised agent tool may invoke the scoring
+adapter through the domain API, but neither receives approval authority.
+
+Keep three boundaries separate in a clean rebuild:
+
+1. Request and scoring: server-authorised sources and current versions go
+   through the inference guard and provider adapter. Persist a proposal,
+   abstention or explicit failure, not a field update.
+2. Review: an authorised human sees the source binding, candidate or support
+   score, thresholds and `Not reviewed` status, then accepts, edits or rejects.
+   This review interaction is a rebuild requirement, not a claim that #58
+   implemented every review action.
+3. Application: the domain API rechecks source/form versions, reviewer
+   permissions and existing controls before applying a reviewed field value.
+   Audit the result separately. Review does not imply eligibility, consent,
+   funding approval, submission, payment or professional sign-off.
+
+Rebuild acceptance must show this complete request-to-review-to-application
+path on the continuing generated data, plus abstention, failed transport and
+stale-source handling. Keep a manual/rules comparator so successful integration
+and measured incremental value remain separate conclusions.
+
 ## What Decision 1 is used for
 
 Two narrow, closed-question tasks on a single form field, each producing an
@@ -294,10 +328,12 @@ and enabled the task.
    (`evidence.read`, `forms.assist`), never from the request body.
 4. The envelope is appended to the case's `assistance` list with the form id
    and `stale: false`. The UI shows it as `Not reviewed`, with the field,
-   candidate, probability, margin, model, version, usage and the human review
-   actions.
+   candidate, probability, margin, model, version and usage. Complete
+   accept/edit/reject and controlled application actions are required for the
+   rebuild; storing the proposal alone does not establish that review flow.
 5. A proposal becomes `stale` when the form input version changes, or when any
-   source it cited changes version or hash. Stale proposals cannot be reviewed.
+   source it cited changes version or hash. The rebuild must prevent stale
+   proposals from being reviewed or applied.
 6. Each assist is audited with action, form, source and reason.
 7. When `PW_AI=off` or workflow-only mode is on, a disabled client is used and
    everything stays manual.
