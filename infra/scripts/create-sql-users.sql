@@ -5,6 +5,7 @@
 -- from the managed identity's client id instead, as a literal binary SID:
 --   CREATE USER [id-warm-dev-api] WITH SID = 0x<client id as little-endian GUID bytes>, TYPE = E;
 -- The MVP app (mvp/) also needs db_ddladmin on first start so it can create its tables.
+-- infra/scripts/create-sql-users.py does all of this (SID form, idempotent) and grants db_ddladmin to the API identity.
 
 CREATE USER [id-warm-dev-api] FROM EXTERNAL PROVIDER;
 ALTER ROLE db_datareader ADD MEMBER [id-warm-dev-api];

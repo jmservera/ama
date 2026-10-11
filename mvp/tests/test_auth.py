@@ -72,6 +72,7 @@ class TrustedProxyTests(Base):
         self.assertIsNone(self.who("not base64 !!"))
         self.assertIsNone(self.who(base64.b64encode(b"[1,2]").decode()))
         self.assertIsNone(self.who(principal(typ="google")))
+        self.assertIsNotNone(self.who(principal(typ="Bearer")))
         self.assertIsNone(self.who(principal(tid="99999999-2222-3333-4444-555555555555")))
         self.assertIsNone(self.who(principal(tid=None)))
         self.assertIsNone(self.who(principal(roles=())))
