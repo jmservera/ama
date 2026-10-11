@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 from collections.abc import Iterable
+import hashlib
 from io import BytesIO
 import json
 import logging
@@ -24,6 +25,7 @@ REPLACEMENTS = (
     ("PROPER NORTH HOMES", "ZAVA NORTH HOMES"),
     ("proper-north-homes", "zava-north-homes"),
     ("proper_north_homes", "zava_north_homes"),
+    ("propernorthhomes", "zavanorthhomes"),
     ("Proper Warm", "Zava Forward"),
     ("PROPER WARM", "ZAVA FORWARD"),
     ("ProperWarm", "ZavaForward"),
@@ -33,6 +35,9 @@ REPLACEMENTS = (
     ("PW_", "ZF_"),
     ("pw_", "zf_"),
     ("X-PW-", "X-ZF-"),
+    ("PW-", "ZF-"),
+    ("pw-", "zf-"),
+    ("Pw-", "Zf-"),
     ("warm-test", "forward-test"),
     ("warm-dev", "forward-dev"),
 )
@@ -134,10 +139,11 @@ def replace_runs(runs: Iterable[object]) -> bool:
     if replace_names(original) == original:
         return False
     # Process longest known forms first and right-to-left to retain run offsets.
-    for old, new in REPLACEMENTS:
+    for old, new in (*REPLACEMENTS, ("PW", "ZF")):
         text = "".join(run.text for run in runs)
         url_spans = [m.span() for m in URL.finditer(text)]
-        for match in reversed(list(re.finditer(re.escape(old), text))):
+        pattern = r"\bPW\b" if old == "PW" else re.escape(old)
+        for match in reversed(list(re.finditer(pattern, text))):
             left, right = match.span()
             if any(a <= left < b for a, b in url_spans):
                 continue
@@ -322,6 +328,15 @@ def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
                 output = migrate_pptx(raw, logo) if apply and changed else raw
             elif path.suffix.lower() in TEXT_SUFFIXES or path.name in ("Dockerfile", ".gitignore"):
                 output = update_text(raw.decode("utf-8"), old, path_map).encode("utf-8")
+                if old.startswith("mvp/policies/") and path.suffix == ".json" and output != raw:
+                    policy = json.loads(output)
+                    if "content_hash" not in policy:
+                        raise ValueError("Ranking policy is missing its required content_hash.")
+                    body = {key: value for key, value in policy.items() if key != "content_hash"}
+                    policy["content_hash"] = hashlib.sha256(json.dumps(
+                        body, sort_keys=True, separators=(",", ":"),
+                    ).encode("utf-8")).hexdigest()
+                    output = (json.dumps(policy, indent=2) + "\n").encode("utf-8")
                 if logo and old.endswith("/content.yaml") and "/ppt/" in old:
                     output = add_yaml_logo(
                         output.decode("utf-8"), path, logo=logo, apply=False,

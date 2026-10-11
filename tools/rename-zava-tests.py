@@ -2,6 +2,8 @@
 
 import importlib.util
 from io import BytesIO
+import hashlib
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -86,6 +88,24 @@ class RenameTests(unittest.TestCase):
             self.assertTrue((new / "global/style.yaml").exists())
             self.assertTrue((new / "slide-001/images/zava-logo.png").exists())
             self.assertIn("Zava branding logo", (new / "slide-001/content.yaml").read_text())
+
+    def test_policy_metadata_rename_recomputes_integrity_hash_without_changing_rules(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q", root], check=True)
+            path = root / "mvp/policies/ranking-v1.json"
+            path.parent.mkdir(parents=True)
+            rules = [{"code": "waiting", "label": "Longest waiting first"}]
+            path.write_text(json.dumps({"policy_id": "proper-warm-home-ranking",
+                                       "rules": rules, "content_hash": "old"}))
+            subprocess.run(["git", "-C", root, "add", "."], check=True)
+            report = rename.migrate(root, apply=True, logo=None)
+            self.assertFalse(report["failures"])
+            policy = json.loads(path.read_text())
+            self.assertEqual(policy["rules"], rules)
+            body = {k: v for k, v in policy.items() if k != "content_hash"}
+            self.assertEqual(policy["content_hash"], hashlib.sha256(json.dumps(
+                body, sort_keys=True, separators=(",", ":")).encode()).hexdigest())
     def test_infra_short_prefix_and_official_funding(self):
         self.assertEqual(
             rename.update_text("param workload = 'warm'\nid-warm-test sql-warm-test\nWarm Homes fund", "infra/a.bicep", {}),
