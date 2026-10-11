@@ -25,11 +25,11 @@ provisions; no new legal currentness verification was performed.
 | E17 | docs/capstone/README.md / Storage map; .github/rubric/artifacts.json / capstone-deck | 2026-10-11 scorer routing update | Published executive deck is included as a scored capstone deck; pitch rehearsal still requires its own evidence |
 
 ## Quantitative controls
-Main slides: 60,000 homes and 980 cases (generated, E07); eight role lenses
+Main slides: 60,000 homes (customer request, E01); eight role lenses
 (E03/E05); GBP20,000/7,500/12,500/22,000/14,500 (fictional E06 EXA-010/015
 and Numerical Targets and Attribution). Slide counts, elapsed presentation
 time and gate numbering are editorial planning, not performance claims.
-Appendix: historical USD450/360/405 (E06 EXA-012 and E07 scoped revision);
+Appendix: 60,000-stock/980-case generated exercise lineage (E07), historical USD450/360/405 (E06 EXA-012 and E07 scoped revision);
 v0.12/v0.13 and pinned commit (E07/E08/E11).
 
 No manual time baseline, doubled throughput, secured GBP40m grants,

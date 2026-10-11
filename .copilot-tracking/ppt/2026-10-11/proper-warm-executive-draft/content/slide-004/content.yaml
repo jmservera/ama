@@ -1,172 +1,25 @@
 slide: 4
-title: Build one retrofit workbench, not five autonomous agents
-section: Main council pitch
+title: Three requests. Three reasons to change.
+section: Main executive story
 layout: blank
-background:
-  fill: '#F7F2E7'
+background: {fill: '#F7F2E7'}
 elements:
-- type: textbox
-  left: 0.65
-  top: 0.6
-  width: 12
-  height: 0.3
-  text: ARCHITECTURE DECISIONS
-  font: Aptos
-  font_size: 11
-  font_color: '#446056'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 1.22
-  width: 12
-  height: 1.25
-  text: One retrofit workbench. Not five autonomous agents.
-  font: Aptos Display
-  font_size: 38
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 6.7
-  width: 12
-  height: 0.28
-  text: 04  /  PROPER WARM     •     OWNER DIRECTION + PROPOSED DESIGN • E07–E10 • 11 Oct 2026
-  font: Aptos
-  font_size: 11
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: shape
-  shape: rounded_rectangle
-  left: 0.65
-  top: 2.85
-  width: 3.79
-  height: 2.75
-  fill: '#173F35'
-  text: 'THE PRODUCT
+- &t {type: textbox, left: 0.65, top: 0.6, width: 12, height: 0.3, text: 'REQUEST → DISCOVERY → CONSEQUENCE → BUILD INSTEAD', font: Aptos, font_size: 11, font_color: '#183A31', font_bold: true, margin_left: 0, margin_right: 0, margin_top: 0, margin_bottom: 0, word_wrap: true}
+- {<<: *t, top: 1.22, height: 1.25, text: 'Three requests. Three reasons to change.', font: Aptos Display, font_size: 38}
+- &b {type: shape, shape: rounded_rectangle, left: 0.65, top: 2.85, width: 3.75, height: 3.3, fill: '#173F35', text: "RANK HOMES\nWeights are policy.\nGuessing cannot defend\nwho waits.\n\nBUILD\nApproved policy;\nversioned rules + sources", text_font: Aptos, text_size: 19, text_color: '#F7F2E7', margin_left: 0.22, margin_right: 0.22, margin_top: 0.16, margin_bottom: 0.16, vertical_anchor: middle, alignment: left, auto_size: none, line_spacing: 1.05}
+- {<<: *b, left: 4.775, fill: '#D5E2D4', text_color: '#183A31', text: "SCHEDULE WORK\nReal capacity AND\ninformed resident choice.\nA slot is not consent.\n\nBUILD\nCapacity + choice records;\nowned handoff"}
+- {<<: *b, left: 8.9, fill: '#E5B96A', text_color: '#183A31', text: "DRAFT GRANTS\nAccepted evidence first.\nAward ≠ claim ≠ cash.\nA form is not funding.\n\nBUILD\nEvidence pack;\nledger states + review"}
+- {<<: *t, top: 6.7, height: 0.28, text: '04 / ROLE-AGENT FINDINGS → PROPOSED RESPONSE / E03 / NOT VERIFIED COMPANY BOTTLENECKS', font_size: 11, font_bold: false}
+speaker_notes: |
+  Three examples make the scope change concrete.
 
-    Staff workbench + role queues
+  You asked for ranking. The challenge found that ranking weights are investment policy, and eligibility is a rules question. If a model guesses either, we cannot justify who waits. Build an approved cohort policy, reproducible rules and field-level sources; let AI reconcile or explain, not set priority.
 
-    One linked home / work package
+  You asked for scheduling. The challenge found that a viable appointment needs committed competent capacity and informed resident choice. A calendar invitation supplies neither. Build capacity and measure-choice records with a named liaison; AI may suggest slots inside those boundaries.
 
-    Evidence, handoffs, quality + finance'
-  text_font: Aptos
-  text_size: 20
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 4.7700000000000005
-  top: 2.85
-  width: 3.79
-  height: 2.75
-  fill: '#D5E2D4'
-  text: 'BOUNDED ASSISTANCE
+  You asked for grant drafts. The challenge found that claimable evidence and the ledger come first. Application, award, claim and cash are different states. Build accepted evidence and independent financial review; AI may assemble the sourced draft.
 
-    Deterministic priority + workflow
-
-    AI drafts / selects / flags
-
-    People accept, decide and act'
-  text_font: Aptos
-  text_size: 20
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 8.89
-  top: 2.85
-  width: 3.79
-  height: 2.75
-  fill: '#173F35'
-  text: 'CUSTOMER OUTCOME
-
-    See owner, next action + blocker
-
-    Track capacity to accepted handover
-
-    Measure effort, quality + cost'
-  text_font: Aptos
-  text_size: 20
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: textbox
-  left: 0.65
-  top: 6
-  width: 12
-  height: 0.38
-  text: Reuse data and API contracts. Prove controls. Platform choice is not company approval.
-  font: Aptos
-  font_size: 18
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-speaker_notes: 'We are proposing one staff-facing retrofit workbench: linked home, building, scheme, work package and
-  service cases, with role queues over shared status, evidence, owners, blockers, capacity and finance. It coordinates
-  work; it does not replace every source system or create five autonomous agents.
-
-  Deterministic rules control ranking and transitions. Bounded AI drafts, selects or flags; people decide. Azure SQL,
-  Blob and a controlled API are the exercise direction. The customer benefit to test is one accountable case and
-  next action through accepted handover. Time, rework and completion improvement are not yet measured.
-
-  Actual Azure, SQL and AI are required in subsequent accepted exercise deliveries. This is not a production platform
-  selection: Excel-only and M365 options still need comparable appraisal.
+  These are hypotheses to validate, but each exposes a prerequisite the requested capability cannot safely skip.
 
   Evidence:
-
-  docs/reference/research/company/agent-request-challenge.md — Purpose and Method; Summary (2026-09-26, role-agent
-  hypotheses)
-
-  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds (2026-10-11); Current Learning and Parallel
-  Experiment (owner direction; feasibility not benefit)
-
-  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0
-  candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
-
-  docs/adrs/0001-azure-architecture.md — Exercise Applicability (2026-10-11); Decisions; Hybrid M365 and Excel transition;
-  Options still to compare (proposed)
-
-  docs/adrs/0002-pilot-readiness-architecture.md — Exercise Applicability (2026-10-11); Decisions; 1. Durable store
-  (proposed readiness design)'
+  docs/reference/research/company/agent-request-challenge.md — Summary; Stock Prioritisation Agent; Grant and Funding Agent; Contractor and Resident Coordination (2026-09-26).

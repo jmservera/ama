@@ -1,186 +1,27 @@
 slide: 14
-title: 'The CFO test: cash exposure before grant optimism'
-section: Main council pitch
+title: Make the first change small enough to learn
+section: Main executive story
 layout: blank
-background:
-  fill: '#F7F2E7'
+background: {fill: '#F7F2E7'}
 elements:
-- type: textbox
-  left: 0.65
-  top: 0.6
-  width: 12
-  height: 0.3
-  text: RETROFIT CASH EXAMPLE • FICTIONAL, NOT WORKBENCH PRICE OR BUDGET
-  font: Aptos
-  font_size: 11
-  font_color: '#446056'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 1.22
-  width: 12
-  height: 1.25
-  text: 'The CFO test: cash exposure before grant optimism'
-  font: Aptos Display
-  font_size: 38
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 6.7
-  width: 12
-  height: 0.28
-  text: 14  /  PROPER WARM     •     FICTIONAL EXA-010/015 ARITHMETIC • E06 • ACCEPTED EXERCISE 10 Oct
-    2026
-  font: Aptos
-  font_size: 11
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 2.85
-  width: 3.75
-  height: 0.85
-  text: £20,000
-  font: Aptos
-  font_size: 47
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 4.05
-  width: 3.75
-  height: 0.4
-  text: gross base cash exposure
-  font: Aptos
-  font_size: 18
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 4.78
-  top: 2.85
-  width: 3.75
-  height: 0.85
-  text: £7,500
-  font: Aptos
-  font_size: 47
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 4.78
-  top: 4.05
-  width: 3.75
-  height: 0.4
-  text: fictional grant—not cash yet
-  font: Aptos
-  font_size: 18
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 8.91
-  top: 2.85
-  width: 3.75
-  height: 0.85
-  text: £12,500
-  font: Aptos
-  font_size: 47
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 8.91
-  top: 4.05
-  width: 3.75
-  height: 0.4
-  text: provider base funding
-  font: Aptos
-  font_size: 18
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: shape
-  shape: rounded_rectangle
-  left: 0.65
-  top: 4.9
-  width: 12
-  height: 0.9
-  fill: '#173F35'
-  text: IF CONTINGENCY SPENT   £22,000 gross envelope / £14,500 provider exposure
-  text_font: Aptos
-  text_size: 22
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: textbox
-  left: 0.65
-  top: 6.1
-  width: 12
-  height: 0.3
-  text: Application ≠ award ≠ claim ≠ cash. Actual terms, liquidity and delegated authority remain unknown.
-  font: Aptos
-  font_size: 16
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-speaker_notes: |-
-  This fictional fixture shows why Finance sees gross cash, not an assumed grant offset: GBP20,000 base cost, GBP7,500 illustrative grant and GBP12,500 provider base funding. If contingency is spent, the gross envelope is GBP22,000 and provider exposure GBP14,500. Before grant cash arrives, exposure is still GBP20,000.
-  These are exercise assumptions, not company budget, award terms or liquidity. Technology requires its own authority and stop conditions. Technology whole-life cost remains unassessed and belongs in the return pack. Measure effort and cost per accepted outcome before treating time saved as cashable benefit.
+- &t {type: textbox, left: 0.65, top: 0.6, width: 12, height: 0.3, text: 'SUPPORTED CHANGE / EXISTING TEAMS AND SUPPLIERS', font: Aptos, font_size: 11, font_color: '#183A31', font_bold: true, margin_left: 0, margin_right: 0, margin_top: 0, margin_bottom: 0, word_wrap: true}
+- {<<: *t, top: 1.22, height: 1.25, text: 'Make the first change small enough to learn', font: Aptos Display, font_size: 38}
+- &b {type: shape, shape: rounded_rectangle, left: 0.65, top: 2.85, width: 2.7, height: 2.85, fill: '#173F35', text: "1 / CO-DESIGN\nProgramme Manager\nWorkbook owners\nTasks + baseline", text_font: Aptos, text_size: 19, text_color: '#F7F2E7', margin_left: 0.2, margin_right: 0.2, margin_top: 0.16, margin_bottom: 0.16, vertical_anchor: middle, alignment: left, auto_size: none, line_spacing: 1.05}
+- {<<: *b, left: 3.75, fill: '#D5E2D4', text_color: '#183A31', text: "2 / CONNECT\nData owner\nOne home first\nShadow import\nQuarantine conflicts"}
+- {<<: *b, left: 6.85, fill: '#D5E2D4', text_color: '#183A31', text: "3 / REHEARSE\nTeam leads\nTask walkthroughs\nNamed support\nShort parallel run"}
+- {<<: *b, left: 9.95, fill: '#E5B96A', text_color: '#183A31', text: "4 / SWITCH\nDigital + work owner\nExit tests + rollback\nWorkbench writes\nExcel reports"}
+- {<<: *t, top: 6.05, height: 0.35, text: 'No permanent dual entry. No compulsory portal. No big-bang replacement.', font_size: 20, font_bold: false}
+- {<<: *t, top: 6.7, height: 0.28, text: '14 / PROPOSED ADOPTION JOURNEY / E05/E09/E12 / ROLE ASSIGNMENTS AND EXIT THRESHOLDS TO CONFIRM', font_size: 11, font_bold: false}
+speaker_notes: |
+  The ambition is large; the first change should be small enough to learn from. Start with existing teams and suppliers, and one connected home.
+
+  The Programme Manager and staff co-design tasks and profile workbook ownership. The Data owner shadows one-way imports and owns quarantine and reconciliation. Team leads rehearse role-specific tasks with named support. Digital and the work owner agree exit tests and prove rollback before switching the write path.
+
+  Keep parallel entry short and explicitly owned. After sign-off, the workbench writes and Excel reports through the API. No permanent dual entry, compulsory portal or big-bang replacement.
+
+  These are proposed owner roles, not confirmed delegations. Validate tenant, workbook quality, accessibility and staff readiness. Count transition and training effort in the business case.
 
   Evidence:
-  docs/case_study_48_addendum.md — Owner-Approved Exercise Baseline (2026-10-10); EXA-001/002/004/005/008/010/011/012/013/015/016; Numerical Targets and Attribution (historical accepted exercise assumptions)
-  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds (2026-10-11); Current Learning and Parallel Experiment (owner direction; feasibility not benefit)
-  docs/reference/research/company/company-profile-research.md — Confirmed Company Information; Modelled Customer Profile; Role and Decision Map (2026-09-26; not-for-profit owner-confirmed, other attributes modelled)
+  docs/reference/research/company/pilot-measurement-challenge.md — Owner Decision, 2026-09-26.
+  docs/adrs/0001-azure-architecture.md — Hybrid M365 and Excel transition (proposed).
+  docs/reference/research/ux/proper-warm-prototype-profile-review.md — Owner Usability Feedback; Proposed Acceptance Checks (2026-10-07).

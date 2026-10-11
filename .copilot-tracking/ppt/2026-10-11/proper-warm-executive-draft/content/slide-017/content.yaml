@@ -1,148 +1,25 @@
 slide: 17
-title: Endorse the evidence stage, not delivery spend or production
-section: Main council pitch
+title: Back the evidence. Keep the promise.
+section: Main executive story
 layout: blank
-background:
-  fill: '#173F35'
+background: {fill: '#173F35'}
 elements:
-- type: textbox
-  left: 0.65
-  top: 0.6
-  width: 12
-  height: 0.3
-  text: COUNCIL DECISION • ENDORSE PLANNING ONLY
-  font: Aptos
-  font_size: 11
-  font_color: '#E5B96A'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 1.22
-  width: 12
-  height: 1.25
-  text: Endorse the evidence stage—not delivery spend or production.
-  font: Aptos Display
-  font_size: 38
-  font_color: '#F7F2E7'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 6.7
-  width: 12
-  height: 0.28
-  text: 17  /  PROPER WARM     •     DRAFT FOR CHALLENGE • E07/E08/E16 • NO PRODUCTION OR SPEND APPROVAL
-  font: Aptos
-  font_size: 11
-  font_color: '#F7F2E7'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: shape
-  shape: rounded_rectangle
-  left: 0.65
-  top: 2.85
-  width: 3.79
-  height: 2.75
-  fill: '#173F35'
-  text: |-
-    CEO
-    Nominate an executive sponsor
-    Require an evidence-led return
-  text_font: Aptos
-  text_size: 20
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 4.7700000000000005
-  top: 2.85
-  width: 3.79
-  height: 2.75
-  fill: '#D5E2D4'
-  text: |-
-    ASSETS CxO
-    Nominate workflow / control owners
-    Confirm non-negotiable gates
-  text_font: Aptos
-  text_size: 20
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 8.89
-  top: 2.85
-  width: 3.79
-  height: 2.75
-  fill: '#173F35'
-  text: |-
-    CFO
-    Define the affordability review
-    Define authority review + stop tests
-  text_font: Aptos
-  text_size: 20
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: textbox
-  left: 0.65
-  top: 6
-  width: 12
-  height: 0.4
-  text: 'Return: reviewed requirements • options • cost / authority • acceptance / stop tests • date to
-    agree'
-  font: Aptos
-  font_size: 14
-  font_color: '#F7F2E7'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-speaker_notes: |-
-  The decision requested today is limited: endorse preparation of a gated evidence-stage proposal. It does not authorize procurement, deployment, delivery spend or production adoption. Ask the CEO to nominate an executive sponsor, Assets to nominate workflow and control owners, and Finance to define how affordability and authority will be reviewed. Confirm the actual delegated roles rather than assuming them.
-  Return at a date the council agrees with freshly reviewed requirements, an unscored comparable options appraisal, scoped cost and authority, acceptance evidence and explicit stop conditions. The evidence must show whether the connected workflow works, whether assistance earns its cost, and which gates remain unmet. If value is absent, simplify. If controls fail, stop and repair.
+- &t {type: textbox, left: 0.65, top: 0.6, width: 12, height: 0.3, text: 'TODAY / ENDORSE PREPARATION OF A GATED EVIDENCE-STAGE PROPOSAL', font: Aptos, font_size: 11, font_color: '#F7F2E7', font_bold: true, margin_left: 0, margin_right: 0, margin_top: 0, margin_bottom: 0, word_wrap: true}
+- {<<: *t, top: 1.22, height: 1.25, text: 'Back the evidence. Keep the promise.', font: Aptos Display, font_size: 42}
+- &b {type: shape, shape: rounded_rectangle, left: 0.65, top: 2.85, width: 3.75, height: 2.5, fill: '#D5E2D4', text: "CEO + ASSETS\nName sponsor + owners\nProtect safe,\naccepted handovers", text_font: Aptos, text_size: 21, text_color: '#183A31', margin_left: 0.22, margin_right: 0.22, margin_top: 0.16, margin_bottom: 0.16, vertical_anchor: middle, alignment: left, auto_size: none, line_spacing: 1.05}
+- {<<: *b, left: 4.775, text: "CFO\nAffordability + net effort\nCost + authority review\nNo assumed grant cash"}
+- {<<: *b, left: 8.9, fill: '#E5B96A', text: "CIO + PROGRAMME\nEnforceable permissions\nResilience + transition\nProof, not cloud assurances"}
+- {<<: *t, top: 5.65, height: 0.72, text: "Return with fair options, costs and stop tests at a date you agree.\nVisible work. Measurable progress. Explainable decisions.", font_size: 21, font_bold: false}
+- {<<: *t, top: 6.7, height: 0.28, text: '17 / ENDORSE PLANNING ONLY / NO PROCUREMENT, PRODUCTION OR SPENDING AUTHORITY / E07/E08', font_size: 11, font_bold: false}
+speaker_notes: |
+  The ask is not to replace how the whole company works. Endorse preparation of a gated evidence-stage proposal for the shared foundation these five capabilities need.
 
-  Our ambition remains bold: move from chasing spreadsheets to warmer homes through one programme, one evidence trail and human control. The case is accountable handovers, not AI theatre.
+  CEO and Assets: name a sponsor and workflow and control owners. CFO: define the affordability, whole-life cost and spending-authority review. CIO and Programme: define enforceable controls, resilience and supported transition evidence. Confirm actual delegations.
+
+  Return at a date you agree with reviewed requirements, fair Excel-only and M365 alternatives, scoped costs, acceptance tests and stop conditions. No purchase, deployment or production is authorized today.
+
+  You asked for agents to help deliver the promise. Our recommendation is to make the work visible, measurable and explainable—so assistance can earn its place, and every accepted home has a story you can stand behind.
 
   Evidence:
-  docs/reference/research/company/pilot-measurement-challenge.md — Summary; Owner Decision, 2026-09-26; Proposed Measurement Design (2026-09-26, proposed comparisons)
-  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds (2026-10-11); Current Learning and Parallel Experiment (owner direction; feasibility not benefit)
-  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0 candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
-  docs/reference/method/ama-capstone-assessment-guide.md — Sections A-D; How the outcome is determined; How to prepare (2026-09-30 published rubric)
+  docs/case_study_48_addendum.md — Executive Assessment; Recommended Executive Decision; Subsequent Application Exercise Builds (2026-10-11, proposal).
+  docs/reference/research/company/company-profile-research.md — Role and Decision Map (2026-09-26, proposed role boundaries).

@@ -1,149 +1,25 @@
 slide: 13
-title: Security must be enforced, not assumed from the cloud
-section: Main council pitch
+title: Stewardship means seeing cash before optimism
+section: Main executive story
 layout: blank
-background:
-  fill: '#F7F2E7'
+background: {fill: '#F7F2E7'}
 elements:
-- type: textbox
-  left: 0.65
-  top: 0.6
-  width: 12
-  height: 0.3
-  text: SECURITY POSTURE • PROPOSED CONTROLS, ASSURANCE OPEN
-  font: Aptos
-  font_size: 11
-  font_color: '#446056'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 1.22
-  width: 12
-  height: 1.25
-  text: Prove security. Cloud hosting is not proof.
-  font: Aptos Display
-  font_size: 38
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 6.7
-  width: 12
-  height: 0.28
-  text: '13  /  PROPER WARM     •     PINNED #58 DOCUMENTED FEASIBILITY • E07/E08/E11 • 11 Oct 2026'
-  font: Aptos
-  font_size: 11
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: shape
-  shape: rounded_rectangle
-  left: 0.65
-  top: 2.85
-  width: 3.79
-  height: 2.75
-  fill: '#173F35'
-  text: |-
-    DATA + ACCESS
-    Role / case / field checks
-    Minimum-necessary inputs
-    Constructed data only for exercise
-  text_font: Aptos
-  text_size: 20
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 4.7700000000000005
-  top: 2.85
-  width: 3.79
-  height: 2.75
-  fill: '#D5E2D4'
-  text: |-
-    CONTROL BOUNDARY
-    API is the only write route
-    AI cannot write or approve
-    Independent human gates
-  text_font: Aptos
-  text_size: 20
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 8.89
-  top: 2.85
-  width: 3.79
-  height: 2.75
-  fill: '#173F35'
-  text: |-
-    PROOF REQUIRED
-    Authorization / leakage tests
-    Recovery / audit verification
-    Security + privacy approval
-  text_font: Aptos
-  text_size: 20
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: textbox
-  left: 0.65
-  top: 6
-  width: 12
-  height: 0.35
-  text: Design controls are not a security certification • No personal data or live decisions in this
-    exercise
-  font: Aptos
-  font_size: 16
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-speaker_notes: |-
-  Cloud alone does not make this secure. Proposed controls are server-enforced role/case/field rights, minimum-necessary model inputs, one API write path, independent human gates, versioned evidence and audit. The AI identity cannot write programme state. The exercise uses constructed, non-identifying records.
-  No penetration, authorization, cross-case leakage, recovery or privacy assessment is claimed. Verify controls against the actual deployment before real data or operations. Narrow Azure SQL/Blob/AI feasibility does not certify the target design. The continuing sixty-thousand-home stock and nine-hundred-and-eighty-case programme are generated; v0.13 remains pending fresh review and owner acceptance.
+- &t {type: textbox, left: 0.65, top: 0.6, width: 12, height: 0.3, text: 'THE CFO TEST / FICTIONAL HOME ECONOMICS, NOT A BUDGET OR WORKBENCH PRICE', font: Aptos, font_size: 11, font_color: '#183A31', font_bold: true, margin_left: 0, margin_right: 0, margin_top: 0, margin_bottom: 0, word_wrap: true}
+- {<<: *t, top: 1.22, height: 1.25, text: 'Stewardship means seeing cash before optimism', font: Aptos Display, font_size: 38}
+- &b {type: shape, shape: rounded_rectangle, left: 0.65, top: 2.85, width: 3.75, height: 2.3, fill: '#173F35', text: "£20,000\nGross base exposure\nbefore grant cash", text_font: Aptos, text_size: 24, text_color: '#F7F2E7', margin_left: 0.25, margin_right: 0.25, margin_top: 0.16, margin_bottom: 0.16, vertical_anchor: middle, alignment: left, auto_size: none, line_spacing: 1.05}
+- {<<: *b, left: 4.775, fill: '#D5E2D4', text_color: '#183A31', text: "£7,500\nFictional grant\n—not cash yet"}
+- {<<: *b, left: 8.9, fill: '#E5B96A', text_color: '#183A31', text: "£12,500\nProvider funding\nif grant is received"}
+- {<<: *t, top: 5.5, height: 0.85, text: "If contingency is spent: £22,000 gross / £14,500 provider exposure.\nApplication ≠ award ≠ claim ≠ cash.", font_size: 22, font_bold: false}
+- {<<: *t, top: 6.7, height: 0.28, text: '13 / FICTIONAL EXA-010/015 / E06 / NO REAL AWARD, COVENANT HEADROOM OR SPENDING AUTHORITY CLAIMED', font_size: 11, font_bold: false}
+speaker_notes: |
+  For the CEO, this is mission stewardship; for Assets, safe accepted handover. For the CFO, it must also be honest cash exposure.
+
+  This fictional home costs twenty thousand pounds. Its illustrative grant is seven thousand five hundred, leaving twelve thousand five hundred provider funding if received. Before receipt, gross exposure is still twenty thousand. Fully spent contingency raises the envelope to twenty-two thousand and provider exposure to fourteen thousand five hundred.
+
+  Application, award, claim and cash must remain separate. These are exercise figures, not a real budget, grant or liquidity position.
+
+  The workbench needs its own whole-life cost and authority review. Count net effort and cost per accepted outcome, not headline minutes saved.
 
   Evidence:
-  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds (2026-10-11); Current Learning and Parallel Experiment (owner direction; feasibility not benefit)
-  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0 candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
-  docs/adrs/0002-pilot-readiness-architecture.md — Exercise Applicability (2026-10-11); Decisions; 1. Durable store (proposed readiness design)
-  docs/ideas/typesafe-system-one-agent-fit.md — Observed Feasibility and Parallel Value Experiment (2026-10-11); Microsoft Decision 1 Reassessment (2026-10-10). PR #58 pinned 5136f192d583a5bf53adeeec4b0f21369b005c9d; inspected in maintained documentation 2026-10-11, not runtime reverified
+  docs/case_study_48_addendum.md — EXA-010/015; Numerical Targets and Attribution (2026-10-10).
+  docs/reference/research/company/company-profile-research.md — Confirmed Company Information (2026-09-26).

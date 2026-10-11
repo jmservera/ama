@@ -22,12 +22,25 @@ the [Capstone Assessment Guide](../reference/method/ama-capstone-assessment-guid
 | A1 to A3, B6 | Architecture decision records | `docs/adrs/` | Markdown |
 | A1, A3 to A7, B6 | Solution code, tests, README and diagrams | `src/` and `mvp/` (see the registry globs) | Source files |
 | A1, A3, A5 | Infrastructure as code | `infra/` and `prototype/deploy/*.bicep` | Bicep, Terraform |
-| B1, B2, B6, B7 | Final capstone deck, with speaker notes | `docs/capstone/deck/` (scorer input); validated delivery copy in `docs/presentations/` | `.pptx` (scorer reads slide and notes text from `docs/capstone/deck/`) |
+| B1, B2, B6, B7 | Capstone deck, with speaker notes | `docs/capstone/deck/` (sole published executive deck; no duplicate in `docs/presentations/`) | `.pptx` (scorer reads slide and notes text) |
 | B1 to B5, B7, C2, C3 | Pitch rehearsal and Q&A transcripts, timing notes, demo script and recovery notes, restated-challenge examples | `docs/capstone/pitch/` | `.md`, `.txt`, `.vtt` |
 | D1 to D3 | Thought leadership artifact | `docs/capstone/thought-leadership/<artifact-name>/` | `.md`, `.txt`, `.vtt`, plus `.pptx` as support |
 
 Recordings (video or audio) are not read by the scorer. Commit the transcript
 or written notes next to the recording and link the recording from them.
+
+The [Proper Warm council proposal](./deck/proper-warm-executive-draft.pptx)
+is the executive capstone artifact. The owner retired its duplicate in
+`docs/presentations/` on 2026-10-11; that folder still holds the separate
+mentor presentation. The filename retains its draft status: production
+approval, measured benefits and live pitch evidence remain separate gates.
+
+The deck was detected in PR #61, but the scorer's `:slideN` references did not
+match the deterministic gate's text-only anchor parser. This discarded its
+proposed B1, B2, B6 and B7 changes and left misleading missing-deck baseline
+rationales in the comment. See the
+[gate repair and activation boundary](../../.github/rubric/README.md).
+Do not treat a saved-scorecard replay as a fresh score for the revised deck.
 
 ## Thought leadership artifact (Section D)
 
@@ -57,7 +70,8 @@ recorded with its link and date. BRDs, PRDs and code never count toward Section 
 | D1 to D3 | Thought leadership artifact | 0, and the outcome is Incomplete |
 | B6 | Capstone deck, plus the documentation already in the repository | Capped at 3 |
 
-Because every Section D criterion and most of Section B score 0 today, the
-Section B and D floors fail. Scores rise only as the assets above are committed.
+Missing pitch and thought-leadership evidence still prevents the associated
+criteria and floors from being satisfied. A deck alone cannot clear them.
+Scores rise only as the assets above are committed and assessed.
 Masterclass attendance is a floor in the guide but is not repository evidence
 and is not scored by the gate.

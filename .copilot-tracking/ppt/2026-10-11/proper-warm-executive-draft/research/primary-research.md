@@ -75,17 +75,86 @@ records are constructed and non-identifying. Authorization, leakage, recovery,
 privacy, monitoring and operational resilience need tests and named approval;
 cloud hosting alone does not establish security.
 
-Independent storytelling challenges required a sharper council ask, an
-unscored common-basis platform comparison, hypothesis labels on assumed Excel
-failure modes, clear service-access boundaries, and neutral AI-benefit
-language. Iteration 3 found no material communications blocker in the revised
-18-slide draft and dispositioned findings F01-F11 as addressed. PPTX-property
-and geometry checks each report zero issues across 18 slides. The main script
-is 1,668 spoken words (about 11.9 minutes at 140 wpm); the 517-word appendix
-is on demand. A timed oral rehearsal remains pending. Option costs,
-current-state baseline and measured outcomes remain open. The requested
-action is endorsement to prepare a gated evidence-stage proposal only, not
-authority for spend, deployment or production.
+## Current storytelling synthesis — iteration 4
+
+Earlier reviews and word counts apply to earlier narratives and are historical,
+not current review approval. This 21-slide iteration rewrites main slides 1–17
+around the customer's 60,000-home mission and five-agent request, then explains
+the evidence-led reversal. Independent iteration-5 review found no blocking
+narrative or visual issue across all 21 slides. Its three editorial findings
+were applied: original grant application wording, explicit assisted-versus-usual
+programme comparison, and technical calibration detail moved out of narration.
+Build, property/geometry and image-review results are recorded in
+changes/build-validate-iteration-4.md; no earlier pass is inherited.
+
+The final published artifact is solely
+`docs/capstone/deck/proper-warm-executive-draft.pptx`; the owner retired the
+presentations-folder duplicate. Its 1,919-word main script is approximately
+13.71 minutes at 140 words/minute, not evidence of a timed performance.
+The rubric found the deck but discarded its original slide citations:
+the `:slideN` anchor repair preserves changed-file and missing-artifact
+rules and needs owner-approved merge to activate in ordinary PR scoring.
+
+The causal case for scope expansion is the minimum repeated foundation needed
+by all five capabilities, not cloud fashion or an all-company replacement:
+
+* Ranking request → weights are investment policy and eligibility is rules →
+  model guessing cannot defend allocation → approved cohort policy, versioned
+  rules and sources, with bounded reconciliation/explanation.
+* Scheduling request → committed competent capacity AND informed measure-level
+  resident choice are required → a calendar cannot create capacity or consent →
+  capacity register, choice record and owned handoff, with bounded slot suggestions.
+* Grant drafting request → accepted evidence and ledger lineage come first →
+  application/award/claim/cash cannot be conflated → evidence pack, separate
+  financial states and independent review, with source-bound draft assembly.
+
+These are role-agent hypotheses, not verified company bottlenecks. Technology
+does not create crew capacity, consent, funding or professional acceptance.
+Every end-to-end request combines deterministic controls, accountable humans
+and bounded AI. Existing teams/suppliers remain, Excel stays useful for API-fed
+reporting, and no compulsory resident portal, permanent dual entry, headcount
+redesign or blanket systems migration is proposed.
+
+The new work contract makes accountability measurable through named case and
+receiving owners, lifecycle states, entry/exit/pause timestamps, blockers, next
+actions and evidence acceptance. A sent task is not an accepted handoff.
+The constructed one-home story includes a source conflict, owned resolution,
+independent technical/resident/funding/capacity checks, quality return,
+resident handover and separate financial closure. It is not proof of an
+executed full workflow.
+
+The transparency story retains source and evidence version, applicable rule
+version, result/reason, reviewer, approval event/timestamp and authorized
+override/reason. Changed evidence reopens dependent reviews; legal/technical
+owners approve rule changes. The landscape's arrows run from sources into the
+workbench and from its controlled views to people/reporting, not to source
+authorities. The second diagram separates staff action request, API checks,
+SQL/Blob, deterministic workflow and AI with no write credentials.
+
+Executive resonance is explicit: CEO mission stewardship, Assets safe accepted
+handover, CFO cash/exposure/net effort, CIO enforceable rights and resilience.
+The numerical cash example remains fictional. All effect sizes are unmeasured.
+Programme comparison uses existing teams and matched localities with identical
+event capture; paired AI comparison holds task inputs constant and counts full
+human effort/errors/cost. Fair Excel-only and M365 alternatives remain unscored.
+
+The requested action is endorsement to prepare a gated evidence-stage proposal
+with named owner roles, fair options, whole-life cost and stop tests at a date
+to agree. No spending, procurement, deployment or production authority is claimed.
+A timed oral rehearsal, measured benefit, company baseline, cost appraisal,
+direct user validation and formal operational acceptance remain open.
+
+### Iteration-4 artifact QA (observed)
+
+The rebuilt 21-slide artifact has 1,920 main narration words (13.71 minutes
+at 140 wpm) and 543 on-demand appendix words, excluding sources/non-spoken
+cue. Default geometry and PPTX-property validators each report zero issues.
+PowerPoint exported all 21 slides, and a serial rendered-text containment
+check reports zero findings. Direct full-deck image review, followed by
+layout fixes and adjacent-slide verification, found no remaining visual
+blocker. This is artifact QA, not independent final narrative approval,
+timed delivery evidence, live application acceptance or a capstone floor pass.
+The final output and SHA-256 are recorded in the iteration-4 execution log.
 
 ## Evidence and readiness
 See evidence-register.md and deck notes for exact section anchors.

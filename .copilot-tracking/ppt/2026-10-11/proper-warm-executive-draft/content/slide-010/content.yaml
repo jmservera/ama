@@ -1,169 +1,25 @@
 slide: 10
-title: Connect every handoff from intake to accepted home
-section: Main council pitch
+title: One workbench beside the systems you keep
+section: Main executive story
 layout: blank
-background:
-  fill: '#F7F2E7'
+background: {fill: '#F7F2E7'}
 elements:
-- type: textbox
-  left: 0.65
-  top: 0.6
-  width: 12
-  height: 0.3
-  text: THE CONNECTED OPERATING JOURNEY
-  font: Aptos
-  font_size: 11
-  font_color: '#446056'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 1.22
-  width: 12
-  height: 1.25
-  text: Connect every handoff from intake to accepted home
-  font: Aptos Display
-  font_size: 38
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 6.7
-  width: 12
-  height: 0.28
-  text: 10  /  PROPER WARM     •     EXERCISE JOURNEY + INDEPENDENT GATES • E06/E08 • NOT LIVE WORK
-  font: Aptos
-  font_size: 11
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: shape
-  shape: rounded_rectangle
-  left: 0.65
-  top: 2.85
-  width: 2.7
-  height: 1.7
-  fill: '#173F35'
-  text: |-
-    INTAKE + RANK
-    Resolve home • approved rules
-  text_font: Aptos
-  text_size: 20
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 3.73
-  top: 2.85
-  width: 2.7
-  height: 1.7
-  fill: '#D5E2D4'
-  text: |-
-    ASSESS + AGREE
-    Survey • design • resident choice
-  text_font: Aptos
-  text_size: 20
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 6.8100000000000005
-  top: 2.85
-  width: 2.7
-  height: 1.7
-  fill: '#173F35'
-  text: |-
-    RESOURCE + DELIVER
-    Funding • crew capacity • work
-  text_font: Aptos
-  text_size: 20
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 9.89
-  top: 2.85
-  width: 2.7
-  height: 1.7
-  fill: '#D5E2D4'
-  text: |-
-    VERIFY + CLOSE
-    Independent QA • handover • finance
-  text_font: Aptos
-  text_size: 20
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 0.65
-  top: 5
-  width: 12
-  height: 1
-  fill: '#E5B96A'
-  text: 'Closed loop: defects / changed evidence → owned re-review • accepted handover • separate finance
-    close'
-  text_font: Aptos
-  text_size: 21
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-speaker_notes: |-
-  The workbench coordinates the full journey: identify and prioritise the home; assess technical scope and resident choice; confirm funding, competent capacity and human release; then deliver, verify quality, resolve defects, hand over to the resident and close finance with separate evidence.
-  Staff can see owner, blocker, next action and returned work across handoffs. A sent task is not an accepted task. The intended outcome is accepted handover, not starts. This is a control mechanism to evaluate on constructed records, not evidence that real work or improvement has occurred.
+- &t {type: textbox, left: 0.65, top: 0.6, width: 12, height: 0.3, text: 'SYSTEM CONTEXT / PROPOSED, NOT DEPLOYED', font: Aptos, font_size: 11, font_color: '#183A31', font_bold: true, margin_left: 0, margin_right: 0, margin_top: 0, margin_bottom: 0, word_wrap: true}
+- {<<: *t, top: 1.22, height: 1.25, text: 'One workbench beside the systems you keep', font: Aptos Display, font_size: 38}
+- &b {type: shape, shape: rounded_rectangle, left: 0.65, top: 2.85, width: 3.1, height: 3.1, fill: '#D5E2D4', text: "EXISTING SOURCES\nExcel + stock\nHousing + assets\nSurveys + evidence\nFunding rules\n\nValidated intake", text_font: Aptos, text_size: 19, text_color: '#183A31', margin_left: 0.2, margin_right: 0.2, margin_top: 0.16, margin_bottom: 0.16, vertical_anchor: middle, alignment: left, auto_size: none, line_spacing: 1.05}
+- {type: shape, shape: chevron, left: 4.05, top: 4.15, width: 0.4, height: 0.5, fill: '#E5B96A'}
+- {<<: *b, left: 4.75, width: 3.8, fill: '#173F35', text_color: '#F7F2E7', text: "PROPER WARM\nOne linked case\nRole queues + next action\nOwner + blocker\nEvidence + trace\nBounded assistance"}
+- {type: shape, shape: chevron, left: 8.85, top: 4.15, width: 0.4, height: 0.5, fill: '#E5B96A'}
+- {<<: *b, left: 9.55, text: "PEOPLE + CHANNELS\nStaff role views\nResident contact\nContractor exchange\nExcel reports\n\nControlled access"}
+- {<<: *t, top: 6.7, height: 0.28, text: '10 / TARGET LANDSCAPE / E06/E08/E09 / SOURCES FEED THE WORKBENCH; NO BLANKET REPLACEMENT', font_size: 11, font_bold: false}
+speaker_notes: |
+  Here is the product in its context. Existing workbooks, housing and stock records, surveys and funding rules feed the workbench through validated intake. The arrow runs from sources into the shared case—not backwards.
+
+  Staff use role queues over that case. Residents receive supported contact, contractors exchange scoped work and evidence through approved channels, and Excel receives reporting views. Neither residents nor contractors need open access to the internal tool.
+
+  We keep useful systems and clarify which source owns each fact. Conflicting identifiers are quarantined, not silently merged. This is a proposed landscape, not a deployed topology or an all-systems migration.
 
   Evidence:
-  docs/case_study_48_addendum.md — Owner-Approved Exercise Baseline (2026-10-10); EXA-001/002/004/005/008/010/011/012/013/015/016; Numerical Targets and Attribution (historical accepted exercise assumptions)
-  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0 candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
-  docs/reference/research/ux/proper-warm-prototype-profile-review.md — Owner Usability Feedback (2026-10-07); Proposed Acceptance Checks UX-01 to UX-08 (reported impressions, unexecuted checks)
+  docs/case_study_48_addendum.md — EXA-003/004/005 (2026-10-10 exercise assumptions).
+  docs/prds/proper-warm-retrofit-programme-demonstrator.md — Executive Summary (v0.13 candidate).
+  docs/adrs/0001-azure-architecture.md — Hybrid M365 and Excel transition; Decisions (2026-10-11 proposed).

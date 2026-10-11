@@ -1,239 +1,29 @@
 slide: 6
-title: One controlled route from evidence to action
-section: Main council pitch
+title: Give every step a name, an owner and a clock
+section: Main executive story
 layout: blank
-background:
-  fill: '#F7F2E7'
+background: {fill: '#F7F2E7'}
 elements:
-- type: textbox
-  left: 0.65
-  top: 0.6
-  width: 12
-  height: 0.3
-  text: PROPOSED CONTROL FLOW • CONCEPTUAL, NOT DEPLOYED
-  font: Aptos
-  font_size: 11
-  font_color: '#446056'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 1.22
-  width: 12
-  height: 1.25
-  text: One controlled route from evidence to action
-  font: Aptos Display
-  font_size: 38
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 6.7
-  width: 12
-  height: 0.28
-  text: 06  /  PROPER WARM     •     TARGET CONTROL DESIGN—NOT A DEPLOYED TOPOLOGY • E08/E09/E10
-  font: Aptos
-  font_size: 11
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: shape
-  shape: rounded_rectangle
-  left: 0.65
-  top: 2.85
-  width: 3.45
-  height: 1.3
-  fill: '#D5E2D4'
-  text: |-
-    WORKBOOK + SOURCE DATA
-    Validated one-way import
-  text_font: Aptos
-  text_size: 16
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 4.94
-  top: 2.85
-  width: 3.45
-  height: 1.3
-  fill: '#173F35'
-  text: |-
-    CONTROLLED API
-    Identity • access • approvals
-  text_font: Aptos
-  text_size: 16
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 9.22
-  top: 2.85
-  width: 3.43
-  height: 1.3
-  fill: '#D5E2D4'
-  text: |-
-    SHARED CASE + EVIDENCE
-    Azure SQL + versioned Blob
-  text_font: Aptos
-  text_size: 16
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 0.65
-  top: 5.05
-  width: 3.45
-  height: 1.15
-  fill: '#173F35'
-  text: |-
-    STAFF WORKBENCH
-    Read case • request gated action
-    Human review before change
-  text_font: Aptos
-  text_size: 15
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 4.94
-  top: 5.05
-  width: 3.45
-  height: 1.15
-  fill: '#D5E2D4'
-  text: |-
-    WORKFLOW RULES
-    Own • route • check • audit
-  text_font: Aptos
-  text_size: 16
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 9.22
-  top: 5.05
-  width: 3.43
-  height: 1.15
-  fill: '#173F35'
-  text: |-
-    BOUNDED AI • NO WRITE
-    Permitted inputs
-    Cited draft / flag to staff
-  text_font: Aptos
-  text_size: 15
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: chevron
-  left: 4.32
-  top: 3.25
-  width: 0.4
-  height: 0.45
-  fill: '#E5B96A'
-- type: shape
-  shape: chevron
-  left: 8.59
-  top: 3.25
-  width: 0.4
-  height: 0.45
-  fill: '#E5B96A'
-- type: connector
-  connector_type: straight
-  begin_x: 2.37
-  begin_y: 5.05
-  end_x: 6.1
-  end_y: 4.15
-  line_color: '#446056'
-  line_width: 2
-  head_end: arrow
-  tail_end: arrow
-- type: connector
-  connector_type: straight
-  begin_x: 6.66
-  begin_y: 5.05
-  end_x: 6.66
-  end_y: 4.15
-  line_color: '#446056'
-  line_width: 2
-  head_end: arrow
-- type: connector
-  connector_type: straight
-  begin_x: 10.93
-  begin_y: 5.05
-  end_x: 7.2
-  end_y: 4.15
-  line_color: '#446056'
-  line_width: 2
-  head_end: arrow
-  tail_end: arrow
-speaker_notes: |-
-  This is one product with a controlled flow. Workbooks enter through validated, one-way import. Staff read a shared case and request actions through role-specific workbench views; the API checks identity, case access, evidence versions and required approvals before SQL state changes. Deterministic workflow routes tasks and gates.
-  Bounded AI receives permitted inputs and can return a typed choice, cited draft or concern to staff. It has no write credentials and cannot advance a case. A person reviews before any controlled change, then acts through the API. If AI fails, staff use the manual route without bypassing controls. Conflicting identifiers are quarantined, not silently merged.
-  This is a target design, not a deployed topology. Production identity, workload separation, private access, monitoring and recovery need separate proof. Narrow AI/SQL feasibility does not verify every component shown.
+- &t {type: textbox, left: 0.65, top: 0.6, width: 12, height: 0.3, text: 'THE NEW WAY OF WORKING / AN ACCOUNTABLE WORK RECORD', font: Aptos, font_size: 11, font_color: '#183A31', font_bold: true, margin_left: 0, margin_right: 0, margin_top: 0, margin_bottom: 0, word_wrap: true}
+- {<<: *t, top: 1.22, height: 1.25, text: 'Give every step a name, an owner and a clock', font: Aptos Display, font_size: 38}
+- &b {type: shape, shape: rounded_rectangle, left: 0.65, top: 2.85, width: 3.75, height: 1.3, fill: '#173F35', text: "WHO\nCase owner + receiving owner", text_font: Aptos, text_size: 21, text_color: '#F7F2E7', margin_left: 0.22, margin_right: 0.22, margin_top: 0.12, margin_bottom: 0.12, vertical_anchor: middle, alignment: left, auto_size: none, line_spacing: 1.05}
+- {<<: *b, left: 4.775, text: "WHERE\nNamed lifecycle state"}
+- {<<: *b, left: 8.9, text: "WHEN\nEntry, exit + pause timestamps"}
+- {<<: *b, top: 4.5, fill: '#D5E2D4', text_color: '#183A31', text: "WHY WAITING\nBlocker + next action"}
+- {<<: *b, left: 4.775, top: 4.5, fill: '#D5E2D4', text_color: '#183A31', text: "WHAT PROVES IT\nEvidence version + acceptance"}
+- {<<: *b, left: 8.9, top: 4.5, fill: '#E5B96A', text_color: '#183A31', text: "WHAT CHANGED\nDecision + event + reason"}
+- {<<: *t, top: 6.15, height: 0.3, text: 'A sent task is not an accepted handoff. A completion is not accepted handover.', font_size: 18, font_bold: false}
+- {<<: *t, top: 6.8, height: 0.2, text: '06 / PROPOSED WORK CONTRACT / E03/E05/E06 / DEFINITIONS AND TARGETS REQUIRE OWNER AGREEMENT', font_size: 10, font_bold: false}
+speaker_notes: |
+  Measurable work does not begin with a dashboard. It begins with a contract for each step.
+
+  Record the case owner and the person accepting the handoff. Give the work a named state. Capture entry, exit and pause timestamps, a coded blocker, the next action, and the evidence version behind acceptance.
+
+  The sender retains chase responsibility until the receiver accepts. Changed evidence returns only dependent decisions for review. Safety concerns take a separate human response route.
+
+  Now the team can distinguish waiting for a survey from waiting for consent or capacity. Leaders can see where effort accumulates. Agree definitions first and count recording effort too; visibility is a proposed mechanism, not a saving.
 
   Evidence:
-  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0 candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
-  docs/adrs/0001-azure-architecture.md — Exercise Applicability (2026-10-11); Decisions; Hybrid M365 and Excel transition; Options still to compare (proposed)
-  docs/adrs/0002-pilot-readiness-architecture.md — Exercise Applicability (2026-10-11); Decisions; 1. Durable store (proposed readiness design)
-  docs/ideas/typesafe-system-one-agent-fit.md — Observed Feasibility and Parallel Value Experiment (2026-10-11); Microsoft Decision 1 Reassessment (2026-10-10). PR #58 pinned 5136f192d583a5bf53adeeec4b0f21369b005c9d; inspected in maintained documentation 2026-10-11, not runtime reverified
+  docs/reference/research/company/agent-request-challenge.md — Summary; Programme supervisor (2026-09-26).
+  docs/reference/research/company/pilot-measurement-challenge.md — Freeze Before Measurement; Analysis Rules (2026-09-26).
+  docs/case_study_48_addendum.md — EXA-002/008/013 (historical exercise assumptions, 2026-10-10).

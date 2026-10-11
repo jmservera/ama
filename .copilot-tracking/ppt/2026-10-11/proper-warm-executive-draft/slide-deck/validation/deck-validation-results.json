@@ -1,6 +1,6 @@
 {
   "source": "pptx-properties",
-  "slide_count": 18,
+  "slide_count": 21,
   "slides": [
     {
       "slide_number": 1,
@@ -89,6 +89,21 @@
     },
     {
       "slide_number": 18,
+      "issues": [],
+      "overall_quality": "good"
+    },
+    {
+      "slide_number": 19,
+      "issues": [],
+      "overall_quality": "good"
+    },
+    {
+      "slide_number": 20,
+      "issues": [],
+      "overall_quality": "good"
+    },
+    {
+      "slide_number": 21,
       "issues": [],
       "overall_quality": "good"
     }

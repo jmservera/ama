@@ -1,127 +1,25 @@
 slide: 9
-title: Transition Excel users in supported, measurable stages
-section: Main council pitch
+title: Every decision must tell its story
+section: Main executive story
 layout: blank
-background:
-  fill: '#F7F2E7'
+background: {fill: '#F7F2E7'}
 elements:
-- type: textbox
-  left: 0.65
-  top: 0.6
-  width: 12
-  height: 0.3
-  text: MECHANISM BEFORE MARKETING
-  font: Aptos
-  font_size: 11
-  font_color: '#446056'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 1.22
-  width: 12
-  height: 1.25
-  text: Excel stays useful. It stops being the control system.
-  font: Aptos Display
-  font_size: 38
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 6.7
-  width: 12
-  height: 0.28
-  text: 09  /  PROPER WARM     •     PROPOSED SUPERIORITY—PAIRED PROOF STILL REQUIRED • E05/E09/E12
-  font: Aptos
-  font_size: 11
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: shape
-  shape: rounded_rectangle
-  left: 0.65
-  top: 2.85
-  width: 5.85
-  height: 2.85
-  fill: '#173F35'
-  text: |-
-    START WITH THE WORKBOOK
-    Case fact: spreadsheets coordinate work
-    Measure current effort, errors and rework
-    Failure modes remain hypotheses
-  text_font: Aptos
-  text_size: 21
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 6.85
-  top: 2.85
-  width: 5.8
-  height: 2.85
-  fill: '#D5E2D4'
-  text: |-
-    SAFE, SUPPORTED CHANGE
-    Shadow import → reconcile
-    Short parallel run → clear exit tests
-    Workbench writes; Excel read-only
-  text_font: Aptos
-  text_size: 21
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: textbox
-  left: 0.65
-  top: 6.03
-  width: 12
-  height: 0.3
-  text: 'CASE FACT: spreadsheets coordinate work. PROPOSED: linked case + named owner + checked handoff.
-    Better by how much? Not measured.'
-  font: Aptos
-  font_size: 15
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-speaker_notes: |-
-  The case says spreadsheets coordinate the work; it does not prove repeated reconciliation or evidence reassembly. Measure before claiming staff pain, saved time or fewer errors.
-  The proposed improvement mechanism is one linked case, named handoff owner and independently checked transition. How much better it is remains unknown until equal tasks are compared for effort, errors, rework and accepted outcomes. Do not claim Excel cannot be hardened.
-  Manage change in stages: co-design with staff, profile workbook owners, then shadow one-way imports. Run a short, time-boxed parallel period with named editors, quarantine ownership and owner-agreed reconciliation and exit thresholds. Train through role-based task walkthroughs and provide named support. After sign-off, tested rollback and an out-of-hours hazard route, the workbench becomes the write path and Excel an API-fed read-only report. No permanent dual write.
-  Compare identical tasks and outcomes, including review, correction, chase, errors and accepted handovers. Tenant, workbook quality, staff readiness and results remain unknown.
+- &t {type: textbox, left: 0.65, top: 0.6, width: 12, height: 0.3, text: 'TRANSPARENCY / AN INSPECTABLE DECISION TRACE, NOT JUST AN AI EXPLANATION', font: Aptos, font_size: 11, font_color: '#183A31', font_bold: true, margin_left: 0, margin_right: 0, margin_top: 0, margin_bottom: 0, word_wrap: true}
+- {<<: *t, top: 1.22, height: 1.25, text: 'Every decision must tell its story', font: Aptos Display, font_size: 40}
+- &b {type: shape, shape: rounded_rectangle, left: 0.65, top: 2.85, width: 3.75, height: 2.95, fill: '#173F35', text: "WHAT DID WE KNOW?\nSource + evidence version\nApplicable rule version\nUnknowns + conflicts", text_font: Aptos, text_size: 20, text_color: '#F7F2E7', margin_left: 0.22, margin_right: 0.22, margin_top: 0.16, margin_bottom: 0.16, vertical_anchor: middle, alignment: left, auto_size: none, line_spacing: 1.05}
+- {<<: *b, left: 4.775, fill: '#D5E2D4', text_color: '#183A31', text: "WHY THIS DECISION?\nRule result + reason\nNamed reviewer + approval\nEvent + timestamp"}
+- {<<: *b, left: 8.9, fill: '#E5B96A', text_color: '#183A31', text: "WHAT IF IT CHANGES?\nOverride: authority + reason\nDependent reviews reopen\nEarlier versions preserved"}
+- {<<: *t, top: 6.15, height: 0.3, text: 'A new source is not a new policy. Accountable owners approve rule changes.', font_size: 18, font_bold: false}
+- {<<: *t, top: 6.8, height: 0.2, text: '09 / PROPOSED CONTROL DESIGN / E02/E06/E09 / LEGAL CURRENTNESS AND CONTROL PROOF REMAIN OPEN', font_size: 10, font_bold: false}
+speaker_notes: |
+  A regulated landlord needs more than a persuasive explanation. It needs a trace another person can inspect.
+
+  For each decision, retain the source and evidence version, applicable rule version, result and reason, named reviewer, approval event and timestamp. If someone overrides the result, capture their authority and reason. If evidence changes, reopen dependent reviews and preserve the earlier story.
+
+  That is how an executive answers: why this home, why this release, why this payment? AI-generated prose cannot substitute for the trace.
+
+  Regulatory updates enter a managed source register; accountable professionals approve changed interpretations and rules. This pitch uses dated repository evidence, not a fresh legal-currentness review. Compliance and technical acceptance stay human-owned.
 
   Evidence:
-  docs/case_study_48_original.md — Business Challenge; Agentic Architecture Brief; Expected Outcomes (2026-09-10, immutable request)
-  docs/reference/research/company/pilot-measurement-challenge.md — Summary; Owner Decision, 2026-09-26; Proposed Measurement Design (2026-09-26, proposed comparisons)
-  docs/adrs/0001-azure-architecture.md — Exercise Applicability (2026-10-11); Decisions; Hybrid M365 and Excel transition; Options still to compare (proposed); see appendix slide 21 for the unscored comparison
-  docs/reference/research/ux/proper-warm-prototype-profile-review.md — Owner Usability Feedback (2026-10-07); Proposed Acceptance Checks UX-01 to UX-08 (reported impressions, unexecuted checks)
+  docs/case_study_48_addendum.md — Regulatory Evidence and Service Design; EXA-003/005/006 (2026-10-11).
+  docs/adrs/0001-azure-architecture.md — Decisions; Exercise Applicability (2026-10-11, proposed).

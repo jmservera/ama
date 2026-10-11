@@ -24,6 +24,17 @@ The pass or fail decision is made by [gate.py](scripts/gate.py), never by the mo
 
 A criterion can only move when an artifact that informs it changes, and every move must cite a changed file. Deleting a scored file, renaming it outside the registry globs or letting it grow past `max_file_bytes` counts as a change: the scorer can lower the affected criteria by citing the removed path, but a removed path never justifies a higher score.
 
+For text, cite `path:line`. For a deck, cite its original repository `.pptx`
+path, optionally followed by `:slideN` (positive slide number), not the
+temporary extracted Markdown path. The gate resolves supported anchors to the
+file before checking that it changed. PR #61's deck was detected and assessed,
+but its `:slide1` and `:slide17` citations were previously treated as filenames,
+so genuine deck score changes were discarded. Slide-anchor support repairs
+that mismatch without relaxing changed-file, artifact-presence or floor rules.
+As with other gate repairs, ordinary PR runs use the base-branch script until
+the owner merges this change. Replaying a saved scorecard verifies the fix;
+it is not a new independent assessment of a revised deck.
+
 Scores are readiness estimates from repository evidence. Live-scored criteria (B1 to B5 and C2) are informed only by the capstone deck and pitch artifacts. They keep their baseline until one of those changes, except in bootstrap and calibration runs, which score every criterion from scratch, and in pull requests that change the rubric, registry, prompt or scripts, which reopen every criterion (moves still need a cited changed artifact file).
 
 ## Files

@@ -127,7 +127,7 @@ elements:
   top: 6
   width: 12
   height: 0.35
-  text: Full source/date/status in notes • Independent findings addressed • Timed rehearsal pending
+  text: Full source/date/status in notes • New narrative review pending • Timed rehearsal pending
   font: Aptos
   font_size: 17
   font_color: '#183A31'
@@ -142,7 +142,7 @@ speaker_notes: |-
 
   All consequential legal adoption requires fresh official-source verification and professional/control-owner approval. v0.12 acceptance on 10 October does not transfer to v0.13. PR #58 evidence is pinned at 5136f192d583a5bf53adeeec4b0f21369b005c9d in maintained main documentation, not imported source or a re-inspected runtime.
 
-  The full capstone guide informed the narrative. A deck cannot establish live delivery, Q&A behaviour, working autonomy, operations or publication floors.   Independent strategist findings are recorded in the tracking review and addressed in this build; a timed rehearsal remains pending. Detailed source/provision/date/status references are in notes and research/evidence-register.md.
+  The full capstone guide informed the narrative. A deck cannot establish live delivery, Q&A behaviour, working autonomy, operations or publication floors. Earlier reviews applied to earlier narratives and are historical, not current approval. Independent final review of this rebuilt narrative is handled by the parent; a timed rehearsal remains pending. Detailed source/provision/date/status references are in notes and research/evidence-register.md.
 
   Evidence:
   docs/case_study_48_original.md — Business Challenge; Agentic Architecture Brief; Expected Outcomes (2026-09-10, immutable request)

@@ -1,162 +1,25 @@
 slide: 2
-title: Research changed the question
-section: Main council pitch
+title: You asked for help at five pressure points
+section: Main executive story
 layout: blank
-background:
-  fill: '#F7F2E7'
+background: {fill: '#F7F2E7'}
 elements:
-- type: textbox
-  left: 0.65
-  top: 0.6
-  width: 12
-  height: 0.3
-  text: WHAT WE FOUND
-  font: Aptos
-  font_size: 11
-  font_color: '#446056'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 1.22
-  width: 12
-  height: 1.25
-  text: Research changed the question
-  font: Aptos Display
-  font_size: 38
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 6.7
-  width: 12
-  height: 0.28
-  text: 02  /  PROPER WARM     •     RESEARCH HYPOTHESES • E02/E03/E04 • 26–27 Sep 2026
-  font: Aptos
-  font_size: 11
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: shape
-  shape: rounded_rectangle
-  left: 0.65
-  top: 2.85
-  width: 3.79
-  height: 2.75
-  fill: '#173F35'
-  text: 'THE CONSTRAINT
+- &t {type: textbox, left: 0.65, top: 0.6, width: 12, height: 0.3, text: 'THE ORIGINAL ASK', font: Aptos, font_size: 11, font_color: '#183A31', font_bold: true, margin_left: 0, margin_right: 0, margin_top: 0, margin_bottom: 0, word_wrap: true}
+- {<<: *t, top: 1.22, height: 1.25, text: 'You asked for help at five pressure points', font: Aptos Display, font_size: 38}
+- &b {type: shape, shape: rounded_rectangle, left: 0.65, top: 2.85, width: 3.75, height: 1.3, fill: '#173F35', text: "1 / PRIORITISE\nWhich homes first?", text_font: Aptos, text_size: 21, text_color: '#F7F2E7', margin_left: 0.22, margin_right: 0.22, margin_top: 0.12, margin_bottom: 0.12, vertical_anchor: middle, alignment: left, auto_size: none, line_spacing: 1.05}
+- {<<: *b, left: 4.775, text: "2 / ASSESS\nWhat does the home need?"}
+- {<<: *b, left: 8.9, text: "3 / FUND\nCan we prepare the application?"}
+- {<<: *b, top: 4.5, width: 5.825, fill: '#D5E2D4', text_color: '#183A31', text: "4 / COORDINATE\nCan the crew and resident agree?"}
+- {<<: *b, left: 6.825, top: 4.5, width: 5.825, fill: '#D5E2D4', text_color: '#183A31', text: "5 / VERIFY\nIs the work safe and acceptable?"}
+- {<<: *t, top: 6.15, height: 0.3, text: 'The objective is accepted handover—not more activity, messages or drafts.', font_size: 18, font_bold: false}
+- {<<: *t, top: 6.8, height: 0.2, text: '02 / REQUEST / E01 / DOUBLED DELIVERY AND GRANT CAPTURE ARE AMBITIONS, NOT RESULTS', font_size: 10, font_bold: false}
+speaker_notes: |
+  The five requests follow a home: prioritise, assess, fund, coordinate, verify. The original asks for recommendations, drafts, coordination and quality flags while preserving investment approval and resident consent.
 
-    Capital, capacity, access and quality may bind—not just administration.'
-  text_font: Aptos
-  text_size: 20
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 4.7700000000000005
-  top: 2.85
-  width: 3.79
-  height: 2.75
-  fill: '#D5E2D4'
-  text: 'THE FOUNDATION
+  We are not dismissing that request. We are asking what must be true for each capability to be useful. A better draft cannot unlock a missing survey; a schedule cannot manufacture a competent crew.
 
-    Shared records, clear lifecycle states and accountable handoffs.'
-  text_font: Aptos
-  text_size: 20
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 8.89
-  top: 2.85
-  width: 3.79
-  height: 2.75
-  fill: '#173F35'
-  text: 'THE AI OPPORTUNITY
-
-    Read, reconcile, draft and flag—inside the controls.'
-  text_font: Aptos
-  text_size: 20
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: textbox
-  left: 0.65
-  top: 6
-  width: 12
-  height: 0.38
-  text: Better inputs do not confer authority. Faster activity is not accepted handover.
-  font: Aptos
-  font_size: 19
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-speaker_notes: 'The original question was which agents to build. The research asked what actually prevents safe,
-  accepted completions. Spreadsheet dependence is in the case, but it is not proof that administration is the binding
-  constraint. Capital, competent assessors, supplier capacity, access, evidence quality and downstream assurance
-  may matter more.
-
-
-  The role challenge found that every end-to-end agent request mixed deterministic controls, accountable decisions
-  and narrower AI tasks. Richer photos, invoices and sensor inputs did not change that division. Better inputs cannot
-  create consent or professional acceptance.
-
-
-  Our conclusion is to build a shared coordination and evidence foundation, then add assistance where comparative
-  tests show net benefit. The regulatory material is a dated research set. The current register distinguishes final
-  energy policy from proof of a commenced landlord duty. We have not refreshed legal currentness for this pitch.
-
+  Doubled delivery, grant capture and lower bills are original ambitions, not demonstrated outcomes. Accepted handover is the endpoint that keeps all five capabilities honest.
 
   Evidence:
-
-  docs/case_study_48_addendum.md — Business Challenge; Regulatory Evidence and Service Design; Proper Warm at Proper
-  North Homes (2026-10-11, maintained proposal)
-
-  docs/reference/research/company/agent-request-challenge.md — Purpose and Method; Summary (2026-09-26, role-agent
-  hypotheses)
-
-  docs/reference/research/company/agent-what-if-study.md — Purpose and Method; Summary of Revised Verdicts (2026-09-27,
-  role-agent hypotheses)
-
-  docs/reference/research/company/company-profile-research.md — Confirmed Company Information; Modelled Customer
-  Profile; Role and Decision Map (2026-09-26; not-for-profit owner-confirmed, other attributes modelled)'
+  docs/case_study_48_original.md — Transformation Objective; Agentic Architecture Brief; Expected Outcomes; Business Case (2026-09-10).
+  docs/reference/research/company/pilot-measurement-challenge.md — Summary (2026-09-26, research hypotheses).
