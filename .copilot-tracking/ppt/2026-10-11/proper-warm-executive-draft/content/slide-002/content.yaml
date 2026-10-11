@@ -1,0 +1,162 @@
+slide: 2
+title: Research changed the question
+section: Main council pitch
+layout: blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12
+  height: 0.3
+  text: WHAT WE FOUND
+  font: Aptos
+  font_size: 11
+  font_color: '#446056'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12
+  height: 1.25
+  text: Research changed the question
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12
+  height: 0.28
+  text: 02  /  PROPER WARM     •     RESEARCH HYPOTHESES • E02/E03/E04 • 26–27 Sep 2026
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 3.79
+  height: 2.75
+  fill: '#173F35'
+  text: 'THE CONSTRAINT
+
+    Capital, capacity, access and quality may bind—not just administration.'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 4.7700000000000005
+  top: 2.85
+  width: 3.79
+  height: 2.75
+  fill: '#D5E2D4'
+  text: 'THE FOUNDATION
+
+    Shared records, clear lifecycle states and accountable handoffs.'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 8.89
+  top: 2.85
+  width: 3.79
+  height: 2.75
+  fill: '#173F35'
+  text: 'THE AI OPPORTUNITY
+
+    Read, reconcile, draft and flag—inside the controls.'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: textbox
+  left: 0.65
+  top: 6
+  width: 12
+  height: 0.38
+  text: Better inputs do not confer authority. Faster activity is not accepted handover.
+  font: Aptos
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+speaker_notes: 'The original question was which agents to build. The research asked what actually prevents safe,
+  accepted completions. Spreadsheet dependence is in the case, but it is not proof that administration is the binding
+  constraint. Capital, competent assessors, supplier capacity, access, evidence quality and downstream assurance
+  may matter more.
+
+
+  The role challenge found that every end-to-end agent request mixed deterministic controls, accountable decisions
+  and narrower AI tasks. Richer photos, invoices and sensor inputs did not change that division. Better inputs cannot
+  create consent or professional acceptance.
+
+
+  Our conclusion is to build a shared coordination and evidence foundation, then add assistance where comparative
+  tests show net benefit. The regulatory material is a dated research set. The current register distinguishes final
+  energy policy from proof of a commenced landlord duty. We have not refreshed legal currentness for this pitch.
+
+
+  Evidence:
+
+  docs/case_study_48_addendum.md — Business Challenge; Regulatory Evidence and Service Design; Proper Warm at Proper
+  North Homes (2026-10-11, maintained proposal)
+
+  docs/reference/research/company/agent-request-challenge.md — Purpose and Method; Summary (2026-09-26, role-agent
+  hypotheses)
+
+  docs/reference/research/company/agent-what-if-study.md — Purpose and Method; Summary of Revised Verdicts (2026-09-27,
+  role-agent hypotheses)
+
+  docs/reference/research/company/company-profile-research.md — Confirmed Company Information; Modelled Customer
+  Profile; Role and Decision Map (2026-09-26; not-for-profit owner-confirmed, other attributes modelled)'

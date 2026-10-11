@@ -1602,3 +1602,28 @@ metadata when the knowledge base was created.
 * Documentation-only implementation: no runtime/deployment/model calls,
   regulatory snapshot, private data or owner-memory changes. Fresh full-BRD/
   PRD quality and owner acceptance remain separate from RPI outcome review.
+
+## [2026-10-11] update | Publish the validated Proper Warm council deck
+
+* Rebuilt the 18-slide Proper Warm executive solution draft for the council
+  from the latest 2026-10-11 research. The workbench offer, bounded AI,
+  proposed architecture, Excel transition, resident/contractor boundaries,
+  controls, evidence gates and unscored platform options are explicit.
+* Closed the iteration-2 storytelling findings F01-F11. The independent
+  iteration-3 review found no material communications blocker to publication
+  as a clearly labelled draft. The main notes contain 1,668 spoken words
+  (about 11.9 minutes at 140 wpm); the 517-word appendix is for reference.
+  Oral timed rehearsal remains pending.
+* PPTX-property and geometry validation each reported zero issues across 18
+  slides. Published
+  `../presentations/proper-warm-executive-draft.pptx` and confirmed the
+  delivery copy matches the validated build by SHA-256
+  (`2764263A97F1A8086E6F3DE31A0BDC4376B8BC06F5E0B235A5989341AC664193`).
+  At 98,072 bytes, it is below the scorer's 2,000,000-byte file limit.
+* Updated `README.md` and `../capstone/README.md`; the existing
+  `.github/rubric/artifacts.json` entry already includes the delivery path.
+  Working files and review evidence remain under
+  `.copilot-tracking/ppt/2026-10-11/proper-warm-executive-draft/`.
+* Benefits, product whole-life cost, direct user acceptance, legal currentness,
+  full security assurance and production readiness remain unproved. No
+  contradiction or new company fact was introduced.

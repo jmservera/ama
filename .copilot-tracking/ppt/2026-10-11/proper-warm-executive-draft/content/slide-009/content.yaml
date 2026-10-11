@@ -1,0 +1,153 @@
+slide: 9
+title: AI prepares the decision. People own it.
+section: Main council pitch
+layout: blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12
+  height: 0.3
+  text: TWO CAPABILITIES • ONE AUTHORITY BOUNDARY
+  font: Aptos
+  font_size: 11
+  font_color: '#446056'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12
+  height: 1.25
+  text: AI prepares the decision. People own it.
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12
+  height: 0.28
+  text: 09  /  PROPER WARM     •     REAL FEASIBILITY ≠ TASK BENEFIT • E07/E11 • 11 Oct 2026
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 5.85
+  height: 2.85
+  fill: '#173F35'
+  text: 'TYPED SCORING
+
+    Decision 1
+
+    Supplied candidates and bounded checks
+
+    Explicit no-match / uncertainty
+
+    Placement conditional on verified task fit'
+  text_font: Aptos
+  text_size: 21
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 6.85
+  top: 2.85
+  width: 5.8
+  height: 2.85
+  fill: '#D5E2D4'
+  text: 'CITED GENERATION
+
+    Foundry generative model
+
+    Draft narrative from permitted sources
+
+    Review every required field
+
+    No invented facts or submission'
+  text_font: Aptos
+  text_size: 21
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: textbox
+  left: 0.65
+  top: 6.05
+  width: 12
+  height: 0.36
+  text: 'NEVER AI-OWNED: priority policy • compliance • consent • technical approval • claims • QA • payment'
+  font: Aptos
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+speaker_notes: 'We distinguish typed scoring from text generation. Decision 1 can select from supplied, source-bound
+  candidates or support a bounded evidence check only when its actual task fit is verified. It should expose no-match
+  or uncertainty rather than invent a missing value. A real Foundry generative task can assemble a cited narrative
+  from approved inputs. That narrative is still a draft.
+
+
+  Neither capability owns priority policy, regulatory satisfaction, consent, technical approval, grant submission,
+  quality acceptance or payment. The API enforces that boundary. Individual manual access does not waive required
+  real AI in an application delivery.
+
+
+  Documented feasibility includes source-bound EPC selection and cited generation. Benefit, calibration and broader
+  screening remain unproved. The binary adapter cannot establish a three-class screening score. The parallel experiment
+  is not completed evidence.
+
+
+  Evidence:
+
+  docs/reference/research/company/agent-request-challenge.md — Purpose and Method; Summary (2026-09-26, role-agent
+  hypotheses)
+
+  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds (2026-10-11); Current Learning and Parallel
+  Experiment (owner direction; feasibility not benefit)
+
+  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0
+  candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
+
+  docs/ideas/typesafe-system-one-agent-fit.md — Observed Feasibility and Parallel Value Experiment (2026-10-11);
+  Microsoft Decision 1 Reassessment (2026-10-10). PR #58 pinned 5136f192d583a5bf53adeeec4b0f21369b005c9d; inspected
+  in maintained documentation 2026-10-11, not runtime reverified'

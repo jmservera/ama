@@ -1,0 +1,142 @@
+slide: 12
+title: Prove the transformation; test whether AI adds value
+section: Main council pitch
+layout: blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12
+  height: 0.3
+  text: MEASUREMENT, NOT A SUCCESS DASHBOARD
+  font: Aptos
+  font_size: 11
+  font_color: '#446056'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12
+  height: 1.25
+  text: Prove the transformation; test whether AI adds value
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12
+  height: 0.28
+  text: 12  /  PROPER WARM     •     PROPOSED COMPARISONS • E05/E11 • NO RESULTS CLAIMED
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 5.85
+  height: 2.95
+  fill: '#173F35'
+  text: 'COMPARISON 1 • PROGRAMME
+
+    Existing teams / matched localities
+
+    Same event capture and frozen cohort
+
+    Accepted handovers + whole-chain cost
+
+    Log shared resources and displacement'
+  text_font: Aptos
+  text_size: 21
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 6.85
+  top: 2.85
+  width: 5.8
+  height: 2.95
+  fill: '#D5E2D4'
+  text: 'COMPARISON 2 • CAPABILITY
+
+    Paired manual/rules versus assistance
+
+    Same inputs and reviewed outcomes
+
+    Full review effort + errors + latency + cost
+
+    Parallel experiment: no results yet'
+  text_font: Aptos
+  text_size: 21
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: textbox
+  left: 0.65
+  top: 6.12
+  width: 12
+  height: 0.28
+  text: 'Guardrails: safety • resident choice • quality • equity • peak cash. Include unfinished and withdrawn cases.'
+  font: Aptos
+  font_size: 17
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+speaker_notes: 'Separate two tests: does the coordinated programme improve safe accepted handovers, and does a specific
+  AI task outperform the same workflow without it? Compare matched localities for programme outcomes and paired,
+  identical tasks for capability value. Include incomplete, paused and withdrawn cases, shared resources and
+  displacement. Measure errors, review effort, delay, cost and uncertainty; protect safety, consent, equity and quality.
+
+  These are proposed comparisons, not results. A negative AI finding means retain the simpler path and report it.
+
+
+  Evidence:
+
+  docs/reference/research/company/pilot-measurement-challenge.md — Summary; Owner Decision, 2026-09-26; Proposed
+  Measurement Design (2026-09-26, proposed comparisons)
+
+  docs/case_study_48_addendum.md — Owner-Approved Exercise Baseline (2026-10-10); EXA-001/002/004/005/008/010/011/012/013/015/016;
+  Numerical Targets and Attribution (historical accepted exercise assumptions)
+
+  docs/ideas/typesafe-system-one-agent-fit.md — Observed Feasibility and Parallel Value Experiment (2026-10-11);
+  Microsoft Decision 1 Reassessment (2026-10-10). PR #58 pinned 5136f192d583a5bf53adeeec4b0f21369b005c9d; inspected
+  in maintained documentation 2026-10-11, not runtime reverified'

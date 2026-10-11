@@ -1,0 +1,169 @@
+slide: 3
+title: We challenged the gaps—not just the technology
+section: Main council pitch
+layout: blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12
+  height: 0.3
+  text: WHO WE ASKED
+  font: Aptos
+  font_size: 11
+  font_color: '#446056'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12
+  height: 1.25
+  text: We challenged the gaps—not just the technology
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12
+  height: 0.28
+  text: 03  /  PROPER WARM     •     ROLE AGENTS ≠ STAFF INTERVIEWS OR APPROVALS • E03/E05/E06/E12
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 5.85
+  height: 1.35
+  fill: '#173F35'
+  text: 'ASSETS + FINANCE
+
+    Investment authority • gross cash • attributable value'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 6.85
+  top: 2.85
+  width: 5.8
+  height: 1.35
+  fill: '#D5E2D4'
+  text: 'PROGRAMME + PROCUREMENT
+
+    Capacity • professional review • supplier accountability'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 4.6
+  width: 5.85
+  height: 1.35
+  fill: '#D5E2D4'
+  text: 'RESIDENTS + FRONTLINE
+
+    Choice • safe contact • accepted handoffs'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 6.85
+  top: 4.6
+  width: 5.8
+  height: 1.35
+  fill: '#173F35'
+  text: 'SAFETY + DATA
+
+    Hazard route • missingness • independent evaluation'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+speaker_notes: 'Eight documented role agents challenged the request: Assets, Programme, Finance, Procurement, Resident
+  Engagement, Building Safety, Data and Performance, and the Neighbourhood Housing Officer. Each brought a different
+  failure question. Who approves the investment? Who accepts quality? Who owns a pending handoff? What happens when
+  a resident cannot use a digital channel? Does faster activity simply move the queue elsewhere?
+
+
+  These were research instruments using sector-informed hypotheses, not employee interviews or corporate approval.
+  The measurement challenge forced us to separate programme change from AI contribution.
+
+
+  Later, Programme, Finance, Resident Engagement and Data instruments proposed reconciled exercise assumptions.
+  The project owner accepted the v0.12 baseline on 10 October. Owner UX feedback separately asked for visible readiness,
+  ownership and agent purpose. None of that substitutes for direct staff or resident validation, or acceptance of
+  the current candidate.
+
+
+  Evidence:
+
+  docs/reference/research/company/agent-request-challenge.md — Purpose and Method; Summary (2026-09-26, role-agent
+  hypotheses)
+
+  docs/reference/research/company/pilot-measurement-challenge.md — Summary; Owner Decision, 2026-09-26; Proposed
+  Measurement Design (2026-09-26, proposed comparisons)
+
+  docs/case_study_48_addendum.md — Owner-Approved Exercise Baseline (2026-10-10); EXA-001/002/004/005/008/010/011/012/013/015/016;
+  Numerical Targets and Attribution (historical accepted exercise assumptions)
+
+  docs/reference/research/ux/proper-warm-prototype-profile-review.md — Owner Usability Feedback (2026-10-07); Proposed
+  Acceptance Checks UX-01 to UX-08 (reported impressions, unexecuted checks)'

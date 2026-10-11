@@ -1,0 +1,170 @@
+slide: 16
+title: 'Council Q&A: the objections we welcome'
+section: Appendix
+layout: blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12
+  height: 0.3
+  text: APPENDIX B • ANSWERS WITH REVERSAL CONDITIONS
+  font: Aptos
+  font_size: 11
+  font_color: '#446056'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12
+  height: 1.25
+  text: 'Council Q&A: the objections we welcome'
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12
+  height: 0.28
+  text: 16  /  PROPER WARM     •     ALTERNATIVES, AFFORDABILITY, AUTHORITY • E05/E07/E09/E11
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 5.85
+  height: 1.35
+  fill: '#173F35'
+  text: 'WHY NOT EXCEL / M365?
+
+    Cost equivalent options; control mechanisms must win.'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 6.85
+  top: 2.85
+  width: 5.8
+  height: 1.35
+  fill: '#D5E2D4'
+  text: 'WHY NOT LAUNCH NOW?
+
+    Feasibility is not full workflow or human acceptance.'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 4.6
+  width: 5.85
+  height: 1.35
+  fill: '#D5E2D4'
+  text: 'WHAT BUDGET?
+
+    New scoped authority needed; prior cap/override is historical.'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 6.85
+  top: 4.6
+  width: 5.8
+  height: 1.35
+  fill: '#173F35'
+  text: 'WHAT IF AI FAILS?
+
+    Keep manual work; simplify failed tasks; preserve gates.'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+speaker_notes: 'Why not fix Excel? We should cost that option; the proposed control mechanisms, not familiarity
+  alone, decide the comparison. Why not Power Platform? Tenant/licensing and operational fit are unverified and
+  require equivalent appraisal before production selection. Why buy AI now? Do not buy an assumed benefit; verify
+  access, terms and scoped authority, then run paired task tests. Why not launch from #58? Narrow observed feasibility
+  is not full workflow/control or human acceptance.
+
+
+  What is the budget? No new corporate amount is approved. Historical EXA-012 allocated USD450 per month, reviewed
+  at USD360 and paused at USD405; #58 removed that cap only for its rebuild. Each subsequent build needs an effective
+  scoped approval with accrued liabilities. Stop if controls fail, authority is absent or liabilities exceed the
+  agreed envelope. Simplify any AI task that fails net-value testing; keep required real-platform evidence independent.
+
+
+  Evidence:
+
+  docs/reference/research/company/pilot-measurement-challenge.md — Summary; Owner Decision, 2026-09-26; Proposed
+  Measurement Design (2026-09-26, proposed comparisons)
+
+  docs/case_study_48_addendum.md — Owner-Approved Exercise Baseline (2026-10-10); EXA-001/002/004/005/008/010/011/012/013/015/016;
+  Numerical Targets and Attribution (historical accepted exercise assumptions)
+
+  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds (2026-10-11); Current Learning and Parallel
+  Experiment (owner direction; feasibility not benefit)
+
+  docs/adrs/0001-azure-architecture.md — Exercise Applicability (2026-10-11); Decisions; Hybrid M365 and Excel transition;
+  Options still to compare (proposed)
+
+  docs/ideas/typesafe-system-one-agent-fit.md — Observed Feasibility and Parallel Value Experiment (2026-10-11);
+  Microsoft Decision 1 Reassessment (2026-10-10). PR #58 pinned 5136f192d583a5bf53adeeec4b0f21369b005c9d; inspected
+  in maintained documentation 2026-10-11, not runtime reverified'

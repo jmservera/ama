@@ -1,0 +1,172 @@
+slide: 4
+title: Build one retrofit workbench, not five autonomous agents
+section: Main council pitch
+layout: blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12
+  height: 0.3
+  text: ARCHITECTURE DECISIONS
+  font: Aptos
+  font_size: 11
+  font_color: '#446056'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12
+  height: 1.25
+  text: One retrofit workbench. Not five autonomous agents.
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12
+  height: 0.28
+  text: 04  /  PROPER WARM     •     OWNER DIRECTION + PROPOSED DESIGN • E07–E10 • 11 Oct 2026
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 3.79
+  height: 2.75
+  fill: '#173F35'
+  text: 'THE PRODUCT
+
+    Staff workbench + role queues
+
+    One linked home / work package
+
+    Evidence, handoffs, quality + finance'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 4.7700000000000005
+  top: 2.85
+  width: 3.79
+  height: 2.75
+  fill: '#D5E2D4'
+  text: 'BOUNDED ASSISTANCE
+
+    Deterministic priority + workflow
+
+    AI drafts / selects / flags
+
+    People accept, decide and act'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 8.89
+  top: 2.85
+  width: 3.79
+  height: 2.75
+  fill: '#173F35'
+  text: 'CUSTOMER OUTCOME
+
+    See owner, next action + blocker
+
+    Track capacity to accepted handover
+
+    Measure effort, quality + cost'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: textbox
+  left: 0.65
+  top: 6
+  width: 12
+  height: 0.38
+  text: Reuse data and API contracts. Prove controls. Platform choice is not company approval.
+  font: Aptos
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+speaker_notes: 'We are proposing one staff-facing retrofit workbench: linked home, building, scheme, work package and
+  service cases, with role queues over shared status, evidence, owners, blockers, capacity and finance. It coordinates
+  work; it does not replace every source system or create five autonomous agents.
+
+  Deterministic rules control ranking and transitions. Bounded AI drafts, selects or flags; people decide. Azure SQL,
+  Blob and a controlled API are the exercise direction. The customer benefit to test is one accountable case and
+  next action through accepted handover. Time, rework and completion improvement are not yet measured.
+
+  Actual Azure, SQL and AI are required in subsequent accepted exercise deliveries. This is not a production platform
+  selection: Excel-only and M365 options still need comparable appraisal.
+
+  Evidence:
+
+  docs/reference/research/company/agent-request-challenge.md — Purpose and Method; Summary (2026-09-26, role-agent
+  hypotheses)
+
+  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds (2026-10-11); Current Learning and Parallel
+  Experiment (owner direction; feasibility not benefit)
+
+  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0
+  candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
+
+  docs/adrs/0001-azure-architecture.md — Exercise Applicability (2026-10-11); Decisions; Hybrid M365 and Excel transition;
+  Options still to compare (proposed)
+
+  docs/adrs/0002-pilot-readiness-architecture.md — Exercise Applicability (2026-10-11); Decisions; 1. Durable store
+  (proposed readiness design)'

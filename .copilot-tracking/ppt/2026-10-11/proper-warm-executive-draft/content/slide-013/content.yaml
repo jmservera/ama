@@ -1,0 +1,225 @@
+slide: 13
+title: Fund evidence in gates—not a leap into production
+section: Main council pitch
+layout: blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12
+  height: 0.3
+  text: PLANNING ONLY • PROPOSED GATES
+  font: Aptos
+  font_size: 11
+  font_color: '#446056'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12
+  height: 1.25
+  text: Prepare the evidence stage in four decision gates
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12
+  height: 0.28
+  text: 13  /  PROPER WARM     •     PROPOSED NEXT STAGE • E06–E10 • SCOPE/BUDGET/ACCEPTANCE REQUIRED
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 2.35
+  height: 0.53
+  fill: '#E5B96A'
+  text: 1 • ACCEPT
+  text_font: Aptos
+  text_size: 18
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: textbox
+  left: 3.4
+  top: 2.85
+  width: 9.25
+  height: 0.53
+  text: Freshly reviewed requirements + named owners + defined authority
+  font: Aptos
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 3.68
+  width: 2.35
+  height: 0.53
+  fill: '#E5B96A'
+  text: 2 • CONNECT
+  text_font: Aptos
+  text_size: 18
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: textbox
+  left: 3.4
+  top: 3.68
+  width: 9.25
+  height: 0.53
+  text: Real Azure/SQL/AI + continuing lineage + negative controls
+  font: Aptos
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 4.51
+  width: 2.35
+  height: 0.53
+  fill: '#E5B96A'
+  text: 3 • PROVE
+  text_font: Aptos
+  text_size: 18
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: textbox
+  left: 3.4
+  top: 4.51
+  width: 9.25
+  height: 0.53
+  text: Paired task value + engineering/accessibility/recovery evidence
+  font: Aptos
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 5.34
+  width: 2.35
+  height: 0.53
+  fill: '#E5B96A'
+  text: 4 • DECIDE
+  text_font: Aptos
+  text_size: 18
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: textbox
+  left: 3.4
+  top: 5.34
+  width: 9.25
+  height: 0.53
+  text: 'Owner evidence review: continue / simplify / stop'
+  font: Aptos
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+speaker_notes: 'Gate the next stage around decisions, not service counts. First review and accept the current requirements
+  candidate, name accountable owners, freeze the evidence and test contracts, and record effective scope and spending
+  authority. No missing approval is solved by running another model.
+
+
+  Prove connected case controls on continuing generated data using actual Azure, SQL and registered inference. Show
+  version-linked write, read and restart evidence, independent decisions and negative permission tests. Unit-test
+  mocks cannot establish delivered application acceptance.
+
+
+  Then evaluate net task value and engineering readiness, including accessibility, recovery, performance and accrued
+  costs. Finally return a reviewable evidence pack to the owner with pass, fail, blocked and not-run states. The
+  earlier four-week exercise plan was a software delivery scenario, not a physical retrofit programme or unconditional
+  timetable for this candidate. Only subsequent operational appraisal, real user research and formal control-owner
+  approval could justify a live pilot.
+
+
+  Evidence:
+
+  docs/case_study_48_addendum.md — Owner-Approved Exercise Baseline (2026-10-10); EXA-001/002/004/005/008/010/011/012/013/015/016;
+  Numerical Targets and Attribution (historical accepted exercise assumptions)
+
+  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds (2026-10-11); Current Learning and Parallel
+  Experiment (owner direction; feasibility not benefit)
+
+  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0
+  candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
+
+  docs/adrs/0001-azure-architecture.md — Exercise Applicability (2026-10-11); Decisions; Hybrid M365 and Excel transition;
+  Options still to compare (proposed)
+
+  docs/adrs/0002-pilot-readiness-architecture.md — Exercise Applicability (2026-10-11); Decisions; 1. Durable store
+  (proposed readiness design)'
