@@ -21,7 +21,7 @@ class RenameTests(unittest.TestCase):
         )
 
     def test_historical_external_urls_remain_exact(self):
-        url = "https://github.com/jmservera/ama/blob/abc/mvp/properwarm_mvp/server.py"
+        url = "https://github.com/jmservera/ama/blob/abc/PW/properwarm_mvp/server.py"
         self.assertEqual(rename.replace_names(f"Proper Warm {url}"), f"Zava Forward {url}")
 
     def test_official_warm_homes_funding_is_not_rebranded(self):
@@ -66,6 +66,26 @@ class RenameTests(unittest.TestCase):
             self.assertEqual(data["elements"][-1]["height"], .35)
             self.assertEqual((path.parent / "images/zava-logo.png").read_bytes(), logo.getvalue())
             self.assertEqual(rename.add_yaml_logo(result, path, logo=logo.getvalue(), apply=False), result)
+
+    def test_style_rename_does_not_break_later_slide_sources(self):
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q", root], check=True)
+            content = root / ".copilot-tracking/ppt/date/proper-warm/content"
+            (content / "global").mkdir(parents=True)
+            (content / "slide-001").mkdir()
+            (content / "global/style.yaml").write_text("dimensions:\n  width_inches: 13.333\n")
+            (content / "slide-001/content.yaml").write_text("elements: []\n")
+            subprocess.run(["git", "-C", root, "add", "."], check=True)
+            logo = BytesIO()
+            Image.new("RGB", (644, 225)).save(logo, "PNG")
+            report = rename.migrate(root, apply=True, logo=logo.getvalue())
+            self.assertEqual(report["failures"], [])
+            new = root / ".copilot-tracking/ppt/date/zava-forward/content"
+            self.assertTrue((new / "global/style.yaml").exists())
+            self.assertTrue((new / "slide-001/images/zava-logo.png").exists())
+            self.assertIn("Zava branding logo", (new / "slide-001/content.yaml").read_text())
     def test_infra_short_prefix_and_official_funding(self):
         self.assertEqual(
             rename.update_text("param workload = 'warm'\nid-warm-test sql-warm-test\nWarm Homes fund", "infra/a.bicep", {}),

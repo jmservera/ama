@@ -54,14 +54,14 @@ def replace_names(text: str) -> str:
     def replace_part(part: str) -> str:
         for old, new in REPLACEMENTS:
             part = part.replace(old, new)
-        return part
+        return re.sub(r"\bPW\b", "ZF", part)
 
     result, start = [], 0
     for match in URL.finditer(text):
         result.extend((replace_part(text[start:match.start()]), match.group()))
         start = match.end()
     result.append(replace_part(text[start:]))
-    return re.sub(r"\bPW\b", "ZF", "".join(result))
+    return "".join(result)
 
 
 def preserved(path: str) -> bool:
@@ -283,6 +283,8 @@ def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
     """Plan or apply local changes, returning explicit per-file and remaining work."""
     paths = tracked_files(root)
     path_map = {p: destination(p) for p in paths}
+    pending_moves: list[tuple[Path, Path]] = []
+    slide_logos: set[Path] = set()
     report = {
         "mode": "apply" if apply else "dry-run", "company": "Zava North Homes",
         "project": "Zava Forward", "changes": [], "preserved": [], "failures": [],
@@ -322,8 +324,9 @@ def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
                 output = update_text(raw.decode("utf-8"), old, path_map).encode("utf-8")
                 if logo and old.endswith("/content.yaml") and "/ppt/" in old:
                     output = add_yaml_logo(
-                        output.decode("utf-8"), path, logo=logo, apply=apply,
+                        output.decode("utf-8"), path, logo=logo, apply=False,
                     ).encode("utf-8")
+                    slide_logos.add((root / new).parent / "images/zava-logo.png")
                 changed = output != raw
             else:
                 if path.suffix.lower() in (".pdf", ".png", ".jpg", ".jpeg"):
@@ -335,13 +338,24 @@ def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
                     if changed:
                         atomic_write(path, output)
                     if old != new:
-                        (root / new).parent.mkdir(parents=True, exist_ok=True)
-                        path.rename(root / new)
+                        pending_moves.append((path, root / new))
         except (OSError, UnicodeError, ValueError, KeyError, TypeError, AttributeError,
                 ET.ParseError, zipfile.BadZipFile, ImportError) as error:
             LOG.error("Cannot migrate %s: %s", old, error)
             report["failures"].append({"path": old, "reason": str(error)})
+    # Keep every source dependency (including global slide style) at its old
+    # path until all files have been read and transformed.
+    for source, target in pending_moves:
+        try:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            source.rename(target)
+        except OSError as error:
+            LOG.error("Cannot rename %s: %s", source.relative_to(root), error)
+            report["failures"].append({"path": source.relative_to(root).as_posix(),
+                                       "reason": str(error)})
     if apply and logo:
+        for path in slide_logos:
+            atomic_write(path, logo)
         atomic_write(root / "mvp/web/zava-logo.png", logo)
         if (root / ".github/extensions/program-workbench/assets").is_dir():
             atomic_write(root / ".github/extensions/program-workbench/assets/zava-logo.png", logo)
