@@ -1,0 +1,212 @@
+slide: 2
+title: You asked for help at five pressure points
+section: Main executive story
+layout: blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12
+  height: 0.3
+  text: THE ORIGINAL ASK
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12
+  height: 1.25
+  text: You asked for help at five pressure points
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 3.75
+  height: 1.3
+  fill: '#173F35'
+  text: '1 / PRIORITISE
+
+    Which homes first?'
+  text_font: Aptos
+  text_size: 21
+  text_color: '#F7F2E7'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.12
+  margin_bottom: 0.12
+  vertical_anchor: middle
+  alignment: left
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 4.775
+  top: 2.85
+  width: 3.75
+  height: 1.3
+  fill: '#173F35'
+  text: '2 / ASSESS
+
+    What does the home need?'
+  text_font: Aptos
+  text_size: 21
+  text_color: '#F7F2E7'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.12
+  margin_bottom: 0.12
+  vertical_anchor: middle
+  alignment: left
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 8.9
+  top: 2.85
+  width: 3.75
+  height: 1.3
+  fill: '#173F35'
+  text: '3 / FUND
+
+    Can we prepare the application?'
+  text_font: Aptos
+  text_size: 21
+  text_color: '#F7F2E7'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.12
+  margin_bottom: 0.12
+  vertical_anchor: middle
+  alignment: left
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 4.5
+  width: 5.825
+  height: 1.3
+  fill: '#D5E2D4'
+  text: '4 / COORDINATE
+
+    Can the crew and resident agree?'
+  text_font: Aptos
+  text_size: 21
+  text_color: '#183A31'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.12
+  margin_bottom: 0.12
+  vertical_anchor: middle
+  alignment: left
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 6.825
+  top: 4.5
+  width: 5.825
+  height: 1.3
+  fill: '#D5E2D4'
+  text: '5 / VERIFY
+
+    Is the work safe and acceptable?'
+  text_font: Aptos
+  text_size: 21
+  text_color: '#183A31'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.12
+  margin_bottom: 0.12
+  vertical_anchor: middle
+  alignment: left
+  auto_size: none
+  line_spacing: 1.05
+- type: textbox
+  left: 0.65
+  top: 6.15
+  width: 12
+  height: 0.3
+  text: The objective is accepted handover—not more activity, messages or drafts.
+  font: Aptos
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 6.8
+  width: 12
+  height: 0.2
+  text: 02 / REQUEST / E01 / DOUBLED DELIVERY AND GRANT CAPTURE ARE AMBITIONS, NOT
+    RESULTS
+  font: Aptos
+  font_size: 10
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'The five requests follow a home: prioritise, assess, fund, coordinate,
+  verify. The original asks for recommendations, drafts, coordination and quality
+  flags while preserving investment approval and resident consent.
+
+
+  We are not dismissing that request. We are asking what must be true for each capability
+  to be useful. A better draft cannot unlock a missing survey; a schedule cannot manufacture
+  a competent crew.
+
+
+  Doubled delivery, grant capture and lower bills are original ambitions, not demonstrated
+  outcomes. Accepted handover is the endpoint that keeps all five capabilities honest.
+
+
+  Evidence:
+
+  docs/case_study_48_original.md — Transformation Objective; Agentic Architecture
+  Brief; Expected Outcomes; Business Case (2026-09-10).
+
+  docs/reference/research/company/pilot-measurement-challenge.md — Summary (2026-09-26,
+  research hypotheses).
+
+  '

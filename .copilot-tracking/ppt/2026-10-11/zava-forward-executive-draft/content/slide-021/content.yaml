@@ -1,0 +1,198 @@
+slide: 21
+title: Compare the routes before selecting a winner
+section: Appendix
+layout: blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12
+  height: 0.3
+  text: APPENDIX D • OPTIONS GATE • NO WINNER SCORED
+  font: Aptos
+  font_size: 11
+  font_color: '#446056'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+- type: textbox
+  left: 0.65
+  top: 1.2
+  width: 12
+  height: 0.7
+  text: Compare the routes before selecting a winner
+  font: Aptos Display
+  font_size: 34
+  font_color: '#183A31'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+- type: table
+  left: 0.65
+  top: 2.2
+  width: 12.03
+  height: 3.25
+  columns:
+  - width: 2.05
+  - width: 3.05
+  - width: 3.3
+  - width: 3.63
+  rows:
+  - cells:
+    - text: Decision criterion
+      font_bold: true
+      font_size: 13
+      fill: '#173F35'
+      font_color: '#F7F2E7'
+    - text: Excel-only improvement
+      font_bold: true
+      font_size: 13
+      fill: '#173F35'
+      font_color: '#F7F2E7'
+    - text: M365 / business platform
+      font_bold: true
+      font_size: 13
+      fill: '#173F35'
+      font_color: '#F7F2E7'
+    - text: Azure-led hybrid
+      font_bold: true
+      font_size: 13
+      fill: '#173F35'
+      font_color: '#F7F2E7'
+  - cells:
+    - text: Workflow / evidence
+      font_size: 13
+    - text: Workbook stays; fit unverified
+      font_size: 13
+    - text: Greenfield Power Apps / Dataverse
+      font_size: 13
+    - text: Shared API; proposed
+      font_size: 13
+  - cells:
+    - text: Permissions
+      font_size: 13
+    - text: Controls / roles unverified
+      font_size: 13
+    - text: Roles proposed; tenant fit unverified
+      font_size: 13
+    - text: Server API checks; proof needed
+      font_size: 13
+  - cells:
+    - text: Migration
+      font_size: 13
+    - text: Less change possible; fit unverified
+      font_size: 13
+    - text: Greenfield; migration unverified
+      font_size: 13
+    - text: Staged import; exit test
+      font_size: 13
+  - cells:
+    - text: Integration
+      font_size: 13
+    - text: Workbook / API links unverified
+      font_size: 13
+    - text: Connectors / sources unverified
+      font_size: 13
+    - text: API / source links proposed
+      font_size: 13
+  - cells:
+    - text: Resident access
+      font_size: 13
+    - text: Non-digital required; untested
+      font_size: 13
+    - text: Non-digital required; untested
+      font_size: 13
+    - text: Non-digital required; untested
+      font_size: 13
+  - cells:
+    - text: Whole-life cost
+      font_size: 13
+    - text: Not assessed
+      font_size: 13
+    - text: Licence / support unverified
+      font_size: 13
+    - text: Run cost not assessed
+      font_size: 13
+  - cells:
+    - text: Readiness
+      font_size: 13
+    - text: Baseline / controls unverified
+      font_size: 13
+    - text: Tenant check needed
+      font_size: 13
+    - text: Exercise direction only
+      font_size: 13
+- type: textbox
+  left: 0.65
+  top: 5.75
+  width: 12
+  height: 0.45
+  text: No common-basis cost or fit evidence yet. Compare controls, tenant, migration
+    and support before choice.
+  font: Aptos
+  font_size: 12
+  font_color: '#183A31'
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12
+  height: 0.25
+  text: 21  /  ZAVA FORWARD     •     QUALITATIVE DESIGN HYPOTHESES • ADR 0001 • OQ-012
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'This is a comparison framework, not a scored recommendation. Excel-only
+  improvement may minimize change, but control fit and the manual baseline still need
+  evidence. The greenfield Power Apps/Dataverse business-platform option and Azure-led
+  hybrid both need fair, equal-scope appraisal. Tenant fit, licences, workflows and
+  resident access have not been tested. The Azure-led hybrid is the exercise direction
+  for connected workflows and real AI, SQL and Azure evidence; it is not a production
+  decision and costs are not measured.
+
+  Ask owners to compare the routes on the same workload, controls, transition risk,
+  accessibility, integration, support and whole-life cost. Identify tenant capability,
+  workbook quality, baseline effort and failure fallback. Score only when comparable
+  evidence exists; mandatory safety, privacy, resident and approval controls are gates,
+  not tradeable points.
+
+  Evidence:
+
+  docs/adrs/0001-azure-architecture.md — Hybrid M365 and Excel transition; Options
+  still to compare; Provisional options appraisal (architect illustration is not an
+  approved decision)
+
+  docs/case_study_48_addendum.md — Implementation Options and Provisional Platform
+  Recommendation; EXA-012 / OQ-012
+
+  docs/case_study_48_original.md — Business Challenge (spreadsheets stated; specific
+  workbook failure modes not measured)'

@@ -1780,3 +1780,22 @@ metadata when the knowledge base was created.
   but no resources have been deleted and live Entra login is not claimed.
   The [rebuild guide](../../tools/rename-zava.md#azure-reset-and-acceptance)
   records the remaining dependency and acceptance boundary.
+
+## [2026-10-11] update | Rename reconciled with the new executive capstone deck
+
+* Preserved the owner's concurrent merge of #61 into the rename branch using
+  a normal history-preserving merge. The only conflict was the rubric score
+  snapshot; its remote workflow record was retained unchanged, rather than
+  mixing evidence from two scores or rewriting historical assertions.
+* Migrated the newly published executive deck, its 21 slide sources and Python
+  authoring scripts. Final coverage is five PPTX files and 61 slide sources;
+  the additional deck renders with no logo/text intersections and its sources
+  pass the shared pipeline dry-run. Research/review records remain historical.
+* Historical rubric snapshots are explicit migration exceptions. A new
+  regression reuses identical PPTX inputs' output bytes so working/published
+  copies do not drift only because separate saves carry different ZIP times.
+  There are now 21 migration regressions; earlier validation entries remain
+  snapshots of their own passes. The Azure app-management blocker is unchanged.
+* Seven targeted rubric deck-citation tests pass. The scorer includes the
+  renamed MVP/generator paths and still excludes private dataset/vendor files;
+  no score was manually increased or recalibrated as part of this rename.

@@ -1,0 +1,151 @@
+slide: 1
+title: 60,000 homes. One promise.
+section: Main executive story
+layout: blank
+background:
+  fill: '#173F35'
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12
+  height: 0.3
+  text: ZAVA NORTH HOMES / ZAVA FORWARD
+  font: Aptos
+  font_size: 11
+  font_color: '#F7F2E7'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12
+  height: 1.25
+  text: 60,000 homes. One promise.
+  font: Aptos Display
+  font_size: 44
+  font_color: '#F7F2E7'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 2.85
+  width: 7.5
+  height: 1.5
+  text: 'Warmer homes.
+
+    Safe, accepted handovers.
+
+    Decisions we can explain.'
+  font: Aptos
+  font_size: 30
+  font_color: '#F7F2E7'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  shape: rounded_rectangle
+  left: 8.65
+  top: 2.85
+  width: 4
+  height: 2.65
+  fill: '#E5B96A'
+  text: 'THE REQUEST
+
+    Five agents to help
+
+    an overstretched
+
+    retrofit programme'
+  text_font: Aptos
+  text_size: 24
+  text_color: '#183A31'
+  margin_left: 0.25
+  margin_right: 0.25
+  margin_top: 0.2
+  margin_bottom: 0.2
+  vertical_anchor: middle
+  alignment: left
+  auto_size: none
+  line_spacing: 1.05
+- type: textbox
+  left: 0.65
+  top: 5.83
+  width: 12
+  height: 0.53
+  text: Not faster agents on invisible work. A clearer path from effort to accepted
+    home.
+  font: Aptos
+  font_size: 19
+  font_color: '#F7F2E7'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12
+  height: 0.28
+  text: 01 / REQUEST + PROPOSED RESPONSE / E01–E02 / 11 OCT 2026
+  font: Aptos
+  font_size: 11
+  font_color: '#F7F2E7'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'Sixty thousand homes. Behind that number are residents waiting for
+  warmth, and a small team trying to hold a complex retrofit programme together. Zava
+  North Homes asked for five agents. That is a reasonable request: help us move faster.
+
+
+  The promise is safe, resident-accepted homes and explainable decisions. Our proposal
+  changes how work becomes accountable, not the whole company.
+
+
+  Today, endorse preparation of a gated evidence-stage proposal. No procurement, spending
+  or production authority is requested. First, let me show why the evidence changed
+  what we should build.
+
+
+  Evidence:
+
+  docs/case_study_48_original.md — Business Challenge; Agentic Architecture Brief;
+  Expected Outcomes (2026-09-10, immutable request).
+
+  docs/case_study_48_addendum.md — Zava Forward at Zava North Homes; Business Challenge;
+  Executive Assessment (2026-10-11, proposal).
+
+  '

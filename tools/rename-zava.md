@@ -173,3 +173,11 @@ inference. Entra application provisioning, Azure recreation and Azure SQL
 restoration remain uncompleted. Historic raster previews and embedded/SmartArt
 limitations remain the explicit exceptions above; rendering did not redesign
 the decks' pre-existing dense layouts.
+
+Publication also integrated the owner's concurrent merge of the new executive
+capstone deck from #61, without rebasing or force-pushing. Its 21 slides and
+Python authoring sources were migrated and checked too: the final coverage is
+61 slide sources and five PPTX files. The rubric conflict retained the remote
+workflow's recorded score unchanged. Historical score snapshots are now explicit
+exceptions, not branding inputs. A 21st regression ensures identical working
+and published deck inputs reuse the same output bytes.

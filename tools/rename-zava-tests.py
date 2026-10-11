@@ -146,6 +146,25 @@ class RenameTests(unittest.TestCase):
         picture = next(s for s in updated.slides[0].shapes if s.name == "Zava branding logo")
         self.assertLess(picture.top + picture.height, title.top)
 
+    def test_identical_working_and_published_decks_share_exact_output(self):
+        from pptx import Presentation
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q", root], check=True)
+            presentation = Presentation()
+            slide = presentation.slides.add_slide(presentation.slide_layouts[6])
+            slide.shapes.add_textbox(0, 0, 1000000, 1000000).text = "Proper Warm"
+            first, second = root / "working.pptx", root / "published.pptx"
+            presentation.save(first)
+            second.write_bytes(first.read_bytes())
+            subprocess.run(["git", "-C", root, "add", "."], check=True)
+            with patch.object(rename, "migrate_pptx", wraps=rename.migrate_pptx) as convert:
+                report = rename.migrate(root, apply=True, logo=None)
+                self.assertFalse(report["failures"])
+                self.assertEqual(convert.call_count, 1)
+            self.assertEqual(first.read_bytes(), second.read_bytes())
+
     def test_infra_short_prefix_and_official_funding(self):
         self.assertEqual(
             rename.update_text("param workload = 'warm'\nid-warm-test sql-warm-test\nWarm Homes fund", "infra/a.bicep", {}),

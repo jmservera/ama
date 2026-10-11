@@ -29,7 +29,7 @@ the [Capstone Assessment Guide](../reference/method/ama-capstone-assessment-guid
 Recordings (video or audio) are not read by the scorer. Commit the transcript
 or written notes next to the recording and link the recording from them.
 
-The [Proper Warm council proposal](./deck/proper-warm-executive-draft.pptx)
+The [Zava Forward council proposal](./deck/zava-forward-executive-draft.pptx)
 is the executive capstone artifact. The owner retired its duplicate in
 `docs/presentations/` on 2026-10-11; that folder still holds the separate
 mentor presentation. The filename retains its draft status: production

@@ -319,6 +319,7 @@ def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
     path_map = {p: p if p in existing_history else destination(p) for p in paths}
     historical_snapshots: dict[str, bytes] = {}
     pending_moves: list[tuple[Path, Path]] = []
+    pptx_outputs: dict[bytes, bytes] = {}
     slide_logos: set[Path] = set()
     report = {
         "mode": "apply" if apply else "dry-run", "company": "Zava North Homes",
@@ -370,7 +371,12 @@ def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
             is_pptx = path.suffix.lower() == ".pptx"
             if is_pptx:
                 changed = pptx_branding(raw) or logo is not None
-                output = migrate_pptx(raw, logo) if apply and changed else raw
+                output = raw
+                if apply and changed:
+                    key = hashlib.sha256(raw).digest()
+                    if key not in pptx_outputs:
+                        pptx_outputs[key] = migrate_pptx(raw, logo)
+                    output = pptx_outputs[key]
             elif path.suffix.lower() in TEXT_SUFFIXES or path.name in ("Dockerfile", ".gitignore"):
                 output = update_text(raw.decode("utf-8"), old, path_map).encode("utf-8")
                 if old.startswith("mvp/policies/") and path.suffix == ".json" and output != raw:
