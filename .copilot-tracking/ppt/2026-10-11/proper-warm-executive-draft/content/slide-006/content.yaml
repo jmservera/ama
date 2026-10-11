@@ -1,0 +1,29 @@
+slide: 6
+title: Give every step a name, an owner and a clock
+section: Main executive story
+layout: blank
+background: {fill: '#F7F2E7'}
+elements:
+- &t {type: textbox, left: 0.65, top: 0.6, width: 12, height: 0.3, text: 'THE NEW WAY OF WORKING / AN ACCOUNTABLE WORK RECORD', font: Aptos, font_size: 11, font_color: '#183A31', font_bold: true, margin_left: 0, margin_right: 0, margin_top: 0, margin_bottom: 0, word_wrap: true}
+- {<<: *t, top: 1.22, height: 1.25, text: 'Give every step a name, an owner and a clock', font: Aptos Display, font_size: 38}
+- &b {type: shape, shape: rounded_rectangle, left: 0.65, top: 2.85, width: 3.75, height: 1.3, fill: '#173F35', text: "WHO\nCase owner + receiving owner", text_font: Aptos, text_size: 21, text_color: '#F7F2E7', margin_left: 0.22, margin_right: 0.22, margin_top: 0.12, margin_bottom: 0.12, vertical_anchor: middle, alignment: left, auto_size: none, line_spacing: 1.05}
+- {<<: *b, left: 4.775, text: "WHERE\nNamed lifecycle state"}
+- {<<: *b, left: 8.9, text: "WHEN\nEntry, exit + pause timestamps"}
+- {<<: *b, top: 4.5, fill: '#D5E2D4', text_color: '#183A31', text: "WHY WAITING\nBlocker + next action"}
+- {<<: *b, left: 4.775, top: 4.5, fill: '#D5E2D4', text_color: '#183A31', text: "WHAT PROVES IT\nEvidence version + acceptance"}
+- {<<: *b, left: 8.9, top: 4.5, fill: '#E5B96A', text_color: '#183A31', text: "WHAT CHANGED\nDecision + event + reason"}
+- {<<: *t, top: 6.15, height: 0.3, text: 'A sent task is not an accepted handoff. A completion is not accepted handover.', font_size: 18, font_bold: false}
+- {<<: *t, top: 6.8, height: 0.2, text: '06 / PROPOSED WORK CONTRACT / E03/E05/E06 / DEFINITIONS AND TARGETS REQUIRE OWNER AGREEMENT', font_size: 10, font_bold: false}
+speaker_notes: |
+  Measurable work does not begin with a dashboard. It begins with a contract for each step.
+
+  Record the case owner and the person accepting the handoff. Give the work a named state. Capture entry, exit and pause timestamps, a coded blocker, the next action, and the evidence version behind acceptance.
+
+  The sender retains chase responsibility until the receiver accepts. Changed evidence returns only dependent decisions for review. Safety concerns take a separate human response route.
+
+  Now the team can distinguish waiting for a survey from waiting for consent or capacity. Leaders can see where effort accumulates. Agree definitions first and count recording effort too; visibility is a proposed mechanism, not a saving.
+
+  Evidence:
+  docs/reference/research/company/agent-request-challenge.md — Summary; Programme supervisor (2026-09-26).
+  docs/reference/research/company/pilot-measurement-challenge.md — Freeze Before Measurement; Analysis Rules (2026-09-26).
+  docs/case_study_48_addendum.md — EXA-002/008/013 (historical exercise assumptions, 2026-10-10).

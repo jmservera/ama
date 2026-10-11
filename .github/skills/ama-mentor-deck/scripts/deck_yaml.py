@@ -21,6 +21,7 @@ a new slide can be saved at that position.
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -101,6 +102,11 @@ def title_of(data: dict[str, Any]) -> str:
         return data.get("title", "") or ""
 
 
+def spoken_notes(notes: str) -> str:
+    """Return the spoken script, excluding the evidence/source register."""
+    return re.split(r"\n\s*Evidence:\s*\n", notes, maxsplit=1, flags=re.IGNORECASE)[0]
+
+
 def insert_slot(content_dir: Path, position: int) -> None:
     """Shift slides at or after ``position`` up by one, highest first."""
     for number in reversed(slide_numbers(content_dir)):
@@ -118,25 +124,30 @@ def insert_slot(content_dir: Path, position: int) -> None:
 def print_text(content_dir: Path) -> None:
     main_words = 0
     appendix_words = 0
+    all_notes_words = 0
     for number in slide_numbers(content_dir):
         data = load_slide(content_dir, number)
         notes = data.get("speaker_notes") or ""
-        words = len(notes.split())
+        words = len(spoken_notes(notes).split())
+        total_words = len(notes.split())
         title = title_of(data).replace("\n", " ")
-        is_appendix = title.lower().startswith("appendix")
+        section = str(data.get("section", "")).strip().lower()
+        is_appendix = section.startswith("appendix") or title.lower().startswith("appendix")
         if is_appendix:
             appendix_words += words
         else:
             main_words += words
+        all_notes_words += total_words
         print(f"===== slide-{number:03d} ({'appendix' if is_appendix else 'main'}) {title}")
         for item in data.get("elements", []):
             text = element_text(item)
             if text and item.get("name") != "Title":
                 print(f"  [{item.get('name')}] {text}")
-        print(f"  NOTES ({words} words): {notes.strip()}")
+        print(f"  NOTES ({words} spoken words; {total_words} total incl. evidence): {notes.strip()}")
     minutes = main_words / WORDS_PER_MINUTE
-    print(f"\nMain notes: {main_words} words, about {minutes:.1f} minutes at {WORDS_PER_MINUTE} wpm")
-    print(f"Appendix notes: {appendix_words} words")
+    print(f"\nMain spoken script: {main_words} words, about {minutes:.1f} minutes at {WORDS_PER_MINUTE} wpm")
+    print(f"Appendix spoken script: {appendix_words} words")
+    print(f"All speaker notes: {all_notes_words} words, including evidence citations")
 
 
 def create_parser() -> argparse.ArgumentParser:
