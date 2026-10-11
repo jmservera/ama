@@ -205,7 +205,65 @@ self-hosted Kev remain contingencies if approved processing location,
 quality or economics favor them, subject to fresh API, licensing, model-card
 and operational verification.
 
+### Observed Feasibility, Not Proven Incremental Value (2026-10-10)
+
+The continuing generated-data MVP has now executed real Microsoft Decision 1
+inference: a validated source-bound EPC candidate proposal with probability,
+version and usage evidence, displayed as Not reviewed. Real GPT-4.1-mini also
+produced a citation-verified summary. See the
+[MVP delivery evidence](../../mvp/README.md#current-continuing-mvp). This newer
+observation supersedes the deployment/access blockers in the historical
+pre-activation assessment below; it does not establish model calibration or
+business benefit.
+
+The exercise proves technical feasibility and a bounded review UX, not that
+Decision 1 improves decisions or saves effort. No paired manual/rules versus
+Decision 1 trial, human-adjudicated held-out accuracy study or measured grant
+capture improvement has been completed. Deterministic extraction is preferable
+for clear structured fields unless comparison demonstrates incremental benefit.
+The defensible tribunal statement is: real inference is integrated; incremental
+value remains a hypothesis to test on ambiguous source-selection tasks.
+
+Use the identical held-out case families for manual/parser-rule and assisted
+arms. Measure correctness, critical errors, abstention and calibration, total
+preparation plus review/correction effort, latency and cost. Freeze task-specific
+success and stop criteria before executing the comparison. Automated synthetic
+oracles can establish engineering accuracy, but do not stand in for human
+adjudication, usability evidence or real company outcomes.
+
 ### Evaluation and Activation Gate
+
+The owner's priority on 2026-10-10 is now comparative value before further
+MVP expansion. The proposed
+[Decision Model Value MVE](../../.copilot-tracking/mve/2026-10-10/decision-model-value/mve-plan.md)
+compares rules/manual, Decision-assisted, generative-agent and hybrid paths,
+with selection/screening ablations. It retains the PRD 120-family split and
+12-pack paired-effort baseline. It is an experiment design, not executed
+evidence or authorization to replace agents. Real participant availability
+remains required for human-effort findings.
+
+Historical pre-activation assessment follows. Read-only implementation verification on 2026-10-10 found the AMA resource's
+model eligibility metadata includes `Microsoft-Decision-1`, format `Microsoft`,
+version `1`, with `GlobalStandard` advertised. The returned SKU cost is null:
+this is neither a price quote nor verified budget clearance. Deployment
+metadata still lists only the existing generative deployments, not Decision 1.
+The eligibility response advertises a 2027-02-04 deprecation date; treat it as
+an operator review trigger, not a prediction of outage or a legal deadline.
+Evidence is the authenticated Azure account `list-models` and `deployment list`
+read on that date, not a performed deployment or model call. No resource
+creation, billable probe, processing-location approval or model quality is
+implied. The [official deployment guide](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision),
+source date 2026-10-07, updated 2026-10-09, rechecked 2026-10-10, continues to
+distinguish global processing from selected-region data-zone serving.
+
+The local exercise now has tested cross-process SQLite upper-liability
+reservations shared by scoring and generation, alongside registry/permission/
+terms/price/quota guards. Failed or timed-out calls do not refund reservations;
+lowering an environment baseline cannot erase retained liabilities and no
+automatic monthly rollover discards them. This conservative engineering control
+does not establish actual prices, invoice reconciliation or owner authorization.
+Actual deployment/response-schema verification, bounded billable permission
+and human-adjudicated evaluation remain mandatory before activation.
 
 Compare manual/templates, parsers/rules, Decision 1 and appropriate
 generative alternatives on identical, human-adjudicated held-out cases.

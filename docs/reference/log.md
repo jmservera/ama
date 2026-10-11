@@ -1602,3 +1602,14 @@ metadata when the knowledge base was created.
 * Documentation-only implementation: no runtime/deployment/model calls,
   regulatory snapshot, private data or owner-memory changes. Fresh full-BRD/
   PRD quality and owner acceptance remain separate from RPI outcome review.
+
+## [2026-10-11] update | Decision 1 rebuild specification and PR 58 learnings split
+
+* Added the [Decision 1 behaviour specification](./research/decision-1-behaviour-specification.md),
+  derived from the unmerged [PR 58](https://github.com/jmservera/ama/pull/58)
+  source and tests, so the capability can be rebuilt from scratch.
+* Carried only the PR 58 documentation learnings in
+  [System One Decision Models](../ideas/typesafe-system-one-agent-fit.md) and
+  the synthetic-data README. The BRD, PRD, addendum, ADR and code changes stay
+  in the draft PR until the code is validated on the current infrastructure.
+* Documentation only: nothing re-run and no deployment or model call.
