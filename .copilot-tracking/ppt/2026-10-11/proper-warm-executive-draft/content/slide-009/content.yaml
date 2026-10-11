@@ -1,5 +1,5 @@
 slide: 9
-title: AI prepares the decision. People own it.
+title: Transition Excel users in supported, measurable stages
 section: Main council pitch
 layout: blank
 background:
@@ -10,7 +10,7 @@ elements:
   top: 0.6
   width: 12
   height: 0.3
-  text: TWO CAPABILITIES • ONE AUTHORITY BOUNDARY
+  text: MECHANISM BEFORE MARKETING
   font: Aptos
   font_size: 11
   font_color: '#446056'
@@ -25,7 +25,7 @@ elements:
   top: 1.22
   width: 12
   height: 1.25
-  text: AI prepares the decision. People own it.
+  text: Excel stays useful. It stops being the control system.
   font: Aptos Display
   font_size: 38
   font_color: '#183A31'
@@ -40,7 +40,7 @@ elements:
   top: 6.7
   width: 12
   height: 0.28
-  text: 09  /  PROPER WARM     •     REAL FEASIBILITY ≠ TASK BENEFIT • E07/E11 • 11 Oct 2026
+  text: 09  /  PROPER WARM     •     PROPOSED SUPERIORITY—PAIRED PROOF STILL REQUIRED • E05/E09/E12
   font: Aptos
   font_size: 11
   font_color: '#183A31'
@@ -57,15 +57,11 @@ elements:
   width: 5.85
   height: 2.85
   fill: '#173F35'
-  text: 'TYPED SCORING
-
-    Decision 1
-
-    Supplied candidates and bounded checks
-
-    Explicit no-match / uncertainty
-
-    Placement conditional on verified task fit'
+  text: |-
+    START WITH THE WORKBOOK
+    Case fact: spreadsheets coordinate work
+    Measure current effort, errors and rework
+    Failure modes remain hypotheses
   text_font: Aptos
   text_size: 21
   text_color: '#F7F2E7'
@@ -85,15 +81,11 @@ elements:
   width: 5.8
   height: 2.85
   fill: '#D5E2D4'
-  text: 'CITED GENERATION
-
-    Foundry generative model
-
-    Draft narrative from permitted sources
-
-    Review every required field
-
-    No invented facts or submission'
+  text: |-
+    SAFE, SUPPORTED CHANGE
+    Shadow import → reconcile
+    Short parallel run → clear exit tests
+    Workbench writes; Excel read-only
   text_font: Aptos
   text_size: 21
   text_color: '#183A31'
@@ -108,46 +100,28 @@ elements:
   line_spacing: 1.05
 - type: textbox
   left: 0.65
-  top: 6.05
+  top: 6.03
   width: 12
-  height: 0.36
-  text: 'NEVER AI-OWNED: priority policy • compliance • consent • technical approval • claims • QA • payment'
+  height: 0.3
+  text: 'CASE FACT: spreadsheets coordinate work. PROPOSED: linked case + named owner + checked handoff.
+    Better by how much? Not measured.'
   font: Aptos
-  font_size: 16
+  font_size: 15
   font_color: '#183A31'
-  font_bold: true
+  font_bold: false
   margin_left: 0
   margin_right: 0
   margin_top: 0
   margin_bottom: 0
   word_wrap: true
-speaker_notes: 'We distinguish typed scoring from text generation. Decision 1 can select from supplied, source-bound
-  candidates or support a bounded evidence check only when its actual task fit is verified. It should expose no-match
-  or uncertainty rather than invent a missing value. A real Foundry generative task can assemble a cited narrative
-  from approved inputs. That narrative is still a draft.
-
-
-  Neither capability owns priority policy, regulatory satisfaction, consent, technical approval, grant submission,
-  quality acceptance or payment. The API enforces that boundary. Individual manual access does not waive required
-  real AI in an application delivery.
-
-
-  Documented feasibility includes source-bound EPC selection and cited generation. Benefit, calibration and broader
-  screening remain unproved. The binary adapter cannot establish a three-class screening score. The parallel experiment
-  is not completed evidence.
-
+speaker_notes: |-
+  The case says spreadsheets coordinate the work; it does not prove repeated reconciliation or evidence reassembly. Measure before claiming staff pain, saved time or fewer errors.
+  The proposed improvement mechanism is one linked case, named handoff owner and independently checked transition. How much better it is remains unknown until equal tasks are compared for effort, errors, rework and accepted outcomes. Do not claim Excel cannot be hardened.
+  Manage change in stages: co-design with staff, profile workbook owners, then shadow one-way imports. Run a short, time-boxed parallel period with named editors, quarantine ownership and owner-agreed reconciliation and exit thresholds. Train through role-based task walkthroughs and provide named support. After sign-off, tested rollback and an out-of-hours hazard route, the workbench becomes the write path and Excel an API-fed read-only report. No permanent dual write.
+  Compare identical tasks and outcomes, including review, correction, chase, errors and accepted handovers. Tenant, workbook quality, staff readiness and results remain unknown.
 
   Evidence:
-
-  docs/reference/research/company/agent-request-challenge.md — Purpose and Method; Summary (2026-09-26, role-agent
-  hypotheses)
-
-  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds (2026-10-11); Current Learning and Parallel
-  Experiment (owner direction; feasibility not benefit)
-
-  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0
-  candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
-
-  docs/ideas/typesafe-system-one-agent-fit.md — Observed Feasibility and Parallel Value Experiment (2026-10-11);
-  Microsoft Decision 1 Reassessment (2026-10-10). PR #58 pinned 5136f192d583a5bf53adeeec4b0f21369b005c9d; inspected
-  in maintained documentation 2026-10-11, not runtime reverified'
+  docs/case_study_48_original.md — Business Challenge; Agentic Architecture Brief; Expected Outcomes (2026-09-10, immutable request)
+  docs/reference/research/company/pilot-measurement-challenge.md — Summary; Owner Decision, 2026-09-26; Proposed Measurement Design (2026-09-26, proposed comparisons)
+  docs/adrs/0001-azure-architecture.md — Exercise Applicability (2026-10-11); Decisions; Hybrid M365 and Excel transition; Options still to compare (proposed); see appendix slide 21 for the unscored comparison
+  docs/reference/research/ux/proper-warm-prototype-profile-review.md — Owner Usability Feedback (2026-10-07); Proposed Acceptance Checks UX-01 to UX-08 (reported impressions, unexecuted checks)

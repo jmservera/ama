@@ -1,5 +1,5 @@
 slide: 7
-title: Connect every handoff from intake to accepted home
+title: Four layers keep speed, control and AI separate
 section: Main council pitch
 layout: blank
 background:
@@ -10,7 +10,7 @@ elements:
   top: 0.6
   width: 12
   height: 0.3
-  text: THE CONNECTED OPERATING JOURNEY
+  text: WHAT WE BUILD • LAYERED ARCHITECTURE • PROPOSED, NOT DEPLOYED
   font: Aptos
   font_size: 11
   font_color: '#446056'
@@ -24,8 +24,8 @@ elements:
   left: 0.65
   top: 1.22
   width: 12
-  height: 1.25
-  text: Connect every handoff from intake to accepted home
+  height: 1.0
+  text: Four layers keep speed, control and AI separate
   font: Aptos Display
   font_size: 38
   font_color: '#183A31'
@@ -40,7 +40,7 @@ elements:
   top: 6.7
   width: 12
   height: 0.28
-  text: 07  /  PROPER WARM     •     EXERCISE JOURNEY + INDEPENDENT GATES • E06/E08 • NOT LIVE WORK
+  text: 07  /  PROPER WARM     •     TARGET LAYERS • PROPOSED DESIGN, PROOF STILL REQUIRED • E08/E09/E10
   font: Aptos
   font_size: 11
   font_color: '#183A31'
@@ -53,127 +53,244 @@ elements:
 - type: shape
   shape: rounded_rectangle
   left: 0.65
-  top: 2.85
-  width: 2.7
-  height: 1.7
+  top: 2.6
+  width: 3.0
+  height: 0.5
   fill: '#173F35'
-  text: 'INTAKE + RANK
-
-    Resolve home • approved rules'
+  text: 1  EXPERIENCE
   text_font: Aptos
-  text_size: 20
+  text_size: 14
   text_color: '#F7F2E7'
   text_bold: false
   alignment: left
   vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.05
+  margin_bottom: 0.05
   auto_size: none
   line_spacing: 1.05
 - type: shape
   shape: rounded_rectangle
-  left: 3.73
-  top: 2.85
-  width: 2.7
-  height: 1.7
+  left: 3.85
+  top: 2.6
+  width: 8.8
+  height: 0.5
   fill: '#D5E2D4'
-  text: 'ASSESS + AGREE
-
-    Survey • design • resident choice'
+  text: Role queues, case view and controlled resident touchpoints
   text_font: Aptos
-  text_size: 20
+  text_size: 15
   text_color: '#183A31'
   text_bold: false
   alignment: left
   vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 6.8100000000000005
-  top: 2.85
-  width: 2.7
-  height: 1.7
-  fill: '#173F35'
-  text: 'RESOURCE + DELIVER
-
-    Funding • crew capacity • work'
-  text_font: Aptos
-  text_size: 20
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 9.89
-  top: 2.85
-  width: 2.7
-  height: 1.7
-  fill: '#D5E2D4'
-  text: 'VERIFY + CLOSE
-
-    Independent QA • handover • finance'
-  text_font: Aptos
-  text_size: 20
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.05
+  margin_bottom: 0.05
   auto_size: none
   line_spacing: 1.05
 - type: shape
   shape: rounded_rectangle
   left: 0.65
-  top: 5
-  width: 12
-  height: 1
-  fill: '#E5B96A'
-  text: 'Closed loop: defects / changed evidence → owned re-review • accepted handover • separate finance close'
+  top: 3.18
+  width: 3.0
+  height: 0.5
+  fill: '#173F35'
+  text: 2  WORKFLOW + RULES
   text_font: Aptos
-  text_size: 21
+  text_size: 14
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.05
+  margin_bottom: 0.05
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 3.85
+  top: 3.18
+  width: 8.8
+  height: 0.5
+  fill: '#D5E2D4'
+  text: Deterministic ranking, routing, gates and blockers
+  text_font: Aptos
+  text_size: 15
   text_color: '#183A31'
   text_bold: false
   alignment: left
   vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.05
+  margin_bottom: 0.05
   auto_size: none
   line_spacing: 1.05
-speaker_notes: 'The workbench coordinates the full journey: identify and prioritise the home; assess technical scope
-  and resident choice; confirm funding, competent capacity and human release; then deliver, verify quality, resolve
-  defects, hand over to the resident and close finance with separate evidence.
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 3.76
+  width: 3.0
+  height: 0.5
+  fill: '#173F35'
+  text: 3  CONTROLLED API
+  text_font: Aptos
+  text_size: 14
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.05
+  margin_bottom: 0.05
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 3.85
+  top: 3.76
+  width: 8.8
+  height: 0.5
+  fill: '#D5E2D4'
+  text: Identity, case-level access, approvals and audit
+  text_font: Aptos
+  text_size: 15
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.05
+  margin_bottom: 0.05
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 4.34
+  width: 3.0
+  height: 0.5
+  fill: '#173F35'
+  text: 4  CASE + EVIDENCE
+  text_font: Aptos
+  text_size: 14
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.05
+  margin_bottom: 0.05
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 3.85
+  top: 4.34
+  width: 8.8
+  height: 0.5
+  fill: '#D5E2D4'
+  text: Azure SQL case state, versioned Blob evidence, Excel import
+  text_font: Aptos
+  text_size: 15
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.05
+  margin_bottom: 0.05
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 4.92
+  width: 3.0
+  height: 0.5
+  fill: '#E5B96A'
+  text: BOUNDED AI
+  text_font: Aptos
+  text_size: 14
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.05
+  margin_bottom: 0.05
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 3.85
+  top: 4.92
+  width: 8.8
+  height: 0.5
+  fill: '#E5B96A'
+  text: Permitted inputs only; cited draft or flag; no write credentials
+  text_font: Aptos
+  text_size: 15
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.05
+  margin_bottom: 0.05
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 5.82
+  width: 12.0
+  height: 0.5
+  fill: '#173F35'
+  text: 'ACROSS ALL LAYERS: least privilege, monitoring, recovery and human approval, each still to be proven'
+  text_font: Aptos
+  text_size: 14
+  text_color: '#F7F2E7'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.05
+  margin_bottom: 0.05
+  auto_size: none
+  line_spacing: 1.05
+speaker_notes: 'Here is the same system as layers. Staff and, later, controlled resident touchpoints use role queues and one
+  case view. Beneath that, deterministic workflow rules rank work, route tasks and hold gates, so priority is explainable
+  rather than a model''s guess.
 
-  Staff can see owner, blocker, next action and returned work across handoffs. A sent task is not an accepted task.
-  The intended outcome is accepted handover, not starts. This is a control mechanism to evaluate on constructed
-  records, not evidence that real work or improvement has occurred.
+  Every action passes the controlled API, which checks identity, case-level access, evidence versions and approvals before
+  the case store changes. Case state sits in Azure SQL, evidence in versioned Blob storage, and Excel arrives by validated
+  one-way import.
+
+  Bounded AI sits to the side. It receives permitted inputs and returns a cited draft, a typed choice or a flag to a person.
+  It has no write credentials, so it can make staff faster without being able to act alone.
+
+  The bottom band is what we still have to prove: least privilege, monitoring, recovery and approval. This is a target design,
+  not a deployed topology.
 
 
   Evidence:
 
-  docs/case_study_48_addendum.md — Owner-Approved Exercise Baseline (2026-10-10); EXA-001/002/004/005/008/010/011/012/013/015/016;
-  Numerical Targets and Attribution (historical accepted exercise assumptions)
+  docs/prds/proper-warm-retrofit-programme-demonstrator.md - front matter; Executive Summary; CON-009/AC-057 (v0.13.0 candidate
+  2026-10-11)
 
-  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0
-  candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
+  docs/adrs/0001-azure-architecture.md - Exercise Applicability (2026-10-11); Decisions; Hybrid M365 and Excel transition
+  (proposed)
 
-  docs/reference/research/ux/proper-warm-prototype-profile-review.md — Owner Usability Feedback (2026-10-07); Proposed
-  Acceptance Checks UX-01 to UX-08 (reported impressions, unexecuted checks)'
+  docs/adrs/0002-pilot-readiness-architecture.md - Exercise Applicability (2026-10-11); Decisions (proposed readiness design)'

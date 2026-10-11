@@ -1,5 +1,5 @@
 slide: 11
-title: 'The CFO test: cash exposure before grant optimism'
+title: Give staff, residents and contractors a clear next step
 section: Main council pitch
 layout: blank
 background:
@@ -10,7 +10,7 @@ elements:
   top: 0.6
   width: 12
   height: 0.3
-  text: RETROFIT CASH EXAMPLE • FICTIONAL, NOT WORKBENCH PRICE OR BUDGET
+  text: RESIDENT VALUE • DIGNITY BY DESIGN
   font: Aptos
   font_size: 11
   font_color: '#446056'
@@ -25,7 +25,7 @@ elements:
   top: 1.22
   width: 12
   height: 1.25
-  text: 'The CFO test: cash exposure before grant optimism'
+  text: Give staff, residents and contractors a clear next step
   font: Aptos Display
   font_size: 38
   font_color: '#183A31'
@@ -40,7 +40,7 @@ elements:
   top: 6.7
   width: 12
   height: 0.28
-  text: 11  /  PROPER WARM     •     FICTIONAL EXA-010/015 ARITHMETIC • E06 • ACCEPTED EXERCISE 10 Oct 2026
+  text: 11  /  PROPER WARM     •     PROPOSED SERVICE + OWNER-REPORTED UX • E06/E12 • VALIDATION PENDING
   font: Aptos
   font_size: 11
   font_color: '#183A31'
@@ -50,106 +50,84 @@ elements:
   margin_top: 0
   margin_bottom: 0
   word_wrap: true
-- type: textbox
+- type: group
+  name: Editable home motif
   left: 0.65
   top: 2.85
-  width: 3.75
-  height: 0.85
-  text: £20,000
-  font: Aptos
-  font_size: 47
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 0.65
-  top: 4.05
-  width: 3.75
-  height: 0.4
-  text: gross base cash exposure
-  font: Aptos
-  font_size: 18
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 4.78
-  top: 2.85
-  width: 3.75
-  height: 0.85
-  text: £7,500
-  font: Aptos
-  font_size: 47
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 4.78
-  top: 4.05
-  width: 3.75
-  height: 0.4
-  text: fictional grant—not cash yet
-  font: Aptos
-  font_size: 18
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 8.91
-  top: 2.85
-  width: 3.75
-  height: 0.85
-  text: £12,500
-  font: Aptos
-  font_size: 47
-  font_color: '#183A31'
-  font_bold: true
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-- type: textbox
-  left: 8.91
-  top: 4.05
-  width: 3.75
-  height: 0.4
-  text: provider base funding
-  font: Aptos
-  font_size: 18
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
+  width: 3.05
+  height: 3.05
+  elements:
+  - type: shape
+    shape: pentagon
+    left: 0.65
+    top: 2.85
+    width: 3.05
+    height: 3.05
+    fill: '#E5B96A'
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    text_bold: false
+    alignment: left
+    vertical_anchor: middle
+    margin_left: 0.22
+    margin_right: 0.22
+    margin_top: 0.14
+    margin_bottom: 0.14
+    auto_size: none
+    line_spacing: 1.05
+    rotation: 270
+  - type: textbox
+    left: 0.8300000000000001
+    top: 4.131
+    width: 2.69
+    height: 1.464
+    text: |-
+      RESIDENT
+      CHOICE
+    font: Aptos
+    font_size: 28
+    font_color: '#183A31'
+    font_bold: true
+    margin_left: 0
+    margin_right: 0
+    margin_top: 0
+    margin_bottom: 0
+    word_wrap: true
 - type: shape
   shape: rounded_rectangle
-  left: 0.65
-  top: 4.9
-  width: 12
-  height: 0.9
-  fill: '#173F35'
-  text: IF CONTINGENCY SPENT   £22,000 gross envelope / £14,500 provider exposure
+  left: 4.45
+  top: 2.85
+  width: 8.2
+  height: 0.78
+  fill: '#D5E2D4'
+  text: |-
+    STAFF • INTERNAL WORKBENCH
+    Owner • blocker • evidence • next action
   text_font: Aptos
-  text_size: 22
+  text_size: 15
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 4.45
+  top: 4
+  width: 8.2
+  height: 0.78
+  fill: '#173F35'
+  text: |-
+    RESIDENTS • NO REQUIRED PORTAL
+    Supported contact • options • human help
+  text_font: Aptos
+  text_size: 15
   text_color: '#F7F2E7'
   text_bold: false
   alignment: left
@@ -160,37 +138,33 @@ elements:
   margin_bottom: 0.14
   auto_size: none
   line_spacing: 1.05
-- type: textbox
-  left: 0.65
-  top: 6.1
-  width: 12
-  height: 0.3
-  text: Application ≠ award ≠ claim ≠ cash. Actual terms, liquidity and delegated authority remain unknown.
-  font: Aptos
-  font_size: 16
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-speaker_notes: 'This fictional fixture shows why Finance sees gross cash, not an assumed grant offset: GBP20,000 base
-  cost, GBP7,500 illustrative grant and GBP12,500 provider base funding. If contingency is spent, the gross envelope
-  is GBP22,000 and provider exposure GBP14,500. Before grant cash arrives, exposure is still GBP20,000.
-
-  These are exercise assumptions, not company budget, award terms or liquidity. Technology requires its own authority
-  and stop conditions. Technology whole-life cost remains unassessed and belongs in the return pack. Measure effort
-  and cost per accepted outcome before treating time saved as cashable benefit.
-
+- type: shape
+  shape: rounded_rectangle
+  left: 4.45
+  top: 5.15
+  width: 8.2
+  height: 0.78
+  fill: '#D5E2D4'
+  text: |-
+    CONTRACTORS • APPROVED CHANNEL
+    Scope • schedule • minimum-necessary information
+  text_font: Aptos
+  text_size: 15
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+speaker_notes: |-
+  Staff work from role queues showing owner, blocker, evidence and next action. Residents get clear choices, a named contact and safe phone, letter, text, email or officer-assisted routes; no mandatory portal. Contact preference, adjustment and measure consent are separate. Silence is not consent, and hazards reach a human response route outside routine scheduling.
+  Contractors receive the agreed scope, schedule and necessary adjustments through approved channels, then return completion evidence. Neither residents nor contractors are assumed to log in to the staff tool; sensitive diagnoses are not shared. These handoffs may improve clarity, but fewer visits, delays or defects are unproved. Accessible staff, resident and contractor co-design/testing remain prerequisites.
 
   Evidence:
-
-  docs/case_study_48_addendum.md — Owner-Approved Exercise Baseline (2026-10-10); EXA-001/002/004/005/008/010/011/012/013/015/016;
-  Numerical Targets and Attribution (historical accepted exercise assumptions)
-
-  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds (2026-10-11); Current Learning and Parallel
-  Experiment (owner direction; feasibility not benefit)
-
-  docs/reference/research/company/company-profile-research.md — Confirmed Company Information; Modelled Customer
-  Profile; Role and Decision Map (2026-09-26; not-for-profit owner-confirmed, other attributes modelled)'
+  docs/case_study_48_addendum.md — Owner-Approved Exercise Baseline (2026-10-10); EXA-001/002/004/005/008/010/011/012/013/015/016; Numerical Targets and Attribution (historical accepted exercise assumptions)
+  docs/reference/research/ux/proper-warm-prototype-profile-review.md — Owner Usability Feedback (2026-10-07); Proposed Acceptance Checks UX-01 to UX-08 (reported impressions, unexecuted checks)
+  docs/reference/research/company/company-profile-research.md — Confirmed Company Information; Modelled Customer Profile; Role and Decision Map (2026-09-26; not-for-profit owner-confirmed, other attributes modelled)

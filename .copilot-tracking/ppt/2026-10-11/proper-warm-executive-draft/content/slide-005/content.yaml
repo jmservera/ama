@@ -1,5 +1,5 @@
 slide: 5
-title: One controlled route from evidence to action
+title: One workbench, one shared case, every role
 section: Main council pitch
 layout: blank
 background:
@@ -10,7 +10,7 @@ elements:
   top: 0.6
   width: 12
   height: 0.3
-  text: PROPOSED CONTROL FLOW • CONCEPTUAL, NOT DEPLOYED
+  text: WHAT WE BUILD • SYSTEM LANDSCAPE • PROPOSED, NOT DEPLOYED
   font: Aptos
   font_size: 11
   font_color: '#446056'
@@ -24,8 +24,8 @@ elements:
   left: 0.65
   top: 1.22
   width: 12
-  height: 1.25
-  text: One controlled route from evidence to action
+  height: 1.0
+  text: One workbench, one shared case, every role
   font: Aptos Display
   font_size: 38
   font_color: '#183A31'
@@ -40,7 +40,7 @@ elements:
   top: 6.7
   width: 12
   height: 0.28
-  text: 05  /  PROPER WARM     •     TARGET CONTROL DESIGN—NOT A DEPLOYED TOPOLOGY • E08/E09/E10
+  text: 05  /  PROPER WARM     •     TARGET LANDSCAPE • PROPOSED DESIGN • E07/E08/E09
   font: Aptos
   font_size: 11
   font_color: '#183A31'
@@ -50,209 +50,276 @@ elements:
   margin_top: 0
   margin_bottom: 0
   word_wrap: true
+- type: textbox
+  left: 0.65
+  top: 2.55
+  width: 3.3
+  height: 0.25
+  text: WHO USES IT
+  font: Aptos
+  font_size: 11
+  font_color: '#446056'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 9.15
+  top: 2.55
+  width: 3.3
+  height: 0.25
+  text: WHERE THE FACTS COME FROM
+  font: Aptos
+  font_size: 11
+  font_color: '#446056'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+- type: textbox
+  left: 4.55
+  top: 2.55
+  width: 4.0
+  height: 0.25
+  text: WHAT WE ARE BUILDING
+  font: Aptos
+  font_size: 11
+  font_color: '#446056'
+  font_bold: true
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
 - type: shape
   shape: rounded_rectangle
   left: 0.65
-  top: 2.85
-  width: 3.45
-  height: 1.3
+  top: 3.1
+  width: 3.3
+  height: 0.66
   fill: '#D5E2D4'
-  text: 'WORKBOOK + SOURCE DATA
-
-    Validated one-way import'
+  text: Programme + retrofit coordinators
   text_font: Aptos
-  text_size: 16
+  text_size: 14
   text_color: '#183A31'
   text_bold: false
   alignment: left
   vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.08
+  margin_bottom: 0.08
   auto_size: none
   line_spacing: 1.05
 - type: shape
   shape: rounded_rectangle
-  left: 4.94
-  top: 2.85
-  width: 3.45
-  height: 1.3
-  fill: '#173F35'
-  text: 'CONTROLLED API
-
-    Identity • access • approvals'
-  text_font: Aptos
-  text_size: 16
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 9.22
-  top: 2.85
-  width: 3.43
-  height: 1.3
+  left: 9.15
+  top: 3.1
+  width: 3.3
+  height: 0.66
   fill: '#D5E2D4'
-  text: 'SHARED CASE + EVIDENCE
+  text: 'Excel workbooks
 
-    Azure SQL + versioned Blob'
+    (validated one-way import)'
   text_font: Aptos
-  text_size: 16
+  text_size: 14
   text_color: '#183A31'
   text_bold: false
   alignment: left
   vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.08
+  margin_bottom: 0.08
   auto_size: none
   line_spacing: 1.05
 - type: shape
   shape: rounded_rectangle
   left: 0.65
-  top: 5.05
-  width: 3.45
-  height: 1.15
+  top: 3.9
+  width: 3.3
+  height: 0.66
+  fill: '#D5E2D4'
+  text: Surveyors, assessors + installers
+  text_font: Aptos
+  text_size: 14
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.08
+  margin_bottom: 0.08
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 9.15
+  top: 3.9
+  width: 3.3
+  height: 0.66
+  fill: '#D5E2D4'
+  text: Housing, asset + stock data
+  text_font: Aptos
+  text_size: 14
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.08
+  margin_bottom: 0.08
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 4.7
+  width: 3.3
+  height: 0.66
+  fill: '#D5E2D4'
+  text: 'Residents + contractors
+
+    (controlled touchpoints)'
+  text_font: Aptos
+  text_size: 14
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.08
+  margin_bottom: 0.08
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 9.15
+  top: 4.7
+  width: 3.3
+  height: 0.66
+  fill: '#D5E2D4'
+  text: Surveys, photos + evidence
+  text_font: Aptos
+  text_size: 14
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.08
+  margin_bottom: 0.08
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 5.5
+  width: 3.3
+  height: 0.66
+  fill: '#D5E2D4'
+  text: Finance, quality + managers
+  text_font: Aptos
+  text_size: 14
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.08
+  margin_bottom: 0.08
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 9.15
+  top: 5.5
+  width: 3.3
+  height: 0.66
+  fill: '#D5E2D4'
+  text: Funding + grant rules
+  text_font: Aptos
+  text_size: 14
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.08
+  margin_bottom: 0.08
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
+  left: 4.55
+  top: 3.1
+  width: 4.0
+  height: 3.06
   fill: '#173F35'
-  text: 'STAFF WORKBENCH
+  text: 'PROPER WARM RETROFIT WORKBENCH
 
-    Read case • request gated action
 
-    Human review before change'
+    One case per home or work package
+
+    Owner, next action, blocker
+
+    Evidence, approvals, audit
+
+    Bounded AI drafts; people decide'
   text_font: Aptos
   text_size: 15
   text_color: '#F7F2E7'
   text_bold: false
   alignment: left
   vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 4.94
-  top: 5.05
-  width: 3.45
-  height: 1.15
-  fill: '#D5E2D4'
-  text: 'WORKFLOW RULES
-
-    Own • route • check • audit'
-  text_font: Aptos
-  text_size: 16
-  text_color: '#183A31'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 9.22
-  top: 5.05
-  width: 3.43
-  height: 1.15
-  fill: '#173F35'
-  text: 'BOUNDED AI • NO WRITE
-
-    Permitted inputs
-
-    Cited draft / flag to staff'
-  text_font: Aptos
-  text_size: 15
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
+  margin_left: 0.2
+  margin_right: 0.2
   margin_top: 0.14
   margin_bottom: 0.14
   auto_size: none
   line_spacing: 1.05
 - type: shape
   shape: chevron
-  left: 4.32
-  top: 3.25
+  left: 4.05
+  top: 4.35
   width: 0.4
   height: 0.45
   fill: '#E5B96A'
 - type: shape
   shape: chevron
-  left: 8.59
-  top: 3.25
+  left: 8.65
+  top: 4.35
   width: 0.4
   height: 0.45
   fill: '#E5B96A'
-- type: connector
-  connector_type: straight
-  begin_x: 2.37
-  begin_y: 5.05
-  end_x: 6.1
-  end_y: 4.15
-  line_color: '#446056'
-  line_width: 2
-  head_end: arrow
-  tail_end: arrow
-- type: connector
-  connector_type: straight
-  begin_x: 6.66
-  begin_y: 5.05
-  end_x: 6.66
-  end_y: 4.15
-  line_color: '#446056'
-  line_width: 2
-  head_end: arrow
-- type: connector
-  connector_type: straight
-  begin_x: 10.93
-  begin_y: 5.05
-  end_x: 7.2
-  end_y: 4.15
-  line_color: '#446056'
-  line_width: 2
-  head_end: arrow
-  tail_end: arrow
-speaker_notes: 'This is one product with a controlled flow. Workbooks enter through validated, one-way import. Staff
-  read a shared case and request actions through role-specific workbench views; the API checks identity, case access,
-  evidence versions and required approvals before SQL state changes. Deterministic workflow routes tasks and gates.
+speaker_notes: 'This is the whole product on one page. On the left are the people who touch a retrofit: coordinators, surveyors
+  and installers, finance and quality managers, and residents and contractors through controlled touchpoints. On the right
+  is where the facts come from today: Excel workbooks, housing and stock data, surveys and evidence, and funding rules.
 
-  Bounded AI receives permitted inputs and can return a typed choice, cited draft or concern to staff. It has no write
-  credentials and cannot advance a case. A person reviews before any controlled change, then acts through the API.
-  If AI fails, staff use the manual route without bypassing controls. Conflicting identifiers are quarantined, not
-  silently merged.
+  In the middle is what we build: one workbench with one linked case per home or work package. Everyone sees the same owner,
+  next action and blocker, and the evidence behind a decision.
 
-  This is a target design, not a deployed topology. Production identity, workload separation, private access, monitoring
-  and recovery need separate proof. Narrow AI/SQL feasibility does not verify every component shown.
+  It sits beside existing sources and reuses their data through a validated one-way import. It does not replace every system,
+  and it does not give residents or contractors open access. Speed and experience gains are mechanisms to test, not measured
+  results.
 
 
   Evidence:
 
-  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0
-  candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
+  docs/prds/proper-warm-retrofit-programme-demonstrator.md - front matter; Executive Summary; CON-009/AC-057 (v0.13.0 candidate
+  2026-10-11)
 
-  docs/adrs/0001-azure-architecture.md — Exercise Applicability (2026-10-11); Decisions; Hybrid M365 and Excel transition;
-  Options still to compare (proposed)
+  docs/adrs/0001-azure-architecture.md - Exercise Applicability (2026-10-11); Decisions; Hybrid M365 and Excel transition
+  (proposed)
 
-  docs/adrs/0002-pilot-readiness-architecture.md — Exercise Applicability (2026-10-11); Decisions; 1. Durable store
-  (proposed readiness design)
-
-  docs/ideas/typesafe-system-one-agent-fit.md — Observed Feasibility and Parallel Value Experiment (2026-10-11);
-  Microsoft Decision 1 Reassessment (2026-10-10). PR #58 pinned 5136f192d583a5bf53adeeec4b0f21369b005c9d; inspected
-  in maintained documentation 2026-10-11, not runtime reverified'
+  docs/adrs/0002-pilot-readiness-architecture.md - Exercise Applicability (2026-10-11); Decisions (proposed readiness design)'

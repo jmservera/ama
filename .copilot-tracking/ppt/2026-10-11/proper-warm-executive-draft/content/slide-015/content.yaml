@@ -1,6 +1,6 @@
 slide: 15
-title: 'Technical Q&A: isolate failure, preserve control'
-section: Appendix
+title: Prove the transformation; test whether AI adds value
+section: Main council pitch
 layout: blank
 background:
   fill: '#F7F2E7'
@@ -10,7 +10,7 @@ elements:
   top: 0.6
   width: 12
   height: 0.3
-  text: APPENDIX A • TARGET DESIGN, NOT DEPLOYMENT CLAIM
+  text: MEASUREMENT, NOT A SUCCESS DASHBOARD
   font: Aptos
   font_size: 11
   font_color: '#446056'
@@ -25,7 +25,7 @@ elements:
   top: 1.22
   width: 12
   height: 1.25
-  text: 'Technical Q&A: isolate failure, preserve control'
+  text: Prove the transformation; test whether AI adds value
   font: Aptos Display
   font_size: 38
   font_color: '#183A31'
@@ -40,7 +40,7 @@ elements:
   top: 6.7
   width: 12
   height: 0.28
-  text: 15  /  PROPER WARM     •     PROPOSED PATTERNS + OPEN ASSURANCE • E08/E09/E10/E11
+  text: 15  /  PROPER WARM     •     PROPOSED COMPARISONS • E05/E11 • NO RESULTS CLAIMED
   font: Aptos
   font_size: 11
   font_color: '#183A31'
@@ -54,20 +54,17 @@ elements:
   shape: rounded_rectangle
   left: 0.65
   top: 2.85
-  width: 3.79
-  height: 3.1
+  width: 5.85
+  height: 2.95
   fill: '#173F35'
-  text: 'STATE & SCALE
-
-    SQL row versions / idempotency
-
-    Indexed queries / paging
-
-    Blob evidence versions
-
-    Restart and restore tests'
+  text: |-
+    COMPARISON 1 • PROGRAMME
+    Existing teams / matched localities
+    Same event capture and frozen cohort
+    Accepted handovers + whole-chain cost
+    Log shared resources and displacement
   text_font: Aptos
-  text_size: 20
+  text_size: 21
   text_color: '#F7F2E7'
   text_bold: false
   alignment: left
@@ -80,22 +77,19 @@ elements:
   line_spacing: 1.05
 - type: shape
   shape: rounded_rectangle
-  left: 4.7700000000000005
+  left: 6.85
   top: 2.85
-  width: 3.79
-  height: 3.1
+  width: 5.8
+  height: 2.95
   fill: '#D5E2D4'
-  text: 'TRUST BOUNDARIES
-
-    Role / case / field rights
-
-    Permitted model inputs
-
-    Schema / source validation
-
-    No agent decision writes'
+  text: |-
+    COMPARISON 2 • CAPABILITY
+    Paired manual/rules versus assistance
+    Same inputs and reviewed outcomes
+    Full review effort + errors + latency + cost
+    Parallel experiment: no results yet
   text_font: Aptos
-  text_size: 20
+  text_size: 21
   text_color: '#183A31'
   text_bold: false
   alignment: left
@@ -106,58 +100,27 @@ elements:
   margin_bottom: 0.14
   auto_size: none
   line_spacing: 1.05
-- type: shape
-  shape: rounded_rectangle
-  left: 8.89
-  top: 2.85
-  width: 3.79
-  height: 3.1
-  fill: '#173F35'
-  text: 'FAILURE & OPERATIONS
-
-    Manual route on AI failure
-
-    Unknown facts hold reviews
-
-    Audit / cost telemetry
-
-    Recovery still to prove'
-  text_font: Aptos
-  text_size: 20
-  text_color: '#F7F2E7'
-  text_bold: false
-  alignment: left
-  vertical_anchor: middle
-  margin_left: 0.22
-  margin_right: 0.22
-  margin_top: 0.14
-  margin_bottom: 0.14
-  auto_size: none
-  line_spacing: 1.05
-speaker_notes: 'Threats include unauthorized writes, stale approvals, cross-case leakage, malicious content in evidence,
-  model hallucination and lost or competing state. Proposed controls are one API write path, server-side role/case/field
-  projections, source-bound inputs, schema validation, independent reviewers, row-version concurrency, idempotent
-  transitions and replayable audit.
-
-
-  SQL indexes and server-side paging/clustering address full-file and full-map mechanisms. Queue-separated workers
-  and private-only access remain proposed topology, not deployed facts. Model failure retains manual work; unsupported
-  source facts stay unknown; retries must not duplicate transitions. Blob versions and SQL metadata must identify
-  exactly which evidence was approved. Recovery, ledger verification, replicas, user identity, leakage/injection
-  tests and legal retention decisions need explicit observed evidence before readiness claims.
-
+- type: textbox
+  left: 0.65
+  top: 6.12
+  width: 12
+  height: 0.28
+  text: 'Guardrails: safety • resident choice • quality • equity • peak cash. Include unfinished and withdrawn
+    cases.'
+  font: Aptos
+  font_size: 17
+  font_color: '#183A31'
+  font_bold: false
+  margin_left: 0
+  margin_right: 0
+  margin_top: 0
+  margin_bottom: 0
+  word_wrap: true
+speaker_notes: |-
+  Separate two tests: does the coordinated programme improve safe accepted handovers, and does a specific AI task outperform the same workflow without it? Compare matched localities for programme outcomes and paired, identical tasks for capability value. Include incomplete, paused and withdrawn cases, shared resources and displacement. Measure errors, review effort, delay, cost and uncertainty; protect safety, consent, equity and quality.
+  These are proposed comparisons, not results. A negative AI finding means retain the simpler path and report it.
 
   Evidence:
-
-  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0
-  candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
-
-  docs/adrs/0001-azure-architecture.md — Exercise Applicability (2026-10-11); Decisions; Hybrid M365 and Excel transition;
-  Options still to compare (proposed)
-
-  docs/adrs/0002-pilot-readiness-architecture.md — Exercise Applicability (2026-10-11); Decisions; 1. Durable store
-  (proposed readiness design)
-
-  docs/ideas/typesafe-system-one-agent-fit.md — Observed Feasibility and Parallel Value Experiment (2026-10-11);
-  Microsoft Decision 1 Reassessment (2026-10-10). PR #58 pinned 5136f192d583a5bf53adeeec4b0f21369b005c9d; inspected
-  in maintained documentation 2026-10-11, not runtime reverified'
+  docs/reference/research/company/pilot-measurement-challenge.md — Summary; Owner Decision, 2026-09-26; Proposed Measurement Design (2026-09-26, proposed comparisons)
+  docs/case_study_48_addendum.md — Owner-Approved Exercise Baseline (2026-10-10); EXA-001/002/004/005/008/010/011/012/013/015/016; Numerical Targets and Attribution (historical accepted exercise assumptions)
+  docs/ideas/typesafe-system-one-agent-fit.md — Observed Feasibility and Parallel Value Experiment (2026-10-11); Microsoft Decision 1 Reassessment (2026-10-10). PR #58 pinned 5136f192d583a5bf53adeeec4b0f21369b005c9d; inspected in maintained documentation 2026-10-11, not runtime reverified

@@ -1,5 +1,5 @@
 slide: 10
-title: Security must be enforced, not assumed from the cloud
+title: Connect every handoff from intake to accepted home
 section: Main council pitch
 layout: blank
 background:
@@ -10,7 +10,7 @@ elements:
   top: 0.6
   width: 12
   height: 0.3
-  text: SECURITY POSTURE • PROPOSED CONTROLS, ASSURANCE OPEN
+  text: THE CONNECTED OPERATING JOURNEY
   font: Aptos
   font_size: 11
   font_color: '#446056'
@@ -25,7 +25,7 @@ elements:
   top: 1.22
   width: 12
   height: 1.25
-  text: Prove security. Cloud hosting is not proof.
+  text: Connect every handoff from intake to accepted home
   font: Aptos Display
   font_size: 38
   font_color: '#183A31'
@@ -40,7 +40,7 @@ elements:
   top: 6.7
   width: 12
   height: 0.28
-  text: '10  /  PROPER WARM     •     PINNED #58 DOCUMENTED FEASIBILITY • E07/E08/E11 • 11 Oct 2026'
+  text: 10  /  PROPER WARM     •     EXERCISE JOURNEY + INDEPENDENT GATES • E06/E08 • NOT LIVE WORK
   font: Aptos
   font_size: 11
   font_color: '#183A31'
@@ -54,16 +54,12 @@ elements:
   shape: rounded_rectangle
   left: 0.65
   top: 2.85
-  width: 3.79
-  height: 2.75
+  width: 2.7
+  height: 1.7
   fill: '#173F35'
-  text: 'DATA + ACCESS
-
-    Role / case / field checks
-
-    Minimum-necessary inputs
-
-    Constructed data only for exercise'
+  text: |-
+    INTAKE + RANK
+    Resolve home • approved rules
   text_font: Aptos
   text_size: 20
   text_color: '#F7F2E7'
@@ -78,18 +74,14 @@ elements:
   line_spacing: 1.05
 - type: shape
   shape: rounded_rectangle
-  left: 4.7700000000000005
+  left: 3.73
   top: 2.85
-  width: 3.79
-  height: 2.75
+  width: 2.7
+  height: 1.7
   fill: '#D5E2D4'
-  text: 'CONTROL BOUNDARY
-
-    API is the only write route
-
-    AI cannot write or approve
-
-    Independent human gates'
+  text: |-
+    ASSESS + AGREE
+    Survey • design • resident choice
   text_font: Aptos
   text_size: 20
   text_color: '#183A31'
@@ -104,18 +96,14 @@ elements:
   line_spacing: 1.05
 - type: shape
   shape: rounded_rectangle
-  left: 8.89
+  left: 6.8100000000000005
   top: 2.85
-  width: 3.79
-  height: 2.75
+  width: 2.7
+  height: 1.7
   fill: '#173F35'
-  text: 'PROOF REQUIRED
-
-    Authorization / leakage tests
-
-    Recovery / audit verification
-
-    Security + privacy approval'
+  text: |-
+    RESOURCE + DELIVER
+    Funding • crew capacity • work
   text_font: Aptos
   text_size: 20
   text_color: '#F7F2E7'
@@ -128,42 +116,54 @@ elements:
   margin_bottom: 0.14
   auto_size: none
   line_spacing: 1.05
-- type: textbox
+- type: shape
+  shape: rounded_rectangle
+  left: 9.89
+  top: 2.85
+  width: 2.7
+  height: 1.7
+  fill: '#D5E2D4'
+  text: |-
+    VERIFY + CLOSE
+    Independent QA • handover • finance
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+- type: shape
+  shape: rounded_rectangle
   left: 0.65
-  top: 6
+  top: 5
   width: 12
-  height: 0.35
-  text: 'Design controls are not a security certification • No personal data or live decisions in this exercise'
-  font: Aptos
-  font_size: 16
-  font_color: '#183A31'
-  font_bold: false
-  margin_left: 0
-  margin_right: 0
-  margin_top: 0
-  margin_bottom: 0
-  word_wrap: true
-speaker_notes: 'Cloud alone does not make this secure. Proposed controls are server-enforced role/case/field rights,
-  minimum-necessary model inputs, one API write path, independent human gates, versioned evidence and audit. The AI
-  identity cannot write programme state. The exercise uses constructed, non-identifying records.
-
-  No penetration, authorization, cross-case leakage, recovery or privacy assessment is claimed. Verify controls
-  against the actual deployment before real data or operations. Narrow Azure SQL/Blob/AI feasibility does not certify
-  the target design. The continuing sixty-thousand-home stock and nine-hundred-and-eighty-case programme are generated;
-  v0.13 remains pending fresh review and owner acceptance.
-
+  height: 1
+  fill: '#E5B96A'
+  text: 'Closed loop: defects / changed evidence → owned re-review • accepted handover • separate finance
+    close'
+  text_font: Aptos
+  text_size: 21
+  text_color: '#183A31'
+  text_bold: false
+  alignment: left
+  vertical_anchor: middle
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  line_spacing: 1.05
+speaker_notes: |-
+  The workbench coordinates the full journey: identify and prioritise the home; assess technical scope and resident choice; confirm funding, competent capacity and human release; then deliver, verify quality, resolve defects, hand over to the resident and close finance with separate evidence.
+  Staff can see owner, blocker, next action and returned work across handoffs. A sent task is not an accepted task. The intended outcome is accepted handover, not starts. This is a control mechanism to evaluate on constructed records, not evidence that real work or improvement has occurred.
 
   Evidence:
-
-  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds (2026-10-11); Current Learning and Parallel
-  Experiment (owner direction; feasibility not benefit)
-
-  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0
-  candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
-
-  docs/adrs/0002-pilot-readiness-architecture.md — Exercise Applicability (2026-10-11); Decisions; 1. Durable store
-  (proposed readiness design)
-
-  docs/ideas/typesafe-system-one-agent-fit.md — Observed Feasibility and Parallel Value Experiment (2026-10-11);
-  Microsoft Decision 1 Reassessment (2026-10-10). PR #58 pinned 5136f192d583a5bf53adeeec4b0f21369b005c9d; inspected
-  in maintained documentation 2026-10-11, not runtime reverified'
+  docs/case_study_48_addendum.md — Owner-Approved Exercise Baseline (2026-10-10); EXA-001/002/004/005/008/010/011/012/013/015/016; Numerical Targets and Attribution (historical accepted exercise assumptions)
+  docs/prds/proper-warm-retrofit-programme-demonstrator.md — front matter; Executive Summary; CON-009/AC-057 (v0.13.0 candidate 2026-10-11; historical v0.12.0 accepted 2026-10-10)
+  docs/reference/research/ux/proper-warm-prototype-profile-review.md — Owner Usability Feedback (2026-10-07); Proposed Acceptance Checks UX-01 to UX-08 (reported impressions, unexecuted checks)

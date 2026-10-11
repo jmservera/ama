@@ -1643,3 +1643,10 @@ metadata when the knowledge base was created.
   B2, B6 and B7 when present; B3, B4, B5 and C2 still require pitch artifacts
   where specified by `rubric.json`. Scoring still requires the deck to be
   committed and changed relative to the base.
+
+
+## [2026-10-11] update | Add architecture diagrams and a working-day view to the council deck
+
+* Rebuilt the Proper Warm executive deck from 18 to 21 slides in response to scorer feedback and owner direction: a system landscape (slide 5), a layered architecture (slide 7) and a same-case working-day comparison (slide 8). All architecture is labelled proposed, not deployed.
+* Speed and experience gains are stated as mechanisms and hypotheses to test; no time, error or benefit measurement is claimed. Main spoken script is about 15 minutes.
+* Both validators report 0 issues. The delivery and scorer copies are identical (SHA-256 ABD74B0F2EC8F82EE042E077CF3608FA6A8AC91663B672860E6701B980C3317E). A scorer note: the bot's reviewer rated the deck B1, B2, B6 and B7 at 4 but ignored the change because its evidence cited no changed file by path.
