@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-11T21:33:12+00:00",
-  "commit": "d3541d276b33369870be103c188a419b3e421605",
+  "scored_at": "2026-10-11T23:03:42+00:00",
+  "commit": "385f3fecf4a57a77bf15a64a937cbb79f0b13d9b",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38176427882",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38182102946",
   "fingerprints": {
     "brd": "ad45b46ce2519c3977631b20fa8d76327de50d1acd6306318697134fa18570a5",
     "prd": "e866c8d459306e57952fefdb85c9252b3e5a4fa22022ee5b83257c4e5feb1743",
@@ -104,11 +104,9 @@
     "B6": {
       "score": 3,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:29",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
-        "infra/README.md:1-54"
+        "docs/brds/agentic-retrofit-programme-brd.md:29"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable but no capstone deck exists, so cap_without caps this at 3 regardless. Diff does not touch these files; unchanged."
+      "rationale": "Not demonstrable: required artifact not provided: capstone-deck. Maximum 3 until it is committed."
     },
     "B7": {
       "score": 0,
