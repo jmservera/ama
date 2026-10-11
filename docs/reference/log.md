@@ -1627,3 +1627,16 @@ metadata when the knowledge base was created.
 * Preserved manual handling, deterministic controls, task-level comparative
   evaluation and the distinction between design, feasibility and benefit.
   No runtime changes, deployments, inference or production approval.
+
+## [2026-10-11] update | Zava Forward migration tooling
+
+* Owner selected Zava Forward as the programme name alongside Zava North Homes.
+  Added a [temporary migration script and guide](../../tools/rename-zava.md),
+  with dry-run inventory, explicit apply, text/path and PPTX/slide-source
+  changes, local logo embedding and per-file partial-failure reporting.
+* Preserved historical records, regulatory snapshots, owner memory, original
+  case study and external evidence URLs. Working-copy migration does not
+  rewrite Git history or alter user-local untracked configuration/secrets.
+* Azure reset/redeployment and visual deck acceptance remain explicit later
+  actions, not side effects of the local rename command. Disposable synthetic
+  exercise state is not a production data-loss policy.

@@ -296,3 +296,11 @@ all acceptance behaviours if some remain unverified.
   Do not design or execute the migration script during this challenge.
 * Session status: Complete through coverage saturation. This record is a
   requirements/disposition record, not validation or production approval.
+
+## Post-Challenge Naming Decision
+
+On 2026-10-11 the owner selected "Zava Forward" from the proposed project names
+and requested continuation of the rename. This resolves the project-name
+choice above. The temporary local migration tooling is documented in
+[tools/rename-zava.md](../../../../tools/rename-zava.md); deployment and
+presentation acceptance remain separate from script generation.
