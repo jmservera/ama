@@ -1696,3 +1696,23 @@ metadata when the knowledge base was created.
   Verified its scorer-extracted slide/notes text and equality with the
   validated working build. No new production, spending, legal or operational
   acceptance is claimed.
+
+## [2026-10-11] validation | Fresh calibration measures the revised capstone
+
+* Report-only workflow run
+  [38177388117](https://github.com/jmservera/ama/actions/runs/38177388117)
+  completed successfully on `6a8b60a`. The revised deck received B1=4, B2=4,
+  B6=4 and B7=4. Narrative, executive/technical register, written structure
+  and evidence-labelled financial storytelling were explicitly cited using
+  the capstone PPTX path and slide numbers.
+* The full-portfolio calibration is 43/100: A=23, B=16, C=4, D=0. Missing
+  pitch and thought-leadership artifacts were still forced to zero; outcome
+  remains Incomplete. This is a fresh assessment with baseline withheld,
+  not an incremental comparison or overwrite of `latest.json`. Normal PR
+  scoring still needs the repair on `main`; no merge was performed.
+* The wider rubric test run produced 100 passes, one skip and 19 failures.
+  An unchanged pre-repair snapshot reproduced the same 19 failures due to
+  historical seed/prototype expectations. The snapshot's initially omitted
+  workflow fixture added one extra failure; restoring it made that test pass.
+  All 19 targeted slide-citation and required-artifact tests passed. No
+  unrelated historical fixture or actual score baseline was modified.

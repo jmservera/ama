@@ -35,6 +35,26 @@ As with other gate repairs, ordinary PR runs use the base-branch script until
 the owner merges this change. Replaying a saved scorecard verifies the fix;
 it is not a new independent assessment of a revised deck.
 
+Validation of the slide-anchor repair passed all 19 targeted citation and
+required-artifact tests. The wider gate/prepare/adapter run had 100 passes,
+one skip and 19 failures. A snapshot of the unchanged pre-repair commit
+reproduced those 19 failures: old tests assume a 66-point seed and active
+prototype paths although the recorded score and solution registry have
+changed. The snapshot's initially omitted workflow fixture caused one extra
+failure; restoring that fixture made its prompt-example test pass. No new
+failure is attributed to the slide-anchor change, and this repair does not
+modify unrelated historical test expectations.
+
+The fresh report-only calibration of the revised deck completed successfully
+in [run 38177388117](https://github.com/jmservera/ama/actions/runs/38177388117),
+on commit `6a8b60a`. It assessed B1, B2, B6 and B7 at 4 each and the full
+portfolio at 43/100 (A=23, B=16, C=4, D=0). The gate recorded missing pitch and
+thought-leadership criteria at zero, leaving the outcome Incomplete. This
+forced run used the repaired branch scripts and withheld the baseline; it
+measures the revised artifact but neither overwrites `latest.json` nor supplies
+an incremental comparison. Its full-portfolio total must not be compared as
+a deck regression against the earlier saved-card replay.
+
 Scores are readiness estimates from repository evidence. Live-scored criteria (B1 to B5 and C2) are informed only by the capstone deck and pitch artifacts. They keep their baseline until one of those changes, except in bootstrap and calibration runs, which score every criterion from scratch, and in pull requests that change the rubric, registry, prompt or scripts, which reopen every criterion (moves still need a cited changed artifact file).
 
 ## Files
