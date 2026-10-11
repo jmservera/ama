@@ -2,14 +2,14 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-10T13:21:45+00:00",
-  "commit": "444a084ad42e4d0308ff5255101c7ce4e0fc32bc",
+  "scored_at": "2026-10-11T09:11:14+00:00",
+  "commit": "5250f55db5a52668d4692ed3589ea31a0a8309fd",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38054831848",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38127029972",
   "fingerprints": {
-    "brd": "bb9557f8cd7f12ceafada2a264ebb068539ec96ff3d76ddec25045fe35d8c389",
-    "prd": "97a6d0c9d0e4951636e923d1acd07c1d8a27b83a2aa65357a32562c6313cf80d",
-    "adr": "ece9516f48868a89f6f1ca198227cef7b3e9c4d1a059e53297714642d95ee8df",
+    "brd": "ad45b46ce2519c3977631b20fa8d76327de50d1acd6306318697134fa18570a5",
+    "prd": "e866c8d459306e57952fefdb85c9252b3e5a4fa22022ee5b83257c4e5feb1743",
+    "adr": "a7c8e9393aff36bc1ee8700ea9364c7c19d46b869d7f946994bd5fda3914e33a",
     "solution-code": "a89a639f156e48a50323490fc9ab6f0eb6ba0ea4db08646ba4d04a79c851b82f",
     "infrastructure": "e962abd356f81103c78019d3442cd3da2fc2d94a694375c109ac0fbc7c8ad7ea"
   },
@@ -69,7 +69,7 @@
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "This PR adds a detailed Real-Inference Quality test table (splits, macro-F1, thresholds) to the PRD but introduces no new evaluation harness code or measured results beyond the existing mvp/properwarm_mvp/ai_eval.py baseline. Documentation deepens the proposal further; still unexecuted, unchanged..."
+      "rationale": "This PR adds a detailed Real-Inference Quality test table (splits, macro-F1, thresholds) and a Parallel Decision-Model Experiment Intake section to the PRD, but no new evaluation harness code or measured results beyond mvp/properwarm_mvp/ai_eval.py. Still unexecuted; unchanged."
     },
     "A7": {
       "score": 4,
@@ -122,7 +122,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-336"
       ],
-      "rationale": "The owner-direction table (PR-001 to PR-008) and governance additions continue to name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures. This PR deepens exercise targets but doesn't change this ev..."
+      "rationale": "The owner-direction table (PR-001 to PR-008) and governance additions name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures. This PR deepens exercise targets without changing this evidence."
     },
     "C2": {
       "score": 0,
