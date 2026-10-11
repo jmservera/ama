@@ -65,6 +65,8 @@ files, and stage/commit the intended results before a new dry run.
 * PPTX text across runs, groups, tables, notes, masters, layouts and metadata
   changes without replacing whole paragraphs. A PNG logo with white backing is
   added to every slide, and matching elements/assets are added to slide YAML.
+  Python deck authoring scripts are active inputs too; research, review and
+  validation records beside them remain historical.
 * The MVP website gets the same locally served PNG with accessible alternate
   text and a contrasting background. No remote logo dependency or CSP change.
 * Files are replaced atomically and executable permissions are retained.
@@ -72,8 +74,9 @@ files, and stage/commit the intended results before a new dry run.
 ## Deliberate exceptions and edge cases
 
 * Original case study, regulatory snapshots, append-only log, owner memory
-  and historical tracking records stay unchanged. Slide authoring sources and
-  PPTX binaries under tracking are active migration inputs.
+  historical rubric score snapshots and historical tracking records stay
+  unchanged. Slide authoring sources and PPTX binaries under tracking are
+  active migration inputs.
 * External URLs remain exact, including pinned GitHub evidence and previous
   deployment URLs. Historical references are allowed by owner direction.
   Relative references to preserved tracked artifacts retain their old paths.

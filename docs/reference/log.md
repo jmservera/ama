@@ -1603,6 +1603,119 @@ metadata when the knowledge base was created.
   regulatory snapshot, private data or owner-memory changes. Fresh full-BRD/
   PRD quality and owner acceptance remain separate from RPI outcome review.
 
+## [2026-10-11] update | Publish the validated Proper Warm council deck
+
+* Rebuilt the 18-slide Proper Warm executive solution draft for the council
+  from the latest 2026-10-11 research. The workbench offer, bounded AI,
+  proposed architecture, Excel transition, resident/contractor boundaries,
+  controls, evidence gates and unscored platform options are explicit.
+* Closed the iteration-2 storytelling findings F01-F11. The independent
+  iteration-3 review found no material communications blocker to publication
+  as a clearly labelled draft. The main notes contain 1,668 spoken words
+  (about 11.9 minutes at 140 wpm); the 517-word appendix is for reference.
+  Oral timed rehearsal remains pending.
+* PPTX-property and geometry validation each reported zero issues across 18
+  slides. Published
+  `../presentations/proper-warm-executive-draft.pptx` and confirmed the
+  delivery copy matches the validated build by SHA-256
+  (`2764263A97F1A8086E6F3DE31A0BDC4376B8BC06F5E0B235A5989341AC664193`).
+  At 98,072 bytes, it is below the scorer's 2,000,000-byte file limit.
+* Updated `README.md` and `../capstone/README.md`; the existing
+  `.github/rubric/artifacts.json` entry already includes the delivery path.
+  Working files and review evidence remain under
+  `.copilot-tracking/ppt/2026-10-11/proper-warm-executive-draft/`.
+* Benefits, product whole-life cost, direct user acceptance, legal currentness,
+  full security assurance and production readiness remain unproved. No
+  contradiction or new company fact was introduced.
+
+## [2026-10-11] correction | Put the deck in the scorer's base-branch path
+
+* Review of `.github/rubric/scripts/prepare.py` and the `origin/main`
+  registry confirmed that pull-request scoring loads `.github/rubric/artifacts.json`
+  from the base branch and matches only `docs/capstone/deck/*.pptx`.
+  The earlier change that added the delivery path under `docs/presentations/`
+  therefore did not make this PR's deck discoverable by the current scorer.
+* Added `docs/capstone/deck/proper-warm-executive-draft.pptx` as the scorer
+  input and retained the validated delivery copy in `docs/presentations/`.
+  The two files have identical SHA-256 hashes. Restored the registry glob to
+  the canonical scorer path and clarified the storage map and deck catalog.
+* The deck extractor reads slide and speaker-note text. The deck informs B1,
+  B2, B6 and B7 when present; B3, B4, B5 and C2 still require pitch artifacts
+  where specified by `rubric.json`. Scoring still requires the deck to be
+  committed and changed relative to the base.
+
+
+## [2026-10-11] update | Add architecture diagrams and a working-day view to the council deck
+
+* Rebuilt the Proper Warm executive deck from 18 to 21 slides in response to scorer feedback and owner direction: a system landscape (slide 5), a layered architecture (slide 7) and a same-case working-day comparison (slide 8). All architecture is labelled proposed, not deployed.
+* Speed and experience gains are stated as mechanisms and hypotheses to test; no time, error or benefit measurement is claimed. Main spoken script is about 15 minutes.
+* Both validators report 0 issues. The delivery and scorer copies are identical (SHA-256 ABD74B0F2EC8F82EE042E077CF3608FA6A8AC91663B672860E6701B980C3317E). A scorer note: the bot's reviewer rated the deck B1, B2, B6 and B7 at 4 but ignored the change because its evidence cited no changed file by path.
+
+## [2026-10-11] correction | Diagnose discarded capstone slide citations
+
+* Inspected the actual scorecard and trusted context from PR #61 workflow run
+  `38174177112`. The capstone deck was found and assessed, not missing. Its
+  submitted citations used `path.pptx:slide1` and other slide numbers; the
+  deterministic gate stripped text line anchors only and treated these as
+  different filenames. It therefore retained missing-deck baseline rationales.
+* Added strictly scoped positive slide-number anchor support for PPTX
+  references and clarified original-file citations in the scorer prompt.
+  Recompiled the workflow with the installed v0.89.21 compiler. Nineteen
+  targeted tests passed, including unchanged-file rejection and missing
+  pitch/thought-leadership controls.
+* Replayed that saved scorecard: the previous parser retains 35/100; the
+  repaired parser records 47/100, with B1=4, B2=3, B6=4 and B7=4. This is a
+  reproduction of the old assessment, not a new grade for the revised deck.
+  Ordinary PR scoring uses the gate from `main`, so owner-approved merge and
+  a subsequent run are required to activate the repair.
+* At the owner's request, removed the saved executive draft from
+  `docs/presentations/` and redirected the catalog and capstone storage map to
+  the sole executive publication in `docs/capstone/deck/`. The separate mentor
+  deck is unchanged. No previous log entry or score baseline was rewritten.
+
+## [2026-10-11] update | Reframe the capstone as accountable agent-led change
+
+* Rebuilt the 21-slide council deck around the 60,000-home mission, original
+  five-agent request, eight role-agent research instruments and three
+  request/discovery/build chains. The bold proposal is justified as a shared
+  foundation for the requested capabilities, not replacement of the whole
+  company, its teams, suppliers or source systems.
+* Made the new way of working tangible through one constructed home,
+  ownership, lifecycle states, timestamps, blockers, accepted handoffs and
+  evidence. Explainable decisions retain source/version, rule/reason,
+  reviewer, event and authorized override; people retain approval and consent.
+  Architecture diagrams, supported Excel transition, resident/contractor
+  service and separate programme/AI comparisons support that argument.
+* Independent narrative and full-slide visual review found no blockers.
+  Applied its three editorial findings and rebuilt with zero issues in both
+  validators. Final main narration is 1,919 words, approximately 13.71
+  minutes at 140 words/minute; timed rehearsal and measured benefits remain
+  open. Review and execution records remain in the deck tracking workspace.
+* Published only `docs/capstone/deck/proper-warm-executive-draft.pptx`.
+  SHA-256: `bb857cb474ad03c38a29c26af052556a4933ef6cdf762cd6bf0eaa53862d2e03`.
+  Verified its scorer-extracted slide/notes text and equality with the
+  validated working build. No new production, spending, legal or operational
+  acceptance is claimed.
+
+## [2026-10-11] validation | Fresh calibration measures the revised capstone
+
+* Report-only workflow run
+  [38177388117](https://github.com/jmservera/ama/actions/runs/38177388117)
+  completed successfully on `6a8b60a`. The revised deck received B1=4, B2=4,
+  B6=4 and B7=4. Narrative, executive/technical register, written structure
+  and evidence-labelled financial storytelling were explicitly cited using
+  the capstone PPTX path and slide numbers.
+* The full-portfolio calibration is 43/100: A=23, B=16, C=4, D=0. Missing
+  pitch and thought-leadership artifacts were still forced to zero; outcome
+  remains Incomplete. This is a fresh assessment with baseline withheld,
+  not an incremental comparison or overwrite of `latest.json`. Normal PR
+  scoring still needs the repair on `main`; no merge was performed.
+* The wider rubric test run produced 100 passes, one skip and 19 failures.
+  An unchanged pre-repair snapshot reproduced the same 19 failures due to
+  historical seed/prototype expectations. The snapshot's initially omitted
+  workflow fixture added one extra failure; restoring it made that test pass.
+  All 19 targeted slide-citation and required-artifact tests passed. No
+  unrelated historical fixture or actual score baseline was modified.
 ## [2026-10-11] update | Decision 1 rebuild specification and PR 58 learnings split
 
 * Added the [Decision 1 behaviour specification](./research/decision-1-behaviour-specification.md),

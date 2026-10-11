@@ -31,10 +31,12 @@ class RenameTests(unittest.TestCase):
 
     def test_history_exceptions_and_active_ppt_sources(self):
         for path in ("docs/reference/log.md", "docs/reference/memory.md",
-                     "docs/reference/regulatory/source.md", ".copilot-tracking/changes/old.md"):
+                     "docs/reference/regulatory/source.md", ".copilot-tracking/changes/old.md",
+                     ".github/rubric/scores/latest.json"):
             self.assertTrue(rename.preserved(path))
         for path in ("docs/prds/proper-warm.md", ".copilot-tracking/ppt/a/content/slide-001/content.yaml",
-                     ".copilot-tracking/ppt/a/slide-deck/proper-warm.pptx"):
+                     ".copilot-tracking/ppt/a/slide-deck/proper-warm.pptx",
+                     ".copilot-tracking/ppt/a/author_content.py"):
             self.assertFalse(rename.preserved(path))
 
     def test_paths_and_preserved_relative_references(self):

@@ -49,6 +49,7 @@ TEXT_SUFFIXES = {
 HISTORICAL = (
     "docs/reference/regulatory/", "docs/reference/log.md",
     "docs/reference/memory.md", "docs/case_study_48_original.md",
+    ".github/rubric/scores/",
 )
 URL = re.compile(r"https?://[^\s<>\"')\]]+")
 SCRIPT_PREFIX = "tools/rename-zava"
@@ -80,7 +81,7 @@ def preserved(path: str) -> bool:
     if path.startswith(".copilot-tracking/"):
         return not (
             path.endswith(".pptx")
-            or ("/ppt/" in path and "/content/" in path)
+            or ("/ppt/" in path and ("/content/" in path or path.endswith(".py")))
         )
     return False
 
