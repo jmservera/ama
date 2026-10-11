@@ -2,20 +2,20 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-11T09:11:14+00:00",
-  "commit": "5250f55db5a52668d4692ed3589ea31a0a8309fd",
+  "scored_at": "2026-10-11T21:06:14+00:00",
+  "commit": "eb169c5a444fc1ea7b6becb5ee88cb4d4a13e890",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38127029972",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38174409783",
   "fingerprints": {
-    "brd": "ad45b46ce2519c3977631b20fa8d76327de50d1acd6306318697134fa18570a5",
-    "prd": "e866c8d459306e57952fefdb85c9252b3e5a4fa22022ee5b83257c4e5feb1743",
+    "brd": "c6577f12036ae3aab37259600786e5e566fd0b08c0b011297263fa557628738b",
+    "prd": "db6a299e45c1995c1b75a47d4931fa105d60e7613e96af8f54e05ef8cbeef85a",
     "adr": "a7c8e9393aff36bc1ee8700ea9364c7c19d46b869d7f946994bd5fda3914e33a",
-    "solution-code": "a89a639f156e48a50323490fc9ab6f0eb6ba0ea4db08646ba4d04a79c851b82f",
-    "infrastructure": "e962abd356f81103c78019d3442cd3da2fc2d94a694375c109ac0fbc7c8ad7ea"
+    "solution-code": "81dc679616fce98c3c85db10f8570d778cb73c4ee3e2e05963268ede152fb236",
+    "infrastructure": "a86a613282b9e9b571f3cf588f53ecc7ac44fa7f9a4690edc2376db17f620905"
   },
-  "total": 35,
+  "total": 37,
   "sections": {
-    "A": 27,
+    "A": 29,
     "B": 3,
     "C": 5,
     "D": 0
@@ -29,7 +29,7 @@
         "infra/modules/containerapps.bicep:123-126",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. ADR 0002 adds design detail but remains proposal, not evidenced deployment; unchanged."
+      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. New exercise.bicep/decision-access.bicep add components but no new failure-domain/scaling documentation; unchanged."
     },
     "A2": {
       "score": 5,
@@ -39,42 +39,49 @@
         "docs/adrs/0002-pilot-readiness-architecture.md:194-203",
         "docs/adrs/0002-pilot-readiness-architecture.md:260-267"
       ],
-      "rationale": "ADR 0002 adds seven independently reasoned decision areas each with a trade-off table naming rejected alternatives and why, deepening the already-argued ADR 0001 appraisal."
+      "rationale": "ADR 0002 trade-off tables remain strongest evidence; this PR's new infra/code does not add further named-alternative trade-off reasoning. Unchanged."
     },
     "A3": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-329"
+        "mvp/properwarm_mvp/decision.py:44-51",
+        "mvp/properwarm_mvp/decision.py:276-277",
+        "infra/decision-access.bicep:28-41"
       ],
-      "rationale": "ADR 0002 names a specific AI leakage threat and states a mitigation, plus named compliance articles (GDPR 9, 17(3), 44-46). This PR's PRD edits add governance/test detail but do not touch the deployed threat-model evidence or any DD-007 content; unchanged."
+      "rationale": "New fail-closed guard denies protected fields (consent, approval, hazard) and unregistered tasks pre-transport; new custom RBAC role grants only scoped inference dataAction, no key listing. Concrete, enforced AI-leakage/least-privilege control beyond prior threat-model text."
     },
     "A4": {
       "score": 4,
       "evidence": [
-        "mvp/properwarm_mvp/ranking.py:16-52",
-        "mvp/properwarm_mvp/store.py:153-179",
-        "mvp/tests/test_ranking_policy.py:42-56",
-        "docs/adrs/0002-pilot-readiness-architecture.md:431"
+        "mvp/README.md:1-5",
+        "mvp/properwarm_mvp/decision.py:1-20"
       ],
-      "rationale": "Policy is a hash-verified versioned file with a registry, a manager-only ranking snapshot endpoint ships with deterministic as_of, and JSON/SQL store parity is tested. Named owner sign-off still open, disclosed in README."
+      "rationale": "Core capabilities (workbench, forms, forecasting, decision client) work end to end; README candidly discloses Decision 1 auth still failing and citation checks unresolved, no full completion claimed. Gaps proactively disclosed; unchanged at Good."
     },
     "A5": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:308-340"
+        "mvp/properwarm_mvp/decision.py:155-168",
+        "mvp/properwarm_mvp/decision.py:182-205",
+        "infra/README.md:12-26"
       ],
-      "rationale": "Operational resilience design discussed with specifics but partial evidenced deployment; unchanged."
+      "rationale": "New atomic liability-reservation ledger (SQLite BEGIN IMMEDIATE plus an Azure SQL transactional equivalent) is a concrete resilience pattern for concurrent spend control; infra/README documents verified SQL/Blob retention across a revision restart plus a stated cost ceiling."
     },
     "A6": {
-      "score": 3,
-      "evidence": [],
-      "rationale": "This PR adds a detailed Real-Inference Quality test table (splits, macro-F1, thresholds) and a Parallel Decision-Model Experiment Intake section to the PRD, but no new evaluation harness code or measured results beyond mvp/properwarm_mvp/ai_eval.py. Still unexecuted; unchanged."
+      "score": 4,
+      "evidence": [
+        "mvp/evals/decision_tasks.json:1-10",
+        "mvp/tests/test_decision.py:1-22",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1007-1030"
+      ],
+      "rationale": "New versioned, reviewed task registry (thresholds, scopes, reviewers) plus a 720-line fake-transport contract test suite validate scoring/guard logic, alongside the PRD held-out macro-F1 table. Narrow but real evaluation harness over contracts/guards; no measured real-inference results yet."
     },
     "A7": {
       "score": 4,
-      "evidence": [],
-      "rationale": "Orchestration-pattern text (capability routing, provider adapter validation, lines 810-817) is untouched by this diff; no new agentic code, handoff/reflection or state-graph implementation was added. Unchanged."
+      "evidence": [
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:858-865"
+      ],
+      "rationale": "Orchestration-pattern text (capability routing, provider adapter validation) is untouched by this diff. New decision.py is a guarded scoring/drafting client, not autonomous handoff/reflection/state-graph behaviour. No new agentic orchestration code; unchanged."
     },
     "B1": {
       "score": 0,
@@ -108,7 +115,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
         "infra/README.md:1-54"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable; the PRD grew more detailed and internally consistent (owner-acceptance narrative, exercise acceptance contract) but no capstone deck exists, so cap_without caps this at 3 regardless. Unchanged."
+      "rationale": "BRD, PRD and infra/README.md remain structured and navigable; PRD and infra README grew more detailed and consistent, but no capstone deck exists, so cap_without caps this at 3 regardless. Unchanged."
     },
     "B7": {
       "score": 0,
@@ -122,7 +129,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-336"
       ],
-      "rationale": "The owner-direction table (PR-001 to PR-008) and governance additions name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures. This PR deepens exercise targets without changing this evidence."
+      "rationale": "The owner-direction table (PR-001 to PR-008) and governance additions name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures. This PR's new data-reuse framing text does not change this evidence."
     },
     "C2": {
       "score": 0,
