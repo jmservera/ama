@@ -2,15 +2,15 @@
 title: Agentic Retrofit Programme Business Requirements Document
 description: Business requirements for safe, resident-centred and financially controlled retrofit delivery
 author: AMA Research Team
-ms.date: 2026-10-08
+ms.date: 2026-10-11
 ms.topic: reference
 brd_id: "BRD-2026-AMA48-001"
 status: "draft"
-version: "0.15.0"
+version: "0.16.0"
 owners: ["AMA Research Team"]
 reviewers: ["Executive Director of Assets (proposed sponsor)", "Named Proper North Homes control owners (to be confirmed)"]
 created_date: "2026-09-11"
-last_updated: "2026-10-08"
+last_updated: "2026-10-11"
 business_goal_ids: ["BG-001", "BG-002", "BG-003", "BG-004", "BG-005", "BG-006", "BG-007", "BG-008", "BG-009", "BG-010", "BG-011", "BG-012"]
 business_goal_smart_status: "fail"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -27,6 +27,12 @@ requirement_id_prefixes:
 ---
 
 ## Document Status
+
+Version 0.16.0 is a candidate amendment for fresh business/requirements
+review, not a newly accepted BRD. The owner's 2026-10-11 direction requires
+real AI, real SQL and actual Azure deployment in each subsequent accepted
+application exercise build. The historical PRD v0.12.0 acceptance does not
+approve this amendment or operational use.
 
 | Field | Value |
 | --- | --- |
@@ -115,6 +121,16 @@ technology case require separate appraisal. A five-agent rollout, GBP 40
 million of secured grant and doubled throughput are not approval assumptions.
 
 ## Board Decision Narrative
+
+For the AMA learning programme, each accepted application exercise build
+means a delivered prototype, PoC or MVP, including updates of Proper Warm.
+It must use actual Azure hosting, real SQL state (the existing Azure SQL
+realization) and at least one registered real generative or decision-model
+task in the exercised path. Continue the generated 60,000-home stock and
+retained 980-case programme lineage; test cohorts are not replacement MVPs.
+Documentation, unit/CI tests and non-delivery development checks may use
+local state/mocks, but cannot satisfy application delivery. This learning
+requirement is separate from production options and attributable benefits.
 
 Proper North Homes does not have a spreadsheet problem. It has a delivery
 control problem that spreadsheets make harder to see. A small team coordinates
@@ -691,6 +707,13 @@ Detailed sources, caveats, calculations and unsupported-average gaps are in
 
 ### Digital Foundation and Authority
 
+CON-007/AC-086 impose the real-platform exercise boundary without requiring
+the full production ADR estate. Case access and manual draft completion
+must not depend on AI availability; mandatory deployed AI is not mandatory
+model use in every workflow or approval. Rejecting a narrow Decision task
+does not permit a wholly disabled-AI application to pass exercise acceptance.
+Source-linked rules/manual handling remains the baseline comparator.
+
 The digital foundation connects authoritative asset, repairs, housing, finance,
 procurement and contractor systems. It does not recreate their services or
 transfer their statutory or financial accountability. Property records link to
@@ -1265,9 +1288,9 @@ renumbered after deletion or reordering.
 | --- | --- | --- | --- |
 | BG | Business goal | Outcome in Business Objectives and Success Metrics; legacy alias OBJ-## | 12 |
 | FR | Functional requirement | Business capability or control the programme must provide | 44 |
-| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 85 |
+| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 86 |
 | NFR | Non-functional requirement | Quality attribute classified by ISO/IEC 25010 category | 9 |
-| CON | Constraint | Imposed, non-negotiable boundary from legislation, regulation, funding or the case study | 6 |
+| CON | Constraint | Imposed boundary from legislation, regulation, funding, case study or owner-directed exercise delivery | 7 |
 | RULE | Business rule | Standing policy or authority rule that outlives the solution; replaces the canonical BR prefix to avoid a clash with legacy BR-### aliases | 24 |
 | OD | Open decision | Unresolved company decision; not a requirement | 39 |
 
@@ -1283,6 +1306,10 @@ chooses, and no programme role can waive them. Each constraint was checked
 against the local snapshot named in its source on 26 September 2026, not
 against the official source online.
 
+CON-007 is the later owner-directed exercise boundary, not legislation or
+company policy. It requires the owner's new decision to change; it does not
+authorize spending or supersede legal, resident or professional controls.
+
 | ID | Constraint | Imposing source and date | Category | Affected boundary | Non-negotiable condition | Exception authority | Affected requirements |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | CON-001 | Awaab's Law Phase 1 duties for emergency hazards and significant damp and mould hazards apply to social homes regardless of retrofit status. | Hazards in Social Housing (Prescribed Requirements) (England) Regulations 2025, SI 2025/1042, regulation 1(2), in force 27 October 2025; duties in regulations 5 to 14 ([local snapshot](../reference/regulatory/social-housing-regulation/awaabs-law-hazards-in-social-housing-regulations-2025.md), converted 2026-09-19). The original case study treats Awaab's Law timescales as hard constraints. | Legislation | Hazard response, clocks and resident updates for every home in the programme | No retrofit hold, platform outage, AI output or contractor arrangement may delay, pause, reset or close a hazard duty. | None within the programme; Legal interprets applicability. Phase 2 (guidance date 30 November 2026) must be verified before activation. | FR-002, FR-003, RULE-003, FR-004, NFR-004 |
@@ -1291,6 +1318,7 @@ against the official source online.
 | CON-004 | Recovery of retrofit costs from leaseholders is limited by the lease and by statutory consultation and charge limits. | Service Charges (Consultation Requirements) (England) Regulations 2003, SI 2003/1987, regulations 4 and 6 (consultation above GBP 250 per leaseholder for qualifying works, or GBP 100 a year under a qualifying long-term agreement); Housing Act 1985, Schedule 6, paragraphs 16B and 16C (right to buy charge limits for five years). Cited through the [Housing Association Primer](../reference/research/sector/housing-association-primer.md#right-to-buy-and-preserved-right-to-buy-leasehold); not held in the local regulatory corpus. | Legislation | Communal works, framework and call-off contracts, and homes held by shared owners and leaseholders | No communal works or long-term agreement proceeds before Legal records the consultation status. | None; Legal determines applicability and must validate the legislative source before live use. | FR-015, FR-022, RULE-023 |
 | CON-005 | Any WH:SHF Wave 3 award is subject to the scheme's eligibility, route and spend conditions. | WH:SHF technical annex, January 2025: in scope (EPC D or below) does not by itself mean eligible (Page 3, footnote 1); formula allocations to the Greater Manchester (5.7%) and West Midlands (7.8%) combined authorities (Page 5, Table 3) ([local snapshot](../reference/regulatory/retrofit-standards-and-funding/warm-homes-social-housing-fund-technical-annex-2025.md), converted 2026-09-19). Spend by 31 March 2028 is recorded by the addendum and supporting research, not verified against a grant agreement. | Funding condition | Funding route, eligibility, match funding and claim evidence for grant-funded homes | Applies once an award is evidenced; no allocation to Proper North Homes is evidenced. | The grant authority only. | FR-023, FR-024, FR-026, FR-027, RULE-009, RULE-010 |
 | CON-006 | Residents control consent, the asset director approves investment and Finance submits grant applications. | [Original Case Study 48](../case_study_48_original.md), Transformation Objective and Agentic Architecture Brief | Organisational (case-study fact) | Resident decisions, investment approval and grant submission | No agent or programme role may take these decisions for their owners. | Changes only through the association's scheme of delegation. | FR-011, FR-013, FR-014, RULE-010, RULE-011 |
+| CON-007 | Every subsequent accepted application exercise build uses real AI, real SQL state and an actual Azure deployment on the continuing generated stock/programme lineage. | Owner direction 2026-10-11, [addendum](../case_study_48_addendum.md#subsequent-application-exercise-builds-2026-10-11) | Exercise delivery (owner decision) | Delivered AMA prototypes/PoCs/MVPs and updates; not documentation/unit/CI checks | At least one permitted real model task, actual SQL durability and Azure workflow evidence under AC-086; local/mock-only delivery cannot pass. No premium topology or production approval inferred. | New explicit exercise-owner decision only; no waiver by an implementer or model | FR-036, FR-044, NFR-002, NFR-004, RULE-018, RULE-019, RULE-020; AC-086 |
 
 ### Non-Functional Requirement Categories
 
@@ -1413,8 +1441,8 @@ against the official source online.
 
 | ID | Legacy ID | Requirement | Business goals | Impacted stakeholders | Acceptance criteria | Priority |
 | --- | --- | --- | --- | --- | --- | --- |
-| FR-036 | BR-046 | Deterministic workflow shall enforce mandatory gates and an explicit allow/deny authority matrix. | BG-003, BG-004, BG-005, BG-006, BG-007, BG-012 | All control owners, digital, audit | AC-056: Tests block AI diagnosis, statutory-duty determination, safety-hold release, professional approval, consent inference, investment or procurement commitment, contractor instruction, payment, bid or claim submission, and hazard, complaint or defect closure. Approval cannot be supplied by generated text. | Must |
-| RULE-018 | BR-046 | In the initial pilot, AI shall be restricted to sourced recommendations, drafts, reconciliation, routing to fixed categories and raise-only flags. | BG-003, BG-004, BG-005, BG-006, BG-007, BG-012 | All control owners, digital, audit | AC-057: A flag can only add work to a human queue and can never clear, accept or close an item. Routing sends messages only to staffed queues. Consequential resident contact requires human authorisation. | Must |
+| FR-036 | BR-046 | Deterministic workflow shall enforce mandatory gates and an explicit allow/deny authority matrix. | BG-003, BG-004, BG-005, BG-006, BG-007, BG-012 | All control owners, digital, audit | AC-056: Tests block AI diagnosis, statutory-duty determination, safety-hold release, professional approval, consent inference, investment or procurement commitment, contractor instruction, payment, bid or claim submission, and hazard, complaint or defect closure. Approval cannot be supplied by generated text.<br>AC-086: Each accepted application exercise build records its authorized Azure endpoint and source/image/revision/config versions, verified least-privilege workload identity, actual Azure SQL write/read and independent before/after restart state/audit evidence, plus at least one permitted real generative or Decision task with source/model/provider/usage/outcome, citations and Not reviewed authority. Failure/manual handling preserves case access and controls. Missing effective budget, authorization or service evidence is Blocked or Not run; templates, mocks or unrelated historical calls cannot pass. Retained generated-stock/programme lineage and separate quality/value gates remain explicit. | Must |
+| RULE-018 | BR-046 | In the initial pilot, AI shall be restricted to sourced recommendations, drafts, reconciliation, routing to fixed categories and raise-only flags. Accepted application exercise builds require deployed real AI under CON-007, but invoking assistance per record is optional and manual case access never depends on model availability. | BG-003, BG-004, BG-005, BG-006, BG-007, BG-012 | All control owners, digital, audit | AC-057: A flag can only add work to a human queue and can never clear, accept or close an item. Routing sends messages only to staffed queues. Consequential resident contact requires human authorisation. | Must |
 | NFR-004 | BR-047 | Service operation shall remain safe during model, integration or platform failure through monitored queues, a disable mechanism, tested manual fallback and controlled recovery. | BG-003, BG-004, BG-010, BG-012 | Digital, repairs, safety, housing, programme | AC-058: Owners approve response and recovery limits before live use. Outage tests preserve hazard response and statutory clocks, expose unowned work, block unverified controlled transitions and reconcile missed or duplicate actions before restart. | Must |
 | NFR-005 | BR-048 | The solution shall connect authoritative systems through documented interfaces. | BG-005, BG-006, BG-008, BG-010, BG-012 | Digital, data owners, procurement, audit | AC-059: Owners accept identifier mapping, conflict handling and reconciliation for each interface. | Must |
 | NFR-006 | BR-048 | The solution shall preserve exportable, versioned evidence independently of an AI supplier. | BG-005, BG-006, BG-008, BG-010, BG-012 | Digital, data owners, procurement, audit | AC-060: Export tests retain source, approval and supersession history. Contracts specify data access, retention, support and exit responsibilities. AI supplier terms require model documentation, advance notice of model or material behaviour changes, access to relevant evaluation results and output logs, and support for NFR-007 version evaluation. | Must |
@@ -1635,6 +1663,24 @@ would risk double counting.
 | Safe acceleration does not worsen guardrails | Approved stop triggers, breach logs, affected-work pauses and restart evidence | Building Safety, Programme and Sponsor | FR-001, FR-002, FR-003, FR-030, FR-032, RULE-003, RULE-020 |
 
 ### Executive Trade-Offs as Approval Criteria
+
+The [pinned #58 learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11)
+records real source-bound Decision 1 selection, cited generative inference
+and Azure SQL deployment, inspected 2026-10-11. Narrow integration is feasible;
+calibrated task quality, three-class support and net benefit remain unproved.
+The owner reports a parallel four-arm experiment: rules/manual, Decision/
+templates, generative agent and hybrid agent with Decision tools. This can
+inform Comparison 2, not establish locality-level or resident outcomes.
+
+Data and Performance reviews versioned protocol/source/split/task/model/
+schema/threshold records, independent human labels, denominators/exclusions,
+quality and uncertainty; Finance reviews complete human preparation/review/
+correction effort and whole-life cost; task/control owners and the exercise
+owner review adoption. Proposed protocol is not executed benefit evidence.
+Binary support cannot satisfy three-class screening; insufficient labels,
+participants or precision remain Inconclusive/Not evaluated. Negative
+results may reject narrow tasks while independent platform/control work
+continues. No result automatically activates a live control.
 
 | Trade-off | Required decision discipline | Requirement |
 | --- | --- | --- |
@@ -1920,7 +1966,7 @@ not that the linked goal or criterion has been validated.
 | FR-033 | BR-041 | AC-051 | All (BG-001, BG-002, BG-003, BG-004, BG-005, BG-006, BG-007, BG-008, BG-009, BG-010, BG-011, BG-012) |
 | FR-034 | BR-042 | AC-052, AC-080, AC-081 | BG-005, BG-010 |
 | FR-035 | BR-045 | AC-055 | BG-001, BG-002, BG-003, BG-008 |
-| FR-036 | BR-046 | AC-056 | BG-003, BG-004, BG-005, BG-006, BG-007, BG-012 |
+| FR-036 | BR-046 | AC-056, AC-086 | BG-003, BG-004, BG-005, BG-006, BG-007, BG-012 |
 | FR-037 | BR-064 | AC-065 | BG-003, BG-005, BG-009 |
 | FR-038 | BR-052 | AC-066 | BG-003, BG-004, BG-006, BG-007, BG-010, BG-012 |
 | FR-039 | BR-053 | AC-067 | BG-003, BG-004, BG-007, BG-010, BG-012 |
@@ -2047,6 +2093,21 @@ evidence, unresolved decisions and accountable owners.
 
 ### Readiness and Shadow Approval
 
+Exercise build acceptance under CON-007 is distinct from shadow/live
+authority. AC-086/PRD AC-057 require the changed build's actual Azure
+workflow, SQL durability and enabled AI proof; unchanged resources may be
+reused, not merely assumed connected. Record current source/image/revision
+and separate recorded #58 observations from newer undeployed source tests.
+Full workflow, permissions, performance/recovery and direct human acceptance
+are not established by one successful inference or restart.
+
+Record effective build budget, scope and approval/override, including
+accrued/unbilled liabilities. EXA-012 USD 450/360/405 limits are historical;
+#58's owner cap removal applies to that rebuild, not all future spending.
+Source/task/input bounds, upper-liability reservations and usage/cost
+telemetry remain. Missing budget/authorization blocks acceptance, never
+licenses mock substitution or silently waives spend controls.
+
 * The sponsor and Finance approve a capped readiness envelope and named owners
   for open decisions.
 * Before any Phase 0 pilot or comparison event capture, the frozen RULE-019
@@ -2110,6 +2171,17 @@ evidence, unresolved decisions and accountable owners.
   plus Board approval where its risk or investment envelope is affected.
 
 ## Source and Review Record
+
+The 2026-10-11 candidate amendment follows the owner's mandatory real
+AI/SQL/Azure direction, pinned #58 source/results and the independent
+decision-model experiment boundary. See the addendum's Subsequent Application
+Exercise Builds and the dated model/simplicity syntheses. These are
+exercise-owner decisions and reported technical observations, not company
+facts, new regulatory claims, approved BRD targets or measured business benefit.
+Counts are 44 FRs, 86 ACs, 9 NFRs, 7 constraints and 24 rules; existing
+functional IDs and human authority boundaries are retained. Fresh full-BRD
+quality/business review remains required; RPI outcome review does not ratify
+BG-011 or close the formal approval gate.
 
 This draft integrates:
 

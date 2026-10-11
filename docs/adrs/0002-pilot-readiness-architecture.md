@@ -2,7 +2,7 @@
 title: ADR 0002 Pilot-Readiness Architecture for the Proper Warm MVP
 description: Proposed decisions for moving the working MVP to pilot readiness over about 60,000 homes - durable store, Blob, Entra ID and field visibility, deterministic ranking, map scale, deployment and gated staff time capture
 author: AMA programme
-ms.date: 2026-10-08
+ms.date: 2026-10-11
 ms.topic: reference
 ---
 
@@ -17,6 +17,27 @@ until the open items in [Open items](#open-items) are closed (DH-002, DH-006).
 This ADR amends [ADR 0001](./0001-azure-architecture.md) for the MVP. It does
 not replace the ADR 0001 demonstrator design for the agent, orchestrator and
 import workloads, which remain deferred.
+
+### Exercise Applicability (2026-10-11)
+
+Every subsequent accepted application exercise build means a delivered AMA
+prototype, PoC or MVP, including updates to this application. It must
+exercise actual Azure hosting, real SQL state (existing Azure SQL realization)
+and at least one registered real AI task under BRD CON-007/AC-086 and
+PRD CON-009/AC-057. Preserve the generated 60,000-home stock and retained
+980-case programme/history/evidence; small fixtures remain tests. Reuse
+unchanged services but verify the changed build's connections and state/
+audit persistence after restart. Local-only acceptance is superseded.
+
+The context and implementation tables below are dated history/proposals.
+[Pinned #58](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11)
+reports real SQL/Blob deployment and selection/generation, not full pilot
+approval or every later source-tested control in the deployed revision.
+Entra user login, full permissions, cloud performance/recovery and direct
+human acceptance remain separate gates. No unconditional Decision-task
+placement, premium topology or new spending authority is implied.
+Missing effective budget/authorization blocks real-platform acceptance;
+fallback keeps case access safe but cannot supply a successful delivery gate.
 
 ## Context
 

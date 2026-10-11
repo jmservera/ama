@@ -2,11 +2,36 @@
 title: Gap Analysis and Next Build
 description: Review of the BRD, PRD, ADR, use case and addendum against the research and the working MVP, with the missing items ranked for the next build
 author: AMA programme
-ms.date: 2026-10-08
+ms.date: 2026-10-11
 ms.topic: reference
 ---
 
 ## Scope and evidence
+
+### Current Build Direction (2026-10-11)
+
+The ranked reviews below are dated snapshots, not an instruction to rebuild
+features subsequently delivered. [Pinned #58 learning](../../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11)
+at `5136f192d583a5bf53adeeec4b0f21369b005c9d` records the continuing
+60,000-home/980-case generated-data MVP with actual Azure SQL/Blob,
+Decision 1 selection and cited generation. Later source controls are not
+automatically deployed. Full workflow, permissions, cloud performance/
+recovery and direct human acceptance remain distinct from those observations.
+
+BRD v0.16.0 and PRD v0.13.0 candidates require real AI/SQL/Azure in
+every subsequent accepted application exercise build: delivered AMA
+prototype/PoC/MVP or update, not docs/unit/CI checks. Reuse the existing
+application, generated data and platform contracts. Local state/mocks and
+small fixtures support tests, not accepted delivery; no wholesale import
+of an unmerged PR or guessed stock-to-case links. AC-086/AC-057 specify
+changed-build identity/workflow/inference and SQL restart evidence.
+
+The parallel four-arm experiment may accept/reject narrow Decision tasks,
+not waive the required platform or whole-app AI. Proposed protocol is not
+executed benefit evidence; binary support is not three-class F1. Preserve
+current source/image/revision and per-task results, effective scoped budget/
+authorization and cost/usage controls. Independent integration/control work
+can proceed while quality/value adoption awaits reviewed results.
 
 Reviewed on 2026-10-08: the
 [BRD v0.15.0](../../brds/agentic-retrofit-programme-brd.md), the

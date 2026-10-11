@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-10
+ms.date: 2026-10-11
 ms.topic: reference
 ---
 
@@ -1566,3 +1566,39 @@ metadata when the knowledge base was created.
   and [local documentation validation](../../.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/local-validation.md)
   are preserved. Implementation, actual inference and direct human validation
   remain later evidence tasks; this change authorises no application work.
+
+## [2026-10-11] update | Mandatory real-platform exercise builds and PR58 learning
+
+* Updated [BRD v0.16.0](../brds/agentic-retrofit-programme-brd.md),
+  [PRD v0.13.0](../prds/proper-warm-retrofit-programme-demonstrator.md)
+  and [addendum](../case_study_48_addendum.md#subsequent-application-exercise-builds-2026-10-11)
+  for the owner's real AI, real SQL and actual Azure requirement in every
+  subsequent delivered AMA prototype/PoC/MVP. Original generated 60,000-home
+  stock and retained programme lineage continue; small fixtures remain tests.
+  New versions are candidates, not inherited v0.12.0 acceptance.
+* Added BRD CON-007/AC-086 and PRD CON-009/AC-057 with actual Azure
+  workflow, identity, SQL write/read/restart and enabled real AI evidence.
+  Missing budget/authority/evidence blocks acceptance, not mock substitution.
+  Clarified FR-044/SA-004 optional per-record/manual access without optional
+  whole-application AI. Counts: BRD 44 FR/86 AC/9 NFR/7 CON/24 RULE;
+  PRD 46 FR/57 AC/13 NFR/9 CON.
+* Integrated [pinned #58](https://github.com/jmservera/ama/pull/58)
+  `5136f192d583a5bf53adeeec4b0f21369b005c9d` observations into
+  [model learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11),
+  [simplicity review](./research/ux/prototype-learnings-and-simplicity-review.md)
+  and [next-build synthesis](./research/gap-analysis-next-build.md).
+  Actual selection/generation and Azure SQL are recorded feasibility;
+  calibration, screening, benefit and full acceptance remain unproved.
+  Earlier provider-host failures and historical result rows stay historical;
+  later source tests are not automatically deployed.
+* Recorded the parallel four-arm experiment boundary and versioned result
+  intake, independent human labels/full effort, uncertainty and task adoption.
+  Proposed protocol is not execution/result evidence. Binary support cannot
+  establish three-class macro-F1. Negative/inconclusive tasks do not waive
+  required AI/SQL/Azure, or block independent platform/control work.
+* Scoped prior USD450/360/405 budget history and #58 rebuild cap override,
+  retaining per-build authorization, reservations and usage controls.
+  Added dated applicability notes to both ADRs and updated the index.
+* Documentation-only implementation: no runtime/deployment/model calls,
+  regulatory snapshot, private data or owner-memory changes. Fresh full-BRD/
+  PRD quality and owner acceptance remain separate from RPI outcome review.
