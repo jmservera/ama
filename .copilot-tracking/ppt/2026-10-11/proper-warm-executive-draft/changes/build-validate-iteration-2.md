@@ -53,16 +53,17 @@ validation.
 
 ## Publication and scorer
 
-Published the validated build to
-`docs/presentations/proper-warm-executive-draft.pptx`. It is listed in
-`.github/rubric/artifacts.json` under `capstone-deck`, whose size ceiling is
-2,000,000 bytes. Source and delivery SHA-256:
+Published the validated delivery copy to
+`docs/presentations/proper-warm-executive-draft.pptx` and placed its identical
+scorer copy at `docs/capstone/deck/proper-warm-executive-draft.pptx`. The
+`capstone-deck` registry scans `docs/capstone/deck/*.pptx`; its size ceiling
+is 2,000,000 bytes. Source and delivery SHA-256:
 `2764263A97F1A8086E6F3DE31A0BDC4376B8BC06F5E0B235A5989341AC664193`.
-The published file is 98,072 bytes; its hash matches the validated build.
+Both published files are 98,072 bytes and match the validated build by hash.
 
 The index and append-only knowledge-base log were updated. The scorer
-registry already pointed to the delivery path and was not changed in this
-pass. No commit, push, deployment, spend or production approval was made.
+registry uses the canonical capstone folder as its input. No commit, push,
+deployment, spend or production approval was made in the original build pass.
 
 ## Evidence boundary and open items
 

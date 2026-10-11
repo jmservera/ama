@@ -1627,3 +1627,19 @@ metadata when the knowledge base was created.
 * Benefits, product whole-life cost, direct user acceptance, legal currentness,
   full security assurance and production readiness remain unproved. No
   contradiction or new company fact was introduced.
+
+## [2026-10-11] correction | Put the deck in the scorer's base-branch path
+
+* Review of `.github/rubric/scripts/prepare.py` and the `origin/main`
+  registry confirmed that pull-request scoring loads `.github/rubric/artifacts.json`
+  from the base branch and matches only `docs/capstone/deck/*.pptx`.
+  The earlier change that added the delivery path under `docs/presentations/`
+  therefore did not make this PR's deck discoverable by the current scorer.
+* Added `docs/capstone/deck/proper-warm-executive-draft.pptx` as the scorer
+  input and retained the validated delivery copy in `docs/presentations/`.
+  The two files have identical SHA-256 hashes. Restored the registry glob to
+  the canonical scorer path and clarified the storage map and deck catalog.
+* The deck extractor reads slide and speaker-note text. The deck informs B1,
+  B2, B6 and B7 when present; B3, B4, B5 and C2 still require pitch artifacts
+  where specified by `rubric.json`. Scoring still requires the deck to be
+  committed and changed relative to the base.

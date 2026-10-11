@@ -46,7 +46,7 @@
       "title": "Final capstone presentation deck",
       "status": "active",
       "extractor": "pptx",
-      "include": ["docs/capstone/deck/*.pptx", "docs/presentations/proper-warm-executive-draft.pptx"],
+      "include": ["docs/capstone/deck/*.pptx"],
       "exclude": [],
       "criteria": ["B1", "B2", "B3", "B5", "B6", "B7"]
     },
