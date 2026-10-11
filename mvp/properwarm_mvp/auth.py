@@ -121,14 +121,14 @@ class TrustedProxyProvider:
 
     def authenticate(self, headers):
         p = self.parse_principal(headers.get("X-MS-CLIENT-PRINCIPAL"))
-        if not p or p.get("auth_typ") != "aad":
-            return None
+        if not p or p.get("auth_typ") not in ("aad", "Bearer"):  # Container Apps reports Entra tokens as Bearer
+            return self._deny("no aad principal", p and p.get("auth_typ"))
         tid = {t.lower() for t in self.claims(p, TID)}
         if tid != {self.tenant}:
-            return None
+            return self._deny("tenant mismatch", sorted(tid))
         mapped = {self.role_map[r] for r in self.claims(p, ROLES) if r in self.role_map}
         if len(mapped) != 1:
-            return None
+            return self._deny("need exactly one mapped app role", self.claims(p, ROLES))
         role = mapped.pop()
         oid = self.claims(p, OID)
         person = None
@@ -139,8 +139,13 @@ class TrustedProxyProvider:
             if len(em) == 1:
                 person = self.store.staff.get(em[0].lower())
         if person is None:
-            return None
+            return self._deny("no staff record with this oid", oid)
         return dict(person, role=role)
+
+    @staticmethod
+    def _deny(reason, detail=None):
+        # Identifiers only (no names or emails), so operators can see why a signed-in user was refused.
+        print(f"auth denied: {reason}: {detail}", flush=True)
 
     def logout_response(self):
         return {"ok": True, "redirect": "/.auth/logout"}
