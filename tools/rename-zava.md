@@ -77,6 +77,9 @@ files, and stage/commit the intended results before a new dry run.
 * External URLs remain exact, including pinned GitHub evidence and previous
   deployment URLs. Historical references are allowed by owner direction.
   Relative references to preserved tracked artifacts retain their old paths.
+  When an immutable historical record links to a renamed active Markdown
+  document, the old path retains an exact original snapshot; a history
+  manifest records these exceptions so subsequent scans preserve them.
 * This is not a blind replacement of the word `warm`: official Warm Homes
   funding names, warmth descriptions and third-party terminology stay intact.
 * PDF exports, raster screenshots, slide previews, narrated audio, old logos
@@ -93,6 +96,8 @@ files, and stage/commit the intended results before a new dry run.
 * Existing tokens, resource IDs, role assignments, redirects, secrets, SQL
   grants, SharePoint permissions and webhooks cannot be fixed by string
   replacement. Capture dependencies and recreate the exercise integration.
+* Ranking-policy display metadata is covered by its content hash. The script
+  recomputes that hash after the rename without changing rule order or logic.
 * A partial report lists the failed files. Other files may already be changed;
   the operation is atomic per file, not a transaction across the repository.
 

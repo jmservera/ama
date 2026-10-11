@@ -52,6 +52,7 @@ HISTORICAL = (
 )
 URL = re.compile(r"https?://[^\s<>\"')\]]+")
 SCRIPT_PREFIX = "tools/rename-zava"
+HISTORY_MANIFEST = ".copilot-tracking/renames/zava-forward-history.json"
 
 
 def replace_names(text: str) -> str:
@@ -99,8 +100,8 @@ def update_text(text: str, path: str, path_map: dict[str, str]) -> str:
     """Update active identifiers and references to paths which will actually move."""
     # References into preserved snapshots must not be changed by the generic mapping.
     references = set()
-    for old in path_map:
-        if preserved(old) and replace_names(old) != old:
+    for old, new in path_map.items():
+        if old == new and replace_names(old) != old:
             references.add(old)
             relative = Path(os.path.relpath(old, Path(path).parent)).as_posix()
             references.add(relative)
@@ -288,12 +289,30 @@ def atomic_write(path: Path, data: bytes) -> None:
 def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
     """Plan or apply local changes, returning explicit per-file and remaining work."""
     paths = tracked_files(root)
-    path_map = {p: destination(p) for p in paths}
+    history_manifest = root / HISTORY_MANIFEST
+    existing_history = set(json.loads(history_manifest.read_text()).get("snapshots", [])) if history_manifest.exists() else set()
+    path_map = {p: p if p in existing_history else destination(p) for p in paths}
+    historical_snapshots: dict[str, bytes] = {}
+    for name in paths:
+        if not preserved(name) or Path(name).suffix != ".md":
+            continue
+        text = (root / name).read_text(encoding="utf-8")
+        for link in re.findall(r"\]\(([^\s)]+)\)", text):
+            if ":" in link or link.startswith("#"):
+                continue
+            link = link.split("#", 1)[0]
+            candidate = ((root / name).parent / link).resolve()
+            if not candidate.is_relative_to(root):
+                continue
+            old = candidate.relative_to(root).as_posix()
+            if old in path_map and path_map[old] != old:
+                historical_snapshots[old] = candidate.read_bytes()
     pending_moves: list[tuple[Path, Path]] = []
     slide_logos: set[Path] = set()
     report = {
         "mode": "apply" if apply else "dry-run", "company": "Zava North Homes",
         "project": "Zava Forward", "changes": [], "preserved": [], "failures": [],
+        "historical_snapshots": sorted(historical_snapshots),
         "manual_follow_up": [
             "Render every changed PPTX: check text overflow, logo overlap and contrast.",
             "Re-export PDFs, screenshots and slide previews; raster text is not replaced.",
@@ -317,7 +336,7 @@ def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
             raise ValueError(f"Refusing symlink path: {old}")
     for old, new in path_map.items():
         path = root / old
-        if preserved(old):
+        if preserved(old) or old in existing_history:
             report["preserved"].append(old)
             continue
         try:
@@ -368,6 +387,11 @@ def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
             LOG.error("Cannot rename %s: %s", source.relative_to(root), error)
             report["failures"].append({"path": source.relative_to(root).as_posix(),
                                        "reason": str(error)})
+    if apply and historical_snapshots:
+        for name, raw in historical_snapshots.items():
+            atomic_write(root / name, raw)
+        snapshots = sorted(existing_history | historical_snapshots.keys())
+        atomic_write(history_manifest, (json.dumps({"snapshots": snapshots}, indent=2) + "\n").encode())
     if apply and logo:
         for path in slide_logos:
             atomic_write(path, logo)

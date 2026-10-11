@@ -302,5 +302,5 @@ all acceptance behaviours if some remain unverified.
 On 2026-10-11 the owner selected "Zava Forward" from the proposed project names
 and requested continuation of the rename. This resolves the project-name
 choice above. The temporary local migration tooling is documented in
-[tools/rename-zava.md](../../../../tools/rename-zava.md); deployment and
+[tools/rename-zava.md](../../../tools/rename-zava.md); deployment and
 presentation acceptance remain separate from script generation.

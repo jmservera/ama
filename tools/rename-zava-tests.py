@@ -106,6 +106,26 @@ class RenameTests(unittest.TestCase):
             body = {k: v for k, v in policy.items() if k != "content_hash"}
             self.assertEqual(policy["content_hash"], hashlib.sha256(json.dumps(
                 body, sort_keys=True, separators=(",", ":")).encode()).hexdigest())
+
+    def test_historical_links_keep_exact_original_snapshot(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q", root], check=True)
+            document = root / "docs/prds/proper-warm.md"
+            document.parent.mkdir(parents=True)
+            document.write_text("Proper Warm original evidence")
+            log = root / "docs/reference/log.md"
+            log.parent.mkdir()
+            log.write_text("[old evidence](../prds/proper-warm.md)")
+            subprocess.run(["git", "-C", root, "add", "."], check=True)
+            report = rename.migrate(root, apply=True, logo=None)
+            self.assertEqual(report["historical_snapshots"], ["docs/prds/proper-warm.md"])
+            self.assertEqual(document.read_text(), "Proper Warm original evidence")
+            self.assertEqual((root / "docs/prds/zava-forward.md").read_text(), "Zava Forward original evidence")
+            self.assertEqual(log.read_text(), "[old evidence](../prds/proper-warm.md)")
+            subprocess.run(["git", "-C", root, "add", "."], check=True)
+            again = rename.migrate(root, apply=False, logo=None)
+            self.assertEqual(again["changes"], [])
     def test_infra_short_prefix_and_official_funding(self):
         self.assertEqual(
             rename.update_text("param workload = 'warm'\nid-warm-test sql-warm-test\nWarm Homes fund", "infra/a.bicep", {}),
