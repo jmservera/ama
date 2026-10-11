@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-11T09:11:14+00:00",
-  "commit": "5250f55db5a52668d4692ed3589ea31a0a8309fd",
+  "scored_at": "2026-10-11T21:33:12+00:00",
+  "commit": "d3541d276b33369870be103c188a419b3e421605",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38127029972",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38176427882",
   "fingerprints": {
     "brd": "ad45b46ce2519c3977631b20fa8d76327de50d1acd6306318697134fa18570a5",
     "prd": "e866c8d459306e57952fefdb85c9252b3e5a4fa22022ee5b83257c4e5feb1743",
     "adr": "a7c8e9393aff36bc1ee8700ea9364c7c19d46b869d7f946994bd5fda3914e33a",
-    "solution-code": "a89a639f156e48a50323490fc9ab6f0eb6ba0ea4db08646ba4d04a79c851b82f",
-    "infrastructure": "e962abd356f81103c78019d3442cd3da2fc2d94a694375c109ac0fbc7c8ad7ea"
+    "solution-code": "ef1fe0e348d42203b87de7db5b944dd13e0af8e60fbc5e6fac0ada6a0bd4202d",
+    "infrastructure": "42c7ee1dde7cdfc23f8b32c295d99ba2d89e5b610216236963d0726b1feba1e4"
   },
   "total": 35,
   "sections": {
@@ -29,7 +29,7 @@
         "infra/modules/containerapps.bicep:123-126",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. ADR 0002 adds design detail but remains proposal, not evidenced deployment; unchanged."
+      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. Unchanged: diff only touches untracked docs (case study, decision-1 spec, reference log), none of A1's evidence files."
     },
     "A2": {
       "score": 5,
@@ -47,7 +47,7 @@
         "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-329"
       ],
-      "rationale": "ADR 0002 names a specific AI leakage threat and states a mitigation, plus named compliance articles (GDPR 9, 17(3), 44-46). This PR's PRD edits add governance/test detail but do not touch the deployed threat-model evidence or any DD-007 content; unchanged."
+      "rationale": "ADR names a specific AI leakage threat and named compliance articles. This PR's actual diff touches only untracked docs (case study addendum, decision-1 spec), not ADR/PRD/infra evidence; unchanged."
     },
     "A4": {
       "score": 4,
@@ -57,24 +57,24 @@
         "mvp/tests/test_ranking_policy.py:42-56",
         "docs/adrs/0002-pilot-readiness-architecture.md:431"
       ],
-      "rationale": "Policy is a hash-verified versioned file with a registry, a manager-only ranking snapshot endpoint ships with deterministic as_of, and JSON/SQL store parity is tested. Named owner sign-off still open, disclosed in README."
+      "rationale": "Policy is a hash-verified versioned file with a registry and tested JSON/SQL store parity. No mvp/ files changed in this diff; unchanged."
     },
     "A5": {
       "score": 3,
       "evidence": [
         "docs/adrs/0002-pilot-readiness-architecture.md:308-340"
       ],
-      "rationale": "Operational resilience design discussed with specifics but partial evidenced deployment; unchanged."
+      "rationale": "Operational resilience design discussed with specifics but partial evidenced deployment. No infra/ files changed in this diff; unchanged."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "This PR adds a detailed Real-Inference Quality test table (splits, macro-F1, thresholds) and a Parallel Decision-Model Experiment Intake section to the PRD, but no new evaluation harness code or measured results beyond mvp/properwarm_mvp/ai_eval.py. Still unexecuted; unchanged."
+      "rationale": "PRD adds a Real-Inference Quality test table but no new evaluation harness code or measured results. This diff does not touch mvp/properwarm_mvp/ai_eval.py or the PRD; unchanged."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Orchestration-pattern text (capability routing, provider adapter validation, lines 810-817) is untouched by this diff; no new agentic code, handoff/reflection or state-graph implementation was added. Unchanged."
+      "rationale": "Orchestration-pattern text is untouched by this diff; no new agentic code, handoff/reflection or state-graph implementation was added. Unchanged."
     },
     "B1": {
       "score": 0,
@@ -108,7 +108,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
         "infra/README.md:1-54"
       ],
-      "rationale": "BRD, PRD and infra/README.md remain structured and navigable; the PRD grew more detailed and internally consistent (owner-acceptance narrative, exercise acceptance contract) but no capstone deck exists, so cap_without caps this at 3 regardless. Unchanged."
+      "rationale": "BRD, PRD and infra/README.md remain structured and navigable but no capstone deck exists, so cap_without caps this at 3 regardless. Diff does not touch these files; unchanged."
     },
     "B7": {
       "score": 0,
