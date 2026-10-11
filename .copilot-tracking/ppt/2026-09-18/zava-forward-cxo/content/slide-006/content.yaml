@@ -1,0 +1,146 @@
+slide: 6
+title: The programme earns the right to progress
+section: Gated Delivery
+layout: content
+background:
+  fill: '#F5F7FA'
+elements:
+- type: shape
+  shape: rectangle
+  left: 0
+  top: 0
+  width: 13.333
+  height: 0.1
+  fill: '#2F80ED'
+  line_color: '#2F80ED'
+- type: textbox
+  left: 0.68
+  top: 0.42
+  width: 11.9
+  height: 0.7
+  text: The programme earns the right to progress at each decision gate
+  font: Aptos Display
+  font_size: 28
+  font_color: '#102A43'
+  font_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.72
+  top: 1.45
+  width: 5.8
+  height: 1.05
+  fill: '#EAF2FD'
+  line_color: '#2F80ED'
+  text: '1  READINESS | 6-8 WEEKS
+
+    Establish the baseline, binding constraint and viable options.'
+  text_font: Aptos
+  text_size: 16
+  text_color: '#174A7E'
+  text_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.72
+  top: 2.75
+  width: 5.8
+  height: 1.05
+  fill: '#E7F6F3'
+  line_color: '#1B998B'
+  text: '2  SHADOW MODE
+
+    Test recommendations and drafts with no live consequences.'
+  text_font: Aptos
+  text_size: 16
+  text_color: '#0B625B'
+  text_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.72
+  top: 4.05
+  width: 5.8
+  height: 1.05
+  fill: '#FFF8E6'
+  line_color: '#F2C14E'
+  text: '3  CONTROLLED PILOT | 6-9 MONTHS
+
+    Operate one bounded delivery cell under explicit controls.'
+  text_font: Aptos
+  text_size: 16
+  text_color: '#5F4B00'
+  text_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.72
+  top: 5.35
+  width: 5.8
+  height: 1.05
+  fill: '#FCE8E6'
+  line_color: '#C44536'
+  text: '4  TRANCHE DECISIONS
+
+    Repeat or scale only where evidence supports it.'
+  text_font: Aptos
+  text_size: 16
+  text_color: '#7A271A'
+  text_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 7.03
+  top: 1.45
+  width: 5.58
+  height: 4.95
+  fill: '#102A43'
+  line_color: '#102A43'
+  text: 'EVERY GATE CAN DECIDE
+
+
+    PROCEED
+
+
+    REDESIGN
+
+
+    SELECT A NON-AGENTIC OPTION
+
+
+    PAUSE OR STOP'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#FFFFFF'
+  text_bold: true
+- type: textbox
+  left: 7.4
+  top: 6.58
+  width: 4.85
+  height: 0.28
+  text: Sequence of decisions, not a commitment to scale
+  font: Aptos
+  font_size: 11
+  font_color: '#627D98'
+  alignment: center
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+speaker_notes: 'This is not a phased commitment to scale. Each stage releases only
+  the
+
+  authority and expenditure justified by evidence. A successful readiness
+
+  stage may recommend conventional process redesign or rules-based workflow.
+
+  The proposed pilot size and duration remain subject to readiness validation.
+
+  '

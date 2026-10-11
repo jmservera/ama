@@ -39,7 +39,7 @@ resource project 'Microsoft.CognitiveServices/accounts/projects@2025-06-01' = {
   identity: { type: 'SystemAssigned' }
   properties: {
     displayName: projectName
-    description: 'Proper Warm retrofit demonstrator bounded agents'
+    description: 'Zava Forward retrofit demonstrator bounded agents'
   }
 }
 

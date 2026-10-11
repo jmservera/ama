@@ -32,7 +32,7 @@ jobs:
           else
             echo "present=false" >> "$GITHUB_OUTPUT"
             {
-              echo "## Proper Warm prototype validation"
+              echo "## Zava Forward prototype validation"
               echo
               echo "No \`prototype/\` directory exists on this commit. No prototype checks ran; this is not prototype test evidence."
             } >> "$GITHUB_STEP_SUMMARY"
@@ -50,7 +50,7 @@ jobs:
 
       - name: Compile Python modules
         if: steps.detect.outputs.present == 'true'
-        run: python -m compileall -q prototype/properwarm
+        run: python -m compileall -q prototype/zavaforward
 
       - name: Run standard-library unit tests
         if: steps.detect.outputs.present == 'true'
@@ -60,7 +60,7 @@ jobs:
         if: steps.detect.outputs.present == 'true'
         env:
           PYTHONPATH: prototype
-          EVALUATION_REPORT: ${{ runner.temp }}/proper-warm-offline-agent-evaluation.json
+          EVALUATION_REPORT: ${{ runner.temp }}/zava-forward-offline-agent-evaluation.json
         run: |
           python prototype/scripts/evaluate_agent.py --out "$EVALUATION_REPORT"
           python -c "import json, os; report=json.load(open(os.environ['EVALUATION_REPORT'], encoding='utf-8')); assert report['execution'] == 'offline-contract-only', report['execution']; assert report['contract_pass_rate'] == 1, report['contract_pass_rate']; print(f\"Offline contract evaluation: {report['cases']} cases, pass rate {report['contract_pass_rate']:.0%}; no live inference.\")"
@@ -74,7 +74,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Proper Warm prototype validation"
+            echo "## Zava Forward prototype validation"
             echo
             echo "Python compilation, standard-library unittests, the offline contract-double evaluation, and JavaScript syntax checks completed."
             echo

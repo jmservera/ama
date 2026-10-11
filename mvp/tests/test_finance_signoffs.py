@@ -6,9 +6,9 @@ import unittest
 from pathlib import Path
 
 import test_mvp
-from properwarm_mvp import controls
-from properwarm_mvp.sqlstore import SqlStore
-from properwarm_mvp.store import GateError, Store
+from zavaforward_mvp import controls
+from zavaforward_mvp.sqlstore import SqlStore
+from zavaforward_mvp.store import GateError, Store
 
 
 def person(code, role, **kw):
@@ -47,11 +47,11 @@ class Flows:
         return [e["action"] for e in self.store.audit_entries()]
 
     def fin(self, user, action, **kw):
-        self.store.finance_action(user, "PW-1", dict(action=action, **kw))
+        self.store.finance_action(user, "ZF-1", dict(action=action, **kw))
 
     def invoice(self, **kw):
         self.fin(self.geo, "invoice_receive", supplier="Test Ltd", work_order="WO-1", ref="INV-100", lines=lines(), **kw)
-        return self.store.detail("PW-1")["finance"]["invoices"][-1]["id"]
+        return self.store.detail("ZF-1")["finance"]["invoices"][-1]["id"]
 
     def funded(self, budget=10000, commit=5000):
         self.fin(self.geo, "budget_propose", amount=budget)
@@ -75,7 +75,7 @@ class Flows:
         with self.assertRaises(ValueError):
             self.fin(self.geo, "commit_raise", supplier="Test Ltd", contract="C-1", work_order="WO-2", measure="x", amount=4001, quantity=1)
         self.fin(self.pm2, "commit_approve", id="COM-1")
-        f = self.store.detail("PW-1")["finance"]
+        f = self.store.detail("ZF-1")["finance"]
         self.assertEqual((f["budget"]["status"], f["commitments"][0]["status"], f["commitments"][0]["approved_by"]), ("Approved", "Approved", self.pm2["name"]))
         self.assertIn("finance_budget_approve", self.actions())
 
@@ -83,7 +83,7 @@ class Flows:
         self.funded()
         inv = self.invoice()
         self.fin(self.geo, "invoice_match", id=inv)
-        i = self.store.detail("PW-1")["finance"]["invoices"][0]
+        i = self.store.detail("ZF-1")["finance"]["invoices"][0]
         self.assertEqual((i["status"], i["exceptions"], i["commitment"]), ("Matched", [], "COM-1"))
         with self.assertRaises(PermissionError):
             self.fin(self.geo, "disposition", id=inv, decision="Accept for payment", note="ok")
@@ -94,7 +94,7 @@ class Flows:
             self.fin(self.pm2, "payment_status", id=inv, status="Paid outside this system")
         self.fin(self.geo, "payment_status", id=inv, status="Awaiting payment run")
         self.fin(self.geo, "payment_status", id=inv, status="Paid outside this system")
-        i = self.store.detail("PW-1")["finance"]["invoices"][0]
+        i = self.store.detail("ZF-1")["finance"]["invoices"][0]
         self.assertEqual(i["payment_status"], "Paid outside this system")
         self.assertIn("never makes", i["payment_note"])
         self.assertFalse([a for a in self.actions() if "execute" in a or a == "pay"])
@@ -103,14 +103,14 @@ class Flows:
         self.fin(self.geo, "invoice_receive", supplier="Test Ltd", work_order="WO-1", ref="INV-1",
                  lines=lines(qty=12, amount=7000, ms="") + lines(measure="Solar panels"))
         self.fin(self.geo, "invoice_match", id="INV-1")
-        i = self.store.detail("PW-1")["finance"]["invoices"][0]
+        i = self.store.detail("ZF-1")["finance"]["invoices"][0]
         codes = {e["code"] for e in i["exceptions"]}
         self.assertTrue({"no_commitment", "no_budget", "no_milestone"} <= codes)
         self.assertEqual(i["status"], "Exception, with Finance")
         self.assertEqual([r["invoice"] for r in self.store.finance_queue(self.pm1)], ["INV-1"])
         self.funded(commit=5000)
         self.fin(self.geo, "invoice_match", id="INV-1")
-        i = self.store.detail("PW-1")["finance"]["invoices"][0]
+        i = self.store.detail("ZF-1")["finance"]["invoices"][0]
         codes = {(e["code"], e["line"]) for e in i["exceptions"]}
         self.assertIn(("quantity", 0), codes)
         self.assertIn(("not_in_scope", 1), codes)
@@ -124,7 +124,7 @@ class Flows:
         self.fin(self.geo, "invoice_match", id=a)
         b = self.invoice()
         self.fin(self.geo, "invoice_match", id=b)
-        self.assertIn("duplicate", {e["code"] for e in self.store.detail("PW-1")["finance"]["invoices"][1]["exceptions"]})
+        self.assertIn("duplicate", {e["code"] for e in self.store.detail("ZF-1")["finance"]["invoices"][1]["exceptions"]})
         self.fin(self.geo, "hold_place", id=a, reason="Query quantity")
         with self.assertRaises(PermissionError):
             self.fin(self.geo, "hold_release", id=a, note="done")
@@ -132,22 +132,22 @@ class Flows:
             self.fin(self.pm1, "disposition", id=a, decision="Accept for payment", note="x")
         self.fin(self.pm1, "hold_release", id=a, note="Resolved")
         self.fin(self.pm1, "disposition", id=a, decision="Accept for payment", note="ok")
-        self.assertEqual(self.store.detail("PW-1")["finance"]["invoices"][0]["disposition_by"], self.pm1["name"])
+        self.assertEqual(self.store.detail("ZF-1")["finance"]["invoices"][0]["disposition_by"], self.pm1["name"])
 
     def test_inputs_and_bulk_are_refused(self):
         for body in (dict(action="budget_propose", amount="abc"), dict(action="budget_propose", amount=-5), dict(action="nope"),
                      dict(action="invoice_receive", supplier="x", work_order="w", ref="r", lines=[])):
             with self.assertRaises(ValueError):
-                self.store.finance_action(self.geo, "PW-1", body)
+                self.store.finance_action(self.geo, "ZF-1", body)
         for fn, body in ((self.store.finance_action, dict(action="budget_approve")), (self.store.grant_action, dict(action="grant_approve")),
                          (self.store.technical_action, dict(action="signoff_give")), (self.store.resident_action, dict(action="service_close"))):
             for key in controls.BULK_KEYS:
                 with self.assertRaises(PermissionError):
-                    fn(self.pm1, "PW-1", dict(body, **{key: ["PW-1", "PW-2"]}))
+                    fn(self.pm1, "ZF-1", dict(body, **{key: ["ZF-1", "ZF-2"]}))
 
     # FR-019
     def grant(self, user, action, **kw):
-        self.store.grant_action(user, "PW-1", dict(action=action, **kw))
+        self.store.grant_action(user, "ZF-1", dict(action=action, **kw))
 
     def test_grant_states_are_distinct_and_need_a_second_person(self):
         self.grant(self.geo, "grant_open", scheme="Warm Homes", source="Notice WH-1")
@@ -163,27 +163,27 @@ class Flows:
         for to, amount in path:
             self.grant(self.geo, "grant_propose", id="GR-1", to=to, source=f"Evidence for {to}", amount=amount)
             self.grant(self.pm2, "grant_approve", id="GR-1")
-        g = self.store.detail("PW-1")["grants"][0]
+        g = self.store.detail("ZF-1")["grants"][0]
         self.assertEqual(g["state"], "Cash received")
         self.assertEqual(g["history"][-1]["amount"], 5000)
         self.assertTrue(all(h["source"] and h["approved_by"] and h["proposed_by"] for h in g["history"]))
-        self.assertNotIn("finance", self.store.detail("PW-1"))
+        self.assertNotIn("finance", self.store.detail("ZF-1"))
 
     def test_grants_never_touch_invoices_and_show_in_funding_list(self):
         self.funded()
         inv = self.invoice()
-        before = json.dumps(self.store.detail("PW-1")["finance"])
+        before = json.dumps(self.store.detail("ZF-1")["finance"])
         self.grant(self.geo, "grant_open", scheme="Warm Homes", source="WH-1")
-        self.assertEqual(json.dumps(self.store.detail("PW-1")["finance"]), before)
-        row = next(r for r in self.store.funding_list(self.geo) if r["id"] == "PW-1")
+        self.assertEqual(json.dumps(self.store.detail("ZF-1")["finance"]), before)
+        row = next(r for r in self.store.funding_list(self.geo) if r["id"] == "ZF-1")
         self.assertIn("Not recorded", row["grants"])
         self.grant(self.geo, "grant_withdraw", id="GR-1")
-        self.assertIsNone(self.store.detail("PW-1")["grants"][0]["pending"])
+        self.assertIsNone(self.store.detail("ZF-1")["grants"][0]["pending"])
         self.assertTrue(inv)
 
     # FR-013
     def tech(self, user, action, **kw):
-        self.store.technical_action(user, "PW-1", dict(action=action, **kw))
+        self.store.technical_action(user, "ZF-1", dict(action=action, **kw))
 
     def sign_all(self):
         self.tech(U["RC-1"], "design_submit", note="Loft and wall")
@@ -192,12 +192,12 @@ class Flows:
         self.tech(U["BSL-1"], "signoff_give", type="building")
 
     def test_technical_stage_lists_missing_items_for_competent_roles(self):
-        self.assertEqual(self.store.detail("PW-1")["technical_missing"], [])
+        self.assertEqual(self.store.detail("ZF-1")["technical_missing"], [])
         self.tech(U["RC-1"], "design_submit", note="Loft and wall")
-        missing = self.store.detail("PW-1")["technical_missing"]
+        missing = self.store.detail("ZF-1")["technical_missing"]
         self.assertIn("Quality Inspector", [m["assigned_to"] for m in missing])
         self.assertIn("Grants and Evidence Officer", [m["assigned_to"] for m in missing])
-        self.assertTrue([w for w in self.store.detail("PW-1")["gate"] if w.startswith("Technical stage")])
+        self.assertTrue([w for w in self.store.detail("ZF-1")["gate"] if w.startswith("Technical stage")])
         with self.assertRaises(PermissionError):
             self.tech(U["RLO-1"], "signoff_give", type="assessment")
         with self.assertRaises(PermissionError):
@@ -213,33 +213,33 @@ class Flows:
     def test_design_change_invalidates_only_affected_signoffs(self):
         self.sign_all()
         self.tech(U["RC-1"], "design_change", note="Wall type changed", affects=["design", "building"])
-        s = self.store.detail("PW-1")["technical"]
+        s = self.store.detail("ZF-1")["technical"]
         self.assertEqual(s["design_version"], 2)
         self.assertEqual({k: v["status"] for k, v in s["signoffs"].items()},
                          {"assessment": "Signed off", "design": "Needs reassessment", "building": "Needs reassessment"})
         with self.assertRaises(ValueError):
             self.tech(U["RC-1"], "design_change", note="x", affects=["assessment"])
         self.tech(U["RC-2"], "signoff_give", type="design")
-        self.assertEqual(self.store.detail("PW-1")["technical"]["signoffs"]["design"]["history"][-1]["status"], "Re-approved")
+        self.assertEqual(self.store.detail("ZF-1")["technical"]["signoffs"]["design"]["history"][-1]["status"], "Re-approved")
 
     def test_return_and_reapproval(self):
         self.sign_all()
         self.tech(U["BSL-1"], "signoff_return", type="building", reason="Ventilation unclear")
-        self.assertEqual(self.store.detail("PW-1")["technical"]["signoffs"]["building"]["status"], "Returned")
+        self.assertEqual(self.store.detail("ZF-1")["technical"]["signoffs"]["building"]["status"], "Returned")
         with self.assertRaises(ValueError):
             self.tech(U["BSL-1"], "signoff_return", type="building", reason="")
         self.tech(U["BSL-1"], "signoff_give", type="building", note="Fixed")
-        self.assertEqual(self.store.detail("PW-1")["technical"]["signoffs"]["building"]["status"], "Signed off")
+        self.assertEqual(self.store.detail("ZF-1")["technical"]["signoffs"]["building"]["status"], "Signed off")
 
     # FR-014
     def res(self, user, action, **kw):
-        self.store.resident_action(user, "PW-1", dict(action=action, **kw))
+        self.store.resident_action(user, "ZF-1", dict(action=action, **kw))
 
     def decisions(self):
-        return {d["measure"]: d for d in self.store.detail("PW-1")["measure_decisions"]}
+        return {d["measure"]: d for d in self.store.detail("ZF-1")["measure_decisions"]}
 
     def test_decisions_are_never_inferred_and_are_per_measure(self):
-        self.store.log_call(U["RLO-1"], "PW-1", "Spoke, happy to go ahead", "")
+        self.store.log_call(U["RLO-1"], "ZF-1", "Spoke, happy to go ahead", "")
         d = self.decisions()
         self.assertEqual({m: x["status"] for m, x in d.items()}, {"Loft insulation": "Not recorded", "Cavity wall": "Not recorded"})
         self.res(U["RLO-1"], "decision_record", measure="Loft insulation", status="Accepted", answered_by="The resident")
@@ -259,7 +259,7 @@ class Flows:
                 self.res(U["RLO-1"], "decision_record", **kw)
         with self.assertRaises(PermissionError):
             self.res(U["QI-1"], "decision_record", measure="Loft insulation", status="Accepted", answered_by="The resident")
-        self.assertEqual(self.store.detail("PW-1")["decision"]["status"], "Waiting")
+        self.assertEqual(self.store.detail("ZF-1")["decision"]["status"], "Waiting")
 
     def test_complaint_route_has_distinct_owners_and_closure(self):
         base = dict(summary="Mess left", desired_outcome="Clean and apology", next_update="2099-01-01")
@@ -272,7 +272,7 @@ class Flows:
                      accessibility=["Her diagnosis"], **base)
         self.res(U["RLO-1"], "service_open", route="Complaint", service_owner="rlo-1@example.test", redress_owner="pm-1@example.test",
                  accessibility=["Large print"], **base)
-        r = self.store.detail("PW-1")["service_requests"][0]
+        r = self.store.detail("ZF-1")["service_requests"][0]
         self.assertEqual((r["route"], r["redress_owner"], r["accessibility"], r["representative_ref"]),
                          ("Complaint", self.pm1["name"], ["Large print"], "Unknown"))
         with self.assertRaises(ValueError):
@@ -281,16 +281,16 @@ class Flows:
         with self.assertRaises(PermissionError):
             self.res(U["RLO-1"], "service_close", id="SR-1", note="done")
         self.res(self.pm1, "service_close", id="SR-1", note="Apology sent")
-        self.assertEqual(self.store.detail("PW-1")["service_requests"][0]["status"], "Closed")
-        self.assertEqual(self.store.detail("PW-1")["measure_decisions"][0]["status"], "Not recorded")
+        self.assertEqual(self.store.detail("ZF-1")["service_requests"][0]["status"], "Closed")
+        self.assertEqual(self.store.detail("ZF-1")["measure_decisions"][0]["status"], "Not recorded")
 
     def test_contractor_and_other_roles_cannot_see_finance(self):
         self.funded()
         self.grant(self.geo, "grant_open", scheme="WH", source="n")
-        self.assertNotIn("finance", self.store.detail("PW-1", U["RLO-1"]))
-        self.assertNotIn("grants", self.store.detail("PW-1", U["QI-1"]))
-        self.assertIn("finance", self.store.detail("PW-1", self.pm1))
-        text = json.dumps(self.store.detail("PW-1", U["CON-1"]))
+        self.assertNotIn("finance", self.store.detail("ZF-1", U["RLO-1"]))
+        self.assertNotIn("grants", self.store.detail("ZF-1", U["QI-1"]))
+        self.assertIn("finance", self.store.detail("ZF-1", self.pm1))
+        text = json.dumps(self.store.detail("ZF-1", U["CON-1"]))
         for w in ("finance", "grants", "budget", "service_requests"):
             self.assertNotIn(w, text)
         with self.assertRaises(PermissionError):
@@ -307,21 +307,21 @@ class Flows:
 
 class JsonFlows(Flows, unittest.TestCase):
     def make(self, data, tmp):
-        p = Path(tmp) / "properwarm.json"
+        p = Path(tmp) / "zavaforward.json"
         p.write_text(json.dumps(data))
         return Store(str(p))
 
 
 class SqlFlows(Flows, unittest.TestCase):
     def make(self, data, tmp):
-        p = Path(tmp) / "properwarm.json"
+        p = Path(tmp) / "zavaforward.json"
         p.write_text(json.dumps(data))
         return SqlStore(str(p), os.path.join(tmp, "pw.sqlite"))
 
     def test_survives_a_restart(self):
         self.funded()
         self.tech(U["RC-1"], "design_submit", note="n")
-        again = SqlStore(str(Path(self.tmp.name) / "properwarm.json"), os.path.join(self.tmp.name, "pw.sqlite"))
-        d = again.detail("PW-1")
+        again = SqlStore(str(Path(self.tmp.name) / "zavaforward.json"), os.path.join(self.tmp.name, "pw.sqlite"))
+        d = again.detail("ZF-1")
         self.assertEqual(d["finance"]["budget"]["status"], "Approved")
         self.assertEqual(d["technical"]["design_version"], 1)

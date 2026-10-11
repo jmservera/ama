@@ -42,7 +42,7 @@ conclusions, not historical result rows.
 | Generic cognitive-services host failed; the Foundry services host with `/providers/microsoft/v1/systemone` succeeded | Endpoint/audience/auth conformance was an integration problem, not model infeasibility. [Official API guide](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision), retrieved 2026-10-11, corroborates the provider-specific API |
 | Provider optional confidence validates separately from option probabilities | Validate question/answer IDs, types, allowed keys, finite normalized probability vectors and optional fields; never substitute confidence for task probability/runner-up thresholds |
 | Actual Azure SQL/Blob deployment retains 60,000 generated stock rows and 980 programme cases | Reuse the continuing application/data lineage. Local fixtures or unrelated model calls are not updated-build acceptance |
-| Later work-order controls are source-tested, while recorded deployment is revision `ca-properwarm-mvp--0000018` | Match source, immutable image, config and deployed revision to each claim. Full permissions/workflow/performance/recovery/human acceptance remains unproved |
+| Later work-order controls are source-tested, while recorded deployment is revision `ca-zavaforward-mvp--0000018` | Match source, immutable image, config and deployed revision to each claim. Full permissions/workflow/performance/recovery/human acceptance remains unproved |
 | Deployed evidence-support adapter is binary | Binary labels cannot establish supported/contradicted/insufficient macro-F1. Use a separately frozen three-option shadow task or Not evaluated |
 | Owner removed the prior inference cap for this rebuild | Preserve scope of approval, source/task/input bounds, SQL upper-liability reservations and usage telemetry; no blanket future spend authorization |
 
@@ -64,7 +64,7 @@ scorer cannot replace free-form generation or accountable reviewers.
 
 Reconcile its 120 grouped families, 30 tuning/30 calibration/60 held-out,
 720 dispositions, human adjudicators and counterbalanced full-pack effort
-with [PRD experiment intake](../prds/proper-warm-retrofit-programme-demonstrator.md#parallel-decision-model-experiment-intake).
+with [PRD experiment intake](../prds/zava-forward-retrofit-programme-demonstrator.md#parallel-decision-model-experiment-intake).
 Require version/hash-bound source, split, task, model, prompt/question,
 schema and frozen thresholds; exclusions/denominators and failures;
 quality/critical errors, coverage/calibration, complete paired human effort,
@@ -86,14 +86,14 @@ extraction/filling, retrofit subsidy applications and other AI-assisted
 decisions. The recommendation is an optional scoring capability inside the
 existing bounded task service, not another autonomous agent or replacement
 workflow engine. The historical PRD v0.11.0 amendment introduced DD-007/008
-and FR-036 to FR-044; the [current PRD candidate](../prds/proper-warm-retrofit-programme-demonstrator.md)
+and FR-036 to FR-044; the [current PRD candidate](../prds/zava-forward-retrofit-programme-demonstrator.md)
 retains conditional task placement with mandatory application-level AI, not a production
 selection, deployment result or approved funding process.
 
 ### Current Product Evidence and Limits
 
 All sources in this table were checked on 2026-10-10. They are vendor product
-documentation, not regulatory authority or Proper North Homes performance
+documentation, not regulatory authority or Zava North Homes performance
 evidence. The findings below supersede incompatible automation, SDK or
 ranking suggestions in the retained 2026-09-24 research sections.
 

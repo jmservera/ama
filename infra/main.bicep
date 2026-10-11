@@ -3,7 +3,7 @@ targetScope = 'resourceGroup'
 @description('Short workload prefix, lower case, 3 to 10 characters.')
 @minLength(3)
 @maxLength(10)
-param workload string = 'warm'
+param workload string = 'forward'
 @allowed(['dev', 'test'])
 param environmentName string = 'dev'
 param location string = resourceGroup().location
@@ -77,7 +77,7 @@ var prefix = '${workload}-${environmentName}'
 var unique = take(uniqueString(resourceGroup().id, location, 'v2'), 5)
 var compact = replace(prefix, '-', '')
 var allTags = union(tags, {
-  workload: 'proper-warm-demonstrator'
+  workload: 'zava-forward-demonstrator'
   environment: environmentName
   dataClassification: 'constructed-non-identifying'
   purpose: 'non-production-demonstrator'
@@ -196,7 +196,7 @@ module foundry 'modules/foundry.bicep' = {
   params: {
     allowPublicNetworkAccess: publicAccess
     name: 'aif-${prefix}-${unique}'
-    projectName: 'proper-warm-agents'
+    projectName: 'zava-forward-agents'
     location: location
     tags: allTags
     workspaceId: monitoring.outputs.workspaceId

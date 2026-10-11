@@ -78,7 +78,7 @@ var authEnabled = !empty(entraClientId)
 
 var commonEnv = [
   { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsightsConnectionString }
-  { name: 'OTEL_SERVICE_NAMESPACE', value: 'proper-warm' }
+  { name: 'OTEL_SERVICE_NAMESPACE', value: 'zava-forward' }
 ]
 
 resource api 'Microsoft.App/containerApps@2025-07-01' = {
@@ -123,22 +123,22 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
             { name: 'ENTRA_TENANT_ID', value: tenant().tenantId }
             { name: 'ENTRA_CLIENT_ID', value: entraClientId }
             // Settings read by the MVP workbench image (mvp/README.md, Configuration).
-            { name: 'PW_TILE_URL', value: tileUrl }
-            { name: 'PW_TILE_ATTRIBUTION', value: tileAttribution }
-            { name: 'PW_STORE', value: 'mssql' }
-            { name: 'PW_SQL_SERVER', value: sqlServerFqdn }
-            { name: 'PW_SQL_DATABASE', value: sqlDatabaseName }
-            { name: 'PW_SQL_AUTH', value: 'msi' }
-            { name: 'PW_SQL_CLIENT_ID', value: identityClientIds.api }
-            { name: 'PW_DOC_STORE', value: 'azure-blob' }
-            { name: 'PW_BLOB_ACCOUNT_URL', value: blobEndpoint }
-            { name: 'PW_BLOB_CONTAINER', value: 'evidence' }
-            { name: 'PW_BLOB_CLIENT_ID', value: identityClientIds.api }
+            { name: 'ZF_TILE_URL', value: tileUrl }
+            { name: 'ZF_TILE_ATTRIBUTION', value: tileAttribution }
+            { name: 'ZF_STORE', value: 'mssql' }
+            { name: 'ZF_SQL_SERVER', value: sqlServerFqdn }
+            { name: 'ZF_SQL_DATABASE', value: sqlDatabaseName }
+            { name: 'ZF_SQL_AUTH', value: 'msi' }
+            { name: 'ZF_SQL_CLIENT_ID', value: identityClientIds.api }
+            { name: 'ZF_DOC_STORE', value: 'azure-blob' }
+            { name: 'ZF_BLOB_ACCOUNT_URL', value: blobEndpoint }
+            { name: 'ZF_BLOB_CONTAINER', value: 'evidence' }
+            { name: 'ZF_BLOB_CLIENT_ID', value: identityClientIds.api }
           ], authEnabled ? [
-            { name: 'PW_AUTH', value: 'trusted-proxy' }
-            { name: 'PW_TRUSTED_PROXY', value: '1' }
-            { name: 'PW_ENTRA_TENANT_ID', value: tenant().tenantId }
-            { name: 'PW_ENV', value: 'production' }
+            { name: 'ZF_AUTH', value: 'trusted-proxy' }
+            { name: 'ZF_TRUSTED_PROXY', value: '1' }
+            { name: 'ZF_ENTRA_TENANT_ID', value: tenant().tenantId }
+            { name: 'ZF_ENV', value: 'production' }
           ] : [])
           probes: [
             { type: 'Liveness', httpGet: { path: '/healthz', port: 8088 } }

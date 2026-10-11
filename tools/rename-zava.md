@@ -110,6 +110,16 @@ soft-deleted resource constraints and external identity/M365 dependencies;
 confirm that the inventory is the intended destructive scope. The local script
 intentionally has no destructive Azure flag.
 
+The owner authorised deletion of resources inside `ama` and accepted downtime
+on 2026-10-11. That does not authorise deleting the resource group itself or
+shared tenant/M365 registrations. The current deployment identity and M365 CLI
+session both return `Insufficient privileges` when reading the existing API
+app registration. Resource-group access does not grant Microsoft Graph
+application-management access. Rebuild remains blocked until an authorised
+application owner or tenant administrator can provision the registration,
+roles, secret and new Container Apps callback URI. Do not disable authentication
+or substitute a shared password to work around this dependency.
+
 Use the renamed Bicep and existing provisioning tools rather than a second
 deployment implementation. Explicitly pass `workload=forward`, `uksouth`,
 the development profile, SQL Entra administrator, real application image,

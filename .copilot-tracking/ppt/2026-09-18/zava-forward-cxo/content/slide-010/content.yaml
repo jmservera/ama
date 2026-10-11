@@ -1,0 +1,115 @@
+slide: 10
+title: The scenarios justify readiness, not an investment commitment
+section: Planning Scenario
+layout: content
+background:
+  fill: '#F5F7FA'
+elements:
+- type: shape
+  shape: rectangle
+  left: 0
+  top: 0
+  width: 13.333
+  height: 0.1
+  fill: '#F2C14E'
+  line_color: '#F2C14E'
+- type: textbox
+  left: 0.68
+  top: 0.42
+  width: 11.9
+  height: 0.7
+  text: The scenarios justify readiness, not an investment commitment
+  font: Aptos Display
+  font_size: 29
+  font_color: '#102A43'
+  font_bold: true
+- type: table
+  left: 0.72
+  top: 1.45
+  width: 11.9
+  height: 4.65
+  columns:
+  - width: 5.4
+  - width: 2.0
+  - width: 4.5
+  rows:
+  - cells:
+    - text: Illustrative scenario
+      font_bold: true
+      fill: '#102A43'
+      font_color: '#FFFFFF'
+    - text: Result
+      font_bold: true
+      fill: '#102A43'
+      font_color: '#FFFFFF'
+    - text: Evidence status
+      font_bold: true
+      fill: '#102A43'
+      font_color: '#FFFFFF'
+  - cells:
+    - text: 26% of 60,000 homes below EPC C
+    - text: 15,600
+      font_bold: true
+    - text: Sector-derived planning cohort
+  - cells:
+    - text: 15,600 homes over four years
+    - text: 3,900 / year
+      font_bold: true
+    - text: Derived accepted-completion trajectory
+  - cells:
+    - text: 15,600 x GBP 20,000
+    - text: GBP 312m
+      font_bold: true
+    - text: Planning assumption, not a budget
+  - cells:
+    - text: GBP 7,500 ordinary grant cap x 15,600
+    - text: GBP 117m
+      font_bold: true
+    - text: Maximum-ceiling illustration, not an award
+  - cells:
+    - text: GBP 40m at the cap
+    - text: ~5,333 homes
+      font_bold: true
+    - text: Rounded scenario, not secured funding
+  first_row: true
+  horz_banding: true
+- type: shape
+  shape: rounded_rectangle
+  left: 3.55
+  top: 6.25
+  width: 6.23
+  height: 0.55
+  fill: '#FFF8E6'
+  line_color: '#F2C14E'
+  text: ILLUSTRATIVE - NOT A COMPANY FORECAST
+  text_font: Aptos
+  text_size: 15
+  text_color: '#5F4B00'
+  text_bold: true
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+speaker_notes: 'Use the numbers to make one point: even the scenario implies material
+
+  provider funding and delivery exposure. Do not present the 74% EPC C sector
+
+  estimate as the Zava North Homes baseline. Finance must validate eligible
+
+  homes, award status, cost inclusions, match funding, peak cash, covenant
+
+  headroom and downside tolerances.
+
+  '

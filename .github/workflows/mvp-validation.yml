@@ -27,7 +27,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Compile
-        run: python -m compileall -q mvp/properwarm_mvp
+        run: python -m compileall -q mvp/zavaforward_mvp
       - name: Unit and API tests
         working-directory: mvp
         env:

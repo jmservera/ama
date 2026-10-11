@@ -11,16 +11,16 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 import test_mvp
-from properwarm_mvp import auth
-from properwarm_mvp.server import App, make_handler
-from properwarm_mvp.store import Store
+from zavaforward_mvp import auth
+from zavaforward_mvp.server import App, make_handler
+from zavaforward_mvp.store import Store
 
 TENANT = "11111111-2222-3333-4444-555555555555"
 OID_SAM = "aaaaaaaa-0000-0000-0000-000000000001"
-ENV = dict(PW_AUTH="trusted-proxy", PW_TRUSTED_PROXY="1", PW_ENTRA_TENANT_ID=TENANT)
+ENV = dict(ZF_AUTH="trusted-proxy", ZF_TRUSTED_PROXY="1", ZF_ENTRA_TENANT_ID=TENANT)
 
 
-def principal(roles=("ProperWarm.LiaisonOfficer",), oid=OID_SAM, tid=TENANT, typ="aad", email=None):
+def principal(roles=("ZavaForward.LiaisonOfficer",), oid=OID_SAM, tid=TENANT, typ="aad", email=None):
     claims = [dict(typ="roles", val=r) for r in roles]
     if oid:
         claims.append(dict(typ="http://schemas.microsoft.com/identity/claims/objectidentifier", val=oid))
@@ -38,7 +38,7 @@ class Base(unittest.TestCase):
         d["staff"][0]["oid"] = OID_SAM
         d["staff"].append(dict(code="CON-1", name="Kim Builder", email="kim@example.test", role="Contractor", contractor="Test Ltd",
                                oid="aaaaaaaa-0000-0000-0000-000000000009"))
-        p = Path(self.tmp.name) / "properwarm.json"
+        p = Path(self.tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(d))
         self.store = Store(str(p))
 
@@ -56,14 +56,14 @@ class TrustedProxyTests(Base):
     def test_valid_principal_maps_role_from_app_role(self):
         u = self.who(principal())
         self.assertEqual((u["code"], u["role"]), ("RLO-01", "Resident Liaison Officer"))
-        u = self.who(principal(roles=("ProperWarm.ProgrammeManager",)))
+        u = self.who(principal(roles=("ZavaForward.ProgrammeManager",)))
         self.assertEqual(u["role"], "Retrofit Programme Manager")
         self.assertEqual(u["code"], "RLO-01")
 
     def test_contractor_role_and_custom_map(self):
-        u = self.who(principal(roles=("ProperWarm.Contractor",), oid="aaaaaaaa-0000-0000-0000-000000000009"))
+        u = self.who(principal(roles=("ZavaForward.Contractor",), oid="aaaaaaaa-0000-0000-0000-000000000009"))
         self.assertEqual((u["role"], u["contractor"]), ("Contractor", "Test Ltd"))
-        u = self.who(principal(roles=("Warm.Coord",)), PW_ROLE_MAP=json.dumps({"Warm.Coord": "Retrofit Coordinator"}))
+        u = self.who(principal(roles=("Warm.Coord",)), ZF_ROLE_MAP=json.dumps({"Warm.Coord": "Retrofit Coordinator"}))
         self.assertEqual(u["role"], "Retrofit Coordinator")
 
     def test_fails_closed(self):
@@ -77,7 +77,7 @@ class TrustedProxyTests(Base):
         self.assertIsNone(self.who(principal(tid=None)))
         self.assertIsNone(self.who(principal(roles=())))
         self.assertIsNone(self.who(principal(roles=("Unmapped.Role",))))
-        self.assertIsNone(self.who(principal(roles=("ProperWarm.Contractor", "ProperWarm.ProgrammeManager"))))
+        self.assertIsNone(self.who(principal(roles=("ZavaForward.Contractor", "ZavaForward.ProgrammeManager"))))
         self.assertIsNone(self.who(principal(oid="not-a-provisioned-person")))
         self.assertIsNone(self.who(principal(oid=None)))
         self.assertIsNone(self.who("A" * 20000))
@@ -85,7 +85,7 @@ class TrustedProxyTests(Base):
     def test_email_match_only_when_enabled(self):
         h = principal(oid="unknown-oid", email="sam@example.test")
         self.assertIsNone(self.who(h))
-        self.assertEqual(self.who(h, PW_AUTH_EMAIL_FALLBACK="1")["code"], "RLO-01")
+        self.assertEqual(self.who(h, ZF_AUTH_EMAIL_FALLBACK="1")["code"], "RLO-01")
 
     def test_role_comes_from_token_not_staff_file(self):
         self.store.staff["sam@example.test"]["role"] = "Retrofit Programme Manager"
@@ -93,15 +93,15 @@ class TrustedProxyTests(Base):
 
     def test_refuses_to_start_without_tenant_or_confirmation(self):
         with self.assertRaises(SystemExit):
-            auth.TrustedProxyProvider(self.store, dict(ENV, PW_ENTRA_TENANT_ID=""))
+            auth.TrustedProxyProvider(self.store, dict(ENV, ZF_ENTRA_TENANT_ID=""))
         with self.assertRaises(SystemExit):
-            auth.TrustedProxyProvider(self.store, dict(ENV, PW_TRUSTED_PROXY=""))
+            auth.TrustedProxyProvider(self.store, dict(ENV, ZF_TRUSTED_PROXY=""))
 
     def test_production_refuses_password_provider(self):
         with self.assertRaises(SystemExit):
-            auth.make_provider(self.store, "x", dict(PW_ENV="production"))
+            auth.make_provider(self.store, "x", dict(ZF_ENV="production"))
         self.assertEqual(auth.make_provider(self.store, "x", {}).name, "password")
-        self.assertEqual(auth.make_provider(self.store, "x", dict(ENV, PW_ENV="production")).name, "trusted-proxy")
+        self.assertEqual(auth.make_provider(self.store, "x", dict(ENV, ZF_ENV="production")).name, "trusted-proxy")
 
 
 class ProxyHttpTests(Base):
@@ -128,20 +128,20 @@ class ProxyHttpTests(Base):
     def test_no_principal_is_401_and_password_login_is_gone(self):
         self.assertEqual(self.call("/api/me")[0], 401)
         self.assertEqual(self.call("/api/login", {}, {"email": "sam@example.test", "password": "x"})[0], 404)
-        self.assertEqual(self.call("/api/cases", {"Cookie": "pw_session=anything"})[0], 401)
+        self.assertEqual(self.call("/api/cases", {"Cookie": "zf_session=anything"})[0], 401)
 
     def test_principal_gives_role_and_projection(self):
         code, me = self.call("/api/me", {"X-MS-CLIENT-PRINCIPAL": principal()})
         self.assertEqual((code, me["user"]["role"]), (200, "Resident Liaison Officer"))
-        con = {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ProperWarm.Contractor",), oid="aaaaaaaa-0000-0000-0000-000000000009")}
+        con = {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Contractor",), oid="aaaaaaaa-0000-0000-0000-000000000009")}
         self.assertEqual(self.call("/api/stats", con)[0], 403)
         self.assertEqual(self.call("/api/cases", con)[0], 200)
 
     def test_post_needs_csrf_header_and_logout_redirects(self):
         h = {"X-MS-CLIENT-PRINCIPAL": principal()}
-        self.assertEqual(self.call("/api/cases/PW-1/call", h, {"outcome": "Spoke"})[0], 403)
-        h["X-PW-CSRF"] = "1"
-        self.assertEqual(self.call("/api/cases/PW-1/call", h, {"outcome": "Spoke"})[0], 200)
+        self.assertEqual(self.call("/api/cases/ZF-1/call", h, {"outcome": "Spoke"})[0], 403)
+        h["X-ZF-CSRF"] = "1"
+        self.assertEqual(self.call("/api/cases/ZF-1/call", h, {"outcome": "Spoke"})[0], 200)
         self.assertEqual(self.call("/api/logout", h, {})[1]["redirect"], "/.auth/logout")
 
 
@@ -152,40 +152,40 @@ class PasswordProviderTests(Base):
         self.assertIsNone(a.login("sam@example.test", "wrong"))
         # a second process with the same key accepts the cookie: no per-process session table
         b = auth.PasswordProvider(self.store, "pw", key="k1")
-        self.assertEqual(b.authenticate({"Cookie": f"pw_session={tok}"})["code"], "RLO-01")
-        self.assertIsNone(auth.PasswordProvider(self.store, "pw", key="other").authenticate({"Cookie": f"pw_session={tok}"}))
-        self.assertIsNone(b.authenticate({"Cookie": f"pw_session={tok[:-2]}xx"}))
+        self.assertEqual(b.authenticate({"Cookie": f"zf_session={tok}"})["code"], "RLO-01")
+        self.assertIsNone(auth.PasswordProvider(self.store, "pw", key="other").authenticate({"Cookie": f"zf_session={tok}"}))
+        self.assertIsNone(b.authenticate({"Cookie": f"zf_session={tok[:-2]}xx"}))
         short = auth.PasswordProvider(self.store, "pw", key="k1", ttl=-1)
-        self.assertIsNone(b.authenticate({"Cookie": "pw_session=" + short.login("sam@example.test", "pw")}))
+        self.assertIsNone(b.authenticate({"Cookie": "zf_session=" + short.login("sam@example.test", "pw")}))
         self.assertIsNone(b.authenticate({}))
 
 
 class TileConfigTests(Base):
     def test_default_dev_uses_osm_and_csp_allows_only_it(self):
-        from properwarm_mvp.server import tile_config
+        from zavaforward_mvp.server import tile_config
         t = tile_config({})
         self.assertIn("tile.openstreetmap.org", t["url"])
 
     def test_production_without_url_has_no_tiles(self):
-        from properwarm_mvp.server import tile_config
-        t = tile_config({"PW_ENV": "production"})
+        from zavaforward_mvp.server import tile_config
+        t = tile_config({"ZF_ENV": "production"})
         self.assertEqual((t["url"], t["host"]), (None, None))
 
     def test_custom_provider_and_validation(self):
-        from properwarm_mvp.server import tile_config
-        t = tile_config({"PW_TILE_URL": "https://{s}.tiles.example.org/{z}/{x}/{y}.png", "PW_TILE_ATTRIBUTION": "Example"})
+        from zavaforward_mvp.server import tile_config
+        t = tile_config({"ZF_TILE_URL": "https://{s}.tiles.example.org/{z}/{x}/{y}.png", "ZF_TILE_ATTRIBUTION": "Example"})
         self.assertEqual(t["host"], "https://a.tiles.example.org")
         with self.assertRaises(SystemExit):
-            tile_config({"PW_TILE_URL": "http://insecure.example.org/{z}/{x}/{y}.png"})
+            tile_config({"ZF_TILE_URL": "http://insecure.example.org/{z}/{x}/{y}.png"})
 
     def test_csp_header_and_me_payload_follow_config(self):
-        import properwarm_mvp.server as srv
-        old = os.environ.get("PW_TILE_URL"), os.environ.get("PW_ENV")
-        os.environ["PW_TILE_URL"] = "https://tiles.example.org/{z}/{x}/{y}.png"
+        import zavaforward_mvp.server as srv
+        old = os.environ.get("ZF_TILE_URL"), os.environ.get("ZF_ENV")
+        os.environ["ZF_TILE_URL"] = "https://tiles.example.org/{z}/{x}/{y}.png"
         try:
             app = App(self.store, "pw")
         finally:
-            for k, v in zip(("PW_TILE_URL", "PW_ENV"), old):
+            for k, v in zip(("ZF_TILE_URL", "ZF_ENV"), old):
                 os.environ.pop(k, None) if v is None else os.environ.__setitem__(k, v)
         httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
@@ -196,7 +196,7 @@ class TileConfigTests(Base):
             self.assertIn("img-src 'self' data: https://tiles.example.org;", csp)
             self.assertNotIn("openstreetmap", csp)
             tok = app.provider.login("sam@example.test", "pw")
-            req = urllib.request.Request(base + "/api/me", headers={"Cookie": f"pw_session={tok}"})
+            req = urllib.request.Request(base + "/api/me", headers={"Cookie": f"zf_session={tok}"})
             with urllib.request.urlopen(req) as r:
                 self.assertEqual(json.loads(r.read())["map"]["tiles"], "https://tiles.example.org/{z}/{x}/{y}.png")
         finally:

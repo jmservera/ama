@@ -4,7 +4,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import unittest
 
-from properwarm.domain import Rejected, Store
+from zavaforward.domain import Rejected, Store
 
 
 def fresh():

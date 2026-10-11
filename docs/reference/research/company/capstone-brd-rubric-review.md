@@ -1,6 +1,6 @@
 ---
 title: Capstone Rubric Review of the Agentic Retrofit Programme BRD
-description: Evidence-based readiness assessment of the Proper Warm BRD against the FY27 AMA capstone criteria
+description: Evidence-based readiness assessment of the Zava Forward BRD against the FY27 AMA capstone criteria
 ms.date: 2026-09-30
 ms.topic: reference
 ---

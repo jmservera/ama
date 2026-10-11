@@ -18,7 +18,7 @@ task. Read relevant requirements, architecture, source code, data contracts,
 standards, research, and operational constraints before designing the
 workflow.
 
-When working on Proper Warm, read `docs/case_study_48_original.md`,
+When working on Zava Forward, read `docs/case_study_48_original.md`,
 `docs/case_study_48_addendum.md` and
 `docs/reference/research/company/company-profile-research.md`. Preserve the distinction between the
 original request, addendum proposals, sourced sector evidence, illustrative

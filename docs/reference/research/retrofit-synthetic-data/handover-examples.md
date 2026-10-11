@@ -1,6 +1,6 @@
 ---
 title: Example Operational Handovers
-description: Handovers between delivery roles, reconstructed from five synthetic records in the Proper Warm year-one evidence pack
+description: Handovers between delivery roles, reconstructed from five synthetic records in the Zava Forward year-one evidence pack
 ms.date: 2026-09-30
 ms.topic: reference
 ---

@@ -53,6 +53,9 @@ HISTORICAL = (
 URL = re.compile(r"https?://[^\s<>\"')\]]+")
 SCRIPT_PREFIX = "tools/rename-zava"
 HISTORY_MANIFEST = ".copilot-tracking/renames/zava-forward-history.json"
+LOGO_WIDTH = .85
+LOGO_TOP = .1
+LOGO_MARGIN = .2
 
 
 def replace_names(text: str) -> str:
@@ -193,10 +196,18 @@ def migrate_pptx(raw: bytes, logo: bytes | None) -> bytes:
         if slide.has_notes_slide:
             for paragraph in shape_paragraphs(slide.notes_slide.shapes):
                 replace_runs(paragraph.runs)
-        if logo and not any(s.name == "Zava branding logo" for s in slide.shapes):
-            width = Inches(1.05)
-            left = presentation.slide_width - width - Inches(.2)
-            top = Inches(.12)
+        if logo:
+            width = Inches(LOGO_WIDTH)
+            left = presentation.slide_width - width - Inches(LOGO_MARGIN)
+            top = Inches(LOGO_TOP)
+            existing = [s for s in slide.shapes if s.name in (
+                "Zava branding logo", "Zava logo contrast backing",
+            )]
+            if existing:
+                for shape in existing:
+                    shape.left, shape.top = left, top
+                    shape.width, shape.height = width, int(width * png_ratio(logo))
+                continue
             backing = slide.shapes.add_shape(
                 MSO_SHAPE.RECTANGLE, left, top, width, int(width * png_ratio(logo)),
             )
@@ -238,20 +249,26 @@ def add_yaml_logo(text: str, path: Path, *, logo: bytes, apply: bool) -> str:
         raise ValueError(f"Invalid slide/style YAML: {error}") from error
     if not isinstance(document, dict) or not isinstance(document.get("elements"), list):
         raise ValueError("Slide YAML must have an elements list.")
-    if any(element.get("name") == "Zava branding logo" for element in document["elements"]):
-        return text
     if not isinstance(style, dict) or not isinstance(style.get("dimensions"), dict):
         raise ValueError("Slide style YAML must define dimensions.width_inches.")
     width = float(style["dimensions"]["width_inches"])
-    left, height = round(width - 1.25, 4), round(1.05 * png_ratio(logo), 4)
+    left = round(width - LOGO_WIDTH - LOGO_MARGIN, 4)
+    height = round(LOGO_WIDTH * png_ratio(logo), 4)
+    existing = [element for element in document["elements"] if element.get("name") in (
+        "Zava branding logo", "Zava logo contrast backing",
+    )]
+    if existing:
+        for element in existing:
+            element.update(left=left, top=LOGO_TOP, width=LOGO_WIDTH, height=height)
+        return yaml.safe_dump(document, allow_unicode=True, sort_keys=False)
     document["elements"].append({
         "type": "shape", "name": "Zava logo contrast backing", "shape": "rectangle",
-        "left": left, "top": .12, "width": 1.05, "height": height,
+        "left": left, "top": LOGO_TOP, "width": LOGO_WIDTH, "height": height,
         "fill": "#FFFFFF", "line_color": "#FFFFFF",
     })
     document["elements"].append({
         "type": "image", "name": "Zava branding logo", "path": "images/zava-logo.png",
-        "left": left, "top": .12, "width": 1.05, "height": height,
+        "left": left, "top": LOGO_TOP, "width": LOGO_WIDTH, "height": height,
     })
     if apply:
         atomic_write(path.parent / "images/zava-logo.png", logo)
@@ -290,23 +307,14 @@ def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
     """Plan or apply local changes, returning explicit per-file and remaining work."""
     paths = tracked_files(root)
     history_manifest = root / HISTORY_MANIFEST
-    existing_history = set(json.loads(history_manifest.read_text()).get("snapshots", [])) if history_manifest.exists() else set()
+    if history_manifest.is_symlink():
+        raise ValueError("Refusing symlink history manifest.")
+    existing_history = (
+        set(json.loads(history_manifest.read_text()).get("snapshots", []))
+        if history_manifest.exists() else set()
+    )
     path_map = {p: p if p in existing_history else destination(p) for p in paths}
     historical_snapshots: dict[str, bytes] = {}
-    for name in paths:
-        if not preserved(name) or Path(name).suffix != ".md":
-            continue
-        text = (root / name).read_text(encoding="utf-8")
-        for link in re.findall(r"\]\(([^\s)]+)\)", text):
-            if ":" in link or link.startswith("#"):
-                continue
-            link = link.split("#", 1)[0]
-            candidate = ((root / name).parent / link).resolve()
-            if not candidate.is_relative_to(root):
-                continue
-            old = candidate.relative_to(root).as_posix()
-            if old in path_map and path_map[old] != old:
-                historical_snapshots[old] = candidate.read_bytes()
     pending_moves: list[tuple[Path, Path]] = []
     slide_logos: set[Path] = set()
     report = {
@@ -334,6 +342,21 @@ def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
             raise ValueError(f"Rename destination already exists: {new}")
         if (root / old).is_symlink() or any(p.is_symlink() for p in target.parents if p != root):
             raise ValueError(f"Refusing symlink path: {old}")
+    for name in paths:
+        if not preserved(name) or Path(name).suffix != ".md":
+            continue
+        text = (root / name).read_text(encoding="utf-8")
+        for link in re.findall(r"\]\(([^\s)]+)\)", text):
+            if ":" in link or link.startswith("#"):
+                continue
+            link = link.split("#", 1)[0]
+            candidate = ((root / name).parent / link).resolve()
+            if not candidate.is_relative_to(root):
+                continue
+            old = candidate.relative_to(root).as_posix()
+            if old in path_map and path_map[old] != old:
+                historical_snapshots[old] = candidate.read_bytes()
+    report["historical_snapshots"] = sorted(historical_snapshots)
     for old, new in path_map.items():
         path = root / old
         if preserved(old) or old in existing_history:

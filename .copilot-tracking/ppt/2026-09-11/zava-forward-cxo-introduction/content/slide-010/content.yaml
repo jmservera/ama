@@ -1,0 +1,225 @@
+slide: 10
+title: The financial case starts with capital discipline.
+section: Financial value
+layout: blank
+duration_seconds: 110
+background:
+  fill: '#F4F3EE'
+elements:
+- type: textbox
+  left: 0.7
+  top: 0.55
+  width: 11.8
+  height: 0.35
+  text: ILLUSTRATIVE ECONOMICS, NOT A BUDGET
+  font: Segoe UI
+  font_size: 12
+  font_color: '#176D67'
+  font_bold: true
+- type: textbox
+  left: 0.7
+  top: 1.1
+  width: 11.8
+  height: 1.3
+  text: 'The financial case starts with
+
+    capital discipline.'
+  font: Segoe UI
+  font_size: 34
+  font_color: '#142B3B'
+  font_bold: true
+- type: textbox
+  left: 0.75
+  top: 2.65
+  width: 5.5
+  height: 0.7
+  text: GBP 312m gross
+  font: Segoe UI
+  font_size: 35
+  font_color: '#142B3B'
+  font_bold: true
+- type: textbox
+  left: 7.25
+  top: 2.72
+  width: 5.25
+  height: 0.75
+  text: '15,600 homes x GBP 20,000
+
+    Cost inclusions require validation'
+  font: Segoe UI
+  font_size: 18
+  font_color: '#4B606C'
+  alignment: right
+- type: shape
+  shape: rectangle
+  left: 0.75
+  top: 3.65
+  width: 4.32
+  height: 0.7
+  fill: '#176D67'
+  line_color: '#176D67'
+- type: shape
+  shape: rectangle
+  left: 5.4
+  top: 3.65
+  width: 7.2
+  height: 0.7
+  fill: '#D8B376'
+  line_color: '#D8B376'
+- type: textbox
+  left: 0.75
+  top: 4.65
+  width: 4.3
+  height: 0.5
+  text: GBP 117m grant ceiling
+  font: Segoe UI
+  font_size: 24
+  font_color: '#176D67'
+  font_bold: true
+- type: textbox
+  left: 5.4
+  top: 4.65
+  width: 7.1
+  height: 0.5
+  text: GBP 195m provider balance
+  font: Segoe UI
+  font_size: 24
+  font_color: '#142B3B'
+  font_bold: true
+- type: textbox
+  left: 0.75
+  top: 5.3
+  width: 4.3
+  height: 0.75
+  text: 'Full-cap scenario only.
+
+    Not an allocation or entitlement.'
+  font: Segoe UI
+  font_size: 17
+  font_color: '#4B606C'
+- type: textbox
+  left: 5.4
+  top: 5.3
+  width: 7.1
+  height: 0.75
+  text: 'Even at that ceiling, provider funding is substantial.
+
+    Cash timing and headroom still govern delivery.'
+  font: Segoe UI
+  font_size: 17
+  font_color: '#4B606C'
+- type: textbox
+  left: 0.75
+  top: 6.15
+  width: 11.85
+  height: 0.45
+  text: The separate GBP 40m opportunity is unverified. Do not add it to the ceiling.
+  font: Segoe UI
+  font_size: 17
+  font_color: '#142B3B'
+  font_bold: true
+- type: textbox
+  left: 0.7
+  top: 6.7
+  width: 10.9
+  height: 0.3
+  text: 'All figures use provisional inputs; GBP 7,500 ordinary cap  |  BRD: illustrative
+    economics'
+  font: Segoe UI
+  font_size: 11
+  font_color: '#4B606C'
+  font_bold: false
+- type: textbox
+  left: 12.0
+  top: 6.7
+  width: 0.6
+  height: 0.3
+  text: '10'
+  font: Segoe UI
+  font_size: 11
+  font_color: '#4B606C'
+  font_bold: false
+  alignment: right
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+speaker_notes: 'TIMING: 12:25-14:15 (110 seconds).
+
+
+  This slide establishes scale and financial discipline, not an investment
+
+  return. The provisional cohort of fifteen thousand six hundred homes at
+
+  twenty thousand pounds each gives three hundred and twelve million pounds.
+
+  Those inputs require company and archetype validation.
+
+
+  If the entire cohort qualified for the ordinary full-cap scenario of seven
+
+  thousand five hundred pounds per home, the illustrated grant ceiling is one
+
+  hundred and seventeen million pounds. The provider balance is still one
+
+  hundred and ninety-five million on the same cost basis.
+
+
+  Neither the ceiling nor the forty-million-pound opportunity in the original
+
+  request is an award. They must not be added together. If only forty million
+
+  were ultimately received against this full programme cost, the balance would
+
+  be two hundred and seventy-two million. Actual eligibility, scheme averaging
+
+  rules, allocation, claims and receipt timing govern the funding case.
+
+
+  The cost input is called fully loaded, but its inclusions are not yet clear.
+
+  We must map them before adding technology, overhead, financing, enabling
+
+  work or contingency, otherwise we could double count costs.
+
+
+  The solution''s financial contribution is more disciplined capital allocation,
+
+  less avoidable expenditure and better conversion of eligible awards into
+
+  compliant claims and cash. It does not fund the works by itself. Monthly
+
+  liquidity, match funding and covenant headroom remain executive controls.
+
+
+  ANIMATION CUES: Start with gross programme cost and the calculation. Click
+
+  once to reveal the grant ceiling with its qualification, then click again
+
+  to reveal the provider balance with its qualification. The final click
+
+  reveals the warning that the separate GBP 40 million opportunity is
+
+  unverified.
+
+
+  TRANSITION: To make a credible technology investment case, separate this
+
+  underlying capital programme from the incremental value of the new service.
+
+
+  SOURCE: BRD, BR-025 through BR-031; Illustrative Economics and Review Qualifications.
+
+  '

@@ -245,13 +245,13 @@ def test_given_evidence_reference_variant_when_normalised_then_repository_path(r
 
 @pytest.mark.parametrize("slide", [1, 5, 7, 14, 17])
 def test_given_pptx_slide_reference_when_normalised_then_repository_path(slide):
-    deck = "docs/capstone/deck/proper-warm-executive-draft.pptx"
+    deck = "docs/capstone/deck/zava-forward-executive-draft.pptx"
 
     assert gate.evidence_path(f"{deck}:slide{slide}") == deck
 
 
 def test_given_changed_deck_with_slide_citations_when_scored_then_deck_scores_are_recorded():
-    deck = "docs/capstone/deck/proper-warm-executive-draft.pptx"
+    deck = "docs/capstone/deck/zava-forward-executive-draft.pptx"
     baseline = workflow_baseline()
     for cid in ("B1", "B2", "B7"):
         baseline["criteria"][cid]["score"] = 0
@@ -290,7 +290,7 @@ def test_given_unsupported_slide_anchor_when_normalised_then_not_accepted_as_fil
 
 
 def test_given_unchanged_deck_slide_citation_when_scored_then_increase_is_rejected():
-    deck = "docs/capstone/deck/proper-warm-executive-draft.pptx"
+    deck = "docs/capstone/deck/zava-forward-executive-draft.pptx"
     baseline = workflow_baseline()
     baseline["criteria"]["B1"]["score"] = 2
     scores = {cid: entry["score"] or 1 for cid, entry in baseline["criteria"].items()}

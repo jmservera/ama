@@ -1,5 +1,5 @@
 ---
-title: ADR 0002 Pilot-Readiness Architecture for the Proper Warm MVP
+title: ADR 0002 Pilot-Readiness Architecture for the Zava Forward MVP
 description: Proposed decisions for moving the working MVP to pilot readiness over about 60,000 homes - durable store, Blob, Entra ID and field visibility, deterministic ranking, map scale, deployment and gated staff time capture
 author: AMA programme
 ms.date: 2026-10-11
@@ -51,7 +51,7 @@ and is a demonstration, not a pilot (see the
 [Gap Analysis and Next Build](../reference/research/gap-analysis-next-build.md)).
 
 Owner direction recorded on 2026-10-08 and now written into the
-[PRD v0.10.0](../prds/proper-warm-retrofit-programme-demonstrator.md) as
+[PRD v0.10.0](../prds/zava-forward-retrofit-programme-demonstrator.md) as
 PR-001 to PR-008 and DH-007:
 
 * Load the whole stock of about 60,000 homes (PR-005, OD-17).
@@ -437,9 +437,9 @@ time capture.
 ## Related documents
 
 * [ADR 0001](./0001-azure-architecture.md)
-* [Proper Warm Workbench PRD v0.10.0](../prds/proper-warm-retrofit-programme-demonstrator.md)
+* [Zava Forward Workbench PRD v0.10.0](../prds/zava-forward-retrofit-programme-demonstrator.md)
 * [Gap Analysis and Next Build](../reference/research/gap-analysis-next-build.md)
-* [Proper Warm MVP](../../mvp/README.md)
+* [Zava Forward MVP](../../mvp/README.md)
 
 ## Implementation status
 
@@ -462,4 +462,4 @@ Azure and no decision in this ADR is approved by this work.
 | Entra ID provider (decision 3) | Partial | Header parsing and role mapping tested with synthetic principals only; Azure configuration documented in the README, not done |
 | Blob documents (decision 2) | Partial | `DocumentStore` interface with local and Azure Blob implementations (urllib, SAS or managed identity), size and type limits, role checks, audit; Blob store run only against a fake transport; no malware scan or content sniffing |
 | Finance, grants, technical sign-offs and resident decisions (FR-013, FR-014, FR-018, FR-019) | Done (API and screens) | Record-only finance with separate approvers and no bulk path; constructed data, proposed role mapping, exact-match comparison, screens not run in a browser |
-| Azure provisioning, replicas, region, load test (decision 6) | Partial | Dev app `ca-properwarm-mvp` on Azure SQL and Blob with a managed identity, min 2 and max 4 replicas, restart persistence checked (2026-10-09); the app is not yet in Bicep, Entra built-in authentication is blocked on an app registration, no load test, region and private networking for the pilot not decided |
+| Azure provisioning, replicas, region, load test (decision 6) | Partial | Dev app `ca-zavaforward-mvp` on Azure SQL and Blob with a managed identity, min 2 and max 4 replicas, restart persistence checked (2026-10-09); the app is not yet in Bicep, Entra built-in authentication is blocked on an app registration, no load test, region and private networking for the pilot not decided |

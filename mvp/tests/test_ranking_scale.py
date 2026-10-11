@@ -10,10 +10,10 @@ import urllib.request
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 
-from properwarm_mvp import ranking
-from properwarm_mvp.insights import STAGE_ORDER
-from properwarm_mvp.server import App, make_handler
-from properwarm_mvp.store import Store
+from zavaforward_mvp import ranking
+from zavaforward_mvp.insights import STAGE_ORDER
+from zavaforward_mvp.server import App, make_handler
+from zavaforward_mvp.store import Store
 from test_mvp import case
 
 STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role="Resident Liaison Officer"),
@@ -29,7 +29,7 @@ def varied(n, seed=7):
     rnd = random.Random(seed)
     out = []
     for i in range(n):
-        c = case(f"PW-{i:05d}", owner_code="RLO-01" if i % 3 else "PM-01", stage=rnd.choice(STAGE_ORDER),
+        c = case(f"ZF-{i:05d}", owner_code="RLO-01" if i % 3 else "PM-01", stage=rnd.choice(STAGE_ORDER),
                  hazards=[hazard()] if rnd.random() < 0.02 else ())
         c["days_in_stage"] = rnd.randint(0, 150)
         c["resident"]["priority_support"] = rnd.random() < 0.08
@@ -41,16 +41,16 @@ def varied(n, seed=7):
 
 class RankingTests(unittest.TestCase):
     def test_golden_order_and_policy_version(self):
-        a = case("PW-A")
-        b = case("PW-B")
+        a = case("ZF-A")
+        b = case("ZF-B")
         b["days_in_stage"] = 50
-        c = case("PW-C", hazards=[hazard()])
-        d = case("PW-D")
+        c = case("ZF-C", hazards=[hazard()])
+        d = case("ZF-D")
         d["resident"]["priority_support"] = True
-        e = case("PW-E", stage="Survey booked")
+        e = case("ZF-E", stage="Survey booked")
         e["days_in_stage"] = 50
         out = ranking.rank([a, b, c, d, e])
-        self.assertEqual([x["id"] for x in out], ["PW-C", "PW-D", "PW-B", "PW-E", "PW-A"])
+        self.assertEqual([x["id"] for x in out], ["ZF-C", "ZF-D", "ZF-B", "ZF-E", "ZF-A"])
         self.assertEqual([x["rank"] for x in out], [1, 2, 3, 4, 5])
         self.assertTrue(all(x["policy_version"] == ranking.POLICY_V1["version"] for x in out))
         self.assertEqual(out[0]["reasons"][0], "Safety issue open")
@@ -66,8 +66,8 @@ class RankingTests(unittest.TestCase):
             self.assertEqual(ranking.canonical(ranking.rank(shuffled)), want)
 
     def test_ties_break_on_case_id(self):
-        cases = [case(f"PW-{n}") for n in (9, 3, 7, 1)]
-        self.assertEqual([x["id"] for x in ranking.rank(cases)], ["PW-1", "PW-3", "PW-7", "PW-9"])
+        cases = [case(f"ZF-{n}") for n in (9, 3, 7, 1)]
+        self.assertEqual([x["id"] for x in ranking.rank(cases)], ["ZF-1", "ZF-3", "ZF-7", "ZF-9"])
 
     def test_new_policy_version_keeps_old_output_reproducible(self):
         cases = varied(200)
@@ -86,7 +86,7 @@ class RankingTests(unittest.TestCase):
         bad = copy.deepcopy(ranking.POLICY_V1)
         bad["rules"].append(dict(code="vibes", label="x"))
         with self.assertRaises(ValueError):
-            ranking.rank([case("PW-1")], bad)
+            ranking.rank([case("ZF-1")], bad)
 
     def test_policy_has_owner_field_and_rules_in_order(self):
         self.assertEqual(ranking.POLICY_V1["owner"], "to be named")
@@ -98,13 +98,13 @@ class ApiBase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.tmp = tempfile.TemporaryDirectory()
-        p = Path(cls.tmp.name) / "properwarm.json"
+        p = Path(cls.tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(dict(staff=STAFF, cases=cls.cases())))
         cls.store = Store(str(p))
-        cls.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(cls.store, "pw-test")))
+        cls.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(cls.store, "zf-test")))
         threading.Thread(target=cls.httpd.serve_forever, daemon=True).start()
         cls.base = f"http://127.0.0.1:{cls.httpd.server_address[1]}"
-        cls.cookie = cls.call("/api/login", {"email": "sam@example.test", "password": "pw-test"})[2]["Set-Cookie"].split(";")[0]
+        cls.cookie = cls.call("/api/login", {"email": "sam@example.test", "password": "zf-test"})[2]["Set-Cookie"].split(";")[0]
 
     @classmethod
     def tearDownClass(cls):

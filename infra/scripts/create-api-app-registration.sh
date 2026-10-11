@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Creates (idempotently) the single-tenant Entra app registration that protects the workbench
 # API through Container Apps built-in authentication, with the app roles the MVP maps to
-# workbench roles (mvp/properwarm_mvp/auth.py DEFAULT_ROLE_MAP).
+# workbench roles (mvp/zavaforward_mvp/auth.py DEFAULT_ROLE_MAP).
 #
 # Run as a user who can create applications (Application Administrator or Global Administrator).
 # Sign in first with: az login --tenant <tenant> --allow-no-subscriptions
 #
 # Usage: create-api-app-registration.sh [options]
-#   -n NAME      display name (default proper-warm-api)
+#   -n NAME      display name (default zava-forward-api)
 #   -u URL       base URL of the API, adds the built-in auth redirect URI (repeatable)
 #   -a UPN:ROLE  assign a user to an app role, for example admin@contoso.com:ProgrammeManager (repeatable)
 #   -v VAULT     store a new client secret in this Key Vault as entra-client-secret
@@ -16,7 +16,7 @@
 # Prints the application (client) id on stdout.
 set -euo pipefail
 
-name=proper-warm-api vault="" urls=() assigns=()
+name=zava-forward-api vault="" urls=() assigns=()
 while getopts "n:u:a:v:" opt; do
   case $opt in
     n) name=$OPTARG ;;
@@ -43,8 +43,8 @@ ns = uuid.UUID("6f1d0c5e-6a0e-4c43-9a55-0c8f7a1b2d34")  # stable ids so a re-run
 out = []
 for item in sys.argv[1:]:
     key, label = item.split("|")
-    out.append({"id": str(uuid.uuid5(ns, key)), "displayName": label, "description": f"Proper Warm workbench: {label}",
-                "value": f"ProperWarm.{key}", "isEnabled": True, "allowedMemberTypes": ["User"]})
+    out.append({"id": str(uuid.uuid5(ns, key)), "displayName": label, "description": f"Zava Forward workbench: {label}",
+                "value": f"ZavaForward.{key}", "isEnabled": True, "allowedMemberTypes": ["User"]})
 print(json.dumps(out))
 PY
 )
@@ -82,7 +82,7 @@ for entry in "${assigns[@]:-}"; do
   [[ -n $entry ]] || continue
   upn=${entry%%:*} role=${entry##*:}
   user_id=$(az ad user show --id "$upn" --query id -o tsv)
-  role_id=$(python3 -c "import json,sys;print(next(r['id'] for r in json.loads(sys.argv[1]) if r['value']=='ProperWarm.'+sys.argv[2]))" "$roles_json" "$role")
+  role_id=$(python3 -c "import json,sys;print(next(r['id'] for r in json.loads(sys.argv[1]) if r['value']=='ZavaForward.'+sys.argv[2]))" "$roles_json" "$role")
   az rest --method POST --url "https://graph.microsoft.com/v1.0/users/$user_id/appRoleAssignments" \
     --body "{\"principalId\":\"$user_id\",\"resourceId\":\"$sp_id\",\"appRoleId\":\"$role_id\"}" -o none 2>/dev/null \
     || echo "role $role already assigned to $upn or could not be assigned" >&2

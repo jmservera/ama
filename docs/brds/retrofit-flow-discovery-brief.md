@@ -10,7 +10,7 @@ ms.topic: concept
 
 This brief supports Phase 0 of the
 [Agentic Retrofit Programme Business Requirements Document](./agentic-retrofit-programme-brd.md).
-It proposes how Proper North Homes could establish where elapsed time and
+It proposes how Zava North Homes could establish where elapsed time and
 avoidable effort are lost between candidate identification and accepted
 handover.
 
@@ -138,7 +138,7 @@ operational adjustment or analytical category needed for the approved purpose.
 ## Candidate Constraint Register
 
 The executive and procurement role reviews proposed the following test order.
-It is not a finding about Proper North Homes.
+It is not a finding about Zava North Homes.
 
 | Candidate constraint | Evidence that would strengthen it | Likely intervention class |
 | --- | --- | --- |
@@ -198,7 +198,7 @@ performance. Ask each person to confirm or narrow the suggested contribution
 before involving them.
 
 The current cohort evidence does not identify a confirmed housing-retrofit,
-PAS 2035, resident-research or housing-contract specialist. Proper North Homes
+PAS 2035, resident-research or housing-contract specialist. Zava North Homes
 should nominate those experts from its own competent and accountable roles.
 
 ## Proposed Assistant Concept

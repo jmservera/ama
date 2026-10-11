@@ -11,9 +11,9 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 import test_mvp
-from properwarm_mvp import auth
-from properwarm_mvp.server import App, make_handler
-from properwarm_mvp.store import Store
+from zavaforward_mvp import auth
+from zavaforward_mvp.server import App, make_handler
+from zavaforward_mvp.store import Store
 
 REASON = "SEEDED-REASON-hearing-loss"
 STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role="Resident Liaison Officer"),
@@ -29,7 +29,7 @@ def data():
         c["resident"]["name"] = f"Resident {i}"
     d["cases"][0]["resident"].update(adjustment=REASON, priority_support=True)
     d["cases"][1]["contractor"]["name"] = "Other Ltd"
-    d["cases"].append(dict(test_mvp.case("PW-9", stage="Completed"), closed=True))
+    d["cases"].append(dict(test_mvp.case("ZF-9", stage="Completed"), closed=True))
     return d
 
 
@@ -39,7 +39,7 @@ class Base(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.tmp = tempfile.TemporaryDirectory()
-        p = Path(cls.tmp.name) / "properwarm.json"
+        p = Path(cls.tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(data()))
         cls.store = Store(str(p))
         prov = auth.make_provider(cls.store, "pw")
@@ -79,47 +79,47 @@ class ScreensApi(Base):
         self.assertEqual(self.call(sam, "/api/cases?view=closed")[0], 403)
         self.assertEqual(self.call(self.login("kim@example.test"), "/api/cases?view=closed")[0], 403)
         st, d, _ = self.call(pam, "/api/cases?view=closed")
-        self.assertEqual((st, d["total"], [r["id"] for r in d["items"]]), (200, 1, ["PW-9"]))
-        self.assertEqual(self.call(sam, "/api/cases/PW-9/reopen", {"reason": "x"})[0], 403)
-        self.assertEqual(self.call(pam, "/api/cases/PW-9/reopen", {"reason": ""})[0], 400)
-        st, d, _ = self.call(pam, "/api/cases/PW-9/reopen", {"reason": "Aftercare fault"})
+        self.assertEqual((st, d["total"], [r["id"] for r in d["items"]]), (200, 1, ["ZF-9"]))
+        self.assertEqual(self.call(sam, "/api/cases/ZF-9/reopen", {"reason": "x"})[0], 403)
+        self.assertEqual(self.call(pam, "/api/cases/ZF-9/reopen", {"reason": ""})[0], 400)
+        st, d, _ = self.call(pam, "/api/cases/ZF-9/reopen", {"reason": "Aftercare fault"})
         self.assertEqual((st, d["closed"], d["stage"]), (200, False, "Aftercare issue"))
         self.assertEqual(self.call(pam, "/api/cases?view=closed")[1]["total"], 0)
 
     def test_handoff_and_hazard_states_reach_the_case_card(self):
         sam, pam = self.login("sam@example.test"), self.login("pam@example.test")
-        st, d, _ = self.call(sam, "/api/cases/PW-1/offer-handoff", {"to": "pam@example.test", "note": "cover"})
+        st, d, _ = self.call(sam, "/api/cases/ZF-1/offer-handoff", {"to": "pam@example.test", "note": "cover"})
         self.assertEqual((st, d["handoff"]["state"]), (200, "Offered"))
-        self.assertEqual(self.call(pam, "/api/handoffs")[1][0]["case_id"], "PW-1")
-        st, d, _ = self.call(pam, "/api/cases/PW-1/decline-handoff", {"reason": ""})
+        self.assertEqual(self.call(pam, "/api/handoffs")[1][0]["case_id"], "ZF-1")
+        st, d, _ = self.call(pam, "/api/cases/ZF-1/decline-handoff", {"reason": ""})
         self.assertEqual(st, 400)
-        self.assertEqual(self.call(pam, "/api/cases/PW-1/decline-handoff", {"reason": "full"})[1]["handoff"]["state"], "Declined")
-        st, d, _ = self.call(sam, "/api/cases/PW-5/hazard-raise", {"category": "Electrical", "priority": "Routine", "note": "n"})
+        self.assertEqual(self.call(pam, "/api/cases/ZF-1/decline-handoff", {"reason": "full"})[1]["handoff"]["state"], "Declined")
+        st, d, _ = self.call(sam, "/api/cases/ZF-5/hazard-raise", {"category": "Electrical", "priority": "Routine", "note": "n"})
         self.assertEqual(st, 200)
         self.assertEqual(d["hazards"][-1]["released"], False)
-        self.assertEqual(self.call(sam, "/api/cases/PW-5/hazard-raise", {"category": "Nope", "priority": "Routine"})[0], 400)
+        self.assertEqual(self.call(sam, "/api/cases/ZF-5/hazard-raise", {"category": "Nope", "priority": "Routine"})[0], 400)
 
     def test_contractor_sees_only_notice_and_contact_never_the_reason(self):
         kim = self.login("kim@example.test")
         st, d, _ = self.call(kim, "/api/cases?limit=100")
         self.assertEqual(st, 200)
         ids = {r["id"] for r in d["items"]}
-        self.assertNotIn("PW-2", ids)
-        self.assertIn("PW-1", ids)
-        item = next(r for r in d["items"] if r["id"] == "PW-1")
+        self.assertNotIn("ZF-2", ids)
+        self.assertIn("ZF-1", ids)
+        item = next(r for r in d["items"] if r["id"] == "ZF-1")
         self.assertTrue(item["needs_notice"])
         self.assertEqual(item["named_contact"], "Sam Example")
         for r in d["items"]:
             for banned in ("resident", "phone", "reasons", "rank", "focus", "owner", "hazard", "support"):
                 self.assertNotIn(banned, r)
-        _, detail, _ = self.call(kim, "/api/cases/PW-1")
+        _, detail, _ = self.call(kim, "/api/cases/ZF-1")
         blob = json.dumps([d, detail])
         for secret in (REASON, "Resident 0", "01000 000000", "priority_support", "adjustment"):
             self.assertNotIn(secret, blob)
-        self.assertEqual(self.call(kim, "/api/cases/PW-2")[0], 404)
-        for path in ("/api/facets", "/api/stats", "/api/map", "/api/handoffs", "/api/docs/PW-1/x", "/api/briefing"):
+        self.assertEqual(self.call(kim, "/api/cases/ZF-2")[0], 404)
+        for path in ("/api/facets", "/api/stats", "/api/map", "/api/handoffs", "/api/docs/ZF-1/x", "/api/briefing"):
             self.assertEqual(self.call(kim, path)[0], 403, path)
-        self.assertEqual(self.call(kim, "/api/cases/PW-1/call", {"outcome": "x"})[0], 403)
+        self.assertEqual(self.call(kim, "/api/cases/ZF-1/call", {"outcome": "x"})[0], 403)
 
     def test_contractor_cannot_search_by_resident_name(self):
         kim = self.login("kim@example.test")
@@ -129,22 +129,22 @@ class ScreensApi(Base):
         import base64
         sam, kim = self.login("sam@example.test"), self.login("kim@example.test")
         raw = base64.b64encode(b"%PDF-1").decode()
-        st, d, _ = self.call(sam, "/api/cases/PW-3/upload", {"name": "epc.pdf", "kind": "EPC", "data": raw})
+        st, d, _ = self.call(sam, "/api/cases/ZF-3/upload", {"name": "epc.pdf", "kind": "EPC", "data": raw})
         self.assertEqual(st, 200)
         did = d["documents"][-1]["id"]
-        req = urllib.request.Request(self.base + f"/api/docs/PW-3/{did}", headers={"Cookie": sam})
+        req = urllib.request.Request(self.base + f"/api/docs/ZF-3/{did}", headers={"Cookie": sam})
         with urllib.request.urlopen(req) as r:
             self.assertEqual(r.read(), b"%PDF-1")
-        self.assertEqual(self.call(kim, f"/api/docs/PW-3/{did}")[0], 403)
-        self.assertEqual(self.call(kim, "/api/cases/PW-3/upload", {"name": "a.pdf", "data": raw})[0], 403)
-        self.assertEqual(self.call(sam, "/api/cases/PW-3/upload", {"name": "a.exe", "data": raw})[0], 400)
+        self.assertEqual(self.call(kim, f"/api/docs/ZF-3/{did}")[0], 403)
+        self.assertEqual(self.call(kim, "/api/cases/ZF-3/upload", {"name": "a.pdf", "data": raw})[0], 403)
+        self.assertEqual(self.call(sam, "/api/cases/ZF-3/upload", {"name": "a.exe", "data": raw})[0], 400)
         actions = [e["action"] for e in self.store.audit_entries()]
         self.assertIn("upload_document", actions)
         self.assertIn("download_document", actions)
 
 
 class MapListAndTiles(Base):
-    ENV = {"PW_TILE_URL": "https://tiles.example.org/{z}/{x}/{y}.png", "PW_TILE_ATTRIBUTION": "Example Tiles"}
+    ENV = {"ZF_TILE_URL": "https://tiles.example.org/{z}/{x}/{y}.png", "ZF_TILE_ATTRIBUTION": "Example Tiles"}
 
     def test_me_payload_carries_server_rendered_tile_config_and_csp_follows(self):
         st, d, h = self.call(self.login("sam@example.test"), "/api/me")
@@ -159,7 +159,7 @@ class MapListAndTiles(Base):
         self.assertEqual(d["total"], len(d["items"]))
         self.assertTrue(all({"id", "name", "kind"} <= set(p) for p in d["items"]))
         self.assertTrue(any(p["kind"] == "hazard" for p in d["items"]))
-        from properwarm_mvp import insights
+        from zavaforward_mvp import insights
         d = insights.map_view(self.store.cases.values(), {}, None, 8, cap=2)
         self.assertEqual(d["mode"], "clusters")
         self.assertEqual(sum(p["count"] for p in d["items"]), d["total"])
@@ -174,7 +174,7 @@ class MapListAndTiles(Base):
 
 
 class ProductionTiles(Base):
-    ENV = {"PW_ENV": "production", "PW_TILE_URL": ""}
+    ENV = {"ZF_ENV": "production", "ZF_TILE_URL": ""}
 
     def test_production_without_url_loads_no_tiles(self):
         _, d, h = self.call(self.login("sam@example.test"), "/api/me")

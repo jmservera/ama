@@ -45,15 +45,15 @@
       "score": 4,
       "evidence": [
         "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-329"
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:314-329"
       ],
       "rationale": "ADR names a specific AI leakage threat and named compliance articles. This PR's actual diff touches only untracked docs (case study addendum, decision-1 spec), not ADR/PRD/infra evidence; unchanged."
     },
     "A4": {
       "score": 4,
       "evidence": [
-        "mvp/properwarm_mvp/ranking.py:16-52",
-        "mvp/properwarm_mvp/store.py:153-179",
+        "mvp/zavaforward_mvp/ranking.py:16-52",
+        "mvp/zavaforward_mvp/store.py:153-179",
         "mvp/tests/test_ranking_policy.py:42-56",
         "docs/adrs/0002-pilot-readiness-architecture.md:431"
       ],
@@ -69,7 +69,7 @@
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "PRD adds a Real-Inference Quality test table but no new evaluation harness code or measured results. This diff does not touch mvp/properwarm_mvp/ai_eval.py or the PRD; unchanged."
+      "rationale": "PRD adds a Real-Inference Quality test table but no new evaluation harness code or measured results. This diff does not touch mvp/zavaforward_mvp/ai_eval.py or the PRD; unchanged."
     },
     "A7": {
       "score": 4,
@@ -105,7 +105,7 @@
       "score": 3,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:29",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:1",
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:1",
         "infra/README.md:1-54"
       ],
       "rationale": "BRD, PRD and infra/README.md remain structured and navigable but no capstone deck exists, so cap_without caps this at 3 regardless. Diff does not touch these files; unchanged."
@@ -119,8 +119,8 @@
       "score": 5,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:528",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269",
-        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-336"
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:269",
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:314-336"
       ],
       "rationale": "The owner-direction table (PR-001 to PR-008) and governance additions name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures. This PR deepens exercise targets without changing this evidence."
     },

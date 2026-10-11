@@ -187,14 +187,14 @@ def test_given_unchanged_main_when_computed_then_no_scoring(tmp_path):
 @pytest.mark.parametrize(
     ("path", "artifact_id", "criteria"),
     [
-        ("prototype/properwarm/domain.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
+        ("prototype/zavaforward/domain.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
         ("prototype/web/app.js", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
         ("prototype/tests/test_domain.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
         ("prototype/scripts/build_container_seed.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
         ("prototype/Dockerfile", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
         ("prototype/requirements.txt", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
         ("prototype/README.md", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
-        ("prototype/architecture/proper-warm-local-prototype.excalidraw", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
+        ("prototype/architecture/zava-forward-local-prototype.excalidraw", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
         ("prototype/deploy/main.bicep", "infrastructure", ["A1", "A3", "A5"]),
         ("src/app.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
         ("infra/main.bicep", "infrastructure", ["A1", "A3", "A5"]),
@@ -230,7 +230,7 @@ def test_given_registered_implementation_change_when_computed_then_expected_crit
         "prototype/seed/container-source/candidate-lifecycle.csv",
         "prototype/seed/container-source/safety-holds.csv",
         "prototype/seed/demo-import.xlsx",
-        "prototype/properwarm/__pycache__/domain.py",
+        "prototype/zavaforward/__pycache__/domain.py",
         "prototype/web/node_modules/library/index.js",
     ],
 )
@@ -268,7 +268,7 @@ def test_given_registry_activation_in_pr_when_computed_then_base_registry_still_
     git(root, "commit", "-am", "planned registry on main")
     git(root, "checkout", "-b", "feature")
     registry_path.write_text(active_registry, encoding="utf-8")
-    candidate = root / "prototype" / "properwarm" / "domain.py"
+    candidate = root / "prototype" / "zavaforward" / "domain.py"
     candidate.parent.mkdir(parents=True)
     candidate.write_text("implementation evidence\n", encoding="utf-8")
     git(root, "add", ".")

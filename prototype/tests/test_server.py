@@ -10,7 +10,7 @@ import urllib.error
 import urllib.request
 from http.server import ThreadingHTTPServer
 
-from properwarm import server
+from zavaforward import server
 
 
 def principal(role):

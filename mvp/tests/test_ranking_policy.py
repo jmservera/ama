@@ -7,9 +7,9 @@ import unittest
 from pathlib import Path
 
 import test_mvp
-from properwarm_mvp import ranking
-from properwarm_mvp.sqlstore import SqlStore
-from properwarm_mvp.store import Store
+from zavaforward_mvp import ranking
+from zavaforward_mvp.sqlstore import SqlStore
+from zavaforward_mvp.store import Store
 from test_ranking_scale import STAFF, hazard, varied
 
 AS_OF = "2026-10-09"
@@ -18,7 +18,7 @@ RLO, PM = STAFF[0], STAFF[1]
 
 
 def golden_cases():
-    a, b, c, d, e = (test_mvp.case(f"PW-{x}") for x in "ABCDE")
+    a, b, c, d, e = (test_mvp.case(f"ZF-{x}") for x in "ABCDE")
     b["days_in_stage"] = 50
     c["hazards"] = [hazard()]
     d["resident"]["priority_support"] = True
@@ -34,7 +34,7 @@ class PolicyFileTests(unittest.TestCase):
 
     def test_shipped_policy_loads_with_owner_and_status_unchanged(self):
         p = ranking.load_policy(POLICY_FILE)
-        self.assertEqual((p["policy_id"], p["version"], p["owner"]), ("proper-warm-home-ranking", "1.0.0", "to be named"))
+        self.assertEqual((p["policy_id"], p["version"], p["owner"]), ("zava-forward-home-ranking", "1.0.0", "to be named"))
         self.assertTrue(p["status"].startswith("Draft rule order, not yet signed off"))
         self.assertEqual(p["content_hash"], ranking.policy_hash(p))
         self.assertIn("1.0.0", ranking.POLICIES)
@@ -77,7 +77,7 @@ class SnapshotTests(unittest.TestCase):
     def test_golden_snapshot_order_and_byte_identical_rerun(self):
         cases = golden_cases()
         snap = ranking.snapshot(cases, ranking.POLICY_V1, AS_OF)
-        self.assertEqual([e["id"] for e in snap["entries"]], ["PW-C", "PW-D", "PW-B", "PW-E", "PW-A"])
+        self.assertEqual([e["id"] for e in snap["entries"]], ["ZF-C", "ZF-D", "ZF-B", "ZF-E", "ZF-A"])
         self.assertEqual([e["deciding_rule"] for e in snap["entries"]], [None, "safety_open", "support", "stage_order", "waiting_days"])
         self.assertEqual((snap["policy_version"], snap["policy_hash"], snap["as_of"]),
                          ("1.0.0", ranking.POLICY_V1["content_hash"], AS_OF))
@@ -128,14 +128,14 @@ class StoreSnapshotBase:
 
 class JsonStoreSnapshotTests(StoreSnapshotBase, unittest.TestCase):
     def make(self, tmp, cases):
-        (tmp / "properwarm.json").write_text(json.dumps(dict(staff=STAFF, cases=cases)))
-        return Store(str(tmp / "properwarm.json"))
+        (tmp / "zavaforward.json").write_text(json.dumps(dict(staff=STAFF, cases=cases)))
+        return Store(str(tmp / "zavaforward.json"))
 
 
 class SqlStoreSnapshotTests(StoreSnapshotBase, unittest.TestCase):
     def make(self, tmp, cases):
-        (tmp / "properwarm.json").write_text(json.dumps(dict(staff=STAFF, cases=cases)))
-        return SqlStore(str(tmp / "properwarm.json"), str(tmp / "pw.sqlite"))
+        (tmp / "zavaforward.json").write_text(json.dumps(dict(staff=STAFF, cases=cases)))
+        return SqlStore(str(tmp / "zavaforward.json"), str(tmp / "pw.sqlite"))
 
     def test_json_and_sql_snapshots_agree(self):
         other = Path(self.tmp.name) / "j"

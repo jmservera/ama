@@ -1,0 +1,155 @@
+slide: 8
+title: The pilot tests outcomes, controls and incremental value
+section: Pilot Scorecard
+layout: content
+background:
+  fill: '#F5F7FA'
+elements:
+- type: shape
+  shape: rectangle
+  left: 0
+  top: 0
+  width: 13.333
+  height: 0.1
+  fill: '#2F80ED'
+  line_color: '#2F80ED'
+- type: textbox
+  left: 0.68
+  top: 0.42
+  width: 11.9
+  height: 0.7
+  text: The pilot tests outcomes, controls and incremental value together
+  font: Aptos Display
+  font_size: 28
+  font_color: '#102A43'
+  font_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.72
+  top: 1.45
+  width: 3.65
+  height: 1.25
+  fill: '#E7F6F3'
+  line_color: '#1B998B'
+  text: 1  SAFETY + PROFESSIONAL AUTHORITY
+  text_font: Aptos
+  text_size: 16
+  text_color: '#0B625B'
+  text_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 4.84
+  top: 1.45
+  width: 3.65
+  height: 1.25
+  fill: '#EAF2FD'
+  line_color: '#2F80ED'
+  text: 2  RESIDENT DECISIONS + EXPERIENCE
+  text_font: Aptos
+  text_size: 16
+  text_color: '#174A7E'
+  text_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 8.96
+  top: 1.45
+  width: 3.65
+  height: 1.25
+  fill: '#FFF8E6'
+  line_color: '#F2C14E'
+  text: 3  QUALITY + EVIDENCE COMPLETENESS
+  text_font: Aptos
+  text_size: 16
+  text_color: '#5F4B00'
+  text_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.72
+  top: 3.05
+  width: 3.65
+  height: 1.25
+  fill: '#FFFFFF'
+  line_color: '#9FB3C8'
+  text: 4  ACCEPTED THROUGHPUT + EFFORT
+  text_font: Aptos
+  text_size: 16
+  text_color: '#243B53'
+  text_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 4.84
+  top: 3.05
+  width: 3.65
+  height: 1.25
+  fill: '#FFFFFF'
+  line_color: '#9FB3C8'
+  text: 5  SUPPLIER + COMPETENT CAPACITY
+  text_font: Aptos
+  text_size: 16
+  text_color: '#243B53'
+  text_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 8.96
+  top: 3.05
+  width: 3.65
+  height: 1.25
+  fill: '#FFFFFF'
+  line_color: '#9FB3C8'
+  text: 6  COST + GRANT + PEAK CASH
+  text_font: Aptos
+  text_size: 16
+  text_color: '#243B53'
+  text_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 3.4
+  top: 4.68
+  width: 6.53
+  height: 1.18
+  fill: '#102A43'
+  line_color: '#102A43'
+  text: 7  BOUNDED AI VALUE VS CONVENTIONAL OR RULES-BASED WORKFLOW
+  text_font: Aptos
+  text_size: 17
+  text_color: '#FFFFFF'
+  text_bold: true
+- type: textbox
+  left: 1.05
+  top: 6.25
+  width: 11.2
+  height: 0.52
+  text: 'Control conditions: zero unauthorised starts | zero autonomous controlled
+    approvals | no missed critical exception in agreed tests'
+  font: Aptos
+  font_size: 13
+  font_color: '#7A271A'
+  font_bold: true
+  alignment: center
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+speaker_notes: 'A pilot passes only if it improves accepted outcomes without weakening
+
+  safety, resident rights, quality or affordability. Proposed cycle-time and
+
+  administration targets are unratified until readiness. Keep absolute
+
+  exceptions visible. A small pilot cannot prove universal safety or seasonal
+
+  energy and affordability outcomes.
+
+  '

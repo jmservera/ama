@@ -44,7 +44,7 @@ const canvas = createCanvas({
       });
       servers.set(ctx.instanceId, entry);
     }
-    return { title: "Proper Warm - Program Workbench", status: "Repository documentation", url: entry.url };
+    return { title: "Zava Forward - Program Workbench", status: "Repository documentation", url: entry.url };
   },
   onClose: async (ctx) => {
     const entry = servers.get(ctx.instanceId);

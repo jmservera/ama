@@ -207,7 +207,8 @@ elements:
   vertical_anchor: middle
   text: ''
   paragraphs:
-  - text: The doubt came first; 26 Sep turned it from my opinion into evidence for each agent.
+  - text: The doubt came first; 26 Sep turned it from my opinion into evidence for
+      each agent.
     text_font: Segoe UI
     text_size: 15
     text_color: '#B83A2E'
@@ -224,8 +225,8 @@ elements:
   height: 0.6
   fill: '#102A43'
   line_color: '#102A43'
-  text: 'Thirteen BRD revisions, each the same pass: research, ask the role agents, rewrite, log what
-    and why'
+  text: 'Thirteen BRD revisions, each the same pass: research, ask the role agents,
+    rewrite, log what and why'
   text_font: Segoe UI
   text_size: 15
   text_color: '#FFFFFF'
@@ -243,7 +244,8 @@ elements:
   top: 6.6
   width: 12.0
   height: 0.38
-  text: 'Sources: git log, 11 to 26 Sep 2026 (dc6561a, 6bbb392, f1c185a, a72f231, 3db359c); docs/reference/log.md.'
+  text: 'Sources: git log, 11 to 26 Sep 2026 (dc6561a, 6bbb392, f1c185a, a72f231,
+    3db359c); docs/reference/log.md.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
@@ -253,9 +255,32 @@ elements:
   vertical_anchor: top
   margin_left: 0
   margin_right: 0
-speaker_notes: |-
-  This slide is the honest origin of the turning point. The doubt about five agents built up over two weeks.
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+speaker_notes: 'This slide is the honest origin of the turning point. The doubt about
+  five agents built up over two weeks.
 
-  On 11 September my first addendum already said that "agentic" is an implementation option and proposed a portfolio control plane, now called the digital foundation. On 19 September the BRD gained a cross-functional challenge to the five-agent request.
 
-  What I lacked was evidence for each agent. On 26 September all eight role agents challenged each request, which added ten requirements and eight open decisions. Each BRD revision was the same pass: research, ask the roles, rewrite, log what changed and why.
+  On 11 September my first addendum already said that "agentic" is an implementation
+  option and proposed a portfolio control plane, now called the digital foundation.
+  On 19 September the BRD gained a cross-functional challenge to the five-agent request.
+
+
+  What I lacked was evidence for each agent. On 26 September all eight role agents
+  challenged each request, which added ten requirements and eight open decisions.
+  Each BRD revision was the same pass: research, ask the roles, rewrite, log what
+  changed and why.'

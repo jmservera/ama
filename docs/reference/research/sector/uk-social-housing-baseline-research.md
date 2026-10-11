@@ -1,6 +1,6 @@
 ---
 title: UK Social Housing Baseline Research
-description: Provisional sector benchmarks for the Proper North Homes retrofit programme
+description: Provisional sector benchmarks for the Zava North Homes retrofit programme
 author: AMA Research Team
 ms.date: 2026-09-11
 ms.topic: reference
@@ -9,11 +9,11 @@ ms.topic: reference
 ## Purpose
 
 This research provides provisional England and UK social-housing comparators
-for the 60,000-home Proper North Homes association in
+for the 60,000-home Zava North Homes association in
 [Case Study 48 Addendum](../../../case_study_48_addendum.md). It supports
 planning where company baselines are not yet known.
 
-The figures are sector benchmarks, not verified Proper North Homes results.
+The figures are sector benchmarks, not verified Zava North Homes results.
 They must be replaced with property-level, resident, contract and financial
 evidence before investment approval.
 
@@ -212,8 +212,8 @@ evidence-controlled approvals.
 
 The presentation identity is:
 
-* Association: Proper North Homes
-* Programme: Proper Warm
+* Association: Zava North Homes
+* Programme: Zava Forward
 * Optional presentation line: Ready, steady, retrofit
 
 The pairing connects northern identity, warmth and programme coordination. The

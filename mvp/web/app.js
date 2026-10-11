@@ -18,7 +18,7 @@ function h(tag, attrs, ...kids) {
 
 async function api(path, body) {
   const res = await fetch(path, body === undefined ? {} : {
-    method: "POST", headers: { "Content-Type": "application/json", "X-PW-CSRF": "1" }, body: JSON.stringify(body),
+    method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
   if (res.status === 401 && path !== "/api/login") { me = null; return login(); }

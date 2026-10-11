@@ -8,7 +8,7 @@ ms.topic: overview
 ## Purpose
 
 This folder is the project's knowledge base, a persistent second brain for the
-Proper Warm research. It gathers the evidence, syntheses, working method and
+Zava Forward research. It gathers the evidence, syntheses, working method and
 project memory that agents and people need, and this index tells them where to
 look first.
 
@@ -52,8 +52,8 @@ management: short pages that point to clusters of related material.
 | --- | --- | --- |
 | Understand the customer and the sector | [Housing Association Primer](./research/sector/housing-association-primer.md) | [Company Profile Research](./research/company/company-profile-research.md) |
 | Start or resume any project work | [Original Case Study 48](../case_study_48_original.md) and [Case Study 48 Addendum](../case_study_48_addendum.md) | [Project Memory](./memory.md) |
-| Answer as a Proper North Homes role | [Company Profile Research](./research/company/company-profile-research.md) | The matching `company-*` agent in [.github/agents/](../../.github/agents/) |
-| Estimate Proper North Homes' tenure, leasehold, resident or financial scale | [Modelled Customer Profile](./research/company/company-profile-research.md#modelled-customer-profile) in Company Profile Research | [Housing Association Primer](./research/sector/housing-association-primer.md) |
+| Answer as a Zava North Homes role | [Company Profile Research](./research/company/company-profile-research.md) | The matching `company-*` agent in [.github/agents/](../../.github/agents/) |
+| Estimate Zava North Homes' tenure, leasehold, resident or financial scale | [Modelled Customer Profile](./research/company/company-profile-research.md#modelled-customer-profile) in Company Profile Research | [Housing Association Primer](./research/sector/housing-association-primer.md) |
 | Quote a benchmark, cost or sector statistic | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) | [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md) |
 | Make a regulatory, legal or funding claim | [Regulatory Source Register](./regulatory/README.md) | The snapshot for the topic under [regulatory/](./regulatory/) |
 | Design Awaab's Law, damp and mould or safety controls | [social-housing-regulation/](./regulatory/social-housing-regulation/) | [Company Profile Research](./research/company/company-profile-research.md) |
@@ -61,11 +61,11 @@ management: short pages that point to clusters of related material.
 | Handle resident data, consent or automated decisions | [data-protection/](./regulatory/data-protection/) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
 | Write or review requirements | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) |
 | Build or review a subsequent AMA prototype/PoC/MVP | [Subsequent Application Exercise Builds](../case_study_48_addendum.md#subsequent-application-exercise-builds-2026-10-11) | BRD CON-007/AC-086 and PRD CON-009/AC-057 require actual AI/SQL/Azure on continuing generated data; [current model learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11) separates feasibility from parallel-experiment benefit |
-| Refine prototype usability from owner feedback | [Owner Usability Feedback (2026-10-07)](./research/ux/proper-warm-prototype-profile-review.md#owner-usability-feedback-2026-10-07) | [Proper Warm Workbench PRD](../prds/proper-warm-retrofit-programme-demonstrator.md); reported impressions and proposed checks are not verified implementation or acceptance |
+| Refine prototype usability from owner feedback | [Owner Usability Feedback (2026-10-07)](./research/ux/zava-forward-prototype-profile-review.md#owner-usability-feedback-2026-10-07) | [Zava Forward Workbench PRD](../prds/zava-forward-retrofit-programme-demonstrator.md); reported impressions and proposed checks are not verified implementation or acceptance |
 | Compare Azure development with M365 and business-platform implementation | [Implementation Options and Provisional Platform Recommendation](../case_study_48_addendum.md#implementation-options-and-provisional-platform-recommendation) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) and [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) |
 | Evaluate a new idea | [Idea Register](../ideas/idea-register.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Migrate company/programme branding to Zava North Homes / Zava Forward | [One-off migration script and guide](../../tools/rename-zava.md) | Dry-run inventory, tracked text/paths, PPTX/YAML/logo handling, historical exceptions and explicit Azure redeployment/acceptance follow-up |
-| Design System One scoring or assisted funding forms | [Decision 1 reassessment](../ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10) | [PRD AI/form contract](../prds/proper-warm-retrofit-programme-demonstrator.md#ai-assisted-decision-coverage); evidenced scheme route, deterministic rules and Finance/human approval remain mandatory |
+| Design System One scoring or assisted funding forms | [Decision 1 reassessment](../ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10) | [PRD AI/form contract](../prds/zava-forward-retrofit-programme-demonstrator.md#ai-assisted-decision-coverage); evidenced scheme route, deterministic rules and Finance/human approval remain mandatory |
 | Challenge whether a requested agent is needed, or decide what to build instead | [Agent Request Challenge](./research/company/agent-request-challenge.md) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
 | Test whether richer inputs (phone photos, geotagging, structured invoices) change any agent verdict | [Agent What-If Study](./research/company/agent-what-if-study.md) | [Agent Request Challenge](./research/company/agent-request-challenge.md) |
 | Design pilot measurement, baselines, comparison cohorts or a benefits dashboard | [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) |
@@ -84,7 +84,7 @@ management: short pages that point to clusters of related material.
 | [Original Case Study 48](../case_study_48_original.md) | Initial problem specification. Preserved unchanged | 2026-09-10 |
 | [Case Study 48 Addendum](../case_study_48_addendum.md) | Dated v0.12.0 assumption/acceptance history plus 2026-10-11 mandatory real AI/SQL/Azure for subsequent delivered prototypes/PoCs/MVPs. Retained generated data, #58 feasibility, scoped budget override and independent parallel experiment distinguished from production approval/benefit | 2026-10-11 |
 | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | v0.16.0 draft candidate: nine controlled workflows, human/resident authority and separate business-value tests. CON-007/AC-086 require real-platform exercise evidence; 44 FRs, 86 ACs, 9 NFRs, 7 constraints, 24 rules. Company baselines/approvals and measured benefits remain unresolved; fresh business/quality review required | 2026-10-11 |
-| [Proper Warm Retrofit Programme Workbench PRD](../prds/proper-warm-retrofit-programme-demonstrator.md) | v0.13.0 candidate awaiting fresh requirements review/owner acceptance; v0.12.0 acceptance retained as history. CON-009/AC-057 require actual Azure/SQL/AI workflow and durability evidence. 46 FRs, 57 ACs, 13 NFRs, 9 constraints; sixteen exercise dispositions and operational questions retained. #58 narrow feasibility does not establish calibration, three-class screening, benefit or full acceptance | 2026-10-11 |
+| [Zava Forward Retrofit Programme Workbench PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) | v0.13.0 candidate awaiting fresh requirements review/owner acceptance; v0.12.0 acceptance retained as history. CON-009/AC-057 require actual Azure/SQL/AI workflow and durability evidence. 46 FRs, 57 ACs, 13 NFRs, 9 constraints; sixteen exercise dispositions and operational questions retained. #58 narrow feasibility does not establish calibration, three-class screening, benefit or full acceptance | 2026-10-11 |
 | [ADR 0001 Azure Architecture](../adrs/0001-azure-architecture.md) | Historical/proposed full topology with dated 2026-10-11 applicability: mandatory actual AI/SQL/Azure does not require every premium service or approve production. Pinned #58 lean deployment and later source tests distinguished. Bicep in [infra](../../infra/README.md) | 2026-10-11 |
 | [ADR 0002 Pilot-Readiness Architecture](../adrs/0002-pilot-readiness-architecture.md) | Historical/proposed pilot decisions with current exercise applicability: retain generated stock/programme and prove changed-build real services; source-tested controls not automatically deployed. Full Entra/user/permissions/performance/human gates remain distinct from #58 feasibility | 2026-10-11 |
 | [Capstone Rubric Review of the Agentic Retrofit Programme BRD](./research/company/capstone-brd-rubric-review.md) | Criterion-by-criterion readiness assessment of the BRD against the FY27 AMA capstone rubric, with floor analysis and a four-gate remediation plan | 2026-09-30 |
@@ -98,7 +98,7 @@ management: short pages that point to clusters of related material.
 
 | Document | Summary | Updated |
 | --- | --- | --- |
-| [Housing Association Primer](./research/sector/housing-association-primer.md) | What a UK housing association is, sector scale and archetypes, tenure types, lease responsibility rules for retrofit, resident needs, board capital patterns, funding model and implications for Proper North Homes | 2026-09-25 |
+| [Housing Association Primer](./research/sector/housing-association-primer.md) | What a UK housing association is, sector scale and archetypes, tenure types, lease responsibility rules for retrofit, resident needs, board capital patterns, funding model and implications for Zava North Homes | 2026-09-25 |
 | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) | Provisional sector benchmarks for energy, repairs, safety, grants, finance, delivery and quality | 2026-09-11 |
 | [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md) | Official publications and datasets behind each baseline benchmark | 2026-09-11 |
 | [Company Profile Research](./research/company/company-profile-research.md) | Confirmed not-for-profit status, comparators, modelled customer profile (estimates, not company facts), common sector problems, role map and company gaps for the role agents | 2026-09-26 |
@@ -107,11 +107,11 @@ management: short pages that point to clusters of related material.
 | [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | Role-agent challenge of measuring acceleration with a dashboard, short history and non-pilot comparison, plus the owner's modernisation decision: Comparison 1 and 2, frozen protocol, benefits scorecard, guardrails, vanity metrics and history sources | 2026-09-26 |
 | [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md) | Version 2.0.0: fifteen months of constructed operating records for 980 candidate homes. The case presents a professional team aware of bottlenecks but not where they occur. The pack covers the tracker, stage event log, property register, CRM contacts, supplier appointments, safety holds, QA and evidence, grant and finance, capacity, board reports and issues log, with realistic record-keeping imperfections, a data dictionary and a manifest. These records are for the exercise and are not evidence of actual company performance. The answer key and generator are held outside the knowledge base so analysis can stay blind | 2026-10-06 |
 | [Program Manager Document Workspace Journey](./research/ux/program-manager-document-workspace-journey.md) | Stakeholder-informed JTBD analysis, journey map, accessibility requirements and design handoff for the repository-backed Program Workbench canvas. All behavioural findings remain reported or assumed pending direct user research | 2026-10-02 |
-| [Proper Warm Prototype Profile Review](./research/ux/proper-warm-prototype-profile-review.md) | Nine company-role critiques, eleven-perspective UX synthesis and four relayed discussions, plus separately dated owner feedback on a later application: preserve brand/clarity, correct reddish status meaning, contextualize role/workflow, expose readiness/ownership/agent boundaries and provide a full-screen case with minimum-necessary synthetic contact context. Eight proposed next-prototype checks; no prototype changes or passed usability claims | 2026-10-07 |
+| [Zava Forward Prototype Profile Review](./research/ux/zava-forward-prototype-profile-review.md) | Nine company-role critiques, eleven-perspective UX synthesis and four relayed discussions, plus separately dated owner feedback on a later application: preserve brand/clarity, correct reddish status meaning, contextualize role/workflow, expose readiness/ownership/agent boundaries and provide a full-screen case with minimum-necessary synthetic contact context. Eight proposed next-prototype checks; no prototype changes or passed usability claims | 2026-10-07 |
 | [Prototype Learnings and Simplicity Review](./research/ux/prototype-learnings-and-simplicity-review.md) | Historical eight-angle simplicity critique plus dated #58 real-platform learning: assistance optional per record, real AI mandatory per delivered application; calibration/benefits and direct human usability unproved | 2026-10-11 |
 | [Gap Analysis and Next Build](./research/gap-analysis-next-build.md) | Dated prior gaps retained; current 2026-10-11 direction reuses generated-data MVP and requires real AI/SQL/Azure, not rebuilding already delivered features. Independent platform/control work and experiment-value gates separated | 2026-10-11 |
 | [Decision 1 Behaviour Specification](./research/decision-1-behaviour-specification.md) | Clean-rebuild contract linked to the overall application design: workbench/API integration, scoring versus generation, human review and application boundaries, tasks, thresholds, provider contract, guard, liabilities and tests | 2026-10-11 |
-| [Proper Warm MVP](../../mvp/README.md) | Local case-management MVP built to SA-001 to SA-010 on realistic constructed data placed on private stock-geography addresses; run instructions, privacy limits and honest scope | 2026-10-08 |
+| [Zava Forward MVP](../../mvp/README.md) | Local case-management MVP built to SA-001 to SA-010 on realistic constructed data placed on private stock-geography addresses; run instructions, privacy limits and honest scope | 2026-10-08 |
 
 ### Regulatory Sources
 
@@ -130,7 +130,7 @@ official links for every snapshot. Check it before relying on any file below.
 
 | Document | Summary | Updated |
 | --- | --- | --- |
-| [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | Internal hub entry points, nonprofit hero use cases, patterns mapped to each Proper Warm agent, customer evidence and lessons | 2026-09-25 |
+| [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | Internal hub entry points, nonprofit hero use cases, patterns mapped to each Zava Forward agent, customer evidence and lessons | 2026-09-25 |
 
 ### Method and Memory
 
@@ -145,7 +145,7 @@ official links for every snapshot. Check it before relying on any file below.
 
 | Agents | Purpose |
 | --- | --- |
-| `company-*` in [.github/agents/](../../.github/agents/) | Proper North Homes role agents for interrogating the problem. Grounded in [Company Profile Research](./research/company/company-profile-research.md) |
+| `company-*` in [.github/agents/](../../.github/agents/) | Zava North Homes role agents for interrogating the problem. Grounded in [Company Profile Research](./research/company/company-profile-research.md) |
 | [company-executive-reviewer.agent.md](../../.github/agents/company-executive-reviewer.agent.md) | Owner-delegated, draft-only target ratification or changes-requested decision; not company approval or operational authority |
 | `ama-*` in [.github/agents/](../../.github/agents/) | AMA helper agents for solution orchestration and presentation communications |
 
@@ -189,7 +189,7 @@ Record the result as a `lint` entry in the log.
 | --- | --- |
 | Official legislation, standards, policy, guidance or funding material | `regulatory/{topic}/` |
 | Sector research and benchmarks | `research/sector/` |
-| Research about Proper North Homes and its roles | `research/company/` |
+| Research about Zava North Homes and its roles | `research/company/` |
 | AMA training material and reusable prompts | `method/` |
 | Internal or external resource pointers and their retrieved findings | `resources/` |
 | Owner notes and preferences | `memory.md`, only when the owner asks |

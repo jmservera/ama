@@ -86,3 +86,5 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .plainlist li{margin:.2rem 0}
 .linkbtn{background:none;border:0;padding:.25rem 0;color:var(--link,#0b5d6b);text-decoration:underline;cursor:pointer;font:inherit;text-align:left}
 .linkbtn:focus-visible,.maplist summary:focus-visible{outline:3px solid #1a73e8;outline-offset:2px}
+
+.zava-logo{width:114px;height:40px;object-fit:contain;flex-shrink:0;background:#fff;border-radius:4px;padding:4px}

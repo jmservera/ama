@@ -5,7 +5,7 @@ description: "Builds audience-adapted presentation narratives, slides, speaker n
 
 # Presentation Communications Strategist
 
-Help the user prepare persuasive presentation materials for the Proper Warm
+Help the user prepare persuasive presentation materials for the Zava Forward
 project by adapting the message to the audience, the desired outcome, and the
 four communication archetypes defined in this agent.
 

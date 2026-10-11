@@ -1,23 +1,57 @@
 {
-  "policy_id": "proper-warm-home-ranking",
+  "policy_id": "zava-forward-home-ranking",
   "version": "1.0.0",
   "owner": "to be named",
   "status": "Draft rule order, not yet signed off by an owner",
   "effective_date": "2026-10-09",
   "rules": [
-    {"code": "safety_open", "label": "Open safety issue first"},
-    {"code": "support", "label": "Residents needing priority support or an adjustment next"},
-    {"code": "waiting_days", "label": "Longest time in the current stage next"},
-    {"code": "stage_order", "label": "Earlier programme stage next"},
-    {"code": "case_id", "label": "Case id as the final fixed tie-break"}
+    {
+      "code": "safety_open",
+      "label": "Open safety issue first"
+    },
+    {
+      "code": "support",
+      "label": "Residents needing priority support or an adjustment next"
+    },
+    {
+      "code": "waiting_days",
+      "label": "Longest time in the current stage next"
+    },
+    {
+      "code": "stage_order",
+      "label": "Earlier programme stage next"
+    },
+    {
+      "code": "case_id",
+      "label": "Case id as the final fixed tie-break"
+    }
   ],
   "stage_order": [
-    "Home identified", "Checking lease", "Rescheduled", "Contacting resident", "Contact paused",
-    "Survey being booked", "Survey booked", "Survey write-up", "Design starting", "Design in progress",
-    "Design awaiting approval", "Design being corrected", "Waiting on other works",
-    "Waiting for resident decision", "Resident paused works", "Funding check",
-    "Final checks before ordering", "Waiting for block programme", "With contractor", "Install booked",
-    "Works under way", "Handover to arrange", "Quality check", "Closing down", "Aftercare issue"
+    "Home identified",
+    "Checking lease",
+    "Rescheduled",
+    "Contacting resident",
+    "Contact paused",
+    "Survey being booked",
+    "Survey booked",
+    "Survey write-up",
+    "Design starting",
+    "Design in progress",
+    "Design awaiting approval",
+    "Design being corrected",
+    "Waiting on other works",
+    "Waiting for resident decision",
+    "Resident paused works",
+    "Funding check",
+    "Final checks before ordering",
+    "Waiting for block programme",
+    "With contractor",
+    "Install booked",
+    "Works under way",
+    "Handover to arrange",
+    "Quality check",
+    "Closing down",
+    "Aftercare issue"
   ],
-  "content_hash": "678a571258220c7db364355f5e419cde064ba198c0631e1a69d845527ff38a20"
+  "content_hash": "b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761be2c"
 }

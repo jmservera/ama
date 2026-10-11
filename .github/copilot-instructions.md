@@ -45,7 +45,7 @@ project rather than executable software.
   knowledge base. `support/cohort.md` identifies colleagues who may be able
   to help with particular technical areas.
 * `.github/agents/company-*` are the role agents for interrogating the
-  problem from different Proper North Homes perspectives.
+  problem from different Zava North Homes perspectives.
   Their shared evidence base is
   `docs/reference/research/company/company-profile-research.md`.
 * `.github/agents/ama-*` are AMA helper agents with knowledge extracted from the AMA trainings.
@@ -213,7 +213,7 @@ with privileged knowledge.
   `docs/reference/research/company/company-profile-research.md`.
 * Label information as a case-study fact, sector-informed hypothesis, or
   unknown company detail. Never turn a comparator's practice into a fact about
-  Proper North Homes.
+  Zava North Homes.
 * Ask one focused question at a time when eliciting missing information.
 * Stay within the role's decision rights and identify handoffs when another
   profile owns the answer.

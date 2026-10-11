@@ -1,13 +1,13 @@
 ---
 title: Company Profile Research
-description: Evidence base for Proper North Homes role agents
+description: Evidence base for Zava North Homes role agents
 ms.date: 2026-09-26
 ms.topic: reference
 ---
 
 ## Purpose
 
-This research supports role profiles for Proper North Homes, the 60,000-home
+This research supports role profiles for Zava North Homes, the 60,000-home
 North of England housing association in the initial problem specification. It
 provides sector patterns and questions to investigate. It does not establish
 undocumented company facts.
@@ -20,7 +20,7 @@ On 25 September 2026, a [Modelled Customer Profile](#modelled-customer-profile)
 was added from official sector statistics. Its values are modelled estimates,
 not company facts.
 
-On 26 September 2026, the project owner confirmed that Proper North Homes is
+On 26 September 2026, the project owner confirmed that Zava North Homes is
 a not-for-profit organisation. This is owner-supplied company information,
 not a conclusion drawn from the comparator research. Its exact corporate form,
 registration, group structure and charitable status remain unknown.
@@ -33,7 +33,7 @@ and its funding model, see
 
 | Information | Evidence status | Decision implication |
 | --- | --- | --- |
-| Proper North Homes is a not-for-profit organisation | Confirmed by the project owner on 26 September 2026 | Evaluate capital, operating and technology choices against resident and social outcomes, stewardship of homes, long-term financial resilience and value for money. Do not frame distributable profit or shareholder return as an objective |
+| Zava North Homes is a not-for-profit organisation | Confirmed by the project owner on 26 September 2026 | Evaluate capital, operating and technology choices against resident and social outcomes, stewardship of homes, long-term financial resilience and value for money. Do not frame distributable profit or shareholder return as an objective |
 
 Not-for-profit status does not mean that funding is unconstrained or that
 surplus is unimportant. The organisation still needs sufficient operating
@@ -79,7 +79,7 @@ sources are listed under
 
 ### Modelled Archetype
 
-Proper North Homes is modelled as a merged northern regional group with
+Zava North Homes is modelled as a merged northern regional group with
 majority stock-transfer heritage: council stock transferred in the 1990s to
 2000s, merged into a group within the last decade. It is the only archetype
 consistent with 60,000 homes, a North of England footprint, general needs
@@ -96,7 +96,7 @@ dominance and fragmented legacy data. See
 
 ### Modelled Scale Position
 
-At 60,000 social homes, Proper North Homes would be a top-ten English group by
+At 60,000 social homes, Zava North Homes would be a top-ten English group by
 social units; 10 groups own at least 50,000. It would be larger than any real
 group with at least 85% of its stock in the North. The largest such group has
 about 40,191 units, and the next largest have about 32,700 to 37,200 (RSH
@@ -174,7 +174,7 @@ for sources and survey years.
 | Fuel poor (housing association households, LILEE, 2024) | 11.6% | About 6,600 |
 
 These are prevalence estimates, not recorded data. The share of residents
-Proper North Homes records as vulnerable, and how complete those records are,
+Zava North Homes records as vulnerable, and how complete those records are,
 are not yet confirmed. The recorded share is probably well below 61%. The
 smallest test is to compare the company's recorded flags with these
 benchmarks by tenure and scheme type.
@@ -192,7 +192,7 @@ to the modelled archetype:
 * A merged group is likely to be harmonising investment standards across
   legacy stock, which competes with retrofit for capacity.
 
-Proper North Homes' board policy is not yet confirmed.
+Zava North Homes' board policy is not yet confirmed.
 
 ## Common Sector Problems
 
@@ -203,7 +203,7 @@ condition evidence. Sector risk reporting identifies incomplete surveys,
 fragmented records, and weak evidence of remedial actions as recurring
 governance risks.
 
-For Proper North Homes, spreadsheet-led coordination makes the following
+For Zava North Homes, spreadsheet-led coordination makes the following
 questions high priority:
 
 * What percentage of homes has a recent physical stock condition survey?
@@ -232,7 +232,7 @@ supply-chain capacity, and grant deadlines can conflict with delivery targets.
 
 Karbon's published EPC position illustrates the possible scale. Applying its
 77% EPC C rate to 60,000 homes would leave approximately 13,800 homes below EPC
-C, but this is only a scenario benchmark. Proper North Homes' actual baseline
+C, but this is only a scenario benchmark. Zava North Homes' actual baseline
 is unknown. A separate sector-based scenario of about 15,000 to 15,600 homes
 below EPC C is recorded in [Modelled Attributes](#modelled-attributes); the
 two scenarios use different bases and are not merged.
@@ -246,7 +246,7 @@ remediation, evidence, and resident-update workflows.
 
 Onward's decision to bring damp and mould delivery in-house demonstrates one
 possible response to contractor dependency. It does not establish the right
-model for Proper North Homes.
+model for Zava North Homes.
 
 ### Contractor Capacity and Assurance
 
@@ -315,7 +315,7 @@ The role agents should apply this time-specific baseline:
   operating circumstances.
 * Warm Homes: Social Housing Fund Wave 3 delivery runs to September 2028, with
   grant spend required by 31 March 2028. The case study does not establish
-  whether Proper North Homes received an allocation.
+  whether Zava North Homes received an allocation.
 * The social rented sector minimum energy efficiency standard (SRS MEES)
   government response published in 2026 is the final policy position, not by
   itself evidence of a commenced landlord duty. It requires EPC C or higher
@@ -473,7 +473,7 @@ Public evidence was stronger for regulatory duties and sector-level problems
 than for internal job descriptions or delegated financial authorities. Some
 provider reports were published only as PDFs or were inaccessible during
 research. Role names, reporting lines, approval limits, and operating models
-therefore remain hypotheses until defined for Proper North Homes.
+therefore remain hypotheses until defined for Zava North Homes.
 
 The Modelled Customer Profile added on 25 September 2026 has further limits:
 
@@ -482,7 +482,7 @@ The Modelled Customer Profile added on 25 September 2026 has further limits:
   older people and leaseholder numbers.
 * Resident indicators apply national survey rates that include council
   tenants. They are not regional or company data.
-* If Proper North Homes is instead the northern arm of a national group, the
+* If Zava North Homes is instead the northern arm of a national group, the
   profile would shift towards more supported housing and shared ownership,
   larger group systems and different governance.
 * Lease allocation of retrofit responsibility cannot be modelled reliably. A

@@ -1,6 +1,6 @@
 ---
 title: AMA Case Study 48
-description: Research and solution design for the Proper Warm retrofit programme
+description: Research and solution design for the Zava Forward retrofit programme
 ---
 
 ## Repository Purpose
@@ -11,12 +11,12 @@ The badge shows the latest recorded [capstone rubric score](./.github/rubric/REA
 
 This repository develops Case Study 48 into a research-backed proposal,
 business requirements, agent architecture, delivery plan and presentation for
-the Proper Warm retrofit programme at Proper North Homes.
+the Zava Forward retrofit programme at Zava North Homes.
 
 > [!NOTE]
-> Proper North Homes, Proper Warm and their organisational context are fictional
+> Zava North Homes, Zava Forward and their organisational context are fictional
 > and are used solely for this presentation exercise. Project reference
-> documents treat Proper North Homes as the case organisation so the scenario
+> documents treat Zava North Homes as the case organisation so the scenario
 > can be analysed consistently and presented credibly.
 
 ## Core Documents

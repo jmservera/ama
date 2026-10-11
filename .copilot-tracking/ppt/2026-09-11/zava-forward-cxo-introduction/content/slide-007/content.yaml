@@ -1,0 +1,201 @@
+slide: 7
+title: One governed journey. Not five autonomous decision-makers.
+section: The solution
+layout: blank
+duration_seconds: 80
+background:
+  fill: '#142B3B'
+elements:
+- type: textbox
+  left: 0.7
+  top: 0.55
+  width: 11.8
+  height: 0.35
+  text: THE PROPOSITION
+  font: Segoe UI
+  font_size: 12
+  font_color: '#76D6C5'
+  font_bold: true
+- type: textbox
+  left: 0.7
+  top: 1.1
+  width: 11.8
+  height: 1.3
+  text: 'One governed journey.
+
+    Not five autonomous decision-makers.'
+  font: Segoe UI
+  font_size: 34
+  font_color: '#FFFFFF'
+  font_bold: true
+- type: textbox
+  left: 0.75
+  top: 2.85
+  width: 3.6
+  height: 0.65
+  text: Trusted evidence
+  font: Segoe UI
+  font_size: 27
+  font_color: '#76D6C5'
+  font_bold: true
+- type: textbox
+  left: 4.85
+  top: 2.85
+  width: 3.6
+  height: 0.65
+  text: Named owners
+  font: Segoe UI
+  font_size: 27
+  font_color: '#76D6C5'
+  font_bold: true
+- type: textbox
+  left: 8.95
+  top: 2.85
+  width: 3.6
+  height: 0.65
+  text: Next safe step
+  font: Segoe UI
+  font_size: 27
+  font_color: '#76D6C5'
+  font_bold: true
+- type: textbox
+  left: 0.75
+  top: 3.75
+  width: 3.5
+  height: 1.1
+  text: 'What is known?
+
+    What is missing?'
+  font: Segoe UI
+  font_size: 24
+  font_color: '#FFFFFF'
+- type: textbox
+  left: 4.85
+  top: 3.75
+  width: 3.5
+  height: 1.1
+  text: 'Who decides?
+
+    Who owns the gap?'
+  font: Segoe UI
+  font_size: 24
+  font_color: '#FFFFFF'
+- type: textbox
+  left: 8.95
+  top: 3.75
+  width: 3.5
+  height: 1.1
+  text: 'Proceed, pause
+
+    or resolve?'
+  font: Segoe UI
+  font_size: 24
+  font_color: '#FFFFFF'
+- type: shape
+  shape: rectangle
+  left: 0.75
+  top: 5.35
+  width: 11.85
+  height: 0.8
+  fill: '#225264'
+  line_color: '#225264'
+- type: textbox
+  left: 0.95
+  top: 5.5
+  width: 11.4
+  height: 0.5
+  text: Connect existing services. Use AI only where it earns its place.
+  font: Segoe UI
+  font_size: 23
+  font_color: '#FFFFFF'
+- type: textbox
+  left: 0.7
+  top: 6.7
+  width: 10.9
+  height: 0.3
+  text: 'A governed retrofit delivery service  |  BRD: operating model and authority'
+  font: Segoe UI
+  font_size: 11
+  font_color: '#B9D4D6'
+  font_bold: false
+- type: textbox
+  left: 12.0
+  top: 6.7
+  width: 0.6
+  height: 0.3
+  text: '07'
+  font: Segoe UI
+  font_size: 11
+  font_color: '#B9D4D6'
+  font_bold: false
+  alignment: right
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+speaker_notes: 'TIMING: 07:55-09:15 (80 seconds).
+
+
+  Here is the solution in business language. For each home, establish the
+
+  evidence, make accountability explicit and identify the next safe step.
+
+  Across the portfolio, show executives where work is progressing, where it
+
+  is held and what decision or resource would unblock it.
+
+
+  The BRD calls the enabling capability a portfolio control plane. Think of
+
+  that as a shared workflow and evidence layer joining the existing asset,
+
+  housing, repairs, finance and contractor services. It is not a proposal to
+
+  replace all of those systems.
+
+
+  Rules enforce mandatory gates. People retain decisions about safety,
+
+  technical approval, resident agreement, investment, contracts, grants and
+
+  quality. Bounded AI can prepare sourced drafts, reconcile information and
+
+  identify anomalies. It does not become a new accountable executive or a
+
+  substitute for a competent professional.
+
+
+  ANIMATION CUES: Reveal the proposition in three beats: trusted evidence,
+
+  named owners, then the next safe step. Reveal each heading and its question
+
+  together. The last click reveals the boundary statement about connecting
+
+  existing services and using AI only where it earns its place.
+
+
+  This is deliberately a business view. We will use a later architecture
+
+  section to explain how the integration and controls work. Today the test is
+
+  whether this operating model addresses the business problem.
+
+
+  TRANSITION: What changes in the day-to-day work of the programme team?
+
+
+  SOURCE: BRD, Operating Model and Authority; BR-043 through BR-048.
+
+  '

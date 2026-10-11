@@ -35,7 +35,7 @@ can proceed while quality/value adoption awaits reviewed results.
 
 Reviewed on 2026-10-08: the
 [BRD v0.15.0](../../brds/agentic-retrofit-programme-brd.md), the
-[PRD v0.9.0](../../prds/proper-warm-retrofit-programme-demonstrator.md),
+[PRD v0.9.0](../../prds/zava-forward-retrofit-programme-demonstrator.md),
 [ADR 0001](../../adrs/0001-azure-architecture.md), the original case study, the
 [addendum](../../case_study_48_addendum.md), the UX and company research, the
 [capstone storage map](../../capstone/README.md), the latest rubric score
@@ -243,7 +243,7 @@ referral, the AI evaluation harness and scale for 60,000 homes.
 ## Review against PRD v0.10.0 and ADRs after PR #36 (2026-10-09)
 
 Reviewed `main` at `c6627e7` (MVP slices 1 to 3 merged) against the
-[PRD](../../prds/proper-warm-retrofit-programme-demonstrator.md) requirements,
+[PRD](../../prds/zava-forward-retrofit-programme-demonstrator.md) requirements,
 [ADR 0001](../../adrs/0001-azure-architecture.md) and
 [ADR 0002](../../adrs/0002-pilot-readiness-architecture.md). Evidence: MVP unit
 suite (154 tests) passing on the branch before merge, a read of `mvp/`, `infra/`
@@ -267,8 +267,8 @@ homes (PR-005), time capture behind flags (PR-004), Entra provider code,
 | --- | --- | --- | --- | --- |
 | 1 | Run the build in Azure: Azure SQL driver and migration, real Blob, Entra sign-in, 2+ replicas, restart-persistence test. Today SQL is sqlite, Blob ran on a fake transport and `infra/` sets `minReplicas: 1` | ADR 0002 decisions 1, 2, 3, 6; DH-005 | README honest limits; `infra/modules/containerapps.bicep:124` | Large, needs Azure |
 | 2 | CI gaps: image vulnerability scan, SBOM, SQL Server integration job, read-only root and dropped-capability checks. `mvp-ci.yml` has tests, non-root and no-data checks only | ADR 0002 decision 6; ADR 0001 open items | `.github/workflows/mvp-ci.yml` | Small |
-| 3 | Ranking snapshot per run with an explicit as-of input, and the policy as a versioned file with owner, effective date and content hash. Today the policy is a Python constant and the owner is "to be named" | ADR 0002 decision 4; PR-006 | `mvp/properwarm_mvp/ranking.py:18-34` | Medium |
-| 4 | AI evaluation measures: rank correlation, critical-miss count, citation validity, run-to-run variation, latency and cost. Only overlap is recorded, and the harness uses a scripted model | ADR 0002 decision 4; FR-027, FR-028; OD-34 | `mvp/properwarm_mvp/store.py:540`; no matches in `ai_eval.py` | Medium |
+| 3 | Ranking snapshot per run with an explicit as-of input, and the policy as a versioned file with owner, effective date and content hash. Today the policy is a Python constant and the owner is "to be named" | ADR 0002 decision 4; PR-006 | `mvp/zavaforward_mvp/ranking.py:18-34` | Medium |
+| 4 | AI evaluation measures: rank correlation, critical-miss count, citation validity, run-to-run variation, latency and cost. Only overlap is recorded, and the harness uses a scripted model | ADR 0002 decision 4; FR-027, FR-028; OD-34 | `mvp/zavaforward_mvp/store.py:540`; no matches in `ai_eval.py` | Medium |
 | 5 | Source citations on every AI output (FR-027) and a workflow-only comparison record for each AI task (FR-028) | FR-027, FR-028, AC-029, AC-030 | No citation code found in `mvp/` | Medium |
 | 6 | Quality acceptance, defects, reinspection and handover (FR-017); budget, invoice match and grant ledger (FR-018, FR-019); procurement and capacity board (FR-016); resident decision per measure with versions (FR-014); technical sign-offs (FR-013) | PRD workflows 2 to 8 | No matches for defect, reinspect, budget, capacity or work order | Large |
 | 7 | Coordinator insight: funnel, event timeline, forecast with uncertainty, stakeholder export with as-of date (FR-021 to FR-024) | FR-021 to FR-024, GOAL-003 | No matches for funnel, forecast or timeline; stats and map exist | Medium |

@@ -8,7 +8,7 @@ brd_id: "BRD-2026-AMA48-001"
 status: "draft"
 version: "0.16.0"
 owners: ["AMA Research Team"]
-reviewers: ["Executive Director of Assets (proposed sponsor)", "Named Proper North Homes control owners (to be confirmed)"]
+reviewers: ["Executive Director of Assets (proposed sponsor)", "Named Zava North Homes control owners (to be confirmed)"]
 created_date: "2026-09-11"
 last_updated: "2026-10-11"
 business_goal_ids: ["BG-001", "BG-002", "BG-003", "BG-004", "BG-005", "BG-006", "BG-007", "BG-008", "BG-009", "BG-010", "BG-011", "BG-012"]
@@ -37,8 +37,8 @@ approve this amendment or operational use.
 | Field | Value |
 | --- | --- |
 | Initiative | Agentic Retrofit Programme Delivery |
-| Organisation | Proper North Homes |
-| Programme | Proper Warm |
+| Organisation | Zava North Homes |
+| Programme | Zava Forward |
 | Region | North of England |
 | Portfolio | 60,000 homes |
 | Executive sponsor | Executive Director of Assets, supported by the Chief Executive |
@@ -109,7 +109,7 @@ safe property progression, valid and accessible resident decisions, committed
 delivery capacity, evidence-based grant reporting, controlled quality and an
 affordable portfolio trajectory.
 
-For the capstone presentation, Proper North Homes is treated as the real
+For the capstone presentation, Zava North Homes is treated as the real
 customer case and attendees are addressed as its stakeholders in their actual
 roles. The records constructed for the exercise do not establish actual
 company performance, resident outcomes, systems or operating decisions.
@@ -123,7 +123,7 @@ million of secured grant and doubled throughput are not approval assumptions.
 ## Board Decision Narrative
 
 For the AMA learning programme, each accepted application exercise build
-means a delivered prototype, PoC or MVP, including updates of Proper Warm.
+means a delivered prototype, PoC or MVP, including updates of Zava Forward.
 It must use actual Azure hosting, real SQL state (the existing Azure SQL
 realization) and at least one registered real generative or decision-model
 task in the exercised path. Continue the generated 60,000-home stock and
@@ -132,7 +132,7 @@ Documentation, unit/CI tests and non-delivery development checks may use
 local state/mocks, but cannot satisfy application delivery. This learning
 requirement is separate from production options and attributable benefits.
 
-Proper North Homes does not have a spreadsheet problem. It has a delivery
+Zava North Homes does not have a spreadsheet problem. It has a delivery
 control problem that spreadsheets make harder to see. A small team coordinates
 property evidence, professional approvals, resident decisions, supplier
 capacity, grant records and quality assurance across fragmented records. The
@@ -262,7 +262,7 @@ authorities through integrated settlements
 ([local snapshot](../reference/regulatory/retrofit-standards-and-funding/warm-homes-social-housing-fund-technical-annex-2025.md),
 Page 3 and Page 5, Table 3). Homes there follow a devolved route rather than a
 competitive national bid. Of the two, only Greater Manchester is in the North
-of England. Whether Proper North Homes owns stock there is an unknown company
+of England. Whether Zava North Homes owns stock there is an unknown company
 detail. The same annex notes that "in scope", meaning EPC D or below, does not
 necessarily reflect scheme eligibility (Page 3, footnote 1). FR-026 therefore
 treats eligibility and route as versioned rules, not as a ranking input.
@@ -292,7 +292,7 @@ The supporting research identifies recurring sector pressures:
 These are sector-informed hypotheses, not established company facts.
 
 The [Modelled Customer Profile](../reference/research/company/company-profile-research.md#modelled-customer-profile),
-added on 25 September 2026, models Proper North Homes as a merged northern
+added on 25 September 2026, models Zava North Homes as a merged northern
 group with majority stock-transfer heritage. Its values are modelled estimates
 from sector medians and national rates, not company facts. Three of them
 change what the requirements must cover:
@@ -495,7 +495,7 @@ accordingly and do not close the related Open Decision.
 
 The Housing Retrofit Programme Manager role-profile agent proposed six roles
 for the sponsor's presentation request. This is a role-profile hypothesis for
-requesting engagement, not a statement of Proper North Homes' current
+requesting engagement, not a statement of Zava North Homes' current
 staffing; no named individuals, headcounts or capacity figures are asserted.
 
 1. **Retrofit Coordinator** - owns the PAS 2035 pathway, risk-path decision
@@ -583,7 +583,7 @@ values as proposed, but the owner-delegated Executive Reviewer recorded
 comparable target for these measures, no forecast establishes the proposed
 magnitudes as achievable, and the proposal still depends on an unratified
 measurement protocol. The decision is limited to draft-target ratification;
-it is not Proper North Homes approval, a historical company decision, a waiver,
+it is not Zava North Homes approval, a historical company decision, a waiver,
 or permission to capture data or operate the programme.
 
 Before BG-011 can be ratified for draft planning, OD-18 must record the
@@ -743,7 +743,7 @@ Agent-proposed values stay visibly marked at field level until a named owner
 confirms them. Programme supervision and portfolio reporting stay deterministic
 in the initial pilot.
 
-Because Proper North Homes is a regulated not-for-profit accountable to
+Because Zava North Homes is a regulated not-for-profit accountable to
 residents, the Regulator of Social Housing, funders and its Board,
 explanations are designed for all four audiences. Resident explanations use
 plain language and non-digital routes; staff explanations support timely human
@@ -1316,7 +1316,7 @@ authorize spending or supersede legal, resident or professional controls.
 | CON-002 | The association must hold accurate, evidenced, property-level stock condition data and consider tenant safety in designing and delivering landlord services. | Regulator of Social Housing, Safety and Quality Standard, effective 1 April 2024, required outcomes 1.1.1, 2.1.1, 2.2.1 and 2.2.3 ([local snapshot](../reference/regulatory/social-housing-regulation/social-housing-safety-and-quality-standard-2024.md), converted 2026-09-19) | Regulatory standard | Property records, safety evidence and service design used by the programme | Programme data and automation may not reduce the accuracy or evidence base of stock records or bypass consideration of tenant safety. | None; the Regulator of Social Housing sets the standard. | FR-001, FR-005, FR-006, RULE-001, RULE-015 |
 | CON-003 | Personal-data processing by the programme and any agent needs a lawful basis, a special-category condition where relevant, transparent information and data-subject-rights handling, a data protection impact assessment where processing is likely to result in high risk, and safeguards if any significant decision would otherwise be based solely on automated processing. | UK GDPR Articles 5, 6, 9, 12 to 18, 20, 21, 22A to 22C, 25, 28, 30, 32 to 35 and 44 to 46 ([local snapshot](../reference/regulatory/data-protection/uk-gdpr-current-text.md), converted 2026-09-19) and the Data Protection Act 2018 ([local snapshot](../reference/regulatory/data-protection/data-protection-act-2018.md)). Article 12(1) requires concise, transparent, intelligible and easily accessible information in clear and plain language; Articles 13(2)(f), 14(2)(g) and 15(1)(h) require meaningful information about the logic involved where Article 22C safeguards apply; Article 22A defines solely automated significant decisions by the absence of meaningful human involvement; Article 22C(2) lists information, representations, human intervention and contest safeguards. The regulatory register rates automated-decision rules as High change likelihood in [Regulatory Context Reference Documents](../reference/regulatory/README.md), retrieved 2026-09-19. | Legislation | Resident, vulnerability, health and safeguarding data used in prioritisation, coordination and evaluation | No live use of personal data by an agent before the gates in RULE-022 pass, and no design may rely on token human review to avoid the solely automated threshold. | None; the Data Protection Officer advises and the association remains accountable as controller. The DPO checks the official source for amendments and commencement before each release. | RULE-022, NFR-001, NFR-003, FR-037, FR-034, FR-042, FR-043, FR-044 |
 | CON-004 | Recovery of retrofit costs from leaseholders is limited by the lease and by statutory consultation and charge limits. | Service Charges (Consultation Requirements) (England) Regulations 2003, SI 2003/1987, regulations 4 and 6 (consultation above GBP 250 per leaseholder for qualifying works, or GBP 100 a year under a qualifying long-term agreement); Housing Act 1985, Schedule 6, paragraphs 16B and 16C (right to buy charge limits for five years). Cited through the [Housing Association Primer](../reference/research/sector/housing-association-primer.md#right-to-buy-and-preserved-right-to-buy-leasehold); not held in the local regulatory corpus. | Legislation | Communal works, framework and call-off contracts, and homes held by shared owners and leaseholders | No communal works or long-term agreement proceeds before Legal records the consultation status. | None; Legal determines applicability and must validate the legislative source before live use. | FR-015, FR-022, RULE-023 |
-| CON-005 | Any WH:SHF Wave 3 award is subject to the scheme's eligibility, route and spend conditions. | WH:SHF technical annex, January 2025: in scope (EPC D or below) does not by itself mean eligible (Page 3, footnote 1); formula allocations to the Greater Manchester (5.7%) and West Midlands (7.8%) combined authorities (Page 5, Table 3) ([local snapshot](../reference/regulatory/retrofit-standards-and-funding/warm-homes-social-housing-fund-technical-annex-2025.md), converted 2026-09-19). Spend by 31 March 2028 is recorded by the addendum and supporting research, not verified against a grant agreement. | Funding condition | Funding route, eligibility, match funding and claim evidence for grant-funded homes | Applies once an award is evidenced; no allocation to Proper North Homes is evidenced. | The grant authority only. | FR-023, FR-024, FR-026, FR-027, RULE-009, RULE-010 |
+| CON-005 | Any WH:SHF Wave 3 award is subject to the scheme's eligibility, route and spend conditions. | WH:SHF technical annex, January 2025: in scope (EPC D or below) does not by itself mean eligible (Page 3, footnote 1); formula allocations to the Greater Manchester (5.7%) and West Midlands (7.8%) combined authorities (Page 5, Table 3) ([local snapshot](../reference/regulatory/retrofit-standards-and-funding/warm-homes-social-housing-fund-technical-annex-2025.md), converted 2026-09-19). Spend by 31 March 2028 is recorded by the addendum and supporting research, not verified against a grant agreement. | Funding condition | Funding route, eligibility, match funding and claim evidence for grant-funded homes | Applies once an award is evidenced; no allocation to Zava North Homes is evidenced. | The grant authority only. | FR-023, FR-024, FR-026, FR-027, RULE-009, RULE-010 |
 | CON-006 | Residents control consent, the asset director approves investment and Finance submits grant applications. | [Original Case Study 48](../case_study_48_original.md), Transformation Objective and Agentic Architecture Brief | Organisational (case-study fact) | Resident decisions, investment approval and grant submission | No agent or programme role may take these decisions for their owners. | Changes only through the association's scheme of delegation. | FR-011, FR-013, FR-014, RULE-010, RULE-011 |
 | CON-007 | Every subsequent accepted application exercise build uses real AI, real SQL state and an actual Azure deployment on the continuing generated stock/programme lineage. | Owner direction 2026-10-11, [addendum](../case_study_48_addendum.md#subsequent-application-exercise-builds-2026-10-11) | Exercise delivery (owner decision) | Delivered AMA prototypes/PoCs/MVPs and updates; not documentation/unit/CI checks | At least one permitted real model task, actual SQL durability and Azure workflow evidence under AC-086; local/mock-only delivery cannot pass. No premium topology or production approval inferred. | New explicit exercise-owner decision only; no waiver by an implementer or model | FR-036, FR-044, NFR-002, NFR-004, RULE-018, RULE-019, RULE-020; AC-086 |
 
@@ -2250,7 +2250,7 @@ records; distinct resident service/defect intake, provider invoice and Finance
 grant-claim paths; role-oriented queues; and source-linked agent next-step
 suggestions. It draws on the constructed retrofit operating-data exercise
 dictionary and
-the `feat/proper-warm-prototype` review at commit `5e52ceb`. These are design
+the `feat/zava-forward-prototype` review at commit `5e52ceb`. These are design
 proposals, not company-validated process or authority. Payment milestones,
 contract terms, resident channels, service ownership, response targets and
 approval limits remain open; no payment timing or compensation process is

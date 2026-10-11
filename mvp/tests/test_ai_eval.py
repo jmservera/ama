@@ -1,8 +1,8 @@
 import unittest
 from unittest import mock
 
-from properwarm_mvp import ai_eval
-from properwarm_mvp.store import Store
+from zavaforward_mvp import ai_eval
+from zavaforward_mvp.store import Store
 
 
 class AiEvalTests(unittest.TestCase):
@@ -40,7 +40,7 @@ class AiEvalTests(unittest.TestCase):
         self.assertIn("Proposed", " ".join(f for r in rep["results"] for f in r["failures"]))
 
     def test_harness_catches_a_model_answer_that_is_not_checked(self):
-        with mock.patch("properwarm_mvp.ai.Ai.run", lambda self, task, s, u, t, strong=False, check=None:
+        with mock.patch("zavaforward_mvp.ai.Ai.run", lambda self, task, s, u, t, strong=False, check=None:
                         dict(text='[{"case_id": "G-999", "reason": "x"}]', source="ai", model="m", validated=True, task=task)):
             rep = ai_eval.run_eval()
         self.assertFalse(rep["passed"])

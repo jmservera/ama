@@ -1,0 +1,247 @@
+slide: 6
+title: Faster administration is not necessarily faster retrofit.
+section: The constraint
+layout: blank
+duration_seconds: 100
+background:
+  fill: '#F4F3EE'
+elements:
+- type: textbox
+  left: 0.7
+  top: 0.55
+  width: 11.8
+  height: 0.35
+  text: CHALLENGE THE TECHNOLOGY-FIRST ANSWER
+  font: Segoe UI
+  font_size: 12
+  font_color: '#176D67'
+  font_bold: true
+- type: textbox
+  left: 0.7
+  top: 1.1
+  width: 11.8
+  height: 1.3
+  text: 'Faster administration is not
+
+    necessarily faster retrofit.'
+  font: Segoe UI
+  font_size: 34
+  font_color: '#142B3B'
+  font_bold: true
+- type: textbox
+  left: 0.75
+  top: 2.6
+  width: 11.8
+  height: 0.5
+  text: The programme moves only when every critical constraint is ready.
+  font: Segoe UI
+  font_size: 23
+  font_color: '#142B3B'
+- type: shape
+  shape: rectangle
+  left: 0.75
+  top: 3.4
+  width: 2.1
+  height: 1.35
+  fill: '#DFEBE6'
+  line_color: '#DFEBE6'
+- type: shape
+  shape: rectangle
+  left: 3.18
+  top: 3.4
+  width: 2.1
+  height: 1.35
+  fill: '#DFEBE6'
+  line_color: '#DFEBE6'
+- type: shape
+  shape: rectangle
+  left: 5.61
+  top: 3.4
+  width: 2.1
+  height: 1.35
+  fill: '#DFEBE6'
+  line_color: '#DFEBE6'
+- type: shape
+  shape: rectangle
+  left: 8.04
+  top: 3.4
+  width: 2.1
+  height: 1.35
+  fill: '#DFEBE6'
+  line_color: '#DFEBE6'
+- type: shape
+  shape: rectangle
+  left: 10.47
+  top: 3.4
+  width: 2.1
+  height: 1.35
+  fill: '#DFEBE6'
+  line_color: '#DFEBE6'
+- type: textbox
+  left: 0.88
+  top: 3.65
+  width: 1.84
+  height: 0.85
+  text: 'Property
+
+    data'
+  font: Segoe UI
+  font_size: 21
+  font_color: '#142B3B'
+  font_bold: true
+  alignment: center
+- type: textbox
+  left: 3.31
+  top: 3.65
+  width: 1.84
+  height: 0.85
+  text: 'Competent
+
+    people'
+  font: Segoe UI
+  font_size: 21
+  font_color: '#142B3B'
+  font_bold: true
+  alignment: center
+- type: textbox
+  left: 5.74
+  top: 3.65
+  width: 1.84
+  height: 0.85
+  text: 'Committed
+
+    suppliers'
+  font: Segoe UI
+  font_size: 21
+  font_color: '#142B3B'
+  font_bold: true
+  alignment: center
+- type: textbox
+  left: 8.17
+  top: 3.65
+  width: 1.84
+  height: 0.85
+  text: 'Resident
+
+    readiness'
+  font: Segoe UI
+  font_size: 21
+  font_color: '#142B3B'
+  font_bold: true
+  alignment: center
+- type: textbox
+  left: 10.6
+  top: 3.65
+  width: 1.84
+  height: 0.85
+  text: 'Affordable
+
+    funding'
+  font: Segoe UI
+  font_size: 21
+  font_color: '#142B3B'
+  font_bold: true
+  alignment: center
+- type: textbox
+  left: 0.75
+  top: 5.3
+  width: 11.8
+  height: 1.0
+  text: 'AI can reduce evidence chasing.
+
+    It cannot create an installation crew or approve a resident''s choice.'
+  font: Segoe UI
+  font_size: 22
+  font_color: '#142B3B'
+- type: textbox
+  left: 0.7
+  top: 6.7
+  width: 10.9
+  height: 0.3
+  text: 'First decision: establish the binding constraint  |  BRD: BR-022, BR-043
+    and BR-044'
+  font: Segoe UI
+  font_size: 11
+  font_color: '#4B606C'
+  font_bold: false
+- type: textbox
+  left: 12.0
+  top: 6.7
+  width: 0.6
+  height: 0.3
+  text: '06'
+  font: Segoe UI
+  font_size: 11
+  font_color: '#4B606C'
+  font_bold: false
+  alignment: right
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+speaker_notes: 'TIMING: 06:15-07:55 (100 seconds).
+
+
+  The tempting answer is to put an agent on every spreadsheet. That may improve
+
+  administration, but the next home still needs reliable property information,
+
+  competent professional input, an available supplier, appropriate resident
+
+  arrangements and funding the association can afford.
+
+
+  If design capacity is the constraint, generating more survey packs can grow
+
+  the queue rather than increase accepted outcomes. If supplier capacity is
+
+  unavailable, a faster scheduling recommendation does not create a crew.
+
+  If a resident needs an adjustment, optimisation cannot wish that need away.
+
+  These are examples of why we need evidence about the bottleneck, not claims
+
+  that these exact failures have been observed at Zava North Homes.
+
+
+  Our first intervention is therefore a readiness exercise. Measure time at
+
+  each stage, why work waits, how often evidence is rejected and how much
+
+  effort is spent correcting or chasing it. Compare process redesign,
+
+  configuration of existing systems, conventional workflow and bounded AI.
+
+
+  This is not a reason to abandon technology. It is how we direct technology
+
+  at a constraint it can actually relieve. The proposition should release
+
+  scarce specialist time for judgement, not replace professional competence.
+
+
+  Ask the executive team to hold one test in mind: will this change increase
+
+  accepted outcomes, or merely move the backlog to another team?
+
+
+  TRANSITION: The answer we propose is a dependable operating model, with
+
+  technology supporting the next safe step.
+
+
+  SOURCE: BRD, Executive Summary, BR-022, BR-043, BR-044 and trade-offs.
+
+  '

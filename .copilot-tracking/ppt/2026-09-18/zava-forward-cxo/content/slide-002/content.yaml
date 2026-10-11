@@ -1,0 +1,132 @@
+slide: 2
+title: The delivery challenge is credible; its binding cause is not yet known
+section: Challenge
+layout: content
+background:
+  fill: '#F5F7FA'
+elements:
+- type: shape
+  shape: rectangle
+  left: 0
+  top: 0
+  width: 13.333
+  height: 0.1
+  fill: '#2F80ED'
+  line_color: '#2F80ED'
+- type: textbox
+  left: 0.68
+  top: 0.42
+  width: 11.9
+  height: 0.72
+  text: The delivery challenge is credible; its binding cause is not yet known
+  font: Aptos Display
+  font_size: 27
+  font_color: '#102A43'
+  font_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.72
+  top: 1.55
+  width: 3.65
+  height: 4.65
+  fill: '#FFFFFF'
+  line_color: '#B8C7D9'
+  text: 'KNOWN
+
+
+    60,000 homes
+
+
+    Small spreadsheet-led team
+
+
+    Delivery described as behind plan'
+  text_font: Aptos
+  text_size: 18
+  text_color: '#243B53'
+  text_bold: false
+- type: shape
+  shape: rounded_rectangle
+  left: 4.78
+  top: 1.55
+  width: 3.65
+  height: 4.65
+  fill: '#FFF8E6'
+  line_color: '#F2C14E'
+  text: 'POSSIBLE CONSTRAINTS
+
+
+    Data quality
+
+    Capital and cash
+
+    Competent capacity
+
+    Supplier capacity
+
+    Property complexity
+
+    Resident access
+
+    Quality failure
+
+    Grant conditions'
+  text_font: Aptos
+  text_size: 17
+  text_color: '#5F4B00'
+  text_bold: false
+- type: shape
+  shape: rounded_rectangle
+  left: 8.84
+  top: 1.55
+  width: 3.77
+  height: 4.65
+  fill: '#FCE8E6'
+  line_color: '#C44536'
+  text: 'EXECUTIVE RISK
+
+
+    Automating the wrong constraint makes activity faster - not outcomes better.
+
+
+    Success means an accepted handover, not a task completed.'
+  text_font: Aptos
+  text_size: 18
+  text_color: '#7A271A'
+  text_bold: false
+- type: textbox
+  left: 0.72
+  top: 6.68
+  width: 11.9
+  height: 0.25
+  text: 'Evidence status: case-study facts + company unknowns + risk hypothesis'
+  font: Aptos
+  font_size: 10
+  font_color: '#627D98'
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.083
+  top: 0.12
+  width: 1.05
+  height: 0.3668
+speaker_notes: 'Avoid criticising the current team or spreadsheets. Spreadsheet dependency
+
+  signals fragmented coordination, but it does not prove administration is the
+
+  binding constraint. Define delivery as a safe, resident-accepted,
+
+  evidence-complete handover. Readiness must identify which constraints
+
+  materially limit that outcome.
+
+  '

@@ -1,6 +1,6 @@
 ---
 title: Azure Infrastructure (Bicep)
-description: Bicep deployment of the proposed Proper Warm demonstrator Azure architecture
+description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
 ms.date: 2026-10-08
 ms.topic: how-to
@@ -24,9 +24,9 @@ Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `mo
 ## Deploy
 
 ```bash
-az group create -n rg-proper-warm-dev -l swedencentral
-az deployment group what-if -g rg-proper-warm-dev -f infra/main.bicep -p infra/main.bicepparam
-az deployment group create -g rg-proper-warm-dev -f infra/main.bicep -p infra/main.bicepparam
+az group create -n rg-zava-forward-dev -l swedencentral
+az deployment group what-if -g rg-zava-forward-dev -f infra/main.bicep -p infra/main.bicepparam
+az deployment group create -g rg-zava-forward-dev -f infra/main.bicep -p infra/main.bicepparam
 ```
 
 Then run the SQL script from a host with private network access, push the
@@ -71,11 +71,11 @@ Deployed on 2026-10-08 to resource group `ama` with `location=uksouth environmen
 Observed 2026-10-11 in resource group `ama` (`uksouth`, `environmentName=test`, `deploymentProfile=development`):
 
 ```bash
-az acr build -r <registry> -t proper-warm-mvp:<tag> mvp
+az acr build -r <registry> -t zava-forward-mvp:<tag> mvp
 az login --tenant <tenant> --allow-no-subscriptions          # as an Application or Global Administrator
 infra/scripts/create-api-app-registration.sh -u https://<api-fqdn> -a <admin-upn>:ProgrammeManager -v <key-vault>
-python3 infra/scripts/create-sql-users.py ama <sql-server> retrofit id-warm-test   # as the SQL Entra admin
-az deployment group create ... -p entraClientId=<client id> apiImage=<registry>.azurecr.io/proper-warm-mvp:<tag>
+python3 infra/scripts/create-sql-users.py ama <sql-server> retrofit id-forward-test   # as the SQL Entra admin
+az deployment group create ... -p entraClientId=<client id> apiImage=<registry>.azurecr.io/zava-forward-mvp:<tag>
 ```
 
 Notes:
@@ -84,7 +84,7 @@ Notes:
 * The image carries no data. Seed the SQL database once from an operator machine (see `mvp/README.md`, Azure SQL store); set `oid` on a staff record to a signed-in user's object id so that user maps to a workbench role.
 * With `entraClientId` set, built-in authentication redirects browsers to sign in and returns 401 to clients that do not look like browsers. Only users assigned an app role can sign in. `/healthz` is excluded. The client secret is a Key Vault secret named `entra-client-secret` read through the API identity.
 * The API listens on 8088 and serves only `/healthz` for probes (there is no `/readyz`). The agents, orchestrator and import workloads still run the placeholder image because no code for them exists yet.
-* `PW_ENV=production` is set when authentication is on, so the map has no background until `tileUrl` is set (for a dev test: `tileUrl=https://tile.openstreetmap.org/{z}/{x}/{y}.png tileAttribution='&copy; OpenStreetMap contributors'`, within the OSM tile usage policy; choose a licensed provider before real use). The CSP follows the tile host.
+* `ZF_ENV=production` is set when authentication is on, so the map has no background until `tileUrl` is set (for a dev test: `tileUrl=https://tile.openstreetmap.org/{z}/{x}/{y}.png tileAttribution='&copy; OpenStreetMap contributors'`, within the OSM tile usage policy; choose a licensed provider before real use). The CSP follows the tile host.
 * The previous `allowedPrincipals` restriction on the auth config was removed: it listed managed identity client ids where object ids are expected and would have blocked signed-in users. Access is limited by the app role requirement instead.
 
 ## Microsoft 365 permissions

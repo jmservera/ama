@@ -13,4 +13,4 @@ az rest --method POST --url "https://graph.microsoft.com/v1.0/servicePrincipals/
   --body "{\"principalId\":\"$principal\",\"resourceId\":\"$graph\",\"appRoleId\":\"$role_id\"}"
 # Scope the grant to the single site
 az rest --method POST --url "https://graph.microsoft.com/v1.0/sites/$site/permissions" \
-  --body "{\"roles\":[\"$role\"],\"grantedToIdentities\":[{\"application\":{\"id\":\"$client\",\"displayName\":\"proper-warm-api\"}}]}"
+  --body "{\"roles\":[\"$role\"],\"grantedToIdentities\":[{\"application\":{\"id\":\"$client\",\"displayName\":\"zava-forward-api\"}}]}"

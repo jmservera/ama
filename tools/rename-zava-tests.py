@@ -65,7 +65,7 @@ class RenameTests(unittest.TestCase):
             Image.new("RGB", (600, 200)).save(logo, "PNG")
             result = rename.add_yaml_logo("elements: []\n", path, logo=logo.getvalue(), apply=True)
             data = yaml.safe_load(result)
-            self.assertEqual(data["elements"][-1]["height"], .35)
+            self.assertEqual(data["elements"][-1]["height"], .2833)
             self.assertEqual((path.parent / "images/zava-logo.png").read_bytes(), logo.getvalue())
             self.assertEqual(rename.add_yaml_logo(result, path, logo=logo.getvalue(), apply=False), result)
 
@@ -126,6 +126,24 @@ class RenameTests(unittest.TestCase):
             subprocess.run(["git", "-C", root, "add", "."], check=True)
             again = rename.migrate(root, apply=False, logo=None)
             self.assertEqual(again["changes"], [])
+
+    def test_logo_clears_the_existing_title_band(self):
+        from PIL import Image
+        from pptx import Presentation
+        from pptx.util import Inches
+        presentation = Presentation()
+        presentation.slide_width = Inches(13.333)
+        slide = presentation.slides.add_slide(presentation.slide_layouts[6])
+        title = slide.shapes.add_textbox(Inches(.68), Inches(.42), Inches(11.9), Inches(.72))
+        title.text = "Proper Warm delivery challenge"
+        logo = BytesIO()
+        Image.new("RGB", (644, 225)).save(logo, "PNG")
+        raw = BytesIO()
+        presentation.save(raw)
+        updated = Presentation(BytesIO(rename.migrate_pptx(raw.getvalue(), logo.getvalue())))
+        picture = next(s for s in updated.slides[0].shapes if s.name == "Zava branding logo")
+        self.assertLess(picture.top + picture.height, title.top)
+
     def test_infra_short_prefix_and_official_funding(self):
         self.assertEqual(
             rename.update_text("param workload = 'warm'\nid-warm-test sql-warm-test\nWarm Homes fund", "infra/a.bicep", {}),
