@@ -1640,3 +1640,30 @@ metadata when the knowledge base was created.
 * Azure reset/redeployment and visual deck acceptance remain explicit later
   actions, not side effects of the local rename command. Disposable synthetic
   exercise state is not a production data-loss policy.
+
+## [2026-10-11] update | Zava Forward local branding migration
+
+* Applied the owner-selected company/programme names to active documentation,
+  package/import names, runtime environment and CSRF contracts, infrastructure
+  defaults, website and four PPTX files. Retained the original case study,
+  regulatory snapshots, owner memory, earlier log entries and pinned URLs.
+* Historical links into the renamed PRD and UX synthesis retain exact original
+  snapshots, declared in
+  `.copilot-tracking/renames/zava-forward-history.json`. Active index links use
+  the renamed documents; no new broken Markdown targets remain against the
+  pre-migration baseline. Ten pre-existing placeholder/relative-link defects
+  remain outside this rename's scope.
+* Twenty migration regressions pass; the renamed MVP runs 270 tests with 26
+  existing skips, and the prototype runs 15 tests. Bicep compiles. All 40 slide
+  sources pass pipeline dry-run; four decks render with zero logo/text
+  bounding-box intersections, and published mentor bytes match the working copy.
+* The retained synthetic fixture still has 980 cases, of which 443 are open.
+  Local browser checks show populated lists, 443 map points, loaded map tiles
+  and the supplied logo. This uses localhost development authentication, not
+  evidence of live Entra acceptance, SQL restoration or actual model inference.
+* Azure recreation remains blocked on API app-registration permissions:
+  both the current Azure identity and M365 session receive `Insufficient
+  privileges`. The owner approved resource deletion inside `ama` and downtime,
+  but no resources have been deleted and live Entra login is not claimed.
+  The [rebuild guide](../../tools/rename-zava.md#azure-reset-and-acceptance)
+  records the remaining dependency and acceptance boundary.

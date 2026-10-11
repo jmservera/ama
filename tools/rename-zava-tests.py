@@ -155,6 +155,7 @@ class RenameTests(unittest.TestCase):
             '<span class="logo" aria-hidden="true">PW</span>', "mvp/web/index.html", {},
         ))
         once = rename.update_text("", "mvp/web/style.css", {})
+        self.assertIn(".top nav{flex-wrap:wrap;min-width:0}", once)
         self.assertEqual(rename.update_text(once, "mvp/web/style.css", {}), once)
 
     def test_cross_run_pptx_text_notes_and_metadata(self):

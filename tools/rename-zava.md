@@ -142,3 +142,31 @@ Complete migration requires:
 
 Report unmet behaviours, deployment errors and presentation rendering gaps as
 partial, not as completed migration.
+
+## Recorded local migration
+
+On 2026-10-11 the topic branch was migrated, leaving the original checkout's
+untracked data, `.env` and MCP settings untouched. The initial application pass
+reported 178 changes and zero per-file failures. Subsequent generated deck/logo
+adjustments keep logos above the existing title band and make the wider website
+brand wrap safely with authenticated navigation.
+
+* Migration regressions: 20 pass.
+* MVP: 270 tests run, 26 existing skips; prototype: 15 tests pass.
+* Bicep build and browser JavaScript syntax checks pass.
+* All 40 slide sources pass the shared pipeline dry-run. Four PPTX files render
+  successfully; logo/text bounding boxes do not intersect. The published
+  mentor deck and its validated working copy have identical hashes.
+* Markdown targets have no new failures against the baseline. Ten existing
+  placeholder/relative-link defects remain. Historical snapshots are explicitly
+  listed in `.copilot-tracking/renames/zava-forward-history.json`.
+* Local browser smoke check uses a rebranded copy of the retained 980-case
+  synthetic fixture: All cases has 443 open cases, the test manager has 133 My
+  cases, Overview has 443 points with loaded tiles, and the supplied logo loads.
+  Header elements remain contained at 1280, 800 and 375 CSS pixels.
+
+These are rename/local checks, not live acceptance or evidence of new AI model
+inference. Entra application provisioning, Azure recreation and Azure SQL
+restoration remain uncompleted. Historic raster previews and embedded/SmartArt
+limitations remain the explicit exceptions above; rendering did not redesign
+the decks' pre-existing dense layouts.

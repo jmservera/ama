@@ -143,19 +143,19 @@ elements:
 - type: shape
   name: Zava logo contrast backing
   shape: rectangle
-  left: 12.083
-  top: 0.12
-  width: 1.05
-  height: 0.3668
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
   fill: '#FFFFFF'
   line_color: '#FFFFFF'
 - type: image
   name: Zava branding logo
   path: images/zava-logo.png
-  left: 12.083
-  top: 0.12
-  width: 1.05
-  height: 0.3668
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
 speaker_notes: 'TIMING: 12:25-14:15 (110 seconds).
 
 

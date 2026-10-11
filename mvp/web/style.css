@@ -88,3 +88,4 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .linkbtn:focus-visible,.maplist summary:focus-visible{outline:3px solid #1a73e8;outline-offset:2px}
 
 .zava-logo{width:114px;height:40px;object-fit:contain;flex-shrink:0;background:#fff;border-radius:4px;padding:4px}
+.top{flex-wrap:wrap;gap:.75rem}.brand{flex-shrink:0}.top nav{flex-wrap:wrap;min-width:0}

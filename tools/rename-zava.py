@@ -133,6 +133,8 @@ def update_text(text: str, path: str, path_map: dict[str, str]) -> str:
                                 "<style>.zava-logo{width:114px;height:40px;object-fit:contain;background:#fff;padding:4px}</style></head>")
     if path == "mvp/web/style.css" and ".zava-logo{" not in text:
         text += "\n.zava-logo{width:114px;height:40px;object-fit:contain;flex-shrink:0;background:#fff;border-radius:4px;padding:4px}\n"
+    if path == "mvp/web/style.css" and ".top nav{flex-wrap:wrap;min-width:0}" not in text:
+        text += ".top{flex-wrap:wrap;gap:.75rem}.brand{flex-shrink:0}.top nav{flex-wrap:wrap;min-width:0}\n"
     return text
 
 
