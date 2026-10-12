@@ -75,13 +75,13 @@ Use existing Azure CLI profiles and SQL driver; no new dependencies.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Initialize, validate and publish
+### [x] P01: Initialize, validate and publish
 <!-- rpi:task id=P01-T01 -->
 #### [x] P01-T01: Implement initializer and synthetic regressions
 <!-- rpi:task id=P01-T02 -->
 #### [x] P01-T02: Reconcile private roster, roles and SQL; restart/verify
 <!-- rpi:task id=P01-T03 -->
-#### [ ] P01-T03: Update initialization guidance and publish
+#### [x] P01-T03: Update initialization guidance and publish
 
 ## Test Ownership and Candidate Lock
 
@@ -117,7 +117,10 @@ Existing retained Entra registration naming remains outside this initialization.
 ## Handoff
 
 Research reused, Planning Readiness Ready; one critique completed/disposed.
-P01-T01/P01-T02 complete. Live Graph/SQL reconciliation matches all eleven
+P01 complete and published as 3073285 on continuing PR #65.
+Live Graph/SQL reconciliation matches all eleven
 positions, idempotent recovery confirmed fresh ready replicas, and exact
 private preservation/anonymous-boundary checks passed. Guidance and targeted
-regressions are complete; publish P01-T03 before the single Review.
+regressions are complete. No implementation blockers or remaining active
+plan markers. Proceed to the single Review; browser acceptance and retained
+tenant naming remain later work, not simulated completion.

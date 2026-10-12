@@ -63,3 +63,23 @@ and append-only log updated. Private roster/directory remains outside Git.
 Twenty-seven infra tests passed; targeted auth, role matrix, SQL projections
 and quality/procurement passed 63 tests. Initial named test-module invocation
 needed the existing tests directory on PYTHONPATH; corrected command passed.
+
+Final direct-membership version passes 27 infra tests and live read-only check
+with all differences zero. Repeated private preservation comparison proves
+restart/no-op recovery changed no additional grants, SQL versions or history.
+Changed-guide/index relative links resolve and all twelve changed files passed
+private selected-identity leakage scanning and git diff checks.
+
+Published source/guidance/evidence as 3073285 on continuing open #65, base main.
+No unrelated local work, main writes, merge, amend or history rewrite.
+Private report lists fifty enabled member people, eleven allocated and
+thirty-nine unallocated, from sixty-five tenant accounts. Full minimal
+directory and selected-role details remain in the private operator folder.
+
+## Review Handoff
+
+P01 and all three task markers complete. Implementation scope fully delivered;
+no blockers. Assess source/synthetic coverage, Graph/SQL exact preservation,
+ready-replica convergence and public/anonymous boundaries. Interactive user
+acceptance, professional competence and production/governance approval are
+explicitly outside this observed boundary; do not invent them.

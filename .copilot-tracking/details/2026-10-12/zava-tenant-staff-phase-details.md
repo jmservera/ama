@@ -81,3 +81,13 @@ runtime map overlay, same-role group/direct duplicates and Default Access,
 conflicts, missing roles/add-only idempotency, incomplete reads, SQL label-only
 change/preservation, collision handling, protected identities, rollback,
 no-op stability and restart-failure/no-op retry.
+
+## Completion Evidence and Review Boundary
+
+P01 complete and published as 3073285 on #65. Final infra suite 27 passed;
+existing auth/role/projection/quality suites 63 passed. Live eleven-role/profile
+check matches, recovery apply/restart is a no-op with fresh ready replicas,
+exact private preservation passes and public root/health are 200 while
+anonymous me/cases are 401. Private complete people report generated.
+No user browser session or actual photo/account-switch behavior was observed.
+Single post-implementation Review is the next parent action.
