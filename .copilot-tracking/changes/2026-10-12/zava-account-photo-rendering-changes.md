@@ -28,9 +28,18 @@ unchanged. Actual HTTPS Blob image check now loads the public logo at width
 644 under image-only blob CSP; the same test failed in parent Review.
 Public welcome 200. Browser-user-agent API request redirects to authentication;
 non-browser API 401 is checked separately. No real personal photo/token used.
-Publication pending. Guide/index updated; repaired the malformed added index
+Published in 25b5f0f through existing #65. Guide/index updated; repaired the malformed added index
 row from the earlier partial-context edit to retain the three-cell table.
 
 ## Remaining Work
 
-Complete P01. Parent real-user acceptance remains separate and unavailable.
+P01 complete; child ready for its one Review. Exact-head 25b5f0f MVP CI
+(test/image/security/SQL), MVP validation and prototype validation succeeded.
+Rubric re-scoring is still running, not capstone acceptance. Parent real-user
+acceptance remains separate and unavailable. Parent Review is not repeated.
+ACR db4 image digest
+sha256:f9651f66bcf98fbd10e5e2e84848606d88b74b8eca3c824d808a750449656a89.
+Actual non-browser root/health 200 and own-photo/me APIs 401 after repair.
+All local links retained: eight baseline missing targets, no new/changed
+fragment defects. Preserved d72faa1 rubric bot record, score 45/100 and
+unmet capstone floors remain outside this repair's acceptance.

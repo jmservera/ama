@@ -10,7 +10,8 @@ App.csp in mvp/zavaforward_mvp/server.py currently lacks blob: in img-src;
 app.js uses URL.createObjectURL for binary proxy response. Add that source
 only to img-src. Do not allow Blob scripts/default/frame sources.
 Target `img-src 'self' data: blob:` followed by any existing map host.
-Update the existing exact custom-tile CSP assertion in scope, preserving it.
+Retain/update the exact custom-tile CSP assertions in test_auth.py and
+test_ui_support.py; both preserve the tile-host check.
 Add two tests in test_auth.py: CSP exact scope and authenticated PNG response
 with image MIME/no-store/nosniff and no token payload. Use synthetic inputs.
 

@@ -19,6 +19,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Necessary RV-001 child repair deployed/published in 25b5f0f. Its single Review executed Complete, outcome Conformant for the image-only repair; parent Review remains historical Defects found and RV-002 stays open.",
+      "status": "child-repair-completed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-12/zava-account-photo-rendering-review.md; live image-only Blob render and exact-source technical CI"
+    },
+    {
       "decision": "Single post-implementation Review executed Complete; outcome Defects found. Live public-logo Blob rendering exposes missing img-src blob: (RV-001); real-user acceptance remains RV-002.",
       "status": "review-executed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-12/zava-workbench-entry-review.md"
@@ -73,10 +78,10 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Complete this one Review and progress the owner-authorized necessary RV-001 repair as child zava-account-photo-rendering; keep RV-002 acceptance open."
+    "action": "Necessary RV-001 child lifecycle completed. Await owner fresh-user acceptance or selected tenant migration, Stop, or manual mode; keep RV-002 open and start no further task while owner unavailable."
   },
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Repair missing Blob image CSP", "rationale": "Small, high-value change required for the requested photo to render.", "evidence": "RV-001"},
-    {"rank": 2, "task": "Fresh real-user photo/account acceptance", "rationale": "Only the legitimate user can confirm consent and personal photo/switch behavior.", "evidence": "RV-002"}
+    {"rank": 1, "task": "Fresh real-user photo/account acceptance", "rationale": "Highest immediate value and easiest check; only the legitimate user can confirm consent and personal photo/switch behavior.", "evidence": "RV-002"},
+    {"rank": 2, "task": "Finish existing Entra naming/role migration", "rationale": "Remaining branding boundary is outside the completed rendering repair; preserve IDs and assignments in separately selected work.", "evidence": "Plan Follow-Up Items; retained proper-warm-api name and ProperWarm role bridge"}
   ]
 }

@@ -50,11 +50,11 @@ directives remain unchanged. Auth boundaries and token secrecy remain intact.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Repair, verify and publish
+### [x] P01: Repair, verify and publish
 <!-- rpi:task id=P01-T01 -->
 #### [x] P01-T01: Scope Blob image permission and add regressions
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Build/deploy, prove real binary rendering and publish
+#### [x] P01-T02: Build/deploy, prove real binary rendering and publish
 
 ## Test Ownership and Candidate Lock
 
