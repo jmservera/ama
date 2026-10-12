@@ -2,21 +2,21 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-12T17:01:43+00:00",
-  "commit": "80d4a47e125a99464d81d7fa32d42a1f766df856",
+  "scored_at": "2026-10-12T17:29:22+00:00",
+  "commit": "b611058e2a69f7b1abf94443f2fb6e7a91427324",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38280179366",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38282840937",
   "fingerprints": {
     "brd": "62bbfe659c52cbca53562d91414afa52a1161571959fce799e3bc702ff5e5e20",
     "prd": "e562b4f407d4d870eae1fa9c2840de030b8b49863a265a659dba24e3c1aaeceb",
     "adr": "a5016831ba91f0a0383427e5963f4908167949739f0f409a59284426f6e483ca",
-    "solution-code": "ffb9219c9ff1e8f9aeef79dc16e00db2e39cbd32de85897b43357da923cbd636",
+    "solution-code": "21d7be9d15b40d976b7b0a4abcb8809b948d106ebe3db35379f1d16e436c03ec",
     "infrastructure": "15c358f57a71a22f63e835a6ea61f694e56b0c6d83794f84e1a8ec868f99dcf1",
     "capstone-deck": "9338390eef61641b043a0128cdc4670a63e6cae4ef6b43aea6f4290aa2badc74"
   },
-  "total": 45,
+  "total": 47,
   "sections": {
-    "A": 27,
+    "A": 29,
     "B": 13,
     "C": 5,
     "D": 0
@@ -30,7 +30,7 @@
         "infra/modules/containerapps.bicep:123-126",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. This PR is a global Proper Warm/Zava Forward rename plus new infra scripts; A1 evidence content unchanged."
+      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. New token-store identity/job added but does not change the scored decoupling/scaling evidence."
     },
     "A2": {
       "score": 5,
@@ -40,15 +40,16 @@
         "docs/adrs/0002-pilot-readiness-architecture.md:194-203",
         "docs/adrs/0002-pilot-readiness-architecture.md:260-267"
       ],
-      "rationale": "ADR 0002 trade-off tables unchanged in substance; diff only renames terms (Proper Warm->Zava Forward) and links."
+      "rationale": "ADR 0002 keeps its seven independently reasoned decision areas with trade-off tables naming rejected alternatives; this diff only renames labels, not the argued content."
     },
     "A3": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:314-329"
+        "infra/modules/authTokenStore.bicep:64-97",
+        "infra/scripts/initialize-api-auth.py:95-140",
+        "mvp/zavaforward_mvp/token_store.py:1-40"
       ],
-      "rationale": "ADR names a specific AI leakage threat and named compliance articles, content unchanged by the rename. PRD path updated to the renamed file (zava-forward), same content as prior proper-warm PRD."
+      "rationale": "Token-store module scopes four least-privilege roles (Delegator at account, Contributor on one container, Secrets Officer on one secret). initialize-api-auth.py validates identity before Graph PATCH with verified retries; token_store.py avoids logging secrets. Deepens identity/secrets rigor."
     },
     "A4": {
       "score": 4,
@@ -56,26 +57,28 @@
         "mvp/zavaforward_mvp/ranking.py:16-52",
         "mvp/zavaforward_mvp/store.py:153-179",
         "mvp/tests/test_ranking_policy.py:42-56",
-        "docs/adrs/0002-pilot-readiness-architecture.md:431"
+        "mvp/zavaforward_mvp/profile.py:1-40"
       ],
-      "rationale": "Policy is a hash-verified versioned file with a registry and tested JSON/SQL store parity; code moved from properwarm_mvp to zavaforward_mvp package with identical logic, no functional change."
+      "rationale": "Policy registry and store parity unchanged beyond rename. New profile.py (own-user Graph photo) is a small complete capability but does not change the overall completeness assessment."
     },
     "A5": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:308-340"
+        "docs/adrs/0002-pilot-readiness-architecture.md:308-340",
+        "infra/README.md:78-138",
+        "infra/modules/authTokenStore.bicep:64-97"
       ],
-      "rationale": "Operational resilience design unchanged; infra/README.md gained new post-deployment auth-init tooling (initialize-api-auth.py) but deployment/replica/region evidence is the same renamed content."
+      "rationale": "New README documents a four-stage rollout with explicit monitoring guidance (watch failed renewals, ~4 days overlap before SAS expiry) and a scheduled daily renewal job with retry/timeout config, more evidenced than prior qualitative-only operations discussion."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "PRD Real-Inference Quality test table and ai_eval.py harness unchanged in substance; only renamed (properwarm_mvp/ai_eval.py -> zavaforward_mvp/ai_eval.py), no new measured results."
+      "rationale": "No new evaluation harness code or measured results; ai_eval.py content is unchanged beyond the module rename, so the baseline's narrow-evaluation assessment stands."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Orchestration-pattern text and agentic code structure unchanged; no new handoff/reflection or state-graph implementation added in this diff beyond renames and new auth/profile/token_store test scaffolding."
+      "rationale": "No new agentic code, handoff/reflection or state-graph implementation was added in this diff; orchestration pattern text is untouched beyond renames."
     },
     "B1": {
       "score": 3,
@@ -84,7 +87,7 @@
         "docs/capstone/deck/zava-forward-executive-draft.pptx:slide4",
         "docs/capstone/deck/zava-forward-executive-draft.pptx:slide17"
       ],
-      "rationale": "Deck arc (request, discovery, response, CFO/risk tests, recommendation) is unchanged content, only renamed from proper-warm-executive-draft.pptx to zava-forward-executive-draft.pptx. Written evidence only, no live delivery."
+      "rationale": "Renamed deck preserves the same clear arc: request, discovery/challenge, response, CFO/risk tests, recommendation narrowing to a bounded endorsement. Written evidence only, no live delivery to confirm the argument lands."
     },
     "B2": {
       "score": 3,
@@ -92,7 +95,7 @@
         "docs/capstone/deck/zava-forward-executive-draft.pptx:slide13",
         "docs/capstone/deck/zava-forward-executive-draft.pptx:slide18"
       ],
-      "rationale": "Register separation (executive narrative vs technical Appendix) unchanged; deck only renamed. No live delivery evidence to confirm calibration."
+      "rationale": "Main narrative stays executive (CFO cash-exposure slide, sponsor asks) with separate appendices for technical/council detail; same register separation as prior deck. Written evidence only."
     },
     "B3": {
       "score": 0,
@@ -113,10 +116,10 @@
       "score": 4,
       "evidence": [
         "docs/capstone/deck/zava-forward-executive-draft.pptx:slide4",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1",
-        "docs/brds/agentic-retrofit-programme-brd.md:29"
+        "docs/brds/agentic-retrofit-programme-brd.md:29",
+        "infra/README.md:78-138"
       ],
-      "rationale": "Capstone deck still exists (renamed), so cap_without no longer applies. Documentation complete and navigable; some slides still pack multiple sub-points. Content unchanged by rename."
+      "rationale": "Capstone deck remains present (cap_without no longer applies); infra/README.md gains a detailed, well-structured operational section. Some slides still pack multiple sub-points, keeping materials clear but occasionally overloaded."
     },
     "B7": {
       "score": 3,
@@ -124,7 +127,7 @@
         "docs/capstone/deck/zava-forward-executive-draft.pptx:slide13",
         "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1"
       ],
-      "rationale": "Deck still cites dated repository evidence and concrete fictional figures (GBP20,000/7,500/12,500), content unchanged by the rename."
+      "rationale": "Deck still cites dated repository evidence per slide with concrete fictional figures (GBP20,000/7,500/12,500), honestly labelled as not real measured outcomes."
     },
     "C1": {
       "score": 5,
@@ -133,7 +136,7 @@
         "docs/prds/zava-forward-retrofit-programme-demonstrator.md:269",
         "docs/prds/zava-forward-retrofit-programme-demonstrator.md:314-336"
       ],
-      "rationale": "Owner-direction table and governance additions unchanged in substance; only organisation/programme names and PRD filename renamed (Proper Warm->Zava Forward, Proper North Homes->Zava North Homes)."
+      "rationale": "Owner-direction table (PR-001 to PR-008) names real stakeholders (DPO, Legal, Finance), concrete constraints (DPIA, retention law, GDPR, scheme terms) and success measures, preserved verbatim under the renamed PRD; only labels changed."
     },
     "C2": {
       "score": 0,
