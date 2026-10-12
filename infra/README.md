@@ -16,6 +16,7 @@ Proposed, non-production infrastructure. The design and its rationale are in
 * `modules/`: identity, network (VNet, NSGs, private DNS), monitoring (Log Analytics, App Insights, AMPLS), Key Vault, storage, registry, SQL, Foundry, Container Apps and the generic private endpoint.
 * `scripts/create-sql-users.sql`: contained SQL users for the managed identities. `scripts/create-sql-users.py` runs the same grants idempotently from the Azure CLI login.
 * `scripts/create-api-app-registration.sh`: Entra app registration, app roles and secret (Key Vault) for API sign-in.
+* `scripts/initialize-api-auth.py`: post-deployment callback synchronization for an existing API registration, without replacing roles, assignments or credentials.
 * `scripts/configure-m365-provisioner-app.sh`: delegated Graph permissions for the app the m365 CLI uses to set up SharePoint and Teams.
 * `scripts/grant-sharepoint-access.sh`: optional Graph `Sites.Selected` grant for the SharePoint evidence store.
 
@@ -103,6 +104,42 @@ Notes:
   registration owner must update those separately; remove the transitional
   mapping when the new default `ZavaForward.*` values are issued.
 
+## Post-deployment API authentication initialization
+
+An environment rebuild changes the ingress FQDN even when the API registration
+is retained. After the protected API has been deployed, initialize its callback:
+
+```bash
+python3 infra/scripts/initialize-api-auth.py \
+  -g ama -n ca-forward-test-api --login
+```
+
+The deployment operator discovers the tenant, current FQDN and configured client
+ID. Explicit `--login` starts tenant-scoped device-code authentication in a
+separate private Azure CLI profile, by default
+`$AZURE_CONFIG_DIR/zava-entra-init` (or `~/.azure/zava-entra-init` when unset).
+Complete it as an authorised registration owner or administrator. This does
+not overwrite the deployment identity or grant tenant permissions to it.
+Keep the profile outside the repository: it contains authentication material.
+
+Subsequent initialization runs omit `--login`. Use `--tenant-profile <directory>`
+to select an existing Graph-authorised provisioning profile. Verify without
+changing the registration:
+
+```bash
+python3 infra/scripts/initialize-api-auth.py \
+  -g ama -n ca-forward-test-api --check
+```
+
+The command validates tenant/client identity and enabled ingress authentication,
+then reads the existing registration by client ID. It adds the current callback
+to `web.redirectUris` only if missing, preserves prior redirects, and verifies
+the update. Reruns do not patch an already initialized registration. Missing
+callbacks in check-only mode, permission denial and unverifiable updates exit
+nonzero. The command does not change display names, roles, assignments or
+secrets. The existing creation helper is for first-time registration and role
+provisioning, not a callback-only repair.
+
 ## Microsoft 365 permissions
 
 The runtime identity needs only Microsoft Graph application permission `Sites.Selected` plus a per-site grant (`scripts/grant-sharepoint-access.sh`, role `write` for the evidence library). Teams alerts use a Workflows webhook, which needs no Graph permission and is created by hand in the channel.
@@ -180,7 +217,10 @@ Rebuild sequence:
 5. Deploy with `deployApplications=true` and the real `apiImage`, keeping the
    same non-secret parameters. An explicit transitional `entraRoleMap` can
    preserve existing tenant role values; it cannot update the registration.
-6. Wait for rollout, then check public `/healthz`, API 401 without credentials
+6. Run [post-deployment authentication initialization](#post-deployment-api-authentication-initialization)
+   against the retained registration, using an authorised isolated tenant
+   profile. A new callback does not require a replacement client ID or secret.
+7. Wait for rollout, then check public `/healthz`, API 401 without credentials
    and browser redirection. Check SQL reads/writes and both model deployments
    from the API's own identity. Restart the actual revision and verify the
    audit writes persist. A template fallback or operator-only SQL test is not
@@ -194,11 +234,12 @@ subsequent health returned 200, unauthenticated API 401 and browser 302.
 Worker jobs/apps still use placeholders and Decision 1 scoring is not thereby
 implemented.
 
-Interactive sign-in, live My cases/All cases and map acceptance remain blocked
-by the existing registration's new callback and the operator's missing Graph
-application-management permission. Keep authentication on. An authorised
-registration owner must add the new callback without dropping existing redirects
-and complete the tenant naming/role transition; then repeat the browser checks.
+The owner reports the new callback repaired on 2026-10-12; that is not a
+verified tenant read or signed-in browser check. The current operator still
+lacks Graph application-management permission. Interactive sign-in, live
+My cases/All cases, map acceptance and tenant naming/role transition remain
+unverified. Keep authentication on and use the initializer for subsequent
+rebuilds; complete real-user browser acceptance separately.
 
 ## Validate locally
 

@@ -292,15 +292,14 @@ def pptx_branding(raw: bytes) -> bool:
 
 
 def atomic_write(path: Path, data: bytes) -> None:
-    """Replace one file atomically, retaining its executable permissions."""
+    """Preserve existing permissions; make new public migration assets readable."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    mode = path.stat().st_mode if path.exists() else None
+    mode = path.stat().st_mode if path.exists() else 0o644
     with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as stream:
         temporary = Path(stream.name)
         stream.write(data)
     try:
-        if mode is not None:
-            temporary.chmod(mode)
+        temporary.chmod(mode)
         temporary.replace(path)
     finally:
         temporary.unlink(missing_ok=True)

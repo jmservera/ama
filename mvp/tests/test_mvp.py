@@ -221,6 +221,17 @@ class ApiTests(unittest.TestCase):
     def test_static_path_traversal_blocked(self):
         self.assertEqual(self.call("/..%2f..%2fREADME.md")[0], 404)
 
+    def test_header_logo_is_served_as_the_packaged_png(self):
+        code, html, _ = self.call("/")
+        self.assertEqual(code, 200)
+        self.assertIn(b'src="/zava-logo.png"', html)
+        code, body, headers = self.call("/zava-logo.png")
+        self.assertEqual(code, 200)
+        self.assertEqual(headers["Content-Type"], "image/png")
+        self.assertTrue(body.startswith(b"\x89PNG\r\n\x1a\n"))
+        expected = Path(__file__).resolve().parents[1] / "web" / "zava-logo.png"
+        self.assertEqual(body, expected.read_bytes())
+
 
 if __name__ == "__main__":
     unittest.main()

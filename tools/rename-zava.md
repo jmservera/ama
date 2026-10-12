@@ -69,7 +69,9 @@ files, and stage/commit the intended results before a new dry run.
   validation records beside them remain historical.
 * The MVP website gets the same locally served PNG with accessible alternate
   text and a contrasting background. No remote logo dependency or CSP change.
-* Files are replaced atomically and executable permissions are retained.
+* Files are replaced atomically and existing permissions are retained. Newly
+  created public assets use mode 0644; the MVP image also makes packaged web
+  assets readable by its non-root runtime.
 
 ## Deliberate exceptions and edge cases
 
@@ -120,10 +122,10 @@ session both return `Insufficient privileges` when reading the existing API
 app registration. Resource-group access does not grant Microsoft Graph
 application-management access. Infrastructure and the protected API can be
 rebuilt using a securely retained existing client credential. Interactive
-sign-in and the tenant naming/role transition remain blocked until an authorised
-application owner or tenant administrator updates the registration and new
-Container Apps callback URI. Do not disable authentication or substitute a
-shared password to work around this dependency.
+sign-in and the tenant naming/role transition need authorised tenant action and
+real-user acceptance. The owner reports the callback repaired on 2026-10-12;
+the current operator cannot independently verify that registration update.
+Do not disable authentication or substitute a shared password.
 
 Use the renamed Bicep and existing provisioning tools rather than a second
 deployment implementation. Explicitly pass `workload=forward`, `uksouth`,
@@ -204,7 +206,8 @@ open, managed-identity SQL reads/writes and actual `source=ai` results from both
 deployed HTML contains the new company/programme names. These operator checks
 do not substitute for signed-in browser acceptance.
 
-An authorised owner of client `8a0a196a-d5e8-4aa6-8a9d-cdd28af5c235` must add:
+The owner reports adding the callback for client
+`8a0a196a-d5e8-4aa6-8a9d-cdd28af5c235`:
 
 `https://ca-forward-test-api.salmonplant-3b962c5f.uksouth.azurecontainerapps.io/.auth/login/aad/callback`
 
@@ -212,12 +215,39 @@ Preserve existing redirects and assignments. The registration still issues
 `ProperWarm.*` roles; an explicit deployment-only map preserves their workbench
 meaning until the owner migrates them to `ZavaForward.*`. Complete the tenant
 name/role transition before claiming all active identity names are migrated.
-The provisioning script can create a new `zava-forward-api` registration, but
+The first-time provisioning script can create a new `zava-forward-api` registration, but
 that requires user assignments, a new vault credential and redeployment with
 the returned client ID; it is not an in-place update by client ID.
 
 The [from-empty infrastructure recipe](../infra/README.md#from-empty-rebuild-observed-on-2026-10-12)
 records deletion ordering, separate budget enumeration, staged deployment,
 identity/model configuration, seeding and live checks. Live Entra login,
-scoped lists, map rendering and tiles remain unverified pending that owner
-action. Placeholder workers remain placeholders, not delivered agent services.
+scoped lists, map rendering and tiles remain unverified. Use the
+[callback-only initializer](../infra/README.md#post-deployment-api-authentication-initialization)
+after future rebuilds rather than replacing the retained registration:
+
+```bash
+python3 infra/scripts/initialize-api-auth.py \
+  -g ama -n ca-forward-test-api --login
+```
+
+Subsequent runs omit `--login`; `--check` verifies without a Graph patch.
+Placeholder workers remain placeholders, not delivered agent services.
+
+## Missing-logo repair on 2026-10-12
+
+The owner reported the live logo missing. The API traceback showed permission
+denied reading the packaged PNG: a newly generated asset had inherited mode
+0600 and root ownership in the image, while the server runs as UID 10001.
+The migration now makes new public assets 0644 and image packaging normalizes
+web readability. Existing target permissions and the non-root runtime remain
+intact; no remote logo or authentication exception was added.
+
+Rebuilt and deployed `zava-forward-mvp:logo-20261012-permissions`. The running
+server now returns the exact source PNG, 14325 bytes at 644 x 225, with status
+200 and `image/png`; its packaged mode is 0644. The image build was deliberately
+performed with the source still at 0600. CI repeats that input and checks the
+PNG from the read-only, capability-free container. The MVP suite runs 273 tests
+with 26 existing skips; 22 migration regressions pass. Public health and
+authentication responses are preserved. This asset check is not a substitute
+for signed-in list/map or tenant name/role acceptance.

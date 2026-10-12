@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir --require-hashes -r requirements.txt && rm requir
 COPY zavaforward_mvp ./zavaforward_mvp
 COPY policies ./policies
 COPY web ./web
+RUN chmod -R a+rX ./web
 USER 10001
 # No working data is baked into the image. Mount the dataset at /data and a writable volume at /state.
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=8088 ZF_BIND=0.0.0.0 ZF_DATA=/data/zavaforward.json ZF_STATE=/state

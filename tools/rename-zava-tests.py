@@ -228,6 +228,16 @@ class RenameTests(unittest.TestCase):
             self.assertEqual((root / "zavaforward.py").stat().st_mode & 0o777, 0o755)
             self.assertEqual(secret.read_text(), "DO_NOT_TOUCH=Proper Warm")
 
+    def test_new_assets_are_readable_and_existing_modes_are_preserved(self):
+        with tempfile.TemporaryDirectory() as directory:
+            asset = Path(directory) / "web" / "zava-logo.png"
+            rename.atomic_write(asset, b"public-logo")
+            self.assertEqual(asset.stat().st_mode & 0o777, 0o644)
+            asset.chmod(0o600)
+            rename.atomic_write(asset, b"updated-logo")
+            self.assertEqual(asset.stat().st_mode & 0o777, 0o600)
+            self.assertEqual(asset.read_bytes(), b"updated-logo")
+
     def test_collision_stops_before_changes(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

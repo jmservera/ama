@@ -1838,3 +1838,25 @@ metadata when the knowledge base was created.
   Runtime authentication and claims remain unchanged. The child acceptance
   task is blocked on authorised owner action; the reset task's single Review
   is not repeated and full migration acceptance is not claimed.
+
+## [2026-10-12] update | Repeatable callbacks and missing-logo permission repair
+
+* The owner reports the callback repaired and requests repeatable initialization.
+  Added [callback-only initialization](../../infra/README.md#post-deployment-api-authentication-initialization)
+  after deployment: discover the existing client/FQDN, explicitly authenticate
+  through an isolated tenant profile, preserve redirects/settings and verify
+  the minimal update. Thirteen mocked-CLI tests pass; this is not live Graph or
+  interactive browser acceptance.
+* Diagnosed the owner's missing logo from the deployed server's PermissionError.
+  Migration-created assets inherited mode 0600 from temporary files; Docker
+  retained root ownership, preventing runtime UID 10001 from reading the PNG.
+  New public assets now use 0644 and image packaging normalizes web readability.
+* Added a logo HTTP regression and a restricted-source-permission image check.
+  The MVP suite runs 273 tests with 26 existing skips; 22 migration regressions
+  pass. Ingress authentication and separate tenant/browser acceptance gates
+  remain unchanged.
+* Rebuilt and deployed the repaired image from the restricted-mode source.
+  The actual UID 10001 API now returns the exact 14325-byte PNG with image/png
+  and mode 0644. Health remains 200, unauthenticated ingress remains 401 and
+  browser entry remains an Entra redirect. Full signed-in browser acceptance
+  is still a separate gate.

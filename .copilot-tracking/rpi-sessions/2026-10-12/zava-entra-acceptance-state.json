@@ -5,19 +5,29 @@
     "task_id": "zava-azure-reset-2026-10-12",
     "task_slug": "zava-azure-reset"
   },
-  "mode": "automatic",
-  "active_phase": "Research",
-  "status": "blocked",
-  "session_status": "running",
+  "mode": "manual",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": null,
-    "plan": null,
-    "details": null,
+    "plan": ".copilot-tracking/plans/2026-10-12/zava-entra-acceptance-plan.md",
+    "details": ".copilot-tracking/details/2026-10-12/zava-entra-acceptance-phase-details.md",
     "critique": null,
-    "changes": null,
+    "changes": ".copilot-tracking/changes/2026-10-12/zava-entra-acceptance-changes.md",
     "review": null
   },
   "confirmed_decisions": [
+    {
+      "decision": "Fix the owner-reported missing logo as P03 alongside P01 initialization; preserve ingress authentication and keep real-user acceptance P02 separate.",
+      "status": "approved",
+      "evidence": "User input: \"BTW, the zava logo is not showing\". Deployed static request fails with PermissionError on /app/web/zava-logo.png; the migration-created source has mode 0600."
+    },
+    {
+      "decision": "Owner reports callback repair done and requests repeatable initialization. Execute approved P01 only in manual mode after the host exits autopilot.",
+      "status": "approved",
+      "evidence": "User input: \"Done, but this should be part of an initialization script, right?\"; host autopilot deactivation notice."
+    },
     {
       "decision": "Continue the remaining Entra/browser acceptance work selected by the owner's continuation directive.",
       "status": "approved",
@@ -47,8 +57,8 @@
     }
   ],
   "next_action": {
-    "phase": "Research",
-    "action": "Wait for an authorised tenant session or owner-applied registration update, then recover actual metadata and progress the remaining acceptance work. No security bypass or speculative application change."
+    "phase": "Implement",
+    "action": "Finish P01 initialization delivery and P03 asset-permission repair with rebuilt/deployed image evidence; leave P02 live acceptance separate."
   },
   "prioritized_follow_ups": []
 }

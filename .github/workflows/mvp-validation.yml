@@ -2,10 +2,10 @@ name: MVP validation
 
 on:
   pull_request:
-    paths: ["mvp/**", ".github/workflows/mvp-validation.yml"]
+    paths: ["mvp/**", "infra/scripts/initialize-api-auth.py", "infra/tests/**", ".github/workflows/mvp-validation.yml"]
   push:
     branches: [main]
-    paths: ["mvp/**"]
+    paths: ["mvp/**", "infra/scripts/initialize-api-auth.py", "infra/tests/**"]
   workflow_dispatch:
 
 permissions:
@@ -33,6 +33,8 @@ jobs:
         env:
           PYTHONPATH: .
         run: python -m unittest discover -s tests -v
+      - name: API authentication initialization tests
+        run: python -m unittest discover -s infra/tests -v
       - name: Check browser JavaScript syntax
         run: node --check mvp/web/app.js
       - name: Refuse committed working data
