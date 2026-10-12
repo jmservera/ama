@@ -1823,3 +1823,18 @@ metadata when the knowledge base was created.
   transition remain gated on an authorised registration owner adding the new
   callback. Existing role values are a declared external identity exception.
   Worker placeholders and planned Decision 1 scoring remain separate limitations.
+
+## [2026-10-12] update | Remaining Entra gate checked through the M365 session
+
+* Continued the owner's requested acceptance work after the completed reset
+  review. The delegated M365 client's current Graph scopes lack application
+  management; its existing login does not authorise app-registration updates.
+  Official Graph update guidance requires delegated `Application.ReadWrite.All`
+  and suitable user authority, not just `Application.Read.All`.
+* Tried the supported delegated-token route for the rebuilt API without
+  disclosing a token. It returned `AADSTS65001` (consent required), so it cannot
+  replace the missing authenticated browser session.
+* Updated [provisioning access guidance](../../infra/README.md#api-registration-management-with-the-existing-m365-session).
+  Runtime authentication and claims remain unchanged. The child acceptance
+  task is blocked on authorised owner action; the reset task's single Review
+  is not repeated and full migration acceptance is not claimed.

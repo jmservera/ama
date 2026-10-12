@@ -1,0 +1,54 @@
+{
+  "task_id": "zava-entra-acceptance-2026-10-12",
+  "task_slug": "zava-entra-acceptance",
+  "parent_task": {
+    "task_id": "zava-azure-reset-2026-10-12",
+    "task_slug": "zava-azure-reset"
+  },
+  "mode": "automatic",
+  "active_phase": "Research",
+  "status": "blocked",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": null,
+    "plan": null,
+    "details": null,
+    "critique": null,
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Continue the remaining Entra/browser acceptance work selected by the owner's continuation directive.",
+      "status": "approved",
+      "evidence": "Parent RV-001 and user input: \"Keep working autonomously until the task is truly finished\"."
+    },
+    {
+      "decision": "Research disposition reused; planning readiness blocked. Existing review/rebuild evidence plus consent probes establish the missing external authority; no new implementation plan or repeated Review is warranted yet.",
+      "status": "blocked",
+      "evidence": "infra/README.md section API registration management with the existing M365 session; parent RV-001. Graph application-management scope is absent; delegated API token acquisition returns AADSTS65001."
+    },
+    {
+      "decision": "Keep ingress authentication, issued claims and consent requirements intact; do not treat operator checks or fabricated proxy headers as interactive acceptance.",
+      "status": "confirmed",
+      "evidence": "Parent approved reset plan and tools/rename-zava.md acceptance boundary."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "tenant-consent",
+      "summary": "Azure operator cannot manage the API registration; the logged-in delegated M365 client has no application-management Graph permission.",
+      "resolution": "An authorised owner updates the registration directly, or temporarily consents Application.ReadWrite.All for the provisioning client and authenticates it again. Never grant this management permission to runtime workloads."
+    },
+    {
+      "id": "authenticated-acceptance",
+      "summary": "A legitimate API token request through the existing M365 client fails with AADSTS65001; no interactive workbench user session is available.",
+      "resolution": "After authorised callback/name/role changes, complete real Entra sign-in and verify scoped lists, 443 open cases and rendered map/tiles. Keep the consented CLI client and browser login requirements distinct."
+    }
+  ],
+  "next_action": {
+    "phase": "Research",
+    "action": "Wait for an authorised tenant session or owner-applied registration update, then recover actual metadata and progress the remaining acceptance work. No security bypass or speculative application change."
+  },
+  "prioritized_follow_ups": []
+}

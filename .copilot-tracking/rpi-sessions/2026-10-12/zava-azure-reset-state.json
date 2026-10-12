@@ -17,12 +17,13 @@
   "confirmed_decisions": [
     {"decision": "Reset resources inside ama, preserve required identities only, redeploy, fix and review.", "status": "approved", "evidence": "Owner request on 2026-10-12; downtime authorised in prior conversation."},
     {"decision": "Reuse the tested migration/deployment contract and continue PR #65.", "status": "approved", "evidence": "Existing workstream and tools/rename-zava.md; no new infrastructure design."},
-    {"decision": "Review executed once: Complete; outcome Residual work. Reset/rebuild and names/links supported, authenticated browser/tenant gate remains open.", "status": "reviewed", "evidence": ".copilot-tracking/reviews/logs/2026-10-12/zava-azure-reset-review.md"}
+    {"decision": "Review executed once: Complete; outcome Residual work. Reset/rebuild and names/links supported, authenticated browser/tenant gate remains open.", "status": "reviewed", "evidence": ".copilot-tracking/reviews/logs/2026-10-12/zava-azure-reset-review.md"},
+    {"decision": "Owner directed continuation of the remaining acceptance gate; progress the sole ranked Entra/browser follow-up without repeating this completed task's Review.", "status": "approved", "evidence": "User input: \"Keep working autonomously until the task is truly finished\""}
   ],
   "blockers": [
     {"id": "entra-management", "summary": "Azure and M365 sessions lack API app-registration read/manage authority.", "resolution": "Authorised application owner/admin updates callback and roles; keep protected API meanwhile."}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Reviewed rebuild published to #65; wait for PR checks, then select the ranked tenant/acceptance follow-up, Stop or manual mode. Full browser/tenant acceptance is not complete."},
+  "next_action": {"phase": "Research", "action": "Child .copilot-tracking/rpi-sessions/2026-10-12/zava-entra-acceptance-state.json is blocked on tenant consent and real user authentication. Await authorised owner action; retain the completed reset Review."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Complete Entra callback/name/role transition and authenticated browser acceptance", "rationale": "Clears the only current user-visible migration acceptance gate; requires authorised tenant owner access.", "evidence": "RV-001 in .copilot-tracking/reviews/logs/2026-10-12/zava-azure-reset-review.md"}
   ]

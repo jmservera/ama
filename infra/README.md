@@ -109,6 +109,31 @@ The runtime identity needs only Microsoft Graph application permission `Sites.Se
 
 Setting the site and channel up through the m365 CLI needs delegated Graph permissions on the app it signs in with, consented by an administrator: `Sites.FullControl.All`, `Team.Create`, `Channel.Create`, `AppRoleAssignment.ReadWrite.All` and `Application.Read.All`, plus the existing `AllSites.Read`. `scripts/configure-m365-provisioner-app.sh <app id> --consent` adds them. Remove `Sites.FullControl.All` and the consent once the grants are made.
 
+### API registration management with the existing M365 session
+
+The existing delegated M365 session was checked on 2026-10-12. Its consented
+Graph scopes do not include application management. Being logged in does not
+make `entra app` write operations authorised. Azure RG Owner and the signed-in
+user's directory authority are also distinct from the CLI client's consented
+Graph permissions.
+
+For delegated Graph application updates, Microsoft's
+[Update application permission table](https://learn.microsoft.com/en-us/graph/api/application-update?view=graph-rest-1.0)
+requires `Application.ReadWrite.All`, plus appropriate ownership/directory
+authority. `Application.Read.All` is not sufficient to change redirects, app
+names or roles. Prefer an authorised owner making this one-off portal update.
+If CLI management is needed, an authorised administrator must temporarily
+consent the management permission for the provisioning client and obtain a
+fresh authenticated session. Remove unnecessary provisioning grants afterwards;
+do not add tenant-management permissions to runtime identities.
+
+A separate, legitimate delegated API-token request through the current M365
+client returned `AADSTS65001` (consent required). That client is not an
+alternative authenticated acceptance path. Graph management consent and
+workbench sign-in are separate concerns: updating the registration does not
+automatically consent another client to call the API, and an API token cannot
+be substituted with a Graph token or forged proxy claims.
+
 ## From-empty rebuild observed on 2026-10-12
 
 The owner-authorised `ama` reset retained the group, its policy-exception tag,
