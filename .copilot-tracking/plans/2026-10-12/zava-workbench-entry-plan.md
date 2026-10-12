@@ -118,7 +118,7 @@ Keep Azure SQL, AI configuration and continuing synthetic data unchanged.
 #### [ ] P03-T02: Deploy, bootstrap token store, activate and verify live boundaries
 
 <!-- rpi:task id=P03-T03 -->
-#### [ ] P03-T03: Update guidance/index/log and publish to continuing #65
+#### [x] P03-T03: Update guidance/index/log and publish to continuing #65
 
 ## Test Ownership and Candidate Lock
 

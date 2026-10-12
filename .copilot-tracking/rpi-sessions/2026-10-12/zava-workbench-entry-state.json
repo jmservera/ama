@@ -58,7 +58,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Publish verified source on continuing PR #65; obtain required fresh-user photo/account-switch acceptance, then execute the single post-implementation Review."
+    "action": "Source published in 15e8158 on PR #65. Obtain required fresh-user photo/account-switch acceptance, confirm CI, then execute the single post-implementation Review."
   },
   "prioritized_follow_ups": []
 }

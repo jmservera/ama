@@ -81,4 +81,8 @@ treat the administrative CLI profile as a workbench browser session.
 
 P01/P02 and P03-T01 complete. P03-T02 implementation/deployment are complete,
 but the legitimate user photo/consent/switch acceptance gate remains open.
-P03-T03 publication pending. No implementation defect is presently known.
+P03-T03 published in 15e8158 on existing PR #65 with a completion-boundary
+comment. Related link check reports eight existing missing targets, zero new
+missing targets and zero changed-fragment failures. CI is triggered by the
+source commit; final post-implementation Review remains pending human gate.
+No implementation defect is presently known.
