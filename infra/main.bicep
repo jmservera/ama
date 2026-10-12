@@ -28,6 +28,10 @@ param sqlAdminPrincipalType string = 'Group'
 param entraClientId string = ''
 @description('Explicit Entra role-value mapping for an existing registration. Empty uses the application defaults. Transitional mappings do not rename tenant roles.')
 param entraRoleMap object = {}
+@description('Provision private token-only storage and its maintenance identity/job for delegated Microsoft profile photos.')
+param enableEntraTokenStore bool = false
+@description('Activate EasyAuth token storage only after the maintenance job has successfully written its first SAS secret.')
+param entraTokenStoreReady bool = false
 @description('Container images. The default placeholder lets infrastructure deploy before application images exist.')
 param apiImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 @description('Enable direct model calls from the existing MVP API. Leave false for the proposed separate agent-runner topology; true grants the API model invocation rights and configures AI_ENDPOINT.')
@@ -238,6 +242,10 @@ module apps 'modules/containerapps.bicep' = if (deployApplications) {
     keyVaultUri: 'https://${keyvault.outputs.name}${environment().suffixes.keyvaultDns}'
     entraClientId: entraClientId
     entraRoleMap: entraRoleMap
+    tokenStoreReady: enableEntraTokenStore && entraTokenStoreReady
+    tokenStoreAccountName: enableEntraTokenStore ? authTokenStore!.outputs.accountName : ''
+    tokenMaintenanceIdentityId: enableEntraTokenStore ? authTokenStore!.outputs.identityId : ''
+    tokenMaintenanceClientId: enableEntraTokenStore ? authTokenStore!.outputs.identityClientId : ''
     tileUrl: tileUrl
     tileAttribution: tileAttribution
     zoneRedundant: zoneRedundant
@@ -248,6 +256,24 @@ module apps 'modules/containerapps.bicep' = if (deployApplications) {
     agentImage: agentImage
     orchestratorImage: orchestratorImage
     importImage: importImage
+  }
+
+}
+
+module authTokenStore 'modules/authTokenStore.bicep' = if (enableEntraTokenStore) {
+  name: 'auth-token-store'
+  params: {
+    name: 'st${take(compact, 13)}auth${unique}'
+    prefix: prefix
+    location: location
+    tags: allTags
+    workspaceId: monitoring.outputs.workspaceId
+    peSubnetId: network.outputs.peSubnetId
+    blobZoneId: network.outputs.zoneIds.blob
+    keyVaultName: keyvault.outputs.name
+    registryName: first(split(registry.outputs.loginServer, '.'))
+    allowPublicNetworkAccess: publicAccess
+    zoneRedundant: zoneRedundant
   }
 }
 

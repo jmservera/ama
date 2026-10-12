@@ -208,7 +208,9 @@ ledger table question in ADR 0002 stays open.
 
 ### Entra ID on Container Apps
 
-Code: `auth.py`. Nothing below has been done or run in Azure.
+Code: `auth.py`. The current demonstrator uses this provider in Azure;
+the owner confirmed working workbench sign-in on 2026-10-12. Local tests and
+provisioning checks do not substitute for each user's consent/acceptance.
 
 * Create an app registration (single tenant) and define app roles whose values
   match the map (default `ZavaForward.Coordinator`, `.LiaisonOfficer`,
@@ -222,8 +224,30 @@ Code: `auth.py`. Nothing below has been done or run in Azure.
   one mapped role; the role comes from the token, never the staff file.
 * Provision each staff record with the Entra object id (`oid`). Email matching
   is off unless `ZF_AUTH_EMAIL_FALLBACK=1`. Contractor guests need the same.
-* Sign-out redirects to `/.auth/logout`. State-changing requests need an
+* Sign-out redirects through `/.auth/logout` to the public welcome;
+  "Use another account" returns through `/sign-in` and the Microsoft account
+  chooser. State-changing requests need an
   `X-ZF-CSRF` header under this provider.
+
+The public `/` page shows Zava Forward and its logo without loading workbench
+scripts or data. Its button enters `/sign-in`; `/app` is protected. Production
+session/role failures show Microsoft sign-in or an authorisation message,
+never the local shared-password form.
+
+The native account panel shows the authenticated Entra display name/email,
+existing workbench role and own Microsoft profile photo. It does not rewrite
+synthetic staff records or broaden contractor projections. Escape/outside
+click closes the panel; keyboard focus and a 375-pixel layout are supported.
+Missing photos/access errors display initials and an explicit status.
+
+`/api/account/photo` authenticates and authorises the current user before
+fetching the fixed Graph `/me/photo/$value` URL. The delegated platform token
+stays server-side, redirects are refused, and timeout/type/signature/2 MiB
+limits apply. There is at most one provider refresh attempt for token expiry.
+See [staged token-store setup and permissions](../infra/README.md#public-welcome-and-microsoft-account-photos).
+This uses only delegated own-user `User.Read`, not tenant-wide application
+photo access. Local password development shows initials without requesting
+Microsoft tokens.
 
 ## Run it locally
 

@@ -81,7 +81,10 @@ class PasswordProvider:
         u = self.store.staff.get(d.get("e", ""))
         return dict(u) if u and d.get("x", 0) > time.time() else None
 
-    def logout_response(self):
+    def account(self, headers, user):
+        return {"name": user["name"], "email": user["email"], "provider": self.name}
+
+    def logout_response(self, switch=False):
         return {"ok": True}
 
 
@@ -147,8 +150,16 @@ class TrustedProxyProvider:
         # Identifiers only (no names or emails), so operators can see why a signed-in user was refused.
         print(f"auth denied: {reason}: {detail}", flush=True)
 
-    def logout_response(self):
-        return {"ok": True, "redirect": "/.auth/logout"}
+    def account(self, headers, user):
+        p = self.parse_principal(headers.get("X-MS-CLIENT-PRINCIPAL"))
+        names = self.claims(p, NAME)
+        emails = self.claims(p, EMAIL)
+        return {"name": names[0] if names else user["name"],
+                "email": emails[0] if emails else "", "provider": self.name}
+
+    def logout_response(self, switch=False):
+        target = "%2Fsign-in" if switch else "%2F"
+        return {"ok": True, "redirect": "/.auth/logout?post_logout_redirect_uri=" + target}
 
 
 def make_provider(store, password, env=None):

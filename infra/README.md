@@ -89,7 +89,11 @@ Notes:
 
 * The registry accepts `az acr build` when public access is on (development profile).
 * The image carries no data. Seed the SQL database once from an operator machine (see `mvp/README.md`, Azure SQL store); set `oid` on a staff record to a signed-in user's object id so that user maps to a workbench role.
-* With `entraClientId` set, built-in authentication redirects browsers to sign in and returns 401 to clients that do not look like browsers. Only users assigned an app role can sign in. `/healthz` is excluded. The client secret is a Key Vault secret named `entra-client-secret` read through the API identity.
+* With `entraClientId` set, `/` is a public branded welcome and `/sign-in`
+  deliberately enters Microsoft sign-in. `/app` and every data API stay
+  protected; anonymous APIs return 401. Only the welcome, its stylesheet/logo,
+  sign-in route and probes are excluded. The client secret is a Key Vault
+  secret named `entra-client-secret` read through the API identity.
 * The API listens on 8088 and serves only `/healthz` for probes (there is no `/readyz`). The agents, orchestrator and import workloads still run the placeholder image because no code for them exists yet.
 * `ZF_ENV=production` is set when authentication is on, so the map has no background until `tileUrl` is set (for a dev test: `tileUrl=https://tile.openstreetmap.org/{z}/{x}/{y}.png tileAttribution='&copy; OpenStreetMap contributors'`, within the OSM tile usage policy; choose a licensed provider before real use). The CSP follows the tile host.
 * The previous `allowedPrincipals` restriction on the auth config was removed: it listed managed identity client ids where object ids are expected and would have blocked signed-in users. Access is limited by the app role requirement instead.
@@ -139,6 +143,73 @@ callbacks in check-only mode, permission denial and unverifiable updates exit
 nonzero. The command does not change display names, roles, assignments or
 secrets. The existing creation helper is for first-time registration and role
 provisioning, not a callback-only repair.
+
+### Public welcome and Microsoft account photos
+
+The existing registration is retained. Add only delegated own-user Graph
+`User.Read` with the same isolated provisioning profile:
+
+```bash
+python3 infra/scripts/initialize-api-auth.py \
+  -g ama -n ca-forward-test-api --account-photo
+python3 infra/scripts/initialize-api-auth.py \
+  -g ama -n ca-forward-test-api --account-photo --check
+```
+
+This opt-in flag merges `User.Read` into existing requested permissions,
+preserving all previous permissions/redirects. It does not grant administrator
+consent, change roles, rotate credentials or request app-only
+`ProfilePhoto.Read.All`. Users complete normal Microsoft sign-in/MFA/consent;
+an administrator handles consent if tenant policy requires it. Never share
+passwords, device codes, access tokens or a CLI profile directory.
+
+Photos use the supported Container Apps Blob token store and a server-only
+Graph `/me/photo/$value` proxy, not browser `/.auth/me` token retrieval.
+Deployment has two deliberate stages:
+
+1. Keep all existing deployment parameters and the real image. Deploy with
+   `enableEntraTokenStore=true entraTokenStoreReady=false`. This creates a
+   dedicated token-only storage account, private `auth-tokens` container,
+   private endpoint, scoped maintenance identity and daily renewal job.
+   Shared account keys and public Blob access remain disabled.
+2. Start the maintenance job and require execution status `Succeeded`:
+
+   ```bash
+   az containerapp job start -g ama -n job-forward-test-auth-renewal -o none
+   az containerapp job execution list -g ama -n job-forward-test-auth-renewal \
+     --query '[].{name:name,status:properties.status,start:properties.startTime}' -o table
+   ```
+
+3. Only after success, redeploy the same parameters with
+   `enableEntraTokenStore=true entraTokenStoreReady=true`. The API references
+   the existing `entra-token-store-sas` secret; Bicep never resets its value.
+   Auth now requests `openid profile email`, own-user `User.Read` and
+   `offline_access`, with the Microsoft account chooser on fresh login.
+4. Sign out and sign in again to obtain the new delegated scope. Confirm the
+   account name/photo and logout/switch with an actual authorised user.
+
+The job uses `ManagedIdentityCredential` and a five-day, HTTPS-only,
+read/write/delete user-delegation SAS, renewed daily at 03:00 UTC. Its identity
+has Blob Delegator at account scope, Blob Contributor only on `auth-tokens`,
+Secrets Officer only on `entra-token-store-sas`, and registry pull. Existing
+evidence/import identities get no rights on the separate token account.
+Authentication tokens are real secret/personal authentication data, not the
+constructed fixture. No token values/photos enter Git, job output or evidence.
+
+Monitor failed/missing renewal executions and act before the last successful
+SAS expires; daily renewal leaves about four days of overlap. Job output
+reports only status/expiry and fails nonzero without overwriting a secret on
+delegation failure. Versionless Key Vault references retrieve updates within
+30 minutes; the secret-ref environment setting triggers active revision
+refresh. Do not expose its value. See Microsoft's
+[Container Apps secret rotation guidance](https://learn.microsoft.com/en-us/azure/container-apps/manage-secrets#reference-secret-from-key-vault)
+and [token-store contract](https://learn.microsoft.com/en-us/azure/container-apps/token-store),
+checked 2026-10-12.
+
+The UI shows initials and an explicit status when no photo exists or token,
+consent or upstream access fails. An expired photo token gets at most one
+supported `/.auth/refresh` attempt. This does not weaken workbench/API
+authentication or make a mocked photo a live acceptance result.
 
 ## Microsoft 365 permissions
 
@@ -234,12 +305,13 @@ subsequent health returned 200, unauthenticated API 401 and browser 302.
 Worker jobs/apps still use placeholders and Decision 1 scoring is not thereby
 implemented.
 
-The owner reports the new callback repaired on 2026-10-12; that is not a
-verified tenant read or signed-in browser check. The current operator still
-lacks Graph application-management permission. Interactive sign-in, live
-My cases/All cases, map acceptance and tenant naming/role transition remain
-unverified. Keep authentication on and use the initializer for subsequent
-rebuilds; complete real-user browser acceptance separately.
+The owner subsequently confirmed working workbench sign-in and completed the
+isolated provisioning login on 2026-10-12. A real initializer `--check` then
+verified the retained callback, and the opt-in `--account-photo` merge and
+read-only check succeeded. This separate provisioning profile has authority
+for that registration; the deployment identity's directory rights were not
+broadened. Live user photo/consent, map acceptance and tenant naming/role
+transition are distinct checks, not established by CLI authentication.
 
 ## Validate locally
 

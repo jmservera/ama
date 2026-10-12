@@ -1860,3 +1860,33 @@ metadata when the knowledge base was created.
   and mode 0644. Health remains 200, unauthenticated ingress remains 401 and
   browser entry remains an Entra redirect. Full signed-in browser acceptance
   is still a separate gate.
+
+## [2026-10-12] update | Public welcome, own-account photos and renewable token storage
+
+* The owner confirmed working workbench sign-in and completed an isolated
+  provisioning login. The initializer then verified the retained callback;
+  opt-in `--account-photo` merged delegated own-user Graph `User.Read` and a
+  read-only rerun verified it. Existing roles, credentials and redirects were
+  retained. This is not a grant of administrator consent or wider runtime
+  directory authority.
+* Added a public branded root with explicit sign-in and protected `/app`.
+  Exact platform exemptions cover only the welcome, its logo/stylesheet,
+  sign-in and probes. Live anonymous root/logo/styles return 200, while APIs
+  and non-browser workbench requests still return 401.
+* Added an accessible account panel and fixed server-only own-photo proxy:
+  real Entra name/email, role, photo or initials with explicit status, safe
+  logout/switch and one bounded provider refresh. Synthetic browser checks
+  cover mobile containment, keyboard closure, expired-photo handling and
+  production role failure without a password form. They are not real-user
+  photo/consent acceptance.
+* ACR db3 built the real image. Bootstrap and activation deployments succeeded.
+  The real maintenance job succeeded and wrote a SAS expiring five days later.
+  Verified shared keys/public Blobs disabled, token-only classification and
+  container-/single-secret-scoped grants. Activated supported token store,
+  delegated scopes and versionless rotation without reading token values.
+* Updated [setup and rotation instructions](../../infra/README.md#public-welcome-and-microsoft-account-photos),
+  [MVP account behavior](../../mvp/README.md#entra-id-on-container-apps), and the
+  knowledge-base routing. MVP 284 tests (26 existing skips), initializer 15
+  tests and migration 22 tests pass; Bicep build/lint and JavaScript syntax pass.
+  Fresh real-user sign-in, consent/photo and account-switch acceptance remain
+  explicitly separate from provisioning and synthetic checks.

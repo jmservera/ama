@@ -2,10 +2,10 @@ name: MVP validation
 
 on:
   pull_request:
-    paths: ["mvp/**", "infra/scripts/initialize-api-auth.py", "infra/tests/**", ".github/workflows/mvp-validation.yml"]
+    paths: ["mvp/**", "infra/**", ".github/workflows/mvp-validation.yml"]
   push:
     branches: [main]
-    paths: ["mvp/**", "infra/scripts/initialize-api-auth.py", "infra/tests/**"]
+    paths: ["mvp/**", "infra/**"]
   workflow_dispatch:
 
 permissions:
@@ -35,6 +35,10 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: API authentication initialization tests
         run: python -m unittest discover -s infra/tests -v
+      - name: Build and lint infrastructure
+        run: |
+          az bicep build --file infra/main.bicep --stdout > /dev/null
+          az bicep lint --file infra/main.bicep
       - name: Check browser JavaScript syntax
         run: node --check mvp/web/app.js
       - name: Refuse committed working data

@@ -17,6 +17,10 @@ param modelDeploymentNames object
 param keyVaultUri string
 param entraClientId string
 param entraRoleMap object = {}
+param tokenStoreReady bool = false
+param tokenStoreAccountName string = ''
+param tokenMaintenanceIdentityId string = ''
+param tokenMaintenanceClientId string = ''
 param zoneRedundant bool = false
 @allowed(['blob', 'sharepoint'])
 param evidenceStore string = 'blob'
@@ -103,9 +107,11 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
         allowInsecure: false
       }
       registries: [{ server: registryServer, identity: identityIds.api }]
-      secrets: authEnabled ? [
+      secrets: concat(authEnabled ? [
         { name: 'entra-client-secret', keyVaultUrl: '${keyVaultUri}/secrets/entra-client-secret', identity: identityIds.api }
-      ] : []
+      ] : [], tokenStoreReady ? [
+        { name: 'entra-token-store-sas', keyVaultUrl: '${keyVaultUri}/secrets/entra-token-store-sas', identity: identityIds.api }
+      ] : [])
     }
     template: {
       containers: [
@@ -136,7 +142,10 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
             { name: 'ZF_BLOB_ACCOUNT_URL', value: blobEndpoint }
             { name: 'ZF_BLOB_CONTAINER', value: 'evidence' }
             { name: 'ZF_BLOB_CLIENT_ID', value: identityClientIds.api }
-          ], enableApiAi ? [
+          ], tokenStoreReady ? [
+            // A versionless secret reference triggers the supported revision refresh on SAS rotation.
+            { name: 'AUTH_TOKEN_STORE_ROTATION', secretRef: 'entra-token-store-sas' }
+          ] : [], enableApiAi ? [
             { name: 'AI_ENDPOINT', value: foundryEndpoint }
             { name: 'AI_DEPLOYMENT', value: modelDeploymentNames.standard }
             { name: 'AI_DEPLOYMENT_STRONG', value: modelDeploymentNames.capable }
@@ -171,23 +180,69 @@ resource apiAuth 'Microsoft.App/containerApps/authConfigs@2025-07-01' = if (!emp
   name: 'current'
   properties: {
     platform: { enabled: true }
+    login: {
+      tokenStore: {
+        enabled: tokenStoreReady
+        azureBlobStorage: tokenStoreReady ? { sasUrlSettingName: 'entra-token-store-sas' } : null
+      }
+    }
     globalValidation: {
       unauthenticatedClientAction: 'RedirectToLoginPage'
       redirectToProvider: 'azureactivedirectory'
-      excludedPaths: ['/healthz', '/readyz']
+      excludedPaths: ['/healthz', '/readyz', '/', '/welcome.html', '/style.css', '/zava-logo.png', '/sign-in']
     }
     identityProviders: {
       azureActiveDirectory: {
         enabled: true
+        login: {
+          loginParameters: tokenStoreReady
+            ? ['scope=openid profile email https://graph.microsoft.com/User.Read offline_access', 'prompt=select_account']
+            : ['prompt=select_account']
+        }
         registration: {
           openIdIssuer: '${environment().authentication.loginEndpoint}${tenant().tenantId}/v2.0'
           clientId: entraClientId
           clientSecretSettingName: 'entra-client-secret'
         }
+
         validation: {
           allowedAudiences: ['api://${entraClientId}']
         }
       }
+    }
+  }
+}
+
+resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (!empty(tokenMaintenanceIdentityId)) {
+  name: 'job-${prefix}-auth-renewal'
+  location: location
+  tags: union(tags, { workload: 'entra-token-maintenance', dataClassification: 'authentication-secrets' })
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: { '${tokenMaintenanceIdentityId}': {} }
+  }
+  properties: {
+    environmentId: environmentResource.id
+    workloadProfileName: 'Consumption'
+    configuration: {
+      triggerType: 'Schedule'
+      replicaTimeout: 180
+      replicaRetryLimit: 2
+      scheduleTriggerConfig: { cronExpression: '0 3 * * *', parallelism: 1, replicaCompletionCount: 1 }
+      registries: [{ server: registryServer, identity: tokenMaintenanceIdentityId }]
+    }
+    template: {
+      containers: [{
+        name: 'auth-renewal'
+        image: apiImage
+        command: ['python', '-m', 'zavaforward_mvp.token_store']
+        resources: { cpu: json('0.25'), memory: '0.5Gi' }
+        env: [
+          { name: 'AZURE_CLIENT_ID', value: tokenMaintenanceClientId }
+          { name: 'TOKEN_STORAGE_ACCOUNT', value: tokenStoreAccountName }
+          { name: 'KEY_VAULT_URI', value: keyVaultUri }
+        ]
+      }]
     }
   }
 }

@@ -7,6 +7,7 @@ import time
 import unittest
 import urllib.error
 import urllib.request
+from unittest.mock import patch
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 
@@ -142,7 +143,46 @@ class ProxyHttpTests(Base):
         self.assertEqual(self.call("/api/cases/ZF-1/call", h, {"outcome": "Spoke"})[0], 403)
         h["X-ZF-CSRF"] = "1"
         self.assertEqual(self.call("/api/cases/ZF-1/call", h, {"outcome": "Spoke"})[0], 200)
-        self.assertEqual(self.call("/api/logout", h, {})[1]["redirect"], "/.auth/logout")
+        self.assertEqual(self.call("/api/logout", h, {})[1]["redirect"], "/.auth/logout?post_logout_redirect_uri=%2F")
+        self.assertEqual(self.call("/api/logout", h, {"switchAccount": True})[1]["redirect"], "/.auth/logout?post_logout_redirect_uri=%2Fsign-in")
+
+    def test_welcome_is_public_and_workbench_is_protected(self):
+        with urllib.request.urlopen(self.base + "/") as response:
+            text = response.read().decode()
+            self.assertIn("Sign in to the workbench", text)
+            self.assertNotIn("app.js", text)
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, *args, **kwargs):
+                return None
+        opener = urllib.request.build_opener(NoRedirect())
+        for path, target in (("/app", "/sign-in"), ("/sign-in", "/.auth/login/aad?post_login_redirect_uri=%2Fapp")):
+            with self.assertRaises(urllib.error.HTTPError) as error:
+                opener.open(self.base + path)
+            self.assertEqual(error.exception.code, 302)
+            self.assertEqual(error.exception.headers["Location"], target)
+        req = urllib.request.Request(self.base + "/app", headers={"X-MS-CLIENT-PRINCIPAL": principal()})
+        with urllib.request.urlopen(req) as response:
+            self.assertIn('data-auth-provider="trusted-proxy"', response.read().decode())
+
+    def test_current_account_claims_do_not_change_staff_records(self):
+        p = json.loads(base64.b64decode(principal(email="signed-in@example.test")))
+        p["claims"].append({"typ": "name", "val": "Signed In Person"})
+        header = base64.b64encode(json.dumps(p).encode()).decode()
+        code, me = self.call("/api/me", {"X-MS-CLIENT-PRINCIPAL": header})
+        self.assertEqual(code, 200)
+        self.assertEqual(me["account"]["name"], "Signed In Person")
+        self.assertEqual(me["account"]["email"], "signed-in@example.test")
+        self.assertEqual(self.store.staff["sam@example.test"]["name"], "Sam Example")
+
+    def test_photo_requires_current_user_and_contractor_is_allowed_own_photo(self):
+        self.assertEqual(self.call("/api/account/photo")[0], 401)
+        con = {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Contractor",), oid="aaaaaaaa-0000-0000-0000-000000000009")}
+        with patch("zavaforward_mvp.profile.own_photo") as photo:
+            from zavaforward_mvp.profile import PhotoError
+            photo.side_effect = PhotoError(404, "No Microsoft profile photo has been set.")
+            self.assertEqual(self.call("/api/account/photo", con)[0], 404)
+            self.assertEqual(self.call("/api/me", con)[1]["staff"], [])
+            photo.assert_called_once_with(None)
 
 
 class PasswordProviderTests(Base):

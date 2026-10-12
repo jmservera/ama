@@ -79,15 +79,43 @@ class InitializationTests(unittest.TestCase):
             raise RuntimeError("Graph PATCH denied")
         self.writes.append(args)
         body = json.loads(args[args.index("--body") + 1])
-        self.assertEqual(set(body), {"web"})
-        self.assertEqual(set(body["web"]), {"redirectUris"})
+        self.assertTrue(set(body).issubset({"web", "requiredResourceAccess"}))
+        if "web" in body:
+            self.assertEqual(set(body["web"]), {"redirectUris"})
         if self.verify_update:
-            self.application["web"]["redirectUris"] = body["web"]["redirectUris"]
+            if "web" in body:
+                self.application["web"]["redirectUris"] = body["web"]["redirectUris"]
+            if "requiredResourceAccess" in body:
+                self.application["requiredResourceAccess"] = body["requiredResourceAccess"]
         return ""
 
-    def run_init(self, *, login: bool = False, check: bool = False) -> dict[str, str]:
+    def run_init(self, *, login: bool = False, check: bool = False, account_photo: bool = False) -> dict[str, str]:
         return INIT.initialize("ama", "ca-forward-test-api", tenant_profile=self.profile,
-                               login=login, check=check)
+                               login=login, check=check, account_photo=account_photo)
+
+    def test_own_photo_merges_only_user_read_and_preserves_other_permissions(self):
+        existing = [{"resourceAppId": "other-api", "resourceAccess": [{"id": "other-grant", "type": "Role"}]},
+                    {"resourceAppId": INIT.GRAPH_ID, "resourceAccess": [{"id": "old-scope", "type": "Scope"}]}]
+        self.application["requiredResourceAccess"] = copy.deepcopy(existing)
+        self.assertEqual(self.run_init(account_photo=True)["status"], "updated")
+        actual = self.application["requiredResourceAccess"]
+        self.assertEqual(actual[0], existing[0])
+        self.assertEqual(actual[1]["resourceAccess"], [*existing[1]["resourceAccess"], {"id": INIT.USER_READ, "type": "Scope"}])
+        self.assertEqual(self.run_init(account_photo=True, check=True)["status"], "already-initialized")
+        self.assertEqual(len(self.writes), 1)
+        self.assertEqual(self.application["appRoles"], self.snapshot["appRoles"])
+        self.assertEqual(self.application["passwordCredentials"], self.snapshot["passwordCredentials"])
+
+    def test_own_photo_check_is_read_only_and_invalid_permissions_fail_closed(self):
+        self.application["web"]["redirectUris"].append(CALLBACK)
+        with self.assertRaisesRegex(RuntimeError, "User.Read is missing"):
+            self.run_init(account_photo=True, check=True)
+        self.assertFalse(self.writes)
+        for bad in ("invalid", [{"resourceAppId": "api"}]):
+            self.application["requiredResourceAccess"] = bad
+            with self.assertRaises(ValueError):
+                self.run_init(account_photo=True)
+        self.assertFalse(self.writes)
 
     def test_initialization_preserves_settings_and_rerun_does_not_write(self) -> None:
         self.assertEqual(self.run_init()["status"], "updated")

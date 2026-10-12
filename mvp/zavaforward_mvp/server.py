@@ -10,7 +10,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from . import auth, projection, quality
+from . import auth, profile, projection, quality
 from .documents import DocumentStoreError
 from .factory import open_store
 from .timecapture import TimeCapture
@@ -48,6 +48,8 @@ class App:
 
 
 def get_kind(path):
+    if path == "/api/account/photo":
+        return "me"
     if path == "/api/me":
         return "me"
     if path == "/api/cases":
@@ -149,10 +151,20 @@ def make_handler(app):
                     return self._send(503, "database unavailable", "text/plain")
                 return self._send(200, "ok", "text/plain")
             if not url.path.startswith("/api/"):
-                name = "index.html" if url.path in ("/", "") else url.path.lstrip("/")
+                if url.path == "/sign-in":
+                    target = "/.auth/login/aad?post_login_redirect_uri=%2Fapp" if app.provider.name == "trusted-proxy" else "/app"
+                    return self._send(302, "", extra={"Location": target})
+                name = "welcome.html" if url.path in ("/", "") else "index.html" if url.path == "/app" else url.path.lstrip("/")
                 f = (WEB / name).resolve()
                 if WEB in f.parents and f.is_file():
-                    return self._send(200, f.read_bytes(), TYPES.get(f.suffix, "application/octet-stream"))
+                    if app.provider.name == "trusted-proxy" and url.path not in ("/", "/welcome.html", "/style.css", "/zava-logo.png") and not self._user():
+                        if self.headers.get("X-MS-CLIENT-PRINCIPAL"):
+                            return self._send(403, '<h1>Account not authorised</h1><p>Your account needs a provisioned workbench role.</p><a href="/.auth/logout?post_logout_redirect_uri=%2F">Sign out</a>', "text/html; charset=utf-8")
+                        return self._send(302, "", extra={"Location": "/sign-in"})
+                    raw = f.read_bytes()
+                    if name == "index.html":
+                        raw = raw.replace(b"__AUTH_PROVIDER__", app.provider.name.encode())
+                    return self._send(200, raw, TYPES.get(f.suffix, "application/octet-stream"))
                 return self._send(404, "Not found", "text/plain")
             u = self._user()
             if not u:
@@ -163,8 +175,16 @@ def make_handler(app):
                 return self._json(403, {"error": "Your role does not include this."})
             if url.path == "/api/me":
                 out = projection.me_payload(u, s.counts(u), list(s.staff.values()))
+                out["account"] = app.provider.account(self.headers, u)
                 out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
                 return self._json(200, out)
+            if url.path == "/api/account/photo":
+                try:
+                    token = self.headers.get("X-MS-TOKEN-AAD-ACCESS-TOKEN") if app.provider.name == "trusted-proxy" else None
+                    raw, kind = profile.own_photo(token)
+                    return self._send(200, raw, kind)
+                except profile.PhotoError as error:
+                    return self._json(error.status, {"error": str(error)})
             if url.path in ("/api/cases", "/api/cases.csv"):
                 view, text, sort = q.get("view", ["mine"])[0], q.get("q", [""])[0], q.get("sort", ["urgent"])[0]
                 if url.path.endswith(".csv"):
@@ -292,7 +312,7 @@ def make_handler(app):
             if app.provider.name == "trusted-proxy" and self.headers.get("X-ZF-CSRF") != "1":
                 return self._json(403, {"error": "Missing request header."})
             if url.path == "/api/logout":
-                return self._json(200, app.provider.logout_response(), {"Set-Cookie": "zf_session=; Max-Age=0; Path=/"})
+                return self._json(200, app.provider.logout_response(switch=body.get("switchAccount") is True), {"Set-Cookie": "zf_session=; Max-Age=0; Path=/"})
             s = app.store
             if not projection.allowed(u, "post", "POST"):
                 return self._json(403, {"error": "Your role does not include this."})
