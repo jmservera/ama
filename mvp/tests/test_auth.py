@@ -184,6 +184,22 @@ class ProxyHttpTests(Base):
             self.assertEqual(self.call("/api/me", con)[1]["staff"], [])
             photo.assert_called_once_with(None)
 
+    def test_photo_binary_response_is_private_and_does_not_expose_platform_token(self):
+        from zavaforward_mvp.server import WEB
+        raw = (WEB / "zava-logo.png").read_bytes()
+        headers = {"X-MS-CLIENT-PRINCIPAL": principal(),
+                   "X-MS-TOKEN-AAD-ACCESS-TOKEN": "synthetic-platform-token"}
+        with patch("zavaforward_mvp.profile.own_photo", return_value=(raw, "image/png")) as photo:
+            req = urllib.request.Request(self.base + "/api/account/photo", headers=headers)
+            with urllib.request.urlopen(req) as response:
+                body = response.read()
+                self.assertEqual(response.headers["Content-Type"], "image/png")
+                self.assertEqual(response.headers["Cache-Control"], "no-store")
+                self.assertEqual(response.headers["X-Content-Type-Options"], "nosniff")
+            self.assertEqual(body, raw)
+            self.assertNotIn(b"synthetic-platform-token", body)
+            photo.assert_called_once_with("synthetic-platform-token")
+
 
 class PasswordProviderTests(Base):
     def test_session_cookie_is_signed_stateless_and_expires(self):
@@ -201,6 +217,17 @@ class PasswordProviderTests(Base):
 
 
 class TileConfigTests(Base):
+    def test_blob_sources_are_allowed_only_for_images(self):
+        app = App(self.store, "pw")
+        directives = {}
+        for directive in app.csp.split(";"):
+            name, *sources = directive.strip().split()
+            directives[name] = sources
+        self.assertIn("blob:", directives["img-src"])
+        for name, sources in directives.items():
+            if name != "img-src":
+                self.assertNotIn("blob:", sources)
+
     def test_default_dev_uses_osm_and_csp_allows_only_it(self):
         from zavaforward_mvp.server import tile_config
         t = tile_config({})
@@ -233,7 +260,7 @@ class TileConfigTests(Base):
             base = f"http://127.0.0.1:{httpd.server_address[1]}"
             with urllib.request.urlopen(base + "/") as r:
                 csp = r.headers["Content-Security-Policy"]
-            self.assertIn("img-src 'self' data: https://tiles.example.org;", csp)
+            self.assertIn("img-src 'self' data: blob: https://tiles.example.org;", csp)
             self.assertNotIn("openstreetmap", csp)
             tok = app.provider.login("sam@example.test", "pw")
             req = urllib.request.Request(base + "/api/me", headers={"Cookie": f"zf_session={tok}"})

@@ -149,7 +149,7 @@ class MapListAndTiles(Base):
     def test_me_payload_carries_server_rendered_tile_config_and_csp_follows(self):
         st, d, h = self.call(self.login("sam@example.test"), "/api/me")
         self.assertEqual(d["map"], dict(tiles="https://tiles.example.org/{z}/{x}/{y}.png", attribution="Example Tiles"))
-        self.assertIn("img-src 'self' data: https://tiles.example.org;", h["Content-Security-Policy"])
+        self.assertIn("img-src 'self' data: blob: https://tiles.example.org;", h["Content-Security-Policy"])
         self.assertNotIn("openstreetmap", h["Content-Security-Policy"])
 
     def test_map_list_data_points_then_clusters(self):

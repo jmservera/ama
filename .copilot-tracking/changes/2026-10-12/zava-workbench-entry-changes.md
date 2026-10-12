@@ -77,6 +77,16 @@ Fresh legitimate user sign-in is needed for delegated photo consent and
 account-switch acceptance. Do not fabricate headers, save a photo/token or
 treat the administrative CLI profile as a workbench browser session.
 
+The acceptance form reported that the owner is unavailable and will review
+later. Preserve that gate unchecked; no consent/photo acceptance is inferred.
+All implementation/deployment is delivered. Review handoff is explicitly
+bounded to source, deployment and synthetic behavior, with the human gate
+routed as residual work rather than a conformant end-to-end outcome.
+Current-head 80d4a47 technical CI, image/security scan, SQL parity, MVP
+validation and prototype validation all succeeded. The source-only 15e8158
+runs were superseded/cancelled by the record commit, not failed tests.
+Rubric scoring remains running/pending and is not capstone readiness.
+
 ## Blockers and Remaining Work
 
 P01/P02 and P03-T01 complete. P03-T02 implementation/deployment are complete,

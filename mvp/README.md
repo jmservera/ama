@@ -249,6 +249,9 @@ This uses only delegated own-user `User.Read`, not tenant-wide application
 photo access. Local password development shows initials without requesting
 Microsoft tokens.
 
+The CSP permits temporary `blob:` URLs only for images, so the server-proxied
+photo can render; script/default/frame source permissions are unchanged.
+
 ## Run it locally
 
 The working data is built from the private stock-geography register. It holds

@@ -43,7 +43,7 @@ class App:
         self.store = store
         self.time = timecap or TimeCapture()
         self.tiles = tile_config()
-        self.csp = "default-src 'self'; img-src 'self' data:" + (f" {self.tiles['host']}" if self.tiles["host"] else "") + "; frame-ancestors 'none'"
+        self.csp = "default-src 'self'; img-src 'self' data: blob:" + (f" {self.tiles['host']}" if self.tiles["host"] else "") + "; frame-ancestors 'none'"
         self.provider = provider or auth.make_provider(store, password or secrets.token_urlsafe(9))
 
 

@@ -1890,3 +1890,21 @@ metadata when the knowledge base was created.
   tests and migration 22 tests pass; Bicep build/lint and JavaScript syntax pass.
   Fresh real-user sign-in, consent/photo and account-switch acceptance remain
   explicitly separate from provisioning and synthetic checks.
+
+## [2026-10-12] update | Successful photo rendering requires image-only Blob CSP
+
+* The post-implementation Review reproduced a real success-path failure:
+  the account-photo client creates a Blob object URL, but the response CSP
+  did not allow `blob:` images. A live Chromium check used only the public
+  logo as binary input, without a personal photo or fabricated live session.
+* The necessary scoped repair permits `blob:` only in `img-src`; default,
+  script and frame permissions are unchanged. Two regressions cover the
+  image-only source and authenticated binary MIME/no-store/no token output;
+  both pre-existing exact tile-host assertions are retained and updated.
+* The full suite passes 286 tests with 26 existing skips. Real ACR db4 and
+  image-only deployment succeeded; latest-ready revision 0000004 renders
+  the binary Blob image successfully. Existing auth/token store stays enabled.
+* Updated [account behavior and CSP](../../mvp/README.md#entra-id-on-container-apps)
+  and routing. Prior Review findings remain historical, not rewritten as
+  closure. Fresh legitimate photo/consent/account-switch acceptance is still
+  separate and unavailable while the owner is away.
