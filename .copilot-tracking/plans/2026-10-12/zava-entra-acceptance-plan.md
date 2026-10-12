@@ -22,7 +22,9 @@ and verify its served logo. Continue the existing open #65.
   isolated optional device-code login and explicit errors.
 * [x] P01-T02: Test reruns, preservation, read/write failures and isolation;
   add the targeted tests to CI.
-* [ ] P01-T03: Document post-deployment initialization and publish through #65.
+* [x] P01-T03: Document post-deployment initialization and publish through #65.
+
+P01 is complete and published in source commit 0723508.
 
 <!-- rpi:phase id=P02 -->
 ## P02: Separate remaining acceptance
@@ -38,8 +40,12 @@ reset's single Review is retained; no repeated Review is requested.
 
 * [x] P03-T01: Make generated assets and image packaging readable by the
   non-root API user; add a restricted-source-permission regression.
-* [ ] P03-T02: Rebuild and deploy the API image, verify the served PNG and
+* [x] P03-T02: Rebuild and deploy the API image, verify the served PNG and
   preserved health/authentication, and publish the fix through #65.
+
+P03 is complete: deployed asset verification passed and source commit 0723508
+was pushed to the continuing PR. New CI remains separate from local/live
+evidence; no merge or new Review is performed.
 
 The deployed request fails with PermissionError on `/app/web/zava-logo.png`.
 The migration-created file has mode 0600; root-owned Docker COPY preserves it

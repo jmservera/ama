@@ -19,6 +19,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "P01 callback initialization and P03 logo repair completed, validated and published in source commit 0723508 on the continuing PR #65; P02 remains separate.",
+      "status": "completed",
+      "evidence": "13 initializer tests, 22 migration tests and 273 MVP tests (26 existing skips). ACR db2 and deployed revision ca-forward-test-api--0000001 serve the exact PNG as UID 10001. Normal push succeeded; no new link/fragment defects. New CI remains pending."
+    },
+    {
       "decision": "Fix the owner-reported missing logo as P03 alongside P01 initialization; preserve ingress authentication and keep real-user acceptance P02 separate.",
       "status": "approved",
       "evidence": "User input: \"BTW, the zava logo is not showing\". Deployed static request fails with PermissionError on /app/web/zava-logo.png; the migration-created source has mode 0600."
@@ -29,13 +34,13 @@
       "evidence": "User input: \"Done, but this should be part of an initialization script, right?\"; host autopilot deactivation notice."
     },
     {
-      "decision": "Continue the remaining Entra/browser acceptance work selected by the owner's continuation directive.",
-      "status": "approved",
+      "decision": "The earlier autonomous Entra/browser continuation is historical; current owner-approved manual implementation is bounded to P01/P03.",
+      "status": "superseded",
       "evidence": "Parent RV-001 and user input: \"Keep working autonomously until the task is truly finished\"."
     },
     {
-      "decision": "Research disposition reused; planning readiness blocked. Existing review/rebuild evidence plus consent probes establish the missing external authority; no new implementation plan or repeated Review is warranted yet.",
-      "status": "blocked",
+      "decision": "Research evidence reused for P01/P03. Missing tenant authority blocks only P02/live Graph checks, not the source-tested initializer or diagnosed asset-permission repair.",
+      "status": "reused",
       "evidence": "infra/README.md section API registration management with the existing M365 session; parent RV-001. Graph application-management scope is absent; delegated API token acquisition returns AADSTS65001."
     },
     {
@@ -47,18 +52,18 @@
   "blockers": [
     {
       "id": "tenant-consent",
-      "summary": "Azure operator cannot manage the API registration; the logged-in delegated M365 client has no application-management Graph permission.",
-      "resolution": "An authorised owner updates the registration directly, or temporarily consents Application.ReadWrite.All for the provisioning client and authenticates it again. Never grant this management permission to runtime workloads."
+      "summary": "P02/live tenant verification: operator and delegated M365 client cannot read/manage the API registration. Owner reports callback repair done; tenant naming/roles remain unverified.",
+      "resolution": "Use an authorised isolated provisioning profile for live --check and tenant naming/role verification. No additional consent is required to complete the already-published P01/P03 code. Never grant tenant management to runtime workloads."
     },
     {
       "id": "authenticated-acceptance",
-      "summary": "A legitimate API token request through the existing M365 client fails with AADSTS65001; no interactive workbench user session is available.",
-      "resolution": "After authorised callback/name/role changes, complete real Entra sign-in and verify scoped lists, 443 open cases and rendered map/tiles. Keep the consented CLI client and browser login requirements distinct."
+      "summary": "P02: real-user workbench acceptance is unverified; the owner's browser session is not available to the assistant. The separate M365 API-token route previously failed with AADSTS65001.",
+      "resolution": "Complete real Entra sign-in and verify scoped lists, 443 open cases and rendered map/tiles. Owner reports callback repair done; keep browser acceptance distinct from CLI-client consent and static asset verification."
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Finish P01 initialization delivery and P03 asset-permission repair with rebuilt/deployed image evidence; leave P02 live acceptance separate."
+    "action": "P01/P03 are complete and published. Await an explicit /rpi-review for that bounded delivery or owner-authorised P02 acceptance; remain in manual Implement. Automatic session is stopped."
   },
   "prioritized_follow_ups": []
 }

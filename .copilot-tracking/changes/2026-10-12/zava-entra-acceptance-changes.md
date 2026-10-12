@@ -57,3 +57,18 @@ Public health remains 200, unauthenticated API/logo requests remain 401, and
 browser entry remains 302 to Entra. No tenant registration was changed.
 Evidence is recorded in the session's zava-live-logo-check.json and build log.
 Publication remains pending; P02 browser/name/role acceptance is not claimed.
+
+## P01/P03 publication and bounded completion
+
+Source commit 0723508 was pushed normally to the existing topic branch and
+#65, with a delivery comment recording the initializer, live asset evidence
+and separate acceptance boundary. Updated the infrastructure recipe, migration
+guide, knowledge-base routing and append-only log. Markdown validation found
+no new missing targets or changed-fragment defects; eight existing target
+defects remain. Python/workflow syntax and git diff --check pass.
+
+P01 and P03 markers are complete. P02 remains outside this invocation and
+unchecked. Manual mode stays in Implement with automatic session stopped.
+No child Review is executed and the parent's completed residual-work Review
+is not repeated. New CI checks are pending, not claimed passed. The published
+code and deployed image are the bounded completion evidence.
