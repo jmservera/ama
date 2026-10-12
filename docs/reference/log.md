@@ -1818,7 +1818,7 @@ metadata when the knowledge base was created.
   and the [migration guide](../../tools/rename-zava.md#recorded-azure-rebuild-on-2026-10-12).
   Added explicit API model invocation, user-assigned model token selection,
   foundation-only bootstrap and transitional tenant-role mapping. The MVP has
-  272 passing tests with 26 existing skips.
+  272 tests run with 26 existing skips.
 * Interactive sign-in, scoped browser lists/map and the tenant name/role
   transition remain gated on an authorised registration owner adding the new
   callback. Existing role values are a declared external identity exception.

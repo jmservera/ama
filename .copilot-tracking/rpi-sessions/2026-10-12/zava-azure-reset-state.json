@@ -22,7 +22,7 @@
   "blockers": [
     {"id": "entra-management", "summary": "Azure and M365 sessions lack API app-registration read/manage authority.", "resolution": "Authorised application owner/admin updates callback and roles; keep protected API meanwhile."}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Publish reviewed rebuild through #65, then offer the tenant/acceptance follow-up, Stop or manual mode."},
+  "next_action": {"phase": "Follow-up", "action": "Reviewed rebuild published to #65; wait for PR checks, then select the ranked tenant/acceptance follow-up, Stop or manual mode. Full browser/tenant acceptance is not complete."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Complete Entra callback/name/role transition and authenticated browser acceptance", "rationale": "Clears the only current user-visible migration acceptance gate; requires authorised tenant owner access.", "evidence": "RV-001 in .copilot-tracking/reviews/logs/2026-10-12/zava-azure-reset-review.md"}
   ]

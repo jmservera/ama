@@ -36,7 +36,7 @@ during redeployment are within the requested fixes.
 
 * [x] P02-T01: Fix discovered deployment/runtime failures; verify health, real SQL
   write/read/restart, actual AI, lists, map and authentication where authorised.
-* [ ] P02-T02: Run one final names/reference review, record unresolved gates,
+* [x] P02-T02: Run one final names/reference review, record unresolved gates,
   update rebuild documentation and publish fixes/evidence through #65.
 
 ### Remaining acceptance gate

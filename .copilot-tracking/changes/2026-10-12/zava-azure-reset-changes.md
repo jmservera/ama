@@ -116,3 +116,9 @@ Implementation is review-ready for the reset/rebuild and explicit acceptance
 boundary. Tenant callback/role completion and authenticated browser acceptance
 are unresolved, not conformant. Publication through the existing open #65
 remains the final delivery action; the remote branch has no intervening commits.
+
+P02-T02: the one review completed with outcome Residual work (RV-001, tenant
+transition/authenticated browser acceptance). Published application/bootstrap
+fix commit `9ab3c19` and reviewed rebuild evidence commit `fe68b88` to the
+existing open #65. No merge, rebase or force-push. The source/image identity is
+unchanged; final delivery tracking records publication and awaits PR checks.
