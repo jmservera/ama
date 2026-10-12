@@ -1,0 +1,26 @@
+{
+  "task_id": "zava-azure-reset-2026-10-12",
+  "task_slug": "zava-azure-reset",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": null,
+    "plan": ".copilot-tracking/plans/2026-10-12/zava-azure-reset-plan.md",
+    "details": ".copilot-tracking/details/2026-10-12/zava-azure-reset-phase-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-10-12/zava-azure-reset-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Reset resources inside ama, preserve required identities only, redeploy, fix and review.", "status": "approved", "evidence": "Owner request on 2026-10-12; downtime authorised in prior conversation."},
+    {"decision": "Reuse the tested migration/deployment contract and continue PR #65.", "status": "approved", "evidence": "Existing workstream and tools/rename-zava.md; no new infrastructure design."}
+  ],
+  "blockers": [
+    {"id": "entra-management", "summary": "Azure and M365 sessions lack API app-registration read/manage authority.", "resolution": "Authorised application owner/admin updates callback and roles; keep protected API meanwhile."}
+  ],
+  "next_action": {"phase": "Implement", "action": "Capture dependencies, delete scoped resources and redeploy; no auth bypass."},
+  "prioritized_follow_ups": []
+}

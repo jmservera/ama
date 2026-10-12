@@ -16,11 +16,13 @@ param foundryProjectName string
 param modelDeploymentNames object
 param keyVaultUri string
 param entraClientId string
+param entraRoleMap object = {}
 param zoneRedundant bool = false
 @allowed(['blob', 'sharepoint'])
 param evidenceStore string = 'blob'
 param sharePointSiteId string = ''
 param apiImage string
+param enableApiAi bool = false
 param agentImage string
 param orchestratorImage string
 param importImage string
@@ -134,12 +136,18 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
             { name: 'ZF_BLOB_ACCOUNT_URL', value: blobEndpoint }
             { name: 'ZF_BLOB_CONTAINER', value: 'evidence' }
             { name: 'ZF_BLOB_CLIENT_ID', value: identityClientIds.api }
-          ], authEnabled ? [
+          ], enableApiAi ? [
+            { name: 'AI_ENDPOINT', value: foundryEndpoint }
+            { name: 'AI_DEPLOYMENT', value: modelDeploymentNames.standard }
+            { name: 'AI_DEPLOYMENT_STRONG', value: modelDeploymentNames.capable }
+          ] : [], authEnabled ? [
             { name: 'ZF_AUTH', value: 'trusted-proxy' }
             { name: 'ZF_TRUSTED_PROXY', value: '1' }
             { name: 'ZF_ENTRA_TENANT_ID', value: tenant().tenantId }
             { name: 'ZF_ENV', value: 'production' }
-          ] : [])
+          ] : [], empty(entraRoleMap) ? [] : [
+            { name: 'ZF_ROLE_MAP', value: string(entraRoleMap) }
+          ])
           probes: [
             { type: 'Liveness', httpGet: { path: '/healthz', port: 8088 } }
             { type: 'Readiness', httpGet: { path: '/healthz', port: 8088 } }

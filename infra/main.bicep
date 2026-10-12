@@ -26,8 +26,14 @@ param sqlAdminGroupObjectId string
 param sqlAdminPrincipalType string = 'Group'
 @description('Entra app registration client ID protecting the workbench API. Leave empty to deploy without app authentication (not for shared use).')
 param entraClientId string = ''
+@description('Explicit Entra role-value mapping for an existing registration. Empty uses the application defaults. Transitional mappings do not rename tenant roles.')
+param entraRoleMap object = {}
 @description('Container images. The default placeholder lets infrastructure deploy before application images exist.')
 param apiImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
+@description('Enable direct model calls from the existing MVP API. Leave false for the proposed separate agent-runner topology; true grants the API model invocation rights and configures AI_ENDPOINT.')
+param enableApiAi bool = false
+@description('False bootstraps dependencies without exposing placeholder apps. Build/push the real image, provision the auth secret and seed SQL, then redeploy with true.')
+param deployApplications bool = true
 param agentImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 param orchestratorImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 param importImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
@@ -202,12 +208,14 @@ module foundry 'modules/foundry.bicep' = {
     workspaceId: monitoring.outputs.workspaceId
     peSubnetId: network.outputs.peSubnetId
     zoneIds: network.outputs.zoneIds
-    userPrincipalIds: [identity.outputs.principalIds.agents]
+    userPrincipalIds: enableApiAi
+      ? [identity.outputs.principalIds.agents, identity.outputs.principalIds.api]
+      : [identity.outputs.principalIds.agents]
     deployments: modelDeployments
   }
 }
 
-module apps 'modules/containerapps.bicep' = {
+module apps 'modules/containerapps.bicep' = if (deployApplications) {
   name: 'containerapps'
   params: {
     allowPublicNetworkAccess: publicAccess
@@ -229,12 +237,14 @@ module apps 'modules/containerapps.bicep' = {
     modelDeploymentNames: { standard: 'standard', capable: 'capable' }
     keyVaultUri: 'https://${keyvault.outputs.name}${environment().suffixes.keyvaultDns}'
     entraClientId: entraClientId
+    entraRoleMap: entraRoleMap
     tileUrl: tileUrl
     tileAttribution: tileAttribution
     zoneRedundant: zoneRedundant
     evidenceStore: evidenceStore
     sharePointSiteId: sharePointSiteId
     apiImage: apiImage
+    enableApiAi: enableApiAi
     agentImage: agentImage
     orchestratorImage: orchestratorImage
     importImage: importImage
@@ -296,14 +306,14 @@ resource sqlCpu 'Microsoft.Insights/metricAlerts@2018-03-01' = {
   dependsOn: [sql]
 }
 
-resource apiErrors 'Microsoft.Insights/metricAlerts@2018-03-01' = {
+resource apiErrors 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployApplications) {
   name: 'alert-${prefix}-api-5xx'
   location: 'global'
   tags: allTags
   properties: {
     severity: 2
     enabled: true
-    scopes: [apps.outputs.apiId]
+    scopes: [apps!.outputs.apiId]
     evaluationFrequency: 'PT1M'
     windowSize: 'PT5M'
     criteria: {
@@ -324,14 +334,14 @@ resource apiErrors 'Microsoft.Insights/metricAlerts@2018-03-01' = {
   }
 }
 
-resource apiRestarts 'Microsoft.Insights/metricAlerts@2018-03-01' = {
+resource apiRestarts 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployApplications) {
   name: 'alert-${prefix}-api-restarts'
   location: 'global'
   tags: allTags
   properties: {
     severity: 3
     enabled: true
-    scopes: [apps.outputs.apiId]
+    scopes: [apps!.outputs.apiId]
     evaluationFrequency: 'PT5M'
     windowSize: 'PT15M'
     criteria: {
@@ -377,7 +387,7 @@ resource budget 'Microsoft.Consumption/budgets@2023-05-01' = {
   }
 }
 
-output apiInternalFqdn string = apps.outputs.apiFqdn
+output apiInternalFqdn string = deployApplications ? apps!.outputs.apiFqdn : ''
 output containerRegistry string = registry.outputs.loginServer
 output sqlServer string = sql.outputs.fqdn
 output foundryEndpoint string = foundry.outputs.endpoint

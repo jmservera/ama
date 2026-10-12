@@ -10,6 +10,7 @@ import json
 import os
 import re
 import time
+import urllib.parse
 import urllib.request
 
 SCOPE = "https://cognitiveservices.azure.com"
@@ -33,10 +34,15 @@ class Ai:
         if self.token and time.time() < self.expires - 120:
             return self.token
         ep, hdr = os.environ.get("IDENTITY_ENDPOINT"), os.environ.get("IDENTITY_HEADER")
+        parameters = {"resource": SCOPE, "api-version": "2019-08-01" if ep else "2018-02-01"}
+        client_id = os.environ.get("AZURE_CLIENT_ID")
+        if client_id:
+            parameters["client_id"] = client_id
+        query = urllib.parse.urlencode(parameters)
         if ep:
-            req = urllib.request.Request(f"{ep}?resource={SCOPE}&api-version=2019-08-01", headers={"X-IDENTITY-HEADER": hdr})
+            req = urllib.request.Request(f"{ep}?{query}", headers={"X-IDENTITY-HEADER": hdr})
         else:
-            req = urllib.request.Request(f"http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource={SCOPE}",
+            req = urllib.request.Request(f"http://169.254.169.254/metadata/identity/oauth2/token?{query}",
                                          headers={"Metadata": "true"})
         with urllib.request.urlopen(req, timeout=5) as r:
             data = json.load(r)

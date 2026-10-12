@@ -32,6 +32,12 @@ az deployment group create -g rg-zava-forward-dev -f infra/main.bicep -p infra/m
 Then run the SQL script from a host with private network access, push the
 application images to the registry and update the image parameters.
 
+For a from-empty rebuild, first set `deployApplications=false`. This creates
+the dependencies without temporarily exposing an unauthenticated placeholder
+workbench. Build the real image, provision the vault auth secret and seed SQL,
+then deploy again with `deployApplications=true`, `entraClientId` and `apiImage`.
+The flag does not delete existing apps in incremental deployment mode.
+
 ## Deployment profile
 
 `deploymentProfile` is the general switch. It defaults to `production`, so a plain deployment keeps every isolation control.
@@ -86,6 +92,16 @@ Notes:
 * The API listens on 8088 and serves only `/healthz` for probes (there is no `/readyz`). The agents, orchestrator and import workloads still run the placeholder image because no code for them exists yet.
 * `ZF_ENV=production` is set when authentication is on, so the map has no background until `tileUrl` is set (for a dev test: `tileUrl=https://tile.openstreetmap.org/{z}/{x}/{y}.png tileAttribution='&copy; OpenStreetMap contributors'`, within the OSM tile usage policy; choose a licensed provider before real use). The CSP follows the tile host.
 * The previous `allowedPrincipals` restriction on the auth config was removed: it listed managed identity client ids where object ids are expected and would have blocked signed-in users. Access is limited by the app role requirement instead.
+* For the existing MVP's direct, human-reviewed model drafts, explicitly set
+  `enableApiAi=true`. This grants the API identity model invocation access and
+  supplies `AI_ENDPOINT` and both deployment names. The default remains false
+  for the separately proposed agent-runner topology. Placeholder worker images
+  do not provide real AI to the workbench; verify a result with `source=ai`.
+* `entraRoleMap` can explicitly map an existing registration's role values to
+  workbench roles during a rename. It does not update tenant roles or callback
+  URLs and is not proof of a completed identity rename. An authorised
+  registration owner must update those separately; remove the transitional
+  mapping when the new default `ZavaForward.*` values are issued.
 
 ## Microsoft 365 permissions
 
