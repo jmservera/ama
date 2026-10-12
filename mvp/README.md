@@ -224,6 +224,11 @@ provisioning checks do not substitute for each user's consent/acceptance.
   one mapped role; the role comes from the token, never the staff file.
 * Provision each staff record with the Entra object id (`oid`). Email matching
   is off unless `ZF_AUTH_EMAIL_FALLBACK=1`. Contractor guests need the same.
+  Use the [tenant staff initializer](../infra/README.md#tenant-staff-and-application-role-initialization)
+  to reconcile enabled tenant members, app roles and SQL bindings together.
+  It replaces current generated staff/owner labels while preserving workload
+  codes and historical actors, then restarts the startup-cached roster.
+  Assigning an enterprise-app role without this binding still fails closed.
 * Sign-out redirects through `/.auth/logout` to the public welcome;
   "Use another account" returns through `/sign-in` and the Microsoft account
   chooser. State-changing requests need an

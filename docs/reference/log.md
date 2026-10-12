@@ -1908,3 +1908,20 @@ metadata when the knowledge base was created.
   and routing. Prior Review findings remain historical, not rewritten as
   closure. Fresh legitimate photo/consent/account-switch acceptance is still
   separate and unavailable while the owner is away.
+
+## [2026-10-12] update | Tenant people require app roles and internal staff bindings
+
+* Live Coordinator denial was `no staff record with this oid`, after successful
+  tenant/role validation. An enterprise-app assignment is not a staff binding;
+  SQL staff is loaded once and requires replica restart after initialization.
+* Owner explicitly requested tenant people rather than generated staff names,
+  preserving the main admin and existing Coordinator. Existing ten positions
+  plus one supplier-scoped Contractor require eleven distinct people to
+  demonstrate all eight role kinds without changing workload codes.
+* Added a repeatable [private-roster initializer](../../infra/README.md#tenant-staff-and-application-role-initialization),
+  read-only check, app-only add-missing grants, atomic current roster/owner-label
+  update and restart recovery. Directory roles/groups, stock and historical
+  actors are not rewritten. Directory identities remain outside Git.
+* Twelve new synthetic methods cover effective roles, fail-closed validation,
+  transaction preservation/rollback and no-op restart recovery; existing
+  authentication assertions are retained.

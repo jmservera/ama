@@ -144,6 +144,65 @@ nonzero. The command does not change display names, roles, assignments or
 secrets. The existing creation helper is for first-time registration and role
 provisioning, not a callback-only repair.
 
+### Tenant staff and application-role initialization
+
+An enterprise-app role assignment alone is not enough. The workbench also
+requires an internal staff record bound to the person's Entra object id. A
+valid role with no matching staff `oid` produces `Account not authorised`;
+email fallback remains disabled. SQL staff is cached at startup, so completing
+the binding also requires reloading the API replicas.
+
+Use `scripts/initialize-workbench-staff.py` after callback initialization and
+SQL seeding. Its private JSON roster is an array of `code`/`userId` objects:
+include every existing staff code, with a distinct enabled tenant member for
+each. The current fixture needs ten internal positions; one additional
+Contractor makes eleven people covering all eight role kinds. New Contractor
+entries also require `"role": "Contractor"` and `"contractor"` naming an
+existing case supplier. Room, desk and workspace accounts are rejected.
+
+Keep the roster outside the repository with file mode 0600 and parent-directory
+mode 0700, for example `~/.azure/zava-forward-staff/roster.json`. The initializer
+resolves current names/UPNs from Graph; do not put directory names, UPNs or ids
+in committed examples. Title/group-based allocation is illustrative exercise
+coherence, not evidence of professional competence or delegated authority.
+
+```bash
+PYTHONPATH=mvp python3 infra/scripts/initialize-workbench-staff.py \
+  --resource-group ama --container-app ca-forward-test-api \
+  --roster "$HOME/.azure/zava-forward-staff/roster.json" --check
+PYTHONPATH=mvp python3 infra/scripts/initialize-workbench-staff.py \
+  --resource-group ama --container-app ca-forward-test-api \
+  --roster "$HOME/.azure/zava-forward-staff/roster.json" --apply --restart
+```
+
+Use the existing MVP dependencies and an operator allowed through the SQL
+firewall/private endpoint with SQL write authority. Graph management uses the
+isolated `~/.azure/zava-entra-init` profile, or `--tenant-profile`. It needs
+delegated `AppRoleAssignment.ReadWrite.All`, `Application.Read.All`, directory
+user/group read access and an appropriate administrative role. No new grants
+are consented automatically. See the official
+[application-role assignment API](https://learn.microsoft.com/en-us/graph/api/serviceprincipal-post-approleassignedto?view=graph-rest-1.0).
+
+Check mode is read-only: exit 0 means the directory/SQL configuration matches,
+2 means reconciliation is required; it does not claim a user's browser sign-in.
+Apply adds missing roles only for this application, preserves Default Access,
+rejects conflicting effective roles (including direct group grants), and never changes
+directory administrator roles or group membership. Existing bound identities
+cannot be replaced. SQL staff/current owner labels are updated atomically,
+preserving workload codes, cases, supplier scope, prior approvals,
+recommendations and the existing audit prefix; one generic audit event records
+the initialization. Historical generated actors remain historical.
+Nested group assignments do not cascade to users, so only direct group
+membership counts toward an effective role. See Microsoft's
+[enterprise-app assignment guidance](https://learn.microsoft.com/entra/identity/enterprise-apps/assign-user-or-group-access-portal).
+
+`--apply --restart` replaces replicas on every traffic-serving revision,
+including after a no-op SQL retry. Apply without restart exits 3 to report
+incomplete runtime convergence. If SQL commits but restart fails, retry the
+same command: no duplicate role grant or audit event is created. Do not reseed
+or weaken authentication to repair onboarding. New role assignments may
+require the person to sign out and sign in again for fresh role claims.
+
 ### Public welcome and Microsoft account photos
 
 The existing registration is retained. Add only delegated own-user Graph
