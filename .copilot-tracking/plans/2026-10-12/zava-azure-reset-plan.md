@@ -25,19 +25,26 @@ during redeployment are within the requested fixes.
 ### P01: Reset and redeploy
 
 * [x] P01-T01: Capture resource inventory, external auth and SQL identity mappings;
-  classify identities and securely transfer the existing auth secret.
-* [ ] P01-T02: Delete only inventoried resources inside ama in dependency order;
+  classify identities and securely retain the existing auth secret for transfer.
+* [x] P01-T02: Delete only inventoried resources inside ama in dependency order;
   verify no unapproved or required identity was removed.
-* [ ] P01-T03: Deploy renamed Bicep, build application image, restore SQL users/data,
+* [x] P01-T03: Deploy renamed Bicep, build application image, restore SQL users/data,
   wire model access and protect the API with Entra.
 
 <!-- rpi:phase id=P02 -->
 ### P02: Acceptance and review
 
-* [ ] P02-T01: Fix discovered deployment/runtime failures; verify health, real SQL
+* [x] P02-T01: Fix discovered deployment/runtime failures; verify health, real SQL
   write/read/restart, actual AI, lists, map and authentication where authorised.
 * [ ] P02-T02: Run one final names/reference review, record unresolved gates,
   update rebuild documentation and publish fixes/evidence through #65.
+
+### Remaining acceptance gate
+
+P02-T01's authorised operator/workload checks passed. Interactive Entra login,
+signed-in lists and map remain blocked on the tenant owner adding the new
+callback and completing registration/role naming. This is partial acceptance,
+not permission to bypass authentication or a conformant migration claim.
 
 ## Dependencies and evidence
 

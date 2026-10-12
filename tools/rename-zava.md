@@ -1,7 +1,7 @@
 ---
 title: One-Off Zava North Homes and Zava Forward Migration
 description: Dry-run-first local branding migration, presentation handling and explicit Azure redeployment follow-up
-ms.date: 2026-10-11
+ms.date: 2026-10-12
 ms.topic: how-to
 ---
 
@@ -118,10 +118,12 @@ on 2026-10-11. That does not authorise deleting the resource group itself or
 shared tenant/M365 registrations. The current deployment identity and M365 CLI
 session both return `Insufficient privileges` when reading the existing API
 app registration. Resource-group access does not grant Microsoft Graph
-application-management access. Rebuild remains blocked until an authorised
-application owner or tenant administrator can provision the registration,
-roles, secret and new Container Apps callback URI. Do not disable authentication
-or substitute a shared password to work around this dependency.
+application-management access. Infrastructure and the protected API can be
+rebuilt using a securely retained existing client credential. Interactive
+sign-in and the tenant naming/role transition remain blocked until an authorised
+application owner or tenant administrator updates the registration and new
+Container Apps callback URI. Do not disable authentication or substitute a
+shared password to work around this dependency.
 
 Use the renamed Bicep and existing provisioning tools rather than a second
 deployment implementation. Explicitly pass `workload=forward`, `uksouth`,
@@ -181,3 +183,41 @@ Python authoring sources were migrated and checked too: the final coverage is
 workflow's recorded score unchanged. Historical score snapshots are now explicit
 exceptions, not branding inputs. A 21st regression ensures identical working
 and published deck inputs reuse the same output bytes.
+
+## Recorded Azure rebuild on 2026-10-12
+
+Deleted all active resources inside `ama`, including the four recreatable
+workload identities and the separately indexed `budget-warm-test`. Verified
+empty generic ARM and budget indexes before deploying. Kept the group, its
+external operator and shared tenant/M365 resources. Service-retained
+soft-deleted artifacts are not active resources and were not claimed purged.
+
+Both renamed deployments succeeded; rebuilt the versioned real image and
+restored the continuing fixture to Azure SQL. The new API is:
+
+`https://ca-forward-test-api.salmonplant-3b962c5f.uksouth.azurecontainerapps.io`
+
+Health is 200, unauthenticated API requests receive 401 and a browser is
+redirected to Entra. Checks inside the API workload confirmed 980 cases / 443
+open, managed-identity SQL reads/writes and actual `source=ai` results from both
+`standard` and `capable`. Audit writes survived a real revision restart. The
+deployed HTML contains the new company/programme names. These operator checks
+do not substitute for signed-in browser acceptance.
+
+An authorised owner of client `8a0a196a-d5e8-4aa6-8a9d-cdd28af5c235` must add:
+
+`https://ca-forward-test-api.salmonplant-3b962c5f.uksouth.azurecontainerapps.io/.auth/login/aad/callback`
+
+Preserve existing redirects and assignments. The registration still issues
+`ProperWarm.*` roles; an explicit deployment-only map preserves their workbench
+meaning until the owner migrates them to `ZavaForward.*`. Complete the tenant
+name/role transition before claiming all active identity names are migrated.
+The provisioning script can create a new `zava-forward-api` registration, but
+that requires user assignments, a new vault credential and redeployment with
+the returned client ID; it is not an in-place update by client ID.
+
+The [from-empty infrastructure recipe](../infra/README.md#from-empty-rebuild-observed-on-2026-10-12)
+records deletion ordering, separate budget enumeration, staged deployment,
+identity/model configuration, seeding and live checks. Live Entra login,
+scoped lists, map rendering and tiles remain unverified pending that owner
+action. Placeholder workers remain placeholders, not delivered agent services.

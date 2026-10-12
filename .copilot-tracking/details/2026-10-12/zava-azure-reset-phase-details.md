@@ -24,6 +24,11 @@ Delete apps/jobs and endpoints before environment/network; delete parent
 resources rather than separately racing managed child/NIC deletions. Preserve
 the group and its policy-exception tag. No force-push or main merge.
 
+Observed deletion ordering: remove the Foundry child project before its account,
+and finish AMPLS deletion before deleting its linked Application Insights
+component. Query resource-group consumption budgets separately; generic ARM
+resource inventory omits them. Both indexes must be empty before rebuilding.
+
 ## P02
 
 Verify the changed image/version, health and unauthenticated denial, SQL seed

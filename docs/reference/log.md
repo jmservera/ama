@@ -1799,3 +1799,27 @@ metadata when the knowledge base was created.
 * Seven targeted rubric deck-citation tests pass. The scorer includes the
   renamed MVP/generator paths and still excludes private dataset/vendor files;
   no score was manually increased or recalibrated as part of this rename.
+
+## [2026-10-12] update | Renamed Azure stack rebuilt from an empty group
+
+* Removed active resources in the owner-authorised `ama` scope, including
+  recreatable workload identities and the budget omitted by generic inventory.
+  Confirmed empty resource and budget indexes; retained the group, external
+  operator and tenant/M365 resources. Foundry project/account and AMPLS/App
+  Insights deletion dependencies required explicit ordering corrections.
+* Both staged Zava deployments succeeded. Built the real versioned image,
+  privately transferred the retained auth credential, recreated SQL grants
+  and restored the continuing 980-case fixture with 443 open cases.
+* Workload-identity checks confirmed SQL reads/writes, actual inference from
+  both model deployments and persisted audit entries after an actual API
+  revision restart. Public health is 200, API without credentials is 401 and
+  browser entry redirects to Entra. No authentication bypass was introduced.
+* Updated [infrastructure rebuild instructions](../../infra/README.md#from-empty-rebuild-observed-on-2026-10-12)
+  and the [migration guide](../../tools/rename-zava.md#recorded-azure-rebuild-on-2026-10-12).
+  Added explicit API model invocation, user-assigned model token selection,
+  foundation-only bootstrap and transitional tenant-role mapping. The MVP has
+  272 passing tests with 26 existing skips.
+* Interactive sign-in, scoped browser lists/map and the tenant name/role
+  transition remain gated on an authorised registration owner adding the new
+  callback. Existing role values are a declared external identity exception.
+  Worker placeholders and planned Decision 1 scoring remain separate limitations.

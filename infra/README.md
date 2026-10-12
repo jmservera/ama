@@ -2,7 +2,7 @@
 title: Azure Infrastructure (Bicep)
 description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
-ms.date: 2026-10-08
+ms.date: 2026-10-12
 ms.topic: how-to
 ---
 
@@ -108,6 +108,72 @@ Notes:
 The runtime identity needs only Microsoft Graph application permission `Sites.Selected` plus a per-site grant (`scripts/grant-sharepoint-access.sh`, role `write` for the evidence library). Teams alerts use a Workflows webhook, which needs no Graph permission and is created by hand in the channel.
 
 Setting the site and channel up through the m365 CLI needs delegated Graph permissions on the app it signs in with, consented by an administrator: `Sites.FullControl.All`, `Team.Create`, `Channel.Create`, `AppRoleAssignment.ReadWrite.All` and `Application.Read.All`, plus the existing `AllSites.Read`. `scripts/configure-m365-provisioner-app.sh <app id> --consent` adds them. Remove `Sites.FullControl.All` and the consent once the grants are made.
+
+## From-empty rebuild observed on 2026-10-12
+
+The owner-authorised `ama` reset retained the group, its policy-exception tag,
+external deployment identity and tenant/M365 resources. No workload identity
+needed preservation: Blob was the active evidence store, and Bicep/SQL recreated
+the four workload identities and their grants. Do not generalise that decision
+to identities with external site grants or other shared consumers.
+
+Deletion has service-specific dependencies. Remove apps/jobs and private
+endpoints before their environment/network, the Foundry project before its
+account, and the private-link scope before its linked App Insights component.
+Wait for accepted deletions to finish. Enumerate and delete resource-group
+budgets separately; `az resource list` does not list them. Verify both the
+generic inventory and this budget list are empty before deploying:
+
+```bash
+az resource list -g ama --query '[].{name:name,type:type}' -o json
+az rest --method get --url \
+  "https://management.azure.com/subscriptions/<subscription>/resourceGroups/ama/providers/Microsoft.Consumption/budgets?api-version=2023-05-01" \
+  --query 'value[].name' -o json
+```
+
+Rebuild sequence:
+
+1. Prepare non-secret deployment parameters: `workload=forward`,
+   `environmentName=test`, both locations `uksouth`, `deploymentProfile=development`,
+   the actual SQL Entra administrator/principal type, `enableApiAi=true`, Entra
+   client ID, and the selected tile URL/attribution. In this subscription the
+   tested models were `standard` / `gpt-4.1-mini` and `capable` / `gpt-4.1`, both
+   version `2025-04-14`, `skuName=GlobalStandard`, capacity 30. Availability and
+   quota must be rechecked, not assumed for another subscription.
+2. Deploy with `deployApplications=false`. Use deployment outputs to discover
+   the registry, SQL server, model endpoint and vault; do not guess hashed names.
+3. Build a versioned `zava-forward-mvp` image with `az acr build`. Provision
+   `entra-client-secret` in the new vault through an authorised operator. RG
+   Owner alone does not grant Key Vault data-plane access. Transfer a retained
+   credential only through a private file or the provisioning script, not a
+   command argument or tracked parameter file.
+4. Run `create-sql-users.py` as the configured SQL Entra administrator. Seed
+   through the [Azure SQL store instructions](../mvp/README.md#azure-sql-store)
+   before exposing replicas. Retain the continuing synthetic stock/cases and
+   privately restore any signed-in staff object-id mapping. The image contains
+   no fixture; a new, empty SQL database is not equivalent to the previous MVP.
+5. Deploy with `deployApplications=true` and the real `apiImage`, keeping the
+   same non-secret parameters. An explicit transitional `entraRoleMap` can
+   preserve existing tenant role values; it cannot update the registration.
+6. Wait for rollout, then check public `/healthz`, API 401 without credentials
+   and browser redirection. Check SQL reads/writes and both model deployments
+   from the API's own identity. Restart the actual revision and verify the
+   audit writes persist. A template fallback or operator-only SQL test is not
+   evidence of workload model/SQL access.
+
+Both group deployments succeeded. The restored database has 980 cases, 443
+open; the API identity read and appended audit entries; both model deployments
+returned `source=ai`. Audit entries survived an actual application revision
+restart. The initial health 503 cleared after cold image/auth-sidecar rollout;
+subsequent health returned 200, unauthenticated API 401 and browser 302.
+Worker jobs/apps still use placeholders and Decision 1 scoring is not thereby
+implemented.
+
+Interactive sign-in, live My cases/All cases and map acceptance remain blocked
+by the existing registration's new callback and the operator's missing Graph
+application-management permission. Keep authentication on. An authorised
+registration owner must add the new callback without dropping existing redirects
+and complete the tenant naming/role transition; then repeat the browser checks.
 
 ## Validate locally
 

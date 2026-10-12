@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-11
+ms.date: 2026-10-12
 ms.topic: overview
 ---
 
@@ -64,7 +64,7 @@ management: short pages that point to clusters of related material.
 | Refine prototype usability from owner feedback | [Owner Usability Feedback (2026-10-07)](./research/ux/zava-forward-prototype-profile-review.md#owner-usability-feedback-2026-10-07) | [Zava Forward Workbench PRD](../prds/zava-forward-retrofit-programme-demonstrator.md); reported impressions and proposed checks are not verified implementation or acceptance |
 | Compare Azure development with M365 and business-platform implementation | [Implementation Options and Provisional Platform Recommendation](../case_study_48_addendum.md#implementation-options-and-provisional-platform-recommendation) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) and [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) |
 | Evaluate a new idea | [Idea Register](../ideas/idea-register.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
-| Migrate company/programme branding to Zava North Homes / Zava Forward | [One-off migration script and guide](../../tools/rename-zava.md) | Dry-run inventory, tracked text/paths, PPTX/YAML/logo handling, historical exceptions and explicit Azure redeployment/acceptance follow-up |
+| Migrate company/programme branding to Zava North Homes / Zava Forward | [One-off migration script and guide](../../tools/rename-zava.md) | Dry-run inventory, tracked text/paths, PPTX/YAML/logo handling and historical exceptions; [observed from-empty Azure rebuild](../../infra/README.md#from-empty-rebuild-observed-on-2026-10-12), real SQL/model checks and remaining tenant/browser acceptance |
 | Design System One scoring or assisted funding forms | [Decision 1 reassessment](../ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10) | [PRD AI/form contract](../prds/zava-forward-retrofit-programme-demonstrator.md#ai-assisted-decision-coverage); evidenced scheme route, deterministic rules and Finance/human approval remain mandatory |
 | Challenge whether a requested agent is needed, or decide what to build instead | [Agent Request Challenge](./research/company/agent-request-challenge.md) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
 | Test whether richer inputs (phone photos, geotagging, structured invoices) change any agent verdict | [Agent What-If Study](./research/company/agent-what-if-study.md) | [Agent Request Challenge](./research/company/agent-request-challenge.md) |
