@@ -19,7 +19,8 @@
     {"decision": "Owner explicitly selects app-scoped tenant people initialization, preserving main admin and existing Coordinator. Earlier synthetic-persona choice is superseded.", "status": "confirmed", "evidence": "Current user direction, 2026-10-12"},
     {"decision": "Research reused from live denial, directory/SQL inspection and official Graph API. Planning Ready.", "status": "ready", "evidence": ".copilot-tracking/research/2026-10-12/zava-tenant-staff-research.md"},
     {"decision": "Eleven app-role/SQL positions initialized; no-op recovery confirms fresh ready replicas, exact private preservation and public/protected boundaries. Direct groups, not nested membership, determine effective app-role inheritance.", "status": "verified", "evidence": ".copilot-tracking/changes/2026-10-12/zava-tenant-staff-changes.md"},
-    {"decision": "Single post-implementation Review execution Complete; outcome Conformant for operator initialization/preservation. No in-scope defects. Real-browser acceptance and retained tenant naming routed separately.", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-12/zava-tenant-staff-review.md"}
+    {"decision": "Single post-implementation Review execution Complete; outcome Conformant for operator initialization/preservation. No in-scope defects. Real-browser acceptance and retained tenant naming routed separately.", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-12/zava-tenant-staff-review.md"},
+    {"decision": "Post-Review choice offered with two evidence-grounded follow-ups plus Stop/manual. Owner unavailable; no selection or child start inferred.", "status": "awaiting-owner", "evidence": "Structured follow-up request returned owner unavailable."}
   ],
   "blockers": [],
   "next_action": {"phase": "Follow-up", "action": "Await owner selection: fresh-browser acceptance, retained naming research, Stop automatic session, or Switch to manual mode."},
