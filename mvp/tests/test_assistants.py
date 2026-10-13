@@ -718,6 +718,9 @@ class DurabilityTests(Base):
         self.service.start()
         self.assertEqual(len(self.service.threads), self.service.limits.active_calls + 1)
         self.service.stop()
+        # stop closes admission immediately; an in-flight SQL operation still has to return.
+        for thread in self.service.threads:
+            thread.join(10)
         self.assertTrue(all(not t.is_alive() for t in self.service.threads))
 
     def test_wall_clock_timeout_retains_physical_slot_and_liability(self):
@@ -860,6 +863,8 @@ class DialectConnection:
 
     def execute(self, sql, args=()):
         self.statements.append(sql)
+        if "SELECT is_ledger_on" in sql:
+            return self.raw.execute("SELECT 0")
         if sql.startswith("SET TRANSACTION ISOLATION LEVEL"):
             return self.raw.execute("SELECT 1")
         if "N'TR'" in sql or "sys.indexes" in sql:
@@ -1053,6 +1058,74 @@ class MssqlDurabilityTests(MssqlFixture, DurabilityTests):
 @unittest.skipUnless(os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)")
 class MssqlApiTests(MssqlFixture, ApiTests):
     pass
+
+
+@unittest.skipUnless(os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlLedgerTests(Base):
+    """A fresh ledger database: table drops cannot reset system-versioned ledger objects."""
+
+    def setUp(self):
+        from zavaforward_mvp.mssqlstore import _Conn, connection_string
+        if os.environ.get("ZF_SQL_SERVER") not in ("localhost", "127.0.0.1", "sql"):
+            raise ValueError("Ledger tests require the local disposable SQL service, never Azure SQL.")
+        self.sql_env = dict(os.environ, ZF_SQL_DATABASE="zf_test_assistants_ledger")
+        master = _Conn(connection_string(dict(self.sql_env, ZF_SQL_DATABASE="master")))
+        try:
+            master.execute("IF DB_ID(N'zf_test_assistants_ledger') IS NOT NULL "
+                           "BEGIN ALTER DATABASE zf_test_assistants_ledger SET SINGLE_USER WITH ROLLBACK IMMEDIATE; "
+                           "DROP DATABASE zf_test_assistants_ledger; END")
+            master.execute("CREATE DATABASE zf_test_assistants_ledger WITH LEDGER=ON")
+        finally:
+            master.close()
+        super().setUp()
+
+    def open_store(self):
+        from zavaforward_mvp.mssqlstore import MssqlStore
+        return MssqlStore(str(self.seed), env=self.sql_env, state_dir=str(self.root))
+
+    def test_five_paths_append_only_and_restart_on_ledger_database(self):
+        self.assertTrue(self.service.sql, self.service.schema_error)
+        before = self.domain()
+        ids = [self.run_ready(cap)["id"] for cap in REGISTRY]
+        with self.service.transaction() as db:
+            kind = db.execute("SELECT ledger_type_desc FROM sys.tables WHERE name='assistant_events'").fetchone()[0]
+            count = db.execute("SELECT COUNT(*) FROM assistant_events").fetchone()[0]
+        self.assertEqual(kind, "APPEND_ONLY_LEDGER_TABLE")
+        self.assertGreaterEqual(count, 15)
+        for statement in ("UPDATE assistant_events SET body='{}'", "DELETE FROM assistant_events"):
+            with self.assertRaises(self.store.dberror):
+                with self.service.transaction() as db:
+                    db.execute(statement)
+        reopened = self.other()
+        for tid in ids:
+            self.assertEqual(reopened.detail(self.pm, tid)["state"], "ready")
+        with reopened.transaction() as db:
+            self.assertEqual(db.execute("SELECT COUNT(*) FROM assistant_events").fetchone()[0], count)
+        self.assertEqual(before, self.domain())
+
+    def test_existing_updatable_ledger_event_table_fails_closed_without_dropping(self):
+        from zavaforward_mvp.mssqlstore import _Conn, connection_string
+        # Create the earlier bad shape before this service's first migration.
+        master = _Conn(connection_string(dict(self.sql_env, ZF_SQL_DATABASE="master")))
+        try:
+            master.execute("IF DB_ID(N'zf_test_assistants_ledger_invalid') IS NOT NULL "
+                           "BEGIN ALTER DATABASE zf_test_assistants_ledger_invalid SET SINGLE_USER WITH ROLLBACK IMMEDIATE; "
+                           "DROP DATABASE zf_test_assistants_ledger_invalid; END")
+            master.execute("CREATE DATABASE zf_test_assistants_ledger_invalid WITH LEDGER=ON")
+        finally:
+            master.close()
+        env = dict(self.sql_env, ZF_SQL_DATABASE="zf_test_assistants_ledger_invalid")
+        from zavaforward_mvp.mssqlstore import MssqlStore
+        store = MssqlStore(str(self.seed), env=env, state_dir=str(self.root))
+        self.addCleanup(store.db.close)
+        store.ai = self.provider
+        store.db.execute(MSSQL_DDL[-1])
+        store.db.execute("INSERT INTO assistant_events (id,task_id,at,body) VALUES ('retained','task',0,'{}')")
+        service = Assistants(store, config())
+        self.addCleanup(service.stop)
+        self.assertFalse(service.sql)
+        self.assertIsNotNone(service.schema_error)
+        self.assertEqual(store.db.execute("SELECT COUNT(*) FROM assistant_events").fetchone()[0], 1)
 
 
 if __name__ == "__main__":

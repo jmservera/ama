@@ -3,6 +3,7 @@ import os
 import sqlite3
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 import test_mvp
@@ -44,6 +45,24 @@ class SqlStoreTests(unittest.TestCase):
         self.assertEqual(b.detail("ZF-1")["contacts"][0]["outcome"], "Contacted")
         self.assertTrue(b.verify_audit())
         self.assertEqual(b.ledger_head()[0], 2)
+
+    def test_initial_seed_retains_procurement_and_date_without_reseeding_restart(self):
+        data = json.loads(Path(self.data).read_text())
+        data["as_of"] = "2026-10-13"
+        data["procurement"] = {"packages": [{"id": "PKG-SYNTHETIC"}], "work_orders": []}
+        Path(self.data).write_text(json.dumps(data))
+        with patch.dict(os.environ, {"ZF_AS_OF": ""}):
+            first = SqlStore(self.data, self.db)
+            self.addCleanup(first.db.close)
+            self.assertEqual(first.as_of, "2026-10-13")
+            self.assertEqual(first.data["procurement"], data["procurement"])
+            data["as_of"] = "2030-01-01"
+            data["procurement"] = {"packages": [], "work_orders": []}
+            Path(self.data).write_text(json.dumps(data))
+            reopened = SqlStore(self.data, self.db)
+            self.addCleanup(reopened.db.close)
+            self.assertEqual(reopened.as_of, "2026-10-13")
+            self.assertEqual(reopened.data["procurement"], first.data["procurement"])
 
     def test_second_process_sees_changes_without_restart(self):
         a, b = SqlStore(self.data, self.db), SqlStore(self.data, self.db)

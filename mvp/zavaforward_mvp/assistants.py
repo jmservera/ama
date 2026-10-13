@@ -311,11 +311,19 @@ class Assistants:
     def migrate(self):
         with self.transaction() as db:
             if self.mssql:
+                ledger = bool(db.execute("SELECT is_ledger_on FROM sys.databases WHERE name=DB_NAME()").fetchone()[0])
                 for ddl in MSSQL_DDL:
                     name = ddl.split()[2]
+                    if ledger and name == "assistant_events":
+                        ddl += " WITH (LEDGER = ON (APPEND_ONLY = ON))"
                     db.execute(f"IF OBJECT_ID(N'{name}', N'U') IS NULL {ddl}")
                 db.execute("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name='ix_assistant_pending' AND object_id=OBJECT_ID(N'assistant_tasks')) CREATE INDEX ix_assistant_pending ON assistant_tasks (state, not_before, lease_until)")
-                db.execute("IF OBJECT_ID(N'assistant_events_immutable', N'TR') IS NULL EXEC(N'CREATE TRIGGER assistant_events_immutable ON assistant_events INSTEAD OF UPDATE, DELETE AS THROW 50001, ''assistant evidence is append-only'', 1')")
+                if ledger:
+                    kind = db.execute("SELECT ledger_type_desc FROM sys.tables WHERE name=N'assistant_events'").fetchone()[0]
+                    if kind != "APPEND_ONLY_LEDGER_TABLE":
+                        raise ValueError("Assistant events must be an append-only ledger table; operator schema repair required.")
+                else:
+                    db.execute("IF OBJECT_ID(N'assistant_events_immutable', N'TR') IS NULL EXEC(N'CREATE TRIGGER assistant_events_immutable ON assistant_events INSTEAD OF UPDATE, DELETE AS THROW 50001, ''assistant evidence is append-only'', 1')")
             else:
                 for ddl in SQLITE_DDL:
                     db.execute(ddl)

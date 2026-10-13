@@ -126,4 +126,5 @@ jobs:
           cd mvp
           PYTHONPATH=.:tests python3 -m unittest test_mssqlstore \
             test_assistants.MssqlContractTests test_assistants.MssqlReviewTests \
-            test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests
+            test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests \
+            test_assistants.MssqlLedgerTests

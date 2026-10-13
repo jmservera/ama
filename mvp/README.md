@@ -527,6 +527,13 @@ event protection. MSSQL startup DDL and assistant migrations serialize with
 the existing transaction-owned `sp_getapplock` write lock. The startup identity
 needs the existing schema-creation privileges (for example the already
 documented `db_ddladmin`) and permission to use that application lock.
+In a ledger-enabled database, `assistant_events` is explicitly created with
+`LEDGER = ON (APPEND_ONLY = ON)`. Do not attach the ordinary SQL Server
+INSTEAD OF trigger to a system-versioned ledger table: that is unsupported.
+An existing updatable-ledger event table fails closed for operator repair;
+startup never drops it or deletes its evidence. Non-ledger SQL and SQLite
+retain their append-only triggers. Real SQL Server tests cover both database
+modes, failed destructive event writes and restart persistence.
 Runtime needs SELECT on cases/staff/meta and assistant state, INSERT/UPDATE
 on task/allowance/attempt state, and INSERT/SELECT on assistant events. It does
 not need new domain write permissions for assistance. Deployment/operator
@@ -614,11 +621,14 @@ contracts, reader matrices, failure/disabled/malformed paths, current roles,
 source review, unchanged controlled state, independent SQLite connections,
 claims/leases/restart/lost acknowledgements, retries/aggregate liability,
 shared limits, blocked-provider/manual access and shutdown admission. Conditional
-`MssqlContractTests`, `MssqlReviewTests`, `MssqlDurabilityTests` and `MssqlApiTests`
+`MssqlContractTests`, `MssqlReviewTests`, `MssqlDurabilityTests`, `MssqlApiTests`
+and `MssqlLedgerTests`
 run the same contracts on actual SQL Server. They require `ZF_TEST_MSSQL=1`,
 the existing password/driver settings and a disposable local service
 (`localhost`, `127.0.0.1` or Docker alias `sql`). They create/reset only
-`zf_test_assistants`; never point these tests at the pilot or Azure SQL.
+`zf_test_assistants`, `zf_test_assistants_ledger` and
+`zf_test_assistants_ledger_invalid`; never point these tests at the pilot or
+Azure SQL. The ledger fixtures replace only their fixed local test databases.
 CI runs these alongside the existing general store parity suite. SQL-shape
 emulation alone is still not actual SQL proof. The isolated non-billable browser
 exercise uses fixtures, not the retained dataset:
@@ -632,7 +642,8 @@ node --check web/assistants.js
 # Disposable local SQL only; set the existing ZF_SQL_* test settings first.
 ZF_TEST_MSSQL=1 PYTHONPATH=.:tests python3 -m unittest \
   test_assistants.MssqlContractTests test_assistants.MssqlReviewTests \
-  test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests
+  test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests \
+  test_assistants.MssqlLedgerTests
 ```
 
 The browser exercise needs the existing Playwright test dependency and Chromium;
