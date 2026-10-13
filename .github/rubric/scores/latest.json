@@ -2,22 +2,22 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-13T15:26:34+00:00",
-  "commit": "0af4a9b481008c0e00206c34532af8039c18b7a6",
+  "scored_at": "2026-10-13T17:40:18+00:00",
+  "commit": "5973c8eb0be220307c78ec4da2817ace3ac3f22d",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38420146372",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38438174579",
   "fingerprints": {
     "brd": "8698b2d950aa2f0d4cda8729d80d2d77ec0bea10404f22860cda2182f9db9160",
-    "prd": "b8527640a2a72eda300af40419b4322c25adddab300818b614e97f0049b68fed",
-    "adr": "e881df6677e31ed5f7700edbbe0c6b57c8ce76b58a1785c7dbb29269a422b2fb",
+    "prd": "3c7d238289da6ff7a573533518aec0b60ceb8e0b9ddd317bf3e8b478c0899bed",
+    "adr": "993b78b8b5ac4d8c1ba8aea2ef59e3dde23a136b97e5de42f279d01e737773ce",
     "solution-code": "6588e8487463b57f8b7d05d1ca2ae2e9f88d2e99cc8457bc2fba806ecd35502e",
     "infrastructure": "e377bd25153088696b714380a81f5137f8aa5db3b2ce3d560c212a90131a38cc",
     "capstone-deck": "31bfa6cfb4a29a87a83ea4b7b30ccf8a834584087165f9a3980ce05b5efe75c0"
   },
-  "total": 45,
+  "total": 47,
   "sections": {
-    "A": 27,
-    "B": 13,
+    "A": 28,
+    "B": 14,
     "C": 5,
     "D": 0
   },
@@ -27,20 +27,25 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "infra/modules/authTokenStore.bicep:20-58",
-        "docs/adrs/0001-azure-architecture.md:120-129"
+        "docs/adrs/0002-pilot-readiness-architecture.md:92-131",
+        "docs/adrs/0001-azure-architecture.md:43-46"
       ],
-      "rationale": "Failure-domain table explicit per component; authTokenStore module adds a cleanly isolated, private-endpoint-scoped component with its own identity, consistent with modular decoupling. Scaling path still only partly evidenced end to end."
+      "rationale": "New runtime section names explicit failure-domain behaviour (fenced leases, SQL dedup, interruptible shutdown, rollback preserving audit) for a cleanly bounded shared service. Scaling path across the five capabilities still not fully evidenced end to end."
     },
     "A2": {
       "score": 5,
-      "evidence": [],
-      "rationale": "Unchanged baseline: this PR's ADR/PRD/deck evidence-governance updates do not add or change design-pattern trade-off reasoning."
+      "evidence": [
+        "docs/adrs/0002-pilot-readiness-architecture.md:92-98"
+      ],
+      "rationale": "Explicitly names and rejects the alternative (separate queue/agent/orchestrator estate) in favour of a shared service in the existing API, with reasons. Baseline already at ceiling; unchanged."
     },
     "A3": {
-      "score": 4,
-      "evidence": [],
-      "rationale": "Unchanged baseline: security/compliance architecture evidence not affected by this PR's evidence-governance diff."
+      "score": 5,
+      "evidence": [
+        "docs/adrs/0002-pilot-readiness-architecture.md:108-121",
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:549-553"
+      ],
+      "rationale": "New text adds concrete AI risk mitigation: explicit service-purpose principal (no impersonation), role/case scope rechecked on every enqueue/read/review including revocation, prompt text treated as inert (injection framing), human verification before accept."
     },
     "A4": {
       "score": 4,
@@ -55,22 +60,24 @@
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: testing/evaluation evidence not affected; no mvp/tests changes in this diff."
+      "rationale": "Unchanged: the diff adds proposal-service mechanics (dedup, leases, review gates), not model selection justification or an evaluation harness with metrics."
     },
     "A7": {
       "score": 4,
-      "evidence": [],
-      "rationale": "Unchanged baseline: agentic autonomy/orchestration evidence not affected by this ADR/PRD/deck provenance update."
+      "evidence": [
+        "docs/adrs/0002-pilot-readiness-architecture.md:122-131"
+      ],
+      "rationale": "Deterministic reactive/proactive predicates, bounded automatic execution, fenced-lease coordination and manual-route fallback are a sound orchestration pattern, but this remains a documented proposal, not a demonstrated autonomous build. Consistent with existing baseline."
     },
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no rehearsal or Q&A evidence in this diff. Baseline readiness score retained."
+      "rationale": "Live-scored; no rehearsal or new deck narrative-arc evidence accompanies this diff beyond expanded written appendices. Baseline readiness retained."
     },
     "B2": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no rehearsal evidence in this diff. Baseline readiness score retained."
+      "rationale": "Live-scored; no new evidence of calibrated delivery across audiences. Baseline retained."
     },
     "B3": {
       "score": 0,
@@ -90,17 +97,21 @@
     "B6": {
       "score": 4,
       "evidence": [],
-      "rationale": "Deck binary changed but prior version could not be inspected (archive read tools blocked by sandbox policy), so no reliable diff-based improvement/weakening could be confirmed; baseline retained."
+      "rationale": "Deck grew substantially but extracted notes remain dense, jargon-heavy appendix text; no clear evidence of improved slide standalone clarity or documentation navigability to justify a change."
     },
     "B7": {
-      "score": 3,
-      "evidence": [],
-      "rationale": "Same constraint as B6: deck content changed but could not be diffed against the prior binary; baseline evidence-storytelling score retained absent a confirmed material change."
+      "score": 4,
+      "evidence": [
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:1241-1244"
+      ],
+      "rationale": "New AC-058 to AC-061 attach concrete, testable scenario conditions (races, lease takeover, budget contention, stale-review denial) to the five-assistant claims, strengthening evidence specificity over the prior more general acceptance language."
     },
     "C1": {
       "score": 5,
-      "evidence": [],
-      "rationale": "Unchanged baseline: ADR/PRD evidence-governance edits reinforce existing stakeholder/business framing already captured at baseline, without a new material business-framing claim."
+      "evidence": [
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:531-537"
+      ],
+      "rationale": "New five-capability table names distinct stakeholders, permitted sources and separate decision owners per capability, reinforcing already-strong stakeholder/success-measure framing. Baseline already at ceiling; unchanged."
     },
     "C2": {
       "score": 0,
