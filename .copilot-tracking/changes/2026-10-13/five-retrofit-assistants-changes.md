@@ -13,11 +13,26 @@ ms.date: 2026-10-13
 
 ## Execution Status
 
-Active. P01/P01-T01 requirements complete; P02 runtime and P03 validation,
+Active. P01/P01-T01 requirements and P02/P02-T01 runtime complete; P03 validation,
 exact-source image and publication remain. Existing worktree/branch
 and open #68 verified. Private/unrelated presentation intermediates preserved.
 
 ## Implementation-Time Plan and Detail Updates
+
+### P02 shared runtime, UI and tests
+
+Whole write-disjoint P02 worker implemented 13 MVP files. Five v1.0.0
+contracts, purpose-compatible sources, shared review queue/case controls,
+fenced claims, durable reservations, registry/role/source CAS review and
+visible manual routes delivered. No deployment, dataset mutation or paid call.
+Worker reports 43 targeted tests, 332 full tests (306 pass, 26 MSSQL skips)
+and 15 Chromium checks. Parent independently repeated 332 tests with the same
+passing/skipped result, JS syntax and clean diff. Real MSSQL/image gates remain.
+Default assistance is disabled without finite authority/expiry/call/token
+allowances; default proactive off. No daily reset or allowance extension under
+the same reference. README contains exact configuration/API/operator gates.
+Late provider/unknown usage retains liability; proposal review never approves
+controlled state. Canonical human/business and real-platform gates unchanged.
 
 ### P01 requirements and architecture
 
@@ -75,6 +90,11 @@ seconds without a valid aggregate result. SQL workload identity/domain
 fingerprints are therefore unavailable, not claimed verified. No provider,
 proposal or controlled-domain write was requested by the probe. Current
 management-plane inventory and unchanged HTTP 200 do not replace AC-057.
+
+The separate simple exec transport check succeeded. Long/multiline startup
+commands then failed explicitly (404/argument quoting); no valid SQL aggregate
+was recovered. Stop this diagnostic rather than claim workload identity or
+domain fingerprint evidence. The live version remains unchanged.
 
 ### P01 document validation
 

@@ -75,6 +75,7 @@ async function start() {
   nav.querySelectorAll("a").forEach((a) => { if (a.dataset.dyn) a.remove(); else a.hidden = contractor; });
   if (contractor) nav.prepend(h("a", { href: "#/", "data-dyn": "1" }, "My jobs"));
   else if (isManager()) nav.querySelector("a[href='#/funding']").after(h("a", { href: "#/capacity", "data-dyn": "1" }, "Capacity and work orders"), h("a", { href: "#/closed", "data-dyn": "1" }, "Closed cases"));
+  if (!contractor) nav.append(h("a", { href: "#/assistants", "data-dyn": "1" }, "Assistant proposals"));
   nav.hidden = false;
   route();
 }
@@ -134,6 +135,7 @@ function route() {
   const m = location.hash.match(/^#\/case\/(.+)$/);
   if (me.user.role === "Contractor") return m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView();
   if (m) return caseView(decodeURIComponent(m[1]));
+  if (location.hash === "#/assistants") return assistantQueueView();
   if (location.hash === "#/closed") return closedView();
   if (location.hash === "#/capacity") return capacityView();
   if (location.hash === "#/import") return importView();
@@ -311,6 +313,7 @@ async function listView(view) {
 
 async function caseView(id) {
   const c = await api(`/api/cases/${encodeURIComponent(id)}`);
+  const assistantPanel = await assistantCasePanel(id);
   const r = c.resident, hm = c.home;
   const openHaz = c.hazards.filter((x) => !x.released);
   const msg = h("div", { role: "status" });
@@ -400,6 +403,7 @@ async function caseView(id) {
         h("button", { class: "alt", onclick: () => kind("update") }, "Plain update template")), draftBox),
     documentsPanel(c, id, refresh),
     fundingPanel(c, id, refresh),
+    assistantPanel,
     financePanel(c, id, refresh), grantPanel(c, id, refresh), technicalPanel(c, id, refresh), residentPanel(c, id, refresh),
     msg,
     h("section", { class: "card" }, h("h2", {}, "History"),

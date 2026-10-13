@@ -1,5 +1,6 @@
 """Case store: loading, views, actions, gates and the hash-chained audit log."""
 import csv
+import hashlib
 import io
 import json
 import os
@@ -413,7 +414,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                 self.audit(user["email"], "upload_document_failed", case_id, f"{kind}: {name}: {e}")
                 raise
             doc = dict(id=did, name=name, kind=kind, at=datetime.now().date().isoformat(), by=user["name"],
-                       generated=False, mime=mime, summary="")
+                       generated=False, mime=mime, summary="", content_sha256=hashlib.sha256(data).hexdigest(), version=1)
             c["documents"].append(doc)
             self.audit(user["email"], "upload_document", case_id, f"{kind}: {name}")
             try:

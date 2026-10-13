@@ -11,6 +11,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from . import auth, profile, projection, quality
+from .assistants import Assistants
 from .documents import DocumentStoreError
 from .factory import open_store
 from .timecapture import TimeCapture
@@ -45,9 +46,12 @@ class App:
         self.tiles = tile_config()
         self.csp = "default-src 'self'; img-src 'self' data: blob:" + (f" {self.tiles['host']}" if self.tiles["host"] else "") + "; frame-ancestors 'none'"
         self.provider = provider or auth.make_provider(store, password or secrets.token_urlsafe(9))
+        self.assistants = Assistants(store)
 
 
 def get_kind(path):
+    if path.startswith("/api/assistants"):
+        return "assistants"
     if path == "/api/account/photo":
         return "me"
     if path == "/api/me":
@@ -182,6 +186,24 @@ def make_handler(app):
             s = app.store
             if not projection.allowed(u, get_kind(url.path)):
                 return self._json(403, {"error": "Your role does not include this."})
+            if url.path.startswith("/api/assistants"):
+                try:
+                    if url.path == "/api/assistants":
+                        return self._json(200, app.assistants.registry(u))
+                    if url.path == "/api/assistants/proposals":
+                        return self._json(200, app.assistants.listing(u, q.get("case_id", [None])[0], q.get("after", [""])[0]))
+                    parts = url.path.strip("/").split("/")
+                    if len(parts) == 4 and parts[:3] == ["api", "assistants", "proposals"]:
+                        return self._json(200, app.assistants.detail(u, parts[3], num(q, "history_offset", 0, 0, 1000000)))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except KeyError:
+                    return self._json(404, {"error": "Proposal not found."})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+                except Exception:
+                    return self._json(503, {"error": "Assistant service unavailable; continue ordinary case work manually."})
+                return self._json(404, {"error": "Not found."})
             if url.path == "/api/me":
                 out = projection.me_payload(u, s.counts(u), list(s.staff.values()))
                 out["account"] = app.provider.account(self.headers, u)
@@ -305,6 +327,8 @@ def make_handler(app):
             url = urlparse(self.path)
             try:
                 body = self._body()
+                if url.path.startswith("/api/assistants") and not isinstance(body, dict):
+                    raise ValueError("Assistant request must be an object.")
             except ValueError:
                 return self._json(400, {"error": "Could not read that."})
             if url.path == "/api/login":
@@ -332,6 +356,12 @@ def make_handler(app):
                 return self._json(403, {"error": "Your role does not include this."})
             parts = url.path.strip("/").split("/")
             try:
+                if len(parts) == 4 and parts[:2] == ["api", "assistants"] and parts[3] == "invoke":
+                    return self._json(202, app.assistants.invoke(u, parts[2], body.get("case_id")))
+                if len(parts) == 5 and parts[:3] == ["api", "assistants", "proposals"] and parts[4] == "review":
+                    return self._json(200, app.assistants.review(
+                        u, parts[3], body.get("action"), body.get("revision"), body.get("note", ""),
+                        body.get("output"), body.get("source_verified", False)))
                 if url.path == "/api/time/acknowledge":
                     ver = app.time.acknowledge(u)
                     s.audit(u["email"], "time_notice_acknowledged", "-", f"notice {ver}")
@@ -422,6 +452,10 @@ def make_handler(app):
                 return self._json(404, {"error": "Case not found."})
             except ValueError as e:
                 return self._json(400, {"error": str(e)})
+            except Exception:
+                if url.path.startswith("/api/assistants"):
+                    return self._json(503, {"error": "Assistant service unavailable; continue ordinary case work manually."})
+                raise
             return self._json(404, {"error": "Not found."})
 
     return H
@@ -438,7 +472,11 @@ def main():
     print(f"Zava Forward is running at http://{host}:{port}")
     if app.provider.name == "password" and not os.environ.get("ZF_PASSWORD"):
         print(f"Sign in with any staff email and the password {password}")
-    ThreadingHTTPServer((host, port), make_handler(app)).serve_forever()
+    app.assistants.start()
+    try:
+        ThreadingHTTPServer((host, port), make_handler(app)).serve_forever()
+    finally:
+        app.assistants.stop()
 
 
 if __name__ == "__main__":

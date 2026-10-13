@@ -150,6 +150,12 @@ class SqlStore(Store):
         self.db.execute("PRAGMA journal_mode=WAL")
         self.db.execute("PRAGMA busy_timeout=5000")
 
+    def assistant_connection(self):
+        """A request/worker owns its connection; inference never owns the Store lock."""
+        db = sqlite3.connect(self.db_path, isolation_level=None)
+        db.execute("PRAGMA busy_timeout=5000")
+        return db
+
     def _create_schema(self):
         self.db.executescript(SCHEMA)
 

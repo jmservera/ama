@@ -413,6 +413,225 @@ else. The SQL Server integration job is not part of this job.
 
 ## Tests
 
+### Five retrofit assistants (2026-10-13 implementation)
+
+The existing workbench now has five separate v1.0.0 capabilities:
+`stock-prioritisation`, `assessment-preparation`, `funding-evidence`,
+`works-resident-coordination` and `quality-evidence`. Each case card exposes
+the controls permitted for the current role. "Assistant proposals" opens the
+shared role-owned queue. This is a proposal service, not a case automation
+engine: generation and review never change ranking, ownership, funding,
+consent, appointments, work orders, safety holds or quality sign-offs.
+
+| Capability | Request and proposal-review roles | Synthetic proactive gap check |
+| --- | --- | --- |
+| Stock | Retrofit Coordinator, Retrofit Programme Manager | Missing home EPC/type/build year or conflicting disclosed survey values |
+| Assessment | Retrofit Coordinator, Retrofit Programme Manager | Missing Survey/Design metadata or hash, missing design version, changed relevant source |
+| Funding | Grants and Evidence Officer, Retrofit Programme Manager | Missing measures/route/reference/grant/budget, incomplete supplied invoice inputs, claim-phase source-history/Funding evidence gaps; changed relevant source/terms |
+| Works/resident coordination | Retrofit Coordinator, Resident Liaison Officer, Retrofit Programme Manager | Offered handoff, missed recorded appointment or overdue open service-request update |
+| Quality | Quality Inspector, Retrofit Programme Manager | Missing measure/checklist evidence, conflicting evidence, obsolete checklist or changed relevant source |
+
+These are selected synthetic exercise rules (`synthetic-gaps-2026-10-13-v1`),
+not approved company rules or an assessment of funding eligibility. Unknown
+fields, missing document versions/content hashes and unavailable provider
+usage remain explicit unknowns/nulls. Existing document records are not
+backfilled or silently asserted to have hashes. New uploads record SHA-256
+and version 1 in the existing document metadata.
+
+Source capture is an allowlist safe for every permitted reader: stock excludes
+resident support/safety ranking inputs and private ranking reasons; other
+non-finance capabilities exclude finance. Coordination includes disclosed
+contact/access preferences but no vulnerability reason, handoff free text or
+complaint narrative. Funding includes structured budget, commitments, invoice
+lines, grants and permitted evidence metadata, not an old `funding_draft`
+invocation. Document filenames, AI summaries and arbitrary document contents
+are not copied into shared proposals. Citations identify captured categories
+and hashes, not passages or proof that the model's conclusion is correct.
+Each response rechecks the current staff record, role and optional `case_ids`
+and `areas` scopes. Contractors and unknown roles are default-denied. A revoked
+staff role cannot read an earlier proposal merely by retaining a session.
+
+Human review has two separate operations: first explicitly record source
+verification with a note, then accept or edit-accept. The accepting person
+must have their own current verification. Quality review additionally uses the
+existing independence check against evidence submitters, recorders and fixers.
+This is independent proposal review, not competent technical sign-off or
+quality acceptance. Failed, malformed, template, missing-citation and stale
+proposals cannot be verified or accepted. Rejection and history remain
+available to authorized current readers; a rejected worker cannot complete
+over that decision. Manual case work remains available during model calls,
+disabled configuration, failure, exhaustion and stale evidence.
+
+#### Operator authority and finite allowance
+
+The new service requires `ZF_STORE=sqlite` or `mssql`. JSON-only operation keeps
+the existing app usable but exposes disabled assistance/manual routes.
+No new AI/model dependency or resource is required. Existing AI endpoint and
+standard deployment settings are used; no model is called by the test suites.
+
+Automatic scanning is off by default. Both reactive execution and proactive
+execution require a configured AI provider and a valid bounded operator
+authority. Configuration alone is not approval: an operator must obtain
+scoped approval for rollout, the authority reference, expiry and finite call/
+token allowances before configuring these settings.
+
+| Environment setting | Default | Effective constraint |
+| --- | --- | --- |
+| `ZF_ASSIST_AUTHORITY` | Empty (disabled) | Approved exercise reference, 1-120 characters; never a credential |
+| `ZF_ASSIST_EXPIRES` | Empty (disabled) | Explicit timezone-bearing ISO timestamp; database time enforces expiry |
+| `ZF_ASSIST_CALL_ALLOWANCE` | 0 (disabled) | Finite aggregate provider-dispatch allowance, 1-1000000 |
+| `ZF_ASSIST_TOKEN_ALLOWANCE` | 0 (disabled) | Finite aggregate tokens, at most 1000000000000; must cover one full reservation |
+| `ZF_ASSIST_PROACTIVE` | `0` | `1` enables periodic purpose-principal scans after valid authority/limits |
+| `ZF_ASSIST_SCAN_INTERVAL` | 60 seconds | 5-3600 |
+| `ZF_ASSIST_SCAN_SIZE` | 20 cases | 1-100; keyset cursor visits subsequent open cases |
+| `ZF_ASSIST_INPUT_CHARS` | 12000 | 1000-24000 including system and evidence prompts |
+| `ZF_ASSIST_OUTPUT_CHARS` | 8000 | 1000-16000; typed summary/findings/unknowns validation |
+| `ZF_ASSIST_OUTPUT_TOKENS` | 600 | 100-2000 |
+| `ZF_ASSIST_TIMEOUT` | 20 seconds | 1-40; bounded wall-clock dispatch wait; late output is not used |
+| `ZF_ASSIST_ACTIVE_CALLS` | 2 | 1-4 local physical call slots and shared unexpired SQL attempt slots |
+| `ZF_ASSIST_ATTEMPTS` | 2 | 1-3 per immutable proposal key |
+| `ZF_ASSIST_BACKOFF` | 30 seconds | 1-3600, multiplied by the completed attempt count |
+| `ZF_ASSIST_LEASE` | 60 seconds | 10-120, at least timeout + 5 seconds |
+
+All replicas must use the same approved effective authority and limits.
+SQL serializes reservations under the existing transaction/application-lock
+adapter. Every dispatch, including a retry or lease takeover, reserves one
+call and `INPUT_CHARS + OUTPUT_TOKENS` tokens before provider access. Input
+characters conservatively upper-bound input tokens without adding a tokenizer.
+Known valid usage replaces the token reservation with actual tokens. Missing,
+out-of-range or timeout usage retains the full bounded reservation liability;
+it is never recorded as zero. Uncertain failures retain a shared active-attempt
+slot until the database lease deadline; a timed-out physical call retains its
+local semaphore slot until it actually returns.
+
+Allowance is keyed by the authority reference hash, shared across replicas and
+restarts. The same reference cannot increase the existing allowance or extend
+its stored expiry. There is no daily reset or indefinite replenishment.
+Exhausted/expired shared allowance disables further automatic scans and is
+visible through the registry and queue, not just at provider dispatch.
+Another reference means a separately approved finite exercise, not an
+automatic rollover. Token allowances are not a currency guarantee; the
+operator must derive finite approved limits from deployment pricing and retain
+unknown billing liability. Exactly-once inference/billing is not promised:
+expired leases can lead to another bounded attempt while remote completion
+remains uncertain.
+
+#### SQL durability and lifecycle
+
+Startup adds four idempotent tables (`assistant_tasks`, `assistant_allowance`,
+`assistant_attempts`, `assistant_events`), a pending index and append-only
+event protection. MSSQL startup DDL and assistant migrations serialize with
+the existing transaction-owned `sp_getapplock` write lock. The startup identity
+needs the existing schema-creation privileges (for example the already
+documented `db_ddladmin`) and permission to use that application lock.
+Runtime needs SELECT on cases/staff/meta and assistant state, INSERT/UPDATE
+on task/allowance/attempt state, and INSERT/SELECT on assistant events. It does
+not need new domain write permissions for assistance. Deployment/operator
+privilege verification and real MSSQL acceptance are separate from local
+dialect emulation. A failed assistant migration leaves assistance visibly
+disabled with an operator-migration/manual-route message; it does not prevent
+otherwise available ordinary case work or quietly start a provider worker.
+
+Each short transaction uses an independently owned Store-adapter connection.
+No provider network call holds the Store/domain/database lock. A durable SHA-256
+task key includes capability/version, case and material permitted-source,
+schema/rule/document signatures. Mode is separate append-only provenance.
+Repeated scans and reactive/proactive collisions recover the same proposal.
+Claims have an owner, monotonic fence, database-time lease and CAS completion.
+Lost acknowledgements are looked up, not blindly re-dispatched. Review compares
+the current material signature and proposal revision in the same serialized
+SQL transaction; unrelated contact notes do not stale a proposal.
+MSSQL assistant transactions use serializable isolation so current role,
+case and permitted metadata reads remain protected through review commit,
+including against writers outside the application's cooperative write lock.
+The independently owned connection resets to read-committed before closing.
+
+The existing process starts at most `ACTIVE_CALLS` proposal workers and,
+when enabled, one scanner. A scanner cannot overlap locally, and SQL capture/
+enqueue transactions serialize across replicas. Local physical provider calls
+are also bounded by a semaphore; shared unexpired attempt slots bound
+replica-wide claims. An interruptible stop event stops scans/polls and abandons
+dispatch waits; outstanding daemon provider calls cannot make late domain or
+proposal writes. Expiry/fencing, not thread ownership, governs recovery.
+Disable assistance by removing its authority or setting proactive off, and
+restore the previous image to roll back. Old images ignore the new tables;
+do not delete evidence, reseed data or reset the allowance.
+
+#### API and non-destructive exercise
+
+These calls require a currently authorized signed-in session and, for the
+trusted proxy, the existing `X-ZF-CSRF: 1` POST header. They write only
+task/proposal/event/allowance state. Invocation can spend approved allowance
+when workers are enabled: do not perform live invocation without its scoped
+approval. Registry/list/detail are non-billable reads.
+
+```bash
+# $BASE is the existing service; use its authenticated session cookie.
+curl -b "$COOKIE" "$BASE/api/assistants"
+curl -b "$COOKIE" "$BASE/api/assistants/proposals?case_id=ZF-1"
+curl -b "$COOKIE" "$BASE/api/assistants/proposals/$PROPOSAL_ID"
+
+# 202 response contains id, state, revision, bounded snapshot and manual route.
+curl -b "$COOKIE" -H 'Content-Type: application/json' -H 'X-ZF-CSRF: 1' \
+  -d '{"case_id":"ZF-1"}' \
+  "$BASE/api/assistants/stock-prioritisation/invoke"
+
+# Repeat the invoke endpoint for any of the other four registered IDs.
+# Use the latest revision returned by detail; verification precedes acceptance.
+curl -b "$COOKIE" -H 'Content-Type: application/json' -H 'X-ZF-CSRF: 1' \
+  -d '{"action":"verify","revision":3,"source_verified":true,"note":"Checked each cited source and retained unknowns."}' \
+  "$BASE/api/assistants/proposals/$PROPOSAL_ID/review"
+curl -b "$COOKIE" -H 'Content-Type: application/json' -H 'X-ZF-CSRF: 1' \
+  -d '{"action":"accept","revision":4,"note":"Accept this proposal only, not a domain decision."}' \
+  "$BASE/api/assistants/proposals/$PROPOSAL_ID/review"
+```
+
+List pages are bounded to 50 proposals and return `next_after`; pass it as
+`?after=<cursor>` for the next page. Detail returns 50 latest history events;
+`history_next_offset` supplies the next `?history_offset=<offset>` page.
+Current roles/scopes are rechecked for each page, including earlier history.
+The queue and case-card history controls expose these continuation reads.
+
+`edit-accept` additionally supplies `output` with exactly `summary`, `findings`
+(each has `text` and a non-empty `citations` list of captured `source:*` IDs)
+and `unknowns`. `reject` supplies the current `revision` and a bounded `note`.
+Stale revision returns 409; denied current role/scope returns 403; invalid
+verification/output/state returns 400. Invocation, list/detail and review have
+separate service authorization. Scanning has no staff-callable API: the
+registered purpose principal is `service:retrofit-evidence-proposals`, not
+a manager impersonation. The scheduler calls `Assistants.scan()` only with
+valid authority/limits and proactive opt-in.
+
+Validation: `tests/test_assistants.py` exercises all five reactive/proactive
+contracts, reader matrices, failure/disabled/malformed paths, current roles,
+source review, unchanged controlled state, independent SQLite connections,
+claims/leases/restart/lost acknowledgements, retries/aggregate liability,
+shared limits and blocked-provider/manual access. MSSQL SQL-shape emulation
+is explicitly not live SQL Server proof. The isolated non-billable browser
+exercise uses fixtures, not the retained dataset:
+
+```bash
+cd mvp
+PYTHONPATH=. python3 -m unittest discover -s tests -p test_assistants.py
+PYTHONPATH=. python3 tests/assistants_browser_check.py
+node --check web/assistants.js
+```
+
+The browser exercise needs the existing Playwright test dependency and Chromium;
+it can use installed Google Chrome or `CHECK_BROWSER_EXECUTABLE`. The parent
+owns image build, real platform evidence, approved rollout and independent
+Review. New live rollout and provider spending remain blocked pending scoped
+owner approval; local mocks do not satisfy that acceptance gate.
+
+Local execution on 2026-10-13: all 43 targeted assistant tests passed; the full
+suite reported 332 tests with 306 passed, 26 MSSQL integration tests skipped
+and no failures. The isolated desktop Chromium exercise passed all 15 checks
+with no page errors. Node syntax checks passed for `assistants.js`, `app.js`,
+`panels.js` and `ops.js`; `git diff --check -- mvp` passed. All provider
+responses in these checks were local test doubles or workflow-only templates.
+No retained dataset, private configuration, live provider, Azure deployment
+or real MSSQL integration was exercised by this implementation phase.
+
 ```bash
 cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests -v
 ```

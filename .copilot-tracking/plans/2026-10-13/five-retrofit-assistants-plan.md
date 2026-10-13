@@ -90,13 +90,13 @@ extend explicit acceptance criteria if needed, preserve approval state and
 update index/log.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Implement the specified assistants
+### [x] P02: Implement the specified assistants
 
 Depends on P01. Whole phase owns only MVP runtime, UI, tests and MVP README;
 it can run independently of the parent's live-platform inspection.
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Implement shared runtime and UI
+#### [x] P02-T01: Implement shared runtime and UI
 
 Registry, bounded evidence, durable task/claim storage, proactive checks,
 reactive generation, role-owned proposal review and existing UI integration.
