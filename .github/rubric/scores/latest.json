@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-13T09:20:53+00:00",
-  "commit": "a7d9eb4c77ba7843af2f2118e3967d8a5cbb6d8c",
+  "scored_at": "2026-10-13T10:00:00+00:00",
+  "commit": "8ca4a3d266331c9d986cfdaf2f51b91aa0e27a55",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38374459654",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38378999706",
   "fingerprints": {
     "brd": "62bbfe659c52cbca53562d91414afa52a1161571959fce799e3bc702ff5e5e20",
     "prd": "665ff790556d7f3d8b9b090c2b6d908627a95631ffe171465140d0bc12d2dd67",
@@ -30,7 +30,7 @@
         "infra/modules/containerapps.bicep:123-126",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. A1 evidence files unchanged by this PR's diff (rename/auth additions elsewhere)."
+      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. Unchanged: diff only touches untracked docs (case study, decision-1 spec, reference log), none of A1's evidence files."
     },
     "A2": {
       "score": 5,
@@ -45,11 +45,10 @@
     "A3": {
       "score": 4,
       "evidence": [
-        "infra/modules/authTokenStore.bicep:22-38",
-        "docs/adrs/0002-pilot-readiness-architecture.md:908-915",
-        "mvp/zavaforward_mvp/auth.py:95-140"
+        "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-329"
       ],
-      "rationale": "New deployed token-store infra scopes identity narrowly (OAuth-only storage, no shared key, private endpoint, scoped RBAC) and ADR 0002 documents observed tenant/role/oid checks with real denial handling, moving from design-only to partially deployed/tested control evidence."
+      "rationale": "ADR names a specific AI leakage threat and named compliance articles. This PR's actual diff touches only untracked docs (case study addendum, decision-1 spec), not ADR/PRD/infra evidence; unchanged."
     },
     "A4": {
       "score": 4,
@@ -59,20 +58,21 @@
         "mvp/tests/test_ranking_policy.py:42-56",
         "docs/adrs/0002-pilot-readiness-architecture.md:431"
       ],
-      "rationale": "Policy is a hash-verified versioned file with a registry and tested JSON/SQL store parity. Renamed package and new auth/token-store/profile modules (with tests) extend coverage but do not change this criterion's core evidence."
+      "rationale": "Policy is a hash-verified versioned file with a registry and tested JSON/SQL store parity. No mvp/ files changed in this diff; unchanged."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:920-933",
-        "infra/README.md:78-120"
+        "infra/README.md:195-204",
+        "infra/README.md:400-412",
+        "infra/README.md:351-391"
       ],
-      "rationale": "ADR 0002 records an observed rebuild preserving all 980 programme cases, workload codes and audit rows; infra/README documents a callback re-initialization procedure. Measured operational evidence beyond prior design-only discussion."
+      "rationale": "Infra README now documents observed operational resilience: idempotent restart-convergence retries (no duplicate role grant on retry), verified audit-entry persistence across an actual application revision restart, and a full from-empty resource-group rebuild sequence with dependency-ordered dele..."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "PRD still only adds a Real-Inference Quality test table; no new evaluation harness code or measured results in ai_eval.py in this diff; unchanged."
+      "rationale": "PRD adds a Real-Inference Quality test table but no new evaluation harness code or measured results. This diff does not touch mvp/properwarm_mvp/ai_eval.py or the PRD; unchanged."
     },
     "A7": {
       "score": 4,
@@ -82,19 +82,19 @@
     "B1": {
       "score": 3,
       "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide4",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide17"
+        "docs/capstone/deck/proper-warm-executive-draft.pptx:slide1",
+        "docs/capstone/deck/proper-warm-executive-draft.pptx:slide4",
+        "docs/capstone/deck/proper-warm-executive-draft.pptx:slide17"
       ],
-      "rationale": "Renamed deck preserves the same clear arc: request, discovery/challenge, proposed response, CFO/risk tests, recommendation. Written evidence only, no live delivery to confirm the argument lands."
+      "rationale": "New deck gives a clear arc: request, discovery/challenge, proposed response, CFO/risk tests, recommendation; each slide header states a claim and the ask narrows to a bounded endorsement. Written evidence only, no live delivery to confirm the argument lands."
     },
     "B2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide13",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide18"
+        "docs/capstone/deck/proper-warm-executive-draft.pptx:slide13",
+        "docs/capstone/deck/proper-warm-executive-draft.pptx:slide18"
       ],
-      "rationale": "Main narrative stays executive (CFO cash-exposure slide, sponsor asks) while separate Appendix A/B/D carry technical and council Q&A detail; same register separation as baseline deck, now under the renamed file. Written evidence only."
+      "rationale": "Main narrative stays executive (CFO cash-exposure slide, sponsor asks) while separate Appendix A/B/D carry technical and council Q&A detail, showing register separation. Written evidence only, no live delivery to confirm calibration."
     },
     "B3": {
       "score": 0,
@@ -114,19 +114,19 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide4",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1",
+        "docs/capstone/deck/proper-warm-executive-draft.pptx:slide4",
+        "docs/capstone/deck/proper-warm-executive-draft.pptx:slide1",
         "docs/brds/agentic-retrofit-programme-brd.md:29"
       ],
-      "rationale": "Capstone deck exists (renamed) so cap_without(3) no longer applies. Documentation is complete and navigable; some slides still pack multiple sub-points rather than one idea each, so materials are clear but occasionally overloaded."
+      "rationale": "Capstone deck now exists so cap_without(3) no longer applies. Documentation is complete and navigable; some slides (e.g. 4, 10, 11) pack multiple sub-points rather than one idea each, so materials are clear but occasionally overloaded."
     },
     "B7": {
       "score": 3,
       "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide13",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1"
+        "docs/capstone/deck/proper-warm-executive-draft.pptx:slide13",
+        "docs/capstone/deck/proper-warm-executive-draft.pptx:slide1"
       ],
-      "rationale": "Deck cites dated repository evidence per slide and uses concrete figures (CFO exposure slide: GBP20,000/7,500/12,500), though fictional figures are honestly labelled rather than real measured outcomes."
+      "rationale": "Deck cites dated repository evidence per slide and uses concrete figures (CFO exposure slide: GBP20,000/7,500/12,500) to make points, though fictional figures are honestly labelled rather than real measured outcomes."
     },
     "C1": {
       "score": 5,
@@ -135,7 +135,7 @@
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269",
         "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-336"
       ],
-      "rationale": "The owner-direction table (PR-001 to PR-008) and governance additions name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures. This PR's rename/auth changes do not alter this evidence."
+      "rationale": "The owner-direction table (PR-001 to PR-008) and governance additions name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures. This PR deepens exercise targets without changing this evidence."
     },
     "C2": {
       "score": 0,
