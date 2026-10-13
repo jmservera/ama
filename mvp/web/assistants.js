@@ -59,29 +59,45 @@ function assistantProposal(p, reload) {
     h("button", { class: "alt", onclick: () => act("reject") }, "Reject proposal"));
 }
 
-async function assistantCasePanel(id) {
-  const panel = h("section", { class: "card" }, h("h2", {}, "Retrofit assistants"));
-  try {
-    const [registry, queue] = await Promise.all([
-      api("/api/assistants"), api(`/api/assistants/proposals?case_id=${encodeURIComponent(id)}`),
-    ]);
-    panel.append(h("p", { role: "status" }, registry.disabled ||
-      `Assistance available. Proactive checks ${registry.proactive ? "enabled" : "off"}.`));
-    panel.append(h("p", {}, "These are synthetic exercise rules. Continue ordinary case work manually when assistance is disabled, failed or stale."));
-    for (const a of registry.assistants) {
-      panel.append(h("button", { class: "alt", onclick: async () => {
-        try {
-          await api(`/api/assistants/${a.id}/invoke`, { case_id: id });
-          await caseView(id);
-        } catch (e) { panel.append(h("p", { role: "alert", class: "err" }, e.message)); }
-      } }, `Request ${assistantNames[a.id]}`));
+function assistantCasePanel(id) {
+  const status = h("p", { role: "status" }, "Loading assistance. Ordinary case controls remain available.");
+  const panel = h("section", { class: "card" }, h("h2", {}, "Retrofit assistants"), status);
+  const routeHash = location.hash;
+  const controller = new AbortController();
+  const deadline = setTimeout(() => controller.abort(), 10000);
+  const current = () => panel.isConnected && location.hash === routeHash;
+  const load = async () => {
+    try {
+      const [registry, queue] = await Promise.all([
+        api("/api/assistants", undefined, controller.signal),
+        api(`/api/assistants/proposals?case_id=${encodeURIComponent(id)}`, undefined, controller.signal),
+      ]);
+      if (!current()) return;
+      status.textContent = registry.disabled ||
+        `Assistance available. Proactive checks ${registry.proactive ? "enabled" : "off"}.`;
+      panel.append(h("p", {}, "These are synthetic exercise rules. Continue ordinary case work manually when assistance is disabled, failed or stale."));
+      for (const a of registry.assistants) {
+        panel.append(h("button", { class: "alt", onclick: async () => {
+          try {
+            await api(`/api/assistants/${a.id}/invoke`, { case_id: id });
+            await caseView(id);
+          } catch (e) { panel.append(h("p", { role: "alert", class: "err" }, e.message)); }
+        } }, `Request ${assistantNames[a.id]}`));
+      }
+      panel.append(h("button", { class: "alt", onclick: () => caseView(id) }, "Refresh proposals"),
+        h("a", { href: "#/assistants" }, "Shared role-owned review queue"));
+      for (const p of queue.proposals) panel.append(assistantProposal(p, () => caseView(id)));
+    } catch (e) {
+      if (current()) {
+        const reason = controller.signal.aborted ? "Assistance request timed out" : e.message;
+        status.textContent = `Assistance unavailable: ${reason}. Continue ordinary case work manually.`;
+      }
+    } finally {
+      clearTimeout(deadline);
+      controller.abort();
     }
-    panel.append(h("button", { class: "alt", onclick: () => caseView(id) }, "Refresh proposals"),
-      h("a", { href: "#/assistants" }, "Shared role-owned review queue"));
-    for (const p of queue.proposals) panel.append(assistantProposal(p, () => caseView(id)));
-  } catch (e) {
-    panel.append(h("p", { role: "status" }, `Assistance unavailable: ${e.message}. Continue ordinary case work manually.`));
-  }
+  };
+  load();
   return panel;
 }
 

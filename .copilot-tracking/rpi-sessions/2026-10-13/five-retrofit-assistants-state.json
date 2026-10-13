@@ -59,8 +59,8 @@
     }
   ],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Await ranked follow-up selection, Stop automatic session or Switch to manual mode. Reviewed iteration completed with Not accepted outcome; requested accepted delivery remains incomplete. Rank 1 is the bounded nonbillable RV-003/004 implementation."
+    "phase": "Implement",
+    "action": "Owner explicitly requests autonomous implementation to finish the work. Start child five-assistant-runtime-validation for RV-003/004 fixes and repeatable actual SQL coverage, preserving the completed parent Review and live authorization boundary."
   },
   "prioritized_follow_ups": [
     {

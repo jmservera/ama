@@ -295,6 +295,7 @@ class Assistants:
         self.sql = hasattr(store, "assistant_connection")
         self.mssql = hasattr(store, "_env")
         self.stop_event = threading.Event()
+        self.dispatch_lock = threading.Lock()
         self.threads = []
         self.scan_lock = threading.Lock()
         self.call_slots = threading.BoundedSemaphore(self.limits.active_calls if self.limits.valid else 1)
@@ -674,6 +675,8 @@ class Assistants:
             return True
 
     def execute(self, tid):
+        if self.stop_event.is_set():
+            return False
         if not self.call_slots.acquire(blocking=False):
             return False
         owner = uuid.uuid4().hex
@@ -714,11 +717,18 @@ class Assistants:
                 self.call_slots.release()
                 returned.set()
         try:
-            threading.Thread(target=call, daemon=True, name="retrofit-provider").start()
+            with self.dispatch_lock:
+                stopped = self.stop_event.is_set()
+                if not stopped:
+                    threading.Thread(target=call, daemon=True, name="retrofit-provider").start()
         except RuntimeError:
             self.call_slots.release()
             return self.complete(task, dict(outcome="provider-unavailable", usage=None, source="unverified"),
                                  None, "Provider dispatch unavailable; use manual work.")
+        if stopped:
+            self.call_slots.release()
+            return self.complete(task, dict(outcome="shutdown", usage=None, source="unverified"),
+                                 None, "Assistance stopped before dispatch; use manual work.")
         while not returned.wait(0.1):
             if self.stop_event.is_set() or time.perf_counter() - started >= self.limits.timeout:
                 break
@@ -836,7 +846,8 @@ class Assistants:
             t.start()
 
     def stop(self):
-        self.stop_event.set()
+        with self.dispatch_lock:
+            self.stop_event.set()
         for t in self.threads:
             t.join(timeout=0.2)
         # A bounded network call may still finish; SQL fencing/expiry owns correctness.

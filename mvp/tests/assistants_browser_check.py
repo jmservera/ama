@@ -58,7 +58,7 @@ def main():
             page.click("button[type=submit]")
             page.wait_for_selector("nav:not([hidden])")
             page.goto(base + "/app#/case/ZF-1")
-            page.wait_for_selector("h2:has-text('Retrofit assistants')")
+            expect(page.get_by_role("button", name="Request Stock facts and prioritisation", exact=True)).to_be_visible()
             check("five distinct case-card controls", page.locator("button:has-text('Request ')").count() == 5)
             names = ("Stock facts and prioritisation", "Assessment preparation", "Funding evidence",
                      "Works and resident coordination", "Quality evidence")
@@ -112,6 +112,50 @@ def main():
             page.get_by_role("link", name="Shared role-owned review queue").click()
             page.wait_for_selector("h1:has-text('Role-owned assistant proposals')")
             check("shared queue retains stale failure and history", page.locator("article").count() == 6)
+
+            held = []
+            def hold(route):
+                held.append(route)
+
+            page.route("**/api/assistants", hold)
+            page.goto(base + "/app#/case/ZF-1")
+            expect(page.get_by_role("heading", name="Log a call", exact=True)).to_be_visible(timeout=2000)
+            expect(page.get_by_role("button", name="Save answer", exact=True)).to_be_enabled()
+            check("pending assistance does not block manual controls", bool(held))
+            page.fill("#outcome", "Manual call while assistance is pending")
+            page.get_by_role("button", name="Save", exact=True).click()
+            expect(page.locator(".tl")).to_contain_text("Manual call while assistance is pending")
+            check("manual write succeeds while assistance stays pending", True)
+            expect(page.get_by_role("status").filter(
+                has_text="Assistance unavailable: Assistance request timed out")).to_be_visible(timeout=12000)
+            check("assistance deadline exposes manual fallback", True)
+            for route in held:
+                route.abort()
+            page.unroute("**/api/assistants", hold)
+            page.goto(base + "/app#/case/ZF-2")
+            expect(page.get_by_role("button", name="Refresh proposals", exact=True)).to_be_visible()
+
+            stale = []
+            def hold_first(route):
+                if not stale:
+                    stale.append(route)
+                else:
+                    route.continue_()
+
+            page.route("**/api/assistants", hold_first)
+            page.goto(base + "/app#/case/ZF-1")
+            expect(page.locator("#app")).to_contain_text("Reference ZF-1")
+            expect(page.get_by_role("status").filter(has_text="Loading assistance.")).to_be_visible()
+            page.goto(base + "/app#/case/ZF-2")
+            expect(page.locator("#app")).to_contain_text("Reference ZF-2")
+            expect(page.get_by_role("button", name="Refresh proposals", exact=True)).to_be_visible()
+            late = app.assistants.registry(pm)
+            late["disabled"] = "STALE-ASSISTANT-PANEL"
+            stale[0].fulfill(status=200, content_type="application/json", body=json.dumps(late))
+            page.wait_for_timeout(100)
+            check("late assistance cannot populate a different case",
+                  "STALE-ASSISTANT-PANEL" not in page.locator("#app").inner_text())
+            page.unroute("**/api/assistants", hold_first)
             check("no page errors", not errors)
             browser.close()
         print(f"{len(passed)} browser checks passed; no billable provider or retained dataset access.")

@@ -18,9 +18,9 @@ function h(tag, attrs, ...kids) {
   return el;
 }
 
-async function api(path, body) {
-  const res = await fetch(path, body === undefined ? {} : {
-    method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body),
+async function api(path, body, signal) {
+  const res = await fetch(path, body === undefined ? { signal } : {
+    method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body), signal,
   });
   const data = await res.json().catch(() => ({}));
   if (res.status === 401 && path !== "/api/login") { me = null; login("Your session has ended. Sign in again."); throw new Error("Your session has ended. Sign in again."); }
@@ -313,7 +313,7 @@ async function listView(view) {
 
 async function caseView(id) {
   const c = await api(`/api/cases/${encodeURIComponent(id)}`);
-  const assistantPanel = await assistantCasePanel(id);
+  const assistantPanel = assistantCasePanel(id);
   const r = c.resident, hm = c.home;
   const openHaz = c.hazards.filter((x) => !x.released);
   const msg = h("div", { role: "status" });

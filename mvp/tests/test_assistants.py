@@ -4,7 +4,6 @@ import json
 import os
 import re
 import shutil
-import sqlite3
 import threading
 import time
 import unittest
@@ -89,7 +88,7 @@ class Base(unittest.TestCase):
             c["documents"] = [dict(id="SURVEY-1", kind="Survey", name="PRIVATE-DOCUMENT-NAME",
                                     summary="PRIVATE-AI-SUMMARY", content_sha256="abc", version=1)]
         self.seed.write_text(json.dumps(data))
-        self.store = SqlStore(str(self.seed), str(self.dbpath))
+        self.store = self.open_store()
         self.provider = Provider()
         self.store.ai = self.provider
         self.service = Assistants(self.store, config())
@@ -100,12 +99,15 @@ class Base(unittest.TestCase):
         shutil.rmtree(self.root)
 
     def other(self, **cfg):
-        store = SqlStore(str(self.seed), str(self.dbpath))
+        store = self.open_store()
         store.ai = self.provider
         service = Assistants(store, config(**cfg))
         self.addCleanup(store.db.close)
         self.addCleanup(service.stop)
         return service
+
+    def open_store(self):
+        return SqlStore(str(self.seed), str(self.dbpath))
 
     def case(self, mutate):
         with self.service.transaction() as db:
@@ -492,6 +494,54 @@ class ReviewTests(Base):
 
 
 class DurabilityTests(Base):
+    def test_stop_before_execute_does_not_claim_or_dispatch(self):
+        p = self.service.invoke(self.pm, "stock-prioritisation", "ZF-1")
+        self.service.stop()
+        self.assertFalse(self.service.execute(p["id"]))
+        self.assertEqual(self.provider.calls, 0)
+        self.assertEqual(self.service.detail(self.pm, p["id"])["attempts"], 0)
+        self.assertTrue(self.service.call_slots.acquire(blocking=False))
+        self.service.call_slots.release()
+
+    def test_stop_while_claim_blocked_closes_dispatch_and_retains_reservation(self):
+        p = self.service.invoke(self.pm, "stock-prioritisation", "ZF-1")
+        entered, release = threading.Event(), threading.Event()
+        claim = self.service.claim
+        results = []
+
+        def blocked(*args):
+            entered.set()
+            if not release.wait(5):
+                raise TimeoutError("Test claim was not released.")
+            return claim(*args)
+
+        with patch.object(self.service, "claim", blocked):
+            worker = threading.Thread(target=lambda: results.append(self.service.execute(p["id"])))
+            self.service.threads.append(worker)
+            worker.start()
+            try:
+                self.assertTrue(entered.wait(2))
+                started = time.monotonic()
+                self.service.stop()
+                self.assertLess(time.monotonic() - started, 1)
+                self.assertTrue(worker.is_alive())
+            finally:
+                release.set()
+                worker.join(5)
+        self.assertFalse(worker.is_alive())
+        self.assertEqual(results, [True])
+        self.assertEqual(self.provider.calls, 0)
+        current = self.service.detail(self.pm, p["id"])
+        self.assertEqual(current["state"], "failed")
+        self.assertEqual(current["envelope"]["outcome"], "shutdown")
+        self.assertIsNone(current["envelope"]["usage"])
+        with self.service.transaction() as db:
+            self.assertEqual(db.execute("SELECT used_calls,reserved_tokens FROM assistant_allowance").fetchone(),
+                             (1, self.service.limits.reservation))
+            self.assertEqual(db.execute("SELECT active_until FROM assistant_attempts").fetchone()[0], 0)
+        self.assertTrue(self.service.call_slots.acquire(blocking=False))
+        self.service.call_slots.release()
+
     def test_parallel_enqueue_unique_and_distinct_provenance(self):
         a, b = self.service, self.other()
         barrier = threading.Barrier(2)
@@ -721,7 +771,9 @@ class DurabilityTests(Base):
                                       "proactive", PURPOSE)
                 # Case scope still requires a real case row, so register isolated fixture rows.
                 row = db.execute("SELECT * FROM cases WHERE id='ZF-1'").fetchone()
-                cols = [r[1] for r in db.execute("PRAGMA table_info(cases)").fetchall()]
+                cols = ([r[0] for r in db.execute(
+                    "SELECT name FROM sys.columns WHERE object_id=OBJECT_ID(N'cases') ORDER BY column_id").fetchall()]
+                    if self.service.mssql else [r[1] for r in db.execute("PRAGMA table_info(cases)").fetchall()])
                 values = list(row)
                 values[cols.index("id")] = f"SYN-{i:03d}"
                 c = json.loads(values[cols.index("body")])
@@ -744,14 +796,14 @@ class DurabilityTests(Base):
         before = self.domain()
         self.run_ready("funding-evidence")
         Assistants(self.store, config())
-        old = SqlStore(str(self.seed), str(self.dbpath))
+        old = self.open_store()
         try:
             self.assertEqual(old.detail("ZF-1", self.pm)["home"]["epc"], "D")
         finally:
             old.db.close()
         self.assertEqual(before, self.domain())
-        with self.service.transaction() as db:
-            with self.assertRaises(sqlite3.IntegrityError):
+        with self.assertRaisesRegex(self.store.dberror, "assistant evidence is append-only"):
+            with self.service.transaction() as db:
                 db.execute("DELETE FROM assistant_events")
 
     def test_schema_failure_disables_assistance_not_manual_reads(self):
@@ -918,6 +970,53 @@ class ApiTests(Base):
             self.assertEqual(status, 503)
             self.assertIn("ordinary case work manually", body["error"])
         self.assertEqual(self.request("/api/cases/ZF-1")[0], 200)
+
+
+class MssqlFixture:
+    """Actual disposable SQL, with the same nonbillable provider and contracts."""
+
+    def setUp(self):
+        from zavaforward_mvp.mssqlstore import _Conn, connection_string
+        if os.environ.get("ZF_SQL_SERVER") not in ("localhost", "127.0.0.1", "sql"):
+            raise ValueError("Assistant SQL tests require the local disposable SQL service, never Azure SQL.")
+        self.sql_env = dict(os.environ, ZF_SQL_DATABASE="zf_test_assistants")
+        master = _Conn(connection_string(dict(self.sql_env, ZF_SQL_DATABASE="master")))
+        try:
+            master.execute("IF DB_ID(N'zf_test_assistants') IS NULL CREATE DATABASE zf_test_assistants")
+        finally:
+            master.close()
+        db = _Conn(connection_string(self.sql_env))
+        try:
+            for name in ("assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance",
+                         "audit_head", "audit", "recommendations", "cases", "staff", "meta"):
+                db.execute(f"IF OBJECT_ID(N'{name}', N'U') IS NOT NULL DROP TABLE {name}")
+        finally:
+            db.close()
+        super().setUp()
+
+    def open_store(self):
+        from zavaforward_mvp.mssqlstore import MssqlStore
+        return MssqlStore(str(self.seed), env=self.sql_env, state_dir=str(self.root))
+
+
+@unittest.skipUnless(os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlContractTests(MssqlFixture, ContractTests):
+    pass
+
+
+@unittest.skipUnless(os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlReviewTests(MssqlFixture, ReviewTests):
+    pass
+
+
+@unittest.skipUnless(os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlDurabilityTests(MssqlFixture, DurabilityTests):
+    pass
+
+
+@unittest.skipUnless(os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlApiTests(MssqlFixture, ApiTests):
+    pass
 
 
 if __name__ == "__main__":

@@ -460,7 +460,10 @@ quality acceptance. Failed, malformed, template, missing-citation and stale
 proposals cannot be verified or accepted. Rejection and history remain
 available to authorized current readers; a rejected worker cannot complete
 over that decision. Manual case work remains available during model calls,
-disabled configuration, failure, exhaustion and stale evidence.
+disabled configuration, failure, exhaustion and stale evidence. Case controls
+render before auxiliary assistant reads finish. Those reads share a 10-second
+abort deadline with a visible manual fallback; detached/different-route panels
+ignore late results.
 
 #### Operator authority and finite allowance
 
@@ -550,9 +553,13 @@ The existing process starts at most `ACTIVE_CALLS` proposal workers and,
 when enabled, one scanner. A scanner cannot overlap locally, and SQL capture/
 enqueue transactions serialize across replicas. Local physical provider calls
 are also bounded by a semaphore; shared unexpired attempt slots bound
-replica-wide claims. An interruptible stop event stops scans/polls and abandons
-dispatch waits; outstanding daemon provider calls cannot make late domain or
-proposal writes. Expiry/fencing, not thread ownership, governs recovery.
+replica-wide claims. Shutdown closes provider-thread admission under a short
+dispatch gate, so a delayed poll/claim cannot admit inference after stop.
+The gate holds neither SQL nor provider work. An existing reservation remains
+conservative if shutdown intervenes; an already admitted call may still finish.
+The interruptible stop event stops scans/polls and abandons dispatch waits;
+outstanding daemon provider calls cannot make late domain or proposal writes.
+Expiry/fencing, not thread ownership, governs recovery.
 Disable assistance by removing its authority or setting proactive off, and
 restore the previous image to roll back. Old images ignore the new tables;
 do not delete evidence, reseed data or reset the allowance.
@@ -606,8 +613,14 @@ Validation: `tests/test_assistants.py` exercises all five reactive/proactive
 contracts, reader matrices, failure/disabled/malformed paths, current roles,
 source review, unchanged controlled state, independent SQLite connections,
 claims/leases/restart/lost acknowledgements, retries/aggregate liability,
-shared limits and blocked-provider/manual access. MSSQL SQL-shape emulation
-is explicitly not live SQL Server proof. The isolated non-billable browser
+shared limits, blocked-provider/manual access and shutdown admission. Conditional
+`MssqlContractTests`, `MssqlReviewTests`, `MssqlDurabilityTests` and `MssqlApiTests`
+run the same contracts on actual SQL Server. They require `ZF_TEST_MSSQL=1`,
+the existing password/driver settings and a disposable local service
+(`localhost`, `127.0.0.1` or Docker alias `sql`). They create/reset only
+`zf_test_assistants`; never point these tests at the pilot or Azure SQL.
+CI runs these alongside the existing general store parity suite. SQL-shape
+emulation alone is still not actual SQL proof. The isolated non-billable browser
 exercise uses fixtures, not the retained dataset:
 
 ```bash
@@ -615,6 +628,11 @@ cd mvp
 PYTHONPATH=. python3 -m unittest discover -s tests -p test_assistants.py
 PYTHONPATH=. python3 tests/assistants_browser_check.py
 node --check web/assistants.js
+
+# Disposable local SQL only; set the existing ZF_SQL_* test settings first.
+ZF_TEST_MSSQL=1 PYTHONPATH=.:tests python3 -m unittest \
+  test_assistants.MssqlContractTests test_assistants.MssqlReviewTests \
+  test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests
 ```
 
 The browser exercise needs the existing Playwright test dependency and Chromium;
@@ -623,14 +641,17 @@ owns image build, real platform evidence, approved rollout and independent
 Review. New live rollout and provider spending remain blocked pending scoped
 owner approval; local mocks do not satisfy that acceptance gate.
 
-Local execution on 2026-10-13: all 43 targeted assistant tests passed; the full
-suite reported 332 tests with 306 passed, 26 MSSQL integration tests skipped
-and no failures. The isolated desktop Chromium exercise passed all 15 checks
-with no page errors. Node syntax checks passed for `assistants.js`, `app.js`,
-`panels.js` and `ops.js`; `git diff --check -- mvp` passed. All provider
-responses in these checks were local test doubles or workflow-only templates.
-No retained dataset, private configuration, live provider, Azure deployment
-or real MSSQL integration was exercised by this implementation phase.
+Corrected-source execution on 2026-10-13: 46 nonbillable assistant tests passed;
+full discovery reported 377 tests, 309 passed and 68 conditional SQL skips.
+The actual disposable SQL run passed all 68 tests: 26 existing store tests and
+42 assistant contract/review/durability/API tests. The isolated desktop Chromium
+exercise passed 19 checks, including pending-assistance manual writes,
+deadline fallback and late-result navigation, with no page errors. Both changed
+JavaScript files passed syntax checks. Provider responses and human-verification
+actions in these suites are test fixtures, not real model or human acceptance.
+No retained dataset, private configuration, live provider or Azure deployment
+was changed. Actual SQL Server proof does not establish deployed Azure SQL
+identity/permissions, real provider quality or CON-009/AC-057 delivery.
 
 ```bash
 cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests -v
