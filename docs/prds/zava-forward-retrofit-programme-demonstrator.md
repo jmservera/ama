@@ -583,6 +583,13 @@ AC-058 to AC-061 cover these mechanisms; AC-057 separately requires
 changed-image real Azure/SQL/AI evidence. Task calibration, staff acceptance
 and comparative improvement are not established by the technical build.
 
+Implementation source `c4b28e3` and the locally built image are recorded in
+[ADR 0002](../adrs/0002-pilot-readiness-architecture.md#implementation-and-build-evidence).
+Automated fixtures exercise the contracts, not formal PRD acceptance.
+General SQL Server CI parity passes, but the new assistants' changed-image
+real SQL/model path remains unexecuted. Live deployment/spend approval was
+unavailable and is not inferred; CON-009/AC-057 acceptance stays Blocked.
+
 ### Form Extraction and Assisted Filling
 
 FR-038 to FR-043 apply to technical, work-package, invoice and funding forms,

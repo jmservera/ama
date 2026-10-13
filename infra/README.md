@@ -135,6 +135,32 @@ For observed outcomes and pending product gates, see the
 Actual account replacement and own-photo acceptance remain separate from
 operator checks, unit tests and the source-head CI/rubric results on #65.
 
+### Five-assistant version: build-only handover
+
+The owner-requested five-assistant runtime is implemented and locally packaged
+in `zavaforward-mvp:assistants-20261013-01`, with source/local image/CI evidence
+in [ADR 0002](../docs/adrs/0002-pilot-readiness-architecture.md#implementation-and-build-evidence).
+This is not a new ACR digest or deployed revision. The current exercise
+handover above remains the serving app; no SQL/AI/auth settings or retained
+data were replaced for this build.
+
+Before enabling this version, obtain its specific retained-data rollout and
+finite incremental allowance approval; the earlier #58 exception is not an
+ongoing spend grant. [MVP settings](../mvp/README.md#operator-authority-and-finite-allowance)
+require authority reference, expiry and aggregate call/token allowances;
+proactive scans default off. Derive those bounds from actual deployment prices,
+not a token-to-dollar assumption. Preserve private pre-rollout config/data
+fingerprints and rollback digest, verify migration privileges without widening
+runtime rights, then verify the actual serving digest/revision and unchanged
+SQL/AI/auth references. New SQL tables are additive; do not reseed or delete
+proposal evidence to roll back.
+
+AC-057 requires a registered assistant through the changed deployed API,
+provider/model/usage/outcome and independent actual SQL task/event evidence
+before/after an app restart, plus unchanged controlled state and failure/
+manual handling. General SQL Server CI or an anonymous HTTP 200 cannot
+replace that proof. This gate is Blocked pending approval and execution.
+
 ## Post-deployment API authentication initialization
 
 An environment rebuild changes the ingress FQDN even when the API registration

@@ -75,6 +75,14 @@ obtained, rather than claiming local tests satisfy CON-009.
 Publish on #68, no merge/amend/force-push. Dynamically resolve GitHub identity,
 use its noreply email locally and include the required co-author trailer.
 
+Current evidence: P01/P02 complete; source c4b28e3 and final local image
+a9314193 verified. Source CI 38446725200 passes including 26 actual general
+SQL Server parity tests. Parent 333 tests pass with 26 local skips; 44 targeted
+and reported 15 Chromium checks pass. Local SQL bootstrap did not authenticate;
+new-assistant real SQL/provider/changed-deployment acceptance is not established.
+P03 remains unchecked for that blocked live gate; Review assesses this explicit
+partial outcome once. Canonical documentation/evidence publication can proceed.
+
 Capture private existing config, identity, domain/data fingerprints and rollback
 digest before rollout. Build exact source; verify serving revision/digest and
 unchanged SQL/AI/auth references. Demonstrate a registered deployed assistant,

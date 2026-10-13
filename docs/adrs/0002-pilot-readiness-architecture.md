@@ -138,6 +138,34 @@ and independent SQL task/audit before/after/restart under AC-057. Technical
 success is not semantic calibration, approved company policy, human
 acceptance, comparative benefit or production approval.
 
+#### Implementation and Build Evidence
+
+Source `c4b28e3168770252fb35a79074dc2202ef375514` implements the five v1.0.0
+contracts, shared case controls/review queue, SQL claims/reservations and
+source-verified proposal review in the existing MVP. The
+[operator/API contract](../../mvp/README.md#five-retrofit-assistants-2026-10-13-implementation)
+lists exact disabled defaults and finite authority/expiry/call/token limits.
+Safe fixed worker/scan warnings expose failures without private exception text;
+worker polling backs off instead of silently failing every second.
+
+The local image `zavaforward-mvp:assistants-20261013-01` has image ID
+`sha256:a9314193655f4a206553cd294cd9df0b280c40d497ca3c067f32c18d891a54e3`,
+not an ACR manifest digest or serving revision. Source CI
+[38446725200](https://github.com/jmservera/ama/actions/runs/38446725200)
+passed unit/JS, hardened-image/scan/SBOM and real SQL Server store parity
+(26 tests). Parent regression discovery passes 333 tests with those 26
+integration tests skipped locally; 44 focused tests and 15 reported Chromium
+checks cover the new assist paths. The disposable local SQL bootstrap could
+not authenticate, so its five-assistant SQL probe did not pass; general CI
+store parity does not establish that new proposal path's real-SQL behavior.
+
+No new cloud image, rollout, paid model call, changed-workload SQL persistence
+or human/business acceptance is claimed. The existing --0000009 app remains
+unchanged. Specific retained-data rollout and effective incremental allowance
+confirmation was unavailable; the earlier #58 exception is not reused.
+AC-057 remains Blocked for this new version until approval and exact changed-
+image Azure/SQL/model evidence, including independent before/after/restart.
+
 ### 1. Durable store: Azure SQL or PostgreSQL
 
 Proposal: Azure SQL Database behind the `Store` interface, not PostgreSQL.

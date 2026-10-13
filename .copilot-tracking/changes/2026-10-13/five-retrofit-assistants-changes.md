@@ -76,12 +76,24 @@ UI/tests and P03 parent delivery. This permits whole-phase, write-disjoint P02
 execution after P01, while the parent investigates existing-platform readiness.
 No scope, safety gate, test boundary or critique change.
 
-Not yet run for this implementation. Live execution requires effective scoped
-authority and budget; configuration/build does not itself prove acceptance.
+Final source c4b28e3168770252fb35a79074dc2202ef375514: 333 parent tests
+passed (26 integration skips), 44 targeted tests passed, JS syntax passed.
+Local image ID a9314193655f4a206553cd294cd9df0b280c40d497ca3c067f32c18d891a54e3
+is labelled with that exact source and contains all five contracts as UID10001.
+Initial and final-image packaging checks preserve no working dataset; initial
+hardened HTTP/asset checks passed and source CI 38446725200 passed unit,
+image hardening/Trivy/SBOM and 26 actual SQL Server parity tests. Local test
+SQL bootstrap remains failed; CI parity does not prove new-assistant real SQL
+paths. No live acceptance/provider result is substituted.
 
 ## Pre-Review Reconciliation
 
-Not ready: implementation, validation and delivery remain.
+Ready for the one Review of supplied full task with explicit partial delivery.
+P01/P02 completed and checked; P03 remains unchecked because accepted changed-
+version Azure/SQL/model delivery is blocked. Local exact-source image and CI
+evidence complete, canonical build boundary documented. Source already pushed
+on #68; final documentation/review publication remains. No false full-plan
+completion or formal PRD/human acceptance is claimed.
 
 ## Blockers
 
@@ -126,8 +138,10 @@ The wide preview table scrolls on narrow viewports; this is not app UX testing.
 
 ## Remaining Work
 
-Requirements/ADR, shared runtime/UI/tests, image/platform verification, Review
-and publication on #68.
+One Review and final documentation/evidence publication on #68. P03 live
+accepted delivery needs owner scoped approval plus exact serving image,
+registered actual provider and independent SQL before/after/restart/control
+evidence. No PR merge or data reset.
 
 ## Follow-Up Items
 

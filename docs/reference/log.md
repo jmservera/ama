@@ -2099,3 +2099,23 @@ metadata when the knowledge base was created.
   separate agent/queue/orchestrator resources remain proposed. These contracts
   do not establish deployed parity, semantic quality, measured value, control
   approval or production readiness. Build evidence is recorded separately.
+
+## [2026-10-13] implementation | Five-assistant workbench version and build boundary
+
+* Implemented the five v1.0.0 capabilities in the existing MVP with separate
+  request/proactive provenance, durable SQL claims/allowances and independently
+  source-verified proposal review. Existing controlled case state is not the
+  assistant write target. [MVP configuration/API](../../mvp/README.md#five-retrofit-assistants-2026-10-13-implementation)
+  keeps authority, expiry and finite shared limits explicit; proactive defaults
+  off. Fixed safe worker/scan warnings and bounded backoff avoid silent failure.
+* Recorded [exact source/local image and CI evidence](../adrs/0002-pilot-readiness-architecture.md#implementation-and-build-evidence):
+  333 parent-discovered tests (26 integration skips), 44 targeted tests,
+  15 reported Chromium checks and passing source CI including real SQL Server
+  general parity and hardened-image scanning. The disposable local SQL login
+  could not be established; new-assistant real-SQL/model acceptance is not
+  supplied by the general parity job.
+* Updated PRD/ADR/index with the honest boundary: no new ACR image/serving
+  revision, paid inference or actual changed-build SQL before/after/restart.
+  Specific shared-runtime/spend confirmation was unavailable. Preserve the
+  existing deployment/data, historical budget exceptions and separate human,
+  calibration and comparative-value gates; no merge or production approval.
