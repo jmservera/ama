@@ -2,14 +2,14 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-13T12:16:23+00:00",
-  "commit": "54f18f6ec58c568c8ac7532e18d6a873d543724e",
+  "scored_at": "2026-10-13T13:36:14+00:00",
+  "commit": "0b90a452fdfb0b45c1526abb59f5e642f1536bc0",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38395433423",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38405411148",
   "fingerprints": {
     "brd": "8698b2d950aa2f0d4cda8729d80d2d77ec0bea10404f22860cda2182f9db9160",
-    "prd": "665ff790556d7f3d8b9b090c2b6d908627a95631ffe171465140d0bc12d2dd67",
-    "adr": "8d1a56951e744b25644d33aa21c1bb9dbb388eb384d736119e6af8a37fa81bab",
+    "prd": "b8527640a2a72eda300af40419b4322c25adddab300818b614e97f0049b68fed",
+    "adr": "e881df6677e31ed5f7700edbbe0c6b57c8ce76b58a1785c7dbb29269a422b2fb",
     "solution-code": "6588e8487463b57f8b7d05d1ca2ae2e9f88d2e99cc8457bc2fba806ecd35502e",
     "infrastructure": "e377bd25153088696b714380a81f5137f8aa5db3b2ce3d560c212a90131a38cc",
     "capstone-deck": "9338390eef61641b043a0128cdc4670a63e6cae4ef6b43aea6f4290aa2badc74"
@@ -35,12 +35,12 @@
     "A2": {
       "score": 5,
       "evidence": [],
-      "rationale": "Unchanged baseline: security/compliance architecture evidence not affected by this PR's CI-tooling-only diff."
+      "rationale": "Unchanged baseline: this diff only retires historical drafts as documented learning in ADR 0002 and bumps PRD version; no new trade-off or alternatives-rejected evidence."
     },
     "A3": {
       "score": 4,
       "evidence": [],
-      "rationale": "Unchanged baseline: data/integration architecture evidence not affected by this PR's CI-tooling-only diff."
+      "rationale": "Unchanged baseline: ADR addendum documents retained lessons from retired drafts, not new security/compliance/responsible-AI architecture decisions."
     },
     "A4": {
       "score": 4,
@@ -55,12 +55,12 @@
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: testing evidence not affected; no mvp/tests changes in this diff."
+      "rationale": "Unchanged baseline: no AI model choice or evaluation evidence added; diff only documents disposition of retired draft branches."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Unchanged baseline: documentation/evidence trail not materially affected by rubric-gate tooling changes."
+      "rationale": "Unchanged baseline: no agentic autonomy or orchestration evidence changed; diff is a documentation retrospective on closed drafts."
     },
     "B1": {
       "score": 3,
@@ -90,7 +90,7 @@
     "B6": {
       "score": 4,
       "evidence": [],
-      "rationale": "Unchanged baseline: no deck changes in this diff to affect thought-leadership-adjacent presentation criterion."
+      "rationale": "Unchanged baseline: no deck changes in this diff; PRD/ADR traceability edits do not bear on deck/documentation presentation quality."
     },
     "B7": {
       "score": 3,
@@ -100,7 +100,7 @@
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "Unchanged baseline: BRD/PRD/ADR evidence not affected by this PR's CI-tooling-only diff."
+      "rationale": "Unchanged baseline: diff records disposition of already-identified historical drafts; no new stakeholder, constraint or value-framing evidence."
     },
     "C2": {
       "score": 0,
