@@ -45,7 +45,7 @@
     },
     {
       "decision": "Autonomous nonbillable local validation found API38/UI0 visits. Corrected shared rendering in a76d281; current runtime sourcecd14b3b/image05/e0254cb3 passes389discovery (316passed/73SQLskips),21browser regressions and21exact-image generated UI/API/SQLite-restart checks. Controlled domain unchanged, five disabled proposals persisted, zero provider attempts, no tenant binding use or Azure change. General continuation does not override deletion cancellation or renew paid authority.",
-      "status": "local-validation-complete; publication-pending; destructive-boundary-unchanged",
+      "status": "local-validation-complete-and-published; destructive-boundary-unchanged",
       "evidence": "Owner instruction: Keep working autonomously until the task is truly finished; earlier exact deletion cancellation and unanswered renewal form remain controlling."
     },
     {
@@ -68,7 +68,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Publish visits-corrected sourcecd14b3b/image05 local evidence and reconciled canonical docs on #68, then await exact Azure reset and renewed finite QA. All safe local source/image/UI/API/restart preparation is complete. Existing DB Online, image02/revision11 healthy, authority absent. P03 remains unchecked; no current-child Review or full completion."
+    "action": "Await exact Azure retrofit reset approval and renewed finite QA authority. Visits-corrected source/image05 evidence and canonical docs published on #68 at e5567f9; CI38481199508 test/mssql/image all pass. All safe local source/image/UI/API/restart preparation is complete. Existing DB retained, image02/revision11 with authority absent. P03 remains unchecked; no current-child Review or full completion."
   },
   "prioritized_follow_ups": [
     {

@@ -102,7 +102,8 @@ Current execution: latest sourcecd14b3b/image05 locally ready, deterministic
 generator, discovery389/316passed/73SQLskips,21browser regressions and21exact
 generated-data image UI/API/local-restart checks pass. Last backendec7721b
 actualSQL73pass and canonical7c4eb18test/image/mssql CI are historical.
-The current source/learning awaits publication. The actual deletion was cancelled;
+Current source/learning published at e5567f9; CI38481199508test/mssql/image
+all pass. The actual deletion was cancelled;
 no alternate destructive route was used. Reset confirmation unavailable.
 Image02/revision11 remains healthy with assistance authority removed, zero
 modelcalls and oldretrofit retained. P03 remains unchecked until confirmed
