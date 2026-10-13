@@ -54,8 +54,8 @@ elements:
   vertical_anchor: top
   text: ''
   paragraphs:
-  - text: 'Addendum: approve a capped pilot, not a five-agent rollout; no end-to-end Stock Prioritisation
-      agent'
+  - text: 'Addendum: approve a capped pilot, not a five-agent rollout; no end-to-end
+      Stock Prioritisation agent'
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -110,7 +110,8 @@ elements:
   vertical_anchor: top
   text: ''
   paragraphs:
-  - text: 'Agent Request Challenge, Stock Prioritisation: "eligibility is a rules question"'
+  - text: 'Agent Request Challenge, Stock Prioritisation: "eligibility is a rules
+      question"'
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -449,9 +450,10 @@ elements:
   top: 6.6
   width: 12.0
   height: 0.38
-  text: |-
-    Sources: addendum (Recommended Executive Decision); Agent Request Challenge; BRD FR-026 and CON-005;
-    WH:SHF annex snapshot; knowledge-base log.
+  text: 'Sources: addendum (Recommended Executive Decision); Agent Request Challenge;
+    BRD FR-026 and CON-005;
+
+    WH:SHF annex snapshot; knowledge-base log.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
@@ -461,9 +463,34 @@ elements:
   vertical_anchor: top
   margin_left: 0
   margin_right: 0
-speaker_notes: |-
-  This slide is the reason for all the structure: immutable dated sources, cited syntheses, an index and an append-only log, on Karpathy's LLM Wiki pattern. The organisation is in the appendix. Any decision in the addendum can be walked back to its evidence, and this is a real chain.
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'This slide is the reason for all the structure: immutable dated sources,
+  cited syntheses, an index and an append-only log, on Karpathy''s LLM Wiki pattern.
+  The organisation is in the appendix. Any decision in the addendum can be walked
+  back to its evidence, and this is a real chain.
 
-  The decision: a capped readiness and pilot stage, not a five-agent rollout, with no end-to-end stock prioritisation agent. The evidence: the roles said eligibility is a rules question. The requirement: FR-026 requires a deterministic pass, fail or unknown eligibility result, tested by AC-039 and constrained by CON-005. The source: the Wave 3 technical annex, page 3, footnote 1, retrieved on 19 September.
 
-  To challenge a decision, change one piece of evidence, such as a real throughput figure, and the chain shows what has to move.
+  The decision: a capped readiness and pilot stage, not a five-agent rollout, with
+  no end-to-end stock prioritisation agent. The evidence: the roles said eligibility
+  is a rules question. The requirement: FR-026 requires a deterministic pass, fail
+  or unknown eligibility result, tested by AC-039 and constrained by CON-005. The
+  source: the Wave 3 technical annex, page 3, footnote 1, retrieved on 19 September.
+
+
+  To challenge a decision, change one piece of evidence, such as a real throughput
+  figure, and the chain shows what has to move.'

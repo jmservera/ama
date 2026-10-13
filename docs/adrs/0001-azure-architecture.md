@@ -1,8 +1,8 @@
 ---
-title: ADR 0001 Azure Architecture for the Proper Warm Demonstrator
-description: Proposed Azure hosting, agent placement, data, model and security architecture for the non-production Proper Warm retrofit workbench demonstrator
+title: ADR 0001 Azure Architecture for the Zava Forward Demonstrator
+description: Proposed Azure hosting, agent placement, data, model and security architecture for the non-production Zava Forward retrofit workbench demonstrator
 author: AMA programme
-ms.date: 2026-10-11
+ms.date: 2026-10-13
 ms.topic: reference
 ---
 
@@ -10,8 +10,9 @@ ms.topic: reference
 
 Proposed. This is a design for a non-production demonstrator using constructed,
 non-identifying data. It is not an approved production architecture. Service
-availability, quotas, model versions and regional capacity are unverified and
-must be checked in the target subscription before deployment.
+availability, quotas, model versions and regional capacity are target-specific
+and must be checked before deployment. The dated UK South exercise observations
+below do not establish availability in a new subscription or production region.
 
 ### Exercise Applicability (2026-10-11)
 
@@ -31,6 +32,18 @@ No premium estate, new app rewrite, production option selection, deployment
 authorization or blanket spend override follows from this note. Missing
 effective budget/authorization/evidence blocks acceptance, not mock substitution.
 
+### Current Exercise Handover (2026-10-13)
+
+The later [#65](https://github.com/jmservera/ama/pull/65) rebuild ran the real
+MVP image, SQL and both model tiers in `ama` / `uksouth`; subsequent initialization
+and owner-reported sign-in are recorded in the
+[current operator handover](../../infra/README.md#current-exercise-handover-2026-10-13)
+and [dated addendum](../case_study_48_addendum.md#observed-deployment-and-identity-learning-2026-10-1213).
+This supplements the historical deployments and proposed topology below.
+Workers remain placeholders; development public-network exceptions, token
+storage, full M365 integration, human acceptance and production authority
+remain explicitly scoped. Merge of documentation is not approval of the ADR.
+
 ## Supersedes/amends
 
 [ADR 0002](./0002-pilot-readiness-architecture.md) (proposed, 2026-10-08)
@@ -44,7 +57,7 @@ the MVP, ADR 0002 applies once approved.
 
 ## Context
 
-The [Proper Warm Workbench PRD](../prds/proper-warm-retrofit-programme-demonstrator.md)
+The [Zava Forward Workbench PRD](../prds/zava-forward-retrofit-programme-demonstrator.md)
 requires one workbench API as the only write path, bounded AI tasks that return
 typed proposals with citations and hold no write credentials, a deterministic
 workflow orchestrator with idempotency keys, a quarantining import service,
@@ -198,7 +211,7 @@ resource group.
 This is a worked illustration of the PRD Options Gate, not an approved
 decision. The weights below are architect proposals pending sponsor approval,
 and the scores are architect judgements on a 1 to 5 scale (5 is best). The
-only measured evidence is the `warm-test` deployment and the `prototype/`
+only measured evidence at that comparison date is the `warm-test` deployment and the `prototype/`
 tests, so every score for cost, support and company fit stays provisional.
 A high aggregate cannot offset a failed mandatory control gate.
 

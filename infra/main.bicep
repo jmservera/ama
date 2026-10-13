@@ -3,7 +3,7 @@ targetScope = 'resourceGroup'
 @description('Short workload prefix, lower case, 3 to 10 characters.')
 @minLength(3)
 @maxLength(10)
-param workload string = 'warm'
+param workload string = 'forward'
 @allowed(['dev', 'test'])
 param environmentName string = 'dev'
 param location string = resourceGroup().location
@@ -26,8 +26,18 @@ param sqlAdminGroupObjectId string
 param sqlAdminPrincipalType string = 'Group'
 @description('Entra app registration client ID protecting the workbench API. Leave empty to deploy without app authentication (not for shared use).')
 param entraClientId string = ''
+@description('Explicit Entra role-value mapping for an existing registration. Empty uses the application defaults. Transitional mappings do not rename tenant roles.')
+param entraRoleMap object = {}
+@description('Provision private token-only storage and its maintenance identity/job for delegated Microsoft profile photos.')
+param enableEntraTokenStore bool = false
+@description('Activate EasyAuth token storage only after the maintenance job has successfully written its first SAS secret.')
+param entraTokenStoreReady bool = false
 @description('Container images. The default placeholder lets infrastructure deploy before application images exist.')
 param apiImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
+@description('Enable direct model calls from the existing MVP API. Leave false for the proposed separate agent-runner topology; true grants the API model invocation rights and configures AI_ENDPOINT.')
+param enableApiAi bool = false
+@description('False bootstraps dependencies without exposing placeholder apps. Build/push the real image, provision the auth secret and seed SQL, then redeploy with true.')
+param deployApplications bool = true
 param agentImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 param orchestratorImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 param importImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
@@ -77,7 +87,7 @@ var prefix = '${workload}-${environmentName}'
 var unique = take(uniqueString(resourceGroup().id, location, 'v2'), 5)
 var compact = replace(prefix, '-', '')
 var allTags = union(tags, {
-  workload: 'proper-warm-demonstrator'
+  workload: 'zava-forward-demonstrator'
   environment: environmentName
   dataClassification: 'constructed-non-identifying'
   purpose: 'non-production-demonstrator'
@@ -196,18 +206,20 @@ module foundry 'modules/foundry.bicep' = {
   params: {
     allowPublicNetworkAccess: publicAccess
     name: 'aif-${prefix}-${unique}'
-    projectName: 'proper-warm-agents'
+    projectName: 'zava-forward-agents'
     location: location
     tags: allTags
     workspaceId: monitoring.outputs.workspaceId
     peSubnetId: network.outputs.peSubnetId
     zoneIds: network.outputs.zoneIds
-    userPrincipalIds: [identity.outputs.principalIds.agents]
+    userPrincipalIds: enableApiAi
+      ? [identity.outputs.principalIds.agents, identity.outputs.principalIds.api]
+      : [identity.outputs.principalIds.agents]
     deployments: modelDeployments
   }
 }
 
-module apps 'modules/containerapps.bicep' = {
+module apps 'modules/containerapps.bicep' = if (deployApplications) {
   name: 'containerapps'
   params: {
     allowPublicNetworkAccess: publicAccess
@@ -229,15 +241,39 @@ module apps 'modules/containerapps.bicep' = {
     modelDeploymentNames: { standard: 'standard', capable: 'capable' }
     keyVaultUri: 'https://${keyvault.outputs.name}${environment().suffixes.keyvaultDns}'
     entraClientId: entraClientId
+    entraRoleMap: entraRoleMap
+    tokenStoreReady: enableEntraTokenStore && entraTokenStoreReady
+    tokenStoreAccountName: enableEntraTokenStore ? authTokenStore!.outputs.accountName : ''
+    tokenMaintenanceIdentityId: enableEntraTokenStore ? authTokenStore!.outputs.identityId : ''
+    tokenMaintenanceClientId: enableEntraTokenStore ? authTokenStore!.outputs.identityClientId : ''
     tileUrl: tileUrl
     tileAttribution: tileAttribution
     zoneRedundant: zoneRedundant
     evidenceStore: evidenceStore
     sharePointSiteId: sharePointSiteId
     apiImage: apiImage
+    enableApiAi: enableApiAi
     agentImage: agentImage
     orchestratorImage: orchestratorImage
     importImage: importImage
+  }
+
+}
+
+module authTokenStore 'modules/authTokenStore.bicep' = if (enableEntraTokenStore) {
+  name: 'auth-token-store'
+  params: {
+    name: 'st${take(compact, 13)}auth${unique}'
+    prefix: prefix
+    location: location
+    tags: allTags
+    workspaceId: monitoring.outputs.workspaceId
+    peSubnetId: network.outputs.peSubnetId
+    blobZoneId: network.outputs.zoneIds.blob
+    keyVaultName: keyvault.outputs.name
+    registryName: first(split(registry.outputs.loginServer, '.'))
+    allowPublicNetworkAccess: publicAccess
+    zoneRedundant: zoneRedundant
   }
 }
 
@@ -296,14 +332,14 @@ resource sqlCpu 'Microsoft.Insights/metricAlerts@2018-03-01' = {
   dependsOn: [sql]
 }
 
-resource apiErrors 'Microsoft.Insights/metricAlerts@2018-03-01' = {
+resource apiErrors 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployApplications) {
   name: 'alert-${prefix}-api-5xx'
   location: 'global'
   tags: allTags
   properties: {
     severity: 2
     enabled: true
-    scopes: [apps.outputs.apiId]
+    scopes: [apps!.outputs.apiId]
     evaluationFrequency: 'PT1M'
     windowSize: 'PT5M'
     criteria: {
@@ -324,14 +360,14 @@ resource apiErrors 'Microsoft.Insights/metricAlerts@2018-03-01' = {
   }
 }
 
-resource apiRestarts 'Microsoft.Insights/metricAlerts@2018-03-01' = {
+resource apiRestarts 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployApplications) {
   name: 'alert-${prefix}-api-restarts'
   location: 'global'
   tags: allTags
   properties: {
     severity: 3
     enabled: true
-    scopes: [apps.outputs.apiId]
+    scopes: [apps!.outputs.apiId]
     evaluationFrequency: 'PT5M'
     windowSize: 'PT15M'
     criteria: {
@@ -377,7 +413,7 @@ resource budget 'Microsoft.Consumption/budgets@2023-05-01' = {
   }
 }
 
-output apiInternalFqdn string = apps.outputs.apiFqdn
+output apiInternalFqdn string = deployApplications ? apps!.outputs.apiFqdn : ''
 output containerRegistry string = registry.outputs.loginServer
 output sqlServer string = sql.outputs.fqdn
 output foundryEndpoint string = foundry.outputs.endpoint

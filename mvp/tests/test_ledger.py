@@ -9,11 +9,11 @@ import threading
 from pathlib import Path
 
 import test_mvp
-from properwarm_mvp import ledger
-from properwarm_mvp.factory import open_store
-from properwarm_mvp.server import App, make_handler
-from properwarm_mvp.sqlstore import SqlStore
-from properwarm_mvp.store import Store
+from zavaforward_mvp import ledger
+from zavaforward_mvp.factory import open_store
+from zavaforward_mvp.server import App, make_handler
+from zavaforward_mvp.sqlstore import SqlStore
+from zavaforward_mvp.store import Store
 
 
 class LedgerCases:
@@ -25,7 +25,7 @@ class LedgerCases:
         self.sam, self.pam = test_mvp.DATA["staff"]
         self.store = self.make()
         for i in range(3):
-            self.store.log_call(self.sam, "PW-1", f"Call {i}", "")
+            self.store.log_call(self.sam, "ZF-1", f"Call {i}", "")
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -37,7 +37,7 @@ class LedgerCases:
 
     def test_digest_matches_then_catches_truncation_and_rewrite(self):
         self.store.write_digest()
-        self.store.log_call(self.sam, "PW-1", "Call 3", "")
+        self.store.log_call(self.sam, "ZF-1", "Call 3", "")
         rep = self.store.verify_ledger()
         self.assertTrue(rep["intact"])
         self.assertEqual(rep["digests_checked"], 1)
@@ -55,7 +55,7 @@ class LedgerCases:
 
 class JsonLedgerTests(LedgerCases, unittest.TestCase):
     def make(self):
-        p = Path(self.tmp.name) / "properwarm.json"
+        p = Path(self.tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(test_mvp.DATA))
         return Store(str(p))
 
@@ -77,7 +77,7 @@ class JsonLedgerTests(LedgerCases, unittest.TestCase):
 
 class SqlLedgerTests(LedgerCases, unittest.TestCase):
     def make(self):
-        p = Path(self.tmp.name) / "properwarm.json"
+        p = Path(self.tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(test_mvp.DATA))
         return SqlStore(str(p), os.path.join(self.tmp.name, "pw.sqlite"))
 
@@ -98,12 +98,12 @@ class LedgerToolTests(unittest.TestCase):
 
     def test_cli_and_endpoint(self):
         with tempfile.TemporaryDirectory() as tmp:
-            p = Path(tmp) / "properwarm.json"
+            p = Path(tmp) / "zavaforward.json"
             p.write_text(json.dumps(test_mvp.DATA))
-            env = dict(PW_DATA=str(p), PW_STATE=tmp, PW_STORE="sqlite")
+            env = dict(ZF_DATA=str(p), ZF_STATE=tmp, ZF_STORE="sqlite")
             store = open_store(env)
             self.assertIsInstance(store, SqlStore)
-            store.log_call(test_mvp.DATA["staff"][0], "PW-1", "Call", "")
+            store.log_call(test_mvp.DATA["staff"][0], "ZF-1", "Call", "")
             old = dict(os.environ)
             os.environ.update(env)
             try:
@@ -112,12 +112,12 @@ class LedgerToolTests(unittest.TestCase):
             finally:
                 os.environ.clear()
                 os.environ.update(old)
-            httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(store, "pw-test")))
+            httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(store, "zf-test")))
             threading.Thread(target=httpd.serve_forever, daemon=True).start()
             base = f"http://127.0.0.1:{httpd.server_address[1]}"
             def call(path, email, body=None):
                 op = urllib.request.build_opener()
-                req = urllib.request.Request(base + "/api/login", json.dumps(dict(email=email, password="pw-test")).encode())
+                req = urllib.request.Request(base + "/api/login", json.dumps(dict(email=email, password="zf-test")).encode())
                 ck = op.open(req).headers["Set-Cookie"].split(";")[0]
                 req = urllib.request.Request(base + path, json.dumps(body).encode() if body is not None else None, headers={"Cookie": ck})
                 try:

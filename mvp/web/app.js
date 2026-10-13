@@ -1,6 +1,8 @@
 "use strict";
 const app = document.getElementById("app");
 let me = null;
+const microsoftSignIn = document.body.dataset.authProvider === "trusted-proxy";
+let photoUrl = null;
 
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
@@ -18,10 +20,10 @@ function h(tag, attrs, ...kids) {
 
 async function api(path, body) {
   const res = await fetch(path, body === undefined ? {} : {
-    method: "POST", headers: { "Content-Type": "application/json", "X-PW-CSRF": "1" }, body: JSON.stringify(body),
+    method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
-  if (res.status === 401 && path !== "/api/login") { me = null; return login(); }
+  if (res.status === 401 && path !== "/api/login") { me = null; login("Your session has ended. Sign in again."); throw new Error("Your session has ended. Sign in again."); }
   if (!res.ok) { const e = new Error(data.error || "Something went wrong."); e.reasons = data.reasons; throw e; }
   return data;
 }
@@ -40,6 +42,15 @@ const show = (...nodes) => { app.replaceChildren(...nodes.filter((n) => n && n.n
 
 function login(msg) {
   document.getElementById("nav").hidden = true;
+  document.getElementById("account").hidden = true;
+  clearPhoto();
+  if (microsoftSignIn) {
+    show(h("section", { class: "card login" }, h("h1", {}, "Sign in to Zava Forward"),
+      h("p", { class: "err", role: "alert" }, msg || "Use your authorised Microsoft work account."),
+      h("a", { class: "btn", href: "/sign-in" }, "Sign in with Microsoft"),
+      h("p", {}, h("a", { href: "/" }, "Back to welcome"))));
+    return;
+  }
   const email = h("input", { id: "email", type: "email", autocomplete: "username", required: true });
   const pass = h("input", { id: "pw", type: "password", autocomplete: "current-password", required: true });
   const err = h("p", { class: "err", role: "alert" }, msg || "");
@@ -58,6 +69,7 @@ function login(msg) {
 async function start() {
   me = await api("/api/me");
   document.getElementById("who").textContent = `${me.user.name}, ${me.user.role}`;
+  showAccount();
   const nav = document.getElementById("nav");
   const contractor = me.user.role === "Contractor";
   nav.querySelectorAll("a").forEach((a) => { if (a.dataset.dyn) a.remove(); else a.hidden = contractor; });
@@ -65,6 +77,57 @@ async function start() {
   else if (isManager()) nav.querySelector("a[href='#/funding']").after(h("a", { href: "#/capacity", "data-dyn": "1" }, "Capacity and work orders"), h("a", { href: "#/closed", "data-dyn": "1" }, "Closed cases"));
   nav.hidden = false;
   route();
+}
+
+function clearPhoto() {
+  if (photoUrl) URL.revokeObjectURL(photoUrl);
+  photoUrl = null;
+  const picture = document.getElementById("account-photo");
+  picture.hidden = true;
+  picture.removeAttribute("src");
+  document.getElementById("account-initials").hidden = false;
+}
+
+function showAccount() {
+  clearPhoto();
+  const account = me.account || { name: me.user.name, email: "" };
+  document.getElementById("account-name").textContent = account.name;
+  document.getElementById("account-short").textContent = account.name.split(/\s+/)[0] || "Account";
+  document.getElementById("account-email").textContent = account.email;
+  document.getElementById("who").textContent = me.user.role;
+  document.getElementById("account-initials").textContent = account.name.trim().split(/\s+/).slice(0, 2).map((n) => n[0]).join("").toUpperCase();
+  document.getElementById("switch-account").hidden = !microsoftSignIn;
+  document.getElementById("account-error").textContent = "";
+  document.getElementById("account").hidden = false;
+  const status = document.getElementById("photo-status");
+  status.textContent = microsoftSignIn ? "Loading Microsoft profile photo..." : "Local development account";
+  if (microsoftSignIn) loadPhoto(account);
+}
+
+async function loadPhoto(account) {
+  const status = document.getElementById("photo-status");
+  try {
+    let res = await fetch("/api/account/photo");
+    if (res.status === 401) {
+      const refresh = await fetch("/.auth/refresh");
+      if (!refresh.ok) throw new Error("Microsoft photo access has expired. Sign in again.");
+      res = await fetch("/api/account/photo");
+    }
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.error || "Microsoft profile photo is unavailable.");
+    }
+    const blob = await res.blob();
+    if (!me || me.account !== account) return;
+    photoUrl = URL.createObjectURL(blob);
+    const picture = document.getElementById("account-photo");
+    picture.src = photoUrl;
+    picture.hidden = false;
+    document.getElementById("account-initials").hidden = true;
+    status.textContent = "Microsoft profile photo";
+  } catch (e) {
+    if (me && me.account === account) status.textContent = e.message;
+  }
 }
 
 function route() {
@@ -554,9 +617,26 @@ function importView() {
     h("label", { for: "f" }, "Spreadsheet (CSV)"), file, out);
 }
 
-document.getElementById("signout").addEventListener("click", async () => { const r = await api("/api/logout", {}); me = null; briefingBox = null; if (r && r.redirect) { location.href = r.redirect; return; } login(); });
+async function signOut(switchAccount) {
+  try {
+    const r = await api("/api/logout", { switchAccount });
+    me = null; briefingBox = null; clearPhoto();
+    if (r && r.redirect) { location.href = r.redirect; return; }
+    location.href = "/";
+  } catch (e) { document.getElementById("account-error").textContent = e.message; }
+}
+document.getElementById("signout").addEventListener("click", () => signOut(false));
+document.getElementById("switch-account").addEventListener("click", () => signOut(true));
+document.addEventListener("keydown", (e) => {
+  const menu = document.getElementById("account");
+  if (e.key === "Escape" && menu.open) { menu.open = false; menu.querySelector("summary").focus(); }
+});
+document.addEventListener("click", (e) => {
+  const menu = document.getElementById("account");
+  if (!menu.contains(e.target)) menu.open = false;
+});
 window.addEventListener("hashchange", () => me && route());
-start().catch(() => login());
+start().catch((e) => login(e.message));
 
 // ---- Overview, Visits, Funding screens
 const NS = "http://www.w3.org/2000/svg";

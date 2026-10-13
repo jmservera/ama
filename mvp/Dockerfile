@@ -9,12 +9,13 @@ RUN apt-get update && apt-get upgrade -y --no-install-recommends \
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir --require-hashes -r requirements.txt && rm requirements.txt
-COPY properwarm_mvp ./properwarm_mvp
+COPY zavaforward_mvp ./zavaforward_mvp
 COPY policies ./policies
 COPY web ./web
+RUN chmod -R a+rX ./web
 USER 10001
 # No working data is baked into the image. Mount the dataset at /data and a writable volume at /state.
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=8088 PW_BIND=0.0.0.0 PW_DATA=/data/properwarm.json PW_STATE=/state
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=8088 ZF_BIND=0.0.0.0 ZF_DATA=/data/zavaforward.json ZF_STATE=/state
 EXPOSE 8088
 HEALTHCHECK --interval=30s --timeout=3s CMD ["python", "-c", "import os,urllib.request;urllib.request.urlopen('http://127.0.0.1:'+os.environ['PORT']+'/healthz',timeout=2)"]
-CMD ["python", "-m", "properwarm_mvp.server"]
+CMD ["python", "-m", "zavaforward_mvp.server"]

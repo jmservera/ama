@@ -1,6 +1,6 @@
 ---
 title: Microsoft Industry Hub
-description: Proven nonprofit, housing and public sector use cases, customer evidence and reusable patterns from the Microsoft Industry Hub, mapped to the Proper Warm agents
+description: Proven nonprofit, housing and public sector use cases, customer evidence and reusable patterns from the Microsoft Industry Hub, mapped to the Zava Forward agents
 ms.date: 2026-09-25
 ms.topic: reference
 ---
@@ -9,10 +9,10 @@ ms.topic: reference
 
 The Microsoft Industry Hub is an internal Microsoft sales-enablement site on
 Seismic. It helps the project find use cases and solutions that Microsoft has
-already delivered with other customers, so the Proper Warm proposal can reuse
+already delivered with other customers, so the Zava Forward proposal can reuse
 proven patterns rather than design everything from scratch.
 
-The nonprofit section is the closest match to the customer. Proper North Homes
+The nonprofit section is the closest match to the customer. Zava North Homes
 is a not-for-profit housing association, as described in the
 [Housing Association Primer](../research/sector/housing-association-primer.md).
 Public sector and social services material is also relevant because social
@@ -66,16 +66,16 @@ retrospective reporting to continuous, auditable accountability for funders
 and boards. Source:
 [CSP Nonprofit Frontier Transformation Deck FY27H1](https://microsoft.sharepoint.com/teams/MicrosoftElevateGTM/_layouts/15/Doc.aspx?sourcedoc=%7B9686BA49-600B-49CD-8542-23C5C50FB265%7D&file=CSP%20Nonprofit%20Frontier%20Transformation%20Deck%20FY27H1.PPTX&action=edit&mobileredirect=true&DefaultItemOpen=1).
 
-## Patterns Mapped to Proper Warm
+## Patterns Mapped to Zava Forward
 
 The fit column is an internal interpretation. It is a hypothesis to test in
 discovery, not evidence that the pattern meets UK social housing duties.
 
-| Proper Warm capability | Hub pattern | Products named in the source | Fit notes |
+| Zava Forward capability | Hub pattern | Products named in the source | Fit notes |
 | --- | --- | --- | --- |
 | Stock Prioritisation Agent | Infrastructure Asset Management Intelligence Agent: unified asset register, mobile condition survey capture with photos, grades, defects and location, and predictive lifecycle modelling. Source: [Government Agentic Use Cases](https://microsoft.sharepoint-df.com/sites/AgenticStarterPack/_layouts/15/Doc.aspx?sourcedoc=%7B40881469-435B-434B-B7E3-3A74936AD29F%7D&file=Government_AgenticUseCases.pptx&action=edit&mobileredirect=true&DefaultItemOpen=1), use case 11 of 20, March 2026 | Power Apps, Copilot Studio | Strong structural fit for stock and condition data. Energy, health risk and grant eligibility scoring would need adding |
 | Assessment Agent | Document and data processing automation within case and compliance management. RNIB reported cutting document processing time by 50% | Azure AI | Supports drafting from surveys. PAS 2035 roles and retrofit coordinator approval remain human |
-| Grant and Funding Agent | Grants management process maps covering lifecycle administration, application and award management, drawdowns and reporting. Source: [Grants Management process map](https://microsoft.sharepoint.com/teams/CRISP/SiteAssets/Industry%20Explorer/Process%20Maps/Cross%20Cutting%20Programs/grants_management.html?web=1) | Power Apps, Power Pages, Dynamics 365 Finance, Power Automate, Power BI, Microsoft Fabric | Written from the grant-maker and US federal perspective. Proper North Homes is a grant recipient, so the model needs inverting for Warm Homes: Social Housing Fund bids and claims |
+| Grant and Funding Agent | Grants management process maps covering lifecycle administration, application and award management, drawdowns and reporting. Source: [Grants Management process map](https://microsoft.sharepoint.com/teams/CRISP/SiteAssets/Industry%20Explorer/Process%20Maps/Cross%20Cutting%20Programs/grants_management.html?web=1) | Power Apps, Power Pages, Dynamics 365 Finance, Power Automate, Power BI, Microsoft Fabric | Written from the grant-maker and US federal perspective. Zava North Homes is a grant recipient, so the model needs inverting for Warm Homes: Social Housing Fund bids and claims |
 | Grant and Funding Agent | Donor Opportunity agent: tracks funding, flags grants nearing expiry without follow-on funding, and highlights budget risk. Source: [Copilot Agent Playbook for Nonprofits](https://microsoft.seismic.com/app?ContentId=86fda258-15a3-4fda-b5b4-f761847c7346) | Microsoft 365 Agent Builder, Copilot Studio, Dynamics 365, Power BI | Good fit for grant deadline, co-funding and spend-profile monitoring |
 | Contractor and Resident Coordination Agent | Field service coordination: request capture, classification and prioritisation by urgency and SLA, agent-assisted scheduling and dispatch, guided resolution, and automated closure. Sources: [Power Platform Use Case Library](https://microsoft.sharepoint.com/teams/solutionengineersbrazil/_layouts/15/Doc.aspx?sourcedoc=%7BBBB02155-4842-4C45-BED8-D51B8677FC4D%7D&file=Power%20Platform%20Use%20Case%20Library%20%28Apps%20%2B%20Agents%20%2B%20Copilot%29.PPTX&action=edit&mobileredirect=true&DefaultItemOpen=1) and [Partner Hackathon Use Case Catalog](https://microsoft.sharepoint.com/teams/MPNPartnerEnablementTeam2/_layouts/15/Doc.aspx?sourcedoc=%7BB812AC8D-1E10-4E30-AEA7-92BE7539404D%7D&file=Microsoft%20Partner%20Hackathon%20Usecase%20Catalog.pptx&action=edit&mobileredirect=true&DefaultItemOpen=1) | Power Apps, Copilot Studio, Power Automate, Dynamics 365 Field Service with the Scheduling Operations Agent | Strong fit for contractor scheduling. Resident consent and access preferences must constrain the scheduler |
 | Damp and mould response loop | Same field service pattern, with workflows enforcing priority rules against SLAs | Power Automate, Dynamics 365 Field Service | Awaab's Law timescales could be encoded as hard SLA constraints, subject to legal approval of the rules |
@@ -86,7 +86,7 @@ discovery, not evidence that the pattern meets UK social housing duties.
 ## Customer Evidence
 
 Outcomes are as reported in Microsoft customer material. They are not
-independently verified and do not predict Proper Warm results.
+independently verified and do not predict Zava Forward results.
 
 | Customer | Sector and country | What they did | Reported outcome | Source |
 | --- | --- | --- | --- | --- |
@@ -123,7 +123,7 @@ These are sector-informed hypotheses drawn from the hub material:
   frontline trust.
 * Position AI as supporting human judgement and stewardship. The FY27
   nonprofit messaging framework uses this framing, which matches the approval
-  boundaries in the Proper Warm design.
+  boundaries in the Zava Forward design.
 * Funders and boards expect continuous, auditable impact reporting. This
   supports the Quality Verification Agent and grant reporting evidence packs.
 
@@ -139,8 +139,8 @@ Seismic when needed for internal preparation only.
 ## Evidence Rules
 
 * Classify hub material as internal comparator evidence. A result achieved by
-  another customer is not a fact about Proper North Homes or a forecast for
-  the Proper Warm programme.
+  another customer is not a fact about Zava North Homes or a forecast for
+  the Zava Forward programme.
 * Record the hub item title, date viewed and the claim it supports. Keep the
   customer's context, such as sector, scale and country, next to any figure.
 * Prefer public customer stories when citing evidence in a deliverable.

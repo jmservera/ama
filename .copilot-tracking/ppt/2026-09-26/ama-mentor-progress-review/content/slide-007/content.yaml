@@ -72,8 +72,8 @@ elements:
     text_bold: true
     space_after: 0
     alignment: left
-  - text: What shared records and gates let existing teams deliver more safe, accepted, grant-claimable
-      homes, and where does an agent beat the same workflow?
+  - text: What shared records and gates let existing teams deliver more safe, accepted,
+      grant-claimable homes, and where does an agent beat the same workflow?
     text_font: Segoe UI
     text_size: 13
     text_color: '#102A43'
@@ -253,8 +253,8 @@ elements:
   height: 0.5
   fill: '#B83A2E'
   line_color: '#B83A2E'
-  text: 'Verdict of all eight roles: build none of the five as an end-to-end agent. The gap is shared
-    records, not intelligence.'
+  text: 'Verdict of all eight roles: build none of the five as an end-to-end agent.
+    The gap is shared records, not intelligence.'
   text_font: Segoe UI
   text_size: 14
   text_color: '#FFFFFF'
@@ -272,9 +272,10 @@ elements:
   top: 6.6
   width: 12.0
   height: 0.38
-  text: |-
-    Source: Agent Request Challenge (26 Sep 2026). Roles read the case, addendum and BRD.
-    Verdicts are sector-informed hypotheses, not validation.
+  text: 'Source: Agent Request Challenge (26 Sep 2026). Roles read the case, addendum
+    and BRD.
+
+    Verdicts are sector-informed hypotheses, not validation.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
@@ -284,11 +285,38 @@ elements:
   vertical_anchor: top
   margin_left: 0
   margin_right: 0
-speaker_notes: |-
-  This is the turning point. I stopped treating the five agents as a specification and read each "owns end-to-end" line as the business telling us what value it expects. For example, quality verification means never paying for defective work.
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'This is the turning point. I stopped treating the five agents as a
+  specification and read each "owns end-to-end" line as the business telling us what
+  value it expects. For example, quality verification means never paying for defective
+  work.
 
-  I asked all eight role agents, in parallel, what the real problem was, what cheaper alternatives existed and where an agent would fit. The answer was unanimous: build none of the five as an end-to-end agent. Each request bundles deterministic control work, accountable human decisions and a smaller set of tasks where bounded AI helps. The most memorable row is quality: every role said the real risk is that a pack with no flags gets read as proof of quality.
+
+  I asked all eight role agents, in parallel, what the real problem was, what cheaper
+  alternatives existed and where an agent would fit. The answer was unanimous: build
+  none of the five as an end-to-end agent. Each request bundles deterministic control
+  work, accountable human decisions and a smaller set of tasks where bounded AI helps.
+  The most memorable row is quality: every role said the real risk is that a pack
+  with no flags gets read as proof of quality.
+
 
   The "after" question is how I phrase it now.
 
-  One caveat: the roles read my addendum, so their agreement is a sector-informed hypothesis, not validation.
+
+  One caveat: the roles read my addendum, so their agreement is a sector-informed
+  hypothesis, not validation.'

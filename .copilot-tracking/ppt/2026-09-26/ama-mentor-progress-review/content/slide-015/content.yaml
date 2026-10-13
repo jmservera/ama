@@ -457,8 +457,8 @@ elements:
     text_bold: true
     space_after: 2
     alignment: left
-  - text: 42 non-merge commits, 10 to 27 Sep, and five merged PRs by 28 Sep; the log records what changed
-      and why
+  - text: 42 non-merge commits, 10 to 27 Sep, and five merged PRs by 28 Sep; the log
+      records what changed and why
     text_font: Segoe UI
     text_size: 12
     text_color: '#243B53'
@@ -475,8 +475,8 @@ elements:
   height: 0.4
   fill: '#102A43'
   line_color: '#102A43'
-  text: 'Pattern: Karpathy''s LLM Wiki. Immutable sources, maintained syntheses, read the index first,
-    log every change'
+  text: 'Pattern: Karpathy''s LLM Wiki. Immutable sources, maintained syntheses, read
+    the index first, log every change'
   text_font: Segoe UI
   text_size: 13
   text_color: '#FFFFFF'
@@ -494,27 +494,60 @@ elements:
   top: 6.7
   width: 12.133000000000001
   height: 0.28
-  text: 'Sources: docs/reference/README.md (Layers, Task Routing); .github/copilot-instructions.md; docs/reference/log.md.'
+  text: 'Sources: docs/reference/README.md (Layers, Task Routing); .github/copilot-instructions.md;
+    docs/reference/log.md.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
-speaker_notes: |
-  This is how I kept a two-week research effort from turning into a pile of
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'This is how I kept a two-week research effort from turning into a
+  pile of
+
   documents.
 
+
   On the left are the problem documents. The original case study is never edited,
+
   so the request is always visible. The addendum evolves with every finding, and
+
   the BRD carries the requirements with stable identifiers.
 
-  In the middle is the knowledge base, organised on Andrej Karpathy's LLM Wiki
+
+  In the middle is the knowledge base, organised on Andrej Karpathy''s LLM Wiki
+
   pattern. An index routes any task to the right files. Regulatory sources are
-  dated and immutable. Syntheses carry citations. Memory holds my own context and is
+
+  dated and immutable. Syntheses carry citations. Memory holds my own context and
+  is
+
   explicitly not evidence. The log is append-only and records every ingest,
+
   correction and contradiction. The schema, the repository instructions, tells every
+
   agent how to use all of this.
 
+
   On the right is the working evidence: the tracking folders for each workflow, and
+
   Git history. Together they mean the next session, human or agent, starts from
+
   what we already know instead of rediscovering it.
+
+  '

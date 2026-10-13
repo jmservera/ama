@@ -1,13 +1,13 @@
 ---
 title: Missing Information Plan for Synthetic Retrofit Evidence
-description: What the Proper Warm year-one synthetic pack now represents, what it deliberately leaves out, and the next iterations
+description: What the Zava Forward year-one synthetic pack now represents, what it deliberately leaves out, and the next iterations
 ms.date: 2026-09-30
 ms.topic: reference
 ---
 
 > [!WARNING]
 > SYNTHETIC DATA. This plan describes a fictional evidence model for design
-> practice. It does not describe Proper North Homes' systems or records.
+> practice. It does not describe Zava North Homes' systems or records.
 
 ## Purpose
 

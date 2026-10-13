@@ -11,7 +11,7 @@ ms.topic: reference
 This page records what the Decision 1 (Microsoft Decision 1, a "System One"
 typed-decision model) assist did in the `feat/exercise-poc-rebuild` branch
 ([PR 58](https://github.com/jmservera/ama/pull/58), head before the 2026-10-11
-rebase, code in `mvp/properwarm_mvp/decision.py`, `mvp/evals/decision_tasks.json`
+rebase, code in `mvp/zavaforward_mvp/decision.py`, `mvp/evals/decision_tasks.json`
 and `mvp/tests/test_decision.py`). It is written so the behaviour can be rebuilt
 without that code.
 
@@ -283,18 +283,18 @@ region. An endpoint setting alone never enables inference.
 
 All gates are environment flags read once at start. Names and meaning:
 
-* Inference: `PW_INFERENCE_AUTHORIZED`, `PW_INFERENCE_ACCESS_REVIEWED`,
-  `PW_INFERENCE_TERMS_REVIEWED`, `PW_INFERENCE_COST_REVIEWED`,
-  `PW_INFERENCE_QUOTA_REVIEWED`, `PW_INFERENCE_PRICE_KNOWN` (all must equal
-  `true`), `PW_INFERENCE_SPEND_PAUSED=false` to unpause,
-  `PW_INFERENCE_TASKS` (comma list), `PW_INFERENCE_CAP_USD`,
-  `PW_INFERENCE_PAUSE_AT_USD`, `PW_INFERENCE_ACCRUED_USD`,
-  `PW_INFERENCE_MAX_CALL_CHARGE_USD`, `PW_INFERENCE_ENFORCE_CAP=false`.
-* Provider: `PW_DECISION_ENDPOINT`, `PW_DECISION_DEPLOYMENT`,
-  `PW_DECISION_METADATA_REVIEWED=true`, `PW_DECISION_METADATA_ENDPOINT`,
-  `PW_DECISION_METADATA_DEPLOYMENT`, `PW_DECISION_METADATA_MODEL`,
-  `PW_DECISION_METADATA_MODEL_VERSION`, `PW_DECISION_DEPLOYMENT_TYPE`,
-  `PW_DECISION_REGION`.
+* Inference: `ZF_INFERENCE_AUTHORIZED`, `ZF_INFERENCE_ACCESS_REVIEWED`,
+  `ZF_INFERENCE_TERMS_REVIEWED`, `ZF_INFERENCE_COST_REVIEWED`,
+  `ZF_INFERENCE_QUOTA_REVIEWED`, `ZF_INFERENCE_PRICE_KNOWN` (all must equal
+  `true`), `ZF_INFERENCE_SPEND_PAUSED=false` to unpause,
+  `ZF_INFERENCE_TASKS` (comma list), `ZF_INFERENCE_CAP_USD`,
+  `ZF_INFERENCE_PAUSE_AT_USD`, `ZF_INFERENCE_ACCRUED_USD`,
+  `ZF_INFERENCE_MAX_CALL_CHARGE_USD`, `ZF_INFERENCE_ENFORCE_CAP=false`.
+* Provider: `ZF_DECISION_ENDPOINT`, `ZF_DECISION_DEPLOYMENT`,
+  `ZF_DECISION_METADATA_REVIEWED=true`, `ZF_DECISION_METADATA_ENDPOINT`,
+  `ZF_DECISION_METADATA_DEPLOYMENT`, `ZF_DECISION_METADATA_MODEL`,
+  `ZF_DECISION_METADATA_MODEL_VERSION`, `ZF_DECISION_DEPLOYMENT_TYPE`,
+  `ZF_DECISION_REGION`.
 
 A rebuild may replace these flags with fewer ones. Keep the effect: nothing
 runs until a human has deliberately reviewed access, terms, price and quota
@@ -335,7 +335,7 @@ and enabled the task.
    source it cited changes version or hash. The rebuild must prevent stale
    proposals from being reviewed or applied.
 6. Each assist is audited with action, form, source and reason.
-7. When `PW_AI=off` or workflow-only mode is on, a disabled client is used and
+7. When `ZF_AI=off` or workflow-only mode is on, a disabled client is used and
    everything stays manual.
 
 ## Acceptance tests to recreate

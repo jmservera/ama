@@ -1,0 +1,31 @@
+{
+  "task_id": "zava-tenant-staff-2026-10-12",
+  "task_slug": "zava-tenant-staff",
+  "parent_task": {"task_id": "zava-workbench-entry-2026-10-12", "task_slug": "zava-workbench-entry"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-12/zava-tenant-staff-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-12/zava-tenant-staff-plan.md",
+    "details": ".copilot-tracking/details/2026-10-12/zava-tenant-staff-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-12/zava-tenant-staff-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-12/zava-tenant-staff-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-12/zava-tenant-staff-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Single candidate critique executed Revise; PC-001 through PC-004 disposed directly in plan/details. Planning Ready.", "status": "ready", "evidence": ".copilot-tracking/plans/2026-10-12/zava-tenant-staff-plan.md Critique Disposition"},
+    {"decision": "Owner explicitly selects app-scoped tenant people initialization, preserving main admin and existing Coordinator. Earlier synthetic-persona choice is superseded.", "status": "confirmed", "evidence": "Current user direction, 2026-10-12"},
+    {"decision": "Research reused from live denial, directory/SQL inspection and official Graph API. Planning Ready.", "status": "ready", "evidence": ".copilot-tracking/research/2026-10-12/zava-tenant-staff-research.md"},
+    {"decision": "Eleven app-role/SQL positions initialized; no-op recovery confirms fresh ready replicas, exact private preservation and public/protected boundaries. Direct groups, not nested membership, determine effective app-role inheritance.", "status": "verified", "evidence": ".copilot-tracking/changes/2026-10-12/zava-tenant-staff-changes.md"},
+    {"decision": "Single post-implementation Review execution Complete; outcome Conformant for operator initialization/preservation. No in-scope defects. Real-browser acceptance and retained tenant naming routed separately.", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-12/zava-tenant-staff-review.md"},
+    {"decision": "Post-Review choice offered with two evidence-grounded follow-ups plus Stop/manual. Owner unavailable; no selection or child start inferred.", "status": "awaiting-owner", "evidence": "Structured follow-up request returned owner unavailable."}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Await owner selection: fresh-browser acceptance, retained naming research, Stop automatic session, or Switch to manual mode."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Fresh-browser role/account acceptance", "rationale": "Highest-value low-effort confirmation of the repaired onboarding using actual sessions; operator checks cannot supply it.", "evidence": ".copilot-tracking/reviews/logs/2026-10-12/zava-tenant-staff-review.md RV-001"},
+    {"rank": 2, "task": "Retained tenant naming research", "rationale": "Separate consistency improvement; investigate compatibility dependencies before a higher-risk claims/registration rename.", "evidence": ".copilot-tracking/reviews/logs/2026-10-12/zava-tenant-staff-review.md RV-002"}
+  ]
+}

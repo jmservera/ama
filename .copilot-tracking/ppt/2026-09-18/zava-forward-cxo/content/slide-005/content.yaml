@@ -1,0 +1,116 @@
+slide: 5
+title: Automation handles evidence; people retain authority
+section: Control Boundary
+layout: two-column
+background:
+  fill: '#FFFFFF'
+elements:
+- type: shape
+  shape: rectangle
+  left: 0
+  top: 0
+  width: 13.333
+  height: 0.1
+  fill: '#1B998B'
+  line_color: '#1B998B'
+- type: textbox
+  left: 0.68
+  top: 0.42
+  width: 11.9
+  height: 0.7
+  text: Automation handles evidence; people retain consequential authority
+  font: Aptos Display
+  font_size: 28
+  font_color: '#102A43'
+  font_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 0.72
+  top: 1.5
+  width: 5.75
+  height: 4.82
+  fill: '#E7F6F3'
+  line_color: '#1B998B'
+  text: 'THE SERVICE MAY
+
+
+    Recommend priorities
+
+    Reconcile records and flag conflicts
+
+    Pre-populate sourced facts
+
+    Draft resident, grant and management packs
+
+    Suggest schedules within confirmed constraints
+
+    Check evidence and flag anomalies'
+  text_font: Aptos
+  text_size: 17
+  text_color: '#0B625B'
+  text_bold: false
+- type: shape
+  shape: rounded_rectangle
+  left: 6.86
+  top: 1.5
+  width: 5.75
+  height: 4.82
+  fill: '#FCE8E6'
+  line_color: '#C44536'
+  text: 'THE SERVICE MUST NOT
+
+
+    Diagnose hazards
+
+    Release a safety hold
+
+    Approve PAS 2035 outputs
+
+    Infer resident consent
+
+    Commit capital or award work
+
+    Submit claims, accept quality or close defects'
+  text_font: Aptos
+  text_size: 17
+  text_color: '#7A271A'
+  text_bold: false
+- type: textbox
+  left: 1.28
+  top: 6.55
+  width: 10.8
+  height: 0.35
+  text: Deterministic workflow enforces the gate. An authorised person makes the controlled
+    decision.
+  font: Aptos
+  font_size: 15
+  font_color: '#243B53'
+  font_bold: true
+  alignment: center
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'Use the exact verbs recommend, draft, reconcile and flag. Competent
+
+  professionals own PAS 2035 outputs. Residents retain measure-specific
+
+  decisions. Finance, safety, procurement and quality authorities retain their
+
+  mandates. Resident silence, survey access or an accepted appointment must
+
+  never be interpreted as installation consent.
+
+  '

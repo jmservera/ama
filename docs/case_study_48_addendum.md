@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-11
+ms.date: 2026-10-13
 ms.topic: reference
 ---
 
@@ -35,8 +35,8 @@ relying on an overall score.
 The following information was introduced after the original case study and is
 preserved in this addendum:
 
-* The association name, Proper North Homes, and programme name, Proper Warm
-* The owner-confirmed fact that Proper North Homes is a not-for-profit
+* The association name, Zava North Homes, and programme name, Zava Forward
+* The owner-confirmed fact that Zava North Homes is a not-for-profit
   organisation, while its exact legal form and charitable status remain
   unknown
 * The working presentation line, "Ready, steady, retrofit," with legal,
@@ -65,7 +65,7 @@ delivery and unconditional Decision 1 task placement are superseded
 prospectively by the 2026-10-11 direction below; its historical budget is
 not silently reapplied to the owner-authorized #58 rebuild.
 
-Proper North Homes is the case customer, not an accessible real organisation
+Zava North Homes is the case customer, not an accessible real organisation
 from which this exercise can obtain missing delegations or operating data.
 The owner approved the following consolidated assumptions and falsifiable
 test targets on 2026-10-10 after proposals from the Programme, Finance,
@@ -100,7 +100,7 @@ regulatory currentness claim is made by this register.
 | E2 | [Housing association primer](./reference/research/sector/housing-association-primer.md) and [sector baseline](./reference/research/sector/uk-social-housing-baseline-research.md): resident needs, mission stewardship and illustrative finance; not company results |
 | E3 | [BRD v0.15.0](./brds/agentic-retrofit-programme-brd.md), work/budget/invoice/grant controls, supplier capacity and OD-18/40: upstream intent; draft, not signed handoff |
 | E4 | [Exercise data dictionary](./reference/research/retrofit-synthetic-data/data-dictionary.md): source IDs, events, capacity and coverage limitations; not the private answer key |
-| E5 | [UX profile review](./reference/research/ux/proper-warm-prototype-profile-review.md) and [simplicity review](./reference/research/ux/prototype-learnings-and-simplicity-review.md): rationale for ownership, evidence, non-digital service and clear workspaces; not direct user validation |
+| E5 | [UX profile review](./reference/research/ux/zava-forward-prototype-profile-review.md) and [simplicity review](./reference/research/ux/prototype-learnings-and-simplicity-review.md): rationale for ownership, evidence, non-digital service and clear workspaces; not direct user validation |
 | E6 | [Decision 1 reassessment](./ideas/typesafe-system-one-agent-fit.md): bounded task fit, API/serving limits, comparative evaluation and pricing uncertainty |
 | E7 | [Pilot measurement challenge](./reference/research/company/pilot-measurement-challenge.md): frozen cohorts, paired comparisons, guardrails and attributable rather than assumed benefit |
 | E8 | [ADR 0001](./adrs/0001-azure-architecture.md), [ADR 0002](./adrs/0002-pilot-readiness-architecture.md) and [MVP limits](../mvp/README.md): reusable contracts and production-path alternatives; not full PRD acceptance |
@@ -126,7 +126,7 @@ only. Real-world questions remain future validation requirements.
 | EXA-012 / OQ-012 | Lean non-production application reuses current contracts; local durable state/evidence or justified minimal cloud hosting. No mandatory premium/private-endpoint-heavy estate or unverified M365. USD 450/month total technology cap: USD 100 hosting/storage, USD 200 inference/comparators, USD 50 diagnostics, USD 100 reserve. | E6/E8: prove workflow and real model value, not service count. These are spending allocations, not quotes; production architecture remains a separate appraisal. | Include existing attributable charges and accrued liabilities; warn/review at USD 360 or projected excess, pause optional work by USD 405 or earlier if remaining liabilities threaten the cap. Unknown price/access blocks billable work; labour reported separately. |
 | EXA-013 / OQ-013 | Keep one-home story, analytical cohort and 60,000-home scale fixture separate. Versioned as-of, numerator/denominator, filters, unknowns and tables; 100% fixture reconciliation. Separate handover, application, award, claim and cash. | E4/E7: reveal missingness rather than fabricate flow; closed does not mean accepted. | Small stakeholder aggregates below ten require suppression with complementary suppression; source mismatch prevents reconciled charts, not silent exclusions. |
 | EXA-014 / OQ-014 | Retain default five and strict greater-than rule: sixth verified eligible no-access event prompts human investigation. Exclude provider failures/cancellations/reschedules; human closure resets active count, retaining history. | E3 and missed-appointment evidence below: owner-directed exercise rule, not sector norm, refusal or sanction. | Test counts four/five/six, exclusions and reset. No hazard delay or automated deprioritisation; operational adoption needs separate governance. |
-| EXA-015 / OQ-015 | Fictional Proper Warm Exercise Fund; separate versioned application/award/claim/cash fixtures. GBP 7,500 maximum and 50% eligible-cost ceiling are selected exercise rules, not complete real scheme terms. Unknown funding route blocks preparation. | E2/E3/E6: a fully declared synthetic route is more honest than claiming a current open round. No live submission/payment; declarations/signatures remain human-only. | Wrong route/template, eligibility change and stale source invalidate pack review; exercise award/claim/cash evidence is visibly fictional. |
+| EXA-015 / OQ-015 | Fictional Zava Forward Exercise Fund; separate versioned application/award/claim/cash fixtures. GBP 7,500 maximum and 50% eligible-cost ceiling are selected exercise rules, not complete real scheme terms. Unknown funding route blocks preparation. | E2/E3/E6: a fully declared synthetic route is more honest than claiming a current open round. No live submission/payment; declarations/signatures remain human-only. | Wrong route/template, eligibility change and stale source invalidate pack review; exercise award/claim/cash evidence is visibly fictional. |
 | EXA-016 / OQ-016 | Real Decision 1 for supplied-candidate form selection and evidence-support screening; real generative Foundry inference for cited narrative. Explicit no-match, source-bound proposals, full required-field review. | E6/E7: typed scoring and generation solve different tasks; compare manual/template and parser/rules rather than presume AI value. | Actual access, API, model/version, role, processing terms, quota and costs must be verified. Replay is not real inference; a failed benefit test retains simpler workflow and the measured negative finding. |
 
 ### Numerical Targets and Attribution
@@ -139,7 +139,7 @@ the stage-duration sensitivity gives [0, 0, 0, 2]. These constructed resources
 are separate from the lead-home contract fixture and imply no real supplier
 capacity. This clarification preserves the approved six-home central target.
 
-The [PRD acceptance contract](./prds/proper-warm-retrofit-programme-demonstrator.md#exercise-acceptance-contract)
+The [PRD acceptance contract](./prds/zava-forward-retrofit-programme-demonstrator.md#exercise-acceptance-contract)
 defines the approved performance, recovery, forecast and AI tests. All are
 targets to be tested, not completed tests. The 20% assessment-to-ready cycle
 time and 25% net coordination-effort reductions remain scenario hypotheses.
@@ -182,7 +182,7 @@ for operational use, not prerequisites for fictional exercise design.
 The owner requires real AI, a real SQL database and an actual Azure
 deployment in the next and every subsequent accepted application exercise
 build. This term means each delivered AMA prototype, PoC or MVP, including
-iterations of the existing Proper Warm application. Documentation-only work,
+iterations of the existing Zava Forward application. Documentation-only work,
 unit/CI tests and non-delivery development checks may use local SQLite,
 mocks or small fixtures; those checks are not delivered application acceptance.
 
@@ -219,6 +219,41 @@ effective scoped approval/override and accrued liabilities, retaining source/
 task permissions, input bounds, reservations and usage/cost telemetry.
 This documentation direction does not authorize new deployments or spending.
 
+### Observed Deployment and Identity Learning (2026-10-12/13)
+
+The continuing [#65](https://github.com/jmservera/ama/pull/65) exercise rebuild
+and identity work adds technical learning, not measured housing outcomes or
+production approval. The
+[from-empty rebuild record](../infra/README.md#from-empty-rebuild-observed-on-2026-10-12)
+and [ADR 0002 learning](./adrs/0002-pilot-readiness-architecture.md#observed-exercise-identity-and-session-learning-2026-10-13)
+retain source, configuration and acceptance limits rather than silently
+reclassifying earlier failures as successful.
+
+| Learning | Evidence and operational implication | Boundary |
+| --- | --- | --- |
+| Reprovisioning must include initialization, not only resource creation | Current ingress callback, managed-identity SQL access and private delegated-photo token store have separate initialization/recovery steps; use an isolated authorised management profile | Operator CLI identity is not a staff browser session; never request passwords/tokens or infer tenant authority |
+| Branding migration includes packaged assets and live references | Renamed deployment and logo delivery need readable non-root container assets; binary Blob display additionally needs image-only CSP permission | Do not rename history, operational app-role values or identity mappings merely to remove old branding; retained tenant names remain separate work |
+| Authentication and workbench authorisation are different | Valid Coordinator claims failed on an absent SQL oid binding; initializer reconciles role plus staff and refreshes startup caches, with no email fallback or weakened tenant/role checks | Owner now reports administrator/Coordinator sign-in works; not a complete role, guest, accessibility or production acceptance |
+| Staff identity changes must preserve programme lineage | Eleven private demo allocations cover ten existing codes plus one scoped Contractor. Exact comparison preserved 980 cases, supplier scopes, six recommendations and nineteen prior audit rows; only current labels/identity fields and one generic event changed | Generated 60,000-home stock continues; do not call 980 programme cases the whole stock or infer professional competence from demo job/group matching |
+| Switching account needs explicit user choice | Fixed switch route requests Microsoft select_account directly rather than sign-out followed by SSO; image account-switch-20261013-01, ready revision 0000009, live tenant/callback/prompt verified | A fresh browser displayed Microsoft sign-in with no remembered accounts. An already-authenticated change of person remains owner-owned and unobserved |
+| Diagnostics and rollout must prove the changed boundary | Five fixed app-flow markers use existing Azure Monitor routing; private app/auth config comparison preserves SQL/AI, scopes and secret references during image-only update | Logs show routes, not chosen people; never publish raw tokens/callback queries or equate new-source tests with a deployed image |
+| CI execution, rubric scoring and product acceptance are separate | Specified scorer job failed on provider HTTP403, then owner's attempt 3 succeeded. Other prior-head checks initially lacked runner admission and passed on attempt 2; account-switch source commit baf6a5c also passed MVP CI and both validation workflows | A successful run does not satisfy rubric floors, prove user behavior or authorize production; rubric/score remains a separate result |
+
+Account-switch source checks ran 289 MVP tests with 26 existing skips and no failures.
+The local read-only/non-root image and live welcome/health/logo/protected API
+checks passed; configuration and ready replicas were compared before accepting
+the rollout. These are technical checks, not a resident/staff user study,
+calibrated AI quality, measured delivery benefit or full CON-009/AC-057 pass.
+The dated MVP/architecture snapshots are supplemented by the
+[current operator handover](../infra/README.md#current-exercise-handover-2026-10-13)
+and [ADR delivery delta](./adrs/0002-pilot-readiness-architecture.md#current-exercise-delivery-delta-2026-10-13).
+Historical `warm-*` deployments and `ca-properwarm-mvp` revisions remain
+their actual recorded identifiers, not retroactively renamed observations.
+No new business requirement or customer fact follows, so the BRD remains
+unchanged. Product implications are in the
+[PRD review-learning disposition](./prds/zava-forward-retrofit-programme-demonstrator.md#review-learning-disposition);
+operator recovery remains in [infra guidance](../infra/README.md).
+
 ### Current Learning and Parallel Experiment
 
 Read [#58](https://github.com/jmservera/ama/pull/58) at
@@ -243,16 +278,16 @@ uncertainty evidence; missing evidence remains Inconclusive or Not evaluated.
 Independent platform/control work need not wait for experiment completion.
 
 This direction revises the baseline, not the original case or historical
-v0.12.0 acceptance. BRD v0.16.0 remains draft; PRD v0.13.0 is a candidate
+v0.12.0 acceptance. BRD v0.16.0 remains draft; PRD v0.13.1 is a candidate
 for fresh requirements review and owner acceptance, not an inherited approval.
 
-## Proper Warm at Proper North Homes
+## Zava Forward at Zava North Homes
 
 | Field | Details | Field | Details |
 | --- | --- | --- | --- |
 | Industry | Real Estate (Affordable Housing) / Decarbonisation | Headquarters | United Kingdom |
 | Operating Region | United Kingdom (North of England) | Regulatory Context | UK Net Zero; final SRS MEES policy not yet evidenced as commenced law; Social Housing Regulation Act; Awaab's Law; UK GDPR; PAS 2035 retrofit standard |
-| Association | Proper North Homes | Programme | Proper Warm |
+| Association | Zava North Homes | Programme | Zava Forward |
 | Operating purpose | Not-for-profit, confirmed by the project owner on 26 September 2026 | Legal form | Unknown; do not infer charitable status, registration or group structure |
 
 The working presentation line is "Ready, steady, retrofit." The name is not
@@ -261,7 +296,7 @@ for hazard, complaint, safeguarding or consent communications.
 
 ## Business Challenge
 
-Proper North Homes is a housing association with 60,000 homes. It is planning
+Zava North Homes is a housing association with 60,000 homes. It is planning
 for the final government SRS MEES policy position while the downloaded evidence
 does not yet establish a commenced 2030 landlord duty. It must also respond to
 damp and mould within statutory timescales under Awaab's Law.
@@ -334,13 +369,13 @@ audit. The rule triggers investigation and corrective action, not a finding
 of refusal or non-cooperation, and must not delay an urgent hazard response.
 
 This is a provisional owner-directed draft rule, not a validated sector norm
-or Proper North Homes policy approval. Housing and Repairs must ratify the
+or Zava North Homes policy approval. Housing and Repairs must ratify the
 event definition, case lifecycle, configuration/change authority and handoff
 arrangements against the association's own appointment records, with
 Resident Engagement review. No company baseline or operational approval has
 been supplied.
 
-A modelled profile of Proper North Homes, covering its likely archetype,
+A modelled profile of Zava North Homes, covering its likely archetype,
 tenure mix, leaseholders and resident indicators, is recorded in the
 [Modelled Customer Profile](./reference/research/company/company-profile-research.md#modelled-customer-profile)
 of the company profile research. Its values are modelled estimates from
@@ -407,7 +442,7 @@ professional work or certify an external submission.
 
 ### Data Handling and Retention Baseline (Proposed)
 
-This is a proposed baseline for the demonstrator and any later production design. It is not legal advice and not an approved policy. The local corpus contains no numeric retention periods and Proper North Homes' own policies are not in the repository, so every period below is a proposed default for the Data Protection Officer (DPO), Legal and the record owners to confirm or replace. Statements are labelled by authority, using the hierarchy in the [regulatory README](./reference/regulatory/README.md). Provision references are to the local copies retrieved on 19 September 2026; check the official source before relying on them.
+This is a proposed baseline for the demonstrator and any later production design. It is not legal advice and not an approved policy. The local corpus contains no numeric retention periods and Zava North Homes' own policies are not in the repository, so every period below is a proposed default for the Data Protection Officer (DPO), Legal and the record owners to confirm or replace. Statements are labelled by authority, using the hierarchy in the [regulatory README](./reference/regulatory/README.md). Provision references are to the local copies retrieved on 19 September 2026; check the official source before relying on them.
 
 The aim is one set of simple rules that satisfies the strictest applicable source, so staff do not have to reconcile separate regimes.
 
@@ -488,7 +523,7 @@ Common-sense limits, flagged as outside the local corpus and for Legal to verify
 
 ### Challenge of the Requested Agents
 
-On 2026-09-26 the eight Proper North Homes role agents challenged each
+On 2026-09-26 the eight Zava North Homes role agents challenged each
 requested agent's "owns end-to-end" line. No role supported building any of
 the five as an end-to-end agent. Each request combines three things:
 deterministic control work, accountable human decisions, and a smaller set
@@ -645,7 +680,7 @@ agent capability.
 #### Decision 1 in the Application Design (2026-10-11)
 
 Microsoft Decision 1 is a bounded scoring capability within the continuing
-Proper Warm application design, not a separate PoC, a standalone programme
+Zava Forward application design, not a separate PoC, a standalone programme
 agent or the workflow authority. Preserve this design when rebuilding from
 scratch; keeping #58 in draft does not discard the capability specification.
 Its first specified uses are source-bound form candidate selection and binary
@@ -697,7 +732,7 @@ production architecture remain open for the Phase 0 options appraisal under
 BRD OD-16 and OD-20. This direction is not customer architecture, procurement
 or investment approval.
 
-On 3 October 2026 the owner confirmed that Proper North Homes currently uses
+On 3 October 2026 the owner confirmed that Zava North Homes currently uses
 Excel files for this coordination and does not have Dataverse or Dynamics 365.
 This is owner-confirmed company context. The existing Microsoft 365 tenant,
 SharePoint availability, licences, governance, retention configuration and
@@ -725,7 +760,7 @@ baseline against which these implementation options must earn their cost.
 SharePoint, OneDrive and M365 Copilot alone are not the strongest comparator
 for the full BRD. A fair business-platform option includes Dataverse or an
 existing operational system for structured records and controlled transitions.
-Proper North Homes has no Dataverse or Dynamics 365 estate to reuse, so
+Zava North Homes has no Dataverse or Dynamics 365 estate to reuse, so
 Dataverse would require a greenfield adoption.
 SharePoint can hold managed documents; OneDrive can support personal working
 material. Personal drives are not proposed as the authoritative programme
@@ -961,7 +996,7 @@ ability to make better capital decisions and convert approved investment into
 safe, resident-complete, evidence-accepted and fundable outcomes with fewer
 avoidable delays and failures.
 
-As a not-for-profit, Proper North Homes should appraise the programme as
+As a not-for-profit, Zava North Homes should appraise the programme as
 mission investment under financial discipline. Resident and social value,
 stewardship of homes and compliance outcomes are primary, while operating
 surplus, liquidity, covenant headroom and value for money preserve the
@@ -1028,7 +1063,7 @@ the directions, revised regulatory standard and commencement needed to treat
 that policy as an in-force landlord duty.
 
 WH:SHF Wave 3 delivery runs to September 2028, with grant spend required by
-31 March 2028. The case study does not establish that Proper North Homes has an
+31 March 2028. The case study does not establish that Zava North Homes has an
 allocation. The immediate pressure is therefore to confirm any existing award,
 protect eligible delivery and establish a credible asset and funding trajectory.
 A new digital platform must not become a precondition for meeting current

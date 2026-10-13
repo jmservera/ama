@@ -1,0 +1,40 @@
+dimensions:
+  width_inches: 13.333
+  height_inches: 7.5
+  format: '16:9'
+layouts:
+  blank: 6
+metadata:
+  title: Zava Forward — Visible work, explainable decisions
+  author: AMA project
+  subject: Bounded next-stage proposal; not production approval
+  keywords: Zava Forward, retrofit, council, draft, evidence
+  category: Executive proposal
+defaults:
+  speaker_notes_required: true
+themes:
+- name: zava-forward
+  slides:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
+  - 16
+  - 17
+  - 18
+  colors:
+    forest: '#173F35'
+    cream: '#F7F2E7'
+    moss: '#D5E2D4'
+    warm: '#E5B96A'

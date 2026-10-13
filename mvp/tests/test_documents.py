@@ -6,9 +6,9 @@ import urllib.parse
 from pathlib import Path
 
 import test_mvp
-from properwarm_mvp.documents import (AzureBlobDocumentStore, DocumentStoreError, LocalDocumentStore, open_document_store)
-from properwarm_mvp.sqlstore import SqlStore
-from properwarm_mvp.store import Store
+from zavaforward_mvp.documents import (AzureBlobDocumentStore, DocumentStoreError, LocalDocumentStore, open_document_store)
+from zavaforward_mvp.sqlstore import SqlStore
+from zavaforward_mvp.store import Store
 
 SAM, PAM = test_mvp.DATA["staff"]
 CONTRACTOR = dict(code="C-1", name="Kim Builder", email="kim@example.test", role="Contractor", contractor="Test Ltd")
@@ -45,17 +45,17 @@ class BlobStoreTests(unittest.TestCase):
     def test_managed_identity_put_get_delete_and_token_cached(self):
         t = FakeBlob()
         s = AzureBlobDocumentStore(self.URL, "case-docs", transport=t, env={"IDENTITY_ENDPOINT": "http://127.0.0.1:42356/msi/token", "IDENTITY_HEADER": "h"})
-        s.put("PW-1", "abc", b"data", "application/pdf")
-        self.assertEqual(s.get("PW-1", "abc"), b"data")
-        s.delete("PW-1", "abc")
+        s.put("ZF-1", "abc", b"data", "application/pdf")
+        self.assertEqual(s.get("ZF-1", "abc"), b"data")
+        s.delete("ZF-1", "abc")
         with self.assertRaises(KeyError):
-            s.get("PW-1", "abc")
+            s.get("ZF-1", "abc")
         token_calls = [c for c in t.calls if "msi/token" in c[1]]
         self.assertEqual(len(token_calls), 1)
         self.assertEqual(token_calls[0][2]["X-IDENTITY-HEADER"], "h")
         self.assertIn("resource=https%3A%2F%2Fstorage.azure.com%2F", token_calls[0][1])
         put = next(c for c in t.calls if c[0] == "PUT")
-        self.assertEqual(put[1], f"{self.URL}/case-docs/PW-1/abc")
+        self.assertEqual(put[1], f"{self.URL}/case-docs/ZF-1/abc")
         self.assertEqual(put[2]["Authorization"], "Bearer tok-1")
         self.assertEqual(put[2]["x-ms-blob-type"], "BlockBlob")
         self.assertEqual(put[2]["If-None-Match"], "*")
@@ -63,7 +63,7 @@ class BlobStoreTests(unittest.TestCase):
     def test_imds_fallback_with_client_id(self):
         t = FakeBlob()
         s = AzureBlobDocumentStore(self.URL, "case-docs", client_id="cid", transport=t, env={})
-        s.put("PW-1", "abc", b"x", "text/plain")
+        s.put("ZF-1", "abc", b"x", "text/plain")
         tok = t.calls[0]
         self.assertTrue(tok[1].startswith("http://169.254.169.254/metadata/identity/oauth2/token"))
         self.assertIn("client_id=cid", tok[1])
@@ -72,42 +72,42 @@ class BlobStoreTests(unittest.TestCase):
     def test_sas_token_is_used_and_no_identity_call_made(self):
         t = FakeBlob()
         s = AzureBlobDocumentStore(self.URL, "case-docs", sas="?sv=1&sig=abc", transport=t)
-        s.put("PW-1", "abc", b"x", "text/plain")
+        s.put("ZF-1", "abc", b"x", "text/plain")
         self.assertEqual(len(t.calls), 1)
-        self.assertTrue(t.calls[0][1].endswith("/case-docs/PW-1/abc?sv=1&sig=abc"))
+        self.assertTrue(t.calls[0][1].endswith("/case-docs/ZF-1/abc?sv=1&sig=abc"))
         self.assertNotIn("Authorization", t.calls[0][2])
 
     def test_failures_become_document_store_errors(self):
         with self.assertRaises(DocumentStoreError):
-            AzureBlobDocumentStore(self.URL, "case-docs", transport=FakeBlob(token_status=403), env={}).put("PW-1", "a", b"x", "text/plain")
+            AzureBlobDocumentStore(self.URL, "case-docs", transport=FakeBlob(token_status=403), env={}).put("ZF-1", "a", b"x", "text/plain")
         with self.assertRaises(DocumentStoreError):
-            AzureBlobDocumentStore(self.URL, "case-docs", sas="s=1", transport=FakeBlob(put_status=500)).put("PW-1", "a", b"x", "text/plain")
+            AzureBlobDocumentStore(self.URL, "case-docs", sas="s=1", transport=FakeBlob(put_status=500)).put("ZF-1", "a", b"x", "text/plain")
 
     def test_config_is_validated_and_ids_cannot_escape(self):
         for url, cont in (("http://x.example", "c-1"), ("", "c-1"), (self.URL, "Bad_Name")):
             with self.assertRaises(ValueError):
                 AzureBlobDocumentStore(url, cont)
         s = AzureBlobDocumentStore(self.URL, "case-docs", sas="s=1", transport=FakeBlob())
-        for bad in (("..", "a"), ("PW-1", "../x"), ("PW-1/x", "a")):
+        for bad in (("..", "a"), ("ZF-1", "../x"), ("ZF-1/x", "a")):
             with self.assertRaises(KeyError):
                 s.put(*bad, b"x", "text/plain")
 
     def test_factory_selects_implementation(self):
         self.assertIsInstance(open_document_store("/x", {}), LocalDocumentStore)
-        env = dict(PW_DOC_STORE="azure-blob", PW_BLOB_ACCOUNT_URL=self.URL, PW_BLOB_CONTAINER="case-docs", PW_BLOB_SAS="s=1")
+        env = dict(ZF_DOC_STORE="azure-blob", ZF_BLOB_ACCOUNT_URL=self.URL, ZF_BLOB_CONTAINER="case-docs", ZF_BLOB_SAS="s=1")
         self.assertIsInstance(open_document_store("/x", env), AzureBlobDocumentStore)
         with self.assertRaises(ValueError):
-            open_document_store("/x", {"PW_DOC_STORE": "ftp"})
+            open_document_store("/x", {"ZF_DOC_STORE": "ftp"})
 
 
 class LocalStoreTests(unittest.TestCase):
     def test_round_trip_and_traversal_refused(self):
         with tempfile.TemporaryDirectory() as d:
             s = LocalDocumentStore(d)
-            s.put("PW-1", "a1", b"hi", "text/plain")
-            self.assertEqual(s.get("PW-1", "a1"), b"hi")
+            s.put("ZF-1", "a1", b"hi", "text/plain")
+            self.assertEqual(s.get("ZF-1", "a1"), b"hi")
             with self.assertRaises(KeyError):
-                s.get("PW-1", "missing")
+                s.get("ZF-1", "missing")
             with self.assertRaises(KeyError):
                 s.get("..", "a1")
 
@@ -116,7 +116,7 @@ class StoreDocumentTests(unittest.TestCase):
     def make(self, sql):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        p = Path(self.tmp.name) / "properwarm.json"
+        p = Path(self.tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(test_mvp.DATA))
         st = SqlStore(str(p), os.path.join(self.tmp.name, "pw.sqlite")) if sql else Store(str(p))
         self.blob = FakeBlob()
@@ -128,22 +128,22 @@ class StoreDocumentTests(unittest.TestCase):
 
     def run_all(self, sql):
         st = self.make(sql)
-        doc = st.add_document(SAM, "PW-1", "epc.pdf", "EPC", b"%PDF-1")
-        self.assertEqual(st.get_document("PW-1", doc["id"], SAM), ("epc.pdf", "application/pdf", b"%PDF-1"))
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
+        self.assertEqual(st.get_document("ZF-1", doc["id"], SAM), ("epc.pdf", "application/pdf", b"%PDF-1"))
         self.assertEqual(len(self.blob.blobs), 1)
         self.assertEqual(self.actions(st), ["upload_document", "download_document"])
         self.assertTrue(st.verify_audit())
         with self.assertRaises(PermissionError):
-            st.get_document("PW-1", doc["id"], CONTRACTOR)
+            st.get_document("ZF-1", doc["id"], CONTRACTOR)
         with self.assertRaises(PermissionError):
-            st.add_document(CONTRACTOR, "PW-1", "a.pdf", "EPC", b"x")
+            st.add_document(CONTRACTOR, "ZF-1", "a.pdf", "EPC", b"x")
         with self.assertRaises(ValueError):
-            st.add_document(SAM, "PW-1", "a.exe", "EPC", b"x")
+            st.add_document(SAM, "ZF-1", "a.exe", "EPC", b"x")
         with self.assertRaises(ValueError):
-            st.add_document(SAM, "PW-1", "a.pdf", "EPC", b"x" * (5 * 1024 * 1024 + 1))
+            st.add_document(SAM, "ZF-1", "a.pdf", "EPC", b"x" * (5 * 1024 * 1024 + 1))
         with self.assertRaises(ValueError):
-            st.add_document(SAM, "PW-1", "a.pdf", "EPC", b"")
-        self.assertEqual(len(st.detail("PW-1")["documents"]), 1)
+            st.add_document(SAM, "ZF-1", "a.pdf", "EPC", b"")
+        self.assertEqual(len(st.detail("ZF-1")["documents"]), 1)
 
     def test_json_store_with_blob(self):
         self.run_all(False)
@@ -155,8 +155,8 @@ class StoreDocumentTests(unittest.TestCase):
         st = self.make(False)
         self.blob.put_status = 500
         with self.assertRaises(DocumentStoreError):
-            st.add_document(SAM, "PW-1", "epc.pdf", "EPC", b"%PDF")
-        self.assertEqual(st.detail("PW-1")["documents"], [])
+            st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF")
+        self.assertEqual(st.detail("ZF-1")["documents"], [])
         self.assertEqual(self.actions(st), ["upload_document_failed"])
 
 

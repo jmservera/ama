@@ -16,11 +16,17 @@ param foundryProjectName string
 param modelDeploymentNames object
 param keyVaultUri string
 param entraClientId string
+param entraRoleMap object = {}
+param tokenStoreReady bool = false
+param tokenStoreAccountName string = ''
+param tokenMaintenanceIdentityId string = ''
+param tokenMaintenanceClientId string = ''
 param zoneRedundant bool = false
 @allowed(['blob', 'sharepoint'])
 param evidenceStore string = 'blob'
 param sharePointSiteId string = ''
 param apiImage string
+param enableApiAi bool = false
 param agentImage string
 param orchestratorImage string
 param importImage string
@@ -78,7 +84,7 @@ var authEnabled = !empty(entraClientId)
 
 var commonEnv = [
   { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsightsConnectionString }
-  { name: 'OTEL_SERVICE_NAMESPACE', value: 'proper-warm' }
+  { name: 'OTEL_SERVICE_NAMESPACE', value: 'zava-forward' }
 ]
 
 resource api 'Microsoft.App/containerApps@2025-07-01' = {
@@ -101,9 +107,11 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
         allowInsecure: false
       }
       registries: [{ server: registryServer, identity: identityIds.api }]
-      secrets: authEnabled ? [
+      secrets: concat(authEnabled ? [
         { name: 'entra-client-secret', keyVaultUrl: '${keyVaultUri}/secrets/entra-client-secret', identity: identityIds.api }
-      ] : []
+      ] : [], tokenStoreReady ? [
+        { name: 'entra-token-store-sas', keyVaultUrl: '${keyVaultUri}/secrets/entra-token-store-sas', identity: identityIds.api }
+      ] : [])
     }
     template: {
       containers: [
@@ -123,23 +131,32 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
             { name: 'ENTRA_TENANT_ID', value: tenant().tenantId }
             { name: 'ENTRA_CLIENT_ID', value: entraClientId }
             // Settings read by the MVP workbench image (mvp/README.md, Configuration).
-            { name: 'PW_TILE_URL', value: tileUrl }
-            { name: 'PW_TILE_ATTRIBUTION', value: tileAttribution }
-            { name: 'PW_STORE', value: 'mssql' }
-            { name: 'PW_SQL_SERVER', value: sqlServerFqdn }
-            { name: 'PW_SQL_DATABASE', value: sqlDatabaseName }
-            { name: 'PW_SQL_AUTH', value: 'msi' }
-            { name: 'PW_SQL_CLIENT_ID', value: identityClientIds.api }
-            { name: 'PW_DOC_STORE', value: 'azure-blob' }
-            { name: 'PW_BLOB_ACCOUNT_URL', value: blobEndpoint }
-            { name: 'PW_BLOB_CONTAINER', value: 'evidence' }
-            { name: 'PW_BLOB_CLIENT_ID', value: identityClientIds.api }
-          ], authEnabled ? [
-            { name: 'PW_AUTH', value: 'trusted-proxy' }
-            { name: 'PW_TRUSTED_PROXY', value: '1' }
-            { name: 'PW_ENTRA_TENANT_ID', value: tenant().tenantId }
-            { name: 'PW_ENV', value: 'production' }
-          ] : [])
+            { name: 'ZF_TILE_URL', value: tileUrl }
+            { name: 'ZF_TILE_ATTRIBUTION', value: tileAttribution }
+            { name: 'ZF_STORE', value: 'mssql' }
+            { name: 'ZF_SQL_SERVER', value: sqlServerFqdn }
+            { name: 'ZF_SQL_DATABASE', value: sqlDatabaseName }
+            { name: 'ZF_SQL_AUTH', value: 'msi' }
+            { name: 'ZF_SQL_CLIENT_ID', value: identityClientIds.api }
+            { name: 'ZF_DOC_STORE', value: 'azure-blob' }
+            { name: 'ZF_BLOB_ACCOUNT_URL', value: blobEndpoint }
+            { name: 'ZF_BLOB_CONTAINER', value: 'evidence' }
+            { name: 'ZF_BLOB_CLIENT_ID', value: identityClientIds.api }
+          ], tokenStoreReady ? [
+            // A versionless secret reference triggers the supported revision refresh on SAS rotation.
+            { name: 'AUTH_TOKEN_STORE_ROTATION', secretRef: 'entra-token-store-sas' }
+          ] : [], enableApiAi ? [
+            { name: 'AI_ENDPOINT', value: foundryEndpoint }
+            { name: 'AI_DEPLOYMENT', value: modelDeploymentNames.standard }
+            { name: 'AI_DEPLOYMENT_STRONG', value: modelDeploymentNames.capable }
+          ] : [], authEnabled ? [
+            { name: 'ZF_AUTH', value: 'trusted-proxy' }
+            { name: 'ZF_TRUSTED_PROXY', value: '1' }
+            { name: 'ZF_ENTRA_TENANT_ID', value: tenant().tenantId }
+            { name: 'ZF_ENV', value: 'production' }
+          ] : [], empty(entraRoleMap) ? [] : [
+            { name: 'ZF_ROLE_MAP', value: string(entraRoleMap) }
+          ])
           probes: [
             { type: 'Liveness', httpGet: { path: '/healthz', port: 8088 } }
             { type: 'Readiness', httpGet: { path: '/healthz', port: 8088 } }
@@ -163,23 +180,69 @@ resource apiAuth 'Microsoft.App/containerApps/authConfigs@2025-07-01' = if (!emp
   name: 'current'
   properties: {
     platform: { enabled: true }
+    login: {
+      tokenStore: {
+        enabled: tokenStoreReady
+        azureBlobStorage: tokenStoreReady ? { sasUrlSettingName: 'entra-token-store-sas' } : null
+      }
+    }
     globalValidation: {
       unauthenticatedClientAction: 'RedirectToLoginPage'
       redirectToProvider: 'azureactivedirectory'
-      excludedPaths: ['/healthz', '/readyz']
+      excludedPaths: ['/healthz', '/readyz', '/', '/welcome.html', '/style.css', '/zava-logo.png', '/sign-in']
     }
     identityProviders: {
       azureActiveDirectory: {
         enabled: true
+        login: {
+          loginParameters: tokenStoreReady
+            ? ['scope=openid profile email https://graph.microsoft.com/User.Read offline_access', 'prompt=select_account']
+            : ['prompt=select_account']
+        }
         registration: {
           openIdIssuer: '${environment().authentication.loginEndpoint}${tenant().tenantId}/v2.0'
           clientId: entraClientId
           clientSecretSettingName: 'entra-client-secret'
         }
+
         validation: {
           allowedAudiences: ['api://${entraClientId}']
         }
       }
+    }
+  }
+}
+
+resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (!empty(tokenMaintenanceIdentityId)) {
+  name: 'job-${prefix}-auth-renewal'
+  location: location
+  tags: union(tags, { workload: 'entra-token-maintenance', dataClassification: 'authentication-secrets' })
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: { '${tokenMaintenanceIdentityId}': {} }
+  }
+  properties: {
+    environmentId: environmentResource.id
+    workloadProfileName: 'Consumption'
+    configuration: {
+      triggerType: 'Schedule'
+      replicaTimeout: 180
+      replicaRetryLimit: 2
+      scheduleTriggerConfig: { cronExpression: '0 3 * * *', parallelism: 1, replicaCompletionCount: 1 }
+      registries: [{ server: registryServer, identity: tokenMaintenanceIdentityId }]
+    }
+    template: {
+      containers: [{
+        name: 'auth-renewal'
+        image: apiImage
+        command: ['python', '-m', 'zavaforward_mvp.token_store']
+        resources: { cpu: json('0.25'), memory: '0.5Gi' }
+        env: [
+          { name: 'AZURE_CLIENT_ID', value: tokenMaintenanceClientId }
+          { name: 'TOKEN_STORAGE_ACCOUNT', value: tokenStoreAccountName }
+          { name: 'KEY_VAULT_URI', value: keyVaultUri }
+        ]
+      }]
     }
   }
 }

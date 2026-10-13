@@ -1,13 +1,13 @@
 ---
 title: Data Dictionary - Retrofit Synthetic Evidence Pack
-description: Field definitions, keys, allowed values and record-keeping notes for the Proper Warm year-one synthetic evidence pack
+description: Field definitions, keys, allowed values and record-keeping notes for the Zava Forward year-one synthetic evidence pack
 ms.date: 2026-09-30
 ms.topic: reference
 ---
 
 > [!WARNING]
 > SYNTHETIC DATA. Fictional records for design and analysis practice. Not
-> Proper North Homes data. Every table has `is_synthetic` set to `true`.
+> Zava North Homes data. Every table has `is_synthetic` set to `true`.
 
 ## Identifiers and Relationships
 

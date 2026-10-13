@@ -8,7 +8,7 @@ ms.topic: reference
 ## Purpose and Method
 
 The [Agent Request Challenge](./agent-request-challenge.md) concluded that
-none of the five requested Proper Warm agents should be built as an
+none of the five requested Zava Forward agents should be built as an
 end-to-end agent. Every "owns end-to-end" line bundled deterministic control
 work, accountable human decisions and a smaller set of tasks where bounded
 AI genuinely helps.
@@ -57,10 +57,10 @@ Cited BRD identifiers were checked against the BRD.
 
 All role-agent answers are `Sector-informed hypothesis` unless they restate
 material already in the case study, the addendum or the local regulatory
-snapshots. The role agents have no access to Proper North Homes' systems,
+snapshots. The role agents have no access to Zava North Homes' systems,
 contracts, resident base or supplier arrangements, so this study does not
 establish that any of the augmentations is feasible, lawful or affordable
-in Proper North Homes' actual environment. It identifies which
+in Zava North Homes' actual environment. It identifies which
 augmentations, if validated, would justify revisiting the earlier verdicts.
 
 The regulatory citations in this page were spot-checked against the local
@@ -314,7 +314,7 @@ refuse the ideas outright.
 
 #### Augmentation
 
-The programme offers residents a Proper Warm app to report condition
+The programme offers residents a Zava Forward app to report condition
 issues with geotagged photos, note vulnerabilities and adjustments, and
 consent to any onward use. Housing officers and stock-condition surveyors
 use the same app during visits. The platform normalises these into the
@@ -396,7 +396,7 @@ challenge.
 
 #### Augmentation
 
-Proper North Homes negotiates data-sharing agreements to pull consented
+Zava North Homes negotiates data-sharing agreements to pull consented
 smart-meter half-hourly reads (via the Data Communications Company or a
 consented DNO route), the national EPC recommendations register,
 DWP-derived fuel poverty proxies at postcode or LSOA level, and any
@@ -573,7 +573,7 @@ blockers.
 #### Augmentation
 
 The worked example from the project owner. The Retrofit Assessor, the
-resident and the installer all use a Proper Warm app to upload evidence
+resident and the installer all use a Zava Forward app to upload evidence
 against a per-measure PAS 2035 evidence schedule. Each upload carries
 device attestation, EXIF GPS, capture time and app-signed provenance. The
 platform matches each artefact to the property, the measure and the
@@ -869,7 +869,7 @@ the West Midlands, competitive bids elsewhere).
 The augmentation directly attacks the data-lineage problem. It does not
 change the authority arrangements. It also does not turn an unsecured
 opportunity into an award: the addendum's GBP 40 million line remains an
-opportunity until Proper North Homes evidences an executed award.
+opportunity until Zava North Homes evidences an executed award.
 
 #### Clarification Questions to the Company Agents
 
@@ -970,7 +970,7 @@ and where must a human always paste and press "submit"?
 
 `Data and Performance Lead` was asked: if TrustMark and MCS
 identifiers become the reconciliation key, what data-quality and change
-management is required inside Proper North Homes before that key is
+management is required inside Zava North Homes before that key is
 trusted?
 
 * Sector-informed hypothesis: keep the internal property and measure
@@ -992,7 +992,7 @@ cadence constitute a change to existing PAS 2035 contracts?
 * Sector-informed hypothesis: a required sync cadence backed by new
   deductions or holdbacks is still potentially a material change and
   needs Legal review where the Procurement Act 2023 applies, but the
-  reframe reduces the need for it. Proper North Homes can read TrustMark
+  reframe reduces the need for it. Zava North Homes can read TrustMark
   and MCS status itself and let the agent reconcile it against its own
   records; a mismatch opens an exception for a named owner and never an
   automatic installer hold (BRD RULE-015, NFR-005). The lodgement duties
@@ -1125,8 +1125,8 @@ rises.
 Contractors offer capacity through the channel they already use (email,
 spreadsheet, an installer app or an existing scheduling system), the
 agent turns it into sourced values, and a named contract manager accepts
-it as committed capacity (BRD RULE-007, FR-022). Residents use a Proper
-Warm app to view proposed slots, record measure-specific consent,
+it as committed capacity (BRD RULE-007, FR-022). Residents use a Zava
+Forward app to view proposed slots, record measure-specific consent,
 withdraw consent, register accessibility adjustments, and see who is
 coming. Installers on arrival open the appointment, capture a geotagged
 proof-of-visit photo and log the outcome against fixed codes. Housing
@@ -1155,7 +1155,7 @@ supplier utilisation and resident choice are optimised together.
 #### Clarification Questions to the Company Agents
 
 `Head of Resident Engagement and Insight` was asked: if the resident
-consent flow lived in a Proper Warm app, what would you require in the
+consent flow lived in a Zava Forward app, what would you require in the
 design so digital consent does not become the default expectation and
 excluded households do not lose their offer?
 
@@ -1645,7 +1645,7 @@ cleanly satisfiable.
 
 #### Augmentation
 
-The Quality module compares Proper North Homes' per-measure defect
+The Quality module compares Zava North Homes' per-measure defect
 patterns to sector defect feeds (for example TrustMark defect data,
 MCS certificate-holder patterns, published sector research on
 common retrofit defects). Where an installer's defect signature
@@ -1672,7 +1672,7 @@ so under what governance?
   FR-021 supplier reviews, never the sole basis for exclusion,
   deductions, a smaller tranche or a Procurement Act 2023 performance
   notice where the Act applies. The method is published, suppliers can
-  challenge the data, and the review records whether Proper North Homes'
+  challenge the data, and the review records whether Zava North Homes'
   confirmed defects or the sector comparison was decisive. New in the
   reframe: agents find more gaps in the pilot locality, so a supplier
   working there may look worse than in the matched locality. Comparisons
@@ -1692,7 +1692,7 @@ obligations attach to importing sector defect feeds?
   sharing or licence terms, retention limits and a correction route.
   In either case, record provenance, licence, snapshot version,
   coverage and known reporting bias, and keep feed data in its own
-  lineage rather than merging it into Proper North Homes' defect
+  lineage rather than merging it into Zava North Homes' defect
   record. Test fitness before use. A sector comparison alone must never
   change an installer's standing (BRD CON-003, RULE-015, NFR-003,
   NFR-005, FR-021, RULE-014).
@@ -1707,7 +1707,7 @@ benchmarking to a sector baseline drives the programme towards
 * Sector-informed hypothesis: yes, if a sector baseline becomes an
   acceptance floor. Sector feeds should only flag divergence for human
   investigation: a flag cannot accept work (BRD RULE-018), and supplier
-  allocation reflects Proper North Homes' own quality-adjusted accepted
+  allocation reflects Zava North Homes' own quality-adjusted accepted
   outcomes (FR-021). The quality standard should rest on absolute
   tolerances and a measured company baseline, such as the proposed zero
   unresolved safety-critical defects at handover, right-first-time
@@ -2242,10 +2242,10 @@ they overlap:
   guidance on explaining decisions made with AI, are listed in OD-39
   and must not be relied on until they are obtained.
 
-## Questions for Proper North Homes
+## Questions for Zava North Homes
 
 Each augmentation depends on an unknown company detail. The most
-important questions to Proper North Homes, in priority order, are:
+important questions to Zava North Homes, in priority order, are:
 
 | Priority | Question | Why it matters |
 | --- | --- | --- |
@@ -2261,7 +2261,7 @@ important questions to Proper North Homes, in priority order, are:
 
 ## Limitations
 
-* The role agents have no access to Proper North Homes' systems,
+* The role agents have no access to Zava North Homes' systems,
   contracts, resident base or supplier arrangements, so this study does
   not establish feasibility, lawfulness or affordability.
 * Every role-agent answer was re-run on 2026-09-27 against the current

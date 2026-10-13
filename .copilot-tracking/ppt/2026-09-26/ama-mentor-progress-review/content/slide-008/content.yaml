@@ -54,8 +54,8 @@ elements:
   vertical_anchor: middle
   text: ''
   paragraphs:
-  - text: Safety, professional sign-off, resident consent, investment, procurement, grant submission,
-      payment and quality acceptance
+  - text: Safety, professional sign-off, resident consent, investment, procurement,
+      grant submission, payment and quality acceptance
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -101,8 +101,8 @@ elements:
   vertical_anchor: middle
   text: ''
   paragraphs:
-  - text: Turn free text into sourced values, propose missing values for owners to confirm, reconcile,
-      draft, route messages, raise hazard and quality signals
+  - text: Turn free text into sourced values, propose missing values for owners to
+      confirm, reconcile, draft, route messages, raise hazard and quality signals
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -148,8 +148,8 @@ elements:
   vertical_anchor: middle
   text: ''
   paragraphs:
-  - text: 'Deterministic: property master, published scoring weights, eligibility rules, gates and clocks,
-      resident decisions, capacity, grant ledger, defects'
+  - text: 'Deterministic: property master, published scoring weights, eligibility
+      rules, gates and clocks, resident decisions, capacity, grant ledger, defects'
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -202,7 +202,8 @@ elements:
     text_bold: true
     space_after: 0
     alignment: left
-  - text: 'Agent-led modernisation of the existing model: one locality, existing teams and suppliers'
+  - text: 'Agent-led modernisation of the existing model: one locality, existing teams
+      and suppliers'
     text_font: Segoe UI
     text_size: 15
     text_color: '#102A43'
@@ -219,7 +220,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: Each agent capability scales only if it beats the same workflow without it (proposed)
+  - text: Each agent capability scales only if it beats the same workflow without
+      it (proposed)
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -239,7 +241,8 @@ elements:
   height: 0.4
   fill: '#102A43'
   line_color: '#102A43'
-  text: Agents earn the right to scale only through safe, resident-accepted, evidence-complete handovers
+  text: Agents earn the right to scale only through safe, resident-accepted, evidence-complete
+    handovers
   text_font: Segoe UI
   text_size: 15
   text_color: '#FFFFFF'
@@ -257,9 +260,10 @@ elements:
   top: 6.6
   width: 12.0
   height: 0.38
-  text: |-
-    Sources: addendum (Where Agents Fit; Agentic Architecture Brief); Agent Request Challenge;
-    BRD v0.5.0 Document Status (owner decision, 26 Sep 2026).
+  text: 'Sources: addendum (Where Agents Fit; Agentic Architecture Brief); Agent Request
+    Challenge;
+
+    BRD v0.5.0 Document Status (owner decision, 26 Sep 2026).'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
@@ -269,9 +273,38 @@ elements:
   vertical_anchor: top
   margin_left: 0
   margin_right: 0
-speaker_notes: |-
-  So if the gap is shared records, not intelligence, why is this agent-led? Because the records do not fill themselves. What rests on a small team today is coordination, chasing, re-keying, reconciliation and evidence assembly, and that unstructured work is where agents help. Later on 26 September, a challenge to my own measurement plan showed the pilot bundled three changes: a new delivery cell, ring-fenced supplier capacity and agents, so it could never tell the Board which one worked. So I reframed it as agent-led modernisation of the existing retrofit model. Whether coordination really is the binding constraint is still a Phase 0 question.
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'So if the gap is shared records, not intelligence, why is this agent-led?
+  Because the records do not fill themselves. What rests on a small team today is
+  coordination, chasing, re-keying, reconciliation and evidence assembly, and that
+  unstructured work is where agents help. Later on 26 September, a challenge to my
+  own measurement plan showed the pilot bundled three changes: a new delivery cell,
+  ring-fenced supplier capacity and agents, so it could never tell the Board which
+  one worked. So I reframed it as agent-led modernisation of the existing retrofit
+  model. Whether coordination really is the binding constraint is still a Phase 0
+  question.
 
-  Read the stack from the bottom. The foundation is deterministic, because decisions that residents, the Regulator, funders or the Board must be able to follow should come from rules. Agents sit where the work is unstructured, and people keep every decision with legal, professional or resident authority.
 
-  The ask changes: agents added to existing teams in one locality and, as a proposal, each capability scales only if it beats the same workflow without it.
+  Read the stack from the bottom. The foundation is deterministic, because decisions
+  that residents, the Regulator, funders or the Board must be able to follow should
+  come from rules. Agents sit where the work is unstructured, and people keep every
+  decision with legal, professional or resident authority.
+
+
+  The ask changes: agents added to existing teams in one locality and, as a proposal,
+  each capability scales only if it beats the same workflow without it.'

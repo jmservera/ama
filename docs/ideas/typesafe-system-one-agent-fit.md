@@ -1,7 +1,7 @@
 ---
 title: System One Decision Models for Retrofit Agents
 description: Dated research on typed decision models, including Microsoft Decision 1 in Foundry, bounded workflow assists and reviewed form extraction/filling
-ms.date: 2026-10-11
+ms.date: 2026-10-13
 ms.topic: reference
 ---
 
@@ -64,7 +64,7 @@ scorer cannot replace free-form generation or accountable reviewers.
 
 Reconcile its 120 grouped families, 30 tuning/30 calibration/60 held-out,
 720 dispositions, human adjudicators and counterbalanced full-pack effort
-with [PRD experiment intake](../prds/proper-warm-retrofit-programme-demonstrator.md#parallel-decision-model-experiment-intake).
+with [PRD experiment intake](../prds/zava-forward-retrofit-programme-demonstrator.md#parallel-decision-model-experiment-intake).
 Require version/hash-bound source, split, task, model, prompt/question,
 schema and frozen thresholds; exclusions/denominators and failures;
 quality/critical errors, coverage/calibration, complete paired human effort,
@@ -86,14 +86,14 @@ extraction/filling, retrofit subsidy applications and other AI-assisted
 decisions. The recommendation is an optional scoring capability inside the
 existing bounded task service, not another autonomous agent or replacement
 workflow engine. The historical PRD v0.11.0 amendment introduced DD-007/008
-and FR-036 to FR-044; the [current PRD candidate](../prds/proper-warm-retrofit-programme-demonstrator.md)
+and FR-036 to FR-044; the [current PRD candidate](../prds/zava-forward-retrofit-programme-demonstrator.md)
 retains conditional task placement with mandatory application-level AI, not a production
 selection, deployment result or approved funding process.
 
 ### Current Product Evidence and Limits
 
 All sources in this table were checked on 2026-10-10. They are vendor product
-documentation, not regulatory authority or Proper North Homes performance
+documentation, not regulatory authority or Zava North Homes performance
 evidence. The findings below supersede incompatible automation, SDK or
 ranking suggestions in the retained 2026-09-24 research sections.
 

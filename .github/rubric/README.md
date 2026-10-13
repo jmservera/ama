@@ -131,20 +131,20 @@ Changing `rubric_version` makes the next run rescore from scratch without a
 comparison with the previous baseline, so a stricter rubric does not fail as a
 regression. The gate stamps the version into `latest.json`.
 
-### Proper Warm MVP
+### Zava Forward MVP
 
 On 2026-10-08 the owner directed that the MVP replaces the earlier prototype as
-the scored solution code. `solution-code` now includes `mvp/properwarm_mvp/`,
+the scored solution code. `solution-code` now includes `mvp/zavaforward_mvp/`,
 `mvp/web/` (without `vendor/`), `mvp/tests/`, `mvp/Dockerfile`, `mvp/README.md`
 and the data generator scripts under `support/synthetic-data/`. The private
 `mvp/data/` is excluded. The prototype description below is retained for
 history; the registry no longer reads `prototype/`. The Prototype validation
 workflow still checks only `prototype/`, so MVP tests are not yet run in CI.
 
-### Proper Warm Prototype
+### Zava Forward Prototype
 
 The existing `solution-code` entry preserves `src/**/*` and also includes the
-prototype's Python implementation (`prototype/properwarm/`), web UI, Python
+prototype's Python implementation (`prototype/zavaforward/`), web UI, Python
 tests and build scripts, `Dockerfile`, `requirements.txt`, `README.md` and
 Excalidraw architecture diagram. It informs A1, A3, A4, A5, A6 and A7, plus B6:
 the README is capstone documentation, whose completeness and navigability are

@@ -8,7 +8,7 @@ from __future__ import annotations
 import argparse
 import json
 
-from properwarm.domain import Rejected, Store
+from zavaforward.domain import Rejected, Store
 
 CASES = [
     ("valid summary", {"task": "summarise", "case_id": "C1", "summary": "s", "citations": ["d1"]}, None),

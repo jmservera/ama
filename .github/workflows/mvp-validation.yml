@@ -2,10 +2,10 @@ name: MVP validation
 
 on:
   pull_request:
-    paths: ["mvp/**", ".github/workflows/mvp-validation.yml"]
+    paths: ["mvp/**", "infra/**", ".github/workflows/mvp-validation.yml"]
   push:
     branches: [main]
-    paths: ["mvp/**"]
+    paths: ["mvp/**", "infra/**"]
   workflow_dispatch:
 
 permissions:
@@ -27,12 +27,18 @@ jobs:
         with:
           python-version: "3.12"
       - name: Compile
-        run: python -m compileall -q mvp/properwarm_mvp
+        run: python -m compileall -q mvp/zavaforward_mvp
       - name: Unit and API tests
         working-directory: mvp
         env:
           PYTHONPATH: .
         run: python -m unittest discover -s tests -v
+      - name: API authentication initialization tests
+        run: python -m unittest discover -s infra/tests -v
+      - name: Build and lint infrastructure
+        run: |
+          az bicep build --file infra/main.bicep --stdout > /dev/null
+          az bicep lint --file infra/main.bicep
       - name: Check browser JavaScript syntax
         run: node --check mvp/web/app.js
       - name: Refuse committed working data

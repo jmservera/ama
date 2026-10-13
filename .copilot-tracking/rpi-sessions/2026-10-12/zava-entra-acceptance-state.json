@@ -1,0 +1,102 @@
+{
+  "task_id": "zava-entra-acceptance-2026-10-12",
+  "task_slug": "zava-entra-acceptance",
+  "parent_task": {
+    "task_id": "zava-azure-reset-2026-10-12",
+    "task_slug": "zava-azure-reset"
+  },
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "blocked",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": null,
+    "plan": ".copilot-tracking/plans/2026-10-12/zava-entra-acceptance-plan.md",
+    "details": ".copilot-tracking/details/2026-10-12/zava-entra-acceptance-phase-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-10-12/zava-entra-acceptance-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-12/zava-entra-acceptance-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Exact-head technical and rubric workflows succeeded for af1bc84. Rubric record remains 45/100 with capstone floors unmet; preserve generated commit 17c2b8a and do not equate CI non-regression with project acceptance.",
+      "status": "verified",
+      "evidence": "MVP CI 38258267105, MVP validation 38258266937, Prototype validation 38258267034 and rubric 38258267201. .github/rubric/scores/latest.json measures af1bc84; 17c2b8a was fast-forwarded without changing the record."
+    },
+    {
+      "decision": "Child Review executed once: execution Complete, outcome Residual work. Assessed completed P01/P03 and remaining P02; no implementation defect found. RV-001 and RV-002 route to authorised tenant verification and real-user acceptance, not a speculative code-fix loop.",
+      "status": "review-complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-12/zava-entra-acceptance-review.md. Thirteen initializer and 22 migration tests pass; deployed exact PNG passes as UID 10001; technical CI at af1bc84 succeeds. Live --check and existing M365 app read both fail explicitly on permission; Playwright reaches Microsoft sign-in."
+    },
+    {
+      "decision": "Plan critique execution and verdict are unavailable for the existing owner-directed implementation; no retrospective critique or conformance claim is fabricated.",
+      "status": "unavailable",
+      "evidence": "artifact_paths.critique is null and no child critique artifact exists. Review records this evidence limit separately."
+    },
+    {
+      "decision": "Owner explicitly requests Review first and a full follow-up RPI cycle if needed. Automatic-mode confirmation was requested but unavailable; retain manual mode and execute the explicitly authorised Review.",
+      "status": "confirmed-review",
+      "evidence": "User input: \"do the full rpi, start with review, but if needed start the loop again\". ask_user returned that the user is unavailable; no mode-choice confirmation was obtained."
+    },
+    {
+      "decision": "P01 callback initialization and P03 logo repair completed, validated and published in source commit 0723508 on the continuing PR #65; P02 remains separate.",
+      "status": "completed",
+      "evidence": "13 initializer tests, 22 migration tests and 273 MVP tests (26 existing skips). ACR db2 and deployed revision ca-forward-test-api--0000001 serve the exact PNG as UID 10001. Normal push succeeded; no new link/fragment defects. New CI remains pending."
+    },
+    {
+      "decision": "Fix the owner-reported missing logo as P03 alongside P01 initialization; preserve ingress authentication and keep real-user acceptance P02 separate.",
+      "status": "approved",
+      "evidence": "User input: \"BTW, the zava logo is not showing\". Deployed static request fails with PermissionError on /app/web/zava-logo.png; the migration-created source has mode 0600."
+    },
+    {
+      "decision": "Owner reports callback repair done and requests repeatable initialization. Execute approved P01 only in manual mode after the host exits autopilot.",
+      "status": "approved",
+      "evidence": "User input: \"Done, but this should be part of an initialization script, right?\"; host autopilot deactivation notice."
+    },
+    {
+      "decision": "The earlier autonomous Entra/browser continuation is historical; current owner-approved manual implementation is bounded to P01/P03.",
+      "status": "superseded",
+      "evidence": "Parent RV-001 and user input: \"Keep working autonomously until the task is truly finished\"."
+    },
+    {
+      "decision": "Research evidence reused for P01/P03. Missing tenant authority blocks only P02/live Graph checks, not the source-tested initializer or diagnosed asset-permission repair.",
+      "status": "reused",
+      "evidence": "infra/README.md section API registration management with the existing M365 session; parent RV-001. Graph application-management scope is absent; delegated API token acquisition returns AADSTS65001."
+    },
+    {
+      "decision": "Keep ingress authentication, issued claims and consent requirements intact; do not treat operator checks or fabricated proxy headers as interactive acceptance.",
+      "status": "confirmed",
+      "evidence": "Parent approved reset plan and tools/rename-zava.md acceptance boundary."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "tenant-consent",
+      "summary": "P02/live tenant verification: fresh --check and delegated M365 app read both return Insufficient privileges. Owner reports callback repair done; tenant naming/roles remain unverified and no isolated provisioning profile is present.",
+      "resolution": "Use an authorised isolated provisioning profile for live --check and tenant naming/role verification. No additional consent is required to complete the already-published P01/P03 code. Never grant tenant management to runtime workloads."
+    },
+    {
+      "id": "authenticated-acceptance",
+      "summary": "P02: Playwright reaches the Microsoft sign-in page, not an authenticated workbench. Real-user list/map/logo acceptance is unverified. The separate M365 API-token route previously failed with AADSTS65001.",
+      "resolution": "Complete real Entra sign-in and verify scoped lists, 443 open cases and rendered map/tiles. Owner reports callback repair done; keep browser acceptance distinct from CLI-client consent and static asset verification."
+    }
+  ],
+  "next_action": {
+    "phase": "Review",
+    "action": "P02 requires an authorised tenant profile and legitimate workbench session; no source-fix loop can replace them. The completed Review routes RV-001/RV-002 to those external prerequisites. Remain in manual Review with session stopped because automatic-mode confirmation was unavailable."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Complete real-user workbench acceptance",
+      "rationale": "Highest immediate acceptance value and smallest user action after reported callback repair: verify scoped cases, 443 open cases, map/tiles and visible logo without changing source or authentication.",
+      "evidence": "RV-002; Playwright reaches Microsoft sign-in rather than an authenticated workbench."
+    },
+    {
+      "rank": 2,
+      "task": "Verify live callback and tenant naming/role state through an authorised provisioning profile",
+      "rationale": "Confirms the remaining identity exception and live initializer behavior, but requires separate tenant authority. Do not recreate the registration or grant management to runtime workloads.",
+      "evidence": "RV-001; actual initializer --check exits 1 at Graph registration read with Insufficient privileges; no isolated provisioning profile is present."
+    }
+  ]
+}

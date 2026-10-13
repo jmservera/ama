@@ -126,7 +126,7 @@ elements:
     text_bold: true
     space_after: 8
     alignment: left
-  - text: Eight Proper North Homes perspectives to ask what the case never says
+  - text: Eight Zava North Homes perspectives to ask what the case never says
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -355,7 +355,8 @@ elements:
   height: 0.6
   fill: '#102A43'
   line_color: '#102A43'
-  text: Every loop sent me back to research and filed its findings in the addendum, the BRD and the log
+  text: Every loop sent me back to research and filed its findings in the addendum,
+    the BRD and the log
   text_font: Segoe UI
   text_size: 15
   text_color: '#FFFFFF'
@@ -373,7 +374,8 @@ elements:
   top: 6.6
   width: 12.0
   height: 0.38
-  text: 'Sources: git log (42 non-merge commits, 10 to 27 Sep 2026); docs/reference/log.md; BRD history.'
+  text: 'Sources: git log (42 non-merge commits, 10 to 27 Sep 2026); docs/reference/log.md;
+    BRD history.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
@@ -383,9 +385,32 @@ elements:
   vertical_anchor: top
   margin_left: 0
   margin_right: 0
-speaker_notes: |-
-  This is the backbone of the story. The five strands were not a straight line; each loop produced questions that sent me back into research.
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'This is the backbone of the story. The five strands were not a straight
+  line; each loop produced questions that sent me back into research.
 
-  Research built the context. The role agents let me ask what the brief could not answer. The BRD has been revised in thirteen commits and is now version 0.5.0. The design thinking session on 26 September was the turning point: I read each agent request as the value behind it and tested my early doubts agent by agent. The quality review made the requirements traceable, and it was re-run after every later change.
 
-  The habit that matters: nothing stayed in chat history. Every finding was filed in the addendum, the BRD or the knowledge base, and logged.
+  Research built the context. The role agents let me ask what the brief could not
+  answer. The BRD has been revised in thirteen commits and is now version 0.5.0. The
+  design thinking session on 26 September was the turning point: I read each agent
+  request as the value behind it and tested my early doubts agent by agent. The quality
+  review made the requirements traceable, and it was re-run after every later change.
+
+
+  The habit that matters: nothing stayed in chat history. Every finding was filed
+  in the addendum, the BRD or the knowledge base, and logged.'

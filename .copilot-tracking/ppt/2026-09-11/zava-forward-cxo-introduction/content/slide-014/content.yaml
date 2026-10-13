@@ -1,0 +1,199 @@
+slide: 14
+title: Approve the next evidence-building step.
+section: The executive decision
+layout: blank
+duration_seconds: 80
+background:
+  fill: '#142B3B'
+elements:
+- type: textbox
+  left: 0.7
+  top: 0.55
+  width: 11.8
+  height: 0.35
+  text: THE DECISION TODAY
+  font: Segoe UI
+  font_size: 12
+  font_color: '#76D6C5'
+  font_bold: true
+- type: textbox
+  left: 0.7
+  top: 1.1
+  width: 11.8
+  height: 1.4
+  text: 'Approve the next
+
+    evidence-building step.'
+  font: Segoe UI
+  font_size: 38
+  font_color: '#FFFFFF'
+  font_bold: true
+- type: textbox
+  left: 0.75
+  top: 2.8
+  width: 2.1
+  height: 0.55
+  text: AUTHORISE
+  font: Segoe UI
+  font_size: 18
+  font_color: '#76D6C5'
+  font_bold: true
+- type: textbox
+  left: 0.75
+  top: 3.65
+  width: 2.1
+  height: 0.55
+  text: ASSIGN
+  font: Segoe UI
+  font_size: 18
+  font_color: '#76D6C5'
+  font_bold: true
+- type: textbox
+  left: 0.75
+  top: 4.5
+  width: 2.1
+  height: 0.55
+  text: RETURN
+  font: Segoe UI
+  font_size: 18
+  font_color: '#76D6C5'
+  font_bold: true
+- type: textbox
+  left: 3.2
+  top: 2.75
+  width: 9.1
+  height: 0.65
+  text: A capped readiness stage; agree its budget and boundaries.
+  font: Segoe UI
+  font_size: 24
+  font_color: '#FFFFFF'
+- type: textbox
+  left: 3.2
+  top: 3.6
+  width: 9.1
+  height: 0.65
+  text: An asset sponsor and accountable cross-functional owners.
+  font: Segoe UI
+  font_size: 24
+  font_color: '#FFFFFF'
+- type: textbox
+  left: 3.2
+  top: 4.45
+  width: 9.1
+  height: 0.65
+  text: With validated options, economics and a gated pilot case.
+  font: Segoe UI
+  font_size: 24
+  font_color: '#FFFFFF'
+- type: shape
+  shape: rectangle
+  left: 0.75
+  top: 5.7
+  width: 11.85
+  height: 0.65
+  fill: '#225264'
+  line_color: '#225264'
+- type: textbox
+  left: 0.95
+  top: 5.8
+  width: 11.4
+  height: 0.45
+  text: 'Next: how the architecture enables this service, then a property-journey
+    demo.'
+  font: Segoe UI
+  font_size: 21
+  font_color: '#FFFFFF'
+- type: textbox
+  left: 0.7
+  top: 6.7
+  width: 10.9
+  height: 0.3
+  text: 'No full rollout, secured-grant assumption or capital acceleration approval
+    today  |  BRD: approval gates'
+  font: Segoe UI
+  font_size: 11
+  font_color: '#B9D4D6'
+  font_bold: false
+- type: textbox
+  left: 12.0
+  top: 6.7
+  width: 0.6
+  height: 0.3
+  text: '14'
+  font: Segoe UI
+  font_size: 11
+  font_color: '#B9D4D6'
+  font_bold: false
+  alignment: right
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'TIMING: 18:40-20:00 (80 seconds).
+
+
+  Close with a proportionate decision. Authorise a capped readiness stage,
+
+  subject to agreeing the budget, boundaries and delegated authority. We do
+
+  not have a validated price or return figure to ask this team to accept today.
+
+
+  Name the Executive Director of Assets as sponsor, supported by the Chief
+
+  Executive, with Finance, Safety, Programme, Resident Engagement, Procurement,
+
+  Digital and data-protection ownership. Return with validated constraints,
+
+  options, economics and the proposed shadow and live-pilot gates.
+
+
+  We are not seeking approval for a five-agent portfolio rollout, recognition
+
+  of forty million pounds as secured grant or acceleration beyond the approved
+
+  capital plan.
+
+
+  End on the promise we can responsibly make about the approach: start with
+
+  the resident outcome, make evidence and accountability visible, and earn the
+
+  right to scale.
+
+
+  ANIMATION CUES: Reveal the decision in three clicks: Authorise, Assign and
+
+  Return. Reveal each verb with its complete statement. The final click reveals
+
+  the handoff to architecture and the property-journey demo.
+
+
+  HANDOFF FOR LATER EXTENSION: Append the architecture section after this
+
+  introduction, explaining systems of record, workflow gates, human approval,
+
+  bounded AI and continuity. Follow it with a demo of the illustrative home:
+
+  evidence arrives, an exception is raised, an accountable person decides,
+
+  resident arrangements are checked and the next safe step is recorded.
+
+  These later sections are not included or counted in the twenty minutes.
+
+
+  SOURCE: BRD, Executive Summary; Validation and Approval Criteria; BR-050.
+
+  '

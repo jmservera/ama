@@ -10,10 +10,10 @@ import unittest
 from pathlib import Path
 
 import test_mvp
-from properwarm_mvp import ranking
-from properwarm_mvp.insights import STAGE_ORDER
-from properwarm_mvp.sqlstore import SqlStore
-from properwarm_mvp.store import Store
+from zavaforward_mvp import ranking
+from zavaforward_mvp.insights import STAGE_ORDER
+from zavaforward_mvp.sqlstore import SqlStore
+from zavaforward_mvp.store import Store
 
 STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role="Resident Liaison Officer"),
          dict(code="PM-01", name="Pam Lead", email="pam@example.test", role="Retrofit Programme Manager"),
@@ -26,7 +26,7 @@ def make_cases(n, seed=11):
     rnd = random.Random(seed)
     out = []
     for i in range(n):
-        c = test_mvp.case(f"PW-{i:05d}", owner_code=rnd.choice(["RLO-01", "PM-01"]), stage=rnd.choice(STAGE_ORDER),
+        c = test_mvp.case(f"ZF-{i:05d}", owner_code=rnd.choice(["RLO-01", "PM-01"]), stage=rnd.choice(STAGE_ORDER),
                           decision=rnd.choice(test_mvp.DECISIONS if hasattr(test_mvp, "DECISIONS") else ["Waiting", "Accepted", "Declined", "Not yet asked"]))
         c["days_in_stage"] = rnd.choice([0, 1, 5, 5, 30, 60, 61, 120, 400])
         c["resident"].update(name=rnd.choice(NAMES), priority_support=rnd.random() < 0.1, adjustment=rnd.choice(["None", "None", "Hearing"]))
@@ -55,7 +55,7 @@ class Parity(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.tmp = tempfile.TemporaryDirectory()
-        p = Path(cls.tmp.name) / "properwarm.json"
+        p = Path(cls.tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(dataset(make_cases(400))))
         cls.mem = Store(str(p), os.path.join(cls.tmp.name, "mem", "live.json"), os.path.join(cls.tmp.name, "mem", "audit.jsonl"))
         cls.sql = SqlStore(str(p), os.path.join(cls.tmp.name, "pw.sqlite"))
@@ -85,7 +85,7 @@ class Parity(unittest.TestCase):
                 for f in filters:
                     for sort in ("urgent", "waiting", "contact", "name", "visit", "bogus"):
                         self.same(user, view=view, filters=f, sort=sort, limit=37, offset=11)
-        for q in ("smith", "SMITH", "100%", "under_score", "ándersen", "te3", "pw-0004", "1 test", "zzz"):
+        for q in ("smith", "SMITH", "100%", "under_score", "ándersen", "te3", "zf-0004", "1 test", "zzz"):
             for user in (self.pam, self.kim):
                 self.same(user, view="all", q=q, limit=500)
 
@@ -140,7 +140,7 @@ class Parity(unittest.TestCase):
 class Writes(unittest.TestCase):
     def test_a_write_moves_the_case_in_the_sql_order_and_another_process_sees_it(self):
         with tempfile.TemporaryDirectory() as tmp:
-            p = Path(tmp) / "properwarm.json"
+            p = Path(tmp) / "zavaforward.json"
             p.write_text(json.dumps(dataset(make_cases(300))))
             db = os.path.join(tmp, "pw.sqlite")
             a, b = SqlStore(str(p), db), SqlStore(str(p), db)
@@ -155,7 +155,7 @@ class Writes(unittest.TestCase):
 class Migration(unittest.TestCase):
     def test_database_from_the_previous_slice_is_upgraded_in_place(self):
         with tempfile.TemporaryDirectory() as tmp:
-            p = Path(tmp) / "properwarm.json"
+            p = Path(tmp) / "zavaforward.json"
             p.write_text(json.dumps(dataset(make_cases(60))))
             db = os.path.join(tmp, "pw.sqlite")
             SqlStore(str(p), db)
@@ -171,11 +171,11 @@ class Migration(unittest.TestCase):
             order = [e["id"] for e in ranking.rank([c for c in s.cases.values() if not c["closed"]])]
             got = [r["id"] for r in s.page_cases(STAFF[1], "all", limit=100)["items"]]
             self.assertEqual(got, order[:100])
-            self.assertEqual(s.detail("PW-00001")["id"], "PW-00001")
+            self.assertEqual(s.detail("ZF-00001")["id"], "ZF-00001")
 
     def test_changed_policy_version_rebuilds_the_keys(self):
         with tempfile.TemporaryDirectory() as tmp:
-            p = Path(tmp) / "properwarm.json"
+            p = Path(tmp) / "zavaforward.json"
             p.write_text(json.dumps(dataset(make_cases(30))))
             db = os.path.join(tmp, "pw.sqlite")
             SqlStore(str(p), db)
@@ -191,7 +191,7 @@ class Migration(unittest.TestCase):
 class Plans(unittest.TestCase):
     def test_list_queries_use_indexes_not_table_scans(self):
         with tempfile.TemporaryDirectory() as tmp:
-            p = Path(tmp) / "properwarm.json"
+            p = Path(tmp) / "zavaforward.json"
             p.write_text(json.dumps(dataset(make_cases(200))))
             s = SqlStore(str(p), os.path.join(tmp, "pw.sqlite"))
             s.db.execute("ANALYZE")
@@ -209,7 +209,7 @@ class Scale(unittest.TestCase):
 
     def test_sql_reads_at_60000(self):
         with tempfile.TemporaryDirectory() as tmp:
-            p = Path(tmp) / "properwarm.json"
+            p = Path(tmp) / "zavaforward.json"
             p.write_text(json.dumps(dataset(make_cases(self.N, seed=5))))
             s = SqlStore(str(p), os.path.join(tmp, "pw.sqlite"))
             pam, kim = STAFF[1], STAFF[2]

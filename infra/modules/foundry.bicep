@@ -5,7 +5,7 @@ param tags object
 param workspaceId string
 param peSubnetId string
 param zoneIds object
-@description('Principals that may invoke models and agents (the agent runner identity only).')
+@description('Principals that may invoke models and agents. Agent runner by default; the MVP API is included only when enableApiAi is explicitly set.')
 param userPrincipalIds array
 @description('Model deployments. Two tiers support the PRD rule to select the smallest model that meets task thresholds.')
 param deployments array
@@ -39,7 +39,7 @@ resource project 'Microsoft.CognitiveServices/accounts/projects@2025-06-01' = {
   identity: { type: 'SystemAssigned' }
   properties: {
     displayName: projectName
-    description: 'Proper Warm retrofit demonstrator bounded agents'
+    description: 'Zava Forward retrofit demonstrator bounded agents'
   }
 }
 

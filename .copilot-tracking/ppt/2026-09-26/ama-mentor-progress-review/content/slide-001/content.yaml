@@ -22,9 +22,9 @@ elements:
   top: 2.2
   width: 11.5
   height: 1.7
-  text: |-
-    From "build five agents" to
-    "what value do they really need?"
+  text: 'From "build five agents" to
+
+    "what value do they really need?"'
   font: Segoe UI
   font_size: 38
   font_color: '#FFFFFF'
@@ -35,7 +35,7 @@ elements:
   top: 4.2
   width: 11.5
   height: 0.8
-  text: How I filled the gaps in the Proper Warm case, 10 to 27 September 2026
+  text: How I filled the gaps in the Zava Forward case, 10 to 27 September 2026
   font: Segoe UI
   font_size: 20
   font_color: '#BCCCDC'
@@ -54,11 +54,34 @@ elements:
   top: 5.66
   width: 11.5
   height: 0.5
-  text: 'Today: the story so far, then four decisions I would value your challenge on'
+  text: 'Today: the story so far, then four decisions I would value your challenge
+    on'
   font: Segoe UI
   font_size: 16
   font_color: '#D9E2EC'
-speaker_notes: |-
-  I have the story so far to show you, and four decisions I want your challenge on. The short version: the brief asks for five agents. Two weeks of evidence says the value is credible, but end-to-end agents are not the way to get it. Where I have landed is an agent-led modernisation of the existing retrofit model, with agents only where they beat the same workflow without them. One of my four questions is whether the panel will read that as answering the brief.
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'I have the story so far to show you, and four decisions I want your
+  challenge on. The short version: the brief asks for five agents. Two weeks of evidence
+  says the value is credible, but end-to-end agents are not the way to get it. Where
+  I have landed is an agent-led modernisation of the existing retrofit model, with
+  agents only where they beat the same workflow without them. One of my four questions
+  is whether the panel will read that as answering the brief.
 
-  I will walk through five strands of work, three later challenges, my lessons and one traceability chain, then my questions.
+
+  I will walk through five strands of work, three later challenges, my lessons and
+  one traceability chain, then my questions.'

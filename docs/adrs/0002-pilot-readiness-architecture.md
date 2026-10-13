@@ -1,8 +1,8 @@
 ---
-title: ADR 0002 Pilot-Readiness Architecture for the Proper Warm MVP
+title: ADR 0002 Pilot-Readiness Architecture for the Zava Forward MVP
 description: Proposed decisions for moving the working MVP to pilot readiness over about 60,000 homes - durable store, Blob, Entra ID and field visibility, deterministic ranking, map scale, deployment and gated staff time capture
 author: AMA programme
-ms.date: 2026-10-11
+ms.date: 2026-10-13
 ms.topic: reference
 ---
 
@@ -51,7 +51,7 @@ and is a demonstration, not a pilot (see the
 [Gap Analysis and Next Build](../reference/research/gap-analysis-next-build.md)).
 
 Owner direction recorded on 2026-10-08 and now written into the
-[PRD v0.10.0](../prds/proper-warm-retrofit-programme-demonstrator.md) as
+[PRD v0.10.0](../prds/zava-forward-retrofit-programme-demonstrator.md) as
 PR-001 to PR-008 and DH-007:
 
 * Load the whole stock of about 60,000 homes (PR-005, OD-17).
@@ -194,7 +194,62 @@ Proposal:
   contractor role (proposal, open item for the tenant owner), and see only
   their own assigned work.
 
-Field-level visibility:
+#### Observed exercise identity and session learning (2026-10-13)
+
+This dated update supplements, not rewrites, the proposals and historical
+implementation tables. [#65](https://github.com/jmservera/ama/pull/65) and the
+[initialization guide](../../infra/README.md#tenant-staff-and-application-role-initialization)
+record deployed built-in authentication and owner-reported administrator and
+Coordinator access. Full pilot identity/permission acceptance remains separate.
+
+* Platform authentication, app-role claims and the internal staff `oid` binding
+  are separate gates. The observed Coordinator denial had a valid role but no
+  staff binding. Default Access is unmapped, not a business permission. Keep
+  the exact tenant and single distinct mapped role checks; email fallback
+  remains off. Direct user/group app grants count; nested groups do not
+  inherit application assignments.
+* The repeatable private-roster initializer preserves existing bindings and
+  workload codes. Ten existing positions plus one supplier-scoped Contractor
+  use eleven distinct tenant members for eight role kinds. This is a demo
+  allocation, not company staffing, competence or the proposed B2B model.
+  The member-only initializer does not resolve the guest/pilot open item.
+* SQL staff is startup-cached. An idempotent SQL no-op must still support
+  replacing every serving replica after a failed restart. Identity/current
+  owner-label reconciliation uses the API's transaction-owned database lock;
+  one generic audit event extends, rather than renames, historical actors.
+  Exact private comparison preserved all 980 programme cases, workload codes,
+  supplier scopes, six recommendations and nineteen prior audit rows.
+* Public welcome is distinct from the protected workbench/API. A changed
+  ingress FQDN requires callback re-initialization in an isolated authorised
+  management profile, not a shared password or replacement registration.
+  Deployed production refuses password auth; a local development provider
+  remains, unlike the proposal above to delete that code path entirely.
+* Own-user account photo uses delegated `User.Read` and the platform's private
+  token store, with scoped scheduled renewal. The browser receives only
+  private binary output. Blob object URLs require `blob:` in CSP `img-src`
+  only, not relaxed script/frame/default sources. A public-logo-as-Blob
+  rendering check proves transport/CSP, not a person's actual photo.
+* Switching account is a new login with explicit `prompt=select_account`,
+  not provider logout followed by ordinary SSO. Normal Sign out retains
+  platform logout. Easy Auth owns state/nonce/callback and session issuance;
+  cancellation or selecting the same account is not successful replacement.
+* Existing Azure Monitor routing collects constant auth-flow events; generic
+  access logs would risk publishing callback queries/tokens. Verify actual
+  table/schema and ingestion rather than assuming legacy `_CL` names.
+  Image-only rollout compares private app/auth configuration and ready
+  serving replicas, preserving SQL/AI, secret references and token store.
+
+References checked 2026-10-13: Microsoft's
+[account-selection behavior](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code)
+and [non-cascading group assignments](https://learn.microsoft.com/entra/identity/enterprise-apps/assign-user-or-group-access-portal).
+Operational steps and evidence boundaries:
+[callback initialization](../../infra/README.md#post-deployment-api-authentication-initialization),
+[own-photo setup](../../infra/README.md#public-welcome-and-microsoft-account-photos)
+and [account diagnostics](../../infra/README.md#account-selection-and-safe-flow-diagnostics).
+Actual already-signed-in account replacement, full permissions, accessibility,
+lawful processing and production approval are not established by these checks.
+
+#### Proposed field-level visibility
 
 * All reads leave the service through role-specific projections: an explicit
   allow-list of fields per role and per object. A field absent from a role's
@@ -437,15 +492,16 @@ time capture.
 ## Related documents
 
 * [ADR 0001](./0001-azure-architecture.md)
-* [Proper Warm Workbench PRD v0.10.0](../prds/proper-warm-retrofit-programme-demonstrator.md)
+* [Zava Forward Workbench PRD v0.10.0](../prds/zava-forward-retrofit-programme-demonstrator.md)
 * [Gap Analysis and Next Build](../reference/research/gap-analysis-next-build.md)
-* [Proper Warm MVP](../../mvp/README.md)
+* [Zava Forward MVP](../../mvp/README.md)
 
 ## Implementation status
 
-Status at 2026-10-08 on branch `feat/mvp-deterministic-ranking`. "Done" means
-built and covered by tests in `mvp/tests` or by a local run; nothing was run in
-Azure and no decision in this ADR is approved by this work.
+Historical snapshot from 2026-10-08 on branch `feat/mvp-deterministic-ranking`,
+with explicitly dated 2026-10-09 deployment updates. "Done" means built and
+covered by the tests/local runs available then, not pilot acceptance. Earlier
+blocked/unrun rows below are not the current #65 status; see the later delta.
 
 | Item | Status | Deviations |
 | --- | --- | --- |
@@ -463,3 +519,17 @@ Azure and no decision in this ADR is approved by this work.
 | Blob documents (decision 2) | Partial | `DocumentStore` interface with local and Azure Blob implementations (urllib, SAS or managed identity), size and type limits, role checks, audit; Blob store run only against a fake transport; no malware scan or content sniffing |
 | Finance, grants, technical sign-offs and resident decisions (FR-013, FR-014, FR-018, FR-019) | Done (API and screens) | Record-only finance with separate approvers and no bulk path; constructed data, proposed role mapping, exact-match comparison, screens not run in a browser |
 | Azure provisioning, replicas, region, load test (decision 6) | Partial | Dev app `ca-properwarm-mvp` on Azure SQL and Blob with a managed identity, min 2 and max 4 replicas, restart persistence checked (2026-10-09); the app is not yet in Bicep, Entra built-in authentication is blocked on an app registration, no load test, region and private networking for the pilot not decided |
+
+### Current Exercise Delivery Delta (2026-10-13)
+
+| Area | Later evidence | Remaining boundary |
+| --- | --- | --- |
+| SQL and deployment | #65 from-empty Bicep rebuild retained 980 programme cases; the API identity read/wrote SQL and retained audit writes across restart; both model tiers returned source=ai | Generated stock is 60,000 homes; no Azure load/backup-restore proof or calibrated AI benefit |
+| Identity and sessions | Callback check, private staff reconciliation, public welcome, own-photo transport and explicit account-picker route are deployed; owner reports administrator/Coordinator sign-in | Different-account replacement, own live photo/consent, all roles, B2B guests and full permissions remain separate acceptance |
+| Containers and CI | Tested account-switch image/revision and private configuration-preservation gate are recorded in the operator handover; MVP CI and both validations passed at source head 8ca4a3d | Later edits need their own checks; no production resilience or blanket assurance claim |
+| Documents and audit | SQL/Blob configuration replaces the local-only development defaults; append-only audit controls and startup-cache convergence are implemented | Malware/content scanning, external immutable digests, deletion/retention approval and recovery remain open |
+
+The [current handover](../../infra/README.md#current-exercise-handover-2026-10-13)
+and [MVP limits](../../mvp/README.md#honest-limits) own the version-linked
+operator detail. This delta neither rewrites the historical table nor approves
+the proposed decisions, control-owner matrix or production rollout.

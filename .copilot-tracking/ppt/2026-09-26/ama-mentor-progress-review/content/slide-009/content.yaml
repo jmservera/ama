@@ -40,8 +40,9 @@ elements:
     text_bold: true
     space_after: 12
     alignment: left
-  - text: 'All eight roles backed the intent but rejected my acceleration dashboard: speed is not the
-      benefit, and about 50 handovers in 6 to 9 months cannot prove a 20% gain'
+  - text: 'All eight roles backed the intent but rejected my acceleration dashboard:
+      speed is not the benefit, and about 50 handovers in 6 to 9 months cannot prove
+      a 20% gain'
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -51,8 +52,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: 'Comparison 1: pilot locality with agents against a matched locality without, same event capture
-      from Phase 0'
+  - text: 'Comparison 1: pilot locality with agents against a matched locality without,
+      same event capture from Phase 0'
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -62,7 +63,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: 'Comparison 2: each agent capability against the same workflow without it, review effort counted'
+  - text: 'Comparison 2: each agent capability against the same workflow without it,
+      review effort counted'
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -72,7 +74,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: The dashboard steers; a frozen benefits scorecard decides; a guardrail breach pauses work (RULE-024)
+  - text: The dashboard steers; a frozen benefits scorecard decides; a guardrail breach
+      pauses work (RULE-024)
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -107,8 +110,8 @@ elements:
     text_bold: true
     space_after: 12
     alignment: left
-  - text: 'Fixed my own citation: CON-003 cited UK GDPR Article 22, which the local text omits; it now
-      cites Articles 22A to 22C'
+  - text: 'Fixed my own citation: CON-003 cited UK GDPR Article 22, which the local
+      text omits; it now cites Articles 22A to 22C'
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -118,7 +121,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: Transparency gate before live processing (AC-079); per-home reason codes (FR-042)
+  - text: Transparency gate before live processing (AC-079); per-home reason codes
+      (FR-042)
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -128,8 +132,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: AI capability register and Board assurance report (FR-043); provenance on every agent output
-      (FR-044)
+  - text: AI capability register and Board assurance report (FR-043); provenance on
+      every agent output (FR-044)
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -177,9 +181,10 @@ elements:
   top: 6.6
   width: 12.0
   height: 0.38
-  text: |-
-    Sources: Pilot Measurement Challenge; BRD v0.5.0 CON-003, RULE-019, RULE-024, AC-079, FR-042 to FR-044, OD-34 and OD-39;
-    log, 26 Sep 2026. Role answers are hypotheses.
+  text: 'Sources: Pilot Measurement Challenge; BRD v0.5.0 CON-003, RULE-019, RULE-024,
+    AC-079, FR-042 to FR-044, OD-34 and OD-39;
+
+    log, 26 Sep 2026. Role answers are hypotheses.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
@@ -189,11 +194,39 @@ elements:
   vertical_anchor: top
   margin_left: 0
   margin_right: 0
-speaker_notes: |-
-  Two challenges asked whether I could prove the value and whether I could explain it. The first came before the reframe and caused it; the second came after.
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'Two challenges asked whether I could prove the value and whether I
+  could explain it. The first came before the reframe and caused it; the second came
+  after.
 
-  The first was my own idea: a dashboard showing the pilot accelerates delivery. All eight roles backed the intent and rejected the design. Speed is not the benefit; accepted handovers are. And, as you saw, it bundled three changes. About 50 handovers in six to nine months cannot prove a 20 percent gain. So there are now two comparisons: a pilot locality with agents against a matched locality without, and each agent capability against the same workflow without it.
 
-  The second was a transparency review. It found an error of mine: CON-003 cited UK GDPR Article 22, but the local consolidated text omits it and uses Articles 22A to 22D. CON-003 now cites Articles 22A to 22C and maps human review to the four Article 22C(2) safeguards.
+  The first was my own idea: a dashboard showing the pilot accelerates delivery. All
+  eight roles backed the intent and rejected the design. Speed is not the benefit;
+  accepted handovers are. And, as you saw, it bundled three changes. About 50 handovers
+  in six to nine months cannot prove a 20 percent gain. So there are now two comparisons:
+  a pilot locality with agents against a matched locality without, and each agent
+  capability against the same workflow without it.
 
-  Still a proposal: the pilot decides which agent capabilities scale.
+
+  The second was a transparency review. It found an error of mine: CON-003 cited UK
+  GDPR Article 22, but the local consolidated text omits it and uses Articles 22A
+  to 22D. CON-003 now cites Articles 22A to 22C and maps human review to the four
+  Article 22C(2) safeguards.
+
+
+  Still a proposal: the pilot decides which agent capabilities scale.'

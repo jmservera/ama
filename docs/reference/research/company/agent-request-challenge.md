@@ -1,6 +1,6 @@
 ---
 title: Agent Request Challenge
-description: Role-by-role challenge of the five requested Proper Warm agents, the problems behind them, non-agent alternatives and what to build instead
+description: Role-by-role challenge of the five requested Zava Forward agents, the problems behind them, non-agent alternatives and what to build instead
 ms.date: 2026-09-26
 ms.topic: reference
 ---
@@ -196,7 +196,7 @@ capacity is probably a secondary constraint.
   integrated settlements, at 5.7% and 7.8% respectively. It is not allocated
   by competitive national bid
   ([local snapshot](../../regulatory/retrofit-standards-and-funding/warm-homes-social-housing-fund-technical-annex-2025.md),
-  Page 3 and Page 5 Table 3). Whether Proper North Homes operates in either
+  Page 3 and Page 5 Table 3). Whether Zava North Homes operates in either
   area is unknown.
 
 ### Alternatives, Cheapest First
@@ -241,7 +241,7 @@ root causes are:
   housing officer finds out from a complaint
 
 Scheduling software does not create installers. The 10% no-access and 5% to
-10% refusal figures are planning assumptions. Proper North Homes' real rates
+10% refusal figures are planning assumptions. Zava North Homes' real rates
 are unknown.
 
 ### Challenge
@@ -477,7 +477,7 @@ ownership. Items 2, 4 and 5 match the typed decision-model candidates in
   Programme Manager recommends revisiting appointment suggestions only after
   Phase 1. This is unresolved.
 
-## Questions for Proper North Homes
+## Questions for Zava North Homes
 
 Each role named the question that would change its answer most:
 

@@ -134,7 +134,8 @@ elements:
   top: 5.05
   width: 7.2
   height: 0.3
-  text: 'Green: test first, after the foundation. White: opportunistic. Amber: big bets. Grey: defer.'
+  text: 'Green: test first, after the foundation. White: opportunistic. Amber: big
+    bets. Grey: defer.'
   font: Segoe UI
   font_size: 11
   font_color: '#627D98'
@@ -184,7 +185,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: 'Duties grow before autonomy: special category data, Awaab''s Law, payment and procurement rules'
+  - text: 'Duties grow before autonomy: special category data, Awaab''s Law, payment
+      and procurement rules'
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -194,7 +196,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: 'All 48 role answers re-run on the reframe: six tightened controls, every verdict held'
+  - text: 'All 48 role answers re-run on the reframe: six tightened controls, every
+      verdict held'
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -204,7 +207,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: The grid orders Comparison 2 tests; under proposed OD-34, the pilot decides what scales
+  - text: The grid orders Comparison 2 tests; under proposed OD-34, the pilot decides
+      what scales
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -224,7 +228,8 @@ elements:
   height: 0.6
   fill: '#102A43'
   line_color: '#102A43'
-  text: Foundation first, then lifecycle events, then evidence packs for assessment, quality and damp
+  text: Foundation first, then lifecycle events, then evidence packs for assessment,
+    quality and damp
   text_font: Segoe UI
   text_size: 16
   text_color: '#FFFFFF'
@@ -242,9 +247,10 @@ elements:
   top: 6.6
   width: 12.0
   height: 0.38
-  text: |-
-    Sources: Agent What-If Study (Reconciliation; Value vs Complexity), post-merge review and role-answer re-run, 27 Sep 2026.
-    Scores are coarse judgements; role answers are hypotheses.
+  text: 'Sources: Agent What-If Study (Reconciliation; Value vs Complexity), post-merge
+    review and role-answer re-run, 27 Sep 2026.
+
+    Scores are coarse judgements; role answers are hypotheses.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
@@ -254,11 +260,41 @@ elements:
   vertical_anchor: top
   margin_left: 0
   margin_right: 0
-speaker_notes: |-
-  One more test, on 27 September. Would richer inputs change any verdict? Phone photos with location, structured invoices, sensors, drones, even a digital twin: twenty scenarios, with focused questions to the role agents.
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'One more test, on 27 September. Would richer inputs change any verdict?
+  Phone photos with location, structured invoices, sensors, drones, even a digital
+  twin: twenty scenarios, with focused questions to the role agents.
 
-  None moved a request to an end-to-end agent. Richer inputs enrich the digital foundation and widen what bounded agents can check, but they add duties before autonomy: special category data, Awaab's Law awareness, which a hazard photo can establish no later than its arrival, and payment and procurement rules.
 
-  The useful output is the grid: lifecycle events first, then evidence packs for assessment, quality and damp. It is my coarse judgement of what Comparison 2 should test first, not a scaling decision.
+  None moved a request to an end-to-end agent. Richer inputs enrich the digital foundation
+  and widen what bounded agents can check, but they add duties before autonomy: special
+  category data, Awaab''s Law awareness, which a hazard photo can establish no later
+  than its arrival, and payment and procurement rules.
 
-  A post-merge review caught two errors: the same Article 22 citation I had fixed in CON-003, and eleven answers from roles that have no agent. I re-ran nine with the nearest roles and labelled two as my own hypotheses. Then I re-ran every other role answer against the reframed proposal. Every verdict held; six answers tightened controls to match the BRD. For example, AI risk paths stay in shadow mode, and a person approves every AI-drafted message to a resident.
+
+  The useful output is the grid: lifecycle events first, then evidence packs for assessment,
+  quality and damp. It is my coarse judgement of what Comparison 2 should test first,
+  not a scaling decision.
+
+
+  A post-merge review caught two errors: the same Article 22 citation I had fixed
+  in CON-003, and eleven answers from roles that have no agent. I re-ran nine with
+  the nearest roles and labelled two as my own hypotheses. Then I re-ran every other
+  role answer against the reframed proposal. Every verdict held; six answers tightened
+  controls to match the BRD. For example, AI risk paths stay in shadow mode, and a
+  person approves every AI-drafted message to a resident.'

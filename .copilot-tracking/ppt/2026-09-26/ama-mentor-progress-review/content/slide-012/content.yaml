@@ -66,8 +66,8 @@ elements:
     text_bold: true
     space_after: 6
     alignment: left
-  - text: The company is fictional. I modelled tenure, residents and finances from sector medians and
-      labelled every value as an estimate.
+  - text: The company is fictional. I modelled tenure, residents and finances from
+      sector medians and labelled every value as an estimate.
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -99,8 +99,8 @@ elements:
     text_bold: true
     space_after: 6
     alignment: left
-  - text: 'Role answers are hypotheses, and the roles share my framing. Divergences stay open: L4 quality
-      flags, L3 digital booking.'
+  - text: 'Role answers are hypotheses, and the roles share my framing. Divergences
+      stay open: L4 quality flags, L3 digital booking.'
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -132,8 +132,8 @@ elements:
     text_bold: true
     space_after: 6
     alignment: left
-  - text: Interest cover 91% or 87%; fuel poverty corrected from 10.0% to 11.6%; EPC C final policy, not
-      commenced law. Flagged, not resolved.
+  - text: Interest cover 91% or 87%; fuel poverty corrected from 10.0% to 11.6%; EPC
+      C final policy, not commenced law. Flagged, not resolved.
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -197,7 +197,8 @@ elements:
     text_bold: true
     space_after: 6
     alignment: left
-  - text: The first quality run scored 0% only because of legacy IDs; relabelling cost a full pass.
+  - text: The first quality run scored 0% only because of legacy IDs; relabelling
+      cost a full pass.
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -229,8 +230,8 @@ elements:
     text_bold: true
     space_after: 6
     alignment: left
-  - text: It came after eight BRD revisions, and the roles could read my addendum. One pass without it
-      would test for priming.
+  - text: It came after eight BRD revisions, and the roles could read my addendum.
+      One pass without it would test for priming.
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -244,8 +245,8 @@ elements:
   top: 6.6
   width: 12.0
   height: 0.38
-  text: 'Sources: knowledge-base log (conventions and corrections, 25 to 26 Sep 2026); Agent Request Challenge
-    (Divergences; Limitations); git log.'
+  text: 'Sources: knowledge-base log (conventions and corrections, 25 to 26 Sep 2026);
+    Agent Request Challenge (Divergences; Limitations); git log.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
@@ -255,9 +256,35 @@ elements:
   vertical_anchor: top
   margin_left: 0
   margin_right: 0
-speaker_notes: |-
-  The writing was not the hard part. Keeping the evidence honest was.
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'The writing was not the hard part. Keeping the evidence honest was.
 
-  The company is fictional, so every number about it is modelled and labelled as an estimate. The role agents are persuasive, and they read my own addendum, so they share my framing. Where they disagree, such as L4 autonomy for quality flags, I keep the divergence open. Sources disagree too, for example on interest cover, and I corrected a superseded fuel poverty measure. I flag those rather than silently choose.
 
-  If I started again, I would change four things. Start the log on day one; earlier entries had to be rebuilt from Git. Use canonical requirement identifiers from the first draft. When I fix an error, search every derived document for it; the what-if study repeated my Article 22 mistake. And run the value challenge earlier, and once without the addendum, to test whether the roles were primed by my framing.
+  The company is fictional, so every number about it is modelled and labelled as an
+  estimate. The role agents are persuasive, and they read my own addendum, so they
+  share my framing. Where they disagree, such as L4 autonomy for quality flags, I
+  keep the divergence open. Sources disagree too, for example on interest cover, and
+  I corrected a superseded fuel poverty measure. I flag those rather than silently
+  choose.
+
+
+  If I started again, I would change four things. Start the log on day one; earlier
+  entries had to be rebuilt from Git. Use canonical requirement identifiers from the
+  first draft. When I fix an error, search every derived document for it; the what-if
+  study repeated my Article 22 mistake. And run the value challenge earlier, and once
+  without the addendum, to test whether the roles were primed by my framing.'

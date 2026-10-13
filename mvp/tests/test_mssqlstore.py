@@ -1,6 +1,6 @@
 """The SQL store behaviour suites again, against a real SQL Server or Azure SQL.
 
-Skipped unless PW_TEST_MSSQL=1 and the PW_SQL_* settings point at a database that may be wiped
+Skipped unless ZF_TEST_MSSQL=1 and the ZF_SQL_* settings point at a database that may be wiped
 (the CI job uses a throwaway SQL Server container; never point this at the pilot database).
 """
 import os
@@ -9,12 +9,12 @@ import unittest
 import test_sqlreads as reads
 import test_sqlstore as base
 
-ON = os.environ.get("PW_TEST_MSSQL") == "1"
+ON = os.environ.get("ZF_TEST_MSSQL") == "1"
 TABLES = ("audit_head", "audit", "recommendations", "cases", "staff", "meta")
 
 
 def wipe():
-    from properwarm_mvp.mssqlstore import _Conn, connection_string
+    from zavaforward_mvp.mssqlstore import _Conn, connection_string
     c = _Conn(connection_string())
     c.execute("IF OBJECT_ID(N'audit_append_only', N'TR') IS NOT NULL DROP TRIGGER audit_append_only")
     for t in TABLES:
@@ -22,11 +22,11 @@ def wipe():
 
 
 def factory(data, db, *a, **k):
-    from properwarm_mvp.mssqlstore import MssqlStore
+    from zavaforward_mvp.mssqlstore import MssqlStore
     return MssqlStore(data, state_dir=os.path.dirname(db))
 
 
-@unittest.skipUnless(ON, "needs a SQL Server (PW_TEST_MSSQL=1)")
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
 class MssqlImproveTests(base.SqlImproveTests):
     @classmethod
     def setUpClass(cls):
@@ -41,7 +41,7 @@ class MssqlImproveTests(base.SqlImproveTests):
         super().setUp()
 
 
-@unittest.skipUnless(ON, "needs a SQL Server (PW_TEST_MSSQL=1)")
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
 class MssqlStoreTests(base.SqlStoreTests):
     @classmethod
     def setUpClass(cls):
@@ -56,10 +56,10 @@ class MssqlStoreTests(base.SqlStoreTests):
         super().setUp()
 
     def test_ledger_is_append_only_and_detects_tampering(self):
-        from properwarm_mvp.mssqlstore import _Conn, connection_string
+        from zavaforward_mvp.mssqlstore import _Conn, connection_string
         s = factory(self.data, self.db)
-        s.log_call(self.sam, "PW-1", "Contacted", "")
-        s.log_call(self.sam, "PW-1", "Contacted again", "")
+        s.log_call(self.sam, "ZF-1", "Contacted", "")
+        s.log_call(self.sam, "ZF-1", "Contacted again", "")
         raw = _Conn(connection_string())
         for sql in ("UPDATE audit SET detail='x' WHERE seq=1", "DELETE FROM audit WHERE seq=1"):
             with self.assertRaises(s.dberror):
@@ -71,7 +71,7 @@ class MssqlStoreTests(base.SqlStoreTests):
     test_list_filters_use_indexes = None
 
 
-@unittest.skipUnless(ON, "needs a SQL Server (PW_TEST_MSSQL=1)")
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
 class MssqlParity(reads.Parity):
     """SQL list reads on SQL Server give the same answers as the in-memory store (binary collation, paging, ranks)."""
 
@@ -87,7 +87,7 @@ class MssqlParity(reads.Parity):
         super().tearDownClass()
 
 
-@unittest.skipUnless(ON, "needs a SQL Server (PW_TEST_MSSQL=1)")
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
 class MssqlWrites(reads.Writes):
     @classmethod
     def setUpClass(cls):

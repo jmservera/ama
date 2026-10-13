@@ -40,7 +40,8 @@ elements:
     text_bold: true
     space_after: 12
     alignment: left
-  - text: Will the panel read agent-led modernisation, not five end-to-end agents, as answering the brief?
+  - text: Will the panel read agent-led modernisation, not five end-to-end agents,
+      as answering the brief?
     text_font: Segoe UI
     text_size: 15
     text_color: '#102A43'
@@ -157,7 +158,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: No real resident or staff evidence yet; the role agents' discovery questions are ready
+  - text: No real resident or staff evidence yet; the role agents' discovery questions
+      are ready
     text_font: Segoe UI
     text_size: 14
     text_color: '#243B53'
@@ -202,17 +204,41 @@ elements:
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
-speaker_notes: |-
-  These are the four places I would most value your challenge.
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'These are the four places I would most value your challenge.
 
-  First, will the panel read agent-led modernisation, not five end-to-end agents, as answering the brief, or as stepping back from the five agents it asked for?
+
+  First, will the panel read agent-led modernisation, not five end-to-end agents,
+  as answering the brief, or as stepping back from the five agents it asked for?
+
 
   Second, how much business depth versus architecture depth should the capstone show?
 
-  Third, should the BRD keep failing where targets need company data, or should I propose clearly labelled illustrative targets?
+
+  Third, should the BRD keep failing where targets need company data, or should I
+  propose clearly labelled illustrative targets?
+
 
   Fourth, which open divergence between the role agents should I resolve first?
 
-  On the right is what comes next on the 85-day plan, to 5 December. There is still no real resident or staff evidence.
 
-  And on the story itself: where did it lose you? Which question would you take first?
+  On the right is what comes next on the 85-day plan, to 5 December. There is still
+  no real resident or staff evidence.
+
+
+  And on the story itself: where did it lose you? Which question would you take first?'

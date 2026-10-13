@@ -13,7 +13,7 @@ This register links every benchmark family used in
 to its supporting publication, underlying dataset or direct report.
 
 The register distinguishes primary data from contextual evidence. Derived
-figures for the 60,000-home Proper North Homes association are arithmetic
+figures for the 60,000-home Zava North Homes association are arithmetic
 translations, not values published by the source organisations.
 
 ## Metric-to-Source Map
@@ -582,7 +582,7 @@ Link:
 
 ## Derived Values
 
-The following values are calculations made for the 60,000-home Proper North
+The following values are calculations made for the 60,000-home Zava North
 Homes portfolio and do not appear as provider figures in the source documents:
 
 | Derived value | Calculation | Inputs |
@@ -603,7 +603,7 @@ Homes portfolio and do not appear as provider figures in the source documents:
 
 ## Citation and Use Notes
 
-* National values must not be presented as Proper North Homes performance.
+* National values must not be presented as Zava North Homes performance.
 * Unweighted TSM landlord medians are research calculations from RS-03.
 * Programme-specific results must retain their scheme, date and cohort.
 * Legal requirements must be checked against guidance in force on the decision

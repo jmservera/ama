@@ -1,5 +1,5 @@
 ---
-title: Proper Warm prototype slice
+title: Zava Forward prototype slice
 description: Small constructed-data code slice that demonstrates deterministic workflow authority, bounded agent proposals and tamper-evident audit
 ms.date: 2026-08-26
 ---
@@ -23,8 +23,8 @@ control boundaries described in ADR 0001 and the PRD.
 
 ## Layout
 
-* `properwarm/domain.py`: rules and audit chain.
-* `properwarm/server.py`: HTTP API.
+* `zavaforward/domain.py`: rules and audit chain.
+* `zavaforward/server.py`: HTTP API.
 * `tests/`: unit and API tests.
 * `scripts/evaluate_agent.py`: offline contract evaluation.
 * `web/app.js`: minimal staff view client.
@@ -41,4 +41,4 @@ PYTHONPATH=prototype python3 prototype/scripts/evaluate_agent.py --out /tmp/eval
 
 The evaluation is an offline contract check (`execution:
 offline-contract-only`). It does not call a model and is not a measure of
-model quality. The image has not been deployed to the `warm-test` stack.
+model quality. The image has not been deployed to the `forward-test` stack.

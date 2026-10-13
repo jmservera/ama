@@ -1,0 +1,238 @@
+slide: 5
+title: The ambition is clear. The delivery baseline is not.
+section: Scale and urgency
+layout: blank
+duration_seconds: 80
+background:
+  fill: '#F4F3EE'
+elements:
+- type: textbox
+  left: 0.7
+  top: 0.55
+  width: 11.8
+  height: 0.35
+  text: THE CASE AT A GLANCE
+  font: Segoe UI
+  font_size: 12
+  font_color: '#176D67'
+  font_bold: true
+- type: textbox
+  left: 0.7
+  top: 1.1
+  width: 11.8
+  height: 1.3
+  text: 'The ambition is clear.
+
+    The delivery baseline is not.'
+  font: Segoe UI
+  font_size: 34
+  font_color: '#142B3B'
+  font_bold: true
+- type: textbox
+  left: 0.75
+  top: 2.8
+  width: 3.65
+  height: 0.92
+  text: 60,000
+  font: Segoe UI
+  font_size: 49
+  font_color: '#142B3B'
+  font_bold: true
+- type: textbox
+  left: 4.85
+  top: 2.8
+  width: 3.65
+  height: 0.92
+  text: 15,600
+  font: Segoe UI
+  font_size: 49
+  font_color: '#176D67'
+  font_bold: true
+- type: textbox
+  left: 8.95
+  top: 2.8
+  width: 3.65
+  height: 0.92
+  text: 3,900
+  font: Segoe UI
+  font_size: 49
+  font_color: '#176D67'
+  font_bold: true
+- type: textbox
+  left: 0.8
+  top: 3.85
+  width: 3.5
+  height: 0.85
+  text: homes in the portfolio
+  font: Segoe UI
+  font_size: 22
+  font_color: '#142B3B'
+- type: textbox
+  left: 4.9
+  top: 3.85
+  width: 3.5
+  height: 0.85
+  text: 'homes below EPC C
+
+    in the scenario'
+  font: Segoe UI
+  font_size: 22
+  font_color: '#142B3B'
+- type: textbox
+  left: 9.0
+  top: 3.85
+  width: 3.5
+  height: 0.85
+  text: 'accepted completions
+
+    per full delivery year'
+  font: Segoe UI
+  font_size: 22
+  font_color: '#142B3B'
+- type: textbox
+  left: 0.8
+  top: 4.85
+  width: 3.5
+  height: 0.6
+  text: Stated fictional context
+  font: Segoe UI
+  font_size: 15
+  font_color: '#4B606C'
+- type: textbox
+  left: 4.9
+  top: 4.85
+  width: 3.5
+  height: 0.6
+  text: '26% sector benchmark;
+
+    not verified company data'
+  font: Segoe UI
+  font_size: 15
+  font_color: '#4B606C'
+- type: textbox
+  left: 9.0
+  top: 4.85
+  width: 3.5
+  height: 0.6
+  text: 'Four-year arithmetic;
+
+    not current throughput'
+  font: Segoe UI
+  font_size: 15
+  font_color: '#4B606C'
+- type: shape
+  shape: rectangle
+  left: 0.75
+  top: 5.65
+  width: 11.85
+  height: 0.65
+  fill: '#DFEBE6'
+  line_color: '#DFEBE6'
+- type: textbox
+  left: 0.95
+  top: 5.7
+  width: 11.4
+  height: 0.55
+  text: Current safety duties cannot wait for a new digital platform.
+  font: Segoe UI
+  font_size: 23
+  font_color: '#142B3B'
+  font_bold: true
+- type: textbox
+  left: 0.7
+  top: 6.7
+  width: 10.9
+  height: 0.3
+  text: 'Planning scenario, not a delivery commitment  |  BRD: objectives and regulatory
+    timing'
+  font: Segoe UI
+  font_size: 11
+  font_color: '#4B606C'
+  font_bold: false
+- type: textbox
+  left: 12.0
+  top: 6.7
+  width: 0.6
+  height: 0.3
+  text: '05'
+  font: Segoe UI
+  font_size: 11
+  font_color: '#4B606C'
+  font_bold: false
+  alignment: right
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'TIMING: 04:55-06:15 (80 seconds).
+
+
+  The case describes sixty thousand homes. That is fictional operating context,
+
+  not a verified customer dataset. Applying the sector planning benchmark of
+
+  twenty-six percent below EPC C produces fifteen thousand six hundred homes.
+
+  Dividing that by four full delivery years produces three thousand nine
+
+  hundred accepted completions annually.
+
+
+  The arithmetic is useful for seeing the scale, but it is not an executable
+
+  programme. We still need the address-level energy and condition baseline,
+
+  actual accepted throughput, property mix, mobilisation period and capacity.
+
+  Doubling an unknown delivery baseline is not a credible promise.
+
+
+  There is real urgency without manufacturing certainty. The BRD records
+
+  current hazard duties and forthcoming regulatory phases as at 11 September
+
+  2026, and treats EPC C by 2030 as proposed rather than an in-force deadline.
+
+  It also records Wave 3 grant spend by March 2028 and delivery to September
+
+  2028, but no award to this association is evidenced. These conditions require
+
+  current official verification before decisions.
+
+
+  The executive choice is not whether to care about speed. It is whether we
+
+  have a trustworthy basis for deciding where and how to accelerate.
+
+
+  ANIMATION CUES: Begin with the portfolio size. Click to introduce the
+
+  below-EPC-C scenario with its qualification, then click to introduce the
+
+  annual trajectory with its qualification. Never reveal a number separately
+
+  from the label that explains its evidence status. The final click reveals
+
+  the current-duty statement.
+
+
+  TRANSITION: To create that basis, we must find the real constraint rather
+
+  than assume that AI can remove every source of delay.
+
+
+  SOURCE: BRD, OBJ-01/02, Provisional Sector Benchmark Pack, Regulatory Timing.
+
+  '

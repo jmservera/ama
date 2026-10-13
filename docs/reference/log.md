@@ -1740,3 +1740,254 @@ metadata when the knowledge base was created.
 * Preserved manual handling, deterministic controls, task-level comparative
   evaluation and the distinction between design, feasibility and benefit.
   No runtime changes, deployments, inference or production approval.
+
+## [2026-10-11] update | Zava Forward migration tooling
+
+* Owner selected Zava Forward as the programme name alongside Zava North Homes.
+  Added a [temporary migration script and guide](../../tools/rename-zava.md),
+  with dry-run inventory, explicit apply, text/path and PPTX/slide-source
+  changes, local logo embedding and per-file partial-failure reporting.
+* Preserved historical records, regulatory snapshots, owner memory, original
+  case study and external evidence URLs. Working-copy migration does not
+  rewrite Git history or alter user-local untracked configuration/secrets.
+* Azure reset/redeployment and visual deck acceptance remain explicit later
+  actions, not side effects of the local rename command. Disposable synthetic
+  exercise state is not a production data-loss policy.
+
+## [2026-10-11] update | Zava Forward local branding migration
+
+* Applied the owner-selected company/programme names to active documentation,
+  package/import names, runtime environment and CSRF contracts, infrastructure
+  defaults, website and four PPTX files. Retained the original case study,
+  regulatory snapshots, owner memory, earlier log entries and pinned URLs.
+* Historical links into the renamed PRD and UX synthesis retain exact original
+  snapshots, declared in
+  `.copilot-tracking/renames/zava-forward-history.json`. Active index links use
+  the renamed documents; no new broken Markdown targets remain against the
+  pre-migration baseline. Ten pre-existing placeholder/relative-link defects
+  remain outside this rename's scope.
+* Twenty migration regressions pass; the renamed MVP runs 270 tests with 26
+  existing skips, and the prototype runs 15 tests. Bicep compiles. All 40 slide
+  sources pass pipeline dry-run; four decks render with zero logo/text
+  bounding-box intersections, and published mentor bytes match the working copy.
+* The retained synthetic fixture still has 980 cases, of which 443 are open.
+  Local browser checks show populated lists, 443 map points, loaded map tiles
+  and the supplied logo. This uses localhost development authentication, not
+  evidence of live Entra acceptance, SQL restoration or actual model inference.
+* Azure recreation remains blocked on API app-registration permissions:
+  both the current Azure identity and M365 session receive `Insufficient
+  privileges`. The owner approved resource deletion inside `ama` and downtime,
+  but no resources have been deleted and live Entra login is not claimed.
+  The [rebuild guide](../../tools/rename-zava.md#azure-reset-and-acceptance)
+  records the remaining dependency and acceptance boundary.
+
+## [2026-10-11] update | Rename reconciled with the new executive capstone deck
+
+* Preserved the owner's concurrent merge of #61 into the rename branch using
+  a normal history-preserving merge. The only conflict was the rubric score
+  snapshot; its remote workflow record was retained unchanged, rather than
+  mixing evidence from two scores or rewriting historical assertions.
+* Migrated the newly published executive deck, its 21 slide sources and Python
+  authoring scripts. Final coverage is five PPTX files and 61 slide sources;
+  the additional deck renders with no logo/text intersections and its sources
+  pass the shared pipeline dry-run. Research/review records remain historical.
+* Historical rubric snapshots are explicit migration exceptions. A new
+  regression reuses identical PPTX inputs' output bytes so working/published
+  copies do not drift only because separate saves carry different ZIP times.
+  There are now 21 migration regressions; earlier validation entries remain
+  snapshots of their own passes. The Azure app-management blocker is unchanged.
+* Seven targeted rubric deck-citation tests pass. The scorer includes the
+  renamed MVP/generator paths and still excludes private dataset/vendor files;
+  no score was manually increased or recalibrated as part of this rename.
+
+## [2026-10-12] update | Renamed Azure stack rebuilt from an empty group
+
+* Removed active resources in the owner-authorised `ama` scope, including
+  recreatable workload identities and the budget omitted by generic inventory.
+  Confirmed empty resource and budget indexes; retained the group, external
+  operator and tenant/M365 resources. Foundry project/account and AMPLS/App
+  Insights deletion dependencies required explicit ordering corrections.
+* Both staged Zava deployments succeeded. Built the real versioned image,
+  privately transferred the retained auth credential, recreated SQL grants
+  and restored the continuing 980-case fixture with 443 open cases.
+* Workload-identity checks confirmed SQL reads/writes, actual inference from
+  both model deployments and persisted audit entries after an actual API
+  revision restart. Public health is 200, API without credentials is 401 and
+  browser entry redirects to Entra. No authentication bypass was introduced.
+* Updated [infrastructure rebuild instructions](../../infra/README.md#from-empty-rebuild-observed-on-2026-10-12)
+  and the [migration guide](../../tools/rename-zava.md#recorded-azure-rebuild-on-2026-10-12).
+  Added explicit API model invocation, user-assigned model token selection,
+  foundation-only bootstrap and transitional tenant-role mapping. The MVP has
+  272 tests run with 26 existing skips.
+* Interactive sign-in, scoped browser lists/map and the tenant name/role
+  transition remain gated on an authorised registration owner adding the new
+  callback. Existing role values are a declared external identity exception.
+  Worker placeholders and planned Decision 1 scoring remain separate limitations.
+
+## [2026-10-12] update | Remaining Entra gate checked through the M365 session
+
+* Continued the owner's requested acceptance work after the completed reset
+  review. The delegated M365 client's current Graph scopes lack application
+  management; its existing login does not authorise app-registration updates.
+  Official Graph update guidance requires delegated `Application.ReadWrite.All`
+  and suitable user authority, not just `Application.Read.All`.
+* Tried the supported delegated-token route for the rebuilt API without
+  disclosing a token. It returned `AADSTS65001` (consent required), so it cannot
+  replace the missing authenticated browser session.
+* Updated [provisioning access guidance](../../infra/README.md#api-registration-management-with-the-existing-m365-session).
+  Runtime authentication and claims remain unchanged. The child acceptance
+  task is blocked on authorised owner action; the reset task's single Review
+  is not repeated and full migration acceptance is not claimed.
+
+## [2026-10-12] update | Repeatable callbacks and missing-logo permission repair
+
+* The owner reports the callback repaired and requests repeatable initialization.
+  Added [callback-only initialization](../../infra/README.md#post-deployment-api-authentication-initialization)
+  after deployment: discover the existing client/FQDN, explicitly authenticate
+  through an isolated tenant profile, preserve redirects/settings and verify
+  the minimal update. Thirteen mocked-CLI tests pass; this is not live Graph or
+  interactive browser acceptance.
+* Diagnosed the owner's missing logo from the deployed server's PermissionError.
+  Migration-created assets inherited mode 0600 from temporary files; Docker
+  retained root ownership, preventing runtime UID 10001 from reading the PNG.
+  New public assets now use 0644 and image packaging normalizes web readability.
+* Added a logo HTTP regression and a restricted-source-permission image check.
+  The MVP suite runs 273 tests with 26 existing skips; 22 migration regressions
+  pass. Ingress authentication and separate tenant/browser acceptance gates
+  remain unchanged.
+* Rebuilt and deployed the repaired image from the restricted-mode source.
+  The actual UID 10001 API now returns the exact 14325-byte PNG with image/png
+  and mode 0644. Health remains 200, unauthenticated ingress remains 401 and
+  browser entry remains an Entra redirect. Full signed-in browser acceptance
+  is still a separate gate.
+
+## [2026-10-12] update | Public welcome, own-account photos and renewable token storage
+
+* The owner confirmed working workbench sign-in and completed an isolated
+  provisioning login. The initializer then verified the retained callback;
+  opt-in `--account-photo` merged delegated own-user Graph `User.Read` and a
+  read-only rerun verified it. Existing roles, credentials and redirects were
+  retained. This is not a grant of administrator consent or wider runtime
+  directory authority.
+* Added a public branded root with explicit sign-in and protected `/app`.
+  Exact platform exemptions cover only the welcome, its logo/stylesheet,
+  sign-in and probes. Live anonymous root/logo/styles return 200, while APIs
+  and non-browser workbench requests still return 401.
+* Added an accessible account panel and fixed server-only own-photo proxy:
+  real Entra name/email, role, photo or initials with explicit status, safe
+  logout/switch and one bounded provider refresh. Synthetic browser checks
+  cover mobile containment, keyboard closure, expired-photo handling and
+  production role failure without a password form. They are not real-user
+  photo/consent acceptance.
+* ACR db3 built the real image. Bootstrap and activation deployments succeeded.
+  The real maintenance job succeeded and wrote a SAS expiring five days later.
+  Verified shared keys/public Blobs disabled, token-only classification and
+  container-/single-secret-scoped grants. Activated supported token store,
+  delegated scopes and versionless rotation without reading token values.
+* Updated [setup and rotation instructions](../../infra/README.md#public-welcome-and-microsoft-account-photos),
+  [MVP account behavior](../../mvp/README.md#entra-id-on-container-apps), and the
+  knowledge-base routing. MVP 284 tests (26 existing skips), initializer 15
+  tests and migration 22 tests pass; Bicep build/lint and JavaScript syntax pass.
+  Fresh real-user sign-in, consent/photo and account-switch acceptance remain
+  explicitly separate from provisioning and synthetic checks.
+
+## [2026-10-12] update | Successful photo rendering requires image-only Blob CSP
+
+* The post-implementation Review reproduced a real success-path failure:
+  the account-photo client creates a Blob object URL, but the response CSP
+  did not allow `blob:` images. A live Chromium check used only the public
+  logo as binary input, without a personal photo or fabricated live session.
+* The necessary scoped repair permits `blob:` only in `img-src`; default,
+  script and frame permissions are unchanged. Two regressions cover the
+  image-only source and authenticated binary MIME/no-store/no token output;
+  both pre-existing exact tile-host assertions are retained and updated.
+* The full suite passes 286 tests with 26 existing skips. Real ACR db4 and
+  image-only deployment succeeded; latest-ready revision 0000004 renders
+  the binary Blob image successfully. Existing auth/token store stays enabled.
+* Updated [account behavior and CSP](../../mvp/README.md#entra-id-on-container-apps)
+  and routing. Prior Review findings remain historical, not rewritten as
+  closure. Fresh legitimate photo/consent/account-switch acceptance is still
+  separate and unavailable while the owner is away.
+
+## [2026-10-12] update | Tenant people require app roles and internal staff bindings
+
+* Live Coordinator denial was `no staff record with this oid`, after successful
+  tenant/role validation. An enterprise-app assignment is not a staff binding;
+  SQL staff is loaded once and requires replica restart after initialization.
+* Owner explicitly requested tenant people rather than generated staff names,
+  preserving the main admin and existing Coordinator. Existing ten positions
+  plus one supplier-scoped Contractor require eleven distinct people to
+  demonstrate all eight role kinds without changing workload codes.
+* Added a repeatable [private-roster initializer](../../infra/README.md#tenant-staff-and-application-role-initialization),
+  read-only check, app-only add-missing grants, atomic current roster/owner-label
+  update and restart recovery. Directory roles/groups, stock and historical
+  actors are not rewritten. Directory identities remain outside Git.
+* Twelve new synthetic methods cover effective roles, fail-closed validation,
+  transaction preservation/rollback and no-op restart recovery; existing
+  authentication assertions are retained.
+
+## [2026-10-13] update | Explicit account selection and canonical deployment learning
+
+* Owner confirms tenant access but reports Use another account only signs out.
+  Separate switching from logout: fixed switch route requests select_account
+  directly. Ordinary sign-in/sign-out and fail-closed role/oid/CSRF checks remain.
+  Five constant app-flow markers now feed the existing diagnostics; actual
+  table is ContainerAppConsoleLogs. No generic token/query/identity logging.
+* Local 289-test suite (26 existing skips), non-root read-only image and live
+  tenant/callback/prompt/anonymous boundaries pass. Image-only rollout compares
+  private app/auth configuration and all ready replicas; current image
+  account-switch-20261013-01, revision 0000009. A fresh anonymous browser is
+  not an observed authenticated account replacement.
+* Owner requests learning in its proper project documents. Integrated dated
+  rebuild/asset/initialization, identity versus app access, preserved workload/
+  history, own-photo Blob CSP/token store, account choice, diagnostics and CI
+  evidence into [ADR 0002](../adrs/0002-pilot-readiness-architecture.md#observed-exercise-identity-and-session-learning-2026-10-13),
+  [PRD v0.13.1 learning](../prds/zava-forward-retrofit-programme-demonstrator.md#review-learning-disposition)
+  and [addendum](../case_study_48_addendum.md#observed-deployment-and-identity-learning-2026-10-1213).
+  PRD counts/approval unchanged; no new business fact warrants a BRD change.
+* Specified rubric job failed with Copilot provider HTTP403; owner's attempt 3
+  succeeded. Other prior-head checks lacked runner admission, not failing
+  application tests. Scores, runner execution and real-user/product acceptance
+  remain distinct. No secrets, directory roster, original case, memory or
+  regulatory snapshots changed.
+
+## [2026-10-13] validation | Account-switch source publication and runner recovery
+
+* Published source and canonical learning as baf6a5c on continuing PR #65.
+  MVP CI run 38368944188 passed test, mssql and image; MVP validation
+  38368944195 and Prototype validation 38368944263 also passed.
+* Read-only recheck confirms prior-head MVP CI and both validation workflows
+  passed on owner-started attempt 2. Earlier runner admission failures remain
+  history, not current application defects. Scorer execution and rubric/score
+  remain separate; these results do not close personal browser acceptance.
+
+## [2026-10-13] audit | PR #65 documentation and handover reconciliation
+
+* Reviewed owner feedback, checkpoint/PR review provenance, current source
+  contracts, operator guides and canonical PRD/ADR/addendum learning. Preserved
+  pending real-session, own-photo, full-role/workflow, M365, accessibility,
+  calibrated AI benefit, pilot and production gates; no requirement or approval
+  was added. The BRD changes only missed wrapped branding, not its business
+  contract; original case, owner memory and regulatory snapshots are unchanged.
+* Corrected contradictory local-only/unrun claims in the
+  [MVP guide](../../mvp/README.md#honest-limits), added the
+  [current operator handover](../../infra/README.md#current-exercise-handover-2026-10-13)
+  and [ADR delivery delta](../adrs/0002-pilot-readiness-architecture.md#current-exercise-delivery-delta-2026-10-13),
+  and distinguished optional M365 provisioning from active Blob/own-user-photo
+  permissions. Contributor guidance now acknowledges executable tests.
+* Restored real historical warm-* deployment IDs and ca-properwarm-mvp
+  app/revision evidence rather than silently rename observations. Corrected
+  wrapped company/programme names in active syntheses; preserved exact
+  historical snapshots and log entries. Migration regressions cover whitespace,
+  retained identifiers and CSP-compatible document-workbench logo styling.
+  The document-workbench also now explicitly serves the binary PNG route;
+  25 migration and five Node tests passed. Browser rendering confirmed the
+  loaded logo at 114x40 CSS pixels after preventing flex compression.
+* The mentor delivery is a 15-slide PPTX, byte-equal to the working copy
+  (SHA256 c40c4295c2bcf45bcdba98c8c65ab39579a6694e80cc4337ef9495aac2307f3e).
+  Updated the index to supersede the earlier publish-blocked note. This audit
+  checks metadata/equality and existing recorded migration validation, not a
+  new narrative/visual redesign or a fabricated post-iteration build.
+* Current source-head checks and the scorer are distinct from capstone/product
+  acceptance. Final publication checks are recorded separately; this audit
+  does not merge #65 or start the previously stopped RPI follow-ups.

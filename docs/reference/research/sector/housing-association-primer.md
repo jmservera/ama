@@ -1,6 +1,6 @@
 ---
 title: Housing Association Primer
-description: Key aspects of UK housing associations for understanding Proper North Homes as the customer, including sector archetypes, tenure, lease responsibility for retrofit, resident needs and board capital patterns
+description: Key aspects of UK housing associations for understanding Zava North Homes as the customer, including sector archetypes, tenure, lease responsibility for retrofit, resident needs and board capital patterns
 author: AMA Research Team
 ms.date: 2026-09-25
 ms.topic: concept
@@ -10,10 +10,10 @@ ms.topic: concept
 
 This primer records general knowledge about UK housing associations so that
 research, role agents and solution proposals start from an understanding of the
-customer. Proper North Homes, the 60,000-home North of England association in
+customer. Zava North Homes, the 60,000-home North of England association in
 [Case Study 48](../../../case_study_48_original.md), is one such organisation.
 
-The primer describes the sector, not Proper North Homes. Sector patterns are
+The primer describes the sector, not Zava North Homes. Sector patterns are
 not facts about the company until confirmed. Use it alongside
 [Company Profile Research](../company/company-profile-research.md) and
 [UK Social Housing Baseline Research](./uk-social-housing-baseline-research.md).
@@ -67,7 +67,7 @@ According to the source, a housing association has these defining features:
 
 In England, housing associations that are registered with the Regulator of
 Social Housing are private registered providers of social housing. The
-regulatory duties that apply to Proper North Homes are recorded in
+regulatory duties that apply to Zava North Homes are recorded in
 [Company Profile Research](../company/company-profile-research.md) and in the
 [reference register](../../regulatory/README.md).
 
@@ -194,7 +194,7 @@ The source reports these figures for the largest associations:
 | Peabody | Approximately 108,000 properties |
 
 The source ranks L&Q second and Peabody third, although its own figures place
-Peabody above L&Q. Treat the ranking as unverified. At 60,000 homes, Proper
+Peabody above L&Q. Treat the ranking as unverified. At 60,000 homes, Zava
 North Homes would be a large association, but smaller than these three.
 
 The source states that government targets include 1.5 million homes, of which
@@ -243,7 +243,7 @@ they overlap: a group can be both stock-transfer heritage and merged.
 
 The regulator's 2025 Sector Risk Profile links fragmented and outdated
 systems to difficulties in mergers, which matters for merged regional groups.
-The archetype modelled for Proper North Homes is recorded in the
+The archetype modelled for Zava North Homes is recorded in the
 [Modelled Customer Profile](../company/company-profile-research.md#modelled-customer-profile).
 
 ## Residents and Vulnerability Data
@@ -330,10 +330,10 @@ reports 87% as the weighted sector average in the 2025 Global Accounts. The
 two figures probably use different bases and have not been reconciled; cite
 the source and basis with either figure.
 
-## Implications for Proper North Homes
+## Implications for Zava North Homes
 
 The following points are internal interpretation and sector-informed
-hypotheses. They are not validated facts about Proper North Homes.
+hypotheses. They are not validated facts about Zava North Homes.
 
 * Retrofit investment competes with new supply, repairs, safety and
   regeneration for reinvested surplus and borrowing capacity. This reinforces
@@ -356,9 +356,9 @@ hypotheses. They are not validated facts about Proper North Homes.
 * A not-for-profit, regulated organisation will expect transparent governance,
   auditable decisions and board-level accountability for agent-assisted work.
 
-## Open Questions for Proper North Homes
+## Open Questions for Zava North Homes
 
-These questions stay open until Proper North Homes confirms the answers. Each
+These questions stay open until Zava North Homes confirms the answers. Each
 note says what the modelled profile in company research covers and what is
 still unknown.
 
@@ -399,7 +399,7 @@ guidance and regulator publications, but these limits remain:
 * Sector counts and survey rates are national or regional. They describe the
   sector, not any one association, and the survey rates include council
   tenants.
-* Modelled values for Proper North Homes, held in company research, come from
+* Modelled values for Zava North Homes, held in company research, come from
   comparator medians and national rates and can differ from the company by
   several percentage points.
 * Northern regional shares from the RSH combined data tool are unweighted, so

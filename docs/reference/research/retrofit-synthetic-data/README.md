@@ -1,5 +1,5 @@
 ---
-title: Retrofit Synthetic Evidence Pack - Proper Warm Year One
+title: Retrofit Synthetic Evidence Pack - Zava Forward Year One
 description: Fifteen months of synthetic operating records from a professional retrofit delivery team that knows it has bottlenecks but not where they are
 ms.date: 2026-09-30
 ms.topic: reference
@@ -28,7 +28,7 @@ output. Keep private outputs out of Git, preserve versions/identifiers/history,
 and report missing stock-to-case linkage explicitly. Small constructed
 regression/forecast fixtures do not replace the generated-data MVP.
 
-This pack gives the Proper Warm discovery a realistic body of operating
+This pack gives the Zava Forward discovery a realistic body of operating
 records to analyse. It models a competent, busy retrofit team one year into
 delivery. The team knows the programme is behind plan and suspects several
 bottlenecks, but its own reports cannot show where the time goes.
@@ -48,7 +48,7 @@ project owner. Record your findings before consulting them.
 
 ### The Programme
 
-* Proper Warm mobilised in July 2025 to move homes towards EPC C. It
+* Zava Forward mobilised in July 2025 to move homes towards EPC C. It
   identified 980 candidate homes in four waves (July 2025, October 2025,
   January 2026 and April 2026), plus ad hoc additions.
 * Candidates identified from 2025-07-01 to 2026-06-30 form the twelve-month
@@ -169,7 +169,7 @@ Suggested discovery questions:
 ## Limits
 
 * The scenario is one synthetic realisation. Its rates, durations and
-  constraints do not describe Proper North Homes or the sector.
+  constraints do not describe Zava North Homes or the sector.
 * Costs, grant amounts, supplier contracts and staffing are illustrative.
 * Energy outcomes, bills, comfort, complaints and resident satisfaction are
   not modelled.

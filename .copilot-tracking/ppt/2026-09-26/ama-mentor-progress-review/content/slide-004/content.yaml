@@ -47,7 +47,7 @@ elements:
     text_bold: true
     space_after: 10
     alignment: left
-  - text: 'Proper North Homes: owner-confirmed not-for-profit, 26 Sep'
+  - text: 'Zava North Homes: owner-confirmed not-for-profit, 26 Sep'
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -191,7 +191,8 @@ elements:
     text_bold: true
     space_after: 10
     alignment: left
-  - text: 'Retrieved 19 Sep: social housing, energy efficiency, retrofit and funding, data protection'
+  - text: 'Retrieved 19 Sep: social housing, energy efficiency, retrofit and funding,
+      data protection'
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -201,7 +202,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: Awaab's Law Phase 1 in force since 27 Oct 2025; Phase 2 planned from 30 Nov 2026
+  - text: Awaab's Law Phase 1 in force since 27 Oct 2025; Phase 2 planned from 30
+      Nov 2026
     text_font: Segoe UI
     text_size: 13
     text_color: '#243B53'
@@ -256,8 +258,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: EPC C by 2030 is final SRS MEES policy, not a consultation, but not yet evidenced as commenced
-      law
+  - text: EPC C by 2030 is final SRS MEES policy, not a consultation, but not yet
+      evidenced as commenced law
     text_font: Segoe UI
     text_size: 14
     text_color: '#102A43'
@@ -274,9 +276,10 @@ elements:
   top: 6.6
   width: 12.0
   height: 0.38
-  text: |-
-    Sources: company profile; housing association primer; UK social housing baseline; regulatory register.
-    Benchmarks are not company facts.
+  text: 'Sources: company profile; housing association primer; UK social housing baseline;
+    regulatory register.
+
+    Benchmarks are not company facts.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
@@ -286,13 +289,41 @@ elements:
   vertical_anchor: top
   margin_left: 0
   margin_right: 0
-speaker_notes: |-
-  Three things came out of research.
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'Three things came out of research.
 
-  First, the company. The brief does not say what kind of organisation this is. I built a housing association primer and a modelled customer profile from sector medians. On 26 September I confirmed it is a not-for-profit. Its legal form is still unknown, and I have not assumed charitable status.
 
-  Second, the numbers. Sector benchmarks suggest about 26 percent of stock is below EPC C, roughly 15,600 homes, about 3,900 accepted completions a year and a gross programme of about GBP 312 million. These are planning estimates, not company facts.
+  First, the company. The brief does not say what kind of organisation this is. I
+  built a housing association primer and a modelled customer profile from sector medians.
+  On 26 September I confirmed it is a not-for-profit. Its legal form is still unknown,
+  and I have not assumed charitable status.
 
-  Third, regulation: 16 official documents, so every regulatory claim has a dated local source.
 
-  Research also corrected two claims in the brief. The GBP 40 million is an opportunity, not an award, and would cover at most about 5,333 homes at the grant cap. And EPC C by 2030 is final policy, not a consultation, though I could not yet evidence it as commenced law.
+  Second, the numbers. Sector benchmarks suggest about 26 percent of stock is below
+  EPC C, roughly 15,600 homes, about 3,900 accepted completions a year and a gross
+  programme of about GBP 312 million. These are planning estimates, not company facts.
+
+
+  Third, regulation: 16 official documents, so every regulatory claim has a dated
+  local source.
+
+
+  Research also corrected two claims in the brief. The GBP 40 million is an opportunity,
+  not an award, and would cover at most about 5,333 homes at the grant cap. And EPC
+  C by 2030 is final policy, not a consultation, though I could not yet evidence it
+  as commenced law.'

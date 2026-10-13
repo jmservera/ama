@@ -1,0 +1,111 @@
+slide: 1
+title: Zava Forward
+section: Decision
+layout: title
+background:
+  fill: '#0B1F33'
+elements:
+- type: shape
+  shape: rectangle
+  left: 0
+  top: 0
+  width: 13.333
+  height: 0.12
+  fill: '#2F80ED'
+  line_color: '#2F80ED'
+- type: textbox
+  left: 0.72
+  top: 0.62
+  width: 3.2
+  height: 0.35
+  text: ZAVA NORTH HOMES
+  font: Aptos
+  font_size: 14
+  font_color: '#7FDBD4'
+  font_bold: true
+- type: textbox
+  left: 0.72
+  top: 1.28
+  width: 11.7
+  height: 0.9
+  text: Zava Forward
+  font: Aptos Display
+  font_size: 42
+  font_color: '#FFFFFF'
+  font_bold: true
+- type: textbox
+  left: 0.72
+  top: 2.2
+  width: 10.8
+  height: 0.7
+  text: A governed retrofit delivery service that turns evidence and investment into
+    safe, resident-accepted outcomes
+  font: Aptos
+  font_size: 22
+  font_color: '#BCCCDC'
+- type: shape
+  shape: rounded_rectangle
+  left: 0.72
+  top: 3.45
+  width: 5.65
+  height: 1.72
+  fill: '#173F5F'
+  line_color: '#2F80ED'
+  line_width: 2
+  text: 'DECISION REQUESTED
+
+    Approve a capped 6-8 week readiness stage'
+  text_font: Aptos
+  text_size: 20
+  text_color: '#FFFFFF'
+  text_bold: true
+- type: shape
+  shape: rounded_rectangle
+  left: 6.78
+  top: 3.45
+  width: 5.65
+  height: 1.72
+  fill: '#102A43'
+  line_color: '#486581'
+  line_width: 1
+  text: 'NOT REQUESTED TODAY
+
+    Portfolio rollout, capital acceleration or a five-agent build'
+  text_font: Aptos
+  text_size: 19
+  text_color: '#D9E2EC'
+  text_bold: true
+- type: textbox
+  left: 0.72
+  top: 6.48
+  width: 6.0
+  height: 0.3
+  text: CxO initial proposal | 18 September 2026
+  font: Aptos
+  font_size: 11
+  font_color: '#829AB1'
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'Open from a fixed position: "The outcome we need today is a bounded
+
+  decision." We are asking to fund evidence, not assume scale. Approval does
+
+  not authorise AI deployment, resident contact, works instructions, capital
+
+  acceleration or grant recognition. Pause after stating what is not requested.
+
+  '

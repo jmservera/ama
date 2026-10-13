@@ -155,7 +155,8 @@ elements:
     bullet_margin_left: 228600
     bullet_indent: -228600
     alignment: left
-  - text: 'The problem: it names the solution first; each agent gets one "owns end-to-end" line'
+  - text: 'The problem: it names the solution first; each agent gets one "owns end-to-end"
+      line'
     text_font: Segoe UI
     text_size: 15
     text_color: '#243B53'
@@ -175,7 +176,8 @@ elements:
   height: 0.6
   fill: '#102A43'
   line_color: '#102A43'
-  text: 'My working question: what business problem would make these agents worth building?'
+  text: 'My working question: what business problem would make these agents worth
+    building?'
   text_font: Segoe UI
   text_size: 15
   text_color: '#FFFFFF'
@@ -193,22 +195,46 @@ elements:
   top: 6.7
   width: 12.133000000000001
   height: 0.28
-  text: 'Source: docs/case_study_48_original.md (10 Sep 2026). Gaps identified during research, 11 to
-    25 Sep 2026.'
+  text: 'Source: docs/case_study_48_original.md (10 Sep 2026). Gaps identified during
+    research, 11 to 25 Sep 2026.'
   font: Segoe UI
   font_size: 9
   font_color: '#627D98'
   margin_top: 0
   margin_bottom: 0
-speaker_notes: |-
-  The brief is a one-page solution request: five agents with autonomy levels, and promises such as doubling delivery and GBP 40 million of grants.
+- type: shape
+  name: Zava logo contrast backing
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+- type: image
+  name: Zava branding logo
+  path: images/zava-logo.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+speaker_notes: 'The brief is a one-page solution request: five agents with autonomy
+  levels, and promises such as doubling delivery and GBP 40 million of grants.
+
 
   What it does not give is everything an architect needs to justify a design: what
+
   kind of organisation this is, what the current throughput and data look like,
+
   which regulations are in force versus proposed, and whether the grant money is
+
   real. Above all, it names the solution before the problem: each agent is
+
   described by a single "owns end-to-end" line.
 
+
   So I set myself one working question for the whole research phase: what business
+
   problem would make these agents worth building? Everything that follows is how I
-  tried to answer it without inventing facts about the company.
+
+  tried to answer it without inventing facts about the company.'

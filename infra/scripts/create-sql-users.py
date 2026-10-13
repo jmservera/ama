@@ -7,7 +7,7 @@ created from the managed identity client id as a literal SID, so the SQL server 
 a Directory Readers identity.
 
 Usage: create-sql-users.py <resource-group> <sql-server-name> <database> <identity-prefix>
-Example: create-sql-users.py ama sql-warm-test-rzsrg retrofit id-warm-test
+Example: create-sql-users.py ama sql-forward-test-rzsrg retrofit id-forward-test
 Needs the mssql-python driver (mvp/requirements.txt), for example on PYTHONPATH.
 """
 import json

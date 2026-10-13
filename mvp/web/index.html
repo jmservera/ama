@@ -3,18 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Proper Warm | Proper North Homes</title>
+<title>Zava Forward | Zava North Homes</title>
 <link rel="stylesheet" href="/vendor/leaflet.css">
 <link rel="stylesheet" href="/style.css">
 </head>
-<body>
+<body data-auth-provider="__AUTH_PROVIDER__">
 <header class="top">
-  <a class="brand" href="/" id="home"><span class="logo" aria-hidden="true">PW</span><span>Proper Warm<small>Proper North Homes</small></span></a>
+  <a class="brand" href="/app" id="home"><img class="zava-logo" src="/zava-logo.png" alt="Zava North Homes"><span>Zava Forward<small>Zava North Homes</small></span></a>
   <nav id="nav" hidden>
     <a href="#/">My cases</a><a href="#/all">All cases</a><a href="#/overview">Overview</a><a href="#/visits">Visits</a><a href="#/funding">Funding</a><a href="#/finance">Finance</a>
-    <span id="who"></span>
-    <button id="signout" class="link">Sign out</button>
   </nav>
+  <details id="account" class="account" hidden>
+    <summary aria-label="Your account">
+      <span class="avatar"><img id="account-photo" alt="" hidden><span id="account-initials" aria-hidden="true"></span></span>
+      <span id="account-short">Account</span>
+    </summary>
+    <div class="account-panel">
+      <strong id="account-name"></strong>
+      <p id="account-email" class="muted"></p>
+      <p id="who" class="muted"></p>
+      <p id="photo-status" class="muted" role="status"></p>
+      <p id="account-error" class="err" role="alert"></p>
+      <button id="switch-account" class="alt" type="button">Use another account</button>
+      <button id="signout" type="button">Sign out</button>
+    </div>
+  </details>
 </header>
 <main id="app" tabindex="-1"></main>
 <script src="/vendor/leaflet.js"></script>

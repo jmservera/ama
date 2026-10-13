@@ -1,7 +1,7 @@
 """Manual browser check (not part of unittest discovery). Needs python3 playwright with chromium.
 
 Run: cd mvp && PYTHONPATH=. python3 tests/browser_check.py
-Starts the real server on a scratch state directory against data/properwarm.json, then drives it as a manager.
+Starts the real server on a scratch state directory against data/zavaforward.json, then drives it as a manager.
 """
 import os
 import shutil
@@ -28,8 +28,8 @@ def check(name, ok, detail=""):
 def main():
     shutil.rmtree(STATE, ignore_errors=True)
     STATE.mkdir()
-    env = dict(os.environ, PW_PASSWORD="check-pass", PW_STATE=str(STATE), PORT=PORT, PYTHONPATH=str(ROOT))
-    srv = subprocess.Popen([sys.executable, "-m", "properwarm_mvp.server"], cwd=ROOT, env=env, stdout=subprocess.DEVNULL)
+    env = dict(os.environ, ZF_PASSWORD="check-pass", ZF_STATE=str(STATE), PORT=PORT, PYTHONPATH=str(ROOT))
+    srv = subprocess.Popen([sys.executable, "-m", "zavaforward_mvp.server"], cwd=ROOT, env=env, stdout=subprocess.DEVNULL)
     try:
         for _ in range(50):
             try:
@@ -45,7 +45,7 @@ def main():
             pg.on("pageerror", lambda e: errs.append(str(e)))
             pg.on("response", lambda r: bad.append((r.status, r.url)) if r.status >= 500 or (r.status == 401 and "/api/me" not in r.url) else None)
             pg.goto(BASE)
-            pg.fill("#email", "helen.marsden@propernorthhomes.example")
+            pg.fill("#email", "helen.marsden@zavanorthhomes.example")
             pg.fill("#pw", "check-pass")
             pg.click("button[type=submit]")
             pg.wait_for_selector(".item")

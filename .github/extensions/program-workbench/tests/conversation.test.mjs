@@ -1,10 +1,33 @@
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { requestConversation, selectProductManagerAdvisor } from "../conversation.mjs";
 import { startProgramWorkbenchServer } from "../server.mjs";
+
+test("serves the exact logo bytes and external sizing rule without relaxing CSP", async () => {
+  const entry = await startProgramWorkbenchServer();
+  try {
+    const response = await fetch(entry.url);
+    assert.equal(response.status, 200);
+    assert.match(response.headers.get("content-security-policy"), /(?:^|; )style-src 'self';/);
+    const html = await response.text();
+    assert.match(html, /href="\/styles.css"/);
+    assert.match(html, /class="zava-logo"/);
+    assert.doesNotMatch(html, /<style>/);
+    const css = await fetch(`${entry.url}styles.css`);
+    assert.equal(css.status, 200);
+    assert.match(await css.text(), /\.zava-logo\s*\{[^}]*width:114px;[^}]*height:40px;[^}]*flex-shrink:0;/);
+    const logo = await fetch(`${entry.url}zava-logo.png`);
+    assert.equal(logo.status, 200);
+    assert.equal(logo.headers.get("content-type"), "image/png");
+    const expected = await readFile(new URL("../assets/zava-logo.png", import.meta.url));
+    assert.deepEqual(Buffer.from(await logo.arrayBuffer()), expected);
+  } finally {
+    await new Promise((resolve) => entry.server.close(resolve));
+  }
+});
 
 test("selects the stable advisor ID and excludes subagent-only profiles", () => {
   const advisor = { id: "plugin:product-manager-advisor", displayName: "Product Manager Advisor" };
