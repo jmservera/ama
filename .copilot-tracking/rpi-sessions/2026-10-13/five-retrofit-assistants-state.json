@@ -1,0 +1,56 @@
+{
+  "task_id": "five-retrofit-assistants-2026-10-13",
+  "task_slug": "five-retrofit-assistants",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-13/five-retrofit-assistants-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-13/five-retrofit-assistants-plan.md",
+    "details": ".copilot-tracking/details/2026-10-13/five-retrofit-assistants-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-13/five-retrofit-assistants-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-13/five-retrofit-assistants-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Add the five reactive/proactive assistants to the PRD and ADR, then build a new version.",
+      "status": "confirmed",
+      "evidence": "Owner request, 2026-10-13"
+    },
+    {
+      "decision": "The prior account-switch task is completed/stopped; create a distinct task. Automatic-mode confirmation was unavailable, so retain manual mode.",
+      "status": "recorded",
+      "evidence": "Prior RPI state and unanswered intake form, 2026-10-13"
+    },
+    {
+      "decision": "Research executed a focused wider/deeper/contrarian source cycle. Existing task storage can be reused as a primitive, but requester-only review, missing source snapshots, mutating funding drafts and placeholder workers require explicit new contracts. Planning Readiness Not ready until delivery/workspace direction is resolved.",
+      "status": "research-complete; continuation-blocked",
+      "evidence": ".copilot-tracking/research/2026-10-13/five-retrofit-assistants-research.md"
+    },
+    {
+      "decision": "Latest owner directive explicitly authorizes automatic continuation on the existing MVP and consolidated #68. Earlier unavailable intake and Not ready procedural conclusions are superseded; Research executed and reused, Planning Readiness Ready.",
+      "status": "confirmed",
+      "evidence": "Owner autonomous-completion directive; retained worktree and open #68 verified."
+    },
+    {
+      "decision": "Single final-candidate critique executed: Revise. PC-001 to PC-008 accepted and incorporated into plan/details; no second critique.",
+      "status": "applied",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-13/five-retrofit-assistants-plan-critique.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "live-rollout-budget",
+      "summary": "Current app/services are available, but the prior unlimited-spend override applies only to #58. Specific retained-data rollout and finite incremental build/AI allowance confirmation was unavailable.",
+      "resolution": "Owner confirms rollout to ca-forward-test-api and this version's effective finite spending allowance; then operator records registered real AI and independent SQL before/after/restart evidence. Continue local implementation/build/publication without inferring approval."
+    }
+  ],
+  "next_action": {
+    "phase": "Implement",
+    "action": "P01 complete. Execute P02 runtime and local build/publication. Gate live rollout/inference on unavailable scoped approval; leave live acceptance Blocked."
+  },
+  "prioritized_follow_ups": null
+}

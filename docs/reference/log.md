@@ -2081,3 +2081,21 @@ metadata when the knowledge base was created.
   user acceptance, timed rehearsal or capstone score is implied. BRD, PRD,
   original case, owner memory and regulatory snapshots are unchanged by this
   diagram/deck continuation.
+
+## [2026-10-13] update | Five bounded reactive/proactive assistant contracts
+
+* Updated the [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md#five-reactive-and-proactive-assistants-2026-10-13)
+  to v0.14.0 with the five stable capabilities, distinct permitted sources,
+  proactive predicates, reactive/reviewer audiences and separate human
+  decisions. Added FR-047/AC-058 to AC-061 and traceability: 47 FRs, 61 ACs,
+  unchanged 13 NFRs/9 constraints. Historical v0.12.0 approval is preserved,
+  not inherited; fresh requirements/owner acceptance remains open.
+* Amended [ADR 0002](../adrs/0002-pilot-readiness-architecture.md#five-assistant-exercise-runtime-2026-10-13)
+  for shared API/SQL proposal execution rather than five apps: durable
+  deduplication, fenced leases, bounded shared reservations, recipient-safe
+  sources and atomic source/version-bound human review. Provider calls hold no
+  domain lock; unknown usage is not zero or an exactly-once billing guarantee.
+* Reconciled [ADR 0001](../adrs/0001-azure-architecture.md) and this index:
+  separate agent/queue/orchestrator resources remain proposed. These contracts
+  do not establish deployed parity, semantic quality, measured value, control
+  approval or production readiness. Build evidence is recorded separately.

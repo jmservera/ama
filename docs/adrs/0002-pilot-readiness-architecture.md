@@ -84,9 +84,59 @@ Decisions below fix those mechanisms, not raw capacity.
 | Field visibility | One server-side projection layer, default deny, per role and per field; contractor view has no vulnerability reason in any API, export, search, audit view or AI prompt | PR-002 enforced in one place and tested |
 | Ranking | Deterministic function of case data and a versioned policy file, stored as a ranking snapshot with reason codes | PR-006 |
 | AI prioritisation | Separate recommendation record, never read by the ranking function or any queue | PR-007, PR-008 |
+| Five reactive/proactive assists | Shared versioned proposal service in the existing MVP API, with SQL-owned deduplication/reservations/fenced leases; bounded automatic execution and recipient-compatible evidence | PRD FR-047/AC-058 to AC-061; no separate estate, model authority or domain approval |
 | Map | Server-side bounding-box queries with grid clustering by zoom, same filter object as the list, licensed tile provider | PR-005 |
 | Deployment | Two or more replicas, zone redundant where available, `uksouth`, hardened image, scan and tests in CI | No state on the container; fixes the honesty gap |
 | Staff time capture | Built behind a feature flag that is off by default and cannot be switched on without a recorded DPIA reference | PR-004 |
+
+### Five-Assistant Exercise Runtime (2026-10-13)
+
+The owner requested implementation of the
+[five capability contracts](../prds/zava-forward-retrofit-programme-demonstrator.md#five-reactive-and-proactive-assistants-2026-10-13)
+in the existing MVP. Stock, assessment, funding, works/resident coordination
+and quality each have distinct source permissions, deterministic proactive
+predicates and human owners. This amends the lean exercise realization;
+the separate queue/agent/orchestrator estate in ADR 0001 remains proposed.
+Use existing SQL/AI/API/UI rather than five applications or new resources.
+
+Proposal identity binds capability/version, case and material dependencies;
+reactive/proactive invocation provenance is separate. SQL owns bounded
+attempts, durable allowance reservations, database-time claims and fenced
+lease takeover/completion. A lost acknowledgement is reconciled by lookup.
+Timeouts and missing usage preserve liability; at-least-once inference may
+incur bounded duplicate cost and is not exactly-once billing. Capture provider,
+model, usage and outcome separately from workflow/manual/template status.
+
+The API captures immutable recipient-compatible evidence in short transactions,
+calls the provider outside domain/database locks and validates typed output.
+An explicit service-purpose principal does not impersonate a staff member.
+Registry/source/schema/rule/document hashes invalidate only affected proposals.
+Every prompt, stored answer, citation, API read and review enforces the same
+source-to-reader boundary; current roles/case scope are rechecked, including
+revocation. Human source verification precedes accept/edit; current permission,
+dependency and proposal status/version are checked atomically. Review writes
+proposal/audit only, not ranking, consent, funding, bookings, work release,
+holds or quality acceptance. Funding assistance does not reuse the legacy
+mutating funding-draft path. Independent QA remains separate from preparation.
+
+Automatic scans remain off until valid scoped authority and effective input,
+output, frequency, concurrency, retry and durable shared allowance limits
+exist. Missing authority/budget is a real delivery blocker. Disabled/throttled/
+failed assistance exposes an owned manual route without blocking case access.
+Worker shutdown is interruptible and scans cannot overlap uncontrolled.
+Startup migrations are additive, idempotent and serialized on each SQL
+backend; deployment/migration permission must not silently expand runtime
+access. Old-image rollback disables assistance and restores traffic without
+deleting retained cases, audit or task evidence.
+
+Acceptance requires independent-connection races, lease takeover/late-worker
+denial, budget contention, stale/revoked reviews, slow-provider/manual-work
+and per-capability trigger/source/unchanged-state evidence. The delivery record
+must additionally link exact source/image/serving revision, preserved private
+SQL/AI/auth configuration, workload identity, a registered real invocation
+and independent SQL task/audit before/after/restart under AC-057. Technical
+success is not semantic calibration, approved company policy, human
+acceptance, comparative benefit or production approval.
 
 ### 1. Durable store: Azure SQL or PostgreSQL
 
