@@ -36,9 +36,10 @@ Local image built as account-switch-20261013-01; validate runtime before upload.
 ## Workflow Inspection
 
 Original specified scorer job failed on Copilot provider HTTP403; owner's
-attempt 3 succeeded. Other prior-head checks never started because of runner
-admission/account-policy restrictions, not test failures; their annotations
-require owner/platform action, not source changes or secret rotation.
+attempt 3 succeeded. Other prior-head checks initially never started because
+of runner admission/account-policy restrictions, not test failures.
+At publication, their owner-started attempt 2 had passed. No source changes
+or secret rotation were needed for this recovery.
 
 ## P01-T02: Local Image and Preservation Gate
 
@@ -88,5 +89,13 @@ real already-authenticated replacement and complete permissions remain open.
 New relative links/anchors: 23 checked and resolved. Seventeen changed source,
 docs/tracking files scanned against the private selected directory identities;
 no leaks. git diff check passed. Documentation session explicitly records
-local evidence separately from CI-owned runner execution. Current source
-publication remains P01-T03's last step.
+local evidence separately from CI-owned runner execution.
+
+Published source/docs as baf6a5ca63bf32833005ea3c8f8faa98d3692c07 on existing
+PR #65, no main write or merge. Source matches the image already tested and
+deployed; subsequent edits are documentation/evidence only. MVP CI 38368944188
+passed all test/mssql/image jobs; MVP validation 38368944195 and Prototype
+validation 38368944263 passed. New scorer 38368944202 was still running at
+this observation; previous rubric/score failure is not called a product pass.
+No active implementation tasks or blockers remain. Plan follow-ups stay
+outside P01: owner existing-session replacement and retained tenant naming.

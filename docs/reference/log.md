@@ -1950,3 +1950,13 @@ metadata when the knowledge base was created.
   application tests. Scores, runner execution and real-user/product acceptance
   remain distinct. No secrets, directory roster, original case, memory or
   regulatory snapshots changed.
+
+## [2026-10-13] validation | Account-switch source publication and runner recovery
+
+* Published source and canonical learning as baf6a5c on continuing PR #65.
+  MVP CI run 38368944188 passed test, mssql and image; MVP validation
+  38368944195 and Prototype validation 38368944263 also passed.
+* Read-only recheck confirms prior-head MVP CI and both validation workflows
+  passed on owner-started attempt 2. Earlier runner admission failures remain
+  history, not current application defects. Scorer execution and rubric/score
+  remain separate; these results do not close personal browser acceptance.

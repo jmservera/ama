@@ -83,13 +83,13 @@ token-store configuration. No directory or user session credentials needed.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Repair, validate, deploy and publish
+### [x] P01: Repair, validate, deploy and publish
 <!-- rpi:task id=P01-T01 -->
 #### [x] P01-T01: Implement explicit chooser and fixed-event diagnostics
 <!-- rpi:task id=P01-T02 -->
 #### [x] P01-T02: Validate local image and live flow/log ingestion
 <!-- rpi:task id=P01-T03 -->
-#### [ ] P01-T03: Document and publish
+#### [x] P01-T03: Document and publish
 
 ## Candidate Test and Target Lock
 
@@ -121,5 +121,11 @@ Retained tenant naming remains separate previously routed work.
 
 ## Handoff
 
-Research executed and Ready; single critique directly disposed, plan Ready.
-Proceed automatically to P01. No blockers.
+Research executed and Ready; single critique directly disposed. P01 and all
+three tasks complete. Source/docs published as baf6a5c on #65; MVP CI and both
+validation workflows passed for that exact source head. Deployed tested image
+account-switch-20261013-01, digest and ready revision 0000009 are recorded in
+changes. Documentation links/privacy/diff passed; historical proposals and
+approval counts remain unchanged. No active implementation blockers.
+Proceed automatically to one Review. Actual authenticated replacement and
+retained tenant naming remain distinct follow-ups, not completed acceptance.

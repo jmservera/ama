@@ -64,3 +64,16 @@ do not regrade full acceptance or assert company staffing/competence.
 Include earlier role-initialization/preservation and welcome/photo learning
 where supported by published source/docs. No gratuitous BRD requirement
 change, separate new ADR or personal directory roster. Update dates/index/log.
+
+## Completion Evidence and Review Readiness
+
+P01-T01: fixed redirect, exact flag, five fixed events and three owned synthetic
+methods implemented. P01-T02: auth 23 passed, full MVP ran 289 with 26 skips
+and no failures, local image and live tenant prompt/log proof passed; private
+configuration/replica comparison passed after recorded operator rollbacks.
+P01-T03: canonical docs validated and source/docs published as baf6a5c on #65.
+Exact-head MVP CI and both validation workflows passed. All P01 markers now
+complete; changes records source/image/revision linkage and acceptance limits.
+Operator normalization and replica polling preserve approved intent, not a
+scope expansion. No active blocker or additional implementation. Owner actual
+session replacement and retained naming remain distinct future work.
