@@ -140,7 +140,7 @@ acceptance, comparative benefit or production approval.
 
 #### Implementation and Build Evidence
 
-Source `c4b28e3168770252fb35a79074dc2202ef375514` implements the five v1.0.0
+Initial candidate source `c4b28e3168770252fb35a79074dc2202ef375514` implements the five v1.0.0
 contracts, shared case controls/review queue, SQL claims/reservations and
 source-verified proposal review in the existing MVP. The
 [operator/API contract](../../mvp/README.md#five-retrofit-assistants-2026-10-13-implementation)
@@ -157,7 +157,39 @@ passed unit/JS, hardened-image/scan/SBOM and real SQL Server store parity
 integration tests skipped locally; 44 focused tests and 15 reported Chromium
 checks cover the new assist paths. The disposable local SQL bootstrap could
 not authenticate, so its five-assistant SQL probe did not pass; general CI
-store parity does not establish that new proposal path's real-SQL behavior.
+store parity did not establish that new proposal path's real-SQL behavior.
+
+The initial Review identified two contract defects, subsequently implemented:
+a delayed poll/claim could admit inference after shutdown, and the case view
+awaited auxiliary reads without a deadline before rendering ordinary controls.
+Corrected runtime source `bf383c40369fa67db3d0cbbe7c9473c24ababbe8` closes
+provider-thread admission under the same short gate as stop, outside SQL and
+inference. Shutdown-interrupted reservations remain conservative. Case controls
+render immediately; auxiliary reads share a 10-second abort deadline and
+ignore disconnected/different-route results. Timeout is explicit manual
+fallback, not a success-shaped empty proposal.
+
+The corrected local image `zavaforward-mvp:assistants-20261013-02` has image ID
+`sha256:d3e652cec1bdef8846270a75c124d55743bdb757231ffaeae585cc423e6b8786`
+and the exact runtime-source OCI revision above. Non-root UID10001,
+read-only root, no capabilities, writable SQLite state, health and byte-exact
+current UI/logo checks passed. Source CI
+[38457772710](https://github.com/jmservera/ama/actions/runs/38457772710)
+passed all three jobs, including image scan/SBOM and the then-current 68 actual
+SQL tests. Additional first-table-creation concurrency coverage brings the
+local actual SQL run to 69: 26 general tests and 43 assistant contract/review/
+durability/API tests on a dedicated disposable SQL Server database. The same
+conditional suites now run in the existing CI SQL job. Full local discovery
+is 379 tests, 310 passed and 69 conditional SQL skips; 47 nonbillable assistant
+tests and 19 Chromium checks cover the corrected behaviors.
+
+The earlier local SQL authentication failure is historical, not an active
+disposable-SQL blocker. Actual SQL tests cover migrations, five proposal paths,
+role/current-source review, fenced claims, allowance contention and recovery;
+their provider and human-verification actions remain fixtures. They do not
+prove actual Azure workload permissions, model quality or human acceptance.
+The completed initial Review remains historical evidence, not silently
+rewritten as acceptance of the corrected build.
 
 No new cloud image, rollout, paid model call, changed-workload SQL persistence
 or human/business acceptance is claimed. The existing --0000009 app remains

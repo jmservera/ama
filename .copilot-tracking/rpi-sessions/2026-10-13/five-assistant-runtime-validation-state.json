@@ -33,12 +33,12 @@
     {
       "id": "live-rollout-budget",
       "summary": "Specific new-version retained-data rollout and finite incremental model allowance remain unapproved.",
-      "resolution": "Owner confirms the concrete rollout/allowance before shared-system change or paid inference. Complete local fixes, SQL validation and publication meanwhile."
+      "resolution": "Concrete existing-app retained-data rollout/up-to-USD-5 QA approval requested again, owner unavailable. Obtain affirmative approval before cloud publication/rollout or real calls; no consent inferred. Local source/image/SQL/docs proceed."
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "P01/P02 complete: shutdown/manual-render fixes pass regressions; 68 actual SQL tests pass (42 assistant plus 26 general). Execute P03 exact-source build, canonical evidence and #68 publication."
+    "action": "Finish current-source full regression, canonical validation and #68 publication. Corrected bf383c4 image/hardening and actual 69 SQL tests pass. Concrete retained-data rollout/finite-spend approval unavailable; preserve that blocker."
   },
   "prioritized_follow_ups": []
 }

@@ -61,3 +61,26 @@ remain distinct unexecuted gates.
 
 Corrected source ready for commit, exact-source local image and canonical
 evidence updates. No PR merge or re-run of the completed parent Review.
+
+Runtime source bf383c40369fa67db3d0cbbe7c9473c24ababbe8 published on #68.
+Local image assistants-20261013-02 ID
+d3e652cec1bdef8846270a75c124d55743bdb757231ffaeae585cc423e6b8786 carries
+that exact runtime OCI revision. UID10001, no baked data, read-only root,
+no capabilities, writable SQLite state, health and current UI/logo bytes pass.
+Source CI 38457772710 passes test/image/mssql, including scan/SBOM and 68 SQL
+tests. Added explicit first-assistant-table concurrent creation on retained
+domain state; latest actual SQL run passes 69 (43 assistant + 26 general).
+Latest full discovery passes: 379 discovered, 310 passed, 69 SQL skips.
+Chromium 19 and JS syntax pass; runtime code unchanged by extra test coverage.
+
+Actual serving image/revision still account-switch-20261013-01/--0000009,
+read-only verified. Azure tool confirms existing app in ama/uksouth.
+Specific retained-data rollout and USD 5 incremental QA approval requested;
+owner unavailable, no affirmative permission inferred. No cloud writes,
+provider calls, tenant changes or fabricated human verification.
+
+PRD/ADR/MVP/operator/index/log learnings reconciled in place. Canonical validator
+reports zero missing targets/fragment/frontmatter failures; six pages render
+with expected headings/tables; original, memory and regulatory evidence remain
+untouched. Prior failures and Review remain historical; disposable SQL success
+is not live Azure/model acceptance. Final publication/reconciliation pending.

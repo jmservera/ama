@@ -583,11 +583,16 @@ AC-058 to AC-061 cover these mechanisms; AC-057 separately requires
 changed-image real Azure/SQL/AI evidence. Task calibration, staff acceptance
 and comparative improvement are not established by the technical build.
 
-Implementation source `c4b28e3` and the locally built image are recorded in
+Corrected runtime source `bf383c4` and the locally built image are recorded in
 [ADR 0002](../adrs/0002-pilot-readiness-architecture.md#implementation-and-build-evidence).
 Automated fixtures exercise the contracts, not formal PRD acceptance.
-General SQL Server CI parity passes, but the new assistants' changed-image
-real SQL/model path remains unexecuted. Live deployment/spend approval was
+Manual controls render independently of assistant reads, which have a
+10-second abort deadline and ignore late results after navigation. Shutdown
+closes new provider-thread admission without holding SQL/inference locks.
+Actual disposable SQL Server now exercises all five assistants, current-source/
+role review, claims/reservations, recovery and concurrent additive startup,
+alongside general parity; provider and human actions are still fixtures.
+The changed-image Azure SQL/model path remains unexecuted. Live deployment/spend approval was
 unavailable and is not inferred; CON-009/AC-057 acceptance stays Blocked.
 
 ### Form Extraction and Assisted Filling

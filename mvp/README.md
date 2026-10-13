@@ -641,10 +641,11 @@ owns image build, real platform evidence, approved rollout and independent
 Review. New live rollout and provider spending remain blocked pending scoped
 owner approval; local mocks do not satisfy that acceptance gate.
 
-Corrected-source execution on 2026-10-13: 46 nonbillable assistant tests passed;
-full discovery reported 377 tests, 309 passed and 68 conditional SQL skips.
-The actual disposable SQL run passed all 68 tests: 26 existing store tests and
-42 assistant contract/review/durability/API tests. The isolated desktop Chromium
+Corrected-source execution on 2026-10-13: 47 nonbillable assistant tests passed;
+full discovery reported 379 tests, 310 passed and 69 conditional SQL skips.
+The actual disposable SQL run passed all 69 tests: 26 existing store tests and
+43 assistant contract/review/durability/API tests, including concurrent first
+assistant-table creation on retained case/audit state. The isolated desktop Chromium
 exercise passed 19 checks, including pending-assistance manual writes,
 deadline fallback and late-result navigation, with no page errors. Both changed
 JavaScript files passed syntax checks. Provider responses and human-verification

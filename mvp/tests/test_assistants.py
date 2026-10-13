@@ -806,6 +806,42 @@ class DurabilityTests(Base):
             with self.service.transaction() as db:
                 db.execute("DELETE FROM assistant_events")
 
+    def test_concurrent_assistant_startup_on_retained_domain(self):
+        before = self.domain()
+        with self.service.transaction() as db:
+            for name in ("assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance"):
+                db.execute(f"DROP TABLE {name}")
+        barrier = threading.Barrier(2)
+        services, errors = [], []
+
+        def startup():
+            store = None
+            try:
+                barrier.wait()
+                store = self.open_store()
+                store.ai = self.provider
+                services.append((Assistants(store, config()), store))
+            except Exception as error:
+                errors.append(error)
+                if store is not None:
+                    store.db.close()
+
+        threads = [threading.Thread(target=startup) for _ in range(2)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join(10)
+        for service, store in services:
+            self.addCleanup(store.db.close)
+            self.addCleanup(service.stop)
+        self.assertTrue(all(not thread.is_alive() for thread in threads))
+        self.assertEqual(errors, [])
+        self.assertEqual(len(services), 2)
+        for service, _ in services:
+            self.assertTrue(service.sql, service.schema_error)
+            self.assertEqual(len(service.registry(self.pm)["assistants"]), 5)
+        self.assertEqual(before, self.domain())
+
     def test_schema_failure_disables_assistance_not_manual_reads(self):
         with patch.object(self.store, "assistant_connection", side_effect=PermissionError("DDL not granted")):
             disabled = Assistants(self.store, config())

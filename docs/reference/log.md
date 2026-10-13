@@ -2119,3 +2119,26 @@ metadata when the knowledge base was created.
   Specific shared-runtime/spend confirmation was unavailable. Preserve the
   existing deployment/data, historical budget exceptions and separate human,
   calibration and comparative-value gates; no merge or production approval.
+
+## [2026-10-13] validation | Corrected assistant lifecycle and actual SQL coverage
+
+* Fixed the initial Review's shutdown-admission and manual-rendering defects:
+  a short dispatch/stop gate prevents delayed claims starting new inference;
+  ordinary case controls render before auxiliary reads, with a 10-second abort
+  deadline, visible manual fallback and stale-panel protection.
+* Recorded corrected runtime `bf383c4`, exact local image `assistants-20261013-02`
+  and hardening/source-CI evidence in
+  [ADR 0002](../adrs/0002-pilot-readiness-architecture.md#implementation-and-build-evidence).
+  The earlier SQL bootstrap failure is historical: actual disposable SQL Server
+  now passes 69 tests, including 43 assistant contract/review/durability/API
+  tests and concurrent additive startup. Those suites are in the existing CI
+  SQL job, not emulation or generic parity alone.
+* Updated PRD, operator handover, MVP guide and index in place. Current local
+  regression is 379 discovered/310 passed/69 SQL skips; 47 nonbillable assistant
+  tests and 19 Chromium checks cover the source candidate. Provider/human
+  fixtures are not actual model or human acceptance. Initial Review retained.
+* Specific retained-data rollout/up-to-USD-5 incremental QA approval was again
+  unavailable. Azure image/revision/data/configuration remain unchanged; no
+  ACR publication or paid calls occurred. CON-009/AC-057, actual workload
+  permission/restart proof, semantic calibration and human/business acceptance
+  remain distinct open gates, not inherited from the corrected source checks.

@@ -138,11 +138,18 @@ operator checks, unit tests and the source-head CI/rubric results on #65.
 ### Five-assistant version: build-only handover
 
 The owner-requested five-assistant runtime is implemented and locally packaged
-in `zavaforward-mvp:assistants-20261013-01`, with source/local image/CI evidence
+in corrected image `zavaforward-mvp:assistants-20261013-02`, with source/local image/CI evidence
 in [ADR 0002](../docs/adrs/0002-pilot-readiness-architecture.md#implementation-and-build-evidence).
 This is not a new ACR digest or deployed revision. The current exercise
 handover above remains the serving app; no SQL/AI/auth settings or retained
 data were replaced for this build.
+
+The corrected candidate closes shutdown dispatch admission and renders manual
+controls independently of auxiliary reads, with a 10-second timeout. Local
+actual SQL validation now passes 69 tests, including 43 assistant tests and
+concurrent startup on retained fixture state; this replaces the earlier
+failed disposable-login attempt, not live Azure acceptance. Those tests use a
+local-only disposable database and nonbillable provider/human fixtures.
 
 Before enabling this version, obtain its specific retained-data rollout and
 finite incremental allowance approval; the earlier #58 exception is not an
