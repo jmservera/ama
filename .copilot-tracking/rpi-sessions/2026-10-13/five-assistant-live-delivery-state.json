@@ -39,6 +39,11 @@
       "evidence": "mvp/tests/test_generated_dataset.py; docs/reference/research/retrofit-synthetic-data/README.md; .copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md"
     },
     {
+      "decision": "Preserved concurrent intent correction687e4aa in normal combined merge ec7721b. Merged source discovery389/316passed/73SQLskips, all73actualSQL tests passed. Exact-source local image04/d5eba379 built; image03 is historical. Canonical docs rendered and links/protected evidence checked. No new cloud operation or Review.",
+      "status": "implemented-and-validated; publication-pending",
+      "evidence": ".copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md; docs/adrs/0002-pilot-readiness-architecture.md"
+    },
+    {
       "decision": "Specific Azure SQL database deletion was cancelled by user at the tool boundary. No wipe/recreate/reseed, no alternate deletion route, no model call. Clarification form unanswered because owner unavailable; preserve existing database and disabled QA.",
       "status": "reset-blocked",
       "evidence": "Azure sql_db_delete result: Operation cancelled by user; subsequent explicit reset-confirmation form unavailable."
@@ -52,8 +57,8 @@
     },
     {
       "id": "actual-platform-acceptance",
-      "summary": "Ledger-compatible image03/enriched seed have not reached Azure; registered model/SQL/restart proof remains unexecuted.",
-      "resolution": "After reset approval, recreate ledger database/settings, preserve tenant bindings, deploy exact image03 and run real proof within an effective approved QA expiry. Original one-hour authority expires2026-10-13T21:55:47Z; never silently extend it."
+      "summary": "Ledger-compatible combined-source image04/enriched seed have not reached Azure; registered model/SQL/restart proof remains unexecuted.",
+      "resolution": "After reset approval, recreate ledger database/settings, preserve tenant bindings, deploy exact image04 and run real proof within an effective approved QA expiry. Original one-hour authority expires2026-10-13T21:55:47Z; never silently extend it."
     }
   ],
   "next_action": {

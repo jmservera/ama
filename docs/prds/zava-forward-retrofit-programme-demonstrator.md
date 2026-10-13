@@ -599,6 +599,8 @@ reached the existing Azure app, with independent managed-identity SQL reads and
 unchanged private configuration/authentication. Before any paid call, the live
 ledger database exposed unsupported trigger DDL; source `99aeaac` corrects fresh
 ledger creation and adds real ledger tests. This is not real-model acceptance.
+Combined source `ec7721b` preserves the concurrent intended-proposal identity
+fix; its image04 is built locally, with 73 actual disposable SQL tests passing.
 The owner then stopped migration and authorized a fresh synthetic database.
 The deletion operation was cancelled, so no reset/reseed is claimed and QA is
 disabled. CON-009/AC-057 acceptance stays Blocked.

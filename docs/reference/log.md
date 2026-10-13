@@ -2044,6 +2044,22 @@ metadata when the knowledge base was created.
   provenance and linked recovery, invalidation and carry-forward learning.
   IDs/counts/approval are unchanged. Updated addendum and index; BRD v0.16.0,
   original case, owner memory and regulatory snapshots remain unchanged.
+
+## 2026-10-13 Combined assistant source and blocked-reset publication
+
+* Preserved concurrent intended-proposal identity correction `687e4aa` with
+  a normal merge, without rewriting PR ancestry or losing generator/ledger
+  corrections. Combined source `ec7721b` passes 389-test discovery (316 passed,
+  73 conditional SQL skips) and all 73 actual disposable SQL tests.
+* Built exact-source image04 locally:
+  `sha256:d5eba379f5fd2ce5d9a38965357c193be88eb1882f8e62f75b06faa5aa52fe22`.
+  Updated the [ADR receipt](../adrs/0002-pilot-readiness-architecture.md#fresh-ledger-and-synthetic-coverage-learning-2026-10-13),
+  PRD, operator guide and index. Rendered nine changed canonical pages and
+  checked links, fragments, frontmatter and protected evidence.
+* Database reset remains cancelled, image02/revision11 remains the disabled
+  serving version, and no model call or image04 cloud deployment is claimed.
+  Prepared synthetic counts and all private tenant bindings remain separate
+  from live acceptance; historical Reviews are preserved.
   The available four-arm MVE evidence is proposed, not verified benefit results.
 
 ## [2026-10-13] ingest | Agent process map and PowerPoint handoff

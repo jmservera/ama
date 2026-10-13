@@ -149,8 +149,10 @@ Live Azure SQL exposed a ledger-only DDL incompatibility before assistance
 could run. Source `99aeaac` fixes fresh append-only ledger events, preserves
 initial generated procurement/as-of, and enriches the
 [existing synthetic generator](../docs/reference/research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13).
-All 72 local actual SQL tests pass; local image `assistants-20261013-03` is
-built, not published or deployed. Full evidence is in
+After preserving the concurrent intended-proposal identity fix, combined
+source `ec7721b` passes all 73 local actual SQL tests and 389-test discovery
+(316 passed, 73 conditional skips). Exact-source local image
+`assistants-20261013-04` is built, not published or deployed. Full evidence is in
 [ADR 0002](../docs/adrs/0002-pilot-readiness-architecture.md#fresh-ledger-and-synthetic-coverage-learning-2026-10-13).
 
 The owner stopped migration and requested a synthetic database reset. QA

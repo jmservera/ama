@@ -21,10 +21,10 @@ incremental spend. Token reservations do not guarantee provider billing.
 
 ## Execution Status
 
-Active. First boundary is fresh private management/configuration/identity,
-rollback and independent controlled-domain SQL fingerprints before deployment.
-Authorization blocker cleared. Real model, SQL persistence and restart evidence
-remain unexecuted until recorded below.
+Blocked for P03/P03-T01 actual delivery. Initial rollout authorization was
+cleared, but the later exact database reset was cancelled. Local source,
+enriched generator and combined-image validation are complete; live reset,
+seed, registered model and changed-database restart evidence remain unexecuted.
 
 ## Validation Intent
 
@@ -121,3 +121,28 @@ Canonical PRD/ADR/addendum/infra/MVP/synthetic recipe/dictionary/index/log now
 distinguish the observed image02 rollout/ledger failure, verified image03/code,
 prepared fixtures and blocked reset/live proof. Parent P03 remains unchecked;
 no new child Review can claim full delivery while these required steps remain.
+
+## P03 Combined Source and Publication Validation
+
+Upstream advanced with rubric-only scoring and the owner-coauthored intended
+proposal identity correction 687e4aa. Committed the current-task documentation
+before a normal conflict-free merge; no stash, reset, history rewrite or
+unrelated-file staging. Combined runtime source is
+ec7721b51f815e034f9afee82dcf09cd6c4019ac. The correction separates changed
+registered intent with unchanged dependencies while retaining same-intent
+reactive/proactive deduplication.
+
+Merged-source discovery: 389 tests,316passed,73conditional SQLskips.
+Actual disposable ordinary/ledger SQL: all73passed. Exact-source local image04
+has ID sha256:d5eba379f5fd2ce5d9a38965357c193be88eb1882f8e62f75b06faa5aa52fe22
+and OCIrevision ec7721b51f815e034f9afee82dcf09cd6c4019ac. Image03 remains
+historical; image04 is the current prepared runtime, not an ACR manifest.
+
+Rendered nine canonical Markdown pages with the existing rendering approach;
+the missing Markdown package was restored only in private session tooling.
+Link/fragment/frontmatter checks pass with no new missing targets, and original
+case, owner memory and regulatory snapshots are untouched. Synthetic coverage
+table agrees with the private aggregate receipt. Canonical PRD/ADR/operator
+guide/index and append-only log distinguish current prepared and serving state.
+P03 remains unchecked, current-child Review unexecuted and reset approval plus
+renewed effective finite QA authority required before live execution.

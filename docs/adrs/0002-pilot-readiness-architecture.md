@@ -216,11 +216,14 @@ Source `99aeaac6b17c19090875b2e23990a6666a58c534` explicitly creates
 using the ordinary trigger only outside ledger databases. It refuses an
 existing incompatible ledger table without dropping evidence. The
 [official append-only ledger example](https://learn.microsoft.com/sql/relational-databases/security/ledger/ledger-how-to-append-only-ledger-tables?view=sql-server-ver17)
-was checked on 2026-10-13. Actual disposable SQL now passes 72 tests,
-including fresh-ledger five-path/immutability/restart and incompatible-table
-refusal. Full discovery passes 387 tests with 72 conditional SQL skips.
-The local image `assistants-20261013-03` has ID
-`sha256:3ca084baf8da6a799dc0c5a277834be80d4ad28be4e59d1b7909092db3706e12`;
+was checked on 2026-10-13. The concurrent intended-proposal identity correction
+`687e4aa` is preserved in combined source
+`ec7721b51f815e034f9afee82dcf09cd6c4019ac`. Actual disposable SQL passes
+73 tests, including fresh-ledger five-path/immutability/restart,
+incompatible-table refusal and changed-intent identity. Full discovery finds
+389 tests: 316 pass and 73 conditional SQL tests skip. The local image
+`assistants-20261013-04` has ID
+`sha256:d5eba379f5fd2ce5d9a38965357c193be88eb1882f8e62f75b06faa5aa52fe22`;
 it is not a published or serving manifest.
 
 Fresh SQL seed loading now preserves generated procurement and as-of metadata,
