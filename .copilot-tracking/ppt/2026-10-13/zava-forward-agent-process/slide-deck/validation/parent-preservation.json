@@ -1,0 +1,58 @@
+{
+  "original_slides_preserved": 21,
+  "slide_count": 22,
+  "new_slide": 13,
+  "counter_changes": [
+    [
+      13,
+      14,
+      6
+    ],
+    [
+      14,
+      15,
+      7
+    ],
+    [
+      15,
+      16,
+      5
+    ],
+    [
+      16,
+      17,
+      6
+    ],
+    [
+      17,
+      18,
+      6
+    ],
+    [
+      18,
+      19,
+      2
+    ],
+    [
+      19,
+      20,
+      2
+    ],
+    [
+      20,
+      21,
+      2
+    ],
+    [
+      21,
+      22,
+      4
+    ]
+  ],
+  "comparison": "Symmetrically detached canonical XML for every original shape; exact notes XML and image bytes; original masters/layouts/themes/media/notes parts byte-equal; notes backlinks correctly retargeted for moved slide parts",
+  "source_sha256": "6ae671851a456b3f1482b0b24af09be2b836900c1d8eccc5a13fa929c1c268da",
+  "output_sha256": "d089b54ff3d905c58020dfe26828d7786dac424ed4310a7547d082175f701d8e",
+  "preserved_parts": 50,
+  "failures": [],
+  "actual_image_alt_text_matches_yaml": true
+}

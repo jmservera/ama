@@ -1,0 +1,625 @@
+{
+  "cards": [
+    {
+      "phase": "Choose homes",
+      "name": [
+        "Stock",
+        "Prioritisation"
+      ],
+      "request": [
+        "Explain sourced",
+        "candidate evidence"
+      ],
+      "proactive": [
+        "New conflicts or",
+        "missing stock facts"
+      ],
+      "owner": [
+        "Assets owns policy;",
+        "data owners verify"
+      ],
+      "full_name": "Stock Prioritisation Agent"
+    },
+    {
+      "phase": "Assess & design",
+      "name": [
+        "Assessment",
+        "Preparation"
+      ],
+      "request": [
+        "Prepare a sourced",
+        "survey / design pack"
+      ],
+      "proactive": [
+        "Changed or stale",
+        "assessment evidence"
+      ],
+      "owner": [
+        "Assessor + coordinator",
+        "sign off independently"
+      ],
+      "full_name": "Assessment Agent"
+    },
+    {
+      "phase": "Prepare funding",
+      "name": [
+        "Grant & Funding",
+        "Evidence"
+      ],
+      "request": [
+        "Draft a source-linked",
+        "application / pack"
+      ],
+      "proactive": [
+        "Changed terms or",
+        "missing pack inputs"
+      ],
+      "owner": [
+        "Finance validates,",
+        "approves and submits"
+      ],
+      "full_name": "Grant & Funding Agent"
+    },
+    {
+      "phase": "Coordinate works",
+      "name": [
+        "Works & Resident",
+        "Coordination"
+      ],
+      "request": [
+        "Draft updates; offer",
+        "capacity-backed slots"
+      ],
+      "proactive": [
+        "Unaccepted handoffs;",
+        "missed update duties"
+      ],
+      "owner": [
+        "Resident chooses;",
+        "Programme releases"
+      ],
+      "full_name": "Contractor & Resident Coordination Agent"
+    },
+    {
+      "phase": "Verify & handover",
+      "name": [
+        "Quality",
+        "Evidence Review"
+      ],
+      "request": [
+        "Assemble evidence",
+        "for human review"
+      ],
+      "proactive": [
+        "Missing or conflicting",
+        "quality evidence"
+      ],
+      "owner": [
+        "Independent quality",
+        "authority accepts"
+      ],
+      "full_name": "Quality Verification Agent"
+    }
+  ],
+  "colors": {
+    "cream": "#F7F2E7",
+    "forest": "#183A31",
+    "moss": "#D5E2D4",
+    "gold": "#E5B96A"
+  },
+  "evidence": [
+    "docs/case_study_48_addendum.md#where-agents-fit-and-where-they-do-not",
+    "docs/case_study_48_addendum.md#agentic-architecture-brief",
+    "docs/prds/zava-forward-retrofit-programme-demonstrator.md#bounded-agent-orchestration-pattern",
+    "docs/reference/research/company/agent-request-challenge.md#summary"
+  ],
+  "status": "proposed target design; benefits unmeasured; proactive watchers not claimed deployed",
+  "trigger_boundary": "Deterministic eligibility and routing; registered permitted AI task only; invalid or failed proposals preserve state and owned manual recovery. No automatic contact, approval, work release, claim or payment.",
+  "funding_boundary": "Grant/funding evidence work spans preparation through claim and cash; reviewed funding and budget are prerequisites before work release, award is not cash.",
+  "text_geometry": [
+    {
+      "text": "PROPOSED DESIGN | BOUNDED ASSISTANCE, NOT FIVE AUTONOMOUS MANAGERS",
+      "left": 60,
+      "top": 47.0,
+      "width": 781.21875,
+      "font_px": 19
+    },
+    {
+      "text": "Five assists. One controlled journey.",
+      "left": 60,
+      "top": 85.0,
+      "width": 955.609375,
+      "font_px": 55
+    },
+    {
+      "text": "The workflow owns progression. People own decisions.",
+      "left": 60,
+      "top": 155.0,
+      "width": 661.8203125,
+      "font_px": 27
+    },
+    {
+      "text": "Choose homes",
+      "left": 96.734375,
+      "top": 234.0,
+      "width": 193.53125,
+      "font_px": 27
+    },
+    {
+      "text": "Assets owns policy;",
+      "left": 87.7578125,
+      "top": 298.0,
+      "width": 211.484375,
+      "font_px": 22
+    },
+    {
+      "text": "data owners verify",
+      "left": 96.9140625,
+      "top": 323.74,
+      "width": 193.171875,
+      "font_px": 22
+    },
+    {
+      "text": "Stock",
+      "left": 78,
+      "top": 392.0,
+      "width": 68.0859375,
+      "font_px": 25
+    },
+    {
+      "text": "Prioritisation",
+      "left": 78,
+      "top": 421.25,
+      "width": 154.1953125,
+      "font_px": 25
+    },
+    {
+      "text": "?",
+      "left": 82.80859375,
+      "top": 466.0,
+      "width": 10.3828125,
+      "font_px": 17
+    },
+    {
+      "text": "ON REQUEST",
+      "left": 109,
+      "top": 465.0,
+      "width": 119.015625,
+      "font_px": 18
+    },
+    {
+      "text": "Explain sourced",
+      "left": 78,
+      "top": 494.0,
+      "width": 170.8046875,
+      "font_px": 24
+    },
+    {
+      "text": "candidate evidence",
+      "left": 78,
+      "top": 522.08,
+      "width": 206.8828125,
+      "font_px": 24
+    },
+    {
+      "text": "!",
+      "left": 85.16796875,
+      "top": 567.0,
+      "width": 5.6640625,
+      "font_px": 17
+    },
+    {
+      "text": "PROACTIVE REVIEW",
+      "left": 109,
+      "top": 566.0,
+      "width": 181.03125,
+      "font_px": 18
+    },
+    {
+      "text": "New conflicts or",
+      "left": 78,
+      "top": 595.0,
+      "width": 162.3125,
+      "font_px": 23
+    },
+    {
+      "text": "missing stock facts",
+      "left": 78,
+      "top": 621.91,
+      "width": 192.984375,
+      "font_px": 23
+    },
+    {
+      "text": "Assess & design",
+      "left": 388.45703125,
+      "top": 234.0,
+      "width": 216.0859375,
+      "font_px": 27
+    },
+    {
+      "text": "Assessor + coordinator",
+      "left": 373.32421875,
+      "top": 298.0,
+      "width": 246.3515625,
+      "font_px": 22
+    },
+    {
+      "text": "sign off independently",
+      "left": 379.1796875,
+      "top": 323.74,
+      "width": 234.640625,
+      "font_px": 22
+    },
+    {
+      "text": "Assessment",
+      "left": 381,
+      "top": 392.0,
+      "width": 147.3203125,
+      "font_px": 25
+    },
+    {
+      "text": "Preparation",
+      "left": 381,
+      "top": 421.25,
+      "width": 138.9375,
+      "font_px": 25
+    },
+    {
+      "text": "?",
+      "left": 385.80859375,
+      "top": 466.0,
+      "width": 10.3828125,
+      "font_px": 17
+    },
+    {
+      "text": "ON REQUEST",
+      "left": 412,
+      "top": 465.0,
+      "width": 119.015625,
+      "font_px": 18
+    },
+    {
+      "text": "Prepare a sourced",
+      "left": 381,
+      "top": 494.0,
+      "width": 197.4921875,
+      "font_px": 24
+    },
+    {
+      "text": "survey / design pack",
+      "left": 381,
+      "top": 522.08,
+      "width": 218.828125,
+      "font_px": 24
+    },
+    {
+      "text": "!",
+      "left": 388.16796875,
+      "top": 567.0,
+      "width": 5.6640625,
+      "font_px": 17
+    },
+    {
+      "text": "PROACTIVE REVIEW",
+      "left": 412,
+      "top": 566.0,
+      "width": 181.03125,
+      "font_px": 18
+    },
+    {
+      "text": "Changed or stale",
+      "left": 381,
+      "top": 595.0,
+      "width": 175.1484375,
+      "font_px": 23
+    },
+    {
+      "text": "assessment evidence",
+      "left": 381,
+      "top": 621.91,
+      "width": 221.1484375,
+      "font_px": 23
+    },
+    {
+      "text": "Prepare funding",
+      "left": 695.9921875,
+      "top": 234.0,
+      "width": 207.015625,
+      "font_px": 27
+    },
+    {
+      "text": "Finance validates,",
+      "left": 704.75,
+      "top": 298.0,
+      "width": 189.5,
+      "font_px": 22
+    },
+    {
+      "text": "approves and submits",
+      "left": 682.7578125,
+      "top": 323.74,
+      "width": 233.484375,
+      "font_px": 22
+    },
+    {
+      "text": "Grant & Funding",
+      "left": 684,
+      "top": 392.0,
+      "width": 197.2109375,
+      "font_px": 25
+    },
+    {
+      "text": "Evidence",
+      "left": 684,
+      "top": 421.25,
+      "width": 109.7890625,
+      "font_px": 25
+    },
+    {
+      "text": "?",
+      "left": 688.80859375,
+      "top": 466.0,
+      "width": 10.3828125,
+      "font_px": 17
+    },
+    {
+      "text": "ON REQUEST",
+      "left": 715,
+      "top": 465.0,
+      "width": 119.015625,
+      "font_px": 18
+    },
+    {
+      "text": "Draft a source-linked",
+      "left": 684,
+      "top": 494.0,
+      "width": 221.484375,
+      "font_px": 24
+    },
+    {
+      "text": "application / pack",
+      "left": 684,
+      "top": 522.08,
+      "width": 185.5078125,
+      "font_px": 24
+    },
+    {
+      "text": "!",
+      "left": 691.16796875,
+      "top": 567.0,
+      "width": 5.6640625,
+      "font_px": 17
+    },
+    {
+      "text": "PROACTIVE REVIEW",
+      "left": 715,
+      "top": 566.0,
+      "width": 181.03125,
+      "font_px": 18
+    },
+    {
+      "text": "Changed terms or",
+      "left": 684,
+      "top": 595.0,
+      "width": 184.0625,
+      "font_px": 23
+    },
+    {
+      "text": "missing pack inputs",
+      "left": 684,
+      "top": 621.91,
+      "width": 200.6796875,
+      "font_px": 23
+    },
+    {
+      "text": "Coordinate works",
+      "left": 988.484375,
+      "top": 234.0,
+      "width": 228.03125,
+      "font_px": 27
+    },
+    {
+      "text": "Resident chooses;",
+      "left": 1004.703125,
+      "top": 298.0,
+      "width": 195.59375,
+      "font_px": 22
+    },
+    {
+      "text": "Programme releases",
+      "left": 994.2734375,
+      "top": 323.74,
+      "width": 216.453125,
+      "font_px": 22
+    },
+    {
+      "text": "Works & Resident",
+      "left": 987,
+      "top": 392.0,
+      "width": 213.4921875,
+      "font_px": 25
+    },
+    {
+      "text": "Coordination",
+      "left": 987,
+      "top": 421.25,
+      "width": 155.546875,
+      "font_px": 25
+    },
+    {
+      "text": "?",
+      "left": 991.80859375,
+      "top": 466.0,
+      "width": 10.3828125,
+      "font_px": 17
+    },
+    {
+      "text": "ON REQUEST",
+      "left": 1018,
+      "top": 465.0,
+      "width": 119.015625,
+      "font_px": 18
+    },
+    {
+      "text": "Draft updates; offer",
+      "left": 987,
+      "top": 494.0,
+      "width": 205.078125,
+      "font_px": 24
+    },
+    {
+      "text": "capacity-backed slots",
+      "left": 987,
+      "top": 522.08,
+      "width": 229.4921875,
+      "font_px": 24
+    },
+    {
+      "text": "!",
+      "left": 994.16796875,
+      "top": 567.0,
+      "width": 5.6640625,
+      "font_px": 17
+    },
+    {
+      "text": "PROACTIVE REVIEW",
+      "left": 1018,
+      "top": 566.0,
+      "width": 181.03125,
+      "font_px": 18
+    },
+    {
+      "text": "Unaccepted handoffs;",
+      "left": 987,
+      "top": 595.0,
+      "width": 223.328125,
+      "font_px": 23
+    },
+    {
+      "text": "missed update duties",
+      "left": 987,
+      "top": 621.91,
+      "width": 217.328125,
+      "font_px": 23
+    },
+    {
+      "text": "Verify & handover",
+      "left": 1290.71484375,
+      "top": 234.0,
+      "width": 229.5703125,
+      "font_px": 27
+    },
+    {
+      "text": "Independent quality",
+      "left": 1301.6171875,
+      "top": 298.0,
+      "width": 207.765625,
+      "font_px": 22
+    },
+    {
+      "text": "authority accepts",
+      "left": 1314.421875,
+      "top": 323.74,
+      "width": 182.15625,
+      "font_px": 22
+    },
+    {
+      "text": "Quality",
+      "left": 1290,
+      "top": 392.0,
+      "width": 84.75,
+      "font_px": 25
+    },
+    {
+      "text": "Evidence Review",
+      "left": 1290,
+      "top": 421.25,
+      "width": 202.8984375,
+      "font_px": 25
+    },
+    {
+      "text": "?",
+      "left": 1294.80859375,
+      "top": 466.0,
+      "width": 10.3828125,
+      "font_px": 17
+    },
+    {
+      "text": "ON REQUEST",
+      "left": 1321,
+      "top": 465.0,
+      "width": 119.015625,
+      "font_px": 18
+    },
+    {
+      "text": "Assemble evidence",
+      "left": 1290,
+      "top": 494.0,
+      "width": 208.15625,
+      "font_px": 24
+    },
+    {
+      "text": "for human review",
+      "left": 1290,
+      "top": 522.08,
+      "width": 184.125,
+      "font_px": 24
+    },
+    {
+      "text": "!",
+      "left": 1297.16796875,
+      "top": 567.0,
+      "width": 5.6640625,
+      "font_px": 17
+    },
+    {
+      "text": "PROACTIVE REVIEW",
+      "left": 1321,
+      "top": 566.0,
+      "width": 181.03125,
+      "font_px": 18
+    },
+    {
+      "text": "Missing or conflicting",
+      "left": 1290,
+      "top": 595.0,
+      "width": 213.4453125,
+      "font_px": 23
+    },
+    {
+      "text": "quality evidence",
+      "left": 1290,
+      "top": 621.91,
+      "width": 164.921875,
+      "font_px": 23
+    },
+    {
+      "text": "WORKFLOW CORE | Rights + versions + gates + approvals + audit + manual recovery",
+      "left": 270.25,
+      "top": 712.0,
+      "width": 1058.5,
+      "font_px": 26
+    },
+    {
+      "text": "Proactive = permitted event / scheduled check -> draft or raise-only flag to a named human queue.",
+      "left": 60,
+      "top": 772.0,
+      "width": 1002.21875,
+      "font_px": 23
+    },
+    {
+      "text": "Funding spans planning through claim / cash. A new hazard goes straight to the human safety service.",
+      "left": 60,
+      "top": 805.0,
+      "width": 1039.3359375,
+      "font_px": 23
+    },
+    {
+      "text": "Intended value: fewer evidence gaps, less rework, clearer handoffs. Not measured gains or deployment proof.",
+      "left": 60,
+      "top": 842.0,
+      "width": 1095.859375,
+      "font_px": 21
+    }
+  ]
+}

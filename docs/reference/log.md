@@ -2045,3 +2045,39 @@ metadata when the knowledge base was created.
   IDs/counts/approval are unchanged. Updated addendum and index; BRD v0.16.0,
   original case, owner memory and regulatory snapshots remain unchanged.
   The available four-arm MVE evidence is proposed, not verified benefit results.
+
+## [2026-10-13] ingest | Agent process map and PowerPoint handoff
+
+* Created the [agent process map](../capstone/deck/agents-in-retrofit-process.svg)
+  and matching high-resolution PNG, grounded in the addendum, PRD and agent
+  request challenge. Five stage-specific assists distinguish staff-requested
+  help, proposed event/scheduled review and the separate human decision owner.
+  Rules own progression; agents do not gain approval, resident consent,
+  instruction, submission, quality acceptance or payment authority.
+* Handed supplied content to the installed PowerPoint Builder, which inserted
+  one slide after the AI boundary. Published the verified 22-slide
+  [capstone deck](../capstone/deck/zava-forward-executive-draft.pptx), with the
+  new map at slide 13 and all 21 original slides, notes, images, masters and
+  layouts retained. Only moved page counters and necessary notes backlinks
+  changed. The parent inset the new artwork/footer/logo to resolve nine
+  edge-margin warnings, then rebuilt only slide 13 and re-exported. The shared
+  builder ignores `alt_text`; a small partial-build helper embeds the YAML
+  description, which was verified in the actual published PPTX.
+* Added an accessible [text equivalent and value tests](../capstone/README.md#agents-in-the-retrofit-process-2026-10-13),
+  new-slide notes/alt description and sources, and an addendum explanation.
+  Updated the index. Working YAML, diagram source/contract, handoff and
+  validation evidence remain under `.copilot-tracking/ppt/2026-10-13/`;
+  the sole delivery is in `docs/capstone/deck/`, not `docs/presentations/`.
+* Validated all-slide notes/count, new-slide geometry (zero issues), original
+  shape XML apart from allowed counter digits, exact notes/image content and
+  unchanged original master/layout/theme parts. Inspected fresh LibreOffice
+  renders of slides 12-14. SDK vision validation and real PowerPoint/Aptos
+  rendering are unavailable/deferred, not passed; the source deck's existing
+  font substitution remains distinct from this addition.
+* Improvements are unmeasured hypotheses, to be tested against paired rules/
+  manual work including preparation, review, correction and shifted burden.
+  Proactive watchers are proposed, not claimed deployed. No new requirement,
+  regulatory currentness claim, resource change, draft closure, merge,
+  user acceptance, timed rehearsal or capstone score is implied. BRD, PRD,
+  original case, owner memory and regulatory snapshots are unchanged by this
+  diagram/deck continuation.

@@ -673,6 +673,14 @@ release a safety hold, approve professional work, infer consent, commit capital,
 award work, submit claims, accept quality, close complaints or defects, or use
 the absence of a sensor alert to contradict a resident.
 
+The [capstone process map](./capstone/deck/agents-in-retrofit-process.svg)
+shows the same bounded capabilities in their process stages, distinguishes
+staff-requested help from permitted event/scheduled review, and retains the
+human owner at every approval. Its [text equivalent and value tests](./capstone/README.md#agents-in-the-retrofit-process-2026-10-13)
+label all proactive deployment and improvement claims as proposed, not observed
+outcomes. Deterministic triggers/gates and the independent hazard route are
+not additional autonomous agents.
+
 ### Agentic Architecture Brief
 
 The pilot places agents only where the
