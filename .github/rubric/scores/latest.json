@@ -2,17 +2,17 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-13T13:36:14+00:00",
-  "commit": "0b90a452fdfb0b45c1526abb59f5e642f1536bc0",
+  "scored_at": "2026-10-13T15:26:34+00:00",
+  "commit": "0af4a9b481008c0e00206c34532af8039c18b7a6",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38405411148",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38420146372",
   "fingerprints": {
     "brd": "8698b2d950aa2f0d4cda8729d80d2d77ec0bea10404f22860cda2182f9db9160",
     "prd": "b8527640a2a72eda300af40419b4322c25adddab300818b614e97f0049b68fed",
     "adr": "e881df6677e31ed5f7700edbbe0c6b57c8ce76b58a1785c7dbb29269a422b2fb",
     "solution-code": "6588e8487463b57f8b7d05d1ca2ae2e9f88d2e99cc8457bc2fba806ecd35502e",
     "infrastructure": "e377bd25153088696b714380a81f5137f8aa5db3b2ce3d560c212a90131a38cc",
-    "capstone-deck": "9338390eef61641b043a0128cdc4670a63e6cae4ef6b43aea6f4290aa2badc74"
+    "capstone-deck": "31bfa6cfb4a29a87a83ea4b7b30ccf8a834584087165f9a3980ce05b5efe75c0"
   },
   "total": 45,
   "sections": {
@@ -30,17 +30,17 @@
         "infra/modules/authTokenStore.bicep:20-58",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component; new authTokenStore module adds a cleanly isolated, private-endpoint-scoped component with its own identity, consistent with modular decoupling. Scaling path still only partly evidenced end to end."
+      "rationale": "Failure-domain table explicit per component; authTokenStore module adds a cleanly isolated, private-endpoint-scoped component with its own identity, consistent with modular decoupling. Scaling path still only partly evidenced end to end."
     },
     "A2": {
       "score": 5,
       "evidence": [],
-      "rationale": "Unchanged baseline: this diff only retires historical drafts as documented learning in ADR 0002 and bumps PRD version; no new trade-off or alternatives-rejected evidence."
+      "rationale": "Unchanged baseline: this PR's ADR/PRD/deck evidence-governance updates do not add or change design-pattern trade-off reasoning."
     },
     "A3": {
       "score": 4,
       "evidence": [],
-      "rationale": "Unchanged baseline: ADR addendum documents retained lessons from retired drafts, not new security/compliance/responsible-AI architecture decisions."
+      "rationale": "Unchanged baseline: security/compliance architecture evidence not affected by this PR's evidence-governance diff."
     },
     "A4": {
       "score": 4,
@@ -55,22 +55,22 @@
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: no AI model choice or evaluation evidence added; diff only documents disposition of retired draft branches."
+      "rationale": "Unchanged baseline: testing/evaluation evidence not affected; no mvp/tests changes in this diff."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Unchanged baseline: no agentic autonomy or orchestration evidence changed; diff is a documentation retrospective on closed drafts."
+      "rationale": "Unchanged baseline: agentic autonomy/orchestration evidence not affected by this ADR/PRD/deck provenance update."
     },
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no new deck or rehearsal evidence in this diff. Baseline readiness score retained."
+      "rationale": "Live-scored; no rehearsal or Q&A evidence in this diff. Baseline readiness score retained."
     },
     "B2": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no new deck or rehearsal evidence in this diff. Baseline readiness score retained."
+      "rationale": "Live-scored; no rehearsal evidence in this diff. Baseline readiness score retained."
     },
     "B3": {
       "score": 0,
@@ -90,17 +90,17 @@
     "B6": {
       "score": 4,
       "evidence": [],
-      "rationale": "Unchanged baseline: no deck changes in this diff; PRD/ADR traceability edits do not bear on deck/documentation presentation quality."
+      "rationale": "Deck binary changed but prior version could not be inspected (archive read tools blocked by sandbox policy), so no reliable diff-based improvement/weakening could be confirmed; baseline retained."
     },
     "B7": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: not affected by CI-tooling-only diff."
+      "rationale": "Same constraint as B6: deck content changed but could not be diffed against the prior binary; baseline evidence-storytelling score retained absent a confirmed material change."
     },
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff records disposition of already-identified historical drafts; no new stakeholder, constraint or value-framing evidence."
+      "rationale": "Unchanged baseline: ADR/PRD evidence-governance edits reinforce existing stakeholder/business framing already captured at baseline, without a new material business-framing claim."
     },
     "C2": {
       "score": 0,
