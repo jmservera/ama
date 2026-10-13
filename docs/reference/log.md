@@ -2142,3 +2142,14 @@ metadata when the knowledge base was created.
   ACR publication or paid calls occurred. CON-009/AC-057, actual workload
   permission/restart proof, semantic calibration and human/business acceptance
   remain distinct open gates, not inherited from the corrected source checks.
+
+## [2026-10-13] validation | Corrected candidate final CI receipt
+
+* Source `560c30c` preserves the shipped runtime/UI/dependencies of exact local
+  image source `bf383c4`. Final
+  [CI 38461679776](https://github.com/jmservera/ama/actions/runs/38461679776)
+  passes test/image/mssql: 379 discovered tests with 69 conditional skips,
+  all 69 actual SQL tests, and hardened-image scan/SBOM checks.
+* This closes source/build validation, not the unapproved live rollout,
+  registered actual model invocation or independent changed-Azure SQL restart
+  gate. Earlier evidence and the initial Review are preserved.

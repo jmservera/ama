@@ -53,12 +53,12 @@ leases, concurrency, recovery, append-only events and startup migrations.
 Generate disposable local credentials privately and clean scoped containers.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Build and publish the corrected version
+### [x] P03: Build and publish the corrected version
 
 Depends on P02.
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Validate image, documentation and source publication
+#### [x] P03-T01: Validate image, documentation and source publication
 
 Run existing suites and browser checks, build exact corrected source, retain
 source/image/SQL evidence and update canonical learning in place. Publish #68

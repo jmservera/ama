@@ -183,6 +183,12 @@ conditional suites now run in the existing CI SQL job. Full local discovery
 is 379 tests, 310 passed and 69 conditional SQL skips; 47 nonbillable assistant
 tests and 19 Chromium checks cover the corrected behaviors.
 
+Final validation source `560c30c56bef93edb06275984dbe49c23b34ebc8` leaves the
+image's shipped runtime/UI/policies/dependency files unchanged from `bf383c4`.
+CI [38461679776](https://github.com/jmservera/ama/actions/runs/38461679776)
+passes all three jobs: 379 discovered tests with 69 conditional skips, all
+69 actual SQL tests, and hardened-image/Trivy/SBOM checks.
+
 The earlier local SQL authentication failure is historical, not an active
 disposable-SQL blocker. Actual SQL tests cover migrations, five proposal paths,
 role/current-source review, fenced claims, allowance contention and recovery;
