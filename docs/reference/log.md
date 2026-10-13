@@ -2017,3 +2017,31 @@ metadata when the knowledge base was created.
   generated-schema checks passed: 13 tests. Seven real-MCP-runtime tests were
   skipped because the pinned external runtime was unavailable; no runtime or
   live model result is represented as Passed. Updated index routing.
+
+## [2026-10-13] audit | Draft experiment PM and UX closure learning
+
+* Reviewed all four open drafts at their exact heads against main `71aaf9d`,
+  using pinned source, captured PR metadata and the requested UX Designer
+  review. No new app execution, browser/user study, deployment, tenant change
+  or resource teardown was performed. Existing tests, owner reports and old
+  revisions remain dated evidence, not newly reproduced acceptance.
+* Added the [closure inventory and #58 disposition queue](./research/gap-analysis-next-build.md#draft-experiment-closure-review-2026-10-13).
+  Recommend retiring #19/#24/#27 as learning only after capture merges and
+  owner authorization; #58 remains draft pending explicit carry/replace/defer
+  decisions and current-infrastructure verification. None of the four pinned
+  heads is an ancestor of inspected main; retirement does not imply all code
+  is merged, requirements accepted or resources deleted.
+* Integrated genuinely missing [UX recovery/capability learning](./research/ux/prototype-learnings-and-simplicity-review.md#draft-ux-closure-review-2026-10-13),
+  preserving owner feedback alongside later #24 source behavior and replacing
+  untested first-task failure assertions with hypotheses. Existing human,
+  role, accessibility and value checks remain unexecuted. Current welcome/
+  account progress does not replace absent #58 connected journeys.
+* Added [ADR regression and resource boundaries](../adrs/0002-pilot-readiness-architecture.md#retained-draft-architecture-learning-2026-10-13):
+  atomic state/event/replay, exact intent, independent handover reacceptance,
+  current work-order/scope binding and preserved historical/resident records.
+  Old local runbooks/topology do not become current operator contracts.
+* PRD v0.13.2 is evidence-only: corrected actual historical #19 branch
+  provenance and linked recovery, invalidation and carry-forward learning.
+  IDs/counts/approval are unchanged. Updated addendum and index; BRD v0.16.0,
+  original case, owner memory and regulatory snapshots remain unchanged.
+  The available four-arm MVE evidence is proposed, not verified benefit results.

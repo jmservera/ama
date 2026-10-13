@@ -39,6 +39,75 @@ current source/image/revision and per-task results, effective scoped budget/
 authorization and cost/usage controls. Independent integration/control work
 can proceed while quality/value adoption awaits reviewed results.
 
+### Draft Experiment Closure Review (2026-10-13)
+
+PM review and the requested UX Designer source review compared all four open
+drafts with `main` at `71aaf9d9833804f2dc1d8bcc4907aa12a95883dc`.
+The pins below are the inspected draft heads. None is an ancestor of that
+main commit; retirement must not be described as all code having merged.
+Branding-only normalization helps compare renamed paths, but a different
+file does not by itself prove either missing or equivalent behavior.
+
+Evidence is source-inspected, historically reported, or reviewer
+interpretation, not fresh execution. No draft was run or deployed, no new
+human study was performed, and no resource was deleted. Previous tests,
+owner feedback, old browser runs and automated reviews retain their original
+scope. The [UX synthesis](./ux/prototype-learnings-and-simplicity-review.md#draft-ux-closure-review-2026-10-13)
+and [ADR learning](../../adrs/0002-pilot-readiness-architecture.md#retained-draft-architecture-learning-2026-10-13)
+own the detail.
+
+| Draft and inspected head | Retained learning and unique work | PM/UX recommendation |
+| --- | --- | --- |
+| [#19](https://github.com/jmservera/ama/pull/19), `5e52ceb7d5937f21a5eb7380ad009833608ed811` | Historical Python demonstrator: bounded read-only agent, explicit failed/unfinished runs, source-preserving workbook preview/import and local persistence. Its optional-inference/private-network templates are not the current deployment contract. Four task perspectives are not authenticated role journeys. | Ready to retire as learning after this capture merges and the owner authorizes closure. Preserve pinned evidence; deliberately do not import its alternative app, seed/import scripts or compile-only infrastructure. This is not acceptance of its code or a claim that every unique file was delivered elsewhere. |
+| [#24](https://github.com/jmservera/ama/pull/24), `6029dc248911ddd3eebece5fb2067d881920494c` | Local Node PoC: transactional state/event/replay records, exact-intent retry, owned unknown-outcome recovery, separate handover reacceptance and scope-reconciled metrics. Nine constructed workflow fixtures, simulated roles and assistant do not establish real identity, AI or Azure acceptance. | Ready to retire as learning after capture and owner authorization; do not merge a second local application. Its reported 40 tests, five simulator fixtures and localhost GET p95 61.52 ms remain historical technical evidence, not cloud load or human value. |
+| [#27](https://github.com/jmservera/ama/pull/27), `51d8ae41caaa4535ad53c7268f874ce5334242ee` | Architecture/runbook/resource split pinned to implementation `40e248a9f29bd518da0be1b9da233e422de46058`, not #24's final head. Local resource ownership, persistence and teardown boundaries are reusable; its proposed services and no-Azure-resource statement describe that experiment only. | Ready to retire after applicable learning is filed here and in ADR/UX homes, with owner authorization. Keep the old runbook as pinned history, not today's operator instructions; no independent application or UX pass follows from this docs-only PR. |
+| [#58](https://github.com/jmservera/ama/pull/58), `6cbcb36e63597c6f4b90268207b5f1afbce4bb4a` | Continuing generated-data MVP with unique stock, connected-home/building, source-bound forms, forecast, portability and event journeys, plus later work-order/evidence/financial controls. These are not all in current main. Earlier real inference/deployment and later source tests are distinct observations. | Keep draft. Selectively carry forward, demonstrate an equivalent, or explicitly defer each capability below before retirement. Do not merge wholesale or mark accepted; preserve the owner's current-infrastructure validation gate and the earlier Partial / Not accepted review. |
+
+#### #58 Carry-Forward and Acceptance Queue
+
+This is a disposition queue against existing requirements, not approval of
+new scope or a commitment to implement the old branch. Proposed accountable
+roles below are review responsibilities, not confirmed company assignments.
+All rows remain unresolved; closing the code requires an explicit owner
+decision on carry-forward, demonstrated replacement or deferral.
+
+| Capability requiring disposition | Pinned evidence and current-main gap | Existing contract and closure evidence |
+| --- | --- | --- |
+| Stock workspace and programme linkage | [Stock UI](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/exercise.js#L165-L221) filters/pages the 60,000-home stock separately from 980 programme cases. Main has a case map, not this stock route. | FR-004/012/035, AC-006/040/043; Data/Programme review search, filtered population/map versus displayed page and explicit unknown stock-to-case links. Do not invent joins. |
+| Linked home/building isolation and controlled events | [Connected UI and event editor](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/exercise.js#L224-L289) and [lifecycle actions](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/exercise.js#L379-L477) are absent as connected routes in main. Adjacent generic panels are not evidence of equivalence. | FR-001/002/009-011/014/015/022/033/035; Programme and resident/safety owners test sibling independence, scoped return/review, distinct handoff/update ownership and recovery without old shortcuts. |
+| Source-bound form and independent pack review | [Forms UI](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/exercise.js#L290-L375); draft `forms.py`/`decision.py` have no current-main equivalents. Generic AI notes do not establish these controls. | FR-036 to FR-044, AC-044 to AC-054; Finance/Data review source/hash/version, no-match/manual correction, deterministic totals, never-prefilled human-only fields, separate reviewer and export with no submission. AI quality/value stays separately evaluated. |
+| Safe portability, import and bulk coordination | [Preview/export UI](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/exercise.js#L64-L161) uses exact previews/fingerprints and partial row outcomes, unlike main's simpler import and CSV export. | FR-005-007/020, AC-007-010/023; Data/Programme review supported fields/formats, source preservation, conflicts, replay and forbidden consequential bulk actions against backend enforcement. |
+| Forecast and stakeholder context | [Forecast UI](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/exercise.js#L43-L57); draft `forecast.py`/`programme.py` are absent in main. Overview counts are not a validated forecast. | FR-021-024/035, AC-024-027/041/043; Data/Programme reconcile as-of, exact cohort/denominator, versions, unknowns, exclusions and uncertainty to retained events/oracles. |
+| Version-bound quality, work release and financial lineage | Later draft `quality.py`, `procurement.py`, `finance.py` and `workflows.py` differ from current main; source presence/difference does not establish runtime parity. [ADR learning](../../adrs/0002-pilot-readiness-architecture.md#retained-draft-architecture-learning-2026-10-13) retains the regression semantics. | FR-009/010/013/016-019/043, AC-012/013/016/019-022/042/051; independent Quality, Programme and Finance review stale work-order/scope evidence, reacceptance, payment/milestone guards and preserved paid history/resident choice. |
+
+For each carried change, record source, immutable image, config, endpoint and
+ready revision on the continuing infrastructure, then verify actual Entra
+roles/field access, SQL write/read/restart, permitted live AI and affected
+workflow/recovery paths under CON-009/AC-057. The
+[owner's gate](https://github.com/jmservera/ama/pull/58#issuecomment-6113913159)
+named then-current `ca-warm-test-api`; the
+[later handover](../../../infra/README.md#current-exercise-handover-2026-10-13)
+identifies `ca-forward-test-api`. Neither old revision
+`ca-properwarm-mvp--0000018` nor #65 welcome/identity work proves the
+unmerged #58 source is delivered on that successor. Preserve the same stock,
+programme history and evidence, with unknown relationships still unknown.
+
+Representative task and accessibility checks remain Not run, including
+queue/context restoration, honest map-to-list scope, role/workflow endpoints,
+owned retry/conflict recovery and independently permitted approvals. The
+available four-arm MVE evidence is a proposed protocol, not verified participant results or measured
+15% net-effort improvement. Integration feasibility is not quality/value.
+BRD v0.16.0 stays unchanged: no new business requirement, customer fact,
+measured benefit or approval emerged. PRD v0.13.2 adds evidence/provenance
+only; existing IDs, counts and candidate approval remain unchanged.
+
+Retirement closes an obsolete research delivery route, not the requirements,
+the continuing application, the open value experiment, production approval
+or Azure/local resources. Merge the learning capture first; the owner decides
+PR closure separately. Resource teardown requires a separate owned inventory,
+preserved evidence/state and explicit authorization, never a copied historical
+cleanup command.
+
 Reviewed on 2026-10-08: the
 [BRD v0.15.0](../../brds/agentic-retrofit-programme-brd.md), the
 [PRD v0.9.0](../../prds/zava-forward-retrofit-programme-demonstrator.md),

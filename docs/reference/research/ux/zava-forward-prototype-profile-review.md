@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Prototype Profile Review
 description: Company-role critique, dated owner usability feedback and proposed next-prototype acceptance checks
-ms.date: 2026-10-07
+ms.date: 2026-10-13
 ms.topic: reference
 ---
 
@@ -165,6 +165,22 @@ queue. The owner now reports that changing role or workflow does not visibly
 change the UI or filters in the later application. These statements concern
 different review contexts and evidence types. Do not silently replace either
 with a universal implementation claim; verify the next artifact directly.
+
+### Later Pinned-Source Reconciliation (2026-10-13)
+
+The requested UX Designer review inspected final #24 source
+`6029dc248911ddd3eebece5fb2067d881920494c` without running it.
+Its [workflow handler](https://github.com/jmservera/ama/blob/6029dc248911ddd3eebece5fb2067d881920494c/apps/proper-warm/public/app.js#L135-L155)
+sets the workflow filter and reloads cases; the
+[scope/reset, failure and detail paths](https://github.com/jmservera/ama/blob/6029dc248911ddd3eebece5fb2067d881920494c/apps/proper-warm/public/app.js#L205-L345)
+show scope/counts, clear failed list metrics and keep case detail independent
+of register filters. These later source affordances neither disprove the
+owner's earlier perception nor establish that the reviewed runtime used
+this pin. UX-02/03 remain unexecuted; preserve both evidence types.
+
+The [closure synthesis](./prototype-learnings-and-simplicity-review.md#draft-ux-closure-review-2026-10-13)
+retains uncertain-write recovery and unique #58 journeys; it recommends
+retirement or carry-forward, not a passed usability study or new requirement.
 
 ### Owner's Notes
 

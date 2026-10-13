@@ -278,8 +278,29 @@ uncertainty evidence; missing evidence remains Inconclusive or Not evaluated.
 Independent platform/control work need not wait for experiment completion.
 
 This direction revises the baseline, not the original case or historical
-v0.12.0 acceptance. BRD v0.16.0 remains draft; PRD v0.13.1 is a candidate
+v0.12.0 acceptance. BRD v0.16.0 remains draft; PRD v0.13.2 is a candidate
 for fresh requirements review and owner acceptance, not an inherited approval.
+
+### Draft Experiment Retirement and Carry-Forward (2026-10-13)
+
+The [PM/UX closure review](./reference/research/gap-analysis-next-build.md#draft-experiment-closure-review-2026-10-13)
+recommends retiring historical #19/#24/#27 as learning after this capture
+merges and the owner authorizes closure. It preserves pinned evidence,
+bounded draft authority, exact-intent retry, independent handover
+reacceptance and owned resource boundaries. It does not accept their local
+apps, copy obsolete topology or authorize deletion of resources.
+
+#58 is not fully superseded: unique stock, connected home/building, form,
+event, portability and forecast journeys and later version-bound controls
+need explicit carry-forward, demonstrated replacement or owner-approved
+deferral. Keep the code draft and verify carried changes on the continuing
+current infrastructure with source/image/config/revision-bound evidence.
+#65 identity/welcome progress, old fixtures/tests and old inference/browser
+observations do not prove delivery or human acceptance of that unmerged work.
+The available four-arm MVE evidence remains proposed, not measured benefit. No new business
+fact, requirement, approval or weakening of resident/safety/financial
+authority follows; BRD v0.16.0 stays unchanged and PRD v0.13.2 records
+evidence only. Retirement and product/pilot/production acceptance are distinct.
 
 ## Zava Forward at Zava North Homes
 

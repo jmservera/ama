@@ -533,3 +533,26 @@ The [current handover](../../infra/README.md#current-exercise-handover-2026-10-1
 and [MVP limits](../../mvp/README.md#honest-limits) own the version-linked
 operator detail. This delta neither rewrites the historical table nor approves
 the proposed decisions, control-owner matrix or production rollout.
+
+### Retained Draft Architecture Learning (2026-10-13)
+
+The [PM/UX closure review](../reference/research/gap-analysis-next-build.md#draft-experiment-closure-review-2026-10-13)
+captures all four unmerged drafts against main `71aaf9d`. These are reusable
+control/regression lessons, not new approved architecture decisions or a
+claim that the draft implementation is running in the current deployment.
+
+| Pinned source | Retained lesson | Current adoption/assurance boundary |
+| --- | --- | --- |
+| #19 [local demonstrator contract](https://github.com/jmservera/ama/blob/5e52ceb7d5937f21a5eb7380ad009833608ed811/prototype/README.md) | Bound model inputs/tools/calls; commit a run before inference, preserve explicit failed/unfinished states and reject stale acceptance. Machine schema/source checks do not establish prose correctness. | Preserve the evidence pattern, not the alternative local SQLite app or compile-only/private-network templates. Durable resume/retry and current real-service/task-quality acceptance need separate proof. |
+| #24 [transaction/replay store](https://github.com/jmservera/ama/blob/6029dc248911ddd3eebece5fb2067d881920494c/apps/proper-warm/src/store.mjs) | Case version, event and idempotency response commit together. Bind replay to case, actor and canonical intent, including expected version. Exact retry returns the committed response; changed intent/actor conflicts. Incompatible/unreadable state fails rather than silently reseeding. | A localhost SQLite implementation is not proof of equivalent Azure SQL concurrency/durability. Carry the regression semantics into the current store and uncertain-outcome UI; tab-local retained intent is not restart-proof recovery. |
+| #24/#27 [quality replacement and runbook](https://github.com/jmservera/ama/blob/51d8ae41caaa4535ad53c7268f874ce5334242ee/docs/architecture/proper-warm-runbook.md#two-minute-demonstration) | Replacing accepted quality evidence invalidates separate handover acceptance. The reported completion count went 1 -> 0 -> 1 only after fresh independent handover evidence and explicit advancement; prior history/invoice/update commitments remain. | Keep an executable replacement/return/reacceptance regression, not only happy-path stage counts. The #27 runbook is pinned to `40e248a`, earlier than final #24; it is not a second runtime verification. |
+| #58 [quality source](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/properwarm_mvp/quality.py) and [control report](https://github.com/jmservera/ama/pull/58#issuecomment-6102962478) | Evidence and installation/quality milestones must bind the exact current completed work-order and scope version. Material correction/rescope stales affected downstream evidence and blocks incompatible release/payment, while preserving paid history and resident choices. Independent review cannot be supplied by a provider submission or AI draft. | Later draft source/tests differ from main and recorded revision 18. Compare/adopt scoped invalidation and financial lineage, then prove changed-source/image/config/revision behavior; do not infer runtime parity or merge wholesale. |
+| #27 [resource ledger](https://github.com/jmservera/ama/blob/51d8ae41caaa4535ad53c7268f874ce5334242ee/docs/architecture/proper-warm-resources.md) | Separate created local resources from proposed Azure services, record ownership/persistence, and inventory before teardown. A docs-only PR creates neither application evidence nor cloud resources. | Its no-Azure-resource statement is experiment-local, not today's `ama` inventory. Proposed queue/agent-state services remain unreconciled with ADR 0001; do not copy that topology or execute old cleanup commands. Current operations stay in the infra handover. |
+
+Retiring #19/#24/#27 preserves these pins and intentionally declines their
+alternative delivery routes, not the control requirements. #58 remains an
+unresolved selective carry-forward queue. Application acceptance continues
+to require actual AI/SQL/Azure, effective authorization/budget, source-bound
+workflows and failure/recovery evidence; independent quality, value, human UX,
+legal and production gates remain separate. No resource teardown is
+authorized by this documentation review.

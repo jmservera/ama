@@ -1,16 +1,16 @@
 ---
 title: Prototype Learnings and Simplicity Review
-description: Historical prototype simplicity review and dated PR58 real-platform and decision-model learning
+description: Historical prototype simplicity review, dated platform learning and PM/UX draft-retirement and carry-forward evidence
 author: AMA programme
-ms.date: 2026-10-11
+ms.date: 2026-10-13
 ms.topic: reference
 ---
 
 ## Purpose and evidence boundary
 
-Open pull requests #19 (Python prototype), #24 (Node proof of concept) and #27 (architecture and runbook documents) are kept unmerged to preserve what the prototypes taught the project. This page records those learnings and the result of a simplicity critique run on 2026-10-08 by the UX designer, the Design Thinking coach and six company-role agents (Neighbourhood Housing Officer, Retrofit Programme Manager, Resident Engagement, Data and Performance, Building Safety, Asset Executive).
+This page preserves learning from draft #19 (Python prototype), #24 (Node proof of concept), #27 (architecture/runbook documents) and #58 (continuing MVP). Keeping a draft open is not necessary to preserve cited learning; the dated closure review below recommends retirement or selective carry-forward, not code acceptance. The historical simplicity critique ran on 2026-10-08 with the UX designer, the Design Thinking coach and six company-role agents (Neighbourhood Housing Officer, Retrofit Programme Manager, Resident Engagement, Data and Performance, Building Safety, Asset Executive).
 
-Evidence labels: observed means seen in the PR content; hypothesis means a role or coach view; unknown means no evidence. Role views are research instruments, not company facts. No usability study with real staff has been done, so every ease-of-use claim here is untested. All prototype data is synthetic.
+Historical evidence labels: observed means seen in the PR content, including reported runs, not independently reproduced behavior; hypothesis means a role or coach view; unknown means no evidence. The later review distinguishes source-inspected, reported and interpretation. Role views are research instruments, not company facts. No usability study with real staff has been done, so every ease-of-use claim here is untested. All prototype data is synthetic.
 
 ## What the prototypes proved
 
@@ -41,6 +41,46 @@ errors and consent/financial/safety authority; do not fake a rationale from
 a closed scorer or hide failed assistance. Independent app/platform work
 need not wait for the parallel experiment; adoption/value claims do.
 
+### Draft UX Closure Review (2026-10-13)
+
+The requested UX Designer inspected pinned draft UI source against main
+`71aaf9d9833804f2dc1d8bcc4907aa12a95883dc`, without executing the
+apps, browser tests or human sessions. The
+[PM closure inventory](../gap-analysis-next-build.md#draft-experiment-closure-review-2026-10-13)
+records all four heads and retirement conditions; the original observations
+below retain their date and scope.
+
+| Newly retained source learning | Product implication and remaining validation |
+| --- | --- |
+| #19 distinguishes captured AI-run evidence from current case state and makes unavailable/failed inference explicit; [run UI](https://github.com/jmservera/ama/blob/5e52ceb7d5937f21a5eb7380ad009833608ed811/prototype/web/app.js#L292-L475) keeps human acceptance separate from stage approval | Retain snapshot/current-state and draft/approval distinctions without merging the crowded historical shell. Readable assistance and source validation do not prove reduced review effort. |
+| #24 preserves an ambiguous write's exact role, version, key and request for explicit retry; [recovery UI](https://github.com/jmservera/ama/blob/6029dc248911ddd3eebece5fb2067d881920494c/apps/proper-warm/public/app.js#L506-L561) is tab-local and warns against reload/closure | Unknown outcome must not look like success or a new action. Preserve exact intent until resolved; test replay versus changed-intent conflict on the current build. This is not proven durable recovery across browser restart. |
+| #24's pinned workflow handler filters/reloads results; [scope/reset and detail behavior](https://github.com/jmservera/ama/blob/6029dc248911ddd3eebece5fb2067d881920494c/apps/proper-warm/public/app.js#L205-L345) separates list failure from zero work and detail from register filters | Preserve earlier owner-reported lack of visible context change. Source affordances at a later pin neither disprove that feedback nor pass UX-02/03; validate visible scope/count/reset and owned failures. |
+| #27 is a runbook pinned to an earlier #24 implementation, not another evaluated interface | Capture its receipt/acceptance, resident-update and independent handover semantics, not an extra UX pass or current runtime contract. |
+| #58 adds [stock](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/exercise.js#L165-L221), [home/building](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/exercise.js#L224-L258), [forms](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/exercise.js#L290-L375), event, portability and forecast routes absent from main | These need explicit carry/replace/defer decisions before code retirement. Main's case map, adjacent panels and generic AI notes are not demonstrated equivalents. Backend authority and current source/image/revision checks remain independent. |
+
+#58 source also exposes task-readiness hypotheses: most workflow links open
+the first story rather than a workflow-specific case; returning from a case
+does not explicitly restore every originating view/page/scroll/focus; the
+map-to-list action copies area/flag, not every filter or viewport. The last
+pattern is also in main, not a unique draft regression. See
+[workflow routing](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/exercise.js#L43-L49),
+[case return](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/app.js#L261-L359)
+and [main map/list scope](https://github.com/jmservera/ama/blob/71aaf9d9833804f2dc1d8bcc4907aa12a95883dc/mvp/web/app.js#L666-L729).
+Raw JSON editors and multi-identity demo instructions are source affordances,
+not evidence of task-ready staff forms. Retain UX-02/03/07 and per-workflow
+endpoint checks as unexecuted, not newly approved requirements.
+
+The current welcome/account route replaces old role simulators as the entry
+pattern, not the absent connected workflows.
+[Identity/session learning](../../../prds/zava-forward-retrofit-programme-demonstrator.md#review-learning-disposition)
+already distinguishes photo availability, actual authorization and account
+replacement. Owner-reported sign-in is not a complete role or usability pass.
+Skip links, native labels, focus styles and responsive CSS in the drafts are
+engineering ingredients, not keyboard, screen-reader, contrast, target-size
+or reflow/200% text-zoom acceptance. Representative staff/provider and
+accessible resident research remains human-owned; no measured ease or benefit
+is inferred.
+
 ### Historical Prototype Findings (2026-10-08)
 
 | Learning | Source | Status |
@@ -63,11 +103,11 @@ Reconciliation with the main-branch ADR 0001: PR #27 treats Cosmos DB as non-aut
 
 All eight critics converged on the same five problems.
 
-* Too much on one screen. The Python prototype combines an actor picker, four perspective buttons, a metric strip, a searchable list, a detail panel, a six-card agent map (five agents unimplemented) and an import panel; the Node PoC adds nine workflows, an 11-role simulator and eight lifecycle stages. Observed. Nobody can name the first action.
+* Too much on one screen. The Python prototype combines an actor picker, four perspective buttons, a metric strip, a searchable list, a detail panel, a six-card agent map (five agents unimplemented) and an import panel; the Node PoC adds nine workflows, an 11-role simulator and eight lifecycle stages. Source-observed density; difficulty identifying the first action is an untested hypothesis.
 * Internal vocabulary. Gate, hold, stale review, provenance, tool trace, episode, "Control room", GATE_BLOCKED. Observed vocabulary; hypothesis that staff read it as bureaucracy or a fault.
 * A long path to value. Pick a perspective, find a case, open it, run the agent for 12 to 18 seconds, read the trace, accept. "Accept" only acknowledges a draft and is easy to read as a safety decision or consent. Observed.
 * Rejections that look like errors, plus red where nothing is wrong. Excel users expect to overwrite cells (hypothesis).
-* A brittle import. An exact nine-column sheet named `cases`, and one bad header fails the file. Observed, so the first task for a data owner would likely fail.
+* A brittle import. An exact nine-column sheet named `cases`, and one bad header fails the file. Source-observed format restriction; first-task failure for a data owner is an untested hypothesis.
 
 ## Consensus simplification
 
@@ -77,7 +117,7 @@ These are proposals, each from at least five of the eight critics.
 * One full-screen case card: contact details, resident preferences and adjustments, flags, last contact, next appointment, next owner. One plain status line: "Ready", "Waiting on [named person]: [reason]" or "Stopped until [named person] confirms".
 * Plain words in place of internal terms: gate becomes "check before next step", hold becomes "waiting on" or "stopped until", quarantine becomes "rows to fix", Accept becomes "Use this draft". Add a copy audit for the core flow.
 * Requesting AI per record is optional, on demand or background, and never required to see a case. The subsequent-build rule still requires real AI in the deployed app. Show deterministic status instantly; distinguish "AI suggestion, not approved" from human-reviewed drafts and controlled approvals. Hide unbuilt agents.
-* A forgiving import: drop any workbook, auto-map columns and sheet names, import good rows, show "rows to fix" with a plain reason, and offer an Excel-shaped download of those rows. The source file stays untouched.
+* A forgiving import within declared supported workbook structures: preview column/sheet mapping, import permitted good rows, show "rows to fix" with a plain reason, and offer an Excel-shaped download of those rows. The source file stays untouched. The historical "drop any workbook" aspiration does not override PRD SA-005 or approve arbitrary-format ingestion.
 * Neutral colours for waiting; red only for real hazards or errors. Never colour alone.
 * Blocked steps give a reason, an owner and a next action, with a button to ask the owner.
 * Export to Excel or CSV on every list from day one, so staff never feel locked in (TR-001).

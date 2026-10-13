@@ -9,7 +9,7 @@ status: "in-review"
 exercise_status: "candidate-pending-review-and-owner-acceptance"
 historical_exercise_accepted_version: "0.12.0"
 historical_exercise_accepted_date: "2026-10-10"
-version: "0.13.1"
+version: "0.13.2"
 owners: ["AMA project owner (exercise approval)", "Retrofit Programme Manager (exercise product-owner role)"]
 reviewers: ["Independent PRD Quality Reviewer", "AMA project owner (final exercise acceptance); live control owners remain unconfirmed"]
 created_date: "2026-10-03"
@@ -32,7 +32,7 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.13.1 | Last Updated: 2026-10-13
+> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.13.2 | Last Updated: 2026-10-13
 
 ## Executive Summary
 
@@ -1295,7 +1295,7 @@ All goals have linked requirements; all FRs map to at least one goal (100%).
 | BRD BG-001 to BG-012 and RULE-001 to RULE-024 | GOAL-001 to GOAL-004, permission and transition gates, resident/safety/finance controls, and evaluation guardrails |
 | BRD Comparison 1 and Comparison 2; OD-18 | GOAL-003/004 and metrics; comparison definitions and targets remain open and unratified |
 | Retrofit operating-data exercise pack and data dictionary | Constructed identifiers, home/building joins, lifecycle events, contacts, appointments, safety holds, quality evidence, grant and finance fields; realistic data defects inform import and stale/conflict scenarios. The records do not establish actual company performance or resident outcomes. |
-| Prototype on `feat/zava-forward-prototype` at `5e52ceb` | Four role-based task perspectives and bounded case-review suggestions inform interaction direction only; view labels are not authorization, and implemented surfaces are not proof of production readiness |
+| [#19 prototype](https://github.com/jmservera/ama/pull/19) on historical `feat/proper-warm-prototype` at `5e52ceb7d5937f21a5eb7380ad009833608ed811` | Four role-based task perspectives and bounded case-review suggestions inform interaction direction only; preserve the actual historical branch name, not a renamed ref. View labels are not authorization, and implemented surfaces are not proof of production readiness |
 | [2026-10-06 nine-role/eleven-profile UX review](../reference/research/ux/zava-forward-prototype-profile-review.md) | Candidate journey contract, next-prototype slice and FR-011/012/014-017/024/032-035 with AC-034-043; source-based observations and proposed UX tests, not company/user validation |
 | [System One reassessment, 2026-10-10](../ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10), Microsoft catalog/API documentation and [2026-10-11 learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11) | DD-007, FR-036/037/044, AC-044/045/052/054/057 and NFR-009; API and source-bound selection feasibility, not calibrated screening or comparative value |
 | Owner direction on form extraction/filling and AI-assisted decisions, 2026-10-10; BRD FR-023/024/026/027 and RULE-009/010; proposed form pattern in the model reassessment | DD-008, FR-038 to FR-043, AC-046 to AC-051/053/054 and Finance journey; evidenced route, deterministic eligibility, separate application/award/claim/cash and human submission; schema/terms unresolved under OQ-015 |
@@ -1320,9 +1320,15 @@ All goals have linked requirements; all FRs map to at least one goal (100%).
 | 2026-10-12: current names changed but staff/workload codes and historical attribution must not | FR-005/011/022, NFR-004; shared-lock atomic update, exact private preservation and no-op restart recovery | Observed 980-case programme, not 60,000 live SQL cases; stock retained, no operational business-value claim |
 | 2026-10-12/13: welcome, own-account photo and switching are distinct from authorisation | NFR-001/003 and GOAL-001; public logo/name with deliberate entry, private delegated own-photo transport, image-only Blob CSP and explicit Microsoft account picker | Owner reports sign-in works; synthetic/photo transport and anonymous platform traces do not establish a person's photo, accessibility or changed authenticated session |
 | 2026-10-13: useful diagnostics require safe events and deployed configuration evidence, not generic request logs | FR-003/022, NFR-003/004; [fixed flow events](../../infra/README.md#account-selection-and-safe-flow-diagnostics), existing centralized routing and private image-only config comparison | Markers contain no new identity/token payload; existing logs need controlled handling. CI provider failures and rubric scores are not app or business acceptance |
+| 2026-10-13: #24 uncertain-write UI retains exact intent/key/version/role; recovery is tab-local, not proven across browser restart | FR-008/011/022, NFR-004/006; distinguish unknown outcome, exact retry/replay and changed-intent conflict; [pinned UX evidence](../reference/research/ux/prototype-learnings-and-simplicity-review.md#draft-ux-closure-review-2026-10-13) | Historical simulator/source evidence only; current SQL/role/recovery checks and usable announced error/owner/next action remain unexecuted acceptance |
+| 2026-10-13: replacing accepted quality evidence invalidates independent handover; later #58 binds evidence/milestones to current work-order/scope versions | FR-009/010/013/016-019/043, AC-012/013/016/019-022/042/051; invalidate affected dependent approvals, not historical payments or unrelated resident decisions; [ADR regression learning](../adrs/0002-pilot-readiness-architecture.md#retained-draft-architecture-learning-2026-10-13) | Source-tested/report evidence is not proof that current delivered code enforces all controls; completion counts require renewed independent acceptance |
+| 2026-10-13: current welcome/identity progress does not replace #58 stock/forms/building/event/forecast/portability journeys absent from main | Existing workflow and AI/form contracts; [carry-forward queue](../reference/research/gap-analysis-next-build.md#58-carry-forward-and-acceptance-queue) assigns carry/replace/defer decisions and version-linked evidence | Keep #58 draft pending explicit disposition and current-infrastructure verification. Eleven descriptions/nine links, raw JSON editors, tests and historical live inference do not establish complete staff journeys |
 
-This v0.13.1 evidence-only update changes no FR/AC/NFR/constraint counts or
-approval status. See [dated exercise observations](../case_study_48_addendum.md#observed-deployment-and-identity-learning-2026-10-1213)
+This v0.13.2 evidence-only update changes no FR/AC/NFR/constraint counts or
+approval status. The [PM/UX closure review](../reference/research/gap-analysis-next-build.md#draft-experiment-closure-review-2026-10-13)
+preserves source pins and requires explicit disposition of unique work before
+retirement; it is not a fresh quality regrade or owner acceptance.
+See [dated exercise observations](../case_study_48_addendum.md#observed-deployment-and-identity-learning-2026-10-1213)
 and [ADR 0002 identity learning](../adrs/0002-pilot-readiness-architecture.md#observed-exercise-identity-and-session-learning-2026-10-13).
 Record actual account selection separately; no unit test or CLI profile can
 stand in for an authenticated user's session.
