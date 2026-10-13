@@ -2,22 +2,22 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-13T18:37:32+00:00",
-  "commit": "c4b28e3168770252fb35a79074dc2202ef375514",
+  "scored_at": "2026-10-13T18:57:43+00:00",
+  "commit": "71ada157eda280069e8ec2524357eadd780b1767",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38446725139",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38449747901",
   "fingerprints": {
     "brd": "8698b2d950aa2f0d4cda8729d80d2d77ec0bea10404f22860cda2182f9db9160",
-    "prd": "3c7d238289da6ff7a573533518aec0b60ceb8e0b9ddd317bf3e8b478c0899bed",
-    "adr": "993b78b8b5ac4d8c1ba8aea2ef59e3dde23a136b97e5de42f279d01e737773ce",
+    "prd": "7730287b25abfe17b841387e75a72963e0640042af9ce714e5b339e496579bd8",
+    "adr": "a4d2e3adf8b8bf0dc47f9bb2f6912bf993c7c9c20de131b0adf5b50939060b36",
     "solution-code": "abd767f3a93bd8f91d134e70c501e7ce10b2673aa5670cbf5cc3f40c587e0857",
-    "infrastructure": "e377bd25153088696b714380a81f5137f8aa5db3b2ce3d560c212a90131a38cc",
+    "infrastructure": "82ee92839f90e9451a55eb9b396f1d1a3d8dc5a48763d646e63719d5ce36d93c",
     "capstone-deck": "31bfa6cfb4a29a87a83ea4b7b30ccf8a834584087165f9a3980ce05b5efe75c0"
   },
   "total": 47,
   "sections": {
-    "A": 29,
-    "B": 13,
+    "A": 28,
+    "B": 14,
     "C": 5,
     "D": 0
   },
@@ -27,65 +27,60 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:300-330",
-        "docs/adrs/0002-pilot-readiness-architecture.md:93-93"
+        "mvp/zavaforward_mvp/assistants.py:278-290",
+        "mvp/zavaforward_mvp/assistants.py:292-330",
+        "docs/adrs/0002-pilot-readiness-architecture.md:87-92"
       ],
-      "rationale": "New assistants.py adds a cleanly decoupled proposal service with its own connections, locks and migrate/transaction contracts; scaling path (bounded worker pool, semaphores) is evidenced but still a single-process MVP."
+      "rationale": "New Assistants service is a cleanly decoupled module with its own SQL tables (assistant_tasks/allowance/attempts/events), independent connections per request/worker, dialect abstraction for SQLite/MSSQL, and explicit fenced-lease/claim contracts for scaling across replicas. Failure domains and co..."
     },
     "A2": {
       "score": 5,
       "evidence": [],
-      "rationale": "No new alternatives-considered trade-off narrative in this diff; FR-047/ADR addendum documents a chosen design but not rejected alternatives in depth."
+      "rationale": "Baseline retained: no materially new trade-off argumentation beyond what A1/A3 already capture; not independently re-assessed this round."
     },
     "A3": {
       "score": 5,
       "evidence": [
-        "mvp/tests/test_assistants.py:241-266",
-        "mvp/zavaforward_mvp/assistants.py:388-403"
+        "mvp/zavaforward_mvp/assistants.py:121-200",
+        "mvp/zavaforward_mvp/ai.py:17",
+        "mvp/zavaforward_mvp/assistants.py:688-749"
       ],
-      "rationale": "New test_exact_source_role_matrix_and_no_cross_audience_leaks enforces a stated threat model: per-capability field allowlists, cross-audience leak checks, revocation and default-deny for contractors/unknown roles."
+      "rationale": "capture() enforces closed per-capability field allowlists excluding private/vulnerability/finance data from non-finance audiences (tested in test_exact_source_role_matrix_and_no_cross_audience_leaks); citation validation rejects unsupported/forbidden content; role/case scope rechecked on every re..."
     },
     "A4": {
       "score": 4,
       "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:1-842",
-        "mvp/README.md:626-629"
+        "mvp/zavaforward_mvp/server.py:49",
+        "mvp/zavaforward_mvp/server.py:188-210",
+        "mvp/web/assistants.js:1-106",
+        "mvp/tests/test_assistants.py:1-60"
       ],
-      "rationale": "Five capabilities working end to end locally (43 targeted + full suite passing per README); gaps (no live Azure/MSSQL, no real provider calls) are proactively disclosed."
+      "rationale": "Five capabilities are wired end to end: API routes (invoke/list/detail/review), a working UI (assistants.js, case-card buttons, review workflow) and a backing service with real SQL persistence. Known gaps (no deployed cloud image, no live Azure/SQL evidence, AC-057 Blocked) are proactively and ex..."
     },
     "A5": {
-      "score": 4,
-      "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:572-620",
-        "mvp/zavaforward_mvp/assistants.py:325-347"
-      ],
-      "rationale": "Fenced leases, serializable isolation, database-time expiry and a finite call/token allowance ledger add resilience patterns and per-reservation cost accounting beyond the prior qualitative-only baseline."
+      "score": 3,
+      "evidence": [],
+      "rationale": "Unchanged baseline: this PR documents some operational bounds (allowance limits, backoff) but does not add structured metrics/traces or measured cost-per-value; not sufficient to move past Satisfactory this round."
     },
     "A6": {
       "score": 3,
-      "evidence": [
-        "mvp/zavaforward_mvp/ai.py:61-89",
-        "mvp/zavaforward_mvp/assistants.py:210-230"
-      ],
-      "rationale": "New evidence() envelope captures model/usage/outcome and validate_output enforces a typed schema with citation checks, but there is still no comparative model-choice justification or a measured evaluation harness for this feature."
+      "evidence": [],
+      "rationale": "Unchanged baseline: no new model-choice justification or evaluation harness with defined metrics was added; test suite covers contract/failure behavior, not model quality evaluation."
     },
     "A7": {
       "score": 4,
-      "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:543-620",
-        "mvp/tests/test_assistants.py:271-351"
-      ],
-      "rationale": "Proactive scanner autonomously detects registered gap predicates and enqueues proposals without a request, with durable claim/lease/fence state-machine coordination across workers - real autonomy within explicit guardrails (no domain mutation, bounded limits)."
+      "evidence": [],
+      "rationale": "Unchanged baseline: the five assistants are bounded proposal-only capabilities with human review gates, consistent with prior 'Good' autonomy assessment; no new orchestration pattern evidence beyond what was already credited."
     },
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored narrative arc; no rehearsal/delivery evidence in this diff."
+      "rationale": "Live-scored; no rehearsal or delivery evidence available this round. Baseline retained."
     },
     "B2": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored audience calibration; no new delivery evidence."
+      "rationale": "Live-scored; no rehearsal or delivery evidence available this round. Baseline retained."
     },
     "B3": {
       "score": 0,
@@ -104,18 +99,24 @@
     },
     "B6": {
       "score": 4,
-      "evidence": [],
-      "rationale": "Closed criterion this run; baseline retained unchanged."
+      "evidence": [
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide13",
+        "mvp/README.md:416-632"
+      ],
+      "rationale": "Deck updated (binary diff) with slide 13 still showing an incomplete/placeholder-looking title line reused from template; capstone documentation (mvp/README.md) is extensive, navigable and discloses honest limits. Overall unchanged from baseline Good assessment."
     },
     "B7": {
-      "score": 3,
-      "evidence": [],
-      "rationale": "Deck's CFO slide already quantifies fictional economics; this diff does not materially add or remove evidence-storytelling content."
+      "score": 4,
+      "evidence": [
+        "mvp/README.md:629-632",
+        "docs/adrs/0002-pilot-readiness-architecture.md:168-176"
+      ],
+      "rationale": "New evidence includes concrete, numbered test results (43 targeted tests passed; 332 total, 306 passed, 26 skipped; 15 browser checks) presented as claims the audience can act on, with explicit disclosure of what was NOT exercised (no real SQL/Azure/provider). This is a step up from assertion-onl..."
     },
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "FR-047/ADR additions are technical scope, not new stakeholder/business-framing evidence beyond the existing baseline."
+      "rationale": "Unchanged baseline: BRD/PRD/ADR already strongly name stakeholders, constraints and success measures; this PR's changes do not add new discovery/business-framing evidence beyond prior Excellent assessment."
     },
     "C2": {
       "score": 0,
