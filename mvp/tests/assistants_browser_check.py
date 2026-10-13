@@ -26,7 +26,13 @@ def main():
     # Playwright/Chromium scratch state is confined to the project as well.
     os.environ["TMPDIR"] = str(root)
     seed = root / "seed.json"
-    seed.write_text(json.dumps(DATA))
+    data = json.loads(json.dumps(DATA))
+    data["cases"][0]["appointments"] = [
+        dict(date=day, slot="Morning", type="Assessment", who="Test Surveyors",
+             person="Kim Test", outcome="Booked")
+        for day in ("2026-10-14", "2026-10-15")
+    ]
+    seed.write_text(json.dumps(data))
     store = SqlStore(str(seed), str(root / "state.sqlite"))
     store.ai = Provider()
     app = App(store, "browser-test-only")
@@ -156,6 +162,13 @@ def main():
             check("late assistance cannot populate a different case",
                   "STALE-ASSISTANT-PANEL" not in page.locator("#app").inner_text())
             page.unroute("**/api/assistants", hold_first)
+            page.goto(base + "/app#/visits")
+            expect(page.get_by_role("heading", name="Visits coming up", exact=True)).to_be_visible()
+            expect(page.locator("#app ul.list > li")).to_have_count(2)
+            check("booked visit day groups render as elements", page.locator("#app section.card").count() == 2)
+            page.locator("#app ul.list > li a").first.click()
+            expect(page.locator("#app")).to_contain_text("Reference ZF-1")
+            check("rendered visit opens its case", True)
             check("no page errors", not errors)
             browser.close()
         print(f"{len(passed)} browser checks passed; no billable provider or retained dataset access.")

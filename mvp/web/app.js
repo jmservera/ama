@@ -38,7 +38,7 @@ const ago = (s) => {
   const days = Math.floor((Date.now() - new Date(s)) / 864e5);
   return days <= 0 ? "Today" : days === 1 ? "Yesterday" : `${days} days ago`;
 };
-const show = (...nodes) => { app.replaceChildren(...nodes.filter((n) => n && n.nodeType)); app.focus(); };
+const show = (...nodes) => { app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType)); app.focus(); };
 
 function login(msg) {
   document.getElementById("nav").hidden = true;
