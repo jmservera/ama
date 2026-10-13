@@ -34,6 +34,24 @@ the same reference. README contains exact configuration/API/operator gates.
 Late provider/unknown usage retains liability; proposal review never approves
 controlled state. Canonical human/business and real-platform gates unchanged.
 
+### P03 image and failure-reporting validation
+
+Built local image assistants-20261013-01 from bf7f05c; non-root UID 10001,
+no baked data, read-only root/cap-drop/no-new-privileges, writable state, HTTP
+health and byte-exact logo/assistant UI asset checks passed. A directly
+encountered silent worker/scanner catch was corrected before Review to fixed
+safe warning messages (no driver/source exception text) and bounded worker
+backoff. Added its regression: 44 targeted tests pass. Final source/image is
+rebuilt after this correction; the earlier image is not final source evidence.
+
+Disposable SQL Server integration initially failed login before executing
+parity assertions (17 tests, 18 setup errors). Credential-ready gating then
+failed to establish a usable test login. Connection-string construction with
+a nonsecret fixture confirms PWD is emitted correctly; the SQL readiness
+tool exists. This is unresolved local test-server bootstrap evidence, not
+proof of a new runtime SQL defect or a passing dialect test. Keep real MSSQL
+acceptance open; source CI's real SQL Server job remains necessary.
+
 ### P01 requirements and architecture
 
 PRD v0.14.0 adds the five-contract matrix, FR-047 and AC-058 to AC-061.

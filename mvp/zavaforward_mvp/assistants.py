@@ -6,6 +6,7 @@ to the provider or this service.
 """
 import hashlib
 import json
+import logging
 import math
 import os
 import threading
@@ -17,6 +18,8 @@ from datetime import datetime, timezone
 from . import projection, quality, ranking
 from .ai import FORBIDDEN
 from .store import ConflictError
+
+LOG = logging.getLogger(__name__)
 
 PM = "Retrofit Programme Manager"
 RC = "Retrofit Coordinator"
@@ -800,6 +803,7 @@ class Assistants:
 
     def _worker(self):
         while not self.stop_event.is_set():
+            delay = 1
             try:
                 with self.transaction() as db:
                     now = self.now(db)
@@ -810,15 +814,16 @@ class Assistants:
                     if self.execute(row[0]):
                         continue
             except Exception:
-                pass  # No source/config/driver exception text enters process logs.
-            self.stop_event.wait(1)
+                LOG.warning("Retrofit assistant worker failed; manual work remains available; bounded retry pending.")
+                delay = self.limits.backoff
+            self.stop_event.wait(delay)
 
     def _scanner(self):
         while not self.stop_event.is_set():
             try:
                 self.scan()
             except Exception:
-                pass
+                LOG.warning("Retrofit assistant scan failed; manual work remains available; next bounded scan pending.")
             self.stop_event.wait(self.limits.scan_interval)
 
     def start(self):

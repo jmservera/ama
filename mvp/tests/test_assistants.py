@@ -139,6 +139,21 @@ class Base(unittest.TestCase):
             db.execute("UPDATE assistant_attempts SET active_until=0 WHERE task_id=?", (tid,))
 
 
+class WorkerFailureReporting(unittest.TestCase):
+    def test_worker_and_scanner_log_safe_failure_without_private_exception(self):
+        for target in ("_worker", "_scanner"):
+            service = object.__new__(Assistants)
+            service.stop_event = threading.Event()
+            service.limits = Limits(config())
+            operation = "transaction" if target == "_worker" else "scan"
+            with patch.object(service, operation, side_effect=RuntimeError("PRIVATE-DRIVER-DETAIL")):
+                with patch.object(service.stop_event, "wait", side_effect=lambda delay: service.stop_event.set()) as wait:
+                    with self.assertLogs("zavaforward_mvp.assistants", level="WARNING") as messages:
+                        getattr(service, target)()
+                    self.assertNotIn("PRIVATE-DRIVER-DETAIL", " ".join(messages.output))
+                    self.assertIn("manual work remains available", " ".join(messages.output))
+                    wait.assert_called_once_with(service.limits.backoff if target == "_worker" else service.limits.scan_interval)
+
 class ContractTests(Base):
     def test_five_exact_versioned_ids(self):
         self.assertEqual(set(REGISTRY), {"stock-prioritisation", "assessment-preparation", "funding-evidence",
