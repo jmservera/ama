@@ -1,7 +1,7 @@
 ---
 title: One-Off Zava North Homes and Zava Forward Migration
 description: Dry-run-first local branding migration, presentation handling and explicit Azure redeployment follow-up
-ms.date: 2026-10-12
+ms.date: 2026-10-13
 ms.topic: how-to
 ---
 
@@ -101,6 +101,15 @@ files, and stage/commit the intended results before a new dry run.
 * Existing tokens, resource IDs, role assignments, redirects, secrets, SQL
   grants, SharePoint permissions and webhooks cannot be fixed by string
   replacement. Capture dependencies and recreate the exercise integration.
+  Observed Markdown deployment IDs (`warm-test`, `warm-dev`, `warm-dev2`)
+  and the historical `ca-properwarm-mvp` app/revision remain exact evidence.
+  Wrapped display names are matched across whitespace; technical IDs and
+  external URLs are not a reason to rewrite historical deployment facts.
+* The document-workbench logo rule belongs in its served stylesheet, not an
+  inline style element blocked by the existing `style-src 'self'` policy.
+  Its server must allow the PNG route and preserve binary bytes with
+  `image/png`; the logo's flex item must not shrink below its 114x40 CSS-pixel
+  box. Migration/HTTP/browser checks retain CSP instead of relaxing it.
 * Ranking-policy display metadata is covered by its content hash. The script
   recomputes that hash after the rename without changing rule order or logic.
 * A partial report lists the failed files. Other files may already be changed;
@@ -117,21 +126,24 @@ intentionally has no destructive Azure flag.
 
 The owner authorised deletion of resources inside `ama` and accepted downtime
 on 2026-10-11. That does not authorise deleting the resource group itself or
-shared tenant/M365 registrations. The current deployment identity and M365 CLI
-session both return `Insufficient privileges` when reading the existing API
+shared tenant/M365 registrations. The deployment identity and M365 CLI
+session initially returned `Insufficient privileges` when reading the existing API
 app registration. Resource-group access does not grant Microsoft Graph
 application-management access. Infrastructure and the protected API can be
 rebuilt using a securely retained existing client credential. Interactive
 sign-in and the tenant naming/role transition need authorised tenant action and
-real-user acceptance. The owner reports the callback repaired on 2026-10-12;
-the current operator cannot independently verify that registration update.
+real-user acceptance. The owner repaired the callback on 2026-10-12, then
+completed an isolated authorised provisioning login. The repeatable initializer
+subsequently verified it in check-only mode without broadening the deployment
+identity's permissions.
 Do not disable authentication or substitute a shared password.
 
 Use the renamed Bicep and existing provisioning tools rather than a second
 deployment implementation. Explicitly pass `workload=forward`, `uksouth`,
 the development profile, SQL Entra administrator, real application image,
 Entra client ID and map tile URL/attribution. Build the renamed package image,
-create the new application roles/redirect URI/secret, create SQL contained
+retain and initialize the existing registration or explicitly provision a new
+one when required, create SQL contained
 users for the new workload identities, and seed the retained generated-data
 snapshot. Check Key Vault soft deletion, name uniqueness, SQL/model regional
 availability and identity permissions before assuming recreation succeeds.
@@ -221,8 +233,12 @@ the returned client ID; it is not an in-place update by client ID.
 
 The [from-empty infrastructure recipe](../infra/README.md#from-empty-rebuild-observed-on-2026-10-12)
 records deletion ordering, separate budget enumeration, staged deployment,
-identity/model configuration, seeding and live checks. Live Entra login,
-scoped lists, map rendering and tiles remain unverified. Use the
+identity/model configuration, seeding and live checks. At that rebuild
+checkpoint, live Entra login, scoped lists, map rendering and tiles were not
+yet verified. Later owner-reported sign-in and staff initialization are recorded
+in the [current handover](../infra/README.md#current-exercise-handover-2026-10-13);
+complete browser/map acceptance and retained tenant naming remain separate.
+Use the
 [callback-only initializer](../infra/README.md#post-deployment-api-authentication-initialization)
 after future rebuilds rather than replacing the retained registration:
 
@@ -251,3 +267,21 @@ PNG from the read-only, capability-free container. The MVP suite runs 273 tests
 with 26 existing skips; 22 migration regressions pass. Public health and
 authentication responses are preserved. This asset check is not a substitute
 for signed-in list/map or tenant name/role acceptance.
+
+## Subsequent identity and account learning (2026-10-13)
+
+Public welcome, protected entry and own-account photo transport were deployed
+after the logo repair. A narrow `img-src blob:` CSP correction enables the
+browser's binary-photo success path; it does not prove a person's photo or
+consent. Tenant onboarding then demonstrated that a valid app role still needs
+the explicit SQL staff binding and startup-cache restart. Private reconciliation
+preserved stable work codes, supplier scopes and historical actors.
+
+The deployed account-switch image requests `select_account` directly; ordinary
+Sign out remains platform logout. Constant flow events use the existing
+centralized logs, not general callback/query logging. Actual replacement in an
+already-authenticated browser remains owner acceptance. See
+[ADR identity learning](../docs/adrs/0002-pilot-readiness-architecture.md#observed-exercise-identity-and-session-learning-2026-10-13),
+[product learning](../docs/prds/zava-forward-retrofit-programme-demonstrator.md#review-learning-disposition)
+and [dated observations](../docs/case_study_48_addendum.md#observed-deployment-and-identity-learning-2026-10-1213).
+Historical test counts/images above are pinned observations, not current totals.

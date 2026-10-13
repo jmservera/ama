@@ -60,7 +60,7 @@ These are comparators, not models to copy. Practices differ by stock profile,
 geography, funding, governance, resident needs, and organisational history.
 
 The comparators with recorded sizes (Karbon Homes 34,000, Onward Homes 35,000
-and Together Housing Group more than 38,000 homes) are all smaller than Proper
+and Together Housing Group more than 38,000 homes) are all smaller than Zava
 North Homes' 60,000 homes. Sizes for Thirteen Group and Home Group are not
 recorded here. See [Modelled Scale Position](#modelled-scale-position).
 
@@ -295,7 +295,7 @@ Recurring information gaps occur between:
 | Data and Performance Lead | Synthetic data design, lifecycle measures, data quality and analytical test evidence | Operational interpretation, investment, safety, resident, supplier and professional decisions |
 
 Approval limits and reporting lines vary between providers. Any monetary
-threshold used in discussion must be treated as an unknown until Proper North
+threshold used in discussion must be treated as an unknown until Zava North
 Homes' governance is defined.
 
 ## Regulatory Baseline

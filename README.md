@@ -26,6 +26,12 @@ the Zava Forward retrofit programme at Zava North Homes.
 * [Original Case Study 48](./docs/case_study_48_original.md)
 * [Case Study 48 Addendum](./docs/case_study_48_addendum.md)
 * [Agentic Retrofit Programme BRD](./docs/brds/agentic-retrofit-programme-brd.md)
+* [Zava Forward Workbench PRD](./docs/prds/zava-forward-retrofit-programme-demonstrator.md)
+* [Azure architecture](./docs/adrs/0001-azure-architecture.md) and
+  [pilot-readiness decisions](./docs/adrs/0002-pilot-readiness-architecture.md)
+* [Working MVP and current limits](./mvp/README.md)
+* [Deployment and identity initialization](./infra/README.md)
+* [Branding migration and historical exceptions](./tools/rename-zava.md)
 * [Housing Association Primer](./docs/reference/research/sector/housing-association-primer.md)
 * [Company Profile Research](./docs/reference/research/company/company-profile-research.md)
 * [UK Social Housing Baseline Research](./docs/reference/research/sector/uk-social-housing-baseline-research.md)

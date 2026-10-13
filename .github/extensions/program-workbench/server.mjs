@@ -82,19 +82,20 @@ export async function startProgramWorkbenchServer({ initialPath = "", repository
 
       const assetMap = {
         "/": "index.html", "/app.js": "app.js", "/styles.css": "styles.css",
+        "/zava-logo.png": "zava-logo.png",
         "/markdown-editor.js": "markdown-editor.js",
         "/vendor/toastui-editor.js": "vendor/toastui-editor.js",
         "/vendor/toastui-editor.css": "vendor/toastui-editor.css",
       };
       const asset = assetMap[url.pathname];
       if (!asset) { res.writeHead(404); return res.end("Not found"); }
-      let content = await readFile(join(assetsDirectory, asset), "utf8");
+      let content = await readFile(join(assetsDirectory, asset));
       if (asset === "index.html") {
-        content = content.replace("__CANVAS_TOKEN__", token).replace("__INITIAL_PATH__", encodeURIComponent(initialPath));
+        content = content.toString("utf8").replace("__CANVAS_TOKEN__", token).replace("__INITIAL_PATH__", encodeURIComponent(initialPath));
         res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'");
       }
-      const type = extname(asset) === ".js" ? "text/javascript" : extname(asset) === ".css" ? "text/css" : "text/html";
-      res.writeHead(200, { "Content-Type": `${type}; charset=utf-8`, "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" });
+      const type = extname(asset) === ".png" ? "image/png" : extname(asset) === ".js" ? "text/javascript" : extname(asset) === ".css" ? "text/css" : "text/html";
+      res.writeHead(200, { "Content-Type": type === "image/png" ? type : `${type}; charset=utf-8`, "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" });
       res.end(content);
     } catch (error) {
       sendJson(res, 400, { error: error instanceof Error ? error.message : "Unexpected canvas error." });

@@ -26,6 +26,20 @@ class RenameTests(unittest.TestCase):
         url = "https://github.com/jmservera/ama/blob/abc/PW/properwarm_mvp/server.py"
         self.assertEqual(rename.replace_names(f"Proper Warm {url}"), f"Zava Forward {url}")
 
+    def test_wrapped_display_names(self):
+        self.assertEqual(
+            rename.replace_names("Proper North\nHomes; Proper\nWarm; PROPER\tNORTH HOMES"),
+            "Zava North Homes; Zava Forward; ZAVA NORTH HOMES",
+        )
+
+    def test_historical_runtime_ids_in_markdown(self):
+        text = "Proper Warm: warm-test warm-dev warm-dev2 budget-warm-test ca-properwarm-mvp ca-properwarm-mvp--0000018"
+        for path in ("docs/adrs/example.md", "infra/README.md"):
+            with self.subTest(path=path):
+                result = rename.update_text(text, path, {})
+                self.assertEqual(result, text.replace("Proper Warm", "Zava Forward"))
+                self.assertEqual(rename.update_text(result, path, {}), result)
+
     def test_official_warm_homes_funding_is_not_rebranded(self):
         self.assertEqual(rename.replace_names("Warm Homes: Social Housing Fund"), "Warm Homes: Social Housing Fund")
 
@@ -178,6 +192,17 @@ class RenameTests(unittest.TestCase):
         once = rename.update_text("", "mvp/web/style.css", {})
         self.assertIn(".top nav{flex-wrap:wrap;min-width:0}", once)
         self.assertEqual(rename.update_text(once, "mvp/web/style.css", {}), once)
+        html_path = ".github/extensions/program-workbench/assets/index.html"
+        html = '<head><link rel="stylesheet" href="/styles.css"></head><span class="brand-mark" aria-hidden="true">PW</span>'
+        updated = rename.update_text(html, html_path, {})
+        self.assertIn('class="zava-logo"', updated)
+        self.assertNotIn("<style>", updated)
+        legacy = '<head><style>.zava-logo{width:114px;height:40px}</style></head>'
+        self.assertNotIn("<style>", rename.update_text(legacy, html_path, {}))
+        css_path = ".github/extensions/program-workbench/assets/styles.css"
+        css = rename.update_text("", css_path, {})
+        self.assertIn(".zava-logo {", css)
+        self.assertEqual(rename.update_text(css, css_path, {}), css)
 
     def test_cross_run_pptx_text_notes_and_metadata(self):
         from pptx import Presentation
@@ -194,6 +219,16 @@ class RenameTests(unittest.TestCase):
         self.assertEqual(result.slides[0].shapes[0].text, "Zava Forward")
         self.assertIn("Zava North Homes", result.slides[0].notes_slide.notes_text_frame.text)
         self.assertEqual(result.core_properties.title, "Zava Forward")
+
+    def test_wrapped_pptx_runs(self):
+        from pptx import Presentation
+        presentation = Presentation()
+        slide = presentation.slides.add_slide(presentation.slide_layouts[6])
+        paragraph = slide.shapes.add_textbox(0, 0, 1000000, 1000000).text_frame.paragraphs[0]
+        paragraph.add_run().text = "Proper North\n"
+        paragraph.add_run().text = "Homes"
+        self.assertTrue(rename.replace_runs(paragraph.runs))
+        self.assertEqual(paragraph.text, "Zava North Homes")
 
     def test_logo_added_once(self):
         from pptx import Presentation

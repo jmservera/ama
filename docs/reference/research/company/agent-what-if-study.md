@@ -1125,8 +1125,8 @@ rises.
 Contractors offer capacity through the channel they already use (email,
 spreadsheet, an installer app or an existing scheduling system), the
 agent turns it into sourced values, and a named contract manager accepts
-it as committed capacity (BRD RULE-007, FR-022). Residents use a Proper
-Warm app to view proposed slots, record measure-specific consent,
+it as committed capacity (BRD RULE-007, FR-022). Residents use a Zava
+Forward app to view proposed slots, record measure-specific consent,
 withdraw consent, register accessibility adjustments, and see who is
 coming. Installers on arrival open the appointment, capture a geotagged
 proof-of-visit photo and log the outcome against fixed codes. Housing

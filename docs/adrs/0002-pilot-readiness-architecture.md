@@ -498,9 +498,10 @@ time capture.
 
 ## Implementation status
 
-Status at 2026-10-08 on branch `feat/mvp-deterministic-ranking`. "Done" means
-built and covered by tests in `mvp/tests` or by a local run; nothing was run in
-Azure and no decision in this ADR is approved by this work.
+Historical snapshot from 2026-10-08 on branch `feat/mvp-deterministic-ranking`,
+with explicitly dated 2026-10-09 deployment updates. "Done" means built and
+covered by the tests/local runs available then, not pilot acceptance. Earlier
+blocked/unrun rows below are not the current #65 status; see the later delta.
 
 | Item | Status | Deviations |
 | --- | --- | --- |
@@ -517,4 +518,18 @@ Azure and no decision in this ADR is approved by this work.
 | Entra ID provider (decision 3) | Partial | Header parsing and role mapping tested with synthetic principals only; Azure configuration documented in the README, not done |
 | Blob documents (decision 2) | Partial | `DocumentStore` interface with local and Azure Blob implementations (urllib, SAS or managed identity), size and type limits, role checks, audit; Blob store run only against a fake transport; no malware scan or content sniffing |
 | Finance, grants, technical sign-offs and resident decisions (FR-013, FR-014, FR-018, FR-019) | Done (API and screens) | Record-only finance with separate approvers and no bulk path; constructed data, proposed role mapping, exact-match comparison, screens not run in a browser |
-| Azure provisioning, replicas, region, load test (decision 6) | Partial | Dev app `ca-zavaforward-mvp` on Azure SQL and Blob with a managed identity, min 2 and max 4 replicas, restart persistence checked (2026-10-09); the app is not yet in Bicep, Entra built-in authentication is blocked on an app registration, no load test, region and private networking for the pilot not decided |
+| Azure provisioning, replicas, region, load test (decision 6) | Partial | Dev app `ca-properwarm-mvp` on Azure SQL and Blob with a managed identity, min 2 and max 4 replicas, restart persistence checked (2026-10-09); the app is not yet in Bicep, Entra built-in authentication is blocked on an app registration, no load test, region and private networking for the pilot not decided |
+
+### Current Exercise Delivery Delta (2026-10-13)
+
+| Area | Later evidence | Remaining boundary |
+| --- | --- | --- |
+| SQL and deployment | #65 from-empty Bicep rebuild retained 980 programme cases; the API identity read/wrote SQL and retained audit writes across restart; both model tiers returned source=ai | Generated stock is 60,000 homes; no Azure load/backup-restore proof or calibrated AI benefit |
+| Identity and sessions | Callback check, private staff reconciliation, public welcome, own-photo transport and explicit account-picker route are deployed; owner reports administrator/Coordinator sign-in | Different-account replacement, own live photo/consent, all roles, B2B guests and full permissions remain separate acceptance |
+| Containers and CI | Tested account-switch image/revision and private configuration-preservation gate are recorded in the operator handover; MVP CI and both validations passed at source head 8ca4a3d | Later edits need their own checks; no production resilience or blanket assurance claim |
+| Documents and audit | SQL/Blob configuration replaces the local-only development defaults; append-only audit controls and startup-cache convergence are implemented | Malware/content scanning, external immutable digests, deletion/retention approval and recovery remain open |
+
+The [current handover](../../infra/README.md#current-exercise-handover-2026-10-13)
+and [MVP limits](../../mvp/README.md#honest-limits) own the version-linked
+operator detail. This delta neither rewrites the historical table nor approves
+the proposed decisions, control-owner matrix or production rollout.

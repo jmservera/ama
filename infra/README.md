@@ -2,7 +2,7 @@
 title: Azure Infrastructure (Bicep)
 description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
-ms.date: 2026-10-12
+ms.date: 2026-10-13
 ms.topic: how-to
 ---
 
@@ -17,6 +17,7 @@ Proposed, non-production infrastructure. The design and its rationale are in
 * `scripts/create-sql-users.sql`: contained SQL users for the managed identities. `scripts/create-sql-users.py` runs the same grants idempotently from the Azure CLI login.
 * `scripts/create-api-app-registration.sh`: Entra app registration, app roles and secret (Key Vault) for API sign-in.
 * `scripts/initialize-api-auth.py`: post-deployment callback synchronization for an existing API registration, without replacing roles, assignments or credentials.
+* `scripts/initialize-workbench-staff.py`: private tenant-member/app-role/SQL binding reconciliation, with idempotent checks and serving-replica restart.
 * `scripts/configure-m365-provisioner-app.sh`: delegated Graph permissions for the app the m365 CLI uses to set up SharePoint and Teams.
 * `scripts/grant-sharepoint-access.sh`: optional Graph `Sites.Selected` grant for the SharePoint evidence store.
 
@@ -25,7 +26,7 @@ Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `mo
 ## Deploy
 
 ```bash
-az group create -n rg-zava-forward-dev -l swedencentral
+az group create -n rg-zava-forward-dev -l uksouth
 az deployment group what-if -g rg-zava-forward-dev -f infra/main.bicep -p infra/main.bicepparam
 az deployment group create -g rg-zava-forward-dev -f infra/main.bicep -p infra/main.bicepparam
 ```
@@ -51,7 +52,7 @@ The flag does not delete existing apps in incremental deployment mode.
 
 `allowPublicNetworkAccess` and `keyVaultPurgeProtection` still work on their own to relax a single control in a production profile. Do not use the development profile as evidence for the private-network claims in ADR 0001.
 
-Example: `az deployment group create -g ama -f main.bicep -p main.bicepparam -p deploymentProfile=development`.
+Example from the repository root: `az deployment group create -g ama -f infra/main.bicep -p infra/main.bicepparam -p deploymentProfile=development`.
 
 ## Development access from external networks
 
@@ -107,6 +108,32 @@ Notes:
   URLs and is not proof of a completed identity rename. An authorised
   registration owner must update those separately; remove the transitional
   mapping when the new default `ZavaForward.*` values are issued.
+
+### Current exercise handover (2026-10-13)
+
+The dated deployment notes above are history, not the latest serving image.
+After the from-empty rebuild, callback initialization, public welcome/photo
+setup and tenant staff reconciliation, the deployed API is
+`ca-forward-test-api`, serving image
+`crforwardtestrzsrg.azurecr.io/zava-forward-mvp:account-switch-20261013-01`
+in ready revision `ca-forward-test-api--0000009`. The tested image digest is
+`sha256:8cf327786ac2b891a586e78981b4abf0cc9c86313d721cef74ea7fcda80fa599`.
+The account-switch rollout changed the image only; private comparisons
+preserved app/auth settings, SQL/AI configuration and secret references.
+
+The owner reports working administrator and Coordinator sign-in. Eleven
+tenant members are privately provisioned for ten stable internal positions
+plus a supplier-scoped Contractor; no roster is committed. This is not
+acceptance of every role, guest onboarding or a changed authenticated session.
+The existing registration and `ProperWarm.*` compatibility role map are
+retained deliberately, not silently renamed. Next-run recovery starts with
+the check modes below; do not replace the registration, reseed the workload
+or grant runtime tenant-management rights to fix a sign-in failure.
+
+For observed outcomes and pending product gates, see the
+[dated addendum](../docs/case_study_48_addendum.md#observed-deployment-and-identity-learning-2026-10-1213).
+Actual account replacement and own-photo acceptance remain separate from
+operator checks, unit tests and the source-head CI/rubric results on #65.
 
 ## Post-deployment API authentication initialization
 
@@ -319,9 +346,25 @@ authentication or make a mocked photo a live acceptance result.
 
 ## Microsoft 365 permissions
 
-The runtime identity needs only Microsoft Graph application permission `Sites.Selected` plus a per-site grant (`scripts/grant-sharepoint-access.sh`, role `write` for the evidence library). Teams alerts use a Workflows webhook, which needs no Graph permission and is created by hand in the channel.
+For the optional SharePoint evidence store, the runtime identity needs
+Microsoft Graph application permission `Sites.Selected` plus a per-site grant
+(`scripts/grant-sharepoint-access.sh`, role `write` for the evidence library).
+The rebuilt exercise uses Blob; SharePoint grants are not a prerequisite for
+that deployment. Teams alerts use a Workflows webhook, which needs no Graph
+permission and is created by hand in the channel. Neither an optional template
+parameter nor a placeholder worker proves that integration has run.
 
-Setting the site and channel up through the m365 CLI needs delegated Graph permissions on the app it signs in with, consented by an administrator: `Sites.FullControl.All`, `Team.Create`, `Channel.Create`, `AppRoleAssignment.ReadWrite.All` and `Application.Read.All`, plus the existing `AllSites.Read`. `scripts/configure-m365-provisioner-app.sh <app id> --consent` adds them. Remove `Sites.FullControl.All` and the consent once the grants are made.
+Setting the optional site and channel up through the m365 CLI needs delegated
+Graph permissions on its provisioning app, consented by an administrator:
+`Sites.FullControl.All`, `Team.Create`, `Channel.Create`,
+`AppRoleAssignment.ReadWrite.All` and `Application.Read.All`.
+The existing SharePoint `AllSites.Read` permission is separate from these
+Graph scopes and does not grant application-management authority.
+`scripts/configure-m365-provisioner-app.sh <app id> --consent` requests and
+optionally consents the Graph scopes; it is an operator step, not runtime
+startup. Remove unnecessary provisioning consent afterwards, including
+`Sites.FullControl.All` once the grants are made. Own-user photos separately
+use delegated `User.Read`, not tenant-wide application photo permission.
 
 ### API registration management with the existing M365 session
 
@@ -397,6 +440,11 @@ Rebuild sequence:
 6. Run [post-deployment authentication initialization](#post-deployment-api-authentication-initialization)
    against the retained registration, using an authorised isolated tenant
    profile. A new callback does not require a replacement client ID or secret.
+   If enabling own-user photos, complete the separate
+   [staged token-store setup](#public-welcome-and-microsoft-account-photos).
+   Reconcile the private roster with the
+   [staff initializer](#tenant-staff-and-application-role-initialization)
+   after seeding, including its serving-replica restart and read-only check.
 7. Wait for rollout, then check public `/healthz`, API 401 without credentials
    and browser redirection. Check SQL reads/writes and both model deployments
    from the API's own identity. Restart the actual revision and verify the
@@ -416,8 +464,10 @@ isolated provisioning login on 2026-10-12. A real initializer `--check` then
 verified the retained callback, and the opt-in `--account-photo` merge and
 read-only check succeeded. This separate provisioning profile has authority
 for that registration; the deployment identity's directory rights were not
-broadened. Live user photo/consent, map acceptance and tenant naming/role
-transition are distinct checks, not established by CLI authentication.
+broadened. Later tenant-staff reconciliation and owner-reported sign-in are
+recorded in the current handover above. Live user photo/consent, changed-account
+acceptance, map acceptance and tenant naming/role transition remain distinct
+checks, not established by CLI authentication.
 
 ## Validate locally
 

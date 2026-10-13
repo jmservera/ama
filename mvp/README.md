@@ -198,13 +198,13 @@ migration adds the columns and rebuilds keys when the ranking policy version
 changes. Tests check parity with the in-memory store, query plans and a
 60,000-case timing.
 
-Azure SQL mapping (designed, not run): `rowversion` becomes a `ROWVERSION`
-column or an explicit `BIGINT` incremented in the same `UPDATE`; the append-only
-triggers become `INSTEAD OF` triggers or a role with `INSERT` only on the ledger
-schema, with SQL ledger tables an option; JSON text columns become `NVARCHAR(MAX)`
-with `ISJSON`; `BEGIN IMMEDIATE` becomes a transaction at `SERIALIZABLE` or an
-`UPDLOCK` on the head row; digests go to immutable Blob storage; the per-year
-ledger table question in ADR 0002 stays open.
+Azure SQL is implemented by `mssqlstore.py` and has run with the API managed
+identity. It uses explicit `BIGINT` row versions, `NVARCHAR(MAX)` JSON bodies,
+binary text collation and a transaction-owned `sp_getapplock` writer lock.
+The audit table is append-only ledger when the database supports/enables it,
+otherwise an `INSTEAD OF UPDATE, DELETE` trigger rejects mutation. External
+immutable digest anchoring and the per-year ledger-table design in ADR 0002
+remain open; a hash chain alone does not prove those proposed controls.
 
 ### Entra ID on Container Apps
 
@@ -220,8 +220,9 @@ provisioning checks do not substitute for each user's consent/acceptance.
   authentication" so unauthenticated requests are blocked, and make the ingress
   the only route to the container so `X-MS-CLIENT-PRINCIPAL` cannot be forged.
 * Set `ZF_AUTH=trusted-proxy`, `ZF_TRUSTED_PROXY=1`, `ZF_ENTRA_TENANT_ID` and
-  `ZF_ENV=production`. A token must be `aad`, from that tenant, with exactly
-  one mapped role; the role comes from the token, never the staff file.
+  `ZF_ENV=production`. The platform principal type must be `aad` or `Bearer`,
+  from that tenant, with exactly one distinct mapped role; the role comes from
+  the validated platform principal, never the staff file.
 * Provision each staff record with the Entra object id (`oid`). Email matching
   is off unless `ZF_AUTH_EMAIL_FALLBACK=1`. Contractor guests need the same.
   Use the [tenant staff initializer](../infra/README.md#tenant-staff-and-application-role-initialization)
@@ -304,41 +305,46 @@ when `ZF_TEST_MSSQL=1` (and `ZF_SQL_*` point at a throwaway database).
 
 ## Honest limits
 
+Current scope is the continuing exercise, not production acceptance. Dated
+earlier observations remain in the ADRs and pinned #58 evidence; they must not
+be read as the current deployment state. The
+[current infrastructure handover](../infra/README.md#current-exercise-handover-2026-10-13)
+records the tested/deployed image and identity initialization.
+
 * The data is constructed. The generator (`zf_names.py`, `build_mvp_dataset.py`)
   makes names, phone numbers on Ofcom drama ranges and example email domains.
   The product screens do not say so; this README and the repository do.
-* Azure on 2026-10-09 (dev subscription, constructed data): the app ran on Azure SQL with a
-  managed identity, documents in Blob, two replicas, and a restart kept a written record with the
-  ledger intact. Sign-in there is still the shared password because Entra built-in
-  authentication needs an app registration that was not available. Nothing was load tested in
-  Azure and Blob contents were not listed directly (no data-plane role).
-* Dev sign-in is a single shared password. The Entra provider is tested only
-  with hand-built principal headers, never against a real tenant or Container
-  Apps authentication. The contractor screens are tested through the server and
-  not with a contractor account in a browser (the sample data has no contractor
-  users). Contractor status text can still say work is stopped for a safety
-  issue, and free-text notes are not redacted.
+* The 2026-10-12 rebuild ran the retained 980-case programme on real Azure SQL
+  with workload-identity reads/writes, both real model tiers and restart
+  persistence checks. Blob is the configured evidence store. Generated stock
+  remains 60,000 homes; it is not 60,000 live SQL programme cases. No Azure
+  load, full recovery, backup-restoration or production acceptance is claimed.
+* Shared-password sign-in remains local development only; production rejects
+  it. Azure uses built-in Entra authentication, app roles and explicit SQL
+  staff bindings. The owner reports working administrator/Coordinator sign-in.
+  A tenant-member Contractor allocation now exists, but browser acceptance
+  for all roles, B2B guests, own photo and actual different-account replacement
+  remains unproved. Unit principals and an anonymous chooser are not that proof.
+  Contractor status text can still mention a safety stop and free-text notes
+  are not redacted.
 * AI needs `AI_ENDPOINT` (and optionally `AI_DEPLOYMENT`,
   `AI_DEPLOYMENT_STRONG`) and a managed identity with the Cognitive Services
-  OpenAI User role. Without them the app uses plain templates. Nothing is
+  OpenAI User role. Both model tiers were exercised with `source=ai`; a
+  template result alone is not real-inference acceptance. Nothing is
   sent; there is no live integration with housing or repairs systems.
 * In development the map loads tiles from tile.openstreetmap.org unless
   `ZF_TILE_URL` is set. No licensed provider has been chosen or tested.
-* Live changes sit on local disk and uploads default to local disk. The Blob
-  store has run only against a fake transport in unit tests, never real
-  storage, and its managed identity path has not run in Azure. Upload checks
-  are an extension list and a size cap: no content sniffing, no malware scan.
-  On Azure Container Apps local disk is lost on restart, so run one replica
-  and treat it as a demo.
+* Local development defaults to local state/documents; Azure selects the
+  SQL/Blob backends through configuration. Do not apply local-disk durability
+  claims to that deployment or infer tested Blob restoration/erasure from
+  configuration alone. Upload checks are an extension list and a size cap:
+  no content sniffing or malware scan. Local files/digests on Container Apps
+  remain ephemeral and do not establish external immutable audit anchoring.
 * Scale: the in-memory store handles 60,000 synthetic cases for filtered pages
   in tens of milliseconds (about 0.6 s for the first, cold ranking build). The
   sqlite store answers list pages, search, sorts and counts in SQL at 60,000
   cases in roughly 50 to 150 ms on a development machine. These are dev
   machine figures, not production latency, and not Azure SQL.
-* Ranking snapshots are not yet stored per run and the policy is a Python
-  constant, not a signed-off policy file. AI value against the deterministic
-  order is measured only on constructed scenarios, plus overlap on each live recommendation record.
-
 * The ranking policy is a hash-checked file but not signed off: no named
   owner yet. The hash detects edits, it does not prove who approved them.
   Snapshots are written when a manager requests one and the data has changed,
@@ -346,7 +352,9 @@ when `ZF_TEST_MSSQL=1` (and `ZF_SQL_*` point at a throwaway database).
   date the store was first loaded, and day counts come from the stored
   `days_in_stage`, not recomputed from it. AI value against the deterministic
   order is only captured as the overlap on each recommendation record.
-* The SQL store is verified only on sqlite. Lists, search, sorts and counts
+* SQL Server parity tests and live Azure SQL checks supplement sqlite tests;
+  neither establishes production scale or every full-workflow requirement.
+  Lists, search, sorts and counts
   use SQL, but case detail, map, statistics, visits, facets, the CSV export,
   the closed list and every write still use the in-memory copy that is kept
   in step with the database. Keyset paging covers the default sort only.
@@ -368,9 +376,12 @@ when `ZF_TEST_MSSQL=1` (and `ZF_SQL_*` point at a throwaway database).
   Playwright (login, list with rank and reasons, show more, return, reopen,
   map list). It is run by hand, is not in the unittest run or CI, and was
   run in desktop Chromium only. No screen reader or mobile run was done.
-* The Dockerfile pins a base digest and runs as uid 10001 with no data baked in.
-  It was built and started locally with Docker; it has not been deployed. The
-  `mvp-ci.yml` workflow has not run on GitHub.
+* The Dockerfile pins a base digest and runs as UID 10001 with no data baked in.
+  Versioned images have been deployed; MVP CI test/image/mssql jobs and both
+  validation workflows passed for source head `8ca4a3d` on 2026-10-13.
+  The deployed account-switch image is linked in the infrastructure handover,
+  not assumed rebuilt from later documentation-only commits. Future edits need
+  their own checks; a scorer's successful execution is not product acceptance.
 * Finance and sign-off rules are a proposal on constructed data: the role
   mapping (for example Quality Inspector for assessment) is a stand-in for the
   PAS 2035 roles, matching is simple exact comparison, amounts are not tied to a

@@ -59,11 +59,15 @@ LOGO_TOP = .1
 LOGO_MARGIN = .2
 
 
+def _name_pattern(name: str) -> str:
+    return re.escape(name).replace(r"\ ", r"\s+")
+
+
 def replace_names(text: str) -> str:
     """Replace known branding forms, preserving external URLs as historical links."""
     def replace_part(part: str) -> str:
         for old, new in REPLACEMENTS:
-            part = part.replace(old, new)
+            part = re.sub(_name_pattern(old), new, part)
         return re.sub(r"\bPW\b", "ZF", part)
 
     result, start = [], 0
@@ -111,12 +115,14 @@ def update_text(text: str, path: str, path_map: dict[str, str]) -> str:
             references.add(relative)
             if not relative.startswith("."):
                 references.add("./" + relative)
+    if path.endswith(".md"):
+        references.update(re.findall(
+            r"\b(?:ca-properwarm-mvp(?:--[0-9]+)?|(?:budget-)?warm-test|warm-dev2?)\b", text,
+        ))
     protected = {old: f"\x00HISTORY_{i}\x00" for i, old in enumerate(sorted(references))}
     for old, marker in sorted(protected.items(), key=lambda item: -len(item[0])):
         text = text.replace(old, marker)
     text = replace_names(text)
-    for old, marker in protected.items():
-        text = text.replace(marker, old)
     if path.startswith("infra/"):
         text = re.sub(r"(?<![A-Za-z])warm(?=[-'])", "forward", text)
     if path == "mvp/web/index.html":
@@ -129,13 +135,15 @@ def update_text(text: str, path: str, path_map: dict[str, str]) -> str:
             r'<span class="brand-mark" aria-hidden="true">(?:PW|ZF)</span>',
             '<img class="zava-logo" src="./zava-logo.png" alt="Zava North Homes">', text,
         )
-        if ".zava-logo{" not in text:
-            text = text.replace("</head>",
-                                "<style>.zava-logo{width:114px;height:40px;object-fit:contain;background:#fff;padding:4px}</style></head>")
+        text = re.sub(r"<style>\.zava-logo\{[^}]+\}</style>", "", text)
+    if path == ".github/extensions/program-workbench/assets/styles.css" and not re.search(r"\.zava-logo\s*\{", text):
+        text += "\n.zava-logo { width:114px; height:40px; object-fit:contain; flex-shrink:0; background:#fff; padding:4px; }\n"
     if path == "mvp/web/style.css" and ".zava-logo{" not in text:
         text += "\n.zava-logo{width:114px;height:40px;object-fit:contain;flex-shrink:0;background:#fff;border-radius:4px;padding:4px}\n"
     if path == "mvp/web/style.css" and ".top nav{flex-wrap:wrap;min-width:0}" not in text:
         text += ".top{flex-wrap:wrap;gap:.75rem}.brand{flex-shrink:0}.top nav{flex-wrap:wrap;min-width:0}\n"
+    for old, marker in protected.items():
+        text = text.replace(marker, old)
     return text
 
 
@@ -149,7 +157,7 @@ def replace_runs(runs: Iterable[object]) -> bool:
     for old, new in (*REPLACEMENTS, ("PW", "ZF")):
         text = "".join(run.text for run in runs)
         url_spans = [m.span() for m in URL.finditer(text)]
-        pattern = r"\bPW\b" if old == "PW" else re.escape(old)
+        pattern = r"\bPW\b" if old == "PW" else _name_pattern(old)
         for match in reversed(list(re.finditer(pattern, text))):
             left, right = match.span()
             if any(a <= left < b for a, b in url_spans):

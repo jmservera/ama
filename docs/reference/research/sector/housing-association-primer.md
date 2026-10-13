@@ -194,7 +194,7 @@ The source reports these figures for the largest associations:
 | Peabody | Approximately 108,000 properties |
 
 The source ranks L&Q second and Peabody third, although its own figures place
-Peabody above L&Q. Treat the ranking as unverified. At 60,000 homes, Proper
+Peabody above L&Q. Treat the ranking as unverified. At 60,000 homes, Zava
 North Homes would be a large association, but smaller than these three.
 
 The source states that government targets include 1.5 million homes, of which

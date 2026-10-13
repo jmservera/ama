@@ -244,6 +244,11 @@ The local read-only/non-root image and live welcome/health/logo/protected API
 checks passed; configuration and ready replicas were compared before accepting
 the rollout. These are technical checks, not a resident/staff user study,
 calibrated AI quality, measured delivery benefit or full CON-009/AC-057 pass.
+The dated MVP/architecture snapshots are supplemented by the
+[current operator handover](../infra/README.md#current-exercise-handover-2026-10-13)
+and [ADR delivery delta](./adrs/0002-pilot-readiness-architecture.md#current-exercise-delivery-delta-2026-10-13).
+Historical `warm-*` deployments and `ca-properwarm-mvp` revisions remain
+their actual recorded identifiers, not retroactively renamed observations.
 No new business requirement or customer fact follows, so the BRD remains
 unchanged. Product implications are in the
 [PRD review-learning disposition](./prds/zava-forward-retrofit-programme-demonstrator.md#review-learning-disposition);
@@ -257,7 +262,7 @@ its [current MVP evidence](https://github.com/jmservera/ama/blob/5136f192d583a5b
 records actual Azure SQL/Blob deployment, Decision 1 source-bound EPC
 selection and cited GPT-4.1-mini generation. Earlier endpoint/authentication
 failures are historical. Later source-tested controls are not automatically
-in deployed revision `ca-zavaforward-mvp--0000018`. Full workflow, permissions,
+in deployed revision `ca-properwarm-mvp--0000018`. Full workflow, permissions,
 cloud performance/recovery and direct human acceptance remain separate
 unmet gates; this document does not regrade them.
 

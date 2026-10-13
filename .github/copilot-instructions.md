@@ -7,8 +7,8 @@ applyTo: "**"
 
 ## Repository Purpose and Structure
 
-This repository contains Markdown documentation for an evolving research
-project rather than executable software.
+This repository combines Markdown research documentation with the executable
+Zava Forward demonstrator, infrastructure and supporting tools.
 
 * `docs/` is the canonical location for project documentation.
   `docs/case_study_48_original.md` preserves the initial problem specification,
@@ -49,10 +49,16 @@ project rather than executable software.
   Their shared evidence base is
   `docs/reference/research/company/company-profile-research.md`.
 * `.github/agents/ama-*` are AMA helper agents with knowledge extracted from the AMA trainings.
+* `mvp/` contains the continuing application and its tests; `infra/` contains
+  Bicep and initialization helpers; `tools/` contains migration and authoring
+  tools. Their READMEs define current commands and evidence boundaries.
 
-There is no build, test, lint, or single-test command configured in the
-repository. Validate changes by reviewing the rendered Markdown and the Git
-diff.
+There is no repository-wide documentation build or lint command. Validate
+documentation with Markdown/link review and the Git diff. Executable changes
+also require the relevant existing tests: for example, from `mvp/`,
+`PYTHONPATH=. python3 -m unittest discover -s tests -q`; migration regressions
+use `python3 tools/rename-zava-tests.py` from the repository root. Use the
+component guides and existing workflows rather than infer that no tests exist.
 
 ## Branch and Pull Request Workflow
 

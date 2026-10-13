@@ -1,7 +1,7 @@
 ---
 title: System One Decision Models for Retrofit Agents
 description: Dated research on typed decision models, including Microsoft Decision 1 in Foundry, bounded workflow assists and reviewed form extraction/filling
-ms.date: 2026-10-11
+ms.date: 2026-10-13
 ms.topic: reference
 ---
 
@@ -42,7 +42,7 @@ conclusions, not historical result rows.
 | Generic cognitive-services host failed; the Foundry services host with `/providers/microsoft/v1/systemone` succeeded | Endpoint/audience/auth conformance was an integration problem, not model infeasibility. [Official API guide](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision), retrieved 2026-10-11, corroborates the provider-specific API |
 | Provider optional confidence validates separately from option probabilities | Validate question/answer IDs, types, allowed keys, finite normalized probability vectors and optional fields; never substitute confidence for task probability/runner-up thresholds |
 | Actual Azure SQL/Blob deployment retains 60,000 generated stock rows and 980 programme cases | Reuse the continuing application/data lineage. Local fixtures or unrelated model calls are not updated-build acceptance |
-| Later work-order controls are source-tested, while recorded deployment is revision `ca-zavaforward-mvp--0000018` | Match source, immutable image, config and deployed revision to each claim. Full permissions/workflow/performance/recovery/human acceptance remains unproved |
+| Later work-order controls are source-tested, while recorded deployment is revision `ca-properwarm-mvp--0000018` | Match source, immutable image, config and deployed revision to each claim. Full permissions/workflow/performance/recovery/human acceptance remains unproved |
 | Deployed evidence-support adapter is binary | Binary labels cannot establish supported/contradicted/insufficient macro-F1. Use a separately frozen three-option shadow task or Not evaluated |
 | Owner removed the prior inference cap for this rebuild | Preserve scope of approval, source/task/input bounds, SQL upper-liability reservations and usage telemetry; no blanket future spend authorization |
 

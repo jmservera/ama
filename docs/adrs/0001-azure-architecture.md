@@ -2,7 +2,7 @@
 title: ADR 0001 Azure Architecture for the Zava Forward Demonstrator
 description: Proposed Azure hosting, agent placement, data, model and security architecture for the non-production Zava Forward retrofit workbench demonstrator
 author: AMA programme
-ms.date: 2026-10-11
+ms.date: 2026-10-13
 ms.topic: reference
 ---
 
@@ -10,8 +10,9 @@ ms.topic: reference
 
 Proposed. This is a design for a non-production demonstrator using constructed,
 non-identifying data. It is not an approved production architecture. Service
-availability, quotas, model versions and regional capacity are unverified and
-must be checked in the target subscription before deployment.
+availability, quotas, model versions and regional capacity are target-specific
+and must be checked before deployment. The dated UK South exercise observations
+below do not establish availability in a new subscription or production region.
 
 ### Exercise Applicability (2026-10-11)
 
@@ -30,6 +31,18 @@ private-only isolation. Keep source/image/revision claims distinct.
 No premium estate, new app rewrite, production option selection, deployment
 authorization or blanket spend override follows from this note. Missing
 effective budget/authorization/evidence blocks acceptance, not mock substitution.
+
+### Current Exercise Handover (2026-10-13)
+
+The later [#65](https://github.com/jmservera/ama/pull/65) rebuild ran the real
+MVP image, SQL and both model tiers in `ama` / `uksouth`; subsequent initialization
+and owner-reported sign-in are recorded in the
+[current operator handover](../../infra/README.md#current-exercise-handover-2026-10-13)
+and [dated addendum](../case_study_48_addendum.md#observed-deployment-and-identity-learning-2026-10-1213).
+This supplements the historical deployments and proposed topology below.
+Workers remain placeholders; development public-network exceptions, token
+storage, full M365 integration, human acceptance and production authority
+remain explicitly scoped. Merge of documentation is not approval of the ADR.
 
 ## Supersedes/amends
 
@@ -198,7 +211,7 @@ resource group.
 This is a worked illustration of the PRD Options Gate, not an approved
 decision. The weights below are architect proposals pending sponsor approval,
 and the scores are architect judgements on a 1 to 5 scale (5 is best). The
-only measured evidence is the `forward-test` deployment and the `prototype/`
+only measured evidence at that comparison date is the `warm-test` deployment and the `prototype/`
 tests, so every score for cost, support and company fit stays provisional.
 A high aggregate cannot offset a failed mandatory control gate.
 
@@ -228,7 +241,7 @@ Reading the result:
 
 ## Observed deployment measurements
 
-Observed on 2026-08-26 from the `forward-test` deployment in `uksouth` (single
+Observed on 2026-08-26 from the `warm-test` deployment in `uksouth` (single
 run, not a statistical sample, no load applied):
 
 | Observation | Value |
@@ -274,7 +287,7 @@ Design Thinking challenge:
 
 ## Development deployment in North Europe
 
-Deployed 2026-10-08 as `forward-dev` in resource group `amaFY27` (`northeurope`) with `allowPublicNetworkAccess=true`. Findings:
+Deployed 2026-10-08 as `warm-dev` in resource group `amaFY27` (`northeurope`) with `allowPublicNetworkAccess=true`. Findings:
 
 * `gpt-4.1` and `gpt-4.1-mini` have no pay-as-you-go SKU in `northeurope`, so the tiers were overridden to `gpt-5.4-nano` (standard) and `gpt-5.4` (capable) with `DataZoneStandard`. Both provisioned.
 * ACR requires its export policy enabled when public access is on.
@@ -288,7 +301,7 @@ Checked 2026-10-08 from `az cognitiveservices model list`; capacity and quota in
 * Recommended target: `uksouth` for the whole stack. The full stack deployed there end to end on 2026-08-26 (SQL, Container Apps, `gpt-4.1` and `gpt-4.1-mini` at `GlobalStandard`), UK data at rest suits a UK customer, and it removes the SQL cross-region split. North Europe refused new SQL servers and `swedencentral` lacked Container Apps capacity on the dates observed.
 * Caveat: `uksouth` has no `DataZoneStandard` model option, so inference may be processed outside the UK. Acceptable for constructed data only; revisit before real resident data (OQ-012).
 * Fallback if an EU inference boundary is required: `westeurope` or `francecentral` list `DataZoneStandard` for both models. SQL and Container Apps capacity there is untested, so probe before committing. `germanywestcentral`, `polandcentral`, `italynorth` and `spaincentral` list data-zone models but have no pay-as-you-go `gpt-4.1-mini` data-zone evidence beyond the model list and were not tested further.
-* The `forward-dev` stack in `northeurope` with SQL in `uksouth` is a development stack only.
+* The `warm-dev` stack in `northeurope` with SQL in `uksouth` is a development stack only.
 
 ## Staff data trust and control
 
@@ -352,7 +365,7 @@ The addendum Data Handling and Retention Baseline (proposed, 2026-10-08) turns i
 
 Deployment note (2026-10-08): the first `uksouth` deployment into the recreated `ama` resource group failed with `VaultAlreadyExists`. The Key Vault name was derived from the resource group ID, which is identical when a group is recreated, and an earlier purge-protected vault held the name. The name now also hashes the location and a version salt.
 
-Result: the redeploy `forward-dev2` into `ama` (`uksouth`, `allowPublicNetworkAccess=true`, default gpt-4.1 and gpt-4.1-mini at GlobalStandard) succeeded in 9 min 13 s.
+Result: the redeploy `warm-dev2` into `ama` (`uksouth`, `allowPublicNetworkAccess=true`, default gpt-4.1 and gpt-4.1-mini at GlobalStandard) succeeded in 9 min 13 s.
 
 ## Open items
 
@@ -368,7 +381,7 @@ Result: the redeploy `forward-dev2` into `ama` (`uksouth`, `allowPublicNetworkAc
 ## Validation performed
 
 * `az bicep build` and `az bicep lint` are clean on `main.bicep` and every module.
-* `az deployment group what-if` reported 93 creates, then the stack was deployed to resource group `ama` as `forward-test` in `uksouth`: all modules succeeded, both Container Apps are running, and both model deployments (`gpt-4.1-mini`, `gpt-4.1`) provisioned.
+* `az deployment group what-if` reported 93 creates, then the stack was deployed to resource group `ama` as `warm-test` in `uksouth`: all modules succeeded, both Container Apps are running, and both model deployments (`gpt-4.1-mini`, `gpt-4.1`) provisioned.
 * Deployment findings fixed in the template: Foundry project and model deployments conflicted when created in parallel (now serialised); the SQL admin principal type is a parameter. The Container Apps environment failed with `AKSCapacityHeavyUsage` twice in `swedencentral`, so the validated region is `uksouth`. Region capacity is therefore a real deployment risk.
 * The container images are the placeholder quickstart image, so no application behaviour, load, latency or cost has been measured. A4 and A5 evidence remains design and deployment only.
 * The SQL contained-user script, the Entra app registration, the SharePoint site and the Teams webhook have not been exercised.

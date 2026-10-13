@@ -250,7 +250,7 @@ an in-force landlord duty. Consultation-stage requirements are historical
 where the final response differs.
 
 The addendum and supporting research record WH:SHF Wave 3 grant spend by
-31 March 2028 and delivery to September 2028. No allocation to Proper North
+31 March 2028 and delivery to September 2028. No allocation to Zava North
 Homes is evidenced. Readiness must verify any award and its applicable
 conditions rather than assume a currently open application round. Existing
 hazard response and eligible grant delivery must not wait for the new platform.
@@ -608,7 +608,7 @@ separately: a completed measure does not necessarily move a home to EPC C.
 ## Provisional Sector Benchmark Pack
 
 The benchmark pack supports scenario planning while company data is gathered.
-It does not convert national or sector values into facts about Proper North
+It does not convert national or sector values into facts about Zava North
 Homes.
 
 | Domain | Provisional benchmark for 60,000 homes | Evidence class |
@@ -1242,7 +1242,7 @@ The workbench is the shared coordination surface, not the whole solution and
 not one giant agent workflow. The underlying business is a set of connected
 workflows, each with a different control owner, outcome and value test. The
 problems below are the case-study challenge and role-agent analysis: they are
-research-backed problem hypotheses, not verified findings about Proper North
+research-backed problem hypotheses, not verified findings about Zava North
 Homes' current operations. Phase 0 must show which are material constraints.
 
 | Workflow and problem to solve | End-to-end outcome and accountable roles | Where agents may help; what remains deterministic or human-owned | Business value evidence |

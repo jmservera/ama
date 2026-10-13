@@ -582,7 +582,7 @@ Link:
 
 ## Derived Values
 
-The following values are calculations made for the 60,000-home Proper North
+The following values are calculations made for the 60,000-home Zava North
 Homes portfolio and do not appear as provider figures in the source documents:
 
 | Derived value | Calculation | Inputs |

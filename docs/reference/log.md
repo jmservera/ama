@@ -1960,3 +1960,34 @@ metadata when the knowledge base was created.
   passed on owner-started attempt 2. Earlier runner admission failures remain
   history, not current application defects. Scorer execution and rubric/score
   remain separate; these results do not close personal browser acceptance.
+
+## [2026-10-13] audit | PR #65 documentation and handover reconciliation
+
+* Reviewed owner feedback, checkpoint/PR review provenance, current source
+  contracts, operator guides and canonical PRD/ADR/addendum learning. Preserved
+  pending real-session, own-photo, full-role/workflow, M365, accessibility,
+  calibrated AI benefit, pilot and production gates; no requirement or approval
+  was added. The BRD changes only missed wrapped branding, not its business
+  contract; original case, owner memory and regulatory snapshots are unchanged.
+* Corrected contradictory local-only/unrun claims in the
+  [MVP guide](../../mvp/README.md#honest-limits), added the
+  [current operator handover](../../infra/README.md#current-exercise-handover-2026-10-13)
+  and [ADR delivery delta](../adrs/0002-pilot-readiness-architecture.md#current-exercise-delivery-delta-2026-10-13),
+  and distinguished optional M365 provisioning from active Blob/own-user-photo
+  permissions. Contributor guidance now acknowledges executable tests.
+* Restored real historical warm-* deployment IDs and ca-properwarm-mvp
+  app/revision evidence rather than silently rename observations. Corrected
+  wrapped company/programme names in active syntheses; preserved exact
+  historical snapshots and log entries. Migration regressions cover whitespace,
+  retained identifiers and CSP-compatible document-workbench logo styling.
+  The document-workbench also now explicitly serves the binary PNG route;
+  25 migration and five Node tests passed. Browser rendering confirmed the
+  loaded logo at 114x40 CSS pixels after preventing flex compression.
+* The mentor delivery is a 15-slide PPTX, byte-equal to the working copy
+  (SHA256 c40c4295c2bcf45bcdba98c8c65ab39579a6694e80cc4337ef9495aac2307f3e).
+  Updated the index to supersede the earlier publish-blocked note. This audit
+  checks metadata/equality and existing recorded migration validation, not a
+  new narrative/visual redesign or a fabricated post-iteration build.
+* Current source-head checks and the scorer are distinct from capstone/product
+  acceptance. Final publication checks are recorded separately; this audit
+  does not merge #65 or start the previously stopped RPI follow-ups.

@@ -28,6 +28,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 .topbar { grid-column: 1 / -1; display: grid; grid-template-columns: calc(var(--rail-width) + var(--library-width) - 1px) minmax(320px, 620px) 1fr; align-items: center; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 95%, transparent); backdrop-filter: blur(14px); z-index: 5; }
 .brand { align-self: stretch; display: flex; align-items: center; gap: 12px; padding: 0 18px; background: var(--moss-deep); color: #f8f7ef; }
 .brand-mark { width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.38); border-radius: 50%; font-family: Georgia, serif; font-weight: 700; font-size: 12px; letter-spacing: .08em; }
+.zava-logo { width:114px; height:40px; object-fit:contain; flex-shrink:0; background:#fff; padding:4px; }
 .brand strong, .brand small { display: block; }
 .brand strong { font-family: Georgia, "Times New Roman", serif; font-size: 17px; letter-spacing: .01em; }
 .brand small { color: rgba(255,255,255,.68); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
