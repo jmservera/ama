@@ -247,6 +247,53 @@ Deployment has two deliberate stages:
 4. Sign out and sign in again to obtain the new delegated scope. Confirm the
    account name/photo and logout/switch with an actual authorised user.
 
+#### Account selection and safe flow diagnostics
+
+"Use another account" is not Sign out. It goes to the fixed
+`/sign-in?switch=1` route, which requests Easy Auth login with
+`prompt=select_account` and returns to `/app`. Microsoft presents remembered
+accounts or a sign-in form when none are remembered; the user chooses the
+account. No global Microsoft logout is requested. Cancelling or choosing the
+same account does not guarantee a changed account or a signed-out session.
+Normal Sign out still uses platform logout and returns to the public welcome.
+See Microsoft's [account-selection parameter](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code).
+
+The API emits five fixed console markers: `sign-in-started`,
+`account-picker-started`, `account-switch-requested`, `sign-out-requested` and
+`workbench-entered`, prefixed `auth flow:`. The latter three require successful
+app authorization; POST markers also require the existing CSRF header.
+New markers contain no identity, URL/query, cookie, principal or token values.
+This does not claim all pre-existing platform/denial logs are identity-free.
+Generic HTTP access logging remains disabled.
+
+The existing environment `allLogs` diagnostic setting already routes console
+output to `log-forward-test`; no new logging resources or role grants are
+needed. Live console access:
+
+```bash
+az containerapp logs show -g ama -n ca-forward-test-api \
+  --type console --tail 50
+```
+
+Use the resource-specific `ContainerAppConsoleLogs` table, not the legacy
+`ContainerAppConsoleLogs_CL`. Allow ingestion delay and query fixed events
+instead of publishing raw platform logs:
+
+```kusto
+ContainerAppConsoleLogs
+| where TimeGenerated > ago(1h)
+| where ContainerAppName == "ca-forward-test-api"
+| extend Event = extract(@"auth flow: (sign-in-started|account-picker-started|account-switch-requested|sign-out-requested|workbench-entered)", 1, Log)
+| where isnotempty(Event)
+| summarize Events=count(), Latest=max(TimeGenerated) by Event, RevisionName
+```
+
+These events show attempted routes, not which account was chosen. Actual
+acceptance starts with an authenticated browser: open Use another account,
+select another authorised account and verify its current-account view and
+permitted work. A fresh anonymous browser or operator CLI cannot prove session
+replacement. Do not share browser cookies, passwords or tokens.
+
 The job uses `ManagedIdentityCredential` and a five-day, HTTPS-only,
 read/write/delete user-delegation SAS, renewed daily at 03:00 UTC. Its identity
 has Blob Delegator at account scope, Blob Contributor only on `auth-tokens`,

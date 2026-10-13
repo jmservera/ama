@@ -158,8 +158,8 @@ class TrustedProxyProvider:
                 "email": emails[0] if emails else "", "provider": self.name}
 
     def logout_response(self, switch=False):
-        target = "%2Fsign-in" if switch else "%2F"
-        return {"ok": True, "redirect": "/.auth/logout?post_logout_redirect_uri=" + target}
+        target = "/sign-in?switch=1" if switch else "/.auth/logout?post_logout_redirect_uri=%2F"
+        return {"ok": True, "redirect": target}
 
 
 def make_provider(store, password, env=None):

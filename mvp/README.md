@@ -230,8 +230,11 @@ provisioning checks do not substitute for each user's consent/acceptance.
   codes and historical actors, then restarts the startup-cached roster.
   Assigning an enterprise-app role without this binding still fails closed.
 * Sign-out redirects through `/.auth/logout` to the public welcome;
-  "Use another account" returns through `/sign-in` and the Microsoft account
-  chooser. State-changing requests need an
+  "Use another account" instead enters `/sign-in?switch=1` directly with
+  `prompt=select_account`, without signing out of Microsoft first. Choosing
+  another account is deliberate, not automatic; cancelling need not clear
+  the previous session. See [flow diagnostics and acceptance](../infra/README.md#account-selection-and-safe-flow-diagnostics).
+  State-changing requests need an
   `X-ZF-CSRF` header under this provider.
 
 The public `/` page shows Zava Forward and its logo without loading workbench

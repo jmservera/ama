@@ -153,6 +153,13 @@ def make_handler(app):
             if not url.path.startswith("/api/"):
                 if url.path == "/sign-in":
                     target = "/.auth/login/aad?post_login_redirect_uri=%2Fapp" if app.provider.name == "trusted-proxy" else "/app"
+                    if app.provider.name == "trusted-proxy":
+                        switch = parse_qs(url.query, keep_blank_values=True).get("switch") == ["1"]
+                        if switch:
+                            target += "&prompt=select_account"
+                            print("auth flow: account-picker-started", flush=True)
+                        else:
+                            print("auth flow: sign-in-started", flush=True)
                     return self._send(302, "", extra={"Location": target})
                 name = "welcome.html" if url.path in ("/", "") else "index.html" if url.path == "/app" else url.path.lstrip("/")
                 f = (WEB / name).resolve()
@@ -163,6 +170,8 @@ def make_handler(app):
                         return self._send(302, "", extra={"Location": "/sign-in"})
                     raw = f.read_bytes()
                     if name == "index.html":
+                        if app.provider.name == "trusted-proxy":
+                            print("auth flow: workbench-entered", flush=True)
                         raw = raw.replace(b"__AUTH_PROVIDER__", app.provider.name.encode())
                     return self._send(200, raw, TYPES.get(f.suffix, "application/octet-stream"))
                 return self._send(404, "Not found", "text/plain")
@@ -312,6 +321,11 @@ def make_handler(app):
             if app.provider.name == "trusted-proxy" and self.headers.get("X-ZF-CSRF") != "1":
                 return self._json(403, {"error": "Missing request header."})
             if url.path == "/api/logout":
+                if app.provider.name == "trusted-proxy":
+                    if body.get("switchAccount") is True:
+                        print("auth flow: account-switch-requested", flush=True)
+                    else:
+                        print("auth flow: sign-out-requested", flush=True)
                 return self._json(200, app.provider.logout_response(switch=body.get("switchAccount") is True), {"Set-Cookie": "zf_session=; Max-Age=0; Path=/"})
             s = app.store
             if not projection.allowed(u, "post", "POST"):

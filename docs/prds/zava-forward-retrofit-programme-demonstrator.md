@@ -2,18 +2,18 @@
 title: "Zava Forward Retrofit Programme Workbench"
 description: "Product requirements for a role-based retrofit delivery workbench covering the Zava Forward workflow portfolio"
 author: AMA Research Team
-ms.date: "2026-10-11"
+ms.date: "2026-10-13"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "in-review"
 exercise_status: "candidate-pending-review-and-owner-acceptance"
 historical_exercise_accepted_version: "0.12.0"
 historical_exercise_accepted_date: "2026-10-10"
-version: "0.13.0"
+version: "0.13.1"
 owners: ["AMA project owner (exercise approval)", "Retrofit Programme Manager (exercise product-owner role)"]
 reviewers: ["Independent PRD Quality Reviewer", "AMA project owner (final exercise acceptance); live control owners remain unconfirmed"]
 created_date: "2026-10-03"
-last_updated: "2026-10-11"
+last_updated: "2026-10-13"
 product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003", "GOAL-004"]
 product_goal_smart_status: "pass"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -32,7 +32,7 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.13.0 | Last Updated: 2026-10-11
+> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.13.1 | Last Updated: 2026-10-13
 
 ## Executive Summary
 
@@ -1316,6 +1316,16 @@ All goals have linked requirements; all FRs map to at least one goal (100%).
 | Narrative timeline lacks audit fields; original examples cannot establish durations | FR-022, NFR-004; AC-025/043 | Constructed events labelled as such; operational audit/recovery deferred |
 | Eleven perspectives not eleven validated journeys; adjacent provider/quality/operator lenses insufficient | FR-035, NFR-001; profile journey contract | Direct representative/device/accessibility research OQ-004/011; no conformance claimed |
 | #58 actual selection/generation and Azure SQL deployment; endpoint fixed; later source controls not all deployed | CON-009/AC-057, DD-007 and separate source/image/revision records | Narrow feasibility observed, not calibrated screening, benefit or full acceptance; [pinned learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11) |
+| 2026-10-12/13: app role alone failed because SQL staff oid was absent; owner subsequently confirms tenant access | FR-003, NFR-003, AC-004/005; [private initialization](../../infra/README.md#tenant-staff-and-application-role-initialization) reconciles claims plus binding without email fallback | Eleven tenant-member demo allocations are not company staffing/competence or validated B2B onboarding; complete role/field and human acceptance remain separate |
+| 2026-10-12: current names changed but staff/workload codes and historical attribution must not | FR-005/011/022, NFR-004; shared-lock atomic update, exact private preservation and no-op restart recovery | Observed 980-case programme, not 60,000 live SQL cases; stock retained, no operational business-value claim |
+| 2026-10-12/13: welcome, own-account photo and switching are distinct from authorisation | NFR-001/003 and GOAL-001; public logo/name with deliberate entry, private delegated own-photo transport, image-only Blob CSP and explicit Microsoft account picker | Owner reports sign-in works; synthetic/photo transport and anonymous platform traces do not establish a person's photo, accessibility or changed authenticated session |
+| 2026-10-13: useful diagnostics require safe events and deployed configuration evidence, not generic request logs | FR-003/022, NFR-003/004; [fixed flow events](../../infra/README.md#account-selection-and-safe-flow-diagnostics), existing centralized routing and private image-only config comparison | Markers contain no new identity/token payload; existing logs need controlled handling. CI provider failures and rubric scores are not app or business acceptance |
+
+This v0.13.1 evidence-only update changes no FR/AC/NFR/constraint counts or
+approval status. See [dated exercise observations](../case_study_48_addendum.md#observed-deployment-and-identity-learning-2026-10-1213)
+and [ADR 0002 identity learning](../adrs/0002-pilot-readiness-architecture.md#observed-exercise-identity-and-session-learning-2026-10-13).
+Record actual account selection separately; no unit test or CLI profile can
+stand in for an authenticated user's session.
 
 ## MVP and Release Framing
 

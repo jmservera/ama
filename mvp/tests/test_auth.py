@@ -144,7 +144,79 @@ class ProxyHttpTests(Base):
         h["X-ZF-CSRF"] = "1"
         self.assertEqual(self.call("/api/cases/ZF-1/call", h, {"outcome": "Spoke"})[0], 200)
         self.assertEqual(self.call("/api/logout", h, {})[1]["redirect"], "/.auth/logout?post_logout_redirect_uri=%2F")
-        self.assertEqual(self.call("/api/logout", h, {"switchAccount": True})[1]["redirect"], "/.auth/logout?post_logout_redirect_uri=%2Fsign-in")
+        self.assertEqual(self.call("/api/logout", h, {"switchAccount": True})[1]["redirect"], "/sign-in?switch=1")
+
+    def test_account_selection_uses_only_fixed_explicit_flag(self):
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, *args, **kwargs):
+                return None
+        opener = urllib.request.build_opener(NoRedirect())
+        normal = "/.auth/login/aad?post_login_redirect_uri=%2Fapp"
+        for query, target in (
+            ("switch=1", normal + "&prompt=select_account"),
+            ("switch=1&return=https%3A%2F%2Fexample.invalid&prompt=none", normal + "&prompt=select_account"),
+            ("", normal), ("switch=0", normal), ("switch=", normal),
+            ("switch=1&switch=1", normal), ("switch=1&switch=", normal),
+            ("switch=&switch=1", normal), ("prompt=select_account", normal),
+        ):
+            with self.subTest(query=query), self.assertRaises(urllib.error.HTTPError) as error:
+                opener.open(self.base + "/sign-in?" + query)
+            self.assertEqual(error.exception.code, 302)
+            self.assertEqual(error.exception.headers["Location"], target)
+            self.assertEqual(error.exception.headers["Cache-Control"], "no-store")
+
+    def test_auth_flow_events_are_fixed_and_require_authorized_success(self):
+        h = {"X-MS-CLIENT-PRINCIPAL": principal(), "X-ZF-CSRF": "1"}
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, *args, **kwargs):
+                return None
+        opener = urllib.request.build_opener(NoRedirect())
+        with patch("builtins.print") as output:
+            for path in ("/sign-in", "/sign-in?switch=1&token=synthetic-secret"):
+                with self.assertRaises(urllib.error.HTTPError):
+                    opener.open(self.base + path)
+            self.call("/api/logout", h, {"switchAccount": True})
+            self.call("/api/logout", h, {})
+            req = urllib.request.Request(self.base + "/app", headers=h)
+            with urllib.request.urlopen(req) as response:
+                self.assertEqual(response.status, 200)
+            self.assertEqual(output.call_args_list, [
+                unittest.mock.call("auth flow: sign-in-started", flush=True),
+                unittest.mock.call("auth flow: account-picker-started", flush=True),
+                unittest.mock.call("auth flow: account-switch-requested", flush=True),
+                unittest.mock.call("auth flow: sign-out-requested", flush=True),
+                unittest.mock.call("auth flow: workbench-entered", flush=True),
+            ])
+            output.reset_mock()
+            self.assertEqual(self.call("/api/logout", {}, {"switchAccount": True})[0], 401)
+            self.assertEqual(self.call("/api/logout", {"X-MS-CLIENT-PRINCIPAL": principal()},
+                                       {"switchAccount": True})[0], 403)
+            req = urllib.request.Request(self.base + "/app",
+                                         headers={"X-MS-CLIENT-PRINCIPAL": principal(oid="unknown")})
+            with self.assertRaises(urllib.error.HTTPError) as error:
+                opener.open(req)
+            self.assertEqual(error.exception.code, 403)
+            self.assertFalse(any(str(call.args[0]).startswith("auth flow:") for call in output.call_args_list))
+
+    def test_password_sign_in_and_switch_do_not_invoke_microsoft(self):
+        app = App(self.store, "pw")
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, *args, **kwargs):
+                return None
+        try:
+            opener = urllib.request.build_opener(NoRedirect())
+            with patch("builtins.print") as output:
+                for query in ("", "?switch=1"):
+                    with self.assertRaises(urllib.error.HTTPError) as error:
+                        opener.open(f"http://127.0.0.1:{httpd.server_address[1]}/sign-in{query}")
+                    self.assertEqual(error.exception.headers["Location"], "/app")
+                self.assertEqual(app.provider.logout_response(switch=True), {"ok": True})
+                output.assert_not_called()
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
 
     def test_welcome_is_public_and_workbench_is_protected(self):
         with urllib.request.urlopen(self.base + "/") as response:

@@ -1925,3 +1925,28 @@ metadata when the knowledge base was created.
 * Twelve new synthetic methods cover effective roles, fail-closed validation,
   transaction preservation/rollback and no-op restart recovery; existing
   authentication assertions are retained.
+
+## [2026-10-13] update | Explicit account selection and canonical deployment learning
+
+* Owner confirms tenant access but reports Use another account only signs out.
+  Separate switching from logout: fixed switch route requests select_account
+  directly. Ordinary sign-in/sign-out and fail-closed role/oid/CSRF checks remain.
+  Five constant app-flow markers now feed the existing diagnostics; actual
+  table is ContainerAppConsoleLogs. No generic token/query/identity logging.
+* Local 289-test suite (26 existing skips), non-root read-only image and live
+  tenant/callback/prompt/anonymous boundaries pass. Image-only rollout compares
+  private app/auth configuration and all ready replicas; current image
+  account-switch-20261013-01, revision 0000009. A fresh anonymous browser is
+  not an observed authenticated account replacement.
+* Owner requests learning in its proper project documents. Integrated dated
+  rebuild/asset/initialization, identity versus app access, preserved workload/
+  history, own-photo Blob CSP/token store, account choice, diagnostics and CI
+  evidence into [ADR 0002](../adrs/0002-pilot-readiness-architecture.md#observed-exercise-identity-and-session-learning-2026-10-13),
+  [PRD v0.13.1 learning](../prds/zava-forward-retrofit-programme-demonstrator.md#review-learning-disposition)
+  and [addendum](../case_study_48_addendum.md#observed-deployment-and-identity-learning-2026-10-1213).
+  PRD counts/approval unchanged; no new business fact warrants a BRD change.
+* Specified rubric job failed with Copilot provider HTTP403; owner's attempt 3
+  succeeded. Other prior-head checks lacked runner admission, not failing
+  application tests. Scores, runner execution and real-user/product acceptance
+  remain distinct. No secrets, directory roster, original case, memory or
+  regulatory snapshots changed.

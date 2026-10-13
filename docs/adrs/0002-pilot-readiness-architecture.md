@@ -2,7 +2,7 @@
 title: ADR 0002 Pilot-Readiness Architecture for the Zava Forward MVP
 description: Proposed decisions for moving the working MVP to pilot readiness over about 60,000 homes - durable store, Blob, Entra ID and field visibility, deterministic ranking, map scale, deployment and gated staff time capture
 author: AMA programme
-ms.date: 2026-10-11
+ms.date: 2026-10-13
 ms.topic: reference
 ---
 
@@ -194,7 +194,62 @@ Proposal:
   contractor role (proposal, open item for the tenant owner), and see only
   their own assigned work.
 
-Field-level visibility:
+#### Observed exercise identity and session learning (2026-10-13)
+
+This dated update supplements, not rewrites, the proposals and historical
+implementation tables. [#65](https://github.com/jmservera/ama/pull/65) and the
+[initialization guide](../../infra/README.md#tenant-staff-and-application-role-initialization)
+record deployed built-in authentication and owner-reported administrator and
+Coordinator access. Full pilot identity/permission acceptance remains separate.
+
+* Platform authentication, app-role claims and the internal staff `oid` binding
+  are separate gates. The observed Coordinator denial had a valid role but no
+  staff binding. Default Access is unmapped, not a business permission. Keep
+  the exact tenant and single distinct mapped role checks; email fallback
+  remains off. Direct user/group app grants count; nested groups do not
+  inherit application assignments.
+* The repeatable private-roster initializer preserves existing bindings and
+  workload codes. Ten existing positions plus one supplier-scoped Contractor
+  use eleven distinct tenant members for eight role kinds. This is a demo
+  allocation, not company staffing, competence or the proposed B2B model.
+  The member-only initializer does not resolve the guest/pilot open item.
+* SQL staff is startup-cached. An idempotent SQL no-op must still support
+  replacing every serving replica after a failed restart. Identity/current
+  owner-label reconciliation uses the API's transaction-owned database lock;
+  one generic audit event extends, rather than renames, historical actors.
+  Exact private comparison preserved all 980 programme cases, workload codes,
+  supplier scopes, six recommendations and nineteen prior audit rows.
+* Public welcome is distinct from the protected workbench/API. A changed
+  ingress FQDN requires callback re-initialization in an isolated authorised
+  management profile, not a shared password or replacement registration.
+  Deployed production refuses password auth; a local development provider
+  remains, unlike the proposal above to delete that code path entirely.
+* Own-user account photo uses delegated `User.Read` and the platform's private
+  token store, with scoped scheduled renewal. The browser receives only
+  private binary output. Blob object URLs require `blob:` in CSP `img-src`
+  only, not relaxed script/frame/default sources. A public-logo-as-Blob
+  rendering check proves transport/CSP, not a person's actual photo.
+* Switching account is a new login with explicit `prompt=select_account`,
+  not provider logout followed by ordinary SSO. Normal Sign out retains
+  platform logout. Easy Auth owns state/nonce/callback and session issuance;
+  cancellation or selecting the same account is not successful replacement.
+* Existing Azure Monitor routing collects constant auth-flow events; generic
+  access logs would risk publishing callback queries/tokens. Verify actual
+  table/schema and ingestion rather than assuming legacy `_CL` names.
+  Image-only rollout compares private app/auth configuration and ready
+  serving replicas, preserving SQL/AI, secret references and token store.
+
+References checked 2026-10-13: Microsoft's
+[account-selection behavior](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code)
+and [non-cascading group assignments](https://learn.microsoft.com/entra/identity/enterprise-apps/assign-user-or-group-access-portal).
+Operational steps and evidence boundaries:
+[callback initialization](../../infra/README.md#post-deployment-api-authentication-initialization),
+[own-photo setup](../../infra/README.md#public-welcome-and-microsoft-account-photos)
+and [account diagnostics](../../infra/README.md#account-selection-and-safe-flow-diagnostics).
+Actual already-signed-in account replacement, full permissions, accessibility,
+lawful processing and production approval are not established by these checks.
+
+#### Proposed field-level visibility
 
 * All reads leave the service through role-specific projections: an explicit
   allow-list of fields per role and per object. A field absent from a role's

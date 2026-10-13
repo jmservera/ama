@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-11
+ms.date: 2026-10-13
 ms.topic: reference
 ---
 
@@ -219,6 +219,36 @@ effective scoped approval/override and accrued liabilities, retaining source/
 task permissions, input bounds, reservations and usage/cost telemetry.
 This documentation direction does not authorize new deployments or spending.
 
+### Observed Deployment and Identity Learning (2026-10-12/13)
+
+The continuing [#65](https://github.com/jmservera/ama/pull/65) exercise rebuild
+and identity work adds technical learning, not measured housing outcomes or
+production approval. The
+[from-empty rebuild record](../infra/README.md#from-empty-rebuild-observed-on-2026-10-12)
+and [ADR 0002 learning](./adrs/0002-pilot-readiness-architecture.md#observed-exercise-identity-and-session-learning-2026-10-13)
+retain source, configuration and acceptance limits rather than silently
+reclassifying earlier failures as successful.
+
+| Learning | Evidence and operational implication | Boundary |
+| --- | --- | --- |
+| Reprovisioning must include initialization, not only resource creation | Current ingress callback, managed-identity SQL access and private delegated-photo token store have separate initialization/recovery steps; use an isolated authorised management profile | Operator CLI identity is not a staff browser session; never request passwords/tokens or infer tenant authority |
+| Branding migration includes packaged assets and live references | Renamed deployment and logo delivery need readable non-root container assets; binary Blob display additionally needs image-only CSP permission | Do not rename history, operational app-role values or identity mappings merely to remove old branding; retained tenant names remain separate work |
+| Authentication and workbench authorisation are different | Valid Coordinator claims failed on an absent SQL oid binding; initializer reconciles role plus staff and refreshes startup caches, with no email fallback or weakened tenant/role checks | Owner now reports administrator/Coordinator sign-in works; not a complete role, guest, accessibility or production acceptance |
+| Staff identity changes must preserve programme lineage | Eleven private demo allocations cover ten existing codes plus one scoped Contractor. Exact comparison preserved 980 cases, supplier scopes, six recommendations and nineteen prior audit rows; only current labels/identity fields and one generic event changed | Generated 60,000-home stock continues; do not call 980 programme cases the whole stock or infer professional competence from demo job/group matching |
+| Switching account needs explicit user choice | Fixed switch route requests Microsoft select_account directly rather than sign-out followed by SSO; image account-switch-20261013-01, ready revision 0000009, live tenant/callback/prompt verified | A fresh browser displayed Microsoft sign-in with no remembered accounts. An already-authenticated change of person remains owner-owned and unobserved |
+| Diagnostics and rollout must prove the changed boundary | Five fixed app-flow markers use existing Azure Monitor routing; private app/auth config comparison preserves SQL/AI, scopes and secret references during image-only update | Logs show routes, not chosen people; never publish raw tokens/callback queries or equate new-source tests with a deployed image |
+| CI execution, rubric scoring and product acceptance are separate | Specified scorer job failed on provider HTTP403, then owner's attempt 3 succeeded. Other prior-head checks were not admitted to runners; no application-test failure was shown | A successful retry does not satisfy rubric floors, prove user behavior or authorize production; runner-admission restrictions need owner/platform action |
+
+Account-switch source checks ran 289 MVP tests with 26 existing skips and no failures.
+The local read-only/non-root image and live welcome/health/logo/protected API
+checks passed; configuration and ready replicas were compared before accepting
+the rollout. These are technical checks, not a resident/staff user study,
+calibrated AI quality, measured delivery benefit or full CON-009/AC-057 pass.
+No new business requirement or customer fact follows, so the BRD remains
+unchanged. Product implications are in the
+[PRD review-learning disposition](./prds/zava-forward-retrofit-programme-demonstrator.md#review-learning-disposition);
+operator recovery remains in [infra guidance](../infra/README.md).
+
 ### Current Learning and Parallel Experiment
 
 Read [#58](https://github.com/jmservera/ama/pull/58) at
@@ -243,7 +273,7 @@ uncertainty evidence; missing evidence remains Inconclusive or Not evaluated.
 Independent platform/control work need not wait for experiment completion.
 
 This direction revises the baseline, not the original case or historical
-v0.12.0 acceptance. BRD v0.16.0 remains draft; PRD v0.13.0 is a candidate
+v0.12.0 acceptance. BRD v0.16.0 remains draft; PRD v0.13.1 is a candidate
 for fresh requirements review and owner acceptance, not an inherited approval.
 
 ## Zava Forward at Zava North Homes
