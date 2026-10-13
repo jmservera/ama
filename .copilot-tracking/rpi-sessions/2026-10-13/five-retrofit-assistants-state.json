@@ -3,8 +3,8 @@
   "task_slug": "five-retrofit-assistants",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-13/five-retrofit-assistants-research.md",
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-10-13/five-retrofit-assistants-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-13/five-retrofit-assistants-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-13/five-retrofit-assistants-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-13/five-retrofit-assistants-review.md"
   },
   "confirmed_decisions": [
     {
@@ -39,6 +39,11 @@
       "decision": "Single final-candidate critique executed: Revise. PC-001 to PC-008 accepted and incorporated into plan/details; no second critique.",
       "status": "applied",
       "evidence": ".copilot-tracking/reviews/plans/2026-10-13/five-retrofit-assistants-plan-critique.md"
+    },
+    {
+      "decision": "Single post-implementation Review execution Complete; outcome Not accepted. Full document/runtime/build boundary compared. RV-003/004 are source-established shutdown admission and manual-case rendering defects; RV-001/002 retain blocked real-platform/new-assistant SQL evidence. No source fixes or second Review inside this task.",
+      "status": "review-complete; not-accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-13/five-retrofit-assistants-review.md"
     }
   ],
   "blockers": [
@@ -46,11 +51,41 @@
       "id": "live-rollout-budget",
       "summary": "Current app/services are available, but the prior unlimited-spend override applies only to #58. Specific retained-data rollout and finite incremental build/AI allowance confirmation was unavailable.",
       "resolution": "Owner confirms rollout to ca-forward-test-api and this version's effective finite spending allowance; then operator records registered real AI and independent SQL before/after/restart evidence. Continue local implementation/build/publication without inferring approval."
+    },
+    {
+      "id": "runtime-review-defects",
+      "summary": "RV-003 permits a new provider dispatch after shutdown returns; RV-004 lets stalled assistant requests block ordinary case controls.",
+      "resolution": "Later user-selected rpi-implement fixes both with nonbillable interleaving/browser regressions before any new-version live rollout."
     }
   ],
   "next_action": {
-    "phase": "Implement",
-    "action": "P01 complete. Execute P02 runtime and local build/publication. Gate live rollout/inference on unavailable scoped approval; leave live acceptance Blocked."
+    "phase": "Follow-up",
+    "action": "Await ranked follow-up selection, Stop automatic session or Switch to manual mode. Reviewed iteration completed with Not accepted outcome; requested accepted delivery remains incomplete. Rank 1 is the bounded nonbillable RV-003/004 implementation."
   },
-  "prioritized_follow_ups": null
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Fix both runtime Review defects",
+      "rationale": "Small, nonbillable fixes restore manual access and shutdown dispatch control; highest immediate release and engineering-quality leverage. No cloud approval needed.",
+      "evidence": "RV-003/004; PC-005/AC-061; .copilot-tracking/reviews/logs/2026-10-13/five-retrofit-assistants-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Complete new-assistant actual SQL/provider and retained-data rollout evidence",
+      "rationale": "Required to establish accepted changed-version delivery. Follows runtime fixes and requires specific rollout and finite incremental-spend approval; no data reset or new estate.",
+      "evidence": "RV-001/002; P03/P03-T01; CON-009/AC-057; .copilot-tracking/reviews/logs/2026-10-13/five-retrofit-assistants-review.md"
+    },
+    {
+      "rank": 3,
+      "task": "Exercise staff role, accessibility and source-verification journeys",
+      "rationale": "Tests whether the bounded assistance and manual fallback are usable, with direct human acceptance kept separate from automated checks. Requires appropriate owner/reviewer participation; follows relevant runtime fixes.",
+      "evidence": "Plan Follow-Up Assessment and Residual Work; .copilot-tracking/reviews/logs/2026-10-13/five-retrofit-assistants-review.md"
+    },
+    {
+      "rank": 4,
+      "task": "Calibrate five assistant outputs and measure paired manual/rules benefit",
+      "rationale": "Determines semantic quality and net benefit including correction burden. Requires verified provider paths, finite call allowance and competent review; not established by passing technical tests.",
+      "evidence": "Plan Follow-Up Assessment and Residual Work; .copilot-tracking/reviews/logs/2026-10-13/five-retrofit-assistants-review.md"
+    }
+  ]
 }
