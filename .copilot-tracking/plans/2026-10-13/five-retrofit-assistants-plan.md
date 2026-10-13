@@ -146,11 +146,14 @@ unless a dependency is actually required.
 One independent critique executed; verdict Revise. PC-001 to PC-008 accepted
 and applied as the following locked implementation obligations. No repeat.
 
-* PC-001: durable unique proposal key (assistant/version, case, permitted
-  dependency signature), provenance distinct from key; pending/leased/ready/
-  failed states, owner plus monotonic fencing token, database-time lease CAS,
-  bounded attempts/backoff and lookup recovery. Late completion cannot win.
-  Inference is bounded at-least-once, not exactly-once billing.
+* PC-001: durable unique proposal key (assistant/version, case, canonical
+  intended proposal identity, permitted dependency signature), provenance
+  distinct from key; changed intent cannot replay an earlier proposal when
+  dependencies are unchanged. Test changed intent and reactive/proactive
+  collisions. Pending/leased/ready/failed states, owner plus monotonic fencing
+  token, database-time lease CAS, bounded attempts/backoff and lookup recovery.
+  Late completion cannot win. Inference is bounded at-least-once, not
+  exactly-once billing.
 * PC-002: valid scoped operator authority/config before real automatic calls;
   bounded input/output, scan interval/size, active calls/attempts and durable
   shared allowance reservations. Timeout/missing usage retains liability.

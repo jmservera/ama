@@ -2,7 +2,7 @@
 ---
 title: Five Retrofit Assistants Research
 ms.date: 2026-10-13
-status: Complete source analysis; delivery direction unresolved
+status: Source analysis complete; live-rollout authorization pending
 ---
 
 ## Research Brief

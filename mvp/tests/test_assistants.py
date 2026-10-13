@@ -559,6 +559,20 @@ class DurabilityTests(Base):
         self.assertEqual(results[0], results[1])
         self.assertEqual(len(a.detail(self.pm, results[0])["provenance"]), 2)
 
+    def test_changed_registered_intent_gets_distinct_proposal_with_same_dependencies(self):
+        cap = "stock-prioritisation"
+        original = dict(REGISTRY[cap])
+        with self.service.transaction() as db:
+            c = self.service.authorize(db, self.pm, cap, "ZF-1")
+            snapshot = self.service.snapshot(db, cap, c)
+        with patch.object(self.service, "snapshot", return_value=snapshot):
+            first = self.service.invoke(self.pm, cap, "ZF-1")
+            with patch.dict(REGISTRY, {cap: dict(original, purpose="Prepare a different stock evidence question")}):
+                changed = self.service.invoke(self.pm, cap, "ZF-1")
+        self.assertEqual(first["source_signature"], changed["source_signature"])
+        self.assertNotEqual(first["id"], changed["id"])
+        self.assertNotEqual(first["proposal_identity"], changed["proposal_identity"])
+
     def test_atomic_claim_two_connections_and_global_active_bound(self):
         other = self.other(active_calls=1)
         self.service.limits.active_calls = 1

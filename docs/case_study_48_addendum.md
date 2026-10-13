@@ -288,8 +288,9 @@ uncertainty evidence; missing evidence remains Inconclusive or Not evaluated.
 Independent platform/control work need not wait for experiment completion.
 
 This direction revises the baseline, not the original case or historical
-v0.12.0 acceptance. BRD v0.16.0 remains draft; PRD v0.13.2 is a candidate
-for fresh requirements review and owner acceptance, not an inherited approval.
+v0.12.0 acceptance. BRD v0.16.0 remains draft; PRD v0.14.0, with 47 functional
+requirements and 61 acceptance criteria, is a candidate for fresh requirements
+review and owner acceptance, not an inherited approval.
 
 ### Draft Experiment Retirement and Carry-Forward (2026-10-13)
 
@@ -309,8 +310,10 @@ current infrastructure with source/image/config/revision-bound evidence.
 observations do not prove delivery or human acceptance of that unmerged work.
 The available four-arm MVE evidence remains proposed, not measured benefit. No new business
 fact, requirement, approval or weakening of resident/safety/financial
-authority follows; BRD v0.16.0 stays unchanged and PRD v0.13.2 records
-evidence only. Retirement and product/pilot/production acceptance are distinct.
+authority follows; BRD v0.16.0 stays unchanged. The v0.13.2 intermediate PRD
+recorded evidence only; the current v0.14.0 candidate adds the five-assistant
+requirements without inheriting approval. Retirement and product/pilot/
+production acceptance are distinct.
 
 ## Zava Forward at Zava North Homes
 
