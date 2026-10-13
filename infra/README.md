@@ -150,9 +150,11 @@ could run. Source `99aeaac` fixes fresh append-only ledger events, preserves
 initial generated procurement/as-of, and enriches the
 [existing synthetic generator](../docs/reference/research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13).
 After preserving the concurrent intended-proposal identity fix, combined
-source `ec7721b` passes all 73 local actual SQL tests and 389-test discovery
-(316 passed, 73 conditional skips). Exact-source local image
-`assistants-20261013-04` is built, not published or deployed. Full evidence is in
+backend source `ec7721b` passes all 73 local actual SQL tests. A later
+populated-visits rendering correction yields latest source `cd14b3b` and local
+image `assistants-20261013-05`, with 389-test discovery (316 passed, 73 conditional
+skips), 21 browser regressions and 21 exact-image generated-data UI/API/local
+restart checks. It is not published or deployed. Full evidence is in
 [ADR 0002](../docs/adrs/0002-pilot-readiness-architecture.md#fresh-ledger-and-synthetic-coverage-learning-2026-10-13).
 
 The owner stopped migration and requested a synthetic database reset. QA

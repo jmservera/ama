@@ -37,13 +37,13 @@
   "blockers": [
     {
       "id": "later-live-delivery",
-      "summary": "Later authorized live-delivery child deployed image02, found ledger DDL incompatibility and prepared combined-source image04/enriched seed. Source/docs published on #68; owner-requested destructive reset was cancelled.",
+      "summary": "Later authorized live-delivery child deployed image02, found ledger DDL and populated-visits defects and prepared corrected image05/enriched seed with21browser/21exact-image checks. Current receipt is publishing on #68; owner-requested destructive reset was cancelled.",
       "resolution": "Current canonical continuation is five-assistant-live-delivery-state.json. Do not repeat this completed bounded runtime Review or infer reset/model acceptance."
     }
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Follow current later child five-assistant-live-delivery-state.json: image04/enriched data ready and source/docs published, exact reset confirmation and effective finite QA required after destructive operation cancellation. Historical bounded Review remains complete; original live acceptance unverified."
+    "action": "Follow current later child five-assistant-live-delivery-state.json: corrected image05/enriched data and21browser/21exact-image local checks ready, current receipt publishing. Exact reset confirmation and effective finite QA required after destructive operation cancellation. Historical bounded Review remains complete; original live acceptance unverified."
   },
   "prioritized_follow_ups": [
     {

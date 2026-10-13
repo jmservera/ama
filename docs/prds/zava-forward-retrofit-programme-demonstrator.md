@@ -599,8 +599,13 @@ reached the existing Azure app, with independent managed-identity SQL reads and
 unchanged private configuration/authentication. Before any paid call, the live
 ledger database exposed unsupported trigger DDL; source `99aeaac` corrects fresh
 ledger creation and adds real ledger tests. This is not real-model acceptance.
-Combined source `ec7721b` preserves the concurrent intended-proposal identity
-fix; its image04 is built locally, with 73 actual disposable SQL tests passing.
+Combined backend source `ec7721b` preserves the concurrent intended-proposal
+identity fix, with 73 actual disposable SQL tests passing. The populated-data
+browser check then found that day-group arrays were silently dropped from
+Visits. Source `a76d281` corrects rendering; latest local image05/source
+`cd14b3b` passes 21 browser regressions and 21 generated-data UI/API/local
+restart checks with no provider attempt. Local SQLite persistence and disabled
+proposals do not satisfy the separate actual Azure/model acceptance gate.
 The owner then stopped migration and authorized a fresh synthetic database.
 The deletion operation was cancelled, so no reset/reseed is claimed and QA is
 disabled. CON-009/AC-057 acceptance stays Blocked.

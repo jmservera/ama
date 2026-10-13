@@ -162,3 +162,53 @@ image02/d3e652ce, healthy revision --0000011, healthzok and zero
 ZF_ASSIST_AUTHORITY entries. No shared-system change followed the cancellation.
 Current task remains automatic/Implement/Blocked with session running; owner
 must clear exact reset and effective finite QA authorization before P03 resumes.
+
+## P03 Autonomous Nonbillable Local Acceptance Preparation
+
+The owner directs continued autonomous execution, but does not specifically
+reverse the exact deletion cancellation or renew expired model authority.
+Continue only the remaining safe local evidence: serve exact image04 with the
+tenant-free enriched generator output in isolated scratch SQLite, AI off,
+authority absent and localhost-only ingress. Check visits and enriched
+operating queues in the actual UI/API, disabled/manual assistance and local
+restart persistence. Do not use private tenant bindings, mutate Azure or infer
+actual Azure/model/human acceptance from this evidence. Current P03 remains
+blocked at the destructive/finite-spend boundary; no Review transition.
+
+### P03 Populated Visits Expose a Rendering Defect
+
+Image04 actual API returns all38booked/11current-week visits, but Chromium
+renders zero visit entries. Captured DOM shows only the heading; no JS
+exception occurs. Shared show helper filters by nodeType before flattening
+arrays, so the visits view's array of date-group elements is silently omitted.
+This directly defeats the requested populated visits. Ordinary in-scope
+correction: flatten node arrays before filtering, preserving existing scalar
+node/null behavior, add a two-day browser regression and rebuild the exact
+candidate. Existing19assistant/manual-browser checks still pass. No new
+planning decision, critique or Azure authority is required for this source fix.
+
+### P03 Corrected Visits and Exact Image05 Evidence
+
+Sourcea76d281 changes only shared show flattening and the browser fixture/
+two-day/case-link regression. All21assistant Chromium checks pass (previous19
+plus2visit checks), and current discovery389/316passed/73conditional skips.
+Preserved rubric-only upstream3ba01ad in a normal merge, latest runtime source
+cd14b3b379026a87ebfa3e9058ac10c0df7888eb. Rubric46/100 is historical automated
+scoring, not product or live-delivery acceptance.
+
+Exact-source local image05:
+sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20.
+All21independent exact-image checks pass on the tenant-free generated980-case/
+10fictional-staff seed:38actualAPI/rendered visits,11dated current-week,
+12Finance rows, populated pending funding/quality,1package/601rendered orders,
+five distinct disabled/manual assistant requests and no browser/server errors.
+Independent read-only SQLite domain hash is unchanged by all assistant
+requests. Actual stop/relaunch against the scratch DB preserves that hash,
+as-of, audit head, five proposals and all queues. Zero provider attempts,
+no tenant binding use, no Azure call/change. Fixture/process/scratch DB cleaned;
+private aggregate receipt/logs retained only under the session folder.
+
+Canonical PRD/ADR/MVP/operator/index and append-only log now distinguish
+image05 as the latest local candidate; image04 remains historical and image02
+is still the disabled serving version. No current-child Review or completion
+claim; exact reset and renewed finite QA remain required.

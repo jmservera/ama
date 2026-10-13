@@ -224,7 +224,21 @@ incompatible-table refusal and changed-intent identity. Full discovery finds
 389 tests: 316 pass and 73 conditional SQL tests skip. The local image
 `assistants-20261013-04` has ID
 `sha256:d5eba379f5fd2ce5d9a38965357c193be88eb1882f8e62f75b06faa5aa52fe22`;
-it is not a published or serving manifest.
+it was not a published or serving manifest and is superseded locally below.
+
+Populated-data Chromium then exposed API38/UI0 visits: the shared page renderer
+discarded arrays of day-group elements before checking node types. Source
+`a76d281` flattens those arrays and adds a two-day/case-link browser regression.
+Latest exact-source image `assistants-20261013-05`, revision
+`cd14b3b379026a87ebfa3e9058ac10c0df7888eb`, has local ID
+`sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20`.
+All 21 assistant/browser regressions and 21 exact-image generated-data checks
+pass: 38 rendered visits, 12 Finance rows, 601 source work orders, populated
+funding/quality controls and five disabled/manual requests. Independent
+SQLite hashes and actual local image restart preserve the controlled domain
+and proposal evidence, with zero provider attempts. This is local preparation,
+not Azure SQL, real-model or human acceptance. Full discovery remains
+389 tests (316 passed, 73 conditional SQL skips).
 
 Fresh SQL seed loading now preserves generated procurement and as-of metadata,
 without overwriting nonempty databases on restart. The

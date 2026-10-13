@@ -98,13 +98,21 @@ the current ledger-enabled architecture: create assistant evidence as an
 append-only ledger table, not an unsupported trigger on an updatable ledger
 table. Fresh domain becomes the independent before/after/restart baseline.
 
-Current execution: combined sourceec7721b/image04 locally ready, deterministic
-generator and all73actualSQL tests pass; source/canonical learning published
-on #68 at7c4eb18 with test/image/mssql CI passing. The actual deletion was cancelled;
+Current execution: latest sourcecd14b3b/image05 locally ready, deterministic
+generator, discovery389/316passed/73SQLskips,21browser regressions and21exact
+generated-data image UI/API/local-restart checks pass. Last backendec7721b
+actualSQL73pass and canonical7c4eb18test/image/mssql CI are historical.
+The current source/learning awaits publication. The actual deletion was cancelled;
 no alternate destructive route was used. Reset confirmation unavailable.
 Image02/revision11 remains healthy with assistance authority removed, zero
 modelcalls and oldretrofit retained. P03 remains unchecked until confirmed
 reset, seeding and actual registered provider/SQL/restart proof are complete.
+
+Local image04 populated-data browser check exposed API38/UI0 visits because
+show filtered out arrays of day-group elements. Sourcea76d281 flattens before
+node filtering; two-day/case-link regression and rebuilt image05 prove all38
+visits render. This directly required UI correction is not new acceptance or
+permission to bypass the cancelled reset.
 
 Capture private existing config, identity, domain/data fingerprints and rollback
 digest before rollout. Build exact source; verify serving revision/digest and

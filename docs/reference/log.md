@@ -2060,6 +2060,22 @@ metadata when the knowledge base was created.
   serving version, and no model call or image04 cloud deployment is claimed.
   Prepared synthetic counts and all private tenant bindings remain separate
   from live acceptance; historical Reviews are preserved.
+
+## 2026-10-13 Populated visits renderer and exact-image local validation
+
+* Generated-data browser QA found 38 booked visits in the actual API but zero
+  rendered rows: the shared page renderer discarded arrays of day-group
+  elements. Source `a76d281` flattens before filtering nodes and adds a two-day
+  appointment/case-link regression.
+* Latest local image05/source `cd14b3b` passes 21 browser regressions and 21
+  exact-image generated-data UI/API/restart checks. All 38 visits, 12 Finance
+  rows and 601 source work orders render; funding/quality remain pending,
+  and all five assistant requests remain disabled/manual. Independent SQLite
+  checks preserve domain/proposals through restart with zero provider attempts.
+* Updated PRD, [ADR receipt](../adrs/0002-pilot-readiness-architecture.md#fresh-ledger-and-synthetic-coverage-learning-2026-10-13),
+  MVP/operator guide and index. This is safe local evidence only: the Azure
+  database remains intact, the reset cancellation is not bypassed, and expired
+  QA authority is not renewed by a general autonomous-continuation instruction.
   The available four-arm MVE evidence is proposed, not verified benefit results.
 
 ## [2026-10-13] ingest | Agent process map and PowerPoint handoff

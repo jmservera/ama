@@ -655,8 +655,9 @@ ZF_TEST_MSSQL=1 PYTHONPATH=.:tests python3 -m unittest \
 The browser exercise needs the existing Playwright test dependency and Chromium;
 it can use installed Google Chrome or `CHECK_BROWSER_EXECUTABLE`. The parent
 owns image build, real platform evidence, approved rollout and independent
-Review. New live rollout and provider spending remain blocked pending scoped
-owner approval; local mocks do not satisfy that acceptance gate.
+Review. Replacement rollout and provider spending remain blocked at the
+cancelled database reset and expired finite QA authority; local mocks do not
+satisfy that acceptance gate.
 
 Corrected-source execution on 2026-10-13: 47 nonbillable assistant tests passed;
 full discovery reported 379 tests, 310 passed and 69 conditional SQL skips.
@@ -670,6 +671,17 @@ actions in these suites are test fixtures, not real model or human acceptance.
 No retained dataset, private configuration, live provider or Azure deployment
 was changed. Actual SQL Server proof does not establish deployed Azure SQL
 identity/permissions, real provider quality or CON-009/AC-057 delivery.
+
+Later generated-data validation on 2026-10-13 exposed a populated Visits
+rendering defect: arrays of day groups were dropped although the API returned
+38 bookings. The shared renderer now flattens node arrays before filtering.
+The two-day/case-link regression brings the assistant browser exercise to
+21 passing checks. Latest exact-source image05 additionally passes 21
+nonbillable generated-data UI/API/local-restart checks with 38 visible visits,
+12 Finance rows and 601 source work orders, preserved independent SQLite
+domain hashes and five disabled/manual proposals with zero provider attempts.
+Image05 is local-only; tenant bindings and Azure/model acceptance are not
+exercised by that isolated validation.
 
 ```bash
 cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests -v

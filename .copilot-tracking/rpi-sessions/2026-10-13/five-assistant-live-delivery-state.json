@@ -44,6 +44,11 @@
       "evidence": ".copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md; docs/adrs/0002-pilot-readiness-architecture.md"
     },
     {
+      "decision": "Autonomous nonbillable local validation found API38/UI0 visits. Corrected shared rendering in a76d281; current runtime sourcecd14b3b/image05/e0254cb3 passes389discovery (316passed/73SQLskips),21browser regressions and21exact-image generated UI/API/SQLite-restart checks. Controlled domain unchanged, five disabled proposals persisted, zero provider attempts, no tenant binding use or Azure change. General continuation does not override deletion cancellation or renew paid authority.",
+      "status": "local-validation-complete; publication-pending; destructive-boundary-unchanged",
+      "evidence": "Owner instruction: Keep working autonomously until the task is truly finished; earlier exact deletion cancellation and unanswered renewal form remain controlling."
+    },
+    {
       "decision": "Specific Azure SQL database deletion was cancelled by user at the tool boundary. No wipe/recreate/reseed, no alternate deletion route, no model call. Clarification form unanswered because owner unavailable; preserve existing database and disabled QA.",
       "status": "reset-blocked",
       "evidence": "Azure sql_db_delete result: Operation cancelled by user; subsequent explicit reset-confirmation form unavailable."
@@ -57,13 +62,13 @@
     },
     {
       "id": "actual-platform-acceptance",
-      "summary": "Ledger-compatible combined-source image04/enriched seed have not reached Azure; registered model/SQL/restart proof remains unexecuted.",
-      "resolution": "After reset approval, recreate ledger database/settings, preserve tenant bindings, deploy exact image04 and run real proof within an effective approved QA expiry. Original one-hour authority expires2026-10-13T21:55:47Z; never silently extend it."
+      "summary": "Ledger-compatible visits-corrected image05/enriched seed have not reached Azure; registered model/SQL/restart proof remains unexecuted.",
+      "resolution": "After reset approval, recreate ledger database/settings, preserve tenant bindings, deploy exact image05 and run real proof within an effective approved QA expiry. Original one-hour authority expires2026-10-13T21:55:47Z; never silently extend it."
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Await owner confirmation of the exact retrofit reset and renewed finite QA authority. Source, canonical learning and updated #68 body published at7c4eb18; test/image/mssql CI pass, rubric remains running. Existing DB Online, image02/revision11 healthy, authority absent. P03 remains unchecked; no current-child Review or full completion."
+    "action": "Publish visits-corrected sourcecd14b3b/image05 local evidence and reconciled canonical docs on #68, then await exact Azure reset and renewed finite QA. All safe local source/image/UI/API/restart preparation is complete. Existing DB Online, image02/revision11 healthy, authority absent. P03 remains unchecked; no current-child Review or full completion."
   },
   "prioritized_follow_ups": [
     {
