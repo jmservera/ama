@@ -537,13 +537,15 @@ otherwise available ordinary case work or quietly start a provider worker.
 
 Each short transaction uses an independently owned Store-adapter connection.
 No provider network call holds the Store/domain/database lock. A durable SHA-256
-task key includes capability/version, case and material permitted-source,
-schema/rule/document signatures. Mode is separate append-only provenance.
-Repeated scans and reactive/proactive collisions recover the same proposal.
-Claims have an owner, monotonic fence, database-time lease and CAS completion.
-Lost acknowledgements are looked up, not blindly re-dispatched. Review compares
-the current material signature and proposal revision in the same serialized
-SQL transaction; unrelated contact notes do not stale a proposal.
+task key includes capability/version, case, canonical intended proposal identity
+(the registered purpose) and material permitted-source/schema/rule/document
+signatures. Changed intent or dependencies cannot replay another proposal;
+mode is separate append-only provenance. Repeated scans and reactive/proactive
+collisions with the same identity recover the same proposal. Claims have an
+owner, monotonic fence, database-time lease and CAS completion. Lost
+acknowledgements are looked up, not blindly re-dispatched. Review compares the
+current material signature and proposal revision in the same serialized SQL
+transaction; unrelated contact notes do not stale a proposal.
 MSSQL assistant transactions use serializable isolation so current role,
 case and permitted metadata reads remain protected through review commit,
 including against writers outside the application's cooperative write lock.

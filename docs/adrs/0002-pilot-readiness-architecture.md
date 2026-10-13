@@ -99,8 +99,10 @@ predicates and human owners. This amends the lean exercise realization;
 the separate queue/agent/orchestrator estate in ADR 0001 remains proposed.
 Use existing SQL/AI/API/UI rather than five applications or new resources.
 
-Proposal identity binds capability/version, case and material dependencies;
-reactive/proactive invocation provenance is separate. SQL owns bounded
+Proposal identity binds capability/version, case, canonical intended proposal
+identity (the registered purpose) and material dependencies; a changed intent
+cannot replay an earlier proposal when dependencies are unchanged.
+Reactive/proactive invocation provenance is separate. SQL owns bounded
 attempts, durable allowance reservations, database-time claims and fenced
 lease takeover/completion. A lost acknowledgement is reconciled by lookup.
 Timeouts and missing usage preserve liability; at-least-once inference may

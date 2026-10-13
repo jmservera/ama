@@ -63,6 +63,10 @@ def digest(value):
     return hashlib.sha256(canonical(value).encode()).hexdigest()
 
 
+def proposal_identity(capability):
+    return dict(capability=capability, purpose=REGISTRY[capability]["purpose"])
+
+
 def pick(value, keys):
     value = value if isinstance(value, dict) else {}
     result = {}
@@ -426,12 +430,13 @@ class Assistants:
     def _enqueue(self, db, capability, c, mode, actor):
         snapshot = self.snapshot(db, capability, c)
         signature = digest(snapshot)
-        tid = digest([capability, VERSION, c["id"], signature])
+        identity = proposal_identity(capability)
+        tid = digest([capability, VERSION, c["id"], signature, identity])
         row = db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()
         if row is None:
             reason = self.disabled(db)
-            body = dict(id=tid, capability=capability, version=VERSION, case_id=c["id"], source_signature=signature,
-                        snapshot=snapshot, output=None, verification=None, review=None, envelope=None,
+            body = dict(id=tid, capability=capability, version=VERSION, case_id=c["id"], proposal_identity=identity,
+                        source_signature=signature, snapshot=snapshot, output=None, verification=None, review=None, envelope=None,
                         manual=f"Review the ordinary case with {', '.join(REGISTRY[capability]['roles'])}.",
                         reason=reason, created_at=self.now(db))
             state = "disabled" if reason else "pending"
