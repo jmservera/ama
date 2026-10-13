@@ -146,3 +146,19 @@ table agrees with the private aggregate receipt. Canonical PRD/ADR/operator
 guide/index and append-only log distinguish current prepared and serving state.
 P03 remains unchecked, current-child Review unexecuted and reset approval plus
 renewed effective finite QA authority required before live execution.
+
+## P03 Published Handover and Fresh Read-Only Confirmation
+
+Source99aeaac, normal combined merge ec7721b and canonical learning are pushed
+to the existing open #68, published head7c4eb18ebf34d118d63b246601f127a9a24721b2.
+PR body now records observed rollout/ledger failure, enriched coverage,
+cancelled reset, exact local image04 and bounded historical Reviews. Current
+MVP CI run38476455860 has successful test/image/mssql jobs; both validation
+workflows pass. Rubric run38476455842 remains running, not a claimed score.
+
+Fresh read-only Azure SQL tool confirms retrofit Online with its original
+creation date and GP_S_Gen5/2/32GB configuration. App remains Running on
+image02/d3e652ce, healthy revision --0000011, healthzok and zero
+ZF_ASSIST_AUTHORITY entries. No shared-system change followed the cancellation.
+Current task remains automatic/Implement/Blocked with session running; owner
+must clear exact reset and effective finite QA authorization before P03 resumes.

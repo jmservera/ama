@@ -40,7 +40,7 @@
     },
     {
       "decision": "Preserved concurrent intent correction687e4aa in normal combined merge ec7721b. Merged source discovery389/316passed/73SQLskips, all73actualSQL tests passed. Exact-source local image04/d5eba379 built; image03 is historical. Canonical docs rendered and links/protected evidence checked. No new cloud operation or Review.",
-      "status": "implemented-and-validated; publication-pending",
+      "status": "implemented-validated-and-published",
       "evidence": ".copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md; docs/adrs/0002-pilot-readiness-architecture.md"
     },
     {
@@ -63,7 +63,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Publish verified source/docs on #68, then await exact reset approval. Old retrofit retained, QA disabled in revision11. No Review-ready full delivery or task completion until actual reset/seed/deployment/model/SQL/restart evidence."
+    "action": "Await owner confirmation of the exact retrofit reset and renewed finite QA authority. Source, canonical learning and updated #68 body published at7c4eb18; test/image/mssql CI pass, rubric remains running. Existing DB Online, image02/revision11 healthy, authority absent. P03 remains unchecked; no current-child Review or full completion."
   },
   "prioritized_follow_ups": [
     {

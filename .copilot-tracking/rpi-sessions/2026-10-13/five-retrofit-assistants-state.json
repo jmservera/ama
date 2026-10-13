@@ -60,13 +60,13 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Later child five-assistant-live-delivery owns authorized rollout/ledger fix/synthetic reset. Source/image03/enriched seed ready, but actual deletion cancelled and reset confirmation unavailable. Original accepted delivery still incomplete; preserve completed historical Reviews."
+    "action": "Later child five-assistant-live-delivery owns authorized rollout/ledger fix/synthetic reset. Combined source/image04/enriched seed ready and source/docs published on #68, but actual deletion cancelled and reset confirmation unavailable. Original accepted delivery still incomplete; preserve completed historical Reviews."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
       "task": "Complete owner-approved synthetic reset and actual provider/SQL/restart evidence",
-      "rationale": "Owner now permits replacement baseline; exact deletion was cancelled. Source/image03/enriched seed and all72actualSQL tests are ready, but no live model/changed-database acceptance exists. Clear reset approval and keep QA within effective bounds.",
+      "rationale": "Owner now permits replacement baseline; exact deletion was cancelled. Combined source/image04/enriched seed and all73actualSQL tests are ready and source/docs published, but no live model/changed-database acceptance exists. Clear reset approval and keep QA within effective bounds.",
       "evidence": "Child RV-001; original P03/P03-T01; CON-009/AC-057; .copilot-tracking/reviews/logs/2026-10-13/five-assistant-runtime-validation-review.md"
     },
     {

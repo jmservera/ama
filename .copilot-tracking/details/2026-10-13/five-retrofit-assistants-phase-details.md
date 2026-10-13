@@ -98,8 +98,9 @@ the current ledger-enabled architecture: create assistant evidence as an
 append-only ledger table, not an unsupported trigger on an updatable ledger
 table. Fresh domain becomes the independent before/after/restart baseline.
 
-Current execution: source99aeaac/image03 locally ready, deterministic generator
-and all72actualSQL tests pass. The actual database deletion was cancelled;
+Current execution: combined sourceec7721b/image04 locally ready, deterministic
+generator and all73actualSQL tests pass; source/canonical learning published
+on #68 at7c4eb18 with test/image/mssql CI passing. The actual deletion was cancelled;
 no alternate destructive route was used. Reset confirmation unavailable.
 Image02/revision11 remains healthy with assistance authority removed, zero
 modelcalls and oldretrofit retained. P03 remains unchecked until confirmed
