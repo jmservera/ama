@@ -12,6 +12,7 @@ never reimplement the runtime validation. Point GH_AW_RUNTIME_DIR at the
 
 from __future__ import annotations
 
+import fnmatch
 import hashlib
 import json
 import os
@@ -97,6 +98,78 @@ def valid_card(**overrides: object) -> dict:
 
 
 # --- Generated config and schema --------------------------------------------
+
+
+def test_copilot_inference_uses_the_automatic_actions_token():
+    text = LOCK.read_text(encoding="utf-8")
+    lock = yaml.safe_load(text)
+    bindings = [
+        step["env"]["COPILOT_GITHUB_TOKEN"]
+        for job in lock["jobs"].values()
+        for step in job.get("steps", [])
+        if "COPILOT_GITHUB_TOKEN" in step.get("env", {})
+    ]
+
+    assert bindings
+    assert all(token == "${{ github.token }}" for token in bindings)
+    assert "secrets.COPILOT_GITHUB_TOKEN" not in text
+    assert lock["jobs"]["agent"]["permissions"] == {
+        "contents": "read",
+        "issues": "read",
+        "pull-requests": "read",
+        "copilot-requests": "write",
+    }
+
+
+def test_repository_operations_use_the_automatic_job_scoped_token():
+    lock = yaml.safe_load(LOCK.read_text(encoding="utf-8"))
+    bindings = [
+        value
+        for job in lock["jobs"].values()
+        for step in job.get("steps", [])
+        for name, value in step.get("env", {}).items()
+        if name in {"GITHUB_MCP_SERVER_TOKEN", "GH_AW_FETCH_TOKEN", "GH_TOKEN", "PUSH_TOKEN"}
+    ]
+    bindings.extend(
+        step["with"]["github-token"]
+        for job in lock["jobs"].values()
+        for step in job.get("steps", [])
+        if "github-token" in step.get("with", {})
+    )
+
+    assert bindings
+    assert all(token in {"${{ github.token }}", "${{ secrets.GITHUB_TOKEN }}"} for token in bindings)
+    assert lock["permissions"] == {}
+    assert lock["jobs"]["rubric_prepare"]["permissions"] == {
+        "contents": "read",
+        "pull-requests": "write",
+        "statuses": "write",
+    }
+    assert lock["jobs"]["record_rubric_score"]["permissions"] == {
+        "contents": "write",
+        "issues": "write",
+        "pull-requests": "write",
+        "statuses": "write",
+    }
+
+
+@pytest.mark.parametrize("workflow", sorted((REPO_ROOT / ".github" / "workflows").glob("*.yml")), ids=lambda p: p.name)
+@pytest.mark.parametrize("event", ["pull_request", "push"])
+def test_tracking_only_changes_do_not_trigger_workflows(workflow: Path, event: str):
+    config = yaml.load(workflow.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
+    trigger = config["on"][event]
+    tracking = [".copilot-tracking/session.md", ".copilot-tracking/reviews/2026-10-13/result.md"]
+    source = "mvp/zavaforward_mvp/app.py"
+
+    if "paths" in trigger:
+        assert "paths-ignore" not in trigger
+        assert not any(fnmatch.fnmatchcase(path, pattern) for path in tracking for pattern in trigger["paths"])
+        assert any(fnmatch.fnmatchcase(source, pattern) for pattern in trigger["paths"])
+    else:
+        assert trigger["paths-ignore"] == [".copilot-tracking/**"]
+        assert all(any(fnmatch.fnmatchcase(path, pattern) for pattern in trigger["paths-ignore"]) for path in tracking)
+        assert not any(fnmatch.fnmatchcase(source, pattern) for pattern in trigger["paths-ignore"])
+    assert "workflow_dispatch" in config["on"]
 
 
 def test_rubric_ids_match_expected_groups():

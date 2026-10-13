@@ -1991,3 +1991,29 @@ metadata when the knowledge base was created.
 * Current source-head checks and the scorer are distinct from capstone/product
   acceptance. Final publication checks are recorded separately; this audit
   does not merge #65 or start the previously stopped RPI follow-ups.
+
+## [2026-10-13] update | Use standard workflow tokens and exclude tracking-only CI
+
+* Merged #65 at the owner's explicit request, then started the independent
+  `fix/rubric-github-token` branch from the merged main. The original checkout's
+  private/untracked configuration is untouched.
+* The [rubric operator guide](../../.github/rubric/README.md#owner-setup) now
+  documents automatic Actions-token authentication: `copilot-requests: write`
+  for inference and explicit built-in token selection for checkout/fetch,
+  GitHub reads and safe outputs. Trusted prepare/record jobs retain their
+  scoped status/review/content/issue permissions; the agent cannot write
+  repository content. No repository secret was created or deleted.
+* Checked the [official authentication reference](https://github.github.com/gh-aw/reference/auth/)
+  on 2026-10-13. Token-based inference still depends on Copilot authorization
+  and billing eligibility; user-owned repository compilation does not prove
+  organization-style inference access. No PAT fallback or entitlement
+  change is implied.
+* Tracking-only push/PR changes no longer start rubric or prototype workflows;
+  MVP workflows already restrict paths to source/infrastructure. Mixed
+  source changes still trigger applicable validation and manual dispatch
+  remains available. Required-check and cumulative-PR-diff caveats are explicit.
+* Regenerated the lock using gh-aw v0.89.21; repeat compilation is byte-identical.
+  Authentication, job-permission, all-four-workflow path-filter and existing
+  generated-schema checks passed: 13 tests. Seven real-MCP-runtime tests were
+  skipped because the pinned external runtime was unavailable; no runtime or
+  live model result is represented as Passed. Updated index routing.

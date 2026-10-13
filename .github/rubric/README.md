@@ -1,7 +1,7 @@
 ---
 title: Capstone Rubric Gate
 description: How the rubric-score agentic workflow scores the capstone against the FY27 AMA rubric and blocks pull requests that lower the score
-ms.date: 2026-10-11
+ms.date: 2026-10-13
 ms.topic: how-to
 ---
 
@@ -78,7 +78,22 @@ Scores are readiness estimates from repository evidence. Live-scored criteria (B
 
 ## Owner Setup
 
-1. Create a fine-grained personal access token owned by your account with Account permissions, Copilot Requests: Read. Give it a short expiry. Store it as the repository secret `COPILOT_GITHUB_TOKEN`.
+1. No repository token secret is required by this workflow. Copilot inference
+   uses the automatic Actions token with `copilot-requests: write`. GitHub
+   checkouts, reads and safe outputs explicitly use `secrets.GITHUB_TOKEN`; score commits
+   use the equivalent `github.token`. Both refer to the job-scoped token
+   minted by GitHub, not a secret an operator creates. The generated lock
+   must not be edited independently of the Markdown source.
+
+   Secretless inference still requires GitHub to authorize Copilot requests
+   for this repository and its billing context. The
+   [official authentication reference](https://github.github.com/gh-aw/reference/auth/)
+   (checked 2026-10-13) documents organization Copilot billing for this path
+   and PAT-based inference for personal repositories or unavailable centralized
+   billing. This repository is user-owned: compilation does not prove that
+   GitHub has enabled token-based inference here. Check a real agent run;
+   requesting a permission does not create a subscription or entitlement.
+   No PAT fallback is configured.
 2. In Settings, Actions, General, enable "Allow GitHub Actions to create and approve pull requests". Without it the gate falls back to a comment review; the status check still works.
 3. The lock file `.github/workflows/rubric-score.lock.yml` was compiled with gh-aw v0.89.21. After any edit to the workflow source, recompile and commit both files:
 
@@ -91,8 +106,42 @@ Scores are readiness estimates from repository evidence. Live-scored criteria (B
 4. Merge the setup pull request. The setup pull request itself triggers a bootstrap run, and so does the first run after merge while `main` still holds the manual seed: the seed is replaced by the first workflow score without a comparison. Fixes to the gate scripts and rubric configuration take effect only after they merge, because every run loads them from `main`.
 5. After one successful run, add a branch protection rule or ruleset on `main` that requires the `rubric/score` status check and requires branches to be up to date before merging. Do not make the bot review a required review.
 
+### Job-Scoped Token Permissions
+
+The agent has `contents: read`, `issues: read`, `pull-requests: read` and
+`copilot-requests: write`, but no repository write permission. The trusted
+prepare job has `contents: read`, `statuses: write` and `pull-requests: write`
+to publish the initial status and dismiss obsolete bot reviews. The trusted
+record job has `contents: write`, `statuses: write`, `pull-requests: write` and
+`issues: write` to commit score files and publish the verdict/review/comment
+or a main-branch regression issue. The compiler scopes helper-job permissions;
+the generated workflow defaults to `permissions: {}`.
+
+Explicit built-in token bindings prevent optional `GH_AW_GITHUB_TOKEN` or
+`GH_AW_GITHUB_MCP_SERVER_TOKEN` secrets from replacing repository-operation
+credentials. Compiler-generated optional diagnostic/telemetry secret
+references do not make those secrets required. The Copilot PAT secret is
+not used or required. Existing repository secrets are not deleted by this
+change.
+
+GitHub normally suppresses new workflow runs caused by pushes made with
+`GITHUB_TOKEN`, avoiding recursive scoring on score-only commits. The gate
+publishes `rubric/score` on both the scored SHA and the recorded-score SHA;
+that is not a claim that other CI ran on the bot commit. Fork pull requests
+and repository policy can restrict token writes independently of requested
+permissions.
+
 ## Day-to-Day Use
 
+* Tracking-only changes under `.copilot-tracking/**` do not trigger any of
+  the four repository push/PR workflows. Rubric and prototype workflows
+  explicitly ignore that path; MVP workflows already include only their
+  source/infrastructure/workflow paths. Mixed source/tracking changes still
+  trigger applicable checks, and manual dispatch remains available.
+  GitHub evaluates PR filters against the cumulative PR diff, not just the
+  latest commit. Required checks on a path-filtered workflow can remain
+  pending; do not require unconditional checks for tracking-only PRs while
+  also expecting no workflow to run.
 * Open a pull request. The workflow posts a sticky "Rubric score" comment, sets `rubric/score`, submits APPROVE or REQUEST_CHANGES, and commits the new `latest.json` to your branch. Pull that commit before pushing again.
 * Pull requests that do not touch a scored artifact or the rubric tooling get an immediate `rubric/score` success without an agent run.
 * If two pull requests both record a score, the second conflicts on `latest.json` after the first merges. Update the branch from `main` and push; the gate rescores against the new baseline.

@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-13T11:31:57+00:00",
-  "commit": "e326ae404eacb3e50dacb0851c6cccfc23d5a0a4",
+  "scored_at": "2026-10-13T12:16:23+00:00",
+  "commit": "54f18f6ec58c568c8ac7532e18d6a873d543724e",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38389633174",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38395433423",
   "fingerprints": {
     "brd": "8698b2d950aa2f0d4cda8729d80d2d77ec0bea10404f22860cda2182f9db9160",
     "prd": "665ff790556d7f3d8b9b090c2b6d908627a95631ffe171465140d0bc12d2dd67",
     "adr": "8d1a56951e744b25644d33aa21c1bb9dbb388eb384d736119e6af8a37fa81bab",
-    "solution-code": "260ac0b0cc175ab5f21db57311ec23a2d0a07967eec04548cb538ba01f69bff2",
+    "solution-code": "6588e8487463b57f8b7d05d1ca2ae2e9f88d2e99cc8457bc2fba806ecd35502e",
     "infrastructure": "e377bd25153088696b714380a81f5137f8aa5db3b2ce3d560c212a90131a38cc",
     "capstone-deck": "9338390eef61641b043a0128cdc4670a63e6cae4ef6b43aea6f4290aa2badc74"
   },
@@ -34,67 +34,43 @@
     },
     "A2": {
       "score": 5,
-      "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:57-67",
-        "docs/adrs/0002-pilot-readiness-architecture.md:123-131",
-        "docs/adrs/0002-pilot-readiness-architecture.md:194-203",
-        "docs/adrs/0002-pilot-readiness-architecture.md:260-267"
-      ],
-      "rationale": "ADR 0002 adds seven independently reasoned decision areas each with a trade-off table naming rejected alternatives and why, deepening the already-argued ADR 0001 appraisal."
+      "evidence": [],
+      "rationale": "Unchanged baseline: security/compliance architecture evidence not affected by this PR's CI-tooling-only diff."
     },
     "A3": {
       "score": 4,
-      "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:197-252",
-        "infra/modules/authTokenStore.bicep:20-33",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:1319-1327"
-      ],
-      "rationale": "New dated ADR section and token-store module show OAuth-only storage, no shared keys, private endpoint and scoped RBAC for auth secrets, plus explicit remaining-gap disclosure (full permissions, guests not yet accepted). Reinforces existing controls without closing the acknowledged gaps."
+      "evidence": [],
+      "rationale": "Unchanged baseline: data/integration architecture evidence not affected by this PR's CI-tooling-only diff."
     },
     "A4": {
       "score": 4,
-      "evidence": [
-        "mvp/zavaforward_mvp/ranking.py:16-52",
-        "mvp/zavaforward_mvp/store.py:153-179",
-        "mvp/tests/test_ranking_policy.py:42-56",
-        "docs/adrs/0002-pilot-readiness-architecture.md:431"
-      ],
-      "rationale": "Policy is a hash-verified versioned file with a registry and tested JSON/SQL store parity; content identical under the renamed package, confirmed byte-for-byte against the pre-rename file."
+      "evidence": [],
+      "rationale": "Unchanged baseline: solution-code delivery evidence not affected; diff only touches rubric workflow tooling, not mvp/ application code."
     },
     "A5": {
       "score": 3,
-      "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:308-340",
-        "infra/modules/authTokenStore.bicep:101-109"
-      ],
-      "rationale": "Operational resilience design discussed with specifics; new token-store module adds one diagnostic setting (audit logs, transaction metrics) but this is routing reuse, not a new structured observability harness with measured cost/performance targets."
+      "evidence": [],
+      "rationale": "Unchanged baseline: operational readiness evidence not affected by this PR's CI-tooling-only diff."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "PRD adds a Real-Inference Quality test table but no new evaluation harness code or measured results. No changed files touch ai_eval.py or an evaluation harness; unchanged."
+      "rationale": "Unchanged baseline: testing evidence not affected; no mvp/tests changes in this diff."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Orchestration-pattern text is untouched in substance by this diff; no new agentic handoff/reflection or state-graph implementation was added beyond renaming."
+      "rationale": "Unchanged baseline: documentation/evidence trail not materially affected by rubric-gate tooling changes."
     },
     "B1": {
       "score": 3,
-      "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide4",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide17"
-      ],
-      "rationale": "Deck gives a clear arc: request, discovery/challenge, proposed response, CFO/risk tests, recommendation; each slide header states a claim. Deck content is unchanged, only renamed/re-pathed. Written evidence only, no live delivery to confirm the argument lands."
+      "evidence": [],
+      "rationale": "Live-scored; no new deck or rehearsal evidence in this diff. Baseline readiness score retained."
     },
     "B2": {
       "score": 3,
-      "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide13",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide18"
-      ],
-      "rationale": "Main narrative stays executive (CFO cash-exposure slide, sponsor asks) while separate appendices carry technical and council Q&A detail. Deck content unchanged, only renamed. Written evidence only, no live delivery to confirm calibration."
+      "evidence": [],
+      "rationale": "Live-scored; no new deck or rehearsal evidence in this diff. Baseline readiness score retained."
     },
     "B3": {
       "score": 0,
@@ -113,29 +89,18 @@
     },
     "B6": {
       "score": 4,
-      "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide4",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1",
-        "docs/brds/agentic-retrofit-programme-brd.md:29"
-      ],
-      "rationale": "Capstone deck exists (renamed path) so cap_without no longer applies. Documentation is complete and navigable; some slides pack multiple sub-points rather than one idea each, so materials are clear but occasionally overloaded."
+      "evidence": [],
+      "rationale": "Unchanged baseline: no deck changes in this diff to affect thought-leadership-adjacent presentation criterion."
     },
     "B7": {
       "score": 3,
-      "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide13",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1"
-      ],
-      "rationale": "Deck cites dated repository evidence per slide and uses concrete figures (CFO exposure slide: GBP20,000/7,500/12,500) to make points, honestly labelled as fictional rather than real measured outcomes. Content unchanged, only renamed."
+      "evidence": [],
+      "rationale": "Unchanged baseline: not affected by CI-tooling-only diff."
     },
     "C1": {
       "score": 5,
-      "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:528",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:269",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:314-336"
-      ],
-      "rationale": "The owner-direction table (PR-001 to PR-008) and governance additions name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR, scheme terms) and success measures. PR deepens exercise targets without changing this evidence."
+      "evidence": [],
+      "rationale": "Unchanged baseline: BRD/PRD/ADR evidence not affected by this PR's CI-tooling-only diff."
     },
     "C2": {
       "score": 0,
