@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-13T08:41:33+00:00",
-  "commit": "a8f54586b6eb6c34dd6eb031992cd61330bbeb5b",
+  "scored_at": "2026-10-13T09:20:53+00:00",
+  "commit": "a7d9eb4c77ba7843af2f2118e3967d8a5cbb6d8c",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38369565640",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38374459654",
   "fingerprints": {
     "brd": "62bbfe659c52cbca53562d91414afa52a1161571959fce799e3bc702ff5e5e20",
     "prd": "665ff790556d7f3d8b9b090c2b6d908627a95631ffe171465140d0bc12d2dd67",
@@ -30,7 +30,7 @@
         "infra/modules/containerapps.bicep:123-126",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component; modular identity split enforced in infra. Diff is mostly a Proper Warm to Zava Forward rename plus added auth-init scripts; no material change to this evidence."
+      "rationale": "Failure-domain table explicit per component, matches deployed Bicep scale rules; modular identity split enforced in infra. A1 evidence files unchanged by this PR's diff (rename/auth additions elsewhere)."
     },
     "A2": {
       "score": 5,
@@ -40,59 +40,61 @@
         "docs/adrs/0002-pilot-readiness-architecture.md:194-203",
         "docs/adrs/0002-pilot-readiness-architecture.md:260-267"
       ],
-      "rationale": "ADR 0002 still carries seven reasoned decision areas with trade-off tables. New dated addendum (lines 197-230) is observational learning, not new trade-off reasoning; score unchanged."
+      "rationale": "ADR 0002 adds seven independently reasoned decision areas each with a trade-off table naming rejected alternatives and why, deepening the already-argued ADR 0001 appraisal."
     },
     "A3": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:156-193",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:314-329"
+        "infra/modules/authTokenStore.bicep:22-38",
+        "docs/adrs/0002-pilot-readiness-architecture.md:908-915",
+        "mvp/zavaforward_mvp/auth.py:95-140"
       ],
-      "rationale": "Named AI leakage threat and compliance articles persist under the renamed PRD. No new threat-model or AI-risk evidence added by this diff; unchanged."
+      "rationale": "New deployed token-store infra scopes identity narrowly (OAuth-only storage, no shared key, private endpoint, scoped RBAC) and ADR 0002 documents observed tenant/role/oid checks with real denial handling, moving from design-only to partially deployed/tested control evidence."
     },
     "A4": {
       "score": 4,
       "evidence": [
-        "mvp/zavaforward_mvp/ranking.py:16-52",
-        "mvp/zavaforward_mvp/store.py:153-179",
+        "mvp/properwarm_mvp/ranking.py:16-52",
+        "mvp/properwarm_mvp/store.py:153-179",
         "mvp/tests/test_ranking_policy.py:42-56",
         "docs/adrs/0002-pilot-readiness-architecture.md:431"
       ],
-      "rationale": "Policy module content is byte-identical after the package rename (properwarm_mvp to zavaforward_mvp); core capability evidence unchanged."
+      "rationale": "Policy is a hash-verified versioned file with a registry and tested JSON/SQL store parity. Renamed package and new auth/token-store/profile modules (with tests) extend coverage but do not change this criterion's core evidence."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:197-230",
-        "infra/README.md:111-206",
-        "infra/scripts/initialize-api-auth.py"
+        "docs/adrs/0002-pilot-readiness-architecture.md:920-933",
+        "infra/README.md:78-120"
       ],
-      "rationale": "New dated ADR entry adds observed operational learning: idempotent SQL no-op, replica restart, startup-cache reconciliation; backed by new tested initializer scripts and infra/README runbooks, beyond prior qualitative discussion. Still no cost model or load test."
+      "rationale": "ADR 0002 records an observed rebuild preserving all 980 programme cases, workload codes and audit rows; infra/README documents a callback re-initialization procedure. Measured operational evidence beyond prior design-only discussion."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No new evaluation harness code or measured AI quality results in this diff (ai_eval.py content unchanged apart from import rename); unchanged."
+      "rationale": "PRD still only adds a Real-Inference Quality test table; no new evaluation harness code or measured results in ai_eval.py in this diff; unchanged."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No new agentic orchestration, handoff or state-graph code in this diff; unchanged."
+      "rationale": "Orchestration-pattern text is untouched by this diff; no new agentic code, handoff/reflection or state-graph implementation was added. Unchanged."
     },
     "B1": {
       "score": 3,
       "evidence": [
         "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide4"
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide4",
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide17"
       ],
-      "rationale": "Deck replaced (Proper Warm deck removed, Zava Forward deck added) but extracted text shows the same narrative arc (request, discovery, response, CFO/risk tests, recommendation). Written evidence only; unchanged."
+      "rationale": "Renamed deck preserves the same clear arc: request, discovery/challenge, proposed response, CFO/risk tests, recommendation. Written evidence only, no live delivery to confirm the argument lands."
     },
     "B2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide13"
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide13",
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide18"
       ],
-      "rationale": "Executive/appendix register separation preserved in the renamed deck. Written evidence only, no live delivery; unchanged."
+      "rationale": "Main narrative stays executive (CFO cash-exposure slide, sponsor asks) while separate Appendix A/B/D carry technical and council Q&A detail; same register separation as baseline deck, now under the renamed file. Written evidence only."
     },
     "B3": {
       "score": 0,
@@ -113,25 +115,27 @@
       "score": 4,
       "evidence": [
         "docs/capstone/deck/zava-forward-executive-draft.pptx:slide4",
-        "docs/brds/agentic-retrofit-programme-brd.md:528"
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1",
+        "docs/brds/agentic-retrofit-programme-brd.md:29"
       ],
-      "rationale": "Capstone deck exists (renamed, same structure); cap_without no longer applies. Documentation complete and navigable; some slides remain multi-point. Removed old-named deck file has no evidentiary loss since replacement deck carries equivalent content."
+      "rationale": "Capstone deck exists (renamed) so cap_without(3) no longer applies. Documentation is complete and navigable; some slides still pack multiple sub-points rather than one idea each, so materials are clear but occasionally overloaded."
     },
     "B7": {
       "score": 3,
       "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide13"
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide13",
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1"
       ],
-      "rationale": "Deck still cites dated repository evidence with concrete figures, honestly labelled as fictional; unchanged."
+      "rationale": "Deck cites dated repository evidence per slide and uses concrete figures (CFO exposure slide: GBP20,000/7,500/12,500), though fictional figures are honestly labelled rather than real measured outcomes."
     },
     "C1": {
       "score": 5,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:520-528",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:267-271",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:312-338"
+        "docs/brds/agentic-retrofit-programme-brd.md:528",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:269",
+        "docs/prds/proper-warm-retrofit-programme-demonstrator.md:314-336"
       ],
-      "rationale": "Owner-direction stakeholder table and governance constraints persist in the renamed BRD/PRD, unchanged in substance by this diff."
+      "rationale": "The owner-direction table (PR-001 to PR-008) and governance additions name real stakeholders (DPO, Legal, Finance, policy owner), concrete constraints (DPIA, retention law, GDPR conditions, scheme terms) and success measures. This PR's rename/auth changes do not alter this evidence."
     },
     "C2": {
       "score": 0,
