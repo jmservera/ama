@@ -36,14 +36,14 @@
   ],
   "blockers": [
     {
-      "id": "live-rollout-budget",
-      "summary": "Specific new-version retained-data rollout and finite incremental model allowance remain unapproved.",
-      "resolution": "Concrete existing-app retained-data rollout/up-to-USD-5 QA approval requested again, owner unavailable. Obtain affirmative approval before cloud publication/rollout or real calls; no consent inferred. Local source/image/SQL/docs proceed."
+      "id": "later-live-delivery",
+      "summary": "Later authorized live-delivery child deployed image02, found ledger DDL incompatibility and prepared image03/enriched seed. Owner-requested destructive reset was cancelled.",
+      "resolution": "Current canonical continuation is five-assistant-live-delivery-state.json. Do not repeat this completed bounded runtime Review or infer reset/model acceptance."
     }
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Original requested delivery awaits affirmative existing-app retained-data rollout/up-to-USD-5 QA authority. Local fixes/SQL/image/docs and final CI complete. No paid/shared-system action or original-task completion without that approval and actual platform evidence."
+    "action": "Follow current later child five-assistant-live-delivery-state.json: image03/enriched data ready, exact reset confirmation required after destructive operation cancellation. Historical bounded Review remains complete; original live acceptance unverified."
   },
   "prioritized_follow_ups": [
     {

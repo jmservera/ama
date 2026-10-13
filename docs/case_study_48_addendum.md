@@ -249,6 +249,16 @@ The dated MVP/architecture snapshots are supplemented by the
 and [ADR delivery delta](./adrs/0002-pilot-readiness-architecture.md#current-exercise-delivery-delta-2026-10-13).
 Historical `warm-*` deployments and `ca-properwarm-mvp` revisions remain
 their actual recorded identifiers, not retroactively renamed observations.
+The later [five-assistant handover](../infra/README.md#five-assistant-version-current-handover)
+supersedes the account-switch serving revision: image02 reached Azure, but
+ledger-specific startup DDL disabled assistance before any model call.
+Image03 corrects fresh ledger creation and the
+[existing generator](./reference/research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13)
+now prepares dated visits and nonempty operating queues. The owner permits
+replacing the synthetic database, not inventing consent, technical acceptance,
+payment or housing outcomes. The deletion operation was cancelled, so the old
+database remains; prepared fixtures are not deployed evidence. Eleven private
+tenant bindings are retained separately from regenerated fictional records.
 No new business requirement or customer fact follows, so the BRD remains
 unchanged. Product implications are in the
 [PRD review-learning disposition](./prds/zava-forward-retrofit-programme-demonstrator.md#review-learning-disposition);

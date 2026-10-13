@@ -75,13 +75,35 @@ obtained, rather than claiming local tests satisfy CON-009.
 Publish on #68, no merge/amend/force-push. Dynamically resolve GitHub identity,
 use its noreply email locally and include the required co-author trailer.
 
-Current evidence: P01/P02 complete; source c4b28e3 and final local image
-a9314193 verified. Source CI 38446725200 passes including 26 actual general
-SQL Server parity tests. Parent 333 tests pass with 26 local skips; 44 targeted
-and reported 15 Chromium checks pass. Local SQL bootstrap did not authenticate;
-new-assistant real SQL/provider/changed-deployment acceptance is not established.
-P03 remains unchecked for that blocked live gate; Review assesses this explicit
-partial outcome once. Canonical documentation/evidence publication can proceed.
+Current evidence: P01/P02 complete; corrected runtime bf383c4 and local image
+d3e652ce verified. Validation source 560c30c / CI 38461679776 passes 379
+discovered tests and all 69 actual SQL tests, including 43 assistant tests.
+47 local assistant and 19 Chromium checks pass. The completed runtime
+follow-up fixes the shutdown/rendering defects and disposable SQL coverage.
+Historical Reviews remain unchanged. P03 remains unchecked until actual
+changed-platform provider/SQL/restart proof exists.
+
+Owner explicitly authorized retained-data rollout and bounded QA on
+2026-10-13: 10 calls, 126000 reserved tokens, one-hour authority, proactive off,
+up to USD 5 incremental target. No exact billing guarantee, tenant changes,
+new estate, data reset or PR merge. Later child five-assistant-live-delivery
+owns the remaining P03 implementation and its new evidence.
+
+The owner subsequently authorizes a fresh synthetic exercise database instead
+of migrating the old database. Stop migration and revoke QA authority first.
+Enrich the existing generator through the explicitly requested dataset agent,
+including booked visits and other empty operational sections. Preserve
+authentication and private tenant staff bindings. The new database must retain
+the current ledger-enabled architecture: create assistant evidence as an
+append-only ledger table, not an unsupported trigger on an updatable ledger
+table. Fresh domain becomes the independent before/after/restart baseline.
+
+Current execution: source99aeaac/image03 locally ready, deterministic generator
+and all72actualSQL tests pass. The actual database deletion was cancelled;
+no alternate destructive route was used. Reset confirmation unavailable.
+Image02/revision11 remains healthy with assistance authority removed, zero
+modelcalls and oldretrofit retained. P03 remains unchecked until confirmed
+reset, seeding and actual registered provider/SQL/restart proof are complete.
 
 Capture private existing config, identity, domain/data fingerprints and rollback
 digest before rollout. Build exact source; verify serving revision/digest and

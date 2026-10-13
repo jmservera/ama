@@ -28,6 +28,47 @@ output. Keep private outputs out of Git, preserve versions/identifiers/history,
 and report missing stock-to-case linkage explicitly. Small constructed
 regression/forecast fixtures do not replace the generated-data MVP.
 
+### MVP Operational Coverage (2026-10-13)
+
+The owner requests a regenerated exercise database and more populated workbench
+sections, especially visits. The requested eval-dataset-creator supplied a
+read-only schema/coverage audit; the parent implemented and tested the existing
+generator. This does not alter the public CSV pack or resolve blind constraint
+findings. The database reset operation was cancelled, so this is a prepared
+private dataset, not a newly seeded live database.
+
+```bash
+python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py \
+  --seed 20260901 --as-of 2026-10-13 --out /private/path/zavaforward.json
+```
+
+The explicit as-of date makes regeneration repeatable. The generator preserves
+source contacts, hazards and decisions, exports simulation state histories and
+uses each appointment's actual source supplier instead of the installation
+contractor for every visit. Six designated future assessment appointments are
+added only to available open cases without unresolved safety holds or existing
+bookings; historical contrasts do not enter the booked-visits queue.
+
+| Prepared coverage | Count | Boundary |
+| --- | --- | --- |
+| Retained geography stock / programme cases | 60000 / 980 | Separate denominators; 443 open programme cases |
+| Distinct geography anchors | 825 | Flats may share a building anchor; not unique stock-unit linkage |
+| Appointments / visible booked visits | 1578 / 38 | Source bookings plus clearly labelled fixtures |
+| Current-week booked visits | 11 | Receipt counts 2026-10-12 to 2026-10-18; API has no date-range filter |
+| Designated forward visits | 6 | Four in that week; no invented works release or consent |
+| Packages / source-issued work orders | 1 / 601 | Imported simulation issuance/completion, not live instructions or QA acceptance |
+| Invoices / quality records / pending grants | 12 / 12 / 12 | Proposed budgets, unpayable received/held invoices, unverified submissions and pending opportunities |
+| Offered handoffs / open service requests | 4 / 12 | No invented acceptance, resolution or redress |
+
+The generator writes a private `.coverage.json` receipt beside its output.
+It contains counts, seed, date and version, not addresses or people. New
+structures carry `is_synthetic`; the whole dataset is synthetic-labelled.
+Operator seeding preserves the 11 existing private tenant staff/oid bindings
+instead of generating identities from the generator's ten fictional staff.
+Initial SQL loading preserves procurement/as-of; restart never silently
+replaces live records. Four focused tests cover determinism, exact visit
+cohorts, referential/control boundaries and SQL seed/restart persistence.
+
 This pack gives the Zava Forward discovery a realistic body of operating
 records to analyse. It models a competent, busy retrofit team one year into
 delivery. The team knows the programme is behind plan and suspects several

@@ -1,13 +1,33 @@
 ---
 title: Data Dictionary - Retrofit Synthetic Evidence Pack
 description: Field definitions, keys, allowed values and record-keeping notes for the Zava Forward year-one synthetic evidence pack
-ms.date: 2026-09-30
+ms.date: 2026-10-13
 ms.topic: reference
 ---
 
 > [!WARNING]
 > SYNTHETIC DATA. Fictional records for design and analysis practice. Not
 > Zava North Homes data. Every table has `is_synthetic` set to `true`.
+
+## Separate Private MVP JSON Extension
+
+The [dated coverage recipe](./README.md#mvp-operational-coverage-2026-10-13)
+extends the separate private MVP export, not these public CSV schemas.
+
+| Field or structure | Grain and meaning |
+| --- | --- |
+| `as_of`, `built`, `seed`, `generator_version`, `is_synthetic` | Explicit deterministic exercise date and provenance |
+| `stock_register_rows` | Geography-stock denominator, not programme-case count |
+| `case.synthetic_stock_anchor_id` | Selected private geography row; multiple flats may share a building anchor |
+| `case.history` | Retained shifted simulation states, labelled source export, not workbench approvals |
+| `case.appointments[].fixture` | `forward-visit` or `historical-visit` for added labelled scenarios; source appointments remain |
+| `procurement.packages`, `procurement.work_orders` | Source-issued simulation orders and synthetic capacity allocation; not live contract authority |
+| `case.finance`, `case.grants`, `case.quality` | Pending/received/unverified operational fixtures; no approval, acceptance or payment implied |
+| `case.handoff`, `case.service_requests` | Offered transfers and open service/redress scenarios, with resolvable staff references |
+
+The private coverage sidecar counts booked visits and their current-week
+intersection. `/api/visits` returns booked appointments by owner/all; it does
+not implement a date-range filter. Historical outcomes stay in case detail.
 
 ## Identifiers and Relationships
 

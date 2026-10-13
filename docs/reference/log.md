@@ -2153,3 +2153,30 @@ metadata when the knowledge base was created.
 * This closes source/build validation, not the unapproved live rollout,
   registered actual model invocation or independent changed-Azure SQL restart
   gate. Earlier evidence and the initial Review are preserved.
+
+## [2026-10-13] implementation | Ledger discovery and prepared operational coverage
+
+* Owner authorized image02 rollout and bounded QA; exact `d3e652ce` manifest
+  reached revision `--0000010`. Private auth/config/identity comparisons and
+  independent managed-identity SQL fingerprints preserved 980 cases, 11 staff,
+  three metadata entries, 15 recommendations and audit head/count 40.
+  Live ledger-trigger incompatibility prevented model execution; no paid call
+  or human acceptance is claimed.
+* Source `99aeaac` creates append-only ledger assistant events instead of an
+  unsupported system-versioned-table trigger, refusing incompatible retained
+  evidence without deletion. Actual disposable SQL passes 72 tests, including
+  fresh-ledger five-path/immutability/restart and invalid-table refusal.
+  Full discovery passes 387 tests with 72 conditional SQL skips.
+* Requested eval-dataset-creator supplied a read-only schema/coverage audit;
+  parent implemented/tested the existing generator and SQL seed persistence.
+  [Dated recipe](./research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13)
+  preserves seed 20260901, 60000 stock and 980-case slice, with 38 visible booked
+  visits (11 current-week), six designated forward visits, one package/601
+  source orders, 12 each invoices/unverified quality/pending grants/requests
+  and four offered handoffs. No new approval, consent, payment or benefit.
+* Owner stopped migration and requested a reset. QA authority removed in
+  healthy revision `--0000011`, still image02. Database deletion was cancelled;
+  no wipe/reseed occurred. Private enriched seed and 11 tenant staff bindings
+  are prepared. Image03 is local-only, not a serving digest. Updated PRD/ADR,
+  addendum, operator guide, synthetic dictionary and index; earlier receipts,
+  original case, owner memory and regulatory snapshots remain unchanged.

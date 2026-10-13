@@ -20,6 +20,16 @@ image on the retained data and existing Azure services. Continue #68.
 * Complete autonomously, resolve ordinary choices and implement.
 * Preserve the existing MVP/data lineage, actual AI/SQL/Azure exercise baseline
   and the earlier consolidated-PR direction.
+* On 2026-10-13 the owner explicitly authorized the offered existing-app
+  retained-data rollout and bounded QA: 10 calls, 126000 reserved tokens,
+  one-hour expiry, proactive off, up to USD 5 incremental target. Token
+  reservations do not guarantee exact billing. No merge, tenant changes or
+  separate worker estate.
+* The owner subsequently stops retained-data migration and explicitly permits
+  wiping/recreating the exercise database from the existing synthetic generator.
+  Enrich missing operational sections, including visits, using the requested
+  hve-core-all:eval-dataset-creator. Preserve tenant role/identity bindings and
+  app authentication; replaced synthetic domain is a new dated baseline.
 
 ## Evidence and Readiness
 
@@ -40,8 +50,10 @@ quality evidence assistants without weakening current controls.
 
 Existing MVP backend/UI/tests, PRD, ADR 0002 and necessary ADR 0001 linkage,
 MVP/operator documentation, knowledge index/log and delivery evidence.
-No new Azure resources, data reset, production approval, original/BRD/memory/
-regulatory changes, presentation redesign or PR merge.
+No new worker estate, production approval, original/BRD/memory/regulatory
+changes, presentation redesign or PR merge. Exercise database replacement
+and synthetic-data enrichment are explicitly authorized exceptions to the
+earlier no-reset/no-new-database boundary.
 
 ## Functional Requirements
 
@@ -112,6 +124,13 @@ Depends on P02. Parent owns platform rollout, Review and publication.
 Targeted then existing suites; real image build and approved existing exercise
 services; record version-linked evidence. Commit/push #68 with privacy-safe
 identity. Preserve all unrelated and private files.
+
+Owner-approved replacement: stop old-database assistant migration, enrich the
+existing deterministic MVP generator without inventing approvals, and seed a
+new exercise baseline. Correct Azure SQL ledger event-table DDL before fresh
+startup. Verify populated operational sections (especially visits), retain
+tenant staff bindings/auth, and compare assistant-only changes against the new
+baseline rather than pretending the old domain remained unchanged.
 
 ## Test Ownership and Locked Boundary
 

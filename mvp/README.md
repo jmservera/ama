@@ -47,6 +47,10 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   of open cases (Leaflet bundled in `web/vendor`; names show on hover; teal normal, amber waiting 60+ days,
   red open safety issue), charts by stage, authority, wave and waiting time,
   contractor and team workload. Visits lists booked appointments by day.
+  The dated synthetic generator now guarantees six additional forward
+  assessment visits and retains historical attended/no-access/cancelled
+  contrasts. See the [coverage recipe](../docs/reference/research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13)
+  for reproducible dates, queue counts, private outputs and safety limits.
 * "Who could take this on": top three colleagues with plain reasons (role
   fit for the stage, current workload, who already knows the resident).
 * AI assistance, always a draft for a person: a morning briefing, a drafted

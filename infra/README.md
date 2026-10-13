@@ -111,8 +111,9 @@ Notes:
 
 ### Current exercise handover (2026-10-13)
 
-The dated deployment notes above are history, not the latest serving image.
-After the from-empty rebuild, callback initialization, public welcome/photo
+The dated deployment notes above are history. The newer five-assistant
+handover below supersedes the account-switch serving revision.
+At that account-switch handover, after the from-empty rebuild, callback initialization, public welcome/photo
 setup and tenant staff reconciliation, the deployed API is
 `ca-forward-test-api`, serving image
 `crforwardtestrzsrg.azurecr.io/zava-forward-mvp:account-switch-20261013-01`
@@ -135,38 +136,46 @@ For observed outcomes and pending product gates, see the
 Actual account replacement and own-photo acceptance remain separate from
 operator checks, unit tests and the source-head CI/rubric results on #65.
 
-### Five-assistant version: build-only handover
+### Five-assistant version: current handover
 
-The owner-requested five-assistant runtime is implemented and locally packaged
-in corrected image `zavaforward-mvp:assistants-20261013-02`, with source/local image/CI evidence
-in [ADR 0002](../docs/adrs/0002-pilot-readiness-architecture.md#implementation-and-build-evidence).
-This is not a new ACR digest or deployed revision. The current exercise
-handover above remains the serving app; no SQL/AI/auth settings or retained
-data were replaced for this build.
+After explicit owner authorization, corrected image `assistants-20261013-02`
+was published and deployed to the existing API as revision `--0000010`, pinned
+to ACR digest
+`sha256:d3e652cec1bdef8846270a75c124d55743bdb757231ffaeae585cc423e6b8786`.
+Private comparisons preserve SQL/AI/auth configuration, workload identity,
+scale and the old controlled-domain fingerprints. No model call occurred.
 
-The corrected candidate closes shutdown dispatch admission and renders manual
-controls independently of auxiliary reads, with a 10-second timeout. Local
-actual SQL validation now passes 69 tests, including 43 assistant tests and
-concurrent startup on retained fixture state; this replaces the earlier
-failed disposable-login attempt, not live Azure acceptance. Those tests use a
-local-only disposable database and nonbillable provider/human fixtures.
+Live Azure SQL exposed a ledger-only DDL incompatibility before assistance
+could run. Source `99aeaac` fixes fresh append-only ledger events, preserves
+initial generated procurement/as-of, and enriches the
+[existing synthetic generator](../docs/reference/research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13).
+All 72 local actual SQL tests pass; local image `assistants-20261013-03` is
+built, not published or deployed. Full evidence is in
+[ADR 0002](../docs/adrs/0002-pilot-readiness-architecture.md#fresh-ledger-and-synthetic-coverage-learning-2026-10-13).
 
-Before enabling this version, obtain its specific retained-data rollout and
-finite incremental allowance approval; the earlier #58 exception is not an
-ongoing spend grant. [MVP settings](../mvp/README.md#operator-authority-and-finite-allowance)
-require authority reference, expiry and aggregate call/token allowances;
-proactive scans default off. Derive those bounds from actual deployment prices,
-not a token-to-dollar assumption. Preserve private pre-rollout config/data
-fingerprints and rollback digest, verify migration privileges without widening
-runtime rights, then verify the actual serving digest/revision and unchanged
-SQL/AI/auth references. New SQL tables are additive; do not reseed or delete
-proposal evidence to roll back.
+The owner stopped migration and requested a synthetic database reset. QA
+authority was removed; healthy revision `--0000011` still serves image
+`d3e652ce`, with proactive off and assistance disabled. Database deletion was
+cancelled; `retrofit` is not wiped or reseeded. A private enriched seed and all
+11 existing tenant staff/oid bindings are prepared. Do not circumvent that
+cancelled operation or claim the new queues are live.
+
+On a confirmed reset, recreate only the exercise database with its existing
+ledger/serverless/backup/diagnostic settings, restore existing contained SQL
+workload grants and privately bound staff, seed the generated date/procurement,
+then deploy the ledger-compatible image and capture a new baseline. This is
+explicit exercise reset authority, not a general reseed or evidence-deletion
+permission. Preserve tenant registration/authentication; do not grant runtime
+tenant-management permissions. Keep real QA within its effective expiry,
+call/token allowance and scoped spend approval; never extend or replenish it
+because a reset occurred. Token limits are not a currency guarantee.
 
 AC-057 requires a registered assistant through the changed deployed API,
 provider/model/usage/outcome and independent actual SQL task/event evidence
 before/after an app restart, plus unchanged controlled state and failure/
 manual handling. General SQL Server CI or an anonymous HTTP 200 cannot
-replace that proof. This gate is Blocked pending approval and execution.
+replace that proof. This gate is Blocked pending reset authorization and actual execution; no
+source test, anonymous health check or fixture approval substitutes for it.
 
 ## Post-deployment API authentication initialization
 

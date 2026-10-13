@@ -1,0 +1,77 @@
+{
+  "task_id": "five-assistant-live-delivery-2026-10-13",
+  "task_slug": "five-assistant-live-delivery",
+  "parent_task": {
+    "task_id": "five-retrofit-assistants-2026-10-13",
+    "task_slug": "five-retrofit-assistants"
+  },
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "blocked",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-13/five-retrofit-assistants-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-13/five-retrofit-assistants-plan.md",
+    "details": ".copilot-tracking/details/2026-10-13/five-retrofit-assistants-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-13/five-retrofit-assistants-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Owner authorizes the offered existing-app retained-data rollout and bounded QA: up to USD 5 incremental target, at most 10 calls, 126000 reserved tokens, one-hour authority and proactive off. Exact billing is not guaranteed by token reservations. No merge, tenant permission changes or new worker estate.",
+      "status": "confirmed",
+      "evidence": "Owner input: authorize; immediately following the concrete rollout and bounded QA authorization request, 2026-10-13."
+    },
+    {
+      "decision": "Reuse approved Research, plan and accepted PC-001 to PC-008. Scope is remaining P03 actual-platform delivery using corrected runtime bf383c4 and local image d3e652ce. Preserve both completed historical Reviews.",
+      "status": "reused",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-13/five-assistant-runtime-validation-review.md"
+    },
+    {
+      "decision": "Owner stops retained-database migration and authorizes wiping/recreating the exercise database from the existing synthetic generator, enriching missing sections including visits through the explicitly requested eval-dataset-creator. Preserve tenant identity bindings and authentication. Assistant QA authority removed before replacement work. No paid model call has occurred.",
+      "status": "confirmed; implementation-scope-reconciled",
+      "evidence": "Owner input: ok, stop the migration, you can wipe the database and create a new one from the synthetic data creator, and ask the hve-core-all:eval-dataset-creator to add some more data."
+    },
+    {
+      "decision": "Requested dataset agent completed a read-only schema/coverage audit; parent implemented deterministic enrichment. Source99aeaac, local image03/3ca084ba, 387 discovery with72SQLskips and all72actualSQL tests. Six forward visits plus original sources yield38visible/11current-week; prepared seed preserves11tenant staff.",
+      "status": "implemented-and-validated; not-live",
+      "evidence": "mvp/tests/test_generated_dataset.py; docs/reference/research/retrofit-synthetic-data/README.md; .copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md"
+    },
+    {
+      "decision": "Specific Azure SQL database deletion was cancelled by user at the tool boundary. No wipe/recreate/reseed, no alternate deletion route, no model call. Clarification form unanswered because owner unavailable; preserve existing database and disabled QA.",
+      "status": "reset-blocked",
+      "evidence": "Azure sql_db_delete result: Operation cancelled by user; subsequent explicit reset-confirmation form unavailable."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "database-reset-cancelled",
+      "summary": "The concrete destructive reset operation was cancelled; confirmation is unavailable.",
+      "resolution": "Owner confirms the exact retrofit database reset through the approval boundary. Do not circumvent cancellation through another tool or CLI. Seed/image are ready; retain old DB and disabled QA meanwhile."
+    },
+    {
+      "id": "actual-platform-acceptance",
+      "summary": "Ledger-compatible image03/enriched seed have not reached Azure; registered model/SQL/restart proof remains unexecuted.",
+      "resolution": "After reset approval, recreate ledger database/settings, preserve tenant bindings, deploy exact image03 and run real proof within an effective approved QA expiry. Original one-hour authority expires2026-10-13T21:55:47Z; never silently extend it."
+    }
+  ],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Publish verified source/docs on #68, then await exact reset approval. Old retrofit retained, QA disabled in revision11. No Review-ready full delivery or task completion until actual reset/seed/deployment/model/SQL/restart evidence."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Human role/accessibility/source-verification acceptance",
+      "rationale": "Automated actual-platform evidence cannot substitute for human acceptance.",
+      "evidence": "Parent plan Follow-Up Items."
+    },
+    {
+      "rank": 2,
+      "task": "Semantic calibration and paired manual/rules net benefit",
+      "rationale": "Technical provider proof is not task quality or measured business benefit.",
+      "evidence": "Parent plan Follow-Up Items."
+    }
+  ]
+}

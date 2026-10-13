@@ -53,20 +53,20 @@
   ],
   "blockers": [
     {
-      "id": "live-rollout-budget",
-      "summary": "Current app/services are available, but the prior unlimited-spend override applies only to #58. Specific retained-data rollout and finite incremental build/AI allowance confirmation was unavailable.",
-      "resolution": "Owner confirms rollout to ca-forward-test-api and this version's effective finite spending allowance; then operator records registered real AI and independent SQL before/after/restart evidence. Continue local implementation/build/publication without inferring approval."
+      "id": "database-reset-cancelled",
+      "summary": "Owner authorized rollout/bounded QA, then requested stopping migration and a fresh synthetic database. Concrete database deletion was cancelled; no reset/reseed or actual model proof occurred.",
+      "resolution": "Continue through later child five-assistant-live-delivery after exact reset confirmation. Prepared source/image/enriched data are validated; retain old retrofit and disabled QA. Never silently extend the expired/effective QA window."
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Child runtime/local-SQL/build follow-up completed and published; original accepted delivery remains incomplete. Obtain concrete retained-data rollout/finite-spend approval for later actual-platform implementation; no source defects or disposable-SQL bootstrap retry remain."
+    "action": "Later child five-assistant-live-delivery owns authorized rollout/ledger fix/synthetic reset. Source/image03/enriched seed ready, but actual deletion cancelled and reset confirmation unavailable. Original accepted delivery still incomplete; preserve completed historical Reviews."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Complete new-assistant actual SQL/provider and retained-data rollout evidence",
-      "rationale": "Only remaining mandatory engineering delivery gate; runtime fixes and actual disposable SQL are now verified. Requires specific rollout and finite incremental-spend approval; no data reset or new estate.",
+      "task": "Complete owner-approved synthetic reset and actual provider/SQL/restart evidence",
+      "rationale": "Owner now permits replacement baseline; exact deletion was cancelled. Source/image03/enriched seed and all72actualSQL tests are ready, but no live model/changed-database acceptance exists. Clear reset approval and keep QA within effective bounds.",
       "evidence": "Child RV-001; original P03/P03-T01; CON-009/AC-057; .copilot-tracking/reviews/logs/2026-10-13/five-assistant-runtime-validation-review.md"
     },
     {

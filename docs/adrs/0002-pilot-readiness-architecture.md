@@ -197,12 +197,44 @@ prove actual Azure workload permissions, model quality or human acceptance.
 The completed initial Review remains historical evidence, not silently
 rewritten as acceptance of the corrected build.
 
-No new cloud image, rollout, paid model call, changed-workload SQL persistence
-or human/business acceptance is claimed. The existing --0000009 app remains
-unchanged. Specific retained-data rollout and effective incremental allowance
-confirmation was unavailable; the earlier #58 exception is not reused.
-AC-057 remains Blocked for this new version until approval and exact changed-
-image Azure/SQL/model evidence, including independent before/after/restart.
+These earlier build-only receipts are historical. The owner subsequently
+authorized the existing-app rollout and finite QA (10 calls, 126000 reserved
+tokens, one-hour authority, proactive off, up to USD 5 incremental target).
+The `d3e652ce` image was published to ACR and deployed as revision
+`ca-forward-test-api--0000010`. Independent managed-identity SQL reads preserved
+980 cases, 11 staff, three metadata entries, 15 recommendations and audit
+head/count 40; private configuration/authentication/identity comparisons matched.
+No model call ran: ledger-enabled Azure SQL rejects an INSTEAD OF trigger on
+its default updatable, system-versioned ledger event table.
+
+#### Fresh Ledger and Synthetic Coverage Learning (2026-10-13)
+
+Source `99aeaac6b17c19090875b2e23990a6666a58c534` explicitly creates
+`assistant_events` as `LEDGER = ON (APPEND_ONLY = ON)` in ledger databases,
+using the ordinary trigger only outside ledger databases. It refuses an
+existing incompatible ledger table without dropping evidence. The
+[official append-only ledger example](https://learn.microsoft.com/sql/relational-databases/security/ledger/ledger-how-to-append-only-ledger-tables?view=sql-server-ver17)
+was checked on 2026-10-13. Actual disposable SQL now passes 72 tests,
+including fresh-ledger five-path/immutability/restart and incompatible-table
+refusal. Full discovery passes 387 tests with 72 conditional SQL skips.
+The local image `assistants-20261013-03` has ID
+`sha256:3ca084baf8da6a799dc0c5a277834be80d4ad28be4e59d1b7909092db3706e12`;
+it is not a published or serving manifest.
+
+Fresh SQL seed loading now preserves generated procurement and as-of metadata,
+without overwriting nonempty databases on restart. The
+[synthetic coverage recipe](../reference/research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13)
+retains the existing generator/60000-stock lineage and 980-case denominator.
+Pending budgets/grants, received/held invoices, submitted unverified quality,
+offered handoffs and open requests are fixtures, not approval evidence.
+
+The owner stopped retained-data migration and authorized a synthetic database
+reset. QA authority was removed in healthy revision `--0000011`. The destructive
+deletion operation was cancelled; reset/reseed did not occur. All 11 tenant
+staff bindings and the enriched seed are privately prepared, not published.
+Revision `--0000011` still serves image `d3e652ce`, with assistance disabled.
+AC-057 remains Blocked for actual registered model/usage and changed-database
+before/after/restart proof. Human, semantic and business acceptance remain open.
 
 ### 1. Durable store: Azure SQL or PostgreSQL
 

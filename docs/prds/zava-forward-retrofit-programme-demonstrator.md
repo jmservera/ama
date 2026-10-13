@@ -592,8 +592,22 @@ closes new provider-thread admission without holding SQL/inference locks.
 Actual disposable SQL Server now exercises all five assistants, current-source/
 role review, claims/reservations, recovery and concurrent additive startup,
 alongside general parity; provider and human actions are still fixtures.
-The changed-image Azure SQL/model path remains unexecuted. Live deployment/spend approval was
-unavailable and is not inferred; CON-009/AC-057 acceptance stays Blocked.
+The owner subsequently authorized rollout and bounded QA. Image `d3e652ce`
+reached the existing Azure app, with independent managed-identity SQL reads and
+unchanged private configuration/authentication. Before any paid call, the live
+ledger database exposed unsupported trigger DDL; source `99aeaac` corrects fresh
+ledger creation and adds real ledger tests. This is not real-model acceptance.
+The owner then stopped migration and authorized a fresh synthetic database.
+The deletion operation was cancelled, so no reset/reseed is claimed and QA is
+disabled. CON-009/AC-057 acceptance stays Blocked.
+
+The [coverage recipe](../reference/research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13)
+now generates repeatable dated visits and nonempty operational queues from the
+existing stock/simulation. Six designated assessment visits supplement source
+bookings, with historical attended/no-access/cancelled contrasts kept separate.
+Pending/unverified Finance, grant, quality, handoff and request fixtures do not
+assert consent, technical release, human sign-off or payment. The prepared
+private dataset is not the live database, measured benefit or a new company fact.
 
 ### Form Extraction and Assisted Filling
 
