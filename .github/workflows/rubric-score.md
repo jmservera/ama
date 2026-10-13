@@ -5,8 +5,10 @@ on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore: [".copilot-tracking/**"]
   push:
     branches: [main]
+    paths-ignore: [".copilot-tracking/**"]
   workflow_dispatch:
     inputs:
       force:
@@ -15,7 +17,9 @@ on:
         default: false
 permissions:
   contents: read
+  issues: read
   pull-requests: read
+  copilot-requests: write
 concurrency:
   group: rubric-score-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}${{ github.event_name == 'workflow_dispatch' && format('-{0}', github.run_id) || '' }}
   cancel-in-progress: true
@@ -28,9 +32,12 @@ timeout-minutes: 20
 max-ai-credits: 300
 network: defaults
 checkout:
+  github-token: ${{ secrets.GITHUB_TOKEN }}
   fetch-depth: 0
   fetch: ["main"]
 tools:
+  github:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
   bash: ["cat", "grep", "head", "tail", "wc", "ls", "find", "jq", "git diff", "git log", "git show"]
 jobs:
   rubric_prepare:
@@ -162,6 +169,7 @@ pre-agent-steps:
       name: rubric-context
       path: /tmp/gh-aw/agent/rubric
 safe-outputs:
+  github-token: ${{ secrets.GITHUB_TOKEN }}
   report-failure-as-issue: false
   jobs:
     record-rubric-score:
