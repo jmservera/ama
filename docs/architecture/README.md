@@ -177,6 +177,12 @@ not a staff-browser acceptance session, calibrated semantic quality or benefit.
 No cloud read, paid model call, new authority or resource change was performed
 to create these diagrams.
 
+The diagrams do not depict sensor ingestion. The simulator-only humidity and
+temperature capture path, deterministic review signal and proposed map overlay
+are documented in
+[ADR 0002](../adrs/0002-pilot-readiness-architecture.md#sensor-data-capture-analysis-and-map);
+they are not implemented or represented as deployed integrations here.
+
 * The existing API/SQL proposal service is the current implementation.
   Separate queue workers would add deployment, failure and permission
   boundaries; they remain deferred rather than being drawn as necessary

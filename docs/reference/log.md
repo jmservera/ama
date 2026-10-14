@@ -2341,3 +2341,25 @@ metadata when the knowledge base was created.
   case, owner memory, regulatory snapshots, runtime and infrastructure
   are unchanged. No cloud/model action, real data publication, new legal
   currentness check, spending or operational approval.
+
+## [2026-10-14] query | Design humidity and temperature sensor data flow
+
+* Reviewed the Business Challenge and Modernised Retrofit Delivery Objective.
+  The current sensor inventory, device mapping, calibration and ownership are
+  unknown; three humidity/temperature readings per simulated day are an AMA
+  demonstration assumption only.
+* Added a simulator-only capture and analysis proposal to ADR 0002. It reuses
+  the existing API and Azure SQL, retains append-only readings and provenance,
+  derives versioned deterministic review signals, and extends the existing
+  map/review queue. No IoT Hub/Event Hubs integration, production threshold or
+  device integration is selected.
+* Sensor signals can create a `SENSOR_REVIEW_DUE` human condition-review task,
+  but cannot diagnose a hazard, alter statutory clocks, override a resident
+  report, release a hold or directly change investment ranking. Missing or
+  invalid data remains insufficient and cannot deprioritise a home.
+* Updated `../case_study_48_addendum.md`, `../adrs/0002-pilot-readiness-architecture.md`,
+  `../architecture/README.md`, this index and this log. No simulator code,
+  cloud resources, live data or operational approval was created.
+* Open items remain the actual sensor inventory/protocol, mapping and
+  calibration ownership, lawful basis and resident choice, retention, data
+  quality rules, analysis window, thresholds and operational triage owner.

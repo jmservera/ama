@@ -347,6 +347,13 @@ coordination across retrofit assessments, grant applications, contractor
 procurement, resident consent and quality assurance, and progress is far
 behind plan.
 
+The current sensor estate, device-to-home mapping, calibration and data
+ownership are unknown. No sensor reading is established as available or
+authoritative for the business challenge. For the AMA demonstration only, the
+design uses simulated humidity and temperature observations three times per
+simulated day; this is a testable assumption, not a claim about existing
+equipment or a production integration commitment.
+
 The spreadsheet dependency shows how much coordination currently rests on a
 small team. It is not yet proven to be the main constraint on delivery.
 Capital, competent people, supplier capacity, property data, resident access,
@@ -577,7 +584,7 @@ Common-sense limits, flagged as outside the local corpus and for Legal to verify
 | Lower resident energy bills | Bills may fall, remain stable or rise as previously under-heated homes become warmer | Property-specific assumptions and measured energy, affordability, comfort and ventilation outcomes |
 | Use agents to run PAS 2035 assessments | Competent professionals must own assessment, design, coordination and evaluation | Named roles, competence, capacity, current standards and controlled professional approvals |
 | Automate resident and contractor coordination | Automation can amplify pressure, exclusion, missed adjustments and supplier failure | Tested resident journeys, committed capacity, human exception ownership and manual fallback |
-| Use sensors to identify health risk and verify quality | Sensors provide partial evidence and cannot overrule a resident report or competent inspection | Lawful purpose, data quality, maintenance model and evidence of predictive value |
+| Use sensors to identify health risk and verify quality | Sensor readings are partial evidence; they cannot diagnose, overrule a resident report or establish quality | Confirm whether any devices exist; lawful purpose, device mapping, data quality, maintenance and evidence of predictive value |
 | Measure acceleration with a dashboard | A dashboard can steer work but cannot prove benefits if definitions change, cohorts are selected for success or safety holds are pressured | Frozen protocol, concurrent comparison, benefits scorecard, assurance and guardrails that pause affected work |
 
 ### Challenge of the Requested Agents
@@ -635,6 +642,9 @@ Modernise the association's existing retrofit delivery model with agents,
 supported by the digital foundation they need:
 
 * Establish a shared stock, condition, safety and energy record
+* Demonstrate how optional humidity and temperature observations can surface
+  a human condition-review task and an explainable map signal, while keeping
+  the current device inventory and operational data policy open
 * Align retrofit with planned maintenance, building safety and the long-term
   asset plan
 * Move each home through explicit technical, resident, supplier, funding,
@@ -682,8 +692,43 @@ Deterministic rules should control:
 * Delegated authority, segregation of duties and approval limits
 * Funding, budget, supplier-capacity, payment, claim and closure gates
 * Property scoring weights, grant eligibility and funding-route rules
+* Sensor identity, property mapping, reading validity and versioned analysis
+  rules; incomplete or absent observations remain unknown and never lower a
+  home's priority
 * Lifecycle states, queues, handoff ownership and programme reporting
 * Version history, audit, reconciliation and fail-closed behaviour
+
+#### Sensor Data Capture, Analysis and Map (Demonstrator Design)
+
+The detailed proposal is recorded in
+[ADR 0002, Sensor Data Capture and Analysis](./adrs/0002-pilot-readiness-architecture.md#sensor-data-capture-analysis-and-map).
+It deliberately reuses the workbench API and Azure SQL programme store rather
+than adding a streaming platform for three simulated readings per day. A
+simulator will later emit clearly labelled synthetic humidity and temperature
+observations through the same validation contract intended for a future
+source adapter. It will not connect to, discover or represent installed
+devices.
+
+The flow is: simulator or later authenticated adapter; schema, time, unit,
+device-mapping and duplicate checks; immutable raw reading and provenance in
+SQL; deterministic, versioned quality and trend analysis; a derived
+property-level signal for the existing map and review queue. Map markers show
+coverage and whether a human review is due, not a diagnosis. A detail view
+shows the latest valid values, last-valid timestamp, stale/validity status,
+sample coverage, trend window and rule version; the accessible list provides
+the same information without relying on colour or geography.
+
+Three observations per day define only the demonstration's expected cadence.
+No operational humidity/temperature thresholds, analysis window, device
+count, retention period or legal basis is assumed. Until data owners and
+competent safety/technical roles approve those inputs, simulated rules are
+labelled as fictional scenario configuration. Invalid, missing, stale,
+mis-mapped or insufficient data is `insufficient`, never "normal". A valid
+signal may add a `SENSOR_REVIEW_DUE` reason and human-owned condition-review
+task under a published policy. It cannot diagnose damp or mould, start or
+pause a statutory clock, release a safety hold, override a resident report,
+or directly change capital ranking. Only a human-verified condition may enter
+the existing investment policy, with its own version and reason codes.
 
 ### Where Agents Fit and Where They Do Not
 
@@ -730,6 +775,7 @@ own test.
 | Capability | Deterministic core | Where an agent helps | Proposed business value measure | Accountable human authority |
 | --- | --- | --- | --- | --- |
 | Property data and prioritisation | Versioned, published scoring weights; pass, fail or unknown eligibility rules; data validity rules | Reconcile conflicting legacy records; extract condition facts from free-text survey notes; flag missing or stale fields; explain each score in plain language | Data reconciliation time; critical conflicts found before survey; homes still viable after survey | Asset and safety owners approve cohort rules and exceptions; named data owners confirm proposed values |
+| Sensor-supported condition review | Validate device-to-property mapping, calibration status, timestamp, units, cadence and gaps; apply only owner-approved, versioned trend rules; keep the investment ranking separate | Explain the source and trend behind a review signal; never diagnose or rank a home | Valid-signal review time; invalid/missing-data rate; human-confirmed condition findings; false or missed review signals | Data owners set validity; competent technical and safety roles approve thresholds and triage; Asset owns any later change to the investment policy |
 | PAS 2035 assessment preparation | Stage gates; separate assessor and coordinator sign-off; material-change rules; safety-hold check | Pre-populate sourced facts; turn survey notes into structured assessment inputs; check completeness before sign-off | Assessment-to-ready-to-install time; returns and re-approvals per home | Competent assessors, designers, coordinators and evaluators own professional outputs |
 | Grant and funding evidence | Four-state grant ledger; eligibility and route rules; monthly reconciliation; claim holds | Match installation evidence to the per-measure schedule; assemble draft claim packs from approved records, only once the ledger exists and an award or open route is evidenced | First-time grant evidence acceptance; rejected or clawed-back value; time to claim | Finance validates, approves and submits |
 | Resident service | Measure-specific decision record; adjustments; pauses; failed access never recorded as refusal | Draft accessible content; route free-text messages into fixed categories; suggest options | Repeat resident contacts; adjustments met; first appointments kept | Residents decide on discretionary measures; staff own support, exceptions and redress |
