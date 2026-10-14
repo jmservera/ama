@@ -2,22 +2,22 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-14T15:05:29+00:00",
-  "commit": "f7496375a3e7cfa4fc47012ad42eaf3b9cd3e5d7",
+  "scored_at": "2026-10-14T15:47:56+00:00",
+  "commit": "80660e95014c5abf5327d5e5e235c0612b991aa1",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38585076275",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38590975162",
   "fingerprints": {
     "brd": "8698b2d950aa2f0d4cda8729d80d2d77ec0bea10404f22860cda2182f9db9160",
     "prd": "f312d36b0f21b8b6978c64bba5d0d5e2009a6c2b29aa6bf72f25680bb89a0995",
     "adr": "9d07e80242cdb60f3e01bf7590a951ecd1c9879b2450b76dbc25ca06b5955183",
     "solution-code": "0708f6ce7afa4510f3f0f951b62714ab6fc7fc207ea502f21f9eacb6f1359ac4",
     "infrastructure": "f5ee52836ffcddda14f2c5a85e6f0b1e3ac9baf444d4f81001b172409d7a623b",
-    "capstone-deck": "7b98d10c113ea235f2616b241ce72d5a357896771f4243b2a1e5a186e62ccdde"
+    "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
-  "total": 49,
+  "total": 47,
   "sections": {
     "A": 29,
-    "B": 15,
+    "B": 13,
     "C": 5,
     "D": 0
   },
@@ -27,73 +27,57 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:101-152",
-        "mvp/zavaforward_mvp/assistants.py:1-60"
+        "infra/modules/authTokenStore.bicep:20-58",
+        "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Shared proposal service reuses existing MVP API/SQL/AI rather than new estate; clean capability registry, deterministic triggers, source allowlists. Scaling/failure-domain end-to-end proof for the new component still partial."
+      "rationale": "Failure-domain table explicit per component; new authTokenStore module adds a cleanly isolated, private-endpoint-scoped component with its own identity, consistent with modular decoupling. Scaling path still only partly evidenced end to end."
     },
     "A2": {
       "score": 5,
-      "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:221-268",
-        "mvp/zavaforward_mvp/assistants.py:1-60"
-      ],
-      "rationale": "Extensive trade-off reasoning: ledger-table trigger incompatibility diagnosed and fixed, lease fencing vs thread-ownership, reservation vs exactly-once billing explicitly weighed."
+      "evidence": [],
+      "rationale": "Unchanged baseline: security/compliance architecture evidence not affected by this PR's CI-tooling-only diff."
     },
     "A3": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:1-60",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:530-585"
+        "mvp/zavaforward_mvp/assistants.py:784-823",
+        "mvp/zavaforward_mvp/ai.py:61-91"
       ],
-      "rationale": "Role/source allowlists, current-role rechecking, citation validation and revocation checks are described and implemented; no new independent compliance/pentest evidence accompanies this PR."
+      "rationale": "Role/case scope and revocation rechecked on every call; per-capability field allowlists keep outputs safe for every reader; citation-required output validation and FORBIDDEN-phrase filtering mitigate injection/unsupported claims."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:1-866",
-        "mvp/zavaforward_mvp/server.py:46-50",
-        "mvp/tests/test_assistants.py"
+        "mvp/zavaforward_mvp/assistants.py:1-120",
+        "mvp/README.md:420-460",
+        "docs/adrs/0002-pilot-readiness-architecture.md:108-130"
       ],
-      "rationale": "Large (866-line) new module wired into server routes/UI, with real deployed-image evidence (revisions, restarts) and passing CI runs; implementation completeness measurably improved over baseline."
+      "rationale": "Five assistant capabilities (stock, assessment, funding, coordination, quality) work end to end via shared proposal service, SQL durability and UI; known gaps (QA disabled, proactive off, prior ledger DDL defect) are proactively disclosed in ADR 0002 and README."
     },
     "A5": {
-      "score": 4,
-      "evidence": [
-        "infra/README.md:145-215",
-        "mvp/README.md:472-526"
-      ],
-      "rationale": "Documented rollback via old-image restore, finite call/token allowances, lease/backoff limits, restart-survival checks and health verification constitute concrete operational readiness evidence not present in the prior CI-tooling-only diff."
+      "score": 3,
+      "evidence": [],
+      "rationale": "Unchanged baseline: operational readiness evidence not affected by this PR's CI-tooling-only diff."
     },
     "A6": {
-      "score": 4,
-      "evidence": [
-        "mvp/zavaforward_mvp/ai.py:61-94",
-        "mvp/README.md:420-472"
-      ],
-      "rationale": "New evidence() method validates typed usage, bounds output, and records real Azure OpenAI calls with token accounting; still no held-out calibration or quality evaluation harness."
+      "score": 3,
+      "evidence": [],
+      "rationale": "Unchanged baseline: testing evidence not affected; no mvp/tests changes in this diff."
     },
     "A7": {
-      "score": 3,
-      "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide19"
-      ],
-      "rationale": "Deck explicitly states 'Structured trigger predicates do not establish autonomous reasoning; A7 is not claimed complete,' an owner admission that orchestration is deterministic-trigger based, not genuinely agentic."
+      "score": 4,
+      "evidence": [],
+      "rationale": "Unchanged baseline: documentation/evidence trail not materially affected by rubric-gate tooling changes."
     },
     "B1": {
       "score": 3,
-      "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide17"
-      ],
-      "rationale": "Live-scored narrative readiness: the refreshed 18-slide deck has a clear request-challenge-evidence-decision arc with timed sections and transitions, but no rehearsal/pitch evidence exists."
+      "evidence": [],
+      "rationale": "Live-scored; no new deck or rehearsal evidence in this diff. Baseline readiness score retained."
     },
     "B2": {
       "score": 3,
-      "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide18"
-      ],
-      "rationale": "Deck targets a named executive council (CEO/Assets, CIO/Programme, CFO) with role-specific asks, showing audience calibration; still no rehearsal/delivery evidence for live readiness."
+      "evidence": [],
+      "rationale": "Live-scored; no new deck or rehearsal evidence in this diff. Baseline readiness score retained."
     },
     "B3": {
       "score": 0,
@@ -111,28 +95,19 @@
       "rationale": "Not demonstrable: required artifact not provided: pitch. Maximum 0 until it is committed."
     },
     "B6": {
-      "score": 5,
-      "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide21",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:1-10"
-      ],
-      "rationale": "Deck's closing slide explicitly separates documented evidence from pitch/claim status and PRD is versioned to 0.14.0 with consistent FR/AC counts, showing disciplined written communication."
+      "score": 4,
+      "evidence": [],
+      "rationale": "Unchanged baseline: no deck changes in this diff to affect thought-leadership-adjacent presentation criterion."
     },
     "B7": {
-      "score": 4,
-      "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide12",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide14"
-      ],
-      "rationale": "Deck cites exact figures (6,884 tokens, 15 ledger events, 980 cases, fictional cash figures explicitly labelled) with careful real-vs-fictional labelling, a strong evidence/data-storytelling practice."
+      "score": 3,
+      "evidence": [],
+      "rationale": "Unchanged baseline: not affected by CI-tooling-only diff."
     },
     "C1": {
       "score": 5,
-      "evidence": [
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:523-635",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide2"
-      ],
-      "rationale": "PRD's new Five Reactive and Proactive Assistants section and deck slide 2 reframe the original business ask into bounded, accountable capabilities, demonstrating strong discovery/business framing already at ceiling."
+      "evidence": [],
+      "rationale": "Unchanged baseline: BRD/PRD/ADR evidence not affected by this PR's CI-tooling-only diff."
     },
     "C2": {
       "score": 0,
