@@ -2,14 +2,14 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-14T21:02:49+00:00",
-  "commit": "9261c5cb1dcca013d9bc93c79d3fafebc70b8f71",
+  "scored_at": "2026-10-14T21:51:32+00:00",
+  "commit": "af334cd684b3494bc9f22e1b092fc2b37d6e8957",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38636228836",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38642219991",
   "fingerprints": {
     "brd": "8698b2d950aa2f0d4cda8729d80d2d77ec0bea10404f22860cda2182f9db9160",
-    "prd": "f312d36b0f21b8b6978c64bba5d0d5e2009a6c2b29aa6bf72f25680bb89a0995",
-    "adr": "e6bb9986d65c655b52944e4ae89e062133e08c2fc56b77da536e241462f96e84",
+    "prd": "99e42a4545711ebc41222fdb7dd8f74bfb99b0ea70a82b068b68955fcd5584e8",
+    "adr": "10ce6fd52671db2661f3dae9dcb3005760d562c40f30f8cb827e27ef5669fdcd",
     "solution-code": "0708f6ce7afa4510f3f0f951b62714ab6fc7fc207ea502f21f9eacb6f1359ac4",
     "infrastructure": "f5ee52836ffcddda14f2c5a85e6f0b1e3ac9baf444d4f81001b172409d7a623b",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
@@ -67,7 +67,7 @@
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Unchanged baseline: documentation/evidence trail not materially affected by rubric-gate tooling changes."
+      "rationale": "Unchanged baseline: documentation/evidence trail not materially affected by this diff's RAI governance prose."
     },
     "B1": {
       "score": 3,
@@ -99,7 +99,7 @@
       "evidence": [
         "docs/adrs/0002-pilot-readiness-architecture.md:590-672"
       ],
-      "rationale": "Reviewed new ADR sensor section: well-organised tables and prose add to capstone documentation completeness, but this is ADR-only text, not deck material, and does not resolve existing slide/thin-documentation issues enough to move from Good(4) to Excellent(5)."
+      "rationale": "Reviewed new ADR sensor/RAI section: well-organised tables and prose add to capstone documentation completeness, but this is ADR/PRD prose, not deck material, and does not resolve existing slide/thin-documentation issues enough to move from Good(4) to Excellent(5)."
     },
     "B7": {
       "score": 3,
@@ -109,7 +109,7 @@
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "Unchanged baseline: BRD/PRD/ADR evidence not affected by this PR's CI-tooling-only diff."
+      "rationale": "Unchanged baseline: BRD/PRD/ADR business-framing evidence not materially affected; new RAI requirements are governance detail, not fresh stakeholder/value framing."
     },
     "C2": {
       "score": 0,
