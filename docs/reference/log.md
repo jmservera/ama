@@ -2341,3 +2341,22 @@ metadata when the knowledge base was created.
   case, owner memory, regulatory snapshots, runtime and infrastructure
   are unchanged. No cloud/model action, real data publication, new legal
   currentness check, spending or operational approval.
+
+## [2026-10-14] update | BRD v0.17.0, PRD v0.15.0 and ADR 0003 from the journey atlas
+
+* Reviewed the customer journey atlas, the updated addendum and the Zava
+  documentation. Amended the BRD to v0.17.0 (FR-045 to FR-047, AC-087 to
+  AC-089, OD-41 and OD-42; refined AC-011, AC-023 and AC-065) after an
+  independent review whose traceability, ordering and consistency findings
+  were applied. The BRD business-goal SMART gate remains blocked on open
+  decisions.
+* Handed the BRD to the PRD (v0.15.0): FR-048/049, AC-062 to AC-065,
+  FR-045 extended, a BRD-to-PRD ID table and journey learning-test bundles.
+  An independent critique found stale BRD versions, a cross-document ID
+  collision and under-specified acceptance criteria; all were applied except
+  the deferred BRD FR-037 challenge requirement and OD-41/OD-42.
+* Added [ADR 0003](../adrs/0003-journey-derived-capabilities-runtime-fit.md)
+  (Proposed) and indexed it here. The addendum's "BRD unchanged" statement
+  refers to the operator evidence; the later atlas drove this change. The
+  atlas stays desk research, not validation. No owner acceptance, runtime
+  change, real data or approval follows.
