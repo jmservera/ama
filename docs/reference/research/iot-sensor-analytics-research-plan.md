@@ -117,3 +117,27 @@ Status values: Verified, Partly or Not found.
 Consequences for the design: use the 80 percent and fRsi figures only as
 candidate exercise values labelled with the BS 5250:2011 source until the
 official text is confirmed, and keep the analysis review-only.
+
+## arXiv search (2026-10-14)
+
+Searched the arXiv API (export.arxiv.org) on 2026-10-14 for dew point and
+humidity formulas, mould and damp in housing, condensation risk in dwellings,
+hygrothermal mould models, retrofit and social-housing indoor monitoring,
+occupant behaviour, and the Magnus formula. No result addressed these topics,
+so arXiv does not validate leads 1 to 6 above; the BS 5250, fRsi, PAS 2035 and
+mould-risk questions need standards, BRE and building-physics journal sources.
+
+Only generic sensor-method papers were relevant. They were read as abstracts
+only and support method design (phase R2), not any threshold or standard:
+
+| arXiv ID | Date | Title | Possible use |
+| --- | --- | --- | --- |
+| [1805.11999](https://arxiv.org/abs/1805.11999) | 2018-05-30 | Reference-free Calibration in Sensor Networks | Calibration of dense low-cost sensor networks without a reference |
+| [2406.17488](https://arxiv.org/abs/2406.17488) | 2024-06-25 | Environmental Variation or Instrumental Drift? A Probabilistic Approach to Gas Sensor Drift Modeling and Evaluation | Separating real change from sensor drift |
+| [2112.09072](https://arxiv.org/abs/2112.09072) | 2021-12-14 | Sampling Trade-Offs in Duty-Cycled Systems for Air Quality Low-Cost Sensors | Sampling cadence versus data quality |
+| [1411.2188](https://arxiv.org/abs/1411.2188) | 2014-11-09 | Semantic-based Detection of Segment Outliers and Unusual Events for Wireless Sensor Networks | Outlier and unusual-event detection in sensor streams |
+
+Next step for R1: search building-science sources (for example Building and
+Environment, Energy and Buildings, BRE, Housing Ombudsman) and obtain the
+official BS 5250, BS EN ISO 13788 and PAS 2035 texts through the owner's
+licensed access.

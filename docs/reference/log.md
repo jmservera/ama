@@ -2424,3 +2424,12 @@ metadata when the knowledge base was created.
   evaluation, not a blanket sensor mandate, and IoT Hub devices use X.509 or
   symmetric keys, not Entra ID. ADR 0003 decision 6 was amended accordingly.
 * No threshold, standard or legal duty is validated by this check.
+
+## [2026-10-14] review | arXiv search for IoT analytics sources
+
+* Searched arXiv for dew point, mould, condensation, fRsi, retrofit
+  monitoring and Magnus formula sources. No building-physics paper was found,
+  so no lead was validated by arXiv. Four generic sensor calibration, drift,
+  sampling and anomaly-detection papers (abstracts only) were recorded as
+  method leads in the research plan. R1 stays open; official standards and
+  building-science journals are the next sources.
