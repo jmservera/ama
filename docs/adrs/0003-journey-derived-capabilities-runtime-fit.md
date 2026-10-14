@@ -1,6 +1,6 @@
 ---
-title: ADR 0003 Fit of Journey-Derived Capabilities to the Exercise Runtime
-description: Proposed decision on carrying the customer journey atlas capabilities (representative authority, confirmed commitments, open remedies and candidate learning tests) in the existing single-API, Azure SQL and five-assistant runtime without new services or assistant authority
+title: ADR 0003 Journey-Derived Capabilities and IoT Hub Sensor Ingestion
+description: Proposed decisions on carrying the customer journey atlas capabilities in the existing single-API, Azure SQL and five-assistant runtime, and on using Azure IoT Hub as the in-use monitoring ingestion product with deterministic analysis
 author: AMA programme
 ms.date: 2026-10-14
 ms.topic: reference
@@ -10,11 +10,13 @@ ms.topic: reference
 
 Proposed. This ADR records a proposal by the AMA programme. It does not record
 approval by the owner, the DPO, Legal, the Board, control owners or any
-customer role. It amends neither [ADR 0001](./0001-azure-architecture.md) nor
-[ADR 0002](./0002-pilot-readiness-architecture.md); it applies their runtime to
-the requirements added by
+customer role. It applies the runtime of [ADR 0001](./0001-azure-architecture.md) and
+[ADR 0002](./0002-pilot-readiness-architecture.md) to the requirements added by
 [BRD v0.17.0](../brds/agentic-retrofit-programme-brd.md) and
 [PRD v0.15.0](../prds/zava-forward-retrofit-programme-demonstrator.md).
+Decision 6 amends the ingestion choice in ADR 0002's sensor section on the
+AMA project owner's direction (2026-10-14) that Azure IoT Hub is the product
+for IoT; the owner has not approved any other part of this ADR.
 
 ## Context
 
@@ -52,11 +54,48 @@ build).
    non-AI comparator, as set out in the PRD. A comparator never waives CON-009.
    Opportunities O10 and O18 to O20 stay out of scope.
 5. Treat saved minutes as capacity until Finance validates them.
+6. Use Azure IoT Hub as the device-to-cloud ingestion product for in-use
+   monitoring (BRD FR-048, PRD FR-050), replacing the ADR 0002 position of "no
+   IoT Hub for the demo". The shape is:
+   * Each simulated or real sensor, or its gateway, is a distinct IoT Hub
+     device identity sending device-to-cloud telemetry with a schema version
+     and stable reading ID. The simulator is one labelled source (source
+     type, scenario, seed) and is never exposed as a resident or device
+     system.
+   * A server-side consumer in the existing API reads the hub (built-in
+     endpoint or message routing), validates schema, device-to-property
+     mapping and effective dates, units, UTC time, duplicates, order and
+     calibration status, and appends accepted readings to Azure SQL
+     (`sensor_reading`) idempotently on sensor ID plus reading ID. Rejected or
+     unmapped input raises an owned data-quality exception. IoT Hub is the
+     transport and device-identity boundary; Azure SQL stays the system of
+     record and there is no public unauthenticated ingestion endpoint.
+   * Derived analysis (`sensor_analysis`) is deterministic, versioned and
+     reproducible from retained readings. Method selection, including dew
+     point and other trend measures, follows the
+     [research plan](../reference/research/iot-sensor-analytics-research-plan.md);
+     no threshold is fixed until it is sourced or labelled an exercise value.
+   * Only an approved derived signal may create a `SENSOR_REVIEW_DUE` human
+     review task. It never diagnoses a hazard, starts a clock, overrides a
+     resident report, releases a hold or changes ranking directly. Missing or
+     stale data is `INSUFFICIENT` and never lowers priority.
+   * Device identity, hub access and the consumer use Microsoft Entra managed
+     identity and least-privilege roles where supported, with no connection
+     strings in source or telemetry. Raw readings and device identifiers stay
+     out of AI prompts, map tiles, cluster payloads and diagnostic logs.
+   * Tier, region (`uksouth`), unit count, device provisioning (for example the
+     Device Provisioning Service) and retention are open items. Confirm the
+     basic tier suffices for device-to-cloud only, or that the standard tier is
+     needed for features such as cloud-to-device messages and twins, against
+     current Microsoft Learn pricing before provisioning. Event Hubs alone is
+     not chosen.
 
 ## Consequences
 
-* No new infrastructure or cost line follows from the journeys; the change is
-  schema, API and screen work inside the current runtime.
+* The journey capabilities add no infrastructure: they are schema, API and
+  screen work inside the current runtime. Decision 6 adds one Azure IoT Hub
+  resource, a consumer in the existing API and its cost, which is not yet
+  estimated or approved.
 * Representative-authority data adds personal data about third parties. It
   needs DPO review before any real data (ADR 0002 open items DH-002, DH-006).
 * The atlas stays hypothesis evidence until real resident, staff and
@@ -82,15 +121,21 @@ build).
   challenge refinement.
 * DPO decision on representative data retention and minimisation.
 * Atlas-owner confirmation of the bundle to opportunity mapping in the PRD.
+* IoT Hub tier, sizing, cost estimate, device provisioning approach, network
+  exposure and Entra role design; BRD OD-43 inventory, lawful basis, DPIA,
+  retention and thresholds.
+* Completion of research phases R1 to R5 in the analytics research plan before
+  any derived rule other than a clearly labelled exercise rule is used.
 
 ## Related documents
 
 * [Customer journey atlas](../reference/research/ux/customer-journeys/customer-journey-atlas.md)
 * [BRD v0.17.0](../brds/agentic-retrofit-programme-brd.md)
 * [PRD v0.15.0](../prds/zava-forward-retrofit-programme-demonstrator.md)
+* [In-use monitoring analytics research plan](../reference/research/iot-sensor-analytics-research-plan.md)
 * [ADR 0001](./0001-azure-architecture.md) and [ADR 0002](./0002-pilot-readiness-architecture.md)
 
 ## Implementation status
 
-Not implemented. No migration, API or screen change, test run or deployment
-follows from this ADR.
+Not implemented. No migration, API or screen change, IoT Hub provisioning,
+test run or deployment follows from this ADR.

@@ -2394,3 +2394,18 @@ metadata when the knowledge base was created.
   approval is created.
 * Resolved merge conflicts with main in this index and log, keeping both
   the sensor-flow and journey entries.
+
+## [2026-10-14] update | IoT Hub decision, PRD sensor requirement and analytics research plan
+
+* Owner direction: Azure IoT Hub is the product for IoT. ADR 0003 decision 6
+  adopts it as the device-to-cloud ingestion boundary, with an API consumer
+  that validates and appends to Azure SQL; ADR 0002's earlier "no IoT Hub for
+  the demo" advice carries a dated amendment. Tier, cost, provisioning,
+  network exposure and Entra roles remain open.
+* PRD v0.15.0 adds FR-050 and AC-066 to AC-068 (counts 50 FR, 68 AC) and
+  traces BRD FR-048/AC-090/OD-43.
+* Added the [analytics research plan](./research/iot-sensor-analytics-research-plan.md)
+  with phases R1 to R5 for dew point and trend analysis. Its leads come from an
+  uncited web synthesis and are unverified; no method, threshold or standard
+  claim is validated, and the PAS 2035 monitoring claim is flagged unverified.
+* No IoT Hub provisioned, no cloud action, real data or approval.

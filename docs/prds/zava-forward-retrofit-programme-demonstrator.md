@@ -762,8 +762,12 @@ owner, named control owners and affected users before implementation approval.
 | FR-047 | The product shall expose the five versioned reactive/proactive assistants in the capability matrix through one bounded, durable, source-authorized proposal service, with independent human review and no controlled-domain mutation. | Permitted staff request or registered proactive predicate | AC-058, AC-059, AC-060, AC-061, AC-057 | GOAL-002, GOAL-004 |
 | FR-048 | The product shall distinguish an offered appointment, visit bundle or contractor slot from a commitment confirmed by the resident or authorised representative, staff and contractor capacity, with no bundle delaying urgent safety work, record household constraints, options offered, deferral or pause and a named update owner, and keep provider no-shows separate from resident non-access. | Authorized user offers, confirms, defers or records a visit outcome | AC-062, AC-065 | Given an offered slot, a proposed visit bundle and a constructed contractor capacity, when each is recorded, then it remains an offer, not a commitment, until the resident or authorised representative and an authorised staff member confirm it and the contractor confirms capacity (FR-019); bundling needs recorded resident agreement and competence checks and never delays urgent safety work (FR-002); a non-digital confirmation route is shown; and no contact, booking or instruction is sent. | FR-048 | Not run |
 | AC-063 | Given a closed complaint response, a completed package and an open household remedy, defect or leaseholder charge query, when package, handover or financial status changes, then each status keeps its own owner and date, the open item stays visible and ages by fixture-configured bands owned by Housing/Complaints (Unknown until set), an affected approval is flagged for review on scope change, missing lease evidence stays Unknown and holds the decision, leasehold text appears only as a constructed Legal-reviewed position ID, and the complaints route stays available without detriment (BRD RULE-005). | FR-049 | Not run |
+| FR-050 | The product shall capture simulated in-use monitoring observations (humidity and temperature) through Azure IoT Hub as the ingestion product, validate and append them to the Azure SQL record with provenance, and derive versioned deterministic review signals that can only create a human condition-review task. | Simulator or authenticated device sends telemetry; scheduled analysis runs | AC-066, AC-067, AC-068 | GOAL-002, GOAL-003 |
 | AC-064 | Given a representative with expired, interpreter-only, disputed or several authorities and a changed safe contact, when a decision or disclosure is attempted, then only the recorded task, scope, source, review date and the resident's own stated wishes apply; a representative's agreement is not the resident's consent unless the authority covers that decision; expired or disputed authority holds disclosure and consent actions as a constructed staff confirmation task with nothing sent; representative fields show only to roles in the permitted-field matrix (NFR-003) and retention is Unknown until approved. See also AC-037. | FR-045 | Not run |
 | AC-065 | Given household constraints (care, noise, work pattern, outage), options offered, a deferral or pause, a provider no-show and a verified resident no-access event, when each is recorded, then constraints and options are visible to scheduling with a named update owner, the provider no-show is recorded separately and never attributed to the resident (FR-031/AC-033), and preference breaches and abortive visits are counted by cause and owner; breach thresholds are Unknown until the programme owner sets them. | FR-048 | Not run |
+| AC-066 | Given a simulator device identity sending valid, duplicate, out-of-order, unmapped, wrong-unit, clock-skewed and uncalibrated telemetry through Azure IoT Hub, when the API consumer processes it, then valid readings are appended once per sensor and reading ID with source type, scenario, seed, schema version and receipt time; others create an owned data-quality exception and never change a property record; ingestion has no public unauthenticated endpoint and no secret in source or telemetry; and the accepted build exercises actual IoT Hub, Azure SQL persistence after restart and a registered real AI task under CON-009. | FR-050, FR-044 | Not run |
+| AC-067 | Given sufficient, insufficient, stale, declined-monitoring and condition-triggering synthetic series, when analysis runs, then outputs are versioned, reproducible from retained readings and labelled by sufficiency; only an approved rule creates `SENSOR_REVIEW_DUE` for a human; no signal diagnoses a hazard, starts a clock, overrides a resident report, releases a hold or changes ranking; insufficient or declined data never lowers priority or service; raw readings and device identifiers are absent from AI prompts, map clusters and diagnostic logs; and the accessible list mirrors the map status text. | FR-050, FR-008, FR-003 | Not run |
+| AC-068 | Given the analytics research plan, when a derived measure such as dew point, dew point margin or sustained-high-humidity duration is proposed for use, then research phases R1 to R3 have cited primary sources, a versioned method specification and a synthetic validation result, every threshold is sourced or labelled an exercise value, and the deterministic result is the comparator for any AI-assisted trend finding. | FR-050 | Not run |
 
 ### Independently reportable review checks
 
@@ -783,6 +787,9 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | AC-063 | closure-independence | Compare status, owner, date and age band of response, package and open remedy; lease evidence unknown holds the decision. |
 | AC-064 | authority-scope | Compare task, scope, source, review date and wishes; expired or disputed authority holds actions with nothing sent. |
 | AC-065 | provider-no-show | Verify provider no-show is separate from verified resident no-access and breach counts show cause and owner. |
+| AC-066 | iot-ingestion-idempotency | Independently replay valid, duplicate, out-of-order and unmapped telemetry and compare appended rows and exception records; confirm no public endpoint and actual hub, SQL and AI evidence. |
+| AC-067 | review-signal-authority | Verify the signal only creates a human task and that insufficient or declined data leaves priority and service unchanged. |
+| AC-068 | method-evidence | Verify cited sources, method version, synthetic result and labelled thresholds for each derived measure. |
 | AC-055 | measure-version-authority | Independently compare each decision's home/measure/scope/version/source and representative permissions; contact/access alone leaves unknown. |
 | AC-056 | withdrawal-isolation | Compare exact affected discretionary-readiness IDs and unaffected choices; verify no inferred sanction or hazard pause. |
 | AC-012 | return-disposition | Compare expected reason/source/actor/receiver/next-action record independently of history and invalidation tests. |
@@ -862,8 +869,9 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-047 | AC-058, AC-059, AC-060, AC-061, AC-057 | Linked |
 | FR-048 | AC-062, AC-065 | Linked |
 | FR-049 | AC-063 | Linked |
+| FR-050 | AC-066, AC-067, AC-068 | Linked |
 
-Link coverage: 49/49 FRs linked to at least one criterion (100%); this matrix
+Link coverage: 50/50 FRs linked to at least one criterion (100%); this matrix
 matches both requirement and criterion tables. Behavioral acceptance remains
 Not run. Links and named subchecks are not proof that every behavior has
 been implemented or tested.
@@ -873,8 +881,8 @@ been implemented or tested.
 | Requirements | Goals |
 | --- | --- |
 | FR-001 to FR-006, FR-009, FR-011, FR-014, FR-024 to FR-026, FR-029 to FR-035, FR-038 to FR-040, FR-042, FR-044 to FR-046, FR-048 to FR-049 | GOAL-001 |
-| FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-031, FR-033, FR-035 to FR-038, FR-040 to FR-049 | GOAL-002 |
-| FR-004, FR-020 to FR-024, FR-030 | GOAL-003 |
+| FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-031, FR-033, FR-035 to FR-038, FR-040 to FR-050 | GOAL-002 |
+| FR-004, FR-020 to FR-024, FR-030, FR-050 | GOAL-003 |
 | FR-025 to FR-028, FR-034, FR-036 to FR-037, FR-039 to FR-040, FR-044, FR-047 | GOAL-004 |
 
 All goals have linked requirements; all FRs map to at least one goal (100%).
@@ -921,7 +929,7 @@ All goals have linked requirements; all FRs map to at least one goal (100%).
 The v0.15.0 amendment follows BRD v0.17.0 (candidate; its `business_goal_smart_status` is fail pending
 open decisions and no current BRD quality report exists) and the
 [customer journey atlas](../reference/research/ux/customer-journeys/customer-journey-atlas.md),
-which is desk research, not user validation. It adds FR-048/049 and AC-062 to AC-065 and extends FR-045.
+which is desk research, not user validation. It adds FR-048/049 and AC-062 to AC-065, extends FR-045 and adds FR-050 with AC-066 to AC-068 for in-use monitoring.
 BRD and PRD numbers differ, so always cite the document:
 
 | BRD v0.17.0 | PRD v0.15.0 |
@@ -932,7 +940,7 @@ BRD and PRD numbers differ, so always cite the document:
 | AC-011 reuse never transfers approval | AC-011 |
 | AC-023 purpose-scoped reuse | AC-035 (changed safe contact or consent stops reuse) |
 | AC-065 owned review and challenge | Deferred; no PRD requirement covers the nomination challenge (BRD FR-037) |
-| FR-048, AC-090 (Should) | Not yet a PRD requirement; the simulator-only sensor design is in [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) and needs a PRD FR and AC before build |
+| FR-048, AC-090 (Should), OD-43 | FR-050, AC-066 to AC-068; IoT Hub ingestion per [ADR 0003](../adrs/0003-journey-derived-capabilities-runtime-fit.md) and [research plan](../reference/research/iot-sensor-analytics-research-plan.md); real data waits for OD-43 |
 | OD-41, OD-42 | Deferred to Open Questions; no resident, staff or contractor validation yet |
 
 Historical approval is not inherited.
@@ -1267,12 +1275,13 @@ approval or inherited v0.12.0 acceptance.
 * [x] Real AI/SQL/Azure scope and evidence recorded in CON-009/AC-057
 * [x] #58 feasibility separated from screening/calibration/value and full delivery
 * [x] Scoped budget history and versioned parallel experiment intake recorded
+* [x] FR-050 and AC-066 to AC-068 added from BRD FR-048/OD-43 (Azure IoT Hub, owner direction) with an analytics research phase
 * [x] FR-048/049 and AC-062 to AC-065 added from BRD v0.17.0 and the atlas (desk research); FR-045 extended
 * [ ] Disposition of BRD OD-41/OD-42 and BRD FR-037 challenge refinement
 * [ ] Fresh independent full-PRD requirements-quality review and disposition
 * [ ] Owner acceptance of this amended exercise candidate
 
-Counts: 49 FRs, 65 ACs, 13 NFRs and 9 constraints; existing IDs preserved.
+Counts: 50 FRs, 68 ACs, 13 NFRs and 9 constraints; existing IDs preserved.
 Document implementation and RPI outcome review are not formal PRD approval.
 Implementation acceptance is separate: nine workflow
 and eleven profile suites, permission/control/source/bulk/return tests,
