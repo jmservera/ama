@@ -129,11 +129,15 @@ def main():
             check_link(path, target)
     for relative in ("docs/reference/README.md", "docs/reference/log.md", "docs/capstone/README.md",
                      "docs/adrs/0002-pilot-readiness-architecture.md", "infra/README.md"):
-        diff = subprocess.check_output(["git", "diff", "--unified=0", "--", relative], cwd=ROOT, text=True)
+        diff = subprocess.check_output(
+            ["git", "diff", manifest["sourceCommit"], "--unified=0", "--", relative], cwd=ROOT, text=True
+        )
         added = "\n".join(line[1:] for line in diff.splitlines() if line.startswith("+") and not line.startswith("+++"))
         for target in re.findall(r"!?\[[^\]]*\]\(([^)]+)\)", added):
             check_link(ROOT / relative, target)
-    old_log = subprocess.check_output(["git", "show", "HEAD:docs/reference/log.md"], cwd=ROOT)
+    old_log = subprocess.check_output(
+        ["git", "show", f"{manifest['sourceCommit']}:docs/reference/log.md"], cwd=ROOT
+    )
     assert (ROOT / "docs/reference/log.md").read_bytes().startswith(old_log), "Log must be append-only"
     report = {
         "sourceCommit": manifest["sourceCommit"],
