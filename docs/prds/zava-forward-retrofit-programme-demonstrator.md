@@ -971,6 +971,9 @@ and [baseline RAI report](../../.copilot-tracking/rai-reviews/2026-10-14/rai-rep
 The report verifies findings against the original v0.14.0/source baseline,
 not implementation of this v0.16.0 proposal or finding closure. ADRs distinguish
 the future estate from the current shared-API control plane.
+The owner accepted the bounded baseline report on 2026-10-15 for remediation
+planning only. That acceptance does not approve this PRD, close findings or
+replace qualified release, legal/privacy or operational gates.
 
 FR-051 to FR-054 and AC-069 to AC-073 extend existing source, permission,
 registry and human-authority controls rather than replace them. Proposed
@@ -1941,7 +1944,7 @@ approval or inherited v0.12.0 acceptance.
 * [ ] Fresh independent full-PRD requirements-quality review and disposition
 * [ ] Owner acceptance of this amended exercise candidate
 
-Counts: 54 FRs, 73 ACs, 14 NFRs and 9 constraints; main IDs preserved, unmerged RAI IDs reconciled below.
+Counts: 54 FRs, 73 ACs, 14 NFRs and 9 constraints; main IDs preserved, unmerged RAI IDs reconciled in the mapping table.
 Document implementation and RPI outcome review are not formal PRD approval.
 Implementation acceptance is separate: nine workflow
 and eleven profile suites, permission/control/source/bulk/return tests,

@@ -135,7 +135,9 @@ is retained alongside the [validated recovery](../case_study_48_addendum.md#veri
 and [baseline RAI report](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md).
 Its 11 PARTIAL residuals (8 MEDIUM, 3 LOW) remain open; proposal-only authority,
 source verification and manual routes reduced nine original severity claims.
-The report does not prove this amendment implemented or accepted. Current
+The owner accepted the bounded baseline report for remediation planning on
+2026-10-15, not this amendment or an operational release. The report does not
+prove this amendment implemented or accepted. Current
 staff/tenant identity processing needs explicit privacy scope review despite
 constructed resident content; restart persistence does not prove recovery.
 

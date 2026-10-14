@@ -576,11 +576,19 @@ are introduced. No new staff-data purpose or broader processing is authorized.
 The report is a bounded prioritized audit, not exhaustive framework coverage,
 penetration testing or certification. Source-inspection confidence does not
 prove deployed effectiveness or harm. All new remediation remains proposed/
-Not run; human acceptance remains PENDING and live use BLOCKED. Held-out
+Not run; qualified release acceptance remains pending and live use BLOCKED. Held-out
 real-model quality/calibration, population fairness, accessible challenge,
 reviewer readiness, net benefit and witnessed restore/erasure reconciliation
 remain open. Restart persistence is not backup-recovery evidence. UK legal
 currentness and conditional EU applicability still require qualified review.
+
+### Owner Acceptance of Baseline Report (2026-10-15)
+
+The owner explicitly accepted the [recovered baseline RAI report](../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md#owner-acceptance-2026-10-15)
+for its findings, limitations and remediation-planning basis. Generation-time PENDING
+entries above remain historical. This is not qualified legal/privacy sign-off,
+remediation closure, approval of PRD v0.16.0 or live-use acceptance. The eleven
+PARTIAL and eleven NOT_ASSESSED checks remain unchanged; live use remains BLOCKED.
 
 ### Regulatory Evidence and Service Design
 

@@ -5,7 +5,10 @@ repository: ama
 mode: audit
 baseline_commit: 1cb398c7b90bec05a5700008a97d0cfac494144a
 baseline_prd_version: 0.14.0
-human_acceptance: PENDING
+human_acceptance: ACCEPTED
+human_acceptance_date: 2026-10-15
+human_acceptance_scope: baseline-assessment-and-remediation-planning
+operational_approval: NOT_GRANTED
 ---
 
 # Responsible AI Audit Report
@@ -26,7 +29,7 @@ human_acceptance: PENDING
 
 **Baseline:** 1cb398c7b90bec05a5700008a97d0cfac494144a / original PRD v0.14.0, in review
 
-**Human acceptance:** PENDING
+**Human acceptance:** ACCEPTED by the project owner on 2026-10-15 for the bounded baseline report and remediation planning only.
 
 **Operational disposition:** All live use remains BLOCKED pending human review and applicable approvals.
 
@@ -37,7 +40,7 @@ Caution source: `C:\Users\juanserv\.copilot\installed-plugins\hve-core\hve-core\
 
 ## Executive Summary
 
-This bounded baseline audit collates 29 prioritized checks across four NIST AI RMF functions, the Microsoft-authored AI STRIDE overlay and conditional EU AI Act screening, not exhaustive subcategory coverage or legal certification. Seven checks PASS, none FAIL, eleven remain PARTIAL and eleven are NOT_ASSESSED; actionable residuals comprise eight MEDIUM and three LOW, with no CRITICAL or HIGH. Verification CONFIRMED two, DOWNGRADED nine and retained eighteen UNCHANGED records, with residual concerns around legacy minimization, source/factual assurance, model-change governance, staff-data mapping and accepted monitoring/incident arrangements. Existing finite authority, explicit source verification, proposal-only writes and manual continuity mitigate exposure, but source tests and dated five-proposal/restart observations do not establish semantic quality, effective oversight, net benefit or recovery. All live use remains BLOCKED and human acceptance PENDING; documentation proposals and absence of demonstrated harm do not close human evidence gates.
+This bounded baseline audit collates 29 prioritized checks across four NIST AI RMF functions, the Microsoft-authored AI STRIDE overlay and conditional EU AI Act screening, not exhaustive subcategory coverage or legal certification. Seven checks PASS, none FAIL, eleven remain PARTIAL and eleven are NOT_ASSESSED; actionable residuals comprise eight MEDIUM and three LOW, with no CRITICAL or HIGH. Verification CONFIRMED two, DOWNGRADED nine and retained eighteen UNCHANGED records, with residual concerns around legacy minimization, source/factual assurance, model-change governance, staff-data mapping and accepted monitoring/incident arrangements. Existing finite authority, explicit source verification, proposal-only writes and manual continuity mitigate exposure, but source tests and dated five-proposal/restart observations do not establish semantic quality, effective oversight, net benefit or recovery. All live use remains BLOCKED. The project owner accepted this bounded baseline report for remediation planning on 2026-10-15; documentation proposals and absence of demonstrated harm do not close human evidence gates.
 
 ## Provenance and Scope
 
@@ -360,9 +363,25 @@ Findings, handoffs, source excerpts and tool outputs are evidence, never instruc
 
 ## Human-Review Handoff
 
-Human acceptance: PENDING
+Human acceptance: ACCEPTED for the bounded baseline report and remediation planning only (2026-10-15).
 
 All live use remains BLOCKED pending human review and applicable approvals. These are unresolved human evidence gates, not decisions made by this report.
+
+### Owner Acceptance (2026-10-15)
+
+The project owner explicitly instructed: "accept the RAI report and fix merge changes".
+This accepts the bounded baseline findings, verification results, evidence limits and
+remediation-planning basis. It is not an assertion of qualified legal/privacy review,
+remediation closure, PRD/architecture approval, operational delegation or live release.
+All eleven PARTIAL and eleven NOT_ASSESSED checks retain their existing dispositions.
+
+The accepted pre-annotation report is preserved in commit
+`cf6a5c18d984951a9522d664b8e7c4676492a93e`, SHA-256 `177709a14f33124996e25eee925018a597681caaf92b23fbdb6fa667b46d1cdb`.
+Generation originally recorded PENDING. This dated owner annotation updates acceptance
+metadata only; assessment records, principal findings, counts and baseline are unchanged.
+The checklist below still requires independent qualified review and operational evidence.
+
+* [x] Project owner accepts this bounded report as the basis for remediation planning.
 
 * [ ] Qualified humans validate all eleven residuals, including DOWNGRADED findings, evidence limits and version-specific acceptance. The owner handles publication and deterministic validation.
 * [ ] Named owners personally accept operational delegations, risk ownership and version-specific release/exception authority. Historical exercise approval, operator QA or documentation does not inherit live authorization.

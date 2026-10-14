@@ -2518,3 +2518,29 @@ metadata when the knowledge base was created.
   separated its combined offer requirement/criterion and supplied FR-049
   from BRD FR-047/AC-089. Counts are 54 FRs, 73 ACs, 14 NFRs, nine constraints.
   Fresh requirements review, human approval and implementation remain open.
+
+## [2026-10-15] approval | Owner acceptance of the bounded RAI baseline report
+
+* Recorded the owner's explicit instruction to accept the recovered RAI report.
+  Acceptance covers its bounded findings, limitations and remediation-planning
+  basis, not legal/privacy sign-off, remediation closure, PRD acceptance or live use.
+* Added dated acceptance metadata and the pre-annotation report commit/hash;
+  retained all 29 findings and counts, the eleven PARTIAL and eleven NOT_ASSESSED
+  checks, the unchecked qualified-review gates and live-use BLOCKED disposition.
+* Updated current addendum, PRD, ADR and index references. Historical generation
+  and log entries remain unchanged. Merge fixes are local; no push was performed.
+
+## [2026-10-15] plan | Responsible AI remediation and independent critique
+
+* Added the [RAI remediation plan](../../.copilot-tracking/plans/2026-10-15/rai-remediation-plan.md)
+  with six phases/thirteen tasks, mapping all eleven verified residuals and eleven
+  unassessed checks to engineering and separately authorized evidence/approval work.
+* The independent [standard critique](../../.copilot-tracking/reviews/plans/2026-10-15/rai-remediation-plan-critique.md)
+  completed with Pass and no actionable findings. Canonical helper projection and
+  hash bind the assessed content; unchanged candidate identity is checked at delivery.
+* Offline engineering is planning-ready; actual staff-data, serving-model attestation,
+  lawful cohorts/thresholds, participant/budget, restore/erasure and qualified release
+  gates remain. No application code, tests, paid inference or deployment was run.
+* Owner then authorized merging PR #72 into main after completion/checks and a
+  subsequent read-only Functional Planner review of GitHub issue coverage. Issue
+  creation is a separate reviewed execution pass.
