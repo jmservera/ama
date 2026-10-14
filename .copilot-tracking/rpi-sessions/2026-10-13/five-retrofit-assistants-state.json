@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Later live-delivery child completed authorized exact reset/enriched seed/image05/five real operator models/independent SQL-content/restart/publication. P03/P03-T01 technical markers checked. Its one Review is Complete/Residual work; human staff-authenticated and semantic/value acceptance remain distinct RV-001/RV-002 follow-ups. Parent historical Review verdict remains unchanged.",
+      "status": "later-child-completed; technical-scope-delivered",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md; .copilot-tracking/rpi-sessions/2026-10-13/five-assistant-live-delivery-state.json"
+    },
+    {
       "decision": "Add the five reactive/proactive assistants to the PRD and ADR, then build a new version.",
       "status": "confirmed",
       "evidence": "Owner request, 2026-10-13"
@@ -59,27 +64,21 @@
     }
   ],
   "next_action": {
-    "phase": "Implement",
-    "action": "Later child five-assistant-live-delivery owns completed reauthorized reset/enriched ledger seed/image05 revision12/5real models/6884tokens/independent SQL contents/restart. Publish current canonical learning and perform its single bounded Review. Staff-authenticated user/human/semantic/accessibility/value acceptance remains separate; preserve historical Reviews."
+    "phase": "Follow-up",
+    "action": "Later child five-assistant-live-delivery is completed with one Review Complete/Residual work. Await owner selection of its ranked real staff/human/accessibility or semantic/paired-benefit follow-ups, Stop or manual mode. Preserve historical Reviews and do not imply full product acceptance."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
       "task": "Real staff-authenticated browser/API and human role/accessibility acceptance",
       "rationale": "Exact reset and deployed operator/provider/SQL/restart proof are now complete after explicit reauthorization. Staff-authenticated user workflow and competent human source checks still require real acceptance without fixture substitution.",
-      "evidence": "Child RV-001; original P03/P03-T01; CON-009/AC-057; .copilot-tracking/reviews/logs/2026-10-13/five-assistant-runtime-validation-review.md"
+      "evidence": "Current child RV-001; CON-009/AC-057/058; .copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md"
     },
     {
       "rank": 2,
-      "task": "Exercise staff role, accessibility and source-verification journeys",
-      "rationale": "Tests whether the bounded assistance and manual fallback are usable, with direct human acceptance kept separate from automated checks. Requires appropriate owner/reviewer participation; follows relevant runtime fixes.",
-      "evidence": "Plan Follow-Up Assessment and Residual Work; .copilot-tracking/reviews/logs/2026-10-13/five-retrofit-assistants-review.md"
-    },
-    {
-      "rank": 3,
       "task": "Calibrate five assistant outputs and measure paired manual/rules benefit",
       "rationale": "Determines semantic quality and net benefit including correction burden. Requires verified provider paths, finite call allowance and competent review; not established by passing technical tests.",
-      "evidence": "Plan Follow-Up Assessment and Residual Work; .copilot-tracking/reviews/logs/2026-10-13/five-retrofit-assistants-review.md"
+      "evidence": "Current child RV-002; parent plan Follow-Up Items; .copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md"
     }
   ]
 }

@@ -6,8 +6,8 @@
     "task_slug": "five-retrofit-assistants"
   },
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-13/five-retrofit-assistants-research.md",
@@ -15,12 +15,17 @@
     "details": ".copilot-tracking/details/2026-10-13/five-retrofit-assistants-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-13/five-retrofit-assistants-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md"
   },
   "confirmed_decisions": [
     {
+      "decision": "Current child's one bounded post-implementation Review executed once. ExecutionComplete/outcomeResidualwork for P03 technical reset/seed/image05/deployed operator/model/independentSQL-content/restart. RV-001 routes real staff-browser/API/human/accessibility acceptance; RV-002 routes semantic/pairedbenefit. No source defect established, no repeat Review or return to current Implement; preserve both historical Reviews.",
+      "status": "Review-executed; Complete; Residual work",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md"
+    },
+    {
       "decision": "Executed authorized exact retrofit ledger reset/settings/users/grants/11tenant bindings/enriched980case seed. Published image05/e0254cb3, serving revision12. Five real registered Azure OpenAI paths ready with distinct validated outputs,5calls/6884tokens/15ledger events/1allowance. Independent controlled-domain and full assistant-table content hashes/outputs/usage survive actual restart. Normal serving authority absent/proactiveoff; human acceptance not fabricated.",
-      "status": "implemented-and-observed; canonical-publication-in-progress",
+      "status": "implemented-observed-and-published-fb70225",
       "evidence": ".copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md; docs/adrs/0002-pilot-readiness-architecture.md; infra/README.md"
     },
     {
@@ -66,8 +71,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Publish reconciled canonical learning and #68 handover for completed exact reset/enriched seed/image05/operator-model/independent-SQL-content/restart proof. Then perform the single current-child bounded Review. Human staff-authenticated browser/API, role/accessibility and semantic/benefit acceptance are later follow-ups, not fabricated."
+    "phase": "Follow-up",
+    "action": "Publish current Review/markers/state/#68 receipt, then await owner selection of ranked RV-001 or RV-002 follow-up, Stop automatic session or Switch to manual mode. Bounded reset/seed/deploy/operator-model/SQL-content/restart task complete; no child work starts before selection."
   },
   "prioritized_follow_ups": [
     {

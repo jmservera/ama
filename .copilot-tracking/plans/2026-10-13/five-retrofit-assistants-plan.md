@@ -119,16 +119,25 @@ Registry, bounded evidence, durable task/claim storage, proactive checks,
 reactive generation, role-owned proposal review and existing UI integration.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Validate and deliver the existing-platform version
+### [x] P03: Validate and deliver the existing-platform version
 
 Depends on P02. Parent owns platform rollout, Review and publication.
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Validate, build and publish
+#### [x] P03-T01: Validate, build and publish
 
 Targeted then existing suites; real image build and approved existing exercise
 services; record version-linked evidence. Commit/push #68 with privacy-safe
 identity. Preserve all unrelated and private files.
+
+P03 completion2026-10-14: authorized exact reset/enriched ledger seed/
+image05 revision12,5actual registered operator model paths/6884tokens/
+independent SQL domain+full assistant-content restart evidence and canonical
+publication fb70225 on #68. Existing source CI/389suite/73SQL/21browser/
+21exact-image receipts remain valid. This completes the declared technical
+delivery scope, not real staff-browser/human/accessibility/semantic/value
+acceptance. The current live-delivery child's single bounded Review follows;
+both historical Reviews remain unchanged.
 
 Owner-approved replacement: stop old-database assistant migration, enrich the
 existing deterministic MVP generator without inventing approvals, and seed a
