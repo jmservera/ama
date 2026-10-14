@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
-import { dirname, extname, join } from "node:path";
+import { readFile, realpath, stat } from "node:fs/promises";
+import { dirname, extname, join, resolve, relative, isAbsolute } from "node:path";
 import { fileURLToPath } from "node:url";
 import { randomBytes } from "node:crypto";
 import { buildIndex, readDocument, saveDocument, searchDocuments } from "./document-store.mjs";
@@ -48,6 +48,31 @@ export async function startProgramWorkbenchServer({ initialPath = "", repository
   const server = createServer(async (req, res) => {
     try {
       const url = new URL(req.url, "http://127.0.0.1");
+      if (url.pathname === "/media") {
+        if (url.searchParams.get("token") !== token) return sendJson(res, 403, { error: "Canvas token is missing or invalid." });
+        if (req.method !== "GET") return sendJson(res, 405, { error: "Images are read-only." });
+        const types = { ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif", ".webp": "image/webp" };
+        const requested = url.searchParams.get("path") || "";
+        const docs = await realpath(join(repositoryRoot, "docs"));
+        const candidate = resolve(repositoryRoot, requested);
+        const insideDocs = (file) => {
+          const location = relative(docs, file);
+          return location && location !== ".." && !location.startsWith(`..${process.platform === "win32" ? "\\" : "/"}`) && !isAbsolute(location);
+        };
+        if (!insideDocs(candidate) || !types[extname(candidate).toLowerCase()]) return sendJson(res, 400, { error: "Only repository documentation images can be displayed." });
+        const absolute = await realpath(candidate);
+        if (!insideDocs(absolute)) return sendJson(res, 400, { error: "Image is outside the documentation workspace." });
+        const info = await stat(absolute);
+        if (!info.isFile() || info.size > 20 * 1024 * 1024) return sendJson(res, 400, { error: "Image exceeds the 20 MB viewer limit." });
+        const content = await readFile(absolute);
+        res.writeHead(200, {
+          "Content-Type": types[extname(candidate).toLowerCase()],
+          "Cache-Control": "no-store",
+          "X-Content-Type-Options": "nosniff",
+          "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        });
+        return res.end(content);
+      }
       if (url.pathname.startsWith("/api/")) {
         if (req.headers["x-canvas-token"] !== token) return sendJson(res, 403, { error: "Canvas token is missing or invalid." });
         if (req.method === "GET" && url.pathname === "/api/index") return sendJson(res, 200, { documents: await getIndex(repositoryRoot) });
@@ -84,7 +109,9 @@ export async function startProgramWorkbenchServer({ initialPath = "", repository
         "/": "index.html", "/app.js": "app.js", "/styles.css": "styles.css",
         "/zava-logo.png": "zava-logo.png",
         "/markdown-editor.js": "markdown-editor.js",
+        "/diagram.html": "diagram.html", "/diagram.js": "diagram.js",
         "/vendor/toastui-editor.js": "vendor/toastui-editor.js",
+        "/vendor/mermaid.js": "vendor/mermaid.js",
         "/vendor/toastui-editor.css": "vendor/toastui-editor.css",
       };
       const asset = assetMap[url.pathname];
@@ -93,6 +120,9 @@ export async function startProgramWorkbenchServer({ initialPath = "", repository
       if (asset === "index.html") {
         content = content.toString("utf8").replace("__CANVAS_TOKEN__", token).replace("__INITIAL_PATH__", encodeURIComponent(initialPath));
         res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'");
+      }
+      if (asset === "diagram.html") {
+        res.setHeader("Content-Security-Policy", "default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; img-src data:; sandbox allow-scripts; base-uri 'none'");
       }
       const type = extname(asset) === ".png" ? "image/png" : extname(asset) === ".js" ? "text/javascript" : extname(asset) === ".css" ? "text/css" : "text/html";
       res.writeHead(200, { "Content-Type": type === "image/png" ? type : `${type}; charset=utf-8`, "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" });

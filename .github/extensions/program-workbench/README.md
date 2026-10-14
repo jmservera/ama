@@ -10,6 +10,16 @@ editor.
 * Search Markdown titles, descriptions, paths and content.
 * Render Markdown and edit it with TOAST UI Editor's built-in Markdown/WYSIWYG
   mode switch, explicit save status and `Ctrl+S`.
+* Display relative SVG, PNG, JPEG, GIF and WebP images inline in Read mode,
+  scaled to the document width. Images resolve relative to the document and
+  must remain inside `docs/`, including after resolving symlinks. The local
+  image endpoint requires the canvas token and limits files to 20 MB.
+  Remote images are not fetched; unavailable images show an explicit message.
+* Render fenced `mermaid` charts locally in Read mode with strict security,
+  a sandboxed renderer frame and SVG image isolation. The main document's
+  script and style restrictions remain unchanged. Invalid charts retain their source and show an
+  explicit error. Ordinary code fences remain code; diagram source remains
+  protected from WYSIWYG conversion.
 * Keep YAML frontmatter outside the visual editor in an expandable source field.
   Opening a document or toggling modes without editing preserves the original
   source, including line endings. Visual edits can normalize Markdown formatting.
@@ -17,7 +27,8 @@ editor.
   reference definitions, images and other guarded syntax; visual conversion is
   blocked to avoid losing it. Detection is conservative, not a guarantee of
   lossless round-tripping for every Markdown extension. Adding guarded syntax in
-  Markdown mode blocks switching into WYSIWYG.
+  Markdown mode blocks switching into WYSIWYG. Image rendering belongs to Read
+  mode; the editor's internal preview strips images to prevent remote requests.
 * Fill the remaining visible page height in Edit mode. The editor scrolls
   internally; metadata and linked-record context have separate bounded scrolling.
 * Start conversation sends the selected saved Markdown file directly to the
@@ -65,7 +76,7 @@ Run `python tests/test_editor.py` with Python Playwright and its Chromium browse
 installed. The tests use a temporary repository, never modify project documents,
 and cover mode switching, frontmatter, tables, relative links, source fallback,
 protected documents, saves and refresh while edits are pending.
-Run `node --test tests/conversation.test.mjs` to check advisor selection,
+Run `node --test tests/conversation.test.mjs tests/images.test.mjs` to check image access boundaries, advisor selection,
 current-session attachments, new-project-session request construction and
 conversation endpoint validation.
 

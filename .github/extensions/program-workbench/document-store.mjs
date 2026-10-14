@@ -149,11 +149,11 @@ function resolveMarkdownLinks(root, relative, content) {
   for (const match of content.matchAll(linkPattern)) {
     const href = match[1].split("#")[0].trim();
     if (!href || /^(https?:|mailto:)/i.test(href)) continue;
-    const resolved = toPosix(path.normalize(path.join(path.dirname(relative), decodeURIComponent(href))));
     try {
+      const resolved = toPosix(path.normalize(path.join(path.dirname(relative), decodeURIComponent(href))));
       const safe = safeRelative(root, resolved);
       links.push(safe.relative);
-    } catch { /* Ignore links outside the repository. */ }
+    } catch { /* Malformed or out-of-workspace links are not indexed. */ }
   }
   return [...new Set(links)];
 }

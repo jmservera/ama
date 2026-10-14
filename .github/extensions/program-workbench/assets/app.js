@@ -18,19 +18,39 @@ function escapeHtml(value = "") {
 }
 
 function inlineMarkdown(value) {
-  return escapeHtml(value)
-    .replace(/`([^`]+)`/g, "<code>$1</code>")
+  return value.split(/(`[^`]+`|!\[[^\]]*\]\([^)]+\))/g).map((part) => {
+    if (/^`[^`]+`$/.test(part)) return `<code>${escapeHtml(part.slice(1, -1))}</code>`;
+    const image = part.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+    if (image) {
+      const href = image[2].trim();
+      if (!state.current || /^(?:[a-z][a-z\d+.-]*:|[/\\]|#)/i.test(href)) {
+        return `<span class="image-error">Image unavailable: ${escapeHtml(image[1])} (repository images only)</span>`;
+      }
+      try {
+        const base = new URL(state.current.path, "http://repository/");
+        const resolved = new URL(href, base);
+        const source = `/media?path=${encodeURIComponent(decodeURIComponent(resolved.pathname.slice(1)))}&token=${encodeURIComponent(token)}`;
+        return `<img class="document-image" src="${escapeHtml(source)}" alt="${escapeHtml(image[1])}" loading="lazy">`;
+      } catch {
+        return `<span class="image-error">Image unavailable: ${escapeHtml(image[1])} (invalid path)</span>`;
+      }
+    }
+    return escapeHtml(part)
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/\*([^*]+)\*/g, "<em>$1</em>")
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
       const linked = resolveLinkedPath(href.split("#")[0]);
       return linked ? `<a href="#" data-doc-path="${escapeHtml(linked)}">${label}</a>` : `<span>${label}</span>`;
     });
+  }).join("");
 }
 
 function renderMarkdown(markdown) {
   const lines = markdown.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "").split(/\r?\n/);
-  let html = "", inList = false, inCode = false, code = [], table = [];
+  let html = "", inList = false, inCode = false, code = [], table = [], language = "";
+  const codeBlock = () => language === "mermaid"
+    ? `<div class="mermaid-chart"><pre><code>${escapeHtml(code.join("\n"))}</code></pre></div>`
+    : `<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`;
   const flushList = () => { if (inList) { html += "</ul>"; inList = false; } };
   const flushTable = () => {
     if (!table.length) return;
@@ -43,7 +63,8 @@ function renderMarkdown(markdown) {
   for (const line of lines) {
     if (line.startsWith("```")) {
       flushList(); flushTable();
-      if (inCode) { html += `<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`; code = []; }
+      if (inCode) { html += codeBlock(); code = []; }
+      else language = line.slice(3).trim().toLowerCase();
       inCode = !inCode; continue;
     }
     if (inCode) { code.push(line); continue; }
@@ -58,8 +79,55 @@ function renderMarkdown(markdown) {
     else if (line.trim()) html += `<p>${inlineMarkdown(line)}</p>`;
   }
   flushList(); flushTable();
-  if (inCode) html += `<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`;
+  if (inCode) html += codeBlock();
   return html;
+}
+
+function renderChart(source) {
+  return new Promise((resolve, reject) => {
+    const frame = document.createElement("iframe");
+    frame.className = "mermaid-renderer";
+    frame.title = "Diagram renderer";
+    frame.setAttribute("sandbox", "allow-scripts");
+    const cleanup = () => {
+      clearTimeout(timeout);
+      window.removeEventListener("message", receive);
+      frame.remove();
+    };
+    const receive = (event) => {
+      if (event.source !== frame.contentWindow || event.data?.type !== "diagram-result") return;
+      cleanup();
+      if (typeof event.data.svg === "string") resolve(event.data.svg);
+      else reject(new Error(event.data.error || "Diagram rendering failed."));
+    };
+    const timeout = setTimeout(() => { cleanup(); reject(new Error("Diagram rendering timed out.")); }, 30000);
+    window.addEventListener("message", receive);
+    frame.addEventListener("load", () => frame.contentWindow.postMessage({ type: "render-diagram", source }, "*"), { once: true });
+    frame.src = "/diagram.html";
+    document.body.append(frame);
+  });
+}
+
+async function renderCharts() {
+  for (const chart of $("#markdown-preview").querySelectorAll(".mermaid-chart")) {
+    const source = chart.textContent;
+    try {
+      const svg = await renderChart(source);
+      if (!chart.isConnected) continue;
+      // Render as an image so diagram styles and links cannot affect the workbench.
+      const image = document.createElement("img");
+      image.className = "document-image";
+      image.alt = "Mermaid diagram";
+      image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      chart.replaceChildren(image);
+    } catch (error) {
+      if (!chart.isConnected) continue;
+      const message = document.createElement("p");
+      message.className = "image-error";
+      message.textContent = `Diagram unavailable: ${error.message}`;
+      chart.prepend(message);
+    }
+  }
 }
 
 function resolveLinkedPath(href) {
@@ -179,7 +247,14 @@ function setMode(mode) {
   $("#editor-wrap").classList.toggle("hidden", mode !== "edit");
   if (mode === "preview" && state.current) {
     $("#markdown-preview").innerHTML = renderMarkdown(documentEditor.getContent());
+    $("#markdown-preview").querySelectorAll("img").forEach((image) => image.addEventListener("error", () => {
+      const message = document.createElement("span");
+      message.className = "image-error";
+      message.textContent = `Image unavailable: ${image.alt || "repository image"}`;
+      image.replaceWith(message);
+    }));
     $("#markdown-preview").querySelectorAll("[data-doc-path]").forEach((link) => link.addEventListener("click", (event) => { event.preventDefault(); openDocument(link.dataset.docPath); }));
+    void renderCharts();
   }
   if (mode === "edit") documentEditor.focus();
 }

@@ -132,6 +132,9 @@ kbd { border: 1px solid var(--line); background: color-mix(in srgb, var(--paper)
 .markdown-preview th, .markdown-preview td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
 .markdown-preview th { background: rgba(41,77,60,.06); }
 .markdown-preview a { color: var(--moss); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.markdown-preview .document-image { display: block; max-width: 100%; height: auto; margin: 20px auto; }
+.markdown-preview .image-error { display: block; color: var(--muted); }
+.mermaid-renderer { position: fixed; left: -10000px; width: 1000px; height: 1000px; border: 0; }
 .editor-wrap { display: flex; flex-direction: column; gap: 12px; max-width: none; min-height: 0; padding: 16px 20px; overflow: hidden; }
 .document-editing { overflow: hidden; }
 .document-editing .documents-view { display: flex; flex-direction: column; height: 100%; min-height: 0; }

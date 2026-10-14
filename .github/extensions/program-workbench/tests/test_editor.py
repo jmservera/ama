@@ -131,6 +131,87 @@ class EditorIntegrationTest(unittest.TestCase):
         self.assertTrue(self.page.locator('[data-mode="edit"]').is_disabled())
         self.assertFalse(self.page.locator("#conversation-button").is_disabled())
 
+    def test_architecture_svg_images_render_inline_without_rewriting(self):
+        source = EXTENSION.parents[2] / "docs" / "architecture"
+        target = self.root / "docs" / "architecture"
+        target.mkdir(exist_ok=True)
+        original = (source / "README.md").read_bytes()
+        (target / "README.md").write_bytes(original)
+        for name in ["executive", "technical"]:
+            filename = f"zava-forward-{name}-architecture.svg"
+            (target / filename).write_bytes((source / filename).read_bytes())
+        self.page.locator('[data-mode="preview"]').click()
+        self.page.locator("#refresh-button").click()
+        self.page.wait_for_load_state("networkidle")
+        self.page.locator('.library-document[data-path="docs/architecture/README.md"]').click()
+        images = self.page.locator('#markdown-preview img[src^="/media"]')
+        expect(images).to_have_count(2)
+        for image in images.all():
+            image.scroll_into_view_if_needed()
+            expect(image).to_be_visible()
+            self.page.wait_for_function(
+                "(image) => image.complete && image.naturalWidth > 0",
+                arg=image.element_handle(),
+            )
+            dimensions = image.evaluate("""image => ({
+                width: image.getBoundingClientRect().width,
+                container: image.parentElement.getBoundingClientRect().width
+            })""")
+            self.assertLessEqual(dimensions["width"], dimensions["container"])
+        expect(self.page.locator(".mermaid-chart img")).to_have_count(2, timeout=60000)
+        for image in self.page.locator(".mermaid-chart img").all():
+            self.page.wait_for_function(
+                "(image) => image.complete && image.naturalWidth > 0",
+                arg=image.element_handle(),
+            )
+        self.assertEqual(self.page.locator("#markdown-preview .image-error").count(), 0)
+        self.page.locator('[data-mode="edit"]').click()
+        expect(self.page.locator("#save-button")).to_be_disabled()
+        self.page.locator('[data-mode="preview"]').click()
+        expect(images).to_have_count(2)
+        self.assertEqual((target / "README.md").read_bytes(), original)
+
+    def test_mermaid_renders_and_invalid_charts_keep_source(self):
+        content = DOCUMENT + (
+            '\n```mermaid\nflowchart LR\n  A["Staff"] --> B["Workbench"]\n```\n'
+            '\n```mermaid\nnot a chart\n```\n'
+            '\n```python\nprint("ordinary code")\n```\n'
+        )
+        (self.root / "docs" / "fixture.md").write_text(content, encoding="utf-8")
+        self.page.locator('.library-document[data-path="docs/other.md"]').click()
+        expect(self.page.locator("#meta-path")).to_have_text("docs/other.md")
+        self.page.locator('.library-document[data-path="docs/fixture.md"]').click()
+        expect(self.page.locator(".toastui-editor-md-container")).to_contain_text("not a chart")
+        self.page.locator('[data-mode="preview"]').click()
+        chart = self.page.locator(".mermaid-chart").first
+        expect(chart.locator("img")).to_have_count(1)
+        self.page.wait_for_function(
+            "(image) => image.complete && image.naturalWidth > 0",
+            arg=chart.locator("img").element_handle(),
+        )
+        expect(self.page.locator(".mermaid-chart").last).to_contain_text("Diagram unavailable:")
+        expect(self.page.locator(".mermaid-chart").last.locator("code")).to_have_text("not a chart")
+        expect(self.page.locator("#markdown-preview pre").last).to_contain_text('print("ordinary code")')
+        self.assertEqual((self.root / "docs" / "fixture.md").read_text(encoding="utf-8"), content)
+
+    def test_image_syntax_is_not_a_link_and_remote_images_are_blocked(self):
+        content = DOCUMENT + (
+            '\n![Remote](https://example.com/image.svg)\n'
+            '![Bad path](./bad%ZZ.svg)\n'
+            '`![Code](./code.svg)`\n'
+        )
+        (self.root / "docs" / "fixture.md").write_text(content, encoding="utf-8")
+        self.page.locator('.library-document[data-path="docs/other.md"]').click()
+        expect(self.page.locator("#meta-path")).to_have_text("docs/other.md")
+        self.page.locator('.library-document[data-path="docs/fixture.md"]').click()
+        expect(self.page.locator(".toastui-editor-md-container")).to_contain_text("example.com/image.svg")
+        self.page.locator('[data-mode="preview"]').click()
+        expect(self.page.locator("#markdown-preview .image-error")).to_have_count(2)
+        expect(self.page.locator("#markdown-preview code").last).to_have_text("![Code](./code.svg)")
+        expect(self.page.locator("#markdown-preview img")).to_have_count(0)
+        self.page.locator('#markdown-preview [data-doc-path="docs/other.md"]').click()
+        expect(self.page.locator("#meta-path")).to_have_text("docs/other.md")
+
     def test_refresh_preserves_dirty_edits_and_reloads_saved_changes(self):
         metadata = self.page.locator("#frontmatter-editor")
         self.page.locator("#frontmatter-wrap summary").click()

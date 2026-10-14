@@ -6,7 +6,7 @@ const directory = new URL("../../.github/extensions/program-workbench/assets/ven
 await mkdir(directory, { recursive: true });
 await build({
   stdin: {
-    contents: 'import Editor from "@toast-ui/editor"; import DOMPurify from "dompurify"; globalThis.toastui = { Editor }; globalThis.workbenchSanitize = html => DOMPurify.sanitize(html, { FORBID_TAGS: ["style"], FORBID_ATTR: ["style"] });',
+    contents: 'import Editor from "@toast-ui/editor"; import DOMPurify from "dompurify"; globalThis.toastui = { Editor }; globalThis.workbenchSanitize = html => DOMPurify.sanitize(html, { FORBID_TAGS: ["style", "img"], FORBID_ATTR: ["style"] });',
     resolveDir: fileURLToPath(new URL(".", import.meta.url)),
     sourcefile: "workbench-editor-entry.js",
   },
@@ -17,6 +17,18 @@ await build({
   legalComments: "inline",
 });
 await copyFile(new URL("./node_modules/@toast-ui/editor/dist/toastui-editor.css", import.meta.url), new URL("toastui-editor.css", directory));
+await build({
+  stdin: {
+    contents: 'import mermaid from "mermaid"; globalThis.workbenchMermaid = mermaid;',
+    resolveDir: fileURLToPath(new URL(".", import.meta.url)),
+    sourcefile: "workbench-mermaid-entry.js",
+  },
+  bundle: true,
+  minify: true,
+  format: "iife",
+  outfile: fileURLToPath(new URL("mermaid.js", directory)),
+  legalComments: "inline",
+});
 
 const lock = JSON.parse(await readFile(new URL("./package-lock.json", import.meta.url), "utf8"));
 const notices = [await readFile(new URL("toastui-editor.LICENSE", directory), "utf8")];
