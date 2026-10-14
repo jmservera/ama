@@ -334,3 +334,9 @@ next distinct work item, Stop or manual mode before any new task begins.
 Parent/runtime current pointers and priorities prune resolved reset/provider
 delivery and duplicate human journeys. Normal serving authority absent,
 proactive off; finite process-local QA not extended or replenished.
+
+Review/markers/reconciled states pushed as f28e8f6; remote #68 head and current
+Review/Residual-work body verified. Tracking-only receipt triggers no new
+workflow. Ranked post-Review choices offered; owner unavailable. Wrapper
+persists awaiting owner selection with completed task and running automatic
+session, without inventing consent, starting a child or ending the session.
