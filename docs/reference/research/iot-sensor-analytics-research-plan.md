@@ -141,3 +141,22 @@ Next step for R1: search building-science sources (for example Building and
 Environment, Energy and Buildings, BRE, Housing Ombudsman) and obtain the
 official BS 5250, BS EN ISO 13788 and PAS 2035 texts through the owner's
 licensed access.
+
+## Public document check (owner-supplied, 2026-10-14)
+
+Two public documents on BS 5250:2021 were supplied by the owner.
+
+| Document | Result |
+| --- | --- |
+| BMI Group, "BS 5250:2021 Management of moisture in buildings: a guide to the updated British Standard and the changes to pitched and flat roofing", issued August 2021 (PDF on assets.ctfassets.net) | Retrieved and text-extracted. A manufacturer's roofing guide, not the standard. It confirms that a 2021 edition of BS 5250 exists and defines condensation as deposition when air temperature drops to or below the dew point. It lists BS EN ISO 13788 (internal surface temperature to avoid critical surface humidity and interstitial condensation) as a calculation method. It does not state the 80 percent surface humidity figure, the 70 percent room air figure or an fRsi threshold, and says nothing about sensor monitoring |
+| Scribd, "BS5250 2021 New Guidance on Managing Moisture Risk in Buildings" | Not read. The page returned an access challenge to an automated request, and the full document needs a signed-in browser session. It may be a copy of protected material and its provenance is unknown, so it is not used as a source until the owner confirms the right to use it |
+
+Effects on the leads:
+
+* The thresholds checked earlier come from the 2011 edition of BS 5250. A 2021
+  edition now exists, so each figure (80 percent surface humidity, fRsi 0.75)
+  must be confirmed against the 2021 edition and BS EN ISO 13788 before use.
+  Until then they stay labelled candidate exercise values from the 2011 text.
+* The dew point definition of condensation is supported by the BMI guide only
+  as a general definition; it does not validate the Magnus constants.
+* Nothing in these documents changes the PAS 2035 finding.

@@ -2433,3 +2433,12 @@ metadata when the knowledge base was created.
   sampling and anomaly-detection papers (abstracts only) were recorded as
   method leads in the research plan. R1 stays open; official standards and
   building-science journals are the next sources.
+
+## [2026-10-14] review | Owner-supplied BS 5250:2021 public documents
+
+* Read the BMI Group BS 5250:2021 roofing guide (August 2021). It supports the
+  dew point definition of condensation and names BS EN ISO 13788, but states no
+  80 percent, 70 percent or fRsi figure. It shows a 2021 edition exists, so
+  the 2011-based thresholds must be re-confirmed against the 2021 edition.
+* The Scribd copy could not be read (access challenge) and its provenance and
+  right to use are unconfirmed, so it is not used. R1 stays open.
