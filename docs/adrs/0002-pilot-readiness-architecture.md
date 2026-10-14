@@ -2,7 +2,7 @@
 title: ADR 0002 Pilot-Readiness Architecture for the Zava Forward MVP
 description: Proposed decisions for moving the working MVP to pilot readiness over about 60,000 homes - durable store, Blob, Entra ID and field visibility, deterministic ranking, map scale, deployment and gated staff time capture
 author: AMA programme
-ms.date: 2026-10-13
+ms.date: 2026-10-14
 ms.topic: reference
 ---
 
@@ -247,13 +247,31 @@ retains the existing generator/60000-stock lineage and 980-case denominator.
 Pending budgets/grants, received/held invoices, submitted unverified quality,
 offered handoffs and open requests are fixtures, not approval evidence.
 
-The owner stopped retained-data migration and authorized a synthetic database
-reset. QA authority was removed in healthy revision `--0000011`. The destructive
-deletion operation was cancelled; reset/reseed did not occur. All 11 tenant
-staff bindings and the enriched seed are privately prepared, not published.
-Revision `--0000011` still serves image `d3e652ce`, with assistance disabled.
-AC-057 remains Blocked for actual registered model/usage and changed-database
-before/after/restart proof. Human, semantic and business acceptance remain open.
+The owner stopped retained-data migration; the initial reset was cancelled
+on 2026-10-13, then explicitly reauthorized with all remaining delivery on
+2026-10-14. Only exercise database `retrofit` was recreated with ledger,
+serverless/backup/diagnostic settings restored, original contained SQL
+users/grants and all 11 private tenant staff bindings retained. The new
+980-case/date/procurement baseline deliberately replaces the previous
+recommendations/audit, not an unchanged-data migration.
+
+Image05/source `cd14b3b` is published and serving as revision `--0000012`,
+manifest `sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20`.
+Actual workload-managed-identity SQL verifies 38 visits, 12 Finance rows,
+12 quality/grant/request records, one package/601 orders and four offered
+handoffs. Renewed process-local operator QA invoked all five registered
+services through Azure OpenAI `standard`/`gpt-4.1-mini-2025-04-14`; all return
+distinct citation-validated ready proposals, five attempts/6884 tokens,
+15 append-only ledger events and one finite allowance. Independent domain
+hashes and assistant-table content hashes/outputs/usage survive actual
+revision restart. No proposal is source-verified or accepted by a human.
+
+Normal serving assistant authority remains absent, proactive off; the bounded
+operator authority did not become a permanent paid-worker configuration.
+This establishes actual deployed service/model/SQL/restart evidence, not
+a real staff-authenticated browser/API acceptance session, semantic quality,
+role/accessibility acceptance or measured business value. Those gates remain
+open; historical Reviews are not rewritten.
 
 ### 1. Durable store: Azure SQL or PostgreSQL
 

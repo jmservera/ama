@@ -138,7 +138,7 @@ operator checks, unit tests and the source-head CI/rubric results on #65.
 
 ### Five-assistant version: current handover
 
-After explicit owner authorization, corrected image `assistants-20261013-02`
+Historical rollout: after explicit owner authorization, image `assistants-20261013-02`
 was published and deployed to the existing API as revision `--0000010`, pinned
 to ACR digest
 `sha256:d3e652cec1bdef8846270a75c124d55743bdb757231ffaeae585cc423e6b8786`.
@@ -154,32 +154,57 @@ backend source `ec7721b` passes all 73 local actual SQL tests. A later
 populated-visits rendering correction yields latest source `cd14b3b` and local
 image `assistants-20261013-05`, with 389-test discovery (316 passed, 73 conditional
 skips), 21 browser regressions and 21 exact-image generated-data UI/API/local
-restart checks. It is not published or deployed. Full evidence is in
+restart checks. It was subsequently published and deployed on 2026-10-14
+as described below. Full evidence is in
 [ADR 0002](../docs/adrs/0002-pilot-readiness-architecture.md#fresh-ledger-and-synthetic-coverage-learning-2026-10-13).
 
 The owner stopped migration and requested a synthetic database reset. QA
-authority was removed; healthy revision `--0000011` still serves image
+authority was removed; historical revision `--0000011` served image
 `d3e652ce`, with proactive off and assistance disabled. Database deletion was
-cancelled; `retrofit` is not wiped or reseeded. A private enriched seed and all
-11 existing tenant staff/oid bindings are prepared. Do not circumvent that
-cancelled operation or claim the new queues are live.
+cancelled on 2026-10-13. The owner explicitly reauthorized deletion/recreation
+and all offered remaining delivery on 2026-10-14; that cancellation no longer
+blocks the exact authorized action.
 
-On a confirmed reset, recreate only the exercise database with its existing
-ledger/serverless/backup/diagnostic settings, restore existing contained SQL
-workload grants and privately bound staff, seed the generated date/procurement,
-then deploy the ledger-compatible image and capture a new baseline. This is
+Only `retrofit` was deleted/recreated, with ledger enabled, serverless Gen5
+2 vCore/minimum 0.5, auto-pause 60 minutes, 32 GB, local backups, 14-day
+retention/12-hour differential backups and restored diagnostics. Original
+contained user SIDs/roles/grants and all 11 privately bound staff were restored
+without tenant changes. The generated date/procurement baseline now contains
+980 cases, 38 booked visits (11 in the week 2026-10-12 to 2026-10-18), 12
+Finance/quality/grant/request records, one package/601 source orders and four
+offered handoffs. Previous recommendations/audit were intentionally reset.
+
+Current serving revision is `ca-forward-test-api--0000012`, image05/source
+`cd14b3b379026a87ebfa3e9058ac10c0df7888eb`, pinned to ACR manifest
+`sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20`.
+Existing identity, auth configuration and scale are preserved; an independent
+auth-token rotation stamp was retained. Health and restarted replicas pass.
+This is
 explicit exercise reset authority, not a general reseed or evidence-deletion
 permission. Preserve tenant registration/authentication; do not grant runtime
 tenant-management permissions. Keep real QA within its effective expiry,
 call/token allowance and scoped spend approval; never extend or replenish it
 because a reset occurred. Token limits are not a currency guarantee.
 
+Renewed bounded operator QA used the registered service inside this serving
+workload, with process-local authority, 10-call/126000-token allowance and
+one-hour expiry, proactive off. All five returned distinct citation-validated
+`ready` proposals through Azure OpenAI deployment `standard`, model
+`gpt-4.1-mini-2025-04-14`: five attempts, 6884 total tokens and 15 ledger events.
+Independent SQL controlled-domain hashes stayed unchanged; full assistant
+table content hashes, outputs and usage survived a real revision restart.
+The normal serving app still has no assistant authority and proactive remains
+off; no standing paid worker or fabricated human verification/acceptance.
+
 AC-057 requires a registered assistant through the changed deployed API,
 provider/model/usage/outcome and independent actual SQL task/event evidence
 before/after an app restart, plus unchanged controlled state and failure/
 manual handling. General SQL Server CI or an anonymous HTTP 200 cannot
-replace that proof. This gate is Blocked pending reset authorization and actual execution; no
-source test, anonymous health check or fixture approval substitutes for it.
+replace that proof. The operator service/model/SQL/restart portion is now
+observed, not blocked on reset authorization. A real staff-authenticated
+browser/API acceptance session, semantic calibration, role/accessibility
+acceptance and measured benefit remain separate and are not claimed by
+operator execution or local Chromium fixtures.
 
 ## Post-deployment API authentication initialization
 

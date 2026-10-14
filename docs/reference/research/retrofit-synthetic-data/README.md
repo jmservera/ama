@@ -1,7 +1,7 @@
 ---
 title: Retrofit Synthetic Evidence Pack - Zava Forward Year One
 description: Fifteen months of synthetic operating records from a professional retrofit delivery team that knows it has bottlenecks but not where they are
-ms.date: 2026-09-30
+ms.date: 2026-10-14
 ms.topic: reference
 ---
 
@@ -34,8 +34,11 @@ The owner requests a regenerated exercise database and more populated workbench
 sections, especially visits. The requested eval-dataset-creator supplied a
 read-only schema/coverage audit; the parent implemented and tested the existing
 generator. This does not alter the public CSV pack or resolve blind constraint
-findings. The database reset operation was cancelled, so this is a prepared
-private dataset, not a newly seeded live database.
+findings. The initial reset was cancelled on 2026-10-13; explicit reauthorization
+on 2026-10-14 permitted recreation and seeding of the exercise Azure SQL
+database. The coverage below now exists in the serving exercise baseline,
+with all 11 original tenant staff bindings retained privately. This does not
+make synthetic records real resident, approval or business-outcome evidence.
 
 ```bash
 python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py \
@@ -49,7 +52,7 @@ contractor for every visit. Six designated future assessment appointments are
 added only to available open cases without unresolved safety holds or existing
 bookings; historical contrasts do not enter the booked-visits queue.
 
-| Prepared coverage | Count | Boundary |
+| Generated and seeded exercise coverage | Count | Boundary |
 | --- | --- | --- |
 | Retained geography stock / programme cases | 60000 / 980 | Separate denominators; 443 open programme cases |
 | Distinct geography anchors | 825 | Flats may share a building anchor; not unique stock-unit linkage |

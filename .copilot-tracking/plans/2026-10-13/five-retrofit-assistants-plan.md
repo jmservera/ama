@@ -30,6 +30,11 @@ image on the retained data and existing Azure services. Continue #68.
   Enrich missing operational sections, including visits, using the requested
   hve-core-all:eval-dataset-creator. Preserve tenant role/identity bindings and
   app authentication; replaced synthetic domain is a new dated baseline.
+* On 2026-10-14 the owner reauthorizes the exact database deletion/recreation
+  and all offered remaining delivery, including enriched seeding, existing-app
+  image05 rollout and renewed finite QA10calls/126000tokens/onehourfromactivation,
+  proactiveoff/up-to-USD5target. Prior cancellation is historical; preserve
+  tenant bindings/settings and do not merge the PR.
 
 ## Evidence and Readiness
 

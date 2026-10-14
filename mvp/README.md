@@ -655,9 +655,9 @@ ZF_TEST_MSSQL=1 PYTHONPATH=.:tests python3 -m unittest \
 The browser exercise needs the existing Playwright test dependency and Chromium;
 it can use installed Google Chrome or `CHECK_BROWSER_EXECUTABLE`. The parent
 owns image build, real platform evidence, approved rollout and independent
-Review. Replacement rollout and provider spending remain blocked at the
-cancelled database reset and expired finite QA authority; local mocks do not
-satisfy that acceptance gate.
+Review. The historical reset cancellation was explicitly cleared on 2026-10-14.
+Real operator provider/SQL/restart execution is now recorded below; local mocks
+still do not substitute for real staff/human acceptance.
 
 Corrected-source execution on 2026-10-13: 47 nonbillable assistant tests passed;
 full discovery reported 379 tests, 310 passed and 69 conditional SQL skips.
@@ -680,8 +680,19 @@ The two-day/case-link regression brings the assistant browser exercise to
 nonbillable generated-data UI/API/local-restart checks with 38 visible visits,
 12 Finance rows and 601 source work orders, preserved independent SQLite
 domain hashes and five disabled/manual proposals with zero provider attempts.
-Image05 is local-only; tenant bindings and Azure/model acceptance are not
-exercised by that isolated validation.
+Tenant bindings and Azure/model acceptance are not exercised by that isolated
+validation. Subsequently, on 2026-10-14, the owner explicitly reauthorized
+the exact exercise database reset and all offered bounded delivery. Image05
+now serves in revision `--0000012`, pinned to manifest
+`sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20`.
+The restored ledger baseline has 980 cases, 11 tenant staff, 38 visits and
+the generated queues. Process-local operator authority permitted five actual
+registered Azure OpenAI calls: all five proposals are distinct/citation-validated
+ready, with 6884 total tokens and 15 immutable ledger events. Independent
+SQL domain and assistant-table content hashes survive actual revision restart.
+No human verification/acceptance is recorded. Normal serving assistant
+authority remains absent/proactive off; this is not standing spend approval,
+staff-browser acceptance, semantic calibration or measured value.
 
 ```bash
 cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests -v

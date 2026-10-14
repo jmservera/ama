@@ -53,20 +53,20 @@
   ],
   "blockers": [
     {
-      "id": "database-reset-cancelled",
-      "summary": "Owner authorized rollout/bounded QA, then requested stopping migration and a fresh synthetic database. Concrete database deletion was cancelled; no reset/reseed or actual model proof occurred.",
-      "resolution": "Continue through later child five-assistant-live-delivery after exact reset confirmation. Prepared source/image/enriched data are validated; retain old retrofit and disabled QA. Never silently extend the expired/effective QA window."
+      "id": "human-product-acceptance",
+      "summary": "Later child completed reauthorized exact reset/seed/image05 and five actual operator model/SQL/content/restart paths; human staff-browser/API/accessibility/semantic/benefit acceptance remains open.",
+      "resolution": "Preserve bounded current-child Review outcome and route human/product acceptance as distinct follow-up; no repeat of historical Reviews or fabricated approval."
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Later child five-assistant-live-delivery owns authorized rollout/ledger fix/synthetic reset. Visits-corrected source/image05/enriched seed and local21browser/21exact-image checks ready; current source/learning published at e5567f9 with CI38481199508 all three jobs passing. Actual deletion cancelled and reset confirmation unavailable. Original accepted delivery still incomplete; preserve completed historical Reviews."
+    "action": "Later child five-assistant-live-delivery owns completed reauthorized reset/enriched ledger seed/image05 revision12/5real models/6884tokens/independent SQL contents/restart. Publish current canonical learning and perform its single bounded Review. Staff-authenticated user/human/semantic/accessibility/value acceptance remains separate; preserve historical Reviews."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Complete owner-approved synthetic reset and actual provider/SQL/restart evidence",
-      "rationale": "Owner now permits replacement baseline; exact deletion was cancelled. Source/image05/enriched seed,21browser regressions/21exact-image UI/API/local-restart checks and prior73backend SQL tests are ready, but no live model/changed-database acceptance exists. Clear reset approval and keep QA within effective bounds.",
+      "task": "Real staff-authenticated browser/API and human role/accessibility acceptance",
+      "rationale": "Exact reset and deployed operator/provider/SQL/restart proof are now complete after explicit reauthorization. Staff-authenticated user workflow and competent human source checks still require real acceptance without fixture substitution.",
       "evidence": "Child RV-001; original P03/P03-T01; CON-009/AC-057; .copilot-tracking/reviews/logs/2026-10-13/five-assistant-runtime-validation-review.md"
     },
     {

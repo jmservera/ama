@@ -37,13 +37,13 @@
   "blockers": [
     {
       "id": "later-live-delivery",
-      "summary": "Later authorized live-delivery child deployed image02, found ledger DDL and populated-visits defects and prepared corrected image05/enriched seed with21browser/21exact-image checks. Published on #68 with current test/mssql/image CI passing; owner-requested destructive reset was cancelled.",
+      "summary": "Later live-delivery child completed explicitly reauthorized reset/enriched seed/image05 serving revision12 and5real provider paths/6884tokens/independent SQL content+restart. Current-child Review/publication owns acceptance boundary; historical reset cancellation is superseded.",
       "resolution": "Current canonical continuation is five-assistant-live-delivery-state.json. Do not repeat this completed bounded runtime Review or infer reset/model acceptance."
     }
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Follow current later child five-assistant-live-delivery-state.json: corrected image05/enriched data and21browser/21exact-image local checks ready, source/learning/current CI published. Exact reset confirmation and effective finite QA required after destructive operation cancellation. Historical bounded Review remains complete; original live acceptance unverified."
+    "action": "Follow current later child five-assistant-live-delivery-state.json: reset/enriched ledger baseline/image05 revision12/5actual provider paths/SQL content+restart complete. Current publication/bounded Review pending; staff-authenticated human/semantic/accessibility/value acceptance remains later work. Historical bounded Review remains complete."
   },
   "prioritized_follow_ups": [
     {

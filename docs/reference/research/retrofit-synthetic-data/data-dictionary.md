@@ -1,7 +1,7 @@
 ---
 title: Data Dictionary - Retrofit Synthetic Evidence Pack
 description: Field definitions, keys, allowed values and record-keeping notes for the Zava Forward year-one synthetic evidence pack
-ms.date: 2026-10-13
+ms.date: 2026-10-14
 ms.topic: reference
 ---
 
@@ -10,6 +10,12 @@ ms.topic: reference
 > Zava North Homes data. Every table has `is_synthetic` set to `true`.
 
 ## Separate Private MVP JSON Extension
+
+The enriched JSON extension was seeded into the recreated exercise Azure SQL
+database on 2026-10-14 after explicit owner reauthorization. Original tenant
+staff/oid bindings remain private; synthetic operating records, proposed
+budgets, pending grants and unverified quality do not acquire approval merely
+because they are persisted in the serving database.
 
 The [dated coverage recipe](./README.md#mvp-operational-coverage-2026-10-13)
 extends the separate private MVP export, not these public CSV schemas.

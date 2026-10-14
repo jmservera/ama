@@ -7,7 +7,7 @@
   },
   "mode": "automatic",
   "active_phase": "Implement",
-  "status": "blocked",
+  "status": "active",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-13/five-retrofit-assistants-research.md",
@@ -18,6 +18,16 @@
     "review": null
   },
   "confirmed_decisions": [
+    {
+      "decision": "Executed authorized exact retrofit ledger reset/settings/users/grants/11tenant bindings/enriched980case seed. Published image05/e0254cb3, serving revision12. Five real registered Azure OpenAI paths ready with distinct validated outputs,5calls/6884tokens/15ledger events/1allowance. Independent controlled-domain and full assistant-table content hashes/outputs/usage survive actual restart. Normal serving authority absent/proactiveoff; human acceptance not fabricated.",
+      "status": "implemented-and-observed; canonical-publication-in-progress",
+      "evidence": ".copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md; docs/adrs/0002-pilot-readiness-architecture.md; infra/README.md"
+    },
+    {
+      "decision": "Owner reauthorizes exact retrofit database deletion/recreation, enriched seeding, existing-app image05 deployment and the offered renewed finite QA: at most10calls,126000reservedtokens, one hour from activation, proactive off, up-to-USD5 incremental target without a billing guarantee. Preserve tenant bindings/settings/auth; no PR merge.",
+      "status": "confirmed",
+      "evidence": "Owner input2026-10-14: Authorize the delete and recreation.; followed by Authorize all in response to the explicit remaining-delivery authorization."
+    },
     {
       "decision": "Owner authorizes the offered existing-app retained-data rollout and bounded QA: up to USD 5 incremental target, at most 10 calls, 126000 reserved tokens, one-hour authority and proactive off. Exact billing is not guaranteed by token reservations. No merge, tenant permission changes or new worker estate.",
       "status": "confirmed",
@@ -50,32 +60,21 @@
     },
     {
       "decision": "Specific Azure SQL database deletion was cancelled by user at the tool boundary. No wipe/recreate/reseed, no alternate deletion route, no model call. Clarification form unanswered because owner unavailable; preserve existing database and disabled QA.",
-      "status": "reset-blocked",
+      "status": "historical-cancellation; superseded-by-explicit-2026-10-14-reauthorization",
       "evidence": "Azure sql_db_delete result: Operation cancelled by user; subsequent explicit reset-confirmation form unavailable."
     }
   ],
-  "blockers": [
-    {
-      "id": "database-reset-cancelled",
-      "summary": "The concrete destructive reset operation was cancelled; confirmation is unavailable.",
-      "resolution": "Owner confirms the exact retrofit database reset through the approval boundary. Do not circumvent cancellation through another tool or CLI. Seed/image are ready; retain old DB and disabled QA meanwhile."
-    },
-    {
-      "id": "actual-platform-acceptance",
-      "summary": "Ledger-compatible visits-corrected image05/enriched seed have not reached Azure; registered model/SQL/restart proof remains unexecuted.",
-      "resolution": "After reset approval, recreate ledger database/settings, preserve tenant bindings, deploy exact image05 and run real proof within an effective approved QA expiry. Original one-hour authority expires2026-10-13T21:55:47Z; never silently extend it."
-    }
-  ],
+  "blockers": [],
   "next_action": {
     "phase": "Implement",
-    "action": "Await exact Azure retrofit reset approval and renewed finite QA authority. Visits-corrected source/image05 evidence and canonical docs published on #68 at e5567f9; CI38481199508 test/mssql/image all pass. All safe local source/image/UI/API/restart preparation is complete. Existing DB retained, image02/revision11 with authority absent. P03 remains unchecked; no current-child Review or full completion."
+    "action": "Publish reconciled canonical learning and #68 handover for completed exact reset/enriched seed/image05/operator-model/independent-SQL-content/restart proof. Then perform the single current-child bounded Review. Human staff-authenticated browser/API, role/accessibility and semantic/benefit acceptance are later follow-ups, not fabricated."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Human role/accessibility/source-verification acceptance",
-      "rationale": "Automated actual-platform evidence cannot substitute for human acceptance.",
-      "evidence": "Parent plan Follow-Up Items."
+      "task": "Real staff-authenticated browser/API and role/accessibility/source-verification acceptance",
+      "rationale": "Actual operator/model/SQL proof does not establish a real staff session or competent human verification; completes the remaining AC-057/058 user boundary without inventing approval.",
+      "evidence": "P03 operator-only QA evidence; PRD AC-057/058; parent plan Follow-Up Items."
     },
     {
       "rank": 2,

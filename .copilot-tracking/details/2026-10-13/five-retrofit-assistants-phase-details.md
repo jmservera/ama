@@ -98,16 +98,21 @@ the current ledger-enabled architecture: create assistant evidence as an
 append-only ledger table, not an unsupported trigger on an updatable ledger
 table. Fresh domain becomes the independent before/after/restart baseline.
 
-Current execution: latest sourcecd14b3b/image05 locally ready, deterministic
-generator, discovery389/316passed/73SQLskips,21browser regressions and21exact
-generated-data image UI/API/local-restart checks pass. Last backendec7721b
-actualSQL73pass and canonical7c4eb18test/image/mssql CI are historical.
-Current source/learning published at e5567f9; CI38481199508test/mssql/image
-all pass. The actual deletion was cancelled;
-no alternate destructive route was used. Reset confirmation unavailable.
-Image02/revision11 remains healthy with assistance authority removed, zero
-modelcalls and oldretrofit retained. P03 remains unchecked until confirmed
-reset, seeding and actual registered provider/SQL/restart proof are complete.
+Current execution2026-10-14: owner explicitly reauthorizes exact reset and
+all remaining offered delivery. Recreated only retrofit with ledger/
+serverless/backup/diagnostic settings and restored2contained users/5roles/
+2grants/11private tenant staff, seeded980cases/as-of2026-10-13/procurement/
+38visits. Sourcecd14b3b/image05/e0254cb3 is published to ACR and serves
+revision --0000012. Current source CI38481199508test/mssql/image all pass,
+alongside discovery389/316passed/73SQLskips/21browser/21exact-image checks.
+Actual deployed registered operator QA returns five distinct citation-valid
+ready Azure OpenAI proposals,5attempts/6884tokens/15ledger events.
+Independent domain and full assistant-table content hashes/outputs/usage
+survive actual restart. No human verification/acceptance, no tenant changes,
+normal app authority absent/proactiveoff. Prior reset cancellation is historical.
+Publish current canonical learning/#68 handover, then current-child bounded
+Review once. Staff-authenticated browser/API/semantic/accessibility/business
+acceptance remains explicit later work.
 
 Local image04 populated-data browser check exposed API38/UI0 visits because
 show filtered out arrays of day-group elements. Sourcea76d281 flattens before

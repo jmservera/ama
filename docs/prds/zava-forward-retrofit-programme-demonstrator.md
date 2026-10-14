@@ -2,7 +2,7 @@
 title: "Zava Forward Retrofit Programme Workbench"
 description: "Product requirements for a role-based retrofit delivery workbench covering the Zava Forward workflow portfolio"
 author: AMA Research Team
-ms.date: "2026-10-13"
+ms.date: "2026-10-14"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "in-review"
@@ -607,7 +607,17 @@ Visits. Source `a76d281` corrects rendering; latest local image05/source
 restart checks with no provider attempt. Local SQLite persistence and disabled
 proposals do not satisfy the separate actual Azure/model acceptance gate.
 The owner then stopped migration and authorized a fresh synthetic database.
-The deletion operation was cancelled, so no reset/reseed is claimed and QA is
+The initial deletion operation was cancelled on 2026-10-13, so that segment
+did not reset/reseed. On 2026-10-14 the owner reauthorized the exact reset and
+all remaining delivery. Image05/revision `--0000012` now serves the regenerated
+980-case/11-bound-staff ledger baseline with 38 booked visits and enriched
+operating queues. Renewed process-local bounded operator QA invoked all five
+registered paths against real Azure OpenAI/SQL: five distinct citation-validated
+ready proposals, five attempts/6884 tokens, 15 ledger events and durable
+output/usage evidence after actual revision restart. Controlled-domain hashes
+are unchanged by generation. These are operator service/model/storage results,
+not human source verification or a real staff-authenticated browser/API
+acceptance session; semantic/accessibility/business gates remain open. QA is
 disabled. CON-009/AC-057 acceptance stays Blocked.
 
 The [coverage recipe](../reference/research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13)
@@ -615,8 +625,9 @@ now generates repeatable dated visits and nonempty operational queues from the
 existing stock/simulation. Six designated assessment visits supplement source
 bookings, with historical attended/no-access/cancelled contrasts kept separate.
 Pending/unverified Finance, grant, quality, handoff and request fixtures do not
-assert consent, technical release, human sign-off or payment. The prepared
-private dataset is not the live database, measured benefit or a new company fact.
+assert consent, technical release, human sign-off or payment. The generated
+private baseline is now seeded in the exercise database; it remains synthetic,
+not measured benefit or a new company fact.
 
 ### Form Extraction and Assisted Filling
 

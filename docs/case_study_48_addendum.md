@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-13
+ms.date: 2026-10-14
 ms.topic: reference
 ---
 
@@ -256,9 +256,17 @@ Image03 corrects fresh ledger creation and the
 [existing generator](./reference/research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13)
 now prepares dated visits and nonempty operating queues. The owner permits
 replacing the synthetic database, not inventing consent, technical acceptance,
-payment or housing outcomes. The deletion operation was cancelled, so the old
-database remains; prepared fixtures are not deployed evidence. Eleven private
-tenant bindings are retained separately from regenerated fictional records.
+payment or housing outcomes. The initial deletion was cancelled on 2026-10-13.
+On 2026-10-14 the owner explicitly reauthorized deletion/recreation and all
+remaining delivery. The enriched 980-case database is now seeded, with 38
+booked visits, restored ledger/serverless/backup/diagnostic settings and all
+11 tenant staff bindings; the prior exercise audit/recommendations were reset.
+Image05 now serves in revision `--0000012`. All five registered service paths
+returned distinct citation-validated ready proposals from actual Azure OpenAI,
+with five attempts/6884 tokens and persisted SQL evidence unchanged across
+an actual revision restart. Normal proactive/assistant authority remains off.
+This operator evidence is not a staff-authenticated user acceptance session,
+human source approval, semantic calibration or measured programme benefit.
 No new business requirement or customer fact follows, so the BRD remains
 unchanged. Product implications are in the
 [PRD review-learning disposition](./prds/zava-forward-retrofit-programme-demonstrator.md#review-learning-disposition);

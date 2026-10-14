@@ -229,3 +229,77 @@ Current task stays automatic/Implement/Blocked, session running, P03-T01
 unchecked and reviewnull. Exact reset plus effective finite model authority
 are the only immediate owner-cleared prerequisites to the already planned
 Azure reset/seed/rollout/model/independent-SQL/restart execution.
+
+## P03 Explicit Reauthorization on 2026-10-14
+
+Owner says "Authorize the delete and recreation" and then "Authorize all" in
+response to the exact remaining-delivery offer. This clears the earlier reset
+cancellation and renews finite QA:10calls/126000tokens/onehourfromactivation/
+proactiveoff/up-to-USD5target, not a billing guarantee. Capture fresh database
+settings and contained users/grants privately before deleting only retrofit;
+restore settings, private11tenant staff and enriched seed, deploy exact image05
+to the existing app, and prove actual registered provider/usage/independent
+SQL/restart. No tenant grant change, new estate or PR merge is authorized.
+
+### P03 Fresh Azure Ledger Reset and Image05 Serving
+
+Fresh private backup independently verified11tenant staff,2contained external
+users,5role memberships and2database grants; prepared seed matches all11
+current staff records exactly. Deleted only retrofit after explicit renewed
+authorization. CLI ledger flag initially rejected booleantrue after deletion;
+corrected to Enabled and successfully recreated GeneralPurposeGen5/serverless
+2vCore/min0.5/autopause60/32GB/localbackup/currentcollation,14dayretention/
+12hourdiffbackup. Restored captured diagnostic destination/categories.
+
+Private SQL operator restores contained users by original SID/type and the
+same role/grant memberships without Graph or tenant changes. Operator fixture
+runs as its host-file owner UID with capdrop/read-only to access0600backup;
+this does not change the runtime UID10001. Fresh seeding verified980cases/
+11staff/as-of2026-10-13/38visits and explicit append-only ledger assistant events.
+Old recommendations/audit are intentionally not asserted to survive reset.
+
+Published exact image05 manifest e0254cb3 to existing ACR and deployed existing
+app revision --0000012. Workload managed identity readiness finds no schema
+error,980cases,all11role bindings and real provider configured. Public healthz
+ok. Fresh show confirms unchanged identity/configuration/scaling, with only
+expected image delta and a concurrent auth-token rotation stamp; preserved
+that rotation instead of overwriting it with the older snapshot.
+
+Renewed QA runs in a bounded operator invocation of the registered deployed
+service, not an always-enabled background worker: settings are process-local,
+proactiveoff,10calls/126000tokens/onehourfromactivation. Normal serving app
+authority remains absent. No human review/acceptance is fabricated.
+
+### P03 Five Actual Provider Paths and Independent Restart Contents
+
+First oversized PTY command timed out without a result. Independent SQL
+reconciliation found0tasks/0attempts/0allowance, so no unknown charge was
+replayed. Multiline bounded transport resolves the framing issue; a later
+stale-replica PodrNotFound during read-only proof was fixed by selecting a
+currently Running replica. Neither event caused an inference retry.
+
+Renewed authority activated2026-10-14T06:41:03.394991Z, expiry07:41:03.394991Z,
+10calls/126000tokens/proactiveoff/active1/attempt1/timeout40/lease90.
+All five registered deployed service paths return ready citation-validated
+outputs from azure-openai/standard/gpt-4.1-mini-2025-04-14:
+stock1144tokens,assessment1370,funding1682,coordination1449,quality1239.
+Total6884tokens;5usedcalls;6884retained token liability;5attempts;
+15append-onlyledger events;1allowance. Five output hashes are distinct;
+verification/review remain null. No standing authority is added to serving app.
+
+Independent workload-identity SQL compares new baseline cases/staff/meta/
+recommendations/audit before/after model execution: unchanged controlled hashes,
+980cases/11staff,0recommendations/0audit count. Actual revision restart preserves
+those counts/hashes. A further independent direct-connection proof hashes
+all assistant-task/event/attempt/allowance table contents before/after a fresh
+restart: identical, including all output/model/usage/review state. Least-
+privilege workload sees only its own principal metadata; privileged operator
+confirms restored2users/5role memberships/2database grants, not missing users.
+
+Actual serving queues verify38booked visits/11in2026-10-12..18,12Finance/
+quality/grant/request records,1package/601orders,4offered handoffs,as-of2026-10-13.
+All five proposals remain ready/notstale/notverified/notreviewed. Normal
+authority disabled and proactive scan explicitlyoff. Public healthzok,
+restarted ready replicas and digest-uploadDisabled confirmed. Technical
+operator service/model/SQL proof is complete; actual staff-browser/API,
+human/accessibility/semantic/benefit remain separate follow-ups.

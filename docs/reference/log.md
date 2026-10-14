@@ -2076,6 +2076,32 @@ metadata when the knowledge base was created.
   MVP/operator guide and index. This is safe local evidence only: the Azure
   database remains intact, the reset cancellation is not bypassed, and expired
   QA authority is not renewed by a general autonomous-continuation instruction.
+
+## 2026-10-14 Authorized exercise SQL recreation and five real assistant paths
+
+* Owner explicitly reauthorized deletion/recreation and all offered remaining
+  delivery. Recreated only `retrofit` with ledger/serverless/backup settings
+  and diagnostics restored; restored original contained SQL users/grants and
+  all 11 private tenant staff bindings without tenant changes. The generated
+  baseline now serves 980 cases, 38 visits, 12 Finance/quality/grant/request
+  records, one package/601 source orders and four offered handoffs.
+* Published exact image05/source `cd14b3b`, manifest
+  `sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20`,
+  in existing API revision `--0000012`. Five registered deployed operator
+  paths returned distinct citation-validated ready proposals through real
+  Azure OpenAI `standard`/`gpt-4.1-mini-2025-04-14`: five attempts/6884 tokens,
+  15 append-only ledger events and one finite allowance.
+* Independent controlled-domain hashes and full assistant-table content
+  hashes/outputs/usage survived actual revision restart. Bounded authority
+  activated 06:41:03Z, expiry 07:41:03Z, limited to 10 calls/126000 tokens;
+  only five calls used. Normal serving authority remains absent/proactive off.
+  No human approval, staff-browser acceptance, semantic/value or production
+  acceptance is claimed; previous recommendations/audit were deliberately reset.
+* Updated PRD, ADR, addendum, operator/MVP guides, synthetic recipe/dictionary
+  and index. Transport timeouts were reconciled against zero durable attempts
+  before first model dispatch; transient stale-replica exec errors caused no
+  inference retry or allowance replenishment. Historical sources and Reviews
+  remain unchanged.
   The available four-arm MVE evidence is proposed, not verified benefit results.
 
 ## [2026-10-13] ingest | Agent process map and PowerPoint handoff
