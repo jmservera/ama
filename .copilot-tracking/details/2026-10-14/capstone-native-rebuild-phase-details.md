@@ -14,7 +14,7 @@ Research: .copilot-tracking/research/2026-10-14/capstone-native-rebuild-research
 | Phase | Direction | Status |
 | --- | --- | --- |
 | P01 | Requested specialist narrative and native editable rebuild | Complete |
-| P02 | Parent validation, publication and one Review | Independent checks passed; publication active |
+| P02 | Parent validation/publication and one wrapper Review | Complete; residual acceptance routed |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Native Presentation Rebuild
@@ -95,3 +95,14 @@ Original case/memory/regulatory snapshots remain unchanged. Record
 implementation evidence/markers, then one bounded Review compares current
 candidate/dispositions/asset evidence; later human/font/rehearsal work remains
 separate. Source CI for presentation-only changes is not product acceptance.
+
+P02-T01 publication complete:cd67e64/#68, exactcanonicalhash7b25fd7e;
+native preview, full authoring/validation assets, capstone handover and
+referenceindex/append-onlylog published. Addedlinks/frontmatter/logprefix/
+protectedsource checks pass. CurrentMVP-CI38537792502, Prototypevalidation
+38537792487 andMVPvalidation38537792533 pass; rubric38537792529 separate/
+inprogress at readinesscheck. No new runtime/cloud/model action.
+The wrapper's one Review is Complete with outcome Residual work:
+.copilot-tracking/reviews/logs/2026-10-14/capstone-native-rebuild-review.md.
+Native font/viewer, actual rehearsal/Q&A and Section D evidence remain
+distinct follow-ups. No source defect or new runtime/cloud/model action.

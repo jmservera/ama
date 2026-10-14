@@ -19,6 +19,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Owner-selected capstone-native-rebuild child completed its requested strategist/builder 22-slide native aligned presentation delivery on #68. Its one Review is Complete/Residual work and its automatic session awaits distinct native-font, rehearsal or Section D follow-up selection. This parent's real staff/human/semantic/value acceptance findings remain unchanged.",
+      "status": "selected-child-completed; distinct-acceptance-follow-ups-open",
+      "evidence": ".copilot-tracking/rpi-sessions/2026-10-14/capstone-native-rebuild-state.json; .copilot-tracking/reviews/logs/2026-10-14/capstone-native-rebuild-review.md"
+    },
+    {
       "decision": "Review/markers/reconciled current states published as f28e8f6 on existing open #68 and PR body verified. Post-Review ranked choice offered; owner unavailable, no selection inferred and no child work begun. Automatic session remains running at the waiting checkpoint; finite QA not renewed.",
       "status": "published; awaiting-owner-follow-up-selection",
       "evidence": "Remote #68 head f28e8f6ef1884c85b25abbf91999067273ddfca8; post-Review ask_user response: user not available, 2026-10-14."
@@ -76,8 +81,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Research",
-    "action": "Owner selects distinct capstone rebuild work on 2026-10-14: use communications strategist and PowerPoint builder, replace embedded process SVG with native aligned PowerPoint boxes. Start child capstone-native-rebuild without reopening this completed task or its human/semantic acceptance findings."
+    "phase": "Follow-up",
+    "action": "Owner-selected capstone-native-rebuild child is completed and awaiting its own follow-up selection. Retain this completed parent's separate real-staff/human/semantic acceptance findings; do not restart the child or either Review."
   },
   "prioritized_follow_ups": [
     {

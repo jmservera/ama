@@ -125,14 +125,21 @@ map13/variable-title15/proof12 at full resolution. Generic compact-layout
 warnings are classified, not represented as a clean heuristic pass.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Publish and review
+### [x] P02: Publish and review
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Parent visual/structural checks, canonical handover and publication
+#### [x] P02-T01: Parent visual/structural checks, canonical handover and publication
 
 Depends on P01-T02. Parent owns delivered PPTX, index/log and existing PR.
 Then execute one post-implementation Review and route real rehearsal/human
 acceptance separately; no repeat Review inside this task.
+
+Implementation publication complete ascd67e64 on existing open#68; current
+MVP/Prototypevalidation andMVP-CI38537792502 pass. Working/canonicalPPTX
+SHA2567b25fd7e equal; source/index/log/preview/175coherentartifactfiles
+published. Wrapper's one post-implementation Review is next, not an
+unexecuted implementation marker. Rubric scorer is separate/inprogress;
+no panel score or floor-pass claim.
 
 ## Dependencies and Locked Validation Ownership
 
@@ -165,8 +172,15 @@ evidence demo, plus1:45 question/contingency. This is not a timed rehearsal.
   separate acceptance; exports/planned timing cannot establish them.
 * Staff-authenticated and semantic/value product gates remain under the
   completed delivery task's RV-001/RV-002, not this deck implementation.
+* SectionD thought-leadership artifact/submission/dissemination: owner,
+  separate capstone work. Complete-guide assessment exposes absent evidence;
+  the rebuilt deck cannot supply a fictional submission or reach.
 
 ## Handoff
 
 Changes record: .copilot-tracking/changes/2026-10-14/capstone-native-rebuild-changes.md.
-Ready phase after compatible critique dispositions: P01-T02.
+P01/P02 implementation is complete and published. The task's single Review:
+.copilot-tracking/reviews/logs/2026-10-14/capstone-native-rebuild-review.md.
+Execution Complete; outcome Residual work. Automatic session remains running
+at Follow-up; native viewer inspection, actual rehearsal and Section D work
+require separate owner selection. No return to Implement or repeat Review.

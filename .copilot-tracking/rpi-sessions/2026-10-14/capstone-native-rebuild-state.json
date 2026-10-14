@@ -6,8 +6,8 @@
     "task_slug": "five-assistant-live-delivery"
   },
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-14/capstone-native-rebuild-research.md",
@@ -15,9 +15,19 @@
     "details": ".copilot-tracking/details/2026-10-14/capstone-native-rebuild-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-14/capstone-native-rebuild-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-14/capstone-native-rebuild-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-14/capstone-native-rebuild-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "One bounded post-implementation Review completed for full P01/P02 presentation scope. Execution Complete; outcome Residual work. Requested native aligned 22-slide delivery is checked and published; no new implementation defect established. RV-001 native PowerPoint/font inspection, RV-002 actual rehearsal/Q&A and RV-003 separate Section D evidence remain distinct follow-ups. No repeat Review or return to Implement.",
+      "status": "Review-executed; Complete; Residual work",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-14/capstone-native-rebuild-review.md"
+    },
+    {
+      "decision": "Published exact checked7b25fd7ePPTX/nativepreview/full22sources/validationassets/canonicalhandover ascd67e64 on existing open#68; parent verified remotehead/body, archived source/protected evidence, all implementationmarkers and current sourceCI/validation success. No paid/model/cloud operation. Ready for one bounded task Review.",
+      "status": "implementation-complete-and-published; Review-ready",
+      "evidence": ".copilot-tracking/changes/2026-10-14/capstone-native-rebuild-changes.md; publishedcd67e6412528fba4282092b7f9a6f26e2176fc48"
+    },
     {
       "decision": "Requested builder rebuilt22slides with native map43textboxes/12backgrounds/4connectors/1brandingpicture/0diagramimages,311TOP-fixedtextframes and56exactpeerrows. Parent independently inspected actual full-deck contact sheets and full-size12/13/15, checked saved notes/geometry/source claims, and copied exact7b25fd7ePPTX to canonical with current native preview/index/log. Humanfont/rehearsal/product gates unclaimed.",
       "status": "implemented; independent-local-asset-checks-passed; canonical-copy-matches",
@@ -46,8 +56,27 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Publish checked canonical deck/preview/source/index/log and new task artifacts to existing #68, reconcile P02 completion, then execute one bounded Review. Native PowerPoint/font fidelity and actual rehearsal remain separate."
+    "phase": "Follow-up",
+    "action": "Publish review/closeout receipts on existing #68, then await owner selection among ranked follow-ups, Stop automatic session or Switch to manual mode. Start no child without selection; inherited product acceptance remains separate."
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Inspect the rebuilt deck in native PowerPoint",
+      "rationale": "Smallest high-value acceptance step: verify intended viewer fonts and editable map/title/body fidelity before the pitch.",
+      "evidence": "Capstone Review RV-001; build-handover font limitation; saved/local-rendered alignment evidence."
+    },
+    {
+      "rank": 2,
+      "task": "Run an actual timed rehearsal with recovery and Q&A",
+      "rationale": "Prepared 13:15 main route plus 1:45 contingency does not establish real pacing, recovery or live-panel criteria.",
+      "evidence": "Capstone Review RV-002; strategist timing and full B/C criterion analysis."
+    },
+    {
+      "rank": 3,
+      "task": "Create the separate Section D thought-leadership artifact",
+      "rationale": "Required authored/submitted/disseminated evidence cannot be replaced by the deck; broader work than the two immediate pitch checks.",
+      "evidence": "Capstone Review RV-003; plan Follow-Up Items; complete-guide assessment."
+    }
+  ]
 }
