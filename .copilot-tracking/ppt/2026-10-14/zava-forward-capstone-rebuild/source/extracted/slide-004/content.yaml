@@ -1,0 +1,352 @@
+slide: 4
+title: REQUEST → DISCOVERY → CONSEQUENCE → BUILD INSTEAD
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: REQUEST → DISCOVERY → CONSEQUENCE → BUILD INSTEAD
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.25
+  text: Three requests. Three reasons to change.
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 1
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 3.75
+  height: 3.3
+  name: Rounded Rectangle 3
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: 'RANK HOMES
+
+    Weights are policy.
+
+    Guessing cannot defend
+
+    who waits.
+
+
+    BUILD
+
+    Approved policy;
+
+    versioned rules + sources'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: RANK HOMES
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Weights are policy.
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Guessing cannot defend
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: who waits.
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: ''
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: BUILD
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Approved policy;
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: versioned rules + sources
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 2
+- type: shape
+  shape: rounded_rectangle
+  left: 4.775
+  top: 2.85
+  width: 3.75
+  height: 3.3
+  name: Rounded Rectangle 4
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'SCHEDULE WORK
+
+    Real capacity AND
+
+    informed resident choice.
+
+    A slot is not consent.
+
+
+    BUILD
+
+    Capacity + choice records;
+
+    owned handoff'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: SCHEDULE WORK
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Real capacity AND
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: informed resident choice.
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: A slot is not consent.
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: ''
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: BUILD
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Capacity + choice records;
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: owned handoff
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#183A31'
+  alignment: left
+  z_order: 3
+- type: shape
+  shape: rounded_rectangle
+  left: 8.9
+  top: 2.85
+  width: 3.75
+  height: 3.3
+  name: Rounded Rectangle 5
+  corner_radius: 0.16667
+  fill: '#E5B96A'
+  text: 'DRAFT GRANTS
+
+    Accepted evidence first.
+
+    Award ≠ claim ≠ cash.
+
+    A form is not funding.
+
+
+    BUILD
+
+    Evidence pack;
+
+    ledger states + review'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: DRAFT GRANTS
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Accepted evidence first.
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Award ≠ claim ≠ cash.
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: A form is not funding.
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: ''
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: BUILD
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Evidence pack;
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: ledger states + review
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#183A31'
+  alignment: left
+  z_order: 4
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12.0
+  height: 0.28
+  text: 04 / ROLE-AGENT FINDINGS → PROPOSED RESPONSE / E03 / NOT VERIFIED COMPANY
+    BOTTLENECKS
+  name: TextBox 6
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  z_order: 5
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 6
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 7
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'Three examples make the scope change concrete.
+
+
+  You asked for ranking. The challenge found that ranking weights are investment policy,
+  and eligibility is a rules question. If a model guesses either, we cannot justify
+  who waits. Build an approved cohort policy, reproducible rules and field-level sources;
+  let AI reconcile or explain, not set priority.
+
+
+  You asked for scheduling. The challenge found that a viable appointment needs committed
+  competent capacity and informed resident choice. A calendar invitation supplies
+  neither. Build capacity and measure-choice records with a named liaison; AI may
+  suggest slots inside those boundaries.
+
+
+  You asked for grant drafts. The challenge found that claimable evidence and the
+  ledger come first. Application, award, claim and cash are different states. Build
+  accepted evidence and independent financial review; AI may assemble the sourced
+  draft.
+
+
+  These are hypotheses to validate, but each exposes a prerequisite the requested
+  capability cannot safely skip.
+
+
+  Evidence:
+
+  docs/reference/research/company/agent-request-challenge.md — Summary; Stock Prioritisation
+  Agent; Grant and Funding Agent; Contractor and Resident Coordination (2026-09-26).'

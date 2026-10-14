@@ -1,0 +1,338 @@
+slide: 14
+title: See cash before optimism.
+section: Main
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EXECUTIVE PROPOSAL
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: See cash before optimism.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026  •  S03 / S06 / S09  •  Sources + status in notes
+  left: 0.55
+  top: 7.12
+  width: 11.4
+  height: 0.2
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 14 / 22
+  left: 12.0
+  top: 7.1
+  width: 0.78
+  height: 0.23
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: fictional-label
+  text: FICTIONAL EXA-010/015  /  not a workbench price or award
+  left: 0.55
+  top: 1.93
+  width: 12.2
+  height: 0.35
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: gross-background
+  left: 0.55
+  top: 2.51
+  width: 12.23
+  height: 1.13
+  fill: '#173F35'
+  line_color: '#173F35'
+  line_width: 0
+- type: textbox
+  name: gross-title
+  text: BEFORE GRANT RECEIPT
+  left: 0.8
+  top: 2.72
+  width: 5.6
+  height: 0.4
+  font: Liberation Sans
+  font_size: 21
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: gross-value
+  text: £20,000 gross base cash
+  left: 6.57
+  top: 2.72
+  width: 5.96
+  height: 0.6
+  font: Liberation Sans
+  font_size: 29
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-1-background
+  left: 0.55
+  top: 3.98
+  width: 6.005
+  height: 1.95
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-1-title
+  text: IF RECEIVED
+  left: 0.73
+  top: 4.18
+  width: 5.645
+  height: 0.43
+  font: Liberation Sans
+  font_size: 21
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-1-body
+  text: '£7,500 fictional grant
+
+    → £12,500 provider base.'
+  left: 0.73
+  top: 4.779999999999999
+  width: 5.645
+  height: 0.9500000000000001
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-2-background
+  left: 6.7749999999999995
+  top: 3.98
+  width: 6.005
+  height: 1.95
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-2-title
+  text: IF CONTINGENCY SPENT
+  left: 6.954999999999999
+  top: 4.18
+  width: 5.645
+  height: 0.43
+  font: Liberation Sans
+  font_size: 21
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-2-body
+  text: '£22,000 gross exposure
+
+    £14,500 provider exposure.'
+  left: 6.954999999999999
+  top: 4.779999999999999
+  width: 5.645
+  height: 0.9500000000000001
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: boundary-background
+  left: 0.55
+  top: 6.23
+  width: 12.23
+  height: 0.6
+  fill: '#E5B96A'
+  line_color: '#E5B96A'
+  line_width: 0
+- type: textbox
+  name: boundary-text
+  text: Application ≠ award ≠ claim ≠ cash.
+  left: 0.73
+  top: 6.33
+  width: 11.87
+  height: 0.45999999999999996
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+speaker_notes: "SLIDE 14 — See cash before optimism.\nTopic sentinel: fictional cash\nMessage: an award\
+  \ or claim is not cash, and fictional economics are not a budget.\nStatus: strategist-recommended proposal;\
+  \ refreshed 14 October 2026.\n\n\"These are the selected home-cost fixtures, not a company budget,\n\
+  \  grant allocation, liquidity position or approved scheme calculation.\n  Before receipt the gross\
+  \ base cash exposure remains twenty thousand.\n  Whole-life technology, integration, training, review,\
+  \ assurance, financing,\n  support and exit cost need their own appraisal. Five calls and token limits\n\
+  \  do not establish a currency cap or cost per accepted home. The historical\n  exercise budget and\
+  \ scoped #58 override are not today's appropriation.\"\n* Transition: \"Affordability also depends on\
+  \ making transition usable.\"\n\nSources — workspace-relative paths, section and evidence status; as\
+  \ read 14 October 2026:\nS03: docs/reference/research/company/company-profile-research.md, Confirmed\
+  \ Company Information; Role and Decision Map; Priority Company Gaps; Evidence Limitations. Status: Owner-confirmed\
+  \ not-for-profit; modelled company/resident/finance attributes are not company facts or delegations.\n\
+  S06: docs/case_study_48_addendum.md, EXA-002/003/004/005/007/008/010/011/012/013/015; Numerical Targets\
+  \ and Attribution; Subsequent Application Exercise Builds. Status: Historical selected exercise assumptions;\
+  \ explicitly fictional costs/terms, not budgets, awards or current open authority.\nS09: infra/README.md,\
+  \ Five-assistant version: current handover. Status: Exact serving/source/model/SQL/restart receipt and\
+  \ authority-off state, 14 October; no fresh cloud inspection in this task.\n\nPlanned allocation: 50\
+  \ seconds; not rehearsed."

@@ -1,0 +1,32 @@
+{
+  "pass_claim_checks": true,
+  "checks": {
+    "cd14b3b379026a87ebfa3e9058ac10c0df7888eb": true,
+    "sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20": true,
+    "ca-forward-test-api--0000012": true,
+    "standard": true,
+    "gpt-4.1-mini-2025-04-14": true,
+    "6884": true,
+    "15 ledger": true,
+    "980": true,
+    "38": true,
+    "11": true,
+    "cabe05c": true,
+    "CON-009": true,
+    "AC-057": true,
+    "RV-001": true,
+    "RV-002": true,
+    "currency guarantee": true,
+    "reset": true,
+    "Decision 1": true,
+    "110": true,
+    "15s": true,
+    "recorded operator-service proof": true,
+    "no_stale_current_screen_claims": true,
+    "authority_absent_screen": true,
+    "proactive_off_screen": true,
+    "no_placeholders": true,
+    "planning_only_close": true
+  },
+  "boundary": "Content-presence/status regression against adopted oracle, not independent runtime or legal-currentness verification."
+}

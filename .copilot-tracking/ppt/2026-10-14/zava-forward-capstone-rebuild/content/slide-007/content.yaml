@@ -1,0 +1,436 @@
+slide: 7
+title: One home shows the journey we still need to prove.
+section: Main
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EXECUTIVE PROPOSAL
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: One home shows the journey we still need to prove.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026  •  S06 / S07  •  Sources + status in notes
+  left: 0.55
+  top: 7.12
+  width: 11.4
+  height: 0.2
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 07 / 22
+  left: 12.0
+  top: 7.1
+  width: 0.78
+  height: 0.23
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-1-background
+  left: 0.55
+  top: 2.02
+  width: 2.8925
+  height: 3.3
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-1-title
+  text: 1  Resolve
+  left: 0.73
+  top: 2.22
+  width: 2.5325
+  height: 0.63
+  font: Liberation Sans
+  font_size: 25
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-1-body
+  text: 'Conflicting evidence.
+
+    Named resolver.'
+  left: 0.73
+  top: 3.02
+  width: 2.5325
+  height: 2.1
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-2-background
+  left: 3.6625000000000005
+  top: 2.02
+  width: 2.8925
+  height: 3.3
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-2-title
+  text: 2  Agree
+  left: 3.8425000000000007
+  top: 2.22
+  width: 2.5325
+  height: 0.63
+  font: Liberation Sans
+  font_size: 25
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-2-body
+  text: 'Scope, resident choice,
+
+    funding, capacity.'
+  left: 3.8425000000000007
+  top: 3.02
+  width: 2.5325
+  height: 2.1
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-3-background
+  left: 6.775
+  top: 2.02
+  width: 2.8925
+  height: 3.3
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-3-title
+  text: 3  Deliver
+  left: 6.955
+  top: 2.22
+  width: 2.5325
+  height: 0.63
+  font: Liberation Sans
+  font_size: 25
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-3-body
+  text: 'Inspect work.
+
+    Return defects.'
+  left: 6.955
+  top: 3.02
+  width: 2.5325
+  height: 2.1
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-4-background
+  left: 9.887500000000001
+  top: 2.02
+  width: 2.8925
+  height: 3.3
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-4-title
+  text: 4  Accept
+  left: 10.0675
+  top: 2.22
+  width: 2.5325
+  height: 0.63
+  font: Liberation Sans
+  font_size: 25
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-4-body
+  text: 'Resident handover.
+
+    Finance closes separately.'
+  left: 10.0675
+  top: 3.02
+  width: 2.5325
+  height: 2.1
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: connector
+  name: journey-arrow-1
+  connector_type: straight
+  begin_x: 3.4625
+  begin_y: 3.1
+  end_x: 3.6425
+  end_y: 3.1
+  line_color: '#446056'
+  line_width: 1.8
+  head_end: none
+  tail_end: triangle
+- type: connector
+  name: journey-arrow-2
+  connector_type: straight
+  begin_x: 6.574999999999999
+  begin_y: 3.1
+  end_x: 6.755
+  end_y: 3.1
+  line_color: '#446056'
+  line_width: 1.8
+  head_end: none
+  tail_end: triangle
+- type: connector
+  name: journey-arrow-3
+  connector_type: straight
+  begin_x: 9.6875
+  begin_y: 3.1
+  end_x: 9.8675
+  end_y: 3.1
+  line_color: '#446056'
+  line_width: 1.8
+  head_end: none
+  tail_end: triangle
+- type: shape
+  shape: rounded_rectangle
+  name: journey-hold-return-background
+  left: 0.55
+  top: 5.51
+  width: 12.23
+  height: 0.43
+  fill: '#E5B96A'
+  line_color: '#E5B96A'
+  line_width: 0
+- type: textbox
+  name: journey-hold-return
+  text: Hold / return → named, competent human owner
+  left: 0.73
+  top: 5.58
+  width: 11.87
+  height: 0.31
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: boundary-background
+  left: 0.55
+  top: 6.1
+  width: 12.23
+  height: 0.7
+  fill: '#E5B96A'
+  line_color: '#E5B96A'
+  line_width: 0
+- type: textbox
+  name: boundary-text
+  text: Illustrative exercise journey — not an executed end-to-end customer outcome.
+  left: 0.73
+  top: 6.199999999999999
+  width: 11.87
+  height: 0.5599999999999999
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+speaker_notes: "SLIDE 07 — One home shows the journey we still need to prove.\nTopic sentinel: connected\
+  \ journey\nMessage: the connected target is broader than the observed service proof.\nStatus: strategist-recommended\
+  \ proposal; refreshed 14 October 2026.\n\n\"Imagine one home with conflicting EPC sources. The dependent\n\
+  \  decision waits for a named resolver. Competent assessment and design,\n  resident measure choice,\
+  \ funding and capacity precede work release.\n  Returned evidence may reveal a defect: an independent\
+  \ authority sends it\n  back, then accepts corrected work. Resident handover and financial closure\n\
+  \  are separate. This is the required connected story, not proof those steps\n  have all run. The current\
+  \ technical receipt later proves proposal generation\n  and durability, not physical delivery or this\
+  \ whole workflow.\"\n* Transition: \"The resident and crew make that journey possible.\"\n\nSources\
+  \ — workspace-relative paths, section and evidence status; as read 14 October 2026:\nS06: docs/case_study_48_addendum.md,\
+  \ EXA-002/003/004/005/007/008/010/011/012/013/015; Numerical Targets and Attribution; Subsequent Application\
+  \ Exercise Builds. Status: Historical selected exercise assumptions; explicitly fictional costs/terms,\
+  \ not budgets, awards or current open authority.\nS07: docs/prds/zava-forward-retrofit-programme-demonstrator.md,\
+  \ v0.14 front matter; component contracts; threat model; Five Reactive and Proactive Assistants; orchestration;\
+  \ evaluation; current handoff. Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and\
+  \ amended owner acceptance open; CON-009/AC-057 full acceptance not passed.\n\nPlanned allocation: 65\
+  \ seconds; not rehearsed."

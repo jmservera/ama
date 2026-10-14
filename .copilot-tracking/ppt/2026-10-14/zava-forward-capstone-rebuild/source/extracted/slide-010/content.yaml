@@ -1,0 +1,337 @@
+slide: 10
+title: SYSTEM CONTEXT / PROPOSED, NOT DEPLOYED
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: SYSTEM CONTEXT / PROPOSED, NOT DEPLOYED
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.25
+  text: One workbench beside the systems you keep
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 1
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 3.1
+  height: 3.1
+  name: Rounded Rectangle 3
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'EXISTING SOURCES
+
+    Excel + stock
+
+    Housing + assets
+
+    Surveys + evidence
+
+    Funding rules
+
+
+    Validated intake'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: EXISTING SOURCES
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Excel + stock
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Housing + assets
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Surveys + evidence
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Funding rules
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: ''
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Validated intake
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#183A31'
+  alignment: left
+  z_order: 2
+- type: shape
+  shape: chevron
+  left: 4.05
+  top: 4.15
+  width: 0.4
+  height: 0.5
+  name: Chevron 4
+  corner_radius: 0.5
+  fill: '#E5B96A'
+  z_order: 3
+- type: shape
+  shape: rounded_rectangle
+  left: 4.75
+  top: 2.85
+  width: 3.8
+  height: 3.1
+  name: Rounded Rectangle 5
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: 'ZAVA FORWARD
+
+    One linked case
+
+    Role queues + next action
+
+    Owner + blocker
+
+    Evidence + trace
+
+    Bounded assistance'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: ZAVA FORWARD
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: One linked case
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Role queues + next action
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Owner + blocker
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Evidence + trace
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Bounded assistance
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 4
+- type: shape
+  shape: chevron
+  left: 8.85
+  top: 4.15
+  width: 0.4
+  height: 0.5
+  name: Chevron 6
+  corner_radius: 0.5
+  fill: '#E5B96A'
+  z_order: 5
+- type: shape
+  shape: rounded_rectangle
+  left: 9.55
+  top: 2.85
+  width: 3.1
+  height: 3.1
+  name: Rounded Rectangle 7
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'PEOPLE + CHANNELS
+
+    Staff role views
+
+    Resident contact
+
+    Contractor exchange
+
+    Excel reports
+
+
+    Controlled access'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: PEOPLE + CHANNELS
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Staff role views
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Resident contact
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Contractor exchange
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Excel reports
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: ''
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Controlled access
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#183A31'
+  alignment: left
+  z_order: 6
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12.0
+  height: 0.28
+  text: 10 / TARGET LANDSCAPE / E06/E08/E09 / SOURCES FEED THE WORKBENCH; NO BLANKET
+    REPLACEMENT
+  name: TextBox 8
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  z_order: 7
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 8
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 9
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'Here is the product in its context. Existing workbooks, housing and
+  stock records, surveys and funding rules feed the workbench through validated intake.
+  The arrow runs from sources into the shared case—not backwards.
+
+
+  Staff use role queues over that case. Residents receive supported contact, contractors
+  exchange scoped work and evidence through approved channels, and Excel receives
+  reporting views. Neither residents nor contractors need open access to the internal
+  tool.
+
+
+  We keep useful systems and clarify which source owns each fact. Conflicting identifiers
+  are quarantined, not silently merged. This is a proposed landscape, not a deployed
+  topology or an all-systems migration.
+
+
+  Evidence:
+
+  docs/case_study_48_addendum.md — EXA-003/004/005 (2026-10-10 exercise assumptions).
+
+  docs/prds/zava-forward-retrofit-programme-demonstrator.md — Executive Summary (v0.13
+  candidate).
+
+  docs/adrs/0001-azure-architecture.md — Hybrid M365 and Excel transition; Decisions
+  (2026-10-11 proposed).'

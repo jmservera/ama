@@ -1,0 +1,53 @@
+{
+  "task_id": "capstone-native-rebuild-2026-10-14",
+  "task_slug": "capstone-native-rebuild",
+  "parent_task": {
+    "task_id": "five-assistant-live-delivery-2026-10-13",
+    "task_slug": "five-assistant-live-delivery"
+  },
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-14/capstone-native-rebuild-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-14/capstone-native-rebuild-plan.md",
+    "details": ".copilot-tracking/details/2026-10-14/capstone-native-rebuild-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-14/capstone-native-rebuild-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-14/capstone-native-rebuild-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Requested builder rebuilt22slides with native map43textboxes/12backgrounds/4connectors/1brandingpicture/0diagramimages,311TOP-fixedtextframes and56exactpeerrows. Parent independently inspected actual full-deck contact sheets and full-size12/13/15, checked saved notes/geometry/source claims, and copied exact7b25fd7ePPTX to canonical with current native preview/index/log. Humanfont/rehearsal/product gates unclaimed.",
+      "status": "implemented; independent-local-asset-checks-passed; canonical-copy-matches",
+      "evidence": ".copilot-tracking/ppt/2026-10-14/zava-forward-capstone-rebuild/build-handover.md; .copilot-tracking/changes/2026-10-14/capstone-native-rebuild-changes.md"
+    },
+    {
+      "decision": "Requested strategist contributed all22slide narrative/notes/timing and complete20criterion/floor analysis in one final-candidate critique. ExecutionComplete/verdictRevise; PC-001 exact claim oracle, PC-002 recorded/public demo and PC-003 relationship-resolved notes checks directly incorporated. Planned13:15main+1:45discussion/contingency; no rehearsal/acceptance claim. Plan Ready; no second critique.",
+      "status": "critique-executed; Revise; PC-001/002/003-applied; Plan-Ready",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-14/capstone-native-rebuild-plan-critique.md; .copilot-tracking/plans/2026-10-14/capstone-native-rebuild-plan.md"
+    },
+    {
+      "decision": "Research reused current22slidecanonical deck, SVG, delivery review, source handover, guide and pipeline; Planning Readiness Ready. No demonstrated external/cloud research gap.",
+      "status": "Research-reused; Ready",
+      "evidence": ".copilot-tracking/research/2026-10-14/capstone-native-rebuild-research.md"
+    },
+    {
+      "decision": "Owner selects capstone rebuild, expressly requesting ama-presentation-communications-strategist and PowerPoint builder help, native editable replacement of agents-in-retrofit-process.svg, and top-aligned titles/text across peer boxes.",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-10-14; continuing running automatic session."
+    },
+    {
+      "decision": "Reuse open #68 and its existing worktree; tracked files clean at intake. Preserve all pre-existing untracked presentation/private files. Concurrent cabe05c is rubric-only and was fast-forwarded normally.",
+      "status": "verified",
+      "evidence": "Read-only branch/status/PR/diff inspection followed by safe fast-forward."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Publish checked canonical deck/preview/source/index/log and new task artifacts to existing #68, reconcile P02 completion, then execute one bounded Review. Native PowerPoint/font fidelity and actual rehearsal remain separate."
+  },
+  "prioritized_follow_ups": []
+}

@@ -2,7 +2,7 @@
 title: Capstone Deliverables and Storage Map
 description: Where every capstone asset must be stored so the rubric gate can find and score it, and what scores 0 until it exists
 author: AMA programme
-ms.date: 2026-10-13
+ms.date: 2026-10-14
 ms.topic: reference
 ---
 
@@ -44,28 +44,51 @@ Do not treat a saved-scorecard replay as a fresh score for the revised deck.
 
 ## Agents in the Retrofit Process (2026-10-13)
 
-The PowerPoint Builder added the map as slide 13 of the
-[22-slide council proposal](./deck/zava-forward-executive-draft.pptx), after the
-AI-authority boundary and before the CFO example. All 21 original slides,
-notes, masters, layouts and images are retained; moved page counters are
-renumbered. The new slide includes an alternative description, a full text
-equivalent, source references and a suggested 45-60-second talk track in notes.
+### Native PowerPoint Rebuild (2026-10-14)
 
-The published copy passed notes/count checks, new-slide geometry checks and
-original-content preservation comparisons; fresh slides 12-14 were inspected
-from a LibreOffice export. PowerPoint/Aptos font fidelity, model-SDK vision
-validation, human acceptance and timed rehearsal are not claimed as passed.
-The historical 2026-10-11 working content is the earlier 21-slide version;
-use the current canonical deck as the source for partial rebuilds with the
-[new slide content](../../.copilot-tracking/ppt/2026-10-13/zava-forward-agent-process/content/slide-013/content.yaml).
-The [partial-build helper](../../.copilot-tracking/ppt/2026-10-13/zava-forward-agent-process/build_agent_slide.py)
-also embeds the YAML image description, which the shared builder alone ignores.
+The requested Presentation Communications Strategist and PowerPoint Builder
+refreshed the complete
+[22-slide council proposal](./deck/zava-forward-executive-draft.pptx).
+Slide 13 now uses editable PowerPoint boxes, text and directional connectors,
+not an embedded SVG or PNG. It retains all five capability stages, human
+owners, on-request help, OFF-labelled proactive triggers, workflow controls
+and the hazard/funding boundaries. Its notes contain the full text equivalent,
+source references and a proposed 60-second explanation.
 
-![Five bounded assists across choosing homes, assessment/design, funding, works coordination and quality/handover, with on-request help, proactive review triggers and separate human owners.](./deck/agents-in-retrofit-process.png)
+Titles have fixed, top-aligned regions and corresponding body text starts
+at a common height across peer cards, including different title lengths.
+The checked deck has 311 explicit TOP-anchored, fixed-size text frames and
+56 exactly aligned peer rows. The map has 43 native textboxes, 12 backgrounds,
+four connectors and one identified branding image; no process-diagram image.
 
-The [vector process map](./deck/agents-in-retrofit-process.svg) illustrates the
-proposed design, not five autonomous managers or a claim that every capability
-is deployed. The workflow owns progression and accountable people retain
+The revised story distinguishes five observed real operator-service model
+paths and SQL-content/restart proof from unexecuted staff/human, semantic and
+value acceptance. Ordinary assistant authority remains absent and proactive
+scans remain off after bounded QA. The planned 18-slide main route is 13:15,
+including a recorded public-evidence walkthrough; discussion/contingency
+brings the plan to 15 minutes. Four appendices are optional. This is not an
+observed rehearsal or a new live model demonstration.
+
+All 22 slides have relationship-correct, source-linked notes. Fresh whole-deck
+LibreOffice exports and independent saved-shape/notes checks were inspected,
+including the native map and variable-length title cards. Generic compact
+spacing/edge-band warnings remain explicitly classified, not claimed as a
+clean heuristic pass. Liberation Sans is explicit because Aptos is unavailable
+locally; native PowerPoint/font fidelity, SDK vision validation, human
+acceptance and timed rehearsal are not claimed as passed.
+
+The [complete working sources and handover](../../.copilot-tracking/ppt/2026-10-14/zava-forward-capstone-rebuild/build-handover.md)
+include all 22 slide YAML files, style, build commands and validation assets.
+The delivered PPTX is byte-identical to the checked working copy. The
+2026-10-11 21-slide sources and 2026-10-13 image-insertion sources are historical;
+do not use them as the current full-deck build.
+
+![Preview of native editable slide 13: five aligned capability cards, human decision owners, on-request help, OFF-labelled triggers and deterministic workflow boundaries. Edit the boxes in the linked PowerPoint, not this preview image.](./deck/agents-in-retrofit-process-native.png)
+
+The standalone [vector process map](./deck/agents-in-retrofit-process.svg)
+and [original PNG](./deck/agents-in-retrofit-process.png) remain reference
+illustrations of the proposed design, not the current editable slide or five
+autonomous managers. The workflow owns progression and accountable people retain
 policy, resident choice, technical acceptance, work release, grant submission,
 quality acceptance and payment. Funding spans preparation through later
 claim/cash reconciliation; an award is not a receipt, and reviewed funding,
@@ -90,8 +113,9 @@ preserves controlled state and an owned manual route.
 
 All improvement claims are hypotheses. Paired comparison with the same
 rules/manual workflow counts preparation, review, correction and shifted
-burden alongside critical errors, latency, cost and uncertainty. Narrow live
-model integration, fixture tests and diagram arrows do not prove all workflow
+burden alongside critical errors, latency, cost and uncertainty. The observed
+five operator-service model paths, fixture tests and diagram arrows do not
+prove all workflow
 capabilities, proactive deployment, calibrated quality or measured benefit.
 The [draft closure review](../reference/research/gap-analysis-next-build.md#draft-experiment-closure-review-2026-10-13)
 keeps absent #58 capabilities and current-infrastructure verification explicit.

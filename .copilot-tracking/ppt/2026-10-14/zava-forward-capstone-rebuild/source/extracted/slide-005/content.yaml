@@ -1,0 +1,229 @@
+slide: 5
+title: THE MINIMUM SHARED FOUNDATION FOR FIVE CAPABILITIES
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: THE MINIMUM SHARED FOUNDATION FOR FIVE CAPABILITIES
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#F7F2E7'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.3
+  text: 'Change the handoffs.
+
+    Not the whole company.'
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  paragraphs:
+  - text: Change the handoffs.
+    font: Aptos Display
+    font_size: 38
+    font_color: '#F7F2E7'
+    font_bold: true
+  - text: Not the whole company.
+    font: Aptos Display
+    font_size: 38
+    font_color: '#F7F2E7'
+    font_bold: true
+  font: Aptos Display
+  font_size: 38
+  font_color: '#F7F2E7'
+  font_bold: true
+  z_order: 1
+- type: textbox
+  left: 0.65
+  top: 2.85
+  width: 12.0
+  height: 1.0
+  text: 'Make work visible, measurable and explainable.
+
+    Then assistance can help safely.'
+  name: TextBox 3
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  paragraphs:
+  - text: Make work visible, measurable and explainable.
+    font: Aptos
+    font_size: 30
+    font_color: '#F7F2E7'
+  - text: Then assistance can help safely.
+    font: Aptos
+    font_size: 30
+    font_color: '#F7F2E7'
+  font: Aptos
+  font_size: 30
+  font_color: '#F7F2E7'
+  z_order: 2
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 4.25
+  width: 5.825
+  height: 1.7
+  name: Rounded Rectangle 4
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'ADD
+
+    One shared case, owned transitions,
+
+    evidence and bounded assistance'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: ADD
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: One shared case, owned transitions,
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: evidence and bounded assistance
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 22
+  text_color: '#183A31'
+  alignment: left
+  z_order: 3
+- type: shape
+  shape: rounded_rectangle
+  left: 6.825
+  top: 4.25
+  width: 5.825
+  height: 1.7
+  name: Rounded Rectangle 5
+  corner_radius: 0.16667
+  fill: '#E5B96A'
+  text: 'KEEP
+
+    Existing teams and suppliers;
+
+    source systems and Excel reporting'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: KEEP
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Existing teams and suppliers;
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: source systems and Excel reporting
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 22
+  text_color: '#183A31'
+  alignment: left
+  z_order: 4
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12.0
+  height: 0.28
+  text: 05 / PROPOSED MODERNISATION / E03/E05/E08 / NO HEADCOUNT REDESIGN OR ALL-SYSTEMS
+    MIGRATION
+  name: TextBox 6
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#F7F2E7'
+  z_order: 5
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 6
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 7
+layout: Blank
+background:
+  fill: '#173F35'
+speaker_notes: 'This is the bold proposal: do not put faster agents on top of invisible
+  work. Make work visible, measurable and explainable so assistance can help safely.
+
+
+  The expansion is explicit. Alongside the five capabilities, we propose a shared
+  case, owned transitions and evidence. Those are repeated prerequisites, not a cloud-fashion
+  detour. Without them, five assistants can produce five incompatible accounts of
+  the same home.
+
+
+  This is modernisation of existing work, not a replacement operating model, headcount
+  redesign or all-systems migration. Keep the teams, suppliers and useful source systems.
+  Keep Excel for reporting. Start with one connected home.
+
+
+  Technology alone creates no crew capacity, consent, money or technical acceptance.
+
+
+  Evidence:
+
+  docs/reference/research/company/agent-request-challenge.md — Summary (2026-09-26).
+
+  docs/reference/research/company/pilot-measurement-challenge.md — Owner Decision,
+  2026-09-26.
+
+  docs/prds/zava-forward-retrofit-programme-demonstrator.md — Executive Summary; CON-009/AC-057
+  (v0.13.0 candidate, 2026-10-11).'

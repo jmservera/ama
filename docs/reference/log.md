@@ -2238,3 +2238,27 @@ metadata when the knowledge base was created.
   are prepared. Image03 is local-only, not a serving digest. Updated PRD/ADR,
   addendum, operator guide, synthetic dictionary and index; earlier receipts,
   original case, owner memory and regulatory snapshots remain unchanged.
+
+  ## [2026-10-14] query | Capstone narrative refresh and native PowerPoint process map
+
+  * Owner requested the Presentation Communications Strategist and PowerPoint
+    Builder. Rebuilt all 22 executive slides with current bounded technical
+    evidence, customer-first decisions, source-linked notes and planned timing.
+    Five real operator-service paths/SQL-content/restart proof remain distinct
+    from open staff/human/accessibility/semantic/value acceptance.
+  * [Native slide 13](../capstone/deck/zava-forward-executive-draft.pptx)
+    replaces its embedded process-map image with editable textboxes, backgrounds
+    and connectors. Peer titles use fixed TOP-anchored regions and common body
+    starts across the deck, including two/three-line title contrasts.
+  * Updated [capstone handover](../capstone/README.md#native-powerpoint-rebuild-2026-10-14),
+    [knowledge-base index](./README.md) and
+    [preview](../capstone/deck/agents-in-retrofit-process-native.png).
+    Original standalone SVG/PNG remain reference illustrations; dated working
+    YAML/style/generated assets and specialist handover are preserved.
+  * Fresh full-deck exports, saved shape/notes/source checks and parent image
+    inspection support the published copy. Compact-spacing/edge-band warnings
+    are explicitly classified, not presented as a clean generic-geometry pass.
+    Native PowerPoint/font fidelity, SDK vision, real rehearsal/pitch, full
+    rubric floors and product/production approval are not claimed.
+  * No new legal claim, private identity, cloud/auth/model action or spending
+    authority. Original case, owner memory and regulatory snapshots unchanged.

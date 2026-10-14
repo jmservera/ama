@@ -1,0 +1,1218 @@
+{
+  "source": "geometry-validation",
+  "slide_count": 22,
+  "slides": [
+    {
+      "slide_number": 1,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S01 / S02 / S03 / S09 / \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"01 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'opening-evidence (\"Real service proof now. Human and value \")' and 'boundary-background' is 0.08\" (minimum 0.3\")",
+          "location": "opening-evidence\u2192boundary-background"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 2,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S01 / S02  \u2022  Sources + \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"02 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Five pressure points. One accepted home.\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-5-title (\"Verify & hand over\")' to 'peer-1-body (\"Prioritisation\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-5-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 3,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S04  \u2022  Sources + \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"03 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Each request needs rules, people and bou\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-3-title (\"Bounded AI\")' to 'peer-1-body (\"Gates, clocks, eligibility, versions.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-3-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 4,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S04  \u2022  Sources + \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"04 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Fix the prerequisite before adding the a\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-3-title (\"Draft funding\")' to 'peer-1-body (\"Approved policy + sourced facts.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-3-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 5,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S07 / S12  \u2022  Sour\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"05 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Change the handoffs, not the whole compa\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-2-title (\"ADD\")' to 'peer-1-body (\"Teams, suppliers, useful systems.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-2-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 6,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S05 / S06 / S07  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"06 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Every handoff needs an owner and a next \")' and 'row-1-peer-1-background' is 0.24\" (minimum 0.3\")",
+          "location": "slide-title\u2192row-1-peer-1-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'row-1-peer-3-title (\"Entry, exit, pause\")' to 'row-1-peer-1-body (\"Sender chases until accepted.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "row-1-peer-3-title\u2192row-1-peer-1-body"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'row-2-peer-3-title (\"Decision + reason\")' to 'row-2-peer-1-body (\"Named action and update owner.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "row-2-peer-3-title\u2192row-2-peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 7,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S06 / S07  \u2022  Sources + \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"07 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"One home shows the journey we still need\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'journey-hold-return (\"Hold / return \u2192 named, competent human o\")' and 'boundary-background' is 0.21\" (minimum 0.3\")",
+          "location": "journey-hold-return\u2192boundary-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-4-title (\"4  Accept\")' to 'peer-1-body (\"Conflicting evidence. Named resolver.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-4-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 8,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S06 / S07 / S10  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"08 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"A resident is not a scheduling variable.\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'boundary-text (\"Preferences \u2260 consent. Silence/no-access\")' and 'human-hazard-route (\"Human hazard route \u2014 never wait for AI.\")' is 0.17\" (minimum 0.3\")",
+          "location": "boundary-text\u2192human-hazard-route"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'human-hazard-route (\"Human hazard route \u2014 never wait for AI.\")' and 'page-counter (\"08 / 22\")' is 0.09\" (minimum 0.3\")",
+          "location": "human-hazard-route\u2192page-counter"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-2-title (\"Delivery\")' to 'peer-1-body (\"Clear options. Safe phone, letter or ass\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-2-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 9,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S07 / S11  \u2022  Sour\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"09 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Show the decision trace, not just an AI \")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-3-title (\"Change\")' to 'peer-1-body (\"Source + evidence version + unknowns.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-3-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 10,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S07 / S11 / S12  \u2022  Sour\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"10 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"One workbench beside the systems you kee\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-3-title (\"People + channels\")' to 'peer-1-body (\"Housing / repairs Documents / spreadshee\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-3-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 11,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S07 / S08 / S10 / S11  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"11 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Let models propose; keep decisions on th\")' and 'proposal-lane-label (\"PROPOSAL PATH  /  observed operator inte\")' is 0.16\" (minimum 0.3\")",
+          "location": "slide-title\u2192proposal-lane-label"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'proposal-lane-label (\"PROPOSAL PATH  /  observed operator inte\")' and 'proposal-peer-1-background' is 0.15\" (minimum 0.3\")",
+          "location": "proposal-lane-label\u2192proposal-peer-1-background"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'domain-lane-label (\"SEPARATE CONTROLLED PATH  /  authority r\")' and 'domain-peer-1-background' is 0.14\" (minimum 0.3\")",
+          "location": "domain-lane-label\u2192domain-peer-1-background"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'boundary-text (\"Model cannot approve, send, book, pay or\")' and 'page-counter (\"11 / 22\")' is 0.24\" (minimum 0.3\")",
+          "location": "boundary-text\u2192page-counter"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'slide-title (\"Let models propose; keep decisions on th\")' to 'proposal-lane-label (\"PROPOSAL PATH  /  observed operator inte\")' clearance is 0.16\" (recommended 0.2\")",
+          "location": "slide-title\u2192proposal-lane-label"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'proposal-peer-3-title (\"Human review\")' to 'proposal-peer-1-body (\"Permitted task.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "proposal-peer-3-title\u2192proposal-peer-1-body"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'domain-peer-3-title (\"SQL + audit\")' to 'domain-peer-1-body (\"Effective authority.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "domain-peer-3-title\u2192domain-peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 12,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S08 / S09 / S10 / S11  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"12 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Five real proposal paths. No delegated d\")' and 'peer-1-background' is 0.20\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'proof-provenance (\"Recorded operator-service proof \u00b7 14 Oct\")' and 'proof-synthetic-context (\"Synthetic baseline: 980 cases / 38 visit\")' is 0.08\" (minimum 0.3\")",
+          "location": "proof-provenance\u2192proof-synthetic-context"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'proof-synthetic-context (\"Synthetic baseline: 980 cases / 38 visit\")' and 'page-counter (\"12 / 22\")' is 0.13\" (minimum 0.3\")",
+          "location": "proof-synthetic-context\u2192page-counter"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-2-title (\"STILL TO PROVE\")' to 'peer-1-body (\"5 distinct ready proposals 5 real calls \")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-2-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 13,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S07 / S09 / S11 / \")' bottom edge (7.42\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"13 / 22\")' bottom edge (7.43\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'map-hazard-boundary (\"Hazard \u2192 human service now, never wait f\")' bottom edge (7.13\") > slide height - margin (7.00\")",
+          "location": "map-hazard-boundary"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' and 'slide-title (\"Five assists. One controlled journey.\")' is 0.15\" (minimum 0.3\")",
+          "location": "deck-eyebrow\u2192slide-title"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Five assists. One controlled journey.\")' and 'map-status (\"Workflow controls progression. People re\")' is 0.04\" (minimum 0.3\")",
+          "location": "slide-title\u2192map-status"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'map-status (\"Workflow controls progression. People re\")' and 'map-peer-1-stage-background' is 0.14\" (minimum 0.3\")",
+          "location": "map-status\u2192map-peer-1-stage-background"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'map-peer-5-proactive-body (\"Missing/conflicting quality evidence\")' and 'map-core-background' is 0.21\" (minimum 0.3\")",
+          "location": "map-peer-5-proactive-body\u2192map-core-background"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'map-core (\"Workflow core: rights \u2022 versions \u2022 gates\")' and 'map-funding-boundary (\"Checks OFF now; future eligibility \u2192 nam\")' is 0.15\" (minimum 0.3\")",
+          "location": "map-core\u2192map-funding-boundary"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'map-funding-boundary (\"Checks OFF now; future eligibility \u2192 nam\")' and 'map-hazard-boundary (\"Hazard \u2192 human service now, never wait f\")' is 0.04\" (minimum 0.3\")",
+          "location": "map-funding-boundary\u2192map-hazard-boundary"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'map-hazard-boundary (\"Hazard \u2192 human service now, never wait f\")' and 'page-counter (\"13 / 22\")' is 0.10\" (minimum 0.3\")",
+          "location": "map-hazard-boundary\u2192page-counter"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'slide-title (\"Five assists. One controlled journey.\")' to 'map-status (\"Workflow controls progression. People re\")' clearance is 0.04\" (recommended 0.2\")",
+          "location": "slide-title\u2192map-status"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'map-peer-5-title (\"Quality Evidence Review\")' to 'map-peer-1-request-label (\"On request\")' clearance is 0.07\" (recommended 0.2\")",
+          "location": "map-peer-5-title\u2192map-peer-1-request-label"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 14,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S03 / S06 / S09  \u2022  Sour\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"14 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"See cash before optimism.\")' and 'fictional-label (\"FICTIONAL EXA-010/015  /  not a workbenc\")' is 0.16\" (minimum 0.3\")",
+          "location": "slide-title\u2192fictional-label"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'fictional-label (\"FICTIONAL EXA-010/015  /  not a workbenc\")' and 'gross-background' is 0.23\" (minimum 0.3\")",
+          "location": "fictional-label\u2192gross-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'slide-title (\"See cash before optimism.\")' to 'fictional-label (\"FICTIONAL EXA-010/015  /  not a workbenc\")' clearance is 0.16\" (recommended 0.2\")",
+          "location": "slide-title\u2192fictional-label"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-2-title (\"IF CONTINGENCY SPENT\")' to 'peer-1-body (\"\u00a37,500 fictional grant \u2192 \u00a312,500 provide\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-2-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 15,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S06 / S07 / S10 / S12  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"15 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Make the first change small enough to le\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-4-title (\"Controlled switch and rollback\")' to 'peer-1-body (\"Programme + workbook owners.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-4-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 16,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S05 / S07 / S10  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"16 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Prove the programme. Test the AI separat\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-2-title (\"Paired task comparison\")' to 'peer-1-body (\"Matched existing teams. Frozen cohort; s\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-2-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 17,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S07 / S09 / S10 / S11  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"17 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Earn the next gate; do not repeat the la\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-4-title (\"4  Decide\")' to 'peer-1-body (\"Requirements, owners, authority.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-4-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 18,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S03 / S07 / S10  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"18 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'closing-boundary (\"No new procurement, spending, rollout or\")' bottom edge (7.07\") > slide height - margin (7.00\")",
+          "location": "closing-boundary"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Endorse the next evidence proposal.\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'boundary-text (\"Agree the return date and stop tests.\")' and 'closing-boundary (\"No new procurement, spending, rollout or\")' is 0.04\" (minimum 0.3\")",
+          "location": "boundary-text\u2192closing-boundary"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'closing-boundary (\"No new procurement, spending, rollout or\")' and 'page-counter (\"18 / 22\")' is 0.03\" (minimum 0.3\")",
+          "location": "closing-boundary\u2192page-counter"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-3-title (\"CFO\")' to 'peer-1-body (\"Sponsor + accountable owners.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-3-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 19,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OP\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S07 / S08 / S11 / S12 / \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"19 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Technical challenge: bounded does not me\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-3-title (\"Operate\")' to 'peer-1-body (\"Versions, fenced attempts, reservations.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-3-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 20,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OP\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S03 / S05 / S07 / \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"20 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Council challenge: the objections we wel\")' and 'qa-row-1-peer-1-background' is 0.24\" (minimum 0.3\")",
+          "location": "slide-title\u2192qa-row-1-peer-1-background"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'qa-row-1-peer-2-title (\"Why not launch now?\")' to 'qa-row-1-peer-1-body (\"Test equal scope and controls.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "qa-row-1-peer-2-title\u2192qa-row-1-peer-1-body"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'qa-row-2-peer-2-title (\"What if AI fails?\")' to 'qa-row-2-peer-1-body (\"No new commitment; whole-life appraisal.\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "qa-row-2-peer-2-title\u2192qa-row-2-peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 21,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OP\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S01 / S02 / S03 / S04 / \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"21 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'assessment-open (\"Live pitch, rehearsal and thought-leader\")' bottom edge (7.08\") > slide height - margin (7.00\")",
+          "location": "assessment-open"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Read the evidence label before the claim\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+          "location": "slide-title\u2192peer-1-background"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'boundary-text (\"As at 14 October. Legal currentness not \")' and 'assessment-open (\"Live pitch, rehearsal and thought-leader\")' is 0.17\" (minimum 0.3\")",
+          "location": "boundary-text\u2192assessment-open"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'assessment-open (\"Live pitch, rehearsal and thought-leader\")' and 'page-counter (\"21 / 22\")' is 0.02\" (minimum 0.3\")",
+          "location": "assessment-open\u2192page-counter"
+        },
+        {
+          "check_type": "title_clearance",
+          "severity": "info",
+          "description": "Title 'peer-3-title (\"Observed proof\")' to 'peer-1-body (\"Request \u2260 result. Research instruments \u2260\")' clearance is 0.17\" (recommended 0.2\")",
+          "location": "peer-3-title\u2192peer-1-body"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    },
+    {
+      "slide_number": 22,
+      "issues": [
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OP\")' top (0.25\") < minimum margin (0.5\")",
+          "location": "deck-eyebrow"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+          "location": "brand-logo-backing"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+          "location": "Zava branding logo \u2014 only branding"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S03 / S07 / S12  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+          "location": "source-footer"
+        },
+        {
+          "check_type": "edge_margin",
+          "severity": "warning",
+          "description": "Shape 'page-counter (\"22 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+          "location": "page-counter"
+        },
+        {
+          "check_type": "adjacent_gap",
+          "severity": "warning",
+          "description": "Gap between 'slide-title (\"Compare equivalent routes before selecti\")' and 'option-1-header-background' is 0.21\" (minimum 0.3\")",
+          "location": "slide-title\u2192option-1-header-background"
+        }
+      ],
+      "overall_quality": "needs-attention"
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "canonical_source": "docs/capstone/deck/zava-forward-executive-draft.pptx",
+  "source_copy": "source/canonical-22-slides.pptx",
+  "source_sha256": "d089b54ff3d905c58020dfe26828d7786dac424ed4310a7547d082175f701d8e",
+  "handover_sha256": "700e76fc3558fca97b2cf27f73e4b4a6e57d1ff805883fa1a3dd3f67079043ed",
+  "source_slides": 22,
+  "source_dimensions_emu": [
+    12191695,
+    6858000
+  ],
+  "documentation_context": "cabe05c",
+  "runtime_source": "cd14b3b379026a87ebfa3e9058ac10c0df7888eb",
+  "font": "Liberation Sans",
+  "font_rationale": "Explicit installed sans-serif; avoids uninspectable Aptos fallback in local LibreOffice. Original masters/themes retained.",
+  "planned_main_seconds": 795,
+  "planned_discussion_contingency_seconds": 105,
+  "rehearsed": false,
+  "notes_topics": [
+    "request/mission",
+    "five asks",
+    "research reversal",
+    "prerequisite examples",
+    "shared foundation",
+    "work contract",
+    "connected journey",
+    "dignity/capacity",
+    "decision trace",
+    "system context",
+    "control flow",
+    "task fit and technical proof",
+    "map",
+    "fictional cash",
+    "supported change",
+    "two comparisons",
+    "gates",
+    "decision",
+    "technical limits",
+    "council challenge",
+    "provenance",
+    "options"
+  ],
+  "source_ids": {
+    "1": [
+      1,
+      2,
+      3,
+      9,
+      10
+    ],
+    "2": [
+      1,
+      2
+    ],
+    "3": [
+      2,
+      4
+    ],
+    "4": [
+      2,
+      4
+    ],
+    "5": [
+      2,
+      7,
+      12
+    ],
+    "6": [
+      2,
+      5,
+      6,
+      7
+    ],
+    "7": [
+      6,
+      7
+    ],
+    "8": [
+      2,
+      6,
+      7,
+      10
+    ],
+    "9": [
+      2,
+      7,
+      11
+    ],
+    "10": [
+      7,
+      11,
+      12
+    ],
+    "11": [
+      7,
+      8,
+      10,
+      11
+    ],
+    "12": [
+      8,
+      9,
+      10,
+      11
+    ],
+    "13": [
+      2,
+      7,
+      9,
+      11,
+      15
+    ],
+    "14": [
+      3,
+      6,
+      9
+    ],
+    "15": [
+      6,
+      7,
+      10,
+      12
+    ],
+    "16": [
+      2,
+      5,
+      7,
+      10
+    ],
+    "17": [
+      7,
+      9,
+      10,
+      11
+    ],
+    "18": [
+      2,
+      3,
+      7,
+      10
+    ],
+    "19": [
+      7,
+      8,
+      11,
+      12,
+      13
+    ],
+    "20": [
+      2,
+      3,
+      5,
+      7,
+      9,
+      10,
+      11,
+      12
+    ],
+    "21": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "22": [
+      2,
+      3,
+      7,
+      12
+    ]
+  }
+}

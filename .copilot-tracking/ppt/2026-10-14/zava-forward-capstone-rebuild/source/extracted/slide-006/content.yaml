@@ -1,0 +1,335 @@
+slide: 6
+title: THE NEW WAY OF WORKING / AN ACCOUNTABLE WORK RECORD
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: THE NEW WAY OF WORKING / AN ACCOUNTABLE WORK RECORD
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.25
+  text: Give every step a name, an owner and a clock
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 1
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 3.75
+  height: 1.3
+  name: Rounded Rectangle 3
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: 'WHO
+
+    Case owner + receiving owner'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.12
+  margin_bottom: 0.12
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: WHO
+    text_font: Aptos
+    text_size: 21
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Case owner + receiving owner
+    text_font: Aptos
+    text_size: 21
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 21
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 2
+- type: shape
+  shape: rounded_rectangle
+  left: 4.775
+  top: 2.85
+  width: 3.75
+  height: 1.3
+  name: Rounded Rectangle 4
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: 'WHERE
+
+    Named lifecycle state'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.12
+  margin_bottom: 0.12
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: WHERE
+    text_font: Aptos
+    text_size: 21
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Named lifecycle state
+    text_font: Aptos
+    text_size: 21
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 21
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 3
+- type: shape
+  shape: rounded_rectangle
+  left: 8.9
+  top: 2.85
+  width: 3.75
+  height: 1.3
+  name: Rounded Rectangle 5
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: 'WHEN
+
+    Entry, exit + pause timestamps'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.12
+  margin_bottom: 0.12
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: WHEN
+    text_font: Aptos
+    text_size: 21
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Entry, exit + pause timestamps
+    text_font: Aptos
+    text_size: 21
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 21
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 4
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 4.5
+  width: 3.75
+  height: 1.3
+  name: Rounded Rectangle 6
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'WHY WAITING
+
+    Blocker + next action'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.12
+  margin_bottom: 0.12
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: WHY WAITING
+    text_font: Aptos
+    text_size: 21
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Blocker + next action
+    text_font: Aptos
+    text_size: 21
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 21
+  text_color: '#183A31'
+  alignment: left
+  z_order: 5
+- type: shape
+  shape: rounded_rectangle
+  left: 4.775
+  top: 4.5
+  width: 3.75
+  height: 1.3
+  name: Rounded Rectangle 7
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'WHAT PROVES IT
+
+    Evidence version + acceptance'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.12
+  margin_bottom: 0.12
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: WHAT PROVES IT
+    text_font: Aptos
+    text_size: 21
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Evidence version + acceptance
+    text_font: Aptos
+    text_size: 21
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 21
+  text_color: '#183A31'
+  alignment: left
+  z_order: 6
+- type: shape
+  shape: rounded_rectangle
+  left: 8.9
+  top: 4.5
+  width: 3.75
+  height: 1.3
+  name: Rounded Rectangle 8
+  corner_radius: 0.16667
+  fill: '#E5B96A'
+  text: 'WHAT CHANGED
+
+    Decision + event + reason'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.12
+  margin_bottom: 0.12
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: WHAT CHANGED
+    text_font: Aptos
+    text_size: 21
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Decision + event + reason
+    text_font: Aptos
+    text_size: 21
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 21
+  text_color: '#183A31'
+  alignment: left
+  z_order: 7
+- type: textbox
+  left: 0.65
+  top: 6.15
+  width: 12.0
+  height: 0.3
+  text: A sent task is not an accepted handoff. A completion is not accepted handover.
+  name: TextBox 9
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 18
+  font_color: '#183A31'
+  z_order: 8
+- type: textbox
+  left: 0.65
+  top: 6.8
+  width: 12.0
+  height: 0.2
+  text: 06 / PROPOSED WORK CONTRACT / E03/E05/E06 / DEFINITIONS AND TARGETS REQUIRE
+    OWNER AGREEMENT
+  name: TextBox 10
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 10
+  font_color: '#183A31'
+  z_order: 9
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 10
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 11
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'Measurable work does not begin with a dashboard. It begins with a
+  contract for each step.
+
+
+  Record the case owner and the person accepting the handoff. Give the work a named
+  state. Capture entry, exit and pause timestamps, a coded blocker, the next action,
+  and the evidence version behind acceptance.
+
+
+  The sender retains chase responsibility until the receiver accepts. Changed evidence
+  returns only dependent decisions for review. Safety concerns take a separate human
+  response route.
+
+
+  Now the team can distinguish waiting for a survey from waiting for consent or capacity.
+  Leaders can see where effort accumulates. Agree definitions first and count recording
+  effort too; visibility is a proposed mechanism, not a saving.
+
+
+  Evidence:
+
+  docs/reference/research/company/agent-request-challenge.md — Summary; Programme
+  supervisor (2026-09-26).
+
+  docs/reference/research/company/pilot-measurement-challenge.md — Freeze Before Measurement;
+  Analysis Rules (2026-09-26).
+
+  docs/case_study_48_addendum.md — EXA-002/008/013 (historical exercise assumptions,
+  2026-10-10).'

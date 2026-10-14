@@ -1,0 +1,376 @@
+slide: 11
+title: CONTROL FLOW / TARGET DESIGN, NOT FULL DEPLOYMENT PROOF
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: CONTROL FLOW / TARGET DESIGN, NOT FULL DEPLOYMENT PROOF
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.25
+  text: One controlled route from evidence to action
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 1
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 3.75
+  height: 1.4
+  name: Rounded Rectangle 3
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'SOURCES + STAFF
+
+    Intake + reviewed requests'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.12
+  margin_bottom: 0.12
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: SOURCES + STAFF
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Intake + reviewed requests
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#183A31'
+  alignment: left
+  z_order: 2
+- type: connector
+  begin_x: 4.4
+  begin_y: 3.55
+  end_x: 4.775
+  end_y: 3.55
+  name: Connector 4
+  line_color: '#173F35'
+  line_width: 2.0
+  z_order: 3
+- type: shape
+  shape: rounded_rectangle
+  left: 4.775
+  top: 2.85
+  width: 3.75
+  height: 1.4
+  name: Rounded Rectangle 5
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: 'CONTROLLED API
+
+    Rights, versions + approvals'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.12
+  margin_bottom: 0.12
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: CONTROLLED API
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Rights, versions + approvals
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 4
+- type: connector
+  begin_x: 8.525
+  begin_y: 3.55
+  end_x: 8.9
+  end_y: 3.55
+  name: Connector 6
+  line_color: '#173F35'
+  line_width: 2.0
+  z_order: 5
+- type: shape
+  shape: rounded_rectangle
+  left: 8.9
+  top: 2.85
+  width: 3.75
+  height: 1.4
+  name: Rounded Rectangle 7
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'CASE + EVIDENCE
+
+    Azure SQL state
+
+    Versioned Blob evidence'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.12
+  margin_bottom: 0.12
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: CASE + EVIDENCE
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Azure SQL state
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Versioned Blob evidence
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#183A31'
+  alignment: left
+  z_order: 6
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 4.65
+  width: 3.75
+  height: 1.35
+  name: Rounded Rectangle 8
+  corner_radius: 0.16667
+  fill: '#E5B96A'
+  text: 'AI → STAFF
+
+    Permitted inputs; cited draft
+
+    No write credentials'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.12
+  margin_bottom: 0.12
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: AI → STAFF
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Permitted inputs; cited draft
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: No write credentials
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#183A31'
+  alignment: left
+  z_order: 7
+- type: shape
+  shape: rounded_rectangle
+  left: 4.775
+  top: 4.65
+  width: 3.75
+  height: 1.35
+  name: Rounded Rectangle 9
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'WORKFLOW RULES
+
+    Ranking, gates + audit'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.12
+  margin_bottom: 0.12
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: WORKFLOW RULES
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Ranking, gates + audit
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#183A31'
+  alignment: left
+  z_order: 8
+- type: shape
+  shape: rounded_rectangle
+  left: 8.9
+  top: 4.65
+  width: 3.75
+  height: 1.35
+  name: Rounded Rectangle 10
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'PROOF STILL REQUIRED
+
+    Permissions + leakage
+
+    Recovery + resilience'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.12
+  margin_bottom: 0.12
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: PROOF STILL REQUIRED
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Permissions + leakage
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Recovery + resilience
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#183A31'
+  alignment: left
+  z_order: 9
+- type: connector
+  begin_x: 2.525
+  begin_y: 4.65
+  end_x: 2.525
+  end_y: 4.25
+  name: Connector 11
+  line_color: '#173F35'
+  line_width: 2.0
+  z_order: 10
+- type: connector
+  begin_x: 6.65
+  begin_y: 4.65
+  end_x: 6.65
+  end_y: 4.25
+  name: Connector 12
+  line_color: '#173F35'
+  line_width: 2.0
+  z_order: 11
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12.0
+  height: 0.28
+  text: 11 / EXERCISE AZURE/SQL/AI DIRECTION ≠ CUSTOMER PROCUREMENT APPROVAL / E07–E11
+  name: TextBox 13
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  z_order: 12
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 13
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 14
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'One controlled API mediates intake and staff action requests. It checks
+  role, case and field permissions, evidence versions and approvals before SQL state
+  changes. Versioned Blob evidence supports the trace. Deterministic workflow controls
+  ranking, gates and routing.
+
+
+  AI receives permitted inputs and returns a cited draft or flag to staff. It has
+  no write credentials. Human review comes before a controlled action; model failure
+  retains the manual route without bypassing gates.
+
+
+  Actual Azure, SQL and AI are the exercise direction—not customer procurement approval
+  or a universal requirement for agent transformation. Pinned #58 documents narrow
+  feasibility, not this entire design. CIO assurance still requires permission, leakage,
+  recovery and resilience tests.
+
+
+  Evidence:
+
+  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds; Current
+  Learning and Parallel Experiment (2026-10-11).
+
+  docs/adrs/0001-azure-architecture.md; docs/adrs/0002-pilot-readiness-architecture.md
+  — Exercise Applicability; Decisions (proposed).
+
+  docs/ideas/typesafe-system-one-agent-fit.md — Observed Feasibility and Parallel
+  Value Experiment (pinned #58).'

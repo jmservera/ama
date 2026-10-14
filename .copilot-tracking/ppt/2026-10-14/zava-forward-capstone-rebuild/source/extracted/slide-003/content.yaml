@@ -1,0 +1,256 @@
+slide: 3
+title: EIGHT ROLE-AGENT RESEARCH INSTRUMENTS / NOT EMPLOYEE INTERVIEWS
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: EIGHT ROLE-AGENT RESEARCH INSTRUMENTS / NOT EMPLOYEE INTERVIEWS
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.25
+  text: The discovery reversal
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos Display
+  font_size: 40
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 1
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 3.75
+  height: 2.8
+  name: Rounded Rectangle 3
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: 'RULES + CONTROLS
+
+    Holds, clocks
+
+    and evidence checks'
+  margin_left: 0.25
+  margin_right: 0.25
+  margin_top: 0.2
+  margin_bottom: 0.2
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: RULES + CONTROLS
+    text_font: Aptos
+    text_size: 22
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Holds, clocks
+    text_font: Aptos
+    text_size: 22
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: and evidence checks
+    text_font: Aptos
+    text_size: 22
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 22
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 2
+- type: shape
+  shape: rounded_rectangle
+  left: 4.775
+  top: 2.85
+  width: 3.75
+  height: 2.8
+  name: Rounded Rectangle 4
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'ACCOUNTABLE PEOPLE
+
+    Investment + consent
+
+    Technical + quality
+
+    acceptance'
+  margin_left: 0.25
+  margin_right: 0.25
+  margin_top: 0.2
+  margin_bottom: 0.2
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: ACCOUNTABLE PEOPLE
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Investment + consent
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Technical + quality
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: acceptance
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 22
+  text_color: '#183A31'
+  alignment: left
+  z_order: 3
+- type: shape
+  shape: rounded_rectangle
+  left: 8.9
+  top: 2.85
+  width: 3.75
+  height: 2.8
+  name: Rounded Rectangle 5
+  corner_radius: 0.16667
+  fill: '#E5B96A'
+  text: 'BOUNDED AI
+
+    Read, reconcile,
+
+    draft and flag'
+  margin_left: 0.25
+  margin_right: 0.25
+  margin_top: 0.2
+  margin_bottom: 0.2
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: BOUNDED AI
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Read, reconcile,
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: draft and flag
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 22
+  text_color: '#183A31'
+  alignment: left
+  z_order: 4
+- type: textbox
+  left: 0.65
+  top: 6.0
+  width: 12.0
+  height: 0.37
+  text: Every end-to-end request combines all three. No model should own the whole
+    journey.
+  name: TextBox 6
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 20
+  font_color: '#183A31'
+  z_order: 5
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12.0
+  height: 0.28
+  text: 03 / RESEARCH HYPOTHESES / E03–E05 / 26–27 SEP 2026
+  name: TextBox 7
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  z_order: 6
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 7
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 8
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'We challenged the request through eight role-agent instruments: Assets,
+  Programme, Finance, Procurement, Resident Engagement, Building Safety, Data and
+  Performance, and a Neighbourhood Housing Officer. These were sector-informed research
+  instruments, not interviews with employees or company approvals.
+
+
+  Their shared finding was a reversal: every end-to-end request bundles controls,
+  accountable decisions and narrower AI work. Each proposed agent needs the same reliable
+  records and lifecycle underneath it. Richer photos, invoices or sensor inputs do
+  not remove that need.
+
+
+  We do not yet know the binding delivery constraint. Capital, capacity, access or
+  quality may dominate administration. That uncertainty argues for visibility and
+  measurement before automation—not for five larger black boxes.
+
+
+  Evidence:
+
+  docs/reference/research/company/agent-request-challenge.md — Purpose and Method;
+  Summary (2026-09-26).
+
+  docs/reference/research/company/agent-what-if-study.md — Purpose and Method; Summary
+  of Revised Verdicts (2026-09-27).
+
+  docs/case_study_48_addendum.md — Business Challenge (2026-10-11).'

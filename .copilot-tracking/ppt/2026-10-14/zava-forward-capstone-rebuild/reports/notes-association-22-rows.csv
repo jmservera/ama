@@ -1,0 +1,23 @@
+slide,title,slide_part,relationship_id,relationship_target,resolved_notes_part,topic_sentinel,source_sentinels,characters,exact_yaml_notes_match,pass_association
+1,Back the evidence. Keep the resident promise.,ppt/slides/slide1.xml,rId2,../notesSlides/notesSlide1.xml,/ppt/notesSlides/notesSlide1.xml,request/mission,S01;S02;S03;S09;S10,1976,True,True
+2,Five pressure points. One accepted home.,ppt/slides/slide2.xml,rId2,../notesSlides/notesSlide2.xml,/ppt/notesSlides/notesSlide2.xml,five asks,S01;S02,1238,True,True
+3,"Each request needs rules, people and bounded AI.",ppt/slides/slide3.xml,rId2,../notesSlides/notesSlide3.xml,/ppt/notesSlides/notesSlide3.xml,research reversal,S02;S04,1425,True,True
+4,Fix the prerequisite before adding the assist.,ppt/slides/slide4.xml,rId2,../notesSlides/notesSlide4.xml,/ppt/notesSlides/notesSlide4.xml,prerequisite examples,S02;S04,1378,True,True
+5,"Change the handoffs, not the whole company.",ppt/slides/slide5.xml,rId2,../notesSlides/notesSlide5.xml,/ppt/notesSlides/notesSlide5.xml,shared foundation,S02;S07;S12,1671,True,True
+6,Every handoff needs an owner and a next action.,ppt/slides/slide6.xml,rId2,../notesSlides/notesSlide6.xml,/ppt/notesSlides/notesSlide6.xml,work contract,S02;S05;S06;S07,1901,True,True
+7,One home shows the journey we still need to prove.,ppt/slides/slide7.xml,rId2,../notesSlides/notesSlide7.xml,/ppt/notesSlides/notesSlide7.xml,connected journey,S06;S07,1660,True,True
+8,A resident is not a scheduling variable.,ppt/slides/slide8.xml,rId2,../notesSlides/notesSlide8.xml,/ppt/notesSlides/notesSlide8.xml,dignity/capacity,S02;S06;S07;S10,2002,True,True
+9,"Show the decision trace, not just an AI explanation.",ppt/slides/slide9.xml,rId2,../notesSlides/notesSlide9.xml,/ppt/notesSlides/notesSlide9.xml,decision trace,S02;S07;S11,1901,True,True
+10,One workbench beside the systems you keep.,ppt/slides/slide10.xml,rId2,../notesSlides/notesSlide10.xml,/ppt/notesSlides/notesSlide10.xml,system context,S07;S11;S12,1832,True,True
+11,Let models propose; keep decisions on the controlled path.,ppt/slides/slide11.xml,rId2,../notesSlides/notesSlide11.xml,/ppt/notesSlides/notesSlide11.xml,control flow,S07;S08;S10;S11,2274,True,True
+12,Five real proposal paths. No delegated decisions.,ppt/slides/slide12.xml,rId2,../notesSlides/notesSlide12.xml,/ppt/notesSlides/notesSlide12.xml,task fit and technical proof,S08;S09;S10;S11,6026,True,True
+13,Five assists. One controlled journey.,ppt/slides/slide13.xml,rId4,../notesSlides/notesSlide22.xml,/ppt/notesSlides/notesSlide22.xml,map,S02;S07;S09;S11;S15,9502,True,True
+14,See cash before optimism.,ppt/slides/slide14.xml,rId2,../notesSlides/notesSlide13.xml,/ppt/notesSlides/notesSlide13.xml,fictional cash,S03;S06;S09,1719,True,True
+15,Make the first change small enough to learn.,ppt/slides/slide15.xml,rId2,../notesSlides/notesSlide14.xml,/ppt/notesSlides/notesSlide14.xml,supported change,S06;S07;S10;S12,2068,True,True
+16,Prove the programme. Test the AI separately.,ppt/slides/slide16.xml,rId2,../notesSlides/notesSlide15.xml,/ppt/notesSlides/notesSlide15.xml,two comparisons,S02;S05;S07;S10,2145,True,True
+17,Earn the next gate; do not repeat the last proof.,ppt/slides/slide17.xml,rId2,../notesSlides/notesSlide16.xml,/ppt/notesSlides/notesSlide16.xml,gates,S07;S09;S10;S11,2168,True,True
+18,Endorse the next evidence proposal.,ppt/slides/slide18.xml,rId2,../notesSlides/notesSlide17.xml,/ppt/notesSlides/notesSlide17.xml,decision,S02;S03;S07;S10,2098,True,True
+19,Technical challenge: bounded does not mean fully assured.,ppt/slides/slide19.xml,rId2,../notesSlides/notesSlide18.xml,/ppt/notesSlides/notesSlide18.xml,technical limits,S07;S08;S11;S12;S13,5692,True,True
+20,Council challenge: the objections we welcome.,ppt/slides/slide20.xml,rId2,../notesSlides/notesSlide19.xml,/ppt/notesSlides/notesSlide19.xml,council challenge,S02;S03;S05;S07;S09;S10;S11;S12,3095,True,True
+21,Read the evidence label before the claim.,ppt/slides/slide21.xml,rId2,../notesSlides/notesSlide20.xml,/ppt/notesSlides/notesSlide20.xml,provenance,S01;S02;S03;S04;S05;S06;S07;S08;S09;S10;S11;S12;S13;S14;S15,7785,True,True
+22,Compare equivalent routes before selecting a winner.,ppt/slides/slide22.xml,rId2,../notesSlides/notesSlide21.xml,/ppt/notesSlides/notesSlide21.xml,options,S02;S03;S07;S12,2290,True,True

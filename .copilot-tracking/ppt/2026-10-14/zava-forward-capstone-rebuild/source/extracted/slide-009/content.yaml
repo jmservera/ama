@@ -1,0 +1,272 @@
+slide: 9
+title: TRANSPARENCY / AN INSPECTABLE DECISION TRACE, NOT JUST AN AI EXPLANATION
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: TRANSPARENCY / AN INSPECTABLE DECISION TRACE, NOT JUST AN AI EXPLANATION
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.25
+  text: Every decision must tell its story
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos Display
+  font_size: 40
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 1
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 3.75
+  height: 2.95
+  name: Rounded Rectangle 3
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: 'WHAT DID WE KNOW?
+
+    Source + evidence version
+
+    Applicable rule version
+
+    Unknowns + conflicts'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: WHAT DID WE KNOW?
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Source + evidence version
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Applicable rule version
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Unknowns + conflicts
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 20
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 2
+- type: shape
+  shape: rounded_rectangle
+  left: 4.775
+  top: 2.85
+  width: 3.75
+  height: 2.95
+  name: Rounded Rectangle 4
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'WHY THIS DECISION?
+
+    Rule result + reason
+
+    Named reviewer + approval
+
+    Event + timestamp'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: WHY THIS DECISION?
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Rule result + reason
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Named reviewer + approval
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Event + timestamp
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  alignment: left
+  z_order: 3
+- type: shape
+  shape: rounded_rectangle
+  left: 8.9
+  top: 2.85
+  width: 3.75
+  height: 2.95
+  name: Rounded Rectangle 5
+  corner_radius: 0.16667
+  fill: '#E5B96A'
+  text: 'WHAT IF IT CHANGES?
+
+    Override: authority + reason
+
+    Dependent reviews reopen
+
+    Earlier versions preserved'
+  margin_left: 0.22
+  margin_right: 0.22
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: WHAT IF IT CHANGES?
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: 'Override: authority + reason'
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Dependent reviews reopen
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Earlier versions preserved
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  alignment: left
+  z_order: 4
+- type: textbox
+  left: 0.65
+  top: 6.15
+  width: 12.0
+  height: 0.3
+  text: A new source is not a new policy. Accountable owners approve rule changes.
+  name: TextBox 6
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 18
+  font_color: '#183A31'
+  z_order: 5
+- type: textbox
+  left: 0.65
+  top: 6.8
+  width: 12.0
+  height: 0.2
+  text: 09 / PROPOSED CONTROL DESIGN / E02/E06/E09 / LEGAL CURRENTNESS AND CONTROL
+    PROOF REMAIN OPEN
+  name: TextBox 7
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 10
+  font_color: '#183A31'
+  z_order: 6
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 7
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 8
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'A regulated landlord needs more than a persuasive explanation. It
+  needs a trace another person can inspect.
+
+
+  For each decision, retain the source and evidence version, applicable rule version,
+  result and reason, named reviewer, approval event and timestamp. If someone overrides
+  the result, capture their authority and reason. If evidence changes, reopen dependent
+  reviews and preserve the earlier story.
+
+
+  That is how an executive answers: why this home, why this release, why this payment?
+  AI-generated prose cannot substitute for the trace.
+
+
+  Regulatory updates enter a managed source register; accountable professionals approve
+  changed interpretations and rules. This pitch uses dated repository evidence, not
+  a fresh legal-currentness review. Compliance and technical acceptance stay human-owned.
+
+
+  Evidence:
+
+  docs/case_study_48_addendum.md — Regulatory Evidence and Service Design; EXA-003/005/006
+  (2026-10-11).
+
+  docs/adrs/0001-azure-architecture.md — Decisions; Exercise Applicability (2026-10-11,
+  proposed).'

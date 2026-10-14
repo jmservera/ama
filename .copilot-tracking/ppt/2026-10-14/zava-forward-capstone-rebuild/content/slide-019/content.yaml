@@ -1,0 +1,365 @@
+slide: 19
+title: 'Technical challenge: bounded does not mean fully assured.'
+section: Optional appendix
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OPTIONAL REFERENCE
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: 'Technical challenge: bounded does not mean fully assured.'
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026  •  S07 / S08 / S11 / S12 / S13  •  Sources + status in notes
+  left: 0.55
+  top: 7.12
+  width: 11.4
+  height: 0.2
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 19 / 22
+  left: 12.0
+  top: 7.1
+  width: 0.78
+  height: 0.23
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-1-background
+  left: 0.55
+  top: 2.02
+  width: 3.93
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-1-title
+  text: State
+  left: 0.73
+  top: 2.22
+  width: 3.5700000000000003
+  height: 0.94
+  font: Liberation Sans
+  font_size: 26
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-1-body
+  text: 'Versions, fenced attempts,
+
+    reservations.
+
+    Content restart observed.'
+  left: 0.73
+  top: 3.33
+  width: 3.5700000000000003
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-2-background
+  left: 4.7
+  top: 2.02
+  width: 3.93
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-2-title
+  text: Trust
+  left: 4.88
+  top: 2.22
+  width: 3.5700000000000003
+  height: 0.94
+  font: Liberation Sans
+  font_size: 26
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-2-body
+  text: 'Permitted sources,
+
+    current role checks,
+
+    independent review.
+
+    Real-session assurance open.'
+  left: 4.88
+  top: 3.33
+  width: 3.5700000000000003
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-3-background
+  left: 8.850000000000001
+  top: 2.02
+  width: 3.93
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-3-title
+  text: Operate
+  left: 9.030000000000001
+  top: 2.22
+  width: 3.5700000000000003
+  height: 0.94
+  font: Liberation Sans
+  font_size: 26
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-3-body
+  text: 'Owned manual path.
+
+    Performance, restore,
+
+    quality and unit cost open.'
+  left: 9.030000000000001
+  top: 3.33
+  width: 3.5700000000000003
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: boundary-background
+  left: 0.55
+  top: 6.2
+  width: 12.23
+  height: 0.6
+  fill: '#E5B96A'
+  line_color: '#E5B96A'
+  line_width: 0
+- type: textbox
+  name: boundary-text
+  text: Decision 1 is separate from the five new GPT proposal calls.
+  left: 0.73
+  top: 6.3
+  width: 11.87
+  height: 0.45999999999999996
+  font: Liberation Sans
+  font_size: 20
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+speaker_notes: "SLIDE 19 — Technical challenge: bounded does not mean fully assured.\nTopic sentinel:\
+  \ technical limits\nMessage: disclose runtime limits and the evidence required for stronger claims.\n\
+  Status: strategist-recommended proposal; refreshed 14 October 2026.\n\n\"Threats include source injection,\
+  \ cross-role leakage, stale\n  approvals and duplicate or lost transitions. Application controls—not\
+  \ a\n  prompt alone—constrain proposals. SQL controls claim/lease fences and finite\n  shared liabilities;\
+  \ timeouts do not mean zero usage and billing is not\n  exactly once. Local SQL/browser tests and deployed\
+  \ content-restart receipts\n  are different evidence. No measured Azure scale load, full restore,\n\
+  \  production SLO or externally anchored whole-system audit is established.\n  Present runtime still\
+  \ shares in-memory domain mechanisms described in\n  the MVP limits; proposed queue workers/private\
+  \ topology remain distinct.\n  Decision 1 is a separate candidate-selection/screening design with historical\n\
+  \  narrow evidence; it did not power the five new GPT proposal calls.\n  Held-out calibration, alternatives\
+  \ on quality/latency/cost and independent\n  human source labels remain required. Structured trigger\
+  \ predicates do not\n  establish autonomous reasoning; A7 is not claimed complete.\"\n\nSources — workspace-relative\
+  \ paths, section and evidence status; as read 14 October 2026:\nS07: docs/prds/zava-forward-retrofit-programme-demonstrator.md,\
+  \ v0.14 front matter; component contracts; threat model; Five Reactive and Proactive Assistants; orchestration;\
+  \ evaluation; current handoff. Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and\
+  \ amended owner acceptance open; CON-009/AC-057 full acceptance not passed.\nS08: docs/adrs/0002-pilot-readiness-architecture.md,\
+  \ Five-Assistant Exercise Runtime; Fresh Ledger and Synthetic Coverage Learning; current delta. Status:\
+  \ Current lean proposal runtime, explicit reset, image/source/revision-linked service proof; proposed\
+  \ readiness estate separate.\nS11: mvp/README.md, Honest limits; Five retrofit assistants; Operator\
+  \ authority; current delivery paragraphs; mvp/zavaforward_mvp/assistants.py, REGISTRY/RULES/capture/eligible/review.\
+  \ Status: Source and documented implementation; captured metadata/category citations, not unrestricted\
+  \ document reading, human source review or semantic entailment.\nS12: docs/adrs/0001-azure-architecture.md,\
+  \ Hybrid M365 and Excel transition; Options still to compare; provisional appraisal. Status: Proposed\
+  \ transition/full topology and historical illustration, not current deployment or scored customer platform\
+  \ choice.\nS13: docs/ideas/typesafe-system-one-agent-fit.md, pinned #58 feasibility/parallel experiment,\
+  \ as carried in S02/S07. Status: Historical separate Decision 1 selection/generation evidence; not the\
+  \ provider for the five new service calls; no new evaluation results.\n\nOptional appendix, outside\
+  \ the planned 795-second main route.\n\nExact current claim-status oracle:\n1. Current documentation/source\
+  \ context is cabe05c; runtime source is\n   cd14b3b379026a87ebfa3e9058ac10c0df7888eb, not cabe05c.\n\
+  2. Image05 is assistants-20261013-05, manifest\n   sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20,\n\
+  \   serving ca-forward-test-api--0000012. Short forms on screen; exact forms\n   in notes. Do not rename\
+  \ historical revisions.\n3. The owner explicitly reauthorized the synthetic database reset on\n   14\
+  \ October after the earlier cancellation. Previous exercise\n   recommendations/audit were reset, not\
+  \ preserved by migration. Retain\n   generator/60,000-stock lineage; the new programme baseline is 980\
+  \ cases,\n   38 booked visits and 11 actual privately bound tenant staff. Do not publish\n   their identities.\
+  \ Counts are exercise context, not real resident activity,\n   staff use or programme success.\n4. Five\
+  \ distinct registered operator service paths returned citation-validated\n   ready proposals through\
+  \ real Azure OpenAI deployment standard, model\n   gpt-4.1-mini-2025-04-14: five calls/attempts, 6884\
+  \ total tokens, 15 ledger\n   events. These are not Decision 1 calls or five independent autonomous\
+  \ agents.\n5. Against that new baseline, independent controlled-domain hashes stayed\n   unchanged by\
+  \ proposal generation, and full assistant-table content,\n   outputs and usage survived an actual serving-revision\
+  \ restart. This is\n   stronger than row-count equality, weaker than disaster recovery/restore.\n6.\
+  \ Bounded operator QA ended. Normal serving assistant authority is absent;\n   proactive scans are off.\
+  \ A registered capability is not current standing\n   authority. Neither proactive enablement nor new\
+  \ calls are authorized here.\n7. Citation validity means permitted source/provenance binding, not semantic\n\
+  \   correctness or competent source verification. None of the five has human\n   verification/acceptance\
+  \ recorded by that operator exercise.\n8. Real staff-browser/API, role/human/source/accessibility acceptance,\n\
+  \   semantic calibration, paired task value and operational outcomes remain\n   open (RV-001/RV-002).\
+  \ PRD v0.14 remains a candidate. Do not mark AC-057\n   or full requirements/product/pilot/production\
+  \ acceptance passed.\n9. No observed doubled throughput, lower bills, secured £40m, programme\n   savings,\
+  \ cost per accepted home, currency-cost cap, production selection\n   or corporate investment approval\
+  \ follows. Token allowance is not a\n   currency guarantee; historical EXA-012 and the scoped #58 override\
+  \ are\n   not a new funding commitment.\n10. Source-level automated contract tests are evidence of tested\
+  \ boundaries,\n    not a live staff session or panel behaviour. No new score is inferred from\n    cabe05c's\
+  \ historical rubric update or from successful CI."

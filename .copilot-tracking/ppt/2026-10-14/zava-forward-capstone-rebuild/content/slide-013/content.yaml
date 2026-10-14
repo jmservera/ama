@@ -1,0 +1,1219 @@
+slide: 13
+title: Five assists. One controlled journey.
+section: Main
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EXECUTIVE PROPOSAL
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: Five assists. One controlled journey.
+  left: 0.55
+  top: 0.65
+  width: 12.23
+  height: 0.5
+  font: Liberation Sans
+  font_size: 30
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026  •  S02 / S07 / S09 / S11 / S15  •  Sources + status in notes
+  left: 0.55
+  top: 7.25
+  width: 11.4
+  height: 0.17
+  font: Liberation Sans
+  font_size: 9
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 13 / 22
+  left: 12.0
+  top: 7.23
+  width: 0.78
+  height: 0.2
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-status
+  text: Workflow controls progression. People retain decisions.  |  Design + implemented contracts; proactive
+    OFF.
+  left: 0.55
+  top: 1.19
+  width: 12.23
+  height: 0.3
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: map-peer-1-stage-background
+  left: 0.55
+  top: 1.63
+  width: 2.342
+  height: 0.54
+  fill: '#173F35'
+  line_color: '#173F35'
+  line_width: 0
+- type: textbox
+  name: map-peer-1-stage
+  text: Choose homes
+  left: 0.6000000000000001
+  top: 1.7
+  width: 2.242
+  height: 0.41
+  font: Liberation Sans
+  font_size: 17
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-1-owner
+  text: 'Assets: policy;
+
+    data owners: verify'
+  left: 0.6000000000000001
+  top: 2.26
+  width: 2.242
+  height: 0.69
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: map-peer-1-capability-background
+  left: 0.55
+  top: 3.01
+  width: 2.342
+  height: 2.84
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: map-peer-1-title
+  text: 'Stock
+
+    Prioritisation'
+  left: 0.65
+  top: 3.1
+  width: 2.142
+  height: 0.74
+  font: Liberation Sans
+  font_size: 17
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-1-request-label
+  text: On request
+  left: 0.65
+  top: 3.91
+  width: 2.142
+  height: 0.29
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-1-request-body
+  text: 'Explain facts;
+
+    query conflicts'
+  left: 0.65
+  top: 4.23
+  width: 2.142
+  height: 0.57
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-1-proactive-label
+  text: Trigger • OFF
+  left: 0.65
+  top: 4.86
+  width: 2.142
+  height: 0.29
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-1-proactive-body
+  text: 'Missing/conflicting
+
+    stock facts'
+  left: 0.65
+  top: 5.19
+  width: 2.142
+  height: 0.59
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: connector
+  name: map-peer-1-stage-arrow
+  connector_type: straight
+  begin_x: 2.902
+  begin_y: 1.9
+  end_x: 3.0120000000000005
+  end_y: 1.9
+  line_color: '#446056'
+  line_width: 1.8
+  head_end: none
+  tail_end: triangle
+- type: shape
+  shape: rounded_rectangle
+  name: map-peer-2-stage-background
+  left: 3.0220000000000002
+  top: 1.63
+  width: 2.342
+  height: 0.54
+  fill: '#173F35'
+  line_color: '#173F35'
+  line_width: 0
+- type: textbox
+  name: map-peer-2-stage
+  text: Assess & design
+  left: 3.072
+  top: 1.7
+  width: 2.242
+  height: 0.41
+  font: Liberation Sans
+  font_size: 17
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-2-owner
+  text: 'Assessor/coordinator:
+
+    independent sign-off'
+  left: 3.072
+  top: 2.26
+  width: 2.242
+  height: 0.69
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: map-peer-2-capability-background
+  left: 3.0220000000000002
+  top: 3.01
+  width: 2.342
+  height: 2.84
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: map-peer-2-title
+  text: 'Assessment
+
+    Preparation'
+  left: 3.1220000000000003
+  top: 3.1
+  width: 2.142
+  height: 0.74
+  font: Liberation Sans
+  font_size: 17
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-2-request-label
+  text: On request
+  left: 3.1220000000000003
+  top: 3.91
+  width: 2.142
+  height: 0.29
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-2-request-body
+  text: 'Prepare sourced
+
+    survey/design pack'
+  left: 3.1220000000000003
+  top: 4.23
+  width: 2.142
+  height: 0.57
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-2-proactive-label
+  text: Trigger • OFF
+  left: 3.1220000000000003
+  top: 4.86
+  width: 2.142
+  height: 0.29
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-2-proactive-body
+  text: 'Missing/changed
+
+    survey or design'
+  left: 3.1220000000000003
+  top: 5.19
+  width: 2.142
+  height: 0.59
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: connector
+  name: map-peer-2-stage-arrow
+  connector_type: straight
+  begin_x: 5.3740000000000006
+  begin_y: 1.9
+  end_x: 5.484000000000001
+  end_y: 1.9
+  line_color: '#446056'
+  line_width: 1.8
+  head_end: none
+  tail_end: triangle
+- type: shape
+  shape: rounded_rectangle
+  name: map-peer-3-stage-background
+  left: 5.494
+  top: 1.63
+  width: 2.342
+  height: 0.54
+  fill: '#173F35'
+  line_color: '#173F35'
+  line_width: 0
+- type: textbox
+  name: map-peer-3-stage
+  text: Prepare funding
+  left: 5.544
+  top: 1.7
+  width: 2.242
+  height: 0.41
+  font: Liberation Sans
+  font_size: 17
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-3-owner
+  text: 'Finance: validate,
+
+    approve, submit'
+  left: 5.544
+  top: 2.26
+  width: 2.242
+  height: 0.69
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: map-peer-3-capability-background
+  left: 5.494
+  top: 3.01
+  width: 2.342
+  height: 2.84
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: map-peer-3-title
+  text: 'Grant & Funding
+
+    Evidence'
+  left: 5.593999999999999
+  top: 3.1
+  width: 2.142
+  height: 0.74
+  font: Liberation Sans
+  font_size: 17
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-3-request-label
+  text: On request
+  left: 5.593999999999999
+  top: 3.91
+  width: 2.142
+  height: 0.29
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-3-request-body
+  text: 'Draft source-linked
+
+    evidence pack'
+  left: 5.593999999999999
+  top: 4.23
+  width: 2.142
+  height: 0.57
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-3-proactive-label
+  text: Trigger • OFF
+  left: 5.593999999999999
+  top: 4.86
+  width: 2.142
+  height: 0.29
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-3-proactive-body
+  text: 'Missing inputs or
+
+    changed terms'
+  left: 5.593999999999999
+  top: 5.19
+  width: 2.142
+  height: 0.59
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: connector
+  name: map-peer-3-stage-arrow
+  connector_type: straight
+  begin_x: 7.846
+  begin_y: 1.9
+  end_x: 7.956
+  end_y: 1.9
+  line_color: '#446056'
+  line_width: 1.8
+  head_end: none
+  tail_end: triangle
+- type: shape
+  shape: rounded_rectangle
+  name: map-peer-4-stage-background
+  left: 7.966
+  top: 1.63
+  width: 2.342
+  height: 0.54
+  fill: '#173F35'
+  line_color: '#173F35'
+  line_width: 0
+- type: textbox
+  name: map-peer-4-stage
+  text: Coordinate works
+  left: 8.016
+  top: 1.7
+  width: 2.242
+  height: 0.41
+  font: Liberation Sans
+  font_size: 17
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-4-owner
+  text: 'Resident: choice;
+
+    Programme: release'
+  left: 8.016
+  top: 2.26
+  width: 2.242
+  height: 0.69
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: map-peer-4-capability-background
+  left: 7.966
+  top: 3.01
+  width: 2.342
+  height: 2.84
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: map-peer-4-title
+  text: 'Works & Resident
+
+    Coordination'
+  left: 8.066
+  top: 3.1
+  width: 2.142
+  height: 0.74
+  font: Liberation Sans
+  font_size: 17
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-4-request-label
+  text: On request
+  left: 8.066
+  top: 3.91
+  width: 2.142
+  height: 0.29
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-4-request-body
+  text: 'Draft update;
+
+    suggest crew slots'
+  left: 8.066
+  top: 4.23
+  width: 2.142
+  height: 0.57
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-4-proactive-label
+  text: Trigger • OFF
+  left: 8.066
+  top: 4.86
+  width: 2.142
+  height: 0.29
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-4-proactive-body
+  text: 'Unaccepted handoff;
+
+    overdue update'
+  left: 8.066
+  top: 5.19
+  width: 2.142
+  height: 0.59
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: connector
+  name: map-peer-4-stage-arrow
+  connector_type: straight
+  begin_x: 10.318
+  begin_y: 1.9
+  end_x: 10.428
+  end_y: 1.9
+  line_color: '#446056'
+  line_width: 1.8
+  head_end: none
+  tail_end: triangle
+- type: shape
+  shape: rounded_rectangle
+  name: map-peer-5-stage-background
+  left: 10.438
+  top: 1.63
+  width: 2.342
+  height: 0.54
+  fill: '#173F35'
+  line_color: '#173F35'
+  line_width: 0
+- type: textbox
+  name: map-peer-5-stage
+  text: Verify & hand over
+  left: 10.488000000000001
+  top: 1.7
+  width: 2.242
+  height: 0.41
+  font: Liberation Sans
+  font_size: 17
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-5-owner
+  text: 'Independent quality
+
+    authority: accept'
+  left: 10.488000000000001
+  top: 2.26
+  width: 2.242
+  height: 0.69
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: map-peer-5-capability-background
+  left: 10.438
+  top: 3.01
+  width: 2.342
+  height: 2.84
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: map-peer-5-title
+  text: 'Quality Evidence
+
+    Review'
+  left: 10.538
+  top: 3.1
+  width: 2.142
+  height: 0.74
+  font: Liberation Sans
+  font_size: 17
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-5-request-label
+  text: On request
+  left: 10.538
+  top: 3.91
+  width: 2.142
+  height: 0.29
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-5-request-body
+  text: 'Assemble evidence;
+
+    raise gaps'
+  left: 10.538
+  top: 4.23
+  width: 2.142
+  height: 0.57
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-5-proactive-label
+  text: Trigger • OFF
+  left: 10.538
+  top: 4.86
+  width: 2.142
+  height: 0.29
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-peer-5-proactive-body
+  text: 'Missing/conflicting
+
+    quality evidence'
+  left: 10.538
+  top: 5.19
+  width: 2.142
+  height: 0.59
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: map-core-background
+  left: 0.55
+  top: 5.99
+  width: 12.23
+  height: 0.45
+  fill: '#173F35'
+  line_color: '#173F35'
+  line_width: 0
+- type: textbox
+  name: map-core
+  text: 'Workflow core: rights • versions • gates • human approvals • audit • retries • manual recovery'
+  left: 0.69
+  top: 6.08
+  width: 11.95
+  height: 0.31
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-funding-boundary
+  text: 'Checks OFF now; future eligibility → named human queue. Funding: application ≠ award ≠ claim
+    ≠ cash.'
+  left: 0.55
+  top: 6.54
+  width: 12.23
+  height: 0.28
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: map-hazard-boundary
+  text: Hazard → human service now, never wait for AI. Value remains a hypothesis.
+  left: 0.55
+  top: 6.86
+  width: 12.23
+  height: 0.27
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+speaker_notes: "SLIDE 13 — Five assists. One controlled journey.\nTopic sentinel: map\nMessage: capabilities\
+  \ prepare evidence; workflow and people retain progression and decisions.\nStatus: strategist-recommended\
+  \ proposal; refreshed 14 October 2026.\n\n\"Each column serves a process stage, not an autonomous manager.\n\
+  \  A person may request help under effective authority. A future authorized\n  event or scheduled check\
+  \ could create an owned review item after rules\n  determine eligibility; scans are currently off. Data\
+  \ owners/Assets,\n  competent technical roles, Finance, the resident/Programme/contract\n  authority\
+  \ and independent QA retain their respective decisions.\n  Funding spans planning through claims and\
+  \ cash. Hazards go directly to\n  the human service; neither an empty model result nor a queue delays\
+  \ intake.\n  Failure, stale evidence and expired authority preserve controlled state and\n  an owned\
+  \ manual path. Fewer gaps and less rework are value hypotheses.\"\n* Transition: \"The financial boundary\
+  \ is as important as the technical one.\"\n\nSources — workspace-relative paths, section and evidence\
+  \ status; as read 14 October 2026:\nS02: docs/case_study_48_addendum.md, Business Challenge; Executive\
+  \ Assessment; Digital Foundation; Where Agents Fit; Recommended Executive Decision. Status: Maintained\
+  \ 14 October synthesis and proposed controls; bottleneck/outcomes not verified company findings.\nS07:\
+  \ docs/prds/zava-forward-retrofit-programme-demonstrator.md, v0.14 front matter; component contracts;\
+  \ threat model; Five Reactive and Proactive Assistants; orchestration; evaluation; current handoff.\
+  \ Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and amended owner acceptance open;\
+  \ CON-009/AC-057 full acceptance not passed.\nS09: infra/README.md, Five-assistant version: current\
+  \ handover. Status: Exact serving/source/model/SQL/restart receipt and authority-off state, 14 October;\
+  \ no fresh cloud inspection in this task.\nS11: mvp/README.md, Honest limits; Five retrofit assistants;\
+  \ Operator authority; current delivery paragraphs; mvp/zavaforward_mvp/assistants.py, REGISTRY/RULES/capture/eligible/review.\
+  \ Status: Source and documented implementation; captured metadata/category citations, not unrestricted\
+  \ document reading, human source review or semantic entailment.\nS15: docs/capstone/deck/zava-forward-executive-draft.pptx;\
+  \ docs/capstone/deck/agents-in-retrofit-process.svg. Status: Existing 22-slide content/relationship-resolved\
+  \ notes and map semantic source, not proof of future operation.\n\nPlanned allocation: 60 seconds; not\
+  \ rehearsed.\n\nFULL MAP TEXT EQUIVALENT — five capabilities, owners, requests and OFF triggers:\n\n\
+  \nRequired result: a full-width, readable, editable PowerPoint process map.\nExisting SVG/PNG remain\
+  \ references only. No diagram image, cropped fragments,\nsingle flattened vector, giant paragraph or\
+  \ hidden text layer substitutes for\nnative elements.\n\nUse the canonical widescreen aspect ratio;\
+  \ inspect actual cx/cy rather than\ntrusting the existing misleading `type=\"screen4x3\"` attribute.\
+  \ It is about\n13.333 × 7.5 inches. Values below describe a 13.333 × 7.5 canvas; scale x\ncoordinates\
+  \ proportionally if preserving the exact existing EMUs. Do not\nchange the whole deck's aspect ratio\
+  \ accidentally.\n\n* Content x = 0.45–12.883. Five columns of width approximately 2.375 with\n  0.14\
+  \ gutters; x positions approximately 0.450, 2.965, 5.479, 7.994, 10.508.\n* Title y=0.40, height=0.48,\
+  \ ≥28pt. Short status/subtitle y=0.99,\n  height=0.30. Keep logo/footer clear.\n* Stage boxes y=1.42,\
+  \ height=0.45, 17–18pt. Short native arrow connectors\n  occupy gutters, do not run through owners or\
+  \ imply autonomous release.\n* Owner text y=1.98, height=0.72, 16pt, max three compact lines.\n* Capability\
+  \ card background y=2.80, height=3.04. Every capability title\n  textbox y=2.90, height=0.78, 17pt bold,\
+  \ same insets; reserve this full\n  region for all five whether title wraps to one, two or three lines.\n\
+  * On-request label y=3.77, height=0.27, 16pt; body y=4.10,\n  height=0.65, 16pt. Proactive label y=4.83,\
+  \ height=0.27, 16pt;\n  body y=5.16, height=0.60, 16pt. Shorten to the copy below if wrapping\n  fails;\
+  \ do not shrink, clip or vertically centre. Label itself can say\n  \"Review trigger • OFF\" if needed\
+  \ to fit the column.\n* Full-width core band y=6.00, height=0.44, 16pt:\n  \"Workflow core: rights •\
+  \ versions • gates • human approvals • audit •\n  retries • manual recovery\". This is deterministic\
+  \ infrastructure, not a\n  sixth supervisor agent.\n* Boundary lines y=6.53, height≈0.52, 16pt over\
+  \ two short full-width lines:\n  \"Checks OFF now; future eligibility → named human queue. Funding:\n\
+  \  application ≠ award ≠ claim ≠ cash.\"\n  \"Hazard → human service now, never wait for AI. Value remains\
+  \ a hypothesis.\"\n  Source/footer below without collision.\n\n| Peer element | Choose homes | Assess\
+  \ & design | Prepare funding | Coordinate works | Verify & hand over |\n| --- | --- | --- | --- | ---\
+  \ | --- |\n| Capability title | Stock Prioritisation | Assessment Preparation | Grant & Funding Evidence\
+  \ | Works & Resident Coordination | Quality Evidence Review |\n| Human owner | Assets: policy; data\
+  \ owners: verify | Assessor + coordinator: independent sign-off | Finance: validate, approve, submit\
+  \ | Resident: choice; Programme: release | Independent quality authority: accept |\n| On request body\
+  \ | Explain facts; query conflicts | Prepare sourced survey/design pack | Draft source-linked evidence\
+  \ pack | Draft update; suggest crew slots | Assemble evidence; raise gaps |\n| Proactive body, OFF now\
+  \ | Missing/conflicting stock facts | Missing/changed survey or design | Missing inputs or changed terms\
+  \ | Unaccepted handoff; overdue update | Missing/conflicting quality evidence |\n\nThe on-slide short\
+  \ labels retain all five capabilities; notes list canonical\nIDs from S11 and detail source categories/permissions,\
+  \ registered purposes\nand synthetic predicates. The diagram expresses the process/design contract;\n\
+  it does not claim actual broader document analysis or professional assessment\ndelivery. In particular\
+  \ current sources include permitted metadata/hashes,\nnot arbitrary document/photo content. Scheduled/event\
+  \ initiation is proposed\nor implemented-but-disabled contract behaviour, not observed paid scanning.\n\
+  Funding's lane spans planning through later claims/cash and is not a gate\nthat automatically approves\
+  \ work. Programme release also requires current\ntechnical evidence, resident measure choice, funding/budget\
+  \ and committed\ncompetent capacity; contract authority alone instructs suppliers.\n\n\n\nCanonical\
+  \ capability identifiers, permitted source categories, registry purposes and synthetic predicates:\n\
+  REGISTRY = {\n    \"stock-prioritisation\": dict(roles=(\"Retrofit Coordinator\", \"Programme Manager\"\
+  ), categories=(\"home\", \"survey\", \"ranking\"),\n                               purpose=\"Explain\
+  \ stock facts and prepare a data-owner query\"),\n    \"assessment-preparation\": dict(roles=(\"Retrofit\
+  \ Coordinator\", \"Programme Manager\"), categories=(\"home\", \"survey\", \"measures\", \"technical\"\
+  , \"documents\"),\n                                  purpose=\"Prepare a survey/design evidence checklist\"\
+  ),\n    \"funding-evidence\": dict(roles=(\"Grants and Evidence Officer\", \"Programme Manager\"),\n\
+  \                            categories=(\"home\", \"measures\", \"funding\", \"finance\", \"grants\"\
+  , \"documents\"),\n                            purpose=\"Prepare application/claim evidence gaps\"),\n\
+  \    \"works-resident-coordination\": dict(roles=(\"Retrofit Coordinator\", \"Resident Liaison Officer\"\
+  , \"Programme Manager\"),\n                                       categories=(\"home\", \"measures\"\
+  , \"preferences\", \"appointments\", \"handoff\", \"capacity\", \"requests\"),\n                   \
+  \                    purpose=\"Draft an update or committed-capacity option\"),\n    \"quality-evidence\"\
+  : dict(roles=(\"Quality Inspector\", \"Programme Manager\"),\n                            categories=(\"\
+  home\", \"measures\", \"quality\", \"checklists\", \"documents\"),\n                            purpose=\"\
+  Assemble per-measure quality evidence discrepancies\"),\n}\nRULES = {\n    \"stock-prioritisation\"\
+  : \"Missing/unknown home.epc, home.type or home.built; supplied survey.epc/type/built conflicts with\
+  \ home.\",\n    \"assessment-preparation\": \"Missing Survey/Design metadata/content hash or technical.design_version;\
+  \ relevant permitted source signature changes.\",\n    \"funding-evidence\": \"Missing measures, funding.route/reference,\
+  \ grants or budget amount; incomplete supplied invoice ref/lines/milestone inputs; claim-phase grant\
+  \ lacks sourced history or hashed Funding evidence metadata; relevant permitted terms/evidence signature\
+  \ changes.\",\n    \"works-resident-coordination\": \"handoff.state=Offered; past appointment.date with\
+  \ missing/Booked/Planned/No access/Missed outcome; past open service_request.next_update.\",\n    \"\
+  quality-evidence\": \"Missing measures; not exactly one quality record per measure; missing/conflicting\
+  \ checklist item evidence or checklist version mismatch; relevant permitted signature changes.\",\n\
+  }\n\n\nProposal review is separate from domain approval. Programme release additionally requires current\
+  \ technical evidence, resident measure choice, funding/budget and committed competent capacity. Only\
+  \ contract authority instructs suppliers. Failed, stale or expired assistance leaves controlled state\
+  \ unchanged, with an owned manual path. Actual sources include permitted metadata and hashes, not arbitrary\
+  \ document/photo analysis. OFF triggers are not paid scans. The workflow core is deterministic infrastructure,\
+  \ never a sixth supervisor agent."

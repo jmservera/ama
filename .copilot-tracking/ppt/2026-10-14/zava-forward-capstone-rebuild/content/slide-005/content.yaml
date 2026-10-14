@@ -1,0 +1,264 @@
+slide: 5
+title: Change the handoffs, not the whole company.
+section: Main
+layout: Blank
+background:
+  fill: '#173F35'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EXECUTIVE PROPOSAL
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: Change the handoffs, not the whole company.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026  •  S02 / S07 / S12  •  Sources + status in notes
+  left: 0.55
+  top: 7.12
+  width: 11.4
+  height: 0.2
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#F7F2E7'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 05 / 22
+  left: 12.0
+  top: 7.1
+  width: 0.78
+  height: 0.23
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-1-background
+  left: 0.55
+  top: 2.02
+  width: 6.005
+  height: 3.72
+  fill: '#F7F2E7'
+  line_color: '#F7F2E7'
+  line_width: 0
+- type: textbox
+  name: peer-1-title
+  text: KEEP
+  left: 0.73
+  top: 2.22
+  width: 5.645
+  height: 0.94
+  font: Liberation Sans
+  font_size: 28
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-1-body
+  text: 'Teams, suppliers,
+
+    useful systems.'
+  left: 0.73
+  top: 3.33
+  width: 5.645
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 27
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-2-background
+  left: 6.7749999999999995
+  top: 2.02
+  width: 6.005
+  height: 3.72
+  fill: '#F7F2E7'
+  line_color: '#F7F2E7'
+  line_width: 0
+- type: textbox
+  name: peer-2-title
+  text: ADD
+  left: 6.954999999999999
+  top: 2.22
+  width: 5.645
+  height: 0.94
+  font: Liberation Sans
+  font_size: 28
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-2-body
+  text: 'One case, owned transitions,
+
+    evidence, bounded assistance.'
+  left: 6.954999999999999
+  top: 3.33
+  width: 5.645
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 27
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: boundary-background
+  left: 0.55
+  top: 6.2
+  width: 12.23
+  height: 0.6
+  fill: '#E5B96A'
+  line_color: '#E5B96A'
+  line_width: 0
+- type: textbox
+  name: boundary-text
+  text: Excel becomes reporting after a controlled transition.
+  left: 0.73
+  top: 6.3
+  width: 11.87
+  height: 0.45999999999999996
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+speaker_notes: "SLIDE 05 — Change the handoffs, not the whole company.\nTopic sentinel: shared foundation\n\
+  Message: modernise coordination around existing people and systems.\nStatus: strategist-recommended\
+  \ proposal; refreshed 14 October 2026.\n\n\"The proposal is a programme control and evidence layer,\
+  \ not\n  replacement of the housing organisation. Keep useful systems, teams and\n  suppliers. Introduce\
+  \ an owned case and a controlled transition from source\n  spreadsheets to API-fed reporting. Neither\
+  \ the integration nor the reduction\n  in duplicate effort is accepted simply because it appears in\
+  \ the design.\"\n* Transition: \"A handoff becomes useful when its contract is explicit.\"\n\nSources\
+  \ — workspace-relative paths, section and evidence status; as read 14 October 2026:\nS02: docs/case_study_48_addendum.md,\
+  \ Business Challenge; Executive Assessment; Digital Foundation; Where Agents Fit; Recommended Executive\
+  \ Decision. Status: Maintained 14 October synthesis and proposed controls; bottleneck/outcomes not verified\
+  \ company findings.\nS07: docs/prds/zava-forward-retrofit-programme-demonstrator.md, v0.14 front matter;\
+  \ component contracts; threat model; Five Reactive and Proactive Assistants; orchestration; evaluation;\
+  \ current handoff. Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and amended owner\
+  \ acceptance open; CON-009/AC-057 full acceptance not passed.\nS12: docs/adrs/0001-azure-architecture.md,\
+  \ Hybrid M365 and Excel transition; Options still to compare; provisional appraisal. Status: Proposed\
+  \ transition/full topology and historical illustration, not current deployment or scored customer platform\
+  \ choice.\n\nPlanned allocation: 30 seconds; not rehearsed."
