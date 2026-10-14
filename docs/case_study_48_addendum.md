@@ -451,6 +451,88 @@ capital acceleration.
 > by increasing safe, resident-accepted and evidence-complete handovers at an
 > affordable risk-adjusted cost.
 
+### Responsible AI Release Position (2026-10-14)
+
+Responsible AI (RAI) is a release discipline for the whole workbench, not a
+model checkbox. Deterministic prioritisation, missing-data rules, sensor
+signals, resident-contact assumptions and staff measurement can cause harm
+without generative AI. The original L2 to L4 autonomy brief is retained as
+history; the current proposal permits recommendations, drafts and flags,
+not autonomous resident, safety, professional or financial decisions.
+
+[NIST AI RMF 1.0](https://doi.org/10.6028/NIST.AI.100-1) (2023), Govern,
+Map, Measure and Manage, provides a voluntary assessment baseline. The
+Microsoft-authored AI STRIDE overlay supports AI-specific misuse analysis,
+not a security certification. EU AI Act applicability requires a separate legal
+screen of intended use, provider/deployer role and territorial scope. A UK
+housing association, an EU-hosted model or social-housing subject matter alone
+does not establish an Annex III high-risk classification. No current legal
+classification or source-currentness approval is inferred from this review.
+The official [EU AI Act](https://eur-lex.europa.eu/eli/reg/2024/1689/oj)
+(2024/1689; territorial scope, intended-use classification and commencement)
+and [UK data-protection register](./reference/regulatory/README.md) require
+a dated legal currentness check before consequential adoption; this amendment
+does not refresh the 2026-09-19 local regulatory snapshots.
+
+The proposed release gates are:
+
+| Gate | Accountable function, to be confirmed for live use | Required evidence |
+| --- | --- | --- |
+| Govern and map | Asset sponsor, Programme product owner, DPO/Legal, Safety and Resident Engagement | Versioned task/system inventory, affected stakeholders, intended and prohibited uses, impact assessment, processing/transfer review, named decision rights and explicit residual-risk acceptance |
+| Measure | Data and Performance with competent task owners and independent Assurance | Held-out task and deterministic-policy evaluation; source support, critical misses, calibration/abstention where applicable, subgroup/missing-data disparities, human review effort and automation-bias tests |
+| Meaningful oversight and redress | Competent reviewers, Housing and Resident Engagement | Reviewers can inspect sources, correct/reject outputs and use manual handling; accessible human/non-digital explanation, challenge and correction routes without retaliation, inferred refusal or delayed hazard response |
+| Manage and change | Digital operator with Safety, DPO and product owner | Version-bound release record, task-level disable and manual fallback drill, monitored harm indicators, incident owner/triage, dependency re-evaluation and approved restart/rollback |
+
+The [PRD RAI contract](./prds/zava-forward-retrofit-programme-demonstrator.md#responsible-ai-release-and-oversight-contract-2026-10-14)
+and [pilot architecture controls](./adrs/0002-pilot-readiness-architecture.md#responsible-ai-control-plane-2026-10-14)
+make these proposals testable. Synthetic scenarios and operator model calls
+cannot establish representative fairness, resident understanding, effective
+human oversight or operational benefit. A deterministic queue is explainable,
+not inherently fair; missing sensors, digital exclusion, adjustment needs and
+no-access history must not become unsupported disadvantage.
+
+Real-data and operational activation remain blocked until the relevant
+human owners approve the evidence and residual risks. Exercise acceptance
+continues to require real Azure/SQL/AI under its existing authority and budget,
+with the new RAI checks separately reported; disabling assistance preserves
+manual access but cannot masquerade as a passing real-AI delivery gate.
+Documentation approval neither fixes an implementation gap nor certifies
+compliance. No cloud, model, data or deployment action is authorized here.
+
+#### Assessment Attempt and Evidence Limits
+
+The 2026-10-14 audit used baseline commit
+`1cb398c7b90bec05a5700008a97d0cfac494144a` and PRD v0.14.0, before this
+v0.15.0 amendment. All six framework assessments returned preliminary results:
+NIST Govern, Map, Measure and Manage, AI STRIDE, and conditional EU AI Act
+screening. The preliminary total was 29 checks: 7 PASS, 11 PARTIAL and
+11 NOT_ASSESSED. These are not consolidated verified findings or release
+acceptance results, and no verified severity breakdown is available.
+
+Measure and AI STRIDE deep verification stopped with terminal
+`INVALID_PAYLOAD` (`Retryable=false`) because the verifiers could not consume
+full finding records through temporary-file references. No retry or
+`RAI_REPORT_V1` report was produced or accepted. Human acceptance is PENDING.
+This assessment status is retained here rather than linking to a nonexistent
+report or treating rejected verification as a pass. A future separately
+scoped recovery must supply complete finding records inline.
+
+The following are preliminary review priorities, not confirmed implementation
+failures. Proposed documentation mitigations leave each evidence gate open.
+
+| Review priority | Proposed treatment and trace | Evidence still required |
+| --- | --- | --- |
+| Semantic correctness, not only schema/citation validity | PRD NFR-009 and AC-063; competent source-based oversight | Held-out real-model evaluation, factual/unsafe-advice adjudication and reviewer detection of plausible wrong outputs |
+| Accountable task/model/prompt release and change binding | PRD FR-048/AC-062; ADR 0001 RAI boundary and ADR 0002 control plane | Named release/residual-risk owners and executed version/permission-change denial tests |
+| Ranking policy and incomplete safety/support records | PRD FR-051/AC-066 and existing FR-012; deterministic and AI cohort evaluation | Approved policy, representative impact evidence, lawful cohort analysis and missing-data disposition |
+| Harm monitoring, incident ownership and restart | PRD FR-050/AC-065/NFR-014 | Approved observation/response thresholds, named incident owners and executed suspend/manual-fallback/restart drill |
+| Consistent minimization across legacy and newer assistant paths | PRD NFR-003/005 and AC-053/060; ADR context/audit/telemetry rules | Complete input/output/citation/review/export permission tests on every retained model path, not only the newer assistants |
+
+Other operational blockers remain the real-data DPIA, processor/transfer and
+retention approvals; recovery/erasure evidence; named control-owner acceptance;
+reviewer readiness and net benefit. The newly written controls are proposals,
+not implementation remediation, verified findings closure or company approval.
+
 ### Regulatory Evidence and Service Design
 
 The legal and regulatory corpus in

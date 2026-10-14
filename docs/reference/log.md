@@ -2363,3 +2363,37 @@ metadata when the knowledge base was created.
 * Open items remain the actual sensor inventory/protocol, mapping and
   calibration ownership, lawful basis and resident choice, retention, data
   quality rules, analysis window, thresholds and operational triage owner.
+
+
+## [2026-10-14] assessment | Responsible AI review and proposed release gates
+
+* Read the preserved original case study, current addendum, Zava Forward PRD
+  and both proposed ADRs. The older Proper Warm PRD and owner memory remain
+  unchanged; the current requirements candidate advances to v0.15.0.
+* Delegated an audit of baseline commit `1cb398c7b90bec05a5700008a97d0cfac494144a`
+  / PRD v0.14.0. Six framework assessments returned 29 preliminary checks:
+  7 PASS, 11 PARTIAL and 11 NOT_ASSESSED. Measure and AI STRIDE verification
+  terminated with `INVALID_PAYLOAD` / `Retryable=false` because full finding
+  records could not be consumed through temporary-file references. No retry,
+  consolidated verified counts, severity breakdown or RAI report is claimed.
+* Preserved that limitation and preliminary review priorities in the
+  [addendum assessment status](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits),
+  with human acceptance PENDING. UK operational scope and conditional EU AI
+  Act screening do not establish a legal classification or currentness check.
+* Proposed [PRD RAI controls](../prds/zava-forward-retrofit-programme-demonstrator.md#responsible-ai-release-and-oversight-contract-2026-10-14):
+  FR-048 to FR-051, AC-062 to AC-066 and NFR-014 cover release/impact records,
+  meaningful oversight, challenge/correction, cohort fairness and incident
+  suspension/restart. Strengthened semantic truth/unsafe-advice evaluation and
+  source-permission parity across every retained model path. All new criteria
+  remain Not run; three new RAI approval/evidence questions remain open.
+* Amended [ADR 0001](../adrs/0001-azure-architecture.md#responsible-ai-architecture-boundary-2026-10-14)
+  and [ADR 0002](../adrs/0002-pilot-readiness-architecture.md#responsible-ai-control-plane-2026-10-14)
+  with proposed version-bound release, privacy, incident and review boundaries
+  in the future worker estate and current shared API/SQL design respectively.
+  Updated this index. No runtime, deployment, model call, regulatory snapshot,
+  processor approval or operational authority was changed.
+* Local documentation checks verify relative links/anchors, table structure,
+  frontmatter presence, 51 FRs/66 ACs/14 NFRs, exact FR-to-AC traceability and
+  new reciprocal references. Git patch hygiene and historical-file preservation
+  are checked separately; formal RAI verification, PRD approval, hosted CI,
+  direct human review and real-data activation remain unproved.

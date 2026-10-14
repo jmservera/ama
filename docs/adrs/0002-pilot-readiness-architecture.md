@@ -283,6 +283,42 @@ a real staff-authenticated browser/API acceptance session, semantic quality,
 role/accessibility acceptance or measured business value. Those gates remain
 open; historical Reviews are not rewritten.
 
+### Responsible AI Control Plane (2026-10-14)
+
+Proposed extension of the existing single-API/SQL runtime; no new service or
+production authority. The [PRD RAI contract](../prds/zava-forward-retrofit-programme-demonstrator.md#responsible-ai-release-and-oversight-contract-2026-10-14)
+adds FR-048 to FR-051, AC-062 to AC-066 and NFR-014. Existing source-tested
+proposal controls and bounded operator calls do not prove these new gates.
+
+| Surface | Proposed control and evidence | Accountable function for live approval |
+| --- | --- | --- |
+| Task registry and dispatch | SQL-owned release/impact record bound to task/model/prompt/policy/data/permission versions; reject absent, stale, expired or suspended releases for reactive and proactive work | Programme product owner and competent task/control owner |
+| Ranking and sensor policy | Evaluate deterministic policy, missing-data treatment and AI recommendations by declared cohort; sensors absent or invalid remain unknown, not low need; retain reason codes and approved disparity disposition | Asset, Data and Performance, Safety and Resident Engagement |
+| Proposal review | Recheck sources, role, material versions and release state atomically; reviewers inspect evidence and record a source-based correction/rejection, including unflagged critical fields | Competent reviewer and independent Assurance |
+| Challenge and correction | Link a staff-recorded resident/staff challenge to explanation, source/policy/proposal version, human owner and resolution; invalidate only dependent proposals/reviews | Housing, Resident Engagement and record owner |
+| Monitoring and incident | Versioned indicator/threshold record; critical harm suspends affected task and reliance on pending/ready proposals, retains permitted history and preserves manual/hazard routes; human approval and corrective tests required to restart | Digital operator with Safety, DPO and product owner |
+| Context, audit and telemetry | Reuse recipient-safe projections on input/output/citations/review/export; exclude source text from operational telemetry by default; approve minimum-necessary prompt/review/incident retention and resolve immutable storage versus erasure | Digital, DPO and Legal |
+
+The [assessment attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
+returned preliminary six-framework results but failed terminal verification;
+no consolidated verified report or closure claim supports this amendment.
+
+Keep these records in the existing authoritative SQL/API control plane and
+reuse the manual workflow. A registry flag alone is insufficient: prove that
+pending claims, queued retries, publication and already-ready proposals cannot
+escape suspension or material-version invalidation. Historical proposals and
+human decisions remain reconstructable without becoming reusable approval.
+The API identity's combined SQL/Blob/model capability is an exercise trade-off,
+not the isolated-worker identity design in ADR 0001.
+
+Mandatory RAI tests cover version mismatch, cohort/missing-data disparities,
+plausible wrong answers and reviewer automation bias, non-digital challenge,
+injected instructions/forged evidence, cross-role prompt/output leakage and
+suspension during active/queued work. Run them against the actual serving
+version before claiming exercise acceptance; retain separate legal, direct-user,
+privacy and live-use gates. Representative fairness and understanding cannot
+be inferred from generated residents or role-agent reviews.
+
 ### 1. Durable store: Azure SQL or PostgreSQL
 
 Proposal: Azure SQL Database behind the `Store` interface, not PostgreSQL.
@@ -768,6 +804,8 @@ OSM public tiles in production, a single replica, AKS, and always-on staff
 time capture.
 
 ## Open items
+
+* Named RAI release, residual-risk and incident owners; current intended-use/jurisdiction screening; representative cohort and oversight evidence; challenge route and suspend/restart drill under PRD AC-062 to AC-066.
 
 * DPO to confirm the lawful basis per data class, the Article 9 condition and
   that audit data can be retained against an erasure request under

@@ -9,11 +9,11 @@ status: "in-review"
 exercise_status: "candidate-pending-review-and-owner-acceptance"
 historical_exercise_accepted_version: "0.12.0"
 historical_exercise_accepted_date: "2026-10-10"
-version: "0.14.0"
+version: "0.15.0"
 owners: ["AMA project owner (exercise approval)", "Retrofit Programme Manager (exercise product-owner role)"]
 reviewers: ["Independent PRD Quality Reviewer", "AMA project owner (final exercise acceptance); live control owners remain unconfirmed"]
 created_date: "2026-10-03"
-last_updated: "2026-10-13"
+last_updated: "2026-10-14"
 product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003", "GOAL-004"]
 product_goal_smart_status: "pass"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -32,7 +32,7 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.14.0 | Last Updated: 2026-10-13
+> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.15.0 | Last Updated: 2026-10-14
 
 ## Executive Summary
 
@@ -724,7 +724,7 @@ owner, named control owners and affected users before implementation approval.
 | FR-009 | An authorised reviewer shall be able to return a case or work item to an earlier lifecycle stage, request missing/corrected information, or reopen it when evidence, scope, condition, resident circumstances or status changes. | Reviewer returns/reopens a case | AC-008, AC-012 | GOAL-001, GOAL-002 |
 | FR-010 | The product shall record each return/reopen as a versioned disposition with reason, source, initiating authority, receiving owner and next action. History preservation is governed by FR-022; dependent invalidation by FR-043. | Case return, reopen or material change | AC-012, AC-013 | GOAL-002 |
 | FR-011 | The product shall maintain role-owned handoffs with distinct sent, received, accepted, rejected/returned, escalated and completed states; show current accountable owner, destination, proposed/confirmed receiver, chase owner, urgency, due date and next action separately, with unknown/unassigned values explicit and receipt not implying acceptance. | A case crosses a team boundary | AC-014, AC-036 | GOAL-001, GOAL-002 |
-| FR-012 | The product shall represent stock-data reconciliation, eligibility pass/fail/unknown, prioritisation policy version, reason codes and review exceptions; a conflict shall expose both compared values, source identifiers, dates/versions, validation state and resolution owner without silently excluding or resolving a home. | Cohort or property record is prepared | AC-015, AC-040 | GOAL-002 |
+| FR-012 | The product shall represent stock-data reconciliation, eligibility pass/fail/unknown, prioritisation policy version, reason codes and review exceptions; a conflict shall expose both compared values, source identifiers, dates/versions, validation state and resolution owner without silently excluding or resolving a home. | Cohort or property record is prepared | AC-015, AC-040, AC-066 | GOAL-002 |
 | FR-013 | The product shall represent assessment, separate competent sign-offs, design version, building dependency, evidence completeness, return and reapproval states. | Technical stage is updated | AC-016 | GOAL-002 |
 | FR-014 | The product shall register a resident service item with distinct service/complaint/repair/defect/hazard type, desired outcome, redress owner and permitted accessible-contact/representative references. Measure decisions and withdrawal are separate under FR-045/046; appointment outcomes under FR-031. | Resident-related exercise intake | AC-017, AC-037 | GOAL-001, GOAL-002 |
 | FR-015 | The product shall represent hazard source and awareness time, referral destination and sent reference/time, separately evidenced receipt and acceptance, owned follow-up, affected retrofit hold scope/source/status and read-only authoritative human release-decision/evidence references; the workbench shall not judge release sufficiency or own the hazard service's clock, classification or closure. | Potential hazard is identified | AC-018, AC-038 | GOAL-002 |
@@ -738,9 +738,9 @@ owner, named control owners and affected users before implementation approval.
 | FR-023 | The product shall generate delivery forecasts from declared cohort, stage, event, committed-capacity, dependency and scenario assumptions, show uncertainty and data limits, and distinguish forecast from target, approved plan and actual outcome. | Coordinator or Asset/Finance user requests forecast | AC-026 | GOAL-003 |
 | FR-024 | The product shall support role-appropriate stakeholder progress views and exportable evidence for a selected cohort and as-of date, with definitions, sources, denominators, filter impact, unresolved items and approval status visible; a separate illustrative snapshot shall disclose that it is not derived from the inspectable case sample and shall not imply case drill-through or accepted handover. | Coordinator prepares a progress review | AC-027, AC-041 | GOAL-001, GOAL-003 |
 | FR-025 | The product shall offer source-linked next-step suggestions based on case state, approved rules and relevant evidence, showing rationale, proposed owner, prerequisite, due-date basis and unknowns. | User reviews a case or queue | AC-028 | GOAL-001, GOAL-004 |
-| FR-026 | A user shall be able to accept, edit or reject a suggestion with a reason; accepting creates a task or draft only and does not satisfy an approval or execute an external action. | User reviews an agent suggestion | AC-028, AC-029 | GOAL-001, GOAL-004 |
-| FR-027 | Bounded AI may extract, reconcile, summarise, draft or raise a signal from approved exercise sources; each material output shall cite its source and remain visibly unapproved until human review. | AI task is invoked | AC-029, AC-030 | GOAL-004 |
-| FR-028 | The product shall provide a workflow-only path for every AI-assisted task and preserve failure, fallback, review, correction and override evidence for comparison. | AI unavailable, disabled or evaluated | AC-030 | GOAL-004 |
+| FR-026 | A user shall be able to accept, edit or reject a suggestion with a reason; accepting creates a task or draft only and does not satisfy an approval or execute an external action. | User reviews an agent suggestion | AC-028, AC-029, AC-063 | GOAL-001, GOAL-004 |
+| FR-027 | Bounded AI may extract, reconcile, summarise, draft or raise a signal from approved exercise sources; each material output shall cite its source and remain visibly unapproved until human review. | AI task is invoked | AC-029, AC-030, AC-063 | GOAL-004 |
+| FR-028 | The product shall provide a workflow-only path for every AI-assisted task and preserve failure, fallback, review, correction and override evidence for comparison. | AI unavailable, disabled or evaluated | AC-030, AC-065 | GOAL-004 |
 | FR-029 | The product shall import declared exercise Excel structures with row-level preview, lineage, mapping/conflict resolution and explicit disposition without modifying source workbooks. | Data analyst previews an import | AC-031 | GOAL-001, GOAL-002 |
 | FR-030 | The product shall export interpretable exercise case, event, decision and evidence-reference data, retaining version, source, approval and supersession history independently of the AI provider. | Authorised user exports data | AC-032 | GOAL-001, GOAL-002, GOAL-003 |
 | FR-031 | For exercise scenarios only, the product shall apply a configurable missed-appointment threshold, provisionally defaulted to five, and create a human-investigation task only when the eligible active-case count is strictly greater than the configured threshold; it shall preserve event/configuration history, exclude provider/contractor no-shows, cancellations and reschedules, never infer refusal, and never delay urgent hazard response. | Exercise appointment outcome is recorded | AC-033 | GOAL-001, GOAL-002 |
@@ -748,18 +748,22 @@ owner, named control owners and affected users before implementation approval.
 | FR-033 | The product shall represent an independent resident-update commitment with purpose/linked issue, owner, due date/basis, minimum-necessary safe-route/adjustment reference or explicit unknown, outstanding/proposed/sent state and sent time/evidence; operational receipt, acceptance or return shall not silently reassign or clear it, and sending shall not imply resident receipt or understanding. | User reviews an update commitment or operational handoff | AC-035 | GOAL-001, GOAL-002 |
 | FR-034 | Queue, case, history, source trace and suggestion views shall agree on recorded ownership, reason, evidence/version and explicit unknowns; selecting a case shall refresh its rationale and proposed reviewer/prerequisite without reusing another case's explanation. | User opens a case or changes selection | AC-036, AC-040 | GOAL-001, GOAL-004 |
 | FR-035 | Each prototype iteration shall include a versioned constructed-scenario manifest identifying its active slice, independently reportable applicable/deferred checks, eleven profile paths, nine workflow representations, fixture links, per-profile default IDs/count/order/selection, expected safe endpoints, deliberately unknown fields and implemented versus unavailable behaviors; same-home lifecycles and shared-building impacts shall be explicitly linked rather than inferred from unrelated examples. | Prototype is generated or reviewed | AC-043 | GOAL-001, GOAL-002 |
-| FR-036 | The product shall maintain a versioned registry for every AI-assisted task with workflow/field scope, permitted capability, question/options or prompt, source permissions, accountable reviewer, approved evaluation thresholds, abstention/fallback and enable/disable state; unregistered or unapproved tasks shall use manual/workflow-only handling. | A task is configured or requested | AC-044, AC-057 | GOAL-002, GOAL-004 |
+| FR-036 | The product shall maintain a versioned registry for every AI-assisted task with workflow/field scope, permitted capability, question/options or prompt, source permissions, accountable reviewer, approved evaluation thresholds, abstention/fallback and enable/disable state; unregistered or unapproved tasks shall use manual/workflow-only handling. | A task is configured or requested | AC-044, AC-057, AC-062 | GOAL-002, GOAL-004 |
 | FR-037 | For decision-scoring tasks, the product shall return a validated, unapproved proposal envelope containing task/case/source versions, question/criteria version, provider/deployment/model identity, permitted selected value and raw probabilities, abstention/failure, bound evidence references and application-derived explanation, without inventing a model rationale or authoritative fact. | System One adapter returns an answer | AC-045, AC-054 | GOAL-002, GOAL-004 |
 | FR-038 | The product shall bind each assisted form to an approved, versioned type/template schema specifying field types, units/options, required/conditional fields, source authority, evidence, calculation/rule references and reviewer; funding forms additionally require an evidenced scheme/route, while non-funding forms explicitly mark that association not applicable unless required by their schema. | User selects a form or funding route | AC-046 | GOAL-001, GOAL-002 |
 | FR-039 | The product shall stage extracted candidate field values with raw text/value, permitted source ID, document hash/version, locator and parser/OCR lineage; optional semantic selection shall choose only a supplied candidate or explicit no-match and retain all conflicting alternatives. | Approved evidence is parsed for a form | AC-047, AC-053 | GOAL-001, GOAL-004 |
 | FR-040 | The form workspace shall support individual accept, correct or reject decisions on proposed fields, preserving prior values, reviewer, evidence/reason and review state; accepting a field changes only the draft and shall not overwrite source records or satisfy an approval. | Authorized reviewer inspects a proposed field | AC-048, AC-053 | GOAL-001, GOAL-002, GOAL-004 |
 | FR-041 | The product shall report deterministic form-validation results against the selected schema, approved funding/eligibility rules and reviewer-confirmed inputs, with field-specific unknown/conflict/failure reasons that block reviewed-pack readiness for unmet mandatory conditions. | Draft validation or readiness is requested | AC-049 | GOAL-002 |
 | FR-042 | The product shall assemble a reviewable funding application or separate claim pack with field/evidence/attachment links, template/input versions and Finance review history; a reviewed export shall not establish application submission/disposition, award, claim submission/disposition or cash, each requiring its own authorized evidence record. | Finance prepares or exports a pack | AC-022, AC-050, AC-054 | GOAL-001, GOAL-002 |
-| FR-043 | When a source, schema, approved rule or reviewer-confirmed value changes, the product shall mark exactly the dependent proposals, calculations, pack reviews and downstream approvals stale for re-review, preserving prior versions and unrelated decisions. | Version or material input changes | AC-013, AC-051 | GOAL-002 |
+| FR-043 | When a source, schema, approved rule or reviewer-confirmed value changes, the product shall mark exactly the dependent proposals, calculations, pack reviews and downstream approvals stale for re-review, preserving prior versions and unrelated decisions. | Version or material input changes | AC-013, AC-051, AC-064 | GOAL-002 |
 | FR-044 | The product shall provide real AI in each accepted deployed application build, while making assistance per record optional, displaying proposed versus human-reviewed output distinctly and excluding declarations, signatures, certifications, resident decisions and controlled approvals from AI pre-fill or batch acceptance; case access and permitted manual draft completion shall not depend on model availability. | User opens a case/form or requests assistance; build acceptance | AC-052, AC-054, AC-057 | GOAL-001, GOAL-002, GOAL-004 |
 | FR-045 | The product shall maintain each resident-owned measure decision against its exact home, measure, scope and design version, with decision source, permitted representative authority and explicit unknown status. | Authorized user records a supplied resident decision | AC-037, AC-055 | GOAL-001, GOAL-002 |
 | FR-046 | The product shall apply a supplied resident pause/withdrawal only to its identified measure/scope and flag dependent discretionary readiness for human review, leaving unrelated measure choices unchanged. | Authorized user records a supplied pause/withdrawal | AC-037, AC-056 | GOAL-001, GOAL-002 |
 | FR-047 | The product shall expose the five versioned reactive/proactive assistants in the capability matrix through one bounded, durable, source-authorized proposal service, with independent human review and no controlled-domain mutation. | Permitted staff request or registered proactive predicate | AC-058, AC-059, AC-060, AC-061, AC-057 | GOAL-002, GOAL-004 |
+| FR-048 | The product shall bind each AI task activation to a versioned RAI release record containing intended/prohibited use, affected stakeholders, accountable owner, impact and residual-risk decision, approved evaluation evidence and material-change triggers; absent, expired or mismatched records shall prevent reactive and proactive dispatch. | Task is enabled or invoked | AC-062 | GOAL-002, GOAL-004 |
+| FR-049 | The product shall record an affected person's supplied challenge or correction request against the relevant source, policy/proposal version and human decision, with a permitted plain-language explanation, human owner, accessible/non-digital route, next-update commitment and resolution evidence. | Authorized staff record a constructed challenge or correction | AC-064 | GOAL-001, GOAL-002 |
+| FR-050 | An authorized operator shall be able to suspend an affected AI task and record its incident, impacted proposal/version set, accountable owner and restart decision, preserving permitted history and independent manual and hazard routes. | RAI incident or threshold breach | AC-065 | GOAL-002, GOAL-004 |
+| FR-051 | The product shall retain a versioned evaluation record for deterministic prioritisation and AI tasks with declared cohort definitions, denominators, missing-data treatment, subgroup error/exclusion/review-burden results, uncertainty, approved thresholds and human disparity disposition. | Release evaluation or material policy/model/data change | AC-066 | GOAL-002, GOAL-004 |
 
 ## Non-Functional Requirements
 
@@ -830,6 +834,11 @@ interoperability (008), portability (010), plus integrity and AI controls.
   mandatory-omission detection, downstream propagation of parser/OCR errors,
   reviewer corrections and total preparation-plus-review effort; average
   accuracy shall not offset a critical unsupported declaration or funding fact.
+  Evaluate semantic truth and unsafe-advice handling, not only citation
+  existence/schema validity. Human adjudication shall include materially
+  incorrect recommendations with valid citations and advice that could delay
+  hazard response or override resident choice; such outputs block the task's
+  release even when structurally valid.
 * **NFR-010 Portability:** Case, event, approval, audit, forecast-input and
   evidence-reference exports shall remain interpretable without the selected
   AI provider or optional M365 document store.
@@ -844,6 +853,14 @@ interoperability (008), portability (010), plus integrity and AI controls.
 * **NFR-013 Bulk-edit safety:** Bulk operations shall preview scope and
   effects, validate permissions and rules per case, report each case's result
   and retain a batch audit record. No hidden partial success is permitted.
+
+* NFR-014 RAI monitoring and change control: Each activated task shall have
+  approved harm/quality/disparity/review-burden indicators, observation window,
+  response thresholds, named monitoring/incident owners and a tested suspend/
+  manual-fallback/restart procedure. Material changes to intended use, model,
+  prompt, policy, evidence or permissions shall invalidate dependent release
+  evidence until re-evaluation; unmeasured indicators cannot be reported green.
+  Verify through AC-062/065/066. Live thresholds require human approval.
 
 ### Observability and SLO Measurement Method
 
@@ -935,6 +952,75 @@ incremental value. Those targets remain unproved by this amendment.
   processing location/terms and failure behavior. Catalog availability is
   neither a deployment result nor a UK-residency claim. No resident personal
   data reaches inference before DH-006 and NFR-005 approval.
+
+### Responsible AI Release and Oversight Contract (2026-10-14)
+
+This v0.15.0 amendment proposes RAI gates; it does not transfer historical
+exercise acceptance, approve live use or claim the new controls are built.
+Use NIST AI RMF Govern/Map/Measure/Manage as voluntary risk-management guidance
+and AI STRIDE for AI-specific misuse scenarios. DPO/Legal must separately
+screen current UK automated-decision rules and conditional EU AI Act scope;
+no legal risk tier follows from housing context or model location alone.
+The [addendum](../case_study_48_addendum.md#responsible-ai-release-position-2026-10-14)
+sets the executive boundary. Its [assessment attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
+records preliminary six-framework results and terminal verification failure;
+no consolidated verified report or finding closure is claimed. These are
+proposed requirements, not remediation evidence. ADRs distinguish the future
+estate from the current shared-API control plane.
+
+FR-048 to FR-051 and AC-062 to AC-066 extend existing source, permission,
+registry and human-authority controls rather than replace them. Proposed
+owners are exercise role functions, not named company approvals.
+
+* Before task activation, bind the intended use, prohibited use, affected
+  residents/staff/providers, model/prompt/policy/data versions, owner,
+  permissions, impact/risk record, approved thresholds, evaluation evidence,
+  residual-risk decision and expiry/change triggers. An absent or stale
+  release record blocks that task, including proactive invocation.
+  Prohibited design uses include tenant social scoring, inferred refusal or
+  vulnerability from contact/access/sensor absence, manipulation of consent,
+  and unapproved staff performance assessment or emotion inference. A new
+  purpose requires a fresh impact/legal review, not a prompt-only change.
+* Evaluate deterministic ranking and missing-data policy as well as model
+  recommendations. Predeclare relevant cohorts, denominators, sample sizes,
+  uncertainty and disparity/action thresholds. Cover sensor presence,
+  source completeness, archetype/geography, accessibility/contact needs and
+  appointment histories. Protected-characteristic analysis needs a lawful,
+  minimum-necessary basis and DPO approval, not speculative inference.
+  Exercise cohort fixtures do not prove population fairness.
+* Test oversight with deliberately plausible but wrong, stale, incomplete and
+  unsupported outputs. Reviewers must explain their source-based disposition,
+  not merely tick acceptance. Review all critical fields, including unflagged
+  ones, and measure error detection and preparation-plus-review effort against
+  workflow-only handling. No score or citation syntax proves factual truth.
+* Provide permitted, plain-language explanations of AI involvement, relevant
+  sources/policy reasons, uncertainty and human decision ownership. An
+  affected person can challenge/correct the information through a human and
+  non-digital route. Keep the request and resolution distinct from consent,
+  complaint closure or a hazard release; do not penalise challenge or silence.
+* Treat imported text, documents, model responses and citations as untrusted.
+  Source permissions apply before inference and again to outputs, citations,
+  explanations, exports and retained prompt/review records. Model text cannot
+  alter tools, roles, approved rules or release state. Negative tests include
+  injected instructions, forged sources, cross-role disclosure and unsafe
+  advice. Verify every retained legacy and newer model path, not only the
+  five-assistant service. Existing AC-053/054/060 remain mandatory.
+* Monitor unsupported claims, critical misses, overrides, abstentions,
+  differential exclusions and review burden by task/version. NFR-014 requires
+  a pre-approved observation window, owner and response thresholds; missing
+  evidence is Not run/Blocked, never a green status. A critical safety,
+  privacy, authority or unfair-treatment incident suspends the affected task,
+  preserves permitted incident evidence and routes to the accountable human.
+  Disable pending/ready affected proposals for consequential reliance while
+  preserving history and independent manual/hazard paths. Restart requires
+  corrective evidence, re-evaluation and recorded human approval.
+
+Before live use, resident/staff participation, DPIA and processor/transfer
+review, legally approved retention and meaningful oversight evidence remain
+mandatory. New RAI governance questions are not covered by EXA-001 to EXA-016.
+Formal requirements review and owner acceptance of this candidate remain
+pending. Zero critical failures in a finite agreed suite is a test gate, not
+proof of zero real-world harm.
 
 ### Bounded-Agent Orchestration Pattern
 
@@ -1288,6 +1374,11 @@ technical, control and user representatives before acceptance.
 | AC-059 | Given independent SQL connections and competing enqueue/claim/reservation operations, when reactive/proactive collisions, changed intended proposal identities with unchanged dependencies, lease expiry, late completion, restart, lost acknowledgement and exhausted attempts are exercised, then identical identities share one proposal while changed intent receives a distinct key, the unique proposal/fenced attempt contract holds, only a current claim completes, every provider dispatch has a durable shared reservation, retries respect aggregate limits and timeout/missing usage remains charged or unknown, never zero or exactly-once billing. | FR-047 | Not run |
 | AC-060 | Given permitted/revoked roles, incompatible reader sources and changed relevant/unrelated dependencies, when prompts, list/detail/report and accept/edit/reject are exercised, then access enforcement covers input/output/citations/metadata, stale/failed/unverified accept/edit is denied with no case mutation, authorized source verification is separately recorded and review atomically rechecks permission, dependency signature and proposal version. | FR-047, FR-003, FR-026, FR-027 | Not run |
 | AC-061 | Given disabled/invalid limits, a slow/failed model and concurrent startup on retained SQL state, when scans, manual case work, migration and old-image rollback are exercised, then invalid configuration makes no automatic call, scans/calls/attempts stay within effective bounds, inference holds no domain lock, additive idempotent migrations preserve records/audit, and disabling assistance/restoring the prior image preserves manual access and proposal history. | FR-047, FR-028, FR-044 | Not run |
+| AC-062 | Given registered tasks and release records that are absent, expired or mismatched to model/prompt/policy/data/permission versions, when reactive and proactive dispatch is attempted, then no provider call occurs, the missing evidence/owner/manual route is visible and the denial is recorded; an approved matching exercise record allows bounded proposal generation only. | FR-048, FR-036 | Not run |
+| AC-063 | Given plausible but wrong, stale, unsupported and incomplete critical proposals plus correct controls, when competent exercise reviewers compare sources and accept/edit/reject, then every seeded critical defect is detected and prevented from satisfying a controlled gate, reviewer/source/reason is retained, and detection, corrections and total review effort are reported against the same workflow-only scenarios; default acceptance and citation validity alone cannot pass. | FR-026, FR-027 | Not run |
+| AC-064 | Given an affected person's constructed challenge through digital and staff-recorded non-digital routes, when the information is reviewed/corrected, then permitted AI/source/policy explanations, owner, next update and resolution are visible, only dependent proposals/reviews become stale, and no consent, refusal, sanction, unrelated closure or hazard-clock change is inferred. | FR-049, FR-043 | Not run |
+| AC-065 | Given a seeded critical harm incident or approved monitoring threshold breach, when the operator suspends the affected task, then new dispatch and reliance on its pending/ready proposals are blocked, impacted versions and owner are recorded, manual case work and hazard response remain available, and restart is denied until corrective tests and distinct authorized human approval are recorded. | FR-050, FR-028 | Not run |
+| AC-066 | Given paired constructed cohorts differing in sensor/source completeness, accessibility/contact need or appointment history and an approved expected-outcome manifest, when deterministic and AI evaluation runs, then all seeded unjustified exclusion/deprioritisation defects are detected, per-cohort counts/errors/review burden and uncertainty reconcile, small or missing samples remain insufficient, and exceeded or unapproved thresholds block task activation pending human disposition rather than being averaged away. | FR-051, FR-012 | Not run |
 
 ### Independently reportable review checks
 
@@ -1344,7 +1435,7 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-009 | AC-008, AC-012 | Linked |
 | FR-010 | AC-012, AC-013 | Linked |
 | FR-011 | AC-014, AC-036 | Linked |
-| FR-012 | AC-015, AC-040 | Linked |
+| FR-012 | AC-015, AC-040, AC-066 | Linked |
 | FR-013 | AC-016 | Linked |
 | FR-014 | AC-017, AC-037 | Linked |
 | FR-015 | AC-018, AC-038 | Linked |
@@ -1358,9 +1449,9 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-023 | AC-026 | Linked |
 | FR-024 | AC-027, AC-041 | Linked |
 | FR-025 | AC-028 | Linked |
-| FR-026 | AC-028, AC-029 | Linked |
-| FR-027 | AC-029, AC-030 | Linked |
-| FR-028 | AC-030 | Linked |
+| FR-026 | AC-028, AC-029, AC-063 | Linked |
+| FR-027 | AC-029, AC-030, AC-063 | Linked |
+| FR-028 | AC-030, AC-065 | Linked |
 | FR-029 | AC-031 | Linked |
 | FR-030 | AC-032 | Linked |
 | FR-031 | AC-033 | Linked |
@@ -1368,20 +1459,24 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-033 | AC-035 | Linked |
 | FR-034 | AC-036, AC-040 | Linked |
 | FR-035 | AC-043 | Linked |
-| FR-036 | AC-044, AC-057 | Linked |
+| FR-036 | AC-044, AC-057, AC-062 | Linked |
 | FR-037 | AC-045, AC-054 | Linked |
 | FR-038 | AC-046 | Linked |
 | FR-039 | AC-047, AC-053 | Linked |
 | FR-040 | AC-048, AC-053 | Linked |
 | FR-041 | AC-049 | Linked |
 | FR-042 | AC-022, AC-050, AC-054 | Linked |
-| FR-043 | AC-013, AC-051 | Linked |
+| FR-043 | AC-013, AC-051, AC-064 | Linked |
 | FR-044 | AC-052, AC-054, AC-057 | Linked |
 | FR-045 | AC-037, AC-055 | Linked |
 | FR-046 | AC-037, AC-056 | Linked |
 | FR-047 | AC-058, AC-059, AC-060, AC-061, AC-057 | Linked |
+| FR-048 | AC-062 | Linked |
+| FR-049 | AC-064 | Linked |
+| FR-050 | AC-065 | Linked |
+| FR-051 | AC-066 | Linked |
 
-Link coverage: 47/47 FRs linked to at least one criterion (100%); this matrix
+Link coverage: 51/51 FRs linked to at least one criterion (100%); this matrix
 matches both requirement and criterion tables. Behavioral acceptance remains
 Not run. Links and named subchecks are not proof that every behavior has
 been implemented or tested.
@@ -1391,9 +1486,12 @@ been implemented or tested.
 | Requirements | Goals |
 | --- | --- |
 | FR-001 to FR-006, FR-009, FR-011, FR-014, FR-024 to FR-026, FR-029 to FR-035, FR-038 to FR-040, FR-042, FR-044 to FR-046 | GOAL-001 |
+| FR-049 | GOAL-001 |
 | FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-031, FR-033, FR-035 to FR-038, FR-040 to FR-047 | GOAL-002 |
+| FR-048 to FR-051 | GOAL-002 |
 | FR-004, FR-020 to FR-024, FR-030 | GOAL-003 |
 | FR-025 to FR-028, FR-034, FR-036 to FR-037, FR-039 to FR-040, FR-044, FR-047 | GOAL-004 |
+| FR-048, FR-050, FR-051 | GOAL-004 |
 
 All goals have linked requirements; all FRs map to at least one goal (100%).
 
@@ -1411,6 +1509,7 @@ All goals have linked requirements; all FRs map to at least one goal (100%).
 | [2026-10-06 nine-role/eleven-profile UX review](../reference/research/ux/zava-forward-prototype-profile-review.md) | Candidate journey contract, next-prototype slice and FR-011/012/014-017/024/032-035 with AC-034-043; source-based observations and proposed UX tests, not company/user validation |
 | [System One reassessment, 2026-10-10](../ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10), Microsoft catalog/API documentation and [2026-10-11 learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11) | DD-007, FR-036/037/044, AC-044/045/052/054/057 and NFR-009; API and source-bound selection feasibility, not calibrated screening or comparative value |
 | Owner direction on form extraction/filling and AI-assisted decisions, 2026-10-10; BRD FR-023/024/026/027 and RULE-009/010; proposed form pattern in the model reassessment | DD-008, FR-038 to FR-043, AC-046 to AC-051/053/054 and Finance journey; evidenced route, deterministic eligibility, separate application/award/claim/cash and human submission; schema/terms unresolved under OQ-015 |
+| [RAI assessment attempt, 2026-10-14](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits) | Preliminary review priorities inform proposed FR-048 to FR-051, AC-062 to AC-066, NFR-014 and semantic/source-permission evaluation; terminal verification failure prevents a consolidated audit report or confirmed finding-closure claim. |
 
 ### Review-learning disposition
 
@@ -1660,6 +1759,8 @@ device/environment, accessibility and actual decision rights (OQ-004/005/011).
 | Stale status is subjective or creates unfair prioritisation | Medium | High | Show field age/source and owner-approved staleness definitions; stale data triggers review, not automatic deprioritisation. |
 | Heatmap/funnel visuals hide missing cases or denominator changes | Medium | High | As-of date, cohort, filters, exclusions, denominator and accessible table; reconciliation tests. |
 | Forecast is mistaken for a commitment or overstates throughput | Medium | High | Separate actual/target/approved plan/forecast; expose uncertainty, capacity, holds and data limits. |
+| Deterministic policy or missing-data proxies create unjustified disadvantage | Medium | High | Cohort evaluation of rules and AI, explicit insufficient evidence, approved thresholds and human disparity disposition under FR-051/AC-066. |
+| AI harm is not detected or a suspended proposal remains actionable | Medium | High | Version-bound release evidence, monitored indicators and tested suspend/restart/manual route under FR-048/050 and NFR-014. |
 | Role-profile hypotheses are mistaken for company or resident evidence | Medium | High | Label evidence classes and validate with named owners and residents. |
 | Agent suggestions are followed without scrutiny | Medium | High | Source links, unknowns, review disposition and no direct commit tools; evaluate automation-bias indicators. |
 | Wrong/OCR-corrupted value propagates into a subsidy application or claim | Medium | High | Candidate spans and lineage, field-level human review, deterministic financial checks, source/template dependency invalidation and held-out critical-field tests; no automatic source overwrite or submission. |
@@ -1668,10 +1769,10 @@ device/environment, accessibility and actual decision rights (OQ-004/005/011).
 
 ## Open Questions
 
-All sixteen questions below are retained for future operational validation.
-For the exercise, each is dispositioned by the owner-approved EXA record
-with the same suffix in the addendum; zero unanswered exercise design
-questions remain. This is not evidence of real company answers. OQ-016's
+OQ-001 to OQ-016 are retained for future operational validation.
+For the historical exercise baseline, each is dispositioned by the owner-approved
+EXA record with the same suffix in the addendum. OQ-017 to OQ-019 are new
+RAI review dependencies, not owner-approved exercise assumptions. This is not evidence of real company answers. OQ-016's
 actual access/API/processing/cost verification remains an essential execution
 dependency and cannot be assumed away.
 
@@ -1693,6 +1794,9 @@ dependency and cannot be assumed away.
 | OQ-014 | What approval and change governance applies to the owner-directed missed-appointment exercise scenario before any operational consideration? | Housing, Repairs, Resident Engagement, Programme/Digital under BRD OD-40 | Operational use remains prohibited |
 | OQ-015 | Which evidenced funding routes, current application/award/claim templates, scheme terms, field/attachment authorities and financial-readiness criteria should the form workspace support, and who approves each version? | Finance and Grants, Legal, Data and competent technical owners; scheme/award evidence and approved constructed schema for the exercise | Unknown route blocks bid preparation; no current round, eligibility, award terms or external submission assumed |
 | OQ-016 | Which decision-scoring tasks justify activation, with what adjudicated datasets, probability/abstention thresholds and reviewer budgets, and can the target Foundry deployment meet response-contract, quota, inference-role, network, processing-location/terms and whole-life-cost gates? | Product, task/control owners, Digital, DPO, Procurement and Finance; conformance and versioned paired-experiment evidence | #58 demonstrates narrow selection/generation feasibility, not calibration, screening, value or production approval. Decision placement remains conditional; whole-app real AI is mandatory under CON-009. |
+| OQ-017 | Who holds RAI release, residual-risk acceptance, incident suspension/restart and competent-review authority, and what evidence makes human oversight meaningful? | Sponsor, Programme, Safety, DPO/Legal and Assurance; task impact register and approved authority/review protocol | FR-048/050, AC-062/063/065; no live activation without named approval |
+| OQ-018 | Which representative cohorts, lawful fairness-analysis fields, sample sufficiency, disparity/quality thresholds and observation windows apply to each task and deterministic policy? | Data and Performance, Resident Engagement, DPO and competent task owners; approved evaluation/monitoring plan | FR-051, NFR-014, AC-066; synthetic scenarios do not prove fairness |
+| OQ-019 | What current UK automated-decision requirements and, if territorial/intended-use conditions arise, EU AI Act role/classification and obligations apply? | Legal and DPO; dated official-source review and applicability decision | RAI legal screening; no jurisdiction, risk-tier or compliance approval inferred |
 
 ## Sign-Off and Handoff Readiness
 
@@ -1739,7 +1843,7 @@ reported. No passing implementation or formal governed approval is inferred.
 * [x] Independent current-version findings dispositioned; upstream governance boundary retained
 * [x] Final reviewed exercise baseline accepted by project owner on 2026-10-10, with no changes
 
-### Current v0.14.0 Candidate Handoff
+### Current v0.15.0 Candidate Handoff
 
 User direction authorizes the amendment, not independent requirements
 approval or inherited v0.12.0 acceptance.
@@ -1747,10 +1851,11 @@ approval or inherited v0.12.0 acceptance.
 * [x] Real AI/SQL/Azure scope and evidence recorded in CON-009/AC-057
 * [x] #58 feasibility separated from screening/calibration/value and full delivery
 * [x] Scoped budget history and versioned parallel experiment intake recorded
+* [x] Proposed RAI release, fairness, oversight, redress and incident gates recorded; implementation/acceptance unproved
 * [ ] Fresh independent full-PRD requirements-quality review and disposition
 * [ ] Owner acceptance of this amended exercise candidate
 
-Counts: 47 FRs, 61 ACs, 13 NFRs and 9 constraints; existing IDs preserved.
+Counts: 51 FRs, 66 ACs, 14 NFRs and 9 constraints; existing IDs preserved.
 Document implementation and RPI outcome review are not formal PRD approval.
 Implementation acceptance is separate: nine workflow
 and eleven profile suites, permission/control/source/bulk/return tests,
@@ -1769,6 +1874,6 @@ human user research and live-use approval remain future operational gates.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-13 (v0.14.0 candidate, five bounded reactive/proactive assistants)
+* **Last Updated:** 2026-10-14 (v0.15.0 candidate, Responsible AI release and oversight gates)
 * **Authoring Status:** Amended candidate awaiting requirements review and owner acceptance; formal governance remains in-review
 * **Next Review:** Full-PRD requirement quality and amended exercise acceptance; implementation and governed adoption are separate gates
