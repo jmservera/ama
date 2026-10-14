@@ -2,23 +2,23 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-14T09:14:24+00:00",
-  "commit": "658f263deecc309163db97932d18a86d68245489",
+  "scored_at": "2026-10-14T12:37:46+00:00",
+  "commit": "95408a39c32285e7dd4477ead7ca9558510cafb8",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38539019294",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38563544896",
   "fingerprints": {
     "brd": "8698b2d950aa2f0d4cda8729d80d2d77ec0bea10404f22860cda2182f9db9160",
     "prd": "f312d36b0f21b8b6978c64bba5d0d5e2009a6c2b29aa6bf72f25680bb89a0995",
-    "adr": "e8f82692275d86e642009b7c98b3647a6284f9ddafc9eccc295b819e4fce40a5",
+    "adr": "9d07e80242cdb60f3e01bf7590a951ecd1c9879b2450b76dbc25ca06b5955183",
     "solution-code": "0708f6ce7afa4510f3f0f951b62714ab6fc7fc207ea502f21f9eacb6f1359ac4",
-    "infrastructure": "65e3ae4d9edbb431f30fc8c966feadabc6d72de7d4cd04b55039ee957db6f324",
+    "infrastructure": "f5ee52836ffcddda14f2c5a85e6f0b1e3ac9baf444d4f81001b172409d7a623b",
     "capstone-deck": "7b98d10c113ea235f2616b241ce72d5a357896771f4243b2a1e5a186e62ccdde"
   },
-  "total": 50,
+  "total": 53,
   "sections": {
     "A": 31,
-    "B": 15,
-    "C": 4,
+    "B": 17,
+    "C": 5,
     "D": 0
   },
   "floors_met": false,
@@ -27,68 +27,69 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:92-99",
-        "mvp/zavaforward_mvp/assistants.py:30-43"
+        "mvp/zavaforward_mvp/assistants.py:296-356",
+        "docs/adrs/0002-pilot-readiness-architecture.md:93-100",
+        "mvp/README.md:470-520"
       ],
-      "rationale": "ADR 0002 adds a bounded, versioned shared proposal service reusing existing API/SQL/AI rather than new components; REGISTRY shows 5 decoupled capabilities with defined contracts. Scaling/failure-domain detail still partial end to end."
+      "rationale": "Five-assistant proposal service adds a decoupled module with explicit contracts, SQL fencing/claims, replica-serialized scaling and documented failure domains (lease takeover, shutdown gate)."
     },
     "A2": {
-      "score": 4,
-      "evidence": [
-        "mvp/zavaforward_mvp/mssqlstore.py:196-212"
-      ],
-      "rationale": "Schema-creation race fixed by wrapping in BEGIN IMMEDIATE/COMMIT with rollback, a deliberate concurrency trade-off; alternatives (e.g. distributed lock) not discussed."
+      "score": 5,
+      "evidence": [],
+      "rationale": "Unchanged: diff adds implementation detail but no new named alternatives-rejected trade-off reasoning beyond prior baseline evidence."
     },
     "A3": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:86-120",
-        "mvp/README.md:420-470"
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:548-560",
+        "mvp/README.md:450-460"
       ],
-      "rationale": "Capture() enforces closed field allowlists per audience/role, excludes vulnerability/finance data from stock, and reader-scope rechecks are documented; named threat classes (leakage, injection via document content) addressed. No formal threat-model document."
+      "rationale": "New default-deny role/source allowlists, revocation rechecks on every read, and explicit prompt-injection mitigation ('Prompt text is inert evidence') materially strengthen identity/isolation/AI-risk controls."
     },
     "A4": {
       "score": 5,
       "evidence": [
         "mvp/zavaforward_mvp/assistants.py:1-866",
-        "mvp/web/assistants.js:1-122",
-        "mvp/tests/test_assistants.py:1-1146"
+        "infra/README.md:178-212",
+        "mvp/tests/test_assistants.py:159-926"
       ],
-      "rationale": "Five capabilities implemented end to end (capture, eligibility, dispatch, review, UI panel) with disabled-by-default gaps proactively disclosed in README/ADR; CI evidence of passing tests cited in docs."
+      "rationale": "All five capabilities implemented end to end, deployed, and actually invoked live (5 proposals, 6884 tokens, ledger events); gaps (AC-057 Blocked, human/semantic acceptance) disclosed proactively."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:288-330",
-        "mvp/tests/test_assistants.py:145-146"
+        "mvp/zavaforward_mvp/assistants.py:827-861",
+        "mvp/README.md:495-515"
       ],
-      "rationale": "Bounded allowances, attempts, backoff, lease/timeout handling and safe-failure logging without private exception text are implemented and tested; cost (token allowance) is modelled per call, though not fully per unit of business value."
+      "rationale": "Resilience patterns (backoff, fenced leases, interruptible shutdown) and finite token/call allowance cost bounds are evidenced; only basic logging, no metrics/traces, so cost and performance are not both measured."
     },
     "A6": {
-      "score": 4,
-      "evidence": [
-        "mvp/zavaforward_mvp/ai.py:1-17",
-        "mvp/tests/test_assistants.py:1-50"
-      ],
-      "rationale": "Model choice (existing standard deployment) reused without fresh cost/latency/quality comparison; evaluation harness is contract/behavioral (schema, citation validity, concurrency) rather than output-quality metrics; failure modes (malformed/stale/unverified output) are documented and tested."
+      "score": 3,
+      "evidence": [],
+      "rationale": "Unchanged: citation-validity and contract tests are evidence of tested boundaries, not a dedicated evaluation harness or model-choice justification for the new assistants; pre-existing golden-scenario harness is unaffected."
     },
     "A7": {
-      "score": 5,
+      "score": 4,
       "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:170-200",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:762"
+        "docs/adrs/0002-pilot-readiness-architecture.md:30-35"
       ],
-      "rationale": "Proactive scan predicates give bounded autonomous detection per capability with explicit guardrails (allowances, human review gate); orchestration is still single-service dispatch rather than multi-agent handoff/reflection."
+      "rationale": "Deterministic trigger predicates with bounded human review are explicitly disclaimed as not establishing autonomous reasoning; this reinforces rather than changes the existing scripted-flow assessment."
     },
     "B1": {
-      "score": 3,
-      "evidence": [],
-      "rationale": "Live-scored; no rehearsal/delivery evidence available in this diff. Deck narrative structure (problem->five pressure points->proof->gates->decision) is coherent in extracted text but live delivery not demonstrated."
+      "score": 4,
+      "evidence": [
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide1",
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide17"
+      ],
+      "rationale": "Deck shows a clear problem-stakes-options-recommendation arc from the opening decision ask through council challenge to the final endorsement slide, with the conclusion following cited evidence."
     },
     "B2": {
-      "score": 3,
-      "evidence": [],
-      "rationale": "Live-scored; deck text shows register shifts between executive asks and technical receipts, but actual audience calibration can only be judged live."
+      "score": 4,
+      "evidence": [
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide3",
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide19"
+      ],
+      "rationale": "Speaker notes explicitly separate executive framing from technical caveats (optional-reference appendix slides), showing deliberate register calibration for mixed audiences."
     },
     "B3": {
       "score": 0,
@@ -108,24 +109,23 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide12",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:530-600"
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide2",
+        "mvp/README.md:417-700"
       ],
-      "rationale": "Deck updated with a dedicated slide (12) presenting the five-assistant operator-service receipt with clear numbers and caveats; PRD gains a well-structured new FR/AC section. Some slides remain dense with caveat text."
+      "rationale": "Each slide carries one headline idea with supporting detail moved to notes, and capstone documentation (PRD/ADRs/README) is extensive, cross-linked and navigable."
     },
     "B7": {
       "score": 4,
       "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide12"
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide12",
+        "docs/capstone/deck/zava-forward-executive-draft.pptx:slide14"
       ],
-      "rationale": "Slide 12 presents concrete numbers (5 calls, 6884 tokens, 15 ledger events) with explicit 'still to prove' caveats, avoiding overclaiming; visuals described textually rather than shown."
+      "rationale": "Claims are backed by concrete numbers (5 proposals, 6884 tokens, 980 cases) and visuals distinguish OBSERVED facts from STILL TO PROVE and FICTIONAL figures rather than decorative display."
     },
     "C1": {
-      "score": 4,
-      "evidence": [
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:525-535"
-      ],
-      "rationale": "New FR-047 section names stakeholders (data owners, Grants/Evidence Officer, Resident Liaison, Quality Inspector) and ties capability scope to owner-requested gaps, but does not quantify value at stake or cost of inaction for this feature."
+      "score": 5,
+      "evidence": [],
+      "rationale": "Unchanged: stakeholder/constraint framing already named at baseline; this diff adds implementation detail, not new business-framing evidence."
     },
     "C2": {
       "score": 0,
