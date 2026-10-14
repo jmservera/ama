@@ -2,14 +2,14 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-14T15:47:56+00:00",
-  "commit": "80660e95014c5abf5327d5e5e235c0612b991aa1",
+  "scored_at": "2026-10-14T21:02:49+00:00",
+  "commit": "9261c5cb1dcca013d9bc93c79d3fafebc70b8f71",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38590975162",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38636228836",
   "fingerprints": {
     "brd": "8698b2d950aa2f0d4cda8729d80d2d77ec0bea10404f22860cda2182f9db9160",
     "prd": "f312d36b0f21b8b6978c64bba5d0d5e2009a6c2b29aa6bf72f25680bb89a0995",
-    "adr": "9d07e80242cdb60f3e01bf7590a951ecd1c9879b2450b76dbc25ca06b5955183",
+    "adr": "e6bb9986d65c655b52944e4ae89e062133e08c2fc56b77da536e241462f96e84",
     "solution-code": "0708f6ce7afa4510f3f0f951b62714ab6fc7fc207ea502f21f9eacb6f1359ac4",
     "infrastructure": "f5ee52836ffcddda14f2c5a85e6f0b1e3ac9baf444d4f81001b172409d7a623b",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
@@ -30,7 +30,7 @@
         "infra/modules/authTokenStore.bicep:20-58",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component; new authTokenStore module adds a cleanly isolated, private-endpoint-scoped component with its own identity, consistent with modular decoupling. Scaling path still only partly evidenced end to end."
+      "rationale": "Failure-domain table explicit per component; ADR 0002's new sensor row (line 96) adds a cleanly decoupled optional module with its own storage records and explicit no-new-estate boundary, consistent with existing modular decoupling. Scaling path still only partly evidenced end to end."
     },
     "A2": {
       "score": 5,
@@ -43,7 +43,7 @@
         "mvp/zavaforward_mvp/assistants.py:784-823",
         "mvp/zavaforward_mvp/ai.py:61-91"
       ],
-      "rationale": "Role/case scope and revocation rechecked on every call; per-capability field allowlists keep outputs safe for every reader; citation-required output validation and FORBIDDEN-phrase filtering mitigate injection/unsupported claims."
+      "rationale": "Role/case scope and revocation rechecked on every call; per-capability field allowlists keep outputs safe; citation-required output validation and FORBIDDEN-phrase filtering mitigate injection/unsupported claims. Reviewed ADR 0002 sensor section (lines 590-672): reinforces data-minimisation and A..."
     },
     "A4": {
       "score": 5,
@@ -96,8 +96,10 @@
     },
     "B6": {
       "score": 4,
-      "evidence": [],
-      "rationale": "Unchanged baseline: no deck changes in this diff to affect thought-leadership-adjacent presentation criterion."
+      "evidence": [
+        "docs/adrs/0002-pilot-readiness-architecture.md:590-672"
+      ],
+      "rationale": "Reviewed new ADR sensor section: well-organised tables and prose add to capstone documentation completeness, but this is ADR-only text, not deck material, and does not resolve existing slide/thin-documentation issues enough to move from Good(4) to Excellent(5)."
     },
     "B7": {
       "score": 3,
