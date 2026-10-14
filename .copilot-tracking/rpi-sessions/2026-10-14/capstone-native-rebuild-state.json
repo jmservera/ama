@@ -19,6 +19,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Review and completion receipts published on existing open #68; verified remote head f6fdf612d2b5ed7a44976eb3b6bfc9025959523d and remote state blob. Concurrent rubric-only a6e7e4c (automated 45/100, workflow success) preserved by normal merge, no rewrite. The automated score does not establish panel/floor/product acceptance. Ranked follow-ups plus Stop/manual offered; owner unavailable, no selection inferred. Session remains running at waiting Follow-up; no new child or paid/cloud action.",
+      "status": "published; awaiting-owner-follow-up-selection",
+      "evidence": "Remote #68 publication f6fdf612d2b5ed7a44976eb3b6bfc9025959523d; rubric workflow 38537792529 completed successfully; post-Review ask_user returned owner unavailable."
+    },
+    {
       "decision": "One bounded post-implementation Review completed for full P01/P02 presentation scope. Execution Complete; outcome Residual work. Requested native aligned 22-slide delivery is checked and published; no new implementation defect established. RV-001 native PowerPoint/font inspection, RV-002 actual rehearsal/Q&A and RV-003 separate Section D evidence remain distinct follow-ups. No repeat Review or return to Implement.",
       "status": "Review-executed; Complete; Residual work",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-14/capstone-native-rebuild-review.md"
@@ -57,7 +62,7 @@
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Publish review/closeout receipts on existing #68, then await owner selection among ranked follow-ups, Stop automatic session or Switch to manual mode. Start no child without selection; inherited product acceptance remains separate."
+    "action": "Await owner selection among ranked follow-ups, Stop automatic session or Switch to manual mode. Review/closeout receipts are published on existing #68. Start no child without selection; inherited product acceptance remains separate."
   },
   "prioritized_follow_ups": [
     {
