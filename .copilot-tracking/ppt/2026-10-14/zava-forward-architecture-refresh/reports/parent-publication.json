@@ -1,0 +1,124 @@
+{
+  "candidate_sha256": "f14ee526ef93e9412b7b3409245307a8fd5cd3b7b3e52a21b6082d99527eb603",
+  "canonical_sha256": "f14ee526ef93e9412b7b3409245307a8fd5cd3b7b3e52a21b6082d99527eb603",
+  "retained_intake_sha256": "7b25fd7e77d1ed7d9aa908cf3da429bcfeae104beadea5ac90c1e97dbc71fbb4",
+  "canonical_mode_preserved": "0o664",
+  "slides": 24,
+  "independent_top_fixed_frames": 387,
+  "all_counters_24": true,
+  "all_notes_relationships_present": true,
+  "map13_notes_and_native_shape_inventory_retained": true,
+  "source_master_layout_theme_media_bytes_retained": 28,
+  "actual_contact_sheets_inspected": [
+    [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    [
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    [
+      19,
+      20,
+      21,
+      22,
+      23,
+      24
+    ]
+  ],
+  "full_size_slides_inspected": [
+    10,
+    12,
+    13,
+    18,
+    19,
+    20,
+    23,
+    24
+  ],
+  "previews": [
+    {
+      "slide": 10,
+      "source": "slide-deck/validation/slide-010.jpg",
+      "destination": "docs/capstone/deck/architecture-executive-native.png",
+      "sha256": "d925e2e94d55d474dd07c3e733b6664bd8bc3b96f5cead27a195837b3b14f2f3",
+      "dimensions": [
+        2000,
+        1125
+      ],
+      "mode": "0644",
+      "same_rendered_pixels": true
+    },
+    {
+      "slide": 13,
+      "source": "slide-deck/validation/slide-013.jpg",
+      "destination": "docs/capstone/deck/agents-in-retrofit-process-native.png",
+      "sha256": "74a2d1470799b6e4d21c3116a8cb7738cb2ae028b510b982734a2cbd39076ae2",
+      "dimensions": [
+        2000,
+        1125
+      ],
+      "mode": "0644",
+      "same_rendered_pixels": true
+    },
+    {
+      "slide": 19,
+      "source": "slide-deck/validation/slide-019.jpg",
+      "destination": "docs/capstone/deck/architecture-runtime-native.png",
+      "sha256": "498a3c63ad5482aed3927ba549f85c1a37e03a5541dec476a2abc3fb2e2808c5",
+      "dimensions": [
+        2000,
+        1125
+      ],
+      "mode": "0644",
+      "same_rendered_pixels": true
+    },
+    {
+      "slide": 23,
+      "source": "slide-deck/validation/slide-023.jpg",
+      "destination": "docs/capstone/deck/architecture-operations-native.png",
+      "sha256": "c40c0fe106141af4090f4f288d9fbf600105fedb1e6861078618a076e4586439",
+      "dimensions": [
+        2000,
+        1125
+      ],
+      "mode": "0644",
+      "same_rendered_pixels": true
+    },
+    {
+      "slide": 24,
+      "source": "slide-deck/validation/slide-024.jpg",
+      "destination": "docs/capstone/deck/architecture-deferred-native.png",
+      "sha256": "3fade90251a63922436d26ee968051dee39ee70512a766b0c50d01fbe447a8a9",
+      "dimensions": [
+        2000,
+        1125
+      ],
+      "mode": "0644",
+      "same_rendered_pixels": true
+    }
+  ],
+  "generic_geometry": {
+    "warnings": 197,
+    "info": 27,
+    "errors": 0
+  },
+  "limits": "Local package/render delivery only; native viewer, screen reader, projection, comprehension, rehearsal, panel and product acceptance unobserved."
+}

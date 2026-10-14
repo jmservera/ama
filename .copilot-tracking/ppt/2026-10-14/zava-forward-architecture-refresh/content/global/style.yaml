@@ -1,0 +1,77 @@
+dimensions:
+  width_inches: 13.33299978127734
+  height_inches: 7.5
+  format: '16:9'
+defaults:
+  speaker_notes_required: true
+typography:
+  body_font: Liberation Sans
+  code_font: Cascadia Code
+  heading_size: 32
+  body_size: 22
+colors:
+  bg_dark: '#F7F2E7'
+  bg_card: '#D5E2D4'
+  text_dark: '#183A31'
+  text_white: '#F7F2E7'
+  text_gray: '#446056'
+themes:
+- name: light
+  slides:
+  - 2
+  - 3
+  - 4
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
+  - 16
+  - 17
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  colors:
+    text_primary: '#183A31'
+    text_secondary: '#446056'
+    bg_card: '#D5E2D4'
+- name: dark
+  slides:
+  - 1
+  - 5
+  - 18
+  colors:
+    bg_dark: '#173F35'
+    text_primary: '#F7F2E7'
+    bg_card: '#E5B96A'
+metadata:
+  title: Zava Forward — Back the evidence. Keep the resident promise.
+  author: AMA project
+  subject: 14 October 2026 architecture refresh; working candidate; planned not rehearsed
+  keywords: Zava Forward, retrofit, council, draft, evidence
+  category: Executive proposal
+theme_colors:
+  dark_1: '#000000'
+  text_1: '#000000'
+  light_1: '#FFFFFF'
+  background_1: '#FFFFFF'
+  dark_2: '#1F497D'
+  text_2: '#1F497D'
+  light_2: '#EEECE1'
+  background_2: '#EEECE1'
+  accent_1: '#4F81BD'
+  accent_2: '#C0504D'
+  accent_3: '#9BBB59'
+  accent_4: '#8064A2'
+  accent_5: '#4BACC6'
+  accent_6: '#F79646'
+  hyperlink: '#0000FF'
+  followed_hyperlink: '#800080'

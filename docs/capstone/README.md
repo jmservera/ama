@@ -51,16 +51,71 @@ with official Azure icons and SVG/PNG previews. Both describe the same #68
 source baseline. The executive view explains one accountable workflow;
 the technical view distinguishes the single-API five-assistant implementation
 from deferred workers, network target versus development exceptions, and
-conditional M365/operational paths. These are architecture assets, not a
-replacement for slide 13's business-process map or a new deck version.
+conditional M365/operational paths. The Excalidraw sources remain separate
+architecture assets; the presentation adaptation below does not replace them
+or slide 13's business-process map.
+
+### Architecture and UX Refresh (2026-10-14)
+
+The owner-requested UX Designer and PowerPoint agents informed the current
+[24-slide council proposal](./deck/zava-forward-executive-draft.pptx).
+It retains the 18-slide main route and adds only two optional appendices.
+The architecture is adapted into native PowerPoint boxes, text and
+connectors, with individual official Azure service icons, rather than
+shrinking the detailed diagram into a slide-sized picture.
+
+| Slide | Audience and purpose | Rendered preview |
+| --- | --- | --- |
+| 10 | Executive: one workbench, controlled evidence, bounded AI and human authority | [Executive architecture](./deck/architecture-executive-native.png) |
+| 19 | Technical: current runtime, identity, SQL/Blob/model contracts and separate proposal review | [Runtime interactions](./deck/architecture-runtime-native.png) |
+| 23 | Technical: token renewal, deployment, operations, network context and failure domains | [Operations and identity](./deck/architecture-operations-native.png) |
+| 24 | Technical: deferred workers/import, conditional M365, intended edge and unimplemented anchoring | [Deferred topology](./deck/architecture-deferred-native.png) |
+
+The UX review made alternatives explicit on the main route, separated
+recorded technical evidence from acceptance still outstanding, and clarified
+the planning-only recommendation and proposed owner/deliverable pairs.
+`Ready` means generated and unreviewed; `acceptance outstanding` replaces
+ambiguous open-gate wording. Internal links lead from the executive view to
+technical detail, with a return to the decision. Expert artifact review is
+not real audience testing, resident engagement or observed comprehension.
+
+Slide 13 retains its native five-capability process map and equal peer
+title/body starts. Fixed top-aligned text, source-linked notes and explicit
+status words preserve the distinction between current implementation,
+configured controls, conditional routes and deferred work.
+
+The planned main route remains 795 seconds, including the 110-second public
+repository-evidence walkthrough and its in-slot fallback. With 75 seconds
+for questions and 30 seconds contingency, the plan is 15 minutes.
+Appendices 19-24 are optional depth, not extra main-route speaking time.
+No timed rehearsal, fresh live demo, calibrated model benefit, spending
+authority or production approval follows from this refresh.
+
+The [current authoring and validation handover](../../.copilot-tracking/ppt/2026-10-14/zava-forward-architecture-refresh/build-handover.md)
+retains all 24 YAML slides, source-to-native architecture mapping, UX
+dispositions, actual rendered checks and warning limitations. The
+[UX design brief](../../.copilot-tracking/ppt/2026-10-14/zava-forward-architecture-refresh/research/ux-design-review.md)
+checks contributions and gaps against all 20 assessment criteria and the
+section/individual floors; it is not a score or panel acceptance. Native
+PowerPoint/font, keyboard/screen-reader navigation, projection, human
+comprehension and pitch evidence remain separate checks.
+
+The [parent inspection and publication receipt](../../.copilot-tracking/ppt/2026-10-14/zava-forward-architecture-refresh/reports/parent-publication.md)
+records the byte-identical delivery and matching previews. All 387 current
+text frames are explicit TOP/fixed and pass complete rendered-word bounds;
+all 24 notes resolve to their actual slide relationships. Generic geometry
+still has 197 warnings and 27 info, zero errors, with explicit dispositions.
+Those local checks do not establish native-viewer accessibility or audience
+acceptance.
 
 ## Agents in the Retrofit Process (2026-10-13)
 
 ### Native PowerPoint Rebuild (2026-10-14)
 
-The requested Presentation Communications Strategist and PowerPoint Builder
-refreshed the complete
-[22-slide council proposal](./deck/zava-forward-executive-draft.pptx).
+The earlier Presentation Communications Strategist and PowerPoint Builder
+refresh produced a 22-slide baseline. The current 24-slide delivery is
+described above; the following records the earlier native-map implementation,
+not fresh counts for the new deck.
 Slide 13 now uses editable PowerPoint boxes, text and directional connectors,
 not an embedded SVG or PNG. It retains all five capability stages, human
 owners, on-request help, OFF-labelled proactive triggers, workflow controls
@@ -69,8 +124,9 @@ source references and a proposed 60-second explanation.
 
 Titles have fixed, top-aligned regions and corresponding body text starts
 at a common height across peer cards, including different title lengths.
-The checked deck has 311 explicit TOP-anchored, fixed-size text frames and
-56 exactly aligned peer rows. The map has 43 native textboxes, 12 backgrounds,
+The earlier checked baseline had 311 explicit TOP-anchored, fixed-size text
+frames and 56 exactly aligned peer rows. The map has 43 native textboxes,
+12 backgrounds,
 four connectors and one identified branding image; no process-diagram image.
 
 The revised story distinguishes five observed real operator-service model
@@ -81,19 +137,21 @@ including a recorded public-evidence walkthrough; discussion/contingency
 brings the plan to 15 minutes. Four appendices are optional. This is not an
 observed rehearsal or a new live model demonstration.
 
-All 22 slides have relationship-correct, source-linked notes. Fresh whole-deck
-LibreOffice exports and independent saved-shape/notes checks were inspected,
+All 22 baseline slides had relationship-correct, source-linked notes.
+Whole-deck LibreOffice exports and independent saved-shape/notes checks were
+inspected,
 including the native map and variable-length title cards. Generic compact
 spacing/edge-band warnings remain explicitly classified, not claimed as a
 clean heuristic pass. Liberation Sans is explicit because Aptos is unavailable
 locally; native PowerPoint/font fidelity, SDK vision validation, human
 acceptance and timed rehearsal are not claimed as passed.
 
-The [complete working sources and handover](../../.copilot-tracking/ppt/2026-10-14/zava-forward-capstone-rebuild/build-handover.md)
+The [earlier working sources and handover](../../.copilot-tracking/ppt/2026-10-14/zava-forward-capstone-rebuild/build-handover.md)
 include all 22 slide YAML files, style, build commands and validation assets.
-The delivered PPTX is byte-identical to the checked working copy. The
+At that publication, the 22-slide PPTX matched the checked working copy. The
 2026-10-11 21-slide sources and 2026-10-13 image-insertion sources are historical;
-do not use them as the current full-deck build.
+do not use them or the superseded 22-slide build as the current full-deck
+source. Use the architecture/UX refresh handover above.
 
 ![Preview of native editable slide 13: five aligned capability cards, human decision owners, on-request help, OFF-labelled triggers and deterministic workflow boundaries. Edit the boxes in the linked PowerPoint, not this preview image.](./deck/agents-in-retrofit-process-native.png)
 

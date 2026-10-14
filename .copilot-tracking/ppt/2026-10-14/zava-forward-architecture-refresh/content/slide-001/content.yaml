@@ -1,0 +1,313 @@
+slide: 1
+title: Back the evidence. Keep the resident promise.
+section: Main
+layout: Blank
+background:
+  fill: '#173F35'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EXECUTIVE PROPOSAL
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: Back the evidence. Keep the resident promise.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026  •  S01 / S02 / S03 / S09 / S10  •  Sources + status in notes
+  left: 0.55
+  top: 7.12
+  width: 11.4
+  height: 0.2
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#F7F2E7'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 01 / 24
+  left: 12.0
+  top: 7.24
+  width: 0.78
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: resident-scale
+  text: 60,000 homes.
+  left: 0.55
+  top: 2.12
+  width: 7.2
+  height: 0.73
+  font: Liberation Sans
+  font_size: 38
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: resident-outcome
+  text: 'Safe, resident-accepted
+
+    handovers.'
+  left: 0.55
+  top: 2.99
+  width: 7.0
+  height: 1.4
+  font: Liberation Sans
+  font_size: 34
+  font_color: '#F7F2E7'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: opening-evidence
+  text: 'Real service proof now.
+
+    Human and value gates next.'
+  left: 0.55
+  top: 5.12
+  width: 7.1
+  height: 1.0
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#F7F2E7'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: decision-background
+  left: 8.3
+  top: 2.12
+  width: 4.48
+  height: 3.89
+  fill: '#E5B96A'
+  line_color: '#E5B96A'
+  line_width: 0
+- type: textbox
+  name: decision-title
+  text: TODAY’S DECISION
+  left: 8.55
+  top: 2.39
+  width: 3.98
+  height: 0.7
+  font: Liberation Sans
+  font_size: 21
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: decision-body
+  text: 'Endorse preparation
+
+    of the next acceptance-
+
+    and-value proposal.'
+  left: 8.55
+  top: 3.32
+  width: 3.98
+  height: 1.8
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: boundary-background
+  left: 0.55
+  top: 6.2
+  width: 12.23
+  height: 0.6
+  fill: '#E5B96A'
+  line_color: '#E5B96A'
+  line_width: 0
+- type: textbox
+  name: boundary-text
+  text: Planning only - no new spending, rollout or production authority.
+  left: 0.73
+  top: 6.3
+  width: 11.87
+  height: 0.45999999999999996
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+speaker_notes: "Message / evidence limit / planned script:\nSLIDE 01 - Back the evidence. Keep the resident\
+  \ promise.\nTopic sentinel: request/mission\nMessage: endorse a bounded next evidence stage, not autonomous\
+  \ rollout.\nStatus: strategist-recommended proposal; refreshed 14 October 2026.\n\n\"The outcome is\
+  \ not more agent activity. It is a home handed over\n  safely, with the resident's decision respected\
+  \ and the evidence accepted.\n  Five bounded service paths now have real technical proof. I recommend\n\
+  \  preparing the next acceptance-and-value proposal, with named owners and\n  stop tests. This is not\
+  \ a spending, deployment or production decision.\"\n* Transition: \"The original request identifies\
+  \ five genuine pressure points.\"\n\nSources — workspace-relative paths, section and evidence status;\
+  \ as read 14 October 2026:\nS01: docs/case_study_48_original.md, Business Challenge; Architecture Brief;\
+  \ Expected Outcomes. Status: Original 10 September request; 60,000-home case, five pressure points,\
+  \ not achieved benefits.\nS02: docs/case_study_48_addendum.md, Business Challenge; Executive Assessment;\
+  \ Digital Foundation; Where Agents Fit; Recommended Executive Decision. Status: Maintained 14 October\
+  \ synthesis and proposed controls; bottleneck/outcomes not verified company findings.\nS03: docs/reference/research/company/company-profile-research.md,\
+  \ Confirmed Company Information; Role and Decision Map; Priority Company Gaps; Evidence Limitations.\
+  \ Status: Owner-confirmed not-for-profit; modelled company/resident/finance attributes are not company\
+  \ facts or delegations.\nS09: infra/README.md, Five-assistant version: current handover. Status: Exact\
+  \ serving/source/model/SQL/restart receipt and authority-off state, 14 October; no fresh cloud inspection\
+  \ in this task.\nS10: .copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md,\
+  \ Completed Work; Validation; RV-001/RV-002; Outcome. Status: Technical Review Complete / Residual work,\
+  \ not blanket product conformance.\n\nPlanned allocation: 35 seconds; not rehearsed.\n\nREFRESH BASELINE\
+  \ / UN SPOKEN REFERENCE:\nRefresh documentation intake: f94f53a56c36d38ec36f7f662595912084571380. Architecture\
+  \ source: 062434a1fedbf6a87d1374c767c2bf0a11491ab6. Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb.\
+  \ Historical cabe05c context below is not the current runtime or this documentation intake.\nCurrent\
+  \ five assistants are modules in ONE Python API Container App, not five microservices or the deferred\
+  \ queue-worker estate. Direct Azure OpenAI; no deployed Foundry Agent Service. SQL owns domain/proposal\
+  \ state, dedupe, reservations and fenced leases. Inference is outside database locks; the provider has\
+  \ no DB/workflow credentials. Accepting a proposal changes proposal/audit state, never resident, professional,\
+  \ work-release, quality or Finance approval.\nNormal five-assistant authority is absent; proactive OFF.\
+  \ This does not disable every legacy AI draft route. Ready = generated, unreviewed. Five operator paths,\
+  \ five calls, 6884 tokens, 15 ledger events and full SQL content/restart proof are technical observations\
+  \ only, not staff-browser, human source, semantic or value acceptance. Restart is not restore acceptance.\n\
+  Development public-network exceptions coexist with configured private controls; PaaS is not VNet-hosted.\
+  \ Source-configured diagnostics are not full app tracing. External immutable audit digest anchoring\
+  \ is unimplemented. M365/import/queue workers are conditional or deferred. User.Read own-photo permission\
+  \ is not Sites.Selected plus a site grant. SharePoint topology parameter is not an implemented adapter.\
+  \ Front Door Premium/WAF is not deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of\
+  \ a five-day user-delegation SAS; one vault secret write, distinct maintenance identity, no browser\
+  \ token retrieval. Budget 80% actual/100% forecast notifications are not a hard cap. Managed-identity\
+  \ ACR image pull/operator build-deploy is distinct from CI tests/scan/SBOM, not automatic Azure deployment.\n\
+  The owner explicitly reauthorised synthetic ledger recreation on 14 October; previous exercise audit/recommendations\
+  \ reset, not an unchanged migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and\
+  \ 11 private staff bindings are aggregate fixture counts only. No private identifiers are reproduced.\
+  \ Historical Decision 1 is not a current five-assistant runtime dependency. Finance fixtures and 20%/25%\
+  \ benefits are hypotheses, not measured success. No new legal currentness, expenditure, rollout or production\
+  \ approval.\n\n\nRETAINED BASELINE VISIBLE COPY / TRACEABILITY, UNSPOKEN:\nHistorical wording below\
+  \ is retained, not promoted to current fact or permission. Current oracle/status and refreshed visible\
+  \ copy govern. In particular, old 'gates OPEN' meant outstanding acceptance, not permission; Excel reporting\
+  \ is a conditional intended transition, not delivered integration.\nBack the evidence. Keep the resident\
+  \ promise.\n60,000 homes.\nSafe, resident-accepted\nhandovers.\nReal service proof now.\nHuman and value\
+  \ gates next.\nTODAY’S DECISION\nEndorse the next\nacceptance-and-value\nproposal.\nProposal only —\
+  \ no new spending or production authority."

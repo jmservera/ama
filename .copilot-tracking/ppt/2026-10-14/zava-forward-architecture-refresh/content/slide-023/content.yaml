@@ -1,0 +1,768 @@
+slide: 23
+title: Operate the core without overstating assurance.
+section: Optional appendix
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES / ZAVA FORWARD / OPTIONAL REFERENCE
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: Operate the core without overstating assurance.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026 | S16 + retained sources/status in notes
+  left: 0.55
+  top: 7.28
+  width: 11.4
+  height: 0.21
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 23 / 24
+  left: 12.0
+  top: 7.24
+  width: 0.78
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: connector
+  name: renewal-token-key-segment-1
+  connector_type: straight
+  begin_x: 4.8
+  begin_y: 2.7
+  end_x: 4.28
+  end_y: 2.7
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: none
+  tail_end: triangle
+- type: connector
+  name: renewal-vault-write-segment-1
+  connector_type: straight
+  begin_x: 8.53
+  begin_y: 2.7
+  end_x: 9.05
+  end_y: 2.7
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: none
+  tail_end: triangle
+- type: shape
+  shape: rounded_rectangle
+  name: ops-tokens-background
+  left: 0.55
+  top: 2.02
+  width: 3.73
+  height: 1.55
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: ops-tokens-title
+  text: Azure Blob | auth tokens
+  left: 1.06
+  top: 2.1
+  width: 3.1
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: ops-tokens-body
+  text: 'CONFIGURED | private store
+
+    EasyAuth19 uses SAS.
+
+    Renewal gets delegation key.'
+  left: 0.67
+  top: 2.48
+  width: 3.49
+  height: 1.03
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: ops-renewal-background
+  left: 4.8
+  top: 2.02
+  width: 3.73
+  height: 1.55
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: ops-renewal-title
+  text: Azure Container Apps
+  left: 5.31
+  top: 2.1
+  width: 3.1
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: ops-renewal-body
+  text: 'CONFIGURED | renewal job
+
+    03:00 UTC; daily five-day SAS.
+
+    Own maintenance identity.'
+  left: 4.92
+  top: 2.48
+  width: 3.49
+  height: 1.03
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: ops-vault-background
+  left: 9.05
+  top: 2.02
+  width: 3.73
+  height: 1.55
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: ops-vault-title
+  text: Azure Key Vault
+  left: 9.56
+  top: 2.1
+  width: 3.1
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: ops-vault-body
+  text: 'CONFIGURED | one secret
+
+    Renewal writes; auth reads.
+
+    No browser token retrieval.'
+  left: 9.17
+  top: 2.48
+  width: 3.49
+  height: 1.03
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: ops-registry-background
+  left: 0.55
+  top: 3.78
+  width: 3.73
+  height: 1.55
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: ops-registry-title
+  text: Azure Container Registry
+  left: 1.06
+  top: 3.86
+  width: 3.1
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: ops-registry-body
+  text: 'CONFIGURED | MI image pull
+
+    Operator build + deploy.
+
+    CI: tests / scan / SBOM only.'
+  left: 0.67
+  top: 4.24
+  width: 3.49
+  height: 1.03
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: ops-logs-background
+  left: 4.8
+  top: 3.78
+  width: 3.73
+  height: 1.55
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: ops-logs-title
+  text: Azure Log Analytics
+  left: 5.31
+  top: 3.86
+  width: 3.1
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: ops-logs-body
+  text: 'CONFIGURED | logs + audit
+
+    App Insights + SQL/API logs.
+
+    Full tracing not established.'
+  left: 4.92
+  top: 4.24
+  width: 3.49
+  height: 1.03
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: ops-alerts-background
+  left: 9.05
+  top: 3.78
+  width: 3.73
+  height: 1.55
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: ops-alerts-title
+  text: Azure Monitor alerts
+  left: 9.56
+  top: 3.86
+  width: 3.1
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: ops-alerts-body
+  text: 'CONFIGURED | email alerts
+
+    80% actual / 100% forecast.
+
+    Not a hard spending cap.'
+  left: 9.17
+  top: 4.24
+  width: 3.49
+  height: 1.03
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: ops-network
+  text: 'SOURCE-CONFIGURED: VNet, subnets, NSGs, private endpoints, DNS, AMPLS.
+
+    Development also permits public access. PaaS services are NOT VNet-hosted.'
+  left: 0.55
+  top: 5.45
+  width: 12.23
+  height: 0.64
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: ops-support
+  text: 'CONFIGURED: API19 -> Graph own-photo User.Read; browser -> tile provider (list alternative).'
+  left: 0.55
+  top: 6.15
+  width: 12.23
+  height: 0.36
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: ops-failures-background
+  left: 0.55
+  top: 6.51
+  width: 12.23
+  height: 0.45
+  fill: '#E5B96A'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: ops-failures
+  text: 'Model fails: manual work. SQL fails: writes may block. Token renewal fails: act before expiry.'
+  left: 0.7
+  top: 6.59
+  width: 11.93
+  height: 0.33
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: return-decision-link
+  text: 'Return to decision: slide 18'
+  left: 9.05
+  top: 6.96
+  width: 2.95
+  height: 0.3
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#173F35'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+  target_slide: 18
+  description: 'Return to decision: slide 18'
+- type: image
+  name: azure-icon-blob-ops-tokens
+  path: images/azure-blob.png
+  left: 0.67
+  top: 2.105
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure Blob | auth tokens.'
+- type: image
+  name: azure-icon-aca-ops-renewal
+  path: images/azure-aca.png
+  left: 4.92
+  top: 2.105
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure Container Apps.'
+- type: image
+  name: azure-icon-vault-ops-vault
+  path: images/azure-vault.png
+  left: 9.17
+  top: 2.105
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure Key Vault.'
+- type: image
+  name: azure-icon-registry-ops-registry
+  path: images/azure-registry.png
+  left: 0.67
+  top: 3.8649999999999998
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure Container Registry.'
+- type: image
+  name: azure-icon-logs-ops-logs
+  path: images/azure-logs.png
+  left: 4.92
+  top: 3.8649999999999998
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure Log Analytics.'
+- type: image
+  name: azure-icon-monitor-ops-alerts
+  path: images/azure-monitor.png
+  left: 9.17
+  top: 3.8649999999999998
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure Monitor alerts.'
+speaker_notes: "Message / evidence limit / planned script:\nSLIDE 23 - Operate the core without overstating\
+  \ assurance.\nMessage: Operate the core without overstating assurance.\nOptional appendix; no scheduled\
+  \ main-route time.\n\n\nREFRESH BASELINE / UN SPOKEN REFERENCE:\nRefresh documentation intake: f94f53a56c36d38ec36f7f662595912084571380.\
+  \ Architecture source: 062434a1fedbf6a87d1374c767c2bf0a11491ab6. Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb.\
+  \ Historical cabe05c context below is not the current runtime or this documentation intake.\nCurrent\
+  \ five assistants are modules in ONE Python API Container App, not five microservices or the deferred\
+  \ queue-worker estate. Direct Azure OpenAI; no deployed Foundry Agent Service. SQL owns domain/proposal\
+  \ state, dedupe, reservations and fenced leases. Inference is outside database locks; the provider has\
+  \ no DB/workflow credentials. Accepting a proposal changes proposal/audit state, never resident, professional,\
+  \ work-release, quality or Finance approval.\nNormal five-assistant authority is absent; proactive OFF.\
+  \ This does not disable every legacy AI draft route. Ready = generated, unreviewed. Five operator paths,\
+  \ five calls, 6884 tokens, 15 ledger events and full SQL content/restart proof are technical observations\
+  \ only, not staff-browser, human source, semantic or value acceptance. Restart is not restore acceptance.\n\
+  Development public-network exceptions coexist with configured private controls; PaaS is not VNet-hosted.\
+  \ Source-configured diagnostics are not full app tracing. External immutable audit digest anchoring\
+  \ is unimplemented. M365/import/queue workers are conditional or deferred. User.Read own-photo permission\
+  \ is not Sites.Selected plus a site grant. SharePoint topology parameter is not an implemented adapter.\
+  \ Front Door Premium/WAF is not deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of\
+  \ a five-day user-delegation SAS; one vault secret write, distinct maintenance identity, no browser\
+  \ token retrieval. Budget 80% actual/100% forecast notifications are not a hard cap. Managed-identity\
+  \ ACR image pull/operator build-deploy is distinct from CI tests/scan/SBOM, not automatic Azure deployment.\n\
+  The owner explicitly reauthorised synthetic ledger recreation on 14 October; previous exercise audit/recommendations\
+  \ reset, not an unchanged migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and\
+  \ 11 private staff bindings are aggregate fixture counts only. No private identifiers are reproduced.\
+  \ Historical Decision 1 is not a current five-assistant runtime dependency. Finance fixtures and 20%/25%\
+  \ benefits are hypotheses, not measured success. No new legal currentness, expenditure, rollout or production\
+  \ approval.\n\nSpoken return: That is the current boundary; the decision remains which evidence gate\
+  \ to resolve next.\n\nS16 ARCHITECTURE / TEXT EQUIVALENT:\nS16: docs/architecture/README.md, executive\
+  \ and technical Excalidraw/SVG/PNG views, docs/architecture/assets/README.md; 14 October 2026. Static\
+  \ source baseline 062434a1fedbf6a87d1374c767c2bf0a11491ab6, not a fresh inventory or acceptance. Source\
+  \ Excalidraw remains editing authority; this PPTX is a simplified native adaptation. Individual unmodified\
+  \ official Azure SVG assets are locally rasterised for product icons; native containers, labels and\
+  \ connectors remain editable.\nRefresh documentation intake: f94f53a56c36d38ec36f7f662595912084571380.\
+  \ Architecture source: 062434a1fedbf6a87d1374c767c2bf0a11491ab6. Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb.\
+  \ Historical cabe05c context below is not the current runtime or this documentation intake.\nCurrent\
+  \ five assistants are modules in ONE Python API Container App, not five microservices or the deferred\
+  \ queue-worker estate. Direct Azure OpenAI; no deployed Foundry Agent Service. SQL owns domain/proposal\
+  \ state, dedupe, reservations and fenced leases. Inference is outside database locks; the provider has\
+  \ no DB/workflow credentials. Accepting a proposal changes proposal/audit state, never resident, professional,\
+  \ work-release, quality or Finance approval.\nNormal five-assistant authority is absent; proactive OFF.\
+  \ This does not disable every legacy AI draft route. Ready = generated, unreviewed. Five operator paths,\
+  \ five calls, 6884 tokens, 15 ledger events and full SQL content/restart proof are technical observations\
+  \ only, not staff-browser, human source, semantic or value acceptance. Restart is not restore acceptance.\n\
+  Development public-network exceptions coexist with configured private controls; PaaS is not VNet-hosted.\
+  \ Source-configured diagnostics are not full app tracing. External immutable audit digest anchoring\
+  \ is unimplemented. M365/import/queue workers are conditional or deferred. User.Read own-photo permission\
+  \ is not Sites.Selected plus a site grant. SharePoint topology parameter is not an implemented adapter.\
+  \ Front Door Premium/WAF is not deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of\
+  \ a five-day user-delegation SAS; one vault secret write, distinct maintenance identity, no browser\
+  \ token retrieval. Budget 80% actual/100% forecast notifications are not a hard cap. Managed-identity\
+  \ ACR image pull/operator build-deploy is distinct from CI tests/scan/SBOM, not automatic Azure deployment.\n\
+  The owner explicitly reauthorised synthetic ledger recreation on 14 October; previous exercise audit/recommendations\
+  \ reset, not an unchanged migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and\
+  \ 11 private staff bindings are aggregate fixture counts only. No private identifiers are reproduced.\
+  \ Historical Decision 1 is not a current five-assistant runtime dependency. Finance fixtures and 20%/25%\
+  \ benefits are hypotheses, not measured success. No new legal currentness, expenditure, rollout or production\
+  \ approval.\nDiagram reading order: identity/request -> single API -> stores/model -> separate human\
+  \ authority. Connectors are editable; no composite architecture image. No native-viewer accessibility\
+  \ claim.\nRETAINED OPERATIONS REFERENCE:\nSLIDE 19 — Technical challenge: bounded does not mean fully\
+  \ assured.\nTopic sentinel: technical limits\nMessage: disclose runtime limits and the evidence required\
+  \ for stronger claims.\nStatus: strategist-recommended proposal; refreshed 14 October 2026.\n\n\"Threats\
+  \ include source injection, cross-role leakage, stale\n  approvals and duplicate or lost transitions.\
+  \ Application controls—not a\n  prompt alone—constrain proposals. SQL controls claim/lease fences and\
+  \ finite\n  shared liabilities; timeouts do not mean zero usage and billing is not\n  exactly once.\
+  \ Local SQL/browser tests and deployed content-restart receipts\n  are different evidence. No measured\
+  \ Azure scale load, full restore,\n  production SLO or externally anchored whole-system audit is established.\n\
+  \  Present runtime still shares in-memory domain mechanisms described in\n  the MVP limits; proposed\
+  \ queue workers/private topology remain distinct.\n  Decision 1 is a separate candidate-selection/screening\
+  \ design with historical\n  narrow evidence; it did not power the five new GPT proposal calls.\n  Held-out\
+  \ calibration, alternatives on quality/latency/cost and independent\n  human source labels remain required.\
+  \ Structured trigger predicates do not\n  establish autonomous reasoning; A7 is not claimed complete.\"\
+  \n\nSources — workspace-relative paths, section and evidence status; as read 14 October 2026:\nS07:\
+  \ docs/prds/zava-forward-retrofit-programme-demonstrator.md, v0.14 front matter; component contracts;\
+  \ threat model; Five Reactive and Proactive Assistants; orchestration; evaluation; current handoff.\
+  \ Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and amended owner acceptance open;\
+  \ CON-009/AC-057 full acceptance not passed.\nS08: docs/adrs/0002-pilot-readiness-architecture.md, Five-Assistant\
+  \ Exercise Runtime; Fresh Ledger and Synthetic Coverage Learning; current delta. Status: Current lean\
+  \ proposal runtime, explicit reset, image/source/revision-linked service proof; proposed readiness estate\
+  \ separate.\nS11: mvp/README.md, Honest limits; Five retrofit assistants; Operator authority; current\
+  \ delivery paragraphs; mvp/zavaforward_mvp/assistants.py, REGISTRY/RULES/capture/eligible/review. Status:\
+  \ Source and documented implementation; captured metadata/category citations, not unrestricted document\
+  \ reading, human source review or semantic entailment.\nS12: docs/adrs/0001-azure-architecture.md, Hybrid\
+  \ M365 and Excel transition; Options still to compare; provisional appraisal. Status: Proposed transition/full\
+  \ topology and historical illustration, not current deployment or scored customer platform choice.\n\
+  S13: docs/ideas/typesafe-system-one-agent-fit.md, pinned #58 feasibility/parallel experiment, as carried\
+  \ in S02/S07. Status: Historical separate Decision 1 selection/generation evidence; not the provider\
+  \ for the five new service calls; no new evaluation results.\n\nOptional appendix, outside the planned\
+  \ 795-second main route.\n\nExact current claim-status oracle:\n1. Historical documentation/source context\
+  \ was cabe05c; runtime source is\n   cd14b3b379026a87ebfa3e9058ac10c0df7888eb, not cabe05c.\n2. Image05\
+  \ is assistants-20261013-05, manifest\n   sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20,\n\
+  \   serving ca-forward-test-api--0000012. Short forms on screen; exact forms\n   in notes. Do not rename\
+  \ historical revisions.\n3. The owner explicitly reauthorized the synthetic database reset on\n   14\
+  \ October after the earlier cancellation. Previous exercise\n   recommendations/audit were reset, not\
+  \ preserved by migration. Retain\n   generator/60,000-stock lineage; the new programme baseline is 980\
+  \ cases,\n   38 booked visits and 11 actual privately bound tenant staff. Do not publish\n   their identities.\
+  \ Counts are exercise context, not real resident activity,\n   staff use or programme success.\n4. Five\
+  \ distinct registered operator service paths returned citation-validated\n   ready proposals through\
+  \ real Azure OpenAI deployment standard, model\n   gpt-4.1-mini-2025-04-14: five calls/attempts, 6884\
+  \ total tokens, 15 ledger\n   events. These are not Decision 1 calls or five independent autonomous\
+  \ agents.\n5. Against that new baseline, independent controlled-domain hashes stayed\n   unchanged by\
+  \ proposal generation, and full assistant-table content,\n   outputs and usage survived an actual serving-revision\
+  \ restart. This is\n   stronger than row-count equality, weaker than disaster recovery/restore.\n6.\
+  \ Bounded operator QA ended. Normal serving assistant authority is absent;\n   proactive scans are off.\
+  \ A registered capability is not current standing\n   authority. Neither proactive enablement nor new\
+  \ calls are authorized here.\n7. Citation validity means permitted source/provenance binding, not semantic\n\
+  \   correctness or competent source verification. None of the five has human\n   verification/acceptance\
+  \ recorded by that operator exercise.\n8. Real staff-browser/API, role/human/source/accessibility acceptance,\n\
+  \   semantic calibration, paired task value and operational outcomes remain\n   open (RV-001/RV-002).\
+  \ PRD v0.14 remains a candidate. Do not mark AC-057\n   or full requirements/product/pilot/production\
+  \ acceptance passed.\n9. No observed doubled throughput, lower bills, secured £40m, programme\n   savings,\
+  \ cost per accepted home, currency-cost cap, production selection\n   or corporate investment approval\
+  \ follows. Token allowance is not a\n   currency guarantee; historical EXA-012 and the scoped #58 override\
+  \ are\n   not a new funding commitment.\n10. Source-level automated contract tests are evidence of tested\
+  \ boundaries,\n    not a live staff session or panel behaviour. No new score is inferred from\n    cabe05c's\
+  \ historical rubric update or from successful CI.\nModel failure leaves manual work; SQL failure may\
+  \ block writes. Token renewal failure needs action before expiry. Safety intake has an independent named\
+  \ human repairs/hazard-service route, never AI/Teams dependent. SLO/load/unit cost, real sessions and\
+  \ full restore acceptance remain unmeasured. One deployable shares failure/scaling boundaries, a lean\
+  \ trade-off, not decoupled-microservice proof.\nSource flow a93858ce6826d7e2ab9f: vault -> auth; native\
+  \ ops-vault-body.\nSource flow 7609eb7a35e5338d6d83: api -> graph; native ops-support.\nSource flow\
+  \ 2eae8e0ea7b026ef35e9: staff -> maps; native ops-support.\nSource flow 34dab47235c72c168f38: renewal\
+  \ -> tokens; native renewal-token-key-segment-1.\nSource flow dc4c3ddd7f1f218075b5: renewal -> vault;\
+  \ native renewal-vault-write-segment-1.\nSource flow b5a9d2f3ab17b9a4ab43: auth -> tokens; native ops-tokens-body.\n\
+  Source flow 0115c864403bfdf58b00: api -> registry; native ops-registry-body.\nSource flow f2dc7f9116778dce9629:\
+  \ insights -> logs; native ops-logs-body.\nSource flow cb3b6a244b00514fb4de: sql -> logs; native ops-logs-body.\n\
+  Source flow 0448430d9d92f5c980be: model -> alerts; native ops-alerts-body.\nVISIBLE NATIVE DIAGRAM TEXT\
+  \ EQUIVALENT (unspoken):\nZAVA NORTH HOMES / ZAVA FORWARD / OPTIONAL REFERENCE\nOperate the core without\
+  \ overstating assurance.\n14 OCT 2026 | S16 + retained sources/status in notes\n23 / 24\nAzure Blob\
+  \ | auth tokens\nCONFIGURED | private store\nEasyAuth19 uses SAS.\nRenewal gets delegation key.\nAzure\
+  \ Container Apps\nCONFIGURED | renewal job\n03:00 UTC; daily five-day SAS.\nOwn maintenance identity.\n\
+  Azure Key Vault\nCONFIGURED | one secret\nRenewal writes; auth reads.\nNo browser token retrieval.\n\
+  Azure Container Registry\nCONFIGURED | MI image pull\nOperator build + deploy.\nCI: tests / scan / SBOM\
+  \ only.\nAzure Log Analytics\nCONFIGURED | logs + audit\nApp Insights + SQL/API logs.\nFull tracing\
+  \ not established.\nAzure Monitor alerts\nCONFIGURED | email alerts\n80% actual / 100% forecast.\nNot\
+  \ a hard spending cap.\nSOURCE-CONFIGURED: VNet, subnets, NSGs, private endpoints, DNS, AMPLS.\nDevelopment\
+  \ also permits public access. PaaS services are NOT VNet-hosted.\nCONFIGURED: API19 -> Graph own-photo\
+  \ User.Read; browser -> tile provider (list alternative).\nModel fails: manual work. SQL fails: writes\
+  \ may block. Token renewal fails: act before expiry.\nReturn to decision: slide 18\nFull source views:\
+  \ docs/architecture/zava-forward-executive-architecture.excalidraw / .svg / .png; docs/architecture/zava-forward-technical-architecture.excalidraw\
+  \ / .svg / .png. README and assets/README hold source/status/provenance."

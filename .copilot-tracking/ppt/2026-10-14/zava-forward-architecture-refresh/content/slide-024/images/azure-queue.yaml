@@ -1,0 +1,25 @@
+slide: 24
+node: deferred-queues
+object: azure-icon-queue-deferred-queues
+source: docs/architecture/assets/azure/queue.svg
+source_sha256: 1f37dad74544fe1e4d5f10d40a11e71b8026d5b11993539f9f19416224097a08
+png: content/slide-024/images/azure-queue.png
+png_sha256: 6cc42602853d94819a695a2bbddcd4394e0d9dde3b7871eef219bde441da65bc
+source_viewbox:
+- 0.0
+- 0.0
+- 18.0
+- 18.0
+source_ratio: 1.0
+raster_pixels:
+- 240
+- 240
+placement_inches:
+- 0.29
+- 0.29
+adjacent_label: Azure Queue Storage
+converter: CairoSVG 2.9.1
+no_crop: true
+no_recolour: true
+source_unmodified: true
+provenance: docs/architecture/assets/README.md; local official Azure asset, not composite

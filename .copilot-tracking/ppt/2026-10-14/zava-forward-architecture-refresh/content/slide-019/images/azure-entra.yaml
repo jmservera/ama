@@ -1,0 +1,25 @@
+slide: 19
+node: runtime-entra
+object: azure-icon-entra-runtime-entra
+source: docs/architecture/assets/azure/entra.svg
+source_sha256: bad6673e76100221dfeb7adaebb4a6778c255c07afbdef742bf18527fe5115ab
+png: content/slide-019/images/azure-entra.png
+png_sha256: 5720bb90454ac10f2deed232aebc9ea29733de51733496edb22e79a33ea61e48
+source_viewbox:
+- 0.0
+- 0.0
+- 18.0
+- 18.0
+source_ratio: 1.0
+raster_pixels:
+- 240
+- 240
+placement_inches:
+- 0.29
+- 0.29
+adjacent_label: Microsoft Entra ID
+converter: CairoSVG 2.9.1
+no_crop: true
+no_recolour: true
+source_unmodified: true
+provenance: docs/architecture/assets/README.md; local official Azure asset, not composite

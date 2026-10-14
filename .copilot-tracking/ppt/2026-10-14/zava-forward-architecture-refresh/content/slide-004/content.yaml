@@ -1,0 +1,383 @@
+slide: 4
+title: Compare routes; keep the exercise choice provisional.
+section: Main
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES / ZAVA FORWARD / EXECUTIVE PROPOSAL
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: Compare routes; keep the exercise choice provisional.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026 | S16 + retained sources/status in notes
+  left: 0.55
+  top: 7.28
+  width: 11.4
+  height: 0.21
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 04 / 24
+  left: 12.0
+  top: 7.24
+  width: 0.78
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-1-background
+  left: 0.55
+  top: 2.02
+  width: 3.93
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: peer-1-title
+  text: Improve workflow
+  left: 0.73
+  top: 2.22
+  width: 3.5700000000000003
+  height: 0.94
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: peer-1-body
+  text: 'Least platform change.
+
+    Controls still to test.'
+  left: 0.73
+  top: 3.33
+  width: 3.5700000000000003
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: peer-2-background
+  left: 4.7
+  top: 2.02
+  width: 3.93
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: peer-2-title
+  text: Greenfield business platform
+  left: 4.88
+  top: 2.22
+  width: 3.5700000000000003
+  height: 0.94
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: peer-2-body
+  text: 'Managed tools.
+
+    New adoption, licensing
+
+    and support.'
+  left: 4.88
+  top: 3.33
+  width: 3.5700000000000003
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: peer-3-background
+  left: 8.850000000000001
+  top: 2.02
+  width: 3.93
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: peer-3-title
+  text: Azure-led hybrid
+  left: 9.030000000000001
+  top: 2.22
+  width: 3.5700000000000003
+  height: 0.94
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: peer-3-body
+  text: 'Explicit contracts.
+
+    Bespoke engineering
+
+    and operations.'
+  left: 9.030000000000001
+  top: 3.33
+  width: 3.5700000000000003
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: options-provisional-background
+  left: 0.55
+  top: 6.0
+  width: 12.23
+  height: 0.8
+  fill: '#E5B96A'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: options-provisional
+  text: 'Recommend hybrid for the bounded exercise only.
+
+    Provisional baseline, NOT a customer investment winner.'
+  left: 0.7
+  top: 6.08
+  width: 11.93
+  height: 0.7200000000000001
+  font: Liberation Sans
+  font_size: 20
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: options-link
+  text: 'Equal-control appraisal: slide 22'
+  left: 0.55
+  top: 6.9
+  width: 6.0
+  height: 0.3
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#173F35'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+  target_slide: 22
+  description: 'Equal-control appraisal: slide 22'
+speaker_notes: "Message / evidence limit / planned script:\nSLIDE 04 - Compare routes; keep the exercise\
+  \ choice provisional.\nTopic sentinel: prerequisite examples\nMessage: safe assistance depends on controlled\
+  \ inputs and separate decisions.\nStatus: strategist-recommended proposal; refreshed 14 October 2026.\n\
+  \n\"Ranking weights are policy, not a model's choice. A schedule\n  requires competent committed capacity\
+  \ and an informed resident decision.\n  A funding pack needs the right evidence, route and Finance review.\n\
+  \  Application, award, claim and cash are different. These research hypotheses\n  explain the prerequisite\
+  \ controls; they are not measured company bottlenecks.\"\n* Transition: \"The shared foundation makes\
+  \ those prerequisites visible.\"\n\nSources — workspace-relative paths, section and evidence status;\
+  \ as read 14 October 2026:\nS02: docs/case_study_48_addendum.md, Business Challenge; Executive Assessment;\
+  \ Digital Foundation; Where Agents Fit; Recommended Executive Decision. Status: Maintained 14 October\
+  \ synthesis and proposed controls; bottleneck/outcomes not verified company findings.\nS04: docs/reference/research/company/agent-request-challenge.md,\
+  \ Summary and capability sections; docs/reference/research/company/agent-what-if-study.md, method and\
+  \ revised verdicts, as carried in S02. Status: Sector-informed role-agent hypotheses, not employee interviews\
+  \ or resident testimony.\n\nPlanned allocation: 40 seconds; not rehearsed.\n\nREFRESH BASELINE / UN\
+  \ SPOKEN REFERENCE:\nRefresh documentation intake: f94f53a56c36d38ec36f7f662595912084571380. Architecture\
+  \ source: 062434a1fedbf6a87d1374c767c2bf0a11491ab6. Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb.\
+  \ Historical cabe05c context below is not the current runtime or this documentation intake.\nCurrent\
+  \ five assistants are modules in ONE Python API Container App, not five microservices or the deferred\
+  \ queue-worker estate. Direct Azure OpenAI; no deployed Foundry Agent Service. SQL owns domain/proposal\
+  \ state, dedupe, reservations and fenced leases. Inference is outside database locks; the provider has\
+  \ no DB/workflow credentials. Accepting a proposal changes proposal/audit state, never resident, professional,\
+  \ work-release, quality or Finance approval.\nNormal five-assistant authority is absent; proactive OFF.\
+  \ This does not disable every legacy AI draft route. Ready = generated, unreviewed. Five operator paths,\
+  \ five calls, 6884 tokens, 15 ledger events and full SQL content/restart proof are technical observations\
+  \ only, not staff-browser, human source, semantic or value acceptance. Restart is not restore acceptance.\n\
+  Development public-network exceptions coexist with configured private controls; PaaS is not VNet-hosted.\
+  \ Source-configured diagnostics are not full app tracing. External immutable audit digest anchoring\
+  \ is unimplemented. M365/import/queue workers are conditional or deferred. User.Read own-photo permission\
+  \ is not Sites.Selected plus a site grant. SharePoint topology parameter is not an implemented adapter.\
+  \ Front Door Premium/WAF is not deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of\
+  \ a five-day user-delegation SAS; one vault secret write, distinct maintenance identity, no browser\
+  \ token retrieval. Budget 80% actual/100% forecast notifications are not a hard cap. Managed-identity\
+  \ ACR image pull/operator build-deploy is distinct from CI tests/scan/SBOM, not automatic Azure deployment.\n\
+  The owner explicitly reauthorised synthetic ledger recreation on 14 October; previous exercise audit/recommendations\
+  \ reset, not an unchanged migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and\
+  \ 11 private staff bindings are aggregate fixture counts only. No private identifiers are reproduced.\
+  \ Historical Decision 1 is not a current five-assistant runtime dependency. Finance fixtures and 20%/25%\
+  \ benefits are hypotheses, not measured success. No new legal currentness, expenditure, rollout or production\
+  \ approval.\n\nSpoken transition: Whichever route wins, the people and accountable services stay.\n\n\
+  RETAINED BASELINE VISIBLE COPY / TRACEABILITY, UNSPOKEN:\nHistorical wording below is retained, not\
+  \ promoted to current fact or permission. Current oracle/status and refreshed visible copy govern. In\
+  \ particular, old 'gates OPEN' meant outstanding acceptance, not permission; Excel reporting is a conditional\
+  \ intended transition, not delivered integration.\nFix the prerequisite before adding the assist.\n\
+  Rank homes\nApproved policy\n+\nsourced facts.\nOffer a slot\nCommitted capacity\n+\nresident choice.\n\
+  Draft funding\nAccepted evidence\n+\nseparate ledger states.\nA slot is not consent. A form is not funding."

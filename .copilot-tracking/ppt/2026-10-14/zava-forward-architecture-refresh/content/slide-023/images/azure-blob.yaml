@@ -1,0 +1,25 @@
+slide: 23
+node: ops-tokens
+object: azure-icon-blob-ops-tokens
+source: docs/architecture/assets/azure/blob.svg
+source_sha256: 7190d3bb14ce30ce74bd0af873915830fe821e8c5f6ef6f3149e6f7cfb2aa4f7
+png: content/slide-023/images/azure-blob.png
+png_sha256: 07fcf7397f41036e40d0c612f5c24ebba03ca0723739cc7120c0e87888ca83a2
+source_viewbox:
+- 0.0
+- 0.0
+- 18.0
+- 18.0
+source_ratio: 1.0
+raster_pixels:
+- 240
+- 240
+placement_inches:
+- 0.29
+- 0.29
+adjacent_label: Azure Blob | auth tokens
+converter: CairoSVG 2.9.1
+no_crop: true
+no_recolour: true
+source_unmodified: true
+provenance: docs/architecture/assets/README.md; local official Azure asset, not composite

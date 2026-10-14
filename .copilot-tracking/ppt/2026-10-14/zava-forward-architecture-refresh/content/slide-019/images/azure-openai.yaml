@@ -1,0 +1,25 @@
+slide: 19
+node: runtime-model
+object: azure-icon-openai-runtime-model
+source: docs/architecture/assets/azure/openai.svg
+source_sha256: 4859f2c78b6b81acbbaf94e7348cb7dcbe97955a038be903de01cf46a7206aad
+png: content/slide-019/images/azure-openai.png
+png_sha256: 6ba3e92249f80980be6ddcd27d8711fbecc7b2ee237114a85252290f9720d9e8
+source_viewbox:
+- 0.0
+- 0.0
+- 18.0
+- 18.0
+source_ratio: 1.0
+raster_pixels:
+- 240
+- 240
+placement_inches:
+- 0.29
+- 0.29
+adjacent_label: Azure OpenAI
+converter: CairoSVG 2.9.1
+no_crop: true
+no_recolour: true
+source_unmodified: true
+provenance: docs/architecture/assets/README.md; local official Azure asset, not composite

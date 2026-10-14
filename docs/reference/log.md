@@ -2284,3 +2284,30 @@ metadata when the knowledge base was created.
   this index. Retained complete-guide coverage and open capstone floors.
   The presentation, original case, owner memory, regulatory snapshots and
   runtime code remain unchanged; no cloud, tenant or model operation.
+
+## [2026-10-14] update | Architecture and UX capstone presentation refresh
+
+* Owner requested the new architecture materials in the presentation and
+  the UX Designer/PowerPoint skills and agents to improve it. Published the
+  [24-slide capstone deck and handover](../capstone/README.md#architecture-and-ux-refresh-2026-10-14),
+  retaining the 18-slide main route and adding two optional appendices.
+* Native presentation architecture covers the executive view on slide 10,
+  current runtime on 19, operations/identity/network context on 23 and
+  deferred/conditional topology on 24. Official Azure service icons remain
+  individual assets; diagrams are editable boxes, text and connectors.
+  The Excalidraw sources retain their separate baseline and authority.
+* UX expert review made alternatives explicit, separated recorded proof
+  from outstanding acceptance, clarified the planning-only decision and
+  proposed owners/deliverables, and added technical-detail/return links.
+  It is artifact review, not human comprehension, resident engagement or
+  observed usability evidence.
+* The native five-capability map, human decision boundaries and common
+  title/body starts remain. The current working handover records fresh
+  rendering, notes/geometry/source checks, icon provenance, warning
+  dispositions and the full-guide contribution/gap assessment.
+* Planned 795-second main route plus 105 seconds questions/contingency is
+  not rehearsal. Authority and proactive scans remain off; real-user,
+  semantic, value, native-viewer and production acceptance remain separate.
+  No new legal, funding or business-outcome claim, cloud/tenant/model
+  operation or spending authority. Original case, owner memory, regulatory
+  snapshots, runtime and infrastructure code remain unchanged.

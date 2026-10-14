@@ -1,0 +1,799 @@
+slide: 10
+title: One API supports the work. People retain authority.
+section: Main
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES / ZAVA FORWARD / EXECUTIVE PROPOSAL
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: One API supports the work. People retain authority.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026 | S16 + retained sources/status in notes
+  left: 0.55
+  top: 7.28
+  width: 11.4
+  height: 0.21
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 10 / 24
+  left: 12.0
+  top: 7.24
+  width: 0.78
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: connector
+  name: exec-staff-api-segment-1
+  connector_type: straight
+  begin_x: 3.15
+  begin_y: 3.18
+  end_x: 3.5
+  end_y: 3.18
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: solid
+  head_end: none
+  tail_end: triangle
+- type: connector
+  name: exec-people-api-segment-1
+  connector_type: straight
+  begin_x: 3.15
+  begin_y: 4.65
+  end_x: 3.5
+  end_y: 4.65
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: solid
+  head_end: none
+  tail_end: triangle
+- type: connector
+  name: exec-entra-api-segment-1
+  connector_type: straight
+  begin_x: 6.0
+  begin_y: 2.77
+  end_x: 6.0
+  end_y: 3.05
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: none
+  tail_end: triangle
+- type: connector
+  name: exec-api-model-segment-1
+  connector_type: straight
+  begin_x: 8.5
+  begin_y: 3.9
+  end_x: 9.05
+  end_y: 3.9
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: triangle
+  tail_end: triangle
+- type: connector
+  name: exec-api-sql-segment-1
+  connector_type: straight
+  begin_x: 4.7
+  begin_y: 4.85
+  end_x: 4.7
+  end_y: 5.25
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: solid
+  head_end: none
+  tail_end: triangle
+- type: connector
+  name: exec-api-blob-segment-1
+  connector_type: straight
+  begin_x: 7.3
+  begin_y: 4.85
+  end_x: 7.3
+  end_y: 5.25
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: none
+  tail_end: triangle
+- type: shape
+  shape: rounded_rectangle
+  name: exec-staff-background
+  left: 0.55
+  top: 2.02
+  width: 2.6
+  height: 2.0
+  fill: '#F7F2E7'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: exec-staff-title
+  text: 'Staff assist
+
+    residents'
+  left: 0.67
+  top: 2.1
+  width: 2.3600000000000003
+  height: 0.65
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: exec-staff-body
+  text: 'HUMAN | requests
+
+    Phone/letter/help.
+
+    No resident portal.'
+  left: 0.67
+  top: 2.87
+  width: 2.3600000000000003
+  height: 1.0899999999999999
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: exec-people-background
+  left: 0.55
+  top: 4.26
+  width: 2.6
+  height: 2.0
+  fill: '#F7F2E7'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: exec-people-title
+  text: 'People own
+
+    approval'
+  left: 0.67
+  top: 4.34
+  width: 2.3600000000000003
+  height: 0.65
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: exec-people-body
+  text: 'HUMAN | approves
+
+    Resident + Finance.
+
+    Professionals; QA.'
+  left: 0.67
+  top: 5.109999999999999
+  width: 2.3600000000000003
+  height: 1.0899999999999999
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: exec-entra-background
+  left: 3.5
+  top: 2.02
+  width: 5.0
+  height: 0.75
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: exec-entra-title
+  text: Microsoft Entra ID | CONFIGURED
+  left: 4.01
+  top: 2.08
+  width: 4.37
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: exec-entra-body
+  text: Microsoft sign-in; role-limited access.
+  left: 3.62
+  top: 2.43
+  width: 4.76
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: exec-api-background
+  left: 3.5
+  top: 3.05
+  width: 5.0
+  height: 1.8
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: exec-api-title
+  text: Azure Container Apps
+  left: 4.01
+  top: 3.13
+  width: 4.37
+  height: 0.5
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: exec-api-body
+  text: 'CORE | one workbench + Python API.
+
+    Workflow + five assistant modules.'
+  left: 3.62
+  top: 3.6999999999999997
+  width: 4.76
+  height: 1.0899999999999999
+  font: Liberation Sans
+  font_size: 20
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: exec-model-background
+  left: 9.05
+  top: 3.05
+  width: 3.73
+  height: 1.8
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: exec-model-title
+  text: Azure OpenAI
+  left: 9.56
+  top: 3.13
+  width: 3.1
+  height: 0.5
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: exec-model-body
+  text: 'CONDITIONAL | draft only
+
+    Scoped request; usage back.
+
+    No DB/workflow credentials.'
+  left: 9.17
+  top: 3.6999999999999997
+  width: 3.49
+  height: 1.0899999999999999
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: exec-sql-background
+  left: 3.5
+  top: 5.2
+  width: 2.4
+  height: 1.17
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: exec-sql-title
+  text: Azure SQL
+  left: 4.01
+  top: 5.28
+  width: 1.77
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: exec-sql-body
+  text: 'CORE | records
+
+    Proposals / audit'
+  left: 3.62
+  top: 5.66
+  width: 2.16
+  height: 0.68
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: exec-blob-background
+  left: 6.1
+  top: 5.2
+  width: 2.4
+  height: 1.17
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: exec-blob-title
+  text: Azure Blob
+  left: 6.609999999999999
+  top: 5.28
+  width: 1.77
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: exec-blob-body
+  text: 'CONFIGURED
+
+    Files; SQL hashes'
+  left: 6.22
+  top: 5.66
+  width: 2.16
+  height: 0.68
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: exec-sql-evidence
+  text: 'SQL persistence:
+
+    recorded technical evidence'
+  left: 9.05
+  top: 5.32
+  width: 3.73
+  height: 0.8
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: exec-boundary-background
+  left: 0.55
+  top: 6.42
+  width: 12.23
+  height: 0.78
+  fill: '#E5B96A'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: exec-boundary
+  text: 'Five-assistant authority absent / proactive OFF.
+
+    Human and value acceptance outstanding.'
+  left: 0.7
+  top: 6.5
+  width: 11.93
+  height: 0.66
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: runtime-link
+  text: 'Runtime detail: slide 19'
+  left: 9.05
+  top: 2.2
+  width: 3.73
+  height: 0.3
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#173F35'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+  target_slide: 19
+  description: 'Runtime detail: slide 19'
+- type: image
+  name: azure-icon-entra-exec-entra
+  path: images/azure-entra.png
+  left: 3.62
+  top: 2.085
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Microsoft Entra ID | CONFIGURED.'
+- type: image
+  name: azure-icon-aca-exec-api
+  path: images/azure-aca.png
+  left: 3.62
+  top: 3.135
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure Container Apps.'
+- type: image
+  name: azure-icon-openai-exec-model
+  path: images/azure-openai.png
+  left: 9.17
+  top: 3.135
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure OpenAI.'
+- type: image
+  name: azure-icon-sql-exec-sql
+  path: images/azure-sql.png
+  left: 3.62
+  top: 5.285
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure SQL.'
+- type: image
+  name: azure-icon-blob-exec-blob
+  path: images/azure-blob.png
+  left: 6.22
+  top: 5.285
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure Blob.'
+speaker_notes: "Message / evidence limit / planned script:\nSLIDE 10 - One API supports the work. People\
+  \ retain authority.\nTopic sentinel: system context\nMessage: retain source ownership while connecting\
+  \ case work.\nStatus: strategist-recommended proposal; refreshed 14 October 2026.\n\n\"The arrow is\
+  \ from source material into validated intake, not an\n  uncontrolled write-back loop. The case connects\
+  \ home, building and package\n  context with roles and evidence. Residents and suppliers need supported,\n\
+  \  scoped exchange, not open access to the internal staff workbench.\n  Housing/repairs integrations,\
+  \ M365 document channels and import transition\n  remain proposals or unverified. An integration picture\
+  \ is not a deployed\n  connection receipt.\"\n* Transition: \"The API is the authority boundary, not\
+  \ the model.\"\n\nSources — workspace-relative paths, section and evidence status; as read 14 October\
+  \ 2026:\nS07: docs/prds/zava-forward-retrofit-programme-demonstrator.md, v0.14 front matter; component\
+  \ contracts; threat model; Five Reactive and Proactive Assistants; orchestration; evaluation; current\
+  \ handoff. Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and amended owner acceptance\
+  \ open; CON-009/AC-057 full acceptance not passed.\nS11: mvp/README.md, Honest limits; Five retrofit\
+  \ assistants; Operator authority; current delivery paragraphs; mvp/zavaforward_mvp/assistants.py, REGISTRY/RULES/capture/eligible/review.\
+  \ Status: Source and documented implementation; captured metadata/category citations, not unrestricted\
+  \ document reading, human source review or semantic entailment.\nS12: docs/adrs/0001-azure-architecture.md,\
+  \ Hybrid M365 and Excel transition; Options still to compare; provisional appraisal. Status: Proposed\
+  \ transition/full topology and historical illustration, not current deployment or scored customer platform\
+  \ choice.\n\nPlanned allocation: 55 seconds; not rehearsed.\n\nREFRESH BASELINE / UN SPOKEN REFERENCE:\n\
+  Refresh documentation intake: f94f53a56c36d38ec36f7f662595912084571380. Architecture source: 062434a1fedbf6a87d1374c767c2bf0a11491ab6.\
+  \ Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb. Historical cabe05c context below is not\
+  \ the current runtime or this documentation intake.\nCurrent five assistants are modules in ONE Python\
+  \ API Container App, not five microservices or the deferred queue-worker estate. Direct Azure OpenAI;\
+  \ no deployed Foundry Agent Service. SQL owns domain/proposal state, dedupe, reservations and fenced\
+  \ leases. Inference is outside database locks; the provider has no DB/workflow credentials. Accepting\
+  \ a proposal changes proposal/audit state, never resident, professional, work-release, quality or Finance\
+  \ approval.\nNormal five-assistant authority is absent; proactive OFF. This does not disable every legacy\
+  \ AI draft route. Ready = generated, unreviewed. Five operator paths, five calls, 6884 tokens, 15 ledger\
+  \ events and full SQL content/restart proof are technical observations only, not staff-browser, human\
+  \ source, semantic or value acceptance. Restart is not restore acceptance.\nDevelopment public-network\
+  \ exceptions coexist with configured private controls; PaaS is not VNet-hosted. Source-configured diagnostics\
+  \ are not full app tracing. External immutable audit digest anchoring is unimplemented. M365/import/queue\
+  \ workers are conditional or deferred. User.Read own-photo permission is not Sites.Selected plus a site\
+  \ grant. SharePoint topology parameter is not an implemented adapter. Front Door Premium/WAF is not\
+  \ deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of a five-day user-delegation SAS;\
+  \ one vault secret write, distinct maintenance identity, no browser token retrieval. Budget 80% actual/100%\
+  \ forecast notifications are not a hard cap. Managed-identity ACR image pull/operator build-deploy is\
+  \ distinct from CI tests/scan/SBOM, not automatic Azure deployment.\nThe owner explicitly reauthorised\
+  \ synthetic ledger recreation on 14 October; previous exercise audit/recommendations reset, not an unchanged\
+  \ migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and 11 private staff bindings\
+  \ are aggregate fixture counts only. No private identifiers are reproduced. Historical Decision 1 is\
+  \ not a current five-assistant runtime dependency. Finance fixtures and 20%/25% benefits are hypotheses,\
+  \ not measured success. No new legal currentness, expenditure, rollout or production approval.\n\nSpoken\
+  \ transition: The services explain where work lives; the next view explains who may change it.\n\nS16\
+  \ ARCHITECTURE / TEXT EQUIVALENT:\nS16: docs/architecture/README.md, executive and technical Excalidraw/SVG/PNG\
+  \ views, docs/architecture/assets/README.md; 14 October 2026. Static source baseline 062434a1fedbf6a87d1374c767c2bf0a11491ab6,\
+  \ not a fresh inventory or acceptance. Source Excalidraw remains editing authority; this PPTX is a simplified\
+  \ native adaptation. Individual unmodified official Azure SVG assets are locally rasterised for product\
+  \ icons; native containers, labels and connectors remain editable.\nRefresh documentation intake: f94f53a56c36d38ec36f7f662595912084571380.\
+  \ Architecture source: 062434a1fedbf6a87d1374c767c2bf0a11491ab6. Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb.\
+  \ Historical cabe05c context below is not the current runtime or this documentation intake.\nCurrent\
+  \ five assistants are modules in ONE Python API Container App, not five microservices or the deferred\
+  \ queue-worker estate. Direct Azure OpenAI; no deployed Foundry Agent Service. SQL owns domain/proposal\
+  \ state, dedupe, reservations and fenced leases. Inference is outside database locks; the provider has\
+  \ no DB/workflow credentials. Accepting a proposal changes proposal/audit state, never resident, professional,\
+  \ work-release, quality or Finance approval.\nNormal five-assistant authority is absent; proactive OFF.\
+  \ This does not disable every legacy AI draft route. Ready = generated, unreviewed. Five operator paths,\
+  \ five calls, 6884 tokens, 15 ledger events and full SQL content/restart proof are technical observations\
+  \ only, not staff-browser, human source, semantic or value acceptance. Restart is not restore acceptance.\n\
+  Development public-network exceptions coexist with configured private controls; PaaS is not VNet-hosted.\
+  \ Source-configured diagnostics are not full app tracing. External immutable audit digest anchoring\
+  \ is unimplemented. M365/import/queue workers are conditional or deferred. User.Read own-photo permission\
+  \ is not Sites.Selected plus a site grant. SharePoint topology parameter is not an implemented adapter.\
+  \ Front Door Premium/WAF is not deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of\
+  \ a five-day user-delegation SAS; one vault secret write, distinct maintenance identity, no browser\
+  \ token retrieval. Budget 80% actual/100% forecast notifications are not a hard cap. Managed-identity\
+  \ ACR image pull/operator build-deploy is distinct from CI tests/scan/SBOM, not automatic Azure deployment.\n\
+  The owner explicitly reauthorised synthetic ledger recreation on 14 October; previous exercise audit/recommendations\
+  \ reset, not an unchanged migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and\
+  \ 11 private staff bindings are aggregate fixture counts only. No private identifiers are reproduced.\
+  \ Historical Decision 1 is not a current five-assistant runtime dependency. Finance fixtures and 20%/25%\
+  \ benefits are hypotheses, not measured success. No new legal currentness, expenditure, rollout or production\
+  \ approval.\nDiagram reading order: identity/request -> single API -> stores/model -> separate human\
+  \ authority. Connectors are editable; no composite architecture image. No native-viewer accessibility\
+  \ claim.\nSource flow 49eb2c57b645018054c3: people -> workbench; native exec-staff-api-segment-1.\n\
+  Source flow e6eb29489d099f0f5f23: identity -> workbench; native exec-entra-api-segment-1.\nSource flow\
+  \ 6d6081a84b6e7b457b07: workbench -> model; native exec-api-model-segment-1.\nSource flow 5395764f763f83e55954:\
+  \ workbench -> sql; native exec-api-sql-segment-1.\nSource flow 67c47731b51938d553d0: workbench -> blob;\
+  \ native exec-api-blob-segment-1.\nSource flow 0c4aef2041d759667f4e: decision -> workbench; native exec-people-api-segment-1.\n\
+  VISIBLE NATIVE DIAGRAM TEXT EQUIVALENT (unspoken):\nZAVA NORTH HOMES / ZAVA FORWARD / EXECUTIVE PROPOSAL\n\
+  One API supports the work. People retain authority.\n14 OCT 2026 | S16 + retained sources/status in\
+  \ notes\n10 / 24\nStaff assist\nresidents\nHUMAN | requests\nPhone/letter/help.\nNo resident portal.\n\
+  People own\napproval\nHUMAN | approves\nResident + Finance.\nProfessionals; QA.\nMicrosoft Entra ID\
+  \ | CONFIGURED\nMicrosoft sign-in; role-limited access.\nAzure Container Apps\nCORE | one workbench\
+  \ + Python API.\nWorkflow + five assistant modules.\nAzure OpenAI\nCONDITIONAL | draft only\nScoped\
+  \ request; usage back.\nNo DB/workflow credentials.\nAzure SQL\nCORE | records\nProposals / audit\n\
+  Azure Blob\nCONFIGURED\nFiles; SQL hashes\nSQL persistence:\nrecorded technical evidence\nFive-assistant\
+  \ authority absent / proactive OFF.\nHuman and value acceptance outstanding.\nRuntime detail: slide\
+  \ 19\nFull source views: docs/architecture/zava-forward-executive-architecture.excalidraw / .svg / .png;\
+  \ docs/architecture/zava-forward-technical-architecture.excalidraw / .svg / .png. README and assets/README\
+  \ hold source/status/provenance.\n\nRETAINED BASELINE VISIBLE COPY / TRACEABILITY, UNSPOKEN:\nHistorical\
+  \ wording below is retained, not promoted to current fact or permission. Current oracle/status and refreshed\
+  \ visible copy govern. In particular, old 'gates OPEN' meant outstanding acceptance, not permission;\
+  \ Excel reporting is a conditional intended transition, not delivered integration.\nOne workbench beside\
+  \ the systems you keep.\nExisting sources\nHousing / repairs\nDocuments / spreadsheets\nSource owners\
+  \ retain authority.\nShared case\nValidated intake\nVersions + owned work\nNo uncontrolled write-back.\n\
+  People + channels\nRole queues\nSupported resident routes\nScoped supplier exchange.\nTarget context\
+  \ — links proposed, not all delivered. Excel reports."

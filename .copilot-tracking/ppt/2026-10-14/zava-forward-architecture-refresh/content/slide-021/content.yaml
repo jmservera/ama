@@ -1,0 +1,487 @@
+slide: 21
+title: Read the evidence label before the claim.
+section: Optional appendix
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OPTIONAL REFERENCE
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: Read the evidence label before the claim.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026 | S01-S16 full source register + statuses in notes
+  left: 0.55
+  top: 7.3
+  width: 11.4
+  height: 0.17
+  font: Liberation Sans
+  font_size: 9
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+  public_document: https://github.com/jmservera/ama/blob/f94f53a56c36d38ec36f7f662595912084571380/docs/architecture/README.md
+- type: textbox
+  name: page-counter
+  text: 21 / 24
+  left: 12.0
+  top: 7.24
+  width: 0.78
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-1-background
+  left: 0.55
+  top: 2.02
+  width: 3.93
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-1-title
+  text: Request + research
+  left: 0.73
+  top: 2.22
+  width: 3.5700000000000003
+  height: 0.94
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-1-body
+  text: 'Request ≠ result.
+
+    Research instruments
+
+    ≠ residents.'
+  left: 0.73
+  top: 3.33
+  width: 3.5700000000000003
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-2-background
+  left: 4.7
+  top: 2.02
+  width: 3.93
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-2-title
+  text: Exercise fixtures
+  left: 4.88
+  top: 2.22
+  width: 3.5700000000000003
+  height: 0.94
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-2-body
+  text: 'Fixtures ≠ company
+
+    performance or budgets.'
+  left: 4.88
+  top: 3.33
+  width: 3.5700000000000003
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-3-background
+  left: 8.850000000000001
+  top: 2.02
+  width: 3.93
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-3-title
+  text: Recorded technical proof
+  left: 9.030000000000001
+  top: 2.22
+  width: 3.5700000000000003
+  height: 0.94
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-3-body
+  text: 'Operator proof ≠ human,
+
+    semantic or value
+
+    acceptance.'
+  left: 9.030000000000001
+  top: 3.33
+  width: 3.5700000000000003
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: boundary-background
+  left: 0.55
+  top: 6.03
+  width: 12.23
+  height: 0.6
+  fill: '#E5B96A'
+  line_color: '#E5B96A'
+  line_width: 0
+- type: textbox
+  name: boundary-text
+  text: As at 14 October. Legal currentness not refreshed.
+  left: 0.73
+  top: 6.13
+  width: 11.87
+  height: 0.45999999999999996
+  font: Liberation Sans
+  font_size: 20
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: assessment-open
+  text: Pitch, rehearsal + thought-leadership evidence outstanding.
+  left: 0.71
+  top: 6.76
+  width: 8.2
+  height: 0.37
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: return-decision-link
+  text: 'Return to decision: slide 18'
+  left: 9.05
+  top: 6.96
+  width: 2.95
+  height: 0.3
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#173F35'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+  target_slide: 18
+  description: 'Return to decision: slide 18'
+speaker_notes: "Message / evidence limit / planned script:\nSLIDE 21 - Read the evidence label before\
+  \ the claim.\nTopic sentinel: provenance\nMessage: separate strong technical evidence from the open\
+  \ pitch and adoption gates.\nStatus: strategist-recommended proposal; refreshed 14 October 2026.\n\n\
+  \"Full source, section, date and status references accompany each\n  slide. PRD v0.14 awaits fresh review\
+  \ and amended owner acceptance. Current\n  source cabe05c is not the runtime source. The complete rubric\
+  \ informs this\n  handover, but slides and plan arithmetic do not prove live presence,\n  listening,\
+  \ under-two-minute delivery, Q&A, autonomous reasoning, business\n  outcomes or Section D dissemination.\
+  \ No pitch or thought-leadership folder\n  was present in the inspected capstone tree. A single separate\
+  \ thought\n  leadership submission and masterclass attendance evidence remain owner\n  responsibilities;\
+  \ existing deck notes are not submission/dissemination proof.\"\n\nSources — workspace-relative paths,\
+  \ section and evidence status; as read 14 October 2026:\nS01: docs/case_study_48_original.md, Business\
+  \ Challenge; Architecture Brief; Expected Outcomes. Status: Original 10 September request; 60,000-home\
+  \ case, five pressure points, not achieved benefits.\nS02: docs/case_study_48_addendum.md, Business\
+  \ Challenge; Executive Assessment; Digital Foundation; Where Agents Fit; Recommended Executive Decision.\
+  \ Status: Maintained 14 October synthesis and proposed controls; bottleneck/outcomes not verified company\
+  \ findings.\nS03: docs/reference/research/company/company-profile-research.md, Confirmed Company Information;\
+  \ Role and Decision Map; Priority Company Gaps; Evidence Limitations. Status: Owner-confirmed not-for-profit;\
+  \ modelled company/resident/finance attributes are not company facts or delegations.\nS04: docs/reference/research/company/agent-request-challenge.md,\
+  \ Summary and capability sections; docs/reference/research/company/agent-what-if-study.md, method and\
+  \ revised verdicts, as carried in S02. Status: Sector-informed role-agent hypotheses, not employee interviews\
+  \ or resident testimony.\nS05: docs/reference/research/company/pilot-measurement-challenge.md, Owner\
+  \ Decision; Proposed Measurement Design; Freeze/Analysis; Guardrails. Status: Proposed comparisons and\
+  \ protected outcomes, not executed experiments.\nS06: docs/case_study_48_addendum.md, EXA-002/003/004/005/007/008/010/011/012/013/015;\
+  \ Numerical Targets and Attribution; Subsequent Application Exercise Builds. Status: Historical selected\
+  \ exercise assumptions; explicitly fictional costs/terms, not budgets, awards or current open authority.\n\
+  S07: docs/prds/zava-forward-retrofit-programme-demonstrator.md, v0.14 front matter; component contracts;\
+  \ threat model; Five Reactive and Proactive Assistants; orchestration; evaluation; current handoff.\
+  \ Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and amended owner acceptance open;\
+  \ CON-009/AC-057 full acceptance not passed.\nS08: docs/adrs/0002-pilot-readiness-architecture.md, Five-Assistant\
+  \ Exercise Runtime; Fresh Ledger and Synthetic Coverage Learning; current delta. Status: Current lean\
+  \ proposal runtime, explicit reset, image/source/revision-linked service proof; proposed readiness estate\
+  \ separate.\nS09: infra/README.md, Five-assistant version: current handover. Status: Exact serving/source/model/SQL/restart\
+  \ receipt and authority-off state, 14 October; no fresh cloud inspection in this task.\nS10: .copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md,\
+  \ Completed Work; Validation; RV-001/RV-002; Outcome. Status: Technical Review Complete / Residual work,\
+  \ not blanket product conformance.\nS11: mvp/README.md, Honest limits; Five retrofit assistants; Operator\
+  \ authority; current delivery paragraphs; mvp/zavaforward_mvp/assistants.py, REGISTRY/RULES/capture/eligible/review.\
+  \ Status: Source and documented implementation; captured metadata/category citations, not unrestricted\
+  \ document reading, human source review or semantic entailment.\nS12: docs/adrs/0001-azure-architecture.md,\
+  \ Hybrid M365 and Excel transition; Options still to compare; provisional appraisal. Status: Proposed\
+  \ transition/full topology and historical illustration, not current deployment or scored customer platform\
+  \ choice.\nS13: docs/ideas/typesafe-system-one-agent-fit.md, pinned #58 feasibility/parallel experiment,\
+  \ as carried in S02/S07. Status: Historical separate Decision 1 selection/generation evidence; not the\
+  \ provider for the five new service calls; no new evaluation results.\nS14: docs/capstone/README.md;\
+  \ docs/reference/method/ama-capstone-assessment-guide.md; docs/reference/memory.md. Status: Publication/storage\
+  \ map, complete official guide, owner communication preferences; these are distinct from observed pitch/score\
+  \ evidence.\nS15: docs/capstone/deck/zava-forward-executive-draft.pptx; docs/capstone/deck/agents-in-retrofit-process.svg.\
+  \ Status: Existing 22-slide content/relationship-resolved notes and map semantic source, not proof of\
+  \ future operation.\n\nOptional appendix, outside the planned 795-second main route.\n\nExact current\
+  \ claim-status oracle:\n1. Historical documentation/source context was cabe05c; runtime source is\n\
+  \   cd14b3b379026a87ebfa3e9058ac10c0df7888eb, not cabe05c.\n2. Image05 is assistants-20261013-05, manifest\n\
+  \   sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20,\n   serving ca-forward-test-api--0000012.\
+  \ Short forms on screen; exact forms\n   in notes. Do not rename historical revisions.\n3. The owner\
+  \ explicitly reauthorized the synthetic database reset on\n   14 October after the earlier cancellation.\
+  \ Previous exercise\n   recommendations/audit were reset, not preserved by migration. Retain\n   generator/60,000-stock\
+  \ lineage; the new programme baseline is 980 cases,\n   38 booked visits and 11 actual privately bound\
+  \ tenant staff. Do not publish\n   their identities. Counts are exercise context, not real resident\
+  \ activity,\n   staff use or programme success.\n4. Five distinct registered operator service paths\
+  \ returned citation-validated\n   ready proposals through real Azure OpenAI deployment standard, model\n\
+  \   gpt-4.1-mini-2025-04-14: five calls/attempts, 6884 total tokens, 15 ledger\n   events. These are\
+  \ not Decision 1 calls or five independent autonomous agents.\n5. Against that new baseline, independent\
+  \ controlled-domain hashes stayed\n   unchanged by proposal generation, and full assistant-table content,\n\
+  \   outputs and usage survived an actual serving-revision restart. This is\n   stronger than row-count\
+  \ equality, weaker than disaster recovery/restore.\n6. Bounded operator QA ended. Normal serving assistant\
+  \ authority is absent;\n   proactive scans are off. A registered capability is not current standing\n\
+  \   authority. Neither proactive enablement nor new calls are authorized here.\n7. Citation validity\
+  \ means permitted source/provenance binding, not semantic\n   correctness or competent source verification.\
+  \ None of the five has human\n   verification/acceptance recorded by that operator exercise.\n8. Real\
+  \ staff-browser/API, role/human/source/accessibility acceptance,\n   semantic calibration, paired task\
+  \ value and operational outcomes remain\n   open (RV-001/RV-002). PRD v0.14 remains a candidate. Do\
+  \ not mark AC-057\n   or full requirements/product/pilot/production acceptance passed.\n9. No observed\
+  \ doubled throughput, lower bills, secured £40m, programme\n   savings, cost per accepted home, currency-cost\
+  \ cap, production selection\n   or corporate investment approval follows. Token allowance is not a\n\
+  \   currency guarantee; historical EXA-012 and the scoped #58 override are\n   not a new funding commitment.\n\
+  10. Source-level automated contract tests are evidence of tested boundaries,\n    not a live staff session\
+  \ or panel behaviour. No new score is inferred from\n    cabe05c's historical rubric update or from\
+  \ successful CI.\n\nREFRESH BASELINE / UN SPOKEN REFERENCE:\nRefresh documentation intake: f94f53a56c36d38ec36f7f662595912084571380.\
+  \ Architecture source: 062434a1fedbf6a87d1374c767c2bf0a11491ab6. Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb.\
+  \ Historical cabe05c context below is not the current runtime or this documentation intake.\nCurrent\
+  \ five assistants are modules in ONE Python API Container App, not five microservices or the deferred\
+  \ queue-worker estate. Direct Azure OpenAI; no deployed Foundry Agent Service. SQL owns domain/proposal\
+  \ state, dedupe, reservations and fenced leases. Inference is outside database locks; the provider has\
+  \ no DB/workflow credentials. Accepting a proposal changes proposal/audit state, never resident, professional,\
+  \ work-release, quality or Finance approval.\nNormal five-assistant authority is absent; proactive OFF.\
+  \ This does not disable every legacy AI draft route. Ready = generated, unreviewed. Five operator paths,\
+  \ five calls, 6884 tokens, 15 ledger events and full SQL content/restart proof are technical observations\
+  \ only, not staff-browser, human source, semantic or value acceptance. Restart is not restore acceptance.\n\
+  Development public-network exceptions coexist with configured private controls; PaaS is not VNet-hosted.\
+  \ Source-configured diagnostics are not full app tracing. External immutable audit digest anchoring\
+  \ is unimplemented. M365/import/queue workers are conditional or deferred. User.Read own-photo permission\
+  \ is not Sites.Selected plus a site grant. SharePoint topology parameter is not an implemented adapter.\
+  \ Front Door Premium/WAF is not deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of\
+  \ a five-day user-delegation SAS; one vault secret write, distinct maintenance identity, no browser\
+  \ token retrieval. Budget 80% actual/100% forecast notifications are not a hard cap. Managed-identity\
+  \ ACR image pull/operator build-deploy is distinct from CI tests/scan/SBOM, not automatic Azure deployment.\n\
+  The owner explicitly reauthorised synthetic ledger recreation on 14 October; previous exercise audit/recommendations\
+  \ reset, not an unchanged migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and\
+  \ 11 private staff bindings are aggregate fixture counts only. No private identifiers are reproduced.\
+  \ Historical Decision 1 is not a current five-assistant runtime dependency. Finance fixtures and 20%/25%\
+  \ benefits are hypotheses, not measured success. No new legal currentness, expenditure, rollout or production\
+  \ approval.\n\nSpoken return: That is the current boundary; the decision remains which evidence gate\
+  \ to resolve next.\nSOURCE BASELINE LEGEND:\nS16: docs/architecture/README.md, executive and technical\
+  \ Excalidraw/SVG/PNG views, docs/architecture/assets/README.md; 14 October 2026. Static source baseline\
+  \ 062434a1fedbf6a87d1374c767c2bf0a11491ab6, not a fresh inventory or acceptance. Source Excalidraw remains\
+  \ editing authority; this PPTX is a simplified native adaptation. Individual unmodified official Azure\
+  \ SVG assets are locally rasterised for product icons; native containers, labels and connectors remain\
+  \ editable.\nRefresh documentation intake: f94f53a56c36d38ec36f7f662595912084571380. Architecture source:\
+  \ 062434a1fedbf6a87d1374c767c2bf0a11491ab6. Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb.\
+  \ Historical cabe05c context below is not the current runtime or this documentation intake.\nCurrent\
+  \ five assistants are modules in ONE Python API Container App, not five microservices or the deferred\
+  \ queue-worker estate. Direct Azure OpenAI; no deployed Foundry Agent Service. SQL owns domain/proposal\
+  \ state, dedupe, reservations and fenced leases. Inference is outside database locks; the provider has\
+  \ no DB/workflow credentials. Accepting a proposal changes proposal/audit state, never resident, professional,\
+  \ work-release, quality or Finance approval.\nNormal five-assistant authority is absent; proactive OFF.\
+  \ This does not disable every legacy AI draft route. Ready = generated, unreviewed. Five operator paths,\
+  \ five calls, 6884 tokens, 15 ledger events and full SQL content/restart proof are technical observations\
+  \ only, not staff-browser, human source, semantic or value acceptance. Restart is not restore acceptance.\n\
+  Development public-network exceptions coexist with configured private controls; PaaS is not VNet-hosted.\
+  \ Source-configured diagnostics are not full app tracing. External immutable audit digest anchoring\
+  \ is unimplemented. M365/import/queue workers are conditional or deferred. User.Read own-photo permission\
+  \ is not Sites.Selected plus a site grant. SharePoint topology parameter is not an implemented adapter.\
+  \ Front Door Premium/WAF is not deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of\
+  \ a five-day user-delegation SAS; one vault secret write, distinct maintenance identity, no browser\
+  \ token retrieval. Budget 80% actual/100% forecast notifications are not a hard cap. Managed-identity\
+  \ ACR image pull/operator build-deploy is distinct from CI tests/scan/SBOM, not automatic Azure deployment.\n\
+  The owner explicitly reauthorised synthetic ledger recreation on 14 October; previous exercise audit/recommendations\
+  \ reset, not an unchanged migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and\
+  \ 11 private staff bindings are aggregate fixture counts only. No private identifiers are reproduced.\
+  \ Historical Decision 1 is not a current five-assistant runtime dependency. Finance fixtures and 20%/25%\
+  \ benefits are hypotheses, not measured success. No new legal currentness, expenditure, rollout or production\
+  \ approval.\n\nRETAINED BASELINE VISIBLE COPY / TRACEABILITY, UNSPOKEN:\nHistorical wording below is\
+  \ retained, not promoted to current fact or permission. Current oracle/status and refreshed visible\
+  \ copy govern. In particular, old 'gates OPEN' meant outstanding acceptance, not permission; Excel reporting\
+  \ is a conditional intended transition, not delivered integration.\nRead the evidence label before the\
+  \ claim.\nRequest + research\nRequest ≠ result.\nResearch instruments\n≠ residents.\nExercise fixtures\n\
+  Fixtures ≠ company\nperformance or budgets.\nObserved proof\nOperator proof ≠ human,\nsemantic or value\n\
+  acceptance.\nAs at 14 October. Legal currentness not refreshed.\nLive pitch, rehearsal and thought-leadership\
+  \ evidence still required."

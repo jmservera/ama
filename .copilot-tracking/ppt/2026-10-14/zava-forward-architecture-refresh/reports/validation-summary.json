@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "slide_count": 24,
+    "notes_24_exact": true,
+    "package_intact": true,
+    "geometry": true,
+    "tokens": true,
+    "strict_all_frame_word_bounds": true,
+    "icons": true,
+    "counters": true,
+    "maps": true,
+    "links": true,
+    "text_contrast": true,
+    "connector_contrast": true,
+    "no_connector_text_crossing": true,
+    "claims": true
+  },
+  "contact_sheets": [
+    "slide-deck/validation/contact-01-06.jpg",
+    "slide-deck/validation/contact-07-12.jpg",
+    "slide-deck/validation/contact-13-18.jpg",
+    "slide-deck/validation/contact-19-24.jpg"
+  ],
+  "working_sha256": "f14ee526ef93e9412b7b3409245307a8fd5cd3b7b3e52a21b6082d99527eb603",
+  "raw_strict_word_bounds_pass": true,
+  "retained_map13_word_metric_findings": 0,
+  "note": "Fresh local artifact checks, not native viewer, rehearsal, panel or product acceptance."
+}

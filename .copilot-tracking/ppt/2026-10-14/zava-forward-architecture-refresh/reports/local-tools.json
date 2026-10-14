@@ -1,0 +1,46 @@
+{
+  "svg_converter_target": "/home/azureuser/.copilot/session-state/1e0d58ea-7ea9-4c65-93b7-66c89c481468/files/capstone-icon-tools",
+  "requested_install": "CairoSVG only; resolver dependencies isolated in same target",
+  "isolated_distributions": [
+    {
+      "name": "cairocffi",
+      "version": "1.7.1"
+    },
+    {
+      "name": "CairoSVG",
+      "version": "2.9.1"
+    },
+    {
+      "name": "cffi",
+      "version": "2.1.1"
+    },
+    {
+      "name": "cssselect2",
+      "version": "0.10.1"
+    },
+    {
+      "name": "defusedxml",
+      "version": "0.7.1"
+    },
+    {
+      "name": "pillow",
+      "version": "12.3.0"
+    },
+    {
+      "name": "pycparser",
+      "version": "3.11"
+    },
+    {
+      "name": "tinycss2",
+      "version": "1.5.1"
+    },
+    {
+      "name": "webencodings",
+      "version": "0.6.1"
+    }
+  ],
+  "actual_pymupdf_version": "1.28.2",
+  "actual_pymupdf_path": "/home/azureuser/.copilot/session-state/1e0d58ea-7ea9-4c65-93b7-66c89c481468/files/capstone-pptx-tools/pymupdf/__init__.py",
+  "uv_or_global_install": false,
+  "cloud_or_sdk_vision": false
+}

@@ -1,0 +1,25 @@
+slide: 23
+node: ops-alerts
+object: azure-icon-monitor-ops-alerts
+source: docs/architecture/assets/azure/monitor.svg
+source_sha256: 1396f59a7d8fd7505a423842b987c9b343a092263d1ab5c7b0d94d58d8b17448
+png: content/slide-023/images/azure-monitor.png
+png_sha256: a6dcc3bd9d942c4328858dec0a3038e4b93b342cfccf7680c73f9b77b1ae77c8
+source_viewbox:
+- 0.0
+- 0.0
+- 18.0
+- 18.0
+source_ratio: 1.0
+raster_pixels:
+- 240
+- 240
+placement_inches:
+- 0.29
+- 0.29
+adjacent_label: Azure Monitor alerts
+converter: CairoSVG 2.9.1
+no_crop: true
+no_recolour: true
+source_unmodified: true
+provenance: docs/architecture/assets/README.md; local official Azure asset, not composite

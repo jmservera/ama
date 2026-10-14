@@ -1,0 +1,308 @@
+slide: 16
+title: Prove the programme. Test the AI separately.
+section: Main
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EXECUTIVE PROPOSAL
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: Prove the programme. Test the AI separately.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026  •  S02 / S05 / S07 / S10  •  Sources + status in notes
+  left: 0.55
+  top: 7.12
+  width: 11.4
+  height: 0.2
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 16 / 24
+  left: 12.0
+  top: 7.24
+  width: 0.78
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-1-background
+  left: 0.55
+  top: 2.02
+  width: 6.005
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-1-title
+  text: Programme comparison
+  left: 0.73
+  top: 2.22
+  width: 5.645
+  height: 0.94
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-1-body
+  text: 'Matched existing teams.
+
+    Frozen cohort; same events.
+
+    Accepted handovers +
+
+    whole-chain cost.'
+  left: 0.73
+  top: 3.33
+  width: 5.645
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-2-background
+  left: 6.7749999999999995
+  top: 2.02
+  width: 6.005
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-2-title
+  text: Paired task comparison
+  left: 6.954999999999999
+  top: 2.22
+  width: 5.645
+  height: 0.94
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-2-body
+  text: 'Same inputs: manual/rules
+
+    versus assistance.
+
+    Quality, net human effort,
+
+    latency and cost.'
+  left: 6.954999999999999
+  top: 3.33
+  width: 5.645
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: boundary-background
+  left: 0.55
+  top: 6.2
+  width: 12.23
+  height: 0.6
+  fill: '#E5B96A'
+  line_color: '#E5B96A'
+  line_width: 0
+- type: textbox
+  name: boundary-text
+  text: Include unfinished/withdrawn homes. Protect safety, choice, quality, equity + cash.
+  left: 0.73
+  top: 6.3
+  width: 11.87
+  height: 0.45999999999999996
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+speaker_notes: "Message / evidence limit / planned script:\nSLIDE 16 - Prove the programme. Test the AI\
+  \ separately.\nTopic sentinel: two comparisons\nMessage: a fair counterfactual, not a dashboard, establishes\
+  \ incremental value.\nStatus: strategist-recommended proposal; refreshed 14 October 2026.\n\n\"Compare\
+  \ changes against an instrumented pre-period and concurrent\n  matched delivery, logging shared staff/suppliers\
+  \ and displacement. The\n  twelve-month reconstruction is context, not the counterfactual by itself.\n\
+  \  At task level pair the same inputs and count gathering, preparation,\n  review, correction, re-review\
+  \ and shifted burden. Proposed 20% cycle-time\n  and 25% coordination-effort reductions remain hypotheses,\
+  \ not ratified or\n  measured benefits. Cycle time is assessment-to-ready-to-install; accepted\n  handover\
+  \ is separate. Freeze definitions/thresholds before measurement;\n  keep the simpler path if AI fails\
+  \ value or quality tests.\"\n* Transition: \"That tells us what the next gate must ask for.\"\n\nSources\
+  \ — workspace-relative paths, section and evidence status; as read 14 October 2026:\nS02: docs/case_study_48_addendum.md,\
+  \ Business Challenge; Executive Assessment; Digital Foundation; Where Agents Fit; Recommended Executive\
+  \ Decision. Status: Maintained 14 October synthesis and proposed controls; bottleneck/outcomes not verified\
+  \ company findings.\nS05: docs/reference/research/company/pilot-measurement-challenge.md, Owner Decision;\
+  \ Proposed Measurement Design; Freeze/Analysis; Guardrails. Status: Proposed comparisons and protected\
+  \ outcomes, not executed experiments.\nS07: docs/prds/zava-forward-retrofit-programme-demonstrator.md,\
+  \ v0.14 front matter; component contracts; threat model; Five Reactive and Proactive Assistants; orchestration;\
+  \ evaluation; current handoff. Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and\
+  \ amended owner acceptance open; CON-009/AC-057 full acceptance not passed.\nS10: .copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md,\
+  \ Completed Work; Validation; RV-001/RV-002; Outcome. Status: Technical Review Complete / Residual work,\
+  \ not blanket product conformance.\n\nPlanned allocation: 50 seconds; not rehearsed.\n\nREFRESH BASELINE\
+  \ / UN SPOKEN REFERENCE:\nRefresh documentation intake: f94f53a56c36d38ec36f7f662595912084571380. Architecture\
+  \ source: 062434a1fedbf6a87d1374c767c2bf0a11491ab6. Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb.\
+  \ Historical cabe05c context below is not the current runtime or this documentation intake.\nCurrent\
+  \ five assistants are modules in ONE Python API Container App, not five microservices or the deferred\
+  \ queue-worker estate. Direct Azure OpenAI; no deployed Foundry Agent Service. SQL owns domain/proposal\
+  \ state, dedupe, reservations and fenced leases. Inference is outside database locks; the provider has\
+  \ no DB/workflow credentials. Accepting a proposal changes proposal/audit state, never resident, professional,\
+  \ work-release, quality or Finance approval.\nNormal five-assistant authority is absent; proactive OFF.\
+  \ This does not disable every legacy AI draft route. Ready = generated, unreviewed. Five operator paths,\
+  \ five calls, 6884 tokens, 15 ledger events and full SQL content/restart proof are technical observations\
+  \ only, not staff-browser, human source, semantic or value acceptance. Restart is not restore acceptance.\n\
+  Development public-network exceptions coexist with configured private controls; PaaS is not VNet-hosted.\
+  \ Source-configured diagnostics are not full app tracing. External immutable audit digest anchoring\
+  \ is unimplemented. M365/import/queue workers are conditional or deferred. User.Read own-photo permission\
+  \ is not Sites.Selected plus a site grant. SharePoint topology parameter is not an implemented adapter.\
+  \ Front Door Premium/WAF is not deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of\
+  \ a five-day user-delegation SAS; one vault secret write, distinct maintenance identity, no browser\
+  \ token retrieval. Budget 80% actual/100% forecast notifications are not a hard cap. Managed-identity\
+  \ ACR image pull/operator build-deploy is distinct from CI tests/scan/SBOM, not automatic Azure deployment.\n\
+  The owner explicitly reauthorised synthetic ledger recreation on 14 October; previous exercise audit/recommendations\
+  \ reset, not an unchanged migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and\
+  \ 11 private staff bindings are aggregate fixture counts only. No private identifiers are reproduced.\
+  \ Historical Decision 1 is not a current five-assistant runtime dependency. Finance fixtures and 20%/25%\
+  \ benefits are hypotheses, not measured success. No new legal currentness, expenditure, rollout or production\
+  \ approval.\n\n\nRETAINED BASELINE VISIBLE COPY / TRACEABILITY, UNSPOKEN:\nHistorical wording below\
+  \ is retained, not promoted to current fact or permission. Current oracle/status and refreshed visible\
+  \ copy govern. In particular, old 'gates OPEN' meant outstanding acceptance, not permission; Excel reporting\
+  \ is a conditional intended transition, not delivered integration.\nProve the programme. Test the AI\
+  \ separately.\nProgramme comparison\nMatched existing teams.\nFrozen cohort; same events.\nAccepted\
+  \ handovers +\nwhole-chain cost.\nPaired task comparison\nSame inputs: manual/rules\nversus assistance.\n\
+  Quality, net human effort,\nlatency and cost.\nInclude unfinished/withdrawn homes. Protect safety, choice,\
+  \ quality, equity + cash."

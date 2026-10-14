@@ -1,0 +1,799 @@
+slide: 22
+title: Compare equivalent routes before selecting a winner.
+section: Optional appendix
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OPTIONAL REFERENCE
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: Compare equivalent routes before selecting a winner.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026  •  S02 / S03 / S07 / S12  •  Sources + status in notes
+  left: 0.55
+  top: 7.3
+  width: 11.4
+  height: 0.17
+  font: Liberation Sans
+  font_size: 9
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 22 / 24
+  left: 12.0
+  top: 7.24
+  width: 0.78
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-1-header-background
+  left: 3.45
+  top: 1.98
+  width: 2.99
+  height: 1.05
+  fill: '#173F35'
+  line_color: '#173F35'
+  line_width: 0
+- type: textbox
+  name: option-peer-1-title
+  text: 'Improve current
+
+    workflow'
+  left: 3.58
+  top: 2.14
+  width: 2.73
+  height: 0.87
+  font: Liberation Sans
+  font_size: 21
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-2-header-background
+  left: 6.62
+  top: 1.98
+  width: 2.99
+  height: 1.05
+  fill: '#173F35'
+  line_color: '#173F35'
+  line_width: 0
+- type: textbox
+  name: option-peer-2-title
+  text: 'Greenfield
+
+    business platform'
+  left: 6.75
+  top: 2.14
+  width: 2.73
+  height: 0.87
+  font: Liberation Sans
+  font_size: 21
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-3-header-background
+  left: 9.79
+  top: 1.98
+  width: 2.99
+  height: 1.05
+  fill: '#173F35'
+  line_color: '#173F35'
+  line_width: 0
+- type: textbox
+  name: option-peer-3-title
+  text: 'Azure-led
+
+    hybrid'
+  left: 9.92
+  top: 2.14
+  width: 2.73
+  height: 0.87
+  font: Liberation Sans
+  font_size: 21
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: option-row-1-label
+  text: Mandatory controls
+  left: 0.55
+  top: 3.3000000000000003
+  width: 2.75
+  height: 0.42
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-1-row-1-background
+  left: 3.45
+  top: 3.18
+  width: 2.99
+  height: 0.57
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: option-row-1-peer-1-body
+  text: To verify
+  left: 3.58
+  top: 3.3000000000000003
+  width: 2.73
+  height: 0.4
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-2-row-1-background
+  left: 6.62
+  top: 3.18
+  width: 2.99
+  height: 0.57
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: option-row-1-peer-2-body
+  text: To verify
+  left: 6.75
+  top: 3.3000000000000003
+  width: 2.73
+  height: 0.4
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-3-row-1-background
+  left: 9.79
+  top: 3.18
+  width: 2.99
+  height: 0.57
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: option-row-1-peer-3-body
+  text: To verify
+  left: 9.92
+  top: 3.3000000000000003
+  width: 2.73
+  height: 0.4
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: option-row-2-label
+  text: Transition + access
+  left: 0.55
+  top: 3.9400000000000004
+  width: 2.75
+  height: 0.42
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-1-row-2-background
+  left: 3.45
+  top: 3.8200000000000003
+  width: 2.99
+  height: 0.57
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: option-row-2-peer-1-body
+  text: To test
+  left: 3.58
+  top: 3.9400000000000004
+  width: 2.73
+  height: 0.4
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-2-row-2-background
+  left: 6.62
+  top: 3.8200000000000003
+  width: 2.99
+  height: 0.57
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: option-row-2-peer-2-body
+  text: To test
+  left: 6.75
+  top: 3.9400000000000004
+  width: 2.73
+  height: 0.4
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-3-row-2-background
+  left: 9.79
+  top: 3.8200000000000003
+  width: 2.99
+  height: 0.57
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: option-row-2-peer-3-body
+  text: To test
+  left: 9.92
+  top: 3.9400000000000004
+  width: 2.73
+  height: 0.4
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: option-row-3-label
+  text: Support + recovery
+  left: 0.55
+  top: 4.58
+  width: 2.75
+  height: 0.42
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-1-row-3-background
+  left: 3.45
+  top: 4.46
+  width: 2.99
+  height: 0.57
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: option-row-3-peer-1-body
+  text: To test
+  left: 3.58
+  top: 4.58
+  width: 2.73
+  height: 0.4
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-2-row-3-background
+  left: 6.62
+  top: 4.46
+  width: 2.99
+  height: 0.57
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: option-row-3-peer-2-body
+  text: To test
+  left: 6.75
+  top: 4.58
+  width: 2.73
+  height: 0.4
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-3-row-3-background
+  left: 9.79
+  top: 4.46
+  width: 2.99
+  height: 0.57
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: option-row-3-peer-3-body
+  text: To test
+  left: 9.92
+  top: 4.58
+  width: 2.73
+  height: 0.4
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: option-row-4-label
+  text: Whole-life cost
+  left: 0.55
+  top: 5.22
+  width: 2.75
+  height: 0.42
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-1-row-4-background
+  left: 3.45
+  top: 5.1
+  width: 2.99
+  height: 0.57
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: option-row-4-peer-1-body
+  text: To price
+  left: 3.58
+  top: 5.22
+  width: 2.73
+  height: 0.4
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-2-row-4-background
+  left: 6.62
+  top: 5.1
+  width: 2.99
+  height: 0.57
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: option-row-4-peer-2-body
+  text: To price
+  left: 6.75
+  top: 5.22
+  width: 2.73
+  height: 0.4
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: option-3-row-4-background
+  left: 9.79
+  top: 5.1
+  width: 2.99
+  height: 0.57
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: option-row-4-peer-3-body
+  text: To price
+  left: 9.92
+  top: 5.22
+  width: 2.73
+  height: 0.4
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: boundary-background
+  left: 0.55
+  top: 6.21
+  width: 12.23
+  height: 0.6
+  fill: '#E5B96A'
+  line_color: '#E5B96A'
+  line_width: 0
+- type: textbox
+  name: boundary-text
+  text: Equivalent-scope appraisal needed. Exercise preference is NOT customer selection.
+  left: 0.73
+  top: 6.31
+  width: 11.87
+  height: 0.45999999999999996
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: return-decision-link
+  text: 'Return to decision: slide 18'
+  left: 9.05
+  top: 6.96
+  width: 2.95
+  height: 0.3
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#173F35'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+  target_slide: 18
+  description: 'Return to decision: slide 18'
+- type: textbox
+  name: return-options-link
+  text: 'Return to options: slide 4'
+  left: 0.55
+  top: 6.96
+  width: 4.5
+  height: 0.3
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#173F35'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+  target_slide: 4
+  description: 'Return to options: slide 4'
+speaker_notes: "Message / evidence limit / planned script:\nSLIDE 22 - Compare equivalent routes before\
+  \ selecting a winner.\nTopic sentinel: options\nMessage: production platform choice must earn customer\
+  \ value, not follow the capstone preference.\nStatus: strategist-recommended proposal; refreshed 14\
+  \ October 2026.\n\n\"Compare workflow/evidence, permissions, migration, integration,\n  resident access,\
+  \ whole-life cost and readiness on the same journey and\n  controls. Include safety hold, withdrawal,\
+  \ missing evidence and failed\n  integration. Confirm tenant, workbook quality, skills, licences and\n\
+  \  support; no Dataverse or Dynamics estate is available for assumed reuse.\n  The Azure-led hybrid\
+  \ is the provisional exercise direction. Historical\n  architect-proposed weights/scores are not customer-approved\
+  \ comparative\n  evidence. A safety/privacy/consent/approval failure is a gate, not a score\n  that\
+  \ another attractive feature can offset. Select the supportable option\n  that meets controls at justified\
+  \ whole-life cost, even if simpler.\"\n\nSources — workspace-relative paths, section and evidence status;\
+  \ as read 14 October 2026:\nS02: docs/case_study_48_addendum.md, Business Challenge; Executive Assessment;\
+  \ Digital Foundation; Where Agents Fit; Recommended Executive Decision. Status: Maintained 14 October\
+  \ synthesis and proposed controls; bottleneck/outcomes not verified company findings.\nS03: docs/reference/research/company/company-profile-research.md,\
+  \ Confirmed Company Information; Role and Decision Map; Priority Company Gaps; Evidence Limitations.\
+  \ Status: Owner-confirmed not-for-profit; modelled company/resident/finance attributes are not company\
+  \ facts or delegations.\nS07: docs/prds/zava-forward-retrofit-programme-demonstrator.md, v0.14 front\
+  \ matter; component contracts; threat model; Five Reactive and Proactive Assistants; orchestration;\
+  \ evaluation; current handoff. Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and\
+  \ amended owner acceptance open; CON-009/AC-057 full acceptance not passed.\nS12: docs/adrs/0001-azure-architecture.md,\
+  \ Hybrid M365 and Excel transition; Options still to compare; provisional appraisal. Status: Proposed\
+  \ transition/full topology and historical illustration, not current deployment or scored customer platform\
+  \ choice.\n\nOptional appendix, outside the planned 795-second main route.\n\nREFRESH BASELINE / UN\
+  \ SPOKEN REFERENCE:\nRefresh documentation intake: f94f53a56c36d38ec36f7f662595912084571380. Architecture\
+  \ source: 062434a1fedbf6a87d1374c767c2bf0a11491ab6. Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb.\
+  \ Historical cabe05c context below is not the current runtime or this documentation intake.\nCurrent\
+  \ five assistants are modules in ONE Python API Container App, not five microservices or the deferred\
+  \ queue-worker estate. Direct Azure OpenAI; no deployed Foundry Agent Service. SQL owns domain/proposal\
+  \ state, dedupe, reservations and fenced leases. Inference is outside database locks; the provider has\
+  \ no DB/workflow credentials. Accepting a proposal changes proposal/audit state, never resident, professional,\
+  \ work-release, quality or Finance approval.\nNormal five-assistant authority is absent; proactive OFF.\
+  \ This does not disable every legacy AI draft route. Ready = generated, unreviewed. Five operator paths,\
+  \ five calls, 6884 tokens, 15 ledger events and full SQL content/restart proof are technical observations\
+  \ only, not staff-browser, human source, semantic or value acceptance. Restart is not restore acceptance.\n\
+  Development public-network exceptions coexist with configured private controls; PaaS is not VNet-hosted.\
+  \ Source-configured diagnostics are not full app tracing. External immutable audit digest anchoring\
+  \ is unimplemented. M365/import/queue workers are conditional or deferred. User.Read own-photo permission\
+  \ is not Sites.Selected plus a site grant. SharePoint topology parameter is not an implemented adapter.\
+  \ Front Door Premium/WAF is not deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of\
+  \ a five-day user-delegation SAS; one vault secret write, distinct maintenance identity, no browser\
+  \ token retrieval. Budget 80% actual/100% forecast notifications are not a hard cap. Managed-identity\
+  \ ACR image pull/operator build-deploy is distinct from CI tests/scan/SBOM, not automatic Azure deployment.\n\
+  The owner explicitly reauthorised synthetic ledger recreation on 14 October; previous exercise audit/recommendations\
+  \ reset, not an unchanged migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and\
+  \ 11 private staff bindings are aggregate fixture counts only. No private identifiers are reproduced.\
+  \ Historical Decision 1 is not a current five-assistant runtime dependency. Finance fixtures and 20%/25%\
+  \ benefits are hypotheses, not measured success. No new legal currentness, expenditure, rollout or production\
+  \ approval.\n\nSpoken return: That is the current boundary; the decision remains which evidence gate\
+  \ to resolve next.\nAzure hybrid is the provisional bounded exercise preference, not a customer investment\
+  \ winner. No existing Dataverse/Dynamics reuse. Test the same journey, safety hold, withdrawn choice,\
+  \ missing evidence and integration failure; include all transition/access/support/recovery/whole-life\
+  \ costs.\n\nRETAINED BASELINE VISIBLE COPY / TRACEABILITY, UNSPOKEN:\nHistorical wording below is retained,\
+  \ not promoted to current fact or permission. Current oracle/status and refreshed visible copy govern.\
+  \ In particular, old 'gates OPEN' meant outstanding acceptance, not permission; Excel reporting is a\
+  \ conditional intended transition, not delivered integration.\nCompare equivalent routes before selecting\
+  \ a winner.\nImprove current\nworkflow\nGreenfield\nbusiness platform\nAzure-led\nhybrid\nMandatory\
+  \ controls\nTo verify\nTo verify\nTo verify\nTransition + access\nTo test\nTo test\nTo test\nSupport\
+  \ + recovery\nTo test\nTo test\nTo test\nWhole-life cost\nTo price\nTo price\nTo price\nEquivalent-scope\
+  \ evidence still needed — no winner scored."

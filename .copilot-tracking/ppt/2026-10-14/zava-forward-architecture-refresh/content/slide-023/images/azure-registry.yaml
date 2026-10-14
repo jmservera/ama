@@ -1,0 +1,25 @@
+slide: 23
+node: ops-registry
+object: azure-icon-registry-ops-registry
+source: docs/architecture/assets/azure/registry.svg
+source_sha256: c134b0a442f203a7eeeb6f99a1f02ed34e51373d7fca59f96c9f125874c9d7d4
+png: content/slide-023/images/azure-registry.png
+png_sha256: a39e7d09e63e7b27ce12e0175d1a6ea6ee11e5dde6a2d330fba3dcb8ba7850a6
+source_viewbox:
+- 0.0
+- 0.0
+- 18.0
+- 18.0
+source_ratio: 1.0
+raster_pixels:
+- 240
+- 240
+placement_inches:
+- 0.29
+- 0.29
+adjacent_label: Azure Container Registry
+converter: CairoSVG 2.9.1
+no_crop: true
+no_recolour: true
+source_unmodified: true
+provenance: docs/architecture/assets/README.md; local official Azure asset, not composite

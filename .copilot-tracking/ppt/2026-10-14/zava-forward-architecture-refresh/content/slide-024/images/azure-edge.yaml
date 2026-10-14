@@ -1,0 +1,25 @@
+slide: 24
+node: deferred-edge
+object: azure-icon-edge-deferred-edge
+source: docs/architecture/assets/azure/edge.svg
+source_sha256: b2e9c9a8b091a0694532257354dea94bb8c65b33876826e44dbc9b2aae01cf17
+png: content/slide-024/images/azure-edge.png
+png_sha256: 7242a74ae809f9f113d63c480e17d84f3a6934250c8a31c9995c8a9fc07592ae
+source_viewbox:
+- 0.0
+- 0.0
+- 18.0
+- 18.0
+source_ratio: 1.0
+raster_pixels:
+- 240
+- 240
+placement_inches:
+- 0.29
+- 0.29
+adjacent_label: Azure Front Door Premium/WAF
+converter: CairoSVG 2.9.1
+no_crop: true
+no_recolour: true
+source_unmodified: true
+provenance: docs/architecture/assets/README.md; local official Azure asset, not composite

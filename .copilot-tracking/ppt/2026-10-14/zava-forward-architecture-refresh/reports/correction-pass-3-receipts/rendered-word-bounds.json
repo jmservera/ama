@@ -1,0 +1,5481 @@
+{
+  "method": "Full expected token sequence attributes actual PDF words before comparing complete word rectangles to literal native frame at 1pt tolerance. Includes out-of-frame word centres. Inherited clipped-region token checks run separately. No preservation exceptions; all 24 pages.",
+  "frames_checked": 387,
+  "pass_word_bounds": false,
+  "failures": [
+    {
+      "slide": 15,
+      "name": "peer-4-title",
+      "frame": [
+        724.8638470261103,
+        159.84,
+        907.2048147533142,
+        235.44
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "and",
+          "box": [
+            726.2930297851562,
+            227.4437255859375,
+            765.2496948242188,
+            251.9923858642578
+          ]
+        },
+        {
+          "token": "rollback",
+          "box": [
+            771.3428344726562,
+            227.4437255859375,
+            855.4812622070312,
+            251.9923858642578
+          ]
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "slide": 1,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "resident-scale",
+      "frame": [
+        39.6002101678034,
+        152.64,
+        558.0029614554114,
+        205.2
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "resident-outcome",
+      "frame": [
+        39.6002101678034,
+        215.28,
+        543.6028850307557,
+        316.08
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "opening-evidence",
+      "frame": [
+        39.6002101678034,
+        368.64,
+        550.8029232430836,
+        440.64
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "decision-title",
+      "frame": [
+        615.6032671540346,
+        172.07999999999998,
+        902.1647880046846,
+        222.48
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "decision-body",
+      "frame": [
+        615.6032671540346,
+        239.04,
+        902.1647880046846,
+        368.64
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        190.0810088054563,
+        235.44
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        247.67999999999998,
+        190.0810088054563,
+        332.6399212598425
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-2-title",
+      "frame": [
+        231.84123043695806,
+        159.84,
+        369.36196029242075,
+        235.44
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-2-body",
+      "frame": [
+        231.84123043695806,
+        247.67999999999998,
+        369.36196029242075,
+        332.6399212598425
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-3-title",
+      "frame": [
+        411.1221819239225,
+        159.84,
+        548.6429117793853,
+        235.44
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-3-body",
+      "frame": [
+        411.1221819239225,
+        247.67999999999998,
+        548.6429117793853,
+        332.6399212598425
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-4-title",
+      "frame": [
+        590.403133410887,
+        159.84,
+        727.9238632663497,
+        235.44
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-4-body",
+      "frame": [
+        590.403133410887,
+        247.67999999999998,
+        727.9238632663497,
+        332.6399212598425
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-5-title",
+      "frame": [
+        769.6840848978514,
+        159.84,
+        907.2048147533142,
+        235.44
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-5-body",
+      "frame": [
+        769.6840848978514,
+        247.67999999999998,
+        907.2048147533142,
+        332.6399212598425
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "outcome",
+      "frame": [
+        54.000286592459176,
+        375.12,
+        903.6047956471501,
+        421.91999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        309.60164313009926,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        309.60164313009926,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "peer-2-title",
+      "frame": [
+        351.361864761601,
+        159.84,
+        608.4032289417067,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "peer-2-body",
+      "frame": [
+        351.361864761601,
+        239.76,
+        608.4032289417067,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "peer-3-title",
+      "frame": [
+        650.1634505732085,
+        159.84,
+        907.2048147533142,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "peer-3-body",
+      "frame": [
+        650.1634505732085,
+        239.76,
+        907.2048147533142,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        309.60164313009926,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        309.60164313009926,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "peer-2-title",
+      "frame": [
+        351.361864761601,
+        159.84,
+        608.4032289417067,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "peer-2-body",
+      "frame": [
+        351.361864761601,
+        239.76,
+        608.4032289417067,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "peer-3-title",
+      "frame": [
+        650.1634505732085,
+        159.84,
+        907.2048147533142,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "peer-3-body",
+      "frame": [
+        650.1634505732085,
+        239.76,
+        907.2048147533142,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "options-provisional",
+      "frame": [
+        50.40026748629523,
+        437.76,
+        909.3648262170125,
+        489.59999999999997
+      ],
+      "words_matched_by_expected_sequence": 14,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "options-link",
+      "frame": [
+        39.6002101678034,
+        496.79999999999995,
+        471.6025029074768,
+        518.4
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        459.002436035903,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        459.002436035903,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "peer-2-title",
+      "frame": [
+        500.76257892682935,
+        159.84,
+        907.2047360127387,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "peer-2-body",
+      "frame": [
+        500.76257892682935,
+        239.76,
+        907.2047360127387,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-1-peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.12,
+        309.60164313009926,
+        198.72
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-1-peer-1-body",
+      "frame": [
+        52.560278949993595,
+        210.9599212598425,
+        309.60164313009926,
+        258.4799212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-1-peer-2-title",
+      "frame": [
+        351.361864761601,
+        159.12,
+        608.4032289417067,
+        198.72
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-1-peer-2-body",
+      "frame": [
+        351.361864761601,
+        210.9599212598425,
+        608.4032289417067,
+        258.4799212598425
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-1-peer-3-title",
+      "frame": [
+        650.1634505732085,
+        159.12,
+        907.2048147533142,
+        198.72
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-1-peer-3-body",
+      "frame": [
+        650.1634505732085,
+        210.9599212598425,
+        907.2048147533142,
+        258.4799212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-2-peer-1-title",
+      "frame": [
+        52.560278949993595,
+        300.95992125984253,
+        309.60164313009926,
+        340.5599212598425
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-2-peer-1-body",
+      "frame": [
+        52.560278949993595,
+        352.7999212598425,
+        309.60164313009926,
+        405.3599212598425
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-2-peer-2-title",
+      "frame": [
+        351.361864761601,
+        300.95992125984253,
+        608.4032289417067,
+        340.5599212598425
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-2-peer-2-body",
+      "frame": [
+        351.361864761601,
+        352.7999212598425,
+        608.4032289417067,
+        405.3599212598425
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-2-peer-3-title",
+      "frame": [
+        650.1634505732085,
+        300.95992125984253,
+        907.2048147533142,
+        340.5599212598425
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-2-peer-3-body",
+      "frame": [
+        650.1634505732085,
+        352.7999212598425,
+        907.2048147533142,
+        405.3599212598425
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        234.9012466771974,
+        205.2
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        217.44,
+        234.9012466771974,
+        368.64
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-2-title",
+      "frame": [
+        276.66146830869917,
+        159.84,
+        459.002436035903,
+        205.2
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-2-body",
+      "frame": [
+        276.66146830869917,
+        217.44,
+        459.002436035903,
+        368.64
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-3-title",
+      "frame": [
+        500.7626576674047,
+        159.84,
+        683.1036253946086,
+        205.2
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-3-body",
+      "frame": [
+        500.7626576674047,
+        217.44,
+        683.1036253946086,
+        368.64
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-4-title",
+      "frame": [
+        724.8638470261103,
+        159.84,
+        907.2048147533142,
+        205.2
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-4-body",
+      "frame": [
+        724.8638470261103,
+        217.44,
+        907.2048147533142,
+        368.64
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "journey-hold-return",
+      "frame": [
+        52.560278949993595,
+        401.76,
+        907.2048147533142,
+        428.4
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        446.3999212598425,
+        907.2048147533142,
+        486.719842519685
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        459.002436035903,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        459.002436035903,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "peer-2-title",
+      "frame": [
+        500.76257892682935,
+        159.84,
+        907.2047360127387,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "peer-2-body",
+      "frame": [
+        500.76257892682935,
+        239.76,
+        907.2047360127387,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        434.88,
+        907.2048147533142,
+        467.9999212598425
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "human-hazard-route",
+      "frame": [
+        50.40026748629523,
+        480.23999999999995,
+        907.2048147533142,
+        508.32
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        309.60164313009926,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        309.60164313009926,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "peer-2-title",
+      "frame": [
+        351.361864761601,
+        159.84,
+        608.4032289417067,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "peer-2-body",
+      "frame": [
+        351.361864761601,
+        239.76,
+        608.4032289417067,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "peer-3-title",
+      "frame": [
+        650.1634505732085,
+        159.84,
+        907.2048147533142,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "peer-3-body",
+      "frame": [
+        650.1634505732085,
+        239.76,
+        907.2048147533142,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-staff-title",
+      "frame": [
+        48.24025602259686,
+        151.2,
+        218.16115783353507,
+        198.0
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-staff-body",
+      "frame": [
+        48.24025602259686,
+        206.64,
+        218.16115783353507,
+        285.1199212598425
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-people-title",
+      "frame": [
+        48.24025602259686,
+        312.47999999999996,
+        218.16115783353507,
+        359.28
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-people-body",
+      "frame": [
+        48.24025602259686,
+        367.9199212598425,
+        218.16115783353507,
+        446.399842519685
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-entra-title",
+      "frame": [
+        288.7215323143484,
+        149.76,
+        603.3632021930772,
+        174.23999999999998
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-entra-body",
+      "frame": [
+        260.6413832862696,
+        174.95999999999998,
+        603.3632021930772,
+        199.44
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-api-title",
+      "frame": [
+        288.7215323143484,
+        225.35999999999999,
+        603.3632021930772,
+        261.36
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-api-body",
+      "frame": [
+        260.6413832862696,
+        266.39992125984253,
+        603.3632021930772,
+        344.87984251968504
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-model-title",
+      "frame": [
+        688.3236530985463,
+        225.35999999999999,
+        911.5248376807109,
+        261.36
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-model-body",
+      "frame": [
+        660.2435040704675,
+        266.39992125984253,
+        911.5248376807109,
+        344.87984251968504
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-sql-title",
+      "frame": [
+        288.7215323143484,
+        380.15999999999997,
+        416.162208672552,
+        404.64
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-sql-body",
+      "frame": [
+        260.6413832862696,
+        407.52,
+        416.162208672552,
+        456.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-blob-title",
+      "frame": [
+        475.92244709429815,
+        380.15999999999997,
+        603.3631234525018,
+        404.64
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-blob-body",
+      "frame": [
+        447.84237680679473,
+        407.52,
+        603.3632021930772,
+        456.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-sql-evidence",
+      "frame": [
+        651.603458215674,
+        383.03999999999996,
+        920.1648835355044,
+        440.64
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-boundary",
+      "frame": [
+        50.40026748629523,
+        468.0,
+        909.3648262170125,
+        515.52
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "runtime-link",
+      "frame": [
+        651.603458215674,
+        158.4,
+        920.1648835355044,
+        180.0
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-lane-label",
+      "frame": [
+        39.6002101678034,
+        138.95999999999998,
+        918.004872071806,
+        164.16
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-peer-1-title",
+      "frame": [
+        52.560278949993595,
+        189.35999999999999,
+        309.60164313009926,
+        223.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-peer-1-body",
+      "frame": [
+        52.560278949993595,
+        236.16,
+        309.60164313009926,
+        286.56
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-peer-2-title",
+      "frame": [
+        351.361864761601,
+        189.35999999999999,
+        608.4032289417067,
+        223.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-peer-2-body",
+      "frame": [
+        351.361864761601,
+        236.16,
+        608.4032289417067,
+        286.56
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-peer-3-title",
+      "frame": [
+        650.1634505732085,
+        189.35999999999999,
+        907.2048147533142,
+        223.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-peer-3-body",
+      "frame": [
+        650.1634505732085,
+        236.16,
+        907.2048147533142,
+        286.56
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-lane-label",
+      "frame": [
+        39.6002101678034,
+        320.4,
+        918.004872071806,
+        345.59999999999997
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-peer-1-title",
+      "frame": [
+        52.560278949993595,
+        370.08,
+        309.60164313009926,
+        401.03999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-peer-1-body",
+      "frame": [
+        52.560278949993595,
+        408.23999999999995,
+        309.60164313009926,
+        438.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-peer-2-title",
+      "frame": [
+        351.361864761601,
+        370.08,
+        608.4032289417067,
+        401.03999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-peer-2-body",
+      "frame": [
+        351.361864761601,
+        408.23999999999995,
+        608.4032289417067,
+        438.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-peer-3-title",
+      "frame": [
+        650.1634505732085,
+        370.08,
+        907.2048147533142,
+        401.03999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-peer-3-body",
+      "frame": [
+        650.1634505732085,
+        408.23999999999995,
+        907.2048147533142,
+        438.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        469.44,
+        907.2048147533142,
+        498.96
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "proof-implication",
+      "frame": [
+        39.6002101678034,
+        140.4,
+        920.1648835355044,
+        169.2
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        196.56,
+        459.002436035903,
+        246.95999999999998
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        259.1999212598425,
+        459.002436035903,
+        410.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 20,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "peer-2-title",
+      "frame": [
+        500.76257892682935,
+        196.56,
+        907.2047360127387,
+        246.95999999999998
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "peer-2-body",
+      "frame": [
+        500.76257892682935,
+        259.1999212598425,
+        907.2047360127387,
+        410.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 15,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "proof-authority",
+      "frame": [
+        50.40026748629523,
+        442.79999999999995,
+        909.3648262170125,
+        468.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "proof-provenance",
+      "frame": [
+        48.960259843829654,
+        480.23999999999995,
+        912.9648453231764,
+        504.0
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        46.8,
+        920.1648835355044,
+        87.83992125984251
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        521.28,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-status",
+      "frame": [
+        39.6002101678034,
+        89.28,
+        920.1648835355044,
+        114.47999999999999
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-stage",
+      "frame": [
+        43.20022927396734,
+        122.39999999999999,
+        204.62502300189834,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-owner",
+      "frame": [
+        43.20022927396734,
+        162.71992125984252,
+        204.62502300189834,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-title",
+      "frame": [
+        46.800248380131286,
+        223.2,
+        201.0250038957344,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-label",
+      "frame": [
+        46.800248380131286,
+        281.52,
+        201.0250038957344,
+        306.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-body",
+      "frame": [
+        46.800248380131286,
+        308.88,
+        201.0250038957344,
+        350.64
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-label",
+      "frame": [
+        46.800248380131286,
+        353.52,
+        201.0250038957344,
+        378.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-body",
+      "frame": [
+        46.800248380131286,
+        382.32,
+        201.0250038957344,
+        426.96
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-stage",
+      "frame": [
+        221.18511089025247,
+        122.39999999999999,
+        382.60990461818346,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-owner",
+      "frame": [
+        221.18511089025247,
+        162.71992125984252,
+        382.60990461818346,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-title",
+      "frame": [
+        224.78512999641643,
+        223.2,
+        379.00988551201954,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-label",
+      "frame": [
+        224.78512999641643,
+        281.52,
+        379.00988551201954,
+        306.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-body",
+      "frame": [
+        224.78512999641643,
+        308.88,
+        379.00988551201954,
+        350.64
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-label",
+      "frame": [
+        224.78512999641643,
+        353.52,
+        379.00988551201954,
+        378.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-body",
+      "frame": [
+        224.78512999641643,
+        382.32,
+        379.00988551201954,
+        426.96
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-stage",
+      "frame": [
+        399.170071247113,
+        122.39999999999999,
+        560.594864975044,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-owner",
+      "frame": [
+        399.170071247113,
+        162.71992125984252,
+        560.594864975044,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-title",
+      "frame": [
+        402.77009035327694,
+        223.2,
+        556.99484586888,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-label",
+      "frame": [
+        402.77009035327694,
+        281.52,
+        556.99484586888,
+        306.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-body",
+      "frame": [
+        402.77009035327694,
+        308.88,
+        556.99484586888,
+        350.64
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-label",
+      "frame": [
+        402.77009035327694,
+        353.52,
+        556.99484586888,
+        378.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-body",
+      "frame": [
+        402.77009035327694,
+        382.32,
+        556.99484586888,
+        426.96
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-stage",
+      "frame": [
+        577.1550316039735,
+        122.39999999999999,
+        738.5798253319045,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-owner",
+      "frame": [
+        577.1550316039735,
+        162.71992125984252,
+        738.5798253319045,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-title",
+      "frame": [
+        580.7550507101374,
+        223.2,
+        734.9798062257405,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-label",
+      "frame": [
+        580.7550507101374,
+        281.52,
+        734.9798062257405,
+        306.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-body",
+      "frame": [
+        580.7550507101374,
+        308.88,
+        734.9798062257405,
+        350.64
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-label",
+      "frame": [
+        580.7550507101374,
+        353.52,
+        734.9798062257405,
+        378.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-body",
+      "frame": [
+        580.7550507101374,
+        382.32,
+        734.9798062257405,
+        426.96
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-stage",
+      "frame": [
+        755.139991960834,
+        122.39999999999999,
+        916.564785688765,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-owner",
+      "frame": [
+        755.139991960834,
+        162.71992125984252,
+        916.564785688765,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-title",
+      "frame": [
+        758.7400110669979,
+        223.2,
+        912.9647665826011,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-label",
+      "frame": [
+        758.7400110669979,
+        281.52,
+        912.9647665826011,
+        306.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-body",
+      "frame": [
+        758.7400110669979,
+        308.88,
+        912.9647665826011,
+        350.64
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-label",
+      "frame": [
+        758.7400110669979,
+        353.52,
+        912.9647665826011,
+        378.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-body",
+      "frame": [
+        758.7400110669979,
+        382.32,
+        912.9647665826011,
+        426.96
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-core",
+      "frame": [
+        49.68026366506244,
+        437.76,
+        910.0848300382453,
+        460.08
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-funding-boundary",
+      "frame": [
+        39.6002101678034,
+        470.88,
+        920.1648835355044,
+        494.64
+      ],
+      "words_matched_by_expected_sequence": 13,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-hazard-boundary",
+      "frame": [
+        39.6002101678034,
+        496.79999999999995,
+        920.1648835355044,
+        520.56
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "fictional-label",
+      "frame": [
+        39.6002101678034,
+        138.95999999999998,
+        918.004872071806,
+        164.16
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "gross-title",
+      "frame": [
+        57.60030569862312,
+        195.84,
+        460.80244558898494,
+        224.64
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "gross-value",
+      "frame": [
+        473.04251054994234,
+        195.84,
+        902.1647880046846,
+        239.04
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        300.95992125984253,
+        459.002436035903,
+        331.9199212598425
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        344.1599212598425,
+        459.002436035903,
+        412.5599212598425
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "peer-2-title",
+      "frame": [
+        500.76257892682935,
+        300.95992125984253,
+        907.2047360127387,
+        331.9199212598425
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "peer-2-body",
+      "frame": [
+        500.76257892682935,
+        344.1599212598425,
+        907.2047360127387,
+        412.5599212598425
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        455.76,
+        907.2048147533142,
+        488.8799212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        234.9012466771974,
+        235.44
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        247.67999999999998,
+        234.9012466771974,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-2-title",
+      "frame": [
+        276.66146830869917,
+        159.84,
+        459.002436035903,
+        235.44
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-2-body",
+      "frame": [
+        276.66146830869917,
+        247.67999999999998,
+        459.002436035903,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-3-title",
+      "frame": [
+        500.7626576674047,
+        159.84,
+        683.1036253946086,
+        235.44
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-3-body",
+      "frame": [
+        500.7626576674047,
+        247.67999999999998,
+        683.1036253946086,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-4-title",
+      "frame": [
+        724.8638470261103,
+        159.84,
+        907.2048147533142,
+        235.44
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "and",
+          "box": [
+            726.2930297851562,
+            227.4437255859375,
+            765.2496948242188,
+            251.9923858642578
+          ]
+        },
+        {
+          "token": "rollback",
+          "box": [
+            771.3428344726562,
+            227.4437255859375,
+            855.4812622070312,
+            251.9923858642578
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 15,
+      "name": "peer-4-body",
+      "frame": [
+        724.8638470261103,
+        247.67999999999998,
+        907.2048147533142,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        459.002436035903,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        459.002436035903,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "peer-2-title",
+      "frame": [
+        500.76257892682935,
+        159.84,
+        907.2047360127387,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "peer-2-body",
+      "frame": [
+        500.76257892682935,
+        239.76,
+        907.2047360127387,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        234.9012466771974,
+        212.39999999999998
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        224.64,
+        234.9012466771974,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-2-title",
+      "frame": [
+        276.66146830869917,
+        159.84,
+        459.002436035903,
+        212.39999999999998
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-2-body",
+      "frame": [
+        276.66146830869917,
+        224.64,
+        459.002436035903,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-3-title",
+      "frame": [
+        500.7626576674047,
+        159.84,
+        683.1036253946086,
+        212.39999999999998
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-3-body",
+      "frame": [
+        500.7626576674047,
+        224.64,
+        683.1036253946086,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-4-title",
+      "frame": [
+        724.8638470261103,
+        159.84,
+        907.2048147533142,
+        212.39999999999998
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-4-body",
+      "frame": [
+        724.8638470261103,
+        224.64,
+        907.2048147533142,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        615.6032671540346,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "closing-ask",
+      "frame": [
+        39.6002101678034,
+        142.56,
+        920.1648835355044,
+        195.84
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        228.95999999999998,
+        309.60164313009926,
+        265.68
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        277.91999999999996,
+        309.60164313009926,
+        394.56
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "peer-2-title",
+      "frame": [
+        351.361864761601,
+        228.95999999999998,
+        608.4032289417067,
+        265.68
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "peer-2-body",
+      "frame": [
+        351.361864761601,
+        277.91999999999996,
+        608.4032289417067,
+        394.56
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "peer-3-title",
+      "frame": [
+        650.1634505732085,
+        228.95999999999998,
+        907.2048147533142,
+        265.68
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "peer-3-body",
+      "frame": [
+        650.1634505732085,
+        277.91999999999996,
+        907.2048147533142,
+        394.56
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "closing-action",
+      "frame": [
+        50.40026748629523,
+        436.32,
+        909.3648262170125,
+        486.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 13,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "closing-boundary",
+      "frame": [
+        39.6002101678034,
+        494.64,
+        920.1648835355044,
+        520.56
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "challenge-19-link",
+      "frame": [
+        630.0033435786903,
+        17.279999999999998,
+        846.0044899485271,
+        38.879999999999995
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-browser-title",
+      "frame": [
+        48.24025602259686,
+        151.2,
+        299.52158963284023,
+        175.67999999999998
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-browser-body",
+      "frame": [
+        48.24025602259686,
+        178.56,
+        299.52158963284023,
+        226.0799212598425
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-entra-title",
+      "frame": [
+        382.32202907461095,
+        151.2,
+        605.5232136567755,
+        175.67999999999998
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-entra-body",
+      "frame": [
+        354.2418800465322,
+        178.56,
+        605.5232136567755,
+        226.0799212598425
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-auth-title",
+      "frame": [
+        660.2435040704675,
+        151.2,
+        911.5248376807109,
+        175.67999999999998
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-auth-body",
+      "frame": [
+        660.2435040704675,
+        178.56,
+        911.5248376807109,
+        226.0799212598425
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-model-title",
+      "frame": [
+        76.32040505067563,
+        261.36,
+        299.52158963284023,
+        285.84
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-model-body",
+      "frame": [
+        48.24025602259686,
+        288.71999999999997,
+        299.52158963284023,
+        355.68
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-api-title",
+      "frame": [
+        382.32202907461095,
+        261.36,
+        605.5232136567755,
+        285.84
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-api-body",
+      "frame": [
+        354.2418800465322,
+        288.71999999999997,
+        605.5232136567755,
+        355.68
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-sql-title",
+      "frame": [
+        688.3236530985463,
+        261.36,
+        911.5248376807109,
+        285.84
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-sql-body",
+      "frame": [
+        660.2435040704675,
+        288.71999999999997,
+        911.5248376807109,
+        355.68
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-review-title",
+      "frame": [
+        48.24025602259686,
+        388.79999999999995,
+        605.5232136567755,
+        413.28
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-review-body",
+      "frame": [
+        48.24025602259686,
+        416.15999999999997,
+        605.5232136567755,
+        465.12
+      ],
+      "words_matched_by_expected_sequence": 13,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-blob-title",
+      "frame": [
+        688.3236530985463,
+        388.79999999999995,
+        911.5248376807109,
+        413.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-blob-body",
+      "frame": [
+        660.2435040704675,
+        416.15999999999997,
+        911.5248376807109,
+        465.12
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-authority",
+      "frame": [
+        39.6002101678034,
+        473.03999999999996,
+        920.1648835355044,
+        496.08
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "operations-link",
+      "frame": [
+        39.6002101678034,
+        501.84,
+        298.8015858116074,
+        523.4399999999999
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "deferred-link",
+      "frame": [
+        324.001719554755,
+        501.84,
+        633.6033626848543,
+        523.4399999999999
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "return-decision-link",
+      "frame": [
+        651.603458215674,
+        501.11999999999995,
+        864.0045854793468,
+        522.72
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        525.6,
+        860.4045663731829,
+        537.8399999999999
+      ],
+      "words_matched_by_expected_sequence": 15,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-1-peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.12,
+        459.002436035903,
+        200.15992125984252
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-1-peer-1-body",
+      "frame": [
+        52.560278949993595,
+        212.3999212598425,
+        459.002436035903,
+        274.3199212598425
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-1-peer-2-title",
+      "frame": [
+        500.76257892682935,
+        159.12,
+        907.2047360127387,
+        200.15992125984252
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-1-peer-2-body",
+      "frame": [
+        500.76257892682935,
+        212.3999212598425,
+        907.2047360127387,
+        274.3199212598425
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-2-peer-1-title",
+      "frame": [
+        52.560278949993595,
+        305.2799212598425,
+        459.002436035903,
+        346.31984251968504
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-2-peer-1-body",
+      "frame": [
+        52.560278949993595,
+        358.56,
+        459.002436035903,
+        419.03999999999996
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-2-peer-2-title",
+      "frame": [
+        500.76257892682935,
+        305.2799212598425,
+        907.2047360127387,
+        346.31984251968504
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-2-peer-2-body",
+      "frame": [
+        500.76257892682935,
+        358.56,
+        907.2047360127387,
+        419.03999999999996
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "return-decision-link",
+      "frame": [
+        651.603458215674,
+        501.11999999999995,
+        864.0045854793468,
+        522.72
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "challenge-22-link",
+      "frame": [
+        39.6002101678034,
+        501.11999999999995,
+        255.6013565376401,
+        522.72
+      ],
+      "words_matched_by_expected_sequence": 1,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        525.6,
+        860.4045663731829,
+        537.8399999999999
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        309.60164313009926,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        309.60164313009926,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "peer-2-title",
+      "frame": [
+        351.361864761601,
+        159.84,
+        608.4032289417067,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "peer-2-body",
+      "frame": [
+        351.361864761601,
+        239.76,
+        608.4032289417067,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "peer-3-title",
+      "frame": [
+        650.1634505732085,
+        159.84,
+        907.2048147533142,
+        227.51999999999998
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "peer-3-body",
+      "frame": [
+        650.1634505732085,
+        239.76,
+        907.2048147533142,
+        398.88
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        441.35999999999996,
+        907.2048147533142,
+        474.4799212598425
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "assessment-open",
+      "frame": [
+        51.120271307528014,
+        486.71999999999997,
+        641.5233259778396,
+        513.36
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "return-decision-link",
+      "frame": [
+        651.603458215674,
+        501.11999999999995,
+        864.0045854793468,
+        522.72
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        525.6,
+        860.4045663731829,
+        537.8399999999999
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-peer-1-title",
+      "frame": [
+        257.76136800133844,
+        154.07999999999998,
+        454.32241119788983,
+        216.72
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-peer-2-title",
+      "frame": [
+        486.00257933213254,
+        154.07999999999998,
+        682.5636225286839,
+        216.72
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-peer-3-title",
+      "frame": [
+        714.2437906629267,
+        154.07999999999998,
+        910.8048338594781,
+        216.72
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-1-label",
+      "frame": [
+        39.6002101678034,
+        237.6,
+        237.60126100682035,
+        267.84
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-1-peer-1-body",
+      "frame": [
+        257.76136800133844,
+        237.6,
+        454.32241119788983,
+        266.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-1-peer-2-body",
+      "frame": [
+        486.00257933213254,
+        237.6,
+        682.5636225286839,
+        266.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-1-peer-3-body",
+      "frame": [
+        714.2437906629267,
+        237.6,
+        910.8048338594781,
+        266.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-2-label",
+      "frame": [
+        39.6002101678034,
+        283.68,
+        237.60126100682035,
+        313.91999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-2-peer-1-body",
+      "frame": [
+        257.76136800133844,
+        283.68,
+        454.32241119788983,
+        312.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-2-peer-2-body",
+      "frame": [
+        486.00257933213254,
+        283.68,
+        682.5636225286839,
+        312.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-2-peer-3-body",
+      "frame": [
+        714.2437906629267,
+        283.68,
+        910.8048338594781,
+        312.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-3-label",
+      "frame": [
+        39.6002101678034,
+        329.76,
+        237.60126100682035,
+        360.0
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-3-peer-1-body",
+      "frame": [
+        257.76136800133844,
+        329.76,
+        454.32241119788983,
+        358.56
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-3-peer-2-body",
+      "frame": [
+        486.00257933213254,
+        329.76,
+        682.5636225286839,
+        358.56
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-3-peer-3-body",
+      "frame": [
+        714.2437906629267,
+        329.76,
+        910.8048338594781,
+        358.56
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-4-label",
+      "frame": [
+        39.6002101678034,
+        375.84,
+        237.60126100682035,
+        406.08
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-4-peer-1-body",
+      "frame": [
+        257.76136800133844,
+        375.84,
+        454.32241119788983,
+        404.64
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-4-peer-2-body",
+      "frame": [
+        486.00257933213254,
+        375.84,
+        682.5636225286839,
+        404.64
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-4-peer-3-body",
+      "frame": [
+        714.2437906629267,
+        375.84,
+        910.8048338594781,
+        404.64
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        454.32,
+        907.2048147533142,
+        487.4399212598425
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "return-decision-link",
+      "frame": [
+        651.603458215674,
+        501.11999999999995,
+        864.0045854793468,
+        522.72
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "return-options-link",
+      "frame": [
+        39.6002101678034,
+        501.11999999999995,
+        363.60192972255845,
+        522.72
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-tokens-title",
+      "frame": [
+        76.32040505067563,
+        151.2,
+        299.52158963284023,
+        175.67999999999998
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-tokens-body",
+      "frame": [
+        48.24025602259686,
+        178.56,
+        299.52158963284023,
+        252.72
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-renewal-title",
+      "frame": [
+        382.32202907461095,
+        151.2,
+        605.5232136567755,
+        175.67999999999998
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-renewal-body",
+      "frame": [
+        354.2418800465322,
+        178.56,
+        605.5232136567755,
+        252.72
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-vault-title",
+      "frame": [
+        688.3236530985463,
+        151.2,
+        911.5248376807109,
+        175.67999999999998
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-vault-body",
+      "frame": [
+        660.2435040704675,
+        178.56,
+        911.5248376807109,
+        252.72
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-registry-title",
+      "frame": [
+        76.32040505067563,
+        277.91999999999996,
+        299.52158963284023,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-registry-body",
+      "frame": [
+        48.24025602259686,
+        305.28,
+        299.52158963284023,
+        379.44
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-logs-title",
+      "frame": [
+        382.32202907461095,
+        277.91999999999996,
+        605.5232136567755,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-logs-body",
+      "frame": [
+        354.2418800465322,
+        305.28,
+        605.5232136567755,
+        379.44
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-alerts-title",
+      "frame": [
+        688.3236530985463,
+        277.91999999999996,
+        911.5248376807109,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-alerts-body",
+      "frame": [
+        660.2435040704675,
+        305.28,
+        911.5248376807109,
+        379.44
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-network",
+      "frame": [
+        39.6002101678034,
+        392.4,
+        920.1648835355044,
+        438.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 18,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-support",
+      "frame": [
+        39.6002101678034,
+        442.79999999999995,
+        920.1648835355044,
+        468.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-failures",
+      "frame": [
+        50.40026748629523,
+        474.47999999999996,
+        909.3648262170125,
+        498.23999999999995
+      ],
+      "words_matched_by_expected_sequence": 15,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "return-decision-link",
+      "frame": [
+        651.603458215674,
+        501.11999999999995,
+        864.0045854793468,
+        522.72
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-frame-label",
+      "frame": [
+        39.6002101678034,
+        136.07999999999998,
+        920.1648835355044,
+        160.56
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-orchestrator-title",
+      "frame": [
+        48.24025602259686,
+        170.64,
+        299.52158963284023,
+        195.12
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-orchestrator-body",
+      "frame": [
+        48.24025602259686,
+        198.0,
+        299.52158963284023,
+        268.56
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-queues-title",
+      "frame": [
+        382.32202907461095,
+        170.64,
+        605.5232136567755,
+        195.12
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-queues-body",
+      "frame": [
+        354.2418800465322,
+        198.0,
+        605.5232136567755,
+        268.56
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-agents-title",
+      "frame": [
+        660.2435040704675,
+        170.64,
+        911.5248376807109,
+        195.12
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-agents-body",
+      "frame": [
+        660.2435040704675,
+        198.0,
+        911.5248376807109,
+        268.56
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-m365-title",
+      "frame": [
+        48.24025602259686,
+        292.3199212598425,
+        299.52158963284023,
+        316.7999212598425
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-m365-body",
+      "frame": [
+        48.24025602259686,
+        319.68,
+        299.52158963284023,
+        390.24
+      ],
+      "words_matched_by_expected_sequence": 9,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-import-title",
+      "frame": [
+        382.32202907461095,
+        292.3199212598425,
+        605.5232136567755,
+        316.7999212598425
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-import-body",
+      "frame": [
+        354.2418800465322,
+        319.68,
+        605.5232136567755,
+        390.24
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-containers-title",
+      "frame": [
+        688.3236530985463,
+        292.3199212598425,
+        911.5248376807109,
+        316.7999212598425
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-containers-body",
+      "frame": [
+        660.2435040704675,
+        319.68,
+        911.5248376807109,
+        390.24
+      ],
+      "words_matched_by_expected_sequence": 8,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-edge-title",
+      "frame": [
+        76.32040505067563,
+        406.08,
+        459.3624379465194,
+        430.56
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-edge-body",
+      "frame": [
+        48.24025602259686,
+        433.44,
+        459.3624379465194,
+        459.35999999999996
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-anchor-title",
+      "frame": [
+        500.40265575678836,
+        406.08,
+        911.5248376807109,
+        430.56
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-anchor-body",
+      "frame": [
+        500.40265575678836,
+        433.44,
+        911.5248376807109,
+        459.35999999999996
+      ],
+      "words_matched_by_expected_sequence": 6,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-teams",
+      "frame": [
+        39.6002101678034,
+        470.88,
+        920.1648835355044,
+        496.08
+      ],
+      "words_matched_by_expected_sequence": 10,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "return-decision-link",
+      "frame": [
+        651.603458215674,
+        501.11999999999995,
+        864.0045854793468,
+        522.72
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "actual-runtime-link",
+      "frame": [
+        39.6002101678034,
+        501.11999999999995,
+        327.601738660919,
+        522.72
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    }
+  ],
+  "dispositions": [],
+  "all_remaining_bounds_dispositioned": false
+}

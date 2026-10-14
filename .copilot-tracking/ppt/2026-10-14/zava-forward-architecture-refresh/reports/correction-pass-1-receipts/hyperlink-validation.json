@@ -1,0 +1,105 @@
+{
+  "pass_links": true,
+  "rows": [
+    {
+      "slide": 4,
+      "native_object": "options-link",
+      "expected": 22,
+      "actual": 22,
+      "valid": true
+    },
+    {
+      "slide": 10,
+      "native_object": "runtime-link",
+      "expected": 19,
+      "actual": 19,
+      "valid": true
+    },
+    {
+      "slide": 18,
+      "native_object": "challenge-19-link",
+      "expected": 19,
+      "actual": 19,
+      "valid": true
+    },
+    {
+      "slide": 19,
+      "native_object": "operations-link",
+      "expected": 23,
+      "actual": 23,
+      "valid": true
+    },
+    {
+      "slide": 19,
+      "native_object": "deferred-link",
+      "expected": 24,
+      "actual": 24,
+      "valid": true
+    },
+    {
+      "slide": 19,
+      "native_object": "return-decision-link",
+      "expected": 18,
+      "actual": 18,
+      "valid": true
+    },
+    {
+      "slide": 20,
+      "native_object": "return-decision-link",
+      "expected": 18,
+      "actual": 18,
+      "valid": true
+    },
+    {
+      "slide": 20,
+      "native_object": "challenge-22-link",
+      "expected": 22,
+      "actual": 22,
+      "valid": true
+    },
+    {
+      "slide": 21,
+      "native_object": "return-decision-link",
+      "expected": 18,
+      "actual": 18,
+      "valid": true
+    },
+    {
+      "slide": 22,
+      "native_object": "return-decision-link",
+      "expected": 18,
+      "actual": 18,
+      "valid": true
+    },
+    {
+      "slide": 22,
+      "native_object": "return-options-link",
+      "expected": 4,
+      "actual": 4,
+      "valid": true
+    },
+    {
+      "slide": 23,
+      "native_object": "return-decision-link",
+      "expected": 18,
+      "actual": 18,
+      "valid": true
+    },
+    {
+      "slide": 24,
+      "native_object": "return-decision-link",
+      "expected": 18,
+      "actual": 18,
+      "valid": true
+    },
+    {
+      "slide": 24,
+      "native_object": "actual-runtime-link",
+      "expected": 19,
+      "actual": 19,
+      "valid": true
+    }
+  ],
+  "errors": [],
+  "native_keyboard_viewer_testing": "Not performed; XML target validity is not keyboard acceptance."
+}

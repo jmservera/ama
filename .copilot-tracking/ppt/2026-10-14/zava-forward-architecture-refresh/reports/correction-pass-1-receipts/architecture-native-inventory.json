@@ -1,0 +1,741 @@
+{
+  "all_mapped_to_actual_objects": true,
+  "executive_cards": 7,
+  "executive_flows": 6,
+  "technical_cards": 24,
+  "technical_flows": 27,
+  "source_coverage_verified": true,
+  "checks": [
+    {
+      "view": "executive",
+      "source_id": "ec8e79bf2966e500bc4a",
+      "slide": 10,
+      "native_objects": [
+        "exec-entra-api-segment-1",
+        "exec-entra-background",
+        "exec-entra-title",
+        "exec-entra-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "executive",
+      "source_id": "0baa44e236185c39bc3b",
+      "slide": 10,
+      "native_objects": [
+        "exec-staff-api-segment-1",
+        "exec-staff-background",
+        "exec-staff-title",
+        "exec-staff-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "executive",
+      "source_id": "2192f52cffdafe092336",
+      "slide": 10,
+      "native_objects": [
+        "exec-api-model-segment-1",
+        "exec-api-sql-segment-1",
+        "exec-api-blob-segment-1",
+        "exec-api-background",
+        "exec-api-title",
+        "exec-api-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "executive",
+      "source_id": "7cb08d201da6d6377180",
+      "slide": 10,
+      "native_objects": [
+        "exec-model-background",
+        "exec-model-title",
+        "exec-model-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "executive",
+      "source_id": "c06ccb8c6179f8aca2fa",
+      "slide": 10,
+      "native_objects": [
+        "exec-people-api-segment-1",
+        "exec-people-background",
+        "exec-people-title",
+        "exec-people-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "executive",
+      "source_id": "69af7394ba72e9d4bff8",
+      "slide": 10,
+      "native_objects": [
+        "exec-sql-background",
+        "exec-sql-title",
+        "exec-sql-body",
+        "exec-sql-evidence"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "executive",
+      "source_id": "59d36717a206823cf100",
+      "slide": 10,
+      "native_objects": [
+        "exec-blob-background",
+        "exec-blob-title",
+        "exec-blob-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "executive",
+      "source_id": "49eb2c57b645018054c3",
+      "slide": 10,
+      "native_objects": [
+        "exec-staff-api-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "executive",
+      "source_id": "e6eb29489d099f0f5f23",
+      "slide": 10,
+      "native_objects": [
+        "exec-entra-api-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "executive",
+      "source_id": "6d6081a84b6e7b457b07",
+      "slide": 10,
+      "native_objects": [
+        "exec-api-model-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "executive",
+      "source_id": "5395764f763f83e55954",
+      "slide": 10,
+      "native_objects": [
+        "exec-api-sql-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "executive",
+      "source_id": "67c47731b51938d553d0",
+      "slide": 10,
+      "native_objects": [
+        "exec-api-blob-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "executive",
+      "source_id": "0c4aef2041d759667f4e",
+      "slide": 10,
+      "native_objects": [
+        "exec-people-api-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "ec85960e75500c25055e",
+      "slide": 19,
+      "native_objects": [
+        "runtime-entra-background",
+        "runtime-entra-title",
+        "runtime-entra-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "7a9c087c19808662c35f",
+      "slide": 19,
+      "native_objects": [
+        "runtime-browser-background",
+        "runtime-browser-title",
+        "runtime-browser-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "cec9602dfea4fda85a9e",
+      "slide": 23,
+      "native_objects": [
+        "ops-support"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "77712f2e2774c57341ab",
+      "slide": 23,
+      "native_objects": [
+        "ops-support"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "1309a59ba14597c50999",
+      "slide": 23,
+      "native_objects": [
+        "ops-registry-background",
+        "ops-registry-title",
+        "ops-registry-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "9601c28a35a0fb0586a3",
+      "slide": 23,
+      "native_objects": [
+        "ops-vault-background",
+        "ops-vault-title",
+        "ops-vault-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "cdce316258c835cc84b0",
+      "slide": 19,
+      "native_objects": [
+        "runtime-model-background",
+        "runtime-model-title",
+        "runtime-model-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "3523bb0d2f370452b9a1",
+      "slide": 19,
+      "native_objects": [
+        "runtime-auth-background",
+        "runtime-auth-title",
+        "runtime-auth-body",
+        "runtime-authority"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "8fa53ee3352dd325db61",
+      "slide": 19,
+      "native_objects": [
+        "runtime-api-model-segment-1",
+        "runtime-api-sql-segment-1",
+        "runtime-api-blob-segment-1",
+        "runtime-api-blob-segment-2",
+        "runtime-api-blob-segment-3",
+        "runtime-api-background",
+        "runtime-api-title",
+        "runtime-api-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "520fa911913a315ec311",
+      "slide": 19,
+      "native_objects": [
+        "runtime-sql-background",
+        "runtime-sql-title",
+        "runtime-sql-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "ca3a4927ee81d06fffac",
+      "slide": 19,
+      "native_objects": [
+        "runtime-blob-background",
+        "runtime-blob-title",
+        "runtime-blob-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "e5e1ec1330919ad269fb",
+      "slide": 23,
+      "native_objects": [
+        "ops-tokens-background",
+        "ops-tokens-title",
+        "ops-tokens-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "f2cc9a49400b46488459",
+      "slide": 23,
+      "native_objects": [
+        "ops-renewal-background",
+        "ops-renewal-title",
+        "ops-renewal-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "17c85b2d2262ab0cf3fd",
+      "slide": 23,
+      "native_objects": [
+        "ops-registry-background",
+        "ops-registry-title",
+        "ops-registry-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "c1dd3cb3e7a0b2ba460e",
+      "slide": 23,
+      "native_objects": [
+        "ops-logs-background",
+        "ops-logs-title",
+        "ops-logs-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "93bc7d5508419881fb93",
+      "slide": 23,
+      "native_objects": [
+        "ops-logs-background",
+        "ops-logs-title",
+        "ops-logs-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "270a2a59b002c95cfad5",
+      "slide": 23,
+      "native_objects": [
+        "ops-alerts-background",
+        "ops-alerts-title",
+        "ops-alerts-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "0133d5a978cf863bf18e",
+      "slide": 24,
+      "native_objects": [
+        "deferred-agents-background",
+        "deferred-agents-title",
+        "deferred-agents-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "3a4912866a25ea9fa4f5",
+      "slide": 24,
+      "native_objects": [
+        "deferred-queues-background",
+        "deferred-queues-title",
+        "deferred-queues-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "05e37da2bcf3a9bbb15d",
+      "slide": 24,
+      "native_objects": [
+        "deferred-orchestrator-background",
+        "deferred-orchestrator-title",
+        "deferred-orchestrator-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "eeebb32c4134c43ff3ea",
+      "slide": 24,
+      "native_objects": [
+        "deferred-import-queue-segment-1",
+        "deferred-import-background",
+        "deferred-import-title",
+        "deferred-import-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "9ecd4499ca1ce4a8094f",
+      "slide": 24,
+      "native_objects": [
+        "deferred-containers-background",
+        "deferred-containers-title",
+        "deferred-containers-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "b725c3d944ac2da4fb76",
+      "slide": 24,
+      "native_objects": [
+        "deferred-edge-background",
+        "deferred-edge-title",
+        "deferred-edge-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "0f525a252a55d87fe19b",
+      "slide": 24,
+      "native_objects": [
+        "deferred-m365-background",
+        "deferred-m365-title",
+        "deferred-m365-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "676ff72690ed81e0823b",
+      "slide": 19,
+      "native_objects": [
+        "runtime-sign-in-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "12b3abbdb6718ff774f7",
+      "slide": 19,
+      "native_objects": [
+        "runtime-browser-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "3a398502e2258877069e",
+      "slide": 19,
+      "native_objects": [
+        "runtime-issuer-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "95a13aafa833607e8907",
+      "slide": 19,
+      "native_objects": [
+        "runtime-principal-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "3ceaae8bf6c64f995ab3",
+      "slide": 19,
+      "native_objects": [
+        "runtime-api-sql-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "36259cde5295635f2668",
+      "slide": 19,
+      "native_objects": [
+        "runtime-api-blob-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "bde189caec5340903daf",
+      "slide": 19,
+      "native_objects": [
+        "runtime-api-model-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "a93858ce6826d7e2ab9f",
+      "slide": 23,
+      "native_objects": [
+        "ops-vault-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "7609eb7a35e5338d6d83",
+      "slide": 23,
+      "native_objects": [
+        "ops-support"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "2eae8e0ea7b026ef35e9",
+      "slide": 23,
+      "native_objects": [
+        "ops-support"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "34dab47235c72c168f38",
+      "slide": 23,
+      "native_objects": [
+        "renewal-token-key-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "dc4c3ddd7f1f218075b5",
+      "slide": 23,
+      "native_objects": [
+        "renewal-vault-write-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "b5a9d2f3ab17b9a4ab43",
+      "slide": 23,
+      "native_objects": [
+        "ops-tokens-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "0115c864403bfdf58b00",
+      "slide": 23,
+      "native_objects": [
+        "ops-registry-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "f2dc7f9116778dce9629",
+      "slide": 23,
+      "native_objects": [
+        "ops-logs-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "cb3b6a244b00514fb4de",
+      "slide": 23,
+      "native_objects": [
+        "ops-logs-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "0448430d9d92f5c980be",
+      "slide": 23,
+      "native_objects": [
+        "ops-alerts-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "477d90fbcf1aa01e03ec",
+      "slide": 24,
+      "native_objects": [
+        "deferred-enqueue-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "fd0a0dedeb1522230ee0",
+      "slide": 24,
+      "native_objects": [
+        "deferred-keda-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "a67a2167aaacf3253bde",
+      "slide": 24,
+      "native_objects": [
+        "deferred-import-queue-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "2f1a9894e847a80b4dce",
+      "slide": 24,
+      "native_objects": [
+        "deferred-quarantine-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "beb89f6cd68c373ae69d",
+      "slide": 24,
+      "native_objects": [
+        "deferred-agents-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "d3ee97bb09a723d14c7c",
+      "slide": 24,
+      "native_objects": [
+        "deferred-orchestrator-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "16ad35bd0bdf7e22f9a9",
+      "slide": 24,
+      "native_objects": [
+        "deferred-agents-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "2a121655841b6b3abef0",
+      "slide": 24,
+      "native_objects": [
+        "deferred-snapshot-segment-1"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "f9ff73c6ea523e3532b1",
+      "slide": 24,
+      "native_objects": [
+        "deferred-import-body"
+      ],
+      "actual_objects_exist": true
+    },
+    {
+      "view": "technical",
+      "source_id": "fc64c30353ef27ae6319",
+      "slide": 24,
+      "native_objects": [
+        "deferred-teams"
+      ],
+      "actual_objects_exist": true
+    }
+  ],
+  "native_counts": [
+    {
+      "slide": 10,
+      "shape_types": {
+        "TEXT_BOX (17)": 21,
+        "AUTO_SHAPE (1)": 9,
+        "PICTURE (13)": 6,
+        "LINE (9)": 6
+      },
+      "pictures": [
+        "Zava branding logo — only branding",
+        "azure-icon-entra-exec-entra",
+        "azure-icon-aca-exec-api",
+        "azure-icon-openai-exec-model",
+        "azure-icon-sql-exec-sql",
+        "azure-icon-blob-exec-blob"
+      ],
+      "product_icons": 5,
+      "diagram_pictures": 0,
+      "connectors": 6
+    },
+    {
+      "slide": 19,
+      "shape_types": {
+        "TEXT_BOX (17)": 24,
+        "AUTO_SHAPE (1)": 9,
+        "PICTURE (13)": 6,
+        "LINE (9)": 11
+      },
+      "pictures": [
+        "Zava branding logo — only branding",
+        "azure-icon-entra-runtime-entra",
+        "azure-icon-openai-runtime-model",
+        "azure-icon-aca-runtime-api",
+        "azure-icon-sql-runtime-sql",
+        "azure-icon-blob-runtime-blob"
+      ],
+      "product_icons": 5,
+      "diagram_pictures": 0,
+      "connectors": 11
+    },
+    {
+      "slide": 23,
+      "shape_types": {
+        "TEXT_BOX (17)": 20,
+        "AUTO_SHAPE (1)": 8,
+        "PICTURE (13)": 7,
+        "LINE (9)": 2
+      },
+      "pictures": [
+        "Zava branding logo — only branding",
+        "azure-icon-blob-ops-tokens",
+        "azure-icon-aca-ops-renewal",
+        "azure-icon-vault-ops-vault",
+        "azure-icon-registry-ops-registry",
+        "azure-icon-logs-ops-logs",
+        "azure-icon-monitor-ops-alerts"
+      ],
+      "product_icons": 6,
+      "diagram_pictures": 0,
+      "connectors": 2
+    },
+    {
+      "slide": 24,
+      "shape_types": {
+        "TEXT_BOX (17)": 24,
+        "AUTO_SHAPE (1)": 9,
+        "PICTURE (13)": 5,
+        "LINE (9)": 5
+      },
+      "pictures": [
+        "Zava branding logo — only branding",
+        "azure-icon-queue-deferred-queues",
+        "azure-icon-aca-deferred-import",
+        "azure-icon-blob-deferred-containers",
+        "azure-icon-edge-deferred-edge"
+      ],
+      "product_icons": 4,
+      "diagram_pictures": 0,
+      "connectors": 5
+    }
+  ],
+  "note": "Some interactions are deliberately grouped visible native text, not an invented additional flow. Exact destinations in source-to-native-mapping.json."
+}

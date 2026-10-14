@@ -1,0 +1,2062 @@
+{
+  "raw_total": 228,
+  "errors": 0,
+  "warning_count": 193,
+  "info_count": 35,
+  "visual_review": "All final 24 slide JPGs and all four contact sheets inspected locally.",
+  "no_blanket_clean_claim": true,
+  "rows": [
+    {
+      "slide": 1,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 1,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 1,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 1,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S01 / S02 / S03 / S09 / \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 1,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"01 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 1,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'opening-evidence (\"Real service proof now. Human and value \")' and 'boundary-background' is 0.08\" (minimum 0.3\")",
+      "location": "opening-evidence\u2192boundary-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 2,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 2,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 2,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 2,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S01 / S02  \u2022  Sources + \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 2,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"02 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 2,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Five pressure points. One accepted home.\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 2,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-5-title (\"Verify & hand over\")' to 'peer-1-body (\"Prioritisation\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-5-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 3,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 3,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 3,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 3,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S04  \u2022  Sources + \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 3,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"03 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 3,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Each request needs rules, people and bou\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 3,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-3-title (\"Bounded AI\")' to 'peer-1-body (\"Gates, clocks, eligibility, versions.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-3-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 4,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES / ZAVA FORWARD / EXECUT\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 4,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 4,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 4,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026 | S16 + retained sources/sta\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 4,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"04 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 4,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'options-link (\"Equal-control appraisal: slide 22\")' bottom edge (7.20\") > slide height - margin (7.00\")",
+      "location": "options-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 4,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Compare routes; keep the exercise choice\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 4,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'options-provisional (\"Recommend hybrid for the bounded exercis\")' and 'options-link (\"Equal-control appraisal: slide 22\")' is 0.10\" (minimum 0.3\")",
+      "location": "options-provisional\u2192options-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 4,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-3-title (\"Azure-led hybrid\")' to 'peer-1-body (\"Least platform change. Controls still to\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-3-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 5,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 5,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 5,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 5,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S07 / S12  \u2022  Sour\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 5,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"05 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 5,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Change the handoffs, not the whole compa\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 5,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-2-title (\"ADD\")' to 'peer-1-body (\"Teams, suppliers, useful systems.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-2-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 6,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 6,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 6,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 6,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S05 / S06 / S07  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 6,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"06 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 6,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Every handoff needs an owner and a next \")' and 'row-1-peer-1-background' is 0.24\" (minimum 0.3\")",
+      "location": "slide-title\u2192row-1-peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 6,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'row-1-peer-3-title (\"Entry, exit, pause\")' to 'row-1-peer-1-body (\"Sender chases until accepted.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "row-1-peer-3-title\u2192row-1-peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 6,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'row-2-peer-3-title (\"Decision + reason\")' to 'row-2-peer-1-body (\"Named action and update owner.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "row-2-peer-3-title\u2192row-2-peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 7,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 7,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 7,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 7,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S06 / S07  \u2022  Sources + \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 7,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"07 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 7,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"One home shows the journey we still need\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 7,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'journey-hold-return (\"Hold / return \u2192 named, competent human o\")' and 'boundary-background' is 0.15\" (minimum 0.3\")",
+      "location": "journey-hold-return\u2192boundary-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 7,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-4-title (\"4  Accept\")' to 'peer-1-body (\"Conflicting evidence. Named resolver.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-4-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 8,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 8,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 8,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 8,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S06 / S07 / S10  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 8,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"08 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 8,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'human-hazard-route (\"Human hazard route \u2014 never wait for AI.\")' bottom edge (7.06\") > slide height - margin (7.00\")",
+      "location": "human-hazard-route",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 8,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"A resident is not a scheduling variable.\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 8,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'boundary-text (\"A proposed slot is not consent. Silence/\")' and 'human-hazard-route (\"Human hazard route \u2014 never wait for AI.\")' is 0.17\" (minimum 0.3\")",
+      "location": "boundary-text\u2192human-hazard-route",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 8,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'human-hazard-route (\"Human hazard route \u2014 never wait for AI.\")' and 'source-footer (\"14 OCT 2026  \u2022  S02 / S06 / S07 / S10  \u2022\")' is 0.06\" (minimum 0.3\")",
+      "location": "human-hazard-route\u2192source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 8,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-2-title (\"Delivery\")' to 'peer-1-body (\"Clear options. Safe phone, letter or ass\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-2-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 9,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 9,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 9,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 9,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S07 / S11  \u2022  Sour\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 9,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"09 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 9,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Show the decision trace, not just an AI \")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 9,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-3-title (\"Change\")' to 'peer-1-body (\"Source + evidence version + unknowns.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-3-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 10,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES / ZAVA FORWARD / EXECUT\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 10,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 10,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 10,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026 | S16 + retained sources/sta\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 10,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"10 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 10,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"One API supports the work. People retain\")' and 'exec-staff-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192exec-staff-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 10,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'exec-blob-body (\"CONFIGURED Files; SQL hashes\")' and 'exec-boundary-background' is 0.08\" (minimum 0.3\")",
+      "location": "exec-blob-body\u2192exec-boundary-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 11,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 11,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 11,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 11,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S07 / S08 / S10 / S11  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 11,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"11 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 11,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Models propose. People and rules control\")' and 'proposal-lane-label (\"PROPOSAL PATH / recorded operator integr\")' is 0.16\" (minimum 0.3\")",
+      "location": "slide-title\u2192proposal-lane-label",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 11,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'proposal-lane-label (\"PROPOSAL PATH / recorded operator integr\")' and 'proposal-peer-1-background' is 0.15\" (minimum 0.3\")",
+      "location": "proposal-lane-label\u2192proposal-peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 11,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'domain-lane-label (\"SEPARATE CONTROLLED PATH / authority sta\")' and 'domain-peer-1-background' is 0.14\" (minimum 0.3\")",
+      "location": "domain-lane-label\u2192domain-peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 11,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'boundary-text (\"Model cannot approve, send, book, pay or\")' and 'source-footer (\"14 OCT 2026  \u2022  S07 / S08 / S10 / S11  \u2022\")' is 0.19\" (minimum 0.3\")",
+      "location": "boundary-text\u2192source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 11,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'slide-title (\"Models propose. People and rules control\")' to 'proposal-lane-label (\"PROPOSAL PATH / recorded operator integr\")' clearance is 0.16\" (recommended 0.2\")",
+      "location": "slide-title\u2192proposal-lane-label",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 11,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'proposal-peer-3-title (\"Human review\")' to 'proposal-peer-1-body (\"Permitted task.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "proposal-peer-3-title\u2192proposal-peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 11,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'domain-peer-3-title (\"SQL + audit\")' to 'domain-peer-1-body (\"Effective authority.\")' clearance is 0.10\" (recommended 0.2\")",
+      "location": "domain-peer-3-title\u2192domain-peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 12,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES / ZAVA FORWARD / EXECUT\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 12,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 12,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 12,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026 | S16 + retained sources/sta\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 12,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"12 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 12,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Five real proposal paths. No delegated d\")' and 'proof-implication (\"Integration and durability observed; use\")' is 0.18\" (minimum 0.3\")",
+      "location": "slide-title\u2192proof-implication",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 12,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'proof-implication (\"Integration and durability observed; use\")' and 'peer-1-background' is 0.18\" (minimum 0.3\")",
+      "location": "proof-implication\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 12,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'proof-authority (\"Normal five-assistant authority absent. \")' and 'proof-provenance (\"PUBLIC REPOSITORY EVIDENCE | 14 October \")' is 0.16\" (minimum 0.3\")",
+      "location": "proof-authority\u2192proof-provenance",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 12,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'proof-provenance (\"PUBLIC REPOSITORY EVIDENCE | 14 October \")' and 'page-counter (\"12 / 24\")' is 0.24\" (minimum 0.3\")",
+      "location": "proof-provenance\u2192page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 12,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'slide-title (\"Five real proposal paths. No delegated d\")' to 'proof-implication (\"Integration and durability observed; use\")' clearance is 0.18\" (recommended 0.2\")",
+      "location": "slide-title\u2192proof-implication",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 12,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-2-title (\"NOT YET ESTABLISHED\")' to 'peer-1-body (\"5 distinct proposal paths 5 real calls /\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-2-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 13,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 13,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 13,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 13,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S07 / S09 / S11 / \")' bottom edge (7.42\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 13,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"13 / 22\")' bottom edge (7.43\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 13,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'map-hazard-boundary (\"Hazard \u2192 human service now, never wait f\")' bottom edge (7.13\") > slide height - margin (7.00\")",
+      "location": "map-hazard-boundary",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' and 'slide-title (\"Five assists. One controlled journey.\")' is 0.15\" (minimum 0.3\")",
+      "location": "deck-eyebrow\u2192slide-title",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Five assists. One controlled journey.\")' and 'map-status (\"Workflow controls progression. People re\")' is 0.04\" (minimum 0.3\")",
+      "location": "slide-title\u2192map-status",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'map-status (\"Workflow controls progression. People re\")' and 'map-peer-1-stage-background' is 0.14\" (minimum 0.3\")",
+      "location": "map-status\u2192map-peer-1-stage-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'map-peer-5-proactive-body (\"Missing/conflicting quality evidence\")' and 'map-core-background' is 0.21\" (minimum 0.3\")",
+      "location": "map-peer-5-proactive-body\u2192map-core-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'map-core (\"Workflow core: rights \u2022 versions \u2022 gates\")' and 'map-funding-boundary (\"Checks OFF now; future eligibility \u2192 nam\")' is 0.15\" (minimum 0.3\")",
+      "location": "map-core\u2192map-funding-boundary",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'map-funding-boundary (\"Checks OFF now; future eligibility \u2192 nam\")' and 'map-hazard-boundary (\"Hazard \u2192 human service now, never wait f\")' is 0.04\" (minimum 0.3\")",
+      "location": "map-funding-boundary\u2192map-hazard-boundary",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'map-hazard-boundary (\"Hazard \u2192 human service now, never wait f\")' and 'page-counter (\"13 / 22\")' is 0.10\" (minimum 0.3\")",
+      "location": "map-hazard-boundary\u2192page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 13,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'slide-title (\"Five assists. One controlled journey.\")' to 'map-status (\"Workflow controls progression. People re\")' clearance is 0.04\" (recommended 0.2\")",
+      "location": "slide-title\u2192map-status",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 13,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'map-peer-5-title (\"Quality Evidence Review\")' to 'map-peer-1-request-label (\"On request\")' clearance is 0.07\" (recommended 0.2\")",
+      "location": "map-peer-5-title\u2192map-peer-1-request-label",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 14,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 14,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 14,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 14,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S03 / S06 / S09  \u2022  Sour\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 14,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"14 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 14,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"See cash before optimism.\")' and 'fictional-label (\"FICTIONAL EXA-010/015 / not a technology\")' is 0.16\" (minimum 0.3\")",
+      "location": "slide-title\u2192fictional-label",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 14,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'fictional-label (\"FICTIONAL EXA-010/015 / not a technology\")' and 'gross-background' is 0.23\" (minimum 0.3\")",
+      "location": "fictional-label\u2192gross-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 14,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'slide-title (\"See cash before optimism.\")' to 'fictional-label (\"FICTIONAL EXA-010/015 / not a technology\")' clearance is 0.16\" (recommended 0.2\")",
+      "location": "slide-title\u2192fictional-label",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 14,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-2-title (\"IF CONTINGENCY SPENT\")' to 'peer-1-body (\"\u00a37,500 fictional grant \u2192 \u00a312,500 provide\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-2-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 15,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 15,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 15,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 15,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S06 / S07 / S10 / S12  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 15,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"15 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 15,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Make the first change small enough to le\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 15,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-4-title (\"Controlled switch and rollback\")' to 'peer-1-body (\"Programme + workbook owners.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-4-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 16,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 16,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 16,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 16,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S05 / S07 / S10  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 16,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"16 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 16,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Prove the programme. Test the AI separat\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 16,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-2-title (\"Paired task comparison\")' to 'peer-1-body (\"Matched existing teams. Frozen cohort; s\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-2-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 17,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 17,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 17,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 17,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S07 / S09 / S10 / S11  \u2022\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 17,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"17 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 17,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Earn the next gate; do not repeat the la\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 17,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-4-title (\"4  Decide\")' to 'peer-1-body (\"Requirements, owners, authority.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-4-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES / ZAVA FORWARD / EXECUT\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026 | S16 + retained sources/sta\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"18 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'closing-boundary (\"No new spending, procurement, rollout or\")' bottom edge (7.23\") > slide height - margin (7.00\")",
+      "location": "closing-boundary",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'challenge-19-link (\"Runtime: slide 19\")' top (0.24\") < minimum margin (0.5\")",
+      "location": "challenge-19-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 18,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Endorse the next acceptance-and-value pr\")' and 'closing-ask (\"Endorse preparation of the next acceptan\")' is 0.21\" (minimum 0.3\")",
+      "location": "slide-title\u2192closing-ask",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 18,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'closing-ask (\"Endorse preparation of the next acceptan\")' and 'peer-1-background' is 0.26\" (minimum 0.3\")",
+      "location": "closing-ask\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 18,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'closing-action (\"Agree owners + return date (to agree). C\")' and 'closing-boundary (\"No new spending, procurement, rollout or\")' is 0.11\" (minimum 0.3\")",
+      "location": "closing-action\u2192closing-boundary",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 18,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'closing-boundary (\"No new spending, procurement, rollout or\")' and 'page-counter (\"18 / 24\")' is 0.01\" (minimum 0.3\")",
+      "location": "closing-boundary\u2192page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 18,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-3-title (\"CFO\")' to 'peer-1-body (\"Owner: proposed sponsor Deliverable: acc\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-3-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES / ZAVA FORWARD / OPTION\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026 | S16 + retained sources/sta\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"19 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'operations-link (\"Operations: slide 23\")' bottom edge (7.27\") > slide height - margin (7.00\")",
+      "location": "operations-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deferred-link (\"Deferred topology: slide 24\")' bottom edge (7.27\") > slide height - margin (7.00\")",
+      "location": "deferred-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'return-decision-link (\"Return to decision: slide 18\")' bottom edge (7.26\") > slide height - margin (7.00\")",
+      "location": "return-decision-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 19,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"One runtime. Proposals are not domain ap\")' and 'runtime-browser-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192runtime-browser-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 19,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'runtime-blob-body (\"API files; SQL refs + hashes. Assist: al\")' and 'runtime-authority (\"Five-assistant authority absent. Proacti\")' is 0.11\" (minimum 0.3\")",
+      "location": "runtime-blob-body\u2192runtime-authority",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 19,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'runtime-authority (\"Five-assistant authority absent. Proacti\")' and 'return-decision-link (\"Return to decision: slide 18\")' is 0.07\" (minimum 0.3\")",
+      "location": "runtime-authority\u2192return-decision-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 19,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'runtime-auth-title (\"EasyAuth | CONFIGURED\")' to 'runtime-browser-body (\"Entra sign-in; HTTPS ingress. Public /; \")' clearance is 0.04\" (recommended 0.2\")",
+      "location": "runtime-auth-title\u2192runtime-browser-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 19,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'runtime-sql-title (\"Azure SQL | CORE\")' to 'runtime-model-body (\"OFF. Scoped draft + usage. No DB/workflo\")' clearance is 0.04\" (recommended 0.2\")",
+      "location": "runtime-sql-title\u2192runtime-model-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 19,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'runtime-blob-title (\"Blob | CONFIGURED\")' to 'runtime-review-body (\"Verify sources. API rechecks permission,\")' clearance is 0.04\" (recommended 0.2\")",
+      "location": "runtime-blob-title\u2192runtime-review-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 20,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OP\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 20,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 20,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 20,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S03 / S05 / S07 / \")' bottom edge (7.47\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 20,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"20 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 20,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'return-decision-link (\"Return to decision: slide 18\")' bottom edge (7.26\") > slide height - margin (7.00\")",
+      "location": "return-decision-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 20,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'challenge-22-link (\"Options:22\")' bottom edge (7.26\") > slide height - margin (7.00\")",
+      "location": "challenge-22-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 20,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Council challenge: the objections we wel\")' and 'qa-row-1-peer-1-background' is 0.24\" (minimum 0.3\")",
+      "location": "slide-title\u2192qa-row-1-peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 20,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'boundary-text (\"Unknowns get an owner: runtime19 / optio\")' and 'return-decision-link (\"Return to decision: slide 18\")' is 0.20\" (minimum 0.3\")",
+      "location": "boundary-text\u2192return-decision-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 20,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'qa-row-1-peer-2-title (\"Why not launch now?\")' to 'qa-row-1-peer-1-body (\"Test equal scope and controls.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "qa-row-1-peer-2-title\u2192qa-row-1-peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 20,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'qa-row-2-peer-2-title (\"What if AI fails?\")' to 'qa-row-2-peer-1-body (\"No new commitment; whole-life appraisal.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "qa-row-2-peer-2-title\u2192qa-row-2-peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OP\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026 | S01-S16 full source regist\")' bottom edge (7.47\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"21 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'assessment-open (\"Pitch, rehearsal + thought-leadership ev\")' bottom edge (7.13\") > slide height - margin (7.00\")",
+      "location": "assessment-open",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'return-decision-link (\"Return to decision: slide 18\")' bottom edge (7.26\") > slide height - margin (7.00\")",
+      "location": "return-decision-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 21,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Read the evidence label before the claim\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192peer-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 21,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'boundary-text (\"As at 14 October. Legal currentness not \")' and 'assessment-open (\"Pitch, rehearsal + thought-leadership ev\")' is 0.17\" (minimum 0.3\")",
+      "location": "boundary-text\u2192assessment-open",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 21,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-3-title (\"Recorded technical proof\")' to 'peer-1-body (\"Request \u2260 result. Research instruments \u2260\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-3-title\u2192peer-1-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 22,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OP\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 22,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 22,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 22,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  \u2022  S02 / S03 / S07 / S12  \u2022\")' bottom edge (7.47\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 22,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"22 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 22,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'return-decision-link (\"Return to decision: slide 18\")' bottom edge (7.26\") > slide height - margin (7.00\")",
+      "location": "return-decision-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 22,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'return-options-link (\"Return to options: slide 4\")' bottom edge (7.26\") > slide height - margin (7.00\")",
+      "location": "return-options-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 22,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Compare equivalent routes before selecti\")' and 'option-1-header-background' is 0.21\" (minimum 0.3\")",
+      "location": "slide-title\u2192option-1-header-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 22,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'boundary-text (\"Equivalent-scope appraisal needed. Exerc\")' and 'return-decision-link (\"Return to decision: slide 18\")' is 0.19\" (minimum 0.3\")",
+      "location": "boundary-text\u2192return-decision-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 22,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'option-peer-3-title (\"Azure-led hybrid\")' to 'option-1-row-1-background' clearance is 0.17\" (recommended 0.2\")",
+      "location": "option-peer-3-title\u2192option-1-row-1-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 23,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES / ZAVA FORWARD / OPTION\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 23,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 23,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 23,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026 | S16 + retained sources/sta\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 23,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"23 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 23,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'return-decision-link (\"Return to decision: slide 18\")' bottom edge (7.26\") > slide height - margin (7.00\")",
+      "location": "return-decision-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 23,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Operate the core without overstating ass\")' and 'ops-tokens-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title\u2192ops-tokens-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 23,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'ops-alerts-body (\"CONFIGURED | email alerts 80% actual / 1\")' and 'ops-network (\"SOURCE-CONFIGURED: VNet, subnets, NSGs, \")' is 0.18\" (minimum 0.3\")",
+      "location": "ops-alerts-body\u2192ops-network",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 23,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'ops-network (\"SOURCE-CONFIGURED: VNet, subnets, NSGs, \")' and 'ops-support (\"CONFIGURED: API19 -> Graph own-photo Use\")' is 0.06\" (minimum 0.3\")",
+      "location": "ops-network\u2192ops-support",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 23,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'ops-failures (\"Model fails: manual work. SQL fails: wri\")' and 'return-decision-link (\"Return to decision: slide 18\")' is 0.04\" (minimum 0.3\")",
+      "location": "ops-failures\u2192return-decision-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 23,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'ops-vault-title (\"Azure Key Vault\")' to 'ops-tokens-body (\"CONFIGURED | private store EasyAuth19 us\")' clearance is 0.04\" (recommended 0.2\")",
+      "location": "ops-vault-title\u2192ops-tokens-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 23,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'ops-alerts-title (\"Model/API/SQL alerts\")' to 'ops-registry-body (\"CONFIGURED | image pull Operator build +\")' clearance is 0.04\" (recommended 0.2\")",
+      "location": "ops-alerts-title\u2192ops-registry-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 24,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES / ZAVA FORWARD / OPTION\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 24,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 24,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo \u2014 only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo \u2014 only branding",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 24,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026 | S16 + retained sources/sta\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 24,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"24 / 24\")' bottom edge (7.49\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 24,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'return-decision-link (\"Return to decision: slide 18\")' bottom edge (7.26\") > slide height - margin (7.00\")",
+      "location": "return-decision-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 24,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'actual-runtime-link (\"Actual runtime: slide 19\")' bottom edge (7.26\") > slide height - margin (7.00\")",
+      "location": "actual-runtime-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Retained branding/provenance/counter or deliberately lower navigation/authority strip inside the canvas. Inspected final full-size image and contact sheet; no visible edge clipping or footer collision. Essential authority text is body-sized, not a source-only disclaimer. Target-viewer/projection remains untested."
+    },
+    {
+      "slide": 24,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Deferred services are not the five-assis\")' and 'deferred-frame-label (\"DEFERRED ADR 0001 | placeholder contract\")' is 0.12\" (minimum 0.3\")",
+      "location": "slide-title\u2192deferred-frame-label",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 24,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'deferred-frame-label (\"DEFERRED ADR 0001 | placeholder contract\")' and 'deferred-orchestrator-background' is 0.06\" (minimum 0.3\")",
+      "location": "deferred-frame-label\u2192deferred-orchestrator-background",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 24,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'deferred-anchor-body (\"Unlocked policy is not immutable anchori\")' and 'deferred-teams (\"CONDITIONAL: ops23 -> Teams Workflows. N\")' is 0.16\" (minimum 0.3\")",
+      "location": "deferred-anchor-body\u2192deferred-teams",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 24,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'deferred-teams (\"CONDITIONAL: ops23 -> Teams Workflows. N\")' and 'return-decision-link (\"Return to decision: slide 18\")' is 0.07\" (minimum 0.3\")",
+      "location": "deferred-teams\u2192return-decision-link",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Compact intentional title/card, lane/band or navigation gap below the generic 0.3-inch recommendation. Final image remains legible; actual native text frames do not intersect, tokens are present and changed-frame PDF word bounds pass. Map13 is exact original and has separately retained metric exceptions."
+    },
+    {
+      "slide": 24,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'slide-title (\"Deferred services are not the five-assis\")' to 'deferred-frame-label (\"DEFERRED ADR 0001 | placeholder contract\")' clearance is 0.12\" (recommended 0.2\")",
+      "location": "slide-title\u2192deferred-frame-label",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 24,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'deferred-agents-title (\"Agent app | DEFERRED\")' to 'deferred-orchestrator-body (\"5-minute task placeholder. Checkpoints -\")' clearance is 0.04\" (recommended 0.2\")",
+      "location": "deferred-agents-title\u2192deferred-orchestrator-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 24,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'deferred-containers-title (\"Containers | DEFERRED\")' to 'deferred-m365-body (\"SharePoint/Excel snapshot. Sites.Selecte\")' clearance is 0.04\" (recommended 0.2\")",
+      "location": "deferred-containers-title\u2192deferred-m365-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    },
+    {
+      "slide": 24,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'deferred-anchor-title (\"Audit digest | NOT IMPLEMENTED\")' to 'deferred-edge-body (\"Intended edge only; current ingress dire\")' clearance is 0.04\" (recommended 0.2\")",
+      "location": "deferred-anchor-title\u2192deferred-edge-body",
+      "disposition": "retained-with-explicit-artifact-disposition",
+      "rationale": "Generic title/body recommendation, including comparisons across neighbouring peer columns. Intended peers have fixed equal starts and no text intersections. Final image inspected; no title/body collision. Compact map13 preserved exactly."
+    }
+  ]
+}

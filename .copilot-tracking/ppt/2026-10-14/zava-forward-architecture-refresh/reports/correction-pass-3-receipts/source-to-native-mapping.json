@@ -1,0 +1,786 @@
+{
+  "executive": {
+    "source": "docs/architecture/zava-forward-executive-architecture.excalidraw",
+    "source_sha256": "ffb36546a15f4c85acc19b9ec796e4d1aad4079641f1c8afe5b7788989e7d534",
+    "nodes": [
+      {
+        "source_id": "ec8e79bf2966e500bc4a",
+        "source_name": "identity",
+        "source_status": "configured",
+        "slide": 10,
+        "native_objects": [
+          "exec-entra-api-segment-1",
+          "exec-entra-background",
+          "exec-entra-title",
+          "exec-entra-body"
+        ],
+        "sources": [
+          "infra/modules/containerapps.bicep",
+          "mvp/zavaforward_mvp/auth.py",
+          "infra/scripts/initialize-workbench-staff.py"
+        ]
+      },
+      {
+        "source_id": "0baa44e236185c39bc3b",
+        "source_name": "people",
+        "source_status": "human",
+        "slide": 10,
+        "native_objects": [
+          "exec-staff-api-segment-1",
+          "exec-staff-background",
+          "exec-staff-title",
+          "exec-staff-body"
+        ],
+        "sources": [
+          "docs/prds/zava-forward-retrofit-programme-demonstrator.md"
+        ]
+      },
+      {
+        "source_id": "2192f52cffdafe092336",
+        "source_name": "workbench",
+        "source_status": "observed",
+        "slide": 10,
+        "native_objects": [
+          "exec-api-model-segment-1",
+          "exec-api-sql-segment-1",
+          "exec-api-blob-segment-1",
+          "exec-api-background",
+          "exec-api-title",
+          "exec-api-body"
+        ],
+        "sources": [
+          "infra/modules/containerapps.bicep",
+          "mvp/zavaforward_mvp/server.py",
+          "mvp/zavaforward_mvp/assistants.py",
+          "docs/adrs/0002-pilot-readiness-architecture.md#five-assistant-exercise-runtime-2026-10-13"
+        ]
+      },
+      {
+        "source_id": "7cb08d201da6d6377180",
+        "source_name": "model",
+        "source_status": "conditional",
+        "slide": 10,
+        "native_objects": [
+          "exec-model-background",
+          "exec-model-title",
+          "exec-model-body"
+        ],
+        "sources": [
+          "infra/modules/foundry.bicep",
+          "infra/main.bicep",
+          "mvp/zavaforward_mvp/ai.py",
+          "infra/README.md#five-assistant-version-current-handover"
+        ]
+      },
+      {
+        "source_id": "c06ccb8c6179f8aca2fa",
+        "source_name": "decision",
+        "source_status": "human",
+        "slide": 10,
+        "native_objects": [
+          "exec-people-api-segment-1",
+          "exec-people-background",
+          "exec-people-title",
+          "exec-people-body"
+        ],
+        "sources": [
+          "docs/adrs/0002-pilot-readiness-architecture.md"
+        ]
+      },
+      {
+        "source_id": "69af7394ba72e9d4bff8",
+        "source_name": "sql",
+        "source_status": "observed",
+        "slide": 10,
+        "native_objects": [
+          "exec-sql-background",
+          "exec-sql-title",
+          "exec-sql-body",
+          "exec-sql-evidence"
+        ],
+        "sources": [
+          "infra/modules/sql.bicep",
+          "mvp/zavaforward_mvp/mssqlstore.py",
+          "infra/README.md#five-assistant-version-current-handover"
+        ]
+      },
+      {
+        "source_id": "59d36717a206823cf100",
+        "source_name": "blob",
+        "source_status": "configured",
+        "slide": 10,
+        "native_objects": [
+          "exec-blob-background",
+          "exec-blob-title",
+          "exec-blob-body"
+        ],
+        "sources": [
+          "infra/modules/storage.bicep",
+          "mvp/zavaforward_mvp/documents.py"
+        ]
+      }
+    ],
+    "flows": [
+      {
+        "source_id": "49eb2c57b645018054c3",
+        "source_from": "people",
+        "source_to": "workbench",
+        "slide": 10,
+        "native_object": "exec-staff-api-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "e6eb29489d099f0f5f23",
+        "source_from": "identity",
+        "source_to": "workbench",
+        "slide": 10,
+        "native_object": "exec-entra-api-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "6d6081a84b6e7b457b07",
+        "source_from": "workbench",
+        "source_to": "model",
+        "slide": 10,
+        "native_object": "exec-api-model-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "5395764f763f83e55954",
+        "source_from": "workbench",
+        "source_to": "sql",
+        "slide": 10,
+        "native_object": "exec-api-sql-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "67c47731b51938d553d0",
+        "source_from": "workbench",
+        "source_to": "blob",
+        "slide": 10,
+        "native_object": "exec-api-blob-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "0c4aef2041d759667f4e",
+        "source_from": "decision",
+        "source_to": "workbench",
+        "slide": 10,
+        "native_object": "exec-people-api-segment-1",
+        "representation": "native connector"
+      }
+    ]
+  },
+  "technical": {
+    "source": "docs/architecture/zava-forward-technical-architecture.excalidraw",
+    "source_sha256": "52b69e918b6948714e0e9112852981c5aeef569e79129f3c1b9fa3e39c2ef589",
+    "nodes": [
+      {
+        "source_id": "ec85960e75500c25055e",
+        "source_name": "entra",
+        "source_status": "configured",
+        "slide": 19,
+        "native_objects": [
+          "runtime-entra-background",
+          "runtime-entra-title",
+          "runtime-entra-body"
+        ],
+        "sources": [
+          "infra/modules/containerapps.bicep",
+          "mvp/zavaforward_mvp/auth.py",
+          "infra/scripts/initialize-workbench-staff.py"
+        ]
+      },
+      {
+        "source_id": "7a9c087c19808662c35f",
+        "source_name": "staff",
+        "source_status": "human",
+        "slide": 19,
+        "native_objects": [
+          "runtime-browser-background",
+          "runtime-browser-title",
+          "runtime-browser-body"
+        ],
+        "sources": [
+          "infra/modules/containerapps.bicep",
+          "mvp/zavaforward_mvp/server.py"
+        ]
+      },
+      {
+        "source_id": "cec9602dfea4fda85a9e",
+        "source_name": "maps",
+        "source_status": "configured",
+        "slide": 23,
+        "native_objects": [
+          "ops-support"
+        ],
+        "sources": [
+          "mvp/zavaforward_mvp/server.py",
+          "mvp/web/app.js"
+        ]
+      },
+      {
+        "source_id": "77712f2e2774c57341ab",
+        "source_name": "graph",
+        "source_status": "configured",
+        "slide": 23,
+        "native_objects": [
+          "ops-support"
+        ],
+        "sources": [
+          "mvp/zavaforward_mvp/profile.py",
+          "mvp/zavaforward_mvp/server.py"
+        ]
+      },
+      {
+        "source_id": "1309a59ba14597c50999",
+        "source_name": "identity",
+        "source_status": "configured",
+        "slide": 23,
+        "native_objects": [
+          "ops-registry-background",
+          "ops-registry-title",
+          "ops-registry-body"
+        ],
+        "sources": [
+          "infra/modules/identity.bicep",
+          "infra/modules/authTokenStore.bicep"
+        ]
+      },
+      {
+        "source_id": "9601c28a35a0fb0586a3",
+        "source_name": "vault",
+        "source_status": "configured",
+        "slide": 23,
+        "native_objects": [
+          "ops-vault-background",
+          "ops-vault-title",
+          "ops-vault-body"
+        ],
+        "sources": [
+          "infra/modules/keyvault.bicep",
+          "infra/modules/authTokenStore.bicep",
+          "mvp/zavaforward_mvp/token_store.py"
+        ]
+      },
+      {
+        "source_id": "cdce316258c835cc84b0",
+        "source_name": "model",
+        "source_status": "conditional",
+        "slide": 19,
+        "native_objects": [
+          "runtime-model-background",
+          "runtime-model-title",
+          "runtime-model-body"
+        ],
+        "sources": [
+          "infra/modules/foundry.bicep",
+          "infra/main.bicep",
+          "mvp/zavaforward_mvp/ai.py",
+          "infra/README.md#five-assistant-version-current-handover"
+        ]
+      },
+      {
+        "source_id": "3523bb0d2f370452b9a1",
+        "source_name": "auth",
+        "source_status": "configured",
+        "slide": 19,
+        "native_objects": [
+          "runtime-auth-background",
+          "runtime-auth-title",
+          "runtime-auth-body",
+          "runtime-authority"
+        ],
+        "sources": [
+          "infra/modules/containerapps.bicep",
+          "mvp/zavaforward_mvp/auth.py",
+          "infra/scripts/initialize-workbench-staff.py"
+        ]
+      },
+      {
+        "source_id": "8fa53ee3352dd325db61",
+        "source_name": "api",
+        "source_status": "observed",
+        "slide": 19,
+        "native_objects": [
+          "runtime-api-model-segment-1",
+          "runtime-api-sql-segment-1",
+          "runtime-api-blob-segment-1",
+          "runtime-api-blob-segment-2",
+          "runtime-api-blob-segment-3",
+          "runtime-api-background",
+          "runtime-api-title",
+          "runtime-api-body"
+        ],
+        "sources": [
+          "infra/modules/containerapps.bicep",
+          "mvp/zavaforward_mvp/server.py",
+          "mvp/zavaforward_mvp/assistants.py",
+          "docs/adrs/0002-pilot-readiness-architecture.md#five-assistant-exercise-runtime-2026-10-13",
+          "infra/README.md#five-assistant-version-current-handover"
+        ]
+      },
+      {
+        "source_id": "520fa911913a315ec311",
+        "source_name": "sql",
+        "source_status": "observed",
+        "slide": 19,
+        "native_objects": [
+          "runtime-sql-background",
+          "runtime-sql-title",
+          "runtime-sql-body"
+        ],
+        "sources": [
+          "infra/modules/sql.bicep",
+          "mvp/zavaforward_mvp/mssqlstore.py",
+          "infra/README.md#five-assistant-version-current-handover"
+        ]
+      },
+      {
+        "source_id": "ca3a4927ee81d06fffac",
+        "source_name": "blob",
+        "source_status": "configured",
+        "slide": 19,
+        "native_objects": [
+          "runtime-blob-background",
+          "runtime-blob-title",
+          "runtime-blob-body"
+        ],
+        "sources": [
+          "infra/modules/storage.bicep",
+          "mvp/zavaforward_mvp/documents.py",
+          "mvp/zavaforward_mvp/assistants.py",
+          "docs/adrs/0002-pilot-readiness-architecture.md#five-assistant-exercise-runtime-2026-10-13"
+        ]
+      },
+      {
+        "source_id": "e5e1ec1330919ad269fb",
+        "source_name": "tokens",
+        "source_status": "configured",
+        "slide": 23,
+        "native_objects": [
+          "ops-tokens-background",
+          "ops-tokens-title",
+          "ops-tokens-body"
+        ],
+        "sources": [
+          "infra/modules/authTokenStore.bicep",
+          "mvp/zavaforward_mvp/token_store.py"
+        ]
+      },
+      {
+        "source_id": "f2cc9a49400b46488459",
+        "source_name": "renewal",
+        "source_status": "configured",
+        "slide": 23,
+        "native_objects": [
+          "ops-renewal-background",
+          "ops-renewal-title",
+          "ops-renewal-body"
+        ],
+        "sources": [
+          "infra/modules/authTokenStore.bicep",
+          "mvp/zavaforward_mvp/token_store.py",
+          "infra/modules/containerapps.bicep",
+          "mvp/zavaforward_mvp/server.py"
+        ]
+      },
+      {
+        "source_id": "17c85b2d2262ab0cf3fd",
+        "source_name": "registry",
+        "source_status": "configured",
+        "slide": 23,
+        "native_objects": [
+          "ops-registry-background",
+          "ops-registry-title",
+          "ops-registry-body"
+        ],
+        "sources": [
+          "infra/modules/registry.bicep",
+          ".github/workflows/mvp-ci.yml",
+          "infra/README.md"
+        ]
+      },
+      {
+        "source_id": "c1dd3cb3e7a0b2ba460e",
+        "source_name": "logs",
+        "source_status": "configured",
+        "slide": 23,
+        "native_objects": [
+          "ops-logs-background",
+          "ops-logs-title",
+          "ops-logs-body"
+        ],
+        "sources": [
+          "infra/modules/monitoring.bicep",
+          "infra/main.bicep"
+        ]
+      },
+      {
+        "source_id": "93bc7d5508419881fb93",
+        "source_name": "insights",
+        "source_status": "configured",
+        "slide": 23,
+        "native_objects": [
+          "ops-logs-background",
+          "ops-logs-title",
+          "ops-logs-body"
+        ],
+        "sources": [
+          "infra/modules/monitoring.bicep",
+          "infra/main.bicep",
+          "infra/modules/containerapps.bicep",
+          "mvp/zavaforward_mvp/server.py"
+        ]
+      },
+      {
+        "source_id": "270a2a59b002c95cfad5",
+        "source_name": "alerts",
+        "source_status": "configured",
+        "slide": 23,
+        "native_objects": [
+          "ops-alerts-background",
+          "ops-alerts-title",
+          "ops-alerts-body"
+        ],
+        "sources": [
+          "infra/modules/monitoring.bicep",
+          "infra/main.bicep"
+        ]
+      },
+      {
+        "source_id": "0133d5a978cf863bf18e",
+        "source_name": "agents",
+        "source_status": "deferred",
+        "slide": 24,
+        "native_objects": [
+          "deferred-agents-background",
+          "deferred-agents-title",
+          "deferred-agents-body"
+        ],
+        "sources": [
+          "infra/modules/containerapps.bicep",
+          "docs/adrs/0001-azure-architecture.md#decisions"
+        ]
+      },
+      {
+        "source_id": "3a4912866a25ea9fa4f5",
+        "source_name": "queues",
+        "source_status": "deferred",
+        "slide": 24,
+        "native_objects": [
+          "deferred-queues-background",
+          "deferred-queues-title",
+          "deferred-queues-body"
+        ],
+        "sources": [
+          "infra/modules/storage.bicep",
+          "mvp/zavaforward_mvp/documents.py",
+          "infra/modules/containerapps.bicep",
+          "docs/adrs/0001-azure-architecture.md#decisions"
+        ]
+      },
+      {
+        "source_id": "05e37da2bcf3a9bbb15d",
+        "source_name": "orchestrator",
+        "source_status": "deferred",
+        "slide": 24,
+        "native_objects": [
+          "deferred-orchestrator-background",
+          "deferred-orchestrator-title",
+          "deferred-orchestrator-body"
+        ],
+        "sources": [
+          "infra/modules/containerapps.bicep",
+          "docs/adrs/0001-azure-architecture.md#decisions"
+        ]
+      },
+      {
+        "source_id": "eeebb32c4134c43ff3ea",
+        "source_name": "import",
+        "source_status": "deferred",
+        "slide": 24,
+        "native_objects": [
+          "deferred-import-queue-segment-1",
+          "deferred-import-background",
+          "deferred-import-title",
+          "deferred-import-body"
+        ],
+        "sources": [
+          "infra/modules/containerapps.bicep",
+          "docs/adrs/0001-azure-architecture.md#decisions"
+        ]
+      },
+      {
+        "source_id": "9ecd4499ca1ce4a8094f",
+        "source_name": "other-containers",
+        "source_status": "deferred",
+        "slide": 24,
+        "native_objects": [
+          "deferred-containers-background",
+          "deferred-containers-title",
+          "deferred-containers-body"
+        ],
+        "sources": [
+          "infra/modules/storage.bicep",
+          "mvp/zavaforward_mvp/documents.py",
+          "mvp/README.md"
+        ]
+      },
+      {
+        "source_id": "b725c3d944ac2da4fb76",
+        "source_name": "edge",
+        "source_status": "deferred",
+        "slide": 24,
+        "native_objects": [
+          "deferred-edge-background",
+          "deferred-edge-title",
+          "deferred-edge-body"
+        ],
+        "sources": [
+          "docs/adrs/0001-azure-architecture.md#decisions"
+        ]
+      },
+      {
+        "source_id": "0f525a252a55d87fe19b",
+        "source_name": "m365",
+        "source_status": "conditional",
+        "slide": 24,
+        "native_objects": [
+          "deferred-m365-background",
+          "deferred-m365-title",
+          "deferred-m365-body"
+        ],
+        "sources": [
+          "docs/adrs/0001-azure-architecture.md#m365-configuration-integration-and-use",
+          "infra/scripts/grant-sharepoint-access.sh",
+          "infra/modules/monitoring.bicep",
+          "infra/main.bicep"
+        ]
+      }
+    ],
+    "flows": [
+      {
+        "source_id": "676ff72690ed81e0823b",
+        "source_from": "staff",
+        "source_to": "entra",
+        "slide": 19,
+        "native_object": "runtime-sign-in-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "12b3abbdb6718ff774f7",
+        "source_from": "staff",
+        "source_to": "auth",
+        "slide": 19,
+        "native_object": "runtime-browser-body",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "3a398502e2258877069e",
+        "source_from": "entra",
+        "source_to": "auth",
+        "slide": 19,
+        "native_object": "runtime-issuer-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "95a13aafa833607e8907",
+        "source_from": "auth",
+        "source_to": "api",
+        "slide": 19,
+        "native_object": "runtime-principal-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "3ceaae8bf6c64f995ab3",
+        "source_from": "api",
+        "source_to": "sql",
+        "slide": 19,
+        "native_object": "runtime-api-sql-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "36259cde5295635f2668",
+        "source_from": "api",
+        "source_to": "blob",
+        "slide": 19,
+        "native_object": "runtime-api-blob-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "bde189caec5340903daf",
+        "source_from": "api",
+        "source_to": "model",
+        "slide": 19,
+        "native_object": "runtime-api-model-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "a93858ce6826d7e2ab9f",
+        "source_from": "vault",
+        "source_to": "auth",
+        "slide": 23,
+        "native_object": "ops-vault-body",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "7609eb7a35e5338d6d83",
+        "source_from": "api",
+        "source_to": "graph",
+        "slide": 23,
+        "native_object": "ops-support",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "2eae8e0ea7b026ef35e9",
+        "source_from": "staff",
+        "source_to": "maps",
+        "slide": 23,
+        "native_object": "ops-support",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "34dab47235c72c168f38",
+        "source_from": "renewal",
+        "source_to": "tokens",
+        "slide": 23,
+        "native_object": "renewal-token-key-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "dc4c3ddd7f1f218075b5",
+        "source_from": "renewal",
+        "source_to": "vault",
+        "slide": 23,
+        "native_object": "renewal-vault-write-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "b5a9d2f3ab17b9a4ab43",
+        "source_from": "auth",
+        "source_to": "tokens",
+        "slide": 23,
+        "native_object": "ops-tokens-body",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "0115c864403bfdf58b00",
+        "source_from": "api",
+        "source_to": "registry",
+        "slide": 23,
+        "native_object": "ops-registry-body",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "f2dc7f9116778dce9629",
+        "source_from": "insights",
+        "source_to": "logs",
+        "slide": 23,
+        "native_object": "ops-logs-body",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "cb3b6a244b00514fb4de",
+        "source_from": "sql",
+        "source_to": "logs",
+        "slide": 23,
+        "native_object": "ops-logs-body",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "0448430d9d92f5c980be",
+        "source_from": "model",
+        "source_to": "alerts",
+        "slide": 23,
+        "native_object": "ops-alerts-body",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "477d90fbcf1aa01e03ec",
+        "source_from": "orchestrator",
+        "source_to": "queues",
+        "slide": 24,
+        "native_object": "deferred-enqueue-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "fd0a0dedeb1522230ee0",
+        "source_from": "queues",
+        "source_to": "agents",
+        "slide": 24,
+        "native_object": "deferred-keda-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "a67a2167aaacf3253bde",
+        "source_from": "queues",
+        "source_to": "import",
+        "slide": 24,
+        "native_object": "deferred-import-queue-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "2f1a9894e847a80b4dce",
+        "source_from": "import",
+        "source_to": "other-containers",
+        "slide": 24,
+        "native_object": "deferred-quarantine-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "beb89f6cd68c373ae69d",
+        "source_from": "agents",
+        "source_to": "api",
+        "slide": 24,
+        "native_object": "deferred-agents-body",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "d3ee97bb09a723d14c7c",
+        "source_from": "orchestrator",
+        "source_to": "api",
+        "slide": 24,
+        "native_object": "deferred-orchestrator-body",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "16ad35bd0bdf7e22f9a9",
+        "source_from": "agents",
+        "source_to": "model",
+        "slide": 24,
+        "native_object": "deferred-agents-body",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "2a121655841b6b3abef0",
+        "source_from": "m365",
+        "source_to": "import",
+        "slide": 24,
+        "native_object": "deferred-snapshot-segment-1",
+        "representation": "native connector"
+      },
+      {
+        "source_id": "f9ff73c6ea523e3532b1",
+        "source_from": "import",
+        "source_to": "sql",
+        "slide": 24,
+        "native_object": "deferred-import-body",
+        "representation": "visible grouped interaction text"
+      },
+      {
+        "source_id": "fc64c30353ef27ae6319",
+        "source_from": "alerts",
+        "source_to": "m365",
+        "slide": 24,
+        "native_object": "deferred-teams",
+        "representation": "visible grouped interaction text"
+      }
+    ]
+  },
+  "network_context": {
+    "slide": 23,
+    "native_object": "ops-network",
+    "not_a_deployed_service": true
+  }
+}

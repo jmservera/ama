@@ -1,0 +1,122 @@
+{
+  "pass_icons": true,
+  "occurrences": 20,
+  "unique_assets": [
+    "docs/architecture/assets/azure/aca.svg",
+    "docs/architecture/assets/azure/blob.svg",
+    "docs/architecture/assets/azure/edge.svg",
+    "docs/architecture/assets/azure/entra.svg",
+    "docs/architecture/assets/azure/logs.svg",
+    "docs/architecture/assets/azure/monitor.svg",
+    "docs/architecture/assets/azure/openai.svg",
+    "docs/architecture/assets/azure/queue.svg",
+    "docs/architecture/assets/azure/registry.svg",
+    "docs/architecture/assets/azure/sql.svg",
+    "docs/architecture/assets/azure/vault.svg"
+  ],
+  "rows": [
+    {
+      "slide": 10,
+      "name": "azure-icon-entra-exec-entra",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 10,
+      "name": "azure-icon-aca-exec-api",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 10,
+      "name": "azure-icon-openai-exec-model",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 10,
+      "name": "azure-icon-sql-exec-sql",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 10,
+      "name": "azure-icon-blob-exec-blob",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 19,
+      "name": "azure-icon-entra-runtime-entra",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 19,
+      "name": "azure-icon-openai-runtime-model",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 19,
+      "name": "azure-icon-aca-runtime-api",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 19,
+      "name": "azure-icon-sql-runtime-sql",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 19,
+      "name": "azure-icon-blob-runtime-blob",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 23,
+      "name": "azure-icon-blob-ops-tokens",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 23,
+      "name": "azure-icon-aca-ops-renewal",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 23,
+      "name": "azure-icon-vault-ops-vault",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 23,
+      "name": "azure-icon-registry-ops-registry",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 23,
+      "name": "azure-icon-logs-ops-logs",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 23,
+      "name": "azure-icon-monitor-ops-alerts",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 24,
+      "name": "azure-icon-queue-deferred-queues",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 24,
+      "name": "azure-icon-aca-deferred-import",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 24,
+      "name": "azure-icon-blob-deferred-containers",
+      "sha_ratio_crop_adjacent_label_valid": true
+    },
+    {
+      "slide": 24,
+      "name": "azure-icon-edge-deferred-edge",
+      "sha_ratio_crop_adjacent_label_valid": true
+    }
+  ],
+  "errors": [],
+  "no_composite_diagrams": true,
+  "scope": "Unmodified individual source icons only; native boxes/text/connectors preserved."
+}

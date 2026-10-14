@@ -1,0 +1,1726 @@
+{
+  "excluded_metadata": [
+    "deck-eyebrow",
+    "page-counter",
+    "source-footer"
+  ],
+  "all_unique_original_content_retained": true,
+  "original_frames_checked": 245,
+  "rows": [
+    {
+      "slide": 1,
+      "original_object": "slide-title",
+      "original_text": "Back the evidence. Keep the resident promise.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 1,
+      "original_object": "resident-scale",
+      "original_text": "60,000 homes.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 1,
+      "original_object": "resident-outcome",
+      "original_text": "Safe, resident-accepted\nhandovers.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 1,
+      "original_object": "opening-evidence",
+      "original_text": "Real service proof now.\nHuman and value gates next.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 1,
+      "original_object": "decision-title",
+      "original_text": "TODAY\u2019S DECISION",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 1,
+      "original_object": "decision-body",
+      "original_text": "Endorse the next\nacceptance-and-value\nproposal.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 1,
+      "original_object": "boundary-text",
+      "original_text": "Proposal only \u2014 no new spending or production authority.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "slide-title",
+      "original_text": "Five pressure points. One accepted home.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "peer-1-title",
+      "original_text": "Choose\nhomes",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "peer-1-body",
+      "original_text": "Prioritisation",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "peer-2-title",
+      "original_text": "Assess &\ndesign",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "peer-2-body",
+      "original_text": "Assessment",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "peer-3-title",
+      "original_text": "Prepare\nfunding",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "peer-3-body",
+      "original_text": "Evidence",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "peer-4-title",
+      "original_text": "Coordinate\nworks",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "peer-4-body",
+      "original_text": "Delivery",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "peer-5-title",
+      "original_text": "Verify &\nhand over",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "peer-5-body",
+      "original_text": "Quality",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "outcome",
+      "original_text": "Safe + resident-accepted + evidence-complete",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 2,
+      "original_object": "boundary-text",
+      "original_text": "Measure accepted outcomes, not messages or drafts.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 3,
+      "original_object": "slide-title",
+      "original_text": "Each request needs rules, people and bounded AI.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 3,
+      "original_object": "peer-1-title",
+      "original_text": "Rules",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 3,
+      "original_object": "peer-1-body",
+      "original_text": "Gates, clocks,\neligibility, versions.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 3,
+      "original_object": "peer-2-title",
+      "original_text": "People",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 3,
+      "original_object": "peer-2-body",
+      "original_text": "Policy, consent,\nprofessional and\nfinancial decisions.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 3,
+      "original_object": "peer-3-title",
+      "original_text": "Bounded AI",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 3,
+      "original_object": "peer-3-body",
+      "original_text": "Reconcile, prepare,\ndraft, flag.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 3,
+      "original_object": "boundary-text",
+      "original_text": "Eight role-agent research instruments \u2014 not employee interviews.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 4,
+      "original_object": "slide-title",
+      "original_text": "Fix the prerequisite before adding the assist.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 4,
+      "original_object": "peer-1-title",
+      "original_text": "Rank homes",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 4,
+      "original_object": "peer-1-body",
+      "original_text": "Approved policy\n+\nsourced facts.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 4,
+      "original_object": "peer-2-title",
+      "original_text": "Offer a slot",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 4,
+      "original_object": "peer-2-body",
+      "original_text": "Committed capacity\n+\nresident choice.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 4,
+      "original_object": "peer-3-title",
+      "original_text": "Draft funding",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 4,
+      "original_object": "peer-3-body",
+      "original_text": "Accepted evidence\n+\nseparate ledger states.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 4,
+      "original_object": "boundary-text",
+      "original_text": "A slot is not consent. A form is not funding.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 5,
+      "original_object": "slide-title",
+      "original_text": "Change the handoffs, not the whole company.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 5,
+      "original_object": "peer-1-title",
+      "original_text": "KEEP",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 5,
+      "original_object": "peer-1-body",
+      "original_text": "Teams, suppliers,\nuseful systems.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 5,
+      "original_object": "peer-2-title",
+      "original_text": "ADD",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 5,
+      "original_object": "peer-2-body",
+      "original_text": "One case, owned transitions,\nevidence, bounded assistance.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 5,
+      "original_object": "boundary-text",
+      "original_text": "Excel becomes reporting after a controlled transition.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "slide-title",
+      "original_text": "Every handoff needs an owner and a next action.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "row-1-peer-1-title",
+      "original_text": "Owner + receiver",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "row-1-peer-1-body",
+      "original_text": "Sender chases until accepted.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "row-1-peer-2-title",
+      "original_text": "State",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "row-1-peer-2-body",
+      "original_text": "What is actually true now?",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "row-1-peer-3-title",
+      "original_text": "Entry, exit, pause",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "row-1-peer-3-body",
+      "original_text": "Explicit conditions and holds.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "row-2-peer-1-title",
+      "original_text": "Blocker + next action",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "row-2-peer-1-body",
+      "original_text": "Named action and update owner.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "row-2-peer-2-title",
+      "original_text": "Evidence version",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "row-2-peer-2-body",
+      "original_text": "Reopen dependent reviews.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "row-2-peer-3-title",
+      "original_text": "Decision + reason",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "row-2-peer-3-body",
+      "original_text": "Authority, rationale, history.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 6,
+      "original_object": "boundary-text",
+      "original_text": "Sent \u2260 accepted. Completed \u2260 handed over.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 7,
+      "original_object": "slide-title",
+      "original_text": "One home shows the journey we still need to prove.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 7,
+      "original_object": "peer-1-title",
+      "original_text": "1  Resolve",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 7,
+      "original_object": "peer-1-body",
+      "original_text": "Conflicting evidence.\nNamed resolver.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 7,
+      "original_object": "peer-2-title",
+      "original_text": "2  Agree",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 7,
+      "original_object": "peer-2-body",
+      "original_text": "Scope, resident choice,\nfunding, capacity.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 7,
+      "original_object": "peer-3-title",
+      "original_text": "3  Deliver",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 7,
+      "original_object": "peer-3-body",
+      "original_text": "Inspect work.\nReturn defects.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 7,
+      "original_object": "peer-4-title",
+      "original_text": "4  Accept",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 7,
+      "original_object": "peer-4-body",
+      "original_text": "Resident handover.\nFinance closes separately.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 7,
+      "original_object": "journey-hold-return",
+      "original_text": "Hold / return \u2192 named, competent human owner",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 7,
+      "original_object": "boundary-text",
+      "original_text": "Illustrative exercise journey \u2014 not an executed end-to-end customer outcome.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 8,
+      "original_object": "slide-title",
+      "original_text": "A resident is not a scheduling variable.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 8,
+      "original_object": "peer-1-title",
+      "original_text": "Resident",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 8,
+      "original_object": "peer-1-body",
+      "original_text": "Clear options.\nSafe phone, letter or assisted route.\nMeasure-specific choice.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 8,
+      "original_object": "peer-2-title",
+      "original_text": "Delivery",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 8,
+      "original_object": "peer-2-body",
+      "original_text": "Committed crew, competence,\nmaterials and named liaison.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 8,
+      "original_object": "boundary-text",
+      "original_text": "Preferences \u2260 consent. Silence/no-access \u2260 refusal.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 8,
+      "original_object": "human-hazard-route",
+      "original_text": "Human hazard route \u2014 never wait for AI.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 9,
+      "original_object": "slide-title",
+      "original_text": "Show the decision trace, not just an AI explanation.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 9,
+      "original_object": "peer-1-title",
+      "original_text": "Know",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 9,
+      "original_object": "peer-1-body",
+      "original_text": "Source + evidence\nversion + unknowns.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 9,
+      "original_object": "peer-2-title",
+      "original_text": "Decide",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 9,
+      "original_object": "peer-2-body",
+      "original_text": "Rule + result +\nreviewer + reason.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 9,
+      "original_object": "peer-3-title",
+      "original_text": "Change",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 9,
+      "original_object": "peer-3-body",
+      "original_text": "Authority + dependent\nre-review + preserved\nhistory.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 9,
+      "original_object": "boundary-text",
+      "original_text": "New source \u2260 approved new policy.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 10,
+      "original_object": "slide-title",
+      "original_text": "One workbench beside the systems you keep.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 10,
+      "original_object": "peer-1-title",
+      "original_text": "Existing sources",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 10,
+      "original_object": "peer-1-body",
+      "original_text": "Housing / repairs\nDocuments / spreadsheets\nSource owners retain authority.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 10,
+      "original_object": "peer-2-title",
+      "original_text": "Shared case",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 10,
+      "original_object": "peer-2-body",
+      "original_text": "Validated intake\nVersions + owned work\nNo uncontrolled write-back.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 10,
+      "original_object": "peer-3-title",
+      "original_text": "People + channels",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 10,
+      "original_object": "peer-3-body",
+      "original_text": "Role queues\nSupported resident routes\nScoped supplier exchange.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 10,
+      "original_object": "boundary-text",
+      "original_text": "Target context \u2014 links proposed, not all delivered. Excel reports.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "slide-title",
+      "original_text": "Let models propose; keep decisions on the controlled path.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "proposal-lane-label",
+      "original_text": "PROPOSAL PATH  /  observed operator integration; staff acceptance open",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "proposal-peer-1-title",
+      "original_text": "Request \u2192 API",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "proposal-peer-1-body",
+      "original_text": "Permitted task.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "proposal-peer-2-title",
+      "original_text": "Snapshot \u2192 model",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "proposal-peer-2-body",
+      "original_text": "Bounded proposal.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "proposal-peer-3-title",
+      "original_text": "Human review",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "proposal-peer-3-body",
+      "original_text": "Verify sources first.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "domain-lane-label",
+      "original_text": "SEPARATE CONTROLLED PATH  /  authority remains with people and rules",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "domain-peer-1-title",
+      "original_text": "Authorized action",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "domain-peer-1-body",
+      "original_text": "Effective authority.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "domain-peer-2-title",
+      "original_text": "Deterministic gates",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "domain-peer-2-body",
+      "original_text": "Holds + evidence.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "domain-peer-3-title",
+      "original_text": "SQL + audit",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "domain-peer-3-body",
+      "original_text": "Controlled write.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 11,
+      "original_object": "boundary-text",
+      "original_text": "Model cannot approve, send, book, pay or clear a hold.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 12,
+      "original_object": "slide-title",
+      "original_text": "Five real proposal paths. No delegated decisions.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 12,
+      "original_object": "peer-1-title",
+      "original_text": "OBSERVED",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 12,
+      "original_object": "peer-1-body",
+      "original_text": "5 distinct ready proposals\n5 real calls \u00b7 6,884 tokens\n15 ledger events\n\nControlled state unchanged;\nproposal contents survived restart.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 12,
+      "original_object": "peer-2-title",
+      "original_text": "STILL TO PROVE",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 12,
+      "original_object": "peer-2-body",
+      "original_text": "Staff browser/API + roles\nHuman source verification\nSemantic correctness + value\n\nCurrent authority absent.\nProactive OFF; gates OPEN.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 12,
+      "original_object": "proof-provenance",
+      "original_text": "Recorded operator-service proof \u00b7 14 October \u00b7 image05 / e0254cb3 \u00b7 revision12",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 12,
+      "original_object": "proof-synthetic-context",
+      "original_text": "Synthetic baseline: 980 cases / 38 visits / 11 private staff bindings. No identity details.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "slide-title",
+      "original_text": "Five assists. One controlled journey.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-status",
+      "original_text": "Workflow controls progression. People retain decisions.  |  Design + implemented contracts; proactive OFF.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-1-stage",
+      "original_text": "Choose homes",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-1-owner",
+      "original_text": "Assets: policy;\ndata owners: verify",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-1-title",
+      "original_text": "Stock\nPrioritisation",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-1-request-label",
+      "original_text": "On request",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-1-request-body",
+      "original_text": "Explain facts;\nquery conflicts",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-1-proactive-label",
+      "original_text": "Trigger \u2022 OFF",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-1-proactive-body",
+      "original_text": "Missing/conflicting\nstock facts",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-2-stage",
+      "original_text": "Assess & design",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-2-owner",
+      "original_text": "Assessor/coordinator:\nindependent sign-off",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-2-title",
+      "original_text": "Assessment\nPreparation",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-2-request-label",
+      "original_text": "On request",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-2-request-body",
+      "original_text": "Prepare sourced\nsurvey/design pack",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-2-proactive-label",
+      "original_text": "Trigger \u2022 OFF",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-2-proactive-body",
+      "original_text": "Missing/changed\nsurvey or design",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-3-stage",
+      "original_text": "Prepare funding",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-3-owner",
+      "original_text": "Finance: validate,\napprove, submit",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-3-title",
+      "original_text": "Grant & Funding\nEvidence",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-3-request-label",
+      "original_text": "On request",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-3-request-body",
+      "original_text": "Draft source-linked\nevidence pack",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-3-proactive-label",
+      "original_text": "Trigger \u2022 OFF",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-3-proactive-body",
+      "original_text": "Missing inputs or\nchanged terms",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-4-stage",
+      "original_text": "Coordinate works",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-4-owner",
+      "original_text": "Resident: choice;\nProgramme: release",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-4-title",
+      "original_text": "Works & Resident\nCoordination",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-4-request-label",
+      "original_text": "On request",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-4-request-body",
+      "original_text": "Draft update;\nsuggest crew slots",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-4-proactive-label",
+      "original_text": "Trigger \u2022 OFF",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-4-proactive-body",
+      "original_text": "Unaccepted handoff;\noverdue update",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-5-stage",
+      "original_text": "Verify & hand over",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-5-owner",
+      "original_text": "Independent quality\nauthority: accept",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-5-title",
+      "original_text": "Quality Evidence\nReview",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-5-request-label",
+      "original_text": "On request",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-5-request-body",
+      "original_text": "Assemble evidence;\nraise gaps",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-5-proactive-label",
+      "original_text": "Trigger \u2022 OFF",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-peer-5-proactive-body",
+      "original_text": "Missing/conflicting\nquality evidence",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-core",
+      "original_text": "Workflow core: rights \u2022 versions \u2022 gates \u2022 human approvals \u2022 audit \u2022 retries \u2022 manual recovery",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-funding-boundary",
+      "original_text": "Checks OFF now; future eligibility \u2192 named human queue. Funding: application \u2260 award \u2260 claim \u2260 cash.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 13,
+      "original_object": "map-hazard-boundary",
+      "original_text": "Hazard \u2192 human service now, never wait for AI. Value remains a hypothesis.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 14,
+      "original_object": "slide-title",
+      "original_text": "See cash before optimism.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 14,
+      "original_object": "fictional-label",
+      "original_text": "FICTIONAL EXA-010/015  /  not a workbench price or award",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 14,
+      "original_object": "gross-title",
+      "original_text": "BEFORE GRANT RECEIPT",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 14,
+      "original_object": "gross-value",
+      "original_text": "\u00a320,000 gross base cash",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 14,
+      "original_object": "peer-1-title",
+      "original_text": "IF RECEIVED",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 14,
+      "original_object": "peer-1-body",
+      "original_text": "\u00a37,500 fictional grant\n\u2192 \u00a312,500 provider base.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 14,
+      "original_object": "peer-2-title",
+      "original_text": "IF CONTINGENCY SPENT",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 14,
+      "original_object": "peer-2-body",
+      "original_text": "\u00a322,000 gross exposure\n\u00a314,500 provider exposure.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 14,
+      "original_object": "boundary-text",
+      "original_text": "Application \u2260 award \u2260 claim \u2260 cash.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 15,
+      "original_object": "slide-title",
+      "original_text": "Make the first change small enough to learn.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 15,
+      "original_object": "peer-1-title",
+      "original_text": "Co-design\ntasks",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 15,
+      "original_object": "peer-1-body",
+      "original_text": "Programme +\nworkbook owners.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 15,
+      "original_object": "peer-2-title",
+      "original_text": "Shadow\none-way import",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 15,
+      "original_object": "peer-2-body",
+      "original_text": "Data owners:\nreconcile + quarantine.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 15,
+      "original_object": "peer-3-title",
+      "original_text": "Supported task\nwalkthroughs",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 15,
+      "original_object": "peer-3-body",
+      "original_text": "Team leads:\nhelp + observe.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 15,
+      "original_object": "peer-4-title",
+      "original_text": "Controlled switch\nand rollback",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 15,
+      "original_object": "peer-4-body",
+      "original_text": "Digital + work owners:\nexit tests first.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 15,
+      "original_object": "boundary-text",
+      "original_text": "Proposed owners. No permanent dual entry. No compulsory portal.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 16,
+      "original_object": "slide-title",
+      "original_text": "Prove the programme. Test the AI separately.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 16,
+      "original_object": "peer-1-title",
+      "original_text": "Programme comparison",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 16,
+      "original_object": "peer-1-body",
+      "original_text": "Matched existing teams.\nFrozen cohort; same events.\nAccepted handovers +\nwhole-chain cost.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 16,
+      "original_object": "peer-2-title",
+      "original_text": "Paired task comparison",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 16,
+      "original_object": "peer-2-body",
+      "original_text": "Same inputs: manual/rules\nversus assistance.\nQuality, net human effort,\nlatency and cost.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 16,
+      "original_object": "boundary-text",
+      "original_text": "Include unfinished/withdrawn homes. Protect safety, choice, quality, equity + cash.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 17,
+      "original_object": "slide-title",
+      "original_text": "Earn the next gate; do not repeat the last proof.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 17,
+      "original_object": "peer-1-title",
+      "original_text": "1  Confirm",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 17,
+      "original_object": "peer-1-body",
+      "original_text": "Requirements,\nowners, authority.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 17,
+      "original_object": "peer-2-title",
+      "original_text": "2  Accept",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 17,
+      "original_object": "peer-2-body",
+      "original_text": "Real staff/session,\nsource review, roles,\naccessibility.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 17,
+      "original_object": "peer-3-title",
+      "original_text": "3  Compare",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 17,
+      "original_object": "peer-3-body",
+      "original_text": "Semantics, net effort,\ncost, recovery.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 17,
+      "original_object": "peer-4-title",
+      "original_text": "4  Decide",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 17,
+      "original_object": "peer-4-body",
+      "original_text": "Continue,\nsimplify or stop.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 17,
+      "original_object": "boundary-text",
+      "original_text": "Recorded operator proof is an input \u2014 not production approval.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 18,
+      "original_object": "slide-title",
+      "original_text": "Endorse the next evidence proposal.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 18,
+      "original_object": "peer-1-title",
+      "original_text": "CEO / Assets",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 18,
+      "original_object": "peer-1-body",
+      "original_text": "Sponsor +\naccountable owners.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 18,
+      "original_object": "peer-2-title",
+      "original_text": "CIO / Programme",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 18,
+      "original_object": "peer-2-body",
+      "original_text": "Human, permission\nand recovery evidence.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 18,
+      "original_object": "peer-3-title",
+      "original_text": "CFO",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 18,
+      "original_object": "peer-3-body",
+      "original_text": "Whole-life affordability\nscoped authority review.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 18,
+      "original_object": "boundary-text",
+      "original_text": "Agree the return date and stop tests.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 18,
+      "original_object": "closing-boundary",
+      "original_text": "No new procurement, spending, rollout or production authority.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 19,
+      "original_object": "slide-title",
+      "original_text": "Technical challenge: bounded does not mean fully assured.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 19,
+      "original_object": "peer-1-title",
+      "original_text": "State",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 19,
+      "original_object": "peer-1-body",
+      "original_text": "Versions, fenced attempts,\nreservations.\nContent restart observed.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 19,
+      "original_object": "peer-2-title",
+      "original_text": "Trust",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 19,
+      "original_object": "peer-2-body",
+      "original_text": "Permitted sources,\ncurrent role checks,\nindependent review.\nReal-session assurance open.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 19,
+      "original_object": "peer-3-title",
+      "original_text": "Operate",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 19,
+      "original_object": "peer-3-body",
+      "original_text": "Owned manual path.\nPerformance, restore,\nquality and unit cost open.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 19,
+      "original_object": "boundary-text",
+      "original_text": "Decision 1 is separate from the five new GPT proposal calls.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 20,
+      "original_object": "slide-title",
+      "original_text": "Council challenge: the objections we welcome.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 20,
+      "original_object": "qa-row-1-peer-1-title",
+      "original_text": "Why not improve Excel?",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 20,
+      "original_object": "qa-row-1-peer-1-body",
+      "original_text": "Test equal scope and controls.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 20,
+      "original_object": "qa-row-1-peer-2-title",
+      "original_text": "Why not launch now?",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 20,
+      "original_object": "qa-row-1-peer-2-body",
+      "original_text": "Human, semantic and value gates open.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 20,
+      "original_object": "qa-row-2-peer-1-title",
+      "original_text": "What budget?",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 20,
+      "original_object": "qa-row-2-peer-1-body",
+      "original_text": "No new commitment; whole-life appraisal.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 20,
+      "original_object": "qa-row-2-peer-2-title",
+      "original_text": "What if AI fails?",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 20,
+      "original_object": "qa-row-2-peer-2-body",
+      "original_text": "Manual workflow remains; simplify.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 20,
+      "original_object": "boundary-text",
+      "original_text": "Unknown answers get an owner and evidence route, not a confident guess.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 21,
+      "original_object": "slide-title",
+      "original_text": "Read the evidence label before the claim.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 21,
+      "original_object": "peer-1-title",
+      "original_text": "Request + research",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 21,
+      "original_object": "peer-1-body",
+      "original_text": "Request \u2260 result.\nResearch instruments\n\u2260 residents.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 21,
+      "original_object": "peer-2-title",
+      "original_text": "Exercise fixtures",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 21,
+      "original_object": "peer-2-body",
+      "original_text": "Fixtures \u2260 company\nperformance or budgets.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 21,
+      "original_object": "peer-3-title",
+      "original_text": "Observed proof",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 21,
+      "original_object": "peer-3-body",
+      "original_text": "Operator proof \u2260 human,\nsemantic or value\nacceptance.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 21,
+      "original_object": "boundary-text",
+      "original_text": "As at 14 October. Legal currentness not refreshed.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 21,
+      "original_object": "assessment-open",
+      "original_text": "Live pitch, rehearsal and thought-leadership evidence still required.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "slide-title",
+      "original_text": "Compare equivalent routes before selecting a winner.",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-peer-1-title",
+      "original_text": "Improve current\nworkflow",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-peer-2-title",
+      "original_text": "Greenfield\nbusiness platform",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-peer-3-title",
+      "original_text": "Azure-led\nhybrid",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-1-label",
+      "original_text": "Mandatory controls",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-1-peer-1-body",
+      "original_text": "To verify",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-1-peer-2-body",
+      "original_text": "To verify",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-1-peer-3-body",
+      "original_text": "To verify",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-2-label",
+      "original_text": "Transition + access",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-2-peer-1-body",
+      "original_text": "To test",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-2-peer-2-body",
+      "original_text": "To test",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-2-peer-3-body",
+      "original_text": "To test",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-3-label",
+      "original_text": "Support + recovery",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-3-peer-1-body",
+      "original_text": "To test",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-3-peer-2-body",
+      "original_text": "To test",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-3-peer-3-body",
+      "original_text": "To test",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-4-label",
+      "original_text": "Whole-life cost",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-4-peer-1-body",
+      "original_text": "To price",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-4-peer-2-body",
+      "original_text": "To price",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "option-row-4-peer-3-body",
+      "original_text": "To price",
+      "destination": "same-slide visible",
+      "retained": true
+    },
+    {
+      "slide": 22,
+      "original_object": "boundary-text",
+      "original_text": "Equivalent-scope evidence still needed \u2014 no winner scored.",
+      "destination": "same-slide relationship-bound reference notes",
+      "retained": true
+    }
+  ]
+}

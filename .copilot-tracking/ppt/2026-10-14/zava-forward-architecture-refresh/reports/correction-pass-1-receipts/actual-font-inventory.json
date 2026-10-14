@@ -1,0 +1,13 @@
+{
+  "run_font_counts": {
+    "Liberation Sans": 532
+  },
+  "all_explicit_liberation_sans": true,
+  "nonessential_small_text_objects": [
+    "deck-eyebrow",
+    "source-footer",
+    "page-counter"
+  ],
+  "diagram_label_minimum_pt": 16,
+  "normal_body_minimum_pt": 18
+}

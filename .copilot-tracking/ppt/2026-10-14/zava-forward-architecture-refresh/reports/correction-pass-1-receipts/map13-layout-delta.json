@@ -1,0 +1,1331 @@
+{
+  "logical_content_retained": true,
+  "original_notes_text_exact": true,
+  "fonts_insets_top_fixed_preserved": true,
+  "rows": [
+    {
+      "name": "deck-eyebrow",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "slide-title",
+      "changes": {
+        "height": [
+          457200,
+          521207
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "source-footer",
+      "changes": {
+        "top": [
+          6629400,
+          6620256
+        ],
+        "height": [
+          155448,
+          228600
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "page-counter",
+      "changes": {
+        "top": [
+          6611112,
+          6620256
+        ],
+        "height": [
+          182880,
+          228600
+        ],
+        "text": [
+          "13 / 22",
+          "13 / 24"
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-status",
+      "changes": {
+        "height": [
+          274320,
+          320040
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-1-stage",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-1-owner",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-1-capability-background",
+      "changes": {
+        "height": [
+          2596896,
+          2697480
+        ]
+      }
+    },
+    {
+      "name": "map-peer-1-title",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-1-request-label",
+      "changes": {
+        "height": [
+          265176,
+          320040
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-1-request-body",
+      "changes": {
+        "top": [
+          3867912,
+          3922776
+        ],
+        "height": [
+          521207,
+          530352
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-1-proactive-label",
+      "changes": {
+        "top": [
+          4443984,
+          4489704
+        ],
+        "height": [
+          265176,
+          320040
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-1-proactive-body",
+      "changes": {
+        "top": [
+          4745736,
+          4855464
+        ],
+        "height": [
+          539496,
+          566928
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-2-stage",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-2-owner",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-2-capability-background",
+      "changes": {
+        "height": [
+          2596896,
+          2697480
+        ]
+      }
+    },
+    {
+      "name": "map-peer-2-title",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-2-request-label",
+      "changes": {
+        "height": [
+          265176,
+          320040
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-2-request-body",
+      "changes": {
+        "top": [
+          3867912,
+          3922776
+        ],
+        "height": [
+          521207,
+          530352
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-2-proactive-label",
+      "changes": {
+        "top": [
+          4443984,
+          4489704
+        ],
+        "height": [
+          265176,
+          320040
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-2-proactive-body",
+      "changes": {
+        "top": [
+          4745736,
+          4855464
+        ],
+        "height": [
+          539496,
+          566928
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-3-stage",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-3-owner",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-3-capability-background",
+      "changes": {
+        "height": [
+          2596896,
+          2697480
+        ]
+      }
+    },
+    {
+      "name": "map-peer-3-title",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-3-request-label",
+      "changes": {
+        "height": [
+          265176,
+          320040
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-3-request-body",
+      "changes": {
+        "top": [
+          3867912,
+          3922776
+        ],
+        "height": [
+          521207,
+          530352
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-3-proactive-label",
+      "changes": {
+        "top": [
+          4443984,
+          4489704
+        ],
+        "height": [
+          265176,
+          320040
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-3-proactive-body",
+      "changes": {
+        "top": [
+          4745736,
+          4855464
+        ],
+        "height": [
+          539496,
+          566928
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-4-stage",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-4-owner",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-4-capability-background",
+      "changes": {
+        "height": [
+          2596896,
+          2697480
+        ]
+      }
+    },
+    {
+      "name": "map-peer-4-title",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-4-request-label",
+      "changes": {
+        "height": [
+          265176,
+          320040
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-4-request-body",
+      "changes": {
+        "top": [
+          3867912,
+          3922776
+        ],
+        "height": [
+          521207,
+          530352
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-4-proactive-label",
+      "changes": {
+        "top": [
+          4443984,
+          4489704
+        ],
+        "height": [
+          265176,
+          320040
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-4-proactive-body",
+      "changes": {
+        "top": [
+          4745736,
+          4855464
+        ],
+        "height": [
+          539496,
+          566928
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-5-stage",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-5-owner",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-5-capability-background",
+      "changes": {
+        "height": [
+          2596896,
+          2697480
+        ]
+      }
+    },
+    {
+      "name": "map-peer-5-title",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-5-request-label",
+      "changes": {
+        "height": [
+          265176,
+          320040
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-5-request-body",
+      "changes": {
+        "top": [
+          3867912,
+          3922776
+        ],
+        "height": [
+          521207,
+          530352
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-5-proactive-label",
+      "changes": {
+        "top": [
+          4443984,
+          4489704
+        ],
+        "height": [
+          265176,
+          320040
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-peer-5-proactive-body",
+      "changes": {
+        "top": [
+          4745736,
+          4855464
+        ],
+        "height": [
+          539496,
+          566928
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ],
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ],
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-core",
+      "changes": {
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-funding-boundary",
+      "changes": {
+        "height": [
+          256032,
+          301752
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "map-hazard-boundary",
+      "changes": {
+        "height": [
+          246888,
+          301752
+        ],
+        "paragraph_spacing": [
+          [
+            [
+              1.08,
+              0,
+              63500
+            ]
+          ],
+          [
+            [
+              1.0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

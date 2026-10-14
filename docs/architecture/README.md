@@ -30,6 +30,18 @@ people. Its outer frame is not a network boundary. The technical resource
 group and Container Apps environment boundaries are distinct; PaaS services
 are not presented as VNet-hosted applications.
 
+## Presentation Adaptation
+
+The [24-slide capstone deck](../capstone/deck/zava-forward-executive-draft.pptx)
+adapts these materials into native editable PowerPoint architecture on
+slides 10, 19, 23 and 24. The executive view remains on the main route;
+runtime, operations and deferred topology use readable optional slides
+rather than a reduced full technical image.
+[Presentation handover and previews](../capstone/README.md#architecture-and-ux-refresh-2026-10-14)
+record the UX improvements, source mapping and remaining human checks.
+The Excalidraw sources here retain their original baseline and editing
+authority; a presentation adaptation is not a new deployment or decision.
+
 ## Executive Architecture
 
 ![Executive architecture: staff use a controlled Azure Container Apps workbench, backed by SQL and Blob, with conditional Azure OpenAI drafts and human approvals.](./zava-forward-executive-architecture.svg)
