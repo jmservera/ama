@@ -477,6 +477,23 @@ information and precise evidence checks. Officials, funders and regulators
 need traceable, versioned and reusable assurance packs with unresolved
 exceptions visible.
 
+The [Customer Journey Atlas](./reference/research/ux/customer-journeys/customer-journey-atlas.md)
+adds a dated, nine-company-role exploration of these needs: 28 stage-based
+maps, nomination and source-change subjourneys, and 24 practical or
+exploratory agent opportunities. The maps distinguish motivations, pains,
+desired gains, receiving/chase/update ownership and exception routes.
+They are desk-research hypotheses, not employee or resident observations,
+approved features or measured benefits.
+
+Candidate assistance includes recipient-scoped story-once briefings,
+resident-controlled disruption planning, pre-dispatch rehearsal,
+changed-evidence review tracing and aftercare concern packs. Each requires
+bounded sources, meaningful human review, manual fallback and comparison
+with simpler workflow support including all-role review and resident effort.
+The atlas reconciles its research snapshot with the current five-assistant
+delivery evidence; it does not enable proactive scans, expand approval
+authority or introduce AI programme supervision in the initial pilot.
+
 Automation must not trade speed for rights or safety. A source update, sensor
 reading, missed contact or generated interpretation cannot diagnose a hazard,
 infer consent, remove a resident's priority, satisfy a statutory duty, approve
