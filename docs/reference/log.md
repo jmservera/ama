@@ -2426,3 +2426,95 @@ metadata when the knowledge base was created.
   legal rule, deployment or operational approval changed. Human acceptance
   remains PENDING and live use BLOCKED; legal currentness, representative
   fairness/oversight, held-out model quality and net benefit remain unassessed.
+## [2026-10-14] update | BRD v0.17.0, PRD v0.15.0 and ADR 0003 from the journey atlas
+
+* Reviewed the customer journey atlas, the updated addendum and the Zava
+  documentation. Amended the BRD to v0.17.0 (FR-045 to FR-047, AC-087 to
+  AC-089, OD-41 and OD-42; refined AC-011, AC-023 and AC-065) after an
+  independent review whose traceability, ordering and consistency findings
+  were applied. The BRD business-goal SMART gate remains blocked on open
+  decisions.
+* Handed the BRD to the PRD (v0.15.0): FR-048/049, AC-062 to AC-065,
+  FR-045 extended, a BRD-to-PRD ID table and journey learning-test bundles.
+  An independent critique found stale BRD versions, a cross-document ID
+  collision and under-specified acceptance criteria; all were applied except
+  the deferred BRD FR-037 challenge requirement and OD-41/OD-42.
+* Added [ADR 0003](../adrs/0003-journey-derived-capabilities-runtime-fit.md)
+  (Proposed) and indexed it here. The addendum's "BRD unchanged" statement
+  refers to the operator evidence; the later atlas drove this change. The
+  atlas stays desk research, not validation. No owner acceptance, runtime
+  change, real data or approval follows.
+
+## [2026-10-14] update | BRD sensor and in-use monitoring capture
+
+* Added BRD FR-048/AC-090 (retained in-use monitoring observations kept
+  separate from derived analysis and human decisions) and OD-43 (actual
+  inventory, mapping, calibration, lawful basis, retention, thresholds and
+  owner), linked to RULE-014 and the ADR 0002 simulator-only sensor design.
+  The BRD stays solution-agnostic and names no IoT platform. A PRD
+  requirement is still needed before build. No data, device, threshold or
+  approval is created.
+* Resolved merge conflicts with main in this index and log, keeping both
+  the sensor-flow and journey entries.
+
+## [2026-10-14] update | IoT Hub decision, PRD sensor requirement and analytics research plan
+
+* Owner direction: Azure IoT Hub is the product for IoT. ADR 0003 decision 6
+  adopts it as the device-to-cloud ingestion boundary, with an API consumer
+  that validates and appends to Azure SQL; ADR 0002's earlier "no IoT Hub for
+  the demo" advice carries a dated amendment. Tier, cost, provisioning,
+  network exposure and Entra roles remain open.
+* PRD v0.15.0 adds FR-050 and AC-066 to AC-068 (counts 50 FR, 68 AC) and
+  traces BRD FR-048/AC-090/OD-43.
+* Added the [analytics research plan](./research/iot-sensor-analytics-research-plan.md)
+  with phases R1 to R5 for dew point and trend analysis. Its leads come from an
+  uncited web synthesis and are unverified; no method, threshold or standard
+  claim is validated, and the PAS 2035 monitoring claim is flagged unverified.
+* No IoT Hub provisioned, no cloud action, real data or approval.
+
+## [2026-10-14] review | Source verification of IoT analytics leads
+
+* Checked the unverified leads in the
+  [analytics research plan](./research/iot-sensor-analytics-research-plan.md)
+  against public sources and recorded status, source and caveat for each.
+* Magnus dew point constants, the BS 5250:2011 80 percent surface humidity and
+  fRsi 0.75 figures, persistence rules, the Housing Ombudsman no-blame
+  principle and Azure IoT Hub tier features were confirmed, in places only
+  through secondary or mirrored sources. The official BSI, BRE and AMS texts
+  were not read, so R1 stays open.
+* Corrected two claims: PAS 2035 requires risk-based monitoring and
+  evaluation, not a blanket sensor mandate, and IoT Hub devices use X.509 or
+  symmetric keys, not Entra ID. ADR 0003 decision 6 was amended accordingly.
+* No threshold, standard or legal duty is validated by this check.
+
+## [2026-10-14] review | arXiv search for IoT analytics sources
+
+* Searched arXiv for dew point, mould, condensation, fRsi, retrofit
+  monitoring and Magnus formula sources. No building-physics paper was found,
+  so no lead was validated by arXiv. Four generic sensor calibration, drift,
+  sampling and anomaly-detection papers (abstracts only) were recorded as
+  method leads in the research plan. R1 stays open; official standards and
+  building-science journals are the next sources.
+
+## [2026-10-14] review | Owner-supplied BS 5250:2021 public documents
+
+* Read the BMI Group BS 5250:2021 roofing guide (August 2021). It supports the
+  dew point definition of condensation and names BS EN ISO 13788, but states no
+  80 percent, 70 percent or fRsi figure. It shows a 2021 edition exists, so
+  the 2011-based thresholds must be re-confirmed against the 2021 edition.
+* The Scribd copy could not be read (access challenge) and its provenance and
+  right to use are unconfirmed, so it is not used. R1 stays open.
+
+## [2026-10-15] update | Reconcile journey/sensor and Responsible AI requirements
+
+* Merged main's BRD v0.17.0, journey learning tests, ADR 0003 and IoT research
+  into the RAI topic. Preserved both index/log contributions and the original
+  audit report, case study and owner memory.
+* Reconciled the two draft v0.15.0 ID allocations in PRD v0.16.0: main keeps
+  FR-048 to FR-050 / AC-062 to AC-068; unmerged RAI additions move to FR-051
+  to FR-054 / AC-069 to AC-073. Updated current addendum/ADR references and
+  recorded the explicit draft-to-current mapping in the PRD.
+* Restored the incoming PRD's omitted NFR and existing acceptance sections;
+  separated its combined offer requirement/criterion and supplied FR-049
+  from BRD FR-047/AC-089. Counts are 54 FRs, 73 ACs, 14 NFRs, nine constraints.
+  Fresh requirements review, human approval and implementation remain open.

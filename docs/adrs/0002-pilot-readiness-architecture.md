@@ -2,7 +2,7 @@
 title: ADR 0002 Pilot-Readiness Architecture for the Zava Forward MVP
 description: Proposed decisions for moving the working MVP to pilot readiness over about 60,000 homes - durable store, Blob, Entra ID and field visibility, deterministic ranking, map scale, deployment and gated staff time capture
 author: AMA programme
-ms.date: 2026-10-14
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
@@ -93,7 +93,7 @@ Decisions below fix those mechanisms, not raw capacity.
 | Field visibility | One server-side projection layer, default deny, per role and per field; contractor view has no vulnerability reason in any API, export, search, audit view or AI prompt | PR-002 enforced in one place and tested |
 | Ranking | Deterministic function of case data and a versioned policy file, stored as a ranking snapshot with reason codes | PR-006 |
 | AI prioritisation | Separate recommendation record, never read by the ranking function or any queue | PR-007, PR-008 |
-| Sensor observations | Simulator-only source for the demonstration; validate and append readings in Azure SQL, derive versioned deterministic review signals, and reuse the map/review queue. No IoT Hub/Event Hubs tier until a real device inventory, integration and throughput need are established | Three observations per simulated day do not justify a separate streaming estate; raw readings are evidence, not diagnoses or investment scores |
+| Sensor observations | Simulator-only source for the demonstration; validate and append readings in Azure SQL, derive versioned deterministic review signals, and reuse the map/review queue. Azure IoT Hub is the ingestion product per owner direction (see [ADR 0003](./0003-journey-derived-capabilities-runtime-fit.md), decision 6); no separate Event Hubs or time-series tier | Three observations per simulated day do not justify a separate streaming estate; raw readings are evidence, not diagnoses or investment scores |
 | Five reactive/proactive assists | Shared versioned proposal service in the existing MVP API, with SQL-owned deduplication/reservations/fenced leases; bounded automatic execution and recipient-compatible evidence | PRD FR-047/AC-058 to AC-061; no separate estate, model authority or domain approval |
 | Map | Server-side bounding-box queries with grid clustering by zoom, same filter object as the list, licensed tile provider | PR-005 |
 | Deployment | Two or more replicas, zone redundant where available, `uksouth`, hardened image, scan and tests in CI | No state on the container; fixes the honesty gap |
@@ -287,7 +287,7 @@ open; historical Reviews are not rewritten.
 
 Proposed extension of the existing single-API/SQL runtime; no new service or
 production authority. The [PRD RAI contract](../prds/zava-forward-retrofit-programme-demonstrator.md#responsible-ai-release-and-oversight-contract-2026-10-14)
-adds FR-048 to FR-051, AC-062 to AC-066 and NFR-014. Existing source-tested
+adds FR-051 to FR-054, AC-069 to AC-073 and NFR-014. Existing source-tested
 proposal controls and bounded operator calls do not prove these new gates.
 
 | Surface | Proposed control and evidence | Accountable function for live approval |
@@ -668,7 +668,14 @@ completeness pass identifies missing or stale expected readings. A later
 device adapter must authenticate the source independently and call the same
 contract. Review the ingestion topology only after actual device protocols,
 delivery guarantees, device counts, latency needs and operating ownership are
-known. Do not add IoT Hub or Event Hubs solely for the demo.
+known.
+
+Amendment (2026-10-14): the AMA project owner directed that Azure IoT Hub is
+the product for IoT, so the earlier advice not to add IoT Hub for the demo is
+replaced by [ADR 0003 decision 6](./0003-journey-derived-capabilities-runtime-fit.md).
+The simulator then sends telemetry as an IoT Hub device, and the API consumer
+still appends to Azure SQL through the same validation contract. Do not add
+Event Hubs separately.
 
 Analysis checks data quality before applying a trend rule. Completeness is
 measured against the demonstration cadence of three readings per simulated
@@ -810,7 +817,7 @@ time capture.
 
 ## Open items
 
-* Named RAI release, residual-risk and incident owners; current intended-use/jurisdiction screening; representative cohort and oversight evidence; challenge route and suspend/restart drill under PRD AC-062 to AC-066.
+* Named RAI release, residual-risk and incident owners; current intended-use/jurisdiction screening; representative cohort and oversight evidence; challenge route and suspend/restart drill under PRD AC-069 to AC-073.
 
 * DPO to confirm the lawful basis per data class, the Article 9 condition and
   that audit data can be retained against an erasure request under

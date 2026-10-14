@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-14
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
@@ -521,10 +521,10 @@ failures. Proposed documentation mitigations leave each evidence gate open.
 
 | Review priority | Proposed treatment and trace | Evidence still required |
 | --- | --- | --- |
-| Semantic correctness, not only schema/citation validity | PRD NFR-009 and AC-063; competent source-based oversight | Held-out real-model evaluation, factual/unsafe-advice adjudication and reviewer detection of plausible wrong outputs |
-| Accountable task/model/prompt release and change binding | PRD FR-048/AC-062; ADR 0001 RAI boundary and ADR 0002 control plane | Named release/residual-risk owners and executed version/permission-change denial tests |
-| Ranking policy and incomplete safety/support records | PRD FR-051/AC-066 and existing FR-012; deterministic and AI cohort evaluation | Approved policy, representative impact evidence, lawful cohort analysis and missing-data disposition |
-| Harm monitoring, incident ownership and restart | PRD FR-050/AC-065/NFR-014 | Approved observation/response thresholds, named incident owners and executed suspend/manual-fallback/restart drill |
+| Semantic correctness, not only schema/citation validity | PRD NFR-009 and AC-070; competent source-based oversight | Held-out real-model evaluation, factual/unsafe-advice adjudication and reviewer detection of plausible wrong outputs |
+| Accountable task/model/prompt release and change binding | PRD FR-051/AC-069; ADR 0001 RAI boundary and ADR 0002 control plane | Named release/residual-risk owners and executed version/permission-change denial tests |
+| Ranking policy and incomplete safety/support records | PRD FR-054/AC-073 and existing FR-012; deterministic and AI cohort evaluation | Approved policy, representative impact evidence, lawful cohort analysis and missing-data disposition |
+| Harm monitoring, incident ownership and restart | PRD FR-053/AC-072/NFR-014 | Approved observation/response thresholds, named incident owners and executed suspend/manual-fallback/restart drill |
 | Consistent minimization across legacy and newer assistant paths | PRD NFR-003/005 and AC-053/060; ADR context/audit/telemetry rules | Complete input/output/citation/review/export permission tests on every retained model path, not only the newer assistants |
 
 Other operational blockers remain the real-data DPIA, processor/transfer and
@@ -560,12 +560,12 @@ runtime behavior, legal classification or qualified human acceptance.
 | Verified review item | Residual severity / verdict | Proposed treatment and evidence gate |
 | --- | --- | --- |
 | T-RAI-001: legacy input minimization | MEDIUM / CONFIRMED | Digital, task owners and DPO establish minimum necessary per-task fields across retained legacy and newer paths; provider-bound payload and cross-role tests under NFR-003/005 and AC-053/060 |
-| T-RAI-002 and MEASURE-01: source/factual assurance | MEDIUM / CONFIRMED and DOWNGRADED respectively | Task owners, Assurance and Digital witness plausible-wrong-output and altered-evidence tests, including structurally valid citations; NFR-009 and AC-063, without bypassing existing human gates |
-| GOVERN-AUDIT-02 and MN-3.2: approved model-change binding | MEDIUM / DOWNGRADED | Product/Digital own version-bound release and dependency invalidation, with renewed approval tests under FR-048/AC-062 |
+| T-RAI-002 and MEASURE-01: source/factual assurance | MEDIUM / CONFIRMED and DOWNGRADED respectively | Task owners, Assurance and Digital witness plausible-wrong-output and altered-evidence tests, including structurally valid citations; NFR-009 and AC-070, without bypassing existing human gates |
+| GOVERN-AUDIT-02 and MN-3.2: approved model-change binding | MEDIUM / DOWNGRADED | Product/Digital own version-bound release and dependency invalidation, with renewed approval tests under FR-051/AC-069 |
 | MAP-02: staff-data and exercise-to-live boundary | MEDIUM / DOWNGRADED | Product, Digital, DPO/Legal and record owners reconcile actual staff identity/processing with synthetic-resident claims and approve necessity, processor/transfer and retention records; DH-001/002/006/007 remain open evidence gates |
 | MN-4.1: owned harm monitoring | MEDIUM / DOWNGRADED | Product/Digital with Data, Safety and Resident Engagement approve indicators, thresholds, observation windows and response owners under NFR-014 |
-| MN-4.3: incident communication and restart | MEDIUM / DOWNGRADED | Digital and named incident/restart owners witness suspension, communication, manual continuity and separately approved restart under FR-050/AC-065 |
-| GOVERN-AUDIT-01, MAP-01 and MAP-04: accountability, ranking impact and participation | LOW / DOWNGRADED in the bounded exercise | Name responsible humans, approve ranking ownership/impact and obtain representative resident/reviewer/accessibility/net-benefit evidence under FR-048/051 and AC-063/064/066 before operational expansion |
+| MN-4.3: incident communication and restart | MEDIUM / DOWNGRADED | Digital and named incident/restart owners witness suspension, communication, manual continuity and separately approved restart under FR-053/AC-072 |
+| GOVERN-AUDIT-01, MAP-01 and MAP-04: accountability, ranking impact and participation | LOW / DOWNGRADED in the bounded exercise | Name responsible humans, approve ranking ownership/impact and obtain representative resident/reviewer/accessibility/net-benefit evidence under FR-051/FR-054 and AC-070/AC-071/AC-073 before operational expansion |
 
 Synthetic resident/programme data does not establish that the whole system
 processes no personal data: the report identifies actual staff/tenant identity

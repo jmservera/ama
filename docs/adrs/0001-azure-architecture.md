@@ -2,7 +2,7 @@
 title: ADR 0001 Azure Architecture for the Zava Forward Demonstrator
 description: Proposed Azure hosting, agent placement, data, model and security architecture for the non-production Zava Forward retrofit workbench demonstrator
 author: AMA programme
-ms.date: 2026-10-14
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
@@ -147,7 +147,7 @@ an AI-ranked queue are rejected: neither adds evidence of fair or safe
 outcomes. The cost is evaluation, monitoring and human review capacity, which
 must be included in the value comparison rather than hidden as model savings.
 
-Before operational activation, evidence must satisfy PRD AC-062 to AC-066,
+Before operational activation, evidence must satisfy PRD AC-069 to AC-073,
 including cohort/missing-data evaluation, oversight error detection, accessible
 challenge and a suspend/manual-fallback/restart drill. Framework coverage is
 not certification; geography and intended use need independent legal scope
@@ -417,7 +417,7 @@ Result: the redeploy `warm-dev2` into `ama` (`uksouth`, `allowPublicNetworkAcces
 
 ## Open items
 
-* RAI task/impact inventory, named residual-risk and incident owners, version-bound release evidence and PRD AC-062 to AC-066 before operational activation.
+* RAI task/impact inventory, named residual-risk and incident owners, version-bound release evidence and PRD AC-069 to AC-073 before operational activation.
 
 * Approve the retention schedule and resolve how ledger tables and immutable audit storage coexist with erasure.
 * Azure Policy assignments and subscription-level Defender plans.
