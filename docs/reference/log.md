@@ -2409,3 +2409,18 @@ metadata when the knowledge base was created.
   uncited web synthesis and are unverified; no method, threshold or standard
   claim is validated, and the PAS 2035 monitoring claim is flagged unverified.
 * No IoT Hub provisioned, no cloud action, real data or approval.
+
+## [2026-10-14] review | Source verification of IoT analytics leads
+
+* Checked the unverified leads in the
+  [analytics research plan](./research/iot-sensor-analytics-research-plan.md)
+  against public sources and recorded status, source and caveat for each.
+* Magnus dew point constants, the BS 5250:2011 80 percent surface humidity and
+  fRsi 0.75 figures, persistence rules, the Housing Ombudsman no-blame
+  principle and Azure IoT Hub tier features were confirmed, in places only
+  through secondary or mirrored sources. The official BSI, BRE and AMS texts
+  were not read, so R1 stays open.
+* Corrected two claims: PAS 2035 requires risk-based monitoring and
+  evaluation, not a blanket sensor mandate, and IoT Hub devices use X.509 or
+  symmetric keys, not Entra ID. ADR 0003 decision 6 was amended accordingly.
+* No threshold, standard or legal duty is validated by this check.

@@ -79,15 +79,19 @@ build).
      review task. It never diagnoses a hazard, starts a clock, overrides a
      resident report, releases a hold or changes ranking directly. Missing or
      stale data is `INSUFFICIENT` and never lowers priority.
-   * Device identity, hub access and the consumer use Microsoft Entra managed
-     identity and least-privilege roles where supported, with no connection
-     strings in source or telemetry. Raw readings and device identifiers stay
+   * Devices authenticate to IoT Hub with per-device X.509 certificates or
+     symmetric keys, because Microsoft Entra ID is not supported for the IoT
+     Hub device APIs (Microsoft Learn, retrieved 2026-10-14). The API consumer
+     and other services use a managed identity with least-privilege roles.
+     No device key or connection string appears in source or telemetry, and
+     device credential issue and rotation need a named owner. Raw readings and device identifiers stay
      out of AI prompts, map tiles, cluster payloads and diagnostic logs.
    * Tier, region (`uksouth`), unit count, device provisioning (for example the
-     Device Provisioning Service) and retention are open items. Confirm the
-     basic tier suffices for device-to-cloud only, or that the standard tier is
-     needed for features such as cloud-to-device messages and twins, against
-     current Microsoft Learn pricing before provisioning. Event Hubs alone is
+     Device Provisioning Service) and retention are open items. The basic tier
+     supports device-to-cloud only, and the standard tier adds cloud-to-device
+     messaging, twins and IoT Edge; message routing is on both (Microsoft
+     Learn, retrieved 2026-10-14). Confirm the tier and pricing before
+     provisioning. Event Hubs alone is
      not chosen.
 
 ## Consequences
@@ -122,7 +126,7 @@ build).
 * DPO decision on representative data retention and minimisation.
 * Atlas-owner confirmation of the bundle to opportunity mapping in the PRD.
 * IoT Hub tier, sizing, cost estimate, device provisioning approach, network
-  exposure and Entra role design; BRD OD-43 inventory, lawful basis, DPIA,
+  exposure and Entra role design and device credential ownership; BRD OD-43 inventory, lawful basis, DPIA,
   retention and thresholds.
 * Completion of research phases R1 to R5 in the analytics research plan before
   any derived rule other than a clearly labelled exercise rule is used.

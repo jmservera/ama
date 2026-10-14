@@ -8,10 +8,13 @@ ms.topic: reference
 
 ## Status
 
-Plan only. Nothing here is a validated method, threshold, legal duty or
-approved rule. The leads below come from an uncited web synthesis retrieved on
-2026-10-14 and from general Microsoft Learn results; each must be confirmed
-against a primary source in phase R1 before it is used. Sensor data remains
+Plan with a first source check. Nothing here is a validated method,
+threshold, legal duty or approved rule. The leads came from an uncited web
+synthesis and were checked on 2026-10-14 against the sources in
+[Source verification (2026-10-14)](#source-verification-2026-10-14). Phase R1
+remains open: the standards are paywalled and several confirmations rest on
+secondary sources, so a competent reviewer must confirm against the official
+text before use. Sensor data remains
 simulated until the open items in
 [BRD OD-43](../../brds/agentic-retrofit-programme-brd.md) are closed.
 
@@ -38,19 +41,22 @@ FR-050 with AC-066 to AC-068.
 * How can the result be explained to a resident, a housing officer and a
   retrofit assessor without implying a diagnosis?
 
-## Leads to verify (unverified)
+## Leads and verification status
 
-| Lead | What to confirm | Primary source to find |
+| Lead | What to confirm | Status (2026-10-14) |
 | --- | --- | --- |
-| Dew point from air temperature and relative humidity by the Magnus approximation, with commonly cited constants for temperatures above 0 C | Constants, validity range and error against a psychrometric reference; behaviour at low temperature | Meteorological or metrology reference, for example WMO or a national standards body |
-| Surface condensation when a surface is at or below the dew point; mould risk when surface relative humidity is sustained near 80 percent | Whether 80 percent and any margin to dew point are stated in current UK guidance; the averaging period | BS 5250 and related UK condensation and mould guidance, PAS 2035 monitoring provisions, building physics literature |
-| Temperature factor (fRsi) compares internal surface temperature with internal and external air temperature, with commonly cited dwelling thresholds near 0.75 | Definition, thresholds and when it applies; needs surface and outdoor temperature, which the demonstration does not capture | BRE or BS EN ISO 13788 and BS 5250 |
-| Persistence and trend rules reduce false alerts | Window lengths, minimum valid samples and seasonal effects | Peer-reviewed or industry monitoring studies in social housing |
-| Occupancy behaviour, ventilation and heating drive indoor humidity | How to separate behaviour, building fabric and weather without blaming residents | Retrofit monitoring evaluations; resident-engagement guidance |
+| Dew point from air temperature and relative humidity by the Magnus approximation, with commonly cited constants for temperatures above 0 C | Constants, validity range and error against a psychrometric reference; behaviour at low temperature | Partly verified: constants and range confirmed through Lawrence (2005); the original paper's own error figure was not retrieved |
+| Surface condensation when a surface is at or below the dew point; mould risk when surface relative humidity is sustained near 80 percent | Whether 80 percent and any margin to dew point are stated in current UK guidance; the averaging period | Partly verified: the 80 percent and 70 percent air figures are in BS 5250:2011 text via a mirror only; not found in current gov.uk damp and mould guidance |
+| Temperature factor (fRsi) compares internal surface temperature with internal and external air temperature, with commonly cited dwelling thresholds near 0.75 | Definition, thresholds and when it applies; needs surface and outdoor temperature, which the demonstration does not capture | Verified in the BS 5250:2011 text via a mirror and two secondary sources; BRE IP 1/06 original not retrieved |
+| Persistence and trend rules reduce false alerts | Window lengths, minimum valid samples and seasonal effects | Verified at practitioner level (LOTI 2025); no peer-reviewed study found |
+| Occupancy behaviour, ventilation and heating drive indoor humidity | How to separate behaviour, building fabric and weather without blaming residents | Verified for the no-blame principle (Housing Ombudsman); behaviour separation method still open |
 
-The web synthesis also claimed that PAS 2035 mandates ongoing monitoring of
-air and surface conditions. Treat that as unverified; the local regulatory
-corpus does not establish it.
+The web synthesis claimed that PAS 2035 mandates ongoing monitoring of air and
+surface conditions. This is an overstatement. A secondary source states that
+PAS 2035 requires a risk-based monitoring and evaluation strategy, with sensor
+monitoring at intermediate levels, not for every retrofit. Do not cite a
+blanket sensor mandate; the official PAS 2035 text is paywalled and was not
+read.
 
 ## Phases
 
@@ -89,4 +95,25 @@ corpus does not establish it.
 
 | Date | Action | Result |
 | --- | --- | --- |
-| 2026-10-14 | Plan created from an uncited web synthesis and Microsoft Learn IoT Hub results | No primary source reviewed yet; phases R1 to R5 not started |
+| 2026-10-14 | Plan created from an uncited web synthesis and Microsoft Learn IoT Hub results | Leads listed |
+| 2026-10-14 | Source check by the research agent against public pages (below) | Leads partly verified; official BSI, BRE and AMS texts not read; R1 stays open; R2 to R5 not started |
+
+## Source verification (2026-10-14)
+
+All sources were retrieved on 2026-10-14. Quotes are short extracts reported by
+the checking agent and were not independently re-read by the author.
+Status values: Verified, Partly or Not found.
+
+| # | Lead | Status | Source | Caveat |
+| --- | --- | --- | --- | --- |
+| 1 | Magnus dew point, a = 17.625, b = 243.04 C, range about -40 to +50 C | Verified (constants and range); Partly (stated error) | Lawrence, M.G. (2005), Bulletin of the American Meteorological Society 86(2), 225-233, as cited on Wikipedia "Dew point"; Alduchov and Eskridge (1996) title confirmed only through an abstract mirror | The publisher page was blocked, so the original paper's error figure was not read |
+| 2 | Mould risk when surface relative humidity exceeds 80 percent; room air above 70 percent likely to give surface above 80 percent | Verified in BS 5250:2011 text; provenance Partly | BS 5250:2011 text via a third-party mirror, not BSI; BSI product page not accessible | Not found in current gov.uk "Understanding and addressing the health risks of damp and mould" guidance, which gives no numeric threshold. Confirm against the official standard |
+| 3 | fRsi not less than 0.75 sufficient to avoid mould growth; see BS EN ISO 13788 and BRE IP 1/06 | Verified | BS 5250:2011 text via the same mirror; thermalbridgecalcs.com and specifierreview.com corroborate | BRE IP 1/06 original was not reachable. fRsi needs surface and outdoor temperature, not captured in the demonstration |
+| 4 | PAS 2035 mandates ongoing monitoring | Partly: overstated | RISE Retrofit "Monitoring and Evaluation" toolkit, riseretrofit.org.uk (secondary guidance) | Accurate wording: PAS 2035 requires a risk-based monitoring and evaluation strategy that may include sensor data. BSI's PAS 2035 page is paywalled and was not read |
+| 5 | Persistence and trend rules reduce false alerts | Verified (practitioner) | London Office of Technology and Innovation, "IoT Sensors for Damp and Mould Project: Winter Follow-Up", loti.london, 2025 | Practitioner report, not peer reviewed; no BRE or university study located |
+| 6 | Avoid blaming residents for damp and mould | Verified | Housing Ombudsman Service, "Housing Ombudsman urges zero tolerance approach on damp and mould", 2021-10-26 (Spotlight report "Damp and mould: It's not lifestyle") | None significant |
+| 7 | Azure IoT Hub tiers, routing, provisioning and authentication | Verified | learn.microsoft.com: iot-hub/iot-hub-scaling, iot-hub/iot-hub-devguide-messages-d2c, iot-dps/about-iot-dps, iot-hub/authenticate-authorize-azure-ad | Pages carry no fixed date. Basic tier is device-to-cloud only; standard adds cloud-to-device messaging, twins and IoT Edge. Message routing is available on both tiers. Devices authenticate with symmetric keys or X.509, not Entra ID; managed identity applies to service-side access |
+
+Consequences for the design: use the 80 percent and fRsi figures only as
+candidate exercise values labelled with the BS 5250:2011 source until the
+official text is confirmed, and keep the analysis review-only.
