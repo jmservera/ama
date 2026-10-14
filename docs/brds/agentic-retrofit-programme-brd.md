@@ -31,9 +31,11 @@ requirement_id_prefixes:
 Version 0.17.0 is a candidate amendment for fresh business/requirements
 review, not a newly accepted BRD. It keeps the v0.16.0 owner direction that
 real AI, real SQL and actual Azure deployment apply to each subsequent
-accepted application exercise build, and adds three business requirements
-(FR-045 to FR-047), two open decisions (OD-41, OD-42) and refinements to
-FR-008, FR-017 and FR-037 from the 2026-10-14 customer journey atlas. The
+accepted application exercise build, and adds four business requirements
+(FR-045 to FR-048), three open decisions (OD-41 to OD-43) and refinements to
+FR-008, FR-017 and FR-037 from the 2026-10-14 customer journey atlas and the
+sensor data-flow design in ADR 0002. FR-048 captures in-use monitoring data
+and keeps it an input to human review only. The
 atlas is desk research by role-agent instruments, not user validation; see
 Customer Journey Evidence. The historical PRD v0.12.0 acceptance does not
 approve this amendment or operational use.
@@ -1312,18 +1314,18 @@ measured incremental value and no agreed critical-control failure.
 Every requirement row carries one canonical identifier, its legacy alias, the
 business goals it supports and one or more acceptance criteria. Numbering is
 sequential in creation order within each family. Identifiers added in later
-amendments (FR-045 to FR-047) sit beside their related requirements and are not
+amendments (FR-045 to FR-048) sit beside their related requirements and are not
 renumbered after insertion, deletion or reordering.
 
 | Prefix | Family | Use in this BRD | Count |
 | --- | --- | --- | --- |
 | BG | Business goal | Outcome in Business Objectives and Success Metrics; legacy alias OBJ-## | 12 |
-| FR | Functional requirement | Business capability or control the programme must provide | 47 |
-| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 89 |
+| FR | Functional requirement | Business capability or control the programme must provide | 48 |
+| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 90 |
 | NFR | Non-functional requirement | Quality attribute classified by ISO/IEC 25010 category | 9 |
 | CON | Constraint | Imposed boundary from legislation, regulation, funding, case study or owner-directed exercise delivery | 7 |
 | RULE | Business rule | Standing policy or authority rule that outlives the solution; replaces the canonical BR prefix to avoid a clash with legacy BR-### aliases | 24 |
-| OD | Open decision | Unresolved company decision; not a requirement | 42 |
+| OD | Open decision | Unresolved company decision; not a requirement | 43 |
 
 Requirement rows remain grouped by business domain below, so a domain table
 can hold FR, RULE and NFR rows together. The prefix states the type.
@@ -1448,6 +1450,7 @@ authorize spending or supersede legal, resident or professional controls.
 | RULE-013 | BR-035 | Defect closure shall require remediation evidence and competent re-verification independent of the original installation decision where risk warrants it. | BG-006 | Quality, competent specialists, contractors | AC-044: Contractor self-certification alone cannot close a controlled defect. | Must |
 | FR-031 | BR-036 | Resident handover shall provide accessible operating guidance, warranties, aftercare contacts and confirmation of receipt. | BG-005, BG-009 | Residents, retrofit, contractors | AC-045: Closure is blocked until required handover evidence is accepted. | Must |
 | FR-032 | BR-037 | The pilot and each subsequent tranche shall have a lawful, proportionate in-use evaluation plan covering energy, comfort, affordability, damp, mould, ventilation, complaints and unintended outcomes. | BG-003, BG-009 | Residents, assets, safety, data protection | AC-046: Before release, owners approve follow-up methods and timing; reports disclose pending seasonal evidence and adverse outcomes. Material concerns trigger human review and remediation; sensors are not mandatory and a normal reading cannot override a resident report. | Must |
+| FR-048 | None | Where a home has consented, lawfully recorded in-use monitoring (for example humidity and temperature sensors), the programme shall capture each observation with its source, device-to-property mapping, calibration status and time as a retained record, separate from any derived analysis or decision. | BG-003, BG-009 | Assets, safety, residents, DPO, data owners | AC-090: Raw observations are retained unaltered with provenance and cannot be overwritten; rejected, duplicate, out-of-order or unmapped data raises an owned data-quality exception and never silently changes a property record. Derived signals are versioned, reproducible and labelled by data sufficiency, and a signal can only create a human condition-review task. A signal never diagnoses a hazard, starts or back-dates a statutory clock, releases a hold, overrides a resident report or changes investment ranking directly. Missing, stale or invalid data shows as insufficient and never lowers a home's priority or service. Resident choice to decline is recorded, honoured and never penalised (RULE-014, FR-032). | Should |
 | RULE-014 | BR-067 | Neither the absence of an AI flag nor the absence of a sensor alert shall count as evidence toward acceptance, closure, payment or claim, and sensor data shall inform a decision only after it passes validity rules. | BG-003, BG-006, BG-007, BG-009 | Quality authority, finance, safety, residents, DPO, data owners | AC-047: A pack with no flags still needs human acceptance against a positive per-measure evidence checklist. Validity rules cover device-to-UPRN mapping, in-date calibration, gaps and clock drift, heating-season coverage and pre-retrofit baseline status; invalid or missing data shows as "insufficient", never "normal". Reports disclose homes with no baseline. Sensor use needs an approved lawful basis and DPIA, and residents can decline. Data owners set the tolerances. | Must |
 
 ### Data, Audit and Reporting
@@ -1800,6 +1803,7 @@ continues. No result automatically activates a live control.
 | OD-40 | Ratify the configurable no-access threshold and event codes, counting only while a case is active and resetting only on human case closure; name the policy/configuration owner and approve change, audit and resident-review controls | Housing and Repairs leads, with Resident Engagement review and Programme/Digital input | Blocks operational use of RULE-006 |
 | OD-41 | Validate the journey atlas stages, pains, gains and handoffs through voluntary, accessible research with real residents, staff, contractors and representatives, including declined or deferred work, failed visits, reopened defects and non-digital households | Resident Engagement and Programme, with Data and Performance input | Blocks use of journey claims as company facts or targets; does not block the exercise demonstrator |
 | OD-42 | Approve how representative authority is evidenced, reviewed, revoked and retained, and which channels may record it | DPO, Legal and Resident Engagement | Blocks operational use of FR-045 with real residents |
+| OD-43 | Confirm the actual in-use monitoring inventory and ownership: device types, count, protocol, sampling cadence, device-to-property mapping and calibration owner, lawful basis and DPIA, resident choice, retention, freshness and gap rules, analysis windows and thresholds, and the operational review owner | Assets, Building Safety, DPO and data owners, with Digital input | Blocks operational use of FR-048 with real data; does not block the simulator exercise |
 
 ### Owner Direction and Company Role-Profile Challenge (2026-10-04)
 
@@ -1886,7 +1890,7 @@ actual executive authority.
 On 20 September 2026, the 25 decisions then open (OD-01 to OD-25) were
 reviewed in one TypeSafe System One request using `jev-1.13.0`. The full BRD
 and its evidence-classification rule were supplied as shared state. OD-26 to
-OD-42 were added later and have not been through this review. Each decision
+OD-43 were added later and have not been through this review. Each decision
 received:
 
 * A Choice judgment on whether it was resolved by company evidence, supported
@@ -1947,21 +1951,21 @@ Acceptance criteria are not yet written in Given/When/Then form.
 | --- | --- | --- | --- |
 | BG-001 | FR-033, FR-035, FR-042 | RULE-011 | NFR-008 |
 | BG-002 | FR-005, FR-019, FR-020, FR-021, FR-022, FR-033, FR-035 | RULE-007, RULE-011, RULE-016, RULE-019, RULE-020 | None |
-| BG-003 | FR-001, FR-002, FR-003, FR-004, FR-007, FR-008, FR-009, FR-010, FR-016, FR-029, FR-030, FR-032, FR-033, FR-035, FR-036, FR-037, FR-038, FR-039, FR-040, FR-043, FR-044 | RULE-001, RULE-003, RULE-012, RULE-014, RULE-015, RULE-017, RULE-018, RULE-020, RULE-021, RULE-022, RULE-024 | NFR-003, NFR-004, NFR-009 |
+| BG-003 | FR-001, FR-002, FR-003, FR-004, FR-007, FR-008, FR-009, FR-010, FR-016, FR-029, FR-030, FR-032, FR-033, FR-035, FR-036, FR-037, FR-038, FR-039, FR-040, FR-043, FR-044, FR-048 | RULE-001, RULE-003, RULE-012, RULE-014, RULE-015, RULE-017, RULE-018, RULE-020, RULE-021, RULE-022, RULE-024 | NFR-003, NFR-004, NFR-009 |
 | BG-004 | FR-001, FR-002, FR-003, FR-004, FR-016, FR-033, FR-036, FR-038, FR-039, FR-040 | RULE-002, RULE-003, RULE-018, RULE-021, RULE-024 | NFR-004, NFR-009 |
 | BG-005 | FR-008, FR-011, FR-012, FR-013, FR-014, FR-015, FR-016, FR-031, FR-033, FR-034, FR-036, FR-037, FR-040, FR-041, FR-042, FR-043, FR-044, FR-045, FR-046, FR-047 | RULE-005, RULE-006, RULE-012, RULE-018, RULE-020, RULE-022, RULE-024 | NFR-001, NFR-002, NFR-003, NFR-005, NFR-006, NFR-007, NFR-008, NFR-009 |
 | BG-006 | FR-005, FR-006, FR-007, FR-008, FR-009, FR-010, FR-019, FR-021, FR-022, FR-028, FR-029, FR-030, FR-033, FR-036, FR-038, FR-040, FR-043, FR-044, FR-046, FR-047 | RULE-004, RULE-007, RULE-008, RULE-012, RULE-013, RULE-014, RULE-015, RULE-017, RULE-018, RULE-019, RULE-020, RULE-021, RULE-024 | NFR-002, NFR-005, NFR-006, NFR-007 |
 | BG-007 | FR-023, FR-024, FR-025, FR-026, FR-027, FR-030, FR-033, FR-036, FR-038, FR-039, FR-040, FR-041, FR-042 | RULE-004, RULE-009, RULE-010, RULE-014, RULE-015, RULE-018, RULE-021 | None |
 | BG-008 | FR-022, FR-025, FR-027, FR-033, FR-035, FR-043 | RULE-008, RULE-010, RULE-011, RULE-012, RULE-016, RULE-020 | NFR-003, NFR-005, NFR-006, NFR-007 |
-| BG-009 | FR-012, FR-015, FR-020, FR-021, FR-029, FR-031, FR-032, FR-033, FR-037, FR-041, FR-042, FR-043, FR-045, FR-046, FR-047 | RULE-005, RULE-006, RULE-014, RULE-019, RULE-022 | NFR-008, NFR-009 |
+| BG-009 | FR-012, FR-015, FR-020, FR-021, FR-029, FR-031, FR-032, FR-033, FR-037, FR-041, FR-042, FR-043, FR-045, FR-046, FR-047, FR-048 | RULE-005, RULE-006, RULE-014, RULE-019, RULE-022 | NFR-008, NFR-009 |
 | BG-010 | FR-003, FR-006, FR-016, FR-017, FR-018, FR-033, FR-034, FR-038, FR-039, FR-040, FR-041, FR-044, FR-045 | RULE-003, RULE-008, RULE-021 | NFR-004, NFR-005, NFR-006, NFR-007, NFR-009 |
 | BG-011 | FR-010, FR-022, FR-033, FR-041 | RULE-016, RULE-019 | NFR-009 |
 | BG-012 | FR-004, FR-025, FR-026, FR-027, FR-033, FR-036, FR-038, FR-039, FR-042, FR-043, FR-044 | RULE-016, RULE-018, RULE-019, RULE-020, RULE-021, RULE-022 | NFR-004, NFR-005, NFR-006, NFR-007 |
 
 ### FR-to-AC and FR-to-BG Coverage
 
-47 of 47 functional requirements have at least one acceptance criterion
-(100.0%, against the 80.0% threshold). 47 of 47 link to at least one business
+48 of 48 functional requirements have at least one acceptance criterion
+(100.0%, against the 80.0% threshold). 48 of 48 link to at least one business
 goal (100.0%, against the 100.0% target). Coverage shows that a link exists,
 not that the linked goal or criterion has been validated.
 
@@ -1999,6 +2003,7 @@ not that the linked goal or criterion has been validated.
 | FR-030 | BR-034 | AC-043 | BG-003, BG-006, BG-007 |
 | FR-031 | BR-036 | AC-045 | BG-005, BG-009 |
 | FR-032 | BR-037 | AC-046 | BG-003, BG-009 |
+| FR-048 | None | AC-090 | BG-003, BG-009 |
 | FR-033 | BR-041 | AC-051 | All (BG-001, BG-002, BG-003, BG-004, BG-005, BG-006, BG-007, BG-008, BG-009, BG-010, BG-011, BG-012) |
 | FR-034 | BR-042 | AC-052, AC-080, AC-081 | BG-005, BG-010 |
 | FR-035 | BR-045 | AC-055 | BG-001, BG-002, BG-003, BG-008 |
@@ -2035,7 +2040,7 @@ verified by the record named in the Verification column.
 | RULE-011 | BR-030 | FR-025 | AC-037 |
 | RULE-012 | BR-031 | FR-025, FR-033 | AC-038 |
 | RULE-013 | BR-035 | FR-029, FR-030 | AC-044 |
-| RULE-014 | BR-067 | FR-028, FR-029 | AC-047 |
+| RULE-014 | BR-067 | FR-028, FR-029, FR-048 | AC-047, AC-090 |
 | RULE-015 | BR-038 | None | AC-048; Data-owner register approved by the executive team and data governance (OD-03) |
 | RULE-016 | BR-043 | None | AC-053; Readiness decision record approved by the executive sponsor |
 | RULE-017 | BR-044 | FR-007, FR-010 | AC-054 |
@@ -2214,8 +2219,9 @@ licenses mock substitution or silently waives spend controls.
 The 2026-10-14 candidate amendment (v0.17.0) follows the
 [customer journey atlas](../reference/research/ux/customer-journeys/customer-journey-atlas.md),
 the updated addendum and the retained v0.16.0 owner direction. It adds FR-045
-to FR-047, AC-087 to AC-089, OD-41 and OD-42, and refines AC-011, AC-023 and
-AC-065. The atlas is role-instrument desk research; no resident, staff or
+to FR-048, AC-087 to AC-090, OD-41 to OD-43, and refines AC-011, AC-023 and
+AC-065. FR-048 and OD-43 capture in-use monitoring (IoT) data from the owner request and the
+[sensor data-flow design in ADR 0002](../adrs/0002-pilot-readiness-architecture.md); the BRD names no device or platform. The atlas is role-instrument desk research; no resident, staff or
 contractor was observed, and no company fact, target or approval follows. The
 Zava naming, five-assistant operator evidence and draft-experiment closure in
 the addendum are recorded there and in the PRD and ADRs, because they change
@@ -2228,7 +2234,7 @@ decision-model experiment boundary. See the addendum's Subsequent Application
 Exercise Builds and the dated model/simplicity syntheses. These are
 exercise-owner decisions and reported technical observations, not company
 facts, new regulatory claims, approved BRD targets or measured business benefit.
-Counts are 47 FRs, 89 ACs, 9 NFRs, 7 constraints, 24 rules and 42 open decisions; existing
+Counts are 48 FRs, 90 ACs, 9 NFRs, 7 constraints, 24 rules and 43 open decisions; existing
 functional IDs and human authority boundaries are retained. Fresh full-BRD
 quality/business review remains required; RPI outcome review does not ratify
 BG-011 or close the formal approval gate.

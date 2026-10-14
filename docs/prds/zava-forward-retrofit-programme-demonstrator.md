@@ -932,6 +932,7 @@ BRD and PRD numbers differ, so always cite the document:
 | AC-011 reuse never transfers approval | AC-011 |
 | AC-023 purpose-scoped reuse | AC-035 (changed safe contact or consent stops reuse) |
 | AC-065 owned review and challenge | Deferred; no PRD requirement covers the nomination challenge (BRD FR-037) |
+| FR-048, AC-090 (Should) | Not yet a PRD requirement; the simulator-only sensor design is in [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) and needs a PRD FR and AC before build |
 | OD-41, OD-42 | Deferred to Open Questions; no resident, staff or contractor validation yet |
 
 Historical approval is not inherited.
