@@ -2311,3 +2311,33 @@ metadata when the knowledge base was created.
   No new legal, funding or business-outcome claim, cloud/tenant/model
   operation or spending authority. Original case, owner memory, regulatory
   snapshots, runtime and infrastructure code remain unchanged.
+
+## [2026-10-14] query | All-user journeys and bounded agent opportunities
+
+* Owner requested original/addendum review and contributions from all
+  nine `company-*` research agents. Published the
+  [customer journey atlas](./research/ux/customer-journeys/customer-journey-atlas.md)
+  and its linked Assets, Programme, Safety, Finance, Procurement/Suppliers,
+  Resident Engagement, Frontline, Data/Performance and Executive Reviewer
+  contributions under `research/ux/customer-journeys/`.
+* Filed 28 stage-based maps and nomination/source-change subjourneys,
+  including motivations, pains, desired gains, channels, handoffs,
+  exceptions, practical and imaginative requests, approval boundaries,
+  manual fallback, non-AI comparators and 24 opportunity hypotheses.
+  Five connected learning bundles count review, correction, resident
+  burden and whole-life cost rather than agent actions.
+* Executive reconciliation added leasehold-service workflow and corrected
+  controller accountability, all-contract participation, owner-reported
+  award/hazard touchpoints and later-only portfolio AI. No corporate
+  delegation, user observation, target ratification or achieved gain
+  follows from a role-agent contribution.
+* Preserved research snapshot 7b5807c and reconciled publication against
+  main snapshot d931066: current Zava names/source paths, five-assistant
+  operator evidence, Decision 1 contracts and draft carry-forward limits.
+  Normal assistant authority/proactive scans remain off; deterministic
+  supervision and independent resident/safety/professional/Finance
+  decisions remain. Publication does not imply human or benefit acceptance.
+* Updated this index and the addendum's service-design section. Original
+  case, owner memory, regulatory snapshots, runtime and infrastructure
+  are unchanged. No cloud/model action, real data publication, new legal
+  currentness check, spending or operational approval.
