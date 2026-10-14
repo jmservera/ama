@@ -93,6 +93,7 @@ Decisions below fix those mechanisms, not raw capacity.
 | Field visibility | One server-side projection layer, default deny, per role and per field; contractor view has no vulnerability reason in any API, export, search, audit view or AI prompt | PR-002 enforced in one place and tested |
 | Ranking | Deterministic function of case data and a versioned policy file, stored as a ranking snapshot with reason codes | PR-006 |
 | AI prioritisation | Separate recommendation record, never read by the ranking function or any queue | PR-007, PR-008 |
+| Sensor observations | Simulator-only source for the demonstration; validate and append readings in Azure SQL, derive versioned deterministic review signals, and reuse the map/review queue. No IoT Hub/Event Hubs tier until a real device inventory, integration and throughput need are established | Three observations per simulated day do not justify a separate streaming estate; raw readings are evidence, not diagnoses or investment scores |
 | Five reactive/proactive assists | Shared versioned proposal service in the existing MVP API, with SQL-owned deduplication/reservations/fenced leases; bounded automatic execution and recipient-compatible evidence | PRD FR-047/AC-058 to AC-061; no separate estate, model authority or domain approval |
 | Map | Server-side bounding-box queries with grid clustering by zoom, same filter object as the list, licensed tile provider | PR-005 |
 | Deployment | Two or more replicas, zone redundant where available, `uksouth`, hardened image, scan and tests in CI | No state on the container; fixes the honesty gap |
@@ -478,6 +479,11 @@ separate recommendation that never feeds back.
 
 Ranking:
 
+* Raw sensor readings and derived sensor signals do not directly change the
+  investment ranking. A valid, approved trend may create a separately owned
+  `SENSOR_REVIEW_DUE` task in the condition-assessment queue. Only a
+  human-verified finding may be considered in a later, approved ranking-policy
+  version.
 * The policy is a versioned file in the repository (and a `policy_version`
   row) with a named owner field, an effective date, a content hash and
   the rule order. Changing it creates a new version; old versions are kept
@@ -556,6 +562,12 @@ Proposal:
   with focusable links and counts. This closes the focus gap recorded in the
   gap analysis and is the primary accessible route (NFR-001).
 * Marker colour meanings stay as in the MVP; the colour is never the only cue.
+* An optional sensor overlay uses the same bounding-box, filters, role checks
+  and grid aggregation. Clusters expose counts of homes due for human review
+  and homes with insufficient sensor data; individual points expose only a
+  categorical state. Raw readings and device identifiers are available only
+  in an authorised property detail view, not in map tiles or cluster payloads.
+  The accessible list mirrors the overlay and its status text.
 * Tiles: use a licensed provider. Proposal: Azure Maps render tiles with
   Entra authentication, because it stays in the Microsoft tenant and keeps the
   subscription and data terms in one place. Alternative: Ordnance Survey Maps
@@ -574,6 +586,99 @@ Trade-offs:
 | Vector tiles generated per filter | Smooth | Heavy infrastructure for one team | Rejected |
 | Continue OSM public tiles | Free | Policy allows light use only; not for production traffic | Demo only |
 | Self-hosted tiles | Control | Operations burden | Not now |
+
+### Sensor Data Capture, Analysis and Map
+
+This is a proposed non-production design for the AMA demonstration, not an
+inventory of Zava North Homes' equipment or an approved production integration.
+The only assumed sensor types are humidity and temperature, with three
+observations per configured sensor per simulated day. Device count, real
+sampling cadence, protocol, calibration, data owner, lawful basis, retention
+and operational thresholds remain unknown. It aligns with BRD RULE-014 and
+AC-047: invalid or missing measurements are insufficient, a normal reading
+does not prove quality, and residents may decline sensor use subject to the
+approved data-protection basis.
+
+The demonstration path is a seeded simulator that sends constructed readings
+through the same server-side ingestion contract intended for a future
+authenticated adapter. The API validates schema version, stable reading ID
+(unique within a sensor), sensor-to-property mapping and its effective dates,
+units, UTC observation time, receipt time, duplicate/out-of-order status,
+device calibration status and configured plausibility limits. The sensor and
+reading IDs form an idempotency key. Accepted readings are appended; rejected
+or unmapped inputs create an owned data-quality exception and never silently
+update property condition. The simulator is explicitly identified by source
+type, scenario and seed and is not exposed as a device or resident system.
+There is no public unauthenticated ingestion endpoint.
+
+Keep observation, derived analysis and business decisions separate:
+
+| Record | Proposed content | Authority |
+| --- | --- | --- |
+| `sensor_mapping` | Sensor identifier, UPRN, optional approved zone, effective dates, device status and calibration evidence reference | Data/device owner confirms mapping and status; do not place resident identity in the mapping |
+| `sensor_reading` | Stable reading ID, sensor ID, observed/received timestamps, relative humidity percentage, temperature in degrees C, source/schema version, quality status and optional simulator scenario/seed | Append-only raw observation; never overwrites a survey, resident report or approved condition |
+| `sensor_analysis` | Sensor/property, analysis window, expected/valid sample counts, latest valid time, completeness, derived trend category, analysis/rule version and run ID | Deterministic derived summary; reproducible from retained readings and versioned rules. Preserve sensor-level results; do not average multiple devices into a property value without an approved aggregation rule |
+| `sensor_review_task` | Trigger reason, evidence references, owning queue, status and human disposition | Human review record; cannot close or downgrade a hazard or safety hold |
+
+At this cadence, the current API and SQL store can validate, persist and
+calculate summaries without a separate streaming broker or time-series
+service. An idempotent API operation accepts simulator batches; a scheduled
+completeness pass identifies missing or stale expected readings. A later
+device adapter must authenticate the source independently and call the same
+contract. Review the ingestion topology only after actual device protocols,
+delivery guarantees, device counts, latency needs and operating ownership are
+known. Do not add IoT Hub or Event Hubs solely for the demo.
+
+Analysis checks data quality before applying a trend rule. Completeness is
+measured against the demonstration cadence of three readings per simulated
+day. A versioned configuration defines the analysis window and any
+humidity/temperature conditions; for example, a synthetic scenario can
+exercise repeated elevated humidity observations with temperature as context.
+No numeric threshold or window is asserted here. The AMA simulator may use
+explicitly fictional scenario settings to exercise the rule. Missing samples,
+stale data, invalid mapping/calibration, clock problems or invalid units
+produce `INSUFFICIENT`, not a green/normal state. No AI is used to calculate
+the rule or change ranking. Raw readings are not placed in AI prompts or
+diagnostic telemetry; a later AI use would need a separately approved purpose,
+field access and evaluation.
+
+The map adds a separately selectable sensor layer to the existing server-side
+bounding-box and grid-cluster API. At portfolio zoom it shows counts by
+`REVIEW_DUE`, `INSUFFICIENT` and `NO_REVIEW_SIGNAL`; the last label means only
+that no configured rule triggered on sufficient data, not that the home is
+safe or damp-free. At property zoom it shows the latest valid humidity and
+temperature, timestamps, valid/expected sample count, trend window,
+provenance, calibration/mapping status and rule version to authorised roles.
+If the latest valid observation is stale, it is labelled with its age and is
+not presented as a current condition.
+The map never displays a health diagnosis, resident identity or raw sensor
+history in cluster responses. Status text and the adjacent list/table remain
+available without relying on marker colour or location.
+
+Prioritisation has two stages. A valid, owner-approved sensor rule may add
+`SENSOR_REVIEW_DUE` to the condition-assessment queue so a person can verify
+the evidence; existing safety holds, statutory response handling and resident
+reports remain independent and take precedence. The signal does not start or
+back-date a statutory clock, diagnose a hazard, release a hold, or directly
+change the investment ranking. Only a human-verified finding may enter a
+subsequent, approved version of the deterministic investment policy with
+published reason codes. Absence of a sensor, stale data, insufficient coverage
+or resident decline must never lower a home's ranking or suppress service.
+
+Before any non-synthetic use, the DPO, Legal, data owner, Asset and competent
+safety/technical roles must confirm the lawful basis, DPIA, resident choice,
+field permissions, retention, calibration/maintenance responsibility,
+device-to-property mapping, freshness and gap rules, analysis window and
+thresholds, handoff owner and evaluation evidence. This ADR does not grant
+those approvals.
+
+The simulator acceptance checks should include three generated observations
+per configured sensor per simulated day; duplicate, out-of-order, missing,
+stale, mis-mapped, invalid-unit and uncalibrated inputs; deterministic replay
+under a fixed rule version; map/list count parity; visible synthetic provenance;
+human task creation; and proof that absence or a no-trigger sensor state cannot
+alter resident reports, safety holds or investment ranking, and that an AI
+recommendation cannot change those controls or ranking.
 
 ### 6. Deployment: replicas, region, hardening and CI
 
@@ -669,6 +774,11 @@ time capture.
   Article 17(3). Legal to set the legal retention period (PR-001, PR-003,
   DH-007).
 * Named owner of the ranking policy and sign-off of the first rule order.
+* Sensor/device inventory, protocol, property mapping owner, calibration and
+  maintenance evidence, approved cadence, retention and data-protection basis.
+* Competent owner-approved sensor validity/trend thresholds and review-window,
+  queue-ownership, triage and evaluation rules. Synthetic simulator settings
+  do not resolve these operational decisions.
 * The roles that have a need to see a vulnerability reason, and the allow and
   deny matrix (OD-14, OD-19).
 * Contractor identity model (B2B guests or another route) and tenant owner
