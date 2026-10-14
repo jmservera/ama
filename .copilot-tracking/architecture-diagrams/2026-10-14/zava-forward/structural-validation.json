@@ -1,0 +1,43 @@
+{
+  "sourceCommit": "062434a1fedbf6a87d1374c767c2bf0a11491ab6",
+  "scenes": [
+    {
+      "name": "executive",
+      "elements": 57,
+      "nodes": 7,
+      "flows": 6,
+      "icons": 5,
+      "sourceCommit": "062434a1fedbf6a87d1374c767c2bf0a11491ab6",
+      "images": 5,
+      "nativeIntegrity": "passed",
+      "iconIntegrity": "passed",
+      "browserLayout": "passed",
+      "hashes": {
+        "zava-forward-executive-architecture.excalidraw": "ffb36546a15f4c85acc19b9ec796e4d1aad4079641f1c8afe5b7788989e7d534",
+        "zava-forward-executive-architecture.svg": "03e21199b805377b9bf6bf4e75e6fa351743975c8ad44d8d6807edd89a06001d",
+        "zava-forward-executive-architecture.png": "fb153c4bca2d84f574a126fd40166642e47041b25441f5b553eadd3d4bc97a56"
+      }
+    },
+    {
+      "name": "technical",
+      "elements": 194,
+      "nodes": 24,
+      "flows": 27,
+      "icons": 20,
+      "sourceCommit": "062434a1fedbf6a87d1374c767c2bf0a11491ab6",
+      "images": 26,
+      "nativeIntegrity": "passed",
+      "iconIntegrity": "passed",
+      "browserLayout": "passed",
+      "hashes": {
+        "zava-forward-technical-architecture.excalidraw": "52b69e918b6948714e0e9112852981c5aeef569e79129f3c1b9fa3e39c2ef589",
+        "zava-forward-technical-architecture.svg": "411aabfd50c4e40462a1876e5c9c2881d76483e171c97e81c3529f974f9a32cb",
+        "zava-forward-technical-architecture.png": "4dccbc97a5f8aaf15b12ecc4e44773df30edb14afcf7bfdc16c2317fd663901b"
+      }
+    }
+  ],
+  "officialIconFiles": 20,
+  "sourceReferences": 30,
+  "linksAndFragments": "passed",
+  "knowledgeLogPrefixPreserved": true
+}

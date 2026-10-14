@@ -1,0 +1,258 @@
+{
+  "working_path": "/home/azureuser/source/ama-wt-zava-challenge/.copilot-tracking/ppt/2026-10-14/zava-forward-architecture-refresh/slide-deck/zava-forward-executive-draft.pptx",
+  "sha256": "f14ee526ef93e9412b7b3409245307a8fd5cd3b7b3e52a21b6082d99527eb603",
+  "bytes": 607754,
+  "canonical_sha256": "7b25fd7e77d1ed7d9aa908cf3da429bcfeae104beadea5ac90c1e97dbc71fbb4",
+  "canonical_untouched": true,
+  "dimensions_identical": true,
+  "dimensions_emu": [
+    12191695,
+    6858000
+  ],
+  "originals_1_22_identity_order_unchanged": true,
+  "original_ids": [
+    [
+      256,
+      "/ppt/slides/slide1.xml"
+    ],
+    [
+      257,
+      "/ppt/slides/slide2.xml"
+    ],
+    [
+      258,
+      "/ppt/slides/slide3.xml"
+    ],
+    [
+      259,
+      "/ppt/slides/slide4.xml"
+    ],
+    [
+      260,
+      "/ppt/slides/slide5.xml"
+    ],
+    [
+      261,
+      "/ppt/slides/slide6.xml"
+    ],
+    [
+      262,
+      "/ppt/slides/slide7.xml"
+    ],
+    [
+      263,
+      "/ppt/slides/slide8.xml"
+    ],
+    [
+      264,
+      "/ppt/slides/slide9.xml"
+    ],
+    [
+      265,
+      "/ppt/slides/slide10.xml"
+    ],
+    [
+      266,
+      "/ppt/slides/slide11.xml"
+    ],
+    [
+      267,
+      "/ppt/slides/slide12.xml"
+    ],
+    [
+      277,
+      "/ppt/slides/slide13.xml"
+    ],
+    [
+      268,
+      "/ppt/slides/slide14.xml"
+    ],
+    [
+      269,
+      "/ppt/slides/slide15.xml"
+    ],
+    [
+      270,
+      "/ppt/slides/slide16.xml"
+    ],
+    [
+      271,
+      "/ppt/slides/slide17.xml"
+    ],
+    [
+      272,
+      "/ppt/slides/slide18.xml"
+    ],
+    [
+      273,
+      "/ppt/slides/slide19.xml"
+    ],
+    [
+      274,
+      "/ppt/slides/slide20.xml"
+    ],
+    [
+      275,
+      "/ppt/slides/slide21.xml"
+    ],
+    [
+      276,
+      "/ppt/slides/slide22.xml"
+    ]
+  ],
+  "candidate_ids": [
+    [
+      256,
+      "/ppt/slides/slide1.xml"
+    ],
+    [
+      257,
+      "/ppt/slides/slide2.xml"
+    ],
+    [
+      258,
+      "/ppt/slides/slide3.xml"
+    ],
+    [
+      259,
+      "/ppt/slides/slide4.xml"
+    ],
+    [
+      260,
+      "/ppt/slides/slide5.xml"
+    ],
+    [
+      261,
+      "/ppt/slides/slide6.xml"
+    ],
+    [
+      262,
+      "/ppt/slides/slide7.xml"
+    ],
+    [
+      263,
+      "/ppt/slides/slide8.xml"
+    ],
+    [
+      264,
+      "/ppt/slides/slide9.xml"
+    ],
+    [
+      265,
+      "/ppt/slides/slide10.xml"
+    ],
+    [
+      266,
+      "/ppt/slides/slide11.xml"
+    ],
+    [
+      267,
+      "/ppt/slides/slide12.xml"
+    ],
+    [
+      277,
+      "/ppt/slides/slide13.xml"
+    ],
+    [
+      268,
+      "/ppt/slides/slide14.xml"
+    ],
+    [
+      269,
+      "/ppt/slides/slide15.xml"
+    ],
+    [
+      270,
+      "/ppt/slides/slide16.xml"
+    ],
+    [
+      271,
+      "/ppt/slides/slide17.xml"
+    ],
+    [
+      272,
+      "/ppt/slides/slide18.xml"
+    ],
+    [
+      273,
+      "/ppt/slides/slide19.xml"
+    ],
+    [
+      274,
+      "/ppt/slides/slide20.xml"
+    ],
+    [
+      275,
+      "/ppt/slides/slide21.xml"
+    ],
+    [
+      276,
+      "/ppt/slides/slide22.xml"
+    ],
+    [
+      278,
+      "/ppt/slides/slide23.xml"
+    ],
+    [
+      279,
+      "/ppt/slides/slide24.xml"
+    ]
+  ],
+  "only_new_slides": [
+    23,
+    24
+  ],
+  "preserved_parts": {
+    "ppt/slideMasters/slideMaster1.xml": true,
+    "ppt/slideMasters/_rels/slideMaster1.xml.rels": true,
+    "ppt/slideLayouts/slideLayout1.xml": true,
+    "ppt/slideLayouts/_rels/slideLayout1.xml.rels": true,
+    "ppt/slideLayouts/slideLayout2.xml": true,
+    "ppt/slideLayouts/_rels/slideLayout2.xml.rels": true,
+    "ppt/slideLayouts/slideLayout3.xml": true,
+    "ppt/slideLayouts/_rels/slideLayout3.xml.rels": true,
+    "ppt/slideLayouts/slideLayout4.xml": true,
+    "ppt/slideLayouts/_rels/slideLayout4.xml.rels": true,
+    "ppt/slideLayouts/slideLayout5.xml": true,
+    "ppt/slideLayouts/_rels/slideLayout5.xml.rels": true,
+    "ppt/slideLayouts/slideLayout6.xml": true,
+    "ppt/slideLayouts/_rels/slideLayout6.xml.rels": true,
+    "ppt/slideLayouts/slideLayout7.xml": true,
+    "ppt/slideLayouts/_rels/slideLayout7.xml.rels": true,
+    "ppt/slideLayouts/slideLayout8.xml": true,
+    "ppt/slideLayouts/_rels/slideLayout8.xml.rels": true,
+    "ppt/slideLayouts/slideLayout9.xml": true,
+    "ppt/slideLayouts/_rels/slideLayout9.xml.rels": true,
+    "ppt/slideLayouts/slideLayout10.xml": true,
+    "ppt/slideLayouts/_rels/slideLayout10.xml.rels": true,
+    "ppt/slideLayouts/slideLayout11.xml": true,
+    "ppt/slideLayouts/_rels/slideLayout11.xml.rels": true,
+    "ppt/theme/theme1.xml": true,
+    "ppt/theme/theme2.xml": true,
+    "ppt/media/image1.png": true,
+    "ppt/media/image2.png": true
+  },
+  "all_preserved": true,
+  "map13_byte_equivalence": {
+    "ppt/slides/slide13.xml": false,
+    "ppt/notesSlides/notesSlide22.xml": true,
+    "ppt/slides/_rels/slide13.xml.rels": true
+  },
+  "map13_unchanged": false,
+  "map13_logical_retained": true,
+  "map13_notes_text_exact": true,
+  "retained_media": 2,
+  "added_media": [
+    "ppt/media/image10.png",
+    "ppt/media/image11.png",
+    "ppt/media/image12.png",
+    "ppt/media/image13.png",
+    "ppt/media/image3.png",
+    "ppt/media/image4.png",
+    "ppt/media/image5.png",
+    "ppt/media/image6.png",
+    "ppt/media/image7.png",
+    "ppt/media/image8.png",
+    "ppt/media/image9.png"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "slide_count": 22,
+  "notes_associations_pass": true,
+  "geometry_pass": true,
+  "rendered_text_pass": true,
+  "claim_checks_pass": true,
+  "package_integrity": {
+    "working_sha256": "7b25fd7e77d1ed7d9aa908cf3da429bcfeae104beadea5ac90c1e97dbc71fbb4",
+    "canonical_sha256": "7b25fd7e77d1ed7d9aa908cf3da429bcfeae104beadea5ac90c1e97dbc71fbb4",
+    "expected_canonical_sha256": "7b25fd7e77d1ed7d9aa908cf3da429bcfeae104beadea5ac90c1e97dbc71fbb4",
+    "canonical_unchanged": false,
+    "canonical_matches_expected": true,
+    "source_copy_matches_recorded": true,
+    "source_slide_count": 22,
+    "output_slide_count": 22,
+    "preserved_master_theme_layout_parts": {
+      "ppt/slideMasters/slideMaster1.xml": true,
+      "ppt/slideMasters/_rels/slideMaster1.xml.rels": true,
+      "ppt/slideLayouts/slideLayout1.xml": true,
+      "ppt/slideLayouts/_rels/slideLayout1.xml.rels": true,
+      "ppt/slideLayouts/slideLayout2.xml": true,
+      "ppt/slideLayouts/_rels/slideLayout2.xml.rels": true,
+      "ppt/slideLayouts/slideLayout3.xml": true,
+      "ppt/slideLayouts/_rels/slideLayout3.xml.rels": true,
+      "ppt/slideLayouts/slideLayout4.xml": true,
+      "ppt/slideLayouts/_rels/slideLayout4.xml.rels": true,
+      "ppt/slideLayouts/slideLayout5.xml": true,
+      "ppt/slideLayouts/_rels/slideLayout5.xml.rels": true,
+      "ppt/slideLayouts/slideLayout6.xml": true,
+      "ppt/slideLayouts/_rels/slideLayout6.xml.rels": true,
+      "ppt/slideLayouts/slideLayout7.xml": true,
+      "ppt/slideLayouts/_rels/slideLayout7.xml.rels": true,
+      "ppt/slideLayouts/slideLayout8.xml": true,
+      "ppt/slideLayouts/_rels/slideLayout8.xml.rels": true,
+      "ppt/slideLayouts/slideLayout9.xml": true,
+      "ppt/slideLayouts/_rels/slideLayout9.xml.rels": true,
+      "ppt/slideLayouts/slideLayout10.xml": true,
+      "ppt/slideLayouts/_rels/slideLayout10.xml.rels": true,
+      "ppt/slideLayouts/slideLayout11.xml": true,
+      "ppt/slideLayouts/_rels/slideLayout11.xml.rels": true,
+      "ppt/theme/theme1.xml": true,
+      "ppt/theme/theme2.xml": true
+    },
+    "all_theme_master_layout_parts_byte_identical": true,
+    "output_bytes": 419383
+  },
+  "shared_geometry": {
+    "default_threshold_findings": 180,
+    "severity_counts": {
+      "warning": 154,
+      "info": 26
+    },
+    "unresolved": 0,
+    "status": "Default heuristic is not claimed passed. Findings retained and individually classified.",
+    "overlay_policy": "Card/title/body overlay is intentional containment, never counted as a text collision; logo/backing likewise."
+  },
+  "contact_sheets": [
+    "slide-deck/validation/contact-01-06.jpg",
+    "slide-deck/validation/contact-07-12.jpg",
+    "slide-deck/validation/contact-13-18.jpg",
+    "slide-deck/validation/contact-19-22.jpg"
+  ]
+}

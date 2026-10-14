@@ -150,6 +150,12 @@ class SqlStore(Store):
         self.db.execute("PRAGMA journal_mode=WAL")
         self.db.execute("PRAGMA busy_timeout=5000")
 
+    def assistant_connection(self):
+        """A request/worker owns its connection; inference never owns the Store lock."""
+        db = sqlite3.connect(self.db_path, isolation_level=None)
+        db.execute("PRAGMA busy_timeout=5000")
+        return db
+
     def _create_schema(self):
         self.db.executescript(SCHEMA)
 
@@ -212,6 +218,10 @@ class SqlStore(Store):
                     self._meta_set("rank_policy", ranking.CURRENT["version"])
                     for s in src["staff"]:
                         self._insert_ignore("staff", ("email", "body"), (s["email"].lower(), json.dumps(s)))
+                    if "procurement" in src:
+                        self._meta_set("procurement", json.dumps(src["procurement"]))
+                    if src.get("as_of") and not os.environ.get("ZF_AS_OF"):
+                        self._meta_set("as_of", src["as_of"])
                     self._insert_ignore("meta", ("key", "value"), ("seq", "1"))
                     self._insert_ignore("audit_head", ("id", "count", "hash"), (1, 0, ledger.GENESIS))
                 self.db.execute("COMMIT")

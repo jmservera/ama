@@ -1,0 +1,16 @@
+{
+  "scene": "executive",
+  "elements": 57,
+  "texts": 32,
+  "images": 5,
+  "arrows": 6,
+  "textChanges": [],
+  "overflows": [],
+  "layoutFailures": [],
+  "missingImages": [],
+  "unboundArrows": [],
+  "dimensions": {
+    "width": "1920",
+    "height": "1260"
+  }
+}

@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-13
+ms.date: 2026-10-14
 ms.topic: reference
 ---
 
@@ -249,6 +249,24 @@ The dated MVP/architecture snapshots are supplemented by the
 and [ADR delivery delta](./adrs/0002-pilot-readiness-architecture.md#current-exercise-delivery-delta-2026-10-13).
 Historical `warm-*` deployments and `ca-properwarm-mvp` revisions remain
 their actual recorded identifiers, not retroactively renamed observations.
+The later [five-assistant handover](../infra/README.md#five-assistant-version-current-handover)
+supersedes the account-switch serving revision: image02 reached Azure, but
+ledger-specific startup DDL disabled assistance before any model call.
+Image03 corrects fresh ledger creation and the
+[existing generator](./reference/research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13)
+now prepares dated visits and nonempty operating queues. The owner permits
+replacing the synthetic database, not inventing consent, technical acceptance,
+payment or housing outcomes. The initial deletion was cancelled on 2026-10-13.
+On 2026-10-14 the owner explicitly reauthorized deletion/recreation and all
+remaining delivery. The enriched 980-case database is now seeded, with 38
+booked visits, restored ledger/serverless/backup/diagnostic settings and all
+11 tenant staff bindings; the prior exercise audit/recommendations were reset.
+Image05 now serves in revision `--0000012`. All five registered service paths
+returned distinct citation-validated ready proposals from actual Azure OpenAI,
+with five attempts/6884 tokens and persisted SQL evidence unchanged across
+an actual revision restart. Normal proactive/assistant authority remains off.
+This operator evidence is not a staff-authenticated user acceptance session,
+human source approval, semantic calibration or measured programme benefit.
 No new business requirement or customer fact follows, so the BRD remains
 unchanged. Product implications are in the
 [PRD review-learning disposition](./prds/zava-forward-retrofit-programme-demonstrator.md#review-learning-disposition);
@@ -278,8 +296,32 @@ uncertainty evidence; missing evidence remains Inconclusive or Not evaluated.
 Independent platform/control work need not wait for experiment completion.
 
 This direction revises the baseline, not the original case or historical
-v0.12.0 acceptance. BRD v0.16.0 remains draft; PRD v0.13.1 is a candidate
-for fresh requirements review and owner acceptance, not an inherited approval.
+v0.12.0 acceptance. BRD v0.16.0 remains draft; PRD v0.14.0, with 47 functional
+requirements and 61 acceptance criteria, is a candidate for fresh requirements
+review and owner acceptance, not an inherited approval.
+
+### Draft Experiment Retirement and Carry-Forward (2026-10-13)
+
+The [PM/UX closure review](./reference/research/gap-analysis-next-build.md#draft-experiment-closure-review-2026-10-13)
+recommends retiring historical #19/#24/#27 as learning after this capture
+merges and the owner authorizes closure. It preserves pinned evidence,
+bounded draft authority, exact-intent retry, independent handover
+reacceptance and owned resource boundaries. It does not accept their local
+apps, copy obsolete topology or authorize deletion of resources.
+
+#58 is not fully superseded: unique stock, connected home/building, form,
+event, portability and forecast journeys and later version-bound controls
+need explicit carry-forward, demonstrated replacement or owner-approved
+deferral. Keep the code draft and verify carried changes on the continuing
+current infrastructure with source/image/config/revision-bound evidence.
+#65 identity/welcome progress, old fixtures/tests and old inference/browser
+observations do not prove delivery or human acceptance of that unmerged work.
+The available four-arm MVE evidence remains proposed, not measured benefit. No new business
+fact, requirement, approval or weakening of resident/safety/financial
+authority follows; BRD v0.16.0 stays unchanged. The v0.13.2 intermediate PRD
+recorded evidence only; the current v0.14.0 candidate adds the five-assistant
+requirements without inheriting approval. Retirement and product/pilot/
+production acceptance are distinct.
 
 ## Zava Forward at Zava North Homes
 
@@ -651,6 +693,14 @@ AI must not diagnose hazards, decide that a statutory duty is satisfied,
 release a safety hold, approve professional work, infer consent, commit capital,
 award work, submit claims, accept quality, close complaints or defects, or use
 the absence of a sensor alert to contradict a resident.
+
+The [capstone process map](./capstone/deck/agents-in-retrofit-process.svg)
+shows the same bounded capabilities in their process stages, distinguishes
+staff-requested help from permitted event/scheduled review, and retains the
+human owner at every approval. Its [text equivalent and value tests](./capstone/README.md#agents-in-the-retrofit-process-2026-10-13)
+label all proactive deployment and improvement claims as proposed, not observed
+outcomes. Deterministic triggers/gates and the independent hazard route are
+not additional autonomous agents.
 
 ### Agentic Architecture Brief
 

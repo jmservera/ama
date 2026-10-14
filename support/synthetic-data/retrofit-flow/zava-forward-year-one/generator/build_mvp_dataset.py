@@ -2,7 +2,7 @@
 
 Runs the year-one simulation, gives every household, contractor and staff
 member a name, and places each home on a real address from the private
-stock-geography register. Dates are shifted so the data ends on today's date.
+stock-geography register. Dates are shifted to an explicit exercise date.
 
 The output (mvp/data/zavaforward.json) contains real OpenStreetMap addresses
 with invented residents. It is git-ignored and must stay on this machine.
@@ -15,6 +15,7 @@ import csv
 import json
 import os
 import random
+import sys
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 
@@ -27,6 +28,8 @@ from zf_names import STAFF_NAMES
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, *[".."] * 5))
 REGISTER = os.path.join(HERE, "..", "stock-geography", "private-north-east-stock-register.csv")
+sys.path.insert(0, os.path.join(REPO, "mvp"))
+from zf_mvp_coverage import enrich, receipt
 
 STAGE = {
     "Identified": "Home identified", "Lease review": "Checking lease", "Deferred (resequenced)": "Rescheduled",
@@ -120,7 +123,8 @@ class AddressPool:
         if flat_no:
             line1 = f"Flat {flat_no}, {line1}"
         return dict(line1=line1, town=base["address_locality"] or base["local_authority"], postcode=base["postcode"],
-                    area=base["local_authority"], lat=float(base["latitude"]), lon=float(base["longitude"]))
+                    area=base["local_authority"], lat=float(base["latitude"]), lon=float(base["longitude"]),
+                    stock_id=base["synthetic_home_id"])
 
 
 def shift(d, off):
@@ -135,6 +139,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=20260901)
     ap.add_argument("--out", default=os.path.join(REPO, "mvp", "data", "zavaforward.json"))
+    ap.add_argument("--as-of", type=date.fromisoformat, default=date.today())
     a = ap.parse_args()
     seed = a.seed
     rng = random.Random(seed)
@@ -148,9 +153,10 @@ def main():
         sim.at(c.identified, c, "h_identified")
     sim.run(SIM_START)
 
-    off = (date.today() - SNAP).days
+    off = (a.as_of - SNAP).days
     rec = Recorder(random.Random(seed + 1))
-    pool = AddressPool(load_register(), random.Random(seed + 2))
+    register = load_register()
+    pool = AddressPool(register, random.Random(seed + 2))
     haz_by = defaultdict(list)
     for h in sim.hazards:
         haz_by[h["cid"]].append(h)
@@ -206,7 +212,8 @@ def main():
             appts.append(dict(type=ap_["type"], date=shift(ap_["date"], off), slot=ap_["slot"],
                               outcome=OUTCOME.get(ap_["outcome"], ap_["outcome"]) if ap_["date"] <= SNAP else "Booked",
                               note=ap_["note"] if ap_["date"] <= SNAP else "",
-                              who=con["name"], person=names.operative(seed, c.supplier, c.cid)))
+                              who=names.contractor(ap_["supplier"])["name"],
+                              person=names.operative(seed, ap_["supplier"], c.cid)))
         hazards = []
         for h in haz_by.get(c.cid, []):
             if h["aware"] > SNAP:
@@ -243,6 +250,7 @@ def main():
             documents=documents,
             funding=dict(route=route or "Not decided", status=fstatus, reference="", draft="", approved_by=None),
             id=c.cid.replace("CAND-", "ZF-"), wave=c.wave, closed=closed, stage=stage,
+            synthetic_stock_anchor_id=addr["stock_id"],
             stage_since=shift(since, off), days_in_stage=days_in_stage,
             waiting_on=waiting, reason=reason,
             owner_code=owner_code, owner=owner["name"], owner_role=ROLE_TITLE[owner_code.split("-")[0]],
@@ -259,16 +267,29 @@ def main():
                                                  contact=names.operative(seed, c.supplier, c.cid)),
             decision=dict(status=decision, by=None, at=shift(dec, off) if dec and dec <= SNAP else None),
             funding_ok=fund_ok,
-            contacts=contacts, appointments=appts, hazards=hazards, history=[]))
+            contacts=contacts, appointments=appts, hazards=hazards,
+            history=[dict(at=shift(d, off), by="Synthetic source export", action=state,
+                          detail=cat, source="year-one simulation", is_synthetic=True)
+                     for d, state, cat in c.history if d <= SNAP]))
 
     staff = []
     for code in [x for x in staff_codes if x != "RLO-03"]:
         s = names.staff(code)
         staff.append(dict(code=code, name=s["name"], email=s["email"], role=ROLE_TITLE[code.split("-")[0]]))
-    out = dict(built=date.today().isoformat(), staff=staff, cases=cases)
-    os.makedirs(os.path.dirname(a.out), exist_ok=True)
+    out = dict(built=a.as_of.isoformat(), as_of=a.as_of.isoformat(),
+               is_synthetic=True, seed=seed, generator_version="operational-coverage-v1",
+               stock_link_kind="Source geography row; flats may share a building anchor, not unique stock-unit linkage.",
+               stock_register_rows=len(register), staff=staff, cases=cases)
+    orders = [(shift(d, off), cid.replace("CAND-", "ZF-"), supplier,
+               shift(sim.by_cid[cid].dates["install_complete"], off)
+               if sim.by_cid[cid].dates.get("install_complete", SNAP + timedelta(days=1)) <= SNAP else None)
+              for d, cid, supplier in sim.work_orders if d <= SNAP]
+    enrich(out, a.as_of, orders)
+    os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
     with open(a.out, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=1)
+    with open(a.out + ".coverage.json", "w", encoding="utf-8") as f:
+        json.dump(receipt(out), f, indent=2)
     open_cases = sum(not x["closed"] for x in cases)
     print(f"wrote {a.out}: {len(cases)} cases ({open_cases} open), {len(staff)} staff")
 

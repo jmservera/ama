@@ -1,0 +1,379 @@
+slide: 17
+title: Earn the next gate; do not repeat the last proof.
+section: Main
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EXECUTIVE PROPOSAL
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: Earn the next gate; do not repeat the last proof.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026  •  S07 / S09 / S10 / S11  •  Sources + status in notes
+  left: 0.55
+  top: 7.12
+  width: 11.4
+  height: 0.2
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 17 / 22
+  left: 12.0
+  top: 7.1
+  width: 0.78
+  height: 0.23
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-1-background
+  left: 0.55
+  top: 2.02
+  width: 2.8925
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-1-title
+  text: 1  Confirm
+  left: 0.73
+  top: 2.22
+  width: 2.5325
+  height: 0.73
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-1-body
+  text: 'Requirements,
+
+    owners, authority.'
+  left: 0.73
+  top: 3.12
+  width: 2.5325
+  height: 2.4200000000000004
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-2-background
+  left: 3.6625000000000005
+  top: 2.02
+  width: 2.8925
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-2-title
+  text: 2  Accept
+  left: 3.8425000000000007
+  top: 2.22
+  width: 2.5325
+  height: 0.73
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-2-body
+  text: 'Real staff/session,
+
+    source review, roles,
+
+    accessibility.'
+  left: 3.8425000000000007
+  top: 3.12
+  width: 2.5325
+  height: 2.4200000000000004
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-3-background
+  left: 6.775
+  top: 2.02
+  width: 2.8925
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-3-title
+  text: 3  Compare
+  left: 6.955
+  top: 2.22
+  width: 2.5325
+  height: 0.73
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-3-body
+  text: 'Semantics, net effort,
+
+    cost, recovery.'
+  left: 6.955
+  top: 3.12
+  width: 2.5325
+  height: 2.4200000000000004
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-4-background
+  left: 9.887500000000001
+  top: 2.02
+  width: 2.8925
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-4-title
+  text: 4  Decide
+  left: 10.0675
+  top: 2.22
+  width: 2.5325
+  height: 0.73
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-4-body
+  text: 'Continue,
+
+    simplify or stop.'
+  left: 10.0675
+  top: 3.12
+  width: 2.5325
+  height: 2.4200000000000004
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: boundary-background
+  left: 0.55
+  top: 6.2
+  width: 12.23
+  height: 0.6
+  fill: '#E5B96A'
+  line_color: '#E5B96A'
+  line_width: 0
+- type: textbox
+  name: boundary-text
+  text: Recorded operator proof is an input — not production approval.
+  left: 0.73
+  top: 6.3
+  width: 11.87
+  height: 0.45999999999999996
+  font: Liberation Sans
+  font_size: 20
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+speaker_notes: "SLIDE 17 — Earn the next gate; do not repeat the last proof.\nTopic sentinel: gates\n\
+  Message: proceed from delivered technical evidence to human and value evidence.\nStatus: strategist-recommended\
+  \ proposal; refreshed 14 October 2026.\n\n\"Historical v0.12 exercise approval does not approve the\
+  \ v0.14\n  candidate. Confirm requirements and actual delegations. RV-001 requires\n  representative\
+  \ staff with real sessions, roles, source verification and\n  accessible manual/failure paths. RV-002\
+  \ requires semantic grading and paired\n  human-effort/quality/cost evidence. Expand restart proof to\
+  \ the necessary\n  recovery/restore evidence where appropriate. Return with explicit passed,\n  failed,\
+  \ blocked and not-run results; the owner then decides within a\n  separately scoped authority. Do not\
+  \ reopen delivered technical work merely\n  to simulate acceptance.\"\n* Transition: \"Here is the decision\
+  \ I ask this council to make.\"\n\nSources — workspace-relative paths, section and evidence status;\
+  \ as read 14 October 2026:\nS07: docs/prds/zava-forward-retrofit-programme-demonstrator.md, v0.14 front\
+  \ matter; component contracts; threat model; Five Reactive and Proactive Assistants; orchestration;\
+  \ evaluation; current handoff. Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and\
+  \ amended owner acceptance open; CON-009/AC-057 full acceptance not passed.\nS09: infra/README.md, Five-assistant\
+  \ version: current handover. Status: Exact serving/source/model/SQL/restart receipt and authority-off\
+  \ state, 14 October; no fresh cloud inspection in this task.\nS10: .copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md,\
+  \ Completed Work; Validation; RV-001/RV-002; Outcome. Status: Technical Review Complete / Residual work,\
+  \ not blanket product conformance.\nS11: mvp/README.md, Honest limits; Five retrofit assistants; Operator\
+  \ authority; current delivery paragraphs; mvp/zavaforward_mvp/assistants.py, REGISTRY/RULES/capture/eligible/review.\
+  \ Status: Source and documented implementation; captured metadata/category citations, not unrestricted\
+  \ document reading, human source review or semantic entailment.\n\nPlanned allocation: 45 seconds; not\
+  \ rehearsed."

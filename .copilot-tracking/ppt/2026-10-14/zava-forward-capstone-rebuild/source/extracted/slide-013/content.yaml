@@ -1,0 +1,121 @@
+slide: 13
+title: ''
+elements:
+- type: image
+  path: images/image-01.png
+  left: 1.333
+  top: 0.5
+  width: 10.667
+  height: 6.0
+  name: Agents in the retrofit process diagram
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 6.8
+  width: 12.0
+  height: 0.2
+  text: 13 / PROPOSED DESIGN; PROACTIVE WATCHERS NOT CLAIMED DEPLOYED / E05/E06/E11
+    / BENEFITS UNMEASURED
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Liberation Sans
+  font_size: 9
+  font_color: '#183A31'
+  z_order: 1
+- type: shape
+  shape: rectangle
+  left: 11.983
+  top: 0.5
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 1.0
+  z_order: 2
+- type: image
+  path: images/image-02.png
+  left: 11.983
+  top: 0.5
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 3
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'Suggested talk track, about 45 to 60 seconds (not a timed rehearsal):
+  Five bounded assists sit on one controlled journey. Each works when someone asks.
+  Where permitted, each can also raise a review item on its own. The workflow decides
+  what happens next; people decide everything that matters.
+
+
+  Text equivalent of the diagram (proposed design, not deployed):
+
+  1. Choose homes, Stock Prioritisation. On request: explain sourced candidate evidence.
+  Proactive review: new conflicts or missing stock facts. Data owners verify; Assets
+  approves policy. AI does not rank or change queues. Measure reconciliation effort,
+  critical conflicts and viability.
+
+  2. Assess and design, Assessment Preparation. On request: prepare a sourced survey
+  or design pack. Proactive review: changed or stale evidence goes to a named reviewer.
+  Assessor and coordinator sign off independently. No invented site facts. Measure
+  returns, rework and assessment-to-ready time.
+
+  3. Prepare funding, Grant and Funding Evidence. On request: draft a source-linked
+  application or pack. Proactive review: changed terms or missing evidence go to Finance.
+  Rules calculate eligibility and totals; Finance validates, approves and submits.
+  The work spans planning through later claim and cash; an award is not receipt. Measure
+  pack rework, first-time acceptance and time-to-claim.
+
+  4. Coordinate works, Works and Resident Coordination. On request: draft updates
+  and suggest committed-capacity slots. Proactive review: unaccepted handoffs and
+  missed updates create an owned review. The resident chooses measures; Programme
+  and contract authority releases and instructs. No automatic messages, inferred consent
+  or autonomous scheduling. Measure coordination effort, failed visits and unowned
+  handoffs.
+
+  5. Verify and handover, Quality Evidence Review. On request: assemble evidence for
+  human review. Proactive review: raise missing or conflicting evidence for independent
+  QA. Flags never clear holds, accept work or close defects. Measure evidence rework
+  and missed critical defects.
+
+
+  Workflow core: owns identity and field rights, versions, deterministic gates, human
+  approvals, audit, retries and manual recovery. It is not a sixth supervisor agent.
+  Any hazard goes directly to the human safety service; model output cannot suppress
+  intake or change its separate clocks.
+
+
+  What proactive means here: a PROPOSED permitted event or scheduled task, started
+  only after deterministic eligibility checks. It is not evidence that every watcher
+  is deployed. Only registered, source-permitted tasks run, and they produce proposals
+  or raise-only flags to owned human queues. A source or version change makes dependent
+  review stale. The rule-only or manual path stays available if the model fails or
+  the task is inappropriate.
+
+
+  How the process should improve (hypotheses): fewer evidence gaps, less rework, clearer
+  handoffs. Test by comparing rules or manual work with assisted work on paired cases.
+  Count preparation, review and correction effort, critical errors, latency, cost
+  and uncertainty. Current live inference is narrow feasibility, not proof of every
+  capability, calibrated quality or value.
+
+
+  Evidence (repository-local):
+
+  docs/case_study_48_addendum.md: Digital Foundation; Where Agents Fit; Agentic Architecture
+  Brief; Decision 1 in Application Design.
+
+  docs/prds/zava-forward-retrofit-programme-demonstrator.md: AI Model Selection and
+  Evaluation Harness; Bounded-Agent Orchestration Pattern.
+
+  docs/reference/research/company/agent-request-challenge.md: Summary and each capability''s
+  value test.
+
+  docs/reference/research/gap-analysis-next-build.md: Draft Experiment Closure; #58
+  features and source are not automatically in the current deployment.'

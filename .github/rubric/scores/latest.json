@@ -2,21 +2,21 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-13T12:16:23+00:00",
-  "commit": "54f18f6ec58c568c8ac7532e18d6a873d543724e",
+  "scored_at": "2026-10-14T15:47:56+00:00",
+  "commit": "80660e95014c5abf5327d5e5e235c0612b991aa1",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38395433423",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38590975162",
   "fingerprints": {
     "brd": "8698b2d950aa2f0d4cda8729d80d2d77ec0bea10404f22860cda2182f9db9160",
-    "prd": "665ff790556d7f3d8b9b090c2b6d908627a95631ffe171465140d0bc12d2dd67",
-    "adr": "8d1a56951e744b25644d33aa21c1bb9dbb388eb384d736119e6af8a37fa81bab",
-    "solution-code": "6588e8487463b57f8b7d05d1ca2ae2e9f88d2e99cc8457bc2fba806ecd35502e",
-    "infrastructure": "e377bd25153088696b714380a81f5137f8aa5db3b2ce3d560c212a90131a38cc",
-    "capstone-deck": "9338390eef61641b043a0128cdc4670a63e6cae4ef6b43aea6f4290aa2badc74"
+    "prd": "f312d36b0f21b8b6978c64bba5d0d5e2009a6c2b29aa6bf72f25680bb89a0995",
+    "adr": "9d07e80242cdb60f3e01bf7590a951ecd1c9879b2450b76dbc25ca06b5955183",
+    "solution-code": "0708f6ce7afa4510f3f0f951b62714ab6fc7fc207ea502f21f9eacb6f1359ac4",
+    "infrastructure": "f5ee52836ffcddda14f2c5a85e6f0b1e3ac9baf444d4f81001b172409d7a623b",
+    "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
-  "total": 45,
+  "total": 47,
   "sections": {
-    "A": 27,
+    "A": 29,
     "B": 13,
     "C": 5,
     "D": 0
@@ -38,14 +38,21 @@
       "rationale": "Unchanged baseline: security/compliance architecture evidence not affected by this PR's CI-tooling-only diff."
     },
     "A3": {
-      "score": 4,
-      "evidence": [],
-      "rationale": "Unchanged baseline: data/integration architecture evidence not affected by this PR's CI-tooling-only diff."
+      "score": 5,
+      "evidence": [
+        "mvp/zavaforward_mvp/assistants.py:784-823",
+        "mvp/zavaforward_mvp/ai.py:61-91"
+      ],
+      "rationale": "Role/case scope and revocation rechecked on every call; per-capability field allowlists keep outputs safe for every reader; citation-required output validation and FORBIDDEN-phrase filtering mitigate injection/unsupported claims."
     },
     "A4": {
-      "score": 4,
-      "evidence": [],
-      "rationale": "Unchanged baseline: solution-code delivery evidence not affected; diff only touches rubric workflow tooling, not mvp/ application code."
+      "score": 5,
+      "evidence": [
+        "mvp/zavaforward_mvp/assistants.py:1-120",
+        "mvp/README.md:420-460",
+        "docs/adrs/0002-pilot-readiness-architecture.md:108-130"
+      ],
+      "rationale": "Five assistant capabilities (stock, assessment, funding, coordination, quality) work end to end via shared proposal service, SQL durability and UI; known gaps (QA disabled, proactive off, prior ledger DDL defect) are proactively disclosed in ADR 0002 and README."
     },
     "A5": {
       "score": 3,

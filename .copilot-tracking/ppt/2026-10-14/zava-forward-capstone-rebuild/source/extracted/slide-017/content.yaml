@@ -1,0 +1,331 @@
+slide: 17
+title: GATED EVIDENCE STAGE / PROPOSED OWNERS, NOT DELEGATED AUTHORITY
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: GATED EVIDENCE STAGE / PROPOSED OWNERS, NOT DELEGATED AUTHORITY
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.25
+  text: Earn the next gate. Do not leap into production.
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 1
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 2.7
+  height: 3.1
+  name: Rounded Rectangle 3
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: '1 / AGREE
+
+    Sponsor + Assets
+
+    Requirements
+
+    Control owners
+
+    Scope + authority'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 1 / AGREE
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Sponsor + Assets
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Requirements
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Control owners
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Scope + authority
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 20
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 2
+- type: shape
+  shape: rounded_rectangle
+  left: 3.75
+  top: 2.85
+  width: 2.7
+  height: 3.1
+  name: Rounded Rectangle 4
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: '2 / CONNECT
+
+    Programme + Digital
+
+    Same-home trace
+
+    Real services
+
+    Negative tests'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 2 / CONNECT
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Programme + Digital
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Same-home trace
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Real services
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Negative tests
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  alignment: left
+  z_order: 3
+- type: shape
+  shape: rounded_rectangle
+  left: 6.85
+  top: 2.85
+  width: 2.7
+  height: 3.1
+  name: Rounded Rectangle 5
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: '3 / PROVE
+
+    Data + Finance + CIO
+
+    Net value + cost
+
+    Rights + recovery'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 3 / PROVE
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Data + Finance + CIO
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Net value + cost
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Rights + recovery
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  alignment: left
+  z_order: 4
+- type: shape
+  shape: rounded_rectangle
+  left: 9.95
+  top: 2.85
+  width: 2.7
+  height: 3.1
+  name: Rounded Rectangle 6
+  corner_radius: 0.16667
+  fill: '#E5B96A'
+  text: '4 / DECIDE
+
+    Sponsor + owners
+
+    Evidence-led return
+
+    Continue,
+
+    simplify or stop'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 4 / DECIDE
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Sponsor + owners
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Evidence-led return
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Continue,
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: simplify or stop
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  alignment: left
+  z_order: 5
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12.0
+  height: 0.28
+  text: 17 / PROPOSED GATES / E06–E10 / NO NEW SPEND, DEPLOYMENT OR LIVE PILOT AUTHORITY
+  name: TextBox 7
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  z_order: 6
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 7
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 8
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'Four gates turn ambition into a controlled next step. Sponsor and
+  Assets review the current requirements candidate, assign control owners, and define
+  scope and authority. Programme and Digital then connect the same-home trace on continuing
+  generated data, with actual exercise services and negative-control tests.
+
+
+  Data, Finance and the CIO require evidence of net task value, whole-life cost, enforceable
+  permissions, accessibility and recovery. The sponsor and owners receive pass, fail,
+  blocked and not-run findings and decide whether to continue, simplify or stop.
+
+
+  PRD v0.13 needs fresh review and acceptance. Historical v0.12 approval and #58 feasibility
+  do not transfer. Missing authority blocks billable work. A later live pilot requires
+  separate operational, privacy, professional and user approval.
+
+
+  Evidence:
+
+  docs/case_study_48_addendum.md — EXA-001; Subsequent Application Exercise Builds;
+  Current Learning and Parallel Experiment (2026-10-11).
+
+  docs/prds/zava-forward-retrofit-programme-demonstrator.md — front matter; CON-009/AC-057
+  (v0.13 candidate).
+
+  docs/adrs/0002-pilot-readiness-architecture.md — Exercise Applicability; Decisions
+  (proposed).'

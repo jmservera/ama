@@ -1,0 +1,7077 @@
+{
+  "method": "Actual LibreOffice/PDF words, 1pt glyph-bound tolerance plus per-frame expected-token matching. No shape-count proxy; full 24-page traversal.",
+  "frames_checked": 387,
+  "pass_word_bounds": false,
+  "failures": [
+    {
+      "slide": 13,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        46.8,
+        920.1648835355044,
+        82.8
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Five",
+          "box": [
+            41.016998291015625,
+            53.929161071777344,
+            100.9990005493164,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "assists.",
+          "box": [
+            109.27651977539062,
+            53.929161071777344,
+            219.28353881835938,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "One",
+          "box": [
+            227.6210479736328,
+            53.929161071777344,
+            285.8935852050781,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "controlled",
+          "box": [
+            294.2910461425781,
+            53.929161071777344,
+            439.1175537109375,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "journey.",
+          "box": [
+            447.5150146484375,
+            53.929161071777344,
+            561.8406982421875,
+            87.39911651611328
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        520.56,
+        920.1648835355044,
+        534.9599999999999
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "13",
+          "box": [
+            865.4459838867188,
+            524.0657958984375,
+            877.6757202148438,
+            536.3395385742188
+          ]
+        },
+        {
+          "token": "/",
+          "box": [
+            880.6781616210938,
+            524.0657958984375,
+            883.724609375,
+            536.3395385742188
+          ]
+        },
+        {
+          "token": "22",
+          "box": [
+            886.8810424804688,
+            524.0657958984375,
+            899.1107788085938,
+            536.3395385742188
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-label",
+      "frame": [
+        46.800248380131286,
+        281.52,
+        201.0250038957344,
+        302.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            48.24599838256836,
+            286.0037536621094,
+            70.34003448486328,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            74.73645782470703,
+            286.0037536621094,
+            132.33761596679688,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-body",
+      "frame": [
+        46.800248380131286,
+        304.56,
+        201.0250038957344,
+        345.5999212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "query",
+          "box": [
+            48.24599838256836,
+            334.7317810058594,
+            88.1175765991211,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "conflicts",
+          "box": [
+            92.4500503540039,
+            334.7317810058594,
+            150.0352325439453,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-label",
+      "frame": [
+        46.800248380131286,
+        349.91999999999996,
+        201.0250038957344,
+        370.79999999999995
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            48.24599838256836,
+            354.4037780761719,
+            102.26607513427734,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "•",
+          "box": [
+            106.59854888916016,
+            354.4037780761719,
+            112.19400024414062,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            116.63838958740234,
+            354.4037780761719,
+            148.45252990722656,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-body",
+      "frame": [
+        46.800248380131286,
+        373.68,
+        201.0250038957344,
+        416.15999999999997
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "stock",
+          "box": [
+            48.24599838256836,
+            403.8967590332031,
+            85.36781311035156,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "facts",
+          "box": [
+            89.79621124267578,
+            403.8967590332031,
+            123.4168701171875,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-label",
+      "frame": [
+        224.78512999641643,
+        281.52,
+        379.00988551201954,
+        302.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            226.23300170898438,
+            286.0037536621094,
+            248.32704162597656,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            252.72348022460938,
+            286.0037536621094,
+            310.3245849609375,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-body",
+      "frame": [
+        224.78512999641643,
+        304.56,
+        379.00988551201954,
+        345.5999212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "survey/design",
+          "box": [
+            226.23300170898438,
+            334.7317810058594,
+            324.53704833984375,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "pack",
+          "box": [
+            328.949462890625,
+            334.7317810058594,
+            362.6020812988281,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-label",
+      "frame": [
+        224.78512999641643,
+        349.91999999999996,
+        379.00988551201954,
+        370.79999999999995
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            226.23300170898438,
+            354.4037780761719,
+            280.2530517578125,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "•",
+          "box": [
+            284.5855407714844,
+            354.4037780761719,
+            290.1809997558594,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            294.6253967285156,
+            354.4037780761719,
+            326.4395446777344,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-body",
+      "frame": [
+        224.78512999641643,
+        373.68,
+        379.00988551201954,
+        416.15999999999997
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "survey",
+          "box": [
+            226.23300170898438,
+            403.8967590332031,
+            273.18682861328125,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "or",
+          "box": [
+            277.5193176269531,
+            403.8967590332031,
+            291.71575927734375,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "design",
+          "box": [
+            296.09619140625,
+            403.8967590332031,
+            343.0979309082031,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-label",
+      "frame": [
+        402.77009035327694,
+        281.52,
+        556.99484586888,
+        302.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            404.2200012207031,
+            286.0037536621094,
+            426.3140563964844,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            430.7104797363281,
+            286.0037536621094,
+            488.31158447265625,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-body",
+      "frame": [
+        402.77009035327694,
+        304.56,
+        556.99484586888,
+        345.5999212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "evidence",
+          "box": [
+            404.2200012207031,
+            334.7317810058594,
+            467.9761047363281,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "pack",
+          "box": [
+            472.3885192871094,
+            334.7317810058594,
+            506.05712890625,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-label",
+      "frame": [
+        402.77009035327694,
+        349.91999999999996,
+        556.99484586888,
+        370.79999999999995
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            404.2200012207031,
+            354.4037780761719,
+            458.24005126953125,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "•",
+          "box": [
+            462.5725402832031,
+            354.4037780761719,
+            468.1679992675781,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            472.6123962402344,
+            354.4037780761719,
+            504.4265441894531,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-body",
+      "frame": [
+        402.77009035327694,
+        373.68,
+        556.99484586888,
+        416.15999999999997
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "changed",
+          "box": [
+            404.2200012207031,
+            403.8967590332031,
+            465.4021911621094,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "terms",
+          "box": [
+            469.8146057128906,
+            403.8967590332031,
+            509.7021484375,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-label",
+      "frame": [
+        580.7550507101374,
+        281.52,
+        734.9798062257405,
+        302.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            582.2080078125,
+            286.0037536621094,
+            604.302001953125,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            608.6984252929688,
+            286.0037536621094,
+            666.2996215820312,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-body",
+      "frame": [
+        580.7550507101374,
+        304.56,
+        734.9798062257405,
+        345.5999212598425
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "suggest",
+          "box": [
+            582.2080078125,
+            334.7317810058594,
+            637.9707641601562,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "crew",
+          "box": [
+            642.3831787109375,
+            334.7317810058594,
+            676.0997924804688,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "slots",
+          "box": [
+            680.4962158203125,
+            334.7317810058594,
+            713.3016357421875,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-label",
+      "frame": [
+        580.7550507101374,
+        349.91999999999996,
+        734.9798062257405,
+        370.79999999999995
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            582.2080078125,
+            354.4037780761719,
+            636.2280883789062,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "•",
+          "box": [
+            640.560546875,
+            354.4037780761719,
+            646.156005859375,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            650.6004028320312,
+            354.4037780761719,
+            682.4144897460938,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-body",
+      "frame": [
+        580.7550507101374,
+        373.68,
+        734.9798062257405,
+        416.15999999999997
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "overdue",
+          "box": [
+            582.2080078125,
+            403.8967590332031,
+            639.77734375,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "update",
+          "box": [
+            644.1897583007812,
+            403.8967590332031,
+            692.9981689453125,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-label",
+      "frame": [
+        758.7400110669979,
+        281.52,
+        912.9647665826011,
+        302.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            760.1950073242188,
+            286.0037536621094,
+            782.2890014648438,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            786.6854248046875,
+            286.0037536621094,
+            844.28662109375,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-body",
+      "frame": [
+        758.7400110669979,
+        304.56,
+        912.9647665826011,
+        345.5999212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "raise",
+          "box": [
+            760.1950073242188,
+            334.7317810058594,
+            794.7269897460938,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "gaps",
+          "box": [
+            799.139404296875,
+            334.7317810058594,
+            833.767333984375,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-label",
+      "frame": [
+        758.7400110669979,
+        349.91999999999996,
+        912.9647665826011,
+        370.79999999999995
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            760.1950073242188,
+            354.4037780761719,
+            814.215087890625,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "•",
+          "box": [
+            818.5475463867188,
+            354.4037780761719,
+            824.1430053710938,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            828.58740234375,
+            354.4037780761719,
+            860.4014892578125,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-body",
+      "frame": [
+        758.7400110669979,
+        373.68,
+        912.9647665826011,
+        416.15999999999997
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "quality",
+          "box": [
+            760.1950073242188,
+            403.8967590332031,
+            806.1578369140625,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "evidence",
+          "box": [
+            810.6022338867188,
+            403.8967590332031,
+            874.3905029296875,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-funding-boundary",
+      "frame": [
+        39.6002101678034,
+        470.88,
+        920.1648835355044,
+        491.03999999999996
+      ],
+      "words_matched_by_position": 17,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Checks",
+          "box": [
+            41.016998291015625,
+            475.38677978515625,
+            94.06185913085938,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            98.4902572631836,
+            475.38677978515625,
+            130.4003143310547,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "now;",
+          "box": [
+            134.7967529296875,
+            475.38677978515625,
+            168.4973602294922,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "future",
+          "box": [
+            172.90977478027344,
+            475.38677978515625,
+            213.67665100097656,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "eligibility",
+          "box": [
+            218.0890655517578,
+            475.38677978515625,
+            278.3280944824219,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "→",
+          "box": [
+            282.66058349609375,
+            475.38677978515625,
+            298.6475830078125,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "named",
+          "box": [
+            303.01202392578125,
+            475.38677978515625,
+            351.8522644042969,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "human",
+          "box": [
+            356.2646789550781,
+            475.38677978515625,
+            405.10491943359375,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "queue.",
+          "box": [
+            409.517333984375,
+            475.38677978515625,
+            458.19769287109375,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "Funding:",
+          "box": [
+            462.610107421875,
+            475.38677978515625,
+            524.6875610351562,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "application",
+          "box": [
+            529.0999755859375,
+            475.38677978515625,
+            605.358154296875,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "≠",
+          "box": [
+            609.7545776367188,
+            475.38677978515625,
+            618.5154418945312,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "award",
+          "box": [
+            622.9278564453125,
+            475.38677978515625,
+            666.3645629882812,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "≠",
+          "box": [
+            670.7769775390625,
+            475.38677978515625,
+            679.537841796875,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "claim",
+          "box": [
+            683.9502563476562,
+            475.38677978515625,
+            721.088134765625,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "≠",
+          "box": [
+            725.5165405273438,
+            475.38677978515625,
+            734.2774047851562,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "cash.",
+          "box": [
+            738.673828125,
+            475.38677978515625,
+            776.77099609375,
+            493.228271484375
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-hazard-boundary",
+      "frame": [
+        39.6002101678034,
+        493.91999999999996,
+        920.1648835355044,
+        513.36
+      ],
+      "words_matched_by_position": 13,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Hazard",
+          "box": [
+            41.016998291015625,
+            498.3757629394531,
+            92.35124969482422,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "→",
+          "box": [
+            96.76366424560547,
+            498.3757629394531,
+            112.75066375732422,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "human",
+          "box": [
+            117.11511993408203,
+            498.3757629394531,
+            165.95541381835938,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "service",
+          "box": [
+            170.36782836914062,
+            498.3757629394531,
+            220.82281494140625,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "now,",
+          "box": [
+            225.2352294921875,
+            498.3757629394531,
+            258.0885314941406,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "never",
+          "box": [
+            262.5009460449219,
+            498.3757629394531,
+            302.34051513671875,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "wait",
+          "box": [
+            306.720947265625,
+            498.3757629394531,
+            335.12982177734375,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "for",
+          "box": [
+            339.542236328125,
+            498.3757629394531,
+            358.1670837402344,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "AI.",
+          "box": [
+            361.6042785644531,
+            498.3757629394531,
+            381.1244201660156,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "Value",
+          "box": [
+            385.5368347167969,
+            498.3757629394531,
+            425.12060546875,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "remains",
+          "box": [
+            429.51702880859375,
+            498.3757629394531,
+            486.30279541015625,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "a",
+          "box": [
+            490.6512756347656,
+            498.3757629394531,
+            499.5400390625,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "hypothesis.",
+          "box": [
+            503.95245361328125,
+            498.3757629394531,
+            584.5751342773438,
+            516.2172241210938
+          ]
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "slide": 1,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 19,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "resident-scale",
+      "frame": [
+        39.6002101678034,
+        152.64,
+        558.0029614554114,
+        205.2
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "resident-outcome",
+      "frame": [
+        39.6002101678034,
+        215.28,
+        543.6028850307557,
+        316.08
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "opening-evidence",
+      "frame": [
+        39.6002101678034,
+        368.64,
+        550.8029232430836,
+        440.64
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "decision-title",
+      "frame": [
+        615.6032671540346,
+        172.07999999999998,
+        902.1647880046846,
+        222.48
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "decision-body",
+      "frame": [
+        615.6032671540346,
+        239.04,
+        902.1647880046846,
+        368.64
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 1,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 13,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        190.0810088054563,
+        235.44
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        247.67999999999998,
+        190.0810088054563,
+        332.6399212598425
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-2-title",
+      "frame": [
+        231.84123043695806,
+        159.84,
+        369.36196029242075,
+        235.44
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-2-body",
+      "frame": [
+        231.84123043695806,
+        247.67999999999998,
+        369.36196029242075,
+        332.6399212598425
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-3-title",
+      "frame": [
+        411.1221819239225,
+        159.84,
+        548.6429117793853,
+        235.44
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-3-body",
+      "frame": [
+        411.1221819239225,
+        247.67999999999998,
+        548.6429117793853,
+        332.6399212598425
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-4-title",
+      "frame": [
+        590.403133410887,
+        159.84,
+        727.9238632663497,
+        235.44
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-4-body",
+      "frame": [
+        590.403133410887,
+        247.67999999999998,
+        727.9238632663497,
+        332.6399212598425
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-5-title",
+      "frame": [
+        769.6840848978514,
+        159.84,
+        907.2048147533142,
+        235.44
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "peer-5-body",
+      "frame": [
+        769.6840848978514,
+        247.67999999999998,
+        907.2048147533142,
+        332.6399212598425
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "outcome",
+      "frame": [
+        54.000286592459176,
+        375.12,
+        903.6047956471501,
+        421.91999999999996
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 2,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 13,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        309.60164313009926,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        309.60164313009926,
+        398.88
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "peer-2-title",
+      "frame": [
+        351.361864761601,
+        159.84,
+        608.4032289417067,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "peer-2-body",
+      "frame": [
+        351.361864761601,
+        239.76,
+        608.4032289417067,
+        398.88
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "peer-3-title",
+      "frame": [
+        650.1634505732085,
+        159.84,
+        907.2048147533142,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "peer-3-body",
+      "frame": [
+        650.1634505732085,
+        239.76,
+        907.2048147533142,
+        398.88
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 3,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        309.60164313009926,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        309.60164313009926,
+        398.88
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "peer-2-title",
+      "frame": [
+        351.361864761601,
+        159.84,
+        608.4032289417067,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "peer-2-body",
+      "frame": [
+        351.361864761601,
+        239.76,
+        608.4032289417067,
+        398.88
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "peer-3-title",
+      "frame": [
+        650.1634505732085,
+        159.84,
+        907.2048147533142,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "peer-3-body",
+      "frame": [
+        650.1634505732085,
+        239.76,
+        907.2048147533142,
+        398.88
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "options-provisional",
+      "frame": [
+        50.40026748629523,
+        437.76,
+        909.3648262170125,
+        489.59999999999997
+      ],
+      "words_matched_by_position": 14,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 4,
+      "name": "options-link",
+      "frame": [
+        39.6002101678034,
+        496.79999999999995,
+        471.6025029074768,
+        518.4
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 15,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        459.002436035903,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        459.002436035903,
+        398.88
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "peer-2-title",
+      "frame": [
+        500.76257892682935,
+        159.84,
+        907.2047360127387,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "peer-2-body",
+      "frame": [
+        500.76257892682935,
+        239.76,
+        907.2047360127387,
+        398.88
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 5,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 17,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-1-peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.12,
+        309.60164313009926,
+        198.72
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-1-peer-1-body",
+      "frame": [
+        52.560278949993595,
+        210.9599212598425,
+        309.60164313009926,
+        258.4799212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-1-peer-2-title",
+      "frame": [
+        351.361864761601,
+        159.12,
+        608.4032289417067,
+        198.72
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-1-peer-2-body",
+      "frame": [
+        351.361864761601,
+        210.9599212598425,
+        608.4032289417067,
+        258.4799212598425
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-1-peer-3-title",
+      "frame": [
+        650.1634505732085,
+        159.12,
+        907.2048147533142,
+        198.72
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-1-peer-3-body",
+      "frame": [
+        650.1634505732085,
+        210.9599212598425,
+        907.2048147533142,
+        258.4799212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-2-peer-1-title",
+      "frame": [
+        52.560278949993595,
+        300.95992125984253,
+        309.60164313009926,
+        340.5599212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-2-peer-1-body",
+      "frame": [
+        52.560278949993595,
+        352.7999212598425,
+        309.60164313009926,
+        405.3599212598425
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-2-peer-2-title",
+      "frame": [
+        351.361864761601,
+        300.95992125984253,
+        608.4032289417067,
+        340.5599212598425
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-2-peer-2-body",
+      "frame": [
+        351.361864761601,
+        352.7999212598425,
+        608.4032289417067,
+        405.3599212598425
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-2-peer-3-title",
+      "frame": [
+        650.1634505732085,
+        300.95992125984253,
+        907.2048147533142,
+        340.5599212598425
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "row-2-peer-3-body",
+      "frame": [
+        650.1634505732085,
+        352.7999212598425,
+        907.2048147533142,
+        405.3599212598425
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 6,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 13,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        234.9012466771974,
+        205.2
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        217.44,
+        234.9012466771974,
+        368.64
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-2-title",
+      "frame": [
+        276.66146830869917,
+        159.84,
+        459.002436035903,
+        205.2
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-2-body",
+      "frame": [
+        276.66146830869917,
+        217.44,
+        459.002436035903,
+        368.64
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-3-title",
+      "frame": [
+        500.7626576674047,
+        159.84,
+        683.1036253946086,
+        205.2
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-3-body",
+      "frame": [
+        500.7626576674047,
+        217.44,
+        683.1036253946086,
+        368.64
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-4-title",
+      "frame": [
+        724.8638470261103,
+        159.84,
+        907.2048147533142,
+        205.2
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "peer-4-body",
+      "frame": [
+        724.8638470261103,
+        217.44,
+        907.2048147533142,
+        368.64
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "journey-hold-return",
+      "frame": [
+        52.560278949993595,
+        401.76,
+        907.2048147533142,
+        428.4
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 7,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        446.3999212598425,
+        907.2048147533142,
+        486.719842519685
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 17,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        459.002436035903,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        459.002436035903,
+        398.88
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "peer-2-title",
+      "frame": [
+        500.76257892682935,
+        159.84,
+        907.2047360127387,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "peer-2-body",
+      "frame": [
+        500.76257892682935,
+        239.76,
+        907.2047360127387,
+        398.88
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        434.88,
+        907.2048147533142,
+        467.9999212598425
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 8,
+      "name": "human-hazard-route",
+      "frame": [
+        50.40026748629523,
+        480.23999999999995,
+        907.2048147533142,
+        508.32
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 15,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        309.60164313009926,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        309.60164313009926,
+        398.88
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "peer-2-title",
+      "frame": [
+        351.361864761601,
+        159.84,
+        608.4032289417067,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "peer-2-body",
+      "frame": [
+        351.361864761601,
+        239.76,
+        608.4032289417067,
+        398.88
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "peer-3-title",
+      "frame": [
+        650.1634505732085,
+        159.84,
+        907.2048147533142,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "peer-3-body",
+      "frame": [
+        650.1634505732085,
+        239.76,
+        907.2048147533142,
+        398.88
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 9,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-staff-title",
+      "frame": [
+        48.24025602259686,
+        151.2,
+        218.16115783353507,
+        198.0
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-staff-body",
+      "frame": [
+        48.24025602259686,
+        206.64,
+        218.16115783353507,
+        285.1199212598425
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-people-title",
+      "frame": [
+        48.24025602259686,
+        312.47999999999996,
+        218.16115783353507,
+        359.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-people-body",
+      "frame": [
+        48.24025602259686,
+        367.9199212598425,
+        218.16115783353507,
+        446.399842519685
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-entra-title",
+      "frame": [
+        260.6413832862696,
+        149.76,
+        603.3632021930772,
+        174.23999999999998
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-entra-body",
+      "frame": [
+        260.6413832862696,
+        174.95999999999998,
+        603.3632021930772,
+        199.44
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-api-title",
+      "frame": [
+        260.6413832862696,
+        225.35999999999999,
+        603.3632021930772,
+        261.36
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-api-body",
+      "frame": [
+        260.6413832862696,
+        266.39992125984253,
+        603.3632021930772,
+        344.87984251968504
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-model-title",
+      "frame": [
+        660.2435040704675,
+        225.35999999999999,
+        911.5248376807109,
+        261.36
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-model-body",
+      "frame": [
+        660.2435040704675,
+        266.39992125984253,
+        911.5248376807109,
+        344.87984251968504
+      ],
+      "words_matched_by_position": 11,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-sql-title",
+      "frame": [
+        260.6413832862696,
+        380.15999999999997,
+        416.162208672552,
+        404.64
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-sql-body",
+      "frame": [
+        260.6413832862696,
+        407.52,
+        416.162208672552,
+        456.47999999999996
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-blob-title",
+      "frame": [
+        447.84237680679473,
+        380.15999999999997,
+        603.3632021930772,
+        404.64
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-blob-body",
+      "frame": [
+        447.84237680679473,
+        407.52,
+        603.3632021930772,
+        456.47999999999996
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-sql-evidence",
+      "frame": [
+        651.603458215674,
+        383.03999999999996,
+        920.1648835355044,
+        440.64
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "exec-boundary",
+      "frame": [
+        50.40026748629523,
+        468.0,
+        909.3648262170125,
+        498.96
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 10,
+      "name": "runtime-link",
+      "frame": [
+        651.603458215674,
+        158.4,
+        920.1648835355044,
+        180.0
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 17,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-lane-label",
+      "frame": [
+        39.6002101678034,
+        138.95999999999998,
+        918.004872071806,
+        164.16
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-peer-1-title",
+      "frame": [
+        52.560278949993595,
+        189.35999999999999,
+        309.60164313009926,
+        223.92
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-peer-1-body",
+      "frame": [
+        52.560278949993595,
+        236.16,
+        309.60164313009926,
+        286.56
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-peer-2-title",
+      "frame": [
+        351.361864761601,
+        189.35999999999999,
+        608.4032289417067,
+        223.92
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-peer-2-body",
+      "frame": [
+        351.361864761601,
+        236.16,
+        608.4032289417067,
+        286.56
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-peer-3-title",
+      "frame": [
+        650.1634505732085,
+        189.35999999999999,
+        907.2048147533142,
+        223.92
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "proposal-peer-3-body",
+      "frame": [
+        650.1634505732085,
+        236.16,
+        907.2048147533142,
+        286.56
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-lane-label",
+      "frame": [
+        39.6002101678034,
+        320.4,
+        918.004872071806,
+        345.59999999999997
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-peer-1-title",
+      "frame": [
+        52.560278949993595,
+        370.08,
+        309.60164313009926,
+        401.03999999999996
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-peer-1-body",
+      "frame": [
+        52.560278949993595,
+        408.23999999999995,
+        309.60164313009926,
+        438.47999999999996
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-peer-2-title",
+      "frame": [
+        351.361864761601,
+        370.08,
+        608.4032289417067,
+        401.03999999999996
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-peer-2-body",
+      "frame": [
+        351.361864761601,
+        408.23999999999995,
+        608.4032289417067,
+        438.47999999999996
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-peer-3-title",
+      "frame": [
+        650.1634505732085,
+        370.08,
+        907.2048147533142,
+        401.03999999999996
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "domain-peer-3-body",
+      "frame": [
+        650.1634505732085,
+        408.23999999999995,
+        907.2048147533142,
+        438.47999999999996
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 11,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        469.44,
+        907.2048147533142,
+        498.96
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "proof-implication",
+      "frame": [
+        39.6002101678034,
+        140.4,
+        920.1648835355044,
+        169.2
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        196.56,
+        459.002436035903,
+        246.95999999999998
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        259.1999212598425,
+        459.002436035903,
+        410.3999212598425
+      ],
+      "words_matched_by_position": 22,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "peer-2-title",
+      "frame": [
+        500.76257892682935,
+        196.56,
+        907.2047360127387,
+        246.95999999999998
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "peer-2-body",
+      "frame": [
+        500.76257892682935,
+        259.1999212598425,
+        907.2047360127387,
+        410.3999212598425
+      ],
+      "words_matched_by_position": 18,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "proof-authority",
+      "frame": [
+        50.40026748629523,
+        442.79999999999995,
+        909.3648262170125,
+        468.71999999999997
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 12,
+      "name": "proof-provenance",
+      "frame": [
+        48.960259843829654,
+        480.23999999999995,
+        912.9648453231764,
+        504.0
+      ],
+      "words_matched_by_position": 12,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        46.8,
+        920.1648835355044,
+        82.8
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Five",
+          "box": [
+            41.016998291015625,
+            53.929161071777344,
+            100.9990005493164,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "assists.",
+          "box": [
+            109.27651977539062,
+            53.929161071777344,
+            219.28353881835938,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "One",
+          "box": [
+            227.6210479736328,
+            53.929161071777344,
+            285.8935852050781,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "controlled",
+          "box": [
+            294.2910461425781,
+            53.929161071777344,
+            439.1175537109375,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "journey.",
+          "box": [
+            447.5150146484375,
+            53.929161071777344,
+            561.8406982421875,
+            87.39911651611328
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        522.0,
+        860.4045663731829,
+        534.24
+      ],
+      "words_matched_by_position": 19,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        520.56,
+        920.1648835355044,
+        534.9599999999999
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "13",
+          "box": [
+            865.4459838867188,
+            524.0657958984375,
+            877.6757202148438,
+            536.3395385742188
+          ]
+        },
+        {
+          "token": "/",
+          "box": [
+            880.6781616210938,
+            524.0657958984375,
+            883.724609375,
+            536.3395385742188
+          ]
+        },
+        {
+          "token": "22",
+          "box": [
+            886.8810424804688,
+            524.0657958984375,
+            899.1107788085938,
+            536.3395385742188
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-status",
+      "frame": [
+        39.6002101678034,
+        85.67999999999999,
+        920.1648835355044,
+        107.28
+      ],
+      "words_matched_by_position": 13,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-stage",
+      "frame": [
+        43.20022927396734,
+        122.39999999999999,
+        204.62502300189834,
+        151.92
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-owner",
+      "frame": [
+        43.20022927396734,
+        162.71992125984252,
+        204.62502300189834,
+        212.3999212598425
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-title",
+      "frame": [
+        46.800248380131286,
+        223.2,
+        201.0250038957344,
+        276.47999999999996
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-label",
+      "frame": [
+        46.800248380131286,
+        281.52,
+        201.0250038957344,
+        302.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            48.24599838256836,
+            286.0037536621094,
+            70.34003448486328,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            74.73645782470703,
+            286.0037536621094,
+            132.33761596679688,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-body",
+      "frame": [
+        46.800248380131286,
+        304.56,
+        201.0250038957344,
+        345.5999212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "query",
+          "box": [
+            48.24599838256836,
+            334.7317810058594,
+            88.1175765991211,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "conflicts",
+          "box": [
+            92.4500503540039,
+            334.7317810058594,
+            150.0352325439453,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-label",
+      "frame": [
+        46.800248380131286,
+        349.91999999999996,
+        201.0250038957344,
+        370.79999999999995
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            48.24599838256836,
+            354.4037780761719,
+            102.26607513427734,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "•",
+          "box": [
+            106.59854888916016,
+            354.4037780761719,
+            112.19400024414062,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            116.63838958740234,
+            354.4037780761719,
+            148.45252990722656,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-body",
+      "frame": [
+        46.800248380131286,
+        373.68,
+        201.0250038957344,
+        416.15999999999997
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "stock",
+          "box": [
+            48.24599838256836,
+            403.8967590332031,
+            85.36781311035156,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "facts",
+          "box": [
+            89.79621124267578,
+            403.8967590332031,
+            123.4168701171875,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-stage",
+      "frame": [
+        221.18511089025247,
+        122.39999999999999,
+        382.60990461818346,
+        151.92
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-owner",
+      "frame": [
+        221.18511089025247,
+        162.71992125984252,
+        382.60990461818346,
+        212.3999212598425
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-title",
+      "frame": [
+        224.78512999641643,
+        223.2,
+        379.00988551201954,
+        276.47999999999996
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-label",
+      "frame": [
+        224.78512999641643,
+        281.52,
+        379.00988551201954,
+        302.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            226.23300170898438,
+            286.0037536621094,
+            248.32704162597656,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            252.72348022460938,
+            286.0037536621094,
+            310.3245849609375,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-body",
+      "frame": [
+        224.78512999641643,
+        304.56,
+        379.00988551201954,
+        345.5999212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "survey/design",
+          "box": [
+            226.23300170898438,
+            334.7317810058594,
+            324.53704833984375,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "pack",
+          "box": [
+            328.949462890625,
+            334.7317810058594,
+            362.6020812988281,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-label",
+      "frame": [
+        224.78512999641643,
+        349.91999999999996,
+        379.00988551201954,
+        370.79999999999995
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            226.23300170898438,
+            354.4037780761719,
+            280.2530517578125,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "•",
+          "box": [
+            284.5855407714844,
+            354.4037780761719,
+            290.1809997558594,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            294.6253967285156,
+            354.4037780761719,
+            326.4395446777344,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-body",
+      "frame": [
+        224.78512999641643,
+        373.68,
+        379.00988551201954,
+        416.15999999999997
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "survey",
+          "box": [
+            226.23300170898438,
+            403.8967590332031,
+            273.18682861328125,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "or",
+          "box": [
+            277.5193176269531,
+            403.8967590332031,
+            291.71575927734375,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "design",
+          "box": [
+            296.09619140625,
+            403.8967590332031,
+            343.0979309082031,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-stage",
+      "frame": [
+        399.170071247113,
+        122.39999999999999,
+        560.594864975044,
+        151.92
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-owner",
+      "frame": [
+        399.170071247113,
+        162.71992125984252,
+        560.594864975044,
+        212.3999212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-title",
+      "frame": [
+        402.77009035327694,
+        223.2,
+        556.99484586888,
+        276.47999999999996
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-label",
+      "frame": [
+        402.77009035327694,
+        281.52,
+        556.99484586888,
+        302.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            404.2200012207031,
+            286.0037536621094,
+            426.3140563964844,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            430.7104797363281,
+            286.0037536621094,
+            488.31158447265625,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-body",
+      "frame": [
+        402.77009035327694,
+        304.56,
+        556.99484586888,
+        345.5999212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "evidence",
+          "box": [
+            404.2200012207031,
+            334.7317810058594,
+            467.9761047363281,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "pack",
+          "box": [
+            472.3885192871094,
+            334.7317810058594,
+            506.05712890625,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-label",
+      "frame": [
+        402.77009035327694,
+        349.91999999999996,
+        556.99484586888,
+        370.79999999999995
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            404.2200012207031,
+            354.4037780761719,
+            458.24005126953125,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "•",
+          "box": [
+            462.5725402832031,
+            354.4037780761719,
+            468.1679992675781,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            472.6123962402344,
+            354.4037780761719,
+            504.4265441894531,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-body",
+      "frame": [
+        402.77009035327694,
+        373.68,
+        556.99484586888,
+        416.15999999999997
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "changed",
+          "box": [
+            404.2200012207031,
+            403.8967590332031,
+            465.4021911621094,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "terms",
+          "box": [
+            469.8146057128906,
+            403.8967590332031,
+            509.7021484375,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-stage",
+      "frame": [
+        577.1550316039735,
+        122.39999999999999,
+        738.5798253319045,
+        151.92
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-owner",
+      "frame": [
+        577.1550316039735,
+        162.71992125984252,
+        738.5798253319045,
+        212.3999212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-title",
+      "frame": [
+        580.7550507101374,
+        223.2,
+        734.9798062257405,
+        276.47999999999996
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-label",
+      "frame": [
+        580.7550507101374,
+        281.52,
+        734.9798062257405,
+        302.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            582.2080078125,
+            286.0037536621094,
+            604.302001953125,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            608.6984252929688,
+            286.0037536621094,
+            666.2996215820312,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-body",
+      "frame": [
+        580.7550507101374,
+        304.56,
+        734.9798062257405,
+        345.5999212598425
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "suggest",
+          "box": [
+            582.2080078125,
+            334.7317810058594,
+            637.9707641601562,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "crew",
+          "box": [
+            642.3831787109375,
+            334.7317810058594,
+            676.0997924804688,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "slots",
+          "box": [
+            680.4962158203125,
+            334.7317810058594,
+            713.3016357421875,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-label",
+      "frame": [
+        580.7550507101374,
+        349.91999999999996,
+        734.9798062257405,
+        370.79999999999995
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            582.2080078125,
+            354.4037780761719,
+            636.2280883789062,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "•",
+          "box": [
+            640.560546875,
+            354.4037780761719,
+            646.156005859375,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            650.6004028320312,
+            354.4037780761719,
+            682.4144897460938,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-body",
+      "frame": [
+        580.7550507101374,
+        373.68,
+        734.9798062257405,
+        416.15999999999997
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "overdue",
+          "box": [
+            582.2080078125,
+            403.8967590332031,
+            639.77734375,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "update",
+          "box": [
+            644.1897583007812,
+            403.8967590332031,
+            692.9981689453125,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-stage",
+      "frame": [
+        755.139991960834,
+        122.39999999999999,
+        916.564785688765,
+        151.92
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-owner",
+      "frame": [
+        755.139991960834,
+        162.71992125984252,
+        916.564785688765,
+        212.3999212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-title",
+      "frame": [
+        758.7400110669979,
+        223.2,
+        912.9647665826011,
+        276.47999999999996
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-label",
+      "frame": [
+        758.7400110669979,
+        281.52,
+        912.9647665826011,
+        302.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            760.1950073242188,
+            286.0037536621094,
+            782.2890014648438,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            786.6854248046875,
+            286.0037536621094,
+            844.28662109375,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-body",
+      "frame": [
+        758.7400110669979,
+        304.56,
+        912.9647665826011,
+        345.5999212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "raise",
+          "box": [
+            760.1950073242188,
+            334.7317810058594,
+            794.7269897460938,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "gaps",
+          "box": [
+            799.139404296875,
+            334.7317810058594,
+            833.767333984375,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-label",
+      "frame": [
+        758.7400110669979,
+        349.91999999999996,
+        912.9647665826011,
+        370.79999999999995
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            760.1950073242188,
+            354.4037780761719,
+            814.215087890625,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "•",
+          "box": [
+            818.5475463867188,
+            354.4037780761719,
+            824.1430053710938,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            828.58740234375,
+            354.4037780761719,
+            860.4014892578125,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-body",
+      "frame": [
+        758.7400110669979,
+        373.68,
+        912.9647665826011,
+        416.15999999999997
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "quality",
+          "box": [
+            760.1950073242188,
+            403.8967590332031,
+            806.1578369140625,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "evidence",
+          "box": [
+            810.6022338867188,
+            403.8967590332031,
+            874.3905029296875,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-core",
+      "frame": [
+        49.68026366506244,
+        437.76,
+        910.0848300382453,
+        460.08
+      ],
+      "words_matched_by_position": 17,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-funding-boundary",
+      "frame": [
+        39.6002101678034,
+        470.88,
+        920.1648835355044,
+        491.03999999999996
+      ],
+      "words_matched_by_position": 17,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Checks",
+          "box": [
+            41.016998291015625,
+            475.38677978515625,
+            94.06185913085938,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            98.4902572631836,
+            475.38677978515625,
+            130.4003143310547,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "now;",
+          "box": [
+            134.7967529296875,
+            475.38677978515625,
+            168.4973602294922,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "future",
+          "box": [
+            172.90977478027344,
+            475.38677978515625,
+            213.67665100097656,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "eligibility",
+          "box": [
+            218.0890655517578,
+            475.38677978515625,
+            278.3280944824219,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "→",
+          "box": [
+            282.66058349609375,
+            475.38677978515625,
+            298.6475830078125,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "named",
+          "box": [
+            303.01202392578125,
+            475.38677978515625,
+            351.8522644042969,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "human",
+          "box": [
+            356.2646789550781,
+            475.38677978515625,
+            405.10491943359375,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "queue.",
+          "box": [
+            409.517333984375,
+            475.38677978515625,
+            458.19769287109375,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "Funding:",
+          "box": [
+            462.610107421875,
+            475.38677978515625,
+            524.6875610351562,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "application",
+          "box": [
+            529.0999755859375,
+            475.38677978515625,
+            605.358154296875,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "≠",
+          "box": [
+            609.7545776367188,
+            475.38677978515625,
+            618.5154418945312,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "award",
+          "box": [
+            622.9278564453125,
+            475.38677978515625,
+            666.3645629882812,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "≠",
+          "box": [
+            670.7769775390625,
+            475.38677978515625,
+            679.537841796875,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "claim",
+          "box": [
+            683.9502563476562,
+            475.38677978515625,
+            721.088134765625,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "≠",
+          "box": [
+            725.5165405273438,
+            475.38677978515625,
+            734.2774047851562,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "cash.",
+          "box": [
+            738.673828125,
+            475.38677978515625,
+            776.77099609375,
+            493.228271484375
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-hazard-boundary",
+      "frame": [
+        39.6002101678034,
+        493.91999999999996,
+        920.1648835355044,
+        513.36
+      ],
+      "words_matched_by_position": 13,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Hazard",
+          "box": [
+            41.016998291015625,
+            498.3757629394531,
+            92.35124969482422,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "→",
+          "box": [
+            96.76366424560547,
+            498.3757629394531,
+            112.75066375732422,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "human",
+          "box": [
+            117.11511993408203,
+            498.3757629394531,
+            165.95541381835938,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "service",
+          "box": [
+            170.36782836914062,
+            498.3757629394531,
+            220.82281494140625,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "now,",
+          "box": [
+            225.2352294921875,
+            498.3757629394531,
+            258.0885314941406,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "never",
+          "box": [
+            262.5009460449219,
+            498.3757629394531,
+            302.34051513671875,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "wait",
+          "box": [
+            306.720947265625,
+            498.3757629394531,
+            335.12982177734375,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "for",
+          "box": [
+            339.542236328125,
+            498.3757629394531,
+            358.1670837402344,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "AI.",
+          "box": [
+            361.6042785644531,
+            498.3757629394531,
+            381.1244201660156,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "Value",
+          "box": [
+            385.5368347167969,
+            498.3757629394531,
+            425.12060546875,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "remains",
+          "box": [
+            429.51702880859375,
+            498.3757629394531,
+            486.30279541015625,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "a",
+          "box": [
+            490.6512756347656,
+            498.3757629394531,
+            499.5400390625,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "hypothesis.",
+          "box": [
+            503.95245361328125,
+            498.3757629394531,
+            584.5751342773438,
+            516.2172241210938
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 14,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 15,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "fictional-label",
+      "frame": [
+        39.6002101678034,
+        138.95999999999998,
+        918.004872071806,
+        164.16
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "gross-title",
+      "frame": [
+        57.60030569862312,
+        195.84,
+        460.80244558898494,
+        224.64
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "gross-value",
+      "frame": [
+        473.04251054994234,
+        195.84,
+        902.1647880046846,
+        239.04
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        300.95992125984253,
+        459.002436035903,
+        331.9199212598425
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        344.1599212598425,
+        459.002436035903,
+        412.5599212598425
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "peer-2-title",
+      "frame": [
+        500.76257892682935,
+        300.95992125984253,
+        907.2047360127387,
+        331.9199212598425
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "peer-2-body",
+      "frame": [
+        500.76257892682935,
+        344.1599212598425,
+        907.2047360127387,
+        412.5599212598425
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 14,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        455.76,
+        907.2048147533142,
+        488.8799212598425
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 17,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        234.9012466771974,
+        235.44
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        247.67999999999998,
+        234.9012466771974,
+        398.88
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-2-title",
+      "frame": [
+        276.66146830869917,
+        159.84,
+        459.002436035903,
+        235.44
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-2-body",
+      "frame": [
+        276.66146830869917,
+        247.67999999999998,
+        459.002436035903,
+        398.88
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-3-title",
+      "frame": [
+        500.7626576674047,
+        159.84,
+        683.1036253946086,
+        235.44
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-3-body",
+      "frame": [
+        500.7626576674047,
+        247.67999999999998,
+        683.1036253946086,
+        398.88
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-4-title",
+      "frame": [
+        724.8638470261103,
+        159.84,
+        907.2048147533142,
+        235.44
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "peer-4-body",
+      "frame": [
+        724.8638470261103,
+        247.67999999999998,
+        907.2048147533142,
+        398.88
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 15,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 17,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        459.002436035903,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        459.002436035903,
+        398.88
+      ],
+      "words_matched_by_position": 12,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "peer-2-title",
+      "frame": [
+        500.76257892682935,
+        159.84,
+        907.2047360127387,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "peer-2-body",
+      "frame": [
+        500.76257892682935,
+        239.76,
+        907.2047360127387,
+        398.88
+      ],
+      "words_matched_by_position": 12,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 16,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        512.64,
+        860.4045663731829,
+        527.04
+      ],
+      "words_matched_by_position": 17,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        234.9012466771974,
+        212.39999999999998
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        224.64,
+        234.9012466771974,
+        398.88
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-2-title",
+      "frame": [
+        276.66146830869917,
+        159.84,
+        459.002436035903,
+        212.39999999999998
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-2-body",
+      "frame": [
+        276.66146830869917,
+        224.64,
+        459.002436035903,
+        398.88
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-3-title",
+      "frame": [
+        500.7626576674047,
+        159.84,
+        683.1036253946086,
+        212.39999999999998
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-3-body",
+      "frame": [
+        500.7626576674047,
+        224.64,
+        683.1036253946086,
+        398.88
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-4-title",
+      "frame": [
+        724.8638470261103,
+        159.84,
+        907.2048147533142,
+        212.39999999999998
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "peer-4-body",
+      "frame": [
+        724.8638470261103,
+        224.64,
+        907.2048147533142,
+        398.88
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 17,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_position": 11,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        615.6032671540346,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "closing-ask",
+      "frame": [
+        39.6002101678034,
+        142.56,
+        920.1648835355044,
+        195.84
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        228.95999999999998,
+        309.60164313009926,
+        265.68
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        277.91999999999996,
+        309.60164313009926,
+        394.56
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "peer-2-title",
+      "frame": [
+        351.361864761601,
+        228.95999999999998,
+        608.4032289417067,
+        265.68
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "peer-2-body",
+      "frame": [
+        351.361864761601,
+        277.91999999999996,
+        608.4032289417067,
+        394.56
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "peer-3-title",
+      "frame": [
+        650.1634505732085,
+        228.95999999999998,
+        907.2048147533142,
+        265.68
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "peer-3-body",
+      "frame": [
+        650.1634505732085,
+        277.91999999999996,
+        907.2048147533142,
+        394.56
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "closing-action",
+      "frame": [
+        50.40026748629523,
+        436.32,
+        909.3648262170125,
+        486.71999999999997
+      ],
+      "words_matched_by_position": 14,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "closing-boundary",
+      "frame": [
+        39.6002101678034,
+        494.64,
+        920.1648835355044,
+        520.56
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 18,
+      "name": "challenge-19-link",
+      "frame": [
+        630.0033435786903,
+        17.279999999999998,
+        846.0044899485271,
+        38.879999999999995
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-browser-title",
+      "frame": [
+        48.24025602259686,
+        151.2,
+        299.52158963284023,
+        175.67999999999998
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-browser-body",
+      "frame": [
+        48.24025602259686,
+        178.56,
+        299.52158963284023,
+        226.0799212598425
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-entra-title",
+      "frame": [
+        354.2418800465322,
+        151.2,
+        605.5232136567755,
+        175.67999999999998
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-entra-body",
+      "frame": [
+        354.2418800465322,
+        178.56,
+        605.5232136567755,
+        226.0799212598425
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-auth-title",
+      "frame": [
+        660.2435040704675,
+        151.2,
+        911.5248376807109,
+        175.67999999999998
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-auth-body",
+      "frame": [
+        660.2435040704675,
+        178.56,
+        911.5248376807109,
+        226.0799212598425
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-model-title",
+      "frame": [
+        48.24025602259686,
+        261.36,
+        299.52158963284023,
+        285.84
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-model-body",
+      "frame": [
+        48.24025602259686,
+        288.71999999999997,
+        299.52158963284023,
+        355.68
+      ],
+      "words_matched_by_position": 12,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-api-title",
+      "frame": [
+        354.2418800465322,
+        261.36,
+        605.5232136567755,
+        285.84
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-api-body",
+      "frame": [
+        354.2418800465322,
+        288.71999999999997,
+        605.5232136567755,
+        355.68
+      ],
+      "words_matched_by_position": 11,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-sql-title",
+      "frame": [
+        660.2435040704675,
+        261.36,
+        911.5248376807109,
+        285.84
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-sql-body",
+      "frame": [
+        660.2435040704675,
+        288.71999999999997,
+        911.5248376807109,
+        355.68
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-review-title",
+      "frame": [
+        48.24025602259686,
+        388.79999999999995,
+        605.5232136567755,
+        413.28
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-review-body",
+      "frame": [
+        48.24025602259686,
+        416.15999999999997,
+        605.5232136567755,
+        465.12
+      ],
+      "words_matched_by_position": 14,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-blob-title",
+      "frame": [
+        660.2435040704675,
+        388.79999999999995,
+        911.5248376807109,
+        413.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-blob-body",
+      "frame": [
+        660.2435040704675,
+        416.15999999999997,
+        911.5248376807109,
+        465.12
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "runtime-authority",
+      "frame": [
+        39.6002101678034,
+        473.03999999999996,
+        920.1648835355044,
+        496.08
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "operations-link",
+      "frame": [
+        39.6002101678034,
+        501.84,
+        298.8015858116074,
+        523.4399999999999
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "deferred-link",
+      "frame": [
+        324.001719554755,
+        501.84,
+        633.6033626848543,
+        523.4399999999999
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 19,
+      "name": "return-decision-link",
+      "frame": [
+        651.603458215674,
+        501.11999999999995,
+        864.0045854793468,
+        522.72
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        525.6,
+        860.4045663731829,
+        537.8399999999999
+      ],
+      "words_matched_by_position": 25,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-1-peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.12,
+        459.002436035903,
+        200.15992125984252
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-1-peer-1-body",
+      "frame": [
+        52.560278949993595,
+        212.3999212598425,
+        459.002436035903,
+        267.1199212598425
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-1-peer-2-title",
+      "frame": [
+        500.76257892682935,
+        159.12,
+        907.2047360127387,
+        200.15992125984252
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-1-peer-2-body",
+      "frame": [
+        500.76257892682935,
+        212.3999212598425,
+        907.2047360127387,
+        267.1199212598425
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-2-peer-1-title",
+      "frame": [
+        52.560278949993595,
+        305.2799212598425,
+        459.002436035903,
+        346.31984251968504
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-2-peer-1-body",
+      "frame": [
+        52.560278949993595,
+        358.56,
+        459.002436035903,
+        419.03999999999996
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-2-peer-2-title",
+      "frame": [
+        500.76257892682935,
+        305.2799212598425,
+        907.2047360127387,
+        346.31984251968504
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "qa-row-2-peer-2-body",
+      "frame": [
+        500.76257892682935,
+        358.56,
+        907.2047360127387,
+        419.03999999999996
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        453.59999999999997,
+        907.2048147533142,
+        486.7199212598425
+      ],
+      "words_matched_by_position": 11,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "return-decision-link",
+      "frame": [
+        651.603458215674,
+        501.11999999999995,
+        864.0045854793468,
+        522.72
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 20,
+      "name": "challenge-22-link",
+      "frame": [
+        39.6002101678034,
+        501.11999999999995,
+        255.6013565376401,
+        522.72
+      ],
+      "words_matched_by_position": 1,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        525.6,
+        860.4045663731829,
+        537.8399999999999
+      ],
+      "words_matched_by_position": 12,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "peer-1-title",
+      "frame": [
+        52.560278949993595,
+        159.84,
+        309.60164313009926,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "peer-1-body",
+      "frame": [
+        52.560278949993595,
+        239.76,
+        309.60164313009926,
+        398.88
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "peer-2-title",
+      "frame": [
+        351.361864761601,
+        159.84,
+        608.4032289417067,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "peer-2-body",
+      "frame": [
+        351.361864761601,
+        239.76,
+        608.4032289417067,
+        398.88
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "peer-3-title",
+      "frame": [
+        650.1634505732085,
+        159.84,
+        907.2048147533142,
+        227.51999999999998
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "peer-3-body",
+      "frame": [
+        650.1634505732085,
+        239.76,
+        907.2048147533142,
+        398.88
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        441.35999999999996,
+        907.2048147533142,
+        474.4799212598425
+      ],
+      "words_matched_by_position": 8,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "assessment-open",
+      "frame": [
+        51.120271307528014,
+        486.71999999999997,
+        641.5233259778396,
+        513.36
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 21,
+      "name": "return-decision-link",
+      "frame": [
+        651.603458215674,
+        501.11999999999995,
+        864.0045854793468,
+        522.72
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        525.6,
+        860.4045663731829,
+        537.8399999999999
+      ],
+      "words_matched_by_position": 17,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-peer-1-title",
+      "frame": [
+        257.76136800133844,
+        154.07999999999998,
+        454.32241119788983,
+        216.72
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-peer-2-title",
+      "frame": [
+        486.00257933213254,
+        154.07999999999998,
+        682.5636225286839,
+        216.72
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-peer-3-title",
+      "frame": [
+        714.2437906629267,
+        154.07999999999998,
+        910.8048338594781,
+        216.72
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-1-label",
+      "frame": [
+        39.6002101678034,
+        237.6,
+        237.60126100682035,
+        267.84
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-1-peer-1-body",
+      "frame": [
+        257.76136800133844,
+        237.6,
+        454.32241119788983,
+        266.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-1-peer-2-body",
+      "frame": [
+        486.00257933213254,
+        237.6,
+        682.5636225286839,
+        266.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-1-peer-3-body",
+      "frame": [
+        714.2437906629267,
+        237.6,
+        910.8048338594781,
+        266.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-2-label",
+      "frame": [
+        39.6002101678034,
+        283.68,
+        237.60126100682035,
+        313.91999999999996
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-2-peer-1-body",
+      "frame": [
+        257.76136800133844,
+        283.68,
+        454.32241119788983,
+        312.47999999999996
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-2-peer-2-body",
+      "frame": [
+        486.00257933213254,
+        283.68,
+        682.5636225286839,
+        312.47999999999996
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-2-peer-3-body",
+      "frame": [
+        714.2437906629267,
+        283.68,
+        910.8048338594781,
+        312.47999999999996
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-3-label",
+      "frame": [
+        39.6002101678034,
+        329.76,
+        237.60126100682035,
+        360.0
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-3-peer-1-body",
+      "frame": [
+        257.76136800133844,
+        329.76,
+        454.32241119788983,
+        358.56
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-3-peer-2-body",
+      "frame": [
+        486.00257933213254,
+        329.76,
+        682.5636225286839,
+        358.56
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-3-peer-3-body",
+      "frame": [
+        714.2437906629267,
+        329.76,
+        910.8048338594781,
+        358.56
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-4-label",
+      "frame": [
+        39.6002101678034,
+        375.84,
+        237.60126100682035,
+        406.08
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-4-peer-1-body",
+      "frame": [
+        257.76136800133844,
+        375.84,
+        454.32241119788983,
+        404.64
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-4-peer-2-body",
+      "frame": [
+        486.00257933213254,
+        375.84,
+        682.5636225286839,
+        404.64
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "option-row-4-peer-3-body",
+      "frame": [
+        714.2437906629267,
+        375.84,
+        910.8048338594781,
+        404.64
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "boundary-text",
+      "frame": [
+        52.560278949993595,
+        454.32,
+        907.2048147533142,
+        487.4399212598425
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "return-decision-link",
+      "frame": [
+        651.603458215674,
+        501.11999999999995,
+        864.0045854793468,
+        522.72
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 22,
+      "name": "return-options-link",
+      "frame": [
+        39.6002101678034,
+        501.11999999999995,
+        363.60192972255845,
+        522.72
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-tokens-title",
+      "frame": [
+        48.24025602259686,
+        151.2,
+        299.52158963284023,
+        175.67999999999998
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-tokens-body",
+      "frame": [
+        48.24025602259686,
+        178.56,
+        299.52158963284023,
+        252.72
+      ],
+      "words_matched_by_position": 11,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-renewal-title",
+      "frame": [
+        354.2418800465322,
+        151.2,
+        605.5232136567755,
+        175.67999999999998
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-renewal-body",
+      "frame": [
+        354.2418800465322,
+        178.56,
+        605.5232136567755,
+        252.72
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-vault-title",
+      "frame": [
+        660.2435040704675,
+        151.2,
+        911.5248376807109,
+        175.67999999999998
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-vault-body",
+      "frame": [
+        660.2435040704675,
+        178.56,
+        911.5248376807109,
+        252.72
+      ],
+      "words_matched_by_position": 12,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-registry-title",
+      "frame": [
+        48.24025602259686,
+        277.91999999999996,
+        299.52158963284023,
+        302.4
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-registry-body",
+      "frame": [
+        48.24025602259686,
+        305.28,
+        299.52158963284023,
+        379.44
+      ],
+      "words_matched_by_position": 15,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-logs-title",
+      "frame": [
+        354.2418800465322,
+        277.91999999999996,
+        605.5232136567755,
+        302.4
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-logs-body",
+      "frame": [
+        354.2418800465322,
+        305.28,
+        605.5232136567755,
+        379.44
+      ],
+      "words_matched_by_position": 12,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-alerts-title",
+      "frame": [
+        660.2435040704675,
+        277.91999999999996,
+        911.5248376807109,
+        302.4
+      ],
+      "words_matched_by_position": 2,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-alerts-body",
+      "frame": [
+        660.2435040704675,
+        305.28,
+        911.5248376807109,
+        379.44
+      ],
+      "words_matched_by_position": 14,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-network",
+      "frame": [
+        39.6002101678034,
+        392.4,
+        920.1648835355044,
+        438.47999999999996
+      ],
+      "words_matched_by_position": 18,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-support",
+      "frame": [
+        39.6002101678034,
+        442.79999999999995,
+        920.1648835355044,
+        468.71999999999997
+      ],
+      "words_matched_by_position": 12,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "ops-failures",
+      "frame": [
+        50.40026748629523,
+        474.47999999999996,
+        909.3648262170125,
+        498.23999999999995
+      ],
+      "words_matched_by_position": 15,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 23,
+      "name": "return-decision-link",
+      "frame": [
+        651.603458215674,
+        501.11999999999995,
+        864.0045854793468,
+        522.72
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        56.879999999999995,
+        920.1648835355044,
+        127.44
+      ],
+      "words_matched_by_position": 7,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        524.16,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-frame-label",
+      "frame": [
+        39.6002101678034,
+        136.07999999999998,
+        920.1648835355044,
+        160.56
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-orchestrator-title",
+      "frame": [
+        48.24025602259686,
+        170.64,
+        299.52158963284023,
+        195.12
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-orchestrator-body",
+      "frame": [
+        48.24025602259686,
+        198.0,
+        299.52158963284023,
+        268.56
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-queues-title",
+      "frame": [
+        354.2418800465322,
+        170.64,
+        605.5232136567755,
+        195.12
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-queues-body",
+      "frame": [
+        354.2418800465322,
+        198.0,
+        605.5232136567755,
+        268.56
+      ],
+      "words_matched_by_position": 12,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-agents-title",
+      "frame": [
+        660.2435040704675,
+        170.64,
+        911.5248376807109,
+        195.12
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-agents-body",
+      "frame": [
+        660.2435040704675,
+        198.0,
+        911.5248376807109,
+        268.56
+      ],
+      "words_matched_by_position": 12,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-m365-title",
+      "frame": [
+        48.24025602259686,
+        292.3199212598425,
+        299.52158963284023,
+        316.7999212598425
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-m365-body",
+      "frame": [
+        48.24025602259686,
+        319.68,
+        299.52158963284023,
+        390.24
+      ],
+      "words_matched_by_position": 10,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-import-title",
+      "frame": [
+        354.2418800465322,
+        292.3199212598425,
+        605.5232136567755,
+        316.7999212598425
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-import-body",
+      "frame": [
+        354.2418800465322,
+        319.68,
+        605.5232136567755,
+        390.24
+      ],
+      "words_matched_by_position": 9,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-containers-title",
+      "frame": [
+        660.2435040704675,
+        292.3199212598425,
+        911.5248376807109,
+        316.7999212598425
+      ],
+      "words_matched_by_position": 3,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-containers-body",
+      "frame": [
+        660.2435040704675,
+        319.68,
+        911.5248376807109,
+        390.24
+      ],
+      "words_matched_by_position": 11,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-edge-title",
+      "frame": [
+        48.24025602259686,
+        406.08,
+        459.3624379465194,
+        430.56
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-edge-body",
+      "frame": [
+        48.24025602259686,
+        433.44,
+        459.3624379465194,
+        459.35999999999996
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-anchor-title",
+      "frame": [
+        500.40265575678836,
+        406.08,
+        911.5248376807109,
+        430.56
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-anchor-body",
+      "frame": [
+        500.40265575678836,
+        433.44,
+        911.5248376807109,
+        459.35999999999996
+      ],
+      "words_matched_by_position": 6,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "deferred-teams",
+      "frame": [
+        39.6002101678034,
+        470.88,
+        920.1648835355044,
+        496.08
+      ],
+      "words_matched_by_position": 11,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "return-decision-link",
+      "frame": [
+        651.603458215674,
+        501.11999999999995,
+        864.0045854793468,
+        522.72
+      ],
+      "words_matched_by_position": 5,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 24,
+      "name": "actual-runtime-link",
+      "frame": [
+        39.6002101678034,
+        501.11999999999995,
+        327.601738660919,
+        522.72
+      ],
+      "words_matched_by_position": 4,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    }
+  ],
+  "dispositions": [
+    {
+      "slide": 13,
+      "name": "slide-title",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "page-counter",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-label",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-body",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-label",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-body",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-label",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-body",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-label",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-body",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-label",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-body",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-label",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-body",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-label",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-body",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-label",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-body",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-label",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-body",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-label",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-body",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-funding-boundary",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    },
+    {
+      "slide": 13,
+      "name": "map-hazard-boundary",
+      "accepted_preservation_exception": true,
+      "rationale": "Preserved map13 compact font-metric rectangle overhang. Exact original native XML/notes/geometry retained; tokens all render and actual image must be inspected. This is not claimed strict word-bound clearance."
+    }
+  ],
+  "all_remaining_bounds_dispositioned": true
+}

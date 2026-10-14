@@ -1,0 +1,882 @@
+[
+  {
+    "slide": 10,
+    "names": [
+      "exec-api",
+      "exec-model"
+    ],
+    "role": "title",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 2862072,
+        "height_emu": 457200,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 22.0,
+        "font_max_pt": 22.0
+      },
+      {
+        "top_emu": 2862072,
+        "height_emu": 457200,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 22.0,
+        "font_max_pt": 22.0
+      }
+    ],
+    "body_font_sizes": [],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 10,
+    "names": [
+      "exec-api",
+      "exec-model"
+    ],
+    "role": "body",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 3383279,
+        "height_emu": 996695,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 3383279,
+        "height_emu": 996695,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      }
+    ],
+    "body_font_sizes": [
+      20.0,
+      18.0
+    ],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 10,
+    "names": [
+      "exec-sql",
+      "exec-blob"
+    ],
+    "role": "title",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 4828032,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 4828032,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      }
+    ],
+    "body_font_sizes": [],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 10,
+    "names": [
+      "exec-sql",
+      "exec-blob"
+    ],
+    "role": "body",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 5175504,
+        "height_emu": 621792,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 5175504,
+        "height_emu": 621792,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      }
+    ],
+    "body_font_sizes": [
+      18.0,
+      18.0
+    ],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 19,
+    "names": [
+      "runtime-browser",
+      "runtime-entra",
+      "runtime-auth"
+    ],
+    "role": "title",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 1920240,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 1920240,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 1920240,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      }
+    ],
+    "body_font_sizes": [],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 19,
+    "names": [
+      "runtime-browser",
+      "runtime-entra",
+      "runtime-auth"
+    ],
+    "role": "body",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 2267712,
+        "height_emu": 603503,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 2267712,
+        "height_emu": 603503,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 2267712,
+        "height_emu": 603503,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      }
+    ],
+    "body_font_sizes": [
+      16.0,
+      18.0,
+      18.0
+    ],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 19,
+    "names": [
+      "runtime-model",
+      "runtime-api",
+      "runtime-sql"
+    ],
+    "role": "title",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 3319272,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 3319272,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 3319272,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      }
+    ],
+    "body_font_sizes": [],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 19,
+    "names": [
+      "runtime-model",
+      "runtime-api",
+      "runtime-sql"
+    ],
+    "role": "body",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 3666744,
+        "height_emu": 850392,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 3666744,
+        "height_emu": 850392,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 3666744,
+        "height_emu": 850392,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      }
+    ],
+    "body_font_sizes": [
+      16.0,
+      16.0,
+      16.0
+    ],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 19,
+    "names": [
+      "runtime-review",
+      "runtime-blob"
+    ],
+    "role": "title",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 4937760,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 4937760,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      }
+    ],
+    "body_font_sizes": [],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 19,
+    "names": [
+      "runtime-review",
+      "runtime-blob"
+    ],
+    "role": "body",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 5285232,
+        "height_emu": 621792,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 5285232,
+        "height_emu": 621792,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      }
+    ],
+    "body_font_sizes": [
+      18.0,
+      16.0
+    ],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 23,
+    "names": [
+      "ops-tokens",
+      "ops-renewal",
+      "ops-vault"
+    ],
+    "role": "title",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 1920240,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 1920240,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 1920240,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      }
+    ],
+    "body_font_sizes": [],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 23,
+    "names": [
+      "ops-tokens",
+      "ops-renewal",
+      "ops-vault"
+    ],
+    "role": "body",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 2267712,
+        "height_emu": 941832,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 2267712,
+        "height_emu": 941832,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 2267712,
+        "height_emu": 941832,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      }
+    ],
+    "body_font_sizes": [
+      18.0,
+      18.0,
+      18.0
+    ],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 23,
+    "names": [
+      "ops-registry",
+      "ops-logs",
+      "ops-alerts"
+    ],
+    "role": "title",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 3529584,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 3529584,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 3529584,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      }
+    ],
+    "body_font_sizes": [],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 23,
+    "names": [
+      "ops-registry",
+      "ops-logs",
+      "ops-alerts"
+    ],
+    "role": "body",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 3877056,
+        "height_emu": 941832,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 3877056,
+        "height_emu": 941832,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 3877056,
+        "height_emu": 941832,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      }
+    ],
+    "body_font_sizes": [
+      18.0,
+      18.0,
+      18.0
+    ],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 24,
+    "names": [
+      "deferred-orchestrator",
+      "deferred-queues",
+      "deferred-agents"
+    ],
+    "role": "title",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 2167128,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 2167128,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 2167128,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      }
+    ],
+    "body_font_sizes": [],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 24,
+    "names": [
+      "deferred-orchestrator",
+      "deferred-queues",
+      "deferred-agents"
+    ],
+    "role": "body",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 2514600,
+        "height_emu": 896112,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 2514600,
+        "height_emu": 896112,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 2514600,
+        "height_emu": 896112,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      }
+    ],
+    "body_font_sizes": [
+      18.0,
+      18.0,
+      16.0
+    ],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 24,
+    "names": [
+      "deferred-m365",
+      "deferred-import",
+      "deferred-containers"
+    ],
+    "role": "title",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 3712463,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 3712463,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 3712463,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      }
+    ],
+    "body_font_sizes": [],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 24,
+    "names": [
+      "deferred-m365",
+      "deferred-import",
+      "deferred-containers"
+    ],
+    "role": "body",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 4059936,
+        "height_emu": 896112,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 4059936,
+        "height_emu": 896112,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 4059936,
+        "height_emu": 896112,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      }
+    ],
+    "body_font_sizes": [
+      18.0,
+      18.0,
+      18.0
+    ],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 24,
+    "names": [
+      "deferred-edge",
+      "deferred-anchor"
+    ],
+    "role": "title",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 5157216,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      },
+      {
+        "top_emu": 5157216,
+        "height_emu": 310896,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        },
+        "font_min_pt": 18.0,
+        "font_max_pt": 18.0
+      }
+    ],
+    "body_font_sizes": [],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  },
+  {
+    "slide": 24,
+    "names": [
+      "deferred-edge",
+      "deferred-anchor"
+    ],
+    "role": "body",
+    "zero_emu_and_font_drift": true,
+    "signatures": [
+      {
+        "top_emu": 5504688,
+        "height_emu": 329184,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      },
+      {
+        "top_emu": 5504688,
+        "height_emu": 329184,
+        "insets_emu": {
+          "left": 18288,
+          "right": 18288,
+          "top": 18288,
+          "bottom": 18288
+        }
+      }
+    ],
+    "body_font_sizes": [
+      18.0,
+      18.0
+    ],
+    "font_rule": "Equal peer header fonts; body role-specific 16pt map labels / 18pt normal / 20pt central core retained, not claimed equal."
+  }
+]

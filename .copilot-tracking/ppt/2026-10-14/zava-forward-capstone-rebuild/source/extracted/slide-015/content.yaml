@@ -1,0 +1,351 @@
+slide: 15
+title: SUPPORTED CHANGE / EXISTING TEAMS AND SUPPLIERS
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: SUPPORTED CHANGE / EXISTING TEAMS AND SUPPLIERS
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.25
+  text: Make the first change small enough to learn
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 1
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 2.7
+  height: 2.85
+  name: Rounded Rectangle 3
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: '1 / CO-DESIGN
+
+    Programme Manager
+
+    Workbook owners
+
+    Tasks + baseline'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 1 / CO-DESIGN
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Programme Manager
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Workbook owners
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Tasks + baseline
+    text_font: Aptos
+    text_size: 19
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 2
+- type: shape
+  shape: rounded_rectangle
+  left: 3.75
+  top: 2.85
+  width: 2.7
+  height: 2.85
+  name: Rounded Rectangle 4
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: '2 / CONNECT
+
+    Data owner
+
+    One home first
+
+    Shadow import
+
+    Quarantine conflicts'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 2 / CONNECT
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Data owner
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: One home first
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Shadow import
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Quarantine conflicts
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#183A31'
+  alignment: left
+  z_order: 3
+- type: shape
+  shape: rounded_rectangle
+  left: 6.85
+  top: 2.85
+  width: 2.7
+  height: 2.85
+  name: Rounded Rectangle 5
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: '3 / REHEARSE
+
+    Team leads
+
+    Task walkthroughs
+
+    Named support
+
+    Short parallel run'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 3 / REHEARSE
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Team leads
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Task walkthroughs
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Named support
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Short parallel run
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#183A31'
+  alignment: left
+  z_order: 4
+- type: shape
+  shape: rounded_rectangle
+  left: 9.95
+  top: 2.85
+  width: 2.7
+  height: 2.85
+  name: Rounded Rectangle 6
+  corner_radius: 0.16667
+  fill: '#E5B96A'
+  text: '4 / SWITCH
+
+    Digital + work owner
+
+    Exit tests + rollback
+
+    Workbench writes
+
+    Excel reports'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 4 / SWITCH
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Digital + work owner
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Exit tests + rollback
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Workbench writes
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Excel reports
+    text_font: Aptos
+    text_size: 19
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 19
+  text_color: '#183A31'
+  alignment: left
+  z_order: 5
+- type: textbox
+  left: 0.65
+  top: 6.05
+  width: 12.0
+  height: 0.35
+  text: No permanent dual entry. No compulsory portal. No big-bang replacement.
+  name: TextBox 7
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 20
+  font_color: '#183A31'
+  z_order: 6
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12.0
+  height: 0.28
+  text: 15 / PROPOSED ADOPTION JOURNEY / E05/E09/E12 / ROLE ASSIGNMENTS AND EXIT THRESHOLDS
+    TO CONFIRM
+  name: TextBox 8
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  z_order: 7
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 8
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 9
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'The ambition is large; the first change should be small enough to
+  learn from. Start with existing teams and suppliers, and one connected home.
+
+
+  The Programme Manager and staff co-design tasks and profile workbook ownership.
+  The Data owner shadows one-way imports and owns quarantine and reconciliation. Team
+  leads rehearse role-specific tasks with named support. Digital and the work owner
+  agree exit tests and prove rollback before switching the write path.
+
+
+  Keep parallel entry short and explicitly owned. After sign-off, the workbench writes
+  and Excel reports through the API. No permanent dual entry, compulsory portal or
+  big-bang replacement.
+
+
+  These are proposed owner roles, not confirmed delegations. Validate tenant, workbook
+  quality, accessibility and staff readiness. Count transition and training effort
+  in the business case.
+
+
+  Evidence:
+
+  docs/reference/research/company/pilot-measurement-challenge.md — Owner Decision,
+  2026-09-26.
+
+  docs/adrs/0001-azure-architecture.md — Hybrid M365 and Excel transition (proposed).
+
+  docs/reference/research/ux/zava-forward-prototype-profile-review.md — Owner Usability
+  Feedback; Proposed Acceptance Checks (2026-10-07).'

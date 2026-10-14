@@ -29,7 +29,7 @@ jobs:
       - name: Unit, API, role matrix, ledger and AI evaluation tests
         run: cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests
       - name: Check browser JavaScript syntax
-        run: node --check mvp/web/app.js
+        run: node --check mvp/web/app.js && node --check mvp/web/assistants.js
 
   image:
     runs-on: ubuntu-latest
@@ -113,7 +113,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libltdl7 libkrb5-3
       - name: Install pinned driver
         run: pip install --require-hashes -r mvp/requirements.txt
-      - name: Store parity tests on SQL Server
+      - name: Store and five-assistant contracts on SQL Server
         env:
           ZF_TEST_MSSQL: "1"
           ZF_SQL_SERVER: localhost
@@ -122,4 +122,9 @@ jobs:
           ZF_SQL_USER: sa
           ZF_SQL_PASSWORD: "Zf-Test-12345!"
           ZF_SQL_TRUST_CERT: "1"
-        run: cd mvp && PYTHONPATH=.:tests python3 -m unittest test_mssqlstore
+        run: |
+          cd mvp
+          PYTHONPATH=.:tests python3 -m unittest test_mssqlstore \
+            test_assistants.MssqlContractTests test_assistants.MssqlReviewTests \
+            test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests \
+            test_assistants.MssqlLedgerTests

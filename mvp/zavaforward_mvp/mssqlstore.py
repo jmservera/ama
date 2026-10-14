@@ -172,6 +172,10 @@ class _Conn:
     def executemany(self, sql, rows):
         return _Cursor(self._run(self._rewrite(sql), list(rows), many=True))
 
+    def close(self):
+        if self.raw is not None:
+            self.raw.close()
+
 
 class MssqlStore(SqlStore):
     def __init__(self, data_path, env=None, state_dir=None, **kw):
@@ -186,7 +190,20 @@ class MssqlStore(SqlStore):
     def _open(self, db_path):
         self.db = _Conn(connection_string(self._env), self._env.get("ZF_SQL_TOKEN"))
 
+    def assistant_connection(self):
+        return _Conn(connection_string(self._env), self._env.get("ZF_SQL_TOKEN"))
+
     def _create_schema(self):
+        with self.dblock:
+            self.db.execute("BEGIN IMMEDIATE")
+            try:
+                self._create_schema_serialized()
+                self.db.execute("COMMIT")
+            except BaseException:
+                self.db.execute("ROLLBACK")
+                raise
+
+    def _create_schema_serialized(self):
         with self.dblock:
             ledger = bool(self.db.execute("SELECT is_ledger_on FROM sys.databases WHERE name = DB_NAME()").fetchone()[0])
             for name, ddl in TABLES.items():

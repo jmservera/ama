@@ -1,0 +1,25 @@
+slide: 10
+node: exec-sql
+object: azure-icon-sql-exec-sql
+source: docs/architecture/assets/azure/sql.svg
+source_sha256: a26124a2b188ccf910520c935c726f7364e0f5935d7a4319ebcab9c80a40e475
+png: content/slide-010/images/azure-sql.png
+png_sha256: 9f787e861b9b7faaffb158ccb87c6c6ecbe6603ebe2c638d77d7e0c946bdab53
+source_viewbox:
+- 0.0
+- 0.0
+- 18.0
+- 18.0
+source_ratio: 1.0
+raster_pixels:
+- 240
+- 240
+placement_inches:
+- 0.29
+- 0.29
+adjacent_label: Azure SQL
+converter: CairoSVG 2.9.1
+no_crop: true
+no_recolour: true
+source_unmodified: true
+provenance: docs/architecture/assets/README.md; local official Azure asset, not composite

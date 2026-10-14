@@ -1,0 +1,237 @@
+slide: 8
+title: DIGNITY AND CAPACITY / BOTH MUST BE REAL
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: DIGNITY AND CAPACITY / BOTH MUST BE REAL
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.25
+  text: A resident is not a scheduling variable
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 1
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 5.825
+  height: 2.85
+  name: Rounded Rectangle 3
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: 'RESIDENT CHOICE
+
+    Clear measure options + named contact
+
+    Safe phone, letter or assisted route
+
+    Preferences are not works consent
+
+    Silence is not consent'
+  margin_left: 0.25
+  margin_right: 0.25
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: RESIDENT CHOICE
+    text_font: Aptos
+    text_size: 22
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Clear measure options + named contact
+    text_font: Aptos
+    text_size: 22
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Safe phone, letter or assisted route
+    text_font: Aptos
+    text_size: 22
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Preferences are not works consent
+    text_font: Aptos
+    text_size: 22
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Silence is not consent
+    text_font: Aptos
+    text_size: 22
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 22
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 2
+- type: shape
+  shape: rounded_rectangle
+  left: 6.825
+  top: 2.85
+  width: 5.825
+  height: 2.85
+  name: Rounded Rectangle 4
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'DELIVERY CAPACITY
+
+    Committed crew + competence
+
+    Materials + client-side review capacity
+
+    Necessary adjustments, not diagnoses
+
+    Named liaison owns the handoff'
+  margin_left: 0.25
+  margin_right: 0.25
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: DELIVERY CAPACITY
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Committed crew + competence
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Materials + client-side review capacity
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Necessary adjustments, not diagnoses
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Named liaison owns the handoff
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 22
+  text_color: '#183A31'
+  alignment: left
+  z_order: 3
+- type: textbox
+  left: 0.65
+  top: 6.05
+  width: 12.0
+  height: 0.35
+  text: No compulsory resident portal. Hazards reach people outside routine scheduling.
+  name: TextBox 5
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 20
+  font_color: '#183A31'
+  z_order: 4
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12.0
+  height: 0.28
+  text: 08 / PROPOSED SERVICE / E03/E06/E12 / DIRECT RESIDENT AND STAFF VALIDATION
+    STILL REQUIRED
+  name: TextBox 6
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  z_order: 5
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 6
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 7
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'At that appointment, two realities meet: a resident''s informed choice
+  and a supplier''s actual capacity. Neither is a prediction for an agent to invent.
+
+
+  Residents need clear options, a named contact and safe phone, letter or officer-assisted
+  routes. No compulsory portal. Contact preference, accessibility adjustment and consent
+  to a measure are separate records. Silence is not consent, and no-access is not
+  automatically refusal.
+
+
+  Contractors need agreed scope, competence, materials and necessary adjustments—not
+  sensitive diagnoses. A named liaison owns the handoff through approved channels.
+
+
+  AI can help prepare an update or suggest an available slot. Staff still review and
+  act. Real co-design must test clarity and burden; fewer failed visits remain unmeasured.
+
+
+  Evidence:
+
+  docs/reference/research/company/agent-request-challenge.md — Coordination; Damp-and-mould
+  loop (2026-09-26).
+
+  docs/case_study_48_addendum.md — EXA-004/005/007/008 (exercise assumptions).
+
+  docs/reference/research/ux/zava-forward-prototype-profile-review.md — Owner Usability
+  Feedback; Proposed Acceptance Checks (2026-10-07).'

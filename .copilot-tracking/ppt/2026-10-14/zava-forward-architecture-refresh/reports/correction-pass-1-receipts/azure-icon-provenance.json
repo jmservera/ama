@@ -1,0 +1,602 @@
+[
+  {
+    "slide": 10,
+    "node": "exec-entra",
+    "object": "azure-icon-entra-exec-entra",
+    "source": "docs/architecture/assets/azure/entra.svg",
+    "source_sha256": "bad6673e76100221dfeb7adaebb4a6778c255c07afbdef742bf18527fe5115ab",
+    "png": "content/slide-010/images/azure-entra.png",
+    "png_sha256": "5720bb90454ac10f2deed232aebc9ea29733de51733496edb22e79a33ea61e48",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Microsoft Entra ID | CONFIGURED",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 10,
+    "node": "exec-api",
+    "object": "azure-icon-aca-exec-api",
+    "source": "docs/architecture/assets/azure/aca.svg",
+    "source_sha256": "b53c7e6b7af75b25c04231a7dff85074f0c32cc1c306376350c0c8df0cb64417",
+    "png": "content/slide-010/images/azure-aca.png",
+    "png_sha256": "9520aa9e1a73c0e1de946219604638e22d3b85598f6e2b54110e9a671fa0702d",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Container Apps",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 10,
+    "node": "exec-model",
+    "object": "azure-icon-openai-exec-model",
+    "source": "docs/architecture/assets/azure/openai.svg",
+    "source_sha256": "4859f2c78b6b81acbbaf94e7348cb7dcbe97955a038be903de01cf46a7206aad",
+    "png": "content/slide-010/images/azure-openai.png",
+    "png_sha256": "6ba3e92249f80980be6ddcd27d8711fbecc7b2ee237114a85252290f9720d9e8",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure OpenAI",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 10,
+    "node": "exec-sql",
+    "object": "azure-icon-sql-exec-sql",
+    "source": "docs/architecture/assets/azure/sql.svg",
+    "source_sha256": "a26124a2b188ccf910520c935c726f7364e0f5935d7a4319ebcab9c80a40e475",
+    "png": "content/slide-010/images/azure-sql.png",
+    "png_sha256": "9f787e861b9b7faaffb158ccb87c6c6ecbe6603ebe2c638d77d7e0c946bdab53",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure SQL",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 10,
+    "node": "exec-blob",
+    "object": "azure-icon-blob-exec-blob",
+    "source": "docs/architecture/assets/azure/blob.svg",
+    "source_sha256": "7190d3bb14ce30ce74bd0af873915830fe821e8c5f6ef6f3149e6f7cfb2aa4f7",
+    "png": "content/slide-010/images/azure-blob.png",
+    "png_sha256": "07fcf7397f41036e40d0c612f5c24ebba03ca0723739cc7120c0e87888ca83a2",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Blob",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 19,
+    "node": "runtime-entra",
+    "object": "azure-icon-entra-runtime-entra",
+    "source": "docs/architecture/assets/azure/entra.svg",
+    "source_sha256": "bad6673e76100221dfeb7adaebb4a6778c255c07afbdef742bf18527fe5115ab",
+    "png": "content/slide-019/images/azure-entra.png",
+    "png_sha256": "5720bb90454ac10f2deed232aebc9ea29733de51733496edb22e79a33ea61e48",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Microsoft Entra ID",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 19,
+    "node": "runtime-model",
+    "object": "azure-icon-openai-runtime-model",
+    "source": "docs/architecture/assets/azure/openai.svg",
+    "source_sha256": "4859f2c78b6b81acbbaf94e7348cb7dcbe97955a038be903de01cf46a7206aad",
+    "png": "content/slide-019/images/azure-openai.png",
+    "png_sha256": "6ba3e92249f80980be6ddcd27d8711fbecc7b2ee237114a85252290f9720d9e8",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure OpenAI",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 19,
+    "node": "runtime-api",
+    "object": "azure-icon-aca-runtime-api",
+    "source": "docs/architecture/assets/azure/aca.svg",
+    "source_sha256": "b53c7e6b7af75b25c04231a7dff85074f0c32cc1c306376350c0c8df0cb64417",
+    "png": "content/slide-019/images/azure-aca.png",
+    "png_sha256": "9520aa9e1a73c0e1de946219604638e22d3b85598f6e2b54110e9a671fa0702d",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Container Apps",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 19,
+    "node": "runtime-sql",
+    "object": "azure-icon-sql-runtime-sql",
+    "source": "docs/architecture/assets/azure/sql.svg",
+    "source_sha256": "a26124a2b188ccf910520c935c726f7364e0f5935d7a4319ebcab9c80a40e475",
+    "png": "content/slide-019/images/azure-sql.png",
+    "png_sha256": "9f787e861b9b7faaffb158ccb87c6c6ecbe6603ebe2c638d77d7e0c946bdab53",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure SQL | CORE",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 19,
+    "node": "runtime-blob",
+    "object": "azure-icon-blob-runtime-blob",
+    "source": "docs/architecture/assets/azure/blob.svg",
+    "source_sha256": "7190d3bb14ce30ce74bd0af873915830fe821e8c5f6ef6f3149e6f7cfb2aa4f7",
+    "png": "content/slide-019/images/azure-blob.png",
+    "png_sha256": "07fcf7397f41036e40d0c612f5c24ebba03ca0723739cc7120c0e87888ca83a2",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Blob",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 23,
+    "node": "ops-tokens",
+    "object": "azure-icon-blob-ops-tokens",
+    "source": "docs/architecture/assets/azure/blob.svg",
+    "source_sha256": "7190d3bb14ce30ce74bd0af873915830fe821e8c5f6ef6f3149e6f7cfb2aa4f7",
+    "png": "content/slide-023/images/azure-blob.png",
+    "png_sha256": "07fcf7397f41036e40d0c612f5c24ebba03ca0723739cc7120c0e87888ca83a2",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Blob | auth tokens",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 23,
+    "node": "ops-renewal",
+    "object": "azure-icon-aca-ops-renewal",
+    "source": "docs/architecture/assets/azure/aca.svg",
+    "source_sha256": "b53c7e6b7af75b25c04231a7dff85074f0c32cc1c306376350c0c8df0cb64417",
+    "png": "content/slide-023/images/azure-aca.png",
+    "png_sha256": "9520aa9e1a73c0e1de946219604638e22d3b85598f6e2b54110e9a671fa0702d",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Container Apps",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 23,
+    "node": "ops-vault",
+    "object": "azure-icon-vault-ops-vault",
+    "source": "docs/architecture/assets/azure/vault.svg",
+    "source_sha256": "712b426f54f0fc50d0816dc79df709daa7ac5f93ccaf4e9b3527f627f6e9ad97",
+    "png": "content/slide-023/images/azure-vault.png",
+    "png_sha256": "61d7f9286eae9b9cd2f7a1c49f5335c05f0fc065d912a84939234d86c8f7b14a",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Key Vault",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 23,
+    "node": "ops-registry",
+    "object": "azure-icon-registry-ops-registry",
+    "source": "docs/architecture/assets/azure/registry.svg",
+    "source_sha256": "c134b0a442f203a7eeeb6f99a1f02ed34e51373d7fca59f96c9f125874c9d7d4",
+    "png": "content/slide-023/images/azure-registry.png",
+    "png_sha256": "a39e7d09e63e7b27ce12e0175d1a6ea6ee11e5dde6a2d330fba3dcb8ba7850a6",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Container Registry",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 23,
+    "node": "ops-logs",
+    "object": "azure-icon-logs-ops-logs",
+    "source": "docs/architecture/assets/azure/logs.svg",
+    "source_sha256": "7a244a8d7260e84be5c904185db7b04994fe6ed345e2b224163bc5f7e3d97ce0",
+    "png": "content/slide-023/images/azure-logs.png",
+    "png_sha256": "a45cd3846c3cca205a3a9780e9e5cad97a119cd87b2ca873207e500d8825a59f",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Log Analytics",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 23,
+    "node": "ops-alerts",
+    "object": "azure-icon-monitor-ops-alerts",
+    "source": "docs/architecture/assets/azure/monitor.svg",
+    "source_sha256": "1396f59a7d8fd7505a423842b987c9b343a092263d1ab5c7b0d94d58d8b17448",
+    "png": "content/slide-023/images/azure-monitor.png",
+    "png_sha256": "a6dcc3bd9d942c4328858dec0a3038e4b93b342cfccf7680c73f9b77b1ae77c8",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Monitor alerts",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 24,
+    "node": "deferred-queues",
+    "object": "azure-icon-queue-deferred-queues",
+    "source": "docs/architecture/assets/azure/queue.svg",
+    "source_sha256": "1f37dad74544fe1e4d5f10d40a11e71b8026d5b11993539f9f19416224097a08",
+    "png": "content/slide-024/images/azure-queue.png",
+    "png_sha256": "6cc42602853d94819a695a2bbddcd4394e0d9dde3b7871eef219bde441da65bc",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Queue Storage",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 24,
+    "node": "deferred-import",
+    "object": "azure-icon-aca-deferred-import",
+    "source": "docs/architecture/assets/azure/aca.svg",
+    "source_sha256": "b53c7e6b7af75b25c04231a7dff85074f0c32cc1c306376350c0c8df0cb64417",
+    "png": "content/slide-024/images/azure-aca.png",
+    "png_sha256": "9520aa9e1a73c0e1de946219604638e22d3b85598f6e2b54110e9a671fa0702d",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Container Apps",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 24,
+    "node": "deferred-containers",
+    "object": "azure-icon-blob-deferred-containers",
+    "source": "docs/architecture/assets/azure/blob.svg",
+    "source_sha256": "7190d3bb14ce30ce74bd0af873915830fe821e8c5f6ef6f3149e6f7cfb2aa4f7",
+    "png": "content/slide-024/images/azure-blob.png",
+    "png_sha256": "07fcf7397f41036e40d0c612f5c24ebba03ca0723739cc7120c0e87888ca83a2",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Blob containers",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  },
+  {
+    "slide": 24,
+    "node": "deferred-edge",
+    "object": "azure-icon-edge-deferred-edge",
+    "source": "docs/architecture/assets/azure/edge.svg",
+    "source_sha256": "b2e9c9a8b091a0694532257354dea94bb8c65b33876826e44dbc9b2aae01cf17",
+    "png": "content/slide-024/images/azure-edge.png",
+    "png_sha256": "7242a74ae809f9f113d63c480e17d84f3a6934250c8a31c9995c8a9fc07592ae",
+    "source_viewbox": [
+      0.0,
+      0.0,
+      18.0,
+      18.0
+    ],
+    "source_ratio": 1.0,
+    "raster_pixels": [
+      240,
+      240
+    ],
+    "placement_inches": [
+      0.29,
+      0.29
+    ],
+    "adjacent_label": "Azure Front Door Premium/WAF",
+    "converter": "CairoSVG 2.9.1",
+    "no_crop": true,
+    "no_recolour": true,
+    "source_unmodified": true,
+    "provenance": "docs/architecture/assets/README.md; local official Azure asset, not composite"
+  }
+]

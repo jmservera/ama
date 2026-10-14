@@ -1,0 +1,3203 @@
+{
+  "baseline_export": "/home/azureuser/source/ama-wt-zava-challenge/.copilot-tracking/ppt/2026-10-14/zava-forward-capstone-rebuild/slide-deck/validation/slides.pdf",
+  "initial_export": "/home/azureuser/source/ama-wt-zava-challenge/.copilot-tracking/ppt/2026-10-14/zava-forward-architecture-refresh/reports/initial-candidate-receipts/slides.pdf",
+  "checker": "Same complete expected-sequence PDF word attribution and literal frame 1pt tolerance in frame_word_rows for all three; includes words with out-of-frame centres.",
+  "explanation": "The baseline 0.5pt helper checks expected tokens in an expanded region, not full glyph containment. Same baseline/initial map13 produce the same conservative glyph rectangle failures. They reveal genuinely undersized fixed frames under this exporter, compounded by 1.08 line spacing and 5pt paragraph-after spacing on explicit line breaks. Not waived as metric false positives. Uniform zero before/after and 1.0 line spacing, sufficient fixed frame heights, small peer-row positions/card height delta and metadata correction resolve all final literal bounds. No font shrink.",
+  "baseline": [
+    {
+      "slide": 13,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        46.8,
+        920.1648835355044,
+        82.8
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Five",
+          "box": [
+            41.016998291015625,
+            53.929161071777344,
+            100.9990005493164,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "assists.",
+          "box": [
+            109.27651977539062,
+            53.929161071777344,
+            219.28353881835938,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "One",
+          "box": [
+            227.6210479736328,
+            53.929161071777344,
+            285.8935852050781,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "controlled",
+          "box": [
+            294.2910461425781,
+            53.929161071777344,
+            439.1175537109375,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "journey.",
+          "box": [
+            447.5150146484375,
+            53.929161071777344,
+            561.8406982421875,
+            87.39911651611328
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        522.0,
+        860.4045663731829,
+        534.24
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        520.56,
+        920.1648835355044,
+        534.9599999999999
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "13",
+          "box": [
+            865.4459838867188,
+            524.0657958984375,
+            877.6757202148438,
+            536.3395385742188
+          ]
+        },
+        {
+          "token": "22",
+          "box": [
+            886.8810424804688,
+            524.0657958984375,
+            899.1107788085938,
+            536.3395385742188
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-status",
+      "frame": [
+        39.6002101678034,
+        85.67999999999999,
+        920.1648835355044,
+        107.28
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-stage",
+      "frame": [
+        43.20022927396734,
+        122.39999999999999,
+        204.62502300189834,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-owner",
+      "frame": [
+        43.20022927396734,
+        162.71992125984252,
+        204.62502300189834,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-title",
+      "frame": [
+        46.800248380131286,
+        223.2,
+        201.0250038957344,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-label",
+      "frame": [
+        46.800248380131286,
+        281.52,
+        201.0250038957344,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            48.24599838256836,
+            286.0037536621094,
+            70.34003448486328,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            74.73645782470703,
+            286.0037536621094,
+            132.33761596679688,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-body",
+      "frame": [
+        46.800248380131286,
+        304.56,
+        201.0250038957344,
+        345.5999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "query",
+          "box": [
+            48.24599838256836,
+            334.7317810058594,
+            88.1175765991211,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "conflicts",
+          "box": [
+            92.4500503540039,
+            334.7317810058594,
+            150.0352325439453,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-label",
+      "frame": [
+        46.800248380131286,
+        349.91999999999996,
+        201.0250038957344,
+        370.79999999999995
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            48.24599838256836,
+            354.4037780761719,
+            102.26607513427734,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            116.63838958740234,
+            354.4037780761719,
+            148.45252990722656,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-body",
+      "frame": [
+        46.800248380131286,
+        373.68,
+        201.0250038957344,
+        416.15999999999997
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "stock",
+          "box": [
+            48.24599838256836,
+            403.8967590332031,
+            85.36781311035156,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "facts",
+          "box": [
+            89.79621124267578,
+            403.8967590332031,
+            123.4168701171875,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-stage",
+      "frame": [
+        221.18511089025247,
+        122.39999999999999,
+        382.60990461818346,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-owner",
+      "frame": [
+        221.18511089025247,
+        162.71992125984252,
+        382.60990461818346,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-title",
+      "frame": [
+        224.78512999641643,
+        223.2,
+        379.00988551201954,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-label",
+      "frame": [
+        224.78512999641643,
+        281.52,
+        379.00988551201954,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            226.23300170898438,
+            286.0037536621094,
+            248.32704162597656,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            252.72348022460938,
+            286.0037536621094,
+            310.3245849609375,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-body",
+      "frame": [
+        224.78512999641643,
+        304.56,
+        379.00988551201954,
+        345.5999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "survey/design",
+          "box": [
+            226.23300170898438,
+            334.7317810058594,
+            324.53704833984375,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "pack",
+          "box": [
+            328.949462890625,
+            334.7317810058594,
+            362.6020812988281,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-label",
+      "frame": [
+        224.78512999641643,
+        349.91999999999996,
+        379.00988551201954,
+        370.79999999999995
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            226.23300170898438,
+            354.4037780761719,
+            280.2530517578125,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            294.6253967285156,
+            354.4037780761719,
+            326.4395446777344,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-body",
+      "frame": [
+        224.78512999641643,
+        373.68,
+        379.00988551201954,
+        416.15999999999997
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "survey",
+          "box": [
+            226.23300170898438,
+            403.8967590332031,
+            273.18682861328125,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "or",
+          "box": [
+            277.5193176269531,
+            403.8967590332031,
+            291.71575927734375,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "design",
+          "box": [
+            296.09619140625,
+            403.8967590332031,
+            343.0979309082031,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-stage",
+      "frame": [
+        399.170071247113,
+        122.39999999999999,
+        560.594864975044,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-owner",
+      "frame": [
+        399.170071247113,
+        162.71992125984252,
+        560.594864975044,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-title",
+      "frame": [
+        402.77009035327694,
+        223.2,
+        556.99484586888,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-label",
+      "frame": [
+        402.77009035327694,
+        281.52,
+        556.99484586888,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            404.2200012207031,
+            286.0037536621094,
+            426.3140563964844,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            430.7104797363281,
+            286.0037536621094,
+            488.31158447265625,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-body",
+      "frame": [
+        402.77009035327694,
+        304.56,
+        556.99484586888,
+        345.5999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "evidence",
+          "box": [
+            404.2200012207031,
+            334.7317810058594,
+            467.9761047363281,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "pack",
+          "box": [
+            472.3885192871094,
+            334.7317810058594,
+            506.05712890625,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-label",
+      "frame": [
+        402.77009035327694,
+        349.91999999999996,
+        556.99484586888,
+        370.79999999999995
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            404.2200012207031,
+            354.4037780761719,
+            458.24005126953125,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            472.6123962402344,
+            354.4037780761719,
+            504.4265441894531,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-body",
+      "frame": [
+        402.77009035327694,
+        373.68,
+        556.99484586888,
+        416.15999999999997
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "changed",
+          "box": [
+            404.2200012207031,
+            403.8967590332031,
+            465.4021911621094,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "terms",
+          "box": [
+            469.8146057128906,
+            403.8967590332031,
+            509.7021484375,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-stage",
+      "frame": [
+        577.1550316039735,
+        122.39999999999999,
+        738.5798253319045,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-owner",
+      "frame": [
+        577.1550316039735,
+        162.71992125984252,
+        738.5798253319045,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-title",
+      "frame": [
+        580.7550507101374,
+        223.2,
+        734.9798062257405,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-label",
+      "frame": [
+        580.7550507101374,
+        281.52,
+        734.9798062257405,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            582.2080078125,
+            286.0037536621094,
+            604.302001953125,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            608.6984252929688,
+            286.0037536621094,
+            666.2996215820312,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-body",
+      "frame": [
+        580.7550507101374,
+        304.56,
+        734.9798062257405,
+        345.5999212598425
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "suggest",
+          "box": [
+            582.2080078125,
+            334.7317810058594,
+            637.9707641601562,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "crew",
+          "box": [
+            642.3831787109375,
+            334.7317810058594,
+            676.0997924804688,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "slots",
+          "box": [
+            680.4962158203125,
+            334.7317810058594,
+            713.3016357421875,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-label",
+      "frame": [
+        580.7550507101374,
+        349.91999999999996,
+        734.9798062257405,
+        370.79999999999995
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            582.2080078125,
+            354.4037780761719,
+            636.2280883789062,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            650.6004028320312,
+            354.4037780761719,
+            682.4144897460938,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-body",
+      "frame": [
+        580.7550507101374,
+        373.68,
+        734.9798062257405,
+        416.15999999999997
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "overdue",
+          "box": [
+            582.2080078125,
+            403.8967590332031,
+            639.77734375,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "update",
+          "box": [
+            644.1897583007812,
+            403.8967590332031,
+            692.9981689453125,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-stage",
+      "frame": [
+        755.139991960834,
+        122.39999999999999,
+        916.564785688765,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-owner",
+      "frame": [
+        755.139991960834,
+        162.71992125984252,
+        916.564785688765,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-title",
+      "frame": [
+        758.7400110669979,
+        223.2,
+        912.9647665826011,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-label",
+      "frame": [
+        758.7400110669979,
+        281.52,
+        912.9647665826011,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            760.1950073242188,
+            286.0037536621094,
+            782.2890014648438,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            786.6854248046875,
+            286.0037536621094,
+            844.28662109375,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-body",
+      "frame": [
+        758.7400110669979,
+        304.56,
+        912.9647665826011,
+        345.5999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "raise",
+          "box": [
+            760.1950073242188,
+            334.7317810058594,
+            794.7269897460938,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "gaps",
+          "box": [
+            799.139404296875,
+            334.7317810058594,
+            833.767333984375,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-label",
+      "frame": [
+        758.7400110669979,
+        349.91999999999996,
+        912.9647665826011,
+        370.79999999999995
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            760.1950073242188,
+            354.4037780761719,
+            814.215087890625,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            828.58740234375,
+            354.4037780761719,
+            860.4014892578125,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-body",
+      "frame": [
+        758.7400110669979,
+        373.68,
+        912.9647665826011,
+        416.15999999999997
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "quality",
+          "box": [
+            760.1950073242188,
+            403.8967590332031,
+            806.1578369140625,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "evidence",
+          "box": [
+            810.6022338867188,
+            403.8967590332031,
+            874.3905029296875,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-core",
+      "frame": [
+        49.68026366506244,
+        437.76,
+        910.0848300382453,
+        460.08
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-funding-boundary",
+      "frame": [
+        39.6002101678034,
+        470.88,
+        920.1648835355044,
+        491.03999999999996
+      ],
+      "words_matched_by_expected_sequence": 13,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Checks",
+          "box": [
+            41.016998291015625,
+            475.38677978515625,
+            94.06185913085938,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            98.4902572631836,
+            475.38677978515625,
+            130.4003143310547,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "now;",
+          "box": [
+            134.7967529296875,
+            475.38677978515625,
+            168.4973602294922,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "future",
+          "box": [
+            172.90977478027344,
+            475.38677978515625,
+            213.67665100097656,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "eligibility",
+          "box": [
+            218.0890655517578,
+            475.38677978515625,
+            278.3280944824219,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "named",
+          "box": [
+            303.01202392578125,
+            475.38677978515625,
+            351.8522644042969,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "human",
+          "box": [
+            356.2646789550781,
+            475.38677978515625,
+            405.10491943359375,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "queue.",
+          "box": [
+            409.517333984375,
+            475.38677978515625,
+            458.19769287109375,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "Funding:",
+          "box": [
+            462.610107421875,
+            475.38677978515625,
+            524.6875610351562,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "application",
+          "box": [
+            529.0999755859375,
+            475.38677978515625,
+            605.358154296875,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "award",
+          "box": [
+            622.9278564453125,
+            475.38677978515625,
+            666.3645629882812,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "claim",
+          "box": [
+            683.9502563476562,
+            475.38677978515625,
+            721.088134765625,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "cash.",
+          "box": [
+            738.673828125,
+            475.38677978515625,
+            776.77099609375,
+            493.228271484375
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-hazard-boundary",
+      "frame": [
+        39.6002101678034,
+        493.91999999999996,
+        920.1648835355044,
+        513.36
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Hazard",
+          "box": [
+            41.016998291015625,
+            498.3757629394531,
+            92.35124969482422,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "human",
+          "box": [
+            117.11511993408203,
+            498.3757629394531,
+            165.95541381835938,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "service",
+          "box": [
+            170.36782836914062,
+            498.3757629394531,
+            220.82281494140625,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "now,",
+          "box": [
+            225.2352294921875,
+            498.3757629394531,
+            258.0885314941406,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "never",
+          "box": [
+            262.5009460449219,
+            498.3757629394531,
+            302.34051513671875,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "wait",
+          "box": [
+            306.720947265625,
+            498.3757629394531,
+            335.12982177734375,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "for",
+          "box": [
+            339.542236328125,
+            498.3757629394531,
+            358.1670837402344,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "AI.",
+          "box": [
+            361.6042785644531,
+            498.3757629394531,
+            381.1244201660156,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "Value",
+          "box": [
+            385.5368347167969,
+            498.3757629394531,
+            425.12060546875,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "remains",
+          "box": [
+            429.51702880859375,
+            498.3757629394531,
+            486.30279541015625,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "a",
+          "box": [
+            490.6512756347656,
+            498.3757629394531,
+            499.5400390625,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "hypothesis.",
+          "box": [
+            503.95245361328125,
+            498.3757629394531,
+            584.5751342773438,
+            516.2172241210938
+          ]
+        }
+      ]
+    }
+  ],
+  "initial_candidate": [
+    {
+      "slide": 13,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        46.8,
+        920.1648835355044,
+        82.8
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Five",
+          "box": [
+            41.016998291015625,
+            53.929161071777344,
+            100.9990005493164,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "assists.",
+          "box": [
+            109.27651977539062,
+            53.929161071777344,
+            219.28353881835938,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "One",
+          "box": [
+            227.6210479736328,
+            53.929161071777344,
+            285.8935852050781,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "controlled",
+          "box": [
+            294.2910461425781,
+            53.929161071777344,
+            439.1175537109375,
+            87.39911651611328
+          ]
+        },
+        {
+          "token": "journey.",
+          "box": [
+            447.5150146484375,
+            53.929161071777344,
+            561.8406982421875,
+            87.39911651611328
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        522.0,
+        860.4045663731829,
+        534.24
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        520.56,
+        920.1648835355044,
+        534.9599999999999
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "13",
+          "box": [
+            865.4459838867188,
+            524.0657958984375,
+            877.6757202148438,
+            536.3395385742188
+          ]
+        },
+        {
+          "token": "22",
+          "box": [
+            886.8810424804688,
+            524.0657958984375,
+            899.1107788085938,
+            536.3395385742188
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-status",
+      "frame": [
+        39.6002101678034,
+        85.67999999999999,
+        920.1648835355044,
+        107.28
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-stage",
+      "frame": [
+        43.20022927396734,
+        122.39999999999999,
+        204.62502300189834,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-owner",
+      "frame": [
+        43.20022927396734,
+        162.71992125984252,
+        204.62502300189834,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-title",
+      "frame": [
+        46.800248380131286,
+        223.2,
+        201.0250038957344,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-label",
+      "frame": [
+        46.800248380131286,
+        281.52,
+        201.0250038957344,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            48.24599838256836,
+            286.0037536621094,
+            70.34003448486328,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            74.73645782470703,
+            286.0037536621094,
+            132.33761596679688,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-body",
+      "frame": [
+        46.800248380131286,
+        304.56,
+        201.0250038957344,
+        345.5999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "query",
+          "box": [
+            48.24599838256836,
+            334.7317810058594,
+            88.1175765991211,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "conflicts",
+          "box": [
+            92.4500503540039,
+            334.7317810058594,
+            150.0352325439453,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-label",
+      "frame": [
+        46.800248380131286,
+        349.91999999999996,
+        201.0250038957344,
+        370.79999999999995
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            48.24599838256836,
+            354.4037780761719,
+            102.26607513427734,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            116.63838958740234,
+            354.4037780761719,
+            148.45252990722656,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-body",
+      "frame": [
+        46.800248380131286,
+        373.68,
+        201.0250038957344,
+        416.15999999999997
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "stock",
+          "box": [
+            48.24599838256836,
+            403.8967590332031,
+            85.36781311035156,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "facts",
+          "box": [
+            89.79621124267578,
+            403.8967590332031,
+            123.4168701171875,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-stage",
+      "frame": [
+        221.18511089025247,
+        122.39999999999999,
+        382.60990461818346,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-owner",
+      "frame": [
+        221.18511089025247,
+        162.71992125984252,
+        382.60990461818346,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-title",
+      "frame": [
+        224.78512999641643,
+        223.2,
+        379.00988551201954,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-label",
+      "frame": [
+        224.78512999641643,
+        281.52,
+        379.00988551201954,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            226.23300170898438,
+            286.0037536621094,
+            248.32704162597656,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            252.72348022460938,
+            286.0037536621094,
+            310.3245849609375,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-body",
+      "frame": [
+        224.78512999641643,
+        304.56,
+        379.00988551201954,
+        345.5999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "survey/design",
+          "box": [
+            226.23300170898438,
+            334.7317810058594,
+            324.53704833984375,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "pack",
+          "box": [
+            328.949462890625,
+            334.7317810058594,
+            362.6020812988281,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-label",
+      "frame": [
+        224.78512999641643,
+        349.91999999999996,
+        379.00988551201954,
+        370.79999999999995
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            226.23300170898438,
+            354.4037780761719,
+            280.2530517578125,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            294.6253967285156,
+            354.4037780761719,
+            326.4395446777344,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-body",
+      "frame": [
+        224.78512999641643,
+        373.68,
+        379.00988551201954,
+        416.15999999999997
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "survey",
+          "box": [
+            226.23300170898438,
+            403.8967590332031,
+            273.18682861328125,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "or",
+          "box": [
+            277.5193176269531,
+            403.8967590332031,
+            291.71575927734375,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "design",
+          "box": [
+            296.09619140625,
+            403.8967590332031,
+            343.0979309082031,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-stage",
+      "frame": [
+        399.170071247113,
+        122.39999999999999,
+        560.594864975044,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-owner",
+      "frame": [
+        399.170071247113,
+        162.71992125984252,
+        560.594864975044,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-title",
+      "frame": [
+        402.77009035327694,
+        223.2,
+        556.99484586888,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-label",
+      "frame": [
+        402.77009035327694,
+        281.52,
+        556.99484586888,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            404.2200012207031,
+            286.0037536621094,
+            426.3140563964844,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            430.7104797363281,
+            286.0037536621094,
+            488.31158447265625,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-body",
+      "frame": [
+        402.77009035327694,
+        304.56,
+        556.99484586888,
+        345.5999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "evidence",
+          "box": [
+            404.2200012207031,
+            334.7317810058594,
+            467.9761047363281,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "pack",
+          "box": [
+            472.3885192871094,
+            334.7317810058594,
+            506.05712890625,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-label",
+      "frame": [
+        402.77009035327694,
+        349.91999999999996,
+        556.99484586888,
+        370.79999999999995
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            404.2200012207031,
+            354.4037780761719,
+            458.24005126953125,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            472.6123962402344,
+            354.4037780761719,
+            504.4265441894531,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-body",
+      "frame": [
+        402.77009035327694,
+        373.68,
+        556.99484586888,
+        416.15999999999997
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "changed",
+          "box": [
+            404.2200012207031,
+            403.8967590332031,
+            465.4021911621094,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "terms",
+          "box": [
+            469.8146057128906,
+            403.8967590332031,
+            509.7021484375,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-stage",
+      "frame": [
+        577.1550316039735,
+        122.39999999999999,
+        738.5798253319045,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-owner",
+      "frame": [
+        577.1550316039735,
+        162.71992125984252,
+        738.5798253319045,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-title",
+      "frame": [
+        580.7550507101374,
+        223.2,
+        734.9798062257405,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-label",
+      "frame": [
+        580.7550507101374,
+        281.52,
+        734.9798062257405,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            582.2080078125,
+            286.0037536621094,
+            604.302001953125,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            608.6984252929688,
+            286.0037536621094,
+            666.2996215820312,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-body",
+      "frame": [
+        580.7550507101374,
+        304.56,
+        734.9798062257405,
+        345.5999212598425
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "suggest",
+          "box": [
+            582.2080078125,
+            334.7317810058594,
+            637.9707641601562,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "crew",
+          "box": [
+            642.3831787109375,
+            334.7317810058594,
+            676.0997924804688,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "slots",
+          "box": [
+            680.4962158203125,
+            334.7317810058594,
+            713.3016357421875,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-label",
+      "frame": [
+        580.7550507101374,
+        349.91999999999996,
+        734.9798062257405,
+        370.79999999999995
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            582.2080078125,
+            354.4037780761719,
+            636.2280883789062,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            650.6004028320312,
+            354.4037780761719,
+            682.4144897460938,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-body",
+      "frame": [
+        580.7550507101374,
+        373.68,
+        734.9798062257405,
+        416.15999999999997
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "overdue",
+          "box": [
+            582.2080078125,
+            403.8967590332031,
+            639.77734375,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "update",
+          "box": [
+            644.1897583007812,
+            403.8967590332031,
+            692.9981689453125,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-stage",
+      "frame": [
+        755.139991960834,
+        122.39999999999999,
+        916.564785688765,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-owner",
+      "frame": [
+        755.139991960834,
+        162.71992125984252,
+        916.564785688765,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-title",
+      "frame": [
+        758.7400110669979,
+        223.2,
+        912.9647665826011,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-label",
+      "frame": [
+        758.7400110669979,
+        281.52,
+        912.9647665826011,
+        302.4
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "On",
+          "box": [
+            760.1950073242188,
+            286.0037536621094,
+            782.2890014648438,
+            303.8452453613281
+          ]
+        },
+        {
+          "token": "request",
+          "box": [
+            786.6854248046875,
+            286.0037536621094,
+            844.28662109375,
+            303.8452453613281
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-body",
+      "frame": [
+        758.7400110669979,
+        304.56,
+        912.9647665826011,
+        345.5999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "raise",
+          "box": [
+            760.1950073242188,
+            334.7317810058594,
+            794.7269897460938,
+            352.5732727050781
+          ]
+        },
+        {
+          "token": "gaps",
+          "box": [
+            799.139404296875,
+            334.7317810058594,
+            833.767333984375,
+            352.5732727050781
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-label",
+      "frame": [
+        758.7400110669979,
+        349.91999999999996,
+        912.9647665826011,
+        370.79999999999995
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Trigger",
+          "box": [
+            760.1950073242188,
+            354.4037780761719,
+            814.215087890625,
+            372.2452697753906
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            828.58740234375,
+            354.4037780761719,
+            860.4014892578125,
+            372.2452697753906
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-body",
+      "frame": [
+        758.7400110669979,
+        373.68,
+        912.9647665826011,
+        416.15999999999997
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "quality",
+          "box": [
+            760.1950073242188,
+            403.8967590332031,
+            806.1578369140625,
+            421.7382507324219
+          ]
+        },
+        {
+          "token": "evidence",
+          "box": [
+            810.6022338867188,
+            403.8967590332031,
+            874.3905029296875,
+            421.7382507324219
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-core",
+      "frame": [
+        49.68026366506244,
+        437.76,
+        910.0848300382453,
+        460.08
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-funding-boundary",
+      "frame": [
+        39.6002101678034,
+        470.88,
+        920.1648835355044,
+        491.03999999999996
+      ],
+      "words_matched_by_expected_sequence": 13,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Checks",
+          "box": [
+            41.016998291015625,
+            475.38677978515625,
+            94.06185913085938,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "OFF",
+          "box": [
+            98.4902572631836,
+            475.38677978515625,
+            130.4003143310547,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "now;",
+          "box": [
+            134.7967529296875,
+            475.38677978515625,
+            168.4973602294922,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "future",
+          "box": [
+            172.90977478027344,
+            475.38677978515625,
+            213.67665100097656,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "eligibility",
+          "box": [
+            218.0890655517578,
+            475.38677978515625,
+            278.3280944824219,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "named",
+          "box": [
+            303.01202392578125,
+            475.38677978515625,
+            351.8522644042969,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "human",
+          "box": [
+            356.2646789550781,
+            475.38677978515625,
+            405.10491943359375,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "queue.",
+          "box": [
+            409.517333984375,
+            475.38677978515625,
+            458.19769287109375,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "Funding:",
+          "box": [
+            462.610107421875,
+            475.38677978515625,
+            524.6875610351562,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "application",
+          "box": [
+            529.0999755859375,
+            475.38677978515625,
+            605.358154296875,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "award",
+          "box": [
+            622.9278564453125,
+            475.38677978515625,
+            666.3645629882812,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "claim",
+          "box": [
+            683.9502563476562,
+            475.38677978515625,
+            721.088134765625,
+            493.228271484375
+          ]
+        },
+        {
+          "token": "cash.",
+          "box": [
+            738.673828125,
+            475.38677978515625,
+            776.77099609375,
+            493.228271484375
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "name": "map-hazard-boundary",
+      "frame": [
+        39.6002101678034,
+        493.91999999999996,
+        920.1648835355044,
+        513.36
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": false,
+      "overhang": [
+        {
+          "token": "Hazard",
+          "box": [
+            41.016998291015625,
+            498.3757629394531,
+            92.35124969482422,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "human",
+          "box": [
+            117.11511993408203,
+            498.3757629394531,
+            165.95541381835938,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "service",
+          "box": [
+            170.36782836914062,
+            498.3757629394531,
+            220.82281494140625,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "now,",
+          "box": [
+            225.2352294921875,
+            498.3757629394531,
+            258.0885314941406,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "never",
+          "box": [
+            262.5009460449219,
+            498.3757629394531,
+            302.34051513671875,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "wait",
+          "box": [
+            306.720947265625,
+            498.3757629394531,
+            335.12982177734375,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "for",
+          "box": [
+            339.542236328125,
+            498.3757629394531,
+            358.1670837402344,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "AI.",
+          "box": [
+            361.6042785644531,
+            498.3757629394531,
+            381.1244201660156,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "Value",
+          "box": [
+            385.5368347167969,
+            498.3757629394531,
+            425.12060546875,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "remains",
+          "box": [
+            429.51702880859375,
+            498.3757629394531,
+            486.30279541015625,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "a",
+          "box": [
+            490.6512756347656,
+            498.3757629394531,
+            499.5400390625,
+            516.2172241210938
+          ]
+        },
+        {
+          "token": "hypothesis.",
+          "box": [
+            503.95245361328125,
+            498.3757629394531,
+            584.5751342773438,
+            516.2172241210938
+          ]
+        }
+      ]
+    }
+  ],
+  "corrected_candidate": [
+    {
+      "slide": 13,
+      "name": "deck-eyebrow",
+      "frame": [
+        39.6002101678034,
+        18.0,
+        817.2043370992155,
+        36.0
+      ],
+      "words_matched_by_expected_sequence": 7,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "slide-title",
+      "frame": [
+        39.6002101678034,
+        46.8,
+        920.1648835355044,
+        87.83992125984251
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "source-footer",
+      "frame": [
+        39.6002101678034,
+        521.28,
+        860.4045663731829,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "page-counter",
+      "frame": [
+        864.0045854793468,
+        521.28,
+        920.1648835355044,
+        539.28
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-status",
+      "frame": [
+        39.6002101678034,
+        89.28,
+        920.1648835355044,
+        114.47999999999999
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-stage",
+      "frame": [
+        43.20022927396734,
+        122.39999999999999,
+        204.62502300189834,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-owner",
+      "frame": [
+        43.20022927396734,
+        162.71992125984252,
+        204.62502300189834,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-title",
+      "frame": [
+        46.800248380131286,
+        223.2,
+        201.0250038957344,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-label",
+      "frame": [
+        46.800248380131286,
+        281.52,
+        201.0250038957344,
+        306.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-request-body",
+      "frame": [
+        46.800248380131286,
+        308.88,
+        201.0250038957344,
+        350.64
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-label",
+      "frame": [
+        46.800248380131286,
+        353.52,
+        201.0250038957344,
+        378.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-1-proactive-body",
+      "frame": [
+        46.800248380131286,
+        382.32,
+        201.0250038957344,
+        426.96
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-stage",
+      "frame": [
+        221.18511089025247,
+        122.39999999999999,
+        382.60990461818346,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-owner",
+      "frame": [
+        221.18511089025247,
+        162.71992125984252,
+        382.60990461818346,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-title",
+      "frame": [
+        224.78512999641643,
+        223.2,
+        379.00988551201954,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-label",
+      "frame": [
+        224.78512999641643,
+        281.52,
+        379.00988551201954,
+        306.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-request-body",
+      "frame": [
+        224.78512999641643,
+        308.88,
+        379.00988551201954,
+        350.64
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-label",
+      "frame": [
+        224.78512999641643,
+        353.52,
+        379.00988551201954,
+        378.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-2-proactive-body",
+      "frame": [
+        224.78512999641643,
+        382.32,
+        379.00988551201954,
+        426.96
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-stage",
+      "frame": [
+        399.170071247113,
+        122.39999999999999,
+        560.594864975044,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-owner",
+      "frame": [
+        399.170071247113,
+        162.71992125984252,
+        560.594864975044,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-title",
+      "frame": [
+        402.77009035327694,
+        223.2,
+        556.99484586888,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-label",
+      "frame": [
+        402.77009035327694,
+        281.52,
+        556.99484586888,
+        306.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-request-body",
+      "frame": [
+        402.77009035327694,
+        308.88,
+        556.99484586888,
+        350.64
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-label",
+      "frame": [
+        402.77009035327694,
+        353.52,
+        556.99484586888,
+        378.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-3-proactive-body",
+      "frame": [
+        402.77009035327694,
+        382.32,
+        556.99484586888,
+        426.96
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-stage",
+      "frame": [
+        577.1550316039735,
+        122.39999999999999,
+        738.5798253319045,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-owner",
+      "frame": [
+        577.1550316039735,
+        162.71992125984252,
+        738.5798253319045,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-title",
+      "frame": [
+        580.7550507101374,
+        223.2,
+        734.9798062257405,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-label",
+      "frame": [
+        580.7550507101374,
+        281.52,
+        734.9798062257405,
+        306.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-request-body",
+      "frame": [
+        580.7550507101374,
+        308.88,
+        734.9798062257405,
+        350.64
+      ],
+      "words_matched_by_expected_sequence": 5,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-label",
+      "frame": [
+        580.7550507101374,
+        353.52,
+        734.9798062257405,
+        378.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-4-proactive-body",
+      "frame": [
+        580.7550507101374,
+        382.32,
+        734.9798062257405,
+        426.96
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-stage",
+      "frame": [
+        755.139991960834,
+        122.39999999999999,
+        916.564785688765,
+        151.92
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-owner",
+      "frame": [
+        755.139991960834,
+        162.71992125984252,
+        916.564785688765,
+        212.3999212598425
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-title",
+      "frame": [
+        758.7400110669979,
+        223.2,
+        912.9647665826011,
+        276.47999999999996
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-label",
+      "frame": [
+        758.7400110669979,
+        281.52,
+        912.9647665826011,
+        306.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-request-body",
+      "frame": [
+        758.7400110669979,
+        308.88,
+        912.9647665826011,
+        350.64
+      ],
+      "words_matched_by_expected_sequence": 4,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-label",
+      "frame": [
+        758.7400110669979,
+        353.52,
+        912.9647665826011,
+        378.71999999999997
+      ],
+      "words_matched_by_expected_sequence": 2,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-peer-5-proactive-body",
+      "frame": [
+        758.7400110669979,
+        382.32,
+        912.9647665826011,
+        426.96
+      ],
+      "words_matched_by_expected_sequence": 3,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-core",
+      "frame": [
+        49.68026366506244,
+        437.76,
+        910.0848300382453,
+        460.08
+      ],
+      "words_matched_by_expected_sequence": 11,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-funding-boundary",
+      "frame": [
+        39.6002101678034,
+        470.88,
+        920.1648835355044,
+        494.64
+      ],
+      "words_matched_by_expected_sequence": 13,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    },
+    {
+      "slide": 13,
+      "name": "map-hazard-boundary",
+      "frame": [
+        39.6002101678034,
+        496.79999999999995,
+        920.1648835355044,
+        520.56
+      ],
+      "words_matched_by_expected_sequence": 12,
+      "full_expected_sequence_matched": true,
+      "glyph_bounds_within_1pt": true,
+      "overhang": []
+    }
+  ],
+  "failure_counts": [
+    24,
+    24,
+    0
+  ]
+}

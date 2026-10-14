@@ -1,0 +1,1632 @@
+{
+  "default_threshold_findings": 180,
+  "severity_counts": {
+    "warning": 154,
+    "info": 26
+  },
+  "unresolved": 0,
+  "status": "Default heuristic is not claimed passed. Findings retained and individually classified.",
+  "overlay_policy": "Card/title/body overlay is intentional containment, never counted as a text collision; logo/backing likewise.",
+  "findings": [
+    {
+      "slide": 1,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 1,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 1,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 1,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S01 / S02 / S03 / S09 / \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 1,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"01 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 1,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'opening-evidence (\"Real service proof now. Human and value \")' and 'boundary-background' is 0.08\" (minimum 0.3\")",
+      "location": "opening-evidence→boundary-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 2,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 2,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 2,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 2,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S01 / S02  •  Sources + \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 2,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"02 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 2,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Five pressure points. One accepted home.\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 2,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-5-title (\"Verify & hand over\")' to 'peer-1-body (\"Prioritisation\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-5-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 3,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 3,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 3,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 3,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S02 / S04  •  Sources + \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 3,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"03 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 3,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Each request needs rules, people and bou\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 3,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-3-title (\"Bounded AI\")' to 'peer-1-body (\"Gates, clocks, eligibility, versions.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-3-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 4,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 4,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 4,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 4,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S02 / S04  •  Sources + \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 4,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"04 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 4,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Fix the prerequisite before adding the a\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 4,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-3-title (\"Draft funding\")' to 'peer-1-body (\"Approved policy + sourced facts.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-3-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 5,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 5,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 5,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 5,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S02 / S07 / S12  •  Sour\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 5,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"05 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 5,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Change the handoffs, not the whole compa\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 5,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-2-title (\"ADD\")' to 'peer-1-body (\"Teams, suppliers, useful systems.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-2-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 6,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 6,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 6,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 6,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S02 / S05 / S06 / S07  •\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 6,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"06 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 6,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Every handoff needs an owner and a next \")' and 'row-1-peer-1-background' is 0.24\" (minimum 0.3\")",
+      "location": "slide-title→row-1-peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 6,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'row-1-peer-3-title (\"Entry, exit, pause\")' to 'row-1-peer-1-body (\"Sender chases until accepted.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "row-1-peer-3-title→row-1-peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 6,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'row-2-peer-3-title (\"Decision + reason\")' to 'row-2-peer-1-body (\"Named action and update owner.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "row-2-peer-3-title→row-2-peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 7,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 7,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 7,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 7,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S06 / S07  •  Sources + \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 7,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"07 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 7,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"One home shows the journey we still need\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 7,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'journey-hold-return (\"Hold / return → named, competent human o\")' and 'boundary-background' is 0.21\" (minimum 0.3\")",
+      "location": "journey-hold-return→boundary-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 7,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-4-title (\"4  Accept\")' to 'peer-1-body (\"Conflicting evidence. Named resolver.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-4-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 8,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 8,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 8,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 8,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S02 / S06 / S07 / S10  •\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 8,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"08 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 8,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"A resident is not a scheduling variable.\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 8,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'boundary-text (\"Preferences ≠ consent. Silence/no-access\")' and 'human-hazard-route (\"Human hazard route — never wait for AI.\")' is 0.17\" (minimum 0.3\")",
+      "location": "boundary-text→human-hazard-route",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 8,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'human-hazard-route (\"Human hazard route — never wait for AI.\")' and 'page-counter (\"08 / 22\")' is 0.09\" (minimum 0.3\")",
+      "location": "human-hazard-route→page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 8,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-2-title (\"Delivery\")' to 'peer-1-body (\"Clear options. Safe phone, letter or ass\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-2-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 9,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 9,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 9,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 9,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S02 / S07 / S11  •  Sour\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 9,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"09 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 9,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Show the decision trace, not just an AI \")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 9,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-3-title (\"Change\")' to 'peer-1-body (\"Source + evidence version + unknowns.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-3-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 10,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 10,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 10,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 10,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S07 / S11 / S12  •  Sour\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 10,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"10 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 10,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"One workbench beside the systems you kee\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 10,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-3-title (\"People + channels\")' to 'peer-1-body (\"Housing / repairs Documents / spreadshee\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-3-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 11,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 11,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 11,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 11,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S07 / S08 / S10 / S11  •\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 11,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"11 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 11,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Let models propose; keep decisions on th\")' and 'proposal-lane-label (\"PROPOSAL PATH  /  observed operator inte\")' is 0.16\" (minimum 0.3\")",
+      "location": "slide-title→proposal-lane-label",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 11,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'proposal-lane-label (\"PROPOSAL PATH  /  observed operator inte\")' and 'proposal-peer-1-background' is 0.15\" (minimum 0.3\")",
+      "location": "proposal-lane-label→proposal-peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 11,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'domain-lane-label (\"SEPARATE CONTROLLED PATH  /  authority r\")' and 'domain-peer-1-background' is 0.14\" (minimum 0.3\")",
+      "location": "domain-lane-label→domain-peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 11,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'boundary-text (\"Model cannot approve, send, book, pay or\")' and 'page-counter (\"11 / 22\")' is 0.24\" (minimum 0.3\")",
+      "location": "boundary-text→page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 11,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'slide-title (\"Let models propose; keep decisions on th\")' to 'proposal-lane-label (\"PROPOSAL PATH  /  observed operator inte\")' clearance is 0.16\" (recommended 0.2\")",
+      "location": "slide-title→proposal-lane-label",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 11,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'proposal-peer-3-title (\"Human review\")' to 'proposal-peer-1-body (\"Permitted task.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "proposal-peer-3-title→proposal-peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 11,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'domain-peer-3-title (\"SQL + audit\")' to 'domain-peer-1-body (\"Effective authority.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "domain-peer-3-title→domain-peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 12,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 12,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 12,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 12,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S08 / S09 / S10 / S11  •\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 12,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"12 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 12,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Five real proposal paths. No delegated d\")' and 'peer-1-background' is 0.20\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 12,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'proof-provenance (\"Recorded operator-service proof · 14 Oct\")' and 'proof-synthetic-context (\"Synthetic baseline: 980 cases / 38 visit\")' is 0.08\" (minimum 0.3\")",
+      "location": "proof-provenance→proof-synthetic-context",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 12,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'proof-synthetic-context (\"Synthetic baseline: 980 cases / 38 visit\")' and 'page-counter (\"12 / 22\")' is 0.13\" (minimum 0.3\")",
+      "location": "proof-synthetic-context→page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 12,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-2-title (\"STILL TO PROVE\")' to 'peer-1-body (\"5 distinct ready proposals 5 real calls \")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-2-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 13,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 13,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 13,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 13,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S02 / S07 / S09 / S11 / \")' bottom edge (7.42\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 13,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"13 / 22\")' bottom edge (7.43\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 13,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'map-hazard-boundary (\"Hazard → human service now, never wait f\")' bottom edge (7.13\") > slide height - margin (7.00\")",
+      "location": "map-hazard-boundary",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' and 'slide-title (\"Five assists. One controlled journey.\")' is 0.15\" (minimum 0.3\")",
+      "location": "deck-eyebrow→slide-title",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Five assists. One controlled journey.\")' and 'map-status (\"Workflow controls progression. People re\")' is 0.04\" (minimum 0.3\")",
+      "location": "slide-title→map-status",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'map-status (\"Workflow controls progression. People re\")' and 'map-peer-1-stage-background' is 0.14\" (minimum 0.3\")",
+      "location": "map-status→map-peer-1-stage-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'map-peer-5-proactive-body (\"Missing/conflicting quality evidence\")' and 'map-core-background' is 0.21\" (minimum 0.3\")",
+      "location": "map-peer-5-proactive-body→map-core-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'map-core (\"Workflow core: rights • versions • gates\")' and 'map-funding-boundary (\"Checks OFF now; future eligibility → nam\")' is 0.15\" (minimum 0.3\")",
+      "location": "map-core→map-funding-boundary",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'map-funding-boundary (\"Checks OFF now; future eligibility → nam\")' and 'map-hazard-boundary (\"Hazard → human service now, never wait f\")' is 0.04\" (minimum 0.3\")",
+      "location": "map-funding-boundary→map-hazard-boundary",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 13,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'map-hazard-boundary (\"Hazard → human service now, never wait f\")' and 'page-counter (\"13 / 22\")' is 0.10\" (minimum 0.3\")",
+      "location": "map-hazard-boundary→page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 13,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'slide-title (\"Five assists. One controlled journey.\")' to 'map-status (\"Workflow controls progression. People re\")' clearance is 0.04\" (recommended 0.2\")",
+      "location": "slide-title→map-status",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 13,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'map-peer-5-title (\"Quality Evidence Review\")' to 'map-peer-1-request-label (\"On request\")' clearance is 0.07\" (recommended 0.2\")",
+      "location": "map-peer-5-title→map-peer-1-request-label",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 14,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 14,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 14,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 14,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S03 / S06 / S09  •  Sour\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 14,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"14 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 14,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"See cash before optimism.\")' and 'fictional-label (\"FICTIONAL EXA-010/015  /  not a workbenc\")' is 0.16\" (minimum 0.3\")",
+      "location": "slide-title→fictional-label",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 14,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'fictional-label (\"FICTIONAL EXA-010/015  /  not a workbenc\")' and 'gross-background' is 0.23\" (minimum 0.3\")",
+      "location": "fictional-label→gross-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 14,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'slide-title (\"See cash before optimism.\")' to 'fictional-label (\"FICTIONAL EXA-010/015  /  not a workbenc\")' clearance is 0.16\" (recommended 0.2\")",
+      "location": "slide-title→fictional-label",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 14,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-2-title (\"IF CONTINGENCY SPENT\")' to 'peer-1-body (\"£7,500 fictional grant → £12,500 provide\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-2-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 15,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 15,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 15,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 15,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S06 / S07 / S10 / S12  •\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 15,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"15 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 15,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Make the first change small enough to le\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 15,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-4-title (\"Controlled switch and rollback\")' to 'peer-1-body (\"Programme + workbook owners.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-4-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 16,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 16,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 16,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 16,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S02 / S05 / S07 / S10  •\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 16,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"16 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 16,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Prove the programme. Test the AI separat\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 16,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-2-title (\"Paired task comparison\")' to 'peer-1-body (\"Matched existing teams. Frozen cohort; s\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-2-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 17,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 17,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 17,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 17,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S07 / S09 / S10 / S11  •\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 17,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"17 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 17,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Earn the next gate; do not repeat the la\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 17,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-4-title (\"4  Decide\")' to 'peer-1-body (\"Requirements, owners, authority.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-4-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EX\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S02 / S03 / S07 / S10  •\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"18 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 18,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'closing-boundary (\"No new procurement, spending, rollout or\")' bottom edge (7.07\") > slide height - margin (7.00\")",
+      "location": "closing-boundary",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 18,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Endorse the next evidence proposal.\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 18,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'boundary-text (\"Agree the return date and stop tests.\")' and 'closing-boundary (\"No new procurement, spending, rollout or\")' is 0.04\" (minimum 0.3\")",
+      "location": "boundary-text→closing-boundary",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 18,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'closing-boundary (\"No new procurement, spending, rollout or\")' and 'page-counter (\"18 / 22\")' is 0.03\" (minimum 0.3\")",
+      "location": "closing-boundary→page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 18,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-3-title (\"CFO\")' to 'peer-1-body (\"Sponsor + accountable owners.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-3-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OP\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S07 / S08 / S11 / S12 / \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 19,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"19 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 19,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Technical challenge: bounded does not me\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 19,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-3-title (\"Operate\")' to 'peer-1-body (\"Versions, fenced attempts, reservations.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-3-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 20,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OP\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 20,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 20,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 20,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S02 / S03 / S05 / S07 / \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 20,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"20 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 20,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Council challenge: the objections we wel\")' and 'qa-row-1-peer-1-background' is 0.24\" (minimum 0.3\")",
+      "location": "slide-title→qa-row-1-peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 20,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'qa-row-1-peer-2-title (\"Why not launch now?\")' to 'qa-row-1-peer-1-body (\"Test equal scope and controls.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "qa-row-1-peer-2-title→qa-row-1-peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 20,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'qa-row-2-peer-2-title (\"What if AI fails?\")' to 'qa-row-2-peer-1-body (\"No new commitment; whole-life appraisal.\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "qa-row-2-peer-2-title→qa-row-2-peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OP\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S01 / S02 / S03 / S04 / \")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"21 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 21,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'assessment-open (\"Live pitch, rehearsal and thought-leader\")' bottom edge (7.08\") > slide height - margin (7.00\")",
+      "location": "assessment-open",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 21,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Read the evidence label before the claim\")' and 'peer-1-background' is 0.25\" (minimum 0.3\")",
+      "location": "slide-title→peer-1-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 21,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'boundary-text (\"As at 14 October. Legal currentness not \")' and 'assessment-open (\"Live pitch, rehearsal and thought-leader\")' is 0.17\" (minimum 0.3\")",
+      "location": "boundary-text→assessment-open",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 21,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'assessment-open (\"Live pitch, rehearsal and thought-leader\")' and 'page-counter (\"21 / 22\")' is 0.02\" (minimum 0.3\")",
+      "location": "assessment-open→page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    },
+    {
+      "slide": 21,
+      "check_type": "title_clearance",
+      "severity": "info",
+      "description": "Title 'peer-3-title (\"Observed proof\")' to 'peer-1-body (\"Request ≠ result. Research instruments ≠\")' clearance is 0.17\" (recommended 0.2\")",
+      "location": "peer-3-title→peer-1-body",
+      "disposition": "intentional-reviewed",
+      "rationale": "Fixed peer title and body regions are separated; checker also compares across different horizontal columns. Actual native text rectangles do not intersect. Reserved title height/body baselines and rendered glyphs checked."
+    },
+    {
+      "slide": 22,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'deck-eyebrow (\"ZAVA NORTH HOMES  /  ZAVA FORWARD  /  OP\")' top (0.25\") < minimum margin (0.5\")",
+      "location": "deck-eyebrow",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 22,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'brand-logo-backing' top (0.22\") < minimum margin (0.5\")",
+      "location": "brand-logo-backing",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 22,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'Zava branding logo — only branding' top (0.23\") < minimum margin (0.5\")",
+      "location": "Zava branding logo — only branding",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 22,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'source-footer (\"14 OCT 2026  •  S02 / S03 / S07 / S12  •\")' bottom edge (7.32\") > slide height - margin (7.00\")",
+      "location": "source-footer",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 22,
+      "check_type": "edge_margin",
+      "severity": "warning",
+      "description": "Shape 'page-counter (\"22 / 22\")' bottom edge (7.33\") > slide height - margin (7.00\")",
+      "location": "page-counter",
+      "disposition": "intentional-reviewed",
+      "rationale": "Intentional branding/footer edge band, fully in bounds. Dense map/control boundary lines inspected in exported images; no clipped glyphs or footer collisions. Default .5in margin is not the approved dense-map/footer layout."
+    },
+    {
+      "slide": 22,
+      "check_type": "adjacent_gap",
+      "severity": "warning",
+      "description": "Gap between 'slide-title (\"Compare equivalent routes before selecti\")' and 'option-1-header-background' is 0.21\" (minimum 0.3\")",
+      "location": "slide-title→option-1-header-background",
+      "disposition": "intentional-reviewed",
+      "rationale": "Deliberate compact spacing below generic .3in gap/.2in title-clearance threshold. Actual text-frame intersections are zero and all expected words render inside their frames. Local image inspection found no collision or readability blocker."
+    }
+  ]
+}

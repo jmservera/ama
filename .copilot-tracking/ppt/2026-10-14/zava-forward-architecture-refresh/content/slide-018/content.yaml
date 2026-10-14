@@ -1,0 +1,437 @@
+slide: 18
+title: Endorse the next acceptance-and-value proposal.
+section: Main
+layout: Blank
+background:
+  fill: '#173F35'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES / ZAVA FORWARD / EXECUTIVE PROPOSAL
+  left: 0.55
+  top: 0.25
+  width: 8.0
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: Endorse the next acceptance-and-value proposal.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026 | S16 + retained sources/status in notes
+  left: 0.55
+  top: 7.28
+  width: 11.4
+  height: 0.21
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#F7F2E7'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 18 / 24
+  left: 12.0
+  top: 7.24
+  width: 0.78
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: closing-ask
+  text: Endorse preparation of the next acceptance-and-value proposal.
+  left: 0.55
+  top: 1.98
+  width: 12.23
+  height: 0.74
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: peer-1-background
+  left: 0.55
+  top: 2.98
+  width: 3.93
+  height: 2.7
+  fill: '#F7F2E7'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: peer-1-title
+  text: CEO / Assets
+  left: 0.73
+  top: 3.18
+  width: 3.5700000000000003
+  height: 0.51
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: peer-1-body
+  text: 'Owner: proposed sponsor
+
+    Deliverable: accountable
+
+    owners + scope.'
+  left: 0.73
+  top: 3.8600000000000003
+  width: 3.5700000000000003
+  height: 1.6200000000000006
+  font: Liberation Sans
+  font_size: 21
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: peer-2-background
+  left: 4.7
+  top: 2.98
+  width: 3.93
+  height: 2.7
+  fill: '#F7F2E7'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: peer-2-title
+  text: CIO / Programme
+  left: 4.88
+  top: 3.18
+  width: 3.5700000000000003
+  height: 0.51
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: peer-2-body
+  text: 'Owner: proposed operator
+
+    Deliverable: human, access
+
+    and recovery evidence.'
+  left: 4.88
+  top: 3.8600000000000003
+  width: 3.5700000000000003
+  height: 1.6200000000000006
+  font: Liberation Sans
+  font_size: 21
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: peer-3-background
+  left: 8.850000000000001
+  top: 2.98
+  width: 3.93
+  height: 2.7
+  fill: '#F7F2E7'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: peer-3-title
+  text: CFO
+  left: 9.030000000000001
+  top: 3.18
+  width: 3.5700000000000003
+  height: 0.51
+  font: Liberation Sans
+  font_size: 23
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: peer-3-body
+  text: 'Owner: proposed reviewer
+
+    Deliverable: whole-life cost
+
+    + scoped authority review.'
+  left: 9.030000000000001
+  top: 3.8600000000000003
+  width: 3.5700000000000003
+  height: 1.6200000000000006
+  font: Liberation Sans
+  font_size: 21
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: closing-action-background
+  left: 0.55
+  top: 5.98
+  width: 12.23
+  height: 0.82
+  fill: '#E5B96A'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: closing-action
+  text: 'Agree owners + return date (to agree). Continue, simplify or stop
+
+    against pre-agreed tests.'
+  left: 0.7
+  top: 6.0600000000000005
+  width: 11.93
+  height: 0.7
+  font: Liberation Sans
+  font_size: 20
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: closing-boundary
+  text: No new spending, procurement, rollout or production authority.
+  left: 0.55
+  top: 6.87
+  width: 12.23
+  height: 0.36
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: challenge-19-link
+  text: 'Runtime: slide 19'
+  left: 8.75
+  top: 0.24
+  width: 3.0
+  height: 0.3
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#F7F2E7'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+  target_slide: 19
+  description: Runtime detail:19
+speaker_notes: "Message / evidence limit / planned script:\nSLIDE 18 - Endorse the next acceptance-and-value\
+  \ proposal.\nTopic sentinel: decision\nMessage: make a clear planning-only choice with named responsibilities.\n\
+  Status: strategist-recommended proposal; refreshed 14 October 2026.\n\n\"The recommendation is yes to\
+  \ preparing the next bounded\n  acceptance-and-value proposal, not yes to autonomous rollout. Confirm\n\
+  \  owners and delegations, require fair alternatives and whole-life costs,\n  and agree a return date\
+  \ rather than inventing one. If a critical control\n  fails or authority is absent, stop that activity.\
+  \ If AI adds no net value,\n  simplify it. We have real service evidence; now let assistance earn its\n\
+  \  place in safe, resident-accepted handovers.\"\n* Transition: \"Which gate would you most need resolved\
+  \ before supporting\n  the next proposal?\" Then listen; use optional appendices only as needed.\n\n\
+  Sources — workspace-relative paths, section and evidence status; as read 14 October 2026:\nS02: docs/case_study_48_addendum.md,\
+  \ Business Challenge; Executive Assessment; Digital Foundation; Where Agents Fit; Recommended Executive\
+  \ Decision. Status: Maintained 14 October synthesis and proposed controls; bottleneck/outcomes not verified\
+  \ company findings.\nS03: docs/reference/research/company/company-profile-research.md, Confirmed Company\
+  \ Information; Role and Decision Map; Priority Company Gaps; Evidence Limitations. Status: Owner-confirmed\
+  \ not-for-profit; modelled company/resident/finance attributes are not company facts or delegations.\n\
+  S07: docs/prds/zava-forward-retrofit-programme-demonstrator.md, v0.14 front matter; component contracts;\
+  \ threat model; Five Reactive and Proactive Assistants; orchestration; evaluation; current handoff.\
+  \ Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and amended owner acceptance open;\
+  \ CON-009/AC-057 full acceptance not passed.\nS10: .copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md,\
+  \ Completed Work; Validation; RV-001/RV-002; Outcome. Status: Technical Review Complete / Residual work,\
+  \ not blanket product conformance.\n\nPlanned allocation: 35 seconds; not rehearsed.\n\nREFRESH BASELINE\
+  \ / UN SPOKEN REFERENCE:\nRefresh documentation intake: f94f53a56c36d38ec36f7f662595912084571380. Architecture\
+  \ source: 062434a1fedbf6a87d1374c767c2bf0a11491ab6. Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb.\
+  \ Historical cabe05c context below is not the current runtime or this documentation intake.\nCurrent\
+  \ five assistants are modules in ONE Python API Container App, not five microservices or the deferred\
+  \ queue-worker estate. Direct Azure OpenAI; no deployed Foundry Agent Service. SQL owns domain/proposal\
+  \ state, dedupe, reservations and fenced leases. Inference is outside database locks; the provider has\
+  \ no DB/workflow credentials. Accepting a proposal changes proposal/audit state, never resident, professional,\
+  \ work-release, quality or Finance approval.\nNormal five-assistant authority is absent; proactive OFF.\
+  \ This does not disable every legacy AI draft route. Ready = generated, unreviewed. Five operator paths,\
+  \ five calls, 6884 tokens, 15 ledger events and full SQL content/restart proof are technical observations\
+  \ only, not staff-browser, human source, semantic or value acceptance. Restart is not restore acceptance.\n\
+  Development public-network exceptions coexist with configured private controls; PaaS is not VNet-hosted.\
+  \ Source-configured diagnostics are not full app tracing. External immutable audit digest anchoring\
+  \ is unimplemented. M365/import/queue workers are conditional or deferred. User.Read own-photo permission\
+  \ is not Sites.Selected plus a site grant. SharePoint topology parameter is not an implemented adapter.\
+  \ Front Door Premium/WAF is not deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of\
+  \ a five-day user-delegation SAS; one vault secret write, distinct maintenance identity, no browser\
+  \ token retrieval. Budget 80% actual/100% forecast notifications are not a hard cap. Managed-identity\
+  \ ACR image pull/operator build-deploy is distinct from CI tests/scan/SBOM, not automatic Azure deployment.\n\
+  The owner explicitly reauthorised synthetic ledger recreation on 14 October; previous exercise audit/recommendations\
+  \ reset, not an unchanged migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and\
+  \ 11 private staff bindings are aggregate fixture counts only. No private identifiers are reproduced.\
+  \ Historical Decision 1 is not a current five-assistant runtime dependency. Finance fixtures and 20%/25%\
+  \ benefits are hypotheses, not measured success. No new legal currentness, expenditure, rollout or production\
+  \ approval.\n\nCritical safety/rights/authority failure stops affected work. No incremental AI value\
+  \ -> simplify. Unresolved evidence -> return with named owner and status. Roles are proposals, not approved\
+  \ corporate delegations; date is to agree, not invented.\n\nRETAINED BASELINE VISIBLE COPY / TRACEABILITY,\
+  \ UNSPOKEN:\nHistorical wording below is retained, not promoted to current fact or permission. Current\
+  \ oracle/status and refreshed visible copy govern. In particular, old 'gates OPEN' meant outstanding\
+  \ acceptance, not permission; Excel reporting is a conditional intended transition, not delivered integration.\n\
+  Endorse the next evidence proposal.\nCEO / Assets\nSponsor +\naccountable owners.\nCIO / Programme\n\
+  Human, permission\nand recovery evidence.\nCFO\nWhole-life affordability\n+ scoped authority review.\n\
+  Agree the return date and stop tests.\nNo new procurement, spending, rollout or production authority.\n\
+  Whole-life affordability\nscoped authority review."

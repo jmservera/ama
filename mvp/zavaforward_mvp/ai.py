@@ -58,6 +58,37 @@ class Ai:
         with urllib.request.urlopen(req, timeout=40) as r:
             return json.load(r)["choices"][0]["message"]["content"].strip()
 
+    def evidence(self, system, user, max_tokens=600, timeout=20):
+        """No fallback, raw output or exception text in the durable usage envelope."""
+        envelope = dict(provider="azure-openai", deployment=self.fast, model=None,
+                        usage=None, outcome="disabled", source="unverified", text=None)
+        if not self.configured:
+            return envelope
+        body = json.dumps({"messages": [{"role": "system", "content": system},
+                                       {"role": "user", "content": user}],
+                           "max_tokens": max_tokens, "temperature": 0}).encode()
+        try:
+            req = urllib.request.Request(
+                f"{self.endpoint}/openai/deployments/{self.fast}/chat/completions?api-version=2024-10-21",
+                data=body, headers={"Authorization": f"Bearer {self._token()}", "Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=timeout) as response:
+                raw = response.read(256001)
+                if len(raw) > 256000:
+                    raise ValueError("Oversized provider envelope")
+                result = json.loads(raw)
+            usage = result.get("usage")
+            if isinstance(usage, dict) and all(type(usage.get(k)) is int and usage[k] >= 0
+                                              for k in ("prompt_tokens", "completion_tokens", "total_tokens")) and (
+                    usage["prompt_tokens"] > 0 and usage["total_tokens"] == usage["prompt_tokens"] + usage["completion_tokens"]):
+                envelope["usage"] = {k: usage[k] for k in ("prompt_tokens", "completion_tokens", "total_tokens")}
+            envelope.update(model=result.get("model"), outcome="returned", source="ai",
+                            text=result["choices"][0]["message"]["content"])
+        except TimeoutError:
+            envelope["outcome"] = "timeout"
+        except Exception:
+            envelope["outcome"] = "provider-unavailable"
+        return envelope
+
     def run(self, task, system, user, template, strong=False, check=None, off=False):
         """Return dict(text, source, model, validated, reason, latency_ms). Falls back to the template on any failure.
 

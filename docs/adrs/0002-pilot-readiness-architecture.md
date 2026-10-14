@@ -2,7 +2,7 @@
 title: ADR 0002 Pilot-Readiness Architecture for the Zava Forward MVP
 description: Proposed decisions for moving the working MVP to pilot readiness over about 60,000 homes - durable store, Blob, Entra ID and field visibility, deterministic ranking, map scale, deployment and gated staff time capture
 author: AMA programme
-ms.date: 2026-10-13
+ms.date: 2026-10-14
 ms.topic: reference
 ---
 
@@ -17,6 +17,15 @@ until the open items in [Open items](#open-items) are closed (DH-002, DH-006).
 This ADR amends [ADR 0001](./0001-azure-architecture.md) for the MVP. It does
 not replace the ADR 0001 demonstrator design for the agent, orchestrator and
 import workloads, which remain deferred.
+
+### Source-Grounded Architecture Views (2026-10-14)
+
+[Executive and technical Excalidraw diagrams](../architecture/README.md)
+explain this ADR's current single-API exercise implementation alongside the
+deferred ADR 0001 queue/worker design. They include official Azure icons,
+source-linked interactions and explicit public-network, telemetry, audit,
+model-authority and M365 limitations. No new architecture decision, approval,
+deployment or successful acceptance test follows from these diagrams.
 
 ### Exercise Applicability (2026-10-11)
 
@@ -84,9 +93,194 @@ Decisions below fix those mechanisms, not raw capacity.
 | Field visibility | One server-side projection layer, default deny, per role and per field; contractor view has no vulnerability reason in any API, export, search, audit view or AI prompt | PR-002 enforced in one place and tested |
 | Ranking | Deterministic function of case data and a versioned policy file, stored as a ranking snapshot with reason codes | PR-006 |
 | AI prioritisation | Separate recommendation record, never read by the ranking function or any queue | PR-007, PR-008 |
+| Five reactive/proactive assists | Shared versioned proposal service in the existing MVP API, with SQL-owned deduplication/reservations/fenced leases; bounded automatic execution and recipient-compatible evidence | PRD FR-047/AC-058 to AC-061; no separate estate, model authority or domain approval |
 | Map | Server-side bounding-box queries with grid clustering by zoom, same filter object as the list, licensed tile provider | PR-005 |
 | Deployment | Two or more replicas, zone redundant where available, `uksouth`, hardened image, scan and tests in CI | No state on the container; fixes the honesty gap |
 | Staff time capture | Built behind a feature flag that is off by default and cannot be switched on without a recorded DPIA reference | PR-004 |
+
+### Five-Assistant Exercise Runtime (2026-10-13)
+
+The owner requested implementation of the
+[five capability contracts](../prds/zava-forward-retrofit-programme-demonstrator.md#five-reactive-and-proactive-assistants-2026-10-13)
+in the existing MVP. Stock, assessment, funding, works/resident coordination
+and quality each have distinct source permissions, deterministic proactive
+predicates and human owners. This amends the lean exercise realization;
+the separate queue/agent/orchestrator estate in ADR 0001 remains proposed.
+Use existing SQL/AI/API/UI rather than five applications or new resources.
+
+Proposal identity binds capability/version, case, canonical intended proposal
+identity (the registered purpose) and material dependencies; a changed intent
+cannot replay an earlier proposal when dependencies are unchanged.
+Reactive/proactive invocation provenance is separate. SQL owns bounded
+attempts, durable allowance reservations, database-time claims and fenced
+lease takeover/completion. A lost acknowledgement is reconciled by lookup.
+Timeouts and missing usage preserve liability; at-least-once inference may
+incur bounded duplicate cost and is not exactly-once billing. Capture provider,
+model, usage and outcome separately from workflow/manual/template status.
+
+The API captures immutable recipient-compatible evidence in short transactions,
+calls the provider outside domain/database locks and validates typed output.
+An explicit service-purpose principal does not impersonate a staff member.
+Registry/source/schema/rule/document hashes invalidate only affected proposals.
+Every prompt, stored answer, citation, API read and review enforces the same
+source-to-reader boundary; current roles/case scope are rechecked, including
+revocation. Human source verification precedes accept/edit; current permission,
+dependency and proposal status/version are checked atomically. Review writes
+proposal/audit only, not ranking, consent, funding, bookings, work release,
+holds or quality acceptance. Funding assistance does not reuse the legacy
+mutating funding-draft path. Independent QA remains separate from preparation.
+
+Automatic scans remain off until valid scoped authority and effective input,
+output, frequency, concurrency, retry and durable shared allowance limits
+exist. Missing authority/budget is a real delivery blocker. Disabled/throttled/
+failed assistance exposes an owned manual route without blocking case access.
+Worker shutdown is interruptible and scans cannot overlap uncontrolled.
+Startup migrations are additive, idempotent and serialized on each SQL
+backend; deployment/migration permission must not silently expand runtime
+access. Old-image rollback disables assistance and restores traffic without
+deleting retained cases, audit or task evidence.
+
+Acceptance requires independent-connection races, lease takeover/late-worker
+denial, budget contention, stale/revoked reviews, slow-provider/manual-work
+and per-capability trigger/source/unchanged-state evidence. The delivery record
+must additionally link exact source/image/serving revision, preserved private
+SQL/AI/auth configuration, workload identity, a registered real invocation
+and independent SQL task/audit before/after/restart under AC-057. Technical
+success is not semantic calibration, approved company policy, human
+acceptance, comparative benefit or production approval.
+
+#### Implementation and Build Evidence
+
+Initial candidate source `c4b28e3168770252fb35a79074dc2202ef375514` implements the five v1.0.0
+contracts, shared case controls/review queue, SQL claims/reservations and
+source-verified proposal review in the existing MVP. The
+[operator/API contract](../../mvp/README.md#five-retrofit-assistants-2026-10-13-implementation)
+lists exact disabled defaults and finite authority/expiry/call/token limits.
+Safe fixed worker/scan warnings expose failures without private exception text;
+worker polling backs off instead of silently failing every second.
+
+The local image `zavaforward-mvp:assistants-20261013-01` has image ID
+`sha256:a9314193655f4a206553cd294cd9df0b280c40d497ca3c067f32c18d891a54e3`,
+not an ACR manifest digest or serving revision. Source CI
+[38446725200](https://github.com/jmservera/ama/actions/runs/38446725200)
+passed unit/JS, hardened-image/scan/SBOM and real SQL Server store parity
+(26 tests). Parent regression discovery passes 333 tests with those 26
+integration tests skipped locally; 44 focused tests and 15 reported Chromium
+checks cover the new assist paths. The disposable local SQL bootstrap could
+not authenticate, so its five-assistant SQL probe did not pass; general CI
+store parity did not establish that new proposal path's real-SQL behavior.
+
+The initial Review identified two contract defects, subsequently implemented:
+a delayed poll/claim could admit inference after shutdown, and the case view
+awaited auxiliary reads without a deadline before rendering ordinary controls.
+Corrected runtime source `bf383c40369fa67db3d0cbbe7c9473c24ababbe8` closes
+provider-thread admission under the same short gate as stop, outside SQL and
+inference. Shutdown-interrupted reservations remain conservative. Case controls
+render immediately; auxiliary reads share a 10-second abort deadline and
+ignore disconnected/different-route results. Timeout is explicit manual
+fallback, not a success-shaped empty proposal.
+
+The corrected local image `zavaforward-mvp:assistants-20261013-02` has image ID
+`sha256:d3e652cec1bdef8846270a75c124d55743bdb757231ffaeae585cc423e6b8786`
+and the exact runtime-source OCI revision above. Non-root UID10001,
+read-only root, no capabilities, writable SQLite state, health and byte-exact
+current UI/logo checks passed. Source CI
+[38457772710](https://github.com/jmservera/ama/actions/runs/38457772710)
+passed all three jobs, including image scan/SBOM and the then-current 68 actual
+SQL tests. Additional first-table-creation concurrency coverage brings the
+local actual SQL run to 69: 26 general tests and 43 assistant contract/review/
+durability/API tests on a dedicated disposable SQL Server database. The same
+conditional suites now run in the existing CI SQL job. Full local discovery
+is 379 tests, 310 passed and 69 conditional SQL skips; 47 nonbillable assistant
+tests and 19 Chromium checks cover the corrected behaviors.
+
+Final validation source `560c30c56bef93edb06275984dbe49c23b34ebc8` leaves the
+image's shipped runtime/UI/policies/dependency files unchanged from `bf383c4`.
+CI [38461679776](https://github.com/jmservera/ama/actions/runs/38461679776)
+passes all three jobs: 379 discovered tests with 69 conditional skips, all
+69 actual SQL tests, and hardened-image/Trivy/SBOM checks.
+
+The earlier local SQL authentication failure is historical, not an active
+disposable-SQL blocker. Actual SQL tests cover migrations, five proposal paths,
+role/current-source review, fenced claims, allowance contention and recovery;
+their provider and human-verification actions remain fixtures. They do not
+prove actual Azure workload permissions, model quality or human acceptance.
+The completed initial Review remains historical evidence, not silently
+rewritten as acceptance of the corrected build.
+
+These earlier build-only receipts are historical. The owner subsequently
+authorized the existing-app rollout and finite QA (10 calls, 126000 reserved
+tokens, one-hour authority, proactive off, up to USD 5 incremental target).
+The `d3e652ce` image was published to ACR and deployed as revision
+`ca-forward-test-api--0000010`. Independent managed-identity SQL reads preserved
+980 cases, 11 staff, three metadata entries, 15 recommendations and audit
+head/count 40; private configuration/authentication/identity comparisons matched.
+No model call ran: ledger-enabled Azure SQL rejects an INSTEAD OF trigger on
+its default updatable, system-versioned ledger event table.
+
+#### Fresh Ledger and Synthetic Coverage Learning (2026-10-13)
+
+Source `99aeaac6b17c19090875b2e23990a6666a58c534` explicitly creates
+`assistant_events` as `LEDGER = ON (APPEND_ONLY = ON)` in ledger databases,
+using the ordinary trigger only outside ledger databases. It refuses an
+existing incompatible ledger table without dropping evidence. The
+[official append-only ledger example](https://learn.microsoft.com/sql/relational-databases/security/ledger/ledger-how-to-append-only-ledger-tables?view=sql-server-ver17)
+was checked on 2026-10-13. The concurrent intended-proposal identity correction
+`687e4aa` is preserved in combined source
+`ec7721b51f815e034f9afee82dcf09cd6c4019ac`. Actual disposable SQL passes
+73 tests, including fresh-ledger five-path/immutability/restart,
+incompatible-table refusal and changed-intent identity. Full discovery finds
+389 tests: 316 pass and 73 conditional SQL tests skip. The local image
+`assistants-20261013-04` has ID
+`sha256:d5eba379f5fd2ce5d9a38965357c193be88eb1882f8e62f75b06faa5aa52fe22`;
+it was not a published or serving manifest and is superseded locally below.
+
+Populated-data Chromium then exposed API38/UI0 visits: the shared page renderer
+discarded arrays of day-group elements before checking node types. Source
+`a76d281` flattens those arrays and adds a two-day/case-link browser regression.
+Latest exact-source image `assistants-20261013-05`, revision
+`cd14b3b379026a87ebfa3e9058ac10c0df7888eb`, has local ID
+`sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20`.
+All 21 assistant/browser regressions and 21 exact-image generated-data checks
+pass: 38 rendered visits, 12 Finance rows, 601 source work orders, populated
+funding/quality controls and five disabled/manual requests. Independent
+SQLite hashes and actual local image restart preserve the controlled domain
+and proposal evidence, with zero provider attempts. This is local preparation,
+not Azure SQL, real-model or human acceptance. Full discovery remains
+389 tests (316 passed, 73 conditional SQL skips).
+
+Fresh SQL seed loading now preserves generated procurement and as-of metadata,
+without overwriting nonempty databases on restart. The
+[synthetic coverage recipe](../reference/research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13)
+retains the existing generator/60000-stock lineage and 980-case denominator.
+Pending budgets/grants, received/held invoices, submitted unverified quality,
+offered handoffs and open requests are fixtures, not approval evidence.
+
+The owner stopped retained-data migration; the initial reset was cancelled
+on 2026-10-13, then explicitly reauthorized with all remaining delivery on
+2026-10-14. Only exercise database `retrofit` was recreated with ledger,
+serverless/backup/diagnostic settings restored, original contained SQL
+users/grants and all 11 private tenant staff bindings retained. The new
+980-case/date/procurement baseline deliberately replaces the previous
+recommendations/audit, not an unchanged-data migration.
+
+Image05/source `cd14b3b` is published and serving as revision `--0000012`,
+manifest `sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20`.
+Actual workload-managed-identity SQL verifies 38 visits, 12 Finance rows,
+12 quality/grant/request records, one package/601 orders and four offered
+handoffs. Renewed process-local operator QA invoked all five registered
+services through Azure OpenAI `standard`/`gpt-4.1-mini-2025-04-14`; all return
+distinct citation-validated ready proposals, five attempts/6884 tokens,
+15 append-only ledger events and one finite allowance. Independent domain
+hashes and assistant-table content hashes/outputs/usage survive actual
+revision restart. No proposal is source-verified or accepted by a human.
+
+Normal serving assistant authority remains absent, proactive off; the bounded
+operator authority did not become a permanent paid-worker configuration.
+This establishes actual deployed service/model/SQL/restart evidence, not
+a real staff-authenticated browser/API acceptance session, semantic quality,
+role/accessibility acceptance or measured business value. Those gates remain
+open; historical Reviews are not rewritten.
 
 ### 1. Durable store: Azure SQL or PostgreSQL
 
@@ -533,3 +727,26 @@ The [current handover](../../infra/README.md#current-exercise-handover-2026-10-1
 and [MVP limits](../../mvp/README.md#honest-limits) own the version-linked
 operator detail. This delta neither rewrites the historical table nor approves
 the proposed decisions, control-owner matrix or production rollout.
+
+### Retained Draft Architecture Learning (2026-10-13)
+
+The [PM/UX closure review](../reference/research/gap-analysis-next-build.md#draft-experiment-closure-review-2026-10-13)
+captures all four unmerged drafts against main `71aaf9d`. These are reusable
+control/regression lessons, not new approved architecture decisions or a
+claim that the draft implementation is running in the current deployment.
+
+| Pinned source | Retained lesson | Current adoption/assurance boundary |
+| --- | --- | --- |
+| #19 [local demonstrator contract](https://github.com/jmservera/ama/blob/5e52ceb7d5937f21a5eb7380ad009833608ed811/prototype/README.md) | Bound model inputs/tools/calls; commit a run before inference, preserve explicit failed/unfinished states and reject stale acceptance. Machine schema/source checks do not establish prose correctness. | Preserve the evidence pattern, not the alternative local SQLite app or compile-only/private-network templates. Durable resume/retry and current real-service/task-quality acceptance need separate proof. |
+| #24 [transaction/replay store](https://github.com/jmservera/ama/blob/6029dc248911ddd3eebece5fb2067d881920494c/apps/proper-warm/src/store.mjs) | Case version, event and idempotency response commit together. Bind replay to case, actor and canonical intent, including expected version. Exact retry returns the committed response; changed intent/actor conflicts. Incompatible/unreadable state fails rather than silently reseeding. | A localhost SQLite implementation is not proof of equivalent Azure SQL concurrency/durability. Carry the regression semantics into the current store and uncertain-outcome UI; tab-local retained intent is not restart-proof recovery. |
+| #24/#27 [quality replacement and runbook](https://github.com/jmservera/ama/blob/51d8ae41caaa4535ad53c7268f874ce5334242ee/docs/architecture/proper-warm-runbook.md#two-minute-demonstration) | Replacing accepted quality evidence invalidates separate handover acceptance. The reported completion count went 1 -> 0 -> 1 only after fresh independent handover evidence and explicit advancement; prior history/invoice/update commitments remain. | Keep an executable replacement/return/reacceptance regression, not only happy-path stage counts. The #27 runbook is pinned to `40e248a`, earlier than final #24; it is not a second runtime verification. |
+| #58 [quality source](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/properwarm_mvp/quality.py) and [control report](https://github.com/jmservera/ama/pull/58#issuecomment-6102962478) | Evidence and installation/quality milestones must bind the exact current completed work-order and scope version. Material correction/rescope stales affected downstream evidence and blocks incompatible release/payment, while preserving paid history and resident choices. Independent review cannot be supplied by a provider submission or AI draft. | Later draft source/tests differ from main and recorded revision 18. Compare/adopt scoped invalidation and financial lineage, then prove changed-source/image/config/revision behavior; do not infer runtime parity or merge wholesale. |
+| #27 [resource ledger](https://github.com/jmservera/ama/blob/51d8ae41caaa4535ad53c7268f874ce5334242ee/docs/architecture/proper-warm-resources.md) | Separate created local resources from proposed Azure services, record ownership/persistence, and inventory before teardown. A docs-only PR creates neither application evidence nor cloud resources. | Its no-Azure-resource statement is experiment-local, not today's `ama` inventory. Proposed queue/agent-state services remain unreconciled with ADR 0001; do not copy that topology or execute old cleanup commands. Current operations stay in the infra handover. |
+
+Retiring #19/#24/#27 preserves these pins and intentionally declines their
+alternative delivery routes, not the control requirements. #58 remains an
+unresolved selective carry-forward queue. Application acceptance continues
+to require actual AI/SQL/Azure, effective authorization/budget, source-bound
+workflows and failure/recovery evidence; independent quality, value, human UX,
+legal and production gates remain separate. No resource teardown is
+authorized by this documentation review.

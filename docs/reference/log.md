@@ -2017,3 +2017,297 @@ metadata when the knowledge base was created.
   generated-schema checks passed: 13 tests. Seven real-MCP-runtime tests were
   skipped because the pinned external runtime was unavailable; no runtime or
   live model result is represented as Passed. Updated index routing.
+
+## [2026-10-13] audit | Draft experiment PM and UX closure learning
+
+* Reviewed all four open drafts at their exact heads against main `71aaf9d`,
+  using pinned source, captured PR metadata and the requested UX Designer
+  review. No new app execution, browser/user study, deployment, tenant change
+  or resource teardown was performed. Existing tests, owner reports and old
+  revisions remain dated evidence, not newly reproduced acceptance.
+* Added the [closure inventory and #58 disposition queue](./research/gap-analysis-next-build.md#draft-experiment-closure-review-2026-10-13).
+  Recommend retiring #19/#24/#27 as learning only after capture merges and
+  owner authorization; #58 remains draft pending explicit carry/replace/defer
+  decisions and current-infrastructure verification. None of the four pinned
+  heads is an ancestor of inspected main; retirement does not imply all code
+  is merged, requirements accepted or resources deleted.
+* Integrated genuinely missing [UX recovery/capability learning](./research/ux/prototype-learnings-and-simplicity-review.md#draft-ux-closure-review-2026-10-13),
+  preserving owner feedback alongside later #24 source behavior and replacing
+  untested first-task failure assertions with hypotheses. Existing human,
+  role, accessibility and value checks remain unexecuted. Current welcome/
+  account progress does not replace absent #58 connected journeys.
+* Added [ADR regression and resource boundaries](../adrs/0002-pilot-readiness-architecture.md#retained-draft-architecture-learning-2026-10-13):
+  atomic state/event/replay, exact intent, independent handover reacceptance,
+  current work-order/scope binding and preserved historical/resident records.
+  Old local runbooks/topology do not become current operator contracts.
+* PRD v0.13.2 is evidence-only: corrected actual historical #19 branch
+  provenance and linked recovery, invalidation and carry-forward learning.
+  IDs/counts/approval are unchanged. Updated addendum and index; BRD v0.16.0,
+  original case, owner memory and regulatory snapshots remain unchanged.
+
+## 2026-10-13 Combined assistant source and blocked-reset publication
+
+* Preserved concurrent intended-proposal identity correction `687e4aa` with
+  a normal merge, without rewriting PR ancestry or losing generator/ledger
+  corrections. Combined source `ec7721b` passes 389-test discovery (316 passed,
+  73 conditional SQL skips) and all 73 actual disposable SQL tests.
+* Built exact-source image04 locally:
+  `sha256:d5eba379f5fd2ce5d9a38965357c193be88eb1882f8e62f75b06faa5aa52fe22`.
+  Updated the [ADR receipt](../adrs/0002-pilot-readiness-architecture.md#fresh-ledger-and-synthetic-coverage-learning-2026-10-13),
+  PRD, operator guide and index. Rendered nine changed canonical pages and
+  checked links, fragments, frontmatter and protected evidence.
+* Database reset remains cancelled, image02/revision11 remains the disabled
+  serving version, and no model call or image04 cloud deployment is claimed.
+  Prepared synthetic counts and all private tenant bindings remain separate
+  from live acceptance; historical Reviews are preserved.
+
+## 2026-10-13 Populated visits renderer and exact-image local validation
+
+* Generated-data browser QA found 38 booked visits in the actual API but zero
+  rendered rows: the shared page renderer discarded arrays of day-group
+  elements. Source `a76d281` flattens before filtering nodes and adds a two-day
+  appointment/case-link regression.
+* Latest local image05/source `cd14b3b` passes 21 browser regressions and 21
+  exact-image generated-data UI/API/restart checks. All 38 visits, 12 Finance
+  rows and 601 source work orders render; funding/quality remain pending,
+  and all five assistant requests remain disabled/manual. Independent SQLite
+  checks preserve domain/proposals through restart with zero provider attempts.
+* Updated PRD, [ADR receipt](../adrs/0002-pilot-readiness-architecture.md#fresh-ledger-and-synthetic-coverage-learning-2026-10-13),
+  MVP/operator guide and index. This is safe local evidence only: the Azure
+  database remains intact, the reset cancellation is not bypassed, and expired
+  QA authority is not renewed by a general autonomous-continuation instruction.
+
+## 2026-10-14 Authorized exercise SQL recreation and five real assistant paths
+
+* Owner explicitly reauthorized deletion/recreation and all offered remaining
+  delivery. Recreated only `retrofit` with ledger/serverless/backup settings
+  and diagnostics restored; restored original contained SQL users/grants and
+  all 11 private tenant staff bindings without tenant changes. The generated
+  baseline now serves 980 cases, 38 visits, 12 Finance/quality/grant/request
+  records, one package/601 source orders and four offered handoffs.
+* Published exact image05/source `cd14b3b`, manifest
+  `sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20`,
+  in existing API revision `--0000012`. Five registered deployed operator
+  paths returned distinct citation-validated ready proposals through real
+  Azure OpenAI `standard`/`gpt-4.1-mini-2025-04-14`: five attempts/6884 tokens,
+  15 append-only ledger events and one finite allowance.
+* Independent controlled-domain hashes and full assistant-table content
+  hashes/outputs/usage survived actual revision restart. Bounded authority
+  activated 06:41:03Z, expiry 07:41:03Z, limited to 10 calls/126000 tokens;
+  only five calls used. Normal serving authority remains absent/proactive off.
+  No human approval, staff-browser acceptance, semantic/value or production
+  acceptance is claimed; previous recommendations/audit were deliberately reset.
+* Updated PRD, ADR, addendum, operator/MVP guides, synthetic recipe/dictionary
+  and index. Transport timeouts were reconciled against zero durable attempts
+  before first model dispatch; transient stale-replica exec errors caused no
+  inference retry or allowance replenishment. Historical sources and Reviews
+  remain unchanged.
+  The available four-arm MVE evidence is proposed, not verified benefit results.
+
+## [2026-10-13] ingest | Agent process map and PowerPoint handoff
+
+* Created the [agent process map](../capstone/deck/agents-in-retrofit-process.svg)
+  and matching high-resolution PNG, grounded in the addendum, PRD and agent
+  request challenge. Five stage-specific assists distinguish staff-requested
+  help, proposed event/scheduled review and the separate human decision owner.
+  Rules own progression; agents do not gain approval, resident consent,
+  instruction, submission, quality acceptance or payment authority.
+* Handed supplied content to the installed PowerPoint Builder, which inserted
+  one slide after the AI boundary. Published the verified 22-slide
+  [capstone deck](../capstone/deck/zava-forward-executive-draft.pptx), with the
+  new map at slide 13 and all 21 original slides, notes, images, masters and
+  layouts retained. Only moved page counters and necessary notes backlinks
+  changed. The parent inset the new artwork/footer/logo to resolve nine
+  edge-margin warnings, then rebuilt only slide 13 and re-exported. The shared
+  builder ignores `alt_text`; a small partial-build helper embeds the YAML
+  description, which was verified in the actual published PPTX.
+* Added an accessible [text equivalent and value tests](../capstone/README.md#agents-in-the-retrofit-process-2026-10-13),
+  new-slide notes/alt description and sources, and an addendum explanation.
+  Updated the index. Working YAML, diagram source/contract, handoff and
+  validation evidence remain under `.copilot-tracking/ppt/2026-10-13/`;
+  the sole delivery is in `docs/capstone/deck/`, not `docs/presentations/`.
+* Validated all-slide notes/count, new-slide geometry (zero issues), original
+  shape XML apart from allowed counter digits, exact notes/image content and
+  unchanged original master/layout/theme parts. Inspected fresh LibreOffice
+  renders of slides 12-14. SDK vision validation and real PowerPoint/Aptos
+  rendering are unavailable/deferred, not passed; the source deck's existing
+  font substitution remains distinct from this addition.
+* Improvements are unmeasured hypotheses, to be tested against paired rules/
+  manual work including preparation, review, correction and shifted burden.
+  Proactive watchers are proposed, not claimed deployed. No new requirement,
+  regulatory currentness claim, resource change, draft closure, merge,
+  user acceptance, timed rehearsal or capstone score is implied. BRD, PRD,
+  original case, owner memory and regulatory snapshots are unchanged by this
+  diagram/deck continuation.
+
+## [2026-10-13] update | Five bounded reactive/proactive assistant contracts
+
+* Updated the [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md#five-reactive-and-proactive-assistants-2026-10-13)
+  to v0.14.0 with the five stable capabilities, distinct permitted sources,
+  proactive predicates, reactive/reviewer audiences and separate human
+  decisions. Added FR-047/AC-058 to AC-061 and traceability: 47 FRs, 61 ACs,
+  unchanged 13 NFRs/9 constraints. Historical v0.12.0 approval is preserved,
+  not inherited; fresh requirements/owner acceptance remains open.
+* Amended [ADR 0002](../adrs/0002-pilot-readiness-architecture.md#five-assistant-exercise-runtime-2026-10-13)
+  for shared API/SQL proposal execution rather than five apps: durable
+  deduplication, fenced leases, bounded shared reservations, recipient-safe
+  sources and atomic source/version-bound human review. Provider calls hold no
+  domain lock; unknown usage is not zero or an exactly-once billing guarantee.
+* Reconciled [ADR 0001](../adrs/0001-azure-architecture.md) and this index:
+  separate agent/queue/orchestrator resources remain proposed. These contracts
+  do not establish deployed parity, semantic quality, measured value, control
+  approval or production readiness. Build evidence is recorded separately.
+
+## [2026-10-13] implementation | Five-assistant workbench version and build boundary
+
+* Implemented the five v1.0.0 capabilities in the existing MVP with separate
+  request/proactive provenance, durable SQL claims/allowances and independently
+  source-verified proposal review. Existing controlled case state is not the
+  assistant write target. [MVP configuration/API](../../mvp/README.md#five-retrofit-assistants-2026-10-13-implementation)
+  keeps authority, expiry and finite shared limits explicit; proactive defaults
+  off. Fixed safe worker/scan warnings and bounded backoff avoid silent failure.
+* Recorded [exact source/local image and CI evidence](../adrs/0002-pilot-readiness-architecture.md#implementation-and-build-evidence):
+  333 parent-discovered tests (26 integration skips), 44 targeted tests,
+  15 reported Chromium checks and passing source CI including real SQL Server
+  general parity and hardened-image scanning. The disposable local SQL login
+  could not be established; new-assistant real-SQL/model acceptance is not
+  supplied by the general parity job.
+* Updated PRD/ADR/index with the honest boundary: no new ACR image/serving
+  revision, paid inference or actual changed-build SQL before/after/restart.
+  Specific shared-runtime/spend confirmation was unavailable. Preserve the
+  existing deployment/data, historical budget exceptions and separate human,
+  calibration and comparative-value gates; no merge or production approval.
+
+## [2026-10-13] validation | Corrected assistant lifecycle and actual SQL coverage
+
+* Fixed the initial Review's shutdown-admission and manual-rendering defects:
+  a short dispatch/stop gate prevents delayed claims starting new inference;
+  ordinary case controls render before auxiliary reads, with a 10-second abort
+  deadline, visible manual fallback and stale-panel protection.
+* Recorded corrected runtime `bf383c4`, exact local image `assistants-20261013-02`
+  and hardening/source-CI evidence in
+  [ADR 0002](../adrs/0002-pilot-readiness-architecture.md#implementation-and-build-evidence).
+  The earlier SQL bootstrap failure is historical: actual disposable SQL Server
+  now passes 69 tests, including 43 assistant contract/review/durability/API
+  tests and concurrent additive startup. Those suites are in the existing CI
+  SQL job, not emulation or generic parity alone.
+* Updated PRD, operator handover, MVP guide and index in place. Current local
+  regression is 379 discovered/310 passed/69 SQL skips; 47 nonbillable assistant
+  tests and 19 Chromium checks cover the source candidate. Provider/human
+  fixtures are not actual model or human acceptance. Initial Review retained.
+* Specific retained-data rollout/up-to-USD-5 incremental QA approval was again
+  unavailable. Azure image/revision/data/configuration remain unchanged; no
+  ACR publication or paid calls occurred. CON-009/AC-057, actual workload
+  permission/restart proof, semantic calibration and human/business acceptance
+  remain distinct open gates, not inherited from the corrected source checks.
+
+## [2026-10-13] validation | Corrected candidate final CI receipt
+
+* Source `560c30c` preserves the shipped runtime/UI/dependencies of exact local
+  image source `bf383c4`. Final
+  [CI 38461679776](https://github.com/jmservera/ama/actions/runs/38461679776)
+  passes test/image/mssql: 379 discovered tests with 69 conditional skips,
+  all 69 actual SQL tests, and hardened-image scan/SBOM checks.
+* This closes source/build validation, not the unapproved live rollout,
+  registered actual model invocation or independent changed-Azure SQL restart
+  gate. Earlier evidence and the initial Review are preserved.
+
+## [2026-10-13] implementation | Ledger discovery and prepared operational coverage
+
+* Owner authorized image02 rollout and bounded QA; exact `d3e652ce` manifest
+  reached revision `--0000010`. Private auth/config/identity comparisons and
+  independent managed-identity SQL fingerprints preserved 980 cases, 11 staff,
+  three metadata entries, 15 recommendations and audit head/count 40.
+  Live ledger-trigger incompatibility prevented model execution; no paid call
+  or human acceptance is claimed.
+* Source `99aeaac` creates append-only ledger assistant events instead of an
+  unsupported system-versioned-table trigger, refusing incompatible retained
+  evidence without deletion. Actual disposable SQL passes 72 tests, including
+  fresh-ledger five-path/immutability/restart and invalid-table refusal.
+  Full discovery passes 387 tests with 72 conditional SQL skips.
+* Requested eval-dataset-creator supplied a read-only schema/coverage audit;
+  parent implemented/tested the existing generator and SQL seed persistence.
+  [Dated recipe](./research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13)
+  preserves seed 20260901, 60000 stock and 980-case slice, with 38 visible booked
+  visits (11 current-week), six designated forward visits, one package/601
+  source orders, 12 each invoices/unverified quality/pending grants/requests
+  and four offered handoffs. No new approval, consent, payment or benefit.
+* Owner stopped migration and requested a reset. QA authority removed in
+  healthy revision `--0000011`, still image02. Database deletion was cancelled;
+  no wipe/reseed occurred. Private enriched seed and 11 tenant staff bindings
+  are prepared. Image03 is local-only, not a serving digest. Updated PRD/ADR,
+  addendum, operator guide, synthetic dictionary and index; earlier receipts,
+  original case, owner memory and regulatory snapshots remain unchanged.
+
+  ## [2026-10-14] query | Capstone narrative refresh and native PowerPoint process map
+
+  * Owner requested the Presentation Communications Strategist and PowerPoint
+    Builder. Rebuilt all 22 executive slides with current bounded technical
+    evidence, customer-first decisions, source-linked notes and planned timing.
+    Five real operator-service paths/SQL-content/restart proof remain distinct
+    from open staff/human/accessibility/semantic/value acceptance.
+  * [Native slide 13](../capstone/deck/zava-forward-executive-draft.pptx)
+    replaces its embedded process-map image with editable textboxes, backgrounds
+    and connectors. Peer titles use fixed TOP-anchored regions and common body
+    starts across the deck, including two/three-line title contrasts.
+  * Updated [capstone handover](../capstone/README.md#native-powerpoint-rebuild-2026-10-14),
+    [knowledge-base index](./README.md) and
+    [preview](../capstone/deck/agents-in-retrofit-process-native.png).
+    Original standalone SVG/PNG remain reference illustrations; dated working
+    YAML/style/generated assets and specialist handover are preserved.
+  * Fresh full-deck exports, saved shape/notes/source checks and parent image
+    inspection support the published copy. Compact-spacing/edge-band warnings
+    are explicitly classified, not presented as a clean generic-geometry pass.
+    Native PowerPoint/font fidelity, SDK vision, real rehearsal/pitch, full
+    rubric floors and product/production approval are not claimed.
+  * No new legal claim, private identity, cloud/auth/model action or spending
+    authority. Original case, owner memory and regulatory snapshots unchanged.
+
+## [2026-10-14] create | Executive and technical Excalidraw architecture views
+
+* Owner requested both audiences' architecture views from #68, with Azure
+  icons. Added [editable scenes and handover](../architecture/README.md),
+  vector/high-resolution previews and unmodified official icon selections
+  with provenance and permitted-use terms.
+* Executive view explains one accountable staff workflow, durable evidence,
+  bounded AI and human approval. Technical view maps ingress/auth, the
+  single-API five-assistant service, SQL/Blob/model interfaces, own-photo/
+  token renewal, registry, networking, diagnostics and alerts, with
+  separate deferred worker and conditional M365 relationships.
+* Preserved distinctions: static source versus live inventory, development
+  public access versus private production design, source-defined telemetry
+  versus measured tracing, declared archive policy versus unimplemented
+  immutable digest anchoring, and five operator paths versus real-user/
+  semantic/value acceptance. Ordinary five-assistant authority and proactive
+  scans remain off. No new architecture decision or operational approval.
+* Linked the views from ADR 0002, infrastructure and capstone handovers and
+  this index. Retained complete-guide coverage and open capstone floors.
+  The presentation, original case, owner memory, regulatory snapshots and
+  runtime code remain unchanged; no cloud, tenant or model operation.
+
+## [2026-10-14] update | Architecture and UX capstone presentation refresh
+
+* Owner requested the new architecture materials in the presentation and
+  the UX Designer/PowerPoint skills and agents to improve it. Published the
+  [24-slide capstone deck and handover](../capstone/README.md#architecture-and-ux-refresh-2026-10-14),
+  retaining the 18-slide main route and adding two optional appendices.
+* Native presentation architecture covers the executive view on slide 10,
+  current runtime on 19, operations/identity/network context on 23 and
+  deferred/conditional topology on 24. Official Azure service icons remain
+  individual assets; diagrams are editable boxes, text and connectors.
+  The Excalidraw sources retain their separate baseline and authority.
+* UX expert review made alternatives explicit, separated recorded proof
+  from outstanding acceptance, clarified the planning-only decision and
+  proposed owners/deliverables, and added technical-detail/return links.
+  It is artifact review, not human comprehension, resident engagement or
+  observed usability evidence.
+* The native five-capability map, human decision boundaries and common
+  title/body starts remain. The current working handover records fresh
+  rendering, notes/geometry/source checks, icon provenance, warning
+  dispositions and the full-guide contribution/gap assessment.
+* Planned 795-second main route plus 105 seconds questions/contingency is
+  not rehearsal. Authority and proactive scans remain off; real-user,
+  semantic, value, native-viewer and production acceptance remain separate.
+  No new legal, funding or business-outcome claim, cloud/tenant/model
+  operation or spending authority. Original case, owner memory, regulatory
+  snapshots, runtime and infrastructure code remain unchanged.

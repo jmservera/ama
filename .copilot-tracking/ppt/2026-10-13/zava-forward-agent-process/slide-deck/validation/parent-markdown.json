@@ -1,0 +1,22 @@
+{
+  "docs/capstone/README.md": {
+    "rendered_tables": 4,
+    "preexisting_table_anomalies": 0,
+    "new_table_anomalies": 0
+  },
+  "docs/case_study_48_addendum.md": {
+    "rendered_tables": 19,
+    "preexisting_table_anomalies": 0,
+    "new_table_anomalies": 0
+  },
+  "docs/reference/README.md": {
+    "rendered_tables": 9,
+    "preexisting_table_anomalies": 1,
+    "new_table_anomalies": 0
+  },
+  "docs/reference/log.md": {
+    "rendered_tables": 0,
+    "preexisting_table_anomalies": 0,
+    "new_table_anomalies": 0
+  }
+}

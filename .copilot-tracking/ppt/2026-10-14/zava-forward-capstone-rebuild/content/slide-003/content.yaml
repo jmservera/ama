@@ -1,0 +1,317 @@
+slide: 3
+title: Each request needs rules, people and bounded AI.
+section: Main
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES  /  ZAVA FORWARD  /  EXECUTIVE PROPOSAL
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: Each request needs rules, people and bounded AI.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026  •  S02 / S04  •  Sources + status in notes
+  left: 0.55
+  top: 7.12
+  width: 11.4
+  height: 0.2
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 03 / 22
+  left: 12.0
+  top: 7.1
+  width: 0.78
+  height: 0.23
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-1-background
+  left: 0.55
+  top: 2.02
+  width: 3.93
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-1-title
+  text: Rules
+  left: 0.73
+  top: 2.22
+  width: 3.5700000000000003
+  height: 0.94
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-1-body
+  text: 'Gates, clocks,
+
+    eligibility, versions.'
+  left: 0.73
+  top: 3.33
+  width: 3.5700000000000003
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-2-background
+  left: 4.7
+  top: 2.02
+  width: 3.93
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-2-title
+  text: People
+  left: 4.88
+  top: 2.22
+  width: 3.5700000000000003
+  height: 0.94
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-2-body
+  text: 'Policy, consent,
+
+    professional and
+
+    financial decisions.'
+  left: 4.88
+  top: 3.33
+  width: 3.5700000000000003
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: peer-3-background
+  left: 8.850000000000001
+  top: 2.02
+  width: 3.93
+  height: 3.72
+  fill: '#D5E2D4'
+  line_color: '#D5E2D4'
+  line_width: 0
+- type: textbox
+  name: peer-3-title
+  text: Bounded AI
+  left: 9.030000000000001
+  top: 2.22
+  width: 3.5700000000000003
+  height: 0.94
+  font: Liberation Sans
+  font_size: 24
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: peer-3-body
+  text: 'Reconcile, prepare,
+
+    draft, flag.'
+  left: 9.030000000000001
+  top: 3.33
+  width: 3.5700000000000003
+  height: 2.2100000000000004
+  font: Liberation Sans
+  font_size: 22
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: boundary-background
+  left: 0.55
+  top: 6.2
+  width: 12.23
+  height: 0.6
+  fill: '#E5B96A'
+  line_color: '#E5B96A'
+  line_width: 0
+- type: textbox
+  name: boundary-text
+  text: Eight role-agent research instruments — not employee interviews.
+  left: 0.73
+  top: 6.3
+  width: 11.87
+  height: 0.45999999999999996
+  font: Liberation Sans
+  font_size: 19
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+speaker_notes: "SLIDE 03 — Each request needs rules, people and bounded AI.\nTopic sentinel: research\
+  \ reversal\nMessage: the research changed task allocation, not the resident objective.\nStatus: strategist-recommended\
+  \ proposal; refreshed 14 October 2026.\n\n\"Eight sector-informed role-agent perspectives challenged\
+  \ the\n  request; they are research instruments, not the company's staff or\n  approvers. Each request\
+  \ combines deterministic controls, accountable\n  decisions and narrower text/evidence tasks. Richer\
+  \ inputs do not remove\n  those boundaries. The binding delivery constraint is still unknown:\n  capital,\
+  \ competent capacity, access or quality may dominate coordination.\"\n* Transition: \"Three examples\
+  \ explain why that changes the build.\"\n\nSources — workspace-relative paths, section and evidence\
+  \ status; as read 14 October 2026:\nS02: docs/case_study_48_addendum.md, Business Challenge; Executive\
+  \ Assessment; Digital Foundation; Where Agents Fit; Recommended Executive Decision. Status: Maintained\
+  \ 14 October synthesis and proposed controls; bottleneck/outcomes not verified company findings.\nS04:\
+  \ docs/reference/research/company/agent-request-challenge.md, Summary and capability sections; docs/reference/research/company/agent-what-if-study.md,\
+  \ method and revised verdicts, as carried in S02. Status: Sector-informed role-agent hypotheses, not\
+  \ employee interviews or resident testimony.\n\nPlanned allocation: 35 seconds; not rehearsed."

@@ -1,0 +1,25 @@
+slide: 23
+node: ops-vault
+object: azure-icon-vault-ops-vault
+source: docs/architecture/assets/azure/vault.svg
+source_sha256: 712b426f54f0fc50d0816dc79df709daa7ac5f93ccaf4e9b3527f627f6e9ad97
+png: content/slide-023/images/azure-vault.png
+png_sha256: 61d7f9286eae9b9cd2f7a1c49f5335c05f0fc065d912a84939234d86c8f7b14a
+source_viewbox:
+- 0.0
+- 0.0
+- 18.0
+- 18.0
+source_ratio: 1.0
+raster_pixels:
+- 240
+- 240
+placement_inches:
+- 0.29
+- 0.29
+adjacent_label: Azure Key Vault
+converter: CairoSVG 2.9.1
+no_crop: true
+no_recolour: true
+source_unmodified: true
+provenance: docs/architecture/assets/README.md; local official Azure asset, not composite

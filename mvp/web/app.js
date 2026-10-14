@@ -18,9 +18,9 @@ function h(tag, attrs, ...kids) {
   return el;
 }
 
-async function api(path, body) {
-  const res = await fetch(path, body === undefined ? {} : {
-    method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body),
+async function api(path, body, signal) {
+  const res = await fetch(path, body === undefined ? { signal } : {
+    method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body), signal,
   });
   const data = await res.json().catch(() => ({}));
   if (res.status === 401 && path !== "/api/login") { me = null; login("Your session has ended. Sign in again."); throw new Error("Your session has ended. Sign in again."); }
@@ -38,7 +38,7 @@ const ago = (s) => {
   const days = Math.floor((Date.now() - new Date(s)) / 864e5);
   return days <= 0 ? "Today" : days === 1 ? "Yesterday" : `${days} days ago`;
 };
-const show = (...nodes) => { app.replaceChildren(...nodes.filter((n) => n && n.nodeType)); app.focus(); };
+const show = (...nodes) => { app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType)); app.focus(); };
 
 function login(msg) {
   document.getElementById("nav").hidden = true;
@@ -75,6 +75,7 @@ async function start() {
   nav.querySelectorAll("a").forEach((a) => { if (a.dataset.dyn) a.remove(); else a.hidden = contractor; });
   if (contractor) nav.prepend(h("a", { href: "#/", "data-dyn": "1" }, "My jobs"));
   else if (isManager()) nav.querySelector("a[href='#/funding']").after(h("a", { href: "#/capacity", "data-dyn": "1" }, "Capacity and work orders"), h("a", { href: "#/closed", "data-dyn": "1" }, "Closed cases"));
+  if (!contractor) nav.append(h("a", { href: "#/assistants", "data-dyn": "1" }, "Assistant proposals"));
   nav.hidden = false;
   route();
 }
@@ -134,6 +135,7 @@ function route() {
   const m = location.hash.match(/^#\/case\/(.+)$/);
   if (me.user.role === "Contractor") return m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView();
   if (m) return caseView(decodeURIComponent(m[1]));
+  if (location.hash === "#/assistants") return assistantQueueView();
   if (location.hash === "#/closed") return closedView();
   if (location.hash === "#/capacity") return capacityView();
   if (location.hash === "#/import") return importView();
@@ -311,6 +313,7 @@ async function listView(view) {
 
 async function caseView(id) {
   const c = await api(`/api/cases/${encodeURIComponent(id)}`);
+  const assistantPanel = assistantCasePanel(id);
   const r = c.resident, hm = c.home;
   const openHaz = c.hazards.filter((x) => !x.released);
   const msg = h("div", { role: "status" });
@@ -400,6 +403,7 @@ async function caseView(id) {
         h("button", { class: "alt", onclick: () => kind("update") }, "Plain update template")), draftBox),
     documentsPanel(c, id, refresh),
     fundingPanel(c, id, refresh),
+    assistantPanel,
     financePanel(c, id, refresh), grantPanel(c, id, refresh), technicalPanel(c, id, refresh), residentPanel(c, id, refresh),
     msg,
     h("section", { class: "card" }, h("h2", {}, "History"),

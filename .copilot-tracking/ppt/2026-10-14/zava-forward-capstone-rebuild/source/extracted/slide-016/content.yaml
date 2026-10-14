@@ -1,0 +1,240 @@
+slide: 16
+title: A DASHBOARD RUNS THE WORK / A FROZEN COMPARISON TESTS THE CLAIM
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: A DASHBOARD RUNS THE WORK / A FROZEN COMPARISON TESTS THE CLAIM
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.25
+  text: Prove the programme. Test the AI separately.
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 1
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 5.825
+  height: 2.85
+  name: Rounded Rectangle 3
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: '1 / PROGRAMME COMPARISON
+
+    Existing teams: assisted vs usual delivery
+
+    Same events + frozen cohort
+
+    Accepted handovers + whole-chain cost
+
+    Shared resources + displacement'
+  margin_left: 0.25
+  margin_right: 0.25
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 1 / PROGRAMME COMPARISON
+    text_font: Aptos
+    text_size: 21
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: 'Existing teams: assisted vs usual delivery'
+    text_font: Aptos
+    text_size: 21
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Same events + frozen cohort
+    text_font: Aptos
+    text_size: 21
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Accepted handovers + whole-chain cost
+    text_font: Aptos
+    text_size: 21
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Shared resources + displacement
+    text_font: Aptos
+    text_size: 21
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 21
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 2
+- type: shape
+  shape: rounded_rectangle
+  left: 6.825
+  top: 2.85
+  width: 5.825
+  height: 2.85
+  name: Rounded Rectangle 4
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: '2 / AI TASK COMPARISON
+
+    Same inputs; manual / rules vs AI
+
+    Paired, reviewed outcomes
+
+    Review + correction + recording effort
+
+    Errors + delay + latency + cost'
+  margin_left: 0.25
+  margin_right: 0.25
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 2 / AI TASK COMPARISON
+    text_font: Aptos
+    text_size: 21
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Same inputs; manual / rules vs AI
+    text_font: Aptos
+    text_size: 21
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Paired, reviewed outcomes
+    text_font: Aptos
+    text_size: 21
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Review + correction + recording effort
+    text_font: Aptos
+    text_size: 21
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Errors + delay + latency + cost
+    text_font: Aptos
+    text_size: 21
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 21
+  text_color: '#183A31'
+  alignment: left
+  z_order: 3
+- type: textbox
+  left: 0.65
+  top: 6.05
+  width: 12.0
+  height: 0.35
+  text: Include unfinished and withdrawn homes. Protect safety, choice, quality, equity
+    and cash.
+  name: TextBox 5
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 18
+  font_color: '#183A31'
+  z_order: 4
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12.0
+  height: 0.28
+  text: 16 / PROPOSED EVALUATION / E05/E11 / EFFECTS UNMEASURED; PARALLEL EXPERIMENT
+    HAS NO RESULTS HERE
+  name: TextBox 6
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  z_order: 5
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 6
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 7
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'A dashboard tells us what is happening; it does not establish what
+  caused it. Separate two questions.
+
+
+  First, does modernisation improve accepted outcomes? Compare an assisted locality
+  with a matched locality using existing delivery without agents, both with existing
+  teams, identical event capture and a frozen cohort. Compare changes against each
+  area''s instrumented pre-period. Log shared suppliers and staff so improvement is
+  not borrowed from elsewhere. Do not introduce a protected delivery cell and call
+  its capacity an AI benefit.
+
+
+  Second, does a capability add value over the same workflow without it? Pair identical
+  inputs and reviewed tasks. Count review, correction, recording, errors, latency
+  and cost.
+
+
+  Include unfinished, paused and withdrawn homes. Safety, resident choice, quality,
+  equity and peak cash cannot be traded for speed. Protocol and thresholds need owner
+  agreement. No numerical effects are measured here; a negative AI result means simplify.
+
+
+  Evidence:
+
+  docs/reference/research/company/pilot-measurement-challenge.md — Summary; Owner
+  Decision, 2026-09-26; Proposed Measurement Design; Analysis Rules.
+
+  docs/ideas/typesafe-system-one-agent-fit.md — Observed Feasibility and Parallel
+  Value Experiment (2026-10-11, protocol not results).'

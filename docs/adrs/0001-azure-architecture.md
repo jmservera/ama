@@ -40,7 +40,11 @@ and owner-reported sign-in are recorded in the
 [current operator handover](../../infra/README.md#current-exercise-handover-2026-10-13)
 and [dated addendum](../case_study_48_addendum.md#observed-deployment-and-identity-learning-2026-10-1213).
 This supplements the historical deployments and proposed topology below.
-Workers remain placeholders; development public-network exceptions, token
+Separate workers remain placeholders; the owner-requested shared five-assistant
+MVP runtime is specified in
+[ADR 0002](./0002-pilot-readiness-architecture.md#five-assistant-exercise-runtime-2026-10-13),
+not evidence that this proposed queue/worker estate was deployed.
+Development public-network exceptions, token
 storage, full M365 integration, human acceptance and production authority
 remain explicitly scoped. Merge of documentation is not approval of the ADR.
 

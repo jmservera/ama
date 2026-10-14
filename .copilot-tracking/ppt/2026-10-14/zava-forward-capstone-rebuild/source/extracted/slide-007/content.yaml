@@ -1,0 +1,353 @@
+slide: 7
+title: ONE-HOME STORY / CONSTRUCTED EXERCISE, NOT A LIVE CUSTOMER OUTCOME
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: ONE-HOME STORY / CONSTRUCTED EXERCISE, NOT A LIVE CUSTOMER OUTCOME
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.25
+  text: One home makes the whole argument real
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos Display
+  font_size: 38
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 1
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 2.7
+  height: 2.75
+  name: Rounded Rectangle 3
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: '1 / IDENTIFY
+
+    Conflicting EPC?
+
+    Hold decision.
+
+    Name resolver.'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 1 / IDENTIFY
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Conflicting EPC?
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Hold decision.
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Name resolver.
+    text_font: Aptos
+    text_size: 20
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 20
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 2
+- type: shape
+  shape: rounded_rectangle
+  left: 3.75
+  top: 2.85
+  width: 2.7
+  height: 2.75
+  name: Rounded Rectangle 4
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: '2 / AGREE
+
+    Survey + design
+
+    Resident choice
+
+    Funding + capacity
+
+    before release'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 2 / AGREE
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Survey + design
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Resident choice
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Funding + capacity
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: before release
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  alignment: left
+  z_order: 3
+- type: shape
+  shape: rounded_rectangle
+  left: 6.85
+  top: 2.85
+  width: 2.7
+  height: 2.75
+  name: Rounded Rectangle 5
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: '3 / DELIVER
+
+    Evidence returned
+
+    Independent QA
+
+    Defect? Return
+
+    to owner.'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 3 / DELIVER
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Evidence returned
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Independent QA
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Defect? Return
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: to owner.
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  alignment: left
+  z_order: 4
+- type: shape
+  shape: rounded_rectangle
+  left: 9.95
+  top: 2.85
+  width: 2.7
+  height: 2.75
+  name: Rounded Rectangle 6
+  corner_radius: 0.16667
+  fill: '#E5B96A'
+  text: '4 / ACCEPT
+
+    Defects resolved
+
+    Resident handover
+
+    Separate financial
+
+    closure'
+  margin_left: 0.2
+  margin_right: 0.2
+  margin_top: 0.14
+  margin_bottom: 0.14
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: 4 / ACCEPT
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Defects resolved
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Resident handover
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Separate financial
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: closure
+    text_font: Aptos
+    text_size: 20
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 20
+  text_color: '#183A31'
+  alignment: left
+  z_order: 5
+- type: textbox
+  left: 0.65
+  top: 5.95
+  width: 12.0
+  height: 0.45
+  text: 'The win to prove: no lost ownership, no silent exception, no unexplained
+    acceptance.'
+  name: TextBox 7
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 20
+  font_color: '#183A31'
+  z_order: 6
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12.0
+  height: 0.28
+  text: 07 / EXERCISE JOURNEY + PROPOSED GATES / E06/E08 / NOT PROOF OF EXECUTED END-TO-END
+    ACCEPTANCE
+  name: TextBox 8
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  z_order: 7
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 8
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 9
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'Follow one fictional home. Its EPC sources conflict. Rather than invent
+  an answer, the case holds the dependent decision and names a resolver. After correction,
+  approved rules establish priority.
+
+
+  The assessor supplies observations; the coordinator reviews the design. The resident
+  chooses the measures through supported contact. Finance checks funding, and a competent
+  crew is committed before a person releases work.
+
+
+  The contractor returns versioned evidence. Independent quality review finds a defect
+  and returns it to an owner. Only after correction and acceptance does resident handover
+  proceed. Financial closure has its own evidence; it is not inferred from installation.
+
+
+  The win to prove is continuity: no lost owner, silent exception or unexplained acceptance.
+  This is an exercise story, not live proof.
+
+
+  Evidence:
+
+  docs/case_study_48_addendum.md — EXA-002/003/005/007/008/015; Four-Week Plan and
+  Tribunal Defence (2026-10-10 exercise).
+
+  docs/prds/zava-forward-retrofit-programme-demonstrator.md — Executive Summary; Exercise
+  Acceptance Contract (v0.13 candidate).
+
+
+  Demo/recovery cue (not spoken): show actual executed scope in under two minutes;
+  if unavailable, use this illustrative trace, never call it proof.'

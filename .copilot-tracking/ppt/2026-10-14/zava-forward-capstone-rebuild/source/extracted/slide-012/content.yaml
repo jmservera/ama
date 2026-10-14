@@ -1,0 +1,219 @@
+slide: 12
+title: ASSISTANCE INSIDE THE BOUNDARY
+elements:
+- type: textbox
+  left: 0.65
+  top: 0.6
+  width: 12.0
+  height: 0.3
+  text: ASSISTANCE INSIDE THE BOUNDARY
+  name: TextBox 1
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 0
+- type: textbox
+  left: 0.65
+  top: 1.22
+  width: 12.0
+  height: 1.25
+  text: AI earns a task. Never the authority.
+  name: TextBox 2
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos Display
+  font_size: 40
+  font_color: '#183A31'
+  font_bold: true
+  z_order: 1
+- type: shape
+  shape: rounded_rectangle
+  left: 0.65
+  top: 2.85
+  width: 5.825
+  height: 2.7
+  name: Rounded Rectangle 3
+  corner_radius: 0.16667
+  fill: '#173F35'
+  text: 'BOUNDED SELECTION
+
+    Source-bound supplied candidates
+
+    Verified task fit; no-match is allowed
+
+    Compare against rules / manual'
+  margin_left: 0.25
+  margin_right: 0.25
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: BOUNDED SELECTION
+    text_font: Aptos
+    text_size: 22
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Source-bound supplied candidates
+    text_font: Aptos
+    text_size: 22
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Verified task fit; no-match is allowed
+    text_font: Aptos
+    text_size: 22
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  - text: Compare against rules / manual
+    text_font: Aptos
+    text_size: 22
+    text_color: '#F7F2E7'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 22
+  text_color: '#F7F2E7'
+  alignment: left
+  z_order: 2
+- type: shape
+  shape: rounded_rectangle
+  left: 6.825
+  top: 2.85
+  width: 5.825
+  height: 2.7
+  name: Rounded Rectangle 4
+  corner_radius: 0.16667
+  fill: '#D5E2D4'
+  text: 'CITED GENERATION
+
+    Draft from permitted evidence
+
+    Check every required field
+
+    Count review and correction effort'
+  margin_left: 0.25
+  margin_right: 0.25
+  margin_top: 0.16
+  margin_bottom: 0.16
+  auto_size: none
+  vertical_anchor: middle
+  paragraphs:
+  - text: CITED GENERATION
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Draft from permitted evidence
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Check every required field
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  - text: Count review and correction effort
+    text_font: Aptos
+    text_size: 22
+    text_color: '#183A31'
+    alignment: left
+    line_spacing: 1.05
+  text_font: Aptos
+  text_size: 22
+  text_color: '#183A31'
+  alignment: left
+  z_order: 3
+- type: textbox
+  left: 0.65
+  top: 5.9
+  width: 12.0
+  height: 0.5
+  text: People own policy, consent, technical acceptance, grant submission, QA and
+    payment.
+  name: TextBox 5
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 20
+  font_color: '#183A31'
+  z_order: 4
+- type: textbox
+  left: 0.65
+  top: 6.7
+  width: 12.0
+  height: 0.28
+  text: 12 / NARROW OBSERVED FEASIBILITY ≠ TASK BENEFIT OR FULL ACCEPTANCE / E07/E11
+  name: TextBox 6
+  margin_left: 0.0
+  margin_right: 0.0
+  margin_top: 0.0
+  margin_bottom: 0.0
+  auto_size: fit
+  font: Aptos
+  font_size: 11
+  font_color: '#183A31'
+  z_order: 5
+- type: shape
+  shape: rectangle
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava logo contrast backing
+  fill: '#FFFFFF'
+  z_order: 6
+- type: image
+  path: images/image-01.png
+  left: 12.283
+  top: 0.1
+  width: 0.85
+  height: 0.297
+  name: Zava branding logo
+  z_order: 7
+layout: Blank
+background:
+  fill: '#F7F2E7'
+speaker_notes: 'Give AI a bounded task, not an office of authority. A decision model
+  may select among supplied, source-bound candidates when verified task fit supports
+  it. It must allow no-match or uncertainty. A generative model may assemble a cited
+  narrative from permitted evidence.
+
+
+  Staff check required fields and own the decision. Priority policy, consent, technical
+  acceptance, claims, quality and payment are never AI-owned.
+
+
+  Pinned #58 records source-bound EPC selection and cited generation feasibility.
+  That does not establish calibration, broader screening or net benefit.
+
+
+  If review and correction erase the benefit, keep the simpler path. Real inference
+  is exercise evidence; usefulness needs a separate test.
+
+
+  Evidence:
+
+  docs/ideas/typesafe-system-one-agent-fit.md — Microsoft Decision 1 Reassessment;
+  Observed Feasibility and Parallel Value Experiment (2026-10-10/11, #58 pinned at
+  5136f192d583a5bf53adeeec4b0f21369b005c9d).
+
+  docs/case_study_48_addendum.md — Subsequent Application Exercise Builds (2026-10-11).'

@@ -1,0 +1,1027 @@
+slide: 19
+title: One runtime. Proposals are not domain approvals.
+section: Optional appendix
+layout: Blank
+background:
+  fill: '#F7F2E7'
+elements:
+- type: textbox
+  name: deck-eyebrow
+  text: ZAVA NORTH HOMES / ZAVA FORWARD / OPTIONAL REFERENCE
+  left: 0.55
+  top: 0.25
+  width: 10.8
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: shape
+  shape: rounded_rectangle
+  name: brand-logo-backing
+  left: 11.9
+  top: 0.22
+  width: 0.88
+  height: 0.32
+  fill: '#FFFFFF'
+  line_color: '#FFFFFF'
+  line_width: 0
+- type: image
+  name: Zava branding logo — only branding
+  path: images/zava-logo.png
+  left: 11.92
+  top: 0.23
+  width: 0.84
+  height: 0.293
+- type: textbox
+  name: slide-title
+  text: One runtime. Proposals are not domain approvals.
+  left: 0.55
+  top: 0.79
+  width: 12.23
+  height: 0.98
+  font: Liberation Sans
+  font_size: 32
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: source-footer
+  text: 14 OCT 2026 | S16 + retained sources/status in notes
+  left: 0.55
+  top: 7.28
+  width: 11.4
+  height: 0.21
+  font: Liberation Sans
+  font_size: 10
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: textbox
+  name: page-counter
+  text: 19 / 24
+  left: 12.0
+  top: 7.24
+  width: 0.78
+  height: 0.25
+  font: Liberation Sans
+  font_size: 11
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.08
+  space_before: 0
+  space_after: 5
+- type: connector
+  name: runtime-sign-in-segment-1
+  connector_type: straight
+  begin_x: 4.28
+  begin_y: 2.55
+  end_x: 4.8
+  end_y: 2.55
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: none
+  tail_end: triangle
+- type: connector
+  name: runtime-issuer-segment-1
+  connector_type: straight
+  begin_x: 8.53
+  begin_y: 2.55
+  end_x: 9.05
+  end_y: 2.55
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: none
+  tail_end: triangle
+- type: connector
+  name: runtime-principal-segment-1
+  connector_type: straight
+  begin_x: 10.9
+  begin_y: 3.16
+  end_x: 10.9
+  end_y: 3.34
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: none
+  tail_end: none
+- type: connector
+  name: runtime-principal-segment-2
+  connector_type: straight
+  begin_x: 10.9
+  begin_y: 3.34
+  end_x: 6.65
+  end_y: 3.34
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: none
+  tail_end: none
+- type: connector
+  name: runtime-principal-segment-3
+  connector_type: straight
+  begin_x: 6.65
+  begin_y: 3.34
+  end_x: 6.65
+  end_y: 3.55
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: none
+  tail_end: triangle
+- type: connector
+  name: runtime-api-model-segment-1
+  connector_type: straight
+  begin_x: 4.8
+  begin_y: 4.28
+  end_x: 4.28
+  end_y: 4.28
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: triangle
+  tail_end: triangle
+- type: connector
+  name: runtime-api-sql-segment-1
+  connector_type: straight
+  begin_x: 8.53
+  begin_y: 4.28
+  end_x: 9.05
+  end_y: 4.28
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: solid
+  head_end: none
+  tail_end: triangle
+- type: connector
+  name: runtime-review-api-segment-1
+  connector_type: straight
+  begin_x: 6.65
+  begin_y: 5.32
+  end_x: 6.65
+  end_y: 4.98
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: solid
+  head_end: none
+  tail_end: triangle
+- type: connector
+  name: runtime-api-blob-segment-1
+  connector_type: straight
+  begin_x: 8.15
+  begin_y: 4.98
+  end_x: 8.15
+  end_y: 5.2
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: none
+  tail_end: none
+- type: connector
+  name: runtime-api-blob-segment-2
+  connector_type: straight
+  begin_x: 8.15
+  begin_y: 5.2
+  end_x: 10.9
+  end_y: 5.2
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: none
+  tail_end: none
+- type: connector
+  name: runtime-api-blob-segment-3
+  connector_type: straight
+  begin_x: 10.9
+  begin_y: 5.2
+  end_x: 10.9
+  end_y: 5.32
+  line_color: '#173F35'
+  line_width: 1.8
+  dash_style: dash
+  head_end: none
+  tail_end: triangle
+- type: shape
+  shape: rounded_rectangle
+  name: runtime-browser-background
+  left: 0.55
+  top: 2.02
+  width: 3.73
+  height: 1.18
+  fill: '#F7F2E7'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: runtime-browser-title
+  text: Staff browser | HUMAN
+  left: 0.67
+  top: 2.1
+  width: 3.49
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: runtime-browser-body
+  text: 'Entra sign-in; HTTPS ingress.
+
+    Public /; protected /app + APIs.'
+  left: 0.67
+  top: 2.48
+  width: 3.49
+  height: 0.6599999999999999
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: runtime-entra-background
+  left: 4.8
+  top: 2.02
+  width: 3.73
+  height: 1.18
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: runtime-entra-title
+  text: Microsoft Entra ID
+  left: 5.31
+  top: 2.1
+  width: 3.1
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: runtime-entra-body
+  text: 'CONFIGURED | issuer + roles.
+
+    Identity -> EasyAuth.'
+  left: 4.92
+  top: 2.48
+  width: 3.49
+  height: 0.6599999999999999
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: runtime-auth-background
+  left: 9.05
+  top: 2.02
+  width: 3.73
+  height: 1.18
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: runtime-auth-title
+  text: EasyAuth | CONFIGURED
+  left: 9.17
+  top: 2.1
+  width: 3.49
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: runtime-auth-body
+  text: 'HTTPS -> verified principal.
+
+    443 -> 8088; /healthz.'
+  left: 9.17
+  top: 2.48
+  width: 3.49
+  height: 0.6599999999999999
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: runtime-model-background
+  left: 0.55
+  top: 3.55
+  width: 3.73
+  height: 1.45
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: runtime-model-title
+  text: Azure OpenAI
+  left: 1.06
+  top: 3.63
+  width: 3.1
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: runtime-model-body
+  text: 'CONDITIONAL / OFF; draft only.
+
+    Usage; no DB/workflow rights.
+
+    No Foundry Agent Service.'
+  left: 0.67
+  top: 4.01
+  width: 3.49
+  height: 0.9299999999999999
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: runtime-api-background
+  left: 4.8
+  top: 3.55
+  width: 3.73
+  height: 1.45
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: runtime-api-title
+  text: Azure Container Apps
+  left: 5.31
+  top: 3.63
+  width: 3.1
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: runtime-api-body
+  text: 'CORE | one Python API.
+
+    Five assistant modules in one API.
+
+    Capture/reserve; validate/store.'
+  left: 4.92
+  top: 4.01
+  width: 3.49
+  height: 0.9299999999999999
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: runtime-sql-background
+  left: 9.05
+  top: 3.55
+  width: 3.73
+  height: 1.45
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: runtime-sql-title
+  text: Azure SQL | CORE
+  left: 9.56
+  top: 3.63
+  width: 3.1
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: runtime-sql-body
+  text: 'Domain/proposal state + audit.
+
+    Dedupe, reservations, fences.
+
+    Inference outside locks.'
+  left: 9.17
+  top: 4.01
+  width: 3.49
+  height: 0.9299999999999999
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: runtime-review-background
+  left: 0.55
+  top: 5.32
+  width: 7.98
+  height: 1.2
+  fill: '#F7F2E7'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: solid
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: runtime-review-title
+  text: Human proposal review | SEPARATE REQUEST
+  left: 0.67
+  top: 5.4
+  width: 7.74
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: runtime-review-body
+  text: 'Verify sources. API rechecks permission, source/version/status.
+
+    Accept proposal -> proposal/audit only, NEVER domain approval.'
+  left: 0.67
+  top: 5.78
+  width: 7.74
+  height: 0.6799999999999999
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: shape
+  shape: rounded_rectangle
+  name: runtime-blob-background
+  left: 9.05
+  top: 5.32
+  width: 3.73
+  height: 1.2
+  fill: '#D5E2D4'
+  line_color: '#173F35'
+  line_width: 1.3
+  dash_style: dash
+  description: Native editable service or person container; text follows in reading order.
+- type: textbox
+  name: runtime-blob-title
+  text: Azure Blob
+  left: 9.56
+  top: 5.4
+  width: 3.1
+  height: 0.34
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: runtime-blob-body
+  text: 'CONFIGURED | files + hashes.
+
+    AI: allowed metadata only.'
+  left: 9.17
+  top: 5.78
+  width: 3.49
+  height: 0.6799999999999999
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#183A31'
+  font_bold: false
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: runtime-authority
+  text: Five-assistant authority absent. Proactive OFF. Controlled approvals stay separate.
+  left: 0.55
+  top: 6.57
+  width: 12.23
+  height: 0.32
+  font: Liberation Sans
+  font_size: 18
+  font_color: '#183A31'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+- type: textbox
+  name: operations-link
+  text: 'Operations: slide 23'
+  left: 0.55
+  top: 6.97
+  width: 3.6
+  height: 0.3
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#173F35'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+  target_slide: 23
+  description: 'Operations: slide 23'
+- type: textbox
+  name: deferred-link
+  text: 'Deferred topology: slide 24'
+  left: 4.5
+  top: 6.97
+  width: 4.3
+  height: 0.3
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#173F35'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+  target_slide: 24
+  description: 'Deferred topology: slide 24'
+- type: textbox
+  name: return-decision-link
+  text: 'Return to decision: slide 18'
+  left: 9.05
+  top: 6.96
+  width: 2.95
+  height: 0.3
+  font: Liberation Sans
+  font_size: 16
+  font_color: '#173F35'
+  font_bold: true
+  vertical_anchor: top
+  auto_size: none
+  word_wrap: true
+  margin_left: 0.02
+  margin_right: 0.02
+  margin_top: 0.02
+  margin_bottom: 0.02
+  line_spacing: 1.02
+  space_before: 0
+  space_after: 0
+  target_slide: 18
+  description: 'Return to decision: slide 18'
+- type: image
+  name: azure-icon-entra-runtime-entra
+  path: images/azure-entra.png
+  left: 4.92
+  top: 2.105
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Microsoft Entra ID.'
+- type: image
+  name: azure-icon-openai-runtime-model
+  path: images/azure-openai.png
+  left: 0.67
+  top: 3.635
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure OpenAI.'
+- type: image
+  name: azure-icon-aca-runtime-api
+  path: images/azure-aca.png
+  left: 4.92
+  top: 3.635
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure Container Apps.'
+- type: image
+  name: azure-icon-sql-runtime-sql
+  path: images/azure-sql.png
+  left: 9.17
+  top: 3.635
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure SQL | CORE.'
+- type: image
+  name: azure-icon-blob-runtime-blob
+  path: images/azure-blob.png
+  left: 9.17
+  top: 5.405
+  width: 0.29
+  height: 0.29
+  description: 'Official Azure product icon; adjacent native label: Azure Blob.'
+speaker_notes: "Message / evidence limit / planned script:\nSLIDE 19 - One runtime. Proposals are not\
+  \ domain approvals.\nTopic sentinel: technical limits\nMessage: disclose runtime limits and the evidence\
+  \ required for stronger claims.\nStatus: strategist-recommended proposal; refreshed 14 October 2026.\n\
+  \n\"Threats include source injection, cross-role leakage, stale\n  approvals and duplicate or lost transitions.\
+  \ Application controls—not a\n  prompt alone—constrain proposals. SQL controls claim/lease fences and\
+  \ finite\n  shared liabilities; timeouts do not mean zero usage and billing is not\n  exactly once.\
+  \ Local SQL/browser tests and deployed content-restart receipts\n  are different evidence. No measured\
+  \ Azure scale load, full restore,\n  production SLO or externally anchored whole-system audit is established.\n\
+  \  Present runtime still shares in-memory domain mechanisms described in\n  the MVP limits; proposed\
+  \ queue workers/private topology remain distinct.\n  Decision 1 is a separate candidate-selection/screening\
+  \ design with historical\n  narrow evidence; it did not power the five new GPT proposal calls.\n  Held-out\
+  \ calibration, alternatives on quality/latency/cost and independent\n  human source labels remain required.\
+  \ Structured trigger predicates do not\n  establish autonomous reasoning; A7 is not claimed complete.\"\
+  \n\nSources — workspace-relative paths, section and evidence status; as read 14 October 2026:\nS07:\
+  \ docs/prds/zava-forward-retrofit-programme-demonstrator.md, v0.14 front matter; component contracts;\
+  \ threat model; Five Reactive and Proactive Assistants; orchestration; evaluation; current handoff.\
+  \ Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and amended owner acceptance open;\
+  \ CON-009/AC-057 full acceptance not passed.\nS08: docs/adrs/0002-pilot-readiness-architecture.md, Five-Assistant\
+  \ Exercise Runtime; Fresh Ledger and Synthetic Coverage Learning; current delta. Status: Current lean\
+  \ proposal runtime, explicit reset, image/source/revision-linked service proof; proposed readiness estate\
+  \ separate.\nS11: mvp/README.md, Honest limits; Five retrofit assistants; Operator authority; current\
+  \ delivery paragraphs; mvp/zavaforward_mvp/assistants.py, REGISTRY/RULES/capture/eligible/review. Status:\
+  \ Source and documented implementation; captured metadata/category citations, not unrestricted document\
+  \ reading, human source review or semantic entailment.\nS12: docs/adrs/0001-azure-architecture.md, Hybrid\
+  \ M365 and Excel transition; Options still to compare; provisional appraisal. Status: Proposed transition/full\
+  \ topology and historical illustration, not current deployment or scored customer platform choice.\n\
+  S13: docs/ideas/typesafe-system-one-agent-fit.md, pinned #58 feasibility/parallel experiment, as carried\
+  \ in S02/S07. Status: Historical separate Decision 1 selection/generation evidence; not the provider\
+  \ for the five new service calls; no new evaluation results.\n\nOptional appendix, outside the planned\
+  \ 795-second main route.\n\nExact current claim-status oracle:\n1. Historical documentation/source context\
+  \ was cabe05c; runtime source is\n   cd14b3b379026a87ebfa3e9058ac10c0df7888eb, not cabe05c.\n2. Image05\
+  \ is assistants-20261013-05, manifest\n   sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20,\n\
+  \   serving ca-forward-test-api--0000012. Short forms on screen; exact forms\n   in notes. Do not rename\
+  \ historical revisions.\n3. The owner explicitly reauthorized the synthetic database reset on\n   14\
+  \ October after the earlier cancellation. Previous exercise\n   recommendations/audit were reset, not\
+  \ preserved by migration. Retain\n   generator/60,000-stock lineage; the new programme baseline is 980\
+  \ cases,\n   38 booked visits and 11 actual privately bound tenant staff. Do not publish\n   their identities.\
+  \ Counts are exercise context, not real resident activity,\n   staff use or programme success.\n4. Five\
+  \ distinct registered operator service paths returned citation-validated\n   ready proposals through\
+  \ real Azure OpenAI deployment standard, model\n   gpt-4.1-mini-2025-04-14: five calls/attempts, 6884\
+  \ total tokens, 15 ledger\n   events. These are not Decision 1 calls or five independent autonomous\
+  \ agents.\n5. Against that new baseline, independent controlled-domain hashes stayed\n   unchanged by\
+  \ proposal generation, and full assistant-table content,\n   outputs and usage survived an actual serving-revision\
+  \ restart. This is\n   stronger than row-count equality, weaker than disaster recovery/restore.\n6.\
+  \ Bounded operator QA ended. Normal serving assistant authority is absent;\n   proactive scans are off.\
+  \ A registered capability is not current standing\n   authority. Neither proactive enablement nor new\
+  \ calls are authorized here.\n7. Citation validity means permitted source/provenance binding, not semantic\n\
+  \   correctness or competent source verification. None of the five has human\n   verification/acceptance\
+  \ recorded by that operator exercise.\n8. Real staff-browser/API, role/human/source/accessibility acceptance,\n\
+  \   semantic calibration, paired task value and operational outcomes remain\n   open (RV-001/RV-002).\
+  \ PRD v0.14 remains a candidate. Do not mark AC-057\n   or full requirements/product/pilot/production\
+  \ acceptance passed.\n9. No observed doubled throughput, lower bills, secured £40m, programme\n   savings,\
+  \ cost per accepted home, currency-cost cap, production selection\n   or corporate investment approval\
+  \ follows. Token allowance is not a\n   currency guarantee; historical EXA-012 and the scoped #58 override\
+  \ are\n   not a new funding commitment.\n10. Source-level automated contract tests are evidence of tested\
+  \ boundaries,\n    not a live staff session or panel behaviour. No new score is inferred from\n    cabe05c's\
+  \ historical rubric update or from successful CI.\n\nREFRESH BASELINE / UN SPOKEN REFERENCE:\nRefresh\
+  \ documentation intake: f94f53a56c36d38ec36f7f662595912084571380. Architecture source: 062434a1fedbf6a87d1374c767c2bf0a11491ab6.\
+  \ Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb. Historical cabe05c context below is not\
+  \ the current runtime or this documentation intake.\nCurrent five assistants are modules in ONE Python\
+  \ API Container App, not five microservices or the deferred queue-worker estate. Direct Azure OpenAI;\
+  \ no deployed Foundry Agent Service. SQL owns domain/proposal state, dedupe, reservations and fenced\
+  \ leases. Inference is outside database locks; the provider has no DB/workflow credentials. Accepting\
+  \ a proposal changes proposal/audit state, never resident, professional, work-release, quality or Finance\
+  \ approval.\nNormal five-assistant authority is absent; proactive OFF. This does not disable every legacy\
+  \ AI draft route. Ready = generated, unreviewed. Five operator paths, five calls, 6884 tokens, 15 ledger\
+  \ events and full SQL content/restart proof are technical observations only, not staff-browser, human\
+  \ source, semantic or value acceptance. Restart is not restore acceptance.\nDevelopment public-network\
+  \ exceptions coexist with configured private controls; PaaS is not VNet-hosted. Source-configured diagnostics\
+  \ are not full app tracing. External immutable audit digest anchoring is unimplemented. M365/import/queue\
+  \ workers are conditional or deferred. User.Read own-photo permission is not Sites.Selected plus a site\
+  \ grant. SharePoint topology parameter is not an implemented adapter. Front Door Premium/WAF is not\
+  \ deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of a five-day user-delegation SAS;\
+  \ one vault secret write, distinct maintenance identity, no browser token retrieval. Budget 80% actual/100%\
+  \ forecast notifications are not a hard cap. Managed-identity ACR image pull/operator build-deploy is\
+  \ distinct from CI tests/scan/SBOM, not automatic Azure deployment.\nThe owner explicitly reauthorised\
+  \ synthetic ledger recreation on 14 October; previous exercise audit/recommendations reset, not an unchanged\
+  \ migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and 11 private staff bindings\
+  \ are aggregate fixture counts only. No private identifiers are reproduced. Historical Decision 1 is\
+  \ not a current five-assistant runtime dependency. Finance fixtures and 20%/25% benefits are hypotheses,\
+  \ not measured success. No new legal currentness, expenditure, rollout or production approval.\n\nSpoken\
+  \ return: That is the current boundary; the decision remains which evidence gate to resolve next.\n\n\
+  S16 ARCHITECTURE / TEXT EQUIVALENT:\nS16: docs/architecture/README.md, executive and technical Excalidraw/SVG/PNG\
+  \ views, docs/architecture/assets/README.md; 14 October 2026. Static source baseline 062434a1fedbf6a87d1374c767c2bf0a11491ab6,\
+  \ not a fresh inventory or acceptance. Source Excalidraw remains editing authority; this PPTX is a simplified\
+  \ native adaptation. Individual unmodified official Azure SVG assets are locally rasterised for product\
+  \ icons; native containers, labels and connectors remain editable.\nRefresh documentation intake: f94f53a56c36d38ec36f7f662595912084571380.\
+  \ Architecture source: 062434a1fedbf6a87d1374c767c2bf0a11491ab6. Runtime source: cd14b3b379026a87ebfa3e9058ac10c0df7888eb.\
+  \ Historical cabe05c context below is not the current runtime or this documentation intake.\nCurrent\
+  \ five assistants are modules in ONE Python API Container App, not five microservices or the deferred\
+  \ queue-worker estate. Direct Azure OpenAI; no deployed Foundry Agent Service. SQL owns domain/proposal\
+  \ state, dedupe, reservations and fenced leases. Inference is outside database locks; the provider has\
+  \ no DB/workflow credentials. Accepting a proposal changes proposal/audit state, never resident, professional,\
+  \ work-release, quality or Finance approval.\nNormal five-assistant authority is absent; proactive OFF.\
+  \ This does not disable every legacy AI draft route. Ready = generated, unreviewed. Five operator paths,\
+  \ five calls, 6884 tokens, 15 ledger events and full SQL content/restart proof are technical observations\
+  \ only, not staff-browser, human source, semantic or value acceptance. Restart is not restore acceptance.\n\
+  Development public-network exceptions coexist with configured private controls; PaaS is not VNet-hosted.\
+  \ Source-configured diagnostics are not full app tracing. External immutable audit digest anchoring\
+  \ is unimplemented. M365/import/queue workers are conditional or deferred. User.Read own-photo permission\
+  \ is not Sites.Selected plus a site grant. SharePoint topology parameter is not an implemented adapter.\
+  \ Front Door Premium/WAF is not deployed.\nTokens: separate private Blob; daily 03:00 UTC renewal of\
+  \ a five-day user-delegation SAS; one vault secret write, distinct maintenance identity, no browser\
+  \ token retrieval. Budget 80% actual/100% forecast notifications are not a hard cap. Managed-identity\
+  \ ACR image pull/operator build-deploy is distinct from CI tests/scan/SBOM, not automatic Azure deployment.\n\
+  The owner explicitly reauthorised synthetic ledger recreation on 14 October; previous exercise audit/recommendations\
+  \ reset, not an unchanged migration. Retained 60,000-stock lineage; 980 cases, 38 booked visits and\
+  \ 11 private staff bindings are aggregate fixture counts only. No private identifiers are reproduced.\
+  \ Historical Decision 1 is not a current five-assistant runtime dependency. Finance fixtures and 20%/25%\
+  \ benefits are hypotheses, not measured success. No new legal currentness, expenditure, rollout or production\
+  \ approval.\nDiagram reading order: identity/request -> single API -> stores/model -> separate human\
+  \ authority. Connectors are editable; no composite architecture image. No native-viewer accessibility\
+  \ claim.\nRETAINED TECHNICAL LIMITS FROM19:\nSLIDE 19 — Technical challenge: bounded does not mean fully\
+  \ assured.\nTopic sentinel: technical limits\nMessage: disclose runtime limits and the evidence required\
+  \ for stronger claims.\nStatus: strategist-recommended proposal; refreshed 14 October 2026.\n\n\"Threats\
+  \ include source injection, cross-role leakage, stale\n  approvals and duplicate or lost transitions.\
+  \ Application controls—not a\n  prompt alone—constrain proposals. SQL controls claim/lease fences and\
+  \ finite\n  shared liabilities; timeouts do not mean zero usage and billing is not\n  exactly once.\
+  \ Local SQL/browser tests and deployed content-restart receipts\n  are different evidence. No measured\
+  \ Azure scale load, full restore,\n  production SLO or externally anchored whole-system audit is established.\n\
+  \  Present runtime still shares in-memory domain mechanisms described in\n  the MVP limits; proposed\
+  \ queue workers/private topology remain distinct.\n  Decision 1 is a separate candidate-selection/screening\
+  \ design with historical\n  narrow evidence; it did not power the five new GPT proposal calls.\n  Held-out\
+  \ calibration, alternatives on quality/latency/cost and independent\n  human source labels remain required.\
+  \ Structured trigger predicates do not\n  establish autonomous reasoning; A7 is not claimed complete.\"\
+  \n\nSources — workspace-relative paths, section and evidence status; as read 14 October 2026:\nS07:\
+  \ docs/prds/zava-forward-retrofit-programme-demonstrator.md, v0.14 front matter; component contracts;\
+  \ threat model; Five Reactive and Proactive Assistants; orchestration; evaluation; current handoff.\
+  \ Status: Current candidate, 47 FRs/61 ACs; fresh requirements review and amended owner acceptance open;\
+  \ CON-009/AC-057 full acceptance not passed.\nS08: docs/adrs/0002-pilot-readiness-architecture.md, Five-Assistant\
+  \ Exercise Runtime; Fresh Ledger and Synthetic Coverage Learning; current delta. Status: Current lean\
+  \ proposal runtime, explicit reset, image/source/revision-linked service proof; proposed readiness estate\
+  \ separate.\nS11: mvp/README.md, Honest limits; Five retrofit assistants; Operator authority; current\
+  \ delivery paragraphs; mvp/zavaforward_mvp/assistants.py, REGISTRY/RULES/capture/eligible/review. Status:\
+  \ Source and documented implementation; captured metadata/category citations, not unrestricted document\
+  \ reading, human source review or semantic entailment.\nS12: docs/adrs/0001-azure-architecture.md, Hybrid\
+  \ M365 and Excel transition; Options still to compare; provisional appraisal. Status: Proposed transition/full\
+  \ topology and historical illustration, not current deployment or scored customer platform choice.\n\
+  S13: docs/ideas/typesafe-system-one-agent-fit.md, pinned #58 feasibility/parallel experiment, as carried\
+  \ in S02/S07. Status: Historical separate Decision 1 selection/generation evidence; not the provider\
+  \ for the five new service calls; no new evaluation results.\n\nOptional appendix, outside the planned\
+  \ 795-second main route.\n\nExact current claim-status oracle:\n1. Historical documentation/source context\
+  \ was cabe05c; runtime source is\n   cd14b3b379026a87ebfa3e9058ac10c0df7888eb, not cabe05c.\n2. Image05\
+  \ is assistants-20261013-05, manifest\n   sha256:e0254cb3a0599c21802f0b6515f975550cf00ddce4849d04fd3fa3d50683af20,\n\
+  \   serving ca-forward-test-api--0000012. Short forms on screen; exact forms\n   in notes. Do not rename\
+  \ historical revisions.\n3. The owner explicitly reauthorized the synthetic database reset on\n   14\
+  \ October after the earlier cancellation. Previous exercise\n   recommendations/audit were reset, not\
+  \ preserved by migration. Retain\n   generator/60,000-stock lineage; the new programme baseline is 980\
+  \ cases,\n   38 booked visits and 11 actual privately bound tenant staff. Do not publish\n   their identities.\
+  \ Counts are exercise context, not real resident activity,\n   staff use or programme success.\n4. Five\
+  \ distinct registered operator service paths returned citation-validated\n   ready proposals through\
+  \ real Azure OpenAI deployment standard, model\n   gpt-4.1-mini-2025-04-14: five calls/attempts, 6884\
+  \ total tokens, 15 ledger\n   events. These are not Decision 1 calls or five independent autonomous\
+  \ agents.\n5. Against that new baseline, independent controlled-domain hashes stayed\n   unchanged by\
+  \ proposal generation, and full assistant-table content,\n   outputs and usage survived an actual serving-revision\
+  \ restart. This is\n   stronger than row-count equality, weaker than disaster recovery/restore.\n6.\
+  \ Bounded operator QA ended. Normal serving assistant authority is absent;\n   proactive scans are off.\
+  \ A registered capability is not current standing\n   authority. Neither proactive enablement nor new\
+  \ calls are authorized here.\n7. Citation validity means permitted source/provenance binding, not semantic\n\
+  \   correctness or competent source verification. None of the five has human\n   verification/acceptance\
+  \ recorded by that operator exercise.\n8. Real staff-browser/API, role/human/source/accessibility acceptance,\n\
+  \   semantic calibration, paired task value and operational outcomes remain\n   open (RV-001/RV-002).\
+  \ PRD v0.14 remains a candidate. Do not mark AC-057\n   or full requirements/product/pilot/production\
+  \ acceptance passed.\n9. No observed doubled throughput, lower bills, secured £40m, programme\n   savings,\
+  \ cost per accepted home, currency-cost cap, production selection\n   or corporate investment approval\
+  \ follows. Token allowance is not a\n   currency guarantee; historical EXA-012 and the scoped #58 override\
+  \ are\n   not a new funding commitment.\n10. Source-level automated contract tests are evidence of tested\
+  \ boundaries,\n    not a live staff session or panel behaviour. No new score is inferred from\n    cabe05c's\
+  \ historical rubric update or from successful CI.\nZAVA NORTH HOMES  /  ZAVA FORWARD  /  OPTIONAL REFERENCE\n\
+  \n\nTechnical challenge: bounded does not mean fully assured.\n14 OCT 2026  •  S07 / S08 / S11 / S12\
+  \ / S13  •  Sources + status in notes\n19 / 22\n\nState\nVersions, fenced attempts,\nreservations.\n\
+  Content restart observed.\n\nTrust\nPermitted sources,\ncurrent role checks,\nindependent review.\n\
+  Real-session assurance open.\n\nOperate\nOwned manual path.\nPerformance, restore,\nquality and unit\
+  \ cost open.\n\nDecision 1 is separate from the five new GPT proposal calls.\nThreats: prompt injection,\
+  \ source leakage, stale/duplicate proposals. Allowed sources and current role/source/version checks\
+  \ are separate from semantic verification. Fenced attempts/reservations constrain duplicates; a timeout\
+  \ does not mean zero usage; billing is not exactly once. Historical Decision 1 evaluation/autonomy gaps\
+  \ remain separate.\nSource flow 676ff72690ed81e0823b: staff -> entra; native runtime-sign-in-segment-1.\n\
+  Source flow 12b3abbdb6718ff774f7: staff -> auth; native runtime-browser-body.\nSource flow 3a398502e2258877069e:\
+  \ entra -> auth; native runtime-issuer-segment-1.\nSource flow 95a13aafa833607e8907: auth -> api; native\
+  \ runtime-principal-segment-1.\nSource flow 3ceaae8bf6c64f995ab3: api -> sql; native runtime-api-sql-segment-1.\n\
+  Source flow 36259cde5295635f2668: api -> blob; native runtime-api-blob-segment-1.\nSource flow bde189caec5340903daf:\
+  \ api -> model; native runtime-api-model-segment-1.\nVISIBLE NATIVE DIAGRAM TEXT EQUIVALENT (unspoken):\n\
+  ZAVA NORTH HOMES / ZAVA FORWARD / OPTIONAL REFERENCE\nOne runtime. Proposals are not domain approvals.\n\
+  14 OCT 2026 | S16 + retained sources/status in notes\n19 / 24\nStaff browser | HUMAN\nEntra sign-in;\
+  \ HTTPS ingress.\nPublic /; protected /app + APIs.\nMicrosoft Entra ID\nCONFIGURED | issuer + roles.\n\
+  Identity -> EasyAuth.\nEasyAuth | CONFIGURED\nHTTPS -> verified principal.\n443 -> 8088; /healthz.\n\
+  Azure OpenAI\nCONDITIONAL / OFF; draft only.\nUsage; no DB/workflow rights.\nNo Foundry Agent Service.\n\
+  Azure Container Apps\nCORE | one Python API.\nFive assistant modules in one API.\nCapture/reserve; validate/store.\n\
+  Azure SQL | CORE\nDomain/proposal state + audit.\nDedupe, reservations, fences.\nInference outside locks.\n\
+  Human proposal review | SEPARATE REQUEST\nVerify sources. API rechecks permission, source/version/status.\n\
+  Accept proposal -> proposal/audit only, NEVER domain approval.\nAzure Blob\nCONFIGURED | files + hashes.\n\
+  AI: allowed metadata only.\nFive-assistant authority absent. Proactive OFF. Controlled approvals stay\
+  \ separate.\nOperations: slide 23\nDeferred topology: slide 24\nReturn to decision: slide 18\nFull source\
+  \ views: docs/architecture/zava-forward-executive-architecture.excalidraw / .svg / .png; docs/architecture/zava-forward-technical-architecture.excalidraw\
+  \ / .svg / .png. README and assets/README hold source/status/provenance.\n\nRETAINED BASELINE VISIBLE\
+  \ COPY / TRACEABILITY, UNSPOKEN:\nHistorical wording below is retained, not promoted to current fact\
+  \ or permission. Current oracle/status and refreshed visible copy govern. In particular, old 'gates\
+  \ OPEN' meant outstanding acceptance, not permission; Excel reporting is a conditional intended transition,\
+  \ not delivered integration.\nTechnical challenge: bounded does not mean fully assured.\nState\nVersions,\
+  \ fenced attempts,\nreservations.\nContent restart observed.\nTrust\nPermitted sources,\ncurrent role\
+  \ checks,\nindependent review.\nReal-session assurance open.\nOperate\nOwned manual path.\nPerformance,\
+  \ restore,\nquality and unit cost open.\nDecision 1 is separate from the five new GPT proposal calls."

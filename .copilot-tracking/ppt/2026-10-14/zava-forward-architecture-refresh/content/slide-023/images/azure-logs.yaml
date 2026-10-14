@@ -1,0 +1,25 @@
+slide: 23
+node: ops-logs
+object: azure-icon-logs-ops-logs
+source: docs/architecture/assets/azure/logs.svg
+source_sha256: 7a244a8d7260e84be5c904185db7b04994fe6ed345e2b224163bc5f7e3d97ce0
+png: content/slide-023/images/azure-logs.png
+png_sha256: a45cd3846c3cca205a3a9780e9e5cad97a119cd87b2ca873207e500d8825a59f
+source_viewbox:
+- 0.0
+- 0.0
+- 18.0
+- 18.0
+source_ratio: 1.0
+raster_pixels:
+- 240
+- 240
+placement_inches:
+- 0.29
+- 0.29
+adjacent_label: Azure Log Analytics
+converter: CairoSVG 2.9.1
+no_crop: true
+no_recolour: true
+source_unmodified: true
+provenance: docs/architecture/assets/README.md; local official Azure asset, not composite

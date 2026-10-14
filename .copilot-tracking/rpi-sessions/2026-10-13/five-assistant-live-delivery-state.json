@@ -1,0 +1,101 @@
+{
+  "task_id": "five-assistant-live-delivery-2026-10-13",
+  "task_slug": "five-assistant-live-delivery",
+  "parent_task": {
+    "task_id": "five-retrofit-assistants-2026-10-13",
+    "task_slug": "five-retrofit-assistants"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-13/five-retrofit-assistants-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-13/five-retrofit-assistants-plan.md",
+    "details": ".copilot-tracking/details/2026-10-13/five-retrofit-assistants-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-13/five-retrofit-assistants-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Owner-selected capstone-native-rebuild child completed its requested strategist/builder 22-slide native aligned presentation delivery on #68. Its one Review is Complete/Residual work and its automatic session awaits distinct native-font, rehearsal or Section D follow-up selection. This parent's real staff/human/semantic/value acceptance findings remain unchanged.",
+      "status": "selected-child-completed; distinct-acceptance-follow-ups-open",
+      "evidence": ".copilot-tracking/rpi-sessions/2026-10-14/capstone-native-rebuild-state.json; .copilot-tracking/reviews/logs/2026-10-14/capstone-native-rebuild-review.md"
+    },
+    {
+      "decision": "Review/markers/reconciled current states published as f28e8f6 on existing open #68 and PR body verified. Post-Review ranked choice offered; owner unavailable, no selection inferred and no child work begun. Automatic session remains running at the waiting checkpoint; finite QA not renewed.",
+      "status": "published; awaiting-owner-follow-up-selection",
+      "evidence": "Remote #68 head f28e8f6ef1884c85b25abbf91999067273ddfca8; post-Review ask_user response: user not available, 2026-10-14."
+    },
+    {
+      "decision": "Current child's one bounded post-implementation Review executed once. ExecutionComplete/outcomeResidualwork for P03 technical reset/seed/image05/deployed operator/model/independentSQL-content/restart. RV-001 routes real staff-browser/API/human/accessibility acceptance; RV-002 routes semantic/pairedbenefit. No source defect established, no repeat Review or return to current Implement; preserve both historical Reviews.",
+      "status": "Review-executed; Complete; Residual work",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md"
+    },
+    {
+      "decision": "Executed authorized exact retrofit ledger reset/settings/users/grants/11tenant bindings/enriched980case seed. Published image05/e0254cb3, serving revision12. Five real registered Azure OpenAI paths ready with distinct validated outputs,5calls/6884tokens/15ledger events/1allowance. Independent controlled-domain and full assistant-table content hashes/outputs/usage survive actual restart. Normal serving authority absent/proactiveoff; human acceptance not fabricated.",
+      "status": "implemented-observed-and-published-fb70225",
+      "evidence": ".copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md; docs/adrs/0002-pilot-readiness-architecture.md; infra/README.md"
+    },
+    {
+      "decision": "Owner reauthorizes exact retrofit database deletion/recreation, enriched seeding, existing-app image05 deployment and the offered renewed finite QA: at most10calls,126000reservedtokens, one hour from activation, proactive off, up-to-USD5 incremental target without a billing guarantee. Preserve tenant bindings/settings/auth; no PR merge.",
+      "status": "confirmed",
+      "evidence": "Owner input2026-10-14: Authorize the delete and recreation.; followed by Authorize all in response to the explicit remaining-delivery authorization."
+    },
+    {
+      "decision": "Owner authorizes the offered existing-app retained-data rollout and bounded QA: up to USD 5 incremental target, at most 10 calls, 126000 reserved tokens, one-hour authority and proactive off. Exact billing is not guaranteed by token reservations. No merge, tenant permission changes or new worker estate.",
+      "status": "confirmed",
+      "evidence": "Owner input: authorize; immediately following the concrete rollout and bounded QA authorization request, 2026-10-13."
+    },
+    {
+      "decision": "Reuse approved Research, plan and accepted PC-001 to PC-008. Scope is remaining P03 actual-platform delivery using corrected runtime bf383c4 and local image d3e652ce. Preserve both completed historical Reviews.",
+      "status": "reused",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-13/five-assistant-runtime-validation-review.md"
+    },
+    {
+      "decision": "Owner stops retained-database migration and authorizes wiping/recreating the exercise database from the existing synthetic generator, enriching missing sections including visits through the explicitly requested eval-dataset-creator. Preserve tenant identity bindings and authentication. Assistant QA authority removed before replacement work. No paid model call has occurred.",
+      "status": "confirmed; implementation-scope-reconciled",
+      "evidence": "Owner input: ok, stop the migration, you can wipe the database and create a new one from the synthetic data creator, and ask the hve-core-all:eval-dataset-creator to add some more data."
+    },
+    {
+      "decision": "Requested dataset agent completed a read-only schema/coverage audit; parent implemented deterministic enrichment. Source99aeaac, local image03/3ca084ba, 387 discovery with72SQLskips and all72actualSQL tests. Six forward visits plus original sources yield38visible/11current-week; prepared seed preserves11tenant staff.",
+      "status": "implemented-and-validated; not-live",
+      "evidence": "mvp/tests/test_generated_dataset.py; docs/reference/research/retrofit-synthetic-data/README.md; .copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md"
+    },
+    {
+      "decision": "Preserved concurrent intent correction687e4aa in normal combined merge ec7721b. Merged source discovery389/316passed/73SQLskips, all73actualSQL tests passed. Exact-source local image04/d5eba379 built; image03 is historical. Canonical docs rendered and links/protected evidence checked. No new cloud operation or Review.",
+      "status": "implemented-validated-and-published",
+      "evidence": ".copilot-tracking/changes/2026-10-13/five-assistant-live-delivery-changes.md; docs/adrs/0002-pilot-readiness-architecture.md"
+    },
+    {
+      "decision": "Autonomous nonbillable local validation found API38/UI0 visits. Corrected shared rendering in a76d281; current runtime sourcecd14b3b/image05/e0254cb3 passes389discovery (316passed/73SQLskips),21browser regressions and21exact-image generated UI/API/SQLite-restart checks. Controlled domain unchanged, five disabled proposals persisted, zero provider attempts, no tenant binding use or Azure change. General continuation does not override deletion cancellation or renew paid authority.",
+      "status": "local-validation-complete-and-published; destructive-boundary-unchanged",
+      "evidence": "Owner instruction: Keep working autonomously until the task is truly finished; earlier exact deletion cancellation and unanswered renewal form remain controlling."
+    },
+    {
+      "decision": "Specific Azure SQL database deletion was cancelled by user at the tool boundary. No wipe/recreate/reseed, no alternate deletion route, no model call. Clarification form unanswered because owner unavailable; preserve existing database and disabled QA.",
+      "status": "historical-cancellation; superseded-by-explicit-2026-10-14-reauthorization",
+      "evidence": "Azure sql_db_delete result: Operation cancelled by user; subsequent explicit reset-confirmation form unavailable."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Owner-selected capstone-native-rebuild child is completed and awaiting its own follow-up selection. Retain this completed parent's separate real-staff/human/semantic acceptance findings; do not restart the child or either Review."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Real staff-authenticated browser/API and role/accessibility/source-verification acceptance",
+      "rationale": "Actual operator/model/SQL proof does not establish a real staff session or competent human verification; completes the remaining AC-057/058 user boundary without inventing approval.",
+      "evidence": "P03 operator-only QA evidence; PRD AC-057/058; parent plan Follow-Up Items."
+    },
+    {
+      "rank": 2,
+      "task": "Semantic calibration and paired manual/rules net benefit",
+      "rationale": "Technical provider proof is not task quality or measured business benefit.",
+      "evidence": "Parent plan Follow-Up Items."
+    }
+  ]
+}

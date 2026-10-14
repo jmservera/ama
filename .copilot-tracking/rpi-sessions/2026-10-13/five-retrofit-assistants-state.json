@@ -1,0 +1,84 @@
+{
+  "task_id": "five-retrofit-assistants-2026-10-13",
+  "task_slug": "five-retrofit-assistants",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-13/five-retrofit-assistants-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-13/five-retrofit-assistants-plan.md",
+    "details": ".copilot-tracking/details/2026-10-13/five-retrofit-assistants-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-13/five-retrofit-assistants-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-13/five-retrofit-assistants-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-13/five-retrofit-assistants-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Later live-delivery child completed authorized exact reset/enriched seed/image05/five real operator models/independent SQL-content/restart/publication. P03/P03-T01 technical markers checked. Its one Review is Complete/Residual work; human staff-authenticated and semantic/value acceptance remain distinct RV-001/RV-002 follow-ups. Parent historical Review verdict remains unchanged.",
+      "status": "later-child-completed; technical-scope-delivered",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md; .copilot-tracking/rpi-sessions/2026-10-13/five-assistant-live-delivery-state.json"
+    },
+    {
+      "decision": "Add the five reactive/proactive assistants to the PRD and ADR, then build a new version.",
+      "status": "confirmed",
+      "evidence": "Owner request, 2026-10-13"
+    },
+    {
+      "decision": "The prior account-switch task is completed/stopped; create a distinct task. Automatic-mode confirmation was unavailable, so retain manual mode.",
+      "status": "recorded",
+      "evidence": "Prior RPI state and unanswered intake form, 2026-10-13"
+    },
+    {
+      "decision": "Research executed a focused wider/deeper/contrarian source cycle. Existing task storage can be reused as a primitive, but requester-only review, missing source snapshots, mutating funding drafts and placeholder workers require explicit new contracts. Planning Readiness Not ready until delivery/workspace direction is resolved.",
+      "status": "research-complete; continuation-blocked",
+      "evidence": ".copilot-tracking/research/2026-10-13/five-retrofit-assistants-research.md"
+    },
+    {
+      "decision": "Latest owner directive explicitly authorizes automatic continuation on the existing MVP and consolidated #68. Earlier unavailable intake and Not ready procedural conclusions are superseded; Research executed and reused, Planning Readiness Ready.",
+      "status": "confirmed",
+      "evidence": "Owner autonomous-completion directive; retained worktree and open #68 verified."
+    },
+    {
+      "decision": "Single final-candidate critique executed: Revise. PC-001 to PC-008 accepted and incorporated into plan/details; no second critique.",
+      "status": "applied",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-13/five-retrofit-assistants-plan-critique.md"
+    },
+    {
+      "decision": "Single post-implementation Review execution Complete; outcome Not accepted. Full document/runtime/build boundary compared. RV-003/004 are source-established shutdown admission and manual-case rendering defects; RV-001/002 retain blocked real-platform/new-assistant SQL evidence. No source fixes or second Review inside this task.",
+      "status": "review-complete; not-accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-13/five-retrofit-assistants-review.md"
+    },
+    {
+      "decision": "Owner-selected autonomous follow-up five-assistant-runtime-validation fixed RV-003/004 and established actual disposable-SQL coverage for RV-002: source bf383c4, validation 560c30c, local image d3e652ce, final CI 38461679776. Child Review Complete/Residual work; original Review preserved. Parent P03/actual deployment acceptance still incomplete.",
+      "status": "implemented; live-acceptance-blocked",
+      "evidence": ".copilot-tracking/rpi-sessions/2026-10-13/five-assistant-runtime-validation-state.json; .copilot-tracking/reviews/logs/2026-10-13/five-assistant-runtime-validation-review.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "human-product-acceptance",
+      "summary": "Later child completed reauthorized exact reset/seed/image05 and five actual operator model/SQL/content/restart paths; human staff-browser/API/accessibility/semantic/benefit acceptance remains open.",
+      "resolution": "Preserve bounded current-child Review outcome and route human/product acceptance as distinct follow-up; no repeat of historical Reviews or fabricated approval."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Later child five-assistant-live-delivery is completed with one Review Complete/Residual work. Await owner selection of its ranked real staff/human/accessibility or semantic/paired-benefit follow-ups, Stop or manual mode. Preserve historical Reviews and do not imply full product acceptance."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Real staff-authenticated browser/API and human role/accessibility acceptance",
+      "rationale": "Exact reset and deployed operator/provider/SQL/restart proof are now complete after explicit reauthorization. Staff-authenticated user workflow and competent human source checks still require real acceptance without fixture substitution.",
+      "evidence": "Current child RV-001; CON-009/AC-057/058; .copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Calibrate five assistant outputs and measure paired manual/rules benefit",
+      "rationale": "Determines semantic quality and net benefit including correction burden. Requires verified provider paths, finite call allowance and competent review; not established by passing technical tests.",
+      "evidence": "Current child RV-002; parent plan Follow-Up Items; .copilot-tracking/reviews/logs/2026-10-14/five-assistant-live-delivery-review.md"
+    }
+  ]
+}

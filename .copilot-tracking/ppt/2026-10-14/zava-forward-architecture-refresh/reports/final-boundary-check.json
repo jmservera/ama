@@ -1,0 +1,24 @@
+{
+  "head": "a07aa0672bca2d457be0b34d0a1a6d55ef8acd0d",
+  "tracked_changes": [
+    "docs/architecture/README.md",
+    "docs/capstone/README.md",
+    "docs/reference/README.md",
+    "docs/reference/log.md"
+  ],
+  "staged_changes": [],
+  "documentation_intake_commit": "f94f53a56c36d38ec36f7f662595912084571380",
+  "canonical_intake_hash_unchanged": true,
+  "allowed_write_root": "/home/azureuser/source/ama-wt-zava-challenge/.copilot-tracking/ppt/2026-10-14/zava-forward-architecture-refresh",
+  "approved_ux_brief_read_only": true,
+  "parent_owned_expected_doc_changes": [
+    "docs/architecture/README.md",
+    "docs/capstone/README.md",
+    "docs/reference/README.md",
+    "docs/reference/log.md"
+  ],
+  "allowed_working_tree_changes": [],
+  "no_publication_or_git_write": true,
+  "source_24_sha256": "f0119755c4d8a88f72090afcc07809486f23e2e093395c0df331ac98e7a6df39",
+  "note": "Read-only git checks. Unrelated old untracked outputs not written or removed."
+}
