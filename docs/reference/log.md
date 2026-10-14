@@ -2262,3 +2262,25 @@ metadata when the knowledge base was created.
     rubric floors and product/production approval are not claimed.
   * No new legal claim, private identity, cloud/auth/model action or spending
     authority. Original case, owner memory and regulatory snapshots unchanged.
+
+## [2026-10-14] create | Executive and technical Excalidraw architecture views
+
+* Owner requested both audiences' architecture views from #68, with Azure
+  icons. Added [editable scenes and handover](../architecture/README.md),
+  vector/high-resolution previews and unmodified official icon selections
+  with provenance and permitted-use terms.
+* Executive view explains one accountable staff workflow, durable evidence,
+  bounded AI and human approval. Technical view maps ingress/auth, the
+  single-API five-assistant service, SQL/Blob/model interfaces, own-photo/
+  token renewal, registry, networking, diagnostics and alerts, with
+  separate deferred worker and conditional M365 relationships.
+* Preserved distinctions: static source versus live inventory, development
+  public access versus private production design, source-defined telemetry
+  versus measured tracing, declared archive policy versus unimplemented
+  immutable digest anchoring, and five operator paths versus real-user/
+  semantic/value acceptance. Ordinary five-assistant authority and proactive
+  scans remain off. No new architecture decision or operational approval.
+* Linked the views from ADR 0002, infrastructure and capstone handovers and
+  this index. Retained complete-guide coverage and open capstone floors.
+  The presentation, original case, owner memory, regulatory snapshots and
+  runtime code remain unchanged; no cloud, tenant or model operation.

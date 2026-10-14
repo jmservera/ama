@@ -18,6 +18,15 @@ This ADR amends [ADR 0001](./0001-azure-architecture.md) for the MVP. It does
 not replace the ADR 0001 demonstrator design for the agent, orchestrator and
 import workloads, which remain deferred.
 
+### Source-Grounded Architecture Views (2026-10-14)
+
+[Executive and technical Excalidraw diagrams](../architecture/README.md)
+explain this ADR's current single-API exercise implementation alongside the
+deferred ADR 0001 queue/worker design. They include official Azure icons,
+source-linked interactions and explicit public-network, telemetry, audit,
+model-authority and M365 limitations. No new architecture decision, approval,
+deployment or successful acceptance test follows from these diagrams.
+
 ### Exercise Applicability (2026-10-11)
 
 Every subsequent accepted application exercise build means a delivered AMA

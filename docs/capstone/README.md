@@ -42,6 +42,18 @@ rationales in the comment. See the
 [gate repair and activation boundary](../../.github/rubric/README.md).
 Do not treat a saved-scorecard replay as a fresh score for the revised deck.
 
+## Solution Architecture Views (2026-10-14)
+
+The [architecture handover](../architecture/README.md) provides an
+[executive Excalidraw view](../architecture/zava-forward-executive-architecture.excalidraw)
+and a [CTO/technical Excalidraw view](../architecture/zava-forward-technical-architecture.excalidraw),
+with official Azure icons and SVG/PNG previews. Both describe the same #68
+source baseline. The executive view explains one accountable workflow;
+the technical view distinguishes the single-API five-assistant implementation
+from deferred workers, network target versus development exceptions, and
+conditional M365/operational paths. These are architecture assets, not a
+replacement for slide 13's business-process map or a new deck version.
+
 ## Agents in the Retrofit Process (2026-10-13)
 
 ### Native PowerPoint Rebuild (2026-10-14)

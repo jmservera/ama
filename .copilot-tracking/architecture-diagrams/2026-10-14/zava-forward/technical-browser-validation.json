@@ -1,0 +1,16 @@
+{
+  "scene": "technical",
+  "elements": 194,
+  "texts": 97,
+  "images": 26,
+  "arrows": 27,
+  "textChanges": [],
+  "overflows": [],
+  "layoutFailures": [],
+  "missingImages": [],
+  "unboundArrows": [],
+  "dimensions": {
+    "width": "2850",
+    "height": "2870"
+  }
+}

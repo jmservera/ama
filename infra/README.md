@@ -2,12 +2,18 @@
 title: Azure Infrastructure (Bicep)
 description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
-ms.date: 2026-10-13
+ms.date: 2026-10-14
 ms.topic: how-to
 ---
 
 Proposed, non-production infrastructure. The design and its rationale are in
 [ADR 0001](../docs/adrs/0001-azure-architecture.md).
+
+The [executive and technical Excalidraw views](../docs/architecture/README.md)
+map these sources and the current ADR 0002 exercise realization. They
+distinguish working API assistants from placeholder workers, configured
+dependencies from observed proof, and development access from the intended
+private production profile. They do not authorize deployment.
 
 ## Layout
 
