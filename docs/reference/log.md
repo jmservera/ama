@@ -2442,3 +2442,22 @@ metadata when the knowledge base was created.
   the 2011-based thresholds must be re-confirmed against the 2021 edition.
 * The Scribd copy could not be read (access challenge) and its provenance and
   right to use are unconfirmed, so it is not used. R1 stays open.
+
+## [2026-10-14] update | Per-user agent chat and memory proposal (BRD v0.18.0, PRD v0.16.0, ADR 0004)
+
+* Added a proposal, not an adopted requirement set, for per-user agent chat and
+  memory (GitHub backlog epic #157, children #158 to #164). It appeared in no
+  earlier BRD, PRD or ADR, and the owner has not decided to adopt it.
+* BRD v0.18.0 adds BG-013, FR-049, FR-050, RULE-025, RULE-026, NFR-010, NFR-011,
+  AC-091 to AC-098 and OD-44 to OD-49. PRD v0.16.0 adds FR-051 to FR-055,
+  NFR-014, NFR-015, AC-069 to AC-081, OQ-017 to OQ-022 and a journey, agent and
+  UI mapping. ADR 0004 is Proposed.
+* Evidence: the backlog issues, the customer journey atlas (desk research),
+  ADR 0001 to ADR 0003 and the current assistant code. Microsoft Learn
+  documentation on Foundry Agent Service memory (a preview, retrieved
+  2026-10-14) was compared and not chosen.
+* Flagged, not fixed: the PRD revision merged in PR #71 no longer contains its
+  Non-Functional Requirements, Constraints and Acceptance Criteria sections
+  (AC-001 to AC-061, NFR-001 to NFR-013, CON-001 to CON-009); the previous
+  revision still holds them. New PRD IDs continue after the highest numbers in
+  that history. Restoring the sections needs a separate change.

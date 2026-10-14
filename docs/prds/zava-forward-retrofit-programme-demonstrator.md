@@ -9,7 +9,7 @@ status: "in-review"
 exercise_status: "candidate-pending-review-and-owner-acceptance"
 historical_exercise_accepted_version: "0.12.0"
 historical_exercise_accepted_date: "2026-10-10"
-version: "0.15.0"
+version: "0.16.0"
 owners: ["AMA project owner (exercise approval)", "Retrofit Programme Manager (exercise product-owner role)"]
 reviewers: ["Independent PRD Quality Reviewer", "AMA project owner (final exercise acceptance); live control owners remain unconfirmed"]
 created_date: "2026-10-03"
@@ -32,7 +32,7 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.15.0 | Last Updated: 2026-10-14
+> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.16.0 | Last Updated: 2026-10-14
 
 ## Executive Summary
 
@@ -706,6 +706,121 @@ scheme application:
 | Narrative delivery plan or business case | Optional generative draft; System One support/contradiction screening | Human validates claims, assumptions and qualifications; model score is not independent verification |
 | Applicant declaration, signature, professional certification or resident choice | Designated human action only | No AI proposal, inferred agreement, default checkbox or batch acceptance |
 
+## Per-user agent chat and memory (proposed)
+
+Status: proposal, inactive. The owner has not decided to adopt per-user agent
+chat or memory (BRD OD-44), and the DPO and Legal have not decided lawful basis,
+notice, DPIA or retention (BRD OD-45, OD-46). Nothing in this section changes
+the exercise baseline, CON-009, FR-036 or FR-047. The capability appears in no
+earlier BRD, PRD or ADR; it is tracked as backlog epic #157 and children #158
+to #164 on GitHub and is analysed in
+[ADR 0004](../adrs/0004-per-user-agent-chat-and-memory.md), status Proposed.
+Identifiers here are PRD identifiers; the BRD uses the same FR, AC and NFR
+prefixes for different rows, so every trace below names its document.
+
+The problem it addresses is a hypothesis: staff may need to ask follow-up
+questions of a registered assistant about one case instead of re-running a
+one-shot proposal. The atlas is desk research and does not show that staff want
+this (BRD OD-41). The comparator is the existing proposal-only assistants, which
+return one typed proposal per request and keep no thread or memory today.
+
+### Journey, agent and UI mapping (proposed)
+
+The base is the 28-journey
+[customer journey atlas](../reference/research/ux/customer-journeys/customer-journey-atlas.md)
+and its opportunities O01 to O24, which are hypotheses until BRD OD-41 closes.
+The mapping extends the five assistants in the capability matrix above. It adds
+no sixth agent: a new assistant needs a registry change under FR-036 and
+ADR 0003 decision 3. The surface is a panel embedded in the role workbench case
+view, not a standalone chat application, so the case, the role projection and
+the reviewer stay in one place.
+
+| Journey role and step | Chat useful? | Existing assistant extended | UI surface | Slice | Autonomy | Consent and safety boundary |
+| --- | --- | --- | --- | --- | --- | --- |
+| Stock and data steward: reconcile EPC or stock facts, prepare a data-owner query | Yes, follow-up on a conflict | `stock-prioritisation` | Case view panel in the data steward and coordinator workbench | First | Recommend and flag | Cannot change identifiers, ranking or queue membership |
+| Retrofit Assessor and Coordinator: assemble survey and design preparation, find missing evidence (atlas O06, O07) | Yes | `assessment-preparation` | Case view panel in the assessor and coordinator workbench | First | Draft and flag | No technical judgement, design approval or PAS 2035 sign-off |
+| Neighbourhood officer and contact-centre officer: understand a case before contacting a household (atlas O01 to O05, O08, O09) | Yes, staff side only | `works-resident-coordination` | Case view panel in the housing and resident engagement workbench | First, staff drafts only | Draft | No contact is sent, no consent is recorded or inferred; first human triage stays independent |
+| Retrofit Coordinator: draft an update or option for a household | Yes | `works-resident-coordination` | Same panel; the draft goes to the existing proposal review | First | Draft | A human sends; resident choice and pause or withdrawal are preserved (FR-046) |
+| Finance and Grants: assemble application or claim evidence gaps (atlas O16, O17) | Yes | `funding-evidence` | Case view panel in the finance and grants workbench | First | Draft and flag | Eligibility, declarations, submission and cash stay rules and humans |
+| Quality and assurance: reconcile per-measure evidence and discrepancies (atlas O11, O12) | Yes | `quality-evidence` | Case view panel in the quality workbench | First | Recommend and flag | No defect grading, closure or acceptance |
+| Programme and executive: ask about one case's blockers and next step | Yes, as a requester of the five assistants | The same five; no portfolio assistant | Case view panel in the programme workbench | First | Recommend | Portfolio narrative and analytics (atlas O10, O18 to O20) stay out of scope |
+| Safety and hazard intake | Limited | None; raise-only possible-signal check stays as in the AI coverage map | Existing hazard referral screen, no chat | Deferred | Flag only | First human triage, clocks, classification and closure never depend on a model or a conversation |
+| Provider or installer: job pack questions (atlas O11) | Possibly | None today; contractors cannot use the shared staff proposals | Contractor job pack | Deferred; separate decision | Not decided | Needs supplier-scoped access design and BRD OD-47 |
+| Resident and representative: report, give consent, choose a slot | Unknown | None | Resident-facing channel | Deferred; separate decision | Not decided | Needs BRD OD-47, OD-41, OD-42 and FR-045; resident memory is a different class from staff memory and is not proposed here |
+| DPO and Legal: rights-request inventory (atlas O22) | Possible later task | None; would need a registry change | DPO workbench | Deferred | Not decided | Decided by the DPO and Legal under BRD OD-45 |
+| Digital operator: outage questions (atlas O21) and source-change tracing (atlas O24) | Possible later task | None | Operator console | Deferred | Not decided | Each needs its own registry entry and thresholds |
+
+First slice: the five rows above marked First, staff only, behind the OD-44
+decision, with threads before memory. Memory (FR-053) is a later gate inside the
+first slice and needs the DPO decisions in BRD OD-45, OD-46 and OD-48. Deferred
+rows are listed so the owner can see the intended boundary, not as commitments.
+
+### Product requirements (proposed)
+
+IDs start at FR-051 and NFR-014 to avoid further collisions: the BRD already
+uses FR-049 and FR-050 for these topics, and the PRD uses FR-049 and FR-050 for
+closure and monitoring. The earlier NFR and acceptance criteria tables are not
+in this document revision, so NFR-014 and AC-069 continue the highest numbers
+recorded in the repository history.
+
+| ID | Requirement | Actor / trigger | Acceptance criteria | Goals |
+| --- | --- | --- | --- | --- |
+| FR-051 | If adopted, the product shall embed a case-aware conversation panel in the staff workbench case view that talks only to an assistant registered under FR-036 for the user's role, shows the task, sources and data version behind each reply, and distinguishes a proposal from a conversational answer. Backlog #159. | A permitted staff user opens a case and starts a conversation | AC-069, AC-070, AC-071 | GOAL-002, GOAL-004 |
+| FR-052 | If adopted, the product shall store each conversation as a thread owned by one user and tied to a case and task, with view, export and delete by the owner and configured retention, in the existing Azure SQL store through additive idempotent migrations and separate from the append-only audit ledger, which holds event metadata only. Backlog #160. | A user sends, views, exports or deletes a thread | AC-072, AC-073 | GOAL-002, GOAL-004 |
+| FR-053 | If adopted, the product shall offer opt-in per-user memory scoped to one user and one role that the user can inspect, edit and delete, with per-item expiry, a global off switch and a per-task off switch, and that excludes resident health, safeguarding, vulnerability, special-category and consent data. Backlog #161. | A user opts in, reviews, edits, withdraws or deletes memory | AC-074, AC-075 | GOAL-002, GOAL-004 |
+| FR-054 | If adopted, the conversation channel shall refuse requests to approve, decide, certify, record consent, diagnose or contact a resident, treat case text and memory as untrusted input, never cite memory or conversation as evidence, and route any record-changing output through the FR-047 proposal review. | A user asks for an out-of-authority action, or text contains an instruction | AC-076, AC-077 | GOAL-002, GOAL-004 |
+| FR-055 | If adopted, each conversational task shall be registered under FR-036 with its approved thresholds and accountable reviewer, be individually enabled or disabled, be switchable off globally for memory, and be evaluated by a multi-turn harness before activation. Backlog #164. | A conversational task is configured or requested | AC-078, AC-079 | GOAL-004 |
+| NFR-014 | If adopted, conversations and memory shall be isolated per user: a server-derived user key, the field projection applied on every turn, re-authorisation of role and case on every turn, and audited administrator or break-glass access. Backlog #162. | Every turn, export and deletion | AC-080 | GOAL-002 |
+| NFR-015 | If adopted, conversation and memory data shall have DPO-approved retention per class (Unknown until BRD OD-46), rights-request handling, content exclusions, and logs and telemetry that exclude content or follow the same retention. Backlog #163. | Any live personal data in a thread or memory item | AC-081 | GOAL-002 |
+
+### Acceptance criteria (proposed)
+
+All proposed criteria are Not run and are inactive until BRD OD-44.
+
+| ID | Given / When / Then | Covers | Status |
+| --- | --- | --- | --- |
+| AC-069 | Given a staff user with case access and one without, when each opens the case, then only the first sees the panel, and it offers only tasks registered for that role. | FR-051 | Not run |
+| AC-070 | Given a reply, when it is displayed, then the task, registry version, sources and data version are shown, and a proposal is visually distinct from an answer. | FR-051 | Not run |
+| AC-071 | Given keyboard-only use, 200% text zoom and a screen reader, when a user holds a conversation, then focus, status updates and reflow meet the WCAG 2.2 AA engineering target; the case stays usable when the model is unavailable. | FR-051, NFR-001 in the earlier PRD revision | Not run |
+| AC-072 | Given two users in the same role on the same case, when one creates a thread, then the other cannot read, list or search it; the owner can view, export and delete it. | FR-052 | Not run |
+| AC-073 | Given a thread and a ledger entry about it, when the thread is deleted, then its content is gone from the conversation store and the ledger keeps event metadata only; the existing ledger parity and tamper tests still pass. | FR-052 | Not run |
+| AC-074 | Given a new user, when no choice is made, then no memory is stored; opting in shows the categories, and withdrawing takes effect on the next turn. | FR-053 | Not run |
+| AC-075 | Given memory items, when a user inspects, edits or deletes one, then the next turn reflects it; an item has a source and expiry; a seeded health, safeguarding, vulnerability, special-category or consent value is not stored. | FR-053 | Not run |
+| AC-076 | Given requests to approve, decide, certify, record consent, diagnose or contact a resident, when asked in a conversation, then each is refused and recorded as event metadata, and no case state changes. | FR-054 | Not run |
+| AC-077 | Given case text or a memory item that contains an instruction, when a turn runs, then the instruction is not followed, memory never overrides a rule, rank or permission, and a record-changing output enters the FR-047 review with provenance. | FR-054 | Not run |
+| AC-078 | Given a conversational task, when it has no registry entry, thresholds or reviewer, then it cannot be enabled; each task and memory can be switched off without redeploying. | FR-055 | Not run |
+| AC-079 | Given a multi-turn evaluation set with seeded refusals, injections, stale context and cross-user probes, when run, then each result is reported separately and thresholds are those approved under BRD OD-49; no threshold is assumed. | FR-055 | Not run |
+| AC-080 | Given a changed or revoked role mid-thread, a cross-user probe and an administrator access, when tested, then the next turn is denied or reprojected and administrator access is reasoned, time-limited and audited. | NFR-014 | Not run |
+| AC-081 | Given retention, a rights request and the logs, when reviewed, then retention per class is DPO-approved, the request finds and acts on thread and memory data, and logs hold no content beyond the approved period. | NFR-015 | Not run |
+
+### Evaluation, safety and runtime fit (proposed)
+
+* Runtime: direct Azure OpenAI calls through the existing Foundry account and
+  `standard` and `capable` deployments, as in ADR 0001, ADR 0002 and ADR 0003.
+  No Foundry Agent Service orchestrator is deployed and none is proposed here.
+* Storage: Azure SQL behind the `Store` interface. A managed memory service is
+  compared in ADR 0004 and not chosen for the first slice.
+* Evaluation: a multi-turn harness extends the existing AI evaluation tests with
+  refusal, injection, cross-user and stale-context cases. Thresholds are BRD
+  OD-49 decisions and are not set here.
+* Safety: chat adds no authority. First human hazard triage, clocks, ranking,
+  eligibility, consent, approval and closure stay deterministic or human.
+* Evidence status: this is a design proposal. No criterion has been run and no
+  user has been asked.
+
+### Traceability to the BRD (proposed)
+
+| PRD ID | BRD v0.18.0 IDs |
+| --- | --- |
+| FR-051, FR-052 | BRD FR-049, RULE-025, NFR-010, AC-091, AC-092 |
+| FR-053 | BRD FR-050, RULE-025, RULE-026, AC-093, AC-094 |
+| FR-054 | BRD RULE-025, AC-095 |
+| FR-055 | BRD FR-036 (existing), OD-49 |
+| NFR-014 | BRD NFR-010, AC-097 |
+| NFR-015 | BRD NFR-011, RULE-026, AC-096, AC-098 |
+
+Open questions OQ-017 to OQ-022 below map to BRD OD-44 to OD-49.
+
 ## Functional Requirements
 
 All requirements are draft candidates and shall be validated by the product
@@ -870,8 +985,15 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-048 | AC-062, AC-065 | Linked |
 | FR-049 | AC-063 | Linked |
 | FR-050 | AC-066, AC-067, AC-068 | Linked |
+| FR-051 (proposed) | AC-069, AC-070, AC-071 | Linked |
+| FR-052 (proposed) | AC-072, AC-073 | Linked |
+| FR-053 (proposed) | AC-074, AC-075 | Linked |
+| FR-054 (proposed) | AC-076, AC-077 | Linked |
+| FR-055 (proposed) | AC-078, AC-079 | Linked |
+| NFR-014 (proposed) | AC-080 | Linked |
+| NFR-015 (proposed) | AC-081 | Linked |
 
-Link coverage: 50/50 FRs linked to at least one criterion (100%); this matrix
+Link coverage: 55/55 FRs (including five proposed) and both proposed NFRs linked to at least one criterion (100%); this matrix
 matches both requirement and criterion tables. Behavioral acceptance remains
 Not run. Links and named subchecks are not proof that every behavior has
 been implemented or tested.
@@ -881,9 +1003,9 @@ been implemented or tested.
 | Requirements | Goals |
 | --- | --- |
 | FR-001 to FR-006, FR-009, FR-011, FR-014, FR-024 to FR-026, FR-029 to FR-035, FR-038 to FR-040, FR-042, FR-044 to FR-046, FR-048 to FR-049 | GOAL-001 |
-| FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-031, FR-033, FR-035 to FR-038, FR-040 to FR-050 | GOAL-002 |
+| FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-031, FR-033, FR-035 to FR-038, FR-040 to FR-055 | GOAL-002 |
 | FR-004, FR-020 to FR-024, FR-030, FR-050 | GOAL-003 |
-| FR-025 to FR-028, FR-034, FR-036 to FR-037, FR-039 to FR-040, FR-044, FR-047 | GOAL-004 |
+| FR-025 to FR-028, FR-034, FR-036 to FR-037, FR-039 to FR-040, FR-044, FR-047, FR-051 to FR-055 | GOAL-004 |
 
 All goals have linked requirements; all FRs map to at least one goal (100%).
 
@@ -894,6 +1016,7 @@ All goals have linked requirements; all FRs map to at least one goal (100%).
 | Case Study 48 original problem and requested agents | Product context, workflow coverage, role views and product goals; initial autonomy wording does not override later BRD controls |
 | Case Study 48 Addendum, Modernised Retrofit Delivery Objective and Digital Foundation | Shared case, property/building linkage, deterministic gates, bounded AI and accountable human authority |
 | BRD v0.17.0, Operating Model, Workflow Portfolio and CON-007/AC-086 | FR-001 to FR-031 plus real-platform CON-009/AC-057; BRD FR-045/046/047 and AC-087/088/089 map to PRD FR-045 with FR-048/049 and AC-064/062/063 (BRD priorities Should, Should, Must); profile screens, state, finance, resident/provider paths and value measures; signed handoff and full approval remain outstanding |
+| BRD v0.18.0 proposal: BG-013, FR-049, FR-050, RULE-025, RULE-026, NFR-010, NFR-011, OD-44 to OD-49 | FR-051 to FR-055, NFR-014, NFR-015 and OQ-017 to OQ-022; inactive until BRD OD-44; see ADR 0004 and backlog #157 to #164 |
 | BRD BG-001 to BG-012 and RULE-001 to RULE-024 | GOAL-001 to GOAL-004, permission and transition gates, resident/safety/finance controls, and evaluation guardrails |
 | BRD Comparison 1 and Comparison 2; OD-18 | GOAL-003/004 and metrics; comparison definitions and targets remain open and unratified |
 | Retrofit operating-data exercise pack and data dictionary | Constructed identifiers, home/building joins, lifecycle events, contacts, appointments, safety holds, quality evidence, grant and finance fields; realistic data defects inform import and stale/conflict scenarios. The records do not establish actual company performance or resident outcomes. |
@@ -1085,6 +1208,9 @@ unavailable-feature label is transparent scope, not evidence of full delivery.
   award/cash, or agent activity and exercise results as achieved benefits.
 * Replacing authoritative systems or implementing all platform options as
   production systems.
+* Per-user agent chat and memory (FR-051 to FR-055) until the owner, DPO and
+  Legal decide under BRD OD-44 to OD-46; resident, representative, provider and
+  installer chat until BRD OD-47; any new assistant not in the registry.
 
 ## Success Metrics
 
@@ -1196,12 +1322,14 @@ device/environment, accessibility and actual decision rights (OQ-004/005/011).
 
 ## Open Questions
 
-All sixteen questions below are retained for future operational validation.
+OQ-001 to OQ-016 below are retained for future operational validation.
 For the exercise, each is dispositioned by the owner-approved EXA record
 with the same suffix in the addendum; zero unanswered exercise design
 questions remain. This is not evidence of real company answers. OQ-016's
 actual access/API/processing/cost verification remains an essential execution
-dependency and cannot be assumed away.
+dependency and cannot be assumed away. OQ-017 to OQ-022 are new proposal
+questions with no EXA record: they are open, unanswered and owned by the
+functions named, and they do not reopen the exercise design questions.
 
 | ID | Question | Accountable function / evidence | Impact |
 | --- | --- | --- | --- |
@@ -1221,6 +1349,12 @@ dependency and cannot be assumed away.
 | OQ-014 | What approval and change governance applies to the owner-directed missed-appointment exercise scenario before any operational consideration? | Housing, Repairs, Resident Engagement, Programme/Digital under BRD OD-40 | Operational use remains prohibited |
 | OQ-015 | Which evidenced funding routes, current application/award/claim templates, scheme terms, field/attachment authorities and financial-readiness criteria should the form workspace support, and who approves each version? | Finance and Grants, Legal, Data and competent technical owners; scheme/award evidence and approved constructed schema for the exercise | Unknown route blocks bid preparation; no current round, eligibility, award terms or external submission assumed |
 | OQ-016 | Which decision-scoring tasks justify activation, with what adjudicated datasets, probability/abstention thresholds and reviewer budgets, and can the target Foundry deployment meet response-contract, quota, inference-role, network, processing-location/terms and whole-life-cost gates? | Product, task/control owners, Digital, DPO, Procurement and Finance; conformance and versioned paired-experiment evidence | #58 demonstrates narrow selection/generation feasibility, not calibration, screening, value or production approval. Decision placement remains conditional; whole-app real AI is mandatory under CON-009. |
+| OQ-017 | Should the owner adopt per-user agent chat at all, for which staff roles and tasks, and as a registry change under FR-036? (BRD OD-44) | Owner, Executive Director of Assets | Proposal only; blocks FR-051 to FR-055 and NFR-014 and NFR-015 |
+| OQ-018 | What are the lawful basis, staff notice, DPIA, model provider and region terms and rights handling for conversation and memory data? (BRD OD-45) | DPO, Legal | Blocks any live personal data |
+| OQ-019 | What retention applies to each class, who may access it and is any aggregate use allowed? (BRD OD-46) | DPO, Legal, HR if named | Retention Unknown; blocks FR-053 and NFR-015 |
+| OQ-020 | May residents, representatives or providers ever use a conversational channel, and on what consent and authority evidence? (BRD OD-47) | Resident Engagement, DPO, Legal, Owner | Out of scope until decided |
+| OQ-021 | Is memory in scope or only thread history, and which content classes may be remembered? (BRD OD-48) | Owner, DPO, Digital | Blocks FR-053 |
+| OQ-022 | What grounding, abstention and injection thresholds apply, and who is the accountable reviewer? (BRD OD-49) | Accountable AI reviewer, Data and Performance Lead | Blocks activation of any conversational task |
 
 ## Sign-Off and Handoff Readiness
 
@@ -1267,7 +1401,7 @@ reported. No passing implementation or formal governed approval is inferred.
 * [x] Independent current-version findings dispositioned; upstream governance boundary retained
 * [x] Final reviewed exercise baseline accepted by project owner on 2026-10-10, with no changes
 
-### Current v0.15.0 Candidate Handoff
+### Current v0.16.0 Candidate Handoff
 
 User direction authorizes the amendment, not independent requirements
 approval or inherited v0.12.0 acceptance.
@@ -1277,11 +1411,12 @@ approval or inherited v0.12.0 acceptance.
 * [x] Scoped budget history and versioned parallel experiment intake recorded
 * [x] FR-050 and AC-066 to AC-068 added from BRD FR-048/OD-43 (Azure IoT Hub, owner direction) with an analytics research phase
 * [x] FR-048/049 and AC-062 to AC-065 added from BRD v0.17.0 and the atlas (desk research); FR-045 extended
+* [x] FR-051 to FR-055, NFR-014, NFR-015 and AC-069 to AC-081 added as a proposal from BRD v0.18.0 (per-user agent chat and memory); inactive until BRD OD-44
 * [ ] Disposition of BRD OD-41/OD-42 and BRD FR-037 challenge refinement
 * [ ] Fresh independent full-PRD requirements-quality review and disposition
 * [ ] Owner acceptance of this amended exercise candidate
 
-Counts: 50 FRs, 68 ACs, 13 NFRs and 9 constraints; existing IDs preserved.
+Counts: 55 FRs (five proposed), 81 ACs (thirteen proposed), 15 NFRs (two proposed) and 9 constraints, using the highest numbers recorded in the repository history; existing IDs preserved.
 Document implementation and RPI outcome review are not formal PRD approval.
 Implementation acceptance is separate: nine workflow
 and eleven profile suites, permission/control/source/bulk/return tests,
@@ -1300,6 +1435,13 @@ human user research and live-use approval remain future operational gates.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-14 (v0.15.0 candidate, BRD v0.17.0 journey amendment; v0.14.0 five-assistant scope retained)
+* **Last Updated:** 2026-10-14 (v0.16.0 candidate with proposal for per-user agent chat and memory; v0.15.0 candidate, BRD v0.17.0 journey amendment; v0.14.0 five-assistant scope retained)
 * **Authoring Status:** Amended candidate awaiting requirements review and owner acceptance; formal governance remains in-review
 * **Next Review:** Full-PRD requirement quality and amended exercise acceptance; implementation and governed adoption are separate gates
+
+### Version history
+
+| Version | Date | Change |
+| --- | --- | --- |
+| 0.16.0 | 2026-10-14 | Proposal: per-user agent chat and memory (FR-051 to FR-055, NFR-014, NFR-015, AC-069 to AC-081, OQ-017 to OQ-022) with a journey, agent and UI mapping; no existing ID renumbered; inactive until BRD OD-44 |
+| 0.15.0 | 2026-10-14 | BRD v0.17.0 journey amendment: FR-048, FR-049, FR-050 and AC-062 to AC-068 |
