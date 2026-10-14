@@ -299,9 +299,14 @@ proposal controls and bounded operator calls do not prove these new gates.
 | Monitoring and incident | Versioned indicator/threshold record; critical harm suspends affected task and reliance on pending/ready proposals, retains permitted history and preserves manual/hazard routes; human approval and corrective tests required to restart | Digital operator with Safety, DPO and product owner |
 | Context, audit and telemetry | Reuse recipient-safe projections on input/output/citations/review/export; exclude source text from operational telemetry by default; approve minimum-necessary prompt/review/incident retention and resolve immutable storage versus erasure | Digital, DPO and Legal |
 
-The [assessment attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
-returned preliminary six-framework results but failed terminal verification;
-no consolidated verified report or closure claim supports this amendment.
+The [failed assessment attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
+is retained alongside the [validated recovery](../case_study_48_addendum.md#verified-recovery-and-open-dispositions-2026-10-14)
+and [baseline RAI report](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md).
+Its 11 PARTIAL residuals (8 MEDIUM, 3 LOW) remain open; proposal-only authority,
+source verification and manual routes reduced nine original severity claims.
+The report does not prove this amendment implemented or accepted. Current
+staff/tenant identity processing needs explicit privacy scope review despite
+constructed resident content; restart persistence does not prove recovery.
 
 Keep these records in the existing authoritative SQL/API control plane and
 reuse the manual workflow. A registry flag alone is insufficient: prove that

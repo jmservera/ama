@@ -2397,3 +2397,32 @@ metadata when the knowledge base was created.
   new reciprocal references. Git patch hygiene and historical-file preservation
   are checked separately; formal RAI verification, PRD approval, hosted CI,
   direct human review and real-data activation remain unproved.
+
+
+## [2026-10-14] validation | Authorized RAI verifier-handoff recovery
+
+* Preserved the original terminal `INVALID_PAYLOAD` attempt and executed a
+  separately owner-authorized bounded recovery using full original findings
+  and codebase profile inline for AI STRIDE and NIST Measure. Reused complete
+  compatible Govern/Map/Manage verdicts; no finding was reconstructed from a
+  count summary, omitted or changed into plan-mode pass-through.
+* Generated the [RAI_REPORT_V1 baseline report](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md)
+  for commit `1cb398c7b90bec05a5700008a97d0cfac494144a` / PRD v0.14.0.
+  All six frameworks yield 29 checks: 7 PASS, 0 FAIL, 11 PARTIAL and
+  11 NOT_ASSESSED. Residual severity: 0 CRITICAL, 0 HIGH, 8 MEDIUM, 3 LOW.
+  Verification: 2 CONFIRMED, 0 DISPROVED, 9 DOWNGRADED, 18 UNCHANGED.
+* Deterministically checked full input fields and inline payloads, every
+  original/response/collection ID, all 11 verification records and total
+  verdict mappings, unchanged-record fidelity, all 29 principal report rows,
+  summary/severity/verification counts, exact path/hash/caution, failed-attempt
+  history and PENDING human acceptance. Session-only structured handoff is
+  validation evidence, not an additional public report or professional sign-off.
+* Updated the addendum, PRD, both ADRs and index with verified review
+  dispositions and baseline limitations. v0.15.0 safeguards remain proposed/
+  Not run, not verified fixes. Explicitly flagged actual staff/tenant identity
+  privacy scope despite synthetic resident content, and distinguished restart
+  persistence from witnessed backup recovery/erasure reconciliation.
+* No application, installed plugin, cloud resource, model call, real-data scope,
+  legal rule, deployment or operational approval changed. Human acceptance
+  remains PENDING and live use BLOCKED; legal currentness, representative
+  fairness/oversight, held-out model quality and net benefit remain unassessed.

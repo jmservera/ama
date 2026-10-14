@@ -130,9 +130,14 @@ retention rules as their sources. Observability defaults to identifiers and
 redacted metrics, not resident/source text. Processor, inference-transfer and
 immutable-audit/erasure questions remain DPO/Legal approval gates.
 
-The [assessment attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
-returned preliminary six-framework results but failed terminal verification;
-no consolidated verified report or closure claim supports this amendment.
+The [failed assessment attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
+is retained alongside the [validated recovery](../case_study_48_addendum.md#verified-recovery-and-open-dispositions-2026-10-14)
+and [baseline RAI report](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md).
+Its 11 PARTIAL residuals (8 MEDIUM, 3 LOW) remain open; proposal-only authority,
+source verification and manual routes reduced nine original severity claims.
+The report does not prove this amendment implemented or accepted. Current
+staff/tenant identity processing needs explicit privacy scope review despite
+constructed resident content; restart persistence does not prove recovery.
 
 Reuse the existing API, SQL records and operator disable path before adding a
 new governance service. This is simpler and preserves one authority, but

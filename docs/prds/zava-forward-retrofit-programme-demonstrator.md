@@ -962,11 +962,12 @@ and AI STRIDE for AI-specific misuse scenarios. DPO/Legal must separately
 screen current UK automated-decision rules and conditional EU AI Act scope;
 no legal risk tier follows from housing context or model location alone.
 The [addendum](../case_study_48_addendum.md#responsible-ai-release-position-2026-10-14)
-sets the executive boundary. Its [assessment attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
-records preliminary six-framework results and terminal verification failure;
-no consolidated verified report or finding closure is claimed. These are
-proposed requirements, not remediation evidence. ADRs distinguish the future
-estate from the current shared-API control plane.
+sets the executive boundary. The [original failed attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
+is preserved alongside the [validated recovery](../case_study_48_addendum.md#verified-recovery-and-open-dispositions-2026-10-14)
+and [baseline RAI report](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md).
+The report verifies findings against the original v0.14.0/source baseline,
+not implementation of this v0.15.0 proposal or finding closure. ADRs distinguish
+the future estate from the current shared-API control plane.
 
 FR-048 to FR-051 and AC-062 to AC-066 extend existing source, permission,
 registry and human-authority controls rather than replace them. Proposed
@@ -1017,7 +1018,11 @@ owners are exercise role functions, not named company approvals.
 
 Before live use, resident/staff participation, DPIA and processor/transfer
 review, legally approved retention and meaningful oversight evidence remain
-mandatory. New RAI governance questions are not covered by EXA-001 to EXA-016.
+mandatory. Synthetic resident content does not remove actual staff/tenant
+identity processing from privacy scope. The report's MAP-02 requires current
+staff-data necessity, lawful-authority, processor/transfer and retention review;
+reconcile that observed scope with NFR-005/DH-002 rather than asserting that
+all data is non-identifying or waiting for real resident ingestion. New RAI governance questions are not covered by EXA-001 to EXA-016.
 Formal requirements review and owner acceptance of this candidate remain
 pending. Zero critical failures in a finite agreed suite is a test gate, not
 proof of zero real-world harm.
@@ -1509,7 +1514,7 @@ All goals have linked requirements; all FRs map to at least one goal (100%).
 | [2026-10-06 nine-role/eleven-profile UX review](../reference/research/ux/zava-forward-prototype-profile-review.md) | Candidate journey contract, next-prototype slice and FR-011/012/014-017/024/032-035 with AC-034-043; source-based observations and proposed UX tests, not company/user validation |
 | [System One reassessment, 2026-10-10](../ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10), Microsoft catalog/API documentation and [2026-10-11 learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11) | DD-007, FR-036/037/044, AC-044/045/052/054/057 and NFR-009; API and source-bound selection feasibility, not calibrated screening or comparative value |
 | Owner direction on form extraction/filling and AI-assisted decisions, 2026-10-10; BRD FR-023/024/026/027 and RULE-009/010; proposed form pattern in the model reassessment | DD-008, FR-038 to FR-043, AC-046 to AC-051/053/054 and Finance journey; evidenced route, deterministic eligibility, separate application/award/claim/cash and human submission; schema/terms unresolved under OQ-015 |
-| [RAI assessment attempt, 2026-10-14](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits) | Preliminary review priorities inform proposed FR-048 to FR-051, AC-062 to AC-066, NFR-014 and semantic/source-permission evaluation; terminal verification failure prevents a consolidated audit report or confirmed finding-closure claim. |
+| [Recovered baseline RAI report, 2026-10-14](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md) and [failed-attempt history](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits) | Original v0.14.0/source baseline: 29 checks, 7 PASS, 11 PARTIAL, 11 NOT_ASSESSED; 8 MEDIUM/3 LOW residuals, 2 confirmed/9 downgraded. Informs proposed FR-048 to FR-051, AC-062 to AC-066, NFR-014 and semantic/privacy evaluation; recovery is not remediation closure or human acceptance. |
 
 ### Review-learning disposition
 
@@ -1851,7 +1856,7 @@ approval or inherited v0.12.0 acceptance.
 * [x] Real AI/SQL/Azure scope and evidence recorded in CON-009/AC-057
 * [x] #58 feasibility separated from screening/calibration/value and full delivery
 * [x] Scoped budget history and versioned parallel experiment intake recorded
-* [x] Proposed RAI release, fairness, oversight, redress and incident gates recorded; implementation/acceptance unproved
+* [x] Proposed RAI release, fairness, oversight, redress and incident gates recorded; baseline audit recovery validated, with implementation/human acceptance unproved
 * [ ] Fresh independent full-PRD requirements-quality review and disposition
 * [ ] Owner acceptance of this amended exercise candidate
 
@@ -1874,6 +1879,6 @@ human user research and live-use approval remain future operational gates.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-14 (v0.15.0 candidate, Responsible AI release and oversight gates)
+* **Last Updated:** 2026-10-14 (v0.15.0 candidate, RAI gates and validated baseline audit recovery)
 * **Authoring Status:** Amended candidate awaiting requirements review and owner acceptance; formal governance remains in-review
 * **Next Review:** Full-PRD requirement quality and amended exercise acceptance; implementation and governed adoption are separate gates

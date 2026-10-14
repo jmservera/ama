@@ -506,16 +506,15 @@ The 2026-10-14 audit used baseline commit
 v0.15.0 amendment. All six framework assessments returned preliminary results:
 NIST Govern, Map, Measure and Manage, AI STRIDE, and conditional EU AI Act
 screening. The preliminary total was 29 checks: 7 PASS, 11 PARTIAL and
-11 NOT_ASSESSED. These are not consolidated verified findings or release
-acceptance results, and no verified severity breakdown is available.
+11 NOT_ASSESSED. These were preliminary results, not consolidated verified findings or release
+acceptance results. No verified severity breakdown was available in that attempt.
 
 Measure and AI STRIDE deep verification stopped with terminal
 `INVALID_PAYLOAD` (`Retryable=false`) because the verifiers could not consume
 full finding records through temporary-file references. No retry or
-`RAI_REPORT_V1` report was produced or accepted. Human acceptance is PENDING.
-This assessment status is retained here rather than linking to a nonexistent
-report or treating rejected verification as a pass. A future separately
-scoped recovery must supply complete finding records inline.
+`RAI_REPORT_V1` report was produced or accepted in that attempt. Its terminal
+failure remains recorded; the separately authorized recovery below supplied
+complete finding records inline. Human acceptance remains PENDING.
 
 The following are preliminary review priorities, not confirmed implementation
 failures. Proposed documentation mitigations leave each evidence gate open.
@@ -532,6 +531,56 @@ Other operational blockers remain the real-data DPIA, processor/transfer and
 retention approvals; recovery/erasure evidence; named control-owner acceptance;
 reviewer readiness and net benefit. The newly written controls are proposals,
 not implementation remediation, verified findings closure or company approval.
+
+#### Verified Recovery and Open Dispositions (2026-10-14)
+
+The owner authorized a new bounded recovery with complete finding records and
+codebase profile supplied inline, not a retry of the rejected temporary-file
+handoff. The [recovered RAI report](../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md)
+completes the original baseline audit at commit
+`1cb398c7b90bec05a5700008a97d0cfac494144a` / PRD v0.14.0. It is not a
+re-audit of v0.15.0 or evidence that this amendment is implemented.
+
+All six framework assessments are represented once. The 29 checks comprise
+7 PASS, 0 FAIL, 11 PARTIAL and 11 NOT_ASSESSED. Actionable residual severity is
+0 CRITICAL, 0 HIGH, 8 MEDIUM and 3 LOW. Verification produced 2 CONFIRMED,
+0 DISPROVED, 9 DOWNGRADED and 18 UNCHANGED results. Existing proposal-only
+authority, source-verification gates, finite activation and manual routes
+were credited; a downgraded residual is not closed. Counts are framework
+checks, not counts of distinct incidents or affected people.
+
+The repaired AI STRIDE and Measure requests included every required finding
+field and the full profile. Other complete baseline-compatible verdicts were
+reused. Deterministic validation checked every input/response/collection ID,
+required verifier fields, total verdict mappings, pass-through fidelity,
+all 29 principal report rows, response counts, exact report path/hash and
+verbatim caution. This validates the exchange and report contracts, not
+runtime behavior, legal classification or qualified human acceptance.
+
+| Verified review item | Residual severity / verdict | Proposed treatment and evidence gate |
+| --- | --- | --- |
+| T-RAI-001: legacy input minimization | MEDIUM / CONFIRMED | Digital, task owners and DPO establish minimum necessary per-task fields across retained legacy and newer paths; provider-bound payload and cross-role tests under NFR-003/005 and AC-053/060 |
+| T-RAI-002 and MEASURE-01: source/factual assurance | MEDIUM / CONFIRMED and DOWNGRADED respectively | Task owners, Assurance and Digital witness plausible-wrong-output and altered-evidence tests, including structurally valid citations; NFR-009 and AC-063, without bypassing existing human gates |
+| GOVERN-AUDIT-02 and MN-3.2: approved model-change binding | MEDIUM / DOWNGRADED | Product/Digital own version-bound release and dependency invalidation, with renewed approval tests under FR-048/AC-062 |
+| MAP-02: staff-data and exercise-to-live boundary | MEDIUM / DOWNGRADED | Product, Digital, DPO/Legal and record owners reconcile actual staff identity/processing with synthetic-resident claims and approve necessity, processor/transfer and retention records; DH-001/002/006/007 remain open evidence gates |
+| MN-4.1: owned harm monitoring | MEDIUM / DOWNGRADED | Product/Digital with Data, Safety and Resident Engagement approve indicators, thresholds, observation windows and response owners under NFR-014 |
+| MN-4.3: incident communication and restart | MEDIUM / DOWNGRADED | Digital and named incident/restart owners witness suspension, communication, manual continuity and separately approved restart under FR-050/AC-065 |
+| GOVERN-AUDIT-01, MAP-01 and MAP-04: accountability, ranking impact and participation | LOW / DOWNGRADED in the bounded exercise | Name responsible humans, approve ranking ownership/impact and obtain representative resident/reviewer/accessibility/net-benefit evidence under FR-048/051 and AC-063/064/066 before operational expansion |
+
+Synthetic resident/programme data does not establish that the whole system
+processes no personal data: the report identifies actual staff/tenant identity
+and model-processing context. This scope tension with NFR-005/DH-002 must be
+reviewed, not silently treated as satisfied or deferred until real residents
+are introduced. No new staff-data purpose or broader processing is authorized.
+
+The report is a bounded prioritized audit, not exhaustive framework coverage,
+penetration testing or certification. Source-inspection confidence does not
+prove deployed effectiveness or harm. All new remediation remains proposed/
+Not run; human acceptance remains PENDING and live use BLOCKED. Held-out
+real-model quality/calibration, population fairness, accessible challenge,
+reviewer readiness, net benefit and witnessed restore/erasure reconciliation
+remain open. Restart persistence is not backup-recovery evidence. UK legal
+currentness and conditional EU applicability still require qualified review.
 
 ### Regulatory Evidence and Service Design
 
