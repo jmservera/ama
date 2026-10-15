@@ -1,0 +1,113 @@
+{
+  "age_band_counts": {
+    "1919-1944": 8695,
+    "1945-1964": 13074,
+    "1965-1980": 12705,
+    "1981-1999": 7248,
+    "2000 or later": 5436,
+    "pre-1919": 12842
+  },
+  "assumptions": {
+    "age_band_weights_by_locality": {
+      "A": {
+        "1919-1944": 0.14,
+        "1945-1964": 0.22,
+        "1965-1980": 0.24,
+        "1981-1999": 0.12,
+        "2000 or later": 0.1,
+        "pre-1919": 0.18
+      },
+      "B": {
+        "1919-1944": 0.17,
+        "1945-1964": 0.22,
+        "1965-1980": 0.15,
+        "1981-1999": 0.1,
+        "2000 or later": 0.06,
+        "pre-1919": 0.3
+      },
+      "C": {
+        "1919-1944": 0.1,
+        "1945-1964": 0.2,
+        "1965-1980": 0.25,
+        "1981-1999": 0.18,
+        "2000 or later": 0.12,
+        "pre-1919": 0.15
+      }
+    },
+    "construction_weights_by_age_band": {
+      "1919-1944": {
+        "Cavity brick": 0.6,
+        "Solid brick": 0.4
+      },
+      "1945-1964": {
+        "Cavity brick": 0.85,
+        "Non-traditional (precast concrete)": 0.15
+      },
+      "1965-1980": {
+        "Cavity brick": 0.9,
+        "Timber frame": 0.1
+      },
+      "1981-1999": {
+        "Cavity brick, partial fill": 0.8,
+        "Timber frame": 0.2
+      },
+      "2000 or later": {
+        "Cavity brick, full fill": 0.7,
+        "Timber frame": 0.3
+      },
+      "pre-1919": {
+        "Solid brick": 0.85,
+        "Stone": 0.15
+      }
+    },
+    "dwelling_type": "Mapped from the OSM building form; untagged or generic forms are drawn as house types (Terraced 35%, Semi-detached 40%, Detached 15%, Bungalow 10%).",
+    "heating_weights_by_locality": {
+      "A": {
+        "Air source heat pump": 0.02,
+        "Communal or district": 0.06,
+        "Electric storage": 0.08,
+        "Mains gas boiler": 0.84
+      },
+      "B": {
+        "Air source heat pump": 0.03,
+        "Communal or district": 0.02,
+        "Electric storage": 0.07,
+        "Mains gas boiler": 0.88
+      },
+      "C": {
+        "Air source heat pump": 0.06,
+        "Electric storage": 0.2,
+        "Mains gas boiler": 0.62,
+        "Oil boiler": 0.12
+      }
+    }
+  },
+  "construction_counts": {
+    "Cavity brick": 27684,
+    "Cavity brick, full fill": 3798,
+    "Cavity brick, partial fill": 5808,
+    "Non-traditional (precast concrete)": 1975,
+    "Solid brick": 14470,
+    "Stone": 1904,
+    "Timber frame": 4361
+  },
+  "dwelling_type_counts": {
+    "Bungalow": 5269,
+    "Detached house": 10068,
+    "Flat": 508,
+    "Semi-detached house": 28509,
+    "Terraced house": 15646
+  },
+  "heating_counts": {
+    "Air source heat pump": 1769,
+    "Communal or district": 2296,
+    "Electric storage": 5591,
+    "Mains gas boiler": 49416,
+    "Oil boiler": 928
+  },
+  "homes": 60000,
+  "is_synthetic": true,
+  "label": "Synthetic assumption; not a company fact, survey result or EPC record.",
+  "seed": 4820260930,
+  "version": "stock-fabric-v1"
+}
