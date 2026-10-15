@@ -1,0 +1,230 @@
+{
+  "warning": "SYNTHETIC DATA. This inventory describes fictional data needs. It contains no personal data.",
+  "version": "1.0.0",
+  "review_date": "2026-10-15",
+  "status": "draft-awaiting-owner-review",
+  "issue": "#166",
+  "parent": "#165",
+  "scenario_manifest": "#103 (link from the manifest once it lands)",
+  "gate_rule": "A build epic that consumes synthetic data must cite its inventory row id (SN-nn) in its issue or PR before work starts. A consuming row whose coverage is partial or missing needs a recorded owner decision on volume and scope first.",
+  "review_cadence": "Review on every iteration; bump version and review_date, and append to docs/reference/log.md.",
+  "coverage_values": [
+    "covered",
+    "partial",
+    "missing"
+  ],
+  "needs": [
+    {
+      "id": "SN-01",
+      "need": "Housing stock",
+      "source_reference": "docs/prds/zava-forward-retrofit-programme-demonstrator.md NFR-002; docs/reference/research/retrofit-synthetic-data/README.md",
+      "consuming_issues": [
+        "#144",
+        "#109",
+        "#104"
+      ],
+      "volume": "60,000 homes (seed 4820260930); 825 distinct geography anchors",
+      "owner": "owner, via #165",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-STOCK-REGISTER"
+      ],
+      "note": "Register exists privately; its generator is not in the repository, so it cannot be regenerated or tested."
+    },
+    {
+      "id": "SN-02",
+      "need": "Residents, contacts and tenancy",
+      "source_reference": "docs/reference/research/retrofit-synthetic-data/README.md; data-dictionary.md",
+      "consuming_issues": [
+        "#157",
+        "#104"
+      ],
+      "volume": "5,905 contacts in the public pack; invented residents in the 980-case MVP seed",
+      "owner": "owner, via #165",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-PACK",
+        "DS-MVP-SEED"
+      ],
+      "note": "No resident or tenancy records for the 60,000-home stock; resident-to-stock linkage is absent."
+    },
+    {
+      "id": "SN-03",
+      "need": "Surveys and EPC",
+      "source_reference": "docs/reference/research/retrofit-synthetic-data/data-dictionary.md",
+      "consuming_issues": [
+        "#104",
+        "#109"
+      ],
+      "volume": "unquantified",
+      "owner": "owner, via #165",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-PACK",
+        "DS-MVP-SEED"
+      ],
+      "note": "Case-level assessment records only; no per-home survey or EPC for 60,000 stock. Volume needs owner decision."
+    },
+    {
+      "id": "SN-04",
+      "need": "Contractors and work orders",
+      "source_reference": "docs/reference/research/retrofit-synthetic-data/README.md",
+      "consuming_issues": [
+        "#144",
+        "#104"
+      ],
+      "volume": "1,578 appointments; contractor capacity table",
+      "owner": "owner, via #165",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-PACK",
+        "DS-MVP-SEED"
+      ],
+      "note": "Covers 980 cases, not the 60,000 stock."
+    },
+    {
+      "id": "SN-05",
+      "need": "Finance and grants",
+      "source_reference": "docs/reference/research/retrofit-synthetic-data/README.md",
+      "consuming_issues": [
+        "#104"
+      ],
+      "volume": "grant-and-finance.csv for 980 cases",
+      "owner": "owner, via #165",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-PACK"
+      ],
+      "note": "Case-level only."
+    },
+    {
+      "id": "SN-06",
+      "need": "Safety and consent",
+      "source_reference": "docs/reference/research/retrofit-synthetic-data/README.md",
+      "consuming_issues": [
+        "#157",
+        "#104"
+      ],
+      "volume": "97 safety-hold rows in the public pack",
+      "owner": "owner, via #165",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-PACK",
+        "DS-MVP-SEED"
+      ],
+      "note": "Holds exist; resident consent records are not generated for the full stock."
+    },
+    {
+      "id": "SN-07",
+      "need": "Documents and forms",
+      "source_reference": "mvp/evals/document_form_fixtures.json",
+      "consuming_issues": [
+        "#104"
+      ],
+      "volume": "fixture file, small constructed set",
+      "owner": "owner, via #165",
+      "coverage": "covered",
+      "dataset_ids": [
+        "DS-DOC-FORM-FIXTURES"
+      ],
+      "note": "Constructed fixtures with a regression test."
+    },
+    {
+      "id": "SN-08",
+      "need": "Agent chat and memory",
+      "source_reference": "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-035; assistants runtime",
+      "consuming_issues": [
+        "#157"
+      ],
+      "volume": "assistant runtime tables only",
+      "owner": "owner, via #157",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-ASSISTANT-RUNTIME"
+      ],
+      "note": "No generated per-user chat or memory history; #157 must define volume before build."
+    },
+    {
+      "id": "SN-09",
+      "need": "Sensor data (history and live)",
+      "source_reference": "docs/reference/research/iot-sensor-analytics-research-plan.md phase R3",
+      "consuming_issues": [
+        "#109"
+      ],
+      "volume": "not defined",
+      "owner": "owner, via #109",
+      "coverage": "missing",
+      "dataset_ids": [
+        "DS-SENSOR"
+      ],
+      "note": "No sensor generator exists. Volume, sampling interval and homes covered need an owner decision."
+    },
+    {
+      "id": "SN-10",
+      "need": "Evaluation and golden sets",
+      "source_reference": "mvp/evals/ai_priority_golden.json",
+      "consuming_issues": [
+        "#104"
+      ],
+      "volume": "10 scenarios",
+      "owner": "owner, via #104",
+      "coverage": "covered",
+      "dataset_ids": [
+        "DS-AI-GOLDEN"
+      ],
+      "note": "Covered by test_ai_eval.py; scale and category coverage reviewed under #104."
+    },
+    {
+      "id": "SN-11",
+      "need": "Personas and scenario manifest",
+      "source_reference": "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-035",
+      "consuming_issues": [
+        "#103"
+      ],
+      "volume": "eleven profile paths per FR-035",
+      "owner": "owner, via #103",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-MANIFEST"
+      ],
+      "note": "Manifest is owned by #103; this row links to it once #103 lands."
+    },
+    {
+      "id": "SN-12",
+      "need": "Volumes and scale fixture",
+      "source_reference": "docs/prds/zava-forward-retrofit-programme-demonstrator.md NFR-002 scale dimension",
+      "consuming_issues": [
+        "#144"
+      ],
+      "volume": "60,000 homes / 600,000 events",
+      "owner": "owner, via #144",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-STOCK-REGISTER"
+      ],
+      "note": "Home stock exists; 600,000-event fixture is not generated."
+    },
+    {
+      "id": "SN-13",
+      "need": "Refresh and determinism",
+      "source_reference": "README.md#determinism-manifests-and-refresh-policy-2026-10-15",
+      "consuming_issues": [
+        "#176"
+      ],
+      "volume": "not applicable",
+      "owner": "owner, via #176",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-PACK",
+        "DS-MVP-SEED"
+      ],
+      "note": "Seeds and manifests exist for two generators; refresh policy is proposed and not approved."
+    }
+  ],
+  "open_items": [
+    "Owner approval of this inventory and of each row owner (all owners are proposed).",
+    "Volumes for SN-03, SN-08 and SN-09 need owner decisions.",
+    "Link from the scenario manifest once #103 delivers it.",
+    "The first inventory and coverage matrix from the 2026-10-14 backlog handoff was not available in the repository; this inventory was rebuilt from repository evidence and needs reconciling with it."
+  ]
+}
