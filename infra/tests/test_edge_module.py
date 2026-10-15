@@ -1,5 +1,6 @@
 """Static guards on private-endpoint coverage and the public edge (issue 143)."""
 from pathlib import Path
+import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,7 +22,60 @@ COVERAGE = {
 }
 
 
+# Private DNS zone names (prefix match against network.bicep dnsZones) each endpoint group must use.
+EXPECTED_ZONES = {
+    "sql.bicep": {"sqlServer": ["privatelink${environment().suffixes.sqlServerHostname}"]},
+    "storage.bicep": {"blob": ["privatelink.blob."], "queue": ["privatelink.queue."]},
+    "keyvault.bicep": {"vault": ["privatelink.vaultcore.azure.net"]},
+    "registry.bicep": {"registry": ["privatelink${environment().suffixes.acrLoginServer}"]},
+    "foundry.bicep": {"account": ["privatelink.cognitiveservices.azure.com", "privatelink.openai.azure.com", "privatelink.services.ai.azure.com"]},
+    "iothub.bicep": {"iotHub": ["privatelink.azure-devices.net", "privatelink.servicebus.windows.net"]},
+    "monitoring.bicep": {"azuremonitor": ["privatelink.monitor.azure.com", "privatelink.oms.opinsights.azure.com", "privatelink.ods.opinsights.azure.com", "privatelink.agentsvc.azure-automation.net", "privatelink.blob."]},
+    "authTokenStore.bicep": {"blob": ["privatelink.blob."]},
+}
+
+
+def _zone_key_names() -> dict:
+    """Map each zoneIds output key to its zone name by position in network.bicep."""
+    network = (MODULES / "network.bicep").read_text(encoding="utf-8")
+    zones = re.findall(r"^  '(.+)'$", re.search(r"var dnsZones = \[(.*?)\n\]", network, re.S).group(1), re.M)
+    keys = re.findall(r"^  (\w+): zones\[(\d+)\]\.id$", network, re.M)
+    return {k: zones[int(i)] for k, i in keys}
+
+
+def _main_zone_params(module_file: str) -> dict:
+    """Map single-zone parameter names passed to a module in main.bicep to the zoneIds key."""
+    block = re.search(rf"module \w+ 'modules/{re.escape(module_file)}' = [^\n]*?\{{\n(.*?)\n\}}", MAIN, re.S)
+    return dict(re.findall(r"(\w+): network\.outputs\.zoneIds\.(\w+)", block.group(1))) if block else {}
+
+
+def _endpoint_calls(text: str, module_file: str) -> dict:
+    """Return {groupId: [zone names]} for every privateEndpoint.bicep call in a module."""
+    zone_names = _zone_key_names()
+    passed = _main_zone_params(module_file)
+    calls = {}
+    for body in re.findall(r"module \w+ 'privateEndpoint\.bicep' = .*?\{(.*?)\n\}", text, re.S):
+        group = re.search(r"groupId: '(\w+)'", body).group(1)
+        ids = re.search(r"dnsZoneIds: \[(.*?)\]", body).group(1)
+        names = []
+        for ref in [r.strip() for r in ids.split(",")]:
+            key = ref.split(".")[-1] if ref.startswith("zoneIds.") else passed[ref]
+            names.append(zone_names[key])
+        calls[group] = names
+    return calls
+
+
 class PrivateEndpointCoverageTests(unittest.TestCase):
+    def test_endpoint_dns_zones_resolve_to_network_zone_list(self) -> None:
+        for name, groups in EXPECTED_ZONES.items():
+            text = (MODULES / name).read_text(encoding="utf-8")
+            calls = _endpoint_calls(text, name)
+            self.assertEqual(set(calls), set(groups), name)
+            for group, expected in groups.items():
+                self.assertEqual(len(calls[group]), len(expected), f"{name} {group}")
+                for actual, prefix in zip(calls[group], expected):
+                    self.assertTrue(actual.startswith(prefix), f"{name} {group}: {actual} != {prefix}")
+
     def test_every_public_switch_module_has_private_endpoint(self) -> None:
         for name, groups in COVERAGE.items():
             text = (MODULES / name).read_text(encoding="utf-8")

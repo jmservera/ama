@@ -16,3 +16,9 @@ date: 2026-10-15
 ## Divergences
 
 No deployment evidence; recorded as open items in `infra/README.md`.
+
+## Review-fix pass (2026-10-15)
+
+* `infra/tests/test_edge_module.py`: structural zone-resolution test added.
+* `infra/modules/edge.bicep`, `infra/main.bicep`, `infra/README.md`: warning and ordering text; open items recorded.
+* Validation: `python3 -m unittest discover -s infra/tests` (65 OK), `az bicep build` OK.

@@ -27,3 +27,7 @@ Issue #143 (parent #136): verify private-endpoint and DNS coverage, define Front
 * Front Door Private Link to Container Apps environments in uksouth and pricing; custom domain and DNS ownership; pilot edge go/no-go.
 
 Planning Readiness: Ready. Research disposition: executed.
+
+## Review-fix pass (2026-10-15)
+
+Findings: (1) coverage test only used string assertions; (2) Private Link to `managedEnvironments` of an internal VNet-injected environment is unverified; (3) the route attaches the managed-certificate domain before DNS validation. Evidence: `infra/modules/network.bicep` (`dnsZones`, `zoneIds` output), module `privateEndpoint.bicep` calls, `infra/modules/edge.bicep`. Planning readiness: Ready.

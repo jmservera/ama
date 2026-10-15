@@ -51,7 +51,7 @@ param deployApplications bool = true
 param agentImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 param orchestratorImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 param importImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
-@description('Deploy Front Door Premium, a WAF policy and a Private Link origin to the internal environment (ADR 0002 decision 6). Production profile only; the private endpoint connection needs approval (infra/README.md, Public edge).')
+@description('Deploy Front Door Premium, a WAF policy and a Private Link origin to the internal environment (ADR 0002 decision 6). WARNING: Private Link to the managedEnvironments group of an internal VNet-injected environment is unverified for this configuration (open item). Production profile only; the private endpoint connection needs approval (infra/README.md, Public edge).')
 param enablePublicEdge bool = false
 @description('Optional edge custom domain (managed TLS certificate). Empty uses the default azurefd.net host.')
 param edgeCustomDomain string = ''

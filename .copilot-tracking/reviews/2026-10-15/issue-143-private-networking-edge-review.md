@@ -19,3 +19,7 @@ Execution: done. Outcome: conformant with open items.
 
 * Deploy the production profile with `enablePublicEdge=true`, approve the private endpoint connection and record evidence.
 * Owner: custom domain, DNS and pilot edge go/no-go; confirm Private Link support and pricing in uksouth.
+
+## Review-fix pass (2026-10-15)
+
+Single review: the three findings are addressed. Still open: Private Link to an internal VNet-injected environment unverified, no production-profile deployment evidence, no live what-if.

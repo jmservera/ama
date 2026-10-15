@@ -1,3 +1,6 @@
+// WARNING (open item): Private Link to groupId 'managedEnvironments' of an internal, VNet-injected Container Apps
+// environment is unverified for this configuration. Confirm in a production-profile deployment that the pending
+// private endpoint connection appears and the origin becomes healthy before relying on enablePublicEdge.
 // Public edge: Front Door Premium, WAF policy and a Private Link origin to the internal Container Apps environment
 // (ADR 0002 decision 6, issue 143). Deployed only when enablePublicEdge is true in the production profile.
 param prefix string
@@ -8,7 +11,7 @@ param environmentId string
 param originHostName string
 @description('Azure region for the Private Link request (the environment region).')
 param privateLinkLocation string
-@description('Optional custom domain. Empty uses the default azurefd.net endpoint. DNS validation records are an owner step.')
+@description('Optional custom domain (managed certificate). Empty uses the default azurefd.net endpoint. Ordering: the domain is attached to the route and WAF in the same deployment, but a managed certificate stays Pending until the owner creates the _dnsauth TXT validation record and the CNAME to the endpoint; traffic on the custom host does not work before that. Deploy without a domain first, or expect the domain to validate after deployment.')
 param customDomain string = ''
 @description('Detection logs only until false positives are reviewed against the synthetic pilot traffic; Prevention is the target.')
 @allowed(['Detection', 'Prevention'])
