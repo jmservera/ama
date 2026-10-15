@@ -162,6 +162,7 @@ const modeBody = (o) => (aiMode.workflow ? { ...o, mode: "workflow" } : o);
 function aiNotes(d, onDone, getText) {
   if (!d) return null;
   const kids = [];
+  if (d.reason) kids.push(h("p", { class: "muted", role: "status" }, d.reason));
   if (d.verified === false || d.validated === false) kids.push(h("p", { class: "flag danger", role: "status" }, "Unverified: its sources do not match the case record. Check it before use."));
   const cites = d.citations || [];
   if (cites.length) kids.push(h("p", { class: "muted" }, "Sources: " + cites.join("; ")));
@@ -201,6 +202,7 @@ function priorityPanel() {
     const kids = [h("h2", {}, "Which cases first? A second opinion"),
       h("p", { class: "muted" }, "The rule-based order below is the list order. The AI suggestion, not approved, is advice only: it never changes the ranking, owners, stages or queues.")];
     if (msg) kids.push(h("p", { role: "alert" }, msg));
+    if (rec && rec.release_denied) kids.push(h("p", { role: "status" }, "This suggestion's release is no longer valid. Use the ordinary case controls or request a new suggestion. The release owner must review the missing evidence."));
     if (!rec) {
       kids.push(h("p", {}, h("button", { class: "alt", onclick: ask }, "Suggest my top 5")));
     } else {
@@ -217,7 +219,7 @@ function priorityPanel() {
         };
         kids.push(h("div", { class: "row" }, h("label", { for: "pri-why" }, "Your reason"), why),
           h("div", { class: "row" }, h("span", { class: "muted" }, "To edit, untick cases to drop:"), rec.items.map((i, n) => h("label", {}, keep[n], ` ${i.resident}`))),
-          h("div", { class: "row" }, h("button", { onclick: act("accept") }, "Accept"), h("button", { class: "alt", onclick: act("edit") }, "Edit"),
+          h("div", { class: "row" }, h("button", { disabled: rec.actionable === false, onclick: act("accept") }, "Accept"), h("button", { class: "alt", disabled: rec.actionable === false, onclick: act("edit") }, "Edit"),
             h("button", { class: "alt", onclick: act("reject") }, "Reject")));
       } else {
         kids.push(h("p", {}, `${rec.status}${rec.reason ? `: ${rec.reason}` : ""}. Recorded in the audit log.`),

@@ -272,7 +272,7 @@ expiry. `GET /api/assistants` shows the build's binding per assistant.
 `actual`); `POST /api/assistants/releases/{id}/suspend|revoke` ends it, and a
 revoked or suspended record is terminal. Absent, expired, suspended, revoked
 or mismatched releases deny with zero provider calls, retain the denial and
-name the owner (Juan Manuel Servera, Legal, Compliance and DPO owner) and the
+state the OQ-017 unappointed-authority gap, project contact and the
 manual route. For the five assistants, a returned model name that differs
 from the released one quarantines the result and suspends the release. This is
 a returned-model check on the provider's own response, not authoritative
@@ -284,14 +284,18 @@ paths and `read_document`) and compares it, with the registry, schema, prompt,
 policy, data, provenance and permission versions (`ai_registry.legacy_binding`),
 to the release. Legacy results are rechecked against the gate after the call
 and discarded (`quarantined`) if the release was suspended, revoked, expired
-or the task suspended meanwhile. Legacy paths get no returned-model check
-(their text helper does not return the model) and a late legacy result is
-discarded but does not suspend the release.
+or the task suspended meanwhile. The real legacy text helper now also checks
+the returned model against `AI_MODEL_VERSION`/`AI_MODEL_VERSION_STRONG`, not an
+independent attestation. A late legacy result is discarded but does not suspend
+the release. [Issue #219's extended core contract](../core/README.md#task-bound-rai-release-records-219)
+binds each activation to an exact release ID/version/digest and adds use,
+stakeholder, owner, impact, evaluation and material-change evidence.
 
 Open items for #107: authoritative serving-version attestation; Azure SQL race
-evidence; a routine-versus-material change distinction; export reliance; the
-JSON dev store has no durable release store and is not gated; delivered-build
+evidence; delivered-build
 acceptance; release approvers are unset (`ZF_ASSIST_RELEASE_APPROVERS`).
+The JSON dev store now denies configured inference without SQL-owned release
+evidence; it is no longer an ungated AI path. OQ-017 live authority remains open.
 
 Validation: `tests/test_assistants.py` and `tests/test_assistant_release.py` exercise all five reactive/proactive
 contracts, reader matrices, failure/disabled/malformed paths, current roles,
