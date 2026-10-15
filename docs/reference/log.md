@@ -3004,3 +3004,9 @@ metadata when the knowledge base was created.
 
 * Added `src/**/web/vendor/**`, `src/**/data/**`, `**/*.egg-info/**` and `**/build/**` to the `solution-code` excludes in `.github/rubric/artifacts.json`, fixture tests in `test_prepare.py` and a note in `.github/rubric/README.md`. `mvp/` globs kept until the cut-over registry PR (#201, #202); `rubric_version` not bumped.
 * Baseline 47 of 100; file sets before and after are identical on the current tree. The change takes effect only after merge. Open: 19 pre-existing test failures, post-merge workflow score.
+
+## [2026-10-15] restructure | src project skeletons (#290)
+
+* Added `src/{core,api,agents,orchestrator,importer}` (ADR 0006 phase 1): per-project `pyproject.toml`, version module, `python -m` entry point, tests with a dependency-rule import test, `requirements.in` and hashed `requirements.txt`, Dockerfiles for the four workloads, `src/.dockerignore`, `/src/**/data/` in `.gitignore`, `src/README.md` and the new workflow `.github/workflows/src-ci.yml` (checks `src-<project>`, `src-namespace`, `src-no-working-data`). `mvp/`, `mvp-ci.yml` and existing check names are unchanged; no module moved.
+* ADR 0006 clarified: Docker build context is `src/`, not the project folder, so images can include the core. Indexed in `docs/reference/README.md`. No regulatory snapshot changed.
+* Open: image checks and the Trivy scan are verified locally and still need a CI run; the per-project core extras are provisional until modules move (#199).
