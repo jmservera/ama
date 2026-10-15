@@ -2725,3 +2725,12 @@ metadata when the knowledge base was created.
   `mvp/tests/test_content_standard.py`.
 * Open items: named human reviewer for resident-facing wording, stored
   finance value "Keep on hold", reading-age targets and user testing.
+
+## [2026-10-15] update | Generator gap closure mapping
+
+* Extended `research/retrofit-synthetic-data/needs-inventory.json` to version
+  1.1.0 (issue #167): every need maps to a child story or delivered issue, and
+  generator conventions (seed, identifiers, `is_synthetic`) are recorded. New
+  README section and tests in `mvp/tests/test_needs_inventory.py`.
+* Open items: owner confirmation of the mapping and of the SN-01 regeneration
+  scope; no deferrals recorded.
