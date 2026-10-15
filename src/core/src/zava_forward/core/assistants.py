@@ -16,7 +16,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 
 from . import assistant_release as rel
-from . import continuity, projection, quality, ranking
+from . import continuity, projection, quality, ranking, rai_release
 from zava_forward.core.ai import FORBIDDEN, Ai
 from .store import ConflictError
 
@@ -290,13 +290,17 @@ PROVENANCE = "constructed-synthetic-demo-labelled"
 
 def runtime_binding(capability, ai):
     """What this build would dispatch with; a release must match it exactly, so any material change needs renewed evidence."""
+    from . import ai_registry
     spec = REGISTRY[capability]
     return dict(registry_version=VERSION, schema_version=SCHEMA_VERSION, provider=getattr(ai, "provider", "azure-openai"),
                 endpoint=getattr(ai, "endpoint", "") or "", deployment=getattr(ai, "fast", "") or "",
                 prompt_version=digest([SYSTEM, spec["purpose"]])[:16],
                 policy_version=f"{RULE_VERSION}:{digest([RULES[capability], OUTPUT_SCHEMA])[:12]}",
                 data_version=digest([SCHEMA_VERSION, spec["categories"]])[:16], provenance_version=PROVENANCE,
-                permission_version=digest([spec["roles"], PURPOSE])[:16])
+                permission_version=digest([spec["roles"], PURPOSE])[:16],
+                model_version=getattr(ai, "model_version", "unattested"),
+                task_contract_version=digest(ai_registry.get(capability)),
+                evaluation_version=rai_release.EVALUATION_VERSION)
 
 
 def build_request(task):
@@ -480,6 +484,11 @@ class Assistants:
         ai = self.store.ai
         return rel.admission(db, capability, runtime_binding(capability, ai), self.now(db), live=isinstance(ai, Ai))
 
+    def release_reference(self, db, capability):
+        selected, _ = rel.assessment(db, capability, runtime_binding(capability, self.store.ai),
+                                     self.now(db), live=isinstance(self.store.ai, Ai))
+        return rai_release.reference(selected) if selected else None
+
     def record_release(self, user, body):
         if not self.sql:
             raise ValueError(self.disabled())
@@ -519,7 +528,8 @@ class Assistants:
                 body = self._row(db, tid)
                 events = [json.loads(r[0]) for r in db.execute("SELECT body FROM assistant_events WHERE task_id=? ORDER BY at,id", (tid,)).fetchall()]
                 s = continuity.active(self.continuity(db), body["capability"])
-                out.append(dict(body, provenance=events, relied_on=body["state"] == "accepted" and not s and not self.admission(db, body["capability"]),
+                out.append(dict(body, provenance=events, relied_on=body["state"] == "accepted" and not s and not self.admission(db, body["capability"])
+                                and body.get("release") == self.release_reference(db, body["capability"]),
                                 suspension=s["id"] if s else None))
             return dict(proposals=out, total=len(ids), truncated=len(ids) > limit, supported=True, limit=limit)
 
@@ -554,6 +564,7 @@ class Assistants:
                                     if user.get("role") in v["roles"]], disabled=self.disabled(),
                         proactive=False, manual="Use the ordinary case controls.")
         with self.transaction() as db:
+            from . import ai_registry
             result = []
             for k, v in REGISTRY.items():
                 if user.get("role") in v["roles"]:
@@ -561,7 +572,22 @@ class Assistants:
                     denied = self.admission(db, k)
                     result.append(dict(id=k, version=VERSION, release="in force" if not denied else denied,
                                        binding=runtime_binding(k, self.store.ai), **v))
-            return dict(assistants=result, disabled=self.disabled(db), proactive=self.limits.proactive,
+            registered = []
+            for task, spec in ai_registry.tasks().items():
+                if user.get("role") not in spec["roles"]:
+                    continue
+                if task in REGISTRY:
+                    binding = runtime_binding(task, self.store.ai)
+                    selected, denied = rel.assessment(db, task, binding, self.now(db),
+                                                       live=isinstance(self.store.ai, Ai))
+                else:
+                    dep = getattr(self.store.ai, "fast", "") if task in ("message", "summary", "briefing") else getattr(self.store.ai, "strong", "")
+                    binding = ai_registry.legacy_binding(task, self.store.ai, dep)
+                    selected, denied = rel.assessment(db, f"legacy:{task}", binding, self.now(db), live=True)
+                registered.append(dict(spec, binding=binding, release_denial=denied,
+                                       release=rai_release.reference(selected) if selected else None,
+                                       authority_gap=rai_release.AUTHORITY_GAP))
+            return dict(assistants=result, registered_tasks=registered, disabled=self.disabled(db), proactive=self.limits.proactive,
                         principal=PURPOSE, rule=RULE_VERSION, limits=Limits.DEFAULTS if not self.limits.valid else
                         {k: getattr(self.limits, k) for k in Limits.DEFAULTS},
                         manual="Use the ordinary case controls; proposals never approve or change the case.")
@@ -570,14 +596,15 @@ class Assistants:
         snapshot = self.snapshot(db, capability, c)
         signature = digest(snapshot)
         identity = proposal_identity(capability)
-        tid = digest([capability, VERSION, c["id"], signature, identity])
+        release = self.release_reference(db, capability)
+        tid = digest([capability, VERSION, c["id"], signature, identity, release])
         row = db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()
         if row is None:
             reason = self.disabled(db, capability)
             body = dict(id=tid, capability=capability, version=VERSION, case_id=c["id"], proposal_identity=identity,
                         source_signature=signature, snapshot=snapshot, output=None, verification=None, review=None, envelope=None,
                         manual=f"Review the ordinary case with {', '.join(REGISTRY[capability]['roles'])}.",
-                        reason=reason, created_at=self.now(db))
+                        release=release, reason=reason, created_at=self.now(db))
             state = "disabled" if reason else "pending"
             if self.limits.valid and len(canonical(snapshot)) > self.limits.input_chars - 1500:
                 state, body["reason"] = "failed", "Source capture exceeds bounded input. Review manually."
@@ -589,8 +616,9 @@ class Assistants:
                 task["reason"] = None
                 db.execute("UPDATE assistant_tasks SET state='pending',body=?,revision=revision+1 WHERE id=?",
                            (canonical(task), tid))
+        denied = self.admission(db, capability)
         self.event(db, tid, kind="invocation", mode=mode, actor=actor, purpose=PURPOSE if mode == "proactive" else None,
-                   rules=RULE_VERSION)
+                   rules=RULE_VERSION, release=release, release_denial=denied)
         return tid
 
     def invoke(self, user, capability, case_id):
@@ -627,6 +655,8 @@ class Assistants:
         body["display_state"] = "stale" if body["stale"] else body["state"]
         held = continuity.active(self.continuity(db), body["capability"])
         body["release_denial"] = self.admission(db, body["capability"])
+        if not body["release_denial"] and body.get("release") != self.release_reference(db, body["capability"]):
+            body["release_denial"] = rel.denial("activation release changed", ["original activation release"], body["capability"])
         body["actionable"] = held is None and body["state"] not in ("quarantined", "disabled") and not body["release_denial"]
         body["suspension"] = held["id"] if held else None
         if held:
@@ -735,6 +765,8 @@ class Assistants:
                 self.event(db, tid, kind="exhausted", outcome="attempts-exhausted")
                 return None
             reason = self.disabled(db, task["capability"])
+            if not reason and task.get("release") != self.release_reference(db, task["capability"]):
+                reason = rel.denial("activation release changed", ["original activation release"], task["capability"])["reason"]
             if reason:
                 task["reason"] = reason
                 db.execute("UPDATE assistant_tasks SET state='disabled',body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
@@ -807,11 +839,12 @@ class Assistants:
             denied = self.admission(db, current["capability"])
             binding = digest(runtime_binding(current["capability"], self.store.ai))
             quarantined = epoch != current.get("claim_epoch", epoch) or bool(self.suspended(db, current["capability"])) or bool(
-                denied) or binding != current.get("claim_binding", binding)
+                denied) or binding != current.get("claim_binding", binding) or current.get("release") != self.release_reference(db, current["capability"])
             if not quarantined and envelope.get("outcome") == "returned":
                 # A deployment alias is not immutable. This only compares the model name the provider returned with the released one;
                 # it is a returned-model check, not authoritative attestation of what served the call.
-                released = [r for r in rel.releases(db, current["capability"]) if r["status"] == "active"]
+                released = [r for r in rel.releases(db, current["capability"])
+                            if r["id"] == current["release"]["id"]]
                 if not any(r.get("serving_model") == envelope.get("model") for r in released):
                     quarantined = True
                     for r in released:
@@ -827,6 +860,7 @@ class Assistants:
                                              output_digest=digest(held_output) if held_output is not None else None)
             current.update(envelope=envelope, output=output, reason=failure,
                            verification=None, review=None)
+            envelope["release"] = current.get("release")
             state = "quarantined" if quarantined else "ready" if output is not None and not failure else (
                 "pending" if envelope.get("outcome") in ("timeout", "provider-unavailable") and current["attempts"] < self.limits.attempts else "failed")
             delay = self.limits.backoff * current["attempts"] if state == "pending" else 0
@@ -892,6 +926,8 @@ class Assistants:
                 returned.set()
         with self.transaction() as db:
             held = self.suspended(db, task["capability"]) or (self.admission(db, task["capability"]) or {}).get("reason")
+            if not held and task.get("release") != self.release_reference(db, task["capability"]):
+                held = "Release changed before dispatch; use the manual route."
         if held:
             self.call_slots.release()
             return self.complete(task, dict(outcome="suspended-before-dispatch", usage=None, source="unverified"), None, held)
