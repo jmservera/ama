@@ -21,6 +21,7 @@ person supplies. Fixtures that use it are labelled synthetic demonstration data.
 from . import controls as k
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
+BREACH_ROLES = MANAGER_ROLES + ("Quality Inspector", "Building Safety Liaison")
 PROTOCOL_FIELDS = (
     ("event_dictionary", "the event dictionary"), ("accepted_handover_definition", "the accepted-handover definition"),
     ("clock_pause_rules", "the clock and pause rules"), ("cohort_eligibility", "the cohort eligibility"),
@@ -174,6 +175,15 @@ class GovernanceMixin:
         if why:
             raise PermissionError("Phase 0 capture is closed. " + " ".join(why))
 
+    def guard_case_event(self, c):
+        """Capture gate for pilot-cohort cases (c["pilot"]) and pause check for every case; hazard response is deliberately not routed here."""
+        if c.get("pilot"):
+            self.require_capture_open()
+        home = c.get("home") or {}
+        for kind, scope in (("home", c["id"]), ("home", home.get("address")), ("archetype", home.get("type"))):
+            if scope:
+                self.require_not_paused(kind, scope)
+
     # ---- release decisions
     def release_record(self, user, body):
         k.refuse_bulk(body)
@@ -196,6 +206,8 @@ class GovernanceMixin:
                    recorded_by=user["email"], recorded_at=k.now(), synthetic=bool(body.get("synthetic")))
         if decision == "Release" and scope == "Phase 0 capture":
             self.require_capture_open()
+        if decision == "Release" and scope in ("Shadow testing", "Live pilot") and not self.is_released("Phase 0 capture"):
+            raise PermissionError(f"{scope} cannot be released until Phase 0 capture is released. Owner: programme manager.")
         if decision == "Release" and scope == "Shadow testing":
             rec["shadow_entry_evidence"] = k.text(body.get("shadow_entry_evidence"), "the shadow-mode entry evidence", 400)
         with self.lock:
@@ -219,6 +231,7 @@ class GovernanceMixin:
     # ---- guardrail breach and restart
     def breach_record(self, user, body):
         k.refuse_bulk(body)
+        k.require_role(user, BREACH_ROLES, "a manager, quality inspector or building safety liaison can record a guardrail breach")
         scope_kind = body.get("scope_kind")
         if scope_kind not in SCOPE_KINDS:
             raise ValueError("Choose home, work package, archetype or workstream.")

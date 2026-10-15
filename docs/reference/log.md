@@ -2848,3 +2848,10 @@ metadata when the knowledge base was created.
 * Synthetic demonstration values only. Open: OD-18 definitions and MDE, OD-36
   DPIA and lawful basis, OD-35 authority, real approvers, and the RAI closure
   registers and fresh assessment, which need qualified owners and evidence.
+
+## 2026-10-15 Governance gates wired into case workflows (#126)
+
+* `mvp/README.md` governance section updated: capture and pause guard on case
+  event paths, breach role check, Shadow and Live release need Phase 0 released.
+* No regulatory snapshot changed. Open: pilot cohort enrolment and work package
+  and workstream pause scopes.

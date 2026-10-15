@@ -1,5 +1,7 @@
+import copy
 import json
 import os
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -71,6 +73,53 @@ class Gov:
         self.store.benefits_record(self.pm1, dict(BENEFITS, mde_cycle_time_pct=15, mde_coordination_hours_pct=15))
         v = self.store.benefit_verdicts(dict(cycle_time=30, coordination_hours=10))
         self.assertEqual((v["cycle_time"]["verdict"], v["coordination_hours"]["verdict"]), ("Pass", "Fail"))
+
+    def test_shadow_and_live_need_phase_0_released(self):
+        s = self.store
+        self.approve_all()
+        shadow = dict(RELEASE, scope="Shadow testing", shadow_entry_evidence="Synthetic entry evidence")
+        with self.assertRaises(PermissionError):
+            s.release_record(self.pm1, shadow)
+        with self.assertRaises(PermissionError):
+            s.release_record(self.pm1, dict(RELEASE, scope="Live pilot"))
+        s.release_record(self.pm1, dict(RELEASE, scope="Phase 0 capture", decision="Withhold"))
+        with self.assertRaises(PermissionError):
+            s.release_record(self.pm1, shadow)
+        s.release_record(self.pm1, dict(RELEASE, scope="Phase 0 capture"))
+        s.release_record(self.pm1, shadow)
+        s.release_record(self.pm1, dict(RELEASE, scope="Live pilot"))
+        s.release_record(self.pm1, dict(RELEASE, scope="Live pilot", decision="Withhold"))
+
+    def test_pilot_case_events_need_open_capture_gate(self):
+        d = copy.deepcopy(tf.test_mvp.DATA)
+        d["staff"] = tf.STAFF
+        d["cases"][0]["pilot"] = True
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        s = self.store = self.make(d, tmp.name)
+        for call in (lambda: s.log_call(self.geo, "ZF-1", "Spoke", ""), lambda: s.set_decision(self.geo, "ZF-1", "Waiting"),
+                     lambda: s.advance(self.geo, "ZF-1"), lambda: s.return_case(self.geo, "ZF-1", "Contacting resident", "r")):
+            with self.assertRaisesRegex(PermissionError, "capture is closed"):
+                call()
+        self.approve_all()
+        s.log_call(self.geo, "ZF-1", "Spoke", "")
+
+    def test_paused_scope_blocks_case_workflows_but_not_hazards(self):
+        s = self.store
+        self.approve_all()
+        s.breach_record(self.pm1, dict(BREACH, scope="Mid terrace"))
+        with self.assertRaisesRegex(PermissionError, "paused"):
+            s.log_call(self.geo, "ZF-1", "Spoke", "")
+        with self.assertRaisesRegex(PermissionError, "paused"):
+            s.set_decision(self.geo, "ZF-1", "Waiting")
+        with self.assertRaisesRegex(PermissionError, "paused"):
+            s.advance(self.geo, "ZF-1")
+        s.raise_hazard(self.pm1, "ZF-1", "Damp and mould", "Emergency")
+
+    def test_breach_record_needs_an_authorised_role(self):
+        with self.assertRaises(PermissionError):
+            self.store.breach_record(tf.U["RLO-1"], BREACH)
+        self.assertEqual(self.store.breach_record(tf.U["BSL-1"], BREACH)["status"], "Paused")
 
     def test_phase_release_decisions_are_recorded_and_gated(self):
         s = self.store
