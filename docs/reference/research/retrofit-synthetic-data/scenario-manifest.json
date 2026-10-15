@@ -1,0 +1,66 @@
+{
+  "warning": "SYNTHETIC SCENARIO METADATA. No personal data, approval or observed business outcomes.",
+  "is_synthetic": true,
+  "version": "0.1.0",
+  "iteration": "2026-10-15-src-needs-inventory-166",
+  "issue": "#103",
+  "status": "partial-inventory-integration",
+  "active_slice": "Documentation and core regression tooling for #166; not an application delivery or full FR-035 acceptance.",
+  "source_reference": "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-035, AC-043",
+  "inventory": {
+    "path": "needs-inventory.json",
+    "version": "1.2.0",
+    "review_date": "2026-10-15",
+    "reviewed_rows": [
+      "SN-01", "SN-02", "SN-03", "SN-04", "SN-05", "SN-06", "SN-07",
+      "SN-08", "SN-09", "SN-10", "SN-11", "SN-12", "SN-13"
+    ],
+    "review_kind": "automated-engineering-review",
+    "reviewer": "Copilot; repository evidence only, not owner ratification",
+    "owner_review": "pending",
+    "review_notes": "Reconciled migrated fixture sources; owners, volume/scope decisions, gap mapping and the unavailable 2026-10-14 handoff matrix remain unapproved.",
+    "next_iteration": "Before each iteration starts, review every SN row; bump inventory version/review_date, update this binding and manifest version/iteration, retain history in Git and append docs/reference/log.md. Data-consuming builds must cite their SN rows and record required owner scope/volume decisions before starting."
+  },
+  "applicable_checks": [
+    "Inventory row completeness, provenance references and gap mappings",
+    "Reciprocal inventory link, exact version/date and complete unique reviewed row set",
+    "Synthetic-only metadata and explicit pending owner review"
+  ],
+  "deferred_checks": [
+    "Owner ratification, volume/scope approvals and historical matrix reconciliation",
+    "Per-profile fixture versions, default IDs/count/order/selection and expected safe endpoints",
+    "Connected same-home lifecycle and independent shared-building gates",
+    "Actual AI, Azure SQL, Azure deployment, human review and resident consent acceptance"
+  ],
+  "profiles": [
+    {"id": "asset-investment", "status": "deferred"},
+    {"id": "programme-coordinator", "status": "deferred"},
+    {"id": "retrofit-case-team", "status": "deferred"},
+    {"id": "assessor-designer", "status": "deferred"},
+    {"id": "housing-resident-engagement", "status": "deferred"},
+    {"id": "repairs-building-safety", "status": "deferred"},
+    {"id": "procurement-contracts", "status": "deferred"},
+    {"id": "provider-contractor", "status": "deferred"},
+    {"id": "quality-assurance", "status": "deferred"},
+    {"id": "finance-grants", "status": "deferred"},
+    {"id": "digital-auditor", "status": "deferred"}
+  ],
+  "workflows": [
+    {"id": "stock-safety-prioritisation", "name": "Stock data, safety triage and fair prioritisation", "status": "deferred"},
+    {"id": "technical-readiness", "name": "Technical assessment and design readiness", "status": "deferred"},
+    {"id": "resident-service", "name": "Resident service, access, choice and redress", "status": "deferred"},
+    {"id": "procurement-release", "name": "Procurement, committed capacity and work release", "status": "deferred"},
+    {"id": "hazard-response", "name": "Hazard awareness and damp-and-mould response", "status": "deferred"},
+    {"id": "quality-handover", "name": "Quality acceptance, defects and handover", "status": "deferred"},
+    {"id": "finance-grants-cash", "name": "Budget, provider invoice, grant claim and cash reconciliation", "status": "deferred"},
+    {"id": "programme-handoffs", "name": "Programme handoffs and case orchestration", "status": "deferred"},
+    {"id": "portfolio-decisions", "name": "Portfolio investment, performance and scale decisions", "status": "deferred"}
+  ],
+  "coverage_note": "Deferred means this manifest supplies no executed profile/workflow acceptance evidence, not that every related application feature is absent. #103 owns completion.",
+  "fixture_references": [
+    "docs/reference/research/retrofit-synthetic-data/manifest.json",
+    "src/core/src/zava_forward/core/synthetic/scale_fixture.py",
+    "src/agents/tests/chat_fixture.py",
+    "src/core/src/zava_forward/core/synthetic/sensor_backfill.py"
+  ]
+}

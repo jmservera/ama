@@ -1,7 +1,7 @@
 ---
 title: Retrofit Synthetic Evidence Pack - Zava Forward Year One
 description: Fifteen months of synthetic operating records from a professional retrofit delivery team that knows it has bottlenecks but not where they are
-ms.date: 2026-10-14
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
@@ -107,7 +107,7 @@ Reproducibility (issue #176, parent #165). The generators are in
 | `generate_pack.py` (public CSV pack) | `--seed` (omitted draws a random seed, so always pass it) and `--as-of` (defaults to the extract date 2026-09-30; sets `generated_at`, never the clock) | `seed`, `version`, `generated_at`, `as_of`, `generator_revision`, per-file `file_sha256` in `manifest.json` | `test_pack_generator_is_byte_deterministic_with_manifest` |
 | Stock fabric (`zf_stock_fabric.py`, seed 4820260930) and EPC (`zf_stock_epc.py`, seed 4820261015) | `--seed` and the register CSV; output depends only on seed and home ID, no clock | `seed`, `version`, `generator_revision` in each summary JSON | `test_stock_fabric_and_epc_generators_are_byte_deterministic_with_revision` |
 | Stock register (seed 4820260930, 60000 homes) | Seed recorded in `private-stock-manifest.json` | Seed, version, generated date only | None: the register generator is not in the repository (it samples real OpenStreetMap anchors) |
-| Sensor data | None | None | None: no sensor generator exists in the repository |
+| Sensor backfill (seed 183) | Explicit seed and fixed 730-day hourly period | Seed, schema, climate model and hash in generated manifest | `src/core/tests/test_sensor_backfill.py`; full-stock run and live simulator acceptance not evidenced |
 
 `generator_revision` is a SHA-256 prefix over the generator source files, so
 a changed generator is visible in the manifest without relying on Git
@@ -143,9 +143,10 @@ Open items for the owner (not decided here).
   for the stock register until then. The fabric and EPC generators derived
   from the register are now tested byte-identical; the committed private
   summaries predate `generator_revision` and are not rewritten here.
-* Define scope for sensor data (see
+* Confirm full-run scope/storage and live cadence for sensor data (see
   [IoT sensor analytics research plan](../iot-sensor-analytics-research-plan.md));
-  no generator exists to make deterministic yet.
+  the migrated backfill generator exists, but verified external climate
+  inputs and canonical full-stock materialization remain open.
 * Decide whether to regenerate the committed pack manifest with the new
   fields.
 
@@ -335,16 +336,39 @@ rendered PDFs or images.
 ## Synthetic data needs inventory and phase gate (2026-10-15)
 
 Issue #166, parent #165. The machine-readable inventory is
-[needs-inventory.json](./needs-inventory.json) (version 1.0.0, draft awaiting
+[needs-inventory.json](./needs-inventory.json) (version 1.2.0, draft awaiting
 owner review). It lists 13 needs with source reference, consuming issues,
 volume, proposed owner and generator coverage (covered, partial or missing).
 
 Gate rule: a build epic that consumes synthetic data cites its inventory row
 (`SN-nn`) before work starts, and a partial or missing row needs a recorded
 owner decision on volume and scope first. The epics gated today are #109
-(SN-09, missing), #157 (SN-08, partial), #104 (SN-02 to SN-10) and #144
-(SN-01, SN-12). The inventory is reviewed on each iteration, and the scenario
-manifest (#103) should link to it once delivered.
+(SN-09, partial), #157 (SN-08, partial), #104 (its cited rows SN-01 to
+SN-07 and SN-10) and #144 (SN-01, SN-04, SN-12). These are issue-specific
+citations, not blanket approval of every row in a numeric range.
+
+The versioned [constructed-scenario manifest](./scenario-manifest.json)
+links the exact inventory version, review date and all thirteen reviewed rows.
+This iteration records an automated engineering review of public repository
+evidence, not owner ratification. Its eleven profile paths and nine workflow
+checks remain explicitly deferred to #103; no defaults, safe endpoints,
+connected lifecycle or full FR-035 acceptance are claimed.
+
+Before each iteration starts, review every row; bump the inventory version
+and review date, update the manifest binding, version and iteration, and
+append the [knowledge log](../../log.md). Preserve prior versions in Git.
+`src/core/tests/test_needs_inventory.py` checks the reciprocal link, exact
+version/date, complete unique reviewed rows and this iteration's pending-owner
+boundary, including negative mutations. It does not enforce GitHub issue
+chronology or grant approval. A data-consuming epic must record its SN row
+citations and the required owner scope/volume decisions before build work
+starts; an automated review or a passing test cannot waive that gate.
+
+Coverage corrections in v1.2.0 distinguish existing stock, EPC, chat, scale
+and sensor fixture tooling from accepted application coverage. Sensor
+backfill is partial, not missing; full-stock materialization, external climate
+verification and live coverage remain unevidenced. Projected generator volumes
+do not resolve the open owner volume/scope decisions.
 
 Open items: owner approval of the inventory and row owners, volumes for
 SN-03, SN-08 and SN-09, and reconciliation with the 2026-10-14 backlog
@@ -422,4 +446,3 @@ values are labelled synthetic fixtures under the owner decision in ADR 0005
   calibrated to Zava North Homes data. The case `epc_band` model in
   `zf_model.py` is a separate denominator and is not reconciled with
   `stock_epc`. Owner confirmation of the conflict mix is not recorded.
-
