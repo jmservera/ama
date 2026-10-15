@@ -6,6 +6,104 @@ ms.date: 2026-10-15
 ms.topic: reference
 ---
 
+## Stock reconciliation API (#84)
+
+`POST /api/cases/{id}/stock-reconciliation` records an unresolved staff query:
+
+```json
+{
+  "field": "epc",
+  "query_owner": "sam@example.test",
+  "left": {
+    "value": "D",
+    "source_id": "SYN-REGISTER-84",
+    "date": "2026-01-01",
+    "version": "1",
+    "validation_state": "Unvalidated"
+  },
+  "right": {
+    "value": "E",
+    "source_id": "SYN-SURVEY-84",
+    "date": "2026-02-01",
+    "version": "2",
+    "validation_state": "Disputed"
+  }
+}
+```
+
+The example is constructed, not a real home. Allowed fields are `epc`, `type`
+and `built`; the owner must be registered non-contractor staff. Each assertion
+needs exactly the shown fields; validation is `Unvalidated`, `Validated`,
+`Disputed` or `Unknown`. Dates cannot be future; EPC is A-G, build year an
+integer and home type bounded text. Equal values and identical source/version
+pairs are rejected. The authenticated session supplies recorder identity.
+Invalid inputs return 400, unauthenticated requests 401, denied roles/bulk
+requests 403. The response is the projected case detail; contractors receive
+neither comparisons nor technical decisions.
+
+Opening additionally requires the registered case owner or programme/manager
+role. Staff role membership alone does not grant responsibility for every case.
+
+`POST /api/cases/{id}/stock-query-event` appends a disposition:
+
+```json
+{
+  "query_id": "SQ-1",
+  "action": "withdraw",
+  "reason": "Duplicate of another recorded query"
+}
+```
+
+The original raiser or a programme/manager role may withdraw. For a human
+reconciliation attestation use `"action": "resolve"` and add a nonempty
+`"evidence": "SYN-HUMAN-REVIEW-84"` reference. Resolution is restricted to
+registered named humans with the existing Retrofit Programme Manager or
+Programme Support Officer role. The server binds identity from the session,
+not the body; agents cannot resolve or sign off. Every disposition needs a
+reason, refers to a query on this case and is terminal. Invalid/repeated
+dispositions return 400; unauthorized requests return 403.
+
+The response derives each query's current `Unresolved`, `Withdrawn` or
+`Reconciled` status and retains the separate `stock_reconciliation_events`
+history (event ID, query ID, status, action, reason, optional evidence,
+timestamp and recorder identity). The original comparison remains unchanged
+in storage. The read-only panel shows the status and human event provenance.
+Only unresolved queries block technical approval; disposition never releases
+other stock, safety, building or independent approval gates. No source or
+home field is automatically selected/updated. Source-authority, resolution
+rules and eligibility stay Unknown/owner-approval-needed, not an approved
+operational reconciliation policy.
+
+The case view displays both values, source metadata and query owner, with
+authority/resolution/eligibility explicitly `Unknown`. A different case shows
+its own comparisons, never a carried-over rationale. Existing technical forms
+record named human decisions, not AI approval; separate sign-offs show the
+design version each person reviewed. Conflict, building and hazard holds reuse
+the [core controls](../core/README.md#stock-comparisons-and-human-technical-sign-offs-84).
+No stock source wins automatically, no resident decision is inferred and no
+case is silently excluded or automatically reprioritised.
+
+Support status and input coverage are explicit in staff detail/list. Missing
+flags are `Unknown`, not `"None"`; compatibility Boolean notice indicators
+still represent observed support only. Existing governed AI proposal paths
+remain available, with release admission and human approval unchanged.
+
+Local synthetic HTTP tests run from `src/api`:
+
+```bash
+PYTHONPATH=../core/tests:../agents/tests python -m unittest discover -s tests -p 'test_stock_reconciliation_api.py' -v
+ZF_STOCK_BROWSER=1 PYTHONPATH=../core/tests:../agents/tests python -m unittest discover -s tests -p 'test_stock_reconciliation_api.py' -v
+```
+
+The second command requires the existing development Playwright dependency
+and Chromium. It runs the real loopback application with synthetic SQL state,
+checks rendered values, source metadata, owner, Unknown labels, heading/keyboard
+access and navigation to another case. The default unit suite skips that
+opt-in browser method. This is engineering evidence, not direct human
+accessibility/competence acceptance, live inference, SQL Server or Azure proof.
+Source-authority/resolution/eligibility rules, operational delegation and
+real-platform acceptance remain unmet; nomination/tenure routing is separate.
+
 A working case-management application for the Zava Forward retrofit programme.
 It follows the simplicity requirements SA-001 to SA-010 in the
 [PRD](../../docs/prds/zava-forward-retrofit-programme-demonstrator.md) and the

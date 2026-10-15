@@ -3300,6 +3300,27 @@ metadata when the knowledge base was created.
   attestation, direct human oversight and Azure execution remain open. The
   project contact is not a release/risk/suspension/restart authorization.
 
+## [2026-10-15] query | Stock comparisons and human technical decisions (#84)
+
+* Added owned, append-only competing stock assertions in `src/core` with both
+  values, source IDs/dates/versions and recorded validation states. Source
+  authority, resolution and eligibility remain Unknown; no automatic merge
+  or silent cohort exclusion was added.
+* Reused four separate human sign-offs, affected-only design reassessment,
+  building blockers and hazard holds. Strengthened registered-actor history
+  and pre-mutation validation without treating an agent as a professional.
+* Centralised observed support versus missing coverage for ranking, staff
+  views, filters, counts and AI facts. Existing SQL-derived support/rank keys
+  receive an idempotent encoding refresh; no new SQL dialect was introduced.
+* Added staff API/read-only evidence panel and JSON/SQLite plus loopback
+  HTTP/rendered-browser synthetic checks. Updated the
+  [core contract](../../src/core/README.md#stock-comparisons-and-human-technical-sign-offs-84),
+  [API guide](../../src/api/README.md#stock-reconciliation-api-84) and index.
+* Nomination/challenge and tenure routing stay with #130/#131. Source-authority
+  policy, eligibility decisions, operational competence/delegation, real model,
+  SQL Server/Azure and direct human acceptance remain unmet. Local engineering
+  evidence is not permission for operational use or issue closure.
+
 ## [2026-10-15] implementation | Stock fabric and exact case references (#168)
 
 * Moved PR 246's fabric generator into installed `src/core` synthetic tooling,
@@ -3357,3 +3378,22 @@ metadata when the knowledge base was created.
   browser zoom, human/screen-reader and actual model/SQL Server/Azure evidence
   remain unmet. Local Docker access was permission denied; no deployment or
   AI release/approval/consent authority changed.
+
+## [2026-10-15] fix | Stock query lifecycle and case responsibility (#84)
+
+* Corrected PR #318's permanent stock-query hold: separate append-only
+  withdrawal or human reconciliation events derive current status without
+  editing the original comparison or prior events. Audit retains named
+  recorder, event/query references, reason and human evidence.
+* Opening requires case ownership or a programme/manager role. Withdrawal
+  requires the original raiser or manager; reconciliation is a registered
+  named human programme-role attestation, never an agent or sign-off.
+* JSON/SQL and authenticated HTTP regressions were observed failing before
+  the fix. The lifecycle preserves independent approvals, safety/building
+  holds and sibling case isolation; SQL uses existing rowversion/audit
+  transactions, with commit-time stock checks and no new SQL dialect.
+* Updated [core](../../src/core/README.md#stock-comparisons-and-human-technical-sign-offs-84)
+  and [API](../../src/api/README.md#stock-reconciliation-api-84) contracts and
+  index. Source authority, resolution rules and eligibility remain
+  Unknown/owner-approval-needed. Local evidence is not professional,
+  operational, real-model or SQL Server/Azure acceptance; Refs #84 remains.

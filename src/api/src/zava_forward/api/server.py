@@ -605,6 +605,10 @@ def make_handler(app):
                         QUALITY_ACTIONS[act](s, u, cid, body)
                     elif act == "advance":
                         s.advance(u, cid)
+                    elif act == "stock-reconciliation":
+                        s.stock_reconcile(u, cid, body)
+                    elif act == "stock-query-event":
+                        s.stock_query_event(u, cid, body)
                     elif act == "ai":
                         s._case(cid)
                         return self._json(200, s.ai_run(u, cid, body.get("task"), body.get("mode")))
