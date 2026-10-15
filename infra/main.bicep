@@ -97,6 +97,17 @@ var storageBlobDataContributor = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
 var storageQueueDataContributor = '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
 var storageQueueDataSender = 'c6a89b2d-59bc-44d0-9896-0f6e12d7b80a'
 
+module guard 'modules/guard.bicep' = {
+  name: 'parameter-guard'
+  params: {
+    productionProfileForbidsPublicNetworkAccess: isDev || !allowPublicNetworkAccess ? 'ok' : ''
+    productionProfileRequiresKeyVaultPurgeProtection: isDev || keyVaultPurgeProtection ? 'ok' : ''
+    sharePointEvidenceStoreRequiresSiteId: evidenceStore != 'sharepoint' || !empty(sharePointSiteId) ? 'ok' : ''
+    tokenStoreReadyRequiresTokenStore: !entraTokenStoreReady || enableEntraTokenStore ? 'ok' : ''
+    entraRoleMapRequiresEntraClientId: empty(entraRoleMap) || !empty(entraClientId) ? 'ok' : ''
+  }
+}
+
 module identity 'modules/identity.bicep' = {
   name: 'identity'
   params: { prefix: prefix, location: location, tags: allTags }
