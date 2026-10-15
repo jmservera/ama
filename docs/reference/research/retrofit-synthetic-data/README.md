@@ -271,3 +271,31 @@ Suggested discovery questions:
   interpretation needs the sources in the
   [Regulatory Source Register](../../regulatory/README.md) and human legal or
   compliance review.
+
+## Document and form fixtures (2026-10-15)
+
+Issue #171 adds `generator/zf_documents.py` (under
+`support/synthetic-data/retrofit-flow/zava-forward-year-one/`) and the committed
+output `mvp/evals/document_form_fixtures.json`, tested by
+`mvp/tests/test_document_form_fixtures.py`.
+
+* Source: one home per neighbourhood cluster drawn from the 60,000-home synthetic
+  stock register, seeded (`--seed 20260901`), so output is byte-identical for the
+  same seed and register. Every record carries `is_synthetic` and a SYNTHETIC label.
+  No addresses, residents or image bytes are included; photos are descriptors.
+* Families: 120 (30 tuning, 30 calibration, 60 held-out), split by family and
+  cluster so no home or cluster appears in two splits. Each has a survey report,
+  EPC certificate, invoice, photo descriptor, twelve gold field values and the
+  synthetic form schema `SYN-FUND-FORM-1.0`.
+* Seeded defects (AC-049): duplicate home, missing required, missing conditional,
+  wrong unit, wrong currency, changed total, unknown eligibility and unapproved
+  match budget. Each defect has a fixture-owned expected rule, field, status and
+  reviewed-pack block; every split contains every kind.
+* Dependency manifest (AC-051): per family, exact affected and unaffected field and
+  calculation IDs for an invoice-template change and an EPC supersession.
+
+Open items: the real funding form schema, terms and approved rules are unresolved
+(PRD OQ-015), so the schema is a labelled placeholder with no approver. Gold labels
+are generator-owned; the PRD requires human engineering adjudication before
+held-out testing, which has not happened. Documents are plain-text fixtures, not
+rendered PDFs or images.
