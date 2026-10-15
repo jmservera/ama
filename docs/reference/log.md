@@ -2699,6 +2699,14 @@ metadata when the knowledge base was created.
 * Recorded owner decisions still open: policy approval, the missing stock
   register generator and the absent sensor generator.
 
+## [2026-10-15] update | Synthetic data needs inventory and phase gate
+
+* Added `research/retrofit-synthetic-data/needs-inventory.json` and a gate
+  section in the retrofit synthetic data README (issue #166, parent #165).
+  Checked by `mvp/tests/test_needs_inventory.py`.
+* Open: owner approval, volumes for sensor, chat and survey needs, link from
+  the scenario manifest (#103), reconciliation with the 2026-10-14 handoff.
+
 ## [2026-10-15] update | Design system foundations
 
 * Added `research/ux/design-system.md` and linked it from the index (issue

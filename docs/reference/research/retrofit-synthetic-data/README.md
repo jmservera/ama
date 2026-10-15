@@ -299,3 +299,21 @@ Open items: the real funding form schema, terms and approved rules are unresolve
 are generator-owned; the PRD requires human engineering adjudication before
 held-out testing, which has not happened. Documents are plain-text fixtures, not
 rendered PDFs or images.
+
+## Synthetic data needs inventory and phase gate (2026-10-15)
+
+Issue #166, parent #165. The machine-readable inventory is
+[needs-inventory.json](./needs-inventory.json) (version 1.0.0, draft awaiting
+owner review). It lists 13 needs with source reference, consuming issues,
+volume, proposed owner and generator coverage (covered, partial or missing).
+
+Gate rule: a build epic that consumes synthetic data cites its inventory row
+(`SN-nn`) before work starts, and a partial or missing row needs a recorded
+owner decision on volume and scope first. The epics gated today are #109
+(SN-09, missing), #157 (SN-08, partial), #104 (SN-02 to SN-10) and #144
+(SN-01, SN-12). The inventory is reviewed on each iteration, and the scenario
+manifest (#103) should link to it once delivered.
+
+Open items: owner approval of the inventory and row owners, volumes for
+SN-03, SN-08 and SN-09, and reconciliation with the 2026-10-14 backlog
+handoff matrix, which is not in the repository.
