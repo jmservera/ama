@@ -2990,3 +2990,8 @@ metadata when the knowledge base was created.
 
 * Added `mvp/zavaforward_mvp/chat_isolation.py`, chat and memory endpoints, `mvp/tests/test_chat_isolation.py` and a `mvp/README.md` section. No knowledge base page or regulatory snapshot changed, so the index is unchanged.
 * Open: break-glass and administrator content-access policy (BRD OD-46, owner), contractor use of chat, live-model injection evaluation (OD-49).
+
+## [2026-10-15] restructure | ADR 0006 source layout and cut-over policy (#196)
+
+* Added `docs/adrs/0006-src-layout-and-cutover.md` (Proposed, owner approval pending) and indexed it in `docs/reference/README.md`. It records the owner decisions of 2026-10-14 and 2026-10-15 (standard `src` layout, `zava_forward` namespace, one isolated package per ADR 0001 workload plus a shared core), the module mapping, move-not-copy and new-feature rules, phases, cut-over gate, rubric counting and `mvp/data/` relocation.
+* No code moved and no regulatory snapshot changed. Open: owner approval, soak period, whether the temporary `api` to `agents` import is acceptable until #144.
