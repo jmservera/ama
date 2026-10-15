@@ -17,7 +17,7 @@ import test_timecapture as timetests
 from zavaforward_mvp.sqlstore import SqlStore
 
 ON = os.environ.get("ZF_TEST_MSSQL") == "1"
-TABLES = ("chat_message", "chat_thread", "time_entry", "time_request", "time_enabled", "notice_ack", "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance", "audit_head", "audit", "recommendations", "cases", "staff", "meta")
+TABLES = ("chat_memory", "chat_message", "chat_thread", "time_entry", "time_request", "time_enabled", "notice_ack", "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance", "audit_head", "audit", "recommendations", "cases", "staff", "meta")
 
 
 def wipe():

@@ -2969,3 +2969,8 @@ metadata when the knowledge base was created.
 
 * Added `research/chat-memory-dpia.md` (data map, decision record, rights, logging, provider position, redaction) and `mvp/zavaforward_mvp/chat_privacy.py` with tests. Index row added.
 * No regulatory snapshot changed. Open: DPO and Legal lawful basis, notice, DPIA decision and retention (OD-45, OD-46); Azure OpenAI terms retrieval.
+
+## 2026-10-15 Chat and memory DPIA record rework (#163, PR #281)
+
+* `chat_privacy.py` now runs locate, export and erase through the #160 chat repository and its `owner` column; only `chat_memory` is added, with DDL in the store dialect hooks. The separate `chat.sqlite` and bare `sqlite3` use were removed; portability tests added.
+* Wording corrected: provider data handling is not recorded and the free-text warning is not wired into any UI. Lawful basis, notice and DPIA decision remain unrecorded for the DPO.

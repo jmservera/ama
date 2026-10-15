@@ -45,6 +45,7 @@ TABLES = {
     "audit_head": f"CREATE TABLE audit_head (id INT PRIMARY KEY CHECK (id = 1), count BIGINT NOT NULL, hash {_t(100)})",
     "chat_thread": CHAT_DDL[0],
     "chat_message": CHAT_DDL[1],
+    "chat_memory": CHAT_DDL[2],
 }
 
 APPEND_ONLY = ("IF OBJECT_ID(N'audit_append_only', N'TR') IS NULL EXEC(N'CREATE TRIGGER audit_append_only ON audit "

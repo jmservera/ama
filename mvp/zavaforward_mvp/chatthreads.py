@@ -24,6 +24,8 @@ SQLITE_DDL = (
     "rowversion INTEGER NOT NULL, message_count INTEGER NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS chat_message (thread_id TEXT NOT NULL, seq INTEGER NOT NULL, role TEXT NOT NULL, content TEXT NOT NULL, "
     "model TEXT NOT NULL, task_version TEXT NOT NULL, evidence TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY (thread_id, seq))",
+    "CREATE TABLE IF NOT EXISTS chat_memory (id TEXT PRIMARY KEY, owner TEXT NOT NULL, owner_role TEXT NOT NULL, content TEXT NOT NULL, "
+    "redactions TEXT NOT NULL, created_at TEXT NOT NULL, expires_at TEXT NULL)",
     "CREATE INDEX IF NOT EXISTS ix_chat_thread_owner ON chat_thread (owner, status, updated_at)",
 )
 MSSQL_DDL = (
@@ -34,13 +36,17 @@ MSSQL_DDL = (
     "CREATE TABLE chat_message (thread_id NVARCHAR(40) COLLATE Latin1_General_100_BIN2 NOT NULL, seq INT NOT NULL, role NVARCHAR(20) NOT NULL, "
     "content NVARCHAR(MAX) NOT NULL, model NVARCHAR(100) NOT NULL, task_version NVARCHAR(40) NOT NULL, evidence NVARCHAR(MAX) NOT NULL, "
     "created_at NVARCHAR(40) NOT NULL, PRIMARY KEY (thread_id, seq))",
+    "CREATE TABLE chat_memory (id NVARCHAR(40) COLLATE Latin1_General_100_BIN2 NOT NULL PRIMARY KEY, owner NVARCHAR(200) COLLATE Latin1_General_100_BIN2 NOT NULL, "
+    "owner_role NVARCHAR(100) NOT NULL, content NVARCHAR(MAX) NOT NULL, redactions NVARCHAR(200) NOT NULL, created_at NVARCHAR(40) NOT NULL, "
+    "expires_at NVARCHAR(40) COLLATE Latin1_General_100_BIN2 NULL)",
 )
 MSSQL_INDEX = ("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_chat_thread_owner' AND object_id = OBJECT_ID(N'chat_thread')) "
                "CREATE INDEX ix_chat_thread_owner ON chat_thread (owner, status, updated_at)")
-TABLE_NAMES = ("chat_message", "chat_thread")
+TABLE_NAMES = ("chat_memory", "chat_message", "chat_thread")
 
 THREAD_COLS = ("id", "owner", "owner_role", "case_id", "title", "task", "task_version", "model", "status", "rowversion",
                "message_count", "created_at", "updated_at")
+MEMORY_COLS = ("id", "owner", "owner_role", "content", "redactions", "created_at", "expires_at")
 MESSAGE_COLS = ("thread_id", "seq", "role", "content", "model", "task_version", "evidence", "created_at")
 
 
@@ -100,6 +106,28 @@ class MemoryRepo:
 
     def delete(self, tid):
         self.doc.pop(tid, None)
+
+    @property
+    def memory_doc(self):
+        return self.store.data.setdefault("chat_memory", [])
+
+    def insert_memory(self, m):
+        self.memory_doc.append(dict(m))
+
+    def memories(self, owner):
+        return [dict(m) for m in self.memory_doc if m["owner"] == owner]
+
+    def delete_memories(self, owner):
+        keep = [m for m in self.memory_doc if m["owner"] != owner]
+        n = len(self.memory_doc) - len(keep)
+        self.memory_doc[:] = keep
+        return n
+
+    def purge_memory(self, now):
+        keep = [m for m in self.memory_doc if not (m["expires_at"] and m["expires_at"] < now)]
+        n = len(self.memory_doc) - len(keep)
+        self.memory_doc[:] = keep
+        return n
 
     def commit(self):
         self.store.save()
@@ -162,6 +190,21 @@ class SqlRepo:
     def delete(self, tid):
         self.store.db.execute("DELETE FROM chat_message WHERE thread_id=?", (tid,))
         self.store.db.execute("DELETE FROM chat_thread WHERE id=?", (tid,))
+
+    def insert_memory(self, m):
+        self.store.db.execute(f"INSERT INTO chat_memory ({', '.join(MEMORY_COLS)}) VALUES ({','.join('?' * len(MEMORY_COLS))})",
+                              tuple(m[c] for c in MEMORY_COLS))
+
+    def memories(self, owner):
+        with self.store.dblock:
+            rows = self.store.db.execute(f"SELECT {', '.join(MEMORY_COLS)} FROM chat_memory WHERE owner=? ORDER BY created_at, id", (owner,)).fetchall()
+        return [self._row(MEMORY_COLS, r) for r in rows]
+
+    def delete_memories(self, owner):
+        return self.store.db.execute("DELETE FROM chat_memory WHERE owner=?", (owner,)).rowcount
+
+    def purge_memory(self, now):
+        return self.store.db.execute("DELETE FROM chat_memory WHERE expires_at IS NOT NULL AND expires_at < ?", (now,)).rowcount
 
     def commit(self):
         """The surrounding transaction commits."""
