@@ -369,7 +369,9 @@ def make_handler(app):
                 if not post and len(parts) == 2 and parts[0] == "threads":
                     return self._json(200, s.chat_resume(c.current_user(user), parts[1]))
                 if not post and parts == ["memory"]:
-                    return self._json(200, c.privacy.export(c.current_user(user))["memory"])
+                    return self._json(200, c.privacy.list_memory(c.current_user(user)))
+                if not post and parts == ["memory", "status"]:
+                    return self._json(200, c.privacy.memory_status(c.current_user(user), (parse_qs(urlparse(self.path).query).get("task") or [""])[0]))
                 if post and parts == ["threads"]:
                     u = c.current_user(user)
                     if body.get("case_id") and s.detail(body["case_id"], u) is None:
@@ -385,14 +387,32 @@ def make_handler(app):
                         s.chat_delete(u, tid)
                         return self._json(200, {"ok": True})
                 if post and parts == ["memory"]:
-                    return self._json(200, {"id": c.privacy.add_memory(c.current_user(user), body.get("content", ""))})
+                    return self._json(200, {"id": c.privacy.add_memory(c.current_user(user), body.get("content", ""), task=str(body.get("task") or ""))})
+                if post and parts == ["memory", "opt-in"]:
+                    c.privacy.opt_in(c.current_user(user), body.get("acknowledged"))
+                    return self._json(200, {"ok": True})
+                if post and parts == ["memory", "opt-out"]:
+                    return self._json(200, {"deleted": c.privacy.opt_out(c.current_user(user))})
+                if post and len(parts) == 3 and parts[0] == "memory" and parts[2] in ("edit", "delete"):
+                    u = c.current_user(user)
+                    if parts[2] == "edit":
+                        c.privacy.edit_memory(u, parts[1], body.get("content", ""))
+                    else:
+                        c.privacy.delete_memory(u, parts[1])
+                    return self._json(200, {"ok": True})
+                if post and parts == ["memory", "global"]:
+                    c.privacy.set_global(c.current_user(user), body.get("enabled") is True)
+                    return self._json(200, {"ok": True})
+                if post and parts == ["memory", "task"]:
+                    c.privacy.set_task(c.current_user(user), str(body.get("task") or ""), body.get("enabled") is True)
+                    return self._json(200, {"ok": True})
                 if post and parts == ["memory", "erase"]:
                     return self._json(200, {"erased": c.erase_memory(user)})
                 if post and parts == ["breakglass"]:
                     return self._json(200, c.break_glass(user, body.get("target"), body.get("purpose"), body.get("minutes", 15)))
-            except ChatNotFound:
+            except (ChatNotFound, LookupError):
                 return self._json(404, {"error": "Not found."})
-            except (ChatForbidden, ChatNotApproved) as e:
+            except (ChatForbidden, ChatNotApproved, PermissionError) as e:
                 return self._json(403, {"error": str(e)})
             except (ValueError, TypeError) as e:
                 return self._json(400, {"error": str(e)})

@@ -55,8 +55,14 @@ class ChatIsolationTests(Matrix):
         code, text = self.call(self.cks[role], path, body)
         return code, (json.loads(text) if text.startswith(("{", "[")) else text)
 
-    def thread(self, role, case="ZF-1"):
-        code, d = self.api(role, "/api/chat/threads", {"case_id": case})
+    TASK = "quality-evidence"
+
+    def remember(self, role, content):
+        self.assertEqual(self.api(role, "/api/chat/memory/opt-in", {"acknowledged": True})[0], 200)
+        return self.api(role, "/api/chat/memory", {"content": content, "task": self.TASK})
+
+    def thread(self, role, case="ZF-1", task=""):
+        code, d = self.api(role, "/api/chat/threads", {"case_id": case, "task": task})
         self.assertEqual(code, 200, d)
         return d["id"]
 
@@ -65,7 +71,7 @@ class ChatIsolationTests(Matrix):
         a, b = STAFF[0], STAFF[1]
         tid = self.thread(a)
         self.assertEqual(self.api(a, f"/api/chat/threads/{tid}/messages", {"content": "hello"})[0], 200)
-        self.assertEqual(self.api(a, "/api/chat/memory", {"content": "likes bullets"})[0], 200)
+        self.assertEqual(self.remember(a, "likes bullets")[0], 200)
         self.assertEqual([t["id"] for t in self.api(a, "/api/chat/threads")[1]], [tid])
         self.assertEqual(self.api(b, "/api/chat/threads")[1], [])
         self.assertEqual(self.api(b, "/api/chat/memory")[1], [])
@@ -84,7 +90,7 @@ class ChatIsolationTests(Matrix):
         endpoints = [("/api/chat/threads", None), ("/api/chat/threads", {"case_id": "ZF-1"}), ("/api/chat/threads/CT-x", None),
                      ("/api/chat/threads/CT-x/messages", {"content": "x"}), ("/api/chat/threads/CT-x/archive", {}),
                      ("/api/chat/threads/CT-x/delete", {}), ("/api/chat/memory", None), ("/api/chat/memory", {"content": "x"}),
-                     ("/api/chat/memory/erase", {}), ("/api/chat/breakglass", {"target": "u1@example.test", "purpose": "investigating a report"}),
+                     ("/api/chat/memory/erase", {}), ("/api/chat/memory/opt-in", {}), ("/api/chat/memory/MEM-x/delete", {}), ("/api/chat/memory/global", {"enabled": True}), ("/api/chat/breakglass", {"target": "u1@example.test", "purpose": "investigating a report"}),
                      ("/api/chat/nothing", None)]
         for role in ROLES:
             for path, body in endpoints:
@@ -105,10 +111,10 @@ class ChatIsolationTests(Matrix):
     # Projection and prompt assembly
     def test_prompt_holds_only_own_content_and_projected_case(self):
         a, b = "Retrofit Coordinator", "Quality Inspector"
-        ta, tb = self.thread(a), self.thread(b)
-        self.api(a, "/api/chat/memory", {"content": "A-MEMORY-CANARY"})
+        ta, tb = self.thread(a, task=self.TASK), self.thread(b, task=self.TASK)
+        self.remember(a, "A-MEMORY-CANARY")
         self.api(a, f"/api/chat/threads/{ta}/messages", {"content": "A-THREAD-CANARY question"})
-        self.api(b, "/api/chat/memory", {"content": "B-MEMORY-CANARY"})
+        self.remember(b, "B-MEMORY-CANARY")
         self.prompts.clear()
         self.api(b, f"/api/chat/threads/{tb}/messages", {"content": "What stage is it?"})
         joined = "\n".join(self.prompts)
@@ -133,6 +139,51 @@ class ChatIsolationTests(Matrix):
             rec["role"] = role
         self.assertEqual(self.api(role, "/api/chat/threads", {"case_id": "ZF-404"})[0], 404)
 
+    def test_memory_lifecycle_gates_the_prompt(self):
+        pm, role = "Retrofit Programme Manager", "Quality Inspector"
+        tid = self.thread(role, task=self.TASK)
+        ask = lambda: (self.prompts.clear(), self.api(role, f"/api/chat/threads/{tid}/messages", {"content": "hi"}), "\n".join(self.prompts))[2]
+        self.api(role, "/api/chat/memory/opt-out", {})
+        self.assertEqual(self.api(role, "/api/chat/memory", {"content": "M-CANARY", "task": self.TASK})[0], 403)
+        mid = self.remember(role, "M-CANARY")[1]["id"]
+        self.assertIn("M-CANARY", ask())
+        self.assertIn('"authority": "none"', ask())
+        self.assertEqual(self.api(role, f"/api/chat/memory/{mid}/edit", {"content": "M-EDITED"})[0], 200)
+        self.assertIn("M-EDITED", ask())
+        self.assertEqual(self.api(pm, "/api/chat/memory/task", {"task": self.TASK, "enabled": False})[0], 200)
+        self.assertNotIn("M-EDITED", ask())
+        self.api(pm, "/api/chat/memory/task", {"task": self.TASK, "enabled": True})
+        self.assertEqual(self.api(role, "/api/chat/memory/global", {"enabled": False})[0], 403)
+        self.api(pm, "/api/chat/memory/global", {"enabled": False})
+        self.assertNotIn("M-EDITED", ask())
+        self.api(pm, "/api/chat/memory/global", {"enabled": True})
+        self.assertIn("M-EDITED", ask())
+        self.assertEqual(self.api(role, f"/api/chat/memory/{mid}/delete", {})[0], 200)
+        self.assertEqual(self.api(role, f"/api/chat/memory/{mid}/delete", {})[0], 404)
+        self.assertNotIn("M-EDITED", ask())
+        self.remember(role, "again")
+        self.assertEqual(self.api(role, "/api/chat/memory/opt-out", {})[1], {"deleted": 1})
+        self.assertEqual(self.api(role, "/api/chat/memory")[1], [])
+
+    def test_masked_text_is_prompted_and_replies_are_redacted_before_storage(self):
+        role = "Retrofit Coordinator"
+        tid = self.thread(role)
+        self.reply = "Noted: the resident has a diagnosis of epilepsy and email x.y@example.com"
+        self.prompts.clear()
+        code, d = self.api(role, f"/api/chat/threads/{tid}/messages", {"content": "Resident email is a.b@example.com and has a diagnosis of epilepsy"})
+        self.assertEqual(code, 200)
+        self.assertNotIn("a.b@example.com", "\n".join(self.prompts))
+        stored = json.dumps(self.api(role, f"/api/chat/threads/{tid}")[1])
+        self.assertNotIn("a.b@example.com", stored)
+        self.assertNotIn("x.y@example.com", stored)
+
+    def test_unavailable_case_and_foreign_thread_look_identical(self):
+        role = "Retrofit Coordinator"
+        tid = self.thread(role)
+        self.store.cases.pop("ZF-1-gone", None)
+        self.assertEqual(self.api(role, "/api/chat/threads", {"case_id": "ZF-404"})[0], 404)
+        self.assertEqual(self.api("Quality Inspector", f"/api/chat/threads/{tid}/messages", {"content": "x"})[0], 404)
+
     def test_leaked_value_in_a_reply_is_withheld(self):
         role = "Retrofit Coordinator"
         self.reply = f"The reason is {REASON}."
@@ -143,11 +194,11 @@ class ChatIsolationTests(Matrix):
     # Injection set
     def test_injection_cannot_cause_tool_calls_exposure_or_writes(self):
         role, other = "Retrofit Coordinator", "Quality Inspector"
-        self.api(other, "/api/chat/memory", {"content": "OTHER-USER-MEMORY-CANARY"})
+        self.remember(other, "OTHER-USER-MEMORY-CANARY")
         before_cases = json.dumps(self.store.cases, sort_keys=True, default=str)
         for payload in INJECTIONS:
             self.store.cases["ZF-1"]["contacts"][0]["outcome"] = payload
-            self.api(role, "/api/chat/memory", {"content": payload})
+            self.remember(role, payload)
             tid = self.thread(role)
             self.prompts.clear()
             self.reply = payload

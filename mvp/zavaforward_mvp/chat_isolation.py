@@ -18,7 +18,7 @@ from datetime import datetime, timedelta, timezone
 
 from . import projection
 from .chat_privacy import ChatPrivacy, redact
-from .chatthreads import ChatNotFound, user_key
+from .chatthreads import MAX_CONTENT, ChatNotFound, user_key
 
 MAX_PURPOSE = 200
 MIN_PURPOSE = 10
@@ -76,9 +76,9 @@ class ChatIsolation:
         ctx["contacts"] = [dict(channel=c.get("channel"), outcome=c.get("outcome")) for c in d.get("contacts", [])[:4]]
         return ctx
 
-    def memory_for(self, user):
-        now = self.clock().isoformat(timespec="milliseconds")
-        return [m["content"] for m in self.store.chat_repo.memories(user_key(user)) if not (m["expires_at"] and m["expires_at"] < now)]
+    def memory_for(self, user, task=""):
+        """Opt-in, switch-gated and labelled non-authoritative items from the #285 lifecycle; empty unless active."""
+        return self.privacy.prompt_memory(user, task)
 
     def build_prompt(self, user, tid, question):
         """Prompt from the caller's own thread and memory plus the projected case; raises ChatNotFound for others' threads."""
@@ -88,11 +88,11 @@ class ChatIsolation:
         if thread["case_id"]:
             ctx = self.case_context(user, thread["case_id"])
             if ctx is None:
-                raise ChatForbidden("That case is not available to your role.")
+                raise ChatNotFound(thread["case_id"])
             parts.append(block("case", json.dumps(ctx, sort_keys=True, default=str)))
-        mem = self.memory_for(user)
+        mem = self.memory_for(user, thread.get("task", ""))
         if mem:
-            parts.append(block("memory", "\n".join(mem)))
+            parts.append(block("memory", json.dumps(mem, sort_keys=True)))
         history = "\n".join(f"{m['role']}: {m['content']}" for m in thread["messages"][-CONTEXT_MESSAGES:])
         if history:
             parts.append(block("thread", history))
@@ -110,11 +110,12 @@ class ChatIsolation:
 
     def turn(self, user, tid, content):
         """One chat turn: store the user's message, ask the model with the owner-only prompt, store the checked reply."""
-        user, thread, prompt = self.build_prompt(user, tid, content)
-        self.privacy.add_message(user, tid, "user", content)
+        masked, _ = redact(str(content if content is not None else "")[:MAX_CONTENT])
+        user, thread, prompt = self.build_prompt(user, tid, masked)
+        self.privacy.add_message(user, tid, "user", masked)
         reply, model = self._ask(prompt), self.model_name()
         flagged = self._withheld(user, thread, reply)
-        text = REFUSAL if flagged else reply
+        text, _ = redact(REFUSAL if flagged else reply)
         self.store.chat_add_message(user, tid, "assistant", text, model=model)
         return dict(reply=text, withheld=flagged, label="AI suggestion, not approved", model=model)
 
