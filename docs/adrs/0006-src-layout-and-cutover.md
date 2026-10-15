@@ -1,6 +1,6 @@
 ---
 title: ADR 0006 Source Layout and Cut-Over Policy
-description: Proposed standard Python src layout with one isolated package per deployable workload plus a shared core, the zava_forward naming scheme, the move-not-copy migration rule, phases, cut-over gate, rubric counting and relocation of private working data
+description: Accepted standard Python src layout with one isolated package per deployable workload plus a shared core, the zava_forward naming scheme, the move-not-copy migration rule, phases, cut-over gate, rubric counting and relocation of private working data
 author: AMA programme
 ms.date: 2026-10-15
 ms.topic: reference
@@ -8,10 +8,10 @@ ms.topic: reference
 
 ## Status
 
-Proposed, for owner approval (issue #196, epic #195). Nothing in this record
-moves code. Owner decisions of 2026-10-14 and 2026-10-15 are recorded as
-decisions below; the tree, the module-to-package mapping and the policies are
-proposals until the owner approves this ADR. It extends
+Accepted on 2026-10-15 by the owner, Juan Manuel Servera (issue #196, epic
+#195). Nothing in this record moves code. Owner decisions of 2026-10-14 and
+2026-10-15 are recorded below. The module-to-package mapping is the working
+assumption for the parity matrix (#197), which sets the final per-file outcome. It extends
 [ADR 0001](./0001-azure-architecture.md) (four workloads on Azure Container
 Apps) and the delivery state in [ADR 0002](./0002-pilot-readiness-architecture.md).
 
@@ -201,9 +201,8 @@ entry point imports. Test modules follow their subject: for example
 `importer/tests`; the remainder go to
 `core/tests`. The two browser scripts go to `api/checks`.
 
-Open as of 2026-10-15: pull request #287 (release admission for the five
-assistants) edits `assistants.py`; its module moves only after that PR merges or
-is rebased by its owner.
+Pull request #287 (release admission for the five assistants) merged on
+2026-10-15 into `mvp/`; its code is covered by the parity matrix (#197).
 
 ### Package naming
 
@@ -262,7 +261,7 @@ must not add capability. No new module is added under `mvp/` or `prototype/`.
 
 | Phase | Content | Exit evidence |
 | --- | --- | --- |
-| 1 Create `src` | Skeleton projects, `pyproject.toml`, CI jobs per project, dependency-rule tests, registry exclusions for vendor and data | Empty projects install and test in CI; ADR approved |
+| 1 Create `src` | Skeleton projects, `pyproject.toml`, CI jobs per project, dependency-rule tests, registry exclusions for vendor and data | Empty projects install and test in CI; ADR accepted (2026-10-15) |
 | 2 Dual window | Incremental move-not-copy pull requests (#199), each recording its rubric total against the baseline; repoint CI, Docker, Bicep, scripts and docs (#200) | Every pull request meets the move-not-copy rule |
 | 3 Retire `prototype/` | Separate earlier pull request once its useful content is mapped in the parity matrix (#197): remove `prototype/`, `prototype-validation.yml` and the dead `prototype/deploy/**/*.bicep` glob; the rubric no longer reads `prototype/` | No tracked file under `prototype/`; owner agrees |
 | 4 Cut-over | The cut-over gate below, then a registry pull request that drops the `mvp/` globs | Gate issue signed |
@@ -291,7 +290,7 @@ blocked until every item is evidenced there and the owner signs off:
   old paths.
 * Docs, ADRs, index, log and live instructions updated; links checked.
 * Archive tag name confirmed; private data relocated and backed up (below).
-* Minimum soak period on the `src/` build: open owner decision.
+* No soak period (owner, 2026-10-15): deletion follows owner sign-off and a healthy deployment of the images built from `src/`.
 * Owner signs off in the issue.
 
 ### Rubric counting
@@ -354,14 +353,15 @@ Deployment is on Azure only; non-Azure services exist solely in local tests.
   the dependent epics) may conflict; the Bicep job commands and `az acr build`
   context must change in step with the first image built from `src/`.
 
-## Open Decisions for the Owner
+## Owner Answers of 2026-10-15
 
-* Approve this ADR (the sixth acceptance criterion of #196).
-* Confirm the `agents` image may not carry `core[sql]`, and that the temporary
-  `api` to `agents` import is acceptable until #144.
-* Minimum soak period on the `src/` build before deleting `mvp/`.
-* Whether to keep the old workflow names for branch protection continuity
-  (#200) and whether a GitHub release accompanies the tag (#202).
+* ADR approved.
+* The `agents` image does not carry `core[sql]` or blob code, and the temporary
+  `api` to `agents` import is accepted until #144.
+* No minimum soak period before deleting `mvp/`.
+* Old workflow and check names stay until after the cut-over, then are renamed in
+  one pull request (#200), so required checks keep matching.
+* The archive tag `v<BRD version>` is accompanied by a GitHub release (#202).
 
 ## Related
 
