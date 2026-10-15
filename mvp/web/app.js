@@ -163,11 +163,11 @@ function aiNotes(d, onDone, getText) {
   const cites = d.citations || [];
   if (cites.length) kids.push(h("p", { class: "muted" }, "Sources: " + cites.join("; ")));
   if (d.dropped_uncited) kids.push(h("p", { class: "muted" }, `${d.dropped_uncited} uncited statement(s) removed.`));
-  kids.push(h("p", { class: "muted" }, d.approval === "Not reviewed" ? "Not reviewed by a person yet." : `${d.approval}.`));
+  kids.push(h("p", { class: "muted" }, d.approval === "Not reviewed" ? "AI suggestion, not approved. Not reviewed by a person yet." : `${d.approval} as a draft by a person. This is not an approval, consent or safety decision.`));
   if (d.record_id && d.approval === "Not reviewed") {
     const why = h("input", { type: "text", maxlength: 300, placeholder: "Reason (needed to edit or reject)", "aria-label": "Reason for your review" });
     const go = (action) => async () => {
-      try { await api(`/api/ai/review/${d.record_id}/${action}`, { reason: why.value, text: action === "edit" ? getText && getText() : undefined }); d.approval = REVIEWED[action]; onDone ? onDone() : box.replaceChildren(h("p", { class: "muted" }, `${d.approval}. Recorded in the audit log.`)); }
+      try { await api(`/api/ai/review/${d.record_id}/${action}`, { reason: why.value, text: action === "edit" ? getText && getText() : undefined }); d.approval = REVIEWED[action]; onDone ? onDone() : box.replaceChildren(h("p", { class: "muted" }, `${d.approval} as a draft. This is not an approval, consent or safety decision. Recorded in the audit log.`)); }
       catch (e) { why.setCustomValidity(e.message); why.reportValidity(); }
     };
     const box = h("div", { class: "row" }, why, h("button", { class: "alt", onclick: go("accept") }, "Accept as is"),
@@ -196,7 +196,7 @@ function priorityPanel() {
     withReason && i.reason ? h("div", { class: "muted" }, i.reason, i.cites && i.cites.length ? ` Sources: ${i.cites.join("; ")}.` : "") : null)));
   const paint = (rec, msg) => {
     const kids = [h("h2", {}, "Which cases first? A second opinion"),
-      h("p", { class: "muted" }, "The rule-based order below is the list order. The AI suggestion is advice only: it never changes the ranking, owners, stages or queues.")];
+      h("p", { class: "muted" }, "The rule-based order below is the list order. The AI suggestion, not approved, is advice only: it never changes the ranking, owners, stages or queues.")];
     if (msg) kids.push(h("p", { role: "alert" }, msg));
     if (!rec) {
       kids.push(h("p", {}, h("button", { class: "alt", onclick: ask }, "Suggest my top 5")));
@@ -611,7 +611,7 @@ function importView() {
       const r = await api("/api/import-check", { text });
       out.replaceChildren(
         h("p", { class: "notice" }, r.message),
-        h("p", {}, `${r.ready} rows are ready to bring in. ${r.matched_existing} match a home we already hold.`),
+        h("p", {}, `${r.ready} rows are ready to bring in. ${r.matched_existing} match a home we already have a record for.`),
         h("p", {}, "We found these columns: ", Object.entries(r.columns).map(([k, v]) => `${k}: ${v || "not found"}`).join("; ")),
         r.to_fix.length ? h("div", {}, h("h2", {}, "Rows to fix"), h("ul", {}, r.to_fix.map((x) => h("li", {}, `Row ${x.row}: ${x.problem}`)))) : h("p", {}, "No rows need fixing."));
     } catch (e) { out.replaceChildren(h("p", { class: "err" }, e.message)); }

@@ -2715,3 +2715,13 @@ metadata when the knowledge base was created.
   decision.
 * Open items: owner confirmation of the extend decision, Zava brand colours,
   non-colour map marker shapes and contrast verification.
+
+## [2026-10-15] update | Content standard and copy audit
+
+* Added `research/ux/content-standard.md` and linked it from the index (issue
+  #153): content standard, glossary, blocked-message pattern, AI suggestion
+  wording and the core-flow copy audit. UI copy and server labels changed to
+  "AI suggestion, not approved"; checked by
+  `mvp/tests/test_content_standard.py`.
+* Open items: named human reviewer for resident-facing wording, stored
+  finance value "Keep on hold", reading-age targets and user testing.
