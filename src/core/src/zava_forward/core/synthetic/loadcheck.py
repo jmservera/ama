@@ -1,6 +1,6 @@
 """Measured load check against the NFR-002 core workload (synthetic data only).
 
-python -m zavaforward_mvp.loadcheck --data zavaforward.json --homes 60000 --seconds 30
+python -m zava_forward.core.synthetic.loadcheck --data zavaforward.json --homes 60000 --seconds 30
 
 Clones the synthetic programme cases up to --homes labelled synthetic homes, opens the configured store
 (ZF_STORE=sqlite by default, mssql for Azure SQL), runs five concurrent sessions with two writers and prints

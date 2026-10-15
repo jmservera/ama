@@ -10,7 +10,7 @@ defect with a fixture-owned expected result, and a dependency manifest.
 Same seed and register give byte-identical output.
 
 Usage:
-    python3 zf_documents.py --seed 20260901 --out ../../../../mvp/evals/document_form_fixtures.json
+    python3 zf_documents.py --seed 20260901 --out ../../../../src/importer/evals/document_form_fixtures.json
 """
 import argparse
 import csv

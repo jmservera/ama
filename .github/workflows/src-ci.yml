@@ -2,10 +2,10 @@ name: Source projects CI
 
 on:
   pull_request:
-    paths: ["src/**", ".github/workflows/src-ci.yml"]
+    paths: ["src/**", "docs/reference/research/retrofit-synthetic-data/**", "support/synthetic-data/**", ".github/workflows/src-ci.yml"]
   push:
     branches: [main]
-    paths: ["src/**"]
+    paths: ["src/**", "docs/reference/research/retrofit-synthetic-data/**", "support/synthetic-data/**"]
   workflow_dispatch:
 
 permissions:

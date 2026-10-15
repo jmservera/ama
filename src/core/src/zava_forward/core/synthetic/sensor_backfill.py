@@ -8,8 +8,8 @@ Outdoor climate is a labelled synthetic UK-style seasonal model. Met Office and 
 Agency open data have not been retrieved or verified; swapping them in is an open item and
 the manifest records climate_source accordingly.
 
-    PYTHONPATH=. python3 -m zavaforward_mvp.sensor_backfill --estimate-only
-    PYTHONPATH=. python3 -m zavaforward_mvp.sensor_backfill --homes 500 [--out DIR] [--seed N]
+    python3 -m zava_forward.core.synthetic.sensor_backfill --estimate-only
+    python3 -m zava_forward.core.synthetic.sensor_backfill --homes 500 [--out DIR] [--seed N]
 """
 import argparse
 import csv
@@ -22,7 +22,7 @@ import sqlite3
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from . import scale_fixture
+from zava_forward.core.synthetic import output_dir, scale_fixture
 
 VERSION = "sensor-backfill-v1"
 SCHEMA_VERSION = "reading-v1"
@@ -257,7 +257,7 @@ def load_into(conn, out, create_schema=_create_sqlite_schema):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--out", default=str(Path(__file__).resolve().parents[1] / "data" / "sensor-backfill"))
+    ap.add_argument("--out", default=str(output_dir("sensor-backfill")))
     ap.add_argument("--seed", type=int, default=SEED)
     ap.add_argument("--homes", type=int, default=SHARD_HOMES)
     ap.add_argument("--cadence", type=int, default=CADENCE_MIN)

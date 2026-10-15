@@ -5,7 +5,10 @@ from pathlib import Path
 import re
 import unittest
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
+# Eval folders: each project's own evals/ plus mvp/evals until M4 moves the golden file.
+EVAL_DIRS = [ROOT / "mvp/evals", *sorted((ROOT / "src").glob("*/evals"))]
+PRIVATE_LOCATIONS = ("mvp/data/", "ZF_DATA")
 PACK = ROOT / "docs/reference/research/retrofit-synthetic-data"
 REGISTER = json.loads((PACK / "provenance-register.json").read_text())
 
@@ -70,7 +73,7 @@ class ProvenanceRegisterTests(unittest.TestCase):
             for i, r in enumerate(rows, 2):
                 hits = scan(" ".join(v or "" for v in r.values()))
                 self.assertEqual(hits, [], f"{f.name} line {i}: {hits}")
-        for f in [PACK / "manifest.json", *sorted((ROOT / "mvp/evals").glob("*.json"))]:
+        for f in [PACK / "manifest.json", *sorted(p for d in EVAL_DIRS for p in d.glob("*.json"))]:
             self.assertEqual(scan(f.read_text()), [], f.name)
 
     def test_checker_detects_real_person_patterns(self):
@@ -93,20 +96,21 @@ class ProvenanceRegisterTests(unittest.TestCase):
     def test_private_and_public_outputs_are_separated(self):
         gitignore = (ROOT / ".gitignore").read_text()
         self.assertIn("/mvp/data/", gitignore)
+        self.assertIn("/src/**/data/", gitignore)
         self.assertIn("support/synthetic-data/**/answer-key/", gitignore)
         for d in REGISTER["datasets"]:
             loc = d["location"]
             if d["visibility"] == "private" and "/" in loc and not loc.startswith("serving"):
-                self.assertTrue(loc.startswith("support/") or loc == "mvp/data/", d["id"])
+                self.assertTrue(loc.startswith("support/") or loc.startswith(PRIVATE_LOCATIONS), d["id"])
             if d["visibility"] == "public":
-                self.assertTrue(loc.startswith(("docs/", "mvp/evals/")), d["id"])
+                self.assertTrue(loc.startswith(("docs/", "mvp/evals/")) or "/evals/" in loc, d["id"])
         stock = dataset("DS-STOCK-REGISTER")["location"]
         self.assertTrue((ROOT / stock / "README-private.txt").read_text().startswith("PRIVATE REPOSITORY DATA"))
         # real map addresses must not leak into public docs
         sample = re.compile(r"SYN-NE-\d{6}")
         for f in list(PACK.glob("*.csv")) + list(PACK.glob("*.md")):
             self.assertIsNone(sample.search(f.read_text()) if f.name != "data-dictionary.md" else None, f.name)
-        self.assertFalse(list((ROOT / "mvp/evals").glob("*private*")))
+        self.assertFalse([p for d in EVAL_DIRS for p in d.glob("*private*")])
 
 
 if __name__ == "__main__":

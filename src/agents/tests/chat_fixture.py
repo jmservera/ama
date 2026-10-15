@@ -3,13 +3,13 @@
 Wholly synthetic (ADR 0005): every row carries is_synthetic=true and turn text comes from a
 fixed set of labelled templates, never from real conversations. Case IDs come from the
 60,000-home stock (scale_fixture), personas map to the eleven PRD perspectives and to the
-existing Entra app-role display names in auth.DEFAULT_ROLE_MAP. One seed gives identical bytes.
+existing Entra app-role display names in ROLE_NAMES (kept equal to auth.DEFAULT_ROLE_MAP by a mvp test until M5). One seed gives identical bytes.
 
 Expected outcomes are fixture expectations for the future chat store (#160 to #164); they are
 not evidence that a runtime enforces them. The retention period is an illustrative parameter,
 not an approved policy (BRD OD-45/OD-46 stay open).
 
-    PYTHONPATH=. python3 -m zavaforward_mvp.chat_fixture [--out DIR] [--seed N]
+    PYTHONPATH=src/agents/tests python3 -m chat_fixture [--out DIR] [--seed N]
 """
 import argparse
 import hashlib
@@ -18,9 +18,8 @@ import random
 from datetime import date, timedelta
 from pathlib import Path
 
-from . import scale_fixture
+from zava_forward.core.synthetic import output_dir, scale_fixture
 from zava_forward.core.assistants import REGISTRY as ASSISTANTS
-from .auth import DEFAULT_ROLE_MAP
 
 VERSION = "chat-fixture-v1"
 SEED = 172
@@ -68,8 +67,20 @@ MEMORY_TEXT = {
 EXCLUDED_TEXT = "[SYNTHETIC PROBE] Seeded value that must be rejected, not stored."
 
 
+ROLE_NAMES = {
+    "ZavaForward.Coordinator": "Retrofit Coordinator",
+    "ZavaForward.LiaisonOfficer": "Resident Liaison Officer",
+    "ZavaForward.SafetyLiaison": "Building Safety Liaison",
+    "ZavaForward.GrantsOfficer": "Grants and Evidence Officer",
+    "ZavaForward.QualityInspector": "Quality Inspector",
+    "ZavaForward.ProgrammeManager": "Retrofit Programme Manager",
+    "ZavaForward.SupportOfficer": "Programme Support Officer",
+    "ZavaForward.Contractor": "Contractor",
+}
+
+
 def role_name(app_role):
-    return DEFAULT_ROLE_MAP[app_role]
+    return ROLE_NAMES[app_role]
 
 
 def eligible_tasks(app_role):
@@ -248,7 +259,7 @@ def write(out, seed=SEED):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--out", default=str(Path(__file__).resolve().parents[1] / "data" / "chat-fixture"))
+    ap.add_argument("--out", default=str(output_dir("chat-fixture")))
     ap.add_argument("--seed", type=int, default=SEED)
     a = ap.parse_args(argv)
     print(json.dumps(write(a.out, seed=a.seed), indent=2))

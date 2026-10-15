@@ -209,7 +209,7 @@ The v1 codes, used from 2025-07-01 to 2026-02-01, and the v2 codes, used from
 [`provenance-register.json`](./provenance-register.json) is the single machine-readable
 register of every dataset, its public or private visibility, its generator, its
 data dictionary entry and its external sources. The automated check
-`mvp/tests/test_synthetic_provenance.py` enforces it.
+`src/core/tests/test_synthetic_provenance.py` enforces it.
 
 | Dataset | Visibility | Dictionary entry |
 | --- | --- | --- |
@@ -236,7 +236,7 @@ need, occupancy and condition are invented (`is_synthetic` is `true`,
 
 ### Stock-scale household and tenancy fixture (2026-10-15)
 
-`mvp/zavaforward_mvp/scale_fixture.py` (version 1.1.0, seed 174) writes
+`src/core/src/zava_forward/core/synthetic/scale_fixture.py` (version 1.1.0, seed 174) writes
 `households.jsonl` with one row per home in the 60,000-home fixture, rebuilt from
 the seed and Git-ignored. Every row has `is_synthetic` set to `true`. Names come
 from a fixed fictional list; no email, phone number or real identifier exists.
@@ -261,7 +261,7 @@ rules are demonstrator rules, not legal advice or an approved policy.
 
 ### Document and form data
 
-`mvp/evals/document_form_fixtures.json` holds 120 constructed document families,
+`src/importer/evals/document_form_fixtures.json` holds 120 constructed document families,
 form schemas and seeded defects with gold labels. All content is synthetic and
 holds no personal data. The real funding form schema (OQ-015) and human
 adjudication of the gold labels are open items, not inferred here.
@@ -277,8 +277,8 @@ holds constructed public scenarios and scripted model outputs.
 
 ### Chat and memory test fixtures (2026-10-15)
 
-`mvp/zavaforward_mvp/chat_fixture.py` (version `chat-fixture-v1`, seed 172) writes
-JSONL to the Git-ignored `mvp/data/chat-fixture/` for the per-user chat and memory
+`src/agents/tests/chat_fixture.py` (version `chat-fixture-v1`, seed 172) writes
+JSONL to `chat-fixture/` under the per-user `ZF_DATA` folder, outside the repository, for the per-user chat and memory
 backlog (#172, ADR 0004). Every row has `is_synthetic` set to `true`. Text comes
 from fixed templates prefixed `[SYNTHETIC`; no real conversation content is used.
 

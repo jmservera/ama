@@ -3,19 +3,22 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from zavaforward_mvp import scale_fixture
+from zava_forward.core.synthetic import scale_fixture
 
-MVP = Path(__file__).resolve().parents[1]
-REG = json.loads((MVP / "evals" / "registry.json").read_text())
+ROOT = Path(__file__).resolve().parents[3]
+REG = json.loads((ROOT / "src/agents/evals/registry.json").read_text())
+# Eval folders: each project's own evals/ plus mvp/evals until M4 moves the golden file.
+EVAL_DIRS = [ROOT / "mvp/evals", *sorted((ROOT / "src").glob("*/evals"))]
 
 
 class RegistryTests(unittest.TestCase):
     def test_every_eval_file_is_registered_with_matching_version(self):
-        reg = {Path(d["path"]).name: d for d in REG["datasets"] if d["path"].startswith("mvp/evals/")}
-        files = {p.name for p in (MVP / "evals").glob("*.json")} - {"registry.json"}
+        reg = {d["path"]: d for d in REG["datasets"] if (ROOT / d["path"]).is_file()}
+        files = {p.relative_to(ROOT).as_posix() for folder in EVAL_DIRS for p in folder.glob("*.json")}
+        files -= {"src/agents/evals/registry.json"}
         self.assertEqual(files, set(reg))
-        for name, d in reg.items():
-            data = json.loads((MVP / "evals" / name).read_text())
+        for path, d in reg.items():
+            data = json.loads((ROOT / path).read_text())
             self.assertEqual(data.get("version", data.get("generator_version")), d["version"])
             self.assertFalse(d["contains_real_data"])
 
@@ -31,7 +34,14 @@ class RegistryTests(unittest.TestCase):
         self.assertEqual((scale_fixture.HOMES, scale_fixture.EVENTS), (60000, 600000))
 
     def test_data_dir_is_git_ignored(self):
-        self.assertIn("/mvp/data/", (MVP.parent / ".gitignore").read_text())
+        ignore = (ROOT / ".gitignore").read_text()
+        self.assertIn("/mvp/data/", ignore)
+        self.assertIn("/src/**/data/", ignore)
+
+    def test_generated_datasets_are_outside_the_repository(self):
+        for d in REG["datasets"]:
+            if "generated" in d["path"]:
+                self.assertTrue(d["path"].startswith("ZF_DATA/"), d["id"])
 
 
 class FixtureTests(unittest.TestCase):

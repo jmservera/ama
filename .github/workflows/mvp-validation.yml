@@ -2,10 +2,10 @@ name: MVP validation
 
 on:
   pull_request:
-    paths: ["mvp/**", "src/core/**", "infra/**", ".github/workflows/mvp-validation.yml"]
+    paths: ["mvp/**", "src/core/**", "src/agents/tests/**", "infra/**", ".github/workflows/mvp-validation.yml"]
   push:
     branches: [main]
-    paths: ["mvp/**", "src/core/**", "infra/**"]
+    paths: ["mvp/**", "src/core/**", "src/agents/tests/**", "infra/**"]
   workflow_dispatch:
 
 permissions:
@@ -33,7 +33,7 @@ jobs:
       - name: Unit and API tests
         working-directory: mvp
         env:
-          PYTHONPATH: .:../src/core/tests
+          PYTHONPATH: .:../src/core/tests:../src/agents/tests
         run: python -m unittest discover -s tests -v
       - name: Show Azure CLI and Bicep
         run: az bicep version

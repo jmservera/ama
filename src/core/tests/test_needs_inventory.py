@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import unittest
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 PACK = ROOT / "docs/reference/research/retrofit-synthetic-data"
 INVENTORY = json.loads((PACK / "needs-inventory.json").read_text())
 REGISTER = json.loads((PACK / "provenance-register.json").read_text())

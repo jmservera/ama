@@ -8,7 +8,7 @@ descriptors that the tests turn into bytes. Same seed and register give
 byte-identical output.
 
 Usage:
-    python3 zf_document_controls.py --seed 20260901 --out ../../../../mvp/evals/document_control_fixtures.json
+    python3 zf_document_controls.py --seed 20260901 --out ../../../../src/core/evals/document_control_fixtures.json
 """
 import argparse
 import hashlib

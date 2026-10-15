@@ -159,7 +159,7 @@
     {
       "id": "SN-07",
       "need": "Documents and forms",
-      "source_reference": "mvp/evals/document_form_fixtures.json",
+      "source_reference": "src/importer/evals/document_form_fixtures.json",
       "consuming_issues": [
         "#104"
       ],

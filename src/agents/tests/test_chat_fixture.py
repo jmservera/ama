@@ -3,8 +3,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from zavaforward_mvp import chat_fixture as cf
-from zavaforward_mvp import scale_fixture
+import chat_fixture as cf
+from zava_forward.core.synthetic import scale_fixture
 
 EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
 
@@ -27,7 +27,7 @@ class ChatFixtureTests(unittest.TestCase):
         self.assertEqual(len(people), 11 * cf.USERS_PER_PERSPECTIVE)
         self.assertEqual(len({p["user_key"] for p in people}), len(people))
         for p in people:
-            self.assertIn(p["app_role"], cf.DEFAULT_ROLE_MAP)
+            self.assertIn(p["app_role"], cf.ROLE_NAMES)
             self.assertTrue(p["is_synthetic"])
         contractor = next(p for p in people if p["persona_id"] == "provider-contractor")
         self.assertEqual(contractor["eligible_tasks"], [])

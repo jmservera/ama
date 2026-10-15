@@ -5,8 +5,8 @@
   "dictionary": "data-dictionary.md",
   "rules": [
     "Every dataset has a visibility of public or private and a data_dictionary pointer.",
-    "Public datasets are committed under docs/ or mvp/evals and carry is_synthetic=true on every record or an explicit exemption.",
-    "Private datasets hold real OpenStreetMap map anchors or private tenant bindings and stay under support/ or the gitignored mvp/data folder.",
+    "Public datasets are committed under docs/ or an evals folder (mvp/evals or src/<project>/evals) and carry is_synthetic=true on every record or an explicit exemption.",
+    "Private datasets hold real OpenStreetMap map anchors or private tenant bindings and stay under support/, the gitignored mvp/data folder or the per-user ZF_DATA folder outside the repository (ADR 0006).",
     "Real map addresses are anchors only. No resident, case, safety, complaint or contractor event is attached to a real person."
   ],
   "sources": [
@@ -126,7 +126,7 @@
       "id": "DS-DOC-FORM-FIXTURES",
       "name": "Document, form-schema and seeded-defect fixtures (120 families)",
       "visibility": "public",
-      "location": "mvp/evals/document_form_fixtures.json",
+      "location": "src/importer/evals/document_form_fixtures.json",
       "sources": [],
       "data_dictionary": "data-dictionary.md#document-and-form-data",
       "personal_data": "none; constructed documents, gold labels await human adjudication"
@@ -145,11 +145,11 @@
       "id": "DS-CHAT-MEMORY-FIXTURE",
       "name": "Per-user chat and memory test fixtures (personas, threads, memory, isolation and deletion cases)",
       "visibility": "private",
-      "location": "mvp/data/",
+      "location": "ZF_DATA (per-user folder outside the repository)",
       "sources": [],
-      "generator": "mvp/zavaforward_mvp/chat_fixture.py",
+      "generator": "src/agents/tests/chat_fixture.py",
       "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
-      "personal_data": "none; written to the Git-ignored mvp/data/chat-fixture/; fixed labelled templates, fictional names, no real conversation content",
+      "personal_data": "none; written to chat-fixture/ under ZF_DATA, outside the repository; fixed labelled templates, fictional names, no real conversation content",
       "open_item": "Retention period is illustrative (90 days); the approved retention policy and legal retention lock are not decided (BRD OD-45/OD-46). Expectations are targets for #160 to #164, not runtime evidence."
     },
     {

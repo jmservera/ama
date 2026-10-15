@@ -1,6 +1,6 @@
 {
  "version": "2026-10-15",
- "note": "Every golden and evaluation dataset, with version, owner and purpose. Add an entry here when a dataset is added; tests/test_eval_registry.py fails for an unregistered file in mvp/evals/. All data is constructed or synthetic.",
+ "note": "Every golden and evaluation dataset, with version, owner and purpose. Add an entry here when a dataset is added; tests/test_eval_registry.py fails for an unregistered file in mvp/evals/ or any src/<project>/evals/ folder. This registry lives with the agents project; the files it lists stay with their owning project. All data is constructed or synthetic.",
  "datasets": [
   {
    "id": "ai-priority-golden",
@@ -16,45 +16,45 @@
   },
   {
    "id": "stock-scale-fixture",
-   "path": "mvp/data/scale-fixture/ (generated, not committed)",
-   "generator": "mvp/zavaforward_mvp/scale_fixture.py",
+   "path": "ZF_DATA/scale-fixture/ (generated, not committed, outside the repository)",
+   "generator": "src/core/src/zava_forward/core/synthetic/scale_fixture.py",
    "version": "1.1.0",
    "seed": 174,
    "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
-   "purpose": "Reproducible wholly fictional 60,000-home, 60,000-household (tenancy, consent, representative states) and 600,000-event fixture for the NFR-002 scale dimension. Rebuilt from the seed; output directory is Git-ignored.",
+   "purpose": "Reproducible wholly fictional 60,000-home, 60,000-household (tenancy, consent, representative states) and 600,000-event fixture for the NFR-002 scale dimension. Rebuilt from the seed; output directory is the per-user ZF_DATA folder.",
    "used_by": [
-    "mvp/tests/test_eval_registry.py"
+    "src/agents/tests/test_eval_registry.py"
    ],
    "contains_real_data": false
   },
   {
    "id": "chat-memory-fixture",
-   "path": "mvp/data/chat-fixture/ (generated, not committed)",
-   "generator": "mvp/zavaforward_mvp/chat_fixture.py",
+   "path": "ZF_DATA/chat-fixture/ (generated, not committed, outside the repository)",
+   "generator": "src/agents/tests/chat_fixture.py",
    "version": "chat-fixture-v1",
    "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
    "purpose": "Synthetic personas for the eleven perspectives, chat threads, memory items, consent/opt-in states and expiry, deletion and cross-user isolation cases for ADR 0004 testing. Retention is illustrative.",
    "used_by": [
-    "mvp/tests/test_chat_fixture.py"
+    "src/agents/tests/test_chat_fixture.py"
    ],
    "seed": 172,
    "contains_real_data": false
   },
   {
    "id": "document-form-fixtures",
-   "path": "mvp/evals/document_form_fixtures.json",
+   "path": "src/importer/evals/document_form_fixtures.json",
    "version": "document-form-fixtures-v1",
    "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
    "purpose": "Synthetic document, form-schema and seeded-defect fixtures (120 families) with seeded gold labels; gold labels await human adjudication.",
    "used_by": [
-    "mvp/tests/test_document_form_fixtures.py"
+    "src/importer/tests/test_document_form_fixtures.py"
    ],
    "seed": 20260901,
    "contains_real_data": false
   },
   {
    "id": "document-control-fixtures",
-   "path": "mvp/evals/document_control_fixtures.json",
+   "path": "src/core/evals/document_control_fixtures.json",
    "version": "document-control-fixtures-v1",
    "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
    "purpose": "Synthetic scan classes, retention triggers and legal holds for 120 homes from the 60,000-home stock register; no real retention decision.",

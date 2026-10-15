@@ -2,10 +2,10 @@
 
 No real people, addresses or map anchors are used: names come from a fixed fictional
 list, addresses are numbered "Test Road" lines and coordinates are a made-up grid.
-Output goes to mvp/data/ by default, which is ignored by Git; the fixture is rebuilt
-from the seed rather than committed.
+Output goes to the per-user ZF_DATA folder by default, outside the repository (ADR 0006);
+the fixture is rebuilt from the seed rather than committed.
 
-    PYTHONPATH=. python3 -m zavaforward_mvp.scale_fixture [--out DIR] [--seed N]
+    python3 -m zava_forward.core.synthetic.scale_fixture [--out DIR] [--seed N]
 """
 import argparse
 import hashlib
@@ -14,6 +14,7 @@ import random
 from pathlib import Path
 
 from zava_forward.core.insights import STAGE_ORDER
+from zava_forward.core.synthetic import output_dir
 
 VERSION = "1.1.0"
 HOMES = 60000
@@ -95,7 +96,7 @@ def write(out, n=HOMES, per_home=EVENTS_PER_HOME, seed=SEED):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--out", default=str(Path(__file__).resolve().parents[1] / "data" / "scale-fixture"))
+    ap.add_argument("--out", default=str(output_dir("scale-fixture")))
     ap.add_argument("--seed", type=int, default=SEED)
     a = ap.parse_args(argv)
     print(json.dumps(write(a.out, seed=a.seed), indent=2))
