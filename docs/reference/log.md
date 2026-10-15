@@ -2665,3 +2665,9 @@ metadata when the knowledge base was created.
 * Repository auto-merge is disabled and branch protection is unavailable on
   this plan, so the agent merges after verifying checks itself. No repository
   settings were changed.
+
+## [2026-10-15] add | Document and form fixtures
+
+* Added a section on the 120-family document, form-schema and seeded-defect fixtures
+  to the retrofit synthetic data README, with open items for the real funding schema
+  (OQ-015) and human adjudication of gold labels. No index entry changes needed.
