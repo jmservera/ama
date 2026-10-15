@@ -234,6 +234,31 @@ items for the owner, not inferred here.
 need, occupancy and condition are invented (`is_synthetic` is `true`,
 `actual_owner_or_tenure_verified` is `false`). No resident or person field exists.
 
+### Stock-scale household and tenancy fixture (2026-10-15)
+
+`mvp/zavaforward_mvp/scale_fixture.py` (version 1.1.0, seed 174) writes
+`households.jsonl` with one row per home in the 60,000-home fixture, rebuilt from
+the seed and Git-ignored. Every row has `is_synthetic` set to `true`. Names come
+from a fixed fictional list; no email, phone number or real identifier exists.
+
+| Field | Meaning |
+| --- | --- |
+| `household_ref`, `resident_ref`, `tenancy_ref` | `HH-SYN-nnnnn`, `R-SYN-nnnnn` and `TEN-SYN-nnnnn`; `home_id` links to `homes.jsonl` (`ZF-nnnnn`) |
+| `tenancy_type` | `Assured`, `Secure`, `Starter`, `Shared ownership` or `Leasehold`. Invented mix, not Zava tenure data |
+| `tenancy_start` | First of a drawn month, 1995 to 2025 |
+| `household_size` | 1 to 5 |
+| `lead_resident` | Fictional name from the fixed list |
+| `preferred_channel`, `adjustment`, `adjustment_recorded` | As in resident-contacts; `adjustment_recorded` is `false` where an adjustment exists but is not on file |
+| `priority_support` | Same value as `priority_support` in `homes.jsonl`. No health detail is held |
+| `representative_state` | `None recorded`, `Claimed - unverified` or `Authorised - evidence on file`. Never inferred from adjustment or consent, except that the `Advocate or representative` adjustment sets `Authorised - evidence on file` |
+| `representative_ref` | `REP-SYN-nnnnn`, empty when `representative_state` is `None recorded` |
+| `works_consent_state` | `Not requested`, `Pending`, `Given`, `Declined` or `Withdrawn`. A missing answer is `Not requested` or `Pending`, never `Given` |
+| `works_consent_given_by` | `Resident` or `Representative`, empty unless an answer is recorded. `Representative` appears only with `Authorised - evidence on file` |
+
+The distributions are invented for scale testing and are not evidence of Zava
+North Homes tenure, consent rates or vulnerability. Consent and representative
+rules are demonstrator rules, not legal advice or an approved policy.
+
 ### Document and form data
 
 `mvp/evals/document_form_fixtures.json` holds 120 constructed document families,

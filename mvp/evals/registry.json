@@ -18,10 +18,10 @@
    "id": "stock-scale-fixture",
    "path": "mvp/data/scale-fixture/ (generated, not committed)",
    "generator": "mvp/zavaforward_mvp/scale_fixture.py",
-   "version": "1.0.0",
+   "version": "1.1.0",
    "seed": 174,
    "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
-   "purpose": "Reproducible wholly fictional 60,000-home and 600,000-event fixture for the NFR-002 scale dimension. Rebuilt from the seed; output directory is Git-ignored.",
+   "purpose": "Reproducible wholly fictional 60,000-home, 60,000-household (tenancy, consent, representative states) and 600,000-event fixture for the NFR-002 scale dimension. Rebuilt from the seed; output directory is Git-ignored.",
    "used_by": [
     "mvp/tests/test_eval_registry.py"
    ],
