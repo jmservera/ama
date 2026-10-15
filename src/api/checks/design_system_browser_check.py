@@ -18,6 +18,7 @@ import tempfile
 import time
 import urllib.error
 import urllib.request
+from collections.abc import Callable
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -89,6 +90,16 @@ def run_browser(base: str) -> None:
                     && heading.fontSize === '24px' && heading.lineHeight === '32px'
                     && button.borderRadius === '4px' && button.minHeight === '40px';
                 }"""),
+            )
+            page.get_by_role("button", name="Show more", exact=False).click()
+            page.wait_for_function("() => document.querySelectorAll('.item').length === 100")
+            page.locator(".item").first.click()
+            page.get_by_role("link", name="Back to the list", exact=True).wait_for()
+            page.get_by_role("link", name="Back to the list", exact=True).click()
+            page.wait_for_function("() => document.querySelectorAll('.item').length === 50")
+            check(
+                "paged queue return intentionally reloads first page",
+                "first page" in page.locator(".side").inner_text(),
             )
             page.get_by_role("link", name="Overview", exact=True).click()
             page.locator(".cluster.hazard").wait_for()
@@ -205,17 +216,21 @@ def run_browser(base: str) -> None:
             page.locator(".map-marker:has(.map-symbol.normal)").press("Space")
             page.wait_for_url("**#/case/ZF-1")
             check("point marker Space opens the real case", "ZF-1" in page.url)
-            check("no uncaught JavaScript errors", not errors)
+            check(f"no uncaught JavaScript errors ({errors})", not errors)
             print(f"Browser: Chromium {browser.version}; no live model/SQL/Azure calls.")
         finally:
             browser.close()
 
 
-def main() -> None:
-    with tempfile.TemporaryDirectory(prefix="zf-design-system-") as scratch:
+def main(
+    browser_check: Callable[[str], None] = run_browser,
+    data_factory: Callable[[], dict[str, Any]] = synthetic_data,
+) -> None:
+    (ROOT / ".venv").mkdir(exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="zf-browser-", dir=ROOT / ".venv") as scratch:
         work = Path(scratch)
         data = work / "synthetic.json"
-        data.write_text(json.dumps(synthetic_data()), encoding="utf-8")
+        data.write_text(json.dumps(data_factory()), encoding="utf-8")
         with socket.socket() as sock:
             sock.bind(("127.0.0.1", 0))
             port = sock.getsockname()[1]
@@ -253,7 +268,7 @@ def main() -> None:
                 else:
                     raise TimeoutError("Local synthetic server did not become healthy")
                 check("owned server is running and responsive on loopback", process.poll() is None)
-                run_browser(base)
+                browser_check(base)
             finally:
                 process.terminate()
                 process.wait(timeout=10)
@@ -261,3 +276,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    from checks.workbench_browser_check import run_browser as workbench_check
+    from checks.workbench_browser_check import synthetic_data as workbench_data
+
+    main(workbench_check, workbench_data)

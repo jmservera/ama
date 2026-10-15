@@ -110,7 +110,7 @@ function residentPanel(c, id, refresh) {
 
 async function financeQueueView() {
   let rows;
-  try { rows = await api("/api/finance"); } catch (e) { return show(h("h1", {}, "Finance queue"), h("p", {}, e.message)); }
+  try { rows = await api("/api/finance"); } catch (e) { if (e.name === "AbortError" || !me) return; return show(h("h1", {}, "Finance queue"), h("p", {}, e.message)); }
   show(h("h1", {}, "Finance queue"),
     h("p", { class: "muted" }, "Invoices with exceptions, paused payments or no check yet. A person decides each one. Nothing is paid from here."),
     rows.length ? h("table", {}, h("thead", {}, h("tr", {}, ["Home", "Invoice", "Supplier", "Status", "Exceptions", "Total"].map((x) => h("th", {}, x)))),
