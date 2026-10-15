@@ -19,6 +19,8 @@ function chatMessageItem(role, text, answer) {
         answer.citations.map((c) => h("li", {}, h("code", {}, c.id), c.text ? `: ${c.text}` : ""))));
     } else if (answer.kind === "abstain") {
       item.append(h("p", { class: "muted" }, "No permitted source answers this question."));
+    } else if (answer.kind === "refused") {
+      item.append(h("p", { class: "muted" }, "Outside the chat scope: use the workflow route in the reply."));
     }
   }
   return item;

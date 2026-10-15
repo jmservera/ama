@@ -1,7 +1,14 @@
 import json
 import unittest
 
-from zava_forward.core.chat_panel import LABEL, parse_reply, permitted_sources
+from zava_forward.core.chat_panel import (
+    ACTION_CLAIM,
+    LABEL,
+    normalise_policy_text,
+    out_of_scope,
+    parse_reply,
+    permitted_sources,
+)
 
 
 class PureTests(unittest.TestCase):
@@ -30,6 +37,96 @@ class PureTests(unittest.TestCase):
             "ZF-1", dict(stage="Survey", resident=dict(adjustment="None"), empty="")
         )
         self.assertEqual(found, {"ZF-1/stage": "Survey", "ZF-1/resident.adjustment": "None"})
+
+
+class OutOfScopeTests(unittest.TestCase):
+    def test_actions_are_refused_with_a_route(self) -> None:
+        asks = {
+            "approve": [
+                "Approve case ZF-1 now.",
+                "Please sign off the quality check",
+                "I need you to approve the case.",
+                "I want you to approve it.",
+                "I want to approve the work.",
+            ],
+            "decide": ["Can you decide for me?"],
+            "consent": [
+                "Record the resident's consent",
+                "Please confirm consent for ZF-1",
+                "Mark ZF-1 as consented.",
+                "I want you to mark Alice as consented.",
+            ],
+            "contact": [
+                "Email the resident today",
+                "Could you phone the tenant?",
+                "Send the letter",
+                "Contact Alice",
+                "Phone Mrs Smith",
+                "Ring Mr. Jones",
+                "Call Ms Patel",
+                "Contact Dr Green",
+            ],
+            "diagnose": ["Diagnose the damp in this home"],
+        }
+        for kind, questions in asks.items():
+            for question in questions:
+                hit = out_of_scope(question)
+                self.assertIsNotNone(hit, question)
+                assert hit
+                self.assertEqual(hit[0], kind, question)
+                self.assertTrue(hit[1])
+
+    def test_ordinary_questions_are_not_refused(self) -> None:
+        for question in (
+            "What stage is it?",
+            "Has the resident given consent?",
+            "Which measures are approved?",
+            "Who is the named contact?",
+            "When was the resident last contacted?",
+            "What should we call this report?",
+            "What is the phone number?",
+            "Explain how the consent control works.",
+        ):
+            self.assertIsNone(out_of_scope(question), question)
+
+    def test_unicode_normalisation_precedes_matching(self) -> None:
+        for question in (
+            "I need you to \u0430\u0440\u0440r\u043eve the case",
+            "I want to \u03b1\u03c1\u03c1r\u03bfve the work",
+            "a\u200bp\u200cp\u200dr\u2060o\ufeffve this case",
+            "\uff21\uff50\uff50\uff52\uff4f\uff56\uff45\u00a0the case",
+            "I\twant\n you to\u00a0approve it",
+        ):
+            hit = out_of_scope(question)
+            self.assertIsNotNone(hit, question)
+            assert hit
+            self.assertEqual(hit[0], "approve", question)
+        self.assertEqual(normalise_policy_text(" \tMrs\u200b\u00a0Smith\n"), "Mrs Smith")
+
+
+class ActionClaimTests(unittest.TestCase):
+    def test_lexical_approval_and_consent_claims_are_detected(self) -> None:
+        for answer in (
+            "I have approved the case.",
+            "We signed off the work.",
+            "I recorded the resident's consent.",
+            "I will confirm consent.",
+            "The case has been approved.",
+            "Consent has been recorded.",
+            "I have \u0430\u0440\u0440r\u043eved the case.",
+            "Consent is re\u200bcorded.",
+        ):
+            self.assertIsNotNone(ACTION_CLAIM.search(normalise_policy_text(answer)), answer)
+
+    def test_non_action_answers_are_preserved(self) -> None:
+        for answer in (
+            "Survey booked.",
+            "I cannot approve the case.",
+            "Consent has not been recorded.",
+            "Ask the named reviewer for approval.",
+            "The resident has not given consent.",
+        ):
+            self.assertIsNone(ACTION_CLAIM.search(normalise_policy_text(answer)), answer)
 
 
 class LabelTests(unittest.TestCase):

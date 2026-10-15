@@ -15,6 +15,18 @@
    "contains_real_data": false
   },
   {
+   "id": "chat-golden",
+   "path": "src/agents/evals/chat_golden.json",
+   "version": "chat-golden-2026-10-15-pr307",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "Constructed multi-turn conversation scenarios for the offline chat evaluation (#164): grounding, abstention, permission change, out-of-scope refusal, prompt injection and memory poisoning. Development set, not an independently labelled held-out set.",
+   "used_by": [
+    "src/agents/src/zava_forward/agents/chat_eval.py",
+    "src/agents/tests/test_chat_eval.py"
+   ],
+   "contains_real_data": false
+  },
+  {
    "id": "stock-scale-fixture",
    "path": "ZF_DATA/scale-fixture/ (generated, not committed, outside the repository)",
    "generator": "src/core/src/zava_forward/core/synthetic/scale_fixture.py",
