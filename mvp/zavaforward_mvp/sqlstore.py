@@ -24,7 +24,7 @@ from datetime import datetime
 
 from . import continuity, insights, ledger, projection, ranking
 from .ai import Ai
-from .chatthreads import SQLITE_DDL as CHAT_DDL
+from .chatthreads import SQLITE_DDL as CHAT_DDL, MEMORY_ADDED as CHAT_MEMORY_ADDED
 from .doc_controls import open_scanner
 from .documents import open_document_store
 from .store import ConflictError, Store
@@ -164,6 +164,10 @@ class SqlStore(Store):
         self.db.executescript(SCHEMA)
         for ddl in CHAT_DDL:
             self.db.execute(ddl)
+        have = {r[1] for r in self.db.execute("PRAGMA table_info(chat_memory)").fetchall()}
+        for c, d in CHAT_MEMORY_ADDED:
+            if c not in have:
+                self.db.execute(f"ALTER TABLE chat_memory ADD COLUMN {c} TEXT NOT NULL DEFAULT '{d}'")
 
     def _create_indexes(self):
         self.db.executescript(INDEXES)
