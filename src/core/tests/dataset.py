@@ -3,6 +3,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from typing import Any
 
 from zava_forward.core.store import Store
 
@@ -29,6 +30,28 @@ DATA = dict(
            case("ZF-4", hazards=[dict(category="Damp", priority="P1", noticed="2026-01-01", referred=None,
                                       repaired=None, released=False, job="J1", owner="Bea Safe")]),
            case("ZF-5", owner_code="PM-01")])
+
+RESIDENT_BINDINGS = [dict(measure="Loft insulation", context_revision=1)]
+
+
+def supplied_resident_fixture(c: dict[str, Any]) -> None:
+    """Explicit constructed source/design/answer fixture, never a generator backfill."""
+    c["technical"] = dict(design_version=1, signoffs={
+        key: dict(status="Signed off") for key in ("assessment", "design", "building", "coordination")})
+    c["documents"] = [dict(id=f"SYN-{kind}", kind=kind, name=f"SYN-{kind}.pdf", at="2026-01-01",
+                           by="Synthetic reviewer", scan=dict(status="clean", scanner="Synthetic metadata fixture"))
+                      for kind in Store.EVIDENCE]
+    c["resident_scopes"] = {"Loft insulation": [dict(
+        revision=1, case_id=c["id"], measure="Loft insulation", scope="SYN-LOFT",
+        design_version=1, source="SYN-SCOPE", recorded_by="sam@example.test", at="2026-01-01")]}
+    c["measure_decisions"] = {"Loft insulation": [dict(
+        version=1, context_revision=1, status="Accepted", answered_by="The resident",
+        case_id=c["id"], measure="Loft insulation", scope="SYN-LOFT", design_version=1,
+        source="SYN-SUPPLIED-RESIDENT-ANSWER", recorded_by="Sam Example",
+        recorded_by_email="sam@example.test", at="2026-01-01")]}
+
+
+supplied_resident_fixture(DATA["cases"][2])
 
 
 class ImproveTests(unittest.TestCase):

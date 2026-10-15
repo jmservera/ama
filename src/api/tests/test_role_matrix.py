@@ -201,8 +201,11 @@ class Matrix(unittest.TestCase):
         order_case = copy.deepcopy(self.store.cases["ZF-1"])
         order_case.update(id="ZF-ROLE-ORDER", hazards=[])
         self.store.cases[order_case["id"]] = order_case
-        w1 = self.store.issue_work_order(mgr, pid, order_case["id"])
-        w2 = self.store.issue_work_order(mgr, pid, "ZF-2")
+        from dataset import RESIDENT_BINDINGS, supplied_resident_fixture
+        supplied_resident_fixture(order_case)
+        supplied_resident_fixture(self.store.cases["ZF-2"])
+        w1 = self.store.issue_work_order(mgr, pid, order_case["id"], resident_bindings=RESIDENT_BINDINGS)
+        w2 = self.store.issue_work_order(mgr, pid, "ZF-2", resident_bindings=RESIDENT_BINDINGS)
         for role in ROLES:
             ck = self.session(next(s["email"] for s in self.store.data["staff"] if s["role"] == role))
             codes = {p: self.call(ck, p)[0] for p in ("/api/packages", "/api/workorders", "/api/checklists")}

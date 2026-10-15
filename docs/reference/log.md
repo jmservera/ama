@@ -3280,3 +3280,30 @@ metadata when the knowledge base was created.
   checks do not establish accepted application-exercise or full issue delivery.
 * Updated the content-standard glossary to distinguish stopped retrofit work
   and its restart decision from external hazard-service closure.
+
+## [2026-10-15] query | Resident decisions, representative authority and scoped withdrawal (#86)
+
+* Extended existing `src/core` and `src/api` contracts, not `mvp/`, to record
+  supplied resident answers against exact measure/scope/design revisions.
+  Historical case-wide answers and contact/access/AI output cannot create
+  scoped consent. Source, actor and answer history remain separate.
+* Added versioned representative tasks, evidence/review dates, resident wishes
+  and safe-contact binding. Current authority is rechecked for disclosure,
+  consent reliance and dependent release; interpreter/scheduling permission is
+  not works-decision authority. Nothing is sent by these local controls.
+* Pause/withdrawal flags only its measure for human review. Explicit work-order
+  and QA bindings preserve independent sibling release; restart needs new
+  supplied acceptance and review evidence. SQL transaction guards recheck the
+  dependency using existing case bodies, without new SQL syntax or dependencies.
+* Added independent review bound to a recorded decision and distinct reviewer,
+  keeping complaint/review, urgent safety and retrofit state independent.
+  Detached field projections protect authority/wishes without changing stored
+  histories; existing AI proposal and human-review boundaries are preserved.
+* Updated the [core guide](../../src/core/README.md#resident-decisions-and-representatives-86),
+  [API guide](../../src/api/README.md#resident-decisions-and-representative-api-86)
+  and this index. Local JSON/SQLite, synthetic adapter and loopback HTTP evidence
+  do not establish real model, SQL Server/Azure or resident acceptance.
+* Formal complaints-service integration, real accessible independent review
+  without detriment, operational field/retention policy and authorized live
+  platform evidence remain open. Docker daemon access is permission denied;
+  image checks remain for CI. Issue #86 returns no comments from GitHub.

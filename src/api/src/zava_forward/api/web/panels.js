@@ -86,7 +86,13 @@ function technicalPanel(c, id, refresh) {
 }
 
 function residentPanel(c, id, refresh) {
-  const go = (action, extra) => refresh(() => caseApi(id, "resident", Object.assign({ action }, extra)));
+  const go = (action, extra) => refresh(() => {
+    const body = Object.assign({ action }, extra);
+    for (const key of ["context_revision", "design_version", "review_decision_version"]) {
+      if (body[key] !== undefined) body[key] = Number(body[key]);
+    }
+    return caseApi(id, "resident", body);
+  });
   const measures = (c.measure_decisions || []);
   const reqs = c.service_requests || [];
   const staff = (me.staff || []).filter((s) => s.role !== "Contractor");
@@ -94,14 +100,23 @@ function residentPanel(c, id, refresh) {
   return h("section", { class: "card" }, h("h2", {}, "Decision for each measure"),
     h("p", { class: "muted" }, "These start as not recorded. Only write what the resident told you. Contact or access is never treated as a yes."),
     h("table", {}, h("thead", {}, h("tr", {}, ["Measure", "Their answer", "Versions"].map((x) => h("th", {}, x)))),
-      h("tbody", {}, measures.map((m) => h("tr", {}, h("td", {}, m.measure), h("td", {}, m.status),
+      h("tbody", {}, measures.map((m) => h("tr", {}, h("td", {}, `${m.measure}: ${m.context ? `scope ${m.context.scope}, revision ${m.context.revision}, design ${m.context.design_version}` : "Current scope not recorded"}`), h("td", {}, `${m.status}. ${m.readiness}`),
         h("td", {}, m.versions.map((v) => `v${v.version} ${v.status} (${v.answered_by}, recorded by ${v.recorded_by}${v.note ? `: ${v.note}` : ""})`).join("; ") || "None"))))),
-    actForm("Record what the resident said", [["measure", "Measure", { options: measures.map((m) => m.measure) }], ["status", "Their answer", { options: ["Waiting", "Accepted", "Declined", "Paused", "Withdrawn"] }], ["answered_by", "Who said it", { options: ["The resident", "Their representative"] }], ["representative_ref", "Reference for the representative, if any"], ["note", "In their words (needed for declined, paused or withdrawn)"]], (b) => go("decision_record", b), "Save answer"),
+    actForm("Record the measure scope", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["scope", "Exact scope reference"], ["design_version", "Current technical design version", { type: "number" }], ["source", "Supplied scope source reference"]], (b) => go("scope_record", b), "Record scope"),
+    actForm("Record what the resident said", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["status", "Their supplied answer", { options: ["", "Waiting", "Accepted", "Declined", "Paused", "Withdrawn"] }], ["answered_by", "Who said it", { options: ["", "The resident", "Their representative"] }], ["source", "Supplied answer source reference"], ["representative_ref", "Reference for the representative, if any"], ["review_ref", "Human review evidence if restarting after a pause or withdrawal"], ["note", "In their words (needed for declined, paused or withdrawn)"]], (b) => go("decision_record", b), "Save supplied answer"),
+    h("h3", {}, "Representative authority"),
+    h("p", { class: "muted" }, "A person confirms authority with the resident. Scheduling or interpreting is not authority for works consent. A changed safe contact, expired, disputed or unclear authority stops representative steps. Nothing is sent here. Retention and operational permissions remain unapproved."),
+    actForm("Confirm the safe contact reference", [["safe_contact_ref", "Resident-confirmed safe contact reference"], ["source", "Supplied confirmation source"]], (b) => go("safe_contact_record", b), "Record confirmation"),
+    actForm("Record representative authority", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["representative_ref", "Representative reference"], ["status", "Authority status", { options: ["", "Confirmed", "Unclear", "Disputed", "Revoked"] }], ["task", "Evidenced task", { options: ["", "Receive information", "Communicate", "Attend", "Works decision"] }], ["authority_date", "Authority evidence date", { type: "date" }], ["review_date", "Review due date (authority held from this date)", { type: "date" }], ["safe_contact_ref", "Current safe contact reference"], ["source", "Authority evidence reference"], ["resident_wishes", "Resident's own stated wishes"]],
+      (b) => go("representative_record", Object.assign({}, b, { tasks: [b.task] })), "Record authority version"),
+    actForm("Check a representative task", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["representative_ref", "Representative reference"], ["task", "Task", { options: ["", "Receive information", "Communicate", "Attend", "Works decision"] }]], (b) => go("disclosure_check", b), "Check only; nothing sent"),
     h("h2", {}, "Service requests and complaints"),
     reqs.length ? reqs.map((r) => h("div", {}, h("strong", {}, `${r.id}: ${r.route}. ${r.status}.`),
       h("div", { class: "muted" }, `${r.summary}. They want: ${r.desired_outcome}. Dealt with by ${r.service_owner}. Redress owner: ${r.redress_owner}. Contact needs: ${r.accessibility.join(", ")}. Representative: ${r.representative_ref}. Next update ${r.next_update}.`))) : h("p", { class: "muted" }, "None open."),
     actForm("Open a request or complaint", [["route", "Type", { options: ["Service request", "Complaint", "Repair", "Defect", "Hazard"] }], ["summary", "Short summary"], ["desired_outcome", "What the resident wants"], ["service_owner", "Who deals with it", { options: who }], ["redress_owner", "Who owns the redress", { options: who }], ["accessibility", "Contact need", { options: ["Unknown", "None", "Large print", "Phone only", "Plain language", "Interpreter", "Representative contact", "Safe route needed"] }], ["next_update", "Next update date", { type: "date" }]],
       (b) => go("service_open", Object.assign({}, b, { accessibility: [b.accessibility] })), "Open"),
+    h("p", { class: "muted" }, "Ask your named officer for independent human review or the association's formal complaints route, including by phone or an accessible non-digital route. Recording a request here does not send it to a live complaints service, change works choices, stop urgent repairs or sanction future engagement."),
+    actForm("Request independent human review", [["review_measure", "Contested measure", { options: ["", ...measures.map((m) => m.measure)] }], ["review_decision_version", "Contested decision version", { type: "number" }], ["review_reference", "Review evidence reference"], ["summary", "Short summary"], ["desired_outcome", "What the resident wants"], ["service_owner", "Request handler", { options: who }], ["redress_owner", "Independent reviewer", { options: who }], ["next_update", "Next update date", { type: "date" }]], (b) => go("service_open", Object.assign({}, b, { route: "Independent review" })), "Record review request"),
     reqs.length ? [
       actForm("Update a request", [["id", "Request", { options: reqs.map((r) => r.id) }], ["status", "Status", { options: ["Open", "In progress", "Resolved"] }], ["next_update", "Next update date", { type: "date" }], ["note", "Note"]], (b) => go("service_update", b), "Save update"),
       actForm("Close a request", [["id", "Request", { options: reqs.map((r) => r.id) }], ["note", "Outcome for the resident"]], (b) => go("service_close", b), "Close"),

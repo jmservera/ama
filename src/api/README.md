@@ -27,6 +27,72 @@ Run the suites from `src/api` with
 `pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator`. When `ZF_DATA` is not
 set, the data file defaults to `data/zavaforward.json` under the current folder.
 
+## Resident decisions and representative API (#86)
+
+The resident panel records only supplied human decisions. Answer and answered-by
+selectors start blank; the displayed default is `Not recorded`. The historical
+case-wide answer is labelled as history, with no consent editor; its legacy
+`decision` endpoint remains role-checked history only and cannot release work.
+First record a technical design, then the exact measure scope and source.
+The [core contract](../core/README.md#resident-decisions-and-representatives-86)
+defines currentness, authority, release dependencies and evidence limits.
+
+Authenticated resident-workflow staff use `POST /api/cases/{id}/resident`:
+
+| `action` | Required input and control |
+| --- | --- |
+| `scope_record` | `measure`, `scope`, integer current `design_version`, `source`; creates a new context revision and no answer |
+| `decision_record` | `measure`, integer `context_revision`, supplied `status`, `answered_by`, `source`; `note` for decline/pause/withdrawal; `representative_ref` for representative; `review_ref` when accepting after a review flag |
+| `safe_contact_record` | Resident-confirmed `safe_contact_ref`, supplied `source`; increments contact history, does not send anything |
+| `representative_record` | `representative_ref`, `measure`, integer `context_revision`, `status`, `tasks`, `source`, `authority_date`, `review_date`, `resident_wishes`, current `safe_contact_ref`; appends authority version |
+| `disclosure_check` | `representative_ref`, `measure`, integer `context_revision`, `task`; checks current task authority only, sends nothing |
+| `service_open` | Existing service fields (route, summary, desired outcome, handler/redress owners, next update); `Independent review` also needs `review_measure`, integer `review_decision_version`, `review_reference` |
+| `service_update`, `service_close` | Existing request ID/status/update/outcome; independent review is update/close-only for its named independent reviewer |
+
+Answer statuses: Waiting, Accepted, Declined, Paused, Withdrawn. Authority
+statuses: Confirmed, Unclear, Disputed, Revoked. Tasks: Receive information,
+Communicate, Attend, Works decision. Review and authority dates use YYYY-MM-DD;
+authority cannot start in the future, review follows evidence, and reliance
+stops on the review date. The UI records one task per authority version; the API
+supports a list of evidenced tasks. Register separate task/scope authority
+references when multiple active authorities are needed; latest version of each
+reference is authoritative, never the most recent representative globally.
+
+The API ignores forged recorder/actor fields. Missing/stale/invalid context,
+source or authority returns 400, wrong staff/reviewer role returns 403, and
+blocked controlled release returns 409. `disclosure_check` is not a send token:
+no downstream transport consumes it and no message is sent. Legacy
+representative-addressed templates remain refused; authorized staff AI
+proposals are non-addressed drafts and still require human review.
+
+Work-order issue/reissue/correction requires `resident_bindings`, for example:
+
+```json
+{"resident_bindings": [{"measure": "Loft insulation", "context_revision": 1}]}
+```
+
+The manager UI accepts `Measure|revision; Measure|revision`, with no inferred
+binding from free-text scope. Booking/completion checks the saved version.
+Quality evidence accepts an explicit integer `context_revision`; unbound
+evidence can be recorded via the API but cannot be accepted or handed over.
+The quality UI asks which scope revision the evidence covers. A withdrawn
+sibling cannot block an explicitly independent bound work order or QA record.
+
+Complaints and independent review stay available after pause/closure and AI
+failure. They record an owned request, not delivery to the association's formal
+complaints service. The panel directs staff to the named officer and accessible
+non-digital route without inventing a real complaints URL, response timetable
+or delegation. The real route, human independence/accessibility and
+without-detriment acceptance remain unproven.
+
+`tests/test_resident_api.py` starts the actual app on loopback with synthetic
+staff/home data and SQLite, checking health/static assets, authentication,
+decisions/withdrawal, redress, authority/privacy and restart. Core semantic tests
+also use a synthetic AI adapter, not live model inference. Real inference,
+SQL Server/Azure and human acceptance remain unmet; no private data or new
+deployment is used. Docker build/run depends on CI when local daemon access is
+denied.
+
 ## Hazard referral and retrofit hold API (#85)
 
 Authenticated staff use the existing safety panel on open or closed retrofit

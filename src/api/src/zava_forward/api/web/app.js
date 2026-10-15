@@ -330,7 +330,6 @@ async function caseView(id) {
   const outcome = h("input", { id: "outcome", placeholder: "For example: spoke to resident, visit agreed" });
   const note = h("textarea", { id: "note", "aria-label": "Notes" });
   const channel = h("select", { "aria-label": "How you spoke" }, ["Phone", "Text message", "Email", "Visit"].map((x) => h("option", {}, x)));
-  const decision = h("select", { id: "dec" }, ["Not yet asked", "Waiting", "Accepted", "Declined"].map((x) => h("option", { selected: x === c.decision.status }, x)));
   const draftBox = h("div", {});
   const kind = async (k) => {
     const d = await api(`/api/cases/${encodeURIComponent(id)}/draft`, { kind: k });
@@ -385,7 +384,7 @@ async function caseView(id) {
           h("dt", {}, "Works"), h("dd", {}, c.measures),
           h("dt", {}, "Contractor"), h("dd", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
           h("dt", {}, "Home"), h("dd", {}, `${hm.type}, built ${hm.built}, EPC ${hm.epc}, ${hm.tenure}`),
-          h("dt", {}, "Resident decision"), h("dd", {}, `${c.decision.status}${c.decision.by ? ` (recorded by ${c.decision.by})` : ""}`)))),
+          h("dt", {}, "Historical case-wide answer (not scope consent)"), h("dd", {}, `${c.decision.status}${c.decision.by ? ` (recorded by ${c.decision.by})` : ""}`)))),
     returnPanel(c, id, refresh),
     handoffPanel(c, id, refresh),
     safetyPanel(c, id, refresh),
@@ -395,12 +394,6 @@ async function caseView(id) {
       h("label", {}, "How you spoke"), channel,
       h("label", { for: "note" }, "Notes"), note,
       h("p", {}, h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/call`, { outcome: outcome.value, note: note.value, channel: channel.value })) }, "Save"))),
-    h("div", { class: "grid" },
-      h("section", { class: "card" }, h("h2", {}, "What the resident has told us"),
-        h("p", { class: "muted" }, "Record their answer in their words. It is never worked out for them."),
-        h("label", { for: "dec" }, "Do they want the works?"), decision,
-        h("p", {}, h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/decision`, { status: decision.value })) }, "Save answer"))),
-      ),
     sugg,
     c.can_advance && h("section", { class: "card" }, h("h2", {}, "Final checks"),
       c.gate.length ? [h("p", {}, "This case cannot move on yet:"), h("ul", {}, c.gate.map((x) => h("li", {}, x)))] : h("p", {}, "Everything is in place."),

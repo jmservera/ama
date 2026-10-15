@@ -9,6 +9,7 @@ those carry no vulnerability reason (PR-002). Managers record appointment
 outcomes and completion on a provider's behalf: a provider's word is evidence,
 not a decision.
 """
+import json
 from datetime import date
 
 from . import projection
@@ -123,13 +124,14 @@ class ProcurementMixin:
             self.save()
 
     # ---- work orders
-    def issue_work_order(self, user, pid, case_id, scope=""):
+    def issue_work_order(self, user, pid, case_id, scope="", resident_bindings=None):
         self._need_manager(user, "issue a work order")
         with self.lock:
             p = self._package(pid)
             c = self._case(case_id)
             contractor = c["contractor"]["name"]
             self.require_safety_clear(c)
+            self.require_resident_clear(c, resident_bindings if resident_bindings is not None else [])
             self.require_building_clear(c, pid)
             if c["closed"]:
                 raise ValueError("This case is closed.")
@@ -145,19 +147,19 @@ class ProcurementMixin:
             wos = self._proc()["work_orders"]
             text = _clean(scope, 400) or p["scope"]
             w = dict(id=f"WO-{len(wos) + 1:04d}", package=pid, case_id=case_id, contractor=contractor, state=ISSUED,
-                     versions=[dict(version=1, scope=text, scope_version=p["scope_version"], issued_by=user["name"], issued_at=_now(), reason="First issue")],
+                     versions=[dict(version=1, scope=text, scope_version=p["scope_version"], resident_bindings=json.loads(json.dumps(resident_bindings)), issued_by=user["name"], issued_at=_now(), reason="First issue")],
                      appointments=[], history=[dict(at=_now(), by=user["name"], from_state=None, to_state=ISSUED, note="")], corrections=[])
             wos.append(w)
             self.audit(user["email"], "workorder_issued", case_id, f"{w['id']} to {contractor} in {pid}, version 1")
             self.save()
             return w["id"]
 
-    def _new_version(self, w, user, scope, reason):
+    def _new_version(self, w, user, scope, reason, resident_bindings):
         p = self._package(w["package"])
         w["versions"].append(dict(version=len(w["versions"]) + 1, scope=_clean(scope, 400) or w["versions"][-1]["scope"],
-                                  scope_version=p["scope_version"], issued_by=user["name"], issued_at=_now(), reason=reason))
+                                  scope_version=p["scope_version"], resident_bindings=json.loads(json.dumps(resident_bindings)), issued_by=user["name"], issued_at=_now(), reason=reason))
 
-    def reissue_work_order(self, user, wid, scope, reason):
+    def reissue_work_order(self, user, wid, scope, reason, resident_bindings=None):
         self._need_manager(user, "change a work order")
         reason = _clean(reason)
         if not reason:
@@ -167,8 +169,9 @@ class ProcurementMixin:
             if w["state"] not in (ISSUED, APPOINTED):
                 raise ValueError(f"This work order is '{w['state']}' and cannot be changed.")
             self.require_safety_clear(self.cases[w["case_id"]])
+            self.require_resident_clear(self.cases[w["case_id"]], resident_bindings if resident_bindings is not None else [])
             self.require_building_clear(self.cases[w["case_id"]], w["package"])
-            self._new_version(w, user, scope, reason)
+            self._new_version(w, user, scope, reason, resident_bindings)
             self.audit(user["email"], "workorder_reissued", w["case_id"], f"{wid} version {len(w['versions'])}: {reason}")
             self.save()
 
@@ -183,6 +186,7 @@ class ProcurementMixin:
                 raise ValueError(f"This work order is '{w['state']}'. Appointments can only be recorded while it is open.")
             if outcome == "Booked":
                 self.require_safety_clear(self.cases[w["case_id"]])
+                self._resident_work_order_clear(w)
                 if w["state"] == ISSUED:
                     self._wo_move(w, APPOINTED, user, f"Booked {when}")
             elif w["state"] == APPOINTED:
@@ -196,12 +200,13 @@ class ProcurementMixin:
         with self.lock:
             w = self._work_order(wid)
             self.require_safety_clear(self.cases[w["case_id"]])
+            self._resident_work_order_clear(w)
             self._wo_move(w, COMPLETED, user, _clean(note))
             w.update(completed_by=user["name"], completed_at=_now())
             self.audit(user["email"], "workorder_completed", w["case_id"], f"{wid} {_clean(note)}".strip())
             self.save()
 
-    def correct_work_order(self, user, wid, reason, scope=""):
+    def correct_work_order(self, user, wid, reason, scope="", resident_bindings=None):
         self._need_manager(user, "record a correction")
         reason = _clean(reason)
         if not reason:
@@ -209,9 +214,10 @@ class ProcurementMixin:
         with self.lock:
             w = self._work_order(wid)
             self.require_safety_clear(self.cases[w["case_id"]])
+            self.require_resident_clear(self.cases[w["case_id"]], resident_bindings if resident_bindings is not None else [])
             self.require_building_clear(self.cases[w["case_id"]], w["package"])
             self._wo_move(w, ISSUED, user, f"Correction: {reason}")
-            self._new_version(w, user, scope, f"Correction: {reason}")
+            self._new_version(w, user, scope, f"Correction: {reason}", resident_bindings)
             w["corrections"].append(dict(reason=reason, by=user["name"], at=_now()))
             self.audit(user["email"], "workorder_corrected", w["case_id"], f"{wid} version {len(w['versions'])}: {reason}")
             self.save()
@@ -228,10 +234,18 @@ class ProcurementMixin:
             self.save()
 
     # ---- views
+    def _resident_work_order_clear(self, w):
+        p = self._package(w["package"])
+        if w["versions"][-1]["scope_version"] != p["scope_version"]:
+            raise ValueError("The package scope changed. Reissue with current resident scope bindings.")
+        self.require_resident_clear(self.cases[w["case_id"]], w["versions"][-1].get("resident_bindings", []))
+
     def _wo_view(self, w, c, contractor_view):
         cur = w["versions"][-1]
+        bindings = cur.get("resident_bindings") or []
         out = dict(id=w["id"], package=w["package"], case_id=w["case_id"], address=c["home"]["address"], postcode=c["home"]["postcode"],
-                   measures=c["measures"], needs_notice=projection.needs_notice(c), named_contact=c["owner"], state=w["state"],
+                   measures=", ".join(b["measure"] for b in bindings) if bindings else "Unknown (resident scope confirmation needed)",
+                   needs_notice=projection.needs_notice(c), named_contact=c["owner"], state=w["state"],
                    version=cur["version"], scope=cur["scope"],
                    appointments=[{k: a[k] for k in ("outcome", "date")} for a in w["appointments"]])
         if not contractor_view:

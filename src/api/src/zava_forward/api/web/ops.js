@@ -6,6 +6,17 @@ const WO_OUTCOMES = ["Booked", "Declined by provider", "Resident not available",
 const QUALITY_WORDS = { "Submitted": "Waiting for an independent check", "Returned": "Returned: defect to put right", "Fixed, awaiting reinspection": "Fixed, waiting to be checked again",
   "Accepted": "Accepted, ready to hand over to the resident", "Handed over": "Handed over to the resident" };
 
+function residentBindings(text) {
+  if (!text.trim()) throw new Error("Enter each affected measure and current scope revision.");
+  return text.split(";").map((line) => {
+    const parts = line.split("|");
+    if (parts.length !== 2 || !parts[0].trim() || !/^[1-9][0-9]*$/.test(parts[1].trim())) {
+      throw new Error("Use Measure|revision, separated by semicolons. Check current revisions on the case.");
+    }
+    return { measure: parts[0].trim(), context_revision: Number(parts[1].trim()) };
+  });
+}
+
 function qualityPanel(c, id, refresh) {
   const box = h("section", { class: "card", id: "quality" }, h("h2", {}, "Quality checks and defects"));
   const canCheck = QUALITY_ROLES.includes(me.user.role);
@@ -57,9 +68,12 @@ function qualityPanel(c, id, refresh) {
     };
     measure.addEventListener("change", () => lists && paint());
     api("/api/checklists").then((l) => { lists = l; if (measures.length) paint(); });
-    form.append(h("label", { for: "q-measure" }, "Which measure"), measure, h("label", { for: "q-by" }, "Who did the work or sent the evidence"), by,
+    const revision = h("input", { id: "q-revision", type: "number", min: 1 });
+    form.append(h("label", { for: "q-measure" }, "Which measure"), measure,
+      h("label", { for: "q-revision" }, "Scope revision the evidence covers (see the resident decision panel)"), revision,
+      h("label", { for: "q-by" }, "Who did the work or sent the evidence"), by,
       h("label", { for: "q-src" }, "Where the evidence came from"), src, checks,
-      h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "quality-submit", { measure: measure.value, submitted_by: by.value, source: src.value,
+      h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "quality-submit", { measure: measure.value, context_revision: Number(revision.value), submitted_by: by.value, source: src.value,
         items: Object.fromEntries([...checks.querySelectorAll("input")].map((i) => [i.dataset.label, i.value])) })) }, "Save evidence")));
     box.append(form);
   }
@@ -92,6 +106,7 @@ async function capacityView() {
     const con = inp("Contractor", { maxlength: 80 }), off = inp("Offered (homes)", { inputmode: "numeric" }), com = inp("Committed with evidence (homes)", { inputmode: "numeric" });
     const evi = inp("Evidence for the commitment", { maxlength: 300 });
     const cid = inp("Case reference to issue a work order for", {}), wsc = inp("Work order wording (leave blank to use the package scope)", { maxlength: 400 });
+    const bindings = inp("Affected measures and scope revisions: Measure|revision; Measure|revision", { maxlength: 1000 });
     return h("section", { class: "card" }, h("h2", {}, `${p.name} (${p.id})`),
       h("p", {}, `${p.period_from} to ${p.period_to}. Reference ${p.contract_ref}. Scope version ${p.scope_version}: ${p.scope}`),
       h("table", {}, h("caption", { class: "muted" }, "Offered is what a contractor says it can do. Only evidenced commitment can be used for work orders."),
@@ -99,22 +114,23 @@ async function capacityView() {
         h("tbody", {}, p.capacity.map((k) => h("tr", {}, h("td", {}, k.contractor), h("td", {}, k.offered), h("td", {}, k.committed), h("td", {}, k.in_use), h("td", {}, k.headroom), h("td", {}, k.evidence || "None"))))),
       h("h3", {}, "Record capacity"), ...[con, off, com, evi].flat(),
       h("p", {}, h("button", { class: "alt", onclick: () => go(() => api(`/api/packages/${p.id}/capacity`, { contractor: con[1].value, offered: off[1].value, committed: com[1].value, evidence: evi[1].value })) }, "Save capacity")),
-      h("h3", {}, "Issue a work order"), ...[cid, wsc].flat(),
-      h("p", {}, h("button", { onclick: () => go(() => api("/api/workorders", { package: p.id, case_id: cid[1].value, scope: wsc[1].value })) }, "Issue work order")));
+      h("h3", {}, "Issue a work order"), ...[cid, wsc, bindings].flat(),
+      h("p", {}, h("button", { onclick: () => go(() => api("/api/workorders", { package: p.id, case_id: cid[1].value, scope: wsc[1].value, resident_bindings: residentBindings(bindings[1].value) })) }, "Issue work order")));
   });
   const actions = orders.map((w) => {
     const note = h("input", { type: "text", maxlength: 300, "aria-label": `Note or date for ${w.id}` });
     const out = h("select", { "aria-label": `Appointment outcome for ${w.id}` }, WO_OUTCOMES.map((x) => h("option", {}, x)));
     const call = (a, body) => go(() => api(`/api/workorders/${w.id}/${a}`, body));
     const open = w.state === "Issued" || w.state === "Appointed";
+    const bindings = h("input", { type: "text", maxlength: 1000, "aria-label": `Affected Measure|revision bindings for new version of ${w.id}` });
     return h("li", {}, h("strong", {}, `${w.id}, version ${w.version}`), ` ${w.state}. ${w.contractor}. ${w.address}. Issued by ${w.issued_by}.`,
       h("div", { class: "muted" }, w.scope),
-      w.state !== "Withdrawn" && h("div", { class: "row" }, note,
+      w.state !== "Withdrawn" && h("div", { class: "row" }, note, bindings,
         open && [out, h("button", { class: "alt", onclick: () => call("appointment", { outcome: out.value, date: note.value }) }, "Record appointment (date for Booked)"),
-          h("button", { class: "alt", onclick: () => call("reissue", { scope: note.value, reason: "Changed" }) }, "New version"),
+          h("button", { class: "alt", onclick: () => go(() => api(`/api/workorders/${w.id}/reissue`, { scope: note.value, reason: "Changed", resident_bindings: residentBindings(bindings.value) })) }, "New version"),
           h("button", { class: "alt", onclick: () => call("complete", { note: note.value }) }, "Record completion"),
           h("button", { class: "alt", onclick: () => call("withdraw", { reason: note.value }) }, "Withdraw (add the reason)")],
-        w.state === "Completed" && h("button", { class: "alt", onclick: () => call("correct", { reason: note.value }) }, "Record a correction (add the reason)")));
+        w.state === "Completed" && h("button", { class: "alt", onclick: () => go(() => api(`/api/workorders/${w.id}/correct`, { reason: note.value, resident_bindings: residentBindings(bindings.value) })) }, "Record a correction (add the reason)")));
   });
   show(h("h1", {}, "Capacity and work orders"),
     h("p", { class: "muted" }, "Work orders are controlled: every change is a new version with who issued it, and nothing is issued beyond a contractor's evidenced commitment."),

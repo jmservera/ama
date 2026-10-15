@@ -113,6 +113,22 @@ def hold_notes(c):
 
 
 def redact_staff_detail(user, d):
+    from .controls import RESIDENT_ROLES
+    if user.get("role") not in RESIDENT_ROLES or not can_see_reason(user):
+        for key in ("representative_authorities", "resident_safe_contact", "resident_contact_history", "resident_scopes"):
+            d.pop(key, None)
+        for measure in d.get("measure_decisions", []):
+            if measure.get("context"):
+                measure["context"].pop("source", None)
+            for answer in measure.get("versions", []):
+                for key in ("source", "note", "representative_ref", "review_ref"):
+                    answer.pop(key, None)
+            if measure.get("review"):
+                measure["review"].pop("review_ref", None)
+        for review in d.get("resident_reviews", {}).values():
+            review.pop("review_ref", None)
+        for request in d.get("service_requests", []):
+            request.pop("representative_ref", None)
     if not can_see_reason(user):
         hold_notes(d)
         d["resident"]["adjustment"] = REDACTED if d["resident"]["adjustment"] != "None" else "None"

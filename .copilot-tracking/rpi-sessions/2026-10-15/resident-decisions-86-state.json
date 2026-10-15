@@ -1,0 +1,79 @@
+{
+  "task_id": "issue-86",
+  "task_slug": "resident-decisions-86",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-15/resident-decisions-86-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-15/resident-decisions-86-plan.md",
+    "details": ".copilot-tracking/details/2026-10-15/resident-decisions-86-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-15/resident-decisions-86-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-15/resident-decisions-86-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-15/resident-decisions-86-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run full RPI loop automatically and publish a PR to main on the named branch",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-15"
+    },
+    {
+      "decision": "Scope excludes inferred consent, private data and owner-dependent acceptance",
+      "status": "confirmed",
+      "evidence": "Explicit user request and issue #86"
+    },
+    {
+      "decision": "Final-candidate critique executed once; Revise; PC-001 through PC-006 applied directly in plan/details",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-15/resident-decisions-86-critique.md"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready for bounded synthetic implementation",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-15/resident-decisions-86-research.md"
+    },
+    {
+      "decision": "Implementation and local validation complete; full operational acceptance remains open",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-15/resident-decisions-86-changes.md"
+    },
+    {
+      "decision": "Single post-implementation Review execution",
+      "status": "Complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-15/resident-decisions-86-review.md"
+    },
+    {
+      "decision": "Review outcome for full bounded implementation; RV-001 through RV-003 routed to distinct follow-ups",
+      "status": "Residual work",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-15/resident-decisions-86-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Complete parent-authorized commit/push/PR publication, then await a ranked follow-up selection; do not start child work"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Ratify operational representative authority, field roles and retention policy",
+      "rationale": "Smallest bounded owner decision; unlocks safe operational planning without speculative code",
+      "evidence": "RV-001 in .copilot-tracking/reviews/logs/2026-10-15/resident-decisions-86-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Supply actual formal complaints and accessible independent-review routes and human acceptance",
+      "rationale": "Directly resolves the unticked fourth issue criterion; needs service and resident-engagement owners",
+      "evidence": "RV-002 in .copilot-tracking/reviews/logs/2026-10-15/resident-decisions-86-review.md"
+    },
+    {
+      "rank": 3,
+      "task": "Capture authorized actual inference, SQL Server/Azure and CI container evidence",
+      "rationale": "Confirms runtime quality after local tests; needs authorized services and CI because Docker daemon is denied",
+      "evidence": "RV-003 in .copilot-tracking/reviews/logs/2026-10-15/resident-decisions-86-review.md"
+    }
+  ]
+}

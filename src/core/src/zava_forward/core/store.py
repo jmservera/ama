@@ -14,7 +14,7 @@ from .finance import FinanceMixin
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
 from .grants import GrantMixin, grant_summary
-from .resident_decisions import ResidentDecisionMixin, measure_decision_view
+from .resident_decisions import ResidentDecisionMixin, measure_decision_view, resident_gate, resident_status
 from .signoffs import SignoffMixin, missing_items, technical_gate
 from zava_forward.core.ai import Ai
 from .chatthreads import ChatMixin
@@ -131,14 +131,12 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     @staticmethod
     def gate_reasons(c):
         why = []
-        if c["decision"]["status"] != "Accepted":
-            why.append(f"The resident has not confirmed they want the works. Owner: {c['owner']}. Next action: ask the resident and save their answer.")
         if not c["funding_ok"]:
             why.append(f"Funding has not been confirmed. Owner: {c['owner']}. Next action: check the funding and record it.")
         open_h = [h for h in c["hazards"] if not h["released"]]
         if open_h:
             why.append(f"Home retrofit work is stopped for safety review. Owner: {open_h[0]['owner']} (referral follow-up). Next action: obtain external service evidence and an independent decision to restart retrofit work.")
-        return why + technical_gate(c)
+        return why + resident_gate(c) + technical_gate(c)
 
     @staticmethod
     def status_line(c):
@@ -274,7 +272,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         if role == "Resident Liaison Officer":
             return [("Resident prefers", rs["preferred"]),
                     ("Extra support", "Yes" if rs["priority_support"] else (rs["adjustment"] if rs["adjustment"] != "None" else "None recorded")),
-                    ("Decision on works", c["decision"]["status"]),
+                    ("Decision on works", resident_status(c)),
                     ("Next visit", nxt["date"] if nxt else "None booked")]
         if role == "Retrofit Coordinator":
             return [("Contractor", c["contractor"]["name"]), ("Works", c["measures"]),
@@ -289,7 +287,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return [("Works", c["measures"]), ("Contractor", c["contractor"]["name"]),
                     ("Stage", c["stage"])]
         return [("Wave", c["wave"]), ("Funding", c["funding"]["status"]),
-                ("Decision on works", c["decision"]["status"]), ("Contractor", c["contractor"]["name"])]
+                ("Decision on works", resident_status(c)), ("Contractor", c["contractor"]["name"])]
 
     def counts(self, user):
         with self.lock:
@@ -337,6 +335,11 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         if active:
             raise GateError([f"Home retrofit work is stopped for safety review. Owner: {active['owner']} (referral follow-up). Next action: obtain external evidence and an independent decision to restart retrofit work."])
 
+    def require_resident_clear(self, c, bindings=None):
+        reasons = resident_gate(c, bindings)
+        if reasons:
+            raise GateError(reasons)
+
     def log_call(self, user, case_id, outcome, note, channel="Phone"):
         outcome = (outcome or "").strip()[:80]
         if not outcome:
@@ -351,11 +354,13 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             self.save()
 
     def set_decision(self, user, case_id, status, note=""):
+        from . import controls
         if status not in DECISIONS:
             raise ValueError("Choose one of the listed answers.")
         with self.lock:
             c = self._case(case_id)
             self.guard_case_event(c)
+            controls.require_role(user, controls.RESIDENT_ROLES, "an authorised resident officer")
             c["decision"] = dict(status=status, by=user["name"], at=datetime.now().date().isoformat())
             self.audit(user["email"], "resident_decision", case_id, f"{status} {note}".strip())
             self.save()
@@ -375,6 +380,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if why:
                 raise GateError(why)
             self.require_safety_clear(c)
+            self.require_resident_clear(c)
             c.update(stage=BOOKED_STAGE, reason="to book the installation", waiting_on=c["contractor"]["contact"])
             self.audit(user["email"], "advance", case_id, BOOKED_STAGE)
             self.save()
@@ -383,7 +389,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         with self.lock:
             c = self._case(case_id)
         r = c["resident"]
-        who = r["representative"]["name"] if r["representative"] else r["formal"]
+        if r["representative"]:
+            raise ValueError("Representative disclosure needs a current scoped authority check. Nothing has been sent.")
+        who = r["formal"]
         if kind == "visit":
             avoid = f", outside {r['unavailable']}" if r["unavailable"] else ""
             body = (f"Dear {who},\n\nWe would like to arrange a visit to {c['home']['address']} to talk through "
@@ -514,7 +522,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         return (f"Case {c['id']}. Resident: {r['name']}. Home: {c['home']['address']}, {c['home']['town']}. "
                 f"Stage: {c['stage']} for {c['days_in_stage']} days. Waiting on {c['waiting_on']} {c['reason']}. "
                 f"Resident adjustments: {adjust}. Resident prefers: {r['preferred']}. "
-                f"Resident decision: {c['decision']['status']}. Funding: {c['funding']['route']} ({c['funding']['status']}). "
+                f"Resident decision: {resident_status(c)}. Funding: {c['funding']['route']} ({c['funding']['status']}). "
                 f"Open safety issues: {sum(not h['released'] for h in c['hazards'])}. "
                 f"Recent contacts: " + "; ".join(f"{k['at'][:10]} {k['outcome'] if reason_ok else k['channel']}" for k in c["contacts"][-4:]))
 
@@ -522,7 +530,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         with self.lock:
             c = self._case(case_id)
             facts = self._facts(c, projection.can_see_reason(user))
-            fallback = self.draft(case_id, "visit" if task == "message" else "update")["text"]
+            fallback = ("Staff proposal only. Confirm the safe recipient and current authority before "
+                        "using this update: " + self.status_line(c)) if c["resident"]["representative"] else \
+                self.draft(case_id, "visit" if task == "message" else "update")["text"]
             summary = self.status_line(c)
             owner, who = c["owner"], c["resident"]["name"]
             case = c
@@ -646,7 +656,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             s = 0
             s += 100 if any(not h["released"] for h in c["hazards"]) else 0
             s += 30 if c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None" else 0
-            s += 20 if c["decision"]["status"] in ("Not yet asked", "Waiting") else 0
+            s += 20 if resident_status(c) not in ("Accepted", "Declined") else 0
             return s + min(c["days_in_stage"], 120) / 4
         out = []
         for c in sorted(cand, key=lambda c: (-score(c), c["id"]))[:n]:
@@ -655,7 +665,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 why.append("an open safety issue")
             if c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None":
                 why.append("the resident needs extra support")
-            if c["decision"]["status"] in ("Not yet asked", "Waiting"):
+            if resident_status(c) not in ("Accepted", "Declined"):
                 why.append("no resident decision yet")
             why.append(f"{c['days_in_stage']} days at '{c['stage'].lower()}'")
             out.append(dict(case_id=c["id"], reason="Because of " + ", ".join(why) + ".",

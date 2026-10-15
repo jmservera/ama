@@ -5,7 +5,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from dataset import DATA
+from dataset import DATA, supplied_resident_fixture
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
 
@@ -17,12 +17,14 @@ def fixture() -> dict[str, Any]:
         home["building_id"] = "SYN-B1"
         home["decision"]["status"] = "Accepted"
         home["funding_ok"] = True
+        supplied_resident_fixture(home)
         home["cost_allocation"] = [
             {"shared_cost_id": "COST-1", "amount_gbp": "6000.00", "source": "SYN-ALLOCATION"}
         ]
     data["cases"][1]["quality"] = [
         {
             "measure": "Loft insulation",
+            "resident_binding": {"measure": "Loft insulation", "context_revision": 1},
             "state": "Accepted",
             "source": "SYN-QA-SIBLING",
             "submitted_by": "Synthetic provider",
@@ -46,7 +48,7 @@ def fixture() -> dict[str, Any]:
             "at": "2026-10-15",
             "by": "Synthetic surveyor",
         }
-    ]
+    ] + [doc for doc in data["cases"][1]["documents"] if doc["kind"] != "Survey"]
     data["procurement"] = {
         "packages": [
             {
