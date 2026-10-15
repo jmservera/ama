@@ -5,6 +5,7 @@ stable across checkouts and never depends on the clock or on Git metadata.
 """
 import hashlib
 import os
+from zava_forward.core.synthetic import stock_fabric
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -16,6 +17,9 @@ def generator_revision():
             digest.update(name.encode())
             with open(os.path.join(HERE, name), "rb") as f:
                 digest.update(f.read())
+    for path in sorted(stock_fabric.revision_sources(), key=lambda path: path.name):
+        digest.update(path.name.encode())
+        digest.update(path.read_bytes())
     return "sha256:" + digest.hexdigest()[:16]
 
 

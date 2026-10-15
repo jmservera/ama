@@ -302,6 +302,69 @@ python3 -m zava_forward.core.synthetic.coverage \
   docs/reference/research/retrofit-synthetic-data/needs-inventory.json
 ```
 
+### Stock fabric and case references (#168)
+
+Inventory row SN-01 remains partial. This iteration reuses PR 246's
+`stock-fabric-v1` draw algorithm and seed 4820260930, moved into
+`zava_forward.core.synthetic.stock_fabric`; it does not generate a second
+stock register. The retained builder and EPC generator now import installed
+core. Install with pip before invoking those support tools.
+
+```bash
+python3 -m zava_forward.core.synthetic.stock_fabric \
+  --register /private/path/private-north-east-stock-register.csv \
+  --cases /private/path/zavaforward.json \
+  --out /private/path/new-stock-fabric-snapshot
+```
+
+Without explicit paths, the register is `private-north-east-stock-register.csv`
+and the new snapshot is `stock-fabric/` under `ZF_DATA` (or
+`~/.zava-forward/data/`). `ZF_DATA` can be a directory or the runtime seed file;
+a file selects its parent. The CLI refuses repository destinations, symlinks
+to them and nonempty snapshots. It checks the resolved destination and its
+ancestors for `.git` files or directories, including when installed outside
+a checkout and when the snapshot directory does not exist yet. It validates
+inputs before creating output.
+Snapshots contain `stock-fabric.csv`, `summary.json` and, with `--cases`,
+`linked-cases.json`. No generated output belongs in git or an image.
+
+Every fabric row carries `fabric_is_synthetic=true` and `is_synthetic=true`.
+Build year/age band, dwelling type, construction and heating are modelling
+assumptions, not company facts, survey results or EPCs. Summary weights/counts,
+seed, v1 draw version, source revision and payload SHA-256 hashes are recorded.
+Core revisions use full SHA-256; retained support manifests retain their
+16-hex revision shape and now include the moved core dependency sources.
+
+`resolve_cases` and `link_report` account for every case. Valid identifiers are
+opaque nonblank strings without outer whitespace; no coercion or fuzzy repair.
+Missing/invalid/not-found/ambiguous anchors produce explicit unlinked reasons.
+Duplicate/invalid case IDs fail rather than collapse rows. Bulk fabric
+generation rejects duplicate/invalid stock IDs. Each `case.stock_link` gives
+`case_id`, nullable `stock_home_id`, status/reason, `shared_anchor`, synthetic
+label and non-unit scope. A unique register reference is not verified dwelling
+identity. Legacy `distinct_stock_homes` and `stock_homes_shared_by_cases` count
+source anchors, not dwellings. Shared anchors stay explicit and valid as source
+references; they never transfer consent, approvals or household identity.
+
+`attach_fabric` refreshes only derived stock linkage/fabric, discards prior
+derived `stock_epc` so it cannot outlive a changed link, and leaves operational
+home fields, histories, consent and approvals unchanged. The retained builder
+then rebuilds its synthetic EPC block for uniquely matched source rows; the
+standalone CLI does not rebuild EPCs. Original input files are never overwritten.
+Top-level reports remain seed metadata; per-case evidence survives existing
+JSON-body SQL persistence without schema changes. Existing populated stores
+are not reseeded or migrated automatically.
+
+`tests/test_stock_fabric.py` verifies a connected fictional 60,000-row register
+and retained 980-case builder, pre-move v1 golden values, diagnostics, CLI safety,
+byte-level reproducibility, revision sensitivity and closed SQLite restart.
+This is local engineering evidence only: actual private corpus reproduction,
+owner inventory approval, unit reconciliation and real AI/SQL Server/Azure/human
+application acceptance remain unverified. AI configuration and human
+approval/resident-consent gates are unchanged; this data tool grants no authority.
+
+### Coverage baseline results and limits
+
 The deterministic JSON report includes every need, coverage totals, child
 issues or justified deferrals, convention declarations and pending owner items.
 Covered needs require delivered closure, and delivered closure requires covered

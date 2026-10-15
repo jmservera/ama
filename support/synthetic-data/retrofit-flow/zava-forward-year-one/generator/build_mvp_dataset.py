@@ -26,7 +26,7 @@ from zf_manifest import generator_revision
 from zf_model import SIM_START, SNAP
 from zf_names import STAFF_NAMES
 import zf_stock_epc
-import zf_stock_fabric
+from zava_forward.core.synthetic import stock_fabric as zf_stock_fabric
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REGISTER = os.path.join(HERE, "..", "stock-geography", "private-north-east-stock-register.csv")
@@ -274,12 +274,11 @@ def main():
                           detail=cat, source="year-one simulation", is_synthetic=True)
                      for d, state, cat in c.history if d <= SNAP]))
 
-    by_stock = {r["synthetic_home_id"]: r for r in register}
+    by_stock = zf_stock_fabric.attach_fabric(cases, register)
     for case in cases:
         row = by_stock.get(case["synthetic_stock_anchor_id"])
         if row:
             fab = zf_stock_fabric.fabric(row)
-            case["stock_fabric"] = {k: v for k, v in fab.items() if k != "synthetic_home_id"}
             epc = zf_stock_epc.epc_record(row, fabric_row=fab)
             case["stock_epc"] = {k: v for k, v in epc.items() if k != "synthetic_home_id"}
     staff = []
