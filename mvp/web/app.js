@@ -661,7 +661,10 @@ function bars(title, data, link) {
         svg("text", { x: 190 + (d.n / max) * 240 + 6, y: i * rowH + 16, class: "lbl" }, String(d.n)));
       return bar;
     }));
-  return h("section", { class: "card" }, h("h2", {}, title), g, link);
+  const table = h("details", { class: "chart-data" }, h("summary", {}, "Show this chart as a table"),
+    h("table", {}, h("caption", { class: "sr-only" }, title), h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Group"), h("th", { scope: "col" }, "Cases"))),
+      h("tbody", {}, data.map((d) => h("tr", {}, h("th", { scope: "row" }, d.label), h("td", {}, String(d.n)))))));
+  return h("section", { class: "card" }, h("h2", {}, title), g, table, link);
 }
 
 const OV_TILES = [["", "Open cases"], ["hazard", "Safety issues open"], ["long", "Waiting 60+ days"], ["nodecision", "Awaiting resident decision"], ["fundingprog", "Funding in progress"], ["support", "Residents needing extra support"]];

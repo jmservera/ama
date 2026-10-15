@@ -3,13 +3,13 @@
   --ink:#1f2933;--muted:#5b6770;--line:#d9dee3;--bg:#f5f7f8;--surface:#fff;
   --brand:#0b5d6b;--brand-d:#08434d;--soft:#e7f1f3;--soft-line:#b9d6db;
   --warn:#b42318;--warn-bg:#fde8e6;--caution:#d98a00;--caution-bg:#fff8e1;--caution-line:#f0d58a;
-  --ok:#1a6b3a;--ok-bg:#e6f4ea;--field-line:#9aa5ad;--disabled-bg:#eceff1;--disabled-ink:#6b747b;
+  --ok:#1a6b3a;--ok-bg:#e6f4ea;--field-line:#7a858d;--disabled-bg:#eceff1;--disabled-ink:#6b747b;
   /* type */
   --font:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;--fs-sm:.85rem;--fs-base:1rem;--fs-lg:1.15rem;--fs-xl:1.5rem;--lh:1.5;
   /* spacing and shape */
   --sp-1:.25rem;--sp-2:.5rem;--sp-3:.75rem;--sp-4:1rem;--sp-5:1.5rem;--radius:.45rem;--radius-lg:.6rem;
   /* focus and motion */
-  --focus:#f2a900;--focus-w:3px;--focus-off:2px;--motion:.15s;
+  --focus:#f2a900;--focus-ink:#1f2933;--focus-w:3px;--focus-off:2px;--motion:.15s;
 }
 @media(prefers-reduced-motion:reduce){:root{--motion:0s}}
 *{box-sizing:border-box}
@@ -24,7 +24,7 @@ button,.btn{font:inherit;border:1px solid var(--brand);background:var(--brand);c
 button:hover,.btn:hover{background:var(--brand-d)}
 button.alt,.btn.alt{background:var(--surface);color:var(--brand)}
 button.link{background:none;border:0;color:#fff;text-decoration:underline;padding:0}
-:focus-visible{outline:var(--focus-w) solid var(--focus);outline-offset:var(--focus-off)}
+:focus-visible{outline:var(--focus-w) solid var(--focus-ink);outline-offset:var(--focus-off);box-shadow:0 0 0 var(--focus-off) var(--focus)}
 .top{gap:1rem;flex-wrap:wrap}
 .top nav{flex-wrap:wrap;justify-content:flex-end;flex:1}
 .account{position:relative}
@@ -103,6 +103,8 @@ nav a:hover{border-bottom-color:#fff}
 .chart{width:100%;height:auto}
 .lbl{font-size:12px;fill:var(--ink)}
 .bar{fill:var(--brand)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.chart-data{margin-top:var(--sp-2)}.chart-data table{border-collapse:collapse;width:100%}.chart-data th,.chart-data td{text-align:left;border-bottom:1px solid var(--line);padding:var(--sp-1) var(--sp-2)}
 .map{width:100%;height:auto;border:1px solid var(--line);border-radius:.4rem}
 .mapbg{fill:#eef3f4}
 .dot{cursor:pointer;stroke:#fff;stroke-width:1}
@@ -133,7 +135,7 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .plainlist{list-style:none;padding:0;margin:.4rem 0;max-height:16rem;overflow:auto}
 .plainlist li{margin:.2rem 0}
 .linkbtn{background:none;border:0;padding:var(--sp-1) 0;color:var(--link,#0b5d6b);text-decoration:underline;cursor:pointer;font:inherit;text-align:left}
-.linkbtn:focus-visible,.maplist summary:focus-visible{outline:var(--focus-w) solid var(--focus);outline-offset:var(--focus-off)}
+.linkbtn:focus-visible,.maplist summary:focus-visible{outline:var(--focus-w) solid var(--focus-ink);outline-offset:var(--focus-off);box-shadow:0 0 0 var(--focus-off) var(--focus)}
 
 .zava-logo{width:114px;height:40px;object-fit:contain;flex-shrink:0;background:var(--surface);border-radius:4px;padding:4px}
 .top{flex-wrap:wrap;gap:.75rem}.brand{flex-shrink:0}.top nav{flex-wrap:wrap;min-width:0}

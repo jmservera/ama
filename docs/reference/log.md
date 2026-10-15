@@ -2734,3 +2734,14 @@ metadata when the knowledge base was created.
   README section and tests in `mvp/tests/test_needs_inventory.py`.
 * Open items: owner confirmation of the mapping and of the SN-01 regeneration
   scope; no deferrals recorded.
+
+## [2026-10-15] update | WCAG 2.2 conformance baseline
+
+* Added `research/ux/wcag-conformance-baseline.md` and linked it from the index
+  (issue #151): proposed WCAG 2.2 AA target and scope, first audit, computed
+  contrast, manual check record and accessibility statement draft. Design
+  system focus token row updated (`--focus-ink`). Fixes in `mvp/web`: two-tone
+  focus indicator, field border contrast, chart table equivalent.
+* Open items: owner confirmation of target, rendered-page scanner for CI,
+  manual screen-reader, keyboard, zoom and target-size results per role,
+  contact route for the statement, re-retrieval of WCAG 2.2.
