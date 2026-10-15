@@ -1,0 +1,30 @@
+{
+  "version": "2026-10-15",
+  "note": "Every golden and evaluation dataset, with version, owner and purpose. Add an entry here when a dataset is added; tests/test_eval_registry.py fails for an unregistered file in mvp/evals/. All data is constructed or synthetic.",
+  "datasets": [
+    {
+      "id": "ai-priority-golden",
+      "path": "mvp/evals/ai_priority_golden.json",
+      "version": "2026-10-09",
+      "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+      "purpose": "Constructed scenarios for the offline AI priority evaluation harness: ranking and case data never change, output stays Proposed, no critical miss, cited facts exist.",
+      "used_by": ["mvp/zavaforward_mvp/ai_eval.py", "mvp/tests/test_ai_eval.py"],
+      "contains_real_data": false
+    },
+    {
+      "id": "stock-scale-fixture",
+      "path": "mvp/data/scale-fixture/ (generated, not committed)",
+      "generator": "mvp/zavaforward_mvp/scale_fixture.py",
+      "version": "1.0.0",
+      "seed": 174,
+      "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+      "purpose": "Reproducible wholly fictional 60,000-home and 600,000-event fixture for the NFR-002 scale dimension. Rebuilt from the seed; output directory is Git-ignored.",
+      "used_by": ["mvp/tests/test_eval_registry.py"],
+      "contains_real_data": false
+    }
+  ],
+  "open_items": [
+    "Name an accountable owner for each dataset.",
+    "In-test 60,000-case builders in tests/test_ranking_scale.py and tests/test_sqlreads.py are not yet migrated to the shared fixture; their data shapes differ (full case records) from the lightweight fixture rows."
+  ]
+}

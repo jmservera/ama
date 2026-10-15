@@ -2655,3 +2655,11 @@ metadata when the knowledge base was created.
   in dependency order under owner approval.
 * Updated the `ama-*` agent row in the index. No research or regulatory content
   changed.
+
+## [2026-10-15] update | Evaluation dataset registry and scale fixture (#174)
+
+* Added `mvp/evals/registry.json` (version, owner, purpose per dataset) and the
+  seeded `mvp/zavaforward_mvp/scale_fixture.py` for a fictional 60,000-home /
+  600,000-event fixture, output Git-ignored. Documented in `mvp/README.md`.
+* Open: named dataset owners; migrating in-test 60,000-case builders. No
+  research or regulatory content changed.
