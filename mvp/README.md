@@ -386,9 +386,20 @@ Tests: `tests/test_governance.py` (JSON and SQL stores, labelled synthetic demon
   policy (created unlocked); `containerapps.bicep` adds a daily
   `job-*-ledger-verify`; `main.bicep` adds a log alert on the marker to the
   action group. Tests: `tests/test_digest_blob.py` (in-memory immutable container
-  fake over the labelled synthetic stock). Open items, not invented here: the
-  legal retention period, the owner's irreversible policy lock, a deployed run
-  and the exact Log Analytics table name for job console logs.
+  fake over the labelled synthetic stock). A second alert,
+  `alert-*-ledger-verify-missing`, fires when no `LEDGER_DIGEST_OK` line
+  arrives within 26 hours, so a job that fails to start or run is caught as well
+  as a mismatch.
+* Trust-on-first-use gap: `--publish` seeds digests from the current ledger and
+  verifies only the chain, so a ledger already tampered with before the first
+  publish is anchored as genuine. Review the first publish by a second person
+  against an independent record before relying on the digests.
+* The retention period must be chosen by the owner (no shorter than the legal
+  audit retention period) before the policy is locked; locking is irreversible.
+* Open items, not invented here: the Log Analytics table names
+  `ContainerAppConsoleLogs_CL` and column `ContainerJobName_s` are unconfirmed
+  and must be checked in the deployed workspace; the legal retention period,
+  the owner's irreversible policy lock and a deployed run also remain open.
 
 ### Per-year ledger digests, load check and recovery drill (issue #114)
 

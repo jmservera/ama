@@ -20,6 +20,7 @@ from . import ledger
 from .documents import AzureBlobDocumentStore, DocumentStoreError
 
 ALERT_MARKER = "LEDGER_DIGEST_ALERT"
+OK_MARKER = "LEDGER_DIGEST_OK"
 
 
 class BlobDigestStore(AzureBlobDocumentStore):
@@ -137,6 +138,7 @@ def main(argv=None, env=None, store=None, blob=None, out=print):
     if not rep["intact"]:
         out(f"{ALERT_MARKER} ledger does not match the immutable digests")
         return 1
+    out(f"{OK_MARKER} ledger matches the immutable digests")
     return 0
 
 

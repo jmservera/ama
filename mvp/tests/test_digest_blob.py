@@ -70,6 +70,10 @@ class BlobDigestTests(unittest.TestCase):
         self.assertEqual(self.run_job(), 0)
         self.assertTrue(digest_blob.verify(self.store, self.blob)["intact"])
 
+    def test_success_prints_heartbeat_marker(self):
+        self.assertEqual(self.run_job("--publish"), 0)
+        self.assertTrue(any(digest_blob.OK_MARKER in line for line in self.out))
+
     def test_truncation_after_publish_alerts(self):
         self.run_job("--publish")
         lines = Path(self.store.audit_path).read_text().splitlines()
