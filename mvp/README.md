@@ -363,6 +363,37 @@ The app identity needs a contained user with `db_datareader`, `db_datawriter` an
 runs the SQL store suites and the list-read parity suite against a real SQL Server
 when `ZF_TEST_MSSQL=1` (and `ZF_SQL_*` point at a throwaway database).
 
+### Per-year ledger digests, load check and recovery drill (issue #114)
+
+* `python -m zavaforward_mvp.ledger --seal-years` writes one immutable `year-YYYY.json`
+  digest per completed year (entries, first link, head); `--by-year` verifies every
+  year on its own, the links between years and each sealed digest, and reports a
+  dropped sealed year. A self-consistent rewrite of a sealed year is caught only by
+  its digest, so those files belong in the immutable Blob container. Proven in
+  `tests/test_recovery.py`; run the scheduled `--by-year` check before relying on the ledger.
+* `python -m zavaforward_mvp.loadcheck --data zavaforward.json --homes 60000` runs the
+  NFR-002 mix (five sessions, two writers) against the configured store and prints
+  p50/p95/max per class. Local SQLite on 2026-10-15 over 60,000 labelled synthetic
+  homes for 30 s: list p95 0.28 s, detail 0.30 s, write 0.33 s, no errors (limits 1 s,
+  1 s, 2 s). Open items: the same run against Azure SQL, dashboard and import preview
+  classes, and cost (needs Azure meter rates and measured vCore time).
+* `zavaforward_mvp/recovery.py` erases a resident's personal fields and keeps a
+  personal-data-free deletion register outside the database. The register is one
+  write-once entry per erasure under the reserved case id `_erasures` in the document
+  backend: Azure Blob Storage when `ZF_DOC_STORE=azure-blob` (same configuration as case
+  documents), a local folder only as the local-test backend. The entry is written
+  before the redaction, so a crash between the two leaves an erasure that
+  `reapply_deletions` completes (audited as `erasure_reapplied`), never an unrecorded
+  one; if the register cannot be written, nothing is redacted, and an unreadable
+  register is an error, never an empty one. Tests: a SQLite backup restore proves the
+  erasure returns, a fake Blob transport proves the register backend and the write
+  ordering.
+* Unverified: the Azure SQL point-in-time restore drill (DH-005) has not been run;
+  the register has not been run against a real storage account, nor has its
+  retention or immutability policy been configured or tested; the Blob container
+  should carry a WORM/immutability policy, which is infrastructure and unproven here;
+  cost (storage, transactions, restore) is not measured.
+
 ## Honest limits
 
 Current scope is the continuing exercise, not production acceptance. Dated
