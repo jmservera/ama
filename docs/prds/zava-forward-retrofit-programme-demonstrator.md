@@ -706,7 +706,7 @@ scheme application:
 | Narrative delivery plan or business case | Optional generative draft; System One support/contradiction screening | Human validates claims, assumptions and qualifications; model score is not independent verification |
 | Applicant declaration, signature, professional certification or resident choice | Designated human action only | No AI proposal, inferred agreement, default checkbox or batch acceptance |
 
-## Per-user agent chat and memory (proposed)
+## Per-user agent chat and memory
 
 Status: owner accepted ADR 0004 on 2026-10-15 (BRD OD-44 decided); live use
 stays inactive. The DPO and Legal have not decided lawful basis,
@@ -724,7 +724,7 @@ one-shot proposal. The atlas is desk research and does not show that staff want
 this (BRD OD-41). The comparator is the existing proposal-only assistants, which
 return one typed proposal per request and keep no thread or memory today.
 
-### Journey, agent and UI mapping (proposed)
+### Journey, agent and UI mapping
 
 The base is the 28-journey
 [customer journey atlas](../reference/research/ux/customer-journeys/customer-journey-atlas.md)
@@ -755,7 +755,7 @@ decision, with threads before memory. Memory (FR-057) is a later gate inside the
 first slice and needs the DPO decisions in BRD OD-45, OD-46 and OD-48. Deferred
 rows are listed so the owner can see the intended boundary, not as commitments.
 
-### Product requirements (proposed)
+### Product requirements
 
 IDs start at FR-055, NFR-015, AC-091 and OQ-020, after the highest PRD numbers
 in use (FR-054, NFR-014, AC-073 with BRD-referenced AC-086 to AC-090, and
@@ -777,7 +777,7 @@ document.
 | AC-105 | Given seeded cases including a possible hazard report, a case with missing evidence, an unapproved or future rule, a measure changed after review and a significant automated recommendation, when step transitions, data changes and scheduled clocks run, then deterministic checks return clear, attention, breach risk, unknown or not applicable with cited source and status; missing evidence is unknown, never clear; a model never sets an awareness date or suppresses a check; an alert names the safe action, the owner and the clock; a breach risk alert needs owner acknowledgement and outcome; and no alert sends a resident message. |
 | AC-106 | Given graded home questions, adversarial prompts, conflicting or stale sources, a future-law question and a request for lease, grant or contract terms, when the chat answers, then every statement cites a provision or fact ID with status and dates, unsupported claims are dropped, role-scoped facts exclude unneeded fields, no compliance conclusion, legal advice or future-as-active rule is given, a doubt route sends the turn to the named owner, retrieved text is treated as data not instruction, and a paired comparison reports value against deterministic rule cards with provision links alone. |
 
-### Acceptance criteria (proposed)
+### Acceptance criteria
 
 All proposed criteria are Not run and are inactive until BRD OD-44.
 
@@ -797,7 +797,7 @@ All proposed criteria are Not run and are inactive until BRD OD-44.
 | AC-102 | Given a changed or revoked role mid-thread, a cross-user probe and an administrator access, when tested, then the next turn is denied or reprojected and administrator access is reasoned, time-limited and audited. | NFR-015 | Not run |
 | AC-103 | Given retention, a rights request and the logs, when reviewed, then retention per class is DPO-approved, the request finds and acts on thread and memory data, and logs hold no content beyond the approved period. | NFR-016 | Not run |
 
-### Evaluation, safety and runtime fit (proposed)
+### Evaluation, safety and runtime fit
 
 * Runtime: direct Azure OpenAI calls through the existing Foundry account and
   `standard` and `capable` deployments, as in ADR 0001, ADR 0002 and ADR 0003.
@@ -812,7 +812,7 @@ All proposed criteria are Not run and are inactive until BRD OD-44.
 * Evidence status: this is a design proposal. No criterion has been run and no
   user has been asked.
 
-### Traceability to the BRD (proposed)
+### Traceability to the BRD
 
 | PRD ID | BRD v0.18.0 IDs |
 | --- | --- |
@@ -1623,14 +1623,14 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-052 | AC-071 | Linked |
 | FR-053 | AC-072 | Linked |
 | FR-054 | AC-073 | Linked |
-| FR-055 (proposed) | AC-091, AC-092, AC-093 | Linked |
-| FR-056 (proposed) | AC-094, AC-095 | Linked |
-| FR-057 (proposed) | AC-096, AC-097 | Linked |
-| FR-058 (proposed) | AC-098, AC-099 | Linked |
-| FR-059 (proposed) | AC-100, AC-101 | Linked |
-| FR-060 (proposed) | AC-104, AC-105, AC-106 | Linked |
-| NFR-015 (proposed) | AC-102 | Linked |
-| NFR-016 (proposed) | AC-103 | Linked |
+| FR-055 | AC-091, AC-092, AC-093 | Linked |
+| FR-056 | AC-094, AC-095 | Linked |
+| FR-057 | AC-096, AC-097 | Linked |
+| FR-058 | AC-098, AC-099 | Linked |
+| FR-059 | AC-100, AC-101 | Linked |
+| FR-060 | AC-104, AC-105, AC-106 | Linked |
+| NFR-015 | AC-102 | Linked |
+| NFR-016 | AC-103 | Linked |
 
 Link coverage: 59/59 FRs (including five proposed) and both proposed NFRs linked to at least one criterion (100%); this matrix
 matches both requirement and criterion tables. Behavioral acceptance remains

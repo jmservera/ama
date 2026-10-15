@@ -1,6 +1,6 @@
 ---
 title: ADR 0004 Per-User Agent Chat and Memory
-description: Proposed decision on whether and how staff users could hold case-linked conversations with the existing assistants and keep opt-in per-user memory, within the existing single-API, Azure SQL and proposal-only runtime
+description: Accepted decision on whether and how staff users could hold case-linked conversations with the existing assistants and keep opt-in per-user memory, within the existing single-API, Azure SQL and proposal-only runtime
 author: AMA programme
 ms.date: 2026-10-15
 ms.topic: reference
@@ -77,8 +77,10 @@ Assumptions and unknowns:
 The owner accepted option C, staged, as written on 2026-10-15. The options
 compared above (A no chat, B threads over existing proposals, C threads plus
 opt-in per-user memory in Azure SQL, D and E rejected or deferred) are
-confirmed unamended. Options A and B remain the fallback if the DPO and Legal
-later reject memory or chat (BRD OD-48).
+confirmed unamended. Option B is the fallback if the DPO and Legal later
+reject memory (BRD OD-48). Option A remains the default comparator and is
+rejected only if the owner wants follow-up questions. If the owner chooses A or
+B, the BRD and PRD rows stay inactive or are reduced.
 
 Authority: chat may recommend, draft, reconcile and flag only. It can never
 approve, decide, certify, record consent, diagnose, contact a resident, change a
@@ -92,8 +94,7 @@ the approver of thresholds) before it is enabled. No new assistant is created.
 Storage: Azure SQL behind the `Store` interface (decision 3). No new store is
 justified; Foundry Agent Service memory is not used.
 
-Deployment: Azure only, region `uksouth`. Prototypes include real Azure OpenAI
-calls; any non-Azure service is for local tests only. Fixtures in tests and
+Deployment: Azure only, region `uksouth`. Fixtures in tests and
 demonstrations are labelled synthetic (ADR 0005 permits labelled synthetic-demo
 fixtures only).
 
@@ -104,7 +105,7 @@ fixtures only).
 2. The first slice is staff only, embedded as a panel in the role workbench case
    view (PRD FR-055). Resident, representative, provider and installer chat is
    deferred to BRD OD-47. The journey, agent and UI mapping is in PRD section
-   Per-user agent chat and memory (proposed).
+   Per-user agent chat and memory.
 3. Threads are stored in the existing Azure SQL store behind the `Store`
    interface through additive idempotent migrations (PRD FR-056). A thread is
    owned by a server-derived user key, tied to a case and task, and deletable by
