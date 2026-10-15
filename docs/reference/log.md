@@ -2765,3 +2765,16 @@ metadata when the knowledge base was created.
   homes) and seeded fabric attributes for the 60,000-home register to the
   [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md#stock-to-case-link-and-fabric-attributes-2026-10-15).
   Distributions are stated as assumptions, not company facts (#168).
+
+## [2026-10-15] implementation | Versioned law store seeded from local snapshots
+
+* Added the Phase 1 law store of [ADR 0005](../adrs/0005-regulatory-compliance-assistant.md)
+  in `mvp/` (issue #210): source, version, provision and gap records, immutable
+  content-hashed snapshots, a rebuildable keyword index and a read-only viewer.
+  Source metadata is in `mvp/law/law-source-register.json`; see the
+  [Regulatory Source Register](./regulatory/README.md).
+* Snapshots were not edited. Effective dates are recorded only where the local
+  snapshots state them; review dates and owners are unknown and left empty or
+  "to be named". Official-source change checks have not been performed.
+* Open: named Legal, Compliance and DPO owners (#209), licensed PAS 2035 and
+  official sources for leasehold, complaints handling and TrustMark.

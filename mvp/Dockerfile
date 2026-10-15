@@ -11,6 +11,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --require-hashes -r requirements.txt && rm requirements.txt
 COPY zavaforward_mvp ./zavaforward_mvp
 COPY policies ./policies
+COPY law ./law
 COPY web ./web
 RUN chmod -R a+rX ./web
 USER 10001

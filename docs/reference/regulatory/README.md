@@ -1,7 +1,7 @@
 ---
 title: Regulatory Context Reference Documents
 description: Authoritative reference documents for the Case Study 48 regulatory context
-ms.date: 2026-09-25
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
@@ -92,6 +92,13 @@ from the searchable document index. Each source record needs:
 * Applicability, affected requirements, operational rules, tests and user
   journeys
 * Review, approval, activation and retirement history
+
+The MVP implements the first step of this register as a versioned law store
+(`mvp/zavaforward_mvp/lawstore.py`) seeded from the snapshots in this folder,
+with seed metadata in `mvp/law/law-source-register.json`. Missing sources
+(leasehold, complaints handling, TrustMark, licensed PAS 2035) are recorded as
+gaps and answered as "no source held". Seeded versions carry review status
+`not_reviewed` and owner "to be named"; this is not an approval (ADR 0005, #209).
 
 Use official APIs, legislation data, publication metadata, feeds and alerts
 where available. Scheduled retrieval may compare metadata, hashes and semantic

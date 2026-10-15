@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Law store viewer - Zava Forward</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/app"><span>Zava Forward<small>Zava North Homes</small></span></a>
+</header>
+<main id="law" tabindex="-1">
+  <h1>Law store viewer</h1>
+  <p class="muted">Read-only reference copies of the regulatory sources held locally. No AI is used. This is not legal advice and no owner has reviewed these copies yet.</p>
+  <form id="law-form" role="search">
+    <label for="law-q">Search the provisions</label>
+    <input id="law-q" type="search" autocomplete="off">
+    <button type="submit">Search</button>
+    <button type="button" id="law-all" class="alt">All sources</button>
+  </form>
+  <p id="law-status" class="muted" role="status"></p>
+  <div id="law-out" tabindex="-1"></div>
+</main>
+<script src="/law.js"></script>
+</body>
+</html>

@@ -5,12 +5,13 @@ import json
 import os
 import secrets
 import sys
+import threading
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
-from . import auth, profile, projection, quality
+from . import auth, lawstore, profile, projection, quality
 from .assistants import Assistants
 from .documents import DocumentStoreError
 from .factory import open_store
@@ -40,16 +41,20 @@ def tile_config(env=None):
 
 
 class App:
-    def __init__(self, store, password=None, timecap=None, provider=None):
+    def __init__(self, store, password=None, timecap=None, provider=None, law=None):
         self.store = store
         self.time = timecap or TimeCapture()
         self.tiles = tile_config()
         self.csp = "default-src 'self'; img-src 'self' data: blob:" + (f" {self.tiles['host']}" if self.tiles["host"] else "") + "; frame-ancestors 'none'"
         self.provider = provider or auth.make_provider(store, password or secrets.token_urlsafe(9))
         self.assistants = Assistants(store)
+        self.law = law
+        self.law_lock = threading.Lock()
 
 
 def get_kind(path):
+    if path.startswith("/api/law"):
+        return "law"
     if path.startswith("/api/assistants"):
         return "assistants"
     if path == "/api/account/photo":
@@ -186,6 +191,23 @@ def make_handler(app):
             s = app.store
             if not projection.allowed(u, get_kind(url.path)):
                 return self._json(403, {"error": "Your role does not include this."})
+            if url.path.startswith("/api/law"):
+                if app.law is None:
+                    return self._json(503, {"error": "The law store is not loaded."})
+                parts = [unquote(x) for x in url.path.strip("/").split("/")]
+                try:
+                    with app.law_lock:
+                        if parts == ["api", "law", "sources"]:
+                            return self._json(200, app.law.sources())
+                        if len(parts) == 4 and parts[:3] == ["api", "law", "sources"]:
+                            return self._json(200, app.law.source(parts[3]))
+                        if len(parts) == 4 and parts[:3] == ["api", "law", "provisions"]:
+                            return self._json(200, app.law.provision(parts[3]))
+                        if parts == ["api", "law", "search"]:
+                            return self._json(200, app.law.search(q.get("q", [""])[0][:200]))
+                except KeyError:
+                    pass
+                return self._json(404, {"error": "Not found."})
             if url.path.startswith("/api/assistants"):
                 try:
                     if url.path == "/api/assistants":
@@ -467,7 +489,8 @@ def main():
         store = open_store()
     except FileNotFoundError:
         sys.exit("No data file. Run build_mvp_dataset.py first (see mvp/README.md).")
-    app = App(store, password)
+    law = lawstore.LawStore(os.environ["ZF_LAW_DB"], os.environ.get("ZF_LAW_BLOBS", "/state/law-blobs")) if os.environ.get("ZF_LAW_DB") else None
+    app = App(store, password, law=law)
     host, port = os.environ.get("ZF_BIND", "127.0.0.1"), int(os.environ.get("PORT", "8088"))
     print(f"Zava Forward is running at http://{host}:{port}")
     if app.provider.name == "password" and not os.environ.get("ZF_PASSWORD"):
