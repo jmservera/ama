@@ -285,7 +285,7 @@ def main():
         s = names.staff(code)
         staff.append(dict(code=code, name=s["name"], email=s["email"], role=ROLE_TITLE[code.split("-")[0]]))
     out = dict(built=a.as_of.isoformat(), as_of=a.as_of.isoformat(),
-               is_synthetic=True, seed=seed, generator_version="operational-coverage-v1",
+               is_synthetic=True, seed=seed, stock_fabric_seed=zf_stock_fabric.SEED, generator_version="operational-coverage-v1",
                generator_revision=generator_revision(),
                stock_link_kind="Source geography row; flats may share a building anchor, not unique stock-unit linkage.",
                stock_register_rows=len(register),
