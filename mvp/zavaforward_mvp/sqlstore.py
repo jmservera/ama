@@ -24,6 +24,7 @@ from datetime import datetime
 
 from . import continuity, insights, ledger, projection, ranking
 from .ai import Ai
+from .chatthreads import SQLITE_DDL as CHAT_DDL
 from .doc_controls import open_scanner
 from .documents import open_document_store
 from .store import ConflictError, Store
@@ -161,6 +162,8 @@ class SqlStore(Store):
 
     def _create_schema(self):
         self.db.executescript(SCHEMA)
+        for ddl in CHAT_DDL:
+            self.db.execute(ddl)
 
     def _create_indexes(self):
         self.db.executescript(INDEXES)

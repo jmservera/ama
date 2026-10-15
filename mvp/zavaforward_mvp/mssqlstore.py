@@ -16,6 +16,7 @@ import os
 import re
 import struct
 
+from .chatthreads import MSSQL_DDL as CHAT_DDL, MSSQL_INDEX as CHAT_INDEX
 from .sqlstore import INDEXES, SqlStore
 
 COLLATE = "COLLATE Latin1_General_100_BIN2"
@@ -42,6 +43,8 @@ TABLES = {
   seq BIGINT IDENTITY(1,1) PRIMARY KEY, at {_t(40)}, who {_t(200)}, action {_t(200)}, case_id {_t(64)},
   detail NVARCHAR(MAX) NOT NULL, prev {_t(100)}, hash {_t(100)} UNIQUE)""",
     "audit_head": f"CREATE TABLE audit_head (id INT PRIMARY KEY CHECK (id = 1), count BIGINT NOT NULL, hash {_t(100)})",
+    "chat_thread": CHAT_DDL[0],
+    "chat_message": CHAT_DDL[1],
 }
 
 APPEND_ONLY = ("IF OBJECT_ID(N'audit_append_only', N'TR') IS NULL EXEC(N'CREATE TRIGGER audit_append_only ON audit "
@@ -219,7 +222,7 @@ class MssqlStore(SqlStore):
 
     def _create_indexes(self):
         with self.dblock:
-            for stmt in _indexes():
+            for stmt in _indexes() + [CHAT_INDEX]:
                 self.db.execute(stmt)
 
     def _columns(self):

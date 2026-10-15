@@ -491,6 +491,20 @@ Tests: `tests/test_governance.py` (JSON and SQL stores, labelled synthetic demon
   should carry a WORM/immutability policy, which is infrastructure and unproven here;
   cost (storage, transactions, restore) is not measured.
 
+## Per-user chat thread storage (issue #160)
+
+`chatthreads.py` stores chat threads and messages per user (ADR 0004 decision 3), behind the `Store` interface: the
+in-memory `Store` keeps them in its live file, `SqlStore` and `MssqlStore` in the additive, idempotent `chat_thread` and
+`chat_message` tables (Azure SQL in deployment, SQLite for local tests). A thread carries the server-derived owner,
+case reference, assistant task and version, and model identity; a message carries its role, evidence references and,
+for assistant messages, the model. `chat_create_thread`, `chat_add_message`, `chat_list_threads`, `chat_resume`,
+`chat_archive` and `chat_delete` always filter on the owner (another user's thread is reported as not found). Writes use
+the thread row version and raise `ConflictError` when a caller's expected version is stale. The audit ledger receives
+metadata only (thread id, case, counts, role), never message text or title, so deleting a thread leaves the chain intact.
+Not in this slice: the panel (#159), model calls, memory (#161), isolation hardening (#162), retention and export
+(#163; retention policy is unlocked for the exercise, legal retention lock deferred). Fixtures are synthetic.
+Tests: `tests/test_chatthreads.py` (in-memory and SQLite parity; `MssqlChatThreads` runs with `ZF_TEST_MSSQL=1`).
+
 ## Service continuity, versioning and export (issue #122)
 
 `continuity.py` adds a persisted AI suspension (whole release or one registered task), a restart gate, a versioned
