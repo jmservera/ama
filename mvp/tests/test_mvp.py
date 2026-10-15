@@ -77,7 +77,7 @@ class ImproveTests(unittest.TestCase):
         with self.assertRaises(GateError):
             self.store.funding_step(self.pam, "ZF-1", "approve")
         for k in ("EPC", "Survey", "Design", "Consent"):
-            self.store.add_document(self.sam, "ZF-1", "a.pdf", k, b"x")
+            self.store.add_document(self.sam, "ZF-1", "a.pdf", k, b"%PDF-x")
         self.store.funding_step(self.pam, "ZF-1", "approve")
         with self.assertRaises(ValueError):
             self.store.funding_step(self.pam, "ZF-1", "submit", "")

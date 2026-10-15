@@ -24,6 +24,7 @@ from datetime import datetime
 
 from . import insights, ledger, projection, ranking
 from .ai import Ai
+from .doc_controls import open_scanner
 from .documents import open_document_store
 from .store import ConflictError, Store
 
@@ -124,6 +125,7 @@ class SqlStore(Store):
         self._create_indexes()
         self.docs_dir = docs_dir or os.path.join(os.path.dirname(db_path) or ".", "docs")
         self.docstore = open_document_store(self.docs_dir)
+        self.scanner = open_scanner(self.docstore)
         self.digest_dir = digest_dir or os.environ.get("ZF_DIGEST_DIR") or os.path.join(os.path.dirname(db_path) or ".", "digests")
         self.ai = Ai()
         self.version = 0

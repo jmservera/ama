@@ -838,7 +838,8 @@ time capture.
 * Which homes are in live scope out of about 60,000, since the BRD pilot
   assumed 80 to 100 candidate homes (OD-17).
 * Licensed tile provider: licence, cost, coverage and processor terms.
-* Document malware scanning service.
+* Document malware scanning service: enable Defender for Storage on the account and run the tag reader against it (issue #117); the local scanner is a demo test only.
+* Retention periods, legal-hold authority and the retention job schedule: DPO and Legal set them (PR-003); the demo periods are placeholders.
 * Per-year audit table approach and ledger digest verification, to be proven
   by test before it is relied on.
 * DPIA, staff notice and consultation view for time capture (OD-36).
@@ -872,7 +873,7 @@ blocked/unrun rows below are not the current #65 status; see the later delta.
 | Dockerfile and CI (decision 6) | Partial | Image built and started locally; workflow not yet run on GitHub; not deployed; no scan or multi-replica test |
 | Staff time capture (decision 7) | Partial | Off by default, needs `DPIA_APPROVED`, a consultation reference and a staff notice acknowledgement before recording; notice text is a draft, enabled by env with no audited admin action, API only (no screens) |
 | Entra ID provider (decision 3) | Partial | Header parsing and role mapping tested with synthetic principals only; Azure configuration documented in the README, not done |
-| Blob documents (decision 2) | Partial | `DocumentStore` interface with local and Azure Blob implementations (urllib, SAS or managed identity), size and type limits, role checks, audit; Blob store run only against a fake transport; no malware scan or content sniffing |
+| Blob documents (decision 2) | Partial | `DocumentStore` interface with local and Azure Blob implementations (urllib, SAS or managed identity), size and type limits, role checks, audit; Blob store run only against a fake transport; scan-before-availability with a labelled synthetic local scanner and a Defender for Storage tag reader (fake transport only, issue #117); retention listing, owner-approved deletion and legal hold with synthetic-demo periods; real scanner, Defender enablement and approved periods open |
 | Finance, grants, technical sign-offs and resident decisions (FR-013, FR-014, FR-018, FR-019) | Done (API and screens) | Record-only finance with separate approvers and no bulk path; constructed data, proposed role mapping, exact-match comparison, screens not run in a browser |
 | Azure provisioning, replicas, region, load test (decision 6) | Partial | Dev app `ca-properwarm-mvp` on Azure SQL and Blob with a managed identity, min 2 and max 4 replicas, restart persistence checked (2026-10-09); the app is not yet in Bicep, Entra built-in authentication is blocked on an app registration, no load test, region and private networking for the pilot not decided |
 

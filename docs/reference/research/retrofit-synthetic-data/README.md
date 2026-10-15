@@ -306,6 +306,11 @@ Issue #171 adds `generator/zf_documents.py` (under
 output `mvp/evals/document_form_fixtures.json`, tested by
 `mvp/tests/test_document_form_fixtures.py`.
 
+Document-control fixtures (scan classes, retention triggers and legal holds for
+120 homes from the same register) come from `generator/zf_document_controls.py`,
+output `mvp/evals/document_control_fixtures.json`, tested by
+`mvp/tests/test_document_controls.py`.
+
 * Source: one home per neighbourhood cluster drawn from the 60,000-home synthetic
   stock register, seeded (`--seed 20260901`), so output is byte-identical for the
   same seed and register. Every record carries `is_synthetic` and a SYNTHETIC label.
