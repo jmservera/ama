@@ -18,6 +18,15 @@ per-user `ZF_DATA` folder, never under `src/`.
 
 ## Datasets, fixtures and synthetic tools
 
+The [synthetic needs inventory](../../docs/reference/research/retrofit-synthetic-data/needs-inventory.json)
+and [scenario manifest](../../docs/reference/research/retrofit-synthetic-data/scenario-manifest.json)
+bind each iteration's engineering review by inventory version/date and SN row.
+Run `python3 -m unittest discover -s tests -p test_needs_inventory.py -v`
+from this project to check that binding and negative mutations. This is a
+recorded pre-build gate, not owner approval or full scenario acceptance;
+partial/missing needs still require an owner volume/scope decision before
+data-consuming build work starts.
+
 * Evaluation dataset registry (`src/agents/evals/registry.json`) lists every golden and
   evaluation dataset with version, owner and purpose; a test fails for an
   unregistered file in `mvp/evals/` or any `src/<project>/evals/` folder. The stock-scale fixture (60,000 homes, 600,000
