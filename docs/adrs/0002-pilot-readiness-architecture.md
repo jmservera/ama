@@ -2,7 +2,7 @@
 title: ADR 0002 Pilot-Readiness Architecture for the Zava Forward MVP
 description: Proposed decisions for moving the working MVP to pilot readiness over about 60,000 homes - durable store, Blob, Entra ID and field visibility, deterministic ranking, map scale, deployment and gated staff time capture
 author: AMA programme
-ms.date: 2026-10-14
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
@@ -282,6 +282,49 @@ This establishes actual deployed service/model/SQL/restart evidence, not
 a real staff-authenticated browser/API acceptance session, semantic quality,
 role/accessibility acceptance or measured business value. Those gates remain
 open; historical Reviews are not rewritten.
+
+### Responsible AI Control Plane (2026-10-14)
+
+Proposed extension of the existing single-API/SQL runtime; no new service or
+production authority. The [PRD RAI contract](../prds/zava-forward-retrofit-programme-demonstrator.md#responsible-ai-release-and-oversight-contract-2026-10-14)
+adds FR-051 to FR-054, AC-069 to AC-073 and NFR-014. Existing source-tested
+proposal controls and bounded operator calls do not prove these new gates.
+
+| Surface | Proposed control and evidence | Accountable function for live approval |
+| --- | --- | --- |
+| Task registry and dispatch | SQL-owned release/impact record bound to task/model/prompt/policy/data/permission versions; reject absent, stale, expired or suspended releases for reactive and proactive work | Programme product owner and competent task/control owner |
+| Ranking and sensor policy | Evaluate deterministic policy, missing-data treatment and AI recommendations by declared cohort; sensors absent or invalid remain unknown, not low need; retain reason codes and approved disparity disposition | Asset, Data and Performance, Safety and Resident Engagement |
+| Proposal review | Recheck sources, role, material versions and release state atomically; reviewers inspect evidence and record a source-based correction/rejection, including unflagged critical fields | Competent reviewer and independent Assurance |
+| Challenge and correction | Link a staff-recorded resident/staff challenge to explanation, source/policy/proposal version, human owner and resolution; invalidate only dependent proposals/reviews | Housing, Resident Engagement and record owner |
+| Monitoring and incident | Versioned indicator/threshold record; critical harm suspends affected task and reliance on pending/ready proposals, retains permitted history and preserves manual/hazard routes; human approval and corrective tests required to restart | Digital operator with Safety, DPO and product owner |
+| Context, audit and telemetry | Reuse recipient-safe projections on input/output/citations/review/export; exclude source text from operational telemetry by default; approve minimum-necessary prompt/review/incident retention and resolve immutable storage versus erasure | Digital, DPO and Legal |
+
+The [failed assessment attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
+is retained alongside the [validated recovery](../case_study_48_addendum.md#verified-recovery-and-open-dispositions-2026-10-14)
+and [baseline RAI report](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md).
+Its 11 PARTIAL residuals (8 MEDIUM, 3 LOW) remain open; proposal-only authority,
+source verification and manual routes reduced nine original severity claims.
+The owner accepted the bounded baseline report for remediation planning on
+2026-10-15, not this amendment or an operational release. The report does not
+prove this amendment implemented or accepted. Current
+staff/tenant identity processing needs explicit privacy scope review despite
+constructed resident content; restart persistence does not prove recovery.
+
+Keep these records in the existing authoritative SQL/API control plane and
+reuse the manual workflow. A registry flag alone is insufficient: prove that
+pending claims, queued retries, publication and already-ready proposals cannot
+escape suspension or material-version invalidation. Historical proposals and
+human decisions remain reconstructable without becoming reusable approval.
+The API identity's combined SQL/Blob/model capability is an exercise trade-off,
+not the isolated-worker identity design in ADR 0001.
+
+Mandatory RAI tests cover version mismatch, cohort/missing-data disparities,
+plausible wrong answers and reviewer automation bias, non-digital challenge,
+injected instructions/forged evidence, cross-role prompt/output leakage and
+suspension during active/queued work. Run them against the actual serving
+version before claiming exercise acceptance; retain separate legal, direct-user,
+privacy and live-use gates. Representative fairness and understanding cannot
+be inferred from generated residents or role-agent reviews.
 
 ### 1. Durable store: Azure SQL or PostgreSQL
 
@@ -775,6 +818,8 @@ OSM public tiles in production, a single replica, AKS, and always-on staff
 time capture.
 
 ## Open items
+
+* Named RAI release, residual-risk and incident owners; current intended-use/jurisdiction screening; representative cohort and oversight evidence; challenge route and suspend/restart drill under PRD AC-069 to AC-073.
 
 * DPO to confirm the lawful basis per data class, the Article 9 condition and
   that audit data can be retained against an erasure request under

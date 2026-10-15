@@ -15,7 +15,7 @@ has not decided to adopt the capability (BRD OD-44). It applies the runtime of
 [ADR 0002](./0002-pilot-readiness-architecture.md) and
 [ADR 0003](./0003-journey-derived-capabilities-runtime-fit.md) to the proposal
 in [BRD v0.18.0](../brds/agentic-retrofit-programme-brd.md) and
-[PRD v0.16.0](../prds/zava-forward-retrofit-programme-demonstrator.md). It is
+[PRD v0.17.0](../prds/zava-forward-retrofit-programme-demonstrator.md). It is
 tracked as GitHub backlog epic #157 and children #158 to #164.
 
 ## Context
@@ -78,30 +78,30 @@ If the owner chooses A or B, the BRD and PRD rows stay inactive or are reduced.
    accountable reviewer, and can be enabled, disabled and have memory switched
    off without redeploying.
 2. The first slice is staff only, embedded as a panel in the role workbench case
-   view (PRD FR-051). Resident, representative, provider and installer chat is
+   view (PRD FR-055). Resident, representative, provider and installer chat is
    deferred to BRD OD-47. The journey, agent and UI mapping is in PRD section
    Per-user agent chat and memory (proposed).
 3. Threads are stored in the existing Azure SQL store behind the `Store`
-   interface through additive idempotent migrations (PRD FR-052). A thread is
+   interface through additive idempotent migrations (PRD FR-056). A thread is
    owned by a server-derived user key, tied to a case and task, and deletable by
    its owner. Thread content is separate from the append-only audit ledger,
    which holds event metadata only, so deletion does not break tamper evidence.
 4. Memory is a later gate. It is off by default, per user and per role,
    inspectable, editable, deletable and expiring, and never holds resident
    health, safeguarding, vulnerability, special-category or consent data
-   (PRD FR-053). Retention is Unknown until the DPO approves it.
+   (PRD FR-057). Retention is Unknown until the DPO approves it.
 5. Every turn re-authorises the user's current role and case and applies the
    same server-side field projection as the case view, so a changed or revoked
-   role takes effect on the next turn (PRD NFR-014).
+   role takes effect on the next turn (PRD NFR-015).
 6. The channel cannot approve, decide, certify, record consent, diagnose or
    contact a resident. Case text and memory are untrusted input. Any
    record-changing output is a proposal that goes through the existing
-   independent review (PRD FR-054).
+   independent review (PRD FR-058).
 7. Runtime stays direct Azure OpenAI calls through the existing Foundry
    deployments (`standard`, `capable`) in `uksouth`, as in ADR 0001 to
    ADR 0003. No Foundry Agent Service orchestrator is deployed.
 8. Activation needs a multi-turn evaluation harness with approved thresholds
-   (PRD FR-055, BRD OD-49).
+   (PRD FR-059, BRD OD-49).
 
 ## Isolation model
 
@@ -176,8 +176,8 @@ number, model choice per task and any cost target.
 
 * [BRD v0.18.0](../brds/agentic-retrofit-programme-brd.md): BG-013, FR-049,
   FR-050, RULE-025, RULE-026, NFR-010, NFR-011, AC-091 to AC-098, OD-44 to OD-49
-* [PRD v0.16.0](../prds/zava-forward-retrofit-programme-demonstrator.md): FR-051
-  to FR-055, NFR-014, NFR-015, AC-069 to AC-081, OQ-017 to OQ-022
+* [PRD v0.17.0](../prds/zava-forward-retrofit-programme-demonstrator.md): FR-055
+  to FR-059, NFR-015, NFR-016, AC-091 to AC-103, OQ-020 to OQ-025
 * [Customer journey atlas](../reference/research/ux/customer-journeys/customer-journey-atlas.md)
 * [ADR 0001](./0001-azure-architecture.md),
   [ADR 0002](./0002-pilot-readiness-architecture.md) and

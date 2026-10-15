@@ -2,7 +2,7 @@
 title: ADR 0003 Journey-Derived Capabilities and IoT Hub Sensor Ingestion
 description: Proposed decisions on carrying the customer journey atlas capabilities in the existing single-API, Azure SQL and five-assistant runtime, and on using Azure IoT Hub as the in-use monitoring ingestion product with deterministic analysis
 author: AMA programme
-ms.date: 2026-10-14
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
@@ -13,7 +13,7 @@ approval by the owner, the DPO, Legal, the Board, control owners or any
 customer role. It applies the runtime of [ADR 0001](./0001-azure-architecture.md) and
 [ADR 0002](./0002-pilot-readiness-architecture.md) to the requirements added by
 [BRD v0.17.0](../brds/agentic-retrofit-programme-brd.md) and
-[PRD v0.15.0](../prds/zava-forward-retrofit-programme-demonstrator.md).
+[PRD v0.16.0](../prds/zava-forward-retrofit-programme-demonstrator.md).
 Decision 6 amends the ingestion choice in ADR 0002's sensor section on the
 AMA project owner's direction (2026-10-14) that Azure IoT Hub is the product
 for IoT; the owner has not approved any other part of this ADR.
@@ -135,7 +135,7 @@ build).
 
 * [Customer journey atlas](../reference/research/ux/customer-journeys/customer-journey-atlas.md)
 * [BRD v0.17.0](../brds/agentic-retrofit-programme-brd.md)
-* [PRD v0.15.0](../prds/zava-forward-retrofit-programme-demonstrator.md)
+* [PRD v0.16.0](../prds/zava-forward-retrofit-programme-demonstrator.md)
 * [In-use monitoring analytics research plan](../reference/research/iot-sensor-analytics-research-plan.md)
 * [ADR 0001](./0001-azure-architecture.md) and [ADR 0002](./0002-pilot-readiness-architecture.md)
 
