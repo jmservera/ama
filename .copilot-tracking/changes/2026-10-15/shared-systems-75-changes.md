@@ -202,6 +202,39 @@ or rewriting any commit.
 | `git status --short && git branch --show-current && git merge --no-commit origin/main` | Clean expected topic; log conflict only, index and core README auto-merged |
 | Post-sync core full suite/static command, then API focused building suite/static/JS command; `git add` resolved log and delivery evidence, `git diff --cached --check && git diff --check` | Core now **275 passed** (five inherited #308 tests); API 3 passed; all affected static checks passed; staged resolution clean |
 
-Post-synchronization validation and the resulting merge commit/push/CI status
-are recorded below when executed. No changes to this feature's executable
-implementation were made after its one Review.
+### Final Publication Evidence
+
+* Regular merge commit `440620c` synchronized the topic with main; push
+  succeeded. PR #310 is MERGEABLE. No merge into main or history rewrite.
+* At code revision `440620c`, all **11 scheduled CI checks passed**, including
+  all five source projects, namespace/no-working-data gates, image, MSSQL,
+  legacy test and validation jobs. Source CI builds the four workload images
+  and verifies their runtime and dependency boundaries.
+* CI SQL Server coverage exercises existing store/five-assistant contracts.
+  It is not evidence of Azure deployment, real model inference, or a new
+  building-specific SQL Server acceptance scenario.
+* The Capstone Rubric Scorer is **disabled_manually** on GitHub. It did not
+  run; no rubric pass is claimed and no workflow setting was changed.
+  Owner disposition is needed before treating the rubric gate as satisfied.
+* Local Docker remains permission denied; successful CI image evidence does
+  not change that local result. Register authority, real Azure/model evidence
+  and human UX/accessibility acceptance remain unticked.
+* No feature executable changes or second Review followed the single Review.
+  The final additional commit only records publication evidence and state.
+
+| Command | Result |
+| --- | --- |
+| From `src/core`: `python -m unittest discover -s tests -q && ruff check . && ruff format --check . && mypy`; from `src/api`: `PYTHONPATH=../core/tests:../agents/tests python -m unittest discover -s tests -p test_buildings.py -q && ruff check . && ruff format --check . && mypy && node --check src/zava_forward/api/web/app.js` | Post-sync core 275 passed, API 3 passed, all affected static checks passed |
+| `git add` resolved log and delivery artifacts; `printf ... \| GIT_AUTHOR_EMAIL=8036360+jmservera@users.noreply.github.com GIT_COMMITTER_EMAIL=8036360+jmservera@users.noreply.github.com git commit -F - && git push origin feat/src-shared-systems-75` | Merge commit 440620c created with required trailer and pushed |
+| `gh pr view 310 --json mergeable,statusCheckRollup`; `gh run list --branch feat/src-shared-systems-75 --limit 5 --json databaseId,name,status,conclusion,headSha` | Initial eventual-consistency response CONFLICTING, refreshed MERGEABLE; checks subsequently scheduled |
+| `gh pr checks 310`; `gh api repos/jmservera/ama/actions/permissions --jq '{enabled,allowed_actions}'`; commit check-runs API | Actions enabled; 11 checks scheduled |
+| `gh pr checks 310 --watch --interval 20` | All 11 checks passed; runs 38807461342, 38807461367 and 38807461702 successful |
+| `gh api repos/jmservera/ama/actions/workflows/rubric-score.lock.yml --jq '{name,state,path}'` | Capstone Rubric Scorer disabled_manually; requires owner disposition |
+| `gh run list --branch feat/src-shared-systems-75 --limit 10 --json databaseId,name,status,conclusion,headSha && gh pr view 310 --json mergeable,reviewDecision` | Three successful workflows at 440620c, MERGEABLE, no human review decision |
+
+Closeout commands use `git diff --check`, an ordinary evidence-only Conventional
+Commit with the same privacy-safe author/committer and coauthor trailer, normal
+topic push, regenerated session PR body, `gh pr edit 310 --body-file ...`,
+`gh pr checks 310 --watch --interval 20` and final read-only branch/status checks.
+Their live publication/check status is reported in PR #310; none merge the PR,
+enable the disabled rubric workflow or start follow-up implementation.

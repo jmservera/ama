@@ -21,12 +21,15 @@
       "evidence": "Explicit user request 2026-10-15 and issue 75 owner pivot comment"
     },
     {"decision": "Research executed and Ready; one critique executed Revise; PC-001 through PC-004 directly resolved in plan/details", "status": "resolved", "evidence": ".copilot-tracking/plans/2026-10-15/shared-systems-75-plan.md"},
-    {"decision": "One post-implementation Review executed Complete; outcome Residual work for bounded local model/view assessment", "status": "executed", "evidence": ".copilot-tracking/reviews/logs/2026-10-15/shared-systems-75-review.md"}
+    {"decision": "One post-implementation Review executed Complete; outcome Residual work for bounded local model/view assessment", "status": "executed", "evidence": ".copilot-tracking/reviews/logs/2026-10-15/shared-systems-75-review.md"},
+    {"decision": "PR 310 published; normal topic/main synchronization 440620c; all 11 scheduled CI checks passed at code revision 440620c, including images and existing MSSQL contracts", "status": "executed", "evidence": ".copilot-tracking/changes/2026-10-15/shared-systems-75-changes.md"}
   ],
-  "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Commit validated topic synchronization, push PR 310 and consume CI; do not merge the PR or start follow-up implementation"},
+  "blockers": [
+    {"id": "rubric-gate", "summary": "Capstone Rubric Scorer is disabled_manually and did not run; rubric evidence is unavailable", "resolution": "Owner must enable/execute or explicitly disposition the rubric gate before merge"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Owner rubric-gate disposition and PR 310 review; await a ranked follow-up selection, Stop or manual-mode direction. No merge or child implementation"},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Consume CI and authorize outstanding actual SQL Server/Azure/model verification", "rationale": "Highest release-evidence value; begin with already running PR checks, no new authority assumed", "evidence": "RV-001"},
+    {"rank": 1, "task": "Authorize outstanding building-specific SQL Server/Azure/model verification", "rationale": "Highest release-evidence value; scheduled CI passed but does not establish actual Azure/model or building-specific SQL Server acceptance", "evidence": "RV-001; CI runs 38807461342, 38807461367 and 38807461702"},
     {"rank": 2, "task": "Run human staff/accessibility acceptance of home/building navigation", "rationale": "Small read-only journey with direct user value and existing browser baseline", "evidence": "RV-003"},
     {"rank": 3, "task": "Supply authoritative building register and govern future update/release rights", "rationale": "Operational value but larger owner/data dependency; do not invent source authority", "evidence": "RV-002"}
   ]
