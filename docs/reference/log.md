@@ -2831,3 +2831,10 @@ metadata when the knowledge base was created.
 * Generator receipt gains a `lifecycle` block; two more cases carry a Raised
   commitment and a Valuation. Labelled synthetic fixtures under ADR 0005.
 * Open: owner decision on demo-only outcome fixtures. No index change.
+
+## 2026-10-15 Law store Azure SQL and Blob backends (#210)
+
+* Noted in `mvp/README.md` (law store section) the Azure SQL ledger backend and
+  Azure Blob snapshot interface; SQLite and local files are test doubles only.
+* No regulatory snapshot changed. Open: Blob immutability policy and Azure SQL
+  deployment are unverified infrastructure items.

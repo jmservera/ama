@@ -1,7 +1,7 @@
 """Law store: versioning, immutability, completeness, gaps, rebuildable index, read-only viewer."""
 import json
+import os
 import shutil
-import sqlite3
 import tempfile
 import threading
 import unittest
@@ -20,16 +20,78 @@ REG = Path(__file__).resolve().parents[2] / "docs" / "reference" / "regulatory"
 
 
 class LawBase(unittest.TestCase):
+    def make(self):
+        return lawstore.LawStore(str(Path(self.tmp.name) / "law.sqlite"), Path(self.tmp.name) / "blobs")
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.reg = Path(self.tmp.name) / "reg"
         shutil.copytree(REG, self.reg)
-        self.law = lawstore.LawStore(str(Path(self.tmp.name) / "law.sqlite"), Path(self.tmp.name) / "blobs")
+        self.law = self.make()
         self.report = self.law.seed(self.reg, today="2026-10-15")
 
     def tearDown(self):
         self.law.close()
         self.tmp.cleanup()
+
+
+class FakeContainer:
+    """Stands in for an azure.storage.blob ContainerClient; only the calls AzureBlobSnapshots makes."""
+
+    def __init__(self):
+        self.items = {}
+
+    def upload_blob(self, name, data, overwrite=False):
+        from azure.core.exceptions import ResourceExistsError
+        if name in self.items and not overwrite:
+            raise ResourceExistsError("exists")
+        self.items[name] = data
+
+    def download_blob(self, name):
+        data = self.items[name]
+        return type("D", (), {"readall": lambda self: data})()
+
+
+class FakeBlobs:
+    def __init__(self, items):
+        self.items = items
+
+    def get(self, rel):
+        return self.items[rel]
+
+
+class BlobInterfaceTests(unittest.TestCase):
+    def check(self, store):
+        store.put("a/v1.md", b"one")
+        store.put("a/v1.md", b"one")
+        with self.assertRaises(FileExistsError):
+            store.put("a/v1.md", b"two")
+        self.assertEqual(store.get("a/v1.md"), b"one")
+
+    def test_local_snapshots_are_write_once(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.check(lawstore.LocalSnapshots(d))
+
+    def test_azure_snapshots_never_overwrite(self):
+        try:
+            import azure.core.exceptions  # noqa: F401
+        except ImportError:
+            self.skipTest("azure-core not installed")
+        container = FakeContainer()
+        self.check(lawstore.AzureBlobSnapshots(container))
+        self.assertEqual(container.items, {"a/v1.md": b"one"})
+
+    def test_store_seeds_through_the_azure_interface(self):
+        try:
+            import azure.core.exceptions  # noqa: F401
+        except ImportError:
+            self.skipTest("azure-core not installed")
+        with tempfile.TemporaryDirectory() as d:
+            law = lawstore.LawStore(str(Path(d) / "l.sqlite"), blobs=lawstore.AzureBlobSnapshots(FakeContainer()))
+            law.seed(REG, today="2026-10-15")
+            s = law.sources()["sources"][0]
+            self.assertTrue(law.verify_snapshot(s["id"], s["version"]))
+            law.close()
 
 
 class StoreTests(LawBase):
@@ -62,8 +124,11 @@ class StoreTests(LawBase):
     def test_existing_rows_cannot_be_changed_or_deleted(self):
         for sql in ("UPDATE reg_version SET status='in_force'", "DELETE FROM reg_version", "UPDATE reg_provision SET text='x'",
                     "DELETE FROM reg_source", "UPDATE reg_gap SET reason='x'"):
-            with self.assertRaises(sqlite3.DatabaseError, msg=sql):
-                self.law.db.execute(sql)
+            with self.assertRaises(self.law.sql.dberror, msg=sql):
+                try:
+                    self.law.sql.run(sql)
+                finally:
+                    self.law.sql.rollback()
 
     def test_snapshot_files_are_never_overwritten(self):
         v = self.law.source("pas-2035-bsi-overview")["versions"][0]
@@ -93,10 +158,17 @@ class StoreTests(LawBase):
         self.assertTrue(any("Historical" in c for c in h["caveats"]))
         self.assertTrue(any(lawstore.NOT_REVIEWED == c for c in h["caveats"]))
 
+    def test_snapshot_tampering_is_detected(self):
+        v = self.law.source("pas-2035-bsi-overview")["versions"][0]
+        self.assertTrue(self.law.verify_snapshot("pas-2035-bsi-overview", 1))
+        self.law.blobs = FakeBlobs({v["blob_path"]: b"changed"})
+        self.assertFalse(self.law.verify_snapshot("pas-2035-bsi-overview", 1))
+
     def test_index_rebuilds_from_sql_alone(self):
         before = self.law.search("hazard timeframe")["results"]
         self.assertTrue(before)
-        self.law.db.execute("DELETE FROM reg_index")
+        self.law.sql.run("DELETE FROM reg_index")
+        self.law.sql.commit()
         self.assertEqual(self.law.search("hazard timeframe")["results"], [])
         self.assertGreater(self.law.rebuild_index(), 0)
         self.assertEqual([r["id"] for r in self.law.search("hazard timeframe")["results"]], [r["id"] for r in before])
@@ -108,6 +180,29 @@ class StoreTests(LawBase):
     def test_split_provisions_keeps_heading_path(self):
         out = lawstore.split_provisions("---\ntitle: x\n---\n\n## A\n\ntext a\n\n### B\n\ntext b\n")
         self.assertEqual(out, [("A", "text a"), ("A > B", "text b")])
+
+
+ON = os.environ.get("ZF_TEST_MSSQL") == "1"
+TABLES = ("reg_index", "reg_gap", "reg_provision", "reg_version", "reg_source")
+
+
+def wipe_mssql():
+    from zavaforward_mvp.mssqlstore import _Conn, connection_string
+    c = _Conn(connection_string())
+    for t in TABLES:
+        c.execute(f"IF OBJECT_ID(N'{t}_append_only', N'TR') IS NOT NULL DROP TRIGGER {t}_append_only")
+        c.execute(f"IF OBJECT_ID(N'{t}', N'U') IS NOT NULL DROP TABLE {t}")
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlStoreTests(StoreTests):
+    """The same behaviour suite against SQL Server or Azure SQL, snapshots in the local test double."""
+
+    def make(self):
+        wipe_mssql()
+        return lawstore.LawStore(db=lawstore.MssqlDb(), blobs=lawstore.LocalSnapshots(Path(self.tmp.name) / "blobs"))
+
+    test_ledger_ddl_maps_every_append_only_table = None
 
 
 class ViewerTests(LawBase):
