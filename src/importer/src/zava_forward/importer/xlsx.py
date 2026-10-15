@@ -8,6 +8,7 @@ links are ignored. Size limits stop oversized or zip-bomb workbooks.
 import io
 import re
 import zipfile
+import zlib
 from collections.abc import Mapping, Sequence
 from xml.etree import ElementTree as ET
 from xml.sax.saxutils import escape
@@ -15,6 +16,8 @@ from xml.sax.saxutils import escape
 MAX_PART_BYTES = 20 * 1024 * 1024
 MAX_ROWS = 20000
 MAX_COLUMNS = 200
+MAX_TOTAL_BYTES = 50 * 1024 * 1024
+MAX_SHEETS = 50
 NS = {
     "m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
     "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
@@ -27,12 +30,30 @@ class WorkbookError(ValueError):
     """The workbook cannot be read safely."""
 
 
-def _part(zf: zipfile.ZipFile, name: str) -> bytes:
+class _Budget:
+    """Tracks uncompressed bytes read across all parts of one workbook."""
+
+    def __init__(self) -> None:
+        self.used = 0
+
+
+def _part(zf: zipfile.ZipFile, name: str, budget: _Budget) -> bytes:
     info = zf.getinfo(name)
     if info.file_size > MAX_PART_BYTES:
         raise WorkbookError(f"workbook part {name} is too large")
-    data = zf.read(name)
-    if b"<!DOCTYPE" in data or b"<!ENTITY" in data:
+    with zf.open(name) as fh:
+        data = fh.read(MAX_PART_BYTES + 1)
+    if len(data) > MAX_PART_BYTES:
+        raise WorkbookError(f"workbook part {name} is too large")
+    budget.used += len(data)
+    if budget.used > MAX_TOTAL_BYTES:
+        raise WorkbookError("workbook is too large when uncompressed")
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise WorkbookError(f"workbook part {name} is not UTF-8") from exc
+    lowered = text.lower()
+    if "<!doctype" in lowered or "<!entity" in lowered:
         raise WorkbookError(f"workbook part {name} declares entities")
     return data
 
@@ -56,27 +77,49 @@ def _text(node: ET.Element | None) -> str:
 def read_workbook(data: bytes) -> dict[str, list[list[str]]]:
     """Return sheet name -> rows of text cells from the bytes of an .xlsx file."""
     try:
-        zf = zipfile.ZipFile(io.BytesIO(data))
-    except zipfile.BadZipFile as exc:
-        raise WorkbookError("not a valid .xlsx file") from exc
+        return _read_workbook(data)
+    except WorkbookError:
+        raise
+    except (
+        KeyError,
+        ET.ParseError,
+        ValueError,
+        IndexError,
+        zipfile.BadZipFile,
+        zlib.error,
+        NotImplementedError,
+        RuntimeError,
+        EOFError,
+    ) as exc:
+        raise WorkbookError(f"not a valid .xlsx file ({type(exc).__name__})") from exc
+
+
+def _read_workbook(data: bytes) -> dict[str, list[list[str]]]:
+    zf = zipfile.ZipFile(io.BytesIO(data))
+    budget = _Budget()
     with zf:
         names = set(zf.namelist())
         if "xl/workbook.xml" not in names:
             raise WorkbookError("not a valid .xlsx file")
+        if "xl/_rels/workbook.xml.rels" not in names:
+            raise WorkbookError("workbook relationships are missing")
         shared: list[str] = []
         if "xl/sharedStrings.xml" in names:
-            root = ET.fromstring(_part(zf, "xl/sharedStrings.xml"))
+            root = ET.fromstring(_part(zf, "xl/sharedStrings.xml", budget))
             shared = [_text(si) for si in root.findall("m:si", NS)]
-        book = ET.fromstring(_part(zf, "xl/workbook.xml"))
-        rels = ET.fromstring(_part(zf, "xl/_rels/workbook.xml.rels"))
+        book = ET.fromstring(_part(zf, "xl/workbook.xml", budget))
+        rels = ET.fromstring(_part(zf, "xl/_rels/workbook.xml.rels", budget))
         targets = {r.get("Id"): r.get("Target", "") for r in rels.findall("pr:Relationship", NS)}
+        sheet_nodes = book.findall("m:sheets/m:sheet", NS)
+        if len(sheet_nodes) > MAX_SHEETS:
+            raise WorkbookError("too many sheets")
         sheets: dict[str, list[list[str]]] = {}
-        for sheet in book.findall("m:sheets/m:sheet", NS):
+        for sheet in sheet_nodes:
             target = targets.get(sheet.get(f"{{{NS['r']}}}id"), "")
             path = target.lstrip("/") if target.startswith("/") else f"xl/{target}"
             if path not in names:
                 continue
-            sheets[sheet.get("name", "Sheet")] = _read_sheet(_part(zf, path), shared)
+            sheets[sheet.get("name", "Sheet")] = _read_sheet(_part(zf, path, budget), shared)
         return sheets
 
 
@@ -98,6 +141,8 @@ def _read_sheet(xml: bytes, shared: list[str]) -> list[list[str]]:
             if kind == "s":
                 v = c.find("m:v", NS)
                 i = int(v.text or "0") if v is not None else 0
+                if i < 0:
+                    raise WorkbookError("bad shared string index")
                 value = shared[i] if i < len(shared) else ""
             elif kind == "inlineStr":
                 value = _text(c.find("m:is", NS))

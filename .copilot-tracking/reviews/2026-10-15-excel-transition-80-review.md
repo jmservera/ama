@@ -20,3 +20,10 @@ Review executed once. Outcome: library slice conformant to plan; issue not closa
 * Owners set thresholds (ADR 0001).
 * AI-assisted mapping with approval gate; importer image and limited SQL role; Azure SQL evidence.
 * Row-key uses the first declared field; revisit when more structures are declared.
+
+## PR #303 code-review fixes (applied)
+
+* Parsing failures (missing rels part, malformed XML, bad cell reference or shared-string index) become `WorkbookError`; CLI exits 2 with "Cannot import".
+* Entity guard hardened (UTF-8 only, case-insensitive), with caps on total uncompressed bytes and sheet count.
+* Quarantine: unique (structure, version), conditional decide UPDATE with rowcount check so concurrent approve/reject cannot both succeed, retry then clean failure on duplicate version. Portable SQL kept.
+* Evidence: 34 unittest OK, ruff and mypy clean; see the changes artifact.

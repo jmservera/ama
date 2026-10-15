@@ -3,7 +3,9 @@ import sqlite3
 import tempfile
 import unittest
 import zipfile
+from collections.abc import Mapping
 from pathlib import Path
+from unittest import mock
 
 from zava_forward.importer.export import compare, history_rows, to_csv, to_xlsx
 from zava_forward.importer.mapping import CASE_LIST, build_preview, preview_file
@@ -39,6 +41,79 @@ class XlsxTests(unittest.TestCase):
             zf.writestr("xl/_rels/workbook.xml.rels", "<r/>")
         with self.assertRaises(WorkbookError):
             read_workbook(buf.read_bytes())
+
+    def _zip(self, parts: Mapping[str, bytes | str]) -> bytes:
+        import io
+
+        out = io.BytesIO()
+        with zipfile.ZipFile(out, "w") as zf:
+            for name, body in parts.items():
+                zf.writestr(name, body)
+        return out.getvalue()
+
+    def test_malformed_parts_become_workbook_errors(self) -> None:
+        wb = '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"/>'
+        cases = {
+            "missing rels": {"xl/workbook.xml": wb},
+            "malformed xml": {"xl/workbook.xml": "<workbook", "xl/_rels/workbook.xml.rels": "<r/>"},
+        }
+        for label, parts in cases.items():
+            with self.subTest(label), self.assertRaises(WorkbookError):
+                read_workbook(self._zip(parts))
+
+    def test_bad_cell_ref_and_shared_index(self) -> None:
+        base = write_workbook({"S": [["a"]]})
+        for old, new in (
+            (b'r="A1"', b'r="1"'),
+            (b't="inlineStr"><is><t xml:space="preserve">a</t></is>', b't="s"><v>x</v>'),
+        ):
+            import io
+
+            src = zipfile.ZipFile(io.BytesIO(base))
+            out = io.BytesIO()
+            with zipfile.ZipFile(out, "w") as zf:
+                for n in src.namelist():
+                    body = src.read(n)
+                    if n.endswith("sheet1.xml"):
+                        body = body.replace(old, new)
+                    zf.writestr(n, body)
+            with self.subTest(new), self.assertRaises(WorkbookError):
+                read_workbook(out.getvalue())
+
+    def test_entity_guard_is_case_insensitive_and_utf8_only(self) -> None:
+        rels = "<r/>"
+        for body in (
+            b'<!doctype x [<!entity a "b">]><workbook/>',
+            "<!DOCTYPE x><workbook/>".encode("utf-16"),
+            b"\xff\xfe<workbook/>\x80",
+        ):
+            with self.assertRaises(WorkbookError):
+                read_workbook(
+                    self._zip({"xl/workbook.xml": body, "xl/_rels/workbook.xml.rels": rels})
+                )
+
+    def test_total_size_and_sheet_caps(self) -> None:
+        from zava_forward.importer import xlsx
+
+        with mock.patch.object(xlsx, "MAX_TOTAL_BYTES", 50), self.assertRaises(WorkbookError):
+            read_workbook(SYNTHETIC_BYTES)
+        with mock.patch.object(xlsx, "MAX_SHEETS", 0), self.assertRaises(WorkbookError):
+            read_workbook(SYNTHETIC_BYTES)
+
+    def test_cli_reports_clean_error(self) -> None:
+        import subprocess
+        import sys
+
+        bad = Path(tempfile.mkdtemp()) / "bad.xlsx"
+        bad.write_bytes(self._zip({"xl/workbook.xml": "<workbook"}))
+        done = subprocess.run(
+            [sys.executable, "-m", "zava_forward.importer", "preview", str(bad)],
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(done.returncode, 2)
+        self.assertIn("Cannot import", done.stderr)
+        self.assertNotIn("Traceback", done.stderr)
 
 
 class PreviewTests(unittest.TestCase):
@@ -148,6 +223,33 @@ class QuarantineTests(unittest.TestCase):
         with self.assertRaises(KeyError):
             self.store.get("none")
         self.assertIsInstance(self.store.conn, sqlite3.Connection)
+
+    def test_second_decision_loses_the_race(self) -> None:
+        rec = self.store.stage(preview_of(GOOD), "Sam")
+        stale = self.store.get(rec.batch_id)
+        self.store.reject(rec.batch_id, "Priya")
+        with mock.patch.object(self.store, "get", return_value=stale):
+            with self.assertRaises(ImportError_):
+                self.store.approve(rec.batch_id, "Alex")
+            with self.assertRaises(ImportError_):
+                self.store.reject(rec.batch_id, "Alex")
+        self.assertEqual(self.store.get(rec.batch_id).status, "rejected")
+        self.assertIsNone(self.store.current("case-list"))
+
+    def test_duplicate_version_is_refused_by_the_database(self) -> None:
+        rec = self.store.stage(preview_of(GOOD), "Sam")
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.store.conn.execute(
+                "INSERT INTO import_batches (batch_id, structure, version, source_name, "
+                "source_sha256, status, staged_by, staged_at, data_label) "
+                "VALUES ('x', ?, ?, 's', 'h', 'staged', 'p', 't', 'd')",
+                (rec.structure, rec.version),
+            )
+
+    def test_stage_after_gap_keeps_versions_unique(self) -> None:
+        first = self.store.stage(preview_of(GOOD), "Sam")
+        second = self.store.stage(preview_of(GOOD), "Sam")
+        self.assertEqual((first.version, second.version), (1, 2))
 
 
 class ExportTests(unittest.TestCase):

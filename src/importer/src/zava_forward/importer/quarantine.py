@@ -23,7 +23,7 @@ SCHEMA = (
     "source_sha256 VARCHAR(64) NOT NULL, status VARCHAR(16) NOT NULL, "
     "staged_by VARCHAR(120) NOT NULL, staged_at VARCHAR(32) NOT NULL, decided_by VARCHAR(120), "
     "decided_at VARCHAR(32), decision_note NVARCHAR(400), superseded_by VARCHAR(36), "
-    "data_label VARCHAR(32) NOT NULL)",
+    "data_label VARCHAR(32) NOT NULL, UNIQUE (structure, version))",
     "CREATE TABLE import_rows ("
     "batch_id VARCHAR(36) NOT NULL, row_number INT NOT NULL, row_key VARCHAR(120) NOT NULL, "
     "payload NVARCHAR(4000) NOT NULL, problems NVARCHAR(4000) NOT NULL, "
@@ -32,8 +32,9 @@ SCHEMA = (
 BLOCKED_APPROVERS = {"", "ai", "assistant", "system"}
 DECIDE = (
     "UPDATE import_batches SET status = ?, decided_by = ?, decided_at = ?, decision_note = ? "
-    "WHERE batch_id = ?"
+    "WHERE batch_id = ? AND status = 'staged'"
 )
+STAGE_ATTEMPTS = 5
 
 
 class ImportError_(Exception):
@@ -90,25 +91,35 @@ class QuarantineStore:
             raise ImportError_("A named person must stage the import.")
         if preview.blocking:
             raise ImportError_("The mapping has conflicts; fix the file and preview again.")
-        cur = self.conn.cursor()
-        cur.execute("SELECT COUNT(*) FROM import_batches WHERE structure = ?", (preview.structure,))
-        version = int(cur.fetchone()[0]) + 1
         batch_id = str(uuid.uuid4())
-        cur.execute(
-            f"INSERT INTO import_batches ({COLUMNS}) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?)",
-            (
-                batch_id,
-                preview.structure,
-                version,
-                preview.source_name,
-                preview.source_sha256,
-                "staged",
-                staged_by.strip(),
-                _now(),
-                self.data_label,
-            ),
-        )
+        cur = self.conn.cursor()
+        for _ in range(STAGE_ATTEMPTS):
+            cur.execute(
+                "SELECT COALESCE(MAX(version), 0) FROM import_batches WHERE structure = ?",
+                (preview.structure,),
+            )
+            version = int(cur.fetchone()[0]) + 1
+            try:
+                cur.execute(
+                    f"INSERT INTO import_batches ({COLUMNS}) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?)",
+                    (
+                        batch_id,
+                        preview.structure,
+                        version,
+                        preview.source_name,
+                        preview.source_sha256,
+                        "staged",
+                        staged_by.strip(),
+                        _now(),
+                        self.data_label,
+                    ),
+                )
+                break
+            except sqlite3.IntegrityError:
+                self.conn.rollback()
+        else:
+            raise ImportError_("Could not allocate a batch version; try staging again.")
         for r in preview.rows:
             cur.execute(
                 "INSERT INTO import_rows (batch_id, row_number, row_key, payload, problems) "
@@ -156,19 +167,21 @@ class QuarantineStore:
                 "Some rows need fixing; fix and re-import, or accept the problems explicitly."
             )
         cur = self.conn.cursor()
+        cur.execute(DECIDE, ("approved", who, _now(), note[:400], batch_id))
+        if cur.rowcount != 1:
+            self.conn.rollback()
+            raise ImportError_("The batch was already decided by someone else.")
         cur.execute(
-            "SELECT batch_id FROM import_batches WHERE structure = ? AND status = ?",
-            (rec.structure, "approved"),
+            "SELECT batch_id FROM import_batches "
+            "WHERE structure = ? AND status = ? AND batch_id <> ?",
+            (rec.structure, "approved", batch_id),
         )
         for (old,) in cur.fetchall():
             cur.execute(
-                "UPDATE import_batches SET status = ?, superseded_by = ? WHERE batch_id = ?",
-                ("superseded", batch_id, old),
+                "UPDATE import_batches SET status = ?, superseded_by = ? "
+                "WHERE batch_id = ? AND status = ?",
+                ("superseded", batch_id, old, "approved"),
             )
-        cur.execute(
-            DECIDE,
-            ("approved", who, _now(), note[:400], batch_id),
-        )
         self.conn.commit()
         return self.get(batch_id)
 
@@ -179,10 +192,11 @@ class QuarantineStore:
         rec = self.get(batch_id)
         if rec.status != "staged":
             raise ImportError_(f"Only a staged batch can be rejected (status is {rec.status}).")
-        self.conn.cursor().execute(
-            DECIDE,
-            ("rejected", who, _now(), note[:400], batch_id),
-        )
+        cur = self.conn.cursor()
+        cur.execute(DECIDE, ("rejected", who, _now(), note[:400], batch_id))
+        if cur.rowcount != 1:
+            self.conn.rollback()
+            raise ImportError_("The batch was already decided by someone else.")
         self.conn.commit()
         return self.get(batch_id)
 
