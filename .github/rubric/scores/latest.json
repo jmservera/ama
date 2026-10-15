@@ -2,14 +2,14 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-14T23:43:37+00:00",
-  "commit": "bc387804381d3b007304ed227a366302cc31e4c9",
+  "scored_at": "2026-10-14T23:46:26+00:00",
+  "commit": "169aab3746649b5c267c89e69b24cbecc47f4726",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38654868763",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38655418897",
   "fingerprints": {
-    "brd": "77a04809dd641a1bedbc293c34d9d852fdeacfe9d9fe00c10c1f100fc17bbde3",
-    "prd": "6f26186fedf053a0951e72a9b8316da861db40c642cdf9ec916f3344f749b47c",
-    "adr": "eb4285e5df8042cfe62330511aa25991178eb742fc3c2c6f5dbfbdbd57c3a869",
+    "brd": "b0752d93d8f553c47308fa99fcd531280995d6e75d085b52a648c9b70f7a7e02",
+    "prd": "9b0b1699aa3b05faa6e3cc59386fe2f825e986286b3f586ff0416e96575e68b5",
+    "adr": "c90b1624ec10f7ae9190ac4a942f9c15f6fe046f5f6380316b989c779324b582",
     "solution-code": "0708f6ce7afa4510f3f0f951b62714ab6fc7fc207ea502f21f9eacb6f1359ac4",
     "infrastructure": "f5ee52836ffcddda14f2c5a85e6f0b1e3ac9baf444d4f81001b172409d7a623b",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
@@ -27,53 +27,46 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "infra/modules/authTokenStore.bicep:20-58",
-        "docs/adrs/0001-azure-architecture.md:112-158"
+        "docs/adrs/0004-per-user-agent-chat-and-memory.md:106-120",
+        "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table unchanged; new ADR 0001 RAI boundary (lines 112-158) is a proposed future worker-identity split, cleanly decoupled, but describes a not-yet-built topology, not current scaling evidence. Score unchanged."
+      "rationale": "New ADR 0004 adds an isolation model section describing a decoupled optional channel reusing the existing Store interface, consistent with existing modular decoupling; it is a proposal, not implemented, so does not move the score."
     },
     "A2": {
       "score": 5,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:286-318",
-        "docs/adrs/0001-azure-architecture.md:112-158"
+        "docs/adrs/0004-per-user-agent-chat-and-memory.md:63-69",
+        "docs/adrs/0004-per-user-agent-chat-and-memory.md:137-150"
       ],
-      "rationale": "New RAI sections explicitly name and reject alternatives (new governance service, always-on assistance, AI-ranked queue) with reasons, reinforcing deliberate trade-off reasoning already at Excellent. Already at ceiling; unchanged."
+      "rationale": "ADR 0004 names five options (A-E) and explicitly rejects two with reasons (D: cross-user exposure; E: preview status, extraction-vs-consent conflict), reinforcing deliberate trade-off reasoning already evidenced elsewhere."
     },
     "A3": {
       "score": 5,
       "evidence": [
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:959-1010",
-        "docs/adrs/0002-pilot-readiness-architecture.md:286-318"
+        "docs/adrs/0004-per-user-agent-chat-and-memory.md:106-120",
+        "docs/adrs/0004-per-user-agent-chat-and-memory.md:121-136"
       ],
-      "rationale": "New FR-051 to FR-054/AC-069 to AC-073/NFR-014 and ADR RAI control plane add a stated threat model (AI STRIDE), injection/leakage/version-mismatch tests and named approval gates. Already at ceiling; unchanged."
+      "rationale": "ADR 0004 states isolation controls (server-derived identity, per-turn re-auth, injection treated as inert data) and names risks (row-level isolation depends on app filters, memory as monitoring risk) with mitigations; still a design proposal, not implemented."
     },
     "A4": {
       "score": 5,
-      "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:1-120",
-        "mvp/README.md:420-460"
-      ],
-      "rationale": "No solution-code files changed in this diff; five-assistant implementation evidence unaffected by the ADR/PRD-only RAI amendment. Score unchanged."
+      "evidence": [],
+      "rationale": "Unchanged baseline: no mvp/ implementation changes in this diff; the new ADR/BRD/PRD content is explicitly proposed and not implemented."
     },
     "A5": {
       "score": 3,
-      "evidence": [
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:868-901"
-      ],
-      "rationale": "New 'Observability and SLO Measurement Method' section is a detailed proposed telemetry contract (OTel conventions, PII denylist, p50/p95 method) but explicitly not implemented; still qualitative, nothing measured. Score unchanged at Satisfactory."
+      "evidence": [],
+      "rationale": "Unchanged baseline: operational readiness evidence not affected by this documentation-only diff."
     },
     "A6": {
       "score": 3,
-      "evidence": [
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:903-958"
-      ],
-      "rationale": "New 'AI Model Selection and Evaluation Harness' defines held-out splits, metrics and thresholds, but text states targets 'remain unproved by this amendment' and no evaluation has run. Plans are not rewarded as delivered; score unchanged."
+      "evidence": [],
+      "rationale": "Unchanged baseline: no evaluation harness or model-choice code changed; PRD FR-055 only proposes a future harness, not evidence of one."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No orchestration/handoff/state-graph code changed; RAI additions govern release gating, not agent autonomy patterns. Score unchanged."
+      "rationale": "Unchanged baseline: no agentic orchestration code changed; ADR 0004 explicitly states no new agent and no orchestrator is deployed."
     },
     "B1": {
       "score": 3,
@@ -103,10 +96,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:286-318",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:959-1010"
+        "docs/adrs/0004-per-user-agent-chat-and-memory.md:1-192"
       ],
-      "rationale": "New ADR/PRD RAI sections are well-organised and well-cross-referenced (tables, named owners) but remain ADR/PRD prose, not deck material; does not resolve prior slide/thin-documentation gaps. Unchanged at Good(4)."
+      "rationale": "New ADR is well organised and clearly labelled as proposed, but adds BRD/PRD/ADR prose, not deck material; existing slide thinness is unresolved so the capped score stays at Good(4), not Excellent(5)."
     },
     "B7": {
       "score": 3,
@@ -116,9 +108,9 @@
     "C1": {
       "score": 5,
       "evidence": [
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:959-990"
+        "docs/brds/agentic-retrofit-programme-brd.md:599-607"
       ],
-      "rationale": "RAI contract names accountable functions (DPO/Legal, Safety, Resident Engagement, Assurance) and quantifies residual severity (0 CRITICAL/HIGH, 8 MEDIUM, 3 LOW), reinforcing already-Excellent stakeholder/value framing. Already at ceiling; unchanged."
+      "rationale": "New BG-013 row names stakeholders (employees, DPO, HR) and states guardrail measures qualitatively (zero cross-user exposures, zero unconsented memory) without a numeric business value target, consistent with existing qualitative-value baseline."
     },
     "C2": {
       "score": 0,
