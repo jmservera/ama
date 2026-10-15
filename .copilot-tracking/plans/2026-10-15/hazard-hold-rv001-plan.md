@@ -85,13 +85,13 @@ No new SQLite-only syntax, exceptions by driver-name assumption, or dependencies
 #### [x] P01-T02: Add interleaved regression and clarify policy boundaries
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate, review and deliver
+### [x] P02: Validate, review and deliver
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Run requested local gates and reconcile evidence
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: One review, commit/push, update existing PR and readiness
+#### [x] P02-T02: One review, commit/push, update existing PR and readiness
 
 ## Critique Disposition
 
@@ -110,6 +110,8 @@ No further critique required or performed.
 Details: .copilot-tracking/details/2026-10-15/hazard-hold-rv001-phase-details.md.
 Changes: .copilot-tracking/changes/2026-10-15/hazard-hold-rv001-changes.md.
 Implementation and P02-T01 complete: integrated core 325 passed, API 477 run/OK with 97
-skipped, core/API ruff/format/mypy passed. P02-T02's one review complete;
-authorized delivery bookkeeping remains. No implementation blocker or plan divergence.
+skipped, core/API ruff/format/mypy passed. P02-T02 complete: one Review,
+correction 1762ccb, integrated main 5da24ca pushed to same branch; PR 314 ready
+and mergeable, original criteria unticked. No merge authorized or performed.
+No implementation blocker or plan divergence.
 Do not repeat the parent Review.

@@ -68,6 +68,11 @@ shown. Read/search/edit tools are evidenced by source and artifact diffs.
 | `/tmp/zf164/bin/python -m venv /tmp/ama-85-rv001-typeenv-ab31c480 && /tmp/ama-85-rv001-typeenv-ab31c480/bin/python -m pip install --quiet 'playwright==1.64.0'` | Exit 0; isolated development dependency environment, pip only, no browser installation |
 | `cd src/api && MYPYPATH=../core/src:../agents/src:src:../orchestrator/src:../importer/src /tmp/zf164/bin/mypy --python-executable /tmp/ama-85-rv001-typeenv-ab31c480/bin/python && PYTHONPATH=../core/tests:../agents/tests:../core/src:../agents/src:src:../orchestrator/src:../importer/src:/tmp/ama-85-rv001-deps-ab31c480 /tmp/zf164/bin/python -m unittest discover -s tests -q` | Exit 0; requested mypy tool passed on 37 files with isolated dependency resolution; integrated API 477 tests run in 117.035s, OK with 97 skips; /tmp/ama-85-rv001-api-integrated.log |
 | `git diff HEAD -- src/core/src/zava_forward/core/sqlstore.py src/core/src/zava_forward/core/store.py src/core/tests/test_hazard_referral.py` | Empty: upstream integration did not change the reviewed hazard implementation/regression |
+| `git add .copilot-tracking/changes/2026-10-15/hazard-hold-rv001-changes.md .copilot-tracking/details/2026-10-15/hazard-hold-rv001-phase-details.md .copilot-tracking/plans/2026-10-15/hazard-hold-rv001-plan.md && git diff --cached --check && git commit -m "chore: merge latest main into hazard hold branch" -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"` | Exit 0; merge commit 5da24ca, both conflicts resolved without dropping either section/log |
+| `git push origin HEAD:feat/src-hazard-referral-85 && gh pr edit 314 --body-file <session>/files/pr314-body.txt && gh pr ready 314 && gh pr view 314 --json number,isDraft,headRefOid,mergeable,url,statusCheckRollup` | Exit 0; ready, MERGEABLE, head 5da24ca; no CI check results yet reported, not claimed passed |
+| `gh pr view 314 --json isDraft,mergeable,headRefName,body,statusCheckRollup` with jq acceptance/check summary | Ready, MERGEABLE, correct branch, four unchecked and zero checked criteria; src-namespace/no-working-data success, other source/test/image/mssql checks in progress, not claimed passed |
+| `git diff --check && /tmp/zf164/bin/python -m json.tool .copilot-tracking/rpi-sessions/2026-10-15/hazard-hold-rv001-state.json && git log -2 --format='%h %an <%ae> %cn <%ce>%n%B'` | Exit 0; valid final evidence, both correction/integration commits use requested author/committer noreply identity and trailer |
+| Targeted `rm` of task-created /tmp/ama-85-rv001-deps-ab31c480, typeenv-ab31c480 and named temporary logs/merge probes | Exit 0; temporary dependencies/logs removed after durable results recorded; shared /tmp/zf164 untouched |
 
 ## Validation Environment Correction
 
@@ -82,7 +87,8 @@ for isolated third-party dependency discovery.
 
 ## Remaining Evidence and Follow-Ups
 
-P01-T01/P01-T02/P02-T01 complete. One review complete; delivery bookkeeping pending.
+P01-T01/P01-T02/P02-T01/P02-T02 complete. One review complete; correction and
+main integration committed/pushed, existing PR 314 ready and mergeable.
 Four added test methods cover all nine guarded transitions, stale-clear
 version conflicts, rollback of pending audit/procurement/case state, clean
 next requests and transaction-local reload with a concurrent writer unable to
@@ -110,3 +116,13 @@ insertions are retained, and the append-only log uses the required helper.
 Full core/API suites and static gates passed again on the integrated tree:
 core 325 passed, API 477 run/OK with 97 skips, ruff/format passed, mypy 71/37
 files passed. No upstream feature acceptance is claimed.
+
+## Delivery Outcome
+
+RV-001 correction is persistent on the existing remote branch. PR 314 uses
+Refs #85, describes the exact concurrency evidence and retained limits, and
+keeps all four original acceptance criteria unchecked. Ready for code review
+does not ratify policy, establish product acceptance or authorize merge.
+No new PR, force-push, main push or merge of PR 314 was performed.
+The bounded task is complete; no new child work is started. Ranked later
+work remains RV-002 owner ratification, then RV-003 permitted live evidence.

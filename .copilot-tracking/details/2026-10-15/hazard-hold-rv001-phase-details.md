@@ -8,7 +8,9 @@ Task: hazard-hold-rv001. Research reused, single critique Pass.
 P01-T01/P01-T02/P02-T01 complete; targeted 18 core hazard and 3 HTTP tests pass,
 including nine interleaved guarded-transition subtests and writer serialization.
 Full integrated core 325 passed; API 477 run/OK with 97 optional/environment skips.
-Core/API lint/format/types passed. Single Review complete; P02-T02 delivery remains.
+Core/API lint/format/types passed. Single Review and P02-T02 delivery complete.
+Correction 1762ccb and main integration 5da24ca pushed; PR 314 ready/mergeable
+for code review, not operational acceptance. Original criteria remain unchecked.
 No local implementation blocker; operational acceptance is deliberately outside
 this correction. Plan owns requirements and acceptance criteria.
 
