@@ -3200,3 +3200,34 @@ metadata when the knowledge base was created.
   Manual escalation and exercise hours are not operational acceptance.
   Existing AI proposal/human-review gates, resident consent and safety controls
   remain; no live inference, Azure deployment or human acceptance is claimed.
+
+## [2026-10-15] query | Generator gap-routing baseline (#167)
+
+* Added a read-only coverage report in `src/core` against the unchanged merged
+  needs inventory v1.2.0: all 13 needs routed, two covered and eleven partial.
+  Semantic and CLI tests reject malformed/duplicate IDs, issue references,
+  blank rationale, unexplained deferrals and unsupported delivered claims.
+* Reused the existing generator and determinism suites; no private register,
+  new generator, generated output or owner scope/deferral was introduced.
+* Updated the pack gap-closure section, core README and this index. Declaration
+  presence is not output conformity: scale homes/events use manifest-level
+  synthetic labels rather than universal per-record `is_synthetic=true`.
+* Owner mapping/row-owner ratification, private stock regeneration, scope and
+  volume decisions, full profile/SQL-scale and actual AI/Azure/human acceptance
+  remain open. Human approvals, resident consent and AI release gates are unchanged.
+
+## [2026-10-15] query | Generator coverage review repairs (#167, PR #312)
+
+* Require covered/delivered consistency in both directions. Missing needs and
+  deferred closures are reported as open gaps with CLI exit 1; partial child
+  routes retain exit 0 without claiming delivery or acceptance.
+* Replace the overbroad `routing_validated` field with
+  `routing_shape_validated` and `issue_existence=not-assessed`. Issue references
+  are shape-checked only; neither public consuming epics nor dataset provenance
+  provides a complete issue registry.
+* Add mutation/CLI tests for unknown routes, issue-less partial deferrals,
+  covered child closures and missing needs without closure changes. Use normal
+  temporary directories rather than tests/__pycache__.
+* Update the core/pack explanations and knowledge index. Inventory values and
+  scenario bindings remain unchanged; no private data, generator output, SQL,
+  owner approval or real-platform acceptance is introduced.
