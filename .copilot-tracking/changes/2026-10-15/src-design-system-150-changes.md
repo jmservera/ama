@@ -117,6 +117,9 @@ Read-only GitHub/docs inspection is research, not application validation.
 | `gh pr checks 313 --watch --interval 20 --fail-fast` | Passed, exit 0; all 11 checks green on 046f6dcdcfbfac4d6fbe67b39f58c4b416f5b6ba, including src API, images and SQL Server |
 | `gh run view 38814048100 --job 116694595043 --log` filtered with grep/tail | Passed; job log retrieved, but broad timestamp matches were not treated as browser-step evidence |
 | `gh run view 38814048100 --json jobs --jq '.jobs[] \| select(.name == "src-api") \| .steps[] \| select(.name \| test("design\|browser\|isolated"; "i")) \| {name,conclusion}' && gh pr checks 313 --json name,state,bucket` | Passed; both "Check design-system browser harness without migration exemptions" and "Synthetic design-system browser checks" explicitly succeeded; all 11 checks successful |
+| `gh pr edit 313 --body` using the updated committed ledger; `gh pr checks 313 --watch --interval 30 --fail-fast` | PR update succeeded; subsequent watch returned "no checks reported" (exit 1), not a passing final-head run |
+| `gh run list --branch feat/src-design-system-150 --limit 6 --json databaseId,headSha,name,status,conclusion && gh pr view 313 --json headRefOid,state,mergeStateStatus` | Previous head's three CI runs succeeded; final evidence-only head b2d99c0 had no new run and PR reported DIRTY |
+| `git fetch origin main --quiet && git rev-list --left-right --count origin/main...HEAD && gh pr view 313 --json mergeable,mergeStateStatus,baseRefOid,headRefOid && git merge-tree --write-tree --name-only HEAD origin/main` | Read-only diagnostic: 1 behind/3 ahead; main advanced to a2253a7c727a122d4d51eb2783fe14ead4ca4605; PR CONFLICTING; merge-tree exited 1 and identified only docs/reference/log.md. No merge, rebase or worktree modification performed |
 
 The review-time inline Python check parsed all local Markdown targets in
 docs/reference/README.md, docs/reference/log.md,
@@ -172,6 +175,10 @@ local Docker limitations; no unresolved implementation blocker for this slice.
 Docker permission prevents local image validation. Subsequent CI image and
 SQL Server checks passed. Real inference, Azure and human accessibility results
 remain unavailable, not simulated as acceptance.
+After the successful CI snapshot, concurrent main advancement introduced a
+docs/reference/log.md merge conflict. Final evidence-only head CI is therefore
+not available. Owner-authorized branch synchronization is required; do not
+silently merge/rebase, rewrite earlier log entries or bypass CI.
 
 ## Delivery Evidence
 
@@ -192,12 +199,15 @@ Post-publication CI snapshot: all 11 checks passed on
 38814049451 (image/test/mssql) and 38814048143 (validate) succeeded.
 Browser-specific CI steps explicitly succeeded, not merely skipped. This final
 evidence-only update does not change reviewed or tested source. The same watch
-command checks the subsequent tracking-only head; the PR retains final results.
+command attempted to check the subsequent tracking-only head, but main advanced
+and the PR became conflicting. The passing snapshot is not presented as a
+passing final-head result. PR #313 remains open and merge-blocked by the log.
 
 ## Remaining Work
 
 No remaining implementation or PR-publication work for this bounded slice.
-CI and owner review remain before merge. Review executed once, Complete;
+Owner-authorized conflict resolution, final-head CI and owner review remain
+before merge. Review executed once, Complete;
 outcome Residual work, with RV-001 through RV-003 routed separately.
 No source edits after Review.
 
@@ -212,5 +222,6 @@ acceptance of a native-only substitute. Human/live-service gates remain separate
 P01/P02/P03 complete. Task completed; automatic session remains at Follow-up
 with no child started. Review Complete / Residual work; PR #313 uses Refs #150
 and explicit open adoption/evidence gates. Owner retains merge and human-review
-authority. No owner decision, full accessibility acceptance or live-service
-result is invented.
+authority. Concurrent main/log conflict is recorded as a delivery follow-up
+blocker. No owner decision, full accessibility acceptance or live-service result
+is invented.

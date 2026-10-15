@@ -41,26 +41,38 @@
       "evidence": "Head 046f6dcdcfbfac4d6fbe67b39f58c4b416f5b6ba; runs 38814048100, 38814049451 and 38814048143; changes ledger records command results; final update is evidence-only"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "concurrent-main-log-conflict",
+      "summary": "After passing CI, main advanced to a2253a7c727a122d4d51eb2783fe14ead4ca4605 and PR #313 became CONFLICTING in docs/reference/log.md; final evidence-only head has no new CI",
+      "resolution": "Owner-authorized branch synchronization and append-only log conflict resolution, then final-head CI; no silent merge/rebase or history rewrite"
+    }
+  ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Owner reviews PR #313 and selects any later follow-up; CI is not an approval or merge authorization, and no child task has started"
+    "action": "Owner-authorized synchronization must resolve PR #313 docs/reference/log.md conflict, then final-head CI and owner review; no child task has started"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
+      "task": "Resolve concurrent main log conflict with owner-authorized branch synchronization",
+      "rationale": "Smallest immediate blocker: PR cannot run final-head CI or merge while the append-only log conflicts",
+      "evidence": "PR #313 CONFLICTING; read-only merge-tree identifies docs/reference/log.md; main a2253a7"
+    },
+    {
+      "rank": 2,
       "task": "Complete actual Fluent UI component integration",
       "rationale": "Highest value: remaining owner-selected adoption delivery; native foundation is not a final substitute",
       "evidence": "RV-001 and owner issue comments 6194437555 and 6194477486"
     },
     {
-      "rank": 2,
+      "rank": 3,
       "task": "Obtain human accessibility and full state coverage evidence",
       "rationale": "Automated map/reflow checks do not establish screen-reader or user task acceptance",
       "evidence": "RV-002 and 31 bounded Chromium checks"
     },
     {
-      "rank": 3,
+      "rank": 4,
       "task": "Arrange authorized real inference and Azure validation",
       "rationale": "CI image/SQL checks now pass, but local Docker is denied and no live inference or Azure acceptance is implied",
       "evidence": "RV-003, passing CI runs and changes command ledger"
