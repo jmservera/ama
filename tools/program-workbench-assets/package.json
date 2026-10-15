@@ -13,6 +13,6 @@
     "@toast-ui/editor": "3.2.2",
     "dompurify": "3.4.16",
     "esbuild-wasm": "0.28.2",
-    "mermaid": "12.1.0"
+    "mermaid": "12.2.0"
   }
 }

@@ -70,6 +70,16 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   recommendation store, in both the JSON and the sqlite store.
 * Documents: upload pdf, png, jpg, docx, xlsx, csv or txt (5 MB), see an
   evidence checklist (EPC, survey, design, consent) and download files.
+  Every upload is scanned before it can be downloaded or read by the document
+  assistant (`doc_controls.py`; `ZF_SCANNER=local|defender`). The local scanner
+  is a labelled synthetic test: a marker and a type check, not an antivirus
+  engine. The Defender scanner reads the Defender for Storage blob tag through a
+  fake transport only, and a pending result keeps the file unavailable. A
+  programme manager lists documents past their retention trigger
+  (`GET /api/retention`), approves each deletion (`retention-approve`) and can
+  place or release a case legal hold (`legal-hold`, `legal-hold-release`); a
+  hold blocks deletion. Periods are synthetic-demo placeholders, not an approved
+  schedule, and the deletion log keeps no file name or content.
 * Funding: a person moves each application through draft, approved,
   submitted and confirmed. Approval needs complete evidence and the Grants
   and Evidence Officer or a manager. The system never submits anything.
@@ -248,6 +258,7 @@ and the rule engine are not done here.
 | `ZF_TILE_URL`, `ZF_TILE_ATTRIBUTION` | map tile provider |
 | `ZF_TIME_CAPTURE`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION`, `ZF_TIME_NOTICE_APPROVED`, `ZF_TIME_DB`, `ZF_TIME_MIN_GROUP` | time capture |
 | `ZF_DOC_STORE`, `ZF_DOC_DIR`, `ZF_BLOB_ACCOUNT_URL`, `ZF_BLOB_CONTAINER`, `ZF_BLOB_SAS`, `ZF_BLOB_CLIENT_ID` | document store |
+| `ZF_SCANNER` | `local` (default) or `defender` content scanner |
 
 ### SQL store
 
@@ -386,6 +397,33 @@ when `ZF_TEST_MSSQL=1` (and `ZF_SQL_*` point at a throwaway database).
 * Guardrail breach (RULE-024, AC-078): `breach_record` (managers, quality inspectors and building safety liaisons, so a hazard-aware role can raise a breach without waiting for a manager) pauses the home, work package, archetype or workstream. `breach_restart` needs a different person, the OD-35 authority reference, accepted remediation evidence and a Release decision recorded after the breach. `guard_case_event` calls `require_not_paused` (home by case id or address, archetype by home type) and, for cases flagged `pilot`, `require_capture_open` in `log_call`, `set_decision`, `advance` and `return_case`; emergency and statutory hazard response continues outside any pause.
 
 Tests: `tests/test_governance.py` (JSON and SQL stores, labelled synthetic demonstration values). Open items, not invented here: the real OD-18 definitions and MDE, the OD-36 DPIA and lawful basis, the OD-35 named authority, actual approvers, how cases are enrolled in the pilot cohort (the `pilot` flag), pause scopes for work package and workstream, and extending the guard to the remaining case workflows. The RAI closure registers in the issue (eleven residuals and eleven unassessed checks, a fresh current-source assessment, owner acceptances) are not delivered or claimed closed by this change; every item stays proposed or insufficient until qualified owners and fresh evidence exist, and live use stays blocked.
+
+### Immutable Blob ledger digests and scheduled verification (issue #115)
+
+* `python -m zavaforward_mvp.digest_blob [--publish]` uploads the head and sealed
+  year digests to the `ledger-digests` container (create-only, managed identity
+  via `ZF_DIGEST_ACCOUNT_URL`, `ZF_DIGEST_CONTAINER`, `ZF_DIGEST_CLIENT_ID`), then
+  verifies the ledger against the digests read back from the container, not local
+  files. A broken chain is never anchored. Any mismatch, empty container or
+  unreachable container prints `LEDGER_DIGEST_ALERT` and exits 1.
+* `infra/modules/storage.bicep` adds the container with a time-based retention
+  policy (created unlocked); `containerapps.bicep` adds a daily
+  `job-*-ledger-verify`; `main.bicep` adds a log alert on the marker to the
+  action group. Tests: `tests/test_digest_blob.py` (in-memory immutable container
+  fake over the labelled synthetic stock). A second alert,
+  `alert-*-ledger-verify-missing`, fires when no `LEDGER_DIGEST_OK` line
+  arrives within 26 hours, so a job that fails to start or run is caught as well
+  as a mismatch.
+* Trust-on-first-use gap: `--publish` seeds digests from the current ledger and
+  verifies only the chain, so a ledger already tampered with before the first
+  publish is anchored as genuine. Review the first publish by a second person
+  against an independent record before relying on the digests.
+* The retention period must be chosen by the owner (no shorter than the legal
+  audit retention period) before the policy is locked; locking is irreversible.
+* Open items, not invented here: the Log Analytics table names
+  `ContainerAppConsoleLogs_CL` and column `ContainerJobName_s` are unconfirmed
+  and must be checked in the deployed workspace; the legal retention period,
+  the owner's irreversible policy lock and a deployed run also remain open.
 
 ### Per-year ledger digests, load check and recovery drill (issue #114)
 
