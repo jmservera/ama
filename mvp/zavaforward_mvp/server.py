@@ -11,7 +11,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-from . import auth, lawstore, profile, projection, quality
+from zava_forward.core import profile
+
+from . import auth, lawstore, projection, quality
 from .assistants import Assistants
 from .chat_isolation import ChatForbidden, ChatIsolation
 from .chat_privacy import ChatNotApproved

@@ -1,4 +1,14 @@
+# Build context is the repository root, because the image also installs src/core (ADR 0006, M1):
+#   docker build -f mvp/Dockerfile -t zavaforward-mvp:ci .
 # python:3.12-slim-bookworm, pinned by digest (resolved 2026-10-08). Bump deliberately and re-run the tests.
+FROM python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258 AS build
+WORKDIR /build
+COPY src/build-requirements.txt .
+RUN pip install --no-cache-dir --require-hashes -r build-requirements.txt
+COPY src/core/pyproject.toml ./core/pyproject.toml
+COPY src/core/src ./core/src
+RUN pip wheel --no-cache-dir --no-deps --no-build-isolation --wheel-dir /wheels ./core
+
 FROM python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258
 # libltdl7 and libkrb5-3 are the runtime libraries the Azure SQL driver (mssql-python, bundled ODBC Driver 18) loads.
 RUN apt-get update && apt-get upgrade -y --no-install-recommends \
@@ -7,12 +17,14 @@ RUN apt-get update && apt-get upgrade -y --no-install-recommends \
     && useradd --uid 10001 --no-create-home --shell /usr/sbin/nologin app \
     && mkdir -p /app /data /state && chown 10001:10001 /state
 WORKDIR /app
-COPY requirements.txt .
+COPY mvp/requirements.txt .
 RUN pip install --no-cache-dir --require-hashes -r requirements.txt && rm requirements.txt
-COPY zavaforward_mvp ./zavaforward_mvp
-COPY policies ./policies
-COPY law ./law
-COPY web ./web
+RUN --mount=type=bind,from=build,source=/wheels,target=/wheels \
+    pip install --no-cache-dir --no-index --no-deps /wheels/*.whl
+COPY mvp/zavaforward_mvp ./zavaforward_mvp
+COPY mvp/policies ./policies
+COPY mvp/law ./law
+COPY mvp/web ./web
 RUN chmod -R a+rX ./web
 USER 10001
 # No working data is baked into the image. Mount the dataset at /data and a writable volume at /state.

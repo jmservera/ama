@@ -161,7 +161,7 @@ Delivery evidence is the pull request or test that proves current behaviour.
 | File | Outcome | Target | Group | Evidence and note |
 | --- | --- | --- | --- | --- |
 | `mvp/zavaforward_mvp/__init__.py` | retire | none | M6 | Empty file (0 lines). The new namespace has no `__init__.py` |
-| `mvp/zavaforward_mvp/ai.py` | migrate | `core/ai.py` | M1 | Model client and `FORBIDDEN` guard; test_ai_identity. `store` and `sqlstore` import it, so it cannot sit in `agents`. In-process call sites are a rebuild, see assistants.py |
+| `mvp/zavaforward_mvp/ai.py` | migrate | `core/ai.py` | M1 | Model client and `FORBIDDEN` guard; test_ai_identity. `store` and `sqlstore` import it, so it cannot sit in `agents`. In-process call sites are a rebuild, see assistants.py Status: moved in M1 (#199), git rename, no copy left in `mvp/`. |
 | `mvp/zavaforward_mvp/ai_eval.py` | migrate | `agents/ai_eval.py` | M4 | PR 258 (#108, open); test_ai_eval. Reads `evals/ai_priority_golden.json` |
 | `mvp/zavaforward_mvp/ai_registry.py` | migrate | `agents/ai_registry.py` | M2 | PR 260 (#105); test_ai_tasks. Imports `assistants` at top level and is imported lazily by core (A1), so it moves with the cluster |
 | `mvp/zavaforward_mvp/ai_tasks.py` | migrate | `core/ai_tasks.py` | M2 | PRs 260, 263 (#105, #106); test_ai_tasks. Citations resolve or are marked Unverified |
@@ -187,13 +187,13 @@ Delivery evidence is the pull request or test that proves current behaviour.
 | `mvp/zavaforward_mvp/loadcheck.py` | migrate | `core/synthetic/loadcheck.py` | M3 | PR 262 (#114, open); test_recovery. Load run on dev Azure SQL not done |
 | `mvp/zavaforward_mvp/mssqlstore.py` | migrate | `core/mssqlstore.py` | M2 | Azure SQL engine (deployed path). test_mssqlstore skips without SQL Server; runs in `mvp-ci` |
 | `mvp/zavaforward_mvp/procurement.py` | migrate | `core/procurement.py` | M2 | Pre-235; test_quality_procurement |
-| `mvp/zavaforward_mvp/profile.py` | migrate | `core/profile.py` | M1 | Pre-235; test_profile |
+| `mvp/zavaforward_mvp/profile.py` | migrate | `core/profile.py` | M1 | Pre-235; test_profile Status: moved in M1 (#199), git rename, no copy left in `mvp/`. |
 | `mvp/zavaforward_mvp/projection.py` | migrate | `core/projection.py` | M2 | Role field projection; test_role_matrix, test_role_endpoint_inventory (PR 275) |
 | `mvp/zavaforward_mvp/quality.py` | migrate | `core/quality.py` | M2 | Pre-235; test_quality_procurement |
 | `mvp/zavaforward_mvp/ranking.py` | migrate | `core/ranking.py` | M2 | Pre-235; test_ranking_policy, test_ranking_scale. Reads `policies/ranking-v1.json` |
 | `mvp/zavaforward_mvp/recovery.py` | migrate | `core/recovery.py` | M4 | PR 262 (#114, open); test_recovery |
 | `mvp/zavaforward_mvp/resident_decisions.py` | migrate | `core/resident_decisions.py` | M2 | Pre-235; test_workflows |
-| `mvp/zavaforward_mvp/rulecards.py` | migrate | `core/rulecards.py` | M1 | PRs 250, 259 (#211 open, #127); test_rulecards. No import of siblings |
+| `mvp/zavaforward_mvp/rulecards.py` | migrate | `core/rulecards.py` | M1 | PRs 250, 259 (#211 open, #127); test_rulecards. No import of siblings Status: moved in M1 (#199), git rename, no copy left in `mvp/`. |
 | `mvp/zavaforward_mvp/scale_fixture.py` | migrate | `core/synthetic/scale_fixture.py` | M3 | PRs 236, 249 (#174, #169); test_eval_registry, test_chat_fixture |
 | `mvp/zavaforward_mvp/sensor_backfill.py` | migrate | `core/synthetic/sensor_backfill.py` | M3 | PR 272 (#183, open); test_sensor_backfill. `validate_reading` mirrors a contract #110 has not defined |
 | `mvp/zavaforward_mvp/server.py` | migrate | `api/server.py`, routers split in later work | M5 | 626-line single HTTP server. In-process model calls via `assistants` are the rebuild noted above. test_mvp (21), test_role_matrix, test_ui_support |
@@ -247,7 +247,7 @@ tests that drive `server` (`test_lawstore`, `test_ledger`, `test_ranking_scale`,
 | `mvp/tests/browser_check.py` | migrate | `api-checks/browser_check.py` | M5 | Browser check; not in unittest discovery |
 | `mvp/tests/test_accessibility_baseline.py` | migrate | `api-tests/test_accessibility_baseline.py` | M5 | PR 244 (#151). Static checks only; no rendered scanner |
 | `mvp/tests/test_ai_eval.py` | migrate | `agents-tests/test_ai_eval.py` | M4 | 6 tests |
-| `mvp/tests/test_ai_identity.py` | migrate | `agents-tests/test_ai_identity.py` | M1 | 2 tests |
+| `mvp/tests/test_ai_identity.py` | migrate | `agents-tests/test_ai_identity.py` | M1 | 2 tests Status: moved in M1 (#199), git rename, no copy left in `mvp/`. |
 | `mvp/tests/test_ai_tasks.py` | migrate | `agents-tests/test_ai_tasks.py` | M5 | 22 tests, uses `server` (A3) |
 | `mvp/tests/test_assistant_release.py` | migrate | `agents-tests/test_assistant_release.py` | M5 | PR 287 (#107); 16 tests, 245 lines; imports `test_assistants` Base and `release_support`, so it moves with them (A2, A3) |
 | `mvp/tests/release_support.py` | migrate | `agents-tests/release_support.py` | M5 | PR 287; 44 lines of test helpers for test_assistant_release; not a test module |
@@ -274,14 +274,14 @@ tests that drive `server` (`test_lawstore`, `test_ledger`, `test_ranking_scale`,
 | `mvp/tests/test_mssqlstore.py` | migrate | `core-tests/test_mssqlstore.py` | M2 | Skips without SQL Server; keep the CI service |
 | `mvp/tests/test_mvp.py` | migrate | `api-tests/test_mvp.py` | M5 | 21 tests, end-to-end API |
 | `mvp/tests/test_needs_inventory.py` | migrate | `core-tests/test_needs_inventory.py` | M3 | PRs 240, 243; reads `docs/reference/research/retrofit-synthetic-data` |
-| `mvp/tests/test_profile.py` | migrate | `core-tests/test_profile.py` | M1 | 4 tests |
+| `mvp/tests/test_profile.py` | migrate | `core-tests/test_profile.py` | M1 | 4 tests Status: moved in M1 (#199), git rename, no copy left in `mvp/`. |
 | `mvp/tests/test_quality_procurement.py` | migrate | `core-tests/test_quality_procurement.py` | M2 | 11 tests |
 | `mvp/tests/test_ranking_policy.py` | migrate | `core-tests/test_ranking_policy.py` | M2 | 10 tests |
 | `mvp/tests/test_ranking_scale.py` | migrate | `api-tests/test_ranking_scale.py` | M5 | 18 tests, uses `server` |
 | `mvp/tests/test_recovery.py` | migrate | `core-tests/test_recovery.py` | M4 | 12 tests |
 | `mvp/tests/test_role_endpoint_inventory.py` | migrate | `api-tests/test_role_endpoint_inventory.py` | M5 | PRs 275, 286 (#116) |
 | `mvp/tests/test_role_matrix.py` | migrate | `api-tests/test_role_matrix.py` | M5 | Role matrix gate in #199 |
-| `mvp/tests/test_rulecards.py` | migrate | `core-tests/test_rulecards.py` | M1 | 11 tests |
+| `mvp/tests/test_rulecards.py` | migrate | `core-tests/test_rulecards.py` | M1 | 11 tests Status: moved in M1 (#199), git rename, no copy left in `mvp/`. |
 | `mvp/tests/test_sensor_backfill.py` | migrate | `core-tests/test_sensor_backfill.py` | M3 | 5 tests |
 | `mvp/tests/test_sensor_plausibility.py` | migrate | `core-tests/test_sensor_plausibility.py` | M3 | PR 280 (#191); 8 tests |
 | `mvp/tests/test_sqlreads.py` | migrate | `core-tests/test_sqlreads.py` | M2 | 14 tests |
@@ -432,7 +432,7 @@ and needs its cause and a recovery expectation in the description.
 | Step | Pull request scope | Modules | Tests moved | Why here |
 | --- | --- | --- | --- | --- |
 | M0 | ADR 0006 accepted; scaffold `src/core` and `src/api` `pyproject.toml`, tooling config, additive `src-ci` workflow | none | none | Blocks everything (#196) |
-| M1 | Isolated leaves | `profile`, `rulecards`, `ai` | test_profile, test_rulecards, test_ai_identity | No sibling imports; proves packaging, namespace and CI. About 450 lines |
+| M1 | Isolated leaves | `profile`, `rulecards`, `ai` | test_profile, test_rulecards, test_ai_identity | No sibling imports; proves packaging, namespace and CI. About 450 lines Status: done in the M1 pull request (refs #199); the moved files keep their formatting, and core and agents carry temporary ruff and mypy exemptions for them until M6. |
 | M2 | Core hub, mechanical move, one pull request | `store`, `sqlstore`, `mssqlstore`, `factory`, `ledger`, `continuity`, `chatthreads`, `doc_controls`, `documents`, `controls`, `finance`, `grants`, `governance`, `signoffs`, `resident_decisions`, `workflows`, `quality`, `procurement`, `insights`, `projection`, `ranking`, `ai_tasks`, `assistant_release` to `core`; `ai_registry`, `assistants` to `agents`; `policies/ranking-v1.json` | the rows marked M2 | `store` imports 18 siblings and the cluster is cyclic through `assistants`, `ai_registry` and `ledger` (A1), so no smaller step leaves a working tree. Use `git mv` and keep it free of behaviour change so rename detection shows a small diff. `mvp/` CI installs `core` from `src/core` |
 | M3 | Synthetic tools and data governance | `scale_fixture`, `sensor_backfill`, `loadcheck` to `core/synthetic`; `chat_fixture` to `agents-tests`; `document_control_fixtures.json`, `document_form_fixtures.json`, `registry.json` | the rows marked M3 | Depends only on M2 `insights`. Coordinate with #165 (generator imports) |
 | M4 | Core features | `chat_privacy`, `chat_isolation`, `recovery` to `core`; `ai_eval` to `agents`; `evals/ai_priority_golden.json` | the rows marked M4 | Depend on M2 and M3. Open work on #160 to #163 and #108 must be merged or rebased first |

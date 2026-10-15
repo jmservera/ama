@@ -249,8 +249,8 @@ class ProxyHttpTests(Base):
     def test_photo_requires_current_user_and_contractor_is_allowed_own_photo(self):
         self.assertEqual(self.call("/api/account/photo")[0], 401)
         con = {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Contractor",), oid="aaaaaaaa-0000-0000-0000-000000000009")}
-        with patch("zavaforward_mvp.profile.own_photo") as photo:
-            from zavaforward_mvp.profile import PhotoError
+        with patch("zava_forward.core.profile.own_photo") as photo:
+            from zava_forward.core.profile import PhotoError
             photo.side_effect = PhotoError(404, "No Microsoft profile photo has been set.")
             self.assertEqual(self.call("/api/account/photo", con)[0], 404)
             self.assertEqual(self.call("/api/me", con)[1]["staff"], [])
@@ -261,7 +261,7 @@ class ProxyHttpTests(Base):
         raw = (WEB / "zava-logo.png").read_bytes()
         headers = {"X-MS-CLIENT-PRINCIPAL": principal(),
                    "X-MS-TOKEN-AAD-ACCESS-TOKEN": "synthetic-platform-token"}
-        with patch("zavaforward_mvp.profile.own_photo", return_value=(raw, "image/png")) as photo:
+        with patch("zava_forward.core.profile.own_photo", return_value=(raw, "image/png")) as photo:
             req = urllib.request.Request(self.base + "/api/account/photo", headers=headers)
             with urllib.request.urlopen(req) as response:
                 body = response.read()

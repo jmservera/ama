@@ -6,7 +6,7 @@ ms.date: 2026-10-15
 ms.topic: reference
 ---
 
-Skeleton projects created for issue #290 (ADR 0006 phase 1). They contain a version module, a `python -m` entry point that prints the version, and tests. No `mvp/` module has moved yet; move-not-copy migration happens in #199. The decision record is [ADR 0006](../docs/adrs/0006-src-layout-and-cutover.md).
+Skeleton projects created for issue #290 (ADR 0006 phase 1). They contain a version module, a `python -m` entry point that prints the version, and tests. Move-not-copy migration happens in #199: M1 moved `profile`, `rulecards` and `ai` into `core` (tests in `core/tests`, plus `agents/tests/test_ai_identity.py`); no other module has moved yet. The decision record is [ADR 0006](../docs/adrs/0006-src-layout-and-cutover.md).
 
 ## Projects
 
@@ -53,4 +53,4 @@ Each image keeps the pinned base digest of `mvp/Dockerfile`, runs as user 10001,
 
 ## CI
 
-[`.github/workflows/src-ci.yml`](../.github/workflows/src-ci.yml) runs the checks `src-core`, `src-api`, `src-agents`, `src-orchestrator`, `src-importer`, `src-namespace` and `src-no-working-data`. The `mvp-ci` and `mvp-validation` workflows and their check names are unchanged.
+[`.github/workflows/src-ci.yml`](../.github/workflows/src-ci.yml) runs the checks `src-core`, `src-api`, `src-agents`, `src-orchestrator`, `src-importer`, `src-namespace` and `src-no-working-data`. The `mvp-ci` and `mvp-validation` workflows keep their check names; they now also install `src/core`, and the `mvp` image builds from the repository root (`docker build -f mvp/Dockerfile .`). The files moved in M1 keep their original formatting, so `core` and `agents` carry temporary ruff and mypy exemptions for them (see each `pyproject.toml`), removed in M6.

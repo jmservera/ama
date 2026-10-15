@@ -2,7 +2,7 @@
 import sqlite3
 import unittest
 
-from zavaforward_mvp import rulecards as rc
+from zava_forward.core import rulecards as rc
 
 OWNER = "Named compliance owner (unassigned)"
 

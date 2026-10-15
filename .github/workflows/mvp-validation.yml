@@ -2,10 +2,10 @@ name: MVP validation
 
 on:
   pull_request:
-    paths: ["mvp/**", "infra/**", ".github/workflows/mvp-validation.yml"]
+    paths: ["mvp/**", "src/core/**", "infra/**", ".github/workflows/mvp-validation.yml"]
   push:
     branches: [main]
-    paths: ["mvp/**", "infra/**"]
+    paths: ["mvp/**", "src/core/**", "infra/**"]
   workflow_dispatch:
 
 permissions:
@@ -26,6 +26,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install the core package that mvp imports
+        run: pip install --no-deps -e src/core
       - name: Compile
         run: python -m compileall -q mvp/zavaforward_mvp
       - name: Unit and API tests

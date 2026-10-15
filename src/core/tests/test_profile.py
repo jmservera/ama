@@ -4,7 +4,7 @@ from email.message import Message
 from urllib.error import HTTPError, URLError
 from unittest.mock import MagicMock
 
-from zavaforward_mvp import profile
+from zava_forward.core import profile
 
 
 class PhotoTests(unittest.TestCase):
