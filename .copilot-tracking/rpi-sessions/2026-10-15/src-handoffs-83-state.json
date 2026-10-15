@@ -1,0 +1,61 @@
+{
+  "task_id": "83",
+  "task_slug": "src-handoffs-83",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-15/src-handoffs-83-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-15/src-handoffs-83-plan.md",
+    "details": ".copilot-tracking/details/2026-10-15/src-handoffs-83-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-15/src-handoffs-83-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-15/src-handoffs-83-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-15/src-handoffs-83-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the complete RPI loop, commit artifacts, push topic branch and open PR to main using Refs #83.",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-15."
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready for bounded slice.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-15/src-handoffs-83-research.md"
+    },
+    {
+      "decision": "One independent final-candidate critique executed; verdict Revise; PC-001 to PC-004 directly disposed, no owner decision required.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/2026-10-15/src-handoffs-83-plan-critique.md; plan Critique Disposition"
+    },
+    {
+      "decision": "Every new core and API disposition requires source/next action; legacy persisted history remains unchanged.",
+      "status": "implemented",
+      "evidence": "Changes artifact current-state refinement; final 872-test local validation."
+    },
+    {
+      "decision": "One post-implementation Review executed over the full bounded diff and RPI evidence.",
+      "status": "Complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-15/src-handoffs-83-review.md"
+    },
+    {
+      "decision": "Review outcome Residual work: no in-scope defect found; RV-001 timing and RV-002 CI/live evidence remain open, so no full issue acceptance.",
+      "status": "Residual work",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-15/src-handoffs-83-review.md"
+    },
+    {
+      "decision": "Implementation and all RPI artifacts committed and pushed; non-closing PR opened to main; no merge authorized or performed.",
+      "status": "published",
+      "evidence": "Commit 996dfcd; https://github.com/jmservera/ama/pull/311; verified noreply author/committer and required trailer."
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Await PR #311 CI and owner review/selection; approved-time escalation remains unmet. No child work or merge."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Confirm PR image and SQL Server CI", "rationale": "Lowest-effort immediate release evidence; new HTTP replays are already wired into mssql.", "evidence": "RV-002; local Docker socket denial and five new guarded replay skips."},
+    {"rank": 2, "task": "Approve operational handoff timing and escalation ownership", "rationale": "Unlocks remaining issue criterion without inventing a live SLA or scheduling authority.", "evidence": "RV-001; BG-010/OD-09."},
+    {"rank": 3, "task": "Collect separately authorized live AI/Azure and human acceptance evidence", "rationale": "Important release evidence, but requires access, approval and real reviewers rather than local synthetic checks.", "evidence": "RV-002; existing exercise real-platform/human acceptance boundaries."}
+  ]
+}

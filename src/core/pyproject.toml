@@ -68,3 +68,8 @@ disallow_untyped_calls = false
 
 [tool.setuptools.package-data]
 "zava_forward.core" = ["policies/*.json", "law/*.json"]
+
+# Typed test harness calling the migrated, not-yet-typed Store interface.
+[[tool.mypy.overrides]]
+module = ["test_handoff_lifecycle", "tests.test_handoff_lifecycle"]
+disallow_untyped_calls = false

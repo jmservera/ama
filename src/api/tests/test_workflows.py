@@ -15,6 +15,7 @@ STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role=
          dict(code="BSL-01", name="Bea Safe", email="bea@example.test", role="Building Safety Liaison"),
          dict(code="BSL-02", name="Bo Safe", email="bo@example.test", role="Building Safety Liaison"),
          dict(code="CON-01", name="Kim Builder", email="kim@example.test", role="Contractor", contractor="Test Ltd")]
+PROVENANCE = dict(source="Synthetic workflow report", next_action="Review the changed evidence")
 
 
 class Flows:
@@ -46,7 +47,7 @@ class Flows:
             self.store.return_case(self.sam, "ZF-6", "Funding check", "")
         with self.assertRaises(ValueError):
             self.store.return_case(self.sam, "ZF-6", "Quality check", "later stage")
-        self.store.return_case(self.sam, "ZF-6", "Final checks before ordering", "Funding changed")
+        self.store.return_case(self.sam, "ZF-6", "Final checks before ordering", "Funding changed", PROVENANCE)
         d = self.store.detail("ZF-6")
         self.assertEqual(d["stage"], "Final checks before ordering")
         self.assertEqual(d["appointments"][-1]["outcome"], "Cancelled")
@@ -54,7 +55,7 @@ class Flows:
         self.assertIn("return_case", self.actions())
 
     def test_return_to_resident_stage_resets_decision(self):
-        self.store.return_case(self.sam, "ZF-6", "Contacting resident", "Resident changed mind")
+        self.store.return_case(self.sam, "ZF-6", "Contacting resident", "Resident changed mind", PROVENANCE)
         self.assertEqual(self.store.detail("ZF-6")["decision"]["status"], "Not yet asked")
         with self.assertRaises(ValueError):
             self.store.advance(self.sam, "ZF-6")
@@ -66,7 +67,7 @@ class Flows:
             self.store.reopen_case(self.pam, "ZF-6", "x")
         with self.assertRaises(ValueError):
             self.store.reopen_case(self.pam, "ZF-7", " ")
-        self.store.reopen_case(self.pam, "ZF-7", "Damp returned")
+        self.store.reopen_case(self.pam, "ZF-7", "Damp returned", PROVENANCE)
         d = self.store.detail("ZF-7")
         self.assertFalse(d["closed"])
         self.assertEqual(d["stage"], "Aftercare issue")
@@ -158,7 +159,7 @@ class Flows:
     def test_chain_intact_after_all_flows(self):
         self.store.offer_handoff(self.sam, "ZF-1", "rae@example.test")
         self.store.accept_handoff(self.rae, "ZF-1")
-        self.store.return_case(self.rae, "ZF-6", "Funding check", "Evidence gap")
+        self.store.return_case(self.rae, "ZF-6", "Funding check", "Evidence gap", PROVENANCE)
         self.assertTrue(self.store.verify_audit())
 
 

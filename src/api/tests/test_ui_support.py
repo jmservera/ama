@@ -82,7 +82,7 @@ class ScreensApi(Base):
         self.assertEqual((st, d["total"], [r["id"] for r in d["items"]]), (200, 1, ["ZF-9"]))
         self.assertEqual(self.call(sam, "/api/cases/ZF-9/reopen", {"reason": "x"})[0], 403)
         self.assertEqual(self.call(pam, "/api/cases/ZF-9/reopen", {"reason": ""})[0], 400)
-        st, d, _ = self.call(pam, "/api/cases/ZF-9/reopen", {"reason": "Aftercare fault"})
+        st, d, _ = self.call(pam, "/api/cases/ZF-9/reopen", {"reason": "Aftercare fault", "source": "Synthetic fault report", "next_action": "Arrange inspection"})
         self.assertEqual((st, d["closed"], d["stage"]), (200, False, "Aftercare issue"))
         self.assertEqual(self.call(pam, "/api/cases?view=closed")[1]["total"], 0)
 

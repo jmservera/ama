@@ -16,6 +16,48 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Return, reopen and handoff accountability (#83)
+
+`workflows.py` is shared by JSON/SQLite local stores and the Azure SQL store.
+Every new return/reopen requires a reason, source reference and next action,
+and records version, prior/current stage, authenticated initiating authority and
+the existing named case owner as receiving owner. A return/reopen never assigns
+another owner. Older history is preserved; absent provenance is unknown, not
+verified or reconstructed. Selective downstream approval invalidation under
+FR-043 is not established by this slice.
+
+Handoffs expose canonical `status` alongside the legacy `state`: `Offered` means
+Sent and `Declined` means Rejected. Received, Accepted, Escalated and Completed
+are distinct states; Withdrawn remains an explicit terminal alternative.
+Only a named recipient may receive/accept/reject. Only the sender or a manager
+may withdraw or manually escalate to a named manager. Completion requires the
+accepting current owner and a note; it completes the handoff, not the retrofit.
+Receipt and escalation never transfer ownership. Acceptance alone changes the
+case owner and chase owner. An accepted unfinished handoff cannot be overwritten.
+The legacy `hand_over` method now creates an offer using the same checks.
+
+Case detail and immutable `handoff_history` snapshots distinguish accountable
+owner, destination role, proposed/confirmed receiver and chase owner. Urgency,
+due date, next action and resident-update owner/commitment are independent fields;
+missing values remain null. Due dates require an explicit timezone and normalize
+to UTC. A pending resident-update commitment survives rejection, withdrawal,
+acceptance, completion and replacement offers; handoffs cannot silently change
+it. No message is sent, consent inferred or safety hold released.
+
+`pending_handoffs` includes sent/received/escalated work for sender, recipient
+and managers. Existing need-role projection holds notes, source references and
+next-action text; contractors and unknown roles cannot use these workflows.
+The coordination assistant's existing deterministic trigger includes all three
+unaccepted states, without gaining action or approval authority.
+
+These are local engineering controls, not approved operational escalation
+timings. BG-010/OD-09 remains open: optional human-selected due dates and manual
+escalation do not prove acceptance/escalation within approved periods. EXA-008's
+24/48/72-hour fixtures are not a production SLA or statutory clock.
+
+Semantic tests: `tests/test_handoff_lifecycle.py` runs on JSON and SQLite;
+HTTP tests and a CI-only SQL Server replay live in `../api/tests/`.
+
 ## Building shared context (issue #75)
 
 `buildings.py` implements the PRD FR-002 read model. Seed data can contain a

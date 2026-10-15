@@ -11,6 +11,7 @@ import unittest
 from pathlib import Path
 
 import test_chatthreads as chattests
+import test_handoff_api as handofftests
 import test_mvp
 import test_sqlreads as reads
 import test_sqlstore as base
@@ -92,6 +93,15 @@ class SharedSqlIsPortableTests(unittest.TestCase):
         shared = src[:a] + src[b:]
         banned = re.compile(r"(?i)\bINSERT\s+OR\s+(REPLACE|IGNORE)\b|\bREPLACE\s+INTO\b|\bAUTOINCREMENT\b|\bPRAGMA\b|\bINSERT OR\b")
         self.assertEqual([l.strip() for l in shared.splitlines() if banned.search(l) and not l.lstrip().startswith(("*", "#"))], [])
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlHandoffApi(handofftests.HandoffApi):
+    """The return/handoff HTTP contract on the CI-only throwaway SQL Server."""
+
+    def make_store(self, path):
+        wipe()
+        return factory(str(path), str(path.with_suffix(".sqlite")))
 
 
 @unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")

@@ -27,6 +27,40 @@ Run the suites from `src/api` with
 `pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator`. When `ZF_DATA` is not
 set, the data file defaults to `data/zavaforward.json` under the current folder.
 
+## Return and handoff API (#83)
+
+All mutations below are authenticated, one-case human actions. The server
+supplies authority and receiving/current owner; client-supplied authority or
+owner fields cannot override them. Source references are human-recorded text,
+not automatically verified evidence.
+
+| Path after `/api/cases/{id}/` | Body and control |
+| --- | --- |
+| `return` | `to_stage`, `reason`, `source`, `next_action`; authorised staff, earlier stage only |
+| `reopen` | `reason`, `source`, `next_action`; manager, closed case only |
+| `offer-handoff` | `to`, optional `note`, `urgency` (Routine/Urgent), timezone-aware `due_at`, `next_action`, `resident_update_to`, `resident_update_due_at`; owner or manager |
+| `receive-handoff` | Empty object; named receiver, Sent only; not acceptance |
+| `accept-handoff` | Empty object; named receiver, Sent/Received/Escalated |
+| `decline-handoff` | `reason`; named receiver, Sent/Received/Escalated |
+| `withdraw-handoff` | Empty object; sender or manager, Sent/Received/Escalated |
+| `escalate-handoff` | `to` (manager email), `reason`; sender or manager, Sent/Received |
+| `complete-handoff` | `note`; accepting current owner, Accepted only |
+| `handover` | Legacy alias for an offer; never immediate reassignment |
+
+`GET /api/handoffs` returns unaccepted work visible to the sender, receiver and
+managers, including canonical `status` and separately labelled responsibility
+fields. Persisted `state` keeps Offered/Declined compatibility; detail returns
+versioned `returns` and `handoff_history`. Unauthorized or replayed transitions
+return an explicit error without a transition. New return/reopen requests
+without source/next action now fail with HTTP 400.
+
+BG-010's approved-time escalation criterion stays unmet: due dates are
+human-selected and escalation is manual; OD-09 policy and operational acceptance
+are not available. No timer, automatic resident contact, live model effectiveness,
+SQL Server result or Azure deployment is claimed by local synthetic tests.
+AI assistance remains available under its existing configuration/release/human
+review gates; this deterministic workflow adds no model authority.
+
 ## Building shared context (issue #75)
 
 Staff can follow an explicitly linked home to `#/building/{building_id}` and
@@ -150,11 +184,19 @@ editor or automatic retrofit of building data into an already populated store.
   responses and AI prompts, and roles without a recorded need see "Held for
   roles with a recorded need" for contact notes and outcomes, appointment and
   hazard notes. The reason-role list remains a proposal (OD-14, OD-19).
-* Workflow screens on the case page: send a case back to an earlier stage with a
-  reason, reopen a closed case (manager, from the "Closed cases" page), offer,
-  accept, decline or withdraw a handoff (pending handoffs show on the work
-  list), and safety referral (raise, refer, record repair, release by a
-  different person). All use the existing API and its server-side checks.
+* Workflow screens on the case page: return to an earlier stage or reopen a
+  closed case (manager), recording reason, source reference, next action,
+  authenticated authority and existing receiving owner. Offer, record receipt,
+  accept, decline, manually escalate to a manager, withdraw or complete a handoff.
+  Receipt does not imply acceptance; the sender keeps case/chase ownership until
+  the named receiver accepts. Pending sender/receiver/manager work lists and case
+  detail distinguish accountability, destination, proposed/confirmed receiver,
+  chase owner, urgency, due date, next action and resident-update commitment.
+  Missing values remain unknown; no message is sent automatically. Existing
+  resident-update commitments survive every transition and subsequent offers.
+  Safety referral (raise, refer, record repair, independent release) is unchanged.
+  All actions use server-side checks; the old `handover` endpoint now offers
+  rather than immediately reassigning. See the [core contract](../core/README.md#return-reopen-and-handoff-accountability-83).
 * Contractor screens: "My jobs" and a job page show only the address, stage,
   next visit, "needs notice" and a named contact. The server projects the data
   (`projection.py`); the screens never request resident detail. The rank and
