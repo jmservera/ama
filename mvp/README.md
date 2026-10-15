@@ -863,7 +863,25 @@ registered purpose principal is `service:retrofit-evidence-proposals`, not
 a manager impersonation. The scheduler calls `Assistants.scan()` only with
 valid authority/limits and proactive opt-in.
 
-Validation: `tests/test_assistants.py` exercises all five reactive/proactive
+Release admission (issue #107, RAI delta; `assistant_release.py`): every
+dispatch, claim, completion, list/detail, review and export reliance rechecks a
+SQL `assistant_releases` record binding the task, registry/schema, provider,
+endpoint, deployment, expected serving model, prompt, policy, data, provenance
+and permission versions to a named approver, residual-risk decision and
+expiry. `GET /api/assistants` shows the build's binding per assistant.
+`POST /api/assistants/releases` records one (Programme Manager listed in
+`ZF_ASSIST_RELEASE_APPROVERS`; `evidence_class` is `constructed-fixture` or
+`actual`); `POST /api/assistants/releases/{id}/suspend|revoke` ends it, and a
+revoked or suspended record is terminal. Absent, expired, suspended, revoked
+or mismatched releases deny with zero provider calls, retain the denial and
+name the owner (Juan Manuel Servera, Legal, Compliance and DPO owner) and the
+manual route. A returned serving model that differs from the released one
+quarantines the result and suspends the release. A `constructed-fixture`
+record never admits a live `Ai` provider. Retained legacy tasks are gated the
+same way on the SQL store when AI is configured (`legacy:<task>` records); the
+JSON dev store has no durable release store and is not gated (open item).
+
+Validation: `tests/test_assistants.py` and `tests/test_assistant_release.py` exercise all five reactive/proactive
 contracts, reader matrices, failure/disabled/malformed paths, current roles,
 source review, unchanged controlled state, independent SQLite connections,
 claims/leases/restart/lost acknowledgements, retries/aggregate liability,

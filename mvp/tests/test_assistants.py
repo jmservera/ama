@@ -14,6 +14,7 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
 
+import release_support
 import test_mvp
 from zavaforward_mvp import projection, quality
 from zavaforward_mvp.ai import Ai
@@ -42,6 +43,7 @@ def proposal(snapshot):
 
 class Provider:
     configured = True
+    provider, endpoint, fast = "local-test-double", "local-test", "test"
 
     def __init__(self, outcome="returned", bad=None, usage=True):
         self.outcome, self.bad, self.usage, self.calls = outcome, bad, usage, 0
@@ -92,6 +94,7 @@ class Base(unittest.TestCase):
         self.provider = Provider()
         self.store.ai = self.provider
         self.service = Assistants(self.store, config())
+        release_support.install(self.store)
 
     def tearDown(self):
         self.service.stop()
@@ -609,7 +612,7 @@ class DurabilityTests(Base):
         other = self.other()
         second = other.claim(p["id"], "two")
         self.assertEqual(second["fence"], first["fence"] + 1)
-        env = dict(outcome="returned", source="ai", usage=None)
+        env = dict(outcome="returned", source="ai", usage=None, model="test-model")
         self.assertFalse(self.service.complete(first, env, proposal(first["snapshot"])))
         self.assertTrue(other.complete(second, env, proposal(second["snapshot"])))
         self.assertFalse(other.complete(second, env, proposal(second["snapshot"])))
@@ -920,7 +923,7 @@ class DialectTests(Base):
         self.assertIn("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE", statements)
         self.assertTrue(any("OFFSET 0 ROWS FETCH NEXT" in s for s in statements))
         self.assertTrue(any("fence=?" in s and "lease_until>?" in s for s in statements))
-        self.assertEqual(len(MSSQL_DDL), 4)
+        self.assertEqual(len(MSSQL_DDL), 5)
 
 
 class ConfigurationTests(unittest.TestCase):

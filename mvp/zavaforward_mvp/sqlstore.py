@@ -129,7 +129,7 @@ class SqlStore(Store):
         self.scanner = open_scanner(self.docstore)
         self.digest_dir = digest_dir or os.environ.get("ZF_DIGEST_DIR") or os.path.join(os.path.dirname(db_path) or ".", "digests")
         self.ai = Ai()
-        self.ai.gate = lambda task: self.continuity_block(task)
+        self.ai.gate = lambda task: self.continuity_block(task) or self.release_block(task)
         self.version = 0
         self._briefings = {}
         self._ranks = None
@@ -153,6 +153,25 @@ class SqlStore(Store):
         self.db = sqlite3.connect(db_path, check_same_thread=False, isolation_level=None)
         self.db.execute("PRAGMA journal_mode=WAL")
         self.db.execute("PRAGMA busy_timeout=5000")
+
+    def release_block(self, task):
+        """Retained legacy dispatch needs a matching release before any provider call; unconfigured AI never calls out."""
+        if not self.ai.configured:
+            return None
+        from . import assistant_release as rel
+        ai = self.ai
+        binding = dict(provider="azure-openai", endpoint=ai.endpoint, deployment=ai.fast)
+        db = self.assistant_connection()
+        try:
+            found = [r for r in rel.releases(db, f"legacy:{task}") if r["status"] == "active"]
+            now = float(db.execute("SELECT (julianday('now')-2440587.5)*86400.0").fetchone()[0])
+            ok = any(r["expires"] > now and r["evidence_class"] == "actual" and r.get("serving_model") and
+                     all(r.get(k) == v for k, v in binding.items()) for r in found)
+        except Exception:
+            ok = False
+        finally:
+            db.close()
+        return None if ok else rel.denial("no matching release for this retained AI task", ["approved, unexpired release record"], task)["reason"]
 
     def assistant_connection(self):
         """A request/worker owns its connection; inference never owns the Store lock."""

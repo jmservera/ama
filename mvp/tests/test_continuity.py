@@ -53,7 +53,7 @@ class Suspension(Base):
             self.assertTrue(other.suspended(db, "stock-prioritisation"))
         self.assertFalse(other.execute(queued["id"]))
         self.assertEqual(self.provider.calls, 0)
-        env = dict(outcome="returned", source="ai", usage=None)
+        env = dict(outcome="returned", source="ai", usage=None, model="test-model")
         other.complete(claim, env, proposal(claim["snapshot"]))
         v = other.detail(self.pm, queued["id"])
         self.assertFalse(v["actionable"])

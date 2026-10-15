@@ -88,6 +88,7 @@ class ImproveTests(unittest.TestCase):
     def test_briefing_cached_until_data_changes(self):
         calls = []
         self.store.ai.endpoint = "http://x"
+        self.grant()
         self.store.ai._chat = lambda *a, **k: calls.append(1) or "All good today."
         self.store.briefing(self.sam)
         self.store.briefing(self.sam)
@@ -101,6 +102,11 @@ class ImproveTests(unittest.TestCase):
         ids = [p["id"] for p in self.store.map_points({"flag": "fundingprog"})]
         self.assertEqual(ids, ["ZF-1"])
 
+    def grant(self):
+        if hasattr(self.store, "assistant_connection"):
+            import release_support
+            release_support.install(self.store)
+
     def test_ai_falls_back_to_template_and_is_audited(self):
         r = self.store.ai_run(self.sam, "ZF-1", "message")
         self.assertEqual(r["source"], "template")
@@ -109,6 +115,7 @@ class ImproveTests(unittest.TestCase):
     def test_ai_output_claiming_sent_is_rejected(self):
         ai = self.store.ai
         ai.endpoint = "http://x"
+        self.grant()
         ai._chat = lambda *a, **k: "I have sent the letter."
         r = self.store.ai_run(self.sam, "ZF-1", "message")
         self.assertEqual(r["source"], "template")
