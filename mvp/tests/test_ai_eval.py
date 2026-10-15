@@ -44,3 +44,23 @@ class AiEvalTests(unittest.TestCase):
                         dict(text='[{"case_id": "G-999", "reason": "x"}]', source="ai", model="m", validated=True, task=task)):
             rep = ai_eval.run_eval()
         self.assertFalse(rep["passed"])
+
+    def test_evidence_gate_refuses_benefit_and_records_open_items(self):
+        rep = ai_eval.run_eval()
+        ev = rep["evidence"]
+        self.assertEqual(len(ev["golden_sha256"]), 64)
+        self.assertTrue(ev["benefit_claim"].startswith("not permitted"))
+        self.assertTrue(ev["actual_model_evaluation"].startswith("not evaluated"))
+        self.assertTrue(ev["calibration"].startswith("not applicable"))
+        self.assertTrue(any("quota" in o for o in ev["open_items"]))
+        self.assertTrue(rep["prompt_version"] and "latency_ms" in rep["summary"] and rep["summary"]["reviewer"])
+
+    def test_a_critical_miss_fails_the_run(self):
+        real = ai_eval.summarise
+
+        def missed(results):
+            s = real(results)
+            s["critical_misses"] = 1
+            return s
+        with mock.patch.object(ai_eval, "summarise", missed):
+            self.assertFalse(ai_eval.run_eval()["passed"])

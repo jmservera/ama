@@ -11,6 +11,7 @@ Each task also leaves one comparison record in the recommendation store (same
 for the JSON and SQLite stores): the input case ids, the AI output, the
 workflow-only output, why there was a fallback, and what the reviewer did.
 """
+import hashlib
 import json
 import os
 import re
@@ -26,6 +27,7 @@ EMPTY_SOURCES = re.compile(r"(?im)^[ \t]*sources?[ \t]*:[\s;,]*$")
 BULLET = re.compile(r"^\s*[-*\u2022]\s")
 REVIEW_ACTIONS = {"accept": "Accepted", "edit": "Edited", "reject": "Rejected"}
 NOT_REVIEWED = "Not reviewed"
+HOLD = "Hold"
 
 
 def workflow_only(mode=None):
@@ -176,6 +178,13 @@ def add_record(store, user, **fields):
         return rec
 
 
+def source_hashes(store, user, case_ids):
+    """Current per-case source hashes as seen by this user; the same function stamps and rechecks a record."""
+    ok = projection.can_see_reason(user)
+    return {cid: hashlib.sha256("\n".join(sorted(source_labels(store._case(cid), ok))).encode()).hexdigest()[:16]
+            for cid in case_ids}
+
+
 def finish(store, user, task, case_ids, r, workflow_text, sources, template_cites=None, bullets=False, record_cites=None):
     """Turn an Ai result into the shown output, with citations checked, plus its comparison record."""
     ai_output = r["text"] if r["source"] == "ai" else r.get("ai_text")
@@ -191,15 +200,28 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
         verified = bool(cites) and not bad
     reason = r.get("reason")
     mode = "workflow-only" if reason == "workflow-only mode selected" else "ai"
+    from . import ai_registry
+    env = ai_registry.envelope(task, case_ids, {cid: hashlib.sha256("\n".join(sorted(labels)).encode()).hexdigest()[:16]
+                                               for cid, labels in sources.items()},
+                               dict(r, prompt_version=PROMPT_VERSION), store.version)
     rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
                      latency_ms=r.get("latency_ms"), ai_output=ai_output, workflow_output=workflow_text, shown_output=text,
-                     fallback_reason=reason, verified=verified, citations=cites, unresolved=bad, dropped_uncited=dropped)
+                     fallback_reason=reason, envelope=env, verified=verified,
+                     provenance=dict(citation_resolved=verified, source_verified=False, human_reviewed=False,
+                                     source_hashes=env["source_versions"], case_version=store.version, hold=None), citations=cites, unresolved=bad, dropped_uncited=dropped)
     return dict(r, text=text, citations=cites, unresolved=bad, dropped_uncited=dropped, verified=verified,
-                approval=NOT_REVIEWED, record_id=rec["id"], mode=mode, prompt_version=PROMPT_VERSION)
+                approval=NOT_REVIEWED, envelope=env, record_id=rec["id"], mode=mode, prompt_version=PROMPT_VERSION)
+
+
+def require_registered(task):
+    from . import ai_registry
+    if ai_registry.get(task) is None:
+        raise ValueError("This AI task is not registered. Use the manual route.")
 
 
 def run_text_task(store, user, task, cases, sysmsg, prompt, template, template_cites, strong=False, check=None, mode=None,
                   bullets=False):
+    require_registered(task)
     with store.lock:
         ok = projection.can_see_reason(user)
         sources = {c["id"]: source_labels(c, ok) for c in cases}
@@ -208,6 +230,7 @@ def run_text_task(store, user, task, cases, sysmsg, prompt, template, template_c
 
 
 def run_document(store, user, case_id, doc, data, mode=None):
+    require_registered("read_document")
     off = workflow_only(mode)
     t0 = time.perf_counter()
     r = store.ai.look_at(doc["name"], data, doc["mime"], off=off)
@@ -234,9 +257,27 @@ def review(store, user, rec_id, action, reason="", text=None):
             raise PermissionError("This AI output was made for someone else.")
         if rec["status"] != NOT_REVIEWED:
             raise ValueError("This AI output has already been reviewed.")
+        prov = rec.setdefault("provenance", dict(citation_resolved=rec.get("verified", False), source_verified=False,
+                                                 human_reviewed=False, source_hashes={}, hold=None))
+        try:
+            now_hashes = source_hashes(store, user, rec["case_ids"])
+        except (KeyError, PermissionError):
+            now_hashes = None
+        if prov.get("source_hashes") and now_hashes != prov["source_hashes"]:
+            # Changed, missing or no-longer-visible source: nothing is accepted; an owned hold stays visible.
+            prov["hold"] = dict(owner=rec["user"], reason="source changed or unavailable since the proposal", at=_now())
+            rec["status"] = HOLD
+            store.audit(user["email"], "ai_review_hold", "-", f"{rec['task']} {rec_id}")
+            store.save()
+            raise ValueError("The source changed since this proposal; it is on hold for a fresh review.")
         rec.update(status=REVIEW_ACTIONS[action], reviewer_action=action, reviewer_reason=reason,
                    override_text=str(text)[:6000] if action == "edit" and text is not None else None,
                    resolved_by=user["email"], resolved_at=_now())
+        prov["human_reviewed"] = True
+        rec["review_evidence"] = dict(reviewer=user["email"], disposition=action, reason=reason,
+                                      compared=dict(ai=rec.get("ai_output"), workflow=rec.get("workflow_output")),
+                                      source_hashes=now_hashes, case_version=store.version,
+                                      effect="records the review only; any task or draft is created separately by the person")
         store.audit(user["email"], f"ai_review_{action}", rec["case_ids"][0] if len(rec["case_ids"]) == 1 else "-",
                     f"{rec['task']} {rec_id} {reason}".strip())
         store.save()
@@ -251,7 +292,7 @@ def live_report(store):
     for r in recs:
         task = "priority" if r.get("kind") != "ai_task" else r["task"]
         status = NOT_REVIEWED if r["status"] == "Proposed" else r["status"]
-        t = tasks.setdefault(task, dict(total=0, ai=0, workflow=0, unverified=0, **{s: 0 for s in (NOT_REVIEWED, "Accepted", "Edited", "Rejected")}))
+        t = tasks.setdefault(task, dict(total=0, ai=0, workflow=0, unverified=0, **{s: 0 for s in (NOT_REVIEWED, "Accepted", "Edited", "Rejected", HOLD)}))
         t["total"] += 1
         t["ai" if r["source"] == "ai" else "workflow"] += 1
         t["unverified"] += 0 if r.get("verified", r.get("validated", True)) else 1

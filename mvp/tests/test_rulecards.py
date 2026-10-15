@@ -93,6 +93,50 @@ class RuleCardTests(unittest.TestCase):
         self.assertEqual(self.s.is_active(self.cid, "2026-10-20"), 1)
         self.assertEqual(self.s.reviews(self.cid)[0]["status"], "open")
 
+    def test_review_item_lists_affected_requirements_rules_tests_and_versions(self):
+        self.activate()
+        self.s.source_changed("awaabs-law-regulations-2025", 2, "2026-11-01", source_effective="2026-11-30")
+        r = self.s.reviews(self.cid)[0]
+        self.assertEqual(r["affected"]["rules"], [self.cid])
+        self.assertEqual(r["affected"]["active_version"], 1)
+        self.assertIn("CON-001", r["affected"]["requirements"])
+        self.assertTrue(r["affected"]["tests"])
+        self.assertEqual((r["source_version"], r["prior_version"], r["source_effective"]), (2, 1, "2026-11-30"))
+        with self.assertRaises(sqlite3.DatabaseError):
+            self.s.db.execute("UPDATE rule_card_review SET status='x'")
+
+    def assess(self, rid=1, actor=OWNER, role=rc.OWNER, **kw):
+        a = dict(interpretation="Owner reading (exercise)", outcome="new_version_required", tests=["t1"], effective="2026-11-30",
+                 notification="Notify Repairs", rollback="Retain v1")
+        a.update(kw)
+        self.s.assess_review(rid, actor, role, "2026-11-02", **a)
+
+    def test_assessment_needs_named_owner_and_complete_record(self):
+        self.activate()
+        self.s.source_changed("awaabs-law-regulations-2025", 2, "2026-11-01")
+        for actor, role in (("Agent", rc.OWNER), (OWNER, rc.AUTHOR), ("Exercise author (synthetic)", rc.AUTHOR)):
+            with self.assertRaises(rc.RuleError):
+                self.assess(actor=actor, role=role)
+        with self.assertRaises(rc.RuleError):
+            self.assess(rollback="")
+        self.assertEqual(self.s.reviews()[0]["status"], "open")
+        self.assess(hold="pending new version")
+        r = self.s.reviews()[0]
+        self.assertEqual((r["status"], r["assessment"]["actor"]), ("assessed", OWNER))
+        self.assertEqual(self.s.state(self.cid, 1), "held")
+        self.assertIsNone(self.s.is_active(self.cid, "2026-11-03"))
+        with self.assertRaises(rc.RuleError):
+            self.assess()
+
+    def test_assessment_never_activates_a_rule(self):
+        self.s.source_changed("awaabs-law-regulations-2025", 2, "2026-11-01")
+        self.assess(outcome="no_change")
+        self.assertIsNone(self.s.is_active(self.cid, "2026-11-03"))
+        self.assertEqual(self.s.state(self.cid, 1), "draft")
+        for role in ("agent", rc.AUTHOR):
+            with self.assertRaises(rc.RuleError):
+                self.s.activate(self.cid, 1, "Agent", role)
+
 
 if __name__ == "__main__":
     unittest.main()

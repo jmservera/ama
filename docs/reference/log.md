@@ -2838,3 +2838,24 @@ metadata when the knowledge base was created.
   Azure Blob snapshot interface; SQLite and local files are test doubles only.
 * No regulatory snapshot changed. Open: Blob immutability policy and Azure SQL
   deployment are unverified infrastructure items.
+
+## 2026-10-15 AI evaluation harness evidence gate (#108)
+
+* Noted in `mvp/README.md` the harness `evidence` block: golden hash, scripted
+  provider, not-evaluated and calibration-not-applicable statements, no benefit
+  claim, and open items. No regulatory snapshot changed.
+* Open: Foundry model, version and quota confirmation in the chosen region,
+  authorised live calls, held-out split and thresholds, human participant
+  protocol and Finance validation need owner decisions or retrieval. No index change.
+
+## [2026-10-15] update | Stock fabric and EPC generator determinism (#176)
+
+* `retrofit-synthetic-data/README.md`: fabric and EPC generators now record
+  `generator_revision` in their summaries and have a byte-identical test.
+* Open for the owner: the stock register generator is not in the repository,
+  and the sensor generator does not exist (depends on #177 to #183), so those
+  two criteria remain unmet; refresh-policy approval is still pending.
+
+## [2026-10-15] update | Coordinator uses /every to monitor tmux sessions
+
+* Changed `.github/agents/ama-backlog-delivery-coordinator.agent.md` so the coordinator registers a recurring `/every` check for its tmux RPI sessions instead of a long blocking loop, and stops the schedule when all issues are merged or blocked.

@@ -24,6 +24,7 @@ cases a person said must surface, AI minus deterministic order).
 Run: cd mvp && PYTHONPATH=. python3 -m zavaforward_mvp.ai_eval
 """
 import copy
+import hashlib
 import json
 import os
 import sys
@@ -312,9 +313,34 @@ def summarise(results):
                          note="recall of the cases a person said must surface, AI minus the other order, on the same cases"))
 
 
+# Items this offline harness cannot establish. Recorded, never invented.
+OPEN_ITEMS = (
+    "Foundry model names, versions and quotas are not confirmed in the chosen Azure region (owner or Azure retrieval needed)",
+    "no live-model run: actual calls need a separate finite call, token, budget and expiry authorisation and serving attestation",
+    "no independently labelled held-out split, approved thresholds or cohort sample sizes exist yet (owner decision)",
+    "no authorised human participant protocol has run; role agents are not participant substitutes",
+    "effort and cost comparison against manual/template and rules alternatives needs Finance validation",
+)
+
+
+def evidence_gate(raw, summary, scripted=True):
+    """Frozen-input hashes and the claims this run may and may not support."""
+    ms = summary["models"]
+    live = bool(ms) and not scripted
+    return dict(
+        golden_sha256=hashlib.sha256(raw).hexdigest(), prompt_version=ai_tasks.PROMPT_VERSION,
+        provider="scripted" if scripted else "live", serving_models=ms,
+        actual_model_evaluation="evaluated" if live else "not evaluated (scripted provider)",
+        human_effectiveness="not evaluated (no authorised participants)",
+        calibration="not applicable (no meaningful scored predictions)",
+        benefit_claim="not permitted (no calibrated actual-model or human results)",
+        critical_misses=summary["critical_misses"], open_items=list(OPEN_ITEMS))
+
+
 def run_eval(golden=GOLDEN):
-    with open(golden, encoding="utf-8") as f:
-        spec = json.load(f)
+    with open(golden, "rb") as f:
+        raw = f.read()
+    spec = json.loads(raw.decode("utf-8"))
     results = []
     for sc in spec["scenarios"]:
         with tempfile.TemporaryDirectory() as tmp:
@@ -324,8 +350,10 @@ def run_eval(golden=GOLDEN):
         fails = run_task_checks(tmp)
     results.append(dict(name="text tasks: citations, Unverified, workflow-only, comparison record, review", passed=not fails,
                         failures=fails, measures=None))
+    summary = summarise(results)
     return dict(version=spec["version"], prompt_version=ai_tasks.PROMPT_VERSION, scenarios=len(results),
-                passed=all(r["passed"] for r in results), results=results, summary=summarise(results))
+                passed=all(r["passed"] for r in results) and summary["critical_misses"] == 0,
+                results=results, summary=summary, evidence=evidence_gate(raw, summary))
 
 
 def main(argv=None):
@@ -348,6 +376,11 @@ def main(argv=None):
     print(f"reviewer answers {s['reviewer']['counts']}")
     av = s["added_value"]
     print(f"added value on {av['scenarios']} scenarios: AI minus deterministic {av['ai_minus_deterministic']}, AI minus workflow-only {av['ai_minus_workflow_only']}")
+    ev = rep["evidence"]
+    print(f"golden sha256 {ev['golden_sha256'][:12]}; actual model: {ev['actual_model_evaluation']}; calibration: {ev['calibration']}")
+    print(f"benefit claim: {ev['benefit_claim']}")
+    for o in ev["open_items"]:
+        print("open: " + o)
     return 0 if rep["passed"] else 1
 
 
