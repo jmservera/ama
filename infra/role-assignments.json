@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "reviewed": "2026-10-15",
+  "reviewer": "Juan Manuel Servera (subscription owner), review pending sign-off",
+  "builtInRoles": {
+    "4633458b-17de-408a-b874-0445c86b69e6": "Key Vault Secrets User",
+    "ba92f5b4-2d11-453d-a403-e96b0029c9fe": "Storage Blob Data Contributor",
+    "974c5e8b-45b9-4653-ba55-5f855dd0fb88": "Storage Queue Data Contributor",
+    "c6a89b2d-59bc-44d0-9896-0f6e12d7b80a": "Storage Queue Data Message Sender",
+    "7f951dda-4ed3-4680-a7ca-43fe172d538d": "AcrPull",
+    "5e0bd9bd-7b93-4f28-af87-19fc36ad61bd": "Cognitive Services OpenAI User",
+    "53ca6127-db72-4b80-b1b0-d745d6d5456d": "Azure AI User",
+    "a638d3c7-ab3a-418d-83e6-5f17a39d4fde": "Azure Event Hubs Data Receiver",
+    "db58b8e5-c6ad-4a2a-8342-4190687cbf4a": "Storage Blob Delegator",
+    "b86a8fe4-44ce-4948-aee5-eccb2c155cd7": "Key Vault Secrets Officer"
+  },
+  "assignments": [
+    {"identity": "api", "resource": "keyvault", "scope": "Key Vault", "roleId": "4633458b-17de-408a-b874-0445c86b69e6", "reason": "Read the Entra client secret reference for built-in authentication", "bicep": "modules/keyvault.bicep"},
+    {"identity": "api", "resource": "storage", "scope": "Storage account, blob service", "roleId": "ba92f5b4-2d11-453d-a403-e96b0029c9fe", "reason": "Read and write evidence and rendered documents", "bicep": "main.bicep"},
+    {"identity": "api", "resource": "storage", "scope": "Storage account, queue service", "roleId": "c6a89b2d-59bc-44d0-9896-0f6e12d7b80a", "reason": "Enqueue agent and import tasks only; never consume", "bicep": "main.bicep"},
+    {"identity": "api", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull its own image", "bicep": "modules/registry.bicep"},
+    {"identity": "api", "resource": "foundry", "scope": "Foundry account", "roleId": "5e0bd9bd-7b93-4f28-af87-19fc36ad61bd", "reason": "Call model deployments for the AI assistants (when enableApiAi)", "bicep": "modules/foundry.bicep"},
+    {"identity": "api", "resource": "foundry", "scope": "Foundry account", "roleId": "53ca6127-db72-4b80-b1b0-d745d6d5456d", "reason": "Use Foundry agents and project APIs (when enableApiAi)", "bicep": "modules/foundry.bicep"},
+    {"identity": "api", "resource": "iotHub", "scope": "IoT Hub", "roleId": "a638d3c7-ab3a-418d-83e6-5f17a39d4fde", "reason": "Read-only receipt of device telemetry from the built-in endpoint (issue 140)", "bicep": "modules/iothub.bicep"},
+    {"identity": "agents", "resource": "storage", "scope": "Storage account, queue service", "roleId": "974c5e8b-45b9-4653-ba55-5f855dd0fb88", "reason": "Consume and complete agent tasks", "bicep": "main.bicep"},
+    {"identity": "agents", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull its own image", "bicep": "modules/registry.bicep"},
+    {"identity": "agents", "resource": "foundry", "scope": "Foundry account", "roleId": "5e0bd9bd-7b93-4f28-af87-19fc36ad61bd", "reason": "Call model deployments", "bicep": "modules/foundry.bicep"},
+    {"identity": "agents", "resource": "foundry", "scope": "Foundry account", "roleId": "53ca6127-db72-4b80-b1b0-d745d6d5456d", "reason": "Use Foundry agents and project APIs", "bicep": "modules/foundry.bicep"},
+    {"identity": "orchestrator", "resource": "storage", "scope": "Storage account, queue service", "roleId": "c6a89b2d-59bc-44d0-9896-0f6e12d7b80a", "reason": "Enqueue tasks only", "bicep": "main.bicep"},
+    {"identity": "orchestrator", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull its own image", "bicep": "modules/registry.bicep"},
+    {"identity": "import", "resource": "storage", "scope": "Storage account, blob service", "roleId": "ba92f5b4-2d11-453d-a403-e96b0029c9fe", "reason": "Read import files and write results", "bicep": "main.bicep"},
+    {"identity": "import", "resource": "storage", "scope": "Storage account, queue service", "roleId": "974c5e8b-45b9-4653-ba55-5f855dd0fb88", "reason": "Consume and complete import tasks", "bicep": "main.bicep"},
+    {"identity": "import", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull its own image", "bicep": "modules/registry.bicep"},
+    {"identity": "token-maintenance", "resource": "tokenStore", "scope": "Token store account", "roleId": "db58b8e5-c6ad-4a2a-8342-4190687cbf4a", "reason": "Obtain user delegation key to mint the short-lived SAS", "bicep": "modules/authTokenStore.bicep"},
+    {"identity": "token-maintenance", "resource": "tokenStore", "scope": "auth-tokens container", "roleId": "ba92f5b4-2d11-453d-a403-e96b0029c9fe", "reason": "Prune expired token blobs", "bicep": "modules/authTokenStore.bicep"},
+    {"identity": "token-maintenance", "resource": "keyvault", "scope": "Secret entra-token-store-sas only", "roleId": "b86a8fe4-44ce-4948-aee5-eccb2c155cd7", "reason": "Write the renewed SAS to its one secret", "bicep": "modules/authTokenStore.bicep"},
+    {"identity": "token-maintenance", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull the maintenance job image", "bicep": "modules/authTokenStore.bicep"}
+  ],
+  "sqlGrants": [
+    {"identity": "api", "roles": ["db_datareader", "db_datawriter", "db_ddladmin"], "reason": "Serve the API; db_ddladmin only so the MVP creates its tables on first start (open item: drop after schema migration)"},
+    {"identity": "import", "roles": ["db_datareader", "db_datawriter"], "reason": "Write imported records"},
+    {"identity": "agents", "roles": [], "reason": "No database access; reaches data through the API"},
+    {"identity": "orchestrator", "roles": [], "reason": "No database access; reaches data through the API"}
+  ],
+  "pendingResources": [
+    {"resource": "chat and memory store (ADR 0004)", "status": "No Bicep resource exists yet. When added, the api identity gets one data-plane role scoped to that store, with local auth disabled; no Contributor, Owner or User Access Administrator."}
+  ]
+}

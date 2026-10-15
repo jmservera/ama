@@ -2951,3 +2951,11 @@ metadata when the knowledge base was created.
 ## 2026-10-15 ADR 0004 review fixes (#158)
 
 * Removed an unsourced deployment sentence, restored the original fallback and A-or-B wording, and updated stale proposal wording in the ADR, BRD and PRD. OD-45 to OD-49 stay open. No regulatory snapshot changed.
+## 2026-10-15 Identity and RBAC as code (#141)
+
+* `infra/role-assignments.json`, `infra/entra/app-registration.json`, `infra/tests/test_identity_rbac.py` and an `infra/README.md` section added; index row added. No regulatory snapshot changed.
+* Open: owner sign-off of the review, contractor B2B decision (#116), live role-assignment comparison, chat store roles when ADR 0004 resources exist.
+
+## 2026-10-15 Identity and RBAC review fixes (#141)
+
+* Matrix test now compares parsed (identity, role, scope) tuples; Entra owner wording corrected; criterion 4 stated as manual steps plus owner. Open: db_ddladmin drop, contractor B2B decision (#116).
