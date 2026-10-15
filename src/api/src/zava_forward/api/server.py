@@ -67,6 +67,8 @@ class App:
 
 
 def get_kind(path):
+    if path.startswith("/api/buildings/"):
+        return "building"
     if path.startswith("/api/chat"):
         return "chat"
     if path.startswith("/api/law"):
@@ -213,6 +215,18 @@ def make_handler(app):
                 return self._json(403, {"error": "Your role does not include this."})
             if url.path.startswith("/api/chat"):
                 return self._chat(u, url.path, None)
+            if url.path.startswith("/api/buildings/"):
+                try:
+                    parts = url.path.strip("/").split("/")
+                    if len(parts) != 3:
+                        return self._json(404, {"error": "Building not found."})
+                    return self._json(200, s.building_view(u, unquote(parts[2])))
+                except KeyError:
+                    return self._json(404, {"error": "Building not found; shared context is unknown."})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
             if url.path.startswith("/api/law"):
                 if app.law is None:
                     return self._json(503, {"error": "The law store is not loaded."})

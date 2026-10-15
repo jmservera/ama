@@ -20,7 +20,7 @@ GET_ENDPOINTS = ["/api/me", "/api/account/photo", "/api/cases?view=all", "/api/c
                  "/api/handoffs", "/api/packages", "/api/workorders", "/api/checklists", "/api/ai/report", "/api/finance",
                  "/api/governance", "/api/continuity", "/api/continuity/export", "/api/retention", "/api/docs/ZF-1/none",
                  "/api/time/status", "/api/time/mine", "/api/time/report", "/api/law/sources", "/api/law/search?q=x",
-                 "/api/assistants", "/api/assistants/proposals", "/api/chat/threads", "/api/chat/memory", "/api/nothing"]
+                 "/api/assistants", "/api/assistants/proposals", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1", "/api/nothing"]
 POST_ENDPOINTS = [("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
                   ("/api/cases/ZF-1/receive-handoff", {}), ("/api/cases/ZF-1/escalate-handoff", {"to": "u0@example.test", "reason": "Synthetic chase"}),
                   ("/api/cases/ZF-1/complete-handoff", {"note": "Synthetic completion"}),

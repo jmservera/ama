@@ -58,7 +58,64 @@ escalation do not prove acceptance/escalation within approved periods. EXA-008's
 Semantic tests: `tests/test_handoff_lifecycle.py` runs on JSON and SQLite;
 HTTP tests and a CI-only SQL Server replay live in `../api/tests/`.
 
+## Building shared context (issue #75)
+
+`buildings.py` implements the PRD FR-002 read model. Seed data can contain a
+`buildings` list and each home case can carry an explicit `building_id`.
+Building records contain exactly `id`, `name`, positive integer `version`,
+`source`, `systems`, `dependencies`, `holds`, `works` and `costs`. Each category
+is `null` when unknown or a list (including `[]` for explicitly none).
+No building approval, resident evidence or home allocation fields are accepted.
+
+* Systems contain `id`, `label` and `source`.
+* Dependencies, holds and works add `owner`, `status`, `case_ids` and
+  `package_ids`. Case IDs must identify homes explicitly linked to this building;
+  package IDs must exist in procurement. `null` applicability is unknown,
+  `[]` means none and nonempty lists are exact explicit references. Building
+  membership and description text never establish package applicability.
+* Dependencies and holds have recorded status `Open`, `Resolved` or `Unknown`;
+  works have `Proposed`, `In progress` or `Completed`. These imported statuses
+  are source assertions, not application-generated approvals or safety releases.
+* Costs contain `id`, `work_id`, `amount_gbp` and `source`. They reference an
+  explicit shared work, and GBP amounts are finite nonnegative decimal strings
+  with at most two fractional places, bounded at GBP 100,000,000. No allocation
+  formula, grant eligibility, spending authority or payment is inferred.
+* Home `cost_allocation` entries (`shared_cost_id`, `amount_gbp`, `source`)
+  remain on each home, as do documents, consent, technical, funding, quality
+  and closure state. Allocations are not added to shared building costs.
+
+Missing/invalid explicitly linked context and applicable unresolved
+dependencies/holds block home advancement. New, reissued and corrective work
+instructions check the exact package; unknown scope fails closed, an explicit
+unaffected home/package does not block. Home readiness considers all applicable
+packages. Hazard intake/referral and resident contact remain independent.
+Unlinked legacy homes retain their existing behavior, not a claim that
+building checks have passed.
+
+JSON Store retains the document in `live.json`; SQL Store seeds, synchronizes
+and persists it through the existing checked-document `DOCS` interface inherited
+by MssqlStore, without new SQL or DDL. Existing live files and populated databases
+are **not reseeded** from a modified seed; absent context stays unknown.
+Loading real registers and governed updates/release authority are future work.
+There is no building editor or release endpoint in this slice.
+
+`tests/building_fixture.py` supplies a wholly fictional two-home block, two
+packages, ventilation work and GBP costs. `tests/test_buildings.py` verifies
+JSON/SQLite reopen, independent gates/evidence, explicit/unknown applicability,
+role projection, blocked instructions, and uninterrupted hazard intake/referral.
+API tests and staff navigation are documented in [api](../api/README.md#building-shared-context-issue-75).
+Local SQLite evidence does not establish live SQL Server or Azure behavior.
+
 ## Datasets, fixtures and synthetic tools
+
+The [synthetic needs inventory](../../docs/reference/research/retrofit-synthetic-data/needs-inventory.json)
+and [scenario manifest](../../docs/reference/research/retrofit-synthetic-data/scenario-manifest.json)
+bind each iteration's engineering review by inventory version/date and SN row.
+Run `python3 -m unittest discover -s tests -p test_needs_inventory.py -v`
+from this project to check that binding and negative mutations. This is a
+recorded pre-build gate, not owner approval or full scenario acceptance;
+partial/missing needs still require an owner volume/scope decision before
+data-consuming build work starts.
 
 * Evaluation dataset registry (`src/agents/evals/registry.json`) lists every golden and
   evaluation dataset with version, owner and purpose; a test fails for an
@@ -89,6 +146,36 @@ HTTP tests and a CI-only SQL Server replay live in `../api/tests/`.
   #110 consumer validation is mirrored by `validate_reading()` and must be
   reconciled when #110 lands, and a full-stock run needs a storage and cost
   decision.
+* Reproducibility and refresh (#176): scale fixture v1.2.0 and sensor backfill
+  v2 record seed, version, `as_of`, dependency-aware `generator_revision` and
+  SHA-256 for every payload file. Both require a new or empty output folder;
+  a repeat write to an existing snapshot fails without replacing files.
+  Generate a new versioned destination rather than deleting live data.
+  Source fingerprints are independent of Git HEAD, clock and output location;
+  exact reproduction also requires the same Python/runtime environment.
+  Scale `--as-of` is a snapshot label, not an event cutoff: its events remain
+  calendar-year 2026 fixtures. Sensor `--as-of YYYY-MM-DD` is the exclusive UTC
+  end of `--days` days; omitting it preserves the historical 2024-10-01 start
+  (730 days ends on 2026-10-01). `--estimate-only` accepts the same window.
+  Cadence must divide 1440 minutes and all sizes must be positive.
+  Example, after setting `ZF_DATA` to a private folder outside the repository:
+
+  ```bash
+  python -m zava_forward.core.synthetic.scale_fixture --seed 174 \
+    --as-of 2026-10-15 --out "$ZF_DATA/scale-fixture-2026-10-15-v1.2.0"
+  python -m zava_forward.core.synthetic.sensor_backfill --seed 183 \
+    --as-of 2026-10-15 --days 2 --cadence 60 --homes 12 \
+    --out "$ZF_DATA/sensor-backfill-2026-10-15-v2"
+  ```
+
+  `tests/test_synthetic_determinism.py` checks every output byte, multiple
+  sensor shards, source/hash metadata, window propagation, unchanged historical
+  payloads and refused refreshes. This wholly fictional stock-scale fixture
+  is not the private OSM-anchored stock register. That generator remains absent;
+  neither these tests nor the sensor sample establishes full-stock feasibility.
+  The [refresh cadence and approval policy](../../docs/reference/research/retrofit-synthetic-data/README.md#determinism-manifests-and-refresh-policy-2026-10-15)
+  is still proposed. These tools confer no approval, resident consent,
+  live SQL reset authority or permission to replace private tenant bindings.
 * Sensor plausibility tests (#191): `tests/test_sensor_plausibility.py` runs in
   the existing MVP CI unittest step over 150 stock homes for two years. It
   fails on out-of-bounds or flat-line series, checks seasonal and diurnal

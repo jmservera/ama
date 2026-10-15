@@ -69,3 +69,7 @@ follow_imports = "skip"
 [[tool.mypy.overrides]]
 module = ["test_handoff_api", "tests.test_handoff_api"]
 disallow_untyped_calls = false
+# Runtime PYTHONPATH supplies the shared fixture, strictly checked by the core project.
+[[tool.mypy.overrides]]
+module = ["building_fixture"]
+ignore_missing_imports = true

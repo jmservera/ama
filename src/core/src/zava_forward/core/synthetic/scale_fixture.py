@@ -13,10 +13,12 @@ import json
 import random
 from pathlib import Path
 
+from zava_forward.core import insights
 from zava_forward.core.insights import STAGE_ORDER
-from zava_forward.core.synthetic import output_dir
+from zava_forward.core.synthetic import output_dir, provenance
 
-VERSION = "1.1.0"
+VERSION = "1.2.0"
+AS_OF = "2026-09-30"
 HOMES = 60000
 EVENTS = 600000
 EVENTS_PER_HOME = EVENTS // HOMES
@@ -74,23 +76,36 @@ def events(n=HOMES, per_home=EVENTS_PER_HOME, seed=SEED):
                        day=f"2026-{rnd.randint(1, 12):02d}-{rnd.randint(1, 28):02d}")
 
 
-def write(out, n=HOMES, per_home=EVENTS_PER_HOME, seed=SEED):
-    out = Path(out)
-    out.mkdir(parents=True, exist_ok=True)
+def revision_sources() -> tuple[Path, ...]:
+    return (Path(__file__), Path(provenance.__file__),
+            Path(__file__).with_name("__init__.py"), Path(insights.__file__))
+
+
+def write(out: str | Path, n: int = HOMES, per_home: int = EVENTS_PER_HOME,
+          seed: int = SEED, *, as_of: str = AS_OF) -> dict[str, object]:
+    provenance.parse_as_of(as_of)
+    if n <= 0 or per_home <= 0:
+        raise ValueError("homes and events per home must be positive")
+    revision = provenance.source_revision(revision_sources())
+    out = provenance.prepare_output(out)
     digest = hashlib.sha256()
     counts = {}
     for name, rows in (("homes.jsonl", homes(n, seed)), ("households.jsonl", households(n, seed)), ("events.jsonl", events(n, per_home, seed))):
         count = 0
-        with open(out / name, "w", encoding="utf-8") as f:
+        with open(out / name, "w", encoding="utf-8", newline="\n") as f:
             for row in rows:
                 line = json.dumps(row, sort_keys=True) + "\n"
                 digest.update(line.encode())
                 f.write(line)
                 count += 1
         counts[name] = count
-    manifest = dict(version=VERSION, seed=seed, homes=counts["homes.jsonl"], households=counts["households.jsonl"], events=counts["events.jsonl"],
-                    sha256=digest.hexdigest())
-    (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    manifest = dict(version=VERSION, seed=seed, as_of=as_of, generator_revision=revision,
+                    homes=counts["homes.jsonl"], households=counts["households.jsonl"], events=counts["events.jsonl"],
+                    sha256=digest.hexdigest(), file_sha256=provenance.file_hashes(out / name for name in counts),
+                    event_calendar_year=2026, events_per_home=per_home,
+                    source_type="SYNTHETIC",
+                    synthetic_label="Wholly fictional scale fixture; not the private stock register or resident consent evidence.")
+    (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     return manifest
 
 
@@ -98,8 +113,11 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--out", default=str(output_dir("scale-fixture")))
     ap.add_argument("--seed", type=int, default=SEED)
+    ap.add_argument("--as-of", default=AS_OF, help="YYYY-MM-DD snapshot label; events remain in calendar year 2026")
+    ap.add_argument("--homes", type=int, default=HOMES)
+    ap.add_argument("--events-per-home", type=int, default=EVENTS_PER_HOME)
     a = ap.parse_args(argv)
-    print(json.dumps(write(a.out, seed=a.seed), indent=2))
+    print(json.dumps(write(a.out, n=a.homes, per_home=a.events_per_home, seed=a.seed, as_of=a.as_of), indent=2))
 
 
 if __name__ == "__main__":

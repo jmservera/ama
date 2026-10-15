@@ -27,7 +27,7 @@ STAFF_ROLES = ("Retrofit Coordinator", "Resident Liaison Officer", "Building Saf
                "Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer")
 FINANCE_VIEW = ("Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer")
 STAFF_GET = ("finance_queue", "me", "cases", "cases.csv", "case", "ranking", "ai_priority", "facets", "stats", "map", "visits",
-             "funding", "briefing", "doc", "audit", "handoffs", "time", "packages", "workorders", "checklists", "ai_report", "assistants", "law", "retention", "chat")
+             "funding", "briefing", "doc", "audit", "handoffs", "time", "packages", "workorders", "checklists", "ai_report", "assistants", "law", "retention", "chat", "building")
 CONTRACTOR_GET = ("me", "cases", "case", "workorders")
 CONTRACTOR_POST = ("logout",)
 
@@ -114,6 +114,7 @@ def redact_staff_detail(user, d):
     if user.get("role") not in FINANCE_VIEW:
         d.pop("finance", None)
         d.pop("grants", None)
+        d.pop("cost_allocation", None)
     return d
 
 

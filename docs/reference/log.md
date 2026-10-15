@@ -3125,6 +3125,59 @@ metadata when the knowledge base was created.
   24-scenario/61-turn golden CLI correctly exits 1 with one critical known gap
   (two failed assertions), `passed: false` and enablement `fail`, disabled.
 
+## [2026-10-15] implementation | Building shared systems model and views (#75)
+
+* Added the source-backed building model in `src/core`, with separate systems,
+  dependencies, holds, shared works and GBP costs. Exact home/package references
+  determine applicability; unknown scope is not approval. Home evidence,
+  consent, funding, technical, quality, closure and allocations stay home.
+* Reused JSON and checked-document SQL persistence, including the inherited
+  MSSQL path, without new SQL or workload dependencies. Existing stores are
+  not silently reseeded; linked missing building context is explicitly unknown.
+* Added staff-only API and home/building navigation in `src/api`, Finance-only
+  shared costs and home allocations, scoped progression/instruction checks and
+  wholly fictional regression fixtures. Hazard intake/referral stays independent;
+  existing AI remains proposal-only with human gates and no new prompt data.
+* Indexed the component guides rather than creating another synthesis page.
+  No real register/owner authority, live SQL Server, inference, Azure deployment
+  or direct human UX/accessibility acceptance is claimed. The BRD FR-002
+  cross-reference in issue #75 differs from the PRD building requirement; this
+  implementation follows the explicit issue criteria and PRD FR-002.
+
+## [2026-10-15] update | Needs inventory iteration gate and scenario linkage (#166)
+
+* Reviewed all thirteen SN rows against public migrated source evidence and
+  bumped `research/retrofit-synthetic-data/needs-inventory.json` to v1.2.0.
+  Corrected stock/EPC, household, chat, scale and sensor fixture notes without
+  claiming private output validation, full-volume runs or owner approval.
+* Added the versioned `scenario-manifest.json` inventory integration seed:
+  reciprocal path, exact inventory version/date and complete reviewed row set.
+  All eleven profile and nine workflow execution checks remain deferred to
+  #103; no full FR-035, application acceptance or resident consent is claimed.
+* Reconciled public provenance metadata, documented the iteration review and
+  pre-build issue/PR citation rule, updated the knowledge index/core README and
+  extended existing `src/core/tests/test_needs_inventory.py` with positive and
+  mutation regressions. No new runtime code or dependencies.
+* Owner ratification, row owners, scope/volume decisions, gap mapping and the
+  unavailable 2026-10-14 handoff matrix remain open. Tooling checks cannot
+  substitute for approval or prove that a GitHub citation preceded a build.
+
+## [2026-10-15] implementation | Src synthetic determinism and protected refresh (#176)
+
+* Extended the migrated core scale and sensor generators, not `mvp/` or a
+  replacement private register. Manifests record seed, as-of, version,
+  dependency-aware source revision and per-payload hashes. Sensor estimates
+  and output share an explicit UTC date window; omitted dates preserve
+  historical payloads. Nonempty destinations are refused without overwrite.
+* Added whole-directory/multi-shard byte comparisons, pre-change payload
+  digests, date/seed sensitivity, dependency-source mutation tests and
+  fail-before-write/refresh preservation checks in core/tests.
+* Corrected the stale sensor-generator absence claim and linked current src
+  recipes in the knowledge-base index. Private OSM-register reproduction,
+  full-stock sensor evidence and owner approval of refresh defaults remain
+  open; no real data, model evidence, consent or live reset authority is
+  invented. No deployment or live records changed.
+
 ## [2026-10-15] query | Return, reopen and role-owned handoff controls (#83)
 
 * Extended the migrated core workflow and API/web panels in `src/`, following
