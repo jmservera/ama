@@ -1,0 +1,135 @@
+name: Source projects CI
+
+on:
+  pull_request:
+    paths: ["src/**", ".github/workflows/src-ci.yml"]
+  push:
+    branches: [main]
+    paths: ["src/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: src-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  project:
+    name: src-${{ matrix.project }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: core
+            dist: zava-forward-core
+            deps: ""
+            image: false
+          - project: api
+            dist: zava-forward-api
+            deps: "-e ../core -e ../agents"
+            image: true
+          - project: agents
+            dist: zava-forward-agents
+            deps: "-e ../core"
+            image: true
+          - project: orchestrator
+            dist: zava-forward-orchestrator
+            deps: "-e ../core"
+            image: true
+          - project: importer
+            dist: zava-forward-import
+            deps: "-e ../core"
+            image: true
+    defaults:
+      run:
+        working-directory: src/${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the project editable with its development tools
+        env:
+          DEPS: ${{ matrix.deps }}
+        run: pip install $DEPS -e ".[dev]"
+      - name: Unit tests and dependency-rule test
+        run: python -m unittest discover -s tests -v
+      - name: Lint
+        run: ruff check . && ruff format --check .
+      - name: Type check
+        run: mypy
+      - name: Build image
+        if: matrix.image
+        working-directory: .
+        run: docker build -f src/${{ matrix.project }}/Dockerfile -t zava-forward-${{ matrix.project }}:ci src
+      - name: Image runs as a non-root user
+        if: matrix.image
+        working-directory: .
+        run: test "$(docker run --rm --entrypoint id zava-forward-${{ matrix.project }}:ci -u)" = "10001"
+      - name: Image contains no working data
+        if: matrix.image
+        working-directory: .
+        run: docker run --rm --entrypoint sh zava-forward-${{ matrix.project }}:ci -c 'test ! -e /app/data && test ! -e /data/zavaforward.json'
+      - name: Agents image carries no SQL or blob client code
+        if: matrix.project == 'agents'
+        working-directory: .
+        run: |
+          docker run --rm --entrypoint python zava-forward-agents:ci -c \
+            "import importlib.util as u; assert not any(u.find_spec(m) for m in ('mssql_python', 'azure'))"
+      - name: Image runs with a read-only root file system and no capabilities
+        if: matrix.image
+        working-directory: .
+        env:
+          DIST: ${{ matrix.dist }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/seed"
+          chmod -R a+rX "$RUNNER_TEMP/seed"
+          out="$(docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges \
+            --tmpfs /tmp --tmpfs /state:uid=10001,gid=10001 \
+            -v "$RUNNER_TEMP/seed:/data:ro" zava-forward-${{ matrix.project }}:ci)"
+          echo "$out"
+          test "$out" = "$DIST 0.1.0"
+      - name: Scan image for high and critical vulnerabilities
+        if: matrix.image
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          image-ref: zava-forward-${{ matrix.project }}:ci
+          severity: HIGH,CRITICAL
+          exit-code: "1"
+          vuln-type: os,library
+          ignore-unfixed: true
+
+  namespace:
+    name: src-namespace
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the five distributions side by side
+        run: pip install -e src/core -e src/agents -e src/api -e src/orchestrator -e src/importer
+      - name: Every distribution imports and the namespace has no init module
+        run: |
+          for name in core api agents orchestrator importer; do python -m zava_forward.$name; done
+          python -c "import zava_forward; assert getattr(zava_forward, '__file__', None) is None; assert len(list(zava_forward.__path__)) == 5"
+
+  no-working-data:
+    name: src-no-working-data
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Refuse committed working data under src
+        run: test -z "$(git ls-files ':(glob)src/**/data/**')"

@@ -112,10 +112,14 @@ Rules that follow from this:
   `sql` (`mssql-python`) and `blob` (`azure-storage-blob`), so an image installs
   only the drivers its identity may use. This is how the `agents` image stays
   free of SQL and blob client code, matching its ADR 0001 identity.
-* Dockerfiles live in the project folder and use the project folder as build
-  context. Each keeps the properties of today's `mvp/Dockerfile`: pinned base
-  digest, non-root user 10001, no working data, read-only root file system. A
-  workload image copies only its own package and the core.
+* Dockerfiles live in the project folder and use the `src/` folder as build
+  context (clarified in #290: a workload image also needs the sibling `core`,
+  which a project-folder context cannot reach), for example
+  `docker build -f src/agents/Dockerfile src`. Each keeps the properties of
+  today's `mvp/Dockerfile`: pinned base digest, non-root user 10001, no working
+  data, read-only root file system. A workload image copies only its own
+  package and the core, built as wheels in a build stage with hash-pinned build
+  tools (`src/build-requirements.txt`).
 * Web assets belong to the API project (only the API serves HTML). Policies and
   the law register are loaded by core rules (`ranking`, `lawstore`), so they are
   core package data and are located through `importlib.resources`, not

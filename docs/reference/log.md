@@ -3014,3 +3014,9 @@ metadata when the knowledge base was created.
 
 * Updated `docs/architecture/mvp-to-src-parity-matrix.md` after ADR 0006 was accepted and PR 287 merged: targets follow the ADR module mapping (no `devtools` package), deviations are stated as proposed amendments A1 to A5, three PR 287 files added, the 450 `mvp/.assistant-test-*` sandbox files mapped as retire, the hold action removed, and the owner answers of 2026-10-15 recorded (check names renamed after cut-over, GitHub release with the archive tag, agents image without the `sql` extra, no soak period). Baseline re-recorded: 719 tests, 92 skipped. The index row is updated.
 * Open: owner decision on A1 to A5 (core importing `ai_registry` and `assistants`, `assistant_release` placement, agents and orchestrator test dependencies).
+
+## [2026-10-15] restructure | src project skeletons (#290)
+
+* Added `src/{core,api,agents,orchestrator,importer}` (ADR 0006 phase 1): per-project `pyproject.toml`, version module, `python -m` entry point, tests with a dependency-rule import test, `requirements.in` and hashed `requirements.txt`, Dockerfiles for the four workloads, `src/.dockerignore`, `/src/**/data/` in `.gitignore`, `src/README.md` and the new workflow `.github/workflows/src-ci.yml` (checks `src-<project>`, `src-namespace`, `src-no-working-data`). `mvp/`, `mvp-ci.yml` and existing check names are unchanged; no module moved.
+* ADR 0006 clarified: Docker build context is `src/`, not the project folder, so images can include the core. Indexed in `docs/reference/README.md`. No regulatory snapshot changed.
+* Open: image checks and the Trivy scan are verified locally and still need a CI run; the per-project core extras are provisional until modules move (#199).
