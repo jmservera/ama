@@ -2,7 +2,7 @@
 title: Agentic Retrofit Programme Business Requirements Document
 description: Business requirements for safe, resident-centred and financially controlled retrofit delivery
 author: AMA Research Team
-ms.date: 2026-10-14
+ms.date: 2026-10-15
 ms.topic: reference
 brd_id: "BRD-2026-AMA48-001"
 status: "draft"
@@ -1334,12 +1334,12 @@ renumbered after insertion, deletion or reordering.
 | Prefix | Family | Use in this BRD | Count |
 | --- | --- | --- | --- |
 | BG | Business goal | Outcome in Business Objectives and Success Metrics; legacy alias OBJ-## | 13 |
-| FR | Functional requirement | Business capability or control the programme must provide | 50 |
-| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 98 |
+| FR | Functional requirement | Business capability or control the programme must provide | 51 |
+| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 99 |
 | NFR | Non-functional requirement | Quality attribute classified by ISO/IEC 25010 category | 11 |
 | CON | Constraint | Imposed boundary from legislation, regulation, funding, case study or owner-directed exercise delivery | 7 |
 | RULE | Business rule | Standing policy or authority rule that outlives the solution; replaces the canonical BR prefix to avoid a clash with legacy BR-### aliases | 26 |
-| OD | Open decision | Unresolved company decision; not a requirement | 49 |
+| OD | Open decision | Unresolved company decision; not a requirement | 50 |
 
 Requirement rows remain grouped by business domain below, so a domain table
 can hold FR, RULE and NFR rows together. The prefix states the type.
@@ -1521,6 +1521,7 @@ authorize spending or supersede legal, resident or professional controls.
 | FR-041 | BR-056 | The service shall provide role-appropriate evidence views that reduce repeated entry and evidence chasing without exposing unnecessary personal or commercially sensitive information. | BG-005, BG-007, BG-009, BG-010, BG-011 | Employees, residents, contractors, officials, data protection | AC-070: Employees have named queues and one controlled evidence pack; residents have accessible explanations and correction or challenge routes; contractors receive authorised scope and minimum necessary adjustments; officials receive qualified, reusable assurance packs. Management views show complaints and challenges where AI was involved, linked to RULE-005, without exposing unnecessary personal data. | Must |
 | NFR-009 | BR-057 | Each material user journey shall have accountable ownership, service-time measures, escalation and tested manual or non-digital alternatives. | BG-003, BG-004, BG-005, BG-009, BG-010, BG-011 | Residents, employees, contractors, officials | AC-071: Measures cover intake-to-owner, hazard action, professional review, resident contact and adjustment, appointment recovery, evidence review, defect resolution and external-query response. Results expose overdue, paused and reopened work and lawful accessibility differences. Thresholds for each measure are set by the journey owners under OD-09 and OD-25 before live use. | Must |
 | RULE-022 | BR-058 | Personal-data use by agents shall pass purpose, lawful-basis, special-category, transparency, automated-decision, DPIA, security, supplier and incident gates before live processing. | BG-003, BG-005, BG-009, BG-012 | Residents, employees, DPO, digital, suppliers | AC-072: Processing records separate each purpose. Pilot design keeps agent outputs below the solely automated threshold by requiring meaningful, not token, human involvement before any significant outcome. Where Article 22C safeguards would apply, records show the four safeguards: information about the decision, ability to make representations, ability to obtain human intervention and ability to contest. Reviewers can depart from an output and record reasons. Resident works decisions are not treated as blanket data-processing consent. Vulnerability data is minimised, and contractor access is limited to functional adjustments.<br>AC-079: Before live processing, the DPO approves privacy notice updates covering each agent purpose under UK GDPR Articles 13 and 14 and a published plain-language statement of where AI is used in the programme, what it does and does not decide, and how to reach a person. Resident-facing AI-drafted content is approved by a named human before sending. Residents can ask for a human explanation or review at any time through digital and non-digital channels. The gate supports Safety and Quality Standard 2.3.3 on clear and timely communication about planned improvements ([local snapshot](../reference/regulatory/social-housing-regulation/social-housing-safety-and-quality-standard-2024.md), effective 1 April 2024, converted 2026-09-19). The Transparency, Influence and Accountability Standard is noted only as a secondary reference through Awaab's Law Phase 2 guidance section 3 ([local snapshot](../reference/regulatory/social-housing-regulation/awaabs-law-phase-2-guidance-2026.md), converted 2026-09-19) pending OD-39 local snapshot. | Must |
+| FR-051 | None | The solution shall provide a regulatory compliance assistant that holds approved regulatory sources and owner-approved rule cards in a versioned store, runs deterministic proactive checks at journey steps and raises role-appropriate alerts, and answers questions about a specific home from cited sources and that home's recorded facts. The assistant retrieves, compares, cites, flags and routes only; named human owners interpret law, approve rule cards and decide that a duty is met. | BG-003, BG-004, BG-006, BG-007, BG-009, BG-010, BG-012 | Employees, residents, Legal, compliance, DPO, Building Safety, finance, digital, audit | AC-099: Every answer, check and alert shows source, provision, status (in force, guidance, consultation, historical or future), effective and retrieval dates, or states that no source is held. Missing evidence returns unknown, never clear. A future or consulted rule is never applied as active. Deterministic code, not a model, owns clocks and holds, and a model result never sets or rewrites an awareness date or suppresses a rule-engine alert. Only a rule card approved by its named owner is active, and an author cannot approve their own card. Chat and alerts never state that a duty is satisfied, give legal advice, infer lease, grant or contract terms, or send resident communications; a doubt route sends the case to the named owner. Emergency and hazard intake works without the assistant. Home facts are role scoped and minimised. Value is compared with deterministic rule cards and provision links without chat. | Should |
 
 ### Conversational Assistance and Memory (proposed)
 
@@ -1846,6 +1847,7 @@ continues. No result automatically activates a live control.
 | OD-47 | Whether residents, representatives or providers may ever use a conversational channel, and what consent, accessibility, identity and authority evidence they would need. Depends on OD-41, OD-42 and FR-045 | Resident Engagement, DPO, Legal and the Owner | Blocks any non-staff chat; out of scope until decided |
 | OD-48 | Whether memory is in scope at all or only conversation history, which content classes may be remembered, and how staff memory differs from any later resident memory | Owner, DPO and Digital service owner | Blocks FR-050 |
 | OD-49 | Grounding, abstention and injection-resistance thresholds for conversational turns and the accountable reviewer who approves them | Accountable AI reviewer named under FR-036 and Data and Performance Lead | Blocks activation of any conversational task (FR-036, NFR-010) |
+| OD-50 | Confirm which regulatory duties, sources and delegations apply to Zava North Homes, who approves rule cards and interprets sources, the alert and chat audiences, alert-fatigue tolerance, and whether chat adds value over deterministic rule cards with provision links | Legal, compliance, DPO, Building Safety, Assets and Digital | Blocks live use of FR-051 and any claim that it supports compliance; does not block the synthetic exercise |
 
 ### Owner Direction and Company Role-Profile Challenge (2026-10-04)
 
@@ -1993,16 +1995,16 @@ Acceptance criteria are not yet written in Given/When/Then form.
 | --- | --- | --- | --- |
 | BG-001 | FR-033, FR-035, FR-042 | RULE-011 | NFR-008 |
 | BG-002 | FR-005, FR-019, FR-020, FR-021, FR-022, FR-033, FR-035 | RULE-007, RULE-011, RULE-016, RULE-019, RULE-020 | None |
-| BG-003 | FR-001, FR-002, FR-003, FR-004, FR-007, FR-008, FR-009, FR-010, FR-016, FR-029, FR-030, FR-032, FR-033, FR-035, FR-036, FR-037, FR-038, FR-039, FR-040, FR-043, FR-044, FR-048 | RULE-001, RULE-003, RULE-012, RULE-014, RULE-015, RULE-017, RULE-018, RULE-020, RULE-021, RULE-022, RULE-024, RULE-025 | NFR-003, NFR-004, NFR-009 |
-| BG-004 | FR-001, FR-002, FR-003, FR-004, FR-016, FR-033, FR-036, FR-038, FR-039, FR-040 | RULE-002, RULE-003, RULE-018, RULE-021, RULE-024 | NFR-004, NFR-009 |
+| BG-003 | FR-001, FR-002, FR-003, FR-004, FR-007, FR-008, FR-009, FR-010, FR-016, FR-029, FR-030, FR-032, FR-033, FR-035, FR-036, FR-037, FR-038, FR-039, FR-040, FR-043, FR-044, FR-048, FR-051 | RULE-001, RULE-003, RULE-012, RULE-014, RULE-015, RULE-017, RULE-018, RULE-020, RULE-021, RULE-022, RULE-024, RULE-025 | NFR-003, NFR-004, NFR-009 |
+| BG-004 | FR-001, FR-002, FR-003, FR-004, FR-016, FR-033, FR-036, FR-038, FR-039, FR-040, FR-051 | RULE-002, RULE-003, RULE-018, RULE-021, RULE-024 | NFR-004, NFR-009 |
 | BG-005 | FR-008, FR-011, FR-012, FR-013, FR-014, FR-015, FR-016, FR-031, FR-033, FR-034, FR-036, FR-037, FR-040, FR-041, FR-042, FR-043, FR-044, FR-045, FR-046, FR-047 | RULE-005, RULE-006, RULE-012, RULE-018, RULE-020, RULE-022, RULE-024, RULE-025 | NFR-001, NFR-002, NFR-003, NFR-005, NFR-006, NFR-007, NFR-008, NFR-009, NFR-010, NFR-011 |
-| BG-006 | FR-005, FR-006, FR-007, FR-008, FR-009, FR-010, FR-019, FR-021, FR-022, FR-028, FR-029, FR-030, FR-033, FR-036, FR-038, FR-040, FR-043, FR-044, FR-046, FR-047 | RULE-004, RULE-007, RULE-008, RULE-012, RULE-013, RULE-014, RULE-015, RULE-017, RULE-018, RULE-019, RULE-020, RULE-021, RULE-024, RULE-025 | NFR-002, NFR-005, NFR-006, NFR-007 |
-| BG-007 | FR-023, FR-024, FR-025, FR-026, FR-027, FR-030, FR-033, FR-036, FR-038, FR-039, FR-040, FR-041, FR-042 | RULE-004, RULE-009, RULE-010, RULE-014, RULE-015, RULE-018, RULE-021 | None |
+| BG-006 | FR-005, FR-006, FR-007, FR-008, FR-009, FR-010, FR-019, FR-021, FR-022, FR-028, FR-029, FR-030, FR-033, FR-036, FR-038, FR-040, FR-043, FR-044, FR-046, FR-047, FR-051 | RULE-004, RULE-007, RULE-008, RULE-012, RULE-013, RULE-014, RULE-015, RULE-017, RULE-018, RULE-019, RULE-020, RULE-021, RULE-024, RULE-025 | NFR-002, NFR-005, NFR-006, NFR-007 |
+| BG-007 | FR-023, FR-024, FR-025, FR-026, FR-027, FR-030, FR-033, FR-036, FR-038, FR-039, FR-040, FR-041, FR-042, FR-051 | RULE-004, RULE-009, RULE-010, RULE-014, RULE-015, RULE-018, RULE-021 | None |
 | BG-008 | FR-022, FR-025, FR-027, FR-033, FR-035, FR-043 | RULE-008, RULE-010, RULE-011, RULE-012, RULE-016, RULE-020 | NFR-003, NFR-005, NFR-006, NFR-007 |
-| BG-009 | FR-012, FR-015, FR-020, FR-021, FR-029, FR-031, FR-032, FR-033, FR-037, FR-041, FR-042, FR-043, FR-045, FR-046, FR-047, FR-048 | RULE-005, RULE-006, RULE-014, RULE-019, RULE-022 | NFR-008, NFR-009 |
-| BG-010 | FR-003, FR-006, FR-016, FR-017, FR-018, FR-033, FR-034, FR-038, FR-039, FR-040, FR-041, FR-044, FR-045 | RULE-003, RULE-008, RULE-021 | NFR-004, NFR-005, NFR-006, NFR-007, NFR-009 |
+| BG-009 | FR-012, FR-015, FR-020, FR-021, FR-029, FR-031, FR-032, FR-033, FR-037, FR-041, FR-042, FR-043, FR-045, FR-046, FR-047, FR-048, FR-051 | RULE-005, RULE-006, RULE-014, RULE-019, RULE-022 | NFR-008, NFR-009 |
+| BG-010 | FR-003, FR-006, FR-016, FR-017, FR-018, FR-033, FR-034, FR-038, FR-039, FR-040, FR-041, FR-044, FR-045, FR-051 | RULE-003, RULE-008, RULE-021 | NFR-004, NFR-005, NFR-006, NFR-007, NFR-009 |
 | BG-011 | FR-010, FR-022, FR-033, FR-041, FR-049 | RULE-016, RULE-019 | NFR-009 |
-| BG-012 | FR-004, FR-025, FR-026, FR-027, FR-033, FR-036, FR-038, FR-039, FR-042, FR-043, FR-044, FR-049, FR-050 | RULE-016, RULE-018, RULE-019, RULE-020, RULE-021, RULE-022 | NFR-004, NFR-005, NFR-006, NFR-007 |
+| BG-012 | FR-004, FR-025, FR-026, FR-027, FR-033, FR-036, FR-038, FR-039, FR-042, FR-043, FR-044, FR-049, FR-050, FR-051 | RULE-016, RULE-018, RULE-019, RULE-020, RULE-021, RULE-022 | NFR-004, NFR-005, NFR-006, NFR-007 |
 | BG-013 | FR-049, FR-050 | RULE-025, RULE-026 | NFR-010, NFR-011 |
 
 ### FR-to-AC and FR-to-BG Coverage
@@ -2063,6 +2065,7 @@ not that the linked goal or criterion has been validated.
 | FR-046 | None | AC-088 | BG-005, BG-006, BG-009 |
 | FR-047 | None | AC-089 | BG-005, BG-006, BG-009 |
 | FR-049 | None | AC-091, AC-092 | BG-011, BG-012, BG-013 |
+| FR-051 | None | AC-099 | BG-003, BG-004, BG-006, BG-007, BG-009, BG-010, BG-012 |
 | FR-050 | None | AC-093, AC-094 | BG-012, BG-013 |
 
 ### Business Rule Enforcement
@@ -2281,6 +2284,12 @@ Zava naming, five-assistant operator evidence and draft-experiment closure in
 the addendum are recorded there and in the PRD and ADRs, because they change
 no business requirement. Fresh quality review and owner acceptance remain
 separate from this amendment.
+
+The 2026-10-15 addition records FR-051, AC-099 and OD-50 for the proposed
+[regulatory compliance assistant](../adrs/0005-regulatory-compliance-assistant.md)
+from the [regulatory literacy synthesis](../reference/research/ux/regulatory-literacy-for-journeys.md).
+It extends FR-038 to FR-040 and RULE-021 and is a proposal, not a validated
+need, a legal interpretation or an owner approval.
 
 The 2026-10-11 candidate amendment follows the owner's mandatory real
 AI/SQL/Azure direction, pinned #58 source/results and the independent

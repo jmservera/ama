@@ -2563,3 +2563,10 @@ metadata when the knowledge base was created.
   to avoid collisions. Main had already restored the PRD NFR, Constraints and
   Acceptance Criteria sections that PR #71 dropped, so the earlier flagged
   defect no longer applies to main.
+
+## [2026-10-15] update | Regulatory literacy synthesis and ADR 0005 regulatory compliance assistant
+
+* Added the regulatory literacy synthesis and ADR 0005 (numbered after main took
+  ADR 0004 for per-user chat). Added BRD FR-051, AC-099 and OD-50, PRD FR-060,
+  AC-104 to AC-106 and OQ-026, and an addendum section. Proposal only; no owner
+  approval, legal interpretation or fresh quality review.

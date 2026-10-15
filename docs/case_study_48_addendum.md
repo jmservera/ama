@@ -645,6 +645,32 @@ reading, missed contact or generated interpretation cannot diagnose a hazard,
 infer consent, remove a resident's priority, satisfy a statutory duty, approve
 professional work or certify an external submission.
 
+### Regulatory Compliance Assistant (Proposed, 2026-10-15)
+
+The [regulatory literacy synthesis](./reference/research/ux/regulatory-literacy-for-journeys.md)
+finds that most journey users need to recognise a legal trigger and act safely,
+not interpret law. [ADR 0005](./adrs/0005-regulatory-compliance-assistant.md)
+proposes an assistant built on the existing runtime, recorded as BRD FR-051,
+PRD FR-060 and open decision BRD OD-50:
+
+* A versioned law store in Azure SQL, with immutable source snapshots and a
+  retrieval index. It is seeded from the local regulatory snapshots and
+  records gaps (leasehold, complaints handling, TrustMark, the licensed PAS
+  2035 text) as no source held.
+* Owner-approved rule cards and a deterministic rule engine that run at
+  journey steps and raise role-appropriate alerts. Missing evidence returns
+  unknown, never clear, and a future rule is never applied as active.
+* A chat on the home and case view that answers from cited provisions and that
+  home's role-scoped facts. It states what is unknown and who decides, and it
+  refuses compliance conclusions, legal advice and invented lease, grant or
+  contract terms.
+
+This is a proposal and a sector-informed hypothesis. It does not establish
+which duties apply to Zava North Homes, name approvers or show that users want
+these alerts. Hazard and emergency intake must keep working without it, and
+named humans interpret law, approve cards and decide that a duty is met.
+Value must be shown against deterministic rule cards with provision links.
+
 ### Data Handling and Retention Baseline (Proposed)
 
 This is a proposed baseline for the demonstrator and any later production design. It is not legal advice and not an approved policy. The local corpus contains no numeric retention periods and Zava North Homes' own policies are not in the repository, so every period below is a proposed default for the Data Protection Officer (DPO), Legal and the record owners to confirm or replace. Statements are labelled by authority, using the hierarchy in the [regulatory README](./reference/regulatory/README.md). Provision references are to the local copies retrieved on 19 September 2026; check the official source before relying on them.
