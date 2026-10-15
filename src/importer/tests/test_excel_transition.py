@@ -252,6 +252,121 @@ class QuarantineTests(unittest.TestCase):
         self.assertEqual((first.version, second.version), (1, 2))
 
 
+class _RacingCursor:
+    """Inserts a competing batch between the MAX(version) SELECT and our INSERT."""
+
+    def __init__(self, real: sqlite3.Cursor, conn: sqlite3.Connection, races: list[int]) -> None:
+        self.real, self.conn, self.races = real, conn, races
+
+    def execute(self, sql: str, params: tuple = ()) -> "_RacingCursor":  # type: ignore[type-arg]
+        if sql.startswith("INSERT INTO import_batches") and self.races[0] > 0:
+            self.races[0] -= 1
+            version = self.conn.execute("SELECT MAX(version) FROM import_batches").fetchone()[0]
+            self.conn.execute(
+                "INSERT INTO import_batches (batch_id, structure, version, source_name, "
+                "source_sha256, status, staged_by, staged_at, data_label) "
+                "VALUES (?, ?, ?, 's', 'h', 'staged', 'p', 't', 'd')",
+                (f"rival-{self.races[0]}", params[1], (version or 0) + 1),
+            )
+            self.conn.commit()
+        self.real.execute(sql, params)
+        return self
+
+    def __getattr__(self, name: str):  # type: ignore[no-untyped-def]
+        return getattr(self.real, name)
+
+
+class _RacingConn:
+    def __init__(self, conn: sqlite3.Connection, races: int) -> None:
+        self.conn, self.races = conn, [races]
+
+    def cursor(self) -> _RacingCursor:
+        return _RacingCursor(self.conn.cursor(), self.conn, self.races)
+
+    def __getattr__(self, name: str):  # type: ignore[no-untyped-def]
+        return getattr(self.conn, name)
+
+
+class IntegrityError(Exception):
+    """Stands in for pyodbc.IntegrityError: same name, no shared base with sqlite3's."""
+
+
+class _RaisingCursor:
+    def __init__(self, real: sqlite3.Cursor, raises: list[int]) -> None:
+        self.real, self.raises = real, raises
+
+    def execute(self, sql: str, params: tuple = ()) -> "_RaisingCursor":  # type: ignore[type-arg]
+        if sql.startswith("INSERT INTO import_batches") and self.raises[0] > 0:
+            self.raises[0] -= 1
+            raise IntegrityError("UNIQUE KEY violation")
+        self.real.execute(sql, params)
+        return self
+
+    def __getattr__(self, name: str):  # type: ignore[no-untyped-def]
+        return getattr(self.real, name)
+
+
+class _RaisingConn:
+    def __init__(self, conn: sqlite3.Connection, raises: int) -> None:
+        self.conn, self.raises = conn, [raises]
+
+    def cursor(self) -> _RaisingCursor:
+        return _RaisingCursor(self.conn.cursor(), self.raises)
+
+    def __getattr__(self, name: str):  # type: ignore[no-untyped-def]
+        return getattr(self.conn, name)
+
+
+class StageRetryTests(unittest.TestCase):
+    def _racing(self, races: int) -> QuarantineStore:
+        base = QuarantineStore.in_memory()
+        return QuarantineStore(_RacingConn(base.conn, races))  # type: ignore[arg-type]
+
+    def test_collision_between_select_and_insert_is_retried(self) -> None:
+        store = self._racing(1)
+        rec = store.stage(preview_of(GOOD), "Sam")
+        self.assertEqual(rec.version, 2)
+        self.assertEqual(store.get("rival-0").version, 1)
+
+    def test_retries_are_exhausted_with_a_clear_error(self) -> None:
+        store = self._racing(99)
+        with self.assertRaisesRegex(ImportError_, "Could not allocate a batch version"):
+            store.stage(preview_of(GOOD), "Sam")
+
+    def test_other_driver_integrity_error_is_retried_by_class_name(self) -> None:
+        base = QuarantineStore.in_memory()
+        conn = _RaisingConn(base.conn, 1)
+        store = QuarantineStore(conn)  # type: ignore[arg-type]
+        self.assertEqual(store.stage(preview_of(GOOD), "Sam").version, 1)
+        self.assertEqual(conn.raises[0], 0)
+
+    def test_injected_integrity_errors_are_honoured(self) -> None:
+        class Custom(Exception):
+            pass
+
+        class Cur(_RaisingCursor):
+            def execute(self, sql, params=()):  # type: ignore[no-untyped-def]
+                if sql.startswith("INSERT INTO import_batches") and self.raises[0] > 0:
+                    self.raises[0] -= 1
+                    raise Custom()
+                self.real.execute(sql, params)
+                return self
+
+        class Conn(_RaisingConn):
+            def cursor(self):  # type: ignore[no-untyped-def]
+                return Cur(self.conn.cursor(), self.raises)
+
+        base = QuarantineStore.in_memory()
+        store = QuarantineStore(Conn(base.conn, 1), integrity_errors=(Custom,))  # type: ignore[arg-type]
+        self.assertEqual(store.stage(preview_of(GOOD), "Sam").version, 1)
+
+    def test_other_errors_propagate(self) -> None:
+        base = QuarantineStore.in_memory()
+        base.conn.execute("DROP TABLE import_rows")
+        with self.assertRaises(sqlite3.OperationalError):
+            base.stage(preview_of(GOOD), "Sam")
+
+
 class ExportTests(unittest.TestCase):
     def test_csv_neutralises_formulas(self) -> None:
         self.assertEqual(to_csv(["a"], [["=cmd"]]).splitlines(), ["a", "'=cmd"])

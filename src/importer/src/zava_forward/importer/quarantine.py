@@ -35,6 +35,7 @@ DECIDE = (
     "WHERE batch_id = ? AND status = 'staged'"
 )
 STAGE_ATTEMPTS = 5
+INTEGRITY_ERRORS: tuple[type[BaseException], ...] = (sqlite3.IntegrityError,)
 
 
 class ImportError_(Exception):
@@ -64,14 +65,25 @@ COLUMNS = (
 )
 
 
+def _is_integrity_error(exc: Exception, extra: tuple[type[BaseException], ...]) -> bool:
+    """DB-API drivers define IntegrityError separately, so also match it by class name."""
+    return isinstance(exc, extra) or any(c.__name__ == "IntegrityError" for c in type(exc).__mro__)
+
+
 def _now() -> str:
     return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 class QuarantineStore:
-    def __init__(self, conn: sqlite3.Connection, data_label: str = "synthetic-demo") -> None:
+    def __init__(
+        self,
+        conn: sqlite3.Connection,
+        data_label: str = "synthetic-demo",
+        integrity_errors: tuple[type[BaseException], ...] = INTEGRITY_ERRORS,
+    ) -> None:
         self.conn = conn
         self.data_label = data_label
+        self.integrity_errors = integrity_errors
 
     @classmethod
     def in_memory(cls) -> "QuarantineStore":
@@ -116,10 +128,15 @@ class QuarantineStore:
                     ),
                 )
                 break
-            except sqlite3.IntegrityError:
+            except Exception as exc:
+                if not _is_integrity_error(exc, self.integrity_errors):
+                    raise
                 self.conn.rollback()
         else:
-            raise ImportError_("Could not allocate a batch version; try staging again.")
+            raise ImportError_(
+                f"Could not allocate a batch version after {STAGE_ATTEMPTS} attempts; "
+                "try staging again."
+            )
         for r in preview.rows:
             cur.execute(
                 "INSERT INTO import_rows (batch_id, row_number, row_key, payload, problems) "

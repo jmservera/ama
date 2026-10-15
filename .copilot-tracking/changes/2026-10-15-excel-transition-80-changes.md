@@ -38,3 +38,9 @@ Other open items: AI-assisted column suggestion with approval, importer image an
 * `quarantine.py`: `UNIQUE (structure, version)`; decide UPDATE is conditional on `status = 'staged'` and rowcount is checked (rollback and clean `ImportError_` on a lost race); approve decides first, then supersedes the previous approved batch; staging uses MAX(version)+1 and retries on a duplicate version, then fails cleanly. SQL stays portable (no upsert, AUTOINCREMENT or PRAGMA).
 * Tests: 8 new unhappy-path tests (34 total) in `tests/test_excel_transition.py`.
 * Validation from `src/importer` (PYTHONPATH=src:../core/src, pip venv): unittest 34 OK, `ruff check` and `ruff format --check` clean, `mypy` success (10 files).
+
+## PR #303 re-review fix: driver-agnostic stage retry (2026-10-15)
+
+* `quarantine.py`: `stage()` no longer catches only `sqlite3.IntegrityError`. `QuarantineStore` accepts an injected `integrity_errors` tuple (default `(sqlite3.IntegrityError,)`), and any exception whose class MRO contains a class named `IntegrityError` (the DB-API name, for example `pyodbc.IntegrityError`) is also retried. No pyodbc import. Other exceptions propagate; exhausted retries raise `ImportError_` naming the attempt count.
+* Tests (39 total, 5 new in `StageRetryTests`): a competing batch committed between the MAX(version) SELECT and the INSERT (retry succeeds with version 2); exhausted retries; a same-named foreign `IntegrityError` retried; injected tuple honoured; non-integrity errors propagate.
+* Validation from `src/importer` (pip venv): unittest 39 OK, `ruff check` and `ruff format --check` clean, `mypy` success (10 files). Real SQL Server still unverified locally.

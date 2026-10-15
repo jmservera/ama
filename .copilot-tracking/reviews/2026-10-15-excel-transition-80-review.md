@@ -27,3 +27,8 @@ Review executed once. Outcome: library slice conformant to plan; issue not closa
 * Entity guard hardened (UTF-8 only, case-insensitive), with caps on total uncompressed bytes and sheet count.
 * Quarantine: unique (structure, version), conditional decide UPDATE with rowcount check so concurrent approve/reject cannot both succeed, retry then clean failure on duplicate version. Portable SQL kept.
 * Evidence: 34 unittest OK, ruff and mypy clean; see the changes artifact.
+
+## PR #303 re-review fix (applied)
+
+* Stage retry is driver-agnostic: injected `integrity_errors` plus matching by DB-API class name `IntegrityError`, so SQL Server (`pyodbc.IntegrityError`) collisions on `UNIQUE (structure, version)` are retried; exhaustion raises a clear `ImportError_`.
+* Evidence: 39 unittest OK, ruff and mypy clean; see the changes artifact.
