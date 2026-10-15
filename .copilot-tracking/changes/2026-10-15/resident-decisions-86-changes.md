@@ -5,7 +5,8 @@ ms.date: 2026-10-15
 ---
 
 Task: issue-86 / resident-decisions-86. Declared scope: full P01-P03 plan.
-Implementation: locally complete, ready for one Review and publication.
+Implementation and single Review complete; PR #319 published. Mergeability
+and hosted CI are blocked by newer-main conflicts, not reported as passed.
 No deployment or private data access authorized.
 
 ## Intake and Research Commands
@@ -173,7 +174,7 @@ No source move, SQL schema, dependency/image, regulatory or memory change.
 
 Local test environment and raw logs are temporary and will not be staged.
 The persistent command/result evidence is this artifact and the PR description.
-Review and commit/push/PR results will be recorded below after execution.
+Review and publication results follow.
 
 ## Review
 
@@ -189,6 +190,63 @@ still returns the same four criteria and no comments.
 The RPI task is completed in Follow-up; automatic session remains running,
 awaiting selection after the explicitly authorized publication. No child work
 is selected or started.
+
+## Publication and Hosted Blocker
+
+* Added-relative-link check using Python pathlib/re over added Markdown links:
+  all five new relative targets exist.
+* `git config --local user.email 8036360+jmservera@users.noreply.github.com &&
+  git config --local user.name jmservera &&
+  git config --local --get user.email`: requested noreply identity configured.
+  Author and committer were also explicitly set to that address at commit.
+* `git fetch origin main --quiet && git rev-list --left-right --count
+  origin/main...HEAD`: two base-only commits, zero topic commits before commit.
+  `git log --oneline HEAD..origin/main`: #315 task-bound RAI releases and #316
+  stock/fabric migration. No merge/rebase/history rewrite was authorized or done.
+* `git add -- src/core src/api docs/reference/README.md docs/reference/log.md`
+  plus the seven exact task research/plan/critique/details/changes/review/state
+  paths; `git diff --cached --check`: pass. Staged stat: 34 files,
+  2,485 insertions/97 deletions. Staged forbidden-path/venv diff: empty.
+* `printf ... | GIT_AUTHOR_NAME=jmservera GIT_COMMITTER_NAME=jmservera
+  GIT_AUTHOR_EMAIL=8036360+jmservera@users.noreply.github.com
+  GIT_COMMITTER_EMAIL=8036360+jmservera@users.noreply.github.com git commit -F -`:
+  success, ee649f0, `feat(src): bind resident decisions to scope and representative authority`,
+  required Copilot co-author trailer included. `git log -1` verified both identities.
+* `bash .../skills/shared/pr-reference/scripts/generate.sh --base-branch
+  origin/main --merge-base --output .venv/resident-pr-reference.xml`: success,
+  3,492 lines. This temporary assembly evidence does not start another Review.
+  No PR template found in .github, docs or repository root. PR body and evidence
+  mapping are persisted under .copilot-tracking/pr/.
+* Python combined the PR description and full command/result record, omitting
+  YAML frontmatter: initial body 19,618 characters.
+* `git push -u origin feat/src-resident-decisions-86`: success, new topic branch,
+  upstream set. No push to main, force push, merge or deployment.
+* `gh pr create --base main --head feat/src-resident-decisions-86 --title
+  'feat(src): enforce scoped resident decisions and representative authority'
+  --body-file .venv/resident-pr-body.md`: success,
+  https://github.com/jmservera/ama/pull/319. Body uses Refs #86.
+* `gh pr view 319 --json number,url,state,baseRefName,headRefName,mergeable,
+  mergeStateStatus,statusCheckRollup`: OPEN, main base, expected topic head,
+  CONFLICTING/DIRTY, no checks. `gh pr checks 319`: no checks reported.
+* `git merge-tree --write-tree --name-only HEAD origin/main`: exit 1,
+  read-only branch/worktree diagnostic. Conflicts are docs/reference/log.md,
+  src/api/README.md, src/core/README.md and
+  src/core/src/zava_forward/core/ai_tasks.py. Worktree/index/branch not merged.
+  Rechecked PR: still CONFLICTING/DIRTY with no hosted checks.
+* Final delivery metadata is committed with the same noreply identity/trailer
+  and pushed with `git push origin feat/src-resident-decisions-86`; PR body is
+  refreshed using `gh pr edit 319 --body-file .venv/resident-pr-body.md`.
+  Exact remote head and retained Refs/no-closing-reference state are verified
+  after push. No source changes or repeated Review occur during closeout.
+* Temporary worktree-local `.venv/` and its raw logs/XML/body are removed after
+  publication; only explicitly staged source, docs and durable artifacts enter
+  the PR. Final `git status --short` must be empty.
+
+Publication succeeded, but PR readiness is **blocked**. The requested owner
+merge boundary prevents silently incorporating newer main or choosing a rebase.
+Owner-authorized integration must reconcile #315/#316, resolve the four files
+and rerun affected validation before CI/merge. Hosted CI is unavailable, not
+passed; no local image or release evidence is invented.
 
 ## Unmet Acceptance and Follow-Up
 
