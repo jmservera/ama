@@ -2646,3 +2646,12 @@ metadata when the knowledge base was created.
 * The thirteen issue updates and their original review/source binding remain
   unchanged; the newer assistant proposal is not silently added to that completed
   execution or activated by this merge.
+
+## [2026-10-15] add | Backlog delivery coordinator agent
+
+* Added `.github/agents/ama-backlog-delivery-coordinator.agent.md`. It reviews
+  issues with the backlog manager, builds dependency waves, runs one RPI loop per
+  issue in its own worktree and branch, reviews each PR, and merges and rebases
+  in dependency order under owner approval.
+* Updated the `ama-*` agent row in the index. No research or regulatory content
+  changed.

@@ -171,7 +171,7 @@ official links for every snapshot. Check it before relying on any file below.
 | --- | --- |
 | `company-*` in [.github/agents/](../../.github/agents/) | Zava North Homes role agents for interrogating the problem. Grounded in [Company Profile Research](./research/company/company-profile-research.md) |
 | [company-executive-reviewer.agent.md](../../.github/agents/company-executive-reviewer.agent.md) | Owner-delegated, draft-only target ratification or changes-requested decision; not company approval or operational authority |
-| `ama-*` in [.github/agents/](../../.github/agents/) | AMA helper agents for solution orchestration and presentation communications |
+| `ama-*` in [.github/agents/](../../.github/agents/) | AMA helper agents for solution orchestration, presentation communications and backlog delivery coordination |
 
 ## Maintenance
 
