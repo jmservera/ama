@@ -1,5 +1,5 @@
 ---
-title: ADR 0004 Regulatory Compliance Assistant
+title: ADR 0005 Regulatory Compliance Assistant
 description: Proposed design for an AI-assisted regulatory checking system with a versioned law store, proactive step checks and a home-specific chat, built on the existing Azure SQL, Foundry and five-assistant runtime
 author: AMA programme
 ms.date: 2026-10-15
@@ -18,8 +18,8 @@ and the [regulatory literacy synthesis](../reference/research/ux/regulatory-lite
 
 | Requirement | Document |
 | --- | --- |
-| FR-049, AC-091, OD-44 | [BRD](../brds/agentic-retrofit-programme-brd.md) |
-| FR-051, AC-069 to AC-071, OQ-017 | [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) |
+| FR-051, AC-099, OD-50 | [BRD](../brds/agentic-retrofit-programme-brd.md) |
+| FR-060, AC-104 to AC-106, OQ-026 | [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) |
 | Proposal summary | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 
 It extends BRD FR-038 to FR-040 and RULE-021, which already require a source

@@ -2,14 +2,14 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-14T21:02:49+00:00",
-  "commit": "9261c5cb1dcca013d9bc93c79d3fafebc70b8f71",
+  "scored_at": "2026-10-14T23:46:26+00:00",
+  "commit": "169aab3746649b5c267c89e69b24cbecc47f4726",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38636228836",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38655418897",
   "fingerprints": {
-    "brd": "8698b2d950aa2f0d4cda8729d80d2d77ec0bea10404f22860cda2182f9db9160",
-    "prd": "f312d36b0f21b8b6978c64bba5d0d5e2009a6c2b29aa6bf72f25680bb89a0995",
-    "adr": "e6bb9986d65c655b52944e4ae89e062133e08c2fc56b77da536e241462f96e84",
+    "brd": "b0752d93d8f553c47308fa99fcd531280995d6e75d085b52a648c9b70f7a7e02",
+    "prd": "9b0b1699aa3b05faa6e3cc59386fe2f825e986286b3f586ff0416e96575e68b5",
+    "adr": "c90b1624ec10f7ae9190ac4a942f9c15f6fe046f5f6380316b989c779324b582",
     "solution-code": "0708f6ce7afa4510f3f0f951b62714ab6fc7fc207ea502f21f9eacb6f1359ac4",
     "infrastructure": "f5ee52836ffcddda14f2c5a85e6f0b1e3ac9baf444d4f81001b172409d7a623b",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
@@ -27,47 +27,46 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "infra/modules/authTokenStore.bicep:20-58",
+        "docs/adrs/0004-per-user-agent-chat-and-memory.md:106-120",
         "docs/adrs/0001-azure-architecture.md:120-129"
       ],
-      "rationale": "Failure-domain table explicit per component; ADR 0002's new sensor row (line 96) adds a cleanly decoupled optional module with its own storage records and explicit no-new-estate boundary, consistent with existing modular decoupling. Scaling path still only partly evidenced end to end."
+      "rationale": "New ADR 0004 adds an isolation model section describing a decoupled optional channel reusing the existing Store interface, consistent with existing modular decoupling; it is a proposal, not implemented, so does not move the score."
     },
     "A2": {
       "score": 5,
-      "evidence": [],
-      "rationale": "Unchanged baseline: security/compliance architecture evidence not affected by this PR's CI-tooling-only diff."
+      "evidence": [
+        "docs/adrs/0004-per-user-agent-chat-and-memory.md:63-69",
+        "docs/adrs/0004-per-user-agent-chat-and-memory.md:137-150"
+      ],
+      "rationale": "ADR 0004 names five options (A-E) and explicitly rejects two with reasons (D: cross-user exposure; E: preview status, extraction-vs-consent conflict), reinforcing deliberate trade-off reasoning already evidenced elsewhere."
     },
     "A3": {
       "score": 5,
       "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:784-823",
-        "mvp/zavaforward_mvp/ai.py:61-91"
+        "docs/adrs/0004-per-user-agent-chat-and-memory.md:106-120",
+        "docs/adrs/0004-per-user-agent-chat-and-memory.md:121-136"
       ],
-      "rationale": "Role/case scope and revocation rechecked on every call; per-capability field allowlists keep outputs safe; citation-required output validation and FORBIDDEN-phrase filtering mitigate injection/unsupported claims. Reviewed ADR 0002 sensor section (lines 590-672): reinforces data-minimisation and A..."
+      "rationale": "ADR 0004 states isolation controls (server-derived identity, per-turn re-auth, injection treated as inert data) and names risks (row-level isolation depends on app filters, memory as monitoring risk) with mitigations; still a design proposal, not implemented."
     },
     "A4": {
       "score": 5,
-      "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:1-120",
-        "mvp/README.md:420-460",
-        "docs/adrs/0002-pilot-readiness-architecture.md:108-130"
-      ],
-      "rationale": "Five assistant capabilities (stock, assessment, funding, coordination, quality) work end to end via shared proposal service, SQL durability and UI; known gaps (QA disabled, proactive off, prior ledger DDL defect) are proactively disclosed in ADR 0002 and README."
+      "evidence": [],
+      "rationale": "Unchanged baseline: no mvp/ implementation changes in this diff; the new ADR/BRD/PRD content is explicitly proposed and not implemented."
     },
     "A5": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: operational readiness evidence not affected by this PR's CI-tooling-only diff."
+      "rationale": "Unchanged baseline: operational readiness evidence not affected by this documentation-only diff."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: testing evidence not affected; no mvp/tests changes in this diff."
+      "rationale": "Unchanged baseline: no evaluation harness or model-choice code changed; PRD FR-055 only proposes a future harness, not evidence of one."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Unchanged baseline: documentation/evidence trail not materially affected by rubric-gate tooling changes."
+      "rationale": "Unchanged baseline: no agentic orchestration code changed; ADR 0004 explicitly states no new agent and no orchestrator is deployed."
     },
     "B1": {
       "score": 3,
@@ -97,9 +96,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:590-672"
+        "docs/adrs/0004-per-user-agent-chat-and-memory.md:1-192"
       ],
-      "rationale": "Reviewed new ADR sensor section: well-organised tables and prose add to capstone documentation completeness, but this is ADR-only text, not deck material, and does not resolve existing slide/thin-documentation issues enough to move from Good(4) to Excellent(5)."
+      "rationale": "New ADR is well organised and clearly labelled as proposed, but adds BRD/PRD/ADR prose, not deck material; existing slide thinness is unresolved so the capped score stays at Good(4), not Excellent(5)."
     },
     "B7": {
       "score": 3,
@@ -108,8 +107,10 @@
     },
     "C1": {
       "score": 5,
-      "evidence": [],
-      "rationale": "Unchanged baseline: BRD/PRD/ADR evidence not affected by this PR's CI-tooling-only diff."
+      "evidence": [
+        "docs/brds/agentic-retrofit-programme-brd.md:599-607"
+      ],
+      "rationale": "New BG-013 row names stakeholders (employees, DPO, HR) and states guardrail measures qualitatively (zero cross-user exposures, zero unconsented memory) without a numeric business value target, consistent with existing qualitative-value baseline."
     },
     "C2": {
       "score": 0,

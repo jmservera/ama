@@ -451,6 +451,145 @@ capital acceleration.
 > by increasing safe, resident-accepted and evidence-complete handovers at an
 > affordable risk-adjusted cost.
 
+### Responsible AI Release Position (2026-10-14)
+
+Responsible AI (RAI) is a release discipline for the whole workbench, not a
+model checkbox. Deterministic prioritisation, missing-data rules, sensor
+signals, resident-contact assumptions and staff measurement can cause harm
+without generative AI. The original L2 to L4 autonomy brief is retained as
+history; the current proposal permits recommendations, drafts and flags,
+not autonomous resident, safety, professional or financial decisions.
+
+[NIST AI RMF 1.0](https://doi.org/10.6028/NIST.AI.100-1) (2023), Govern,
+Map, Measure and Manage, provides a voluntary assessment baseline. The
+Microsoft-authored AI STRIDE overlay supports AI-specific misuse analysis,
+not a security certification. EU AI Act applicability requires a separate legal
+screen of intended use, provider/deployer role and territorial scope. A UK
+housing association, an EU-hosted model or social-housing subject matter alone
+does not establish an Annex III high-risk classification. No current legal
+classification or source-currentness approval is inferred from this review.
+The official [EU AI Act](https://eur-lex.europa.eu/eli/reg/2024/1689/oj)
+(2024/1689; territorial scope, intended-use classification and commencement)
+and [UK data-protection register](./reference/regulatory/README.md) require
+a dated legal currentness check before consequential adoption; this amendment
+does not refresh the 2026-09-19 local regulatory snapshots.
+
+The proposed release gates are:
+
+| Gate | Accountable function, to be confirmed for live use | Required evidence |
+| --- | --- | --- |
+| Govern and map | Asset sponsor, Programme product owner, DPO/Legal, Safety and Resident Engagement | Versioned task/system inventory, affected stakeholders, intended and prohibited uses, impact assessment, processing/transfer review, named decision rights and explicit residual-risk acceptance |
+| Measure | Data and Performance with competent task owners and independent Assurance | Held-out task and deterministic-policy evaluation; source support, critical misses, calibration/abstention where applicable, subgroup/missing-data disparities, human review effort and automation-bias tests |
+| Meaningful oversight and redress | Competent reviewers, Housing and Resident Engagement | Reviewers can inspect sources, correct/reject outputs and use manual handling; accessible human/non-digital explanation, challenge and correction routes without retaliation, inferred refusal or delayed hazard response |
+| Manage and change | Digital operator with Safety, DPO and product owner | Version-bound release record, task-level disable and manual fallback drill, monitored harm indicators, incident owner/triage, dependency re-evaluation and approved restart/rollback |
+
+The [PRD RAI contract](./prds/zava-forward-retrofit-programme-demonstrator.md#responsible-ai-release-and-oversight-contract-2026-10-14)
+and [pilot architecture controls](./adrs/0002-pilot-readiness-architecture.md#responsible-ai-control-plane-2026-10-14)
+make these proposals testable. Synthetic scenarios and operator model calls
+cannot establish representative fairness, resident understanding, effective
+human oversight or operational benefit. A deterministic queue is explainable,
+not inherently fair; missing sensors, digital exclusion, adjustment needs and
+no-access history must not become unsupported disadvantage.
+
+Real-data and operational activation remain blocked until the relevant
+human owners approve the evidence and residual risks. Exercise acceptance
+continues to require real Azure/SQL/AI under its existing authority and budget,
+with the new RAI checks separately reported; disabling assistance preserves
+manual access but cannot masquerade as a passing real-AI delivery gate.
+Documentation approval neither fixes an implementation gap nor certifies
+compliance. No cloud, model, data or deployment action is authorized here.
+
+#### Assessment Attempt and Evidence Limits
+
+The 2026-10-14 audit used baseline commit
+`1cb398c7b90bec05a5700008a97d0cfac494144a` and PRD v0.14.0, before this
+v0.15.0 amendment. All six framework assessments returned preliminary results:
+NIST Govern, Map, Measure and Manage, AI STRIDE, and conditional EU AI Act
+screening. The preliminary total was 29 checks: 7 PASS, 11 PARTIAL and
+11 NOT_ASSESSED. These were preliminary results, not consolidated verified findings or release
+acceptance results. No verified severity breakdown was available in that attempt.
+
+Measure and AI STRIDE deep verification stopped with terminal
+`INVALID_PAYLOAD` (`Retryable=false`) because the verifiers could not consume
+full finding records through temporary-file references. No retry or
+`RAI_REPORT_V1` report was produced or accepted in that attempt. Its terminal
+failure remains recorded; the separately authorized recovery below supplied
+complete finding records inline. Human acceptance remains PENDING.
+
+The following are preliminary review priorities, not confirmed implementation
+failures. Proposed documentation mitigations leave each evidence gate open.
+
+| Review priority | Proposed treatment and trace | Evidence still required |
+| --- | --- | --- |
+| Semantic correctness, not only schema/citation validity | PRD NFR-009 and AC-070; competent source-based oversight | Held-out real-model evaluation, factual/unsafe-advice adjudication and reviewer detection of plausible wrong outputs |
+| Accountable task/model/prompt release and change binding | PRD FR-051/AC-069; ADR 0001 RAI boundary and ADR 0002 control plane | Named release/residual-risk owners and executed version/permission-change denial tests |
+| Ranking policy and incomplete safety/support records | PRD FR-054/AC-073 and existing FR-012; deterministic and AI cohort evaluation | Approved policy, representative impact evidence, lawful cohort analysis and missing-data disposition |
+| Harm monitoring, incident ownership and restart | PRD FR-053/AC-072/NFR-014 | Approved observation/response thresholds, named incident owners and executed suspend/manual-fallback/restart drill |
+| Consistent minimization across legacy and newer assistant paths | PRD NFR-003/005 and AC-053/060; ADR context/audit/telemetry rules | Complete input/output/citation/review/export permission tests on every retained model path, not only the newer assistants |
+
+Other operational blockers remain the real-data DPIA, processor/transfer and
+retention approvals; recovery/erasure evidence; named control-owner acceptance;
+reviewer readiness and net benefit. The newly written controls are proposals,
+not implementation remediation, verified findings closure or company approval.
+
+#### Verified Recovery and Open Dispositions (2026-10-14)
+
+The owner authorized a new bounded recovery with complete finding records and
+codebase profile supplied inline, not a retry of the rejected temporary-file
+handoff. The [recovered RAI report](../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md)
+completes the original baseline audit at commit
+`1cb398c7b90bec05a5700008a97d0cfac494144a` / PRD v0.14.0. It is not a
+re-audit of v0.15.0 or evidence that this amendment is implemented.
+
+All six framework assessments are represented once. The 29 checks comprise
+7 PASS, 0 FAIL, 11 PARTIAL and 11 NOT_ASSESSED. Actionable residual severity is
+0 CRITICAL, 0 HIGH, 8 MEDIUM and 3 LOW. Verification produced 2 CONFIRMED,
+0 DISPROVED, 9 DOWNGRADED and 18 UNCHANGED results. Existing proposal-only
+authority, source-verification gates, finite activation and manual routes
+were credited; a downgraded residual is not closed. Counts are framework
+checks, not counts of distinct incidents or affected people.
+
+The repaired AI STRIDE and Measure requests included every required finding
+field and the full profile. Other complete baseline-compatible verdicts were
+reused. Deterministic validation checked every input/response/collection ID,
+required verifier fields, total verdict mappings, pass-through fidelity,
+all 29 principal report rows, response counts, exact report path/hash and
+verbatim caution. This validates the exchange and report contracts, not
+runtime behavior, legal classification or qualified human acceptance.
+
+| Verified review item | Residual severity / verdict | Proposed treatment and evidence gate |
+| --- | --- | --- |
+| T-RAI-001: legacy input minimization | MEDIUM / CONFIRMED | Digital, task owners and DPO establish minimum necessary per-task fields across retained legacy and newer paths; provider-bound payload and cross-role tests under NFR-003/005 and AC-053/060 |
+| T-RAI-002 and MEASURE-01: source/factual assurance | MEDIUM / CONFIRMED and DOWNGRADED respectively | Task owners, Assurance and Digital witness plausible-wrong-output and altered-evidence tests, including structurally valid citations; NFR-009 and AC-070, without bypassing existing human gates |
+| GOVERN-AUDIT-02 and MN-3.2: approved model-change binding | MEDIUM / DOWNGRADED | Product/Digital own version-bound release and dependency invalidation, with renewed approval tests under FR-051/AC-069 |
+| MAP-02: staff-data and exercise-to-live boundary | MEDIUM / DOWNGRADED | Product, Digital, DPO/Legal and record owners reconcile actual staff identity/processing with synthetic-resident claims and approve necessity, processor/transfer and retention records; DH-001/002/006/007 remain open evidence gates |
+| MN-4.1: owned harm monitoring | MEDIUM / DOWNGRADED | Product/Digital with Data, Safety and Resident Engagement approve indicators, thresholds, observation windows and response owners under NFR-014 |
+| MN-4.3: incident communication and restart | MEDIUM / DOWNGRADED | Digital and named incident/restart owners witness suspension, communication, manual continuity and separately approved restart under FR-053/AC-072 |
+| GOVERN-AUDIT-01, MAP-01 and MAP-04: accountability, ranking impact and participation | LOW / DOWNGRADED in the bounded exercise | Name responsible humans, approve ranking ownership/impact and obtain representative resident/reviewer/accessibility/net-benefit evidence under FR-051/FR-054 and AC-070/AC-071/AC-073 before operational expansion |
+
+Synthetic resident/programme data does not establish that the whole system
+processes no personal data: the report identifies actual staff/tenant identity
+and model-processing context. This scope tension with NFR-005/DH-002 must be
+reviewed, not silently treated as satisfied or deferred until real residents
+are introduced. No new staff-data purpose or broader processing is authorized.
+
+The report is a bounded prioritized audit, not exhaustive framework coverage,
+penetration testing or certification. Source-inspection confidence does not
+prove deployed effectiveness or harm. All new remediation remains proposed/
+Not run; qualified release acceptance remains pending and live use BLOCKED. Held-out
+real-model quality/calibration, population fairness, accessible challenge,
+reviewer readiness, net benefit and witnessed restore/erasure reconciliation
+remain open. Restart persistence is not backup-recovery evidence. UK legal
+currentness and conditional EU applicability still require qualified review.
+
+### Owner Acceptance of Baseline Report (2026-10-15)
+
+The owner explicitly accepted the [recovered baseline RAI report](../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md#owner-acceptance-2026-10-15)
+for its findings, limitations and remediation-planning basis. Generation-time PENDING
+entries above remain historical. This is not qualified legal/privacy sign-off,
+remediation closure, approval of PRD v0.16.0 or live-use acceptance. The eleven
+PARTIAL and eleven NOT_ASSESSED checks remain unchanged; live use remains BLOCKED.
+
 ### Regulatory Evidence and Service Design
 
 The legal and regulatory corpus in
@@ -510,9 +649,9 @@ professional work or certify an external submission.
 
 The [regulatory literacy synthesis](./reference/research/ux/regulatory-literacy-for-journeys.md)
 finds that most journey users need to recognise a legal trigger and act safely,
-not interpret law. [ADR 0004](./adrs/0004-regulatory-compliance-assistant.md)
-proposes an assistant built on the existing runtime, recorded as BRD FR-049,
-PRD FR-051 and open decision BRD OD-44:
+not interpret law. [ADR 0005](./adrs/0005-regulatory-compliance-assistant.md)
+proposes an assistant built on the existing runtime, recorded as BRD FR-051,
+PRD FR-060 and open decision BRD OD-50:
 
 * A versioned law store in Azure SQL, with immutable source snapshots and a
   retrieval index. It is seeded from the local regulatory snapshots and

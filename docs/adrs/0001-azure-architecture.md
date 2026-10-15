@@ -2,7 +2,7 @@
 title: ADR 0001 Azure Architecture for the Zava Forward Demonstrator
 description: Proposed Azure hosting, agent placement, data, model and security architecture for the non-production Zava Forward retrofit workbench demonstrator
 author: AMA programme
-ms.date: 2026-10-13
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
@@ -108,6 +108,52 @@ is set). SQL contained users are created with
 * Diagnostic settings from every service to one Log Analytics workspace; SQL auditing to Azure Monitor; ledger tables; immutable `audit-archive` blob container.
 * Defender alert policy on SQL, metric alerts for Foundry client errors and SQL CPU to the action group, optional `CanNotDelete` locks.
 * Constructed, non-identifying data only. Production would need a data protection impact assessment and a new approval, which this record does not provide.
+
+## Responsible AI Architecture Boundary (2026-10-14)
+
+Proposed amendment, not adoption or deployment. The future separate-worker
+estate must enforce the same [PRD RAI release contract](../prds/zava-forward-retrofit-programme-demonstrator.md#responsible-ai-release-and-oversight-contract-2026-10-14)
+as the [current shared-API realization](./0002-pilot-readiness-architecture.md#responsible-ai-control-plane-2026-10-14).
+Do not infer an implemented identity boundary from this proposed topology.
+
+The API owns task release/impact records, permission-filtered evidence,
+validated proposals, meaningful review and incident/suspension state. Workers
+receive only task-scoped authorized inputs and cannot activate a task, approve
+risk, change a policy or commit a domain decision. Recheck task release and
+material dependencies before dispatch, proposal publication and human review;
+queued work from a superseded release cannot bypass suspension by retrying.
+
+Bind provenance to task, provider/deployment/model, prompt, policy, evidence,
+permissions and release versions. Protect retained prompts, explanations and
+review/incident records under the same minimum-necessary access and approved
+retention rules as their sources. Observability defaults to identifiers and
+redacted metrics, not resident/source text. Processor, inference-transfer and
+immutable-audit/erasure questions remain DPO/Legal approval gates.
+
+The [failed assessment attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
+is retained alongside the [validated recovery](../case_study_48_addendum.md#verified-recovery-and-open-dispositions-2026-10-14)
+and [baseline RAI report](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md).
+Its 11 PARTIAL residuals (8 MEDIUM, 3 LOW) remain open; proposal-only authority,
+source verification and manual routes reduced nine original severity claims.
+The owner accepted the bounded baseline report for remediation planning on
+2026-10-15, not this amendment or an operational release. The report does not
+prove this amendment implemented or accepted. Current
+staff/tenant identity processing needs explicit privacy scope review despite
+constructed resident content; restart persistence does not prove recovery.
+
+Reuse the existing API, SQL records and operator disable path before adding a
+new governance service. This is simpler and preserves one authority, but
+requires explicit server-side gates and tested version invalidation; a separate
+worker identity is not available in the current MVP. Always-on assistance and
+an AI-ranked queue are rejected: neither adds evidence of fair or safe
+outcomes. The cost is evaluation, monitoring and human review capacity, which
+must be included in the value comparison rather than hidden as model savings.
+
+Before operational activation, evidence must satisfy PRD AC-069 to AC-073,
+including cohort/missing-data evaluation, oversight error detection, accessible
+challenge and a suspend/manual-fallback/restart drill. Framework coverage is
+not certification; geography and intended use need independent legal scope
+review. No new infrastructure or paid inference is authorized by this amendment.
 
 ## Hybrid M365 and Excel transition
 
@@ -372,6 +418,8 @@ Deployment note (2026-10-08): the first `uksouth` deployment into the recreated 
 Result: the redeploy `warm-dev2` into `ama` (`uksouth`, `allowPublicNetworkAccess=true`, default gpt-4.1 and gpt-4.1-mini at GlobalStandard) succeeded in 9 min 13 s.
 
 ## Open items
+
+* RAI task/impact inventory, named residual-risk and incident owners, version-bound release evidence and PRD AC-069 to AC-073 before operational activation.
 
 * Approve the retention schedule and resolve how ledger tables and immutable audit storage coexist with erasure.
 * Azure Policy assignments and subscription-level Defender plans.
