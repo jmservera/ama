@@ -20,3 +20,10 @@ Research disposition: executed. Planning Readiness: Ready.
 * Actual authorised approver names and real release evidence: owner decision (`ZF_ASSIST_RELEASE_APPROVERS` is operator config).
 * Actual serving-version attestation from Azure OpenAI and Azure SQL race evidence (CON-009/AC-057): needs real deployment.
 * JSON dev store has no durable release store and is not gated.
+
+## PR 287 review-fix research (2026-10-15)
+
+* mssql CI failure: `tests/release_support.py` ran SQLite `CREATE TABLE IF NOT EXISTS` on SQL Server (48 errors, "Incorrect syntax near the keyword 'IF'"). `SqlStore.release_block` also used SQLite `julianday` for the clock, which fails on SQL Server and denies silently.
+* `ai.py` calls `strong` for strong paths and `read_document`, but the gate bound only `ai.fast` and only provider/endpoint/deployment.
+* Legacy dispatch had a pre-dispatch check only; `_chat` returns text without the model name.
+* Planning readiness: Ready.

@@ -1,4 +1,5 @@
 """Release admission for the five assistants and retained legacy dispatch (issue #107). Constructed fixtures only."""
+import json
 import time
 import unittest
 from unittest.mock import patch
@@ -182,7 +183,7 @@ class Legacy(Base):
         calls = []
         ai._chat = lambda *a, **k: calls.append(1) or "All good today."
         self.store.ai = ai
-        ai.gate = lambda task: self.store.continuity_block(task) or self.store.release_block(task)
+        ai.gate = lambda task, dep=None: self.store.continuity_block(task) or self.store.release_block(task, dep)
         with self.service.transaction() as db:
             db.execute("DELETE FROM assistant_releases WHERE capability LIKE 'legacy:%'")
         r = ai.run("briefing", "s", "u", "template")
@@ -191,8 +192,48 @@ class Legacy(Base):
         release_support.install(self.store, ai, tasks=[])
         self.assertEqual(ai.run("briefing", "s", "u", "template")["source"], "ai")
         with self.service.transaction() as db:
-            db.execute("UPDATE assistant_releases SET status='revoked' WHERE id='fx-legacy-briefing'")
+            db.execute("UPDATE assistant_releases SET status='revoked' WHERE id=?", (f"fx-legacy-briefing-{ai.fast}",))
         self.assertEqual(ai.run("briefing", "s", "u", "template")["source"], "template")
+
+    def legacy_ai(self):
+        ai = Ai()
+        ai.endpoint = "http://scripted-model.invalid"
+        ai._chat = lambda *a, **k: "All good today."
+        self.store.ai = ai
+        ai.gate = lambda task, dep=None: self.store.continuity_block(task) or self.store.release_block(task, dep)
+        return ai
+
+    def test_gate_binds_the_deployment_actually_called(self):
+        ai = self.legacy_ai()
+        release_support.install(self.store, ai, tasks=[])
+        with self.service.transaction() as db:
+            db.execute("DELETE FROM assistant_releases WHERE id LIKE ?", (f"fx-legacy-%-{ai.strong}",))
+        self.assertEqual(ai.run("briefing", "s", "u", "template")["source"], "ai")
+        self.assertEqual(ai.run("briefing", "s", "u", "template", strong=True)["source"], "template")
+        self.assertEqual(ai.look_at("a.txt", b"x", "text/plain")["source"], "template")
+
+    def test_legacy_release_binds_versions(self):
+        ai = self.legacy_ai()
+        release_support.install(self.store, ai, tasks=[])
+        with self.service.transaction() as db:
+            for rid, body in db.execute("SELECT id,body FROM assistant_releases WHERE capability='legacy:summary'").fetchall():
+                rec = json.loads(body)
+                rec["prompt_version"] = "stale"
+                db.execute("UPDATE assistant_releases SET body=? WHERE id=?", (rel.canonical(rec), rid))
+        self.assertEqual(ai.run("summary", "s", "u", "template")["source"], "template")
+        self.assertEqual(ai.run("briefing", "s", "u", "template")["source"], "ai")
+
+    def test_legacy_completion_recheck_discards_result_after_revocation(self):
+        ai = self.legacy_ai()
+        release_support.install(self.store, ai, tasks=[])
+
+        def chat(*a, **k):
+            with self.service.transaction() as db:
+                db.execute("UPDATE assistant_releases SET status='revoked' WHERE capability='legacy:briefing'")
+            return "All good today."
+        ai._chat = chat
+        r = ai.run("briefing", "s", "u", "template")
+        self.assertEqual((r["source"], r.get("quarantined")), ("template", True))
 
 
 def assistants_proposal(task):

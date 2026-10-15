@@ -18,23 +18,26 @@ def fixture(task, binding, model="test-model", cls="constructed-fixture", expire
 
 def install(store, ai=None, model="test-model", cls="constructed-fixture", tasks=None, legacy=True, **over):
     """Insert active releases directly on a SQL store (all assistants and, if the AI is live, legacy tasks)."""
-    from zavaforward_mvp.ai_registry import LEGACY
+    from zavaforward_mvp.ai_registry import LEGACY, legacy_binding
     ai = ai or store.ai
     db = store.assistant_connection()
     try:
-        for ddl in rel.SQLITE_DDL:
-            db.execute(ddl)
+        if hasattr(store, "_env"):
+            for ddl in rel.MSSQL_DDL:
+                db.execute(f"IF OBJECT_ID(N'assistant_releases', N'U') IS NULL {ddl}")
+        else:
+            for ddl in rel.SQLITE_DDL:
+                db.execute(ddl)
         for cap in assistants.REGISTRY if tasks is None else tasks:
             rec = fixture(cap, assistants.runtime_binding(cap, ai), model, cls, **over)
             db.execute("INSERT INTO assistant_releases (id,capability,status,body,revision) VALUES (?,?,'active',?,1)",
                        (f"fx-{cap}", cap, rel.canonical(rec)))
         if legacy and getattr(ai, "endpoint", ""):
             for t in LEGACY:
-                rec = fixture(f"legacy:{t}", dict(provider="azure-openai", endpoint=ai.endpoint, deployment=ai.fast),
-                              model, "actual", **{k: v for k, v in over.items() if k != "cls"})
-                for k in rel.BOUND:
-                    rec.setdefault(k, "n/a")
-                db.execute("INSERT INTO assistant_releases (id,capability,status,body,revision) VALUES (?,?,'active',?,1)",
-                           (f"fx-legacy-{t}", f"legacy:{t}", rel.canonical(rec)))
+                for dep in {ai.fast, getattr(ai, "strong", ai.fast)}:
+                    rec = fixture(f"legacy:{t}", legacy_binding(t, ai, dep),
+                                  model, "actual", **{k: v for k, v in over.items() if k != "cls"})
+                    db.execute("INSERT INTO assistant_releases (id,capability,status,body,revision) VALUES (?,?,'active',?,1)",
+                               (f"fx-legacy-{t}-{dep}", f"legacy:{t}", rel.canonical(rec)))
     finally:
         db.close()

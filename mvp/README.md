@@ -875,11 +875,25 @@ expiry. `GET /api/assistants` shows the build's binding per assistant.
 revoked or suspended record is terminal. Absent, expired, suspended, revoked
 or mismatched releases deny with zero provider calls, retain the denial and
 name the owner (Juan Manuel Servera, Legal, Compliance and DPO owner) and the
-manual route. A returned serving model that differs from the released one
-quarantines the result and suspends the release. A `constructed-fixture`
-record never admits a live `Ai` provider. Retained legacy tasks are gated the
-same way on the SQL store when AI is configured (`legacy:<task>` records); the
-JSON dev store has no durable release store and is not gated (open item).
+manual route. For the five assistants, a returned model name that differs
+from the released one quarantines the result and suspends the release. This is
+a returned-model check on the provider's own response, not authoritative
+attestation of what served the call. A `constructed-fixture` record never
+admits a live `Ai` provider. Retained legacy tasks are gated on the SQL store
+when AI is configured (`legacy:<task>` records). The gate is given the
+deployment that will actually be called (`ai.fast`, or `ai.strong` for strong
+paths and `read_document`) and compares it, with the registry, schema, prompt,
+policy, data, provenance and permission versions (`ai_registry.legacy_binding`),
+to the release. Legacy results are rechecked against the gate after the call
+and discarded (`quarantined`) if the release was suspended, revoked, expired
+or the task suspended meanwhile. Legacy paths get no returned-model check
+(their text helper does not return the model) and a late legacy result is
+discarded but does not suspend the release.
+
+Open items for #107: authoritative serving-version attestation; Azure SQL race
+evidence; a routine-versus-material change distinction; export reliance; the
+JSON dev store has no durable release store and is not gated; delivered-build
+acceptance; release approvers are unset (`ZF_ASSIST_RELEASE_APPROVERS`).
 
 Validation: `tests/test_assistants.py` and `tests/test_assistant_release.py` exercise all five reactive/proactive
 contracts, reader matrices, failure/disabled/malformed paths, current roles,

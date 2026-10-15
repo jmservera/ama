@@ -61,7 +61,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         self.docstore = open_document_store(self.docs_dir)
         self.scanner = open_scanner(self.docstore)
         self.ai = Ai()
-        self.ai.gate = lambda task: self.continuity_block(task)
+        self.ai.gate = lambda task, deployment=None: self.continuity_block(task)
         self.version = 0
         self._briefings = {}
         self._ranks = None

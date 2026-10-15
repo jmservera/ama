@@ -772,13 +772,14 @@ class Assistants:
             quarantined = epoch != current.get("claim_epoch", epoch) or bool(self.suspended(db, current["capability"])) or bool(
                 denied) or binding != current.get("claim_binding", binding)
             if not quarantined and envelope.get("outcome") == "returned":
-                # A deployment alias is not immutable: the serving version the provider reports must equal the released one.
+                # A deployment alias is not immutable. This only compares the model name the provider returned with the released one;
+                # it is a returned-model check, not authoritative attestation of what served the call.
                 released = [r for r in rel.releases(db, current["capability"]) if r["status"] == "active"]
                 if not any(r.get("serving_model") == envelope.get("model") for r in released):
                     quarantined = True
                     for r in released:
                         rel.change(db, now, None, r["id"], "suspended",
-                                   "Unexpected serving model version returned; results quarantined.", system=True)
+                                   "Returned model name differs from the released one (returned-model check, not attestation); results quarantined.", system=True)
                     current["serving_attestation"] = dict(returned=envelope.get("model"), outcome="mismatch")
             held_output = output
             if quarantined:

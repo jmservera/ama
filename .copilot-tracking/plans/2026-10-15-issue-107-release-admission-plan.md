@@ -13,3 +13,11 @@ ms.date: 2026-10-15
 * [x] README section; full suite.
 
 Critique: executed once, verdict: compatible; applied directly (live provider needs an `actual` record; constructed fixtures never admit live Ai).
+
+## PR 287 review-fix plan (2026-10-15)
+
+* [x] Dialect-guard release DDL in test helper; add `_epoch_sql` dialect hook for `release_block`.
+* [x] Pass the called deployment to the gate; add `ai_registry.legacy_binding` binding all versions.
+* [x] Add legacy completion recheck that discards the result (`quarantined`).
+* [x] Describe the serving-model check as a returned-model check, not attestation, in code, README and PR body.
+* [x] Keep open items listed. Critique: one pass, compatible findings applied.
