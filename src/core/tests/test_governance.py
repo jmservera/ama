@@ -114,7 +114,8 @@ class Gov:
             s.set_decision(self.geo, "ZF-1", "Waiting")
         with self.assertRaisesRegex(PermissionError, "paused"):
             s.advance(self.geo, "ZF-1")
-        s.raise_hazard(self.pm1, "ZF-1", "Damp and mould", "Emergency")
+        s.raise_hazard(self.pm1, "ZF-1", "Damp and mould", "Emergency",
+                       metadata=dict(source="Synthetic report", aware_at="2026-01-01T10:00:00Z"))
 
     def test_breach_record_needs_an_authorised_role(self):
         with self.assertRaises(PermissionError):

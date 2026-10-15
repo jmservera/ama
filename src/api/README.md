@@ -27,6 +27,45 @@ Run the suites from `src/api` with
 `pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator`. When `ZF_DATA` is not
 set, the data file defaults to `data/zavaforward.json` under the current folder.
 
+## Hazard referral and retrofit hold API (#85)
+
+Authenticated staff use the existing safety panel on open or closed retrofit
+records. It labels observations as unverified, shows source/awareness, referral
+destination, follow-up owner, whole-home hold scope, separate sent/received/
+accepted evidence, external service response/resident-update times and explicit
+unknowns. It sends no referral or resident communication itself. Use the
+existing hazard service directly for urgent concerns; neither AI nor a
+retrofit hold may delay that route.
+
+| Path after `/api/cases/{id}/` | Body and control |
+| --- | --- |
+| `hazard-raise` | Reported `category`, `priority`, optional `note`, required `source`, timezone-aware `aware_at` not in the future; staff, including closed retrofit records |
+| `hazard-refer` | `index`, `to`, external case/job `job`, sending `evidence`; staff; prospective binding for active legacy records |
+| `hazard-receive` | `index`, receipt `evidence`; named safety receiver, once |
+| `hazard-accept` | `index`, acceptance `evidence`; named safety receiver, after receipt, once |
+| `hazard-times` | `index`, external timing `evidence`, at least one of timezone-aware `response_due_at`, `responded_at`, `resident_update_due_at`, `resident_updated_at`; accepting receiver; no overwrite |
+| `hazard-repaired` | `index`, external repair `evidence`; accepting receiver; observation only |
+| `hazard-release` | `index`, release reason `note`, external supporting `evidence`; independent safety-role actor, after repair evidence; home retrofit hold only |
+
+Missing evidence/invalid state or index returns 400; wrong role/receiver or
+non-independent release returns 403. Active holds return 409 on controlled
+retrofit progression. No classify, pause-clock, reset-clock or close-hazard API
+exists. Server-supplied actors and home scope ignore forged client authority.
+All actions are manual, one-case decisions; consent and other home/building
+gates stay independent. See the [core contract](../core/README.md#hazard-referral-and-home-retrofit-holds-85).
+
+`tests/test_hazard_api.py` runs a real HTTP application on loopback with
+fictional staff/home data and SQLite state. It exercises health/static serving,
+authenticated closed-record intake, receipt/acceptance/timing/repair/release,
+role isolation, legacy binding and restart durability. This is local synthetic
+application evidence, not real model inference, verified service transport,
+SQL Server durability, Azure deployment or human/browser acceptance.
+The existing AI release and human-review gates are unchanged; no fallback or
+model output can waive a hold. Full #85 acceptance and the mandatory
+real-platform application exercise remain unmet without the outstanding
+owner/live evidence. Docker image checks are delegated to CI if the local
+daemon is inaccessible.
+
 ## Return and handoff API (#83)
 
 All mutations below are authenticated, one-case human actions. The server
@@ -194,7 +233,8 @@ editor or automatic retrofit of building data into an already populated store.
   chase owner, urgency, due date, next action and resident-update commitment.
   Missing values remain unknown; no message is sent automatically. Existing
   resident-update commitments survive every transition and subsequent offers.
-  Safety referral (raise, refer, record repair, independent release) is unchanged.
+  Safety referral has separately evidenced receipt/acceptance and an
+  evidence-backed independent home-hold release; see the #85 contract above.
   All actions use server-side checks; the old `handover` endpoint now offers
   rather than immediately reassigning. See the [core contract](../core/README.md#return-reopen-and-handoff-accountability-83).
 * Contractor screens: "My jobs" and a job page show only the address, stage,

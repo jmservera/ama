@@ -16,6 +16,8 @@ STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role=
          dict(code="BSL-02", name="Bo Safe", email="bo@example.test", role="Building Safety Liaison"),
          dict(code="CON-01", name="Kim Builder", email="kim@example.test", role="Contractor", contractor="Test Ltd")]
 PROVENANCE = dict(source="Synthetic workflow report", next_action="Review the changed evidence")
+HAZARD_SOURCE = dict(source="Synthetic report", aware_at="2026-01-01T10:00:00Z")
+SENT = dict(evidence="Synthetic sending reference")
 
 
 class Flows:
@@ -114,7 +116,7 @@ class Flows:
 
     # safety referral
     def test_safety_flow_blocks_booking_until_released_by_someone_else(self):
-        i = self.store.raise_hazard(self.sam, "ZF-3", "Damp and mould", "Emergency", "Black mould")
+        i = self.store.raise_hazard(self.sam, "ZF-3", "Damp and mould", "Emergency", "Black mould", HAZARD_SOURCE)
         self.assertIn("safety_emergency", self.actions())
         self.assertTrue(self.store.status_line(self.store.cases["ZF-3"]).startswith("Stopped"))
         with self.assertRaises(GateError):
@@ -125,29 +127,33 @@ class Flows:
             self.store.refer_hazard(self.sam, "ZF-3", i, "rae@example.test", "J1")
         with self.assertRaises(ValueError):
             self.store.refer_hazard(self.sam, "ZF-3", i, "bea@example.test", "")
-        self.store.refer_hazard(self.sam, "ZF-3", i, "bea@example.test", "J-100")
+        self.store.refer_hazard(self.sam, "ZF-3", i, "bea@example.test", "J-100", SENT)
         with self.assertRaises(ValueError):
             self.store.refer_hazard(self.sam, "ZF-3", i, "bea@example.test", "J-100")
         with self.assertRaises(ValueError):
             self.store.release_hazard(self.bea, "ZF-3", i)
-        self.store.record_repair(self.bea, "ZF-3", i)
+        self.store.receive_hazard(self.bea, "ZF-3", i, "Synthetic receipt")
+        self.store.accept_hazard(self.bea, "ZF-3", i, "Synthetic acceptance")
+        self.store.record_repair(self.bea, "ZF-3", i, "Synthetic repair report")
         with self.assertRaises(PermissionError):
             self.store.release_hazard(self.sam, "ZF-3", i)
-        self.assertEqual(self.store.hazard_states("ZF-3")[i]["state"], "Repaired, awaiting release")
-        self.store.release_hazard(self.bo, "ZF-3", i, "Checked on site")
-        self.assertEqual(self.store.hazard_states("ZF-3")[i]["state"], "Released")
+        self.assertEqual(self.store.hazard_states("ZF-3")[i]["state"], "Repair evidenced, hold active")
+        self.store.release_hazard(self.bo, "ZF-3", i, "Checked on site", "Synthetic clearance")
+        self.assertEqual(self.store.hazard_states("ZF-3")[i]["state"], "Retrofit hold released")
         self.store.advance(self.sam, "ZF-3")
         self.assertEqual(self.stage("ZF-3"), "Install booked")
         for a in ("safety_raised", "safety_referred", "safety_repaired", "safety_released"):
             self.assertIn(a, self.actions())
 
     def test_raiser_cannot_release_own_issue(self):
-        i = self.store.raise_hazard(self.bea, "ZF-3", "Electrical", "Routine")
-        self.store.refer_hazard(self.bea, "ZF-3", i, "bo@example.test", "J-5")
-        self.store.record_repair(self.bo, "ZF-3", i)
+        i = self.store.raise_hazard(self.bea, "ZF-3", "Electrical", "Routine", metadata=HAZARD_SOURCE)
+        self.store.refer_hazard(self.bea, "ZF-3", i, "bo@example.test", "J-5", SENT)
+        self.store.receive_hazard(self.bo, "ZF-3", i, "Synthetic receipt")
+        self.store.accept_hazard(self.bo, "ZF-3", i, "Synthetic acceptance")
+        self.store.record_repair(self.bo, "ZF-3", i, "Synthetic repair report")
         with self.assertRaises(PermissionError):
-            self.store.release_hazard(self.bea, "ZF-3", i)
-        self.store.release_hazard(self.pam, "ZF-3", i)
+            self.store.release_hazard(self.bea, "ZF-3", i, "Reason", "Synthetic clearance")
+        self.store.release_hazard(self.pam, "ZF-3", i, "Reason", "Synthetic clearance")
 
     def test_hazard_inputs_validated(self):
         with self.assertRaises(ValueError):
@@ -207,7 +213,7 @@ class RouteTests(unittest.TestCase):
                 self.assertEqual(call("sam@example.test", "/api/cases/ZF-1/accept-handoff", {})[0], 403)
                 self.assertEqual(call("rae@example.test", "/api/handoffs")[1][0]["case_id"], "ZF-1")
                 self.assertEqual(call("rae@example.test", "/api/cases/ZF-1/accept-handoff", {})[1]["owner"], "Rae Other")
-                self.assertEqual(call("rae@example.test", "/api/cases/ZF-1/hazard-raise", {"category": "Structural", "priority": "Routine"})[0], 200)
+                self.assertEqual(call("rae@example.test", "/api/cases/ZF-1/hazard-raise", dict(category="Structural", priority="Routine", **HAZARD_SOURCE))[0], 200)
                 self.assertEqual(call("rae@example.test", "/api/cases/ZF-1/hazard-release", {"index": 0})[0], 403)
                 self.assertEqual(call("pam@example.test", "/api/cases/ZF-1/return", {"to_stage": "Contacting resident", "reason": ""})[0], 400)
                 self.assertEqual(call("kim@example.test", "/api/cases/ZF-1/offer-handoff", {"to": "sam@example.test"})[0], 403)

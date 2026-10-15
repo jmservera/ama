@@ -129,6 +129,7 @@ class ProcurementMixin:
             p = self._package(pid)
             c = self._case(case_id)
             contractor = c["contractor"]["name"]
+            self.require_safety_clear(c)
             self.require_building_clear(c, pid)
             if c["closed"]:
                 raise ValueError("This case is closed.")
@@ -165,6 +166,7 @@ class ProcurementMixin:
             w = self._work_order(wid)
             if w["state"] not in (ISSUED, APPOINTED):
                 raise ValueError(f"This work order is '{w['state']}' and cannot be changed.")
+            self.require_safety_clear(self.cases[w["case_id"]])
             self.require_building_clear(self.cases[w["case_id"]], w["package"])
             self._new_version(w, user, scope, reason)
             self.audit(user["email"], "workorder_reissued", w["case_id"], f"{wid} version {len(w['versions'])}: {reason}")
@@ -180,6 +182,7 @@ class ProcurementMixin:
             if w["state"] not in (ISSUED, APPOINTED):
                 raise ValueError(f"This work order is '{w['state']}'. Appointments can only be recorded while it is open.")
             if outcome == "Booked":
+                self.require_safety_clear(self.cases[w["case_id"]])
                 if w["state"] == ISSUED:
                     self._wo_move(w, APPOINTED, user, f"Booked {when}")
             elif w["state"] == APPOINTED:
@@ -192,6 +195,7 @@ class ProcurementMixin:
         self._need_manager(user, "record completion")
         with self.lock:
             w = self._work_order(wid)
+            self.require_safety_clear(self.cases[w["case_id"]])
             self._wo_move(w, COMPLETED, user, _clean(note))
             w.update(completed_by=user["name"], completed_at=_now())
             self.audit(user["email"], "workorder_completed", w["case_id"], f"{wid} {_clean(note)}".strip())
@@ -204,6 +208,7 @@ class ProcurementMixin:
             raise ValueError("Say what needs correcting.")
         with self.lock:
             w = self._work_order(wid)
+            self.require_safety_clear(self.cases[w["case_id"]])
             self.require_building_clear(self.cases[w["case_id"]], w["package"])
             self._wo_move(w, ISSUED, user, f"Correction: {reason}")
             self._new_version(w, user, scope, f"Correction: {reason}")

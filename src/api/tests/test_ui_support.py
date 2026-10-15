@@ -94,7 +94,7 @@ class ScreensApi(Base):
         st, d, _ = self.call(pam, "/api/cases/ZF-1/decline-handoff", {"reason": ""})
         self.assertEqual(st, 400)
         self.assertEqual(self.call(pam, "/api/cases/ZF-1/decline-handoff", {"reason": "full"})[1]["handoff"]["state"], "Declined")
-        st, d, _ = self.call(sam, "/api/cases/ZF-5/hazard-raise", {"category": "Electrical", "priority": "Routine", "note": "n"})
+        st, d, _ = self.call(sam, "/api/cases/ZF-5/hazard-raise", {"category": "Electrical", "priority": "Routine", "note": "n", "source": "Synthetic report", "aware_at": "2026-01-01T10:00:00Z"})
         self.assertEqual(st, 200)
         self.assertEqual(d["hazards"][-1]["released"], False)
         self.assertEqual(self.call(sam, "/api/cases/ZF-5/hazard-raise", {"category": "Nope", "priority": "Routine"})[0], 400)

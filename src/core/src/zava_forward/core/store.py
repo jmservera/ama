@@ -22,7 +22,7 @@ from .doc_controls import DocControlsMixin, open_scanner
 from .documents import ACCEPTED, MAX_BYTES, DocumentStoreError, open_document_store
 from .procurement import ProcurementMixin
 from .quality import QualityMixin
-from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view
+from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view, hazard_view
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
 READY_STAGE = "Final checks before ordering"
@@ -137,7 +137,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             why.append(f"Funding has not been confirmed. Owner: {c['owner']}. Next action: check the funding and record it.")
         open_h = [h for h in c["hazards"] if not h["released"]]
         if open_h:
-            why.append(f"A safety issue is still open. Owner: {open_h[0]['owner']}. Next action: the owner confirms it is resolved.")
+            why.append(f"Home retrofit work is stopped for safety review. Owner: {open_h[0]['owner']} (referral follow-up). Next action: obtain external service evidence and an independent decision to restart retrofit work.")
         return why + technical_gate(c)
 
     @staticmethod
@@ -146,7 +146,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return "Completed"
         open_h = [h for h in c["hazards"] if not h["released"]]
         if open_h:
-            return f"Stopped until {open_h[0]['owner']} confirms the safety issue is resolved"
+            return f"Stopped until {open_h[0]['owner']} obtains evidence and an independent decision to restart retrofit work"
         if c["stage"] == READY_STAGE and not Store.gate_reasons(c):
             return "Ready"
         return f"Waiting on {c['waiting_on']} {c['reason']}"
@@ -304,6 +304,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if not c or (user is not None and projection.is_contractor(user) and not projection.own_case(user, c)):
                 return None
             d = json.loads(json.dumps(c))
+            d["hazards"] = [hazard_view(h, case_id) for h in c["hazards"]]
             if c.get("handoff"):
                 d["handoff"] = handoff_view(c)
             d["status"] = self.status_line(c)
@@ -330,6 +331,11 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         reasons = buildings.blockers(self.data, self.cases, c, package_id)
         if reasons:
             raise GateError(reasons)
+
+    def require_safety_clear(self, c):
+        active = next((h for h in c["hazards"] if not h["released"]), None)
+        if active:
+            raise GateError([f"Home retrofit work is stopped for safety review. Owner: {active['owner']} (referral follow-up). Next action: obtain external evidence and an independent decision to restart retrofit work."])
 
     def log_call(self, user, case_id, outcome, note, channel="Phone"):
         outcome = (outcome or "").strip()[:80]

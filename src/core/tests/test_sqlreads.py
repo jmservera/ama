@@ -146,7 +146,8 @@ class Writes(unittest.TestCase):
             a, b = SqlStore(str(p), db), SqlStore(str(p), db)
             pam = STAFF[1]
             victim = next(r for r in a.page_cases(pam, "all", limit=300)["items"] if r["rank"] > 100)
-            a.raise_hazard(pam, victim["id"], "Electrical", "Routine", "x")
+            a.raise_hazard(pam, victim["id"], "Electrical", "Routine", "x",
+                           metadata=dict(source="Synthetic report", aware_at="2026-01-01T10:00:00Z"))
             for engine in (a, b):
                 top = {r["id"]: r["rank"] for r in engine.page_cases(pam, "all", limit=50)["items"]}
                 self.assertIn(victim["id"], top)

@@ -3200,3 +3200,30 @@ metadata when the knowledge base was created.
   Manual escalation and exercise hours are not operational acceptance.
   Existing AI proposal/human-review gates, resident consent and safety controls
   remain; no live inference, Azure deployment or human acceptance is claimed.
+
+## [2026-10-15] query | Hazard referral evidence and home retrofit holds (#85)
+
+* Extended the merged `src/core` workflow and `src/api` safety panel/API with
+  authenticated report source/awareness, separate sent/received/accepted
+  evidence and sender follow-up until safety-service acceptance.
+* Recorded the linked-home hold scope/accountable role, externally sourced
+  response/resident-update times and independent evidence-backed hold release.
+  No hazard categorisation, statutory clock or closure command was added;
+  hold release is not hazard resolution or resident consent.
+* Preserved legacy history with prospective evidence binding, closed-record
+  safety intake, need-role narrative projection and independent building gates.
+  Controlled retrofit sign-off, instruction, booking/completion and quality
+  handover now enforce an active home hazard hold consistently.
+* Updated the [API guide](../../src/api/README.md#hazard-referral-and-retrofit-hold-api-85),
+  [core guide](../../src/core/README.md#hazard-referral-and-home-retrofit-holds-85)
+  and knowledge-base index. JSON/SQLite and loopback synthetic HTTP tests cover
+  the engineering contract; no new code was placed in `mvp/`.
+* The issue currently has no comments returned by GitHub. Its BRD FR-015 pointer
+  now refers to tenure; current hazard-service authority is RULE-003/FR-003.
+  No requirement identifiers were silently changed.
+* Approved operational timing/escalation policy, verified service transport,
+  real permitted model inference, SQL Server/Azure workflow and human acceptance
+  remain open. Existing AI release/human gates stay unchanged; local synthetic
+  checks do not establish accepted application-exercise or full issue delivery.
+* Updated the content-standard glossary to distinguish stopped retrofit work
+  and its restart decision from external hazard-service closure.
