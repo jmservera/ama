@@ -2959,3 +2959,8 @@ metadata when the knowledge base was created.
 ## 2026-10-15 Identity and RBAC review fixes (#141)
 
 * Matrix test now compares parsed (identity, role, scope) tuples; Entra owner wording corrected; criterion 4 stated as manual steps plus owner. Open: db_ddladmin drop, contractor B2B decision (#116).
+
+## 2026-10-15 Chat and memory DPIA record (#163)
+
+* Added `research/chat-memory-dpia.md` (data map, decision record, rights, logging, provider position, redaction) and `mvp/zavaforward_mvp/chat_privacy.py` with tests. Index row added.
+* No regulatory snapshot changed. Open: DPO and Legal lawful basis, notice, DPIA decision and retention (OD-45, OD-46); Azure OpenAI terms retrieval.
