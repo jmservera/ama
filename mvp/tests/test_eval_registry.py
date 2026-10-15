@@ -42,11 +42,31 @@ class FixtureTests(unittest.TestCase):
             m3 = scale_fixture.write(c, n=500, seed=1)
             self.assertEqual(m1, m2)
             self.assertNotEqual(m1["sha256"], m3["sha256"])
-            self.assertEqual((m1["homes"], m1["events"]), (500, 5000))
+            self.assertEqual((m1["homes"], m1["households"], m1["events"]), (500, 500, 5000))
             self.assertEqual((Path(a) / "events.jsonl").read_bytes(), (Path(b) / "events.jsonl").read_bytes())
+
+    def test_households_consent_and_representative_never_inferred(self):
+        rows = list(scale_fixture.households(3000))
+        self.assertEqual(len(rows), 3000)
+        homes = {h["id"]: h for h in scale_fixture.homes(3000)}
+        for r in rows:
+            self.assertTrue(r["is_synthetic"])
+            self.assertTrue(r["resident_ref"].startswith("R-SYN-"))
+            self.assertEqual(r["priority_support"], homes[r["home_id"]]["priority_support"])
+            self.assertIn(r["works_consent_state"], scale_fixture.CONSENT_STATES)
+            self.assertIn(r["representative_state"], scale_fixture.REP_STATES)
+            self.assertEqual(r["representative_ref"] is None, r["representative_state"] == "None recorded")
+            self.assertEqual(r["works_consent_given_by"] is None,
+                             r["works_consent_state"] in ("Not requested", "Pending"))
+            if r["works_consent_given_by"] == "Representative":
+                self.assertEqual(r["representative_state"], "Authorised - evidence on file")
+        self.assertEqual({r["works_consent_state"] for r in rows}, set(scale_fixture.CONSENT_STATES))
+        self.assertTrue(any(r["representative_state"] == "Claimed - unverified" for r in rows))
+        self.assertFalse(any("@" in json.dumps(r) for r in rows))
 
     def test_full_scale_counts(self):
         self.assertEqual(sum(1 for _ in scale_fixture.homes()), 60000)
+        self.assertEqual(sum(1 for _ in scale_fixture.households()), 60000)
         self.assertEqual(sum(1 for _ in scale_fixture.events()), 600000)
 
 
