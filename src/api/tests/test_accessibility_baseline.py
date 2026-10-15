@@ -11,7 +11,17 @@ DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "wcag-conformance-basel
 
 
 def token(name):
-    value = re.search(r"--%s:(#[0-9a-fA-F]{3,6})[;}]" % name, CSS).group(1)
+    values = dict(re.findall(r"(--[\w-]+):([^;}\n]+)", CSS))
+    value = values["--" + name]
+    seen = set()
+    while value.startswith("var("):
+        alias = value[4:-1]
+        if alias in seen:
+            raise ValueError(f"Circular token alias: {alias}")
+        seen.add(alias)
+        value = values[alias]
+    if not re.fullmatch(r"#[0-9a-fA-F]{3,6}", value):
+        raise ValueError(f"Expected colour token, got {value!r}")
     return "#" + "".join(c * 2 for c in value[1:]) if len(value) == 4 else value
 
 
@@ -44,6 +54,8 @@ class Wcag22Baseline(unittest.TestCase):
     def test_non_text_contrast_meets_aa(self):
         self.assertGreaterEqual(ratio(token("field-line"), token("surface")), 3.0)
         self.assertGreaterEqual(ratio(token("focus-ink"), token("surface")), 3.0)
+        for outline in ("brand", "warn"):
+            self.assertGreaterEqual(ratio(token(outline), token("surface")), 3.0)
 
     def test_focus_indicator_is_two_tone_and_never_removed(self):
         self.assertRegex(CSS, r":focus-visible\{outline:var\(--focus-w\) solid var\(--focus-ink\)")

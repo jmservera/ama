@@ -761,6 +761,31 @@ function bars(title, data, link) {
 
 const OV_TILES = [["", "Open cases"], ["hazard", "Safety issues open"], ["long", "Waiting 60+ days"], ["nodecision", "Awaiting resident decision"], ["fundingprog", "Funding in progress"], ["support", "Residents needing extra support"]];
 const ovState = { flag: "", area: "" };
+const MAP_SIGNALS = {
+  normal: { label: "Normal", code: "O" },
+  long: { label: "Waiting 60+ days", code: "W" },
+  hazard: { label: "Safety issue open", code: "!" },
+};
+
+function mapSymbol(kind) {
+  const shape = kind === "hazard" ? svg("path", { d: "M14 2 L26 26 H2 Z" })
+    : kind === "long" ? svg("rect", { x: 2, y: 2, width: 24, height: 24 })
+      : svg("circle", { cx: 14, cy: 14, r: 12 });
+  return h("span", { class: `map-symbol ${kind}`, "aria-hidden": "true" },
+    svg("svg", { viewBox: "0 0 28 28", focusable: "false" }, shape),
+    h("span", { class: "marker-code" }, MAP_SIGNALS[kind].code));
+}
+
+function mapAction(marker, action) {
+  // Leaflet forwards keys but does not activate custom markers without a popup.
+  marker.on("click", action);
+  marker.on("keydown", (event) => {
+    if (event.originalEvent.key === "Enter" || event.originalEvent.key === " ") {
+      event.originalEvent.preventDefault();
+      action();
+    }
+  });
+}
 
 function mapPanel() {
   const el = h("div", { id: "leaflet", class: "leafmap", role: "region", "aria-label": "Map of open cases. Zoom with the buttons, mouse wheel or pinch." });
@@ -773,14 +798,13 @@ function mapPanel() {
   const renderList = (d) => {
     listUl.replaceChildren(...d.items.map((p) => {
       if (d.mode === "clusters") {
-        const label = `${p.count} homes${p.hazards ? `, ${p.hazards} with a safety issue open` : ""}`;
+        const label = `${p.count} homes, ${p.hazards} with a safety issue open`;
         return h("li", {}, h("button", { type: "button", class: "linkbtn", "aria-label": `${label}. Zoom in to this area`,
           onclick: () => { map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18)); listHead.focus(); } }, label));
       }
-      return h("li", {}, h("a", { href: `#/case/${encodeURIComponent(p.id)}` }, `${p.name}${p.kind === "hazard" ? ", safety issue open" : p.kind === "long" ? ", waiting 60+ days" : ""}`));
+      return h("li", {}, h("a", { href: `#/case/${encodeURIComponent(p.id)}` }, `${p.name}, ${MAP_SIGNALS[p.kind].label}`));
     }));
   };
-  const KIND = { normal: "#0b5d6b", long: "#d98a00", hazard: "#b42318" };
   let fitting = false, seq = 0;
   const draw = async (fit) => {
     const my = ++seq;
@@ -804,15 +828,21 @@ function mapPanel() {
     layer.clearLayers();
     d.items.forEach((p) => {
       if (d.mode === "clusters") {
-        const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "", html: `<div class="cluster${p.hazards ? " hazard" : ""}">${p.count}</div>`, iconSize: [34, 34] }),
-          keyboard: false, title: `${p.count} homes${p.hazards ? `, ${p.hazards} with a safety issue open` : ""}` });
-        m.on("click", () => map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18)));
+        const label = `${p.count} homes, ${p.hazards} with a safety issue open. Zoom in to this area`;
+        const icon = h("div", { class: `cluster${p.hazards ? " hazard" : ""}`, "aria-hidden": "true" },
+          h("span", {}, `${p.count} homes`),
+          h("span", { class: "cluster-safety" }, `Safety: ${p.hazards}`));
+        const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "map-cluster", html: icon, iconSize: [104, 50] }),
+          keyboard: true, title: label, alt: label });
+        mapAction(m, () => map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18)));
         m.addTo(layer);
         return;
       }
-      const m = L.circleMarker([p.lat, p.lon], { radius: p.kind === "hazard" ? 8 : 6, color: "#fff", weight: 1.5, fillColor: KIND[p.kind], fillOpacity: 0.9 });
-      m.bindTooltip(`${p.name}`, { direction: "top" });
-      m.on("click", () => { location.hash = `#/case/${encodeURIComponent(p.id)}`; });
+      const label = `${p.name}, ${MAP_SIGNALS[p.kind].label}`;
+      const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "map-marker", html: mapSymbol(p.kind), iconSize: [28, 28] }),
+        keyboard: true, title: label, alt: label });
+      m.bindTooltip(h("span", {}, label), { direction: "top" });
+      mapAction(m, () => { location.hash = `#/case/${encodeURIComponent(p.id)}`; });
       m.addTo(layer);
     });
     if (fit && d.bounds) {
@@ -823,7 +853,7 @@ function mapPanel() {
     }
   };
   const box = h("section", { class: "card" }, h("h2", {}, "Map of open cases"),
-    h("p", {}, h("span", { class: "key normal" }, "Normal"), h("span", { class: "key long" }, "Waiting 60+ days"), h("span", { class: "key hazard" }, "Safety issue open")),
+    h("p", {}, Object.entries(MAP_SIGNALS).map(([kind, signal]) => h("span", { class: `key ${kind}` }, mapSymbol(kind), signal.label))),
     el, listBox, h("div", { class: "row between" }, info, open));
   return { box, draw, size: () => map && map.invalidateSize() };
 }
@@ -835,7 +865,8 @@ async function overviewView() {
   const mp = mapPanel();
   const tiles = h("div", { class: "tiles", role: "group", "aria-label": "Choose what the map shows" });
   const paint = () => tiles.replaceChildren(...OV_TILES.map(([f, label]) => h("button", { class: `tile${f === "hazard" ? " danger" : ""}`, "aria-pressed": String(ovState.flag === f),
-    onclick: () => { ovState.flag = f; paint(); mp.draw(true); } }, h("strong", {}, String(counts[f])), h("span", {}, label))),
+    onclick: () => { ovState.flag = f; paint(); mp.draw(true); } }, h("strong", {}, String(counts[f])), h("span", {}, label),
+    h("span", { class: "tile-selection" }, ovState.flag === f ? "Selected" : "Select filter"))),
     h("div", { class: "tile static" }, h("strong", {}, String(k.completed)), h("span", {}, "Completed")));
   paint();
   const area = h("select", { id: "mapArea", onchange: (e) => { ovState.area = e.target.value; mp.draw(true); } },
@@ -847,10 +878,14 @@ async function overviewView() {
     h("div", { class: "grid" }, bars("Cases by stage", st.stages), bars("Cases by local authority", st.areas)),
     h("div", { class: "grid" }, bars("How long cases have waited", st.ages), bars("Cases by wave", st.waves)),
     h("div", { class: "grid" }, bars("Funding status", st.funding),
-      h("section", { class: "card" }, h("h2", {}, "Contractors"), h("table", {}, h("thead", {}, h("tr", {}, ["Contractor", "Open", "On site or booked", "Stuck 60+ days"].map((x) => h("th", {}, x)))),
-        h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("td", {}, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long))))))),
-    h("section", { class: "card" }, h("h2", {}, "Team workload"), h("table", {}, h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", {}, x)))),
-      h("tbody", {}, st.team.map((t) => h("tr", {}, h("td", {}, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards)))))));
+      h("section", { class: "card" }, h("h2", {}, "Contractors"),
+        h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Contractors table" },
+          h("table", {}, h("thead", {}, h("tr", {}, ["Contractor", "Open", "On site or booked", "Stuck 60+ days"].map((x) => h("th", { scope: "col" }, x)))),
+            h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("td", {}, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long)))))))),
+    h("section", { class: "card" }, h("h2", {}, "Team workload"),
+      h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Team workload table" },
+        h("table", {}, h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", { scope: "col" }, x)))),
+          h("tbody", {}, st.team.map((t) => h("tr", {}, h("td", {}, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards))))))));
   mp.size();
   await mp.draw(true);
 }
