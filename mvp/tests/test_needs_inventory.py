@@ -34,6 +34,20 @@ class NeedsInventoryTests(unittest.TestCase):
         cited = {i for n in INVENTORY["needs"] for i in n["consuming_issues"]}
         self.assertTrue({"#109", "#157", "#104"} <= cited)
 
+    def test_every_gap_has_child_story_or_deferral(self):
+        for n in INVENTORY["needs"]:
+            gap = n["gap_closure"]
+            self.assertIn(gap["kind"], ("child", "delivered", "deferred"), n["id"])
+            self.assertTrue(gap["issues"] or gap["kind"] == "deferred", n["id"])
+            self.assertTrue(gap["note"], n["id"])
+            if n["coverage"] != "covered":
+                self.assertNotEqual(gap["kind"], "delivered", n["id"])
+
+    def test_generator_conventions_recorded(self):
+        conv = INVENTORY["generator_conventions"]
+        for key in ("reuse_rule", "seed", "identifiers", "is_synthetic"):
+            self.assertTrue(conv[key], key)
+
 
 if __name__ == "__main__":
     unittest.main()
