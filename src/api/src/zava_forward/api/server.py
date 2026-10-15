@@ -17,6 +17,7 @@ from zava_forward.core import projection, quality
 
 from zava_forward.core import lawstore
 from zava_forward.api import auth
+from zava_forward.agents.dispatch import AgentWorker
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved
@@ -55,7 +56,8 @@ class App:
         self.tiles = tile_config()
         self.csp = "default-src 'self'; img-src 'self' data: blob:" + (f" {self.tiles['host']}" if self.tiles["host"] else "") + "; frame-ancestors 'none'"
         self.provider = provider or auth.make_provider(store, password or secrets.token_urlsafe(9))
-        self.assistants = Assistants(store)
+        # The provider call is agents code; the API composes it in process until the queue transport (#144) replaces it.
+        self.assistants = Assistants(store, provider=AgentWorker(lambda *args: store.ai.evidence(*args)).provider_call)
         self.chat = ChatIsolation(store)
         self.law = law
         self.law_lock = threading.Lock()

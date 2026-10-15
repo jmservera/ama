@@ -45,3 +45,10 @@ exclude = ["src/zava_forward/agents/ai_eval.py", "tests/{chat_fixture,test_ai_ev
 [[tool.mypy.overrides]]
 module = ["zava_forward.agents.ai_eval", "chat_fixture", "test_ai_eval", "test_ai_identity", "test_chat_fixture", "test_eval_registry", "tests.chat_fixture", "tests.test_ai_eval", "tests.test_ai_identity", "tests.test_chat_fixture", "tests.test_eval_registry"]
 ignore_errors = true
+
+# core ships no py.typed marker until its own typing pass (M6); agents sees it as untyped.
+[[tool.mypy.overrides]]
+module = ["zava_forward.core.*"]
+ignore_errors = true
+follow_imports = "skip"
+ignore_missing_imports = true
