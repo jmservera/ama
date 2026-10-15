@@ -2924,3 +2924,7 @@ metadata when the knowledge base was created.
 
 * `mvp/README.md` documents the sensor backfill generator, its volume and size estimate (about 1.05 billion hourly rows, about 118 GiB CSV for 60,000 homes over two years), manifest and idempotent load.
 * No regulatory snapshot changed. Open: Met Office and Environment Agency data retrieval, reconciliation with #110 validation, and a full-stock storage and cost decision.
+## 2026-10-15 IoT Hub Bicep module (#140)
+
+* `infra/README.md` records the proposed IoT Hub tier, region, retention, identity, network and credential-owner decisions; ADR 0003 open items point to them. No regulatory snapshot changed.
+* Open: owner approval of ADR 0003, verified pricing, live what-if, BRD OD-43.
