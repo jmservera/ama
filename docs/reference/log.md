@@ -2985,3 +2985,8 @@ metadata when the knowledge base was created.
 * `chat_privacy.py`: `add_memory` requires a known task (fails closed); expired items are hidden by `list_memory`, `edit_memory` and the prompt view; the administrator role is read from the staff register record; memory ids sort by creation time (fixes a CI ordering flake).
 * `chatthreads.py`, `sqlstore.py`, `mssqlstore.py`: idempotent ALTER adds `item_class`, `source`, `updated_at` to an existing `chat_memory` table.
 * Open: administrator Entra app role (owner decision), DPO retention, scoping and wiring to users.
+
+## 2026-10-15 Chat and memory isolation (#162)
+
+* Added `mvp/zavaforward_mvp/chat_isolation.py`, chat and memory endpoints, `mvp/tests/test_chat_isolation.py` and a `mvp/README.md` section. No knowledge base page or regulatory snapshot changed, so the index is unchanged.
+* Open: break-glass and administrator content-access policy (BRD OD-46, owner), contractor use of chat, live-model injection evaluation (OD-49).
