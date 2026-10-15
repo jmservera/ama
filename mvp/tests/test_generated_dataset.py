@@ -16,6 +16,9 @@ sys.path.insert(0, str(GENERATOR))
 builder = importlib.import_module("build_mvp_dataset")
 pack = importlib.import_module("generate_pack")
 fabric = importlib.import_module("zf_stock_fabric")
+epc = importlib.import_module("zf_stock_epc")
+
+builder_band = importlib.import_module("zf_model").band_from_sap
 
 
 def register():
@@ -78,6 +81,55 @@ class GeneratedDatasetTests(unittest.TestCase):
         summary = fabric.summary(one, 1)
         self.assertIn("not a company fact", summary["label"])
         self.assertIn("age_band_weights_by_locality", summary["assumptions"])
+
+    def test_epc_and_survey_fields_reconcile_to_fabric_and_conflicts_are_manifested(self):
+        rows = register()
+        recs = epc.epc_rows(rows, 1)
+        self.assertEqual(recs, epc.epc_rows(rows, 1))
+        self.assertNotEqual(recs, epc.epc_rows(rows, 2))
+        fab = {f["synthetic_home_id"]: f for f in fabric.fabric_rows(rows)}
+        manifest = {m["synthetic_home_id"]: m for m in epc.conflict_manifest(recs)}
+        self.assertTrue(manifest)
+        self.assertEqual(len(manifest), sum(1 for r in recs if r["conflict_type"]))
+        surveyed = 0
+        for r in recs:
+            f = fab[r["synthetic_home_id"]]
+            self.assertTrue(r["epc_is_synthetic"])
+            self.assertEqual(r["epc_band"], builder_band(r["epc_sap"]))
+            self.assertEqual(r["epc_dwelling_type"], f["dwelling_type"])
+            self.assertLessEqual(r["epc_lodged"], r["epc_expires"])
+            pairs = (("epc_build_age_band", "surveyed_build_age_band", "age_band"),
+                     ("epc_construction", "surveyed_construction", "construction"),
+                     ("epc_heating", "surveyed_heating", "heating"))
+            if r["survey_status"] != "Surveyed":
+                self.assertEqual(r["conflict_type"], "")
+                self.assertEqual((r["epc_build_age_band"], r["epc_construction"], r["epc_heating"]),
+                                 (f["age_band"], f["construction"], f["heating"]))
+                continue
+            surveyed += 1
+            for e, s, k in pairs:
+                self.assertEqual(r[s], f[k])
+            self.assertEqual(r["surveyed_band"], builder_band(r["surveyed_sap"]))
+            if r["conflict_type"]:
+                self.assertIn(r["synthetic_home_id"], manifest)
+                self.assertNotEqual(manifest[r["synthetic_home_id"]]["epc_value"],
+                                    manifest[r["synthetic_home_id"]]["surveyed_value"])
+            else:
+                self.assertLessEqual(abs(r["epc_sap"] - r["surveyed_sap"]), 3)
+                for e, s, k in pairs:
+                    self.assertEqual(r[e], r[s])
+                self.assertEqual(r["epc_band"] == r["surveyed_band"] or abs(r["epc_sap"] - r["surveyed_sap"]) <= 3, True)
+        self.assertTrue(surveyed)
+        self.assertIn("not a lodged EPC", epc.summary(recs, 1)["label"])
+
+    def test_cases_carry_epc_record_matching_their_stock_fabric(self):
+        for c in self.data["cases"]:
+            if "stock_fabric" in c:
+                e = c["stock_epc"]
+                self.assertTrue(e["epc_is_synthetic"])
+                if not e["conflict_type"]:
+                    self.assertEqual(e["epc_construction"], c["stock_fabric"]["construction"])
+                    self.assertEqual(e["epc_heating"], c["stock_fabric"]["heating"])
 
     def test_mvp_output_and_receipt_record_seed_version_and_revision(self):
         self.assertEqual(self.data["seed"], 20260901)

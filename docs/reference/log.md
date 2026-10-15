@@ -2785,3 +2785,11 @@ metadata when the knowledge base was created.
   coordinator sets the Status field on the owner's project 7 when an issue
   starts, opens a PR, blocks, closes or reopens. Ids are discovered at run
   time and the `project` token scope is a precondition. No index change.
+
+## [2026-10-15] update | Synthetic stock EPC, survey and conflict fixtures
+
+* Extended `research/retrofit-synthetic-data/README.md` and its index entry for
+  issue #170: EPC and survey records for the 60,000-home stock derived from the
+  fabric attributes, plus a committed manifest of seeded EPC conflicts.
+* Labelled synthetic fixtures under ADR 0005 (2026-10-15); not lodged EPCs.
+* Open: conflict mix and rates are unconfirmed generator assumptions.

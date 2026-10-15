@@ -364,3 +364,32 @@ Closes the generator gap in [#168](https://github.com/jmservera/ama/issues/168).
   not Zava North Homes facts, surveys or EPC data and must not be cited as such.
 * The case `home.built` and `home.type` values from the 980-case model remain a
   separate denominator and are not reconciled with `stock_fabric`.
+
+## Stock EPC, survey and conflict fixtures (2026-10-15)
+
+Delivers [#170](https://github.com/jmservera/ama/issues/170) under #167. All
+values are labelled synthetic fixtures under the owner decision in ADR 0005
+(2026-10-15); they are not lodged EPCs, survey results or company facts.
+
+* `zf_stock_epc.py` adds, for each of the 60,000 register homes, an EPC record
+  (band, SAP, lodged and expiry dates, status, recorded age band, dwelling
+  type, construction, heating) and, for about 35% of homes, a survey record
+  (type, date, surveyed SAP and band, surveyed age band, construction, heating).
+  Output depends only on the seed and the home ID.
+* Reconciliation: EPC and survey attributes are derived from the stock fabric
+  (`zf_stock_fabric.py`). Without a seeded conflict they equal the fabric
+  values and the EPC and surveyed SAP differ by at most 3 points. The EPC band
+  is derived from the SAP with the standard A-G cut-offs.
+* Seeded conflicts (8% of surveyed homes, 1,679 in the default build) are
+  listed in the committed `private-stock-epc-conflict-manifest.csv` with type,
+  EPC value and surveyed value: band, heating, construction or age band
+  differs. `private-stock-epc-summary.json` holds counts and assumptions.
+  The full EPC CSV is git-untracked; rebuild with
+  `python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_stock_epc.py`.
+* Each case in the private MVP JSON gains a `stock_epc` block from its linked
+  stock home, and `stock_epc_seed` is recorded.
+* Open: the band, SAP and conflict rates are generator-author assumptions, not
+  calibrated to Zava North Homes data. The case `epc_band` model in
+  `zf_model.py` is a separate denominator and is not reconciled with
+  `stock_epc`. Owner confirmation of the conflict mix is not recorded.
+
