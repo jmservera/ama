@@ -2919,3 +2919,8 @@ metadata when the knowledge base was created.
   detection, and that assistant proposals are unsupported on the JSON store.
 * No regulatory snapshot changed. Open: externally held head in an immutable
   Azure container and Azure SQL drill evidence.
+
+## 2026-10-15 Azure Policy, Defender plans, locks and tagging as code (#147)
+
+* infra/README.md gains a Governance controls section; ADR 0001 open item updated. New `infra/governance.bicep`, `main.pilot.bicepparam`, `policy-exceptions.json` and tests.
+* No regulatory snapshot changed. Open: Defender cost estimate and enablement, EX-001 expiry, audit versus Deny stance.

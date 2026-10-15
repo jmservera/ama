@@ -70,6 +70,25 @@ Example from the repository root: `az deployment group create -g ama -f infra/ma
 
 The Container Registry export policy is set to `enabled` in this mode because ACR requires it when public access is on. Identity and RBAC controls are unchanged (no keys, no SQL logins). Never set it to `true` outside a throwaway development stack, and do not use it as evidence for the private-network claims in ADR 0001.
 
+## Governance controls
+
+Governance as code for issue #147 (ADR 0002 decision 6). Owner decisions (2026-10-15): region `uksouth`; subscription owner and Legal/Compliance/DPO owner Juan Manuel Servera.
+
+| Control | Where | Decision | Owner | Cost |
+| --- | --- | --- | --- | --- |
+| Azure Policy assignments (SQL and storage public access, Key Vault deletion protection, required tags) | [`governance.bicep`](./governance.bicep), subscription scope, deployed separately by the subscription owner | Built-in definitions, audit only (`enforcementMode=DoNotEnforce`); a Deny stance is an open owner decision | Juan Manuel Servera | No charge for Azure Policy |
+| Defender for Cloud plans (Storage, SQL servers, Key Vaults, Containers) | [`governance.bicep`](./governance.bicep) | Decided; stay on Free until `enableDefenderPlans=true` | Juan Manuel Servera | Per-resource pricing, not yet estimated: open item, confirm in the Azure pricing calculator before enabling |
+| Resource locks | `enableLocks` in `main.bicep` (Key Vault, SQL, storage) | `main.pilot.bicepparam` sets `true`; the development file keeps `false` so the stack can be reset | Juan Manuel Servera | None |
+| Tagging standard | `allTags` in `main.bicep` | `workload`, `environment`, `dataClassification`, `purpose`, `owner` on every resource; the required-tag policy checks `workload`, `environment`, `dataClassification` and `owner` on resource groups | Juan Manuel Servera | None |
+| Known exceptions | [`policy-exceptions.json`](./policy-exceptions.json) | EX-001: `SecurityControl=Ignore` on the development resource group (MCAPS SQL public-access policy) | Juan Manuel Servera | None |
+
+```bash
+az deployment sub what-if -l uksouth -f infra/governance.bicep
+az deployment sub create -l uksouth -f infra/governance.bicep
+```
+
+Open items: Defender cost estimate and the decision to enable; an expiry date for EX-001 (proposed: end of the development stack, never on a pilot group); whether to switch any policy from audit to Deny; the group must carry the required tags before Deny is considered. The platform-wide MCAPS policy itself is managed outside this repository.
+
 ## Key Vault secret lifecycle
 
 Secrets are listed in [secret-inventory.json](secret-inventory.json) with an owner, rotation interval and expiry alert window. `infra/scripts/secret_lifecycle.py` checks vault metadata against it (never secret values), produces the access review record and prints the rotation steps. Run `python3 -m unittest discover -s infra/tests -q` for its tests.
@@ -577,4 +596,6 @@ checks, not established by CLI authentication.
 ```bash
 az bicep build --file infra/main.bicep --stdout > /dev/null
 az bicep lint --file infra/main.bicep
+az bicep build --file infra/governance.bicep --stdout > /dev/null
+python3 -m unittest infra/tests/test_governance.py
 ```
