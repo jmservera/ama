@@ -1,5 +1,6 @@
 """Policy-as-code checks on the compiled Bicep: README security claims and parameter guards."""
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -55,7 +56,10 @@ def evaluate(expression, parameters: dict, variables: dict):
     return eval(source, {"__builtins__": {}}, scope)  # noqa: S307 - compiled repository template only
 
 
-@unittest.skipUnless(shutil.which("az"), "Azure CLI with Bicep is needed to compile the templates")
+@unittest.skipUnless(
+    shutil.which("az") or os.environ.get("REQUIRE_AZ_BICEP") == "1",
+    "Azure CLI with Bicep is needed to compile the templates",
+)
 class BicepPolicyTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -63,6 +67,31 @@ class BicepPolicyTests(unittest.TestCase):
         cls.guard = compile_bicep("modules/guard.bicep")
         cls.defaults = {k: v.get("defaultValue") for k, v in cls.main["parameters"].items() if "defaultValue" in v}
         cls.guard_module = next(r for r in cls.main["resources"] if r["name"] == "parameter-guard")
+
+    def test_missing_az_is_a_failure_when_required(self) -> None:
+        if os.environ.get("REQUIRE_AZ_BICEP") == "1":
+            self.assertIsNotNone(shutil.which("az"), "az is required (REQUIRE_AZ_BICEP=1)")
+
+    def test_every_deployed_resource_waits_for_the_guard(self) -> None:
+        guard_id = "[resourceId('Microsoft.Resources/deployments', 'parameter-guard')]"
+        items = self.main["resources"]
+        items = list(items.values()) if isinstance(items, dict) else items
+        depends = {r["name"]: set(r.get("dependsOn", [])) for r in items}
+
+        def waits(name: str, seen: frozenset = frozenset()) -> bool:
+            if guard_id in depends[name]:
+                return True
+            by_id = {
+                f"[resourceId('{r['type']}', '{r['name']}')]": r["name"]
+                for r in items if "/" not in r["name"] and r["type"] == "Microsoft.Resources/deployments"
+            }
+            return any(d in by_id and by_id[d] not in seen and waits(by_id[d], seen | {name}) for d in depends[name])
+
+        for item in items:
+            if item["name"] == "parameter-guard":
+                continue
+            self.assertTrue(waits(item["name"]), f"{item['name']} can deploy before the parameter guard")
+        self.assertEqual(depends["parameter-guard"], set())
 
     def test_lint_rules_are_errors(self) -> None:
         levels = {rule["level"] for rule in CONFIG["analyzers"]["core"]["rules"].values()}

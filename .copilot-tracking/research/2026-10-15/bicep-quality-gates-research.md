@@ -18,3 +18,8 @@ Disposition: executed. Planning Readiness: Ready.
 ## Open items
 
 * Live confirmation (`az deployment group validate`/`what-if`) of the guard message needs an Azure session.
+
+## Review fix pass
+
+* Finding 1: `guard` had no dependents, so ARM could deploy other modules in parallel. Finding 2: tests skip silently without `az`.
+* Compiled template confirmed: only module output references created implicit dependencies; none on `parameter-guard`.

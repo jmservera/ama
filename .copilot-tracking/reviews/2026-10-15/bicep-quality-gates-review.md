@@ -10,3 +10,7 @@ Review executed once. Outcome: conformant with open items.
 | Unsupported combinations fail clearly | Met in template; message surfacing in Azure unverified |
 
 Follow-ups: run `az deployment group validate` in Azure to confirm guard message; add Azure Policy compliance evidence; document `az bicep` as a CI prerequisite if runner image changes.
+
+## Review fix pass
+
+Both findings fixed and tested (guard ordering; CI cannot skip). Live Azure validation remains open.

@@ -110,16 +110,19 @@ module guard 'modules/guard.bicep' = {
 
 module identity 'modules/identity.bicep' = {
   name: 'identity'
+  dependsOn: [guard]
   params: { prefix: prefix, location: location, tags: allTags }
 }
 
 module network 'modules/network.bicep' = {
   name: 'network'
+  dependsOn: [guard]
   params: { prefix: prefix, location: location, tags: allTags }
 }
 
 module monitoring 'modules/monitoring.bicep' = {
   name: 'monitoring'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     prefix: prefix
@@ -134,6 +137,7 @@ module monitoring 'modules/monitoring.bicep' = {
 
 module keyvault 'modules/keyvault.bicep' = {
   name: 'keyvault'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     purgeProtection: purgeProtection
@@ -151,6 +155,7 @@ module keyvault 'modules/keyvault.bicep' = {
 
 module storage 'modules/storage.bicep' = {
   name: 'storage'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     name: 'st${compact}${unique}'
@@ -174,6 +179,7 @@ module storage 'modules/storage.bicep' = {
 
 module registry 'modules/registry.bicep' = {
   name: 'registry'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     quarantine: !isDev
@@ -195,6 +201,7 @@ module registry 'modules/registry.bicep' = {
 
 module sql 'modules/sql.bicep' = {
   name: 'sql'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     name: 'sql-${prefix}-${unique}'
@@ -215,6 +222,7 @@ module sql 'modules/sql.bicep' = {
 
 module foundry 'modules/foundry.bicep' = {
   name: 'foundry'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     name: 'aif-${prefix}-${unique}'
@@ -233,6 +241,7 @@ module foundry 'modules/foundry.bicep' = {
 
 module apps 'modules/containerapps.bicep' = if (deployApplications) {
   name: 'containerapps'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     prefix: prefix
@@ -274,6 +283,7 @@ module apps 'modules/containerapps.bicep' = if (deployApplications) {
 
 module authTokenStore 'modules/authTokenStore.bicep' = if (enableEntraTokenStore) {
   name: 'auth-token-store'
+  dependsOn: [guard]
   params: {
     name: 'st${take(compact, 13)}auth${unique}'
     prefix: prefix
@@ -455,6 +465,7 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
 
 resource budget 'Microsoft.Consumption/budgets@2023-05-01' = {
   name: 'budget-${prefix}'
+  dependsOn: [guard]
   properties: {
     category: 'Cost'
     amount: monthlyBudget

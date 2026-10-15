@@ -6,3 +6,8 @@
 * [x] Phase 4: README quality gates section; CI already runs lint and `infra/tests`.
 
 Critique (executed once, compatible findings applied): the guard cannot use `@allowed([true])` (type error), so `@minLength(1)` is used; the test evaluates guard expressions to cover the matrix.
+
+## Review fix pass
+
+* Add `dependsOn: [guard]` to all modules and the budget; test transitive guard dependence.
+* Set `REQUIRE_AZ_BICEP=1` in CI infra test step so a missing `az` fails the job.
