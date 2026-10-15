@@ -29,6 +29,11 @@
       "decision": "Post-implementation Review executed once; execution Complete, outcome Not accepted. Two High and one Medium engineering defects; human/live evidence residual.",
       "status": "not accepted",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-15/src-rai-release-record-219-review.md"
+    },
+    {
+      "decision": "Publish implementation 4d92edf and complete RPI artifacts in draft PR #315 to main using Refs #219; initial eleven CI checks queued, no merge or accepted-release claim",
+      "status": "published draft",
+      "evidence": "https://github.com/jmservera/ama/pull/315"
     }
   ],
   "blockers": [
@@ -55,7 +60,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Publish completed-loop artifacts in a draft main PR using Refs #219; engineering acceptance blocked by RV-001 through RV-003."
+    "action": "Draft PR #315 published. Select ranked RV-001, RV-002, RV-003 or RV-004 follow-up, Stop automatic session, or Switch to manual mode. No child work started; engineering acceptance remains blocked."
   },
   "prioritized_follow_ups": [
     {

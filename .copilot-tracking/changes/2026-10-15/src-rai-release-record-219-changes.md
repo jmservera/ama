@@ -57,6 +57,12 @@ are evidence discovery, not execution validation. No private data or .env read.
 | Review `git diff --check`, protected-path diff, `gh issue view 219 --json body,comments`, branch PR lookup | Read-only evidence checks pass; no source/plan changes by reviewer |
 | Publication safeguard `git status --short && git diff --check && gh api user --jq '{id,login}' && git remote -v` | Only task changes; privacy-safe account confirmed; origin jmservera/ama |
 | `git fetch --quiet origin main && git rev-list --left-right --count origin/main...HEAD && git config --get user.name && python3 -m json.tool .copilot-tracking/rpi-sessions/2026-10-15/src-rai-release-record-219-state.json > /dev/null` | Exit 0; branch at current main (0/0), name jmservera; completed-loop state parses |
+| `git diff --check && git config --local user.email 8036360+jmservera@users.noreply.github.com && git add -A`, then Conventional Commit piped to `GIT_AUTHOR_EMAIL=8036360+jmservera@users.noreply.github.com GIT_COMMITTER_EMAIL=8036360+jmservera@users.noreply.github.com git commit -F -` | Exit 0; 4d92edf, 31 task files including all seven RPI artifacts, required Co-authored-by trailer |
+| `bash <installed-pr-reference>/scripts/generate.sh --base-branch origin/main --merge-base --output <session>/files/issue219-pr-reference.xml` | Exit 0; 2,741-line diff reference generated outside repository; no duplicate Review |
+| `awk '/^\| Command \| Result \|/{copy=1} /^## P01/{copy=0} copy' <changes-artifact> >> <session>/files/issue219-pr.md` | Exit 0; local command/result table incorporated into PR description |
+| `git push --set-upstream origin feat/src-rai-release-record-219` | Exit 0; only topic branch pushed, remote tracking set |
+| `gh pr create --draft --base main --head feat/src-rai-release-record-219 --title 'feat(core): add task-bound RAI release records' --body-file <session>/files/issue219-pr.md` | Exit 0; draft PR https://github.com/jmservera/ama/pull/315 using Refs #219 |
+| `gh pr view 315 --json url,isDraft,baseRefName,headRefName,statusCheckRollup`, `git status --short`, `git log -1 --format='%h%n%ae%n%ce'` | Draft targets main from correct topic; eleven checks queued at initial publication; clean worktree; 4d92edf author and committer use confirmed privacy-safe email |
 
 ## P01 - Contract and Wiring
 
@@ -115,6 +121,15 @@ OQ-017 holders/delegations and competent review unavailable. Real approved
 evaluation, provider attestation, direct human oversight and Azure deployment
 are not established by nonbillable synthetic tests. No acceptance checkbox
 will imply those results.
+
+## Publication
+
+Draft PR [#315](https://github.com/jmservera/ama/pull/315) publishes commit
+4d92edf and the complete RPI evidence. The draft status and explicit Review
+Not accepted prevent this handoff from representing a merge-ready release.
+CI was queued at initial publication; no CI pass or merge is claimed.
+Publication metadata is retained in a subsequent ordinary documentation
+commit on the same topic, without amending or rewriting the implementation.
 
 ## Review Handoff
 
