@@ -56,6 +56,36 @@ data-consuming build work starts.
   #110 consumer validation is mirrored by `validate_reading()` and must be
   reconciled when #110 lands, and a full-stock run needs a storage and cost
   decision.
+* Reproducibility and refresh (#176): scale fixture v1.2.0 and sensor backfill
+  v2 record seed, version, `as_of`, dependency-aware `generator_revision` and
+  SHA-256 for every payload file. Both require a new or empty output folder;
+  a repeat write to an existing snapshot fails without replacing files.
+  Generate a new versioned destination rather than deleting live data.
+  Source fingerprints are independent of Git HEAD, clock and output location;
+  exact reproduction also requires the same Python/runtime environment.
+  Scale `--as-of` is a snapshot label, not an event cutoff: its events remain
+  calendar-year 2026 fixtures. Sensor `--as-of YYYY-MM-DD` is the exclusive UTC
+  end of `--days` days; omitting it preserves the historical 2024-10-01 start
+  (730 days ends on 2026-10-01). `--estimate-only` accepts the same window.
+  Cadence must divide 1440 minutes and all sizes must be positive.
+  Example, after setting `ZF_DATA` to a private folder outside the repository:
+
+  ```bash
+  python -m zava_forward.core.synthetic.scale_fixture --seed 174 \
+    --as-of 2026-10-15 --out "$ZF_DATA/scale-fixture-2026-10-15-v1.2.0"
+  python -m zava_forward.core.synthetic.sensor_backfill --seed 183 \
+    --as-of 2026-10-15 --days 2 --cadence 60 --homes 12 \
+    --out "$ZF_DATA/sensor-backfill-2026-10-15-v2"
+  ```
+
+  `tests/test_synthetic_determinism.py` checks every output byte, multiple
+  sensor shards, source/hash metadata, window propagation, unchanged historical
+  payloads and refused refreshes. This wholly fictional stock-scale fixture
+  is not the private OSM-anchored stock register. That generator remains absent;
+  neither these tests nor the sensor sample establishes full-stock feasibility.
+  The [refresh cadence and approval policy](../../docs/reference/research/retrofit-synthetic-data/README.md#determinism-manifests-and-refresh-policy-2026-10-15)
+  is still proposed. These tools confer no approval, resident consent,
+  live SQL reset authority or permission to replace private tenant bindings.
 * Sensor plausibility tests (#191): `tests/test_sensor_plausibility.py` runs in
   the existing MVP CI unittest step over 150 stock homes for two years. It
   fails on out-of-bounds or flat-line series, checks seasonal and diurnal
