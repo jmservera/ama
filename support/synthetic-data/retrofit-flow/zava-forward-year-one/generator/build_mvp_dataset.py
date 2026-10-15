@@ -25,6 +25,7 @@ from zf_export_rules import Recorder, tracker_owner
 from zf_manifest import generator_revision
 from zf_model import SIM_START, SNAP
 from zf_names import STAFF_NAMES
+import zf_stock_epc
 import zf_stock_fabric
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -280,12 +281,14 @@ def main():
         if row:
             fab = zf_stock_fabric.fabric(row)
             case["stock_fabric"] = {k: v for k, v in fab.items() if k != "synthetic_home_id"}
+            epc = zf_stock_epc.epc_record(row, fabric_row=fab)
+            case["stock_epc"] = {k: v for k, v in epc.items() if k != "synthetic_home_id"}
     staff = []
     for code in [x for x in staff_codes if x != "RLO-03"]:
         s = names.staff(code)
         staff.append(dict(code=code, name=s["name"], email=s["email"], role=ROLE_TITLE[code.split("-")[0]]))
     out = dict(built=a.as_of.isoformat(), as_of=a.as_of.isoformat(),
-               is_synthetic=True, seed=seed, stock_fabric_seed=zf_stock_fabric.SEED, generator_version="operational-coverage-v1",
+               is_synthetic=True, seed=seed, stock_fabric_seed=zf_stock_fabric.SEED, stock_epc_seed=zf_stock_epc.SEED, generator_version="operational-coverage-v1",
                generator_revision=generator_revision(),
                stock_link_kind="Source geography row; flats may share a building anchor, not unique stock-unit linkage.",
                stock_register_rows=len(register),

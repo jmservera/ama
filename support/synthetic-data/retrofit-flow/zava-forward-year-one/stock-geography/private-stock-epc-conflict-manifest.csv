@@ -1,0 +1,1680 @@
+synthetic_home_id,conflict_type,epc_value,surveyed_value,description
+SYN-NE-000019,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-000053,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000054,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000070,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000091,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000118,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-000217,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000275,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-000337,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-000354,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000372,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000379,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000496,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-000556,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000607,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-000609,age_band_differs,1919-1944,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-000670,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-000693,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000698,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000709,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000720,age_band_differs,pre-1919,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-000787,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000848,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-000914,age_band_differs,pre-1919,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-000995,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001004,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001006,age_band_differs,2000 or later,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-001027,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001102,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-001116,construction_differs,"Cavity brick, full fill","Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-001150,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001151,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001158,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001166,construction_differs,"Cavity brick, full fill",Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-001174,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001185,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-001201,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001271,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001316,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-001348,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-001371,age_band_differs,2000 or later,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-001465,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001476,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001500,construction_differs,Cavity brick,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-001521,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001549,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001560,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-001787,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-001843,construction_differs,Stone,Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-001847,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-001906,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-002013,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002089,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002112,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-002161,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-002214,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-002258,construction_differs,Stone,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-002384,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002434,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-002439,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-002485,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002498,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002512,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-002516,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002518,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002524,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-002576,construction_differs,Stone,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-002637,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-002673,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002691,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002715,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002717,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002721,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002728,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002796,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-002813,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002913,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-002946,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-002961,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-003025,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-003034,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-003051,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-003056,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-003072,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-003080,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-003239,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-003262,age_band_differs,2000 or later,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-003291,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-003357,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-003362,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-003365,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-003430,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-003470,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-003476,age_band_differs,1981-1999,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-003729,age_band_differs,1945-1964,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-003758,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-003766,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-003821,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-003829,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-003836,age_band_differs,1919-1944,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-003843,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-003888,construction_differs,Non-traditional (precast concrete),Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-003978,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-003993,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004000,age_band_differs,1981-1999,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-004058,age_band_differs,1945-1964,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-004085,heating_differs,Mains gas boiler,Communal or district,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-004103,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004187,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004200,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-004217,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004227,construction_differs,Solid brick,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-004241,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-004270,band_differs,D,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004290,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004298,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004344,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004349,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004375,construction_differs,Solid brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-004398,heating_differs,Mains gas boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-004411,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-004432,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-004449,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-004456,heating_differs,Mains gas boiler,Communal or district,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-004465,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004496,age_band_differs,1945-1964,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-004609,construction_differs,Cavity brick,Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-004630,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-004656,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004729,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004751,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004911,age_band_differs,2000 or later,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-004956,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-004992,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005011,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005033,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-005081,construction_differs,Cavity brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-005187,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-005202,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005210,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005240,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-005277,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-005283,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005285,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005301,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-005355,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-005397,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-005448,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005483,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005492,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005568,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005604,heating_differs,Air source heat pump,Oil boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-005638,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005641,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005681,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-005721,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005741,age_band_differs,2000 or later,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-005778,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-005782,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005793,construction_differs,Solid brick,Non-traditional (precast concrete),Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-005823,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-005831,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005834,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-005836,age_band_differs,1945-1964,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-005847,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005929,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-005941,band_differs,C,A,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-005961,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-005980,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-006041,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006053,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006074,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006094,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-006106,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006157,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-006165,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006171,heating_differs,Air source heat pump,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-006203,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006239,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006282,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006319,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006341,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-006418,age_band_differs,1945-1964,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-006623,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-006634,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006649,age_band_differs,pre-1919,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-006678,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006684,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006685,heating_differs,Mains gas boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-006686,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006830,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006836,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006858,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006916,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-006946,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-007028,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007070,heating_differs,Communal or district,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-007113,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-007125,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-007141,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-007157,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007159,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007178,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007182,band_differs,D,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007192,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007216,construction_differs,"Cavity brick, full fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-007261,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007271,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007334,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007342,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-007360,heating_differs,Electric storage,Communal or district,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-007467,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007510,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007543,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007547,age_band_differs,1981-1999,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-007683,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007735,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-007746,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007758,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007790,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007855,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-007933,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008007,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008035,construction_differs,Cavity brick,Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-008089,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008146,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008153,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008155,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-008160,heating_differs,Air source heat pump,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-008250,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008268,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-008296,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008299,age_band_differs,1981-1999,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-008306,construction_differs,Stone,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-008335,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008426,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008462,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-008466,construction_differs,Cavity brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-008483,construction_differs,Timber frame,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-008509,age_band_differs,2000 or later,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-008563,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008585,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008587,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008595,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008633,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-008651,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008675,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008678,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008723,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008850,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008911,construction_differs,Stone,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-008953,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-008970,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-008978,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-008981,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-009005,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-009034,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-009070,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-009115,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-009128,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-009215,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-009298,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-009402,construction_differs,Non-traditional (precast concrete),Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-009516,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-009633,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-009808,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-009812,construction_differs,Stone,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-009842,construction_differs,Cavity brick,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-009856,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-009905,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-009953,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-009990,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010023,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010027,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010050,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010056,age_band_differs,2000 or later,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-010068,band_differs,B,A,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010109,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-010163,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-010191,construction_differs,Non-traditional (precast concrete),Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-010266,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010344,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-010368,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010393,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010483,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-010491,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-010542,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010685,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010696,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010711,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-010764,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-010824,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010862,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010885,heating_differs,Electric storage,Communal or district,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-010902,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010925,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-010969,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-010982,age_band_differs,1945-1964,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-010987,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011065,heating_differs,Electric storage,Communal or district,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-011103,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011115,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011180,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-011207,heating_differs,Oil boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-011272,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-011326,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011331,band_differs,C,A,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011374,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-011385,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011413,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-011429,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011467,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011476,age_band_differs,1965-1980,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-011553,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011569,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011631,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011671,age_band_differs,2000 or later,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-011708,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-011720,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011742,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011815,age_band_differs,1981-1999,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-011844,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011847,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011880,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011916,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011924,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011943,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011947,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-011995,construction_differs,Solid brick,Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-012026,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-012046,construction_differs,Timber frame,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-012067,age_band_differs,pre-1919,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-012141,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-012218,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-012240,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-012269,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-012306,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-012344,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-012408,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-012485,age_band_differs,1981-1999,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-012486,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-012510,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-012575,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-012689,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-012718,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-012741,heating_differs,Mains gas boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-012761,heating_differs,Oil boiler,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-012762,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-012783,construction_differs,Non-traditional (precast concrete),Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-012858,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-012984,heating_differs,Electric storage,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-012997,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-013031,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013036,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013132,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-013135,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013160,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013176,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013191,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-013228,construction_differs,Solid brick,Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-013253,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013274,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013443,construction_differs,Stone,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-013491,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013564,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013579,construction_differs,Non-traditional (precast concrete),Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-013588,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013629,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013633,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-013671,band_differs,C,A,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013674,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-013755,heating_differs,Oil boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-013773,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-013785,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013792,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013821,heating_differs,Communal or district,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-013844,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-013860,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013865,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-013874,age_band_differs,1919-1944,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-014018,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014060,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014082,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014098,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-014136,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014201,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-014207,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-014228,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-014309,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014312,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014353,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014362,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-014365,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014366,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014392,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014397,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014402,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014499,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-014532,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-014544,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014549,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-014561,age_band_differs,pre-1919,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-014564,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-014581,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014618,heating_differs,Oil boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-014652,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-014730,heating_differs,Mains gas boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-014732,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014778,heating_differs,Air source heat pump,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-014840,age_band_differs,1981-1999,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-014851,age_band_differs,1981-1999,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-014870,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014941,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014987,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-014997,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015007,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015017,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-015028,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-015047,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015065,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015107,construction_differs,Timber frame,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-015198,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015208,band_differs,C,A,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015357,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015403,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015420,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015618,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015628,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-015701,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015731,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-015738,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015776,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015805,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-015818,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015820,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015822,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015832,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-015911,age_band_differs,1981-1999,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-016058,age_band_differs,pre-1919,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-016061,age_band_differs,2000 or later,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-016071,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016109,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016112,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-016157,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016229,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016334,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-016364,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016405,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-016454,age_band_differs,1981-1999,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-016477,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016490,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016639,construction_differs,Cavity brick,Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-016641,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016691,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016731,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016746,age_band_differs,pre-1919,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-016747,age_band_differs,1981-1999,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-016782,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016784,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016798,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-016834,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016867,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-016914,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016946,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-016978,age_band_differs,1945-1964,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-017004,age_band_differs,pre-1919,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-017042,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-017078,construction_differs,Stone,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-017106,construction_differs,"Cavity brick, partial fill",Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-017111,age_band_differs,1981-1999,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-017209,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-017240,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-017301,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-017323,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-017417,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-017452,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-017460,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-017493,construction_differs,Timber frame,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-017589,construction_differs,Stone,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-017615,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-017631,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-017640,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-017932,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-017938,age_band_differs,pre-1919,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-018011,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018048,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-018137,band_differs,D,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018193,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018194,age_band_differs,1945-1964,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-018214,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018220,age_band_differs,1919-1944,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-018227,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018228,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018247,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018265,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018269,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018400,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018421,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-018573,age_band_differs,1919-1944,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-018653,construction_differs,Stone,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-018686,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018713,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-018728,heating_differs,Air source heat pump,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-018741,age_band_differs,1965-1980,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-018766,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-018786,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018796,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-018809,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018819,age_band_differs,1981-1999,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-018848,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018862,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-018879,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018889,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-018920,age_band_differs,1945-1964,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-018980,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019014,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019015,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-019020,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019069,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019087,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-019172,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019210,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-019212,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019232,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019273,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019284,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019326,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019327,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019331,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019368,age_band_differs,1981-1999,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-019382,age_band_differs,2000 or later,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-019457,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019464,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-019468,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019480,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-019481,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019497,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019557,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019583,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019593,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019622,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019682,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019688,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-019733,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-019740,age_band_differs,1919-1944,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-019782,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-019813,age_band_differs,1945-1964,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-019815,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-019836,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020027,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020034,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020087,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020161,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020260,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020263,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020372,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-020396,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020406,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020411,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-020427,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020438,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020468,band_differs,D,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020520,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020564,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020568,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-020572,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020603,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-020685,age_band_differs,1945-1964,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-020755,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020768,age_band_differs,1981-1999,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-020773,heating_differs,Mains gas boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-020923,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020927,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-020964,age_band_differs,1965-1980,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-021012,construction_differs,"Cavity brick, full fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-021066,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-021083,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021105,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-021155,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021159,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021260,age_band_differs,2000 or later,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-021289,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021299,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021333,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021355,construction_differs,Solid brick,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-021361,band_differs,D,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021363,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021372,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021386,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-021421,band_differs,D,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021426,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021453,construction_differs,"Cavity brick, partial fill",Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-021456,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021469,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021497,construction_differs,Solid brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-021501,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021510,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021580,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021587,band_differs,D,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021691,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021706,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-021718,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021743,construction_differs,Timber frame,Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-021745,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021810,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021815,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021881,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021943,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021965,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-021969,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021976,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-021979,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022070,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022095,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-022101,age_band_differs,1981-1999,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-022115,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022198,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-022234,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022320,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022334,construction_differs,Solid brick,Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-022390,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022421,age_band_differs,2000 or later,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-022510,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022573,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-022618,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022638,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022692,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022743,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022744,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-022755,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-022774,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022778,age_band_differs,1981-1999,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-022803,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022832,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022879,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-022928,heating_differs,Communal or district,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-022931,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-022977,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-023012,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-023100,age_band_differs,1945-1964,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-023141,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-023229,age_band_differs,1965-1980,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-023326,heating_differs,Air source heat pump,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-023336,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-023391,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-023455,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-023499,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-023577,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-023603,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-023664,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-023708,construction_differs,Cavity brick,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-023732,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-023740,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-023808,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-023812,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-023824,age_band_differs,1965-1980,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-023915,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-023929,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-023960,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-024003,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024014,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024028,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024051,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024057,age_band_differs,1919-1944,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-024098,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024103,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024136,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-024152,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024166,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-024171,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024178,construction_differs,Solid brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-024252,construction_differs,Stone,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-024304,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024317,heating_differs,Communal or district,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-024343,age_band_differs,1965-1980,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-024355,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-024375,construction_differs,Stone,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-024403,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024427,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-024429,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024441,construction_differs,Stone,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-024472,heating_differs,Electric storage,Oil boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-024479,construction_differs,Non-traditional (precast concrete),Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-024499,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024527,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024592,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-024593,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024659,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-024735,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024752,construction_differs,"Cavity brick, full fill",Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-024776,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024849,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024860,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024865,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024878,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024926,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-024961,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-025073,age_band_differs,1981-1999,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-025132,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-025171,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-025180,construction_differs,Cavity brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-025192,construction_differs,Timber frame,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-025266,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-025314,age_band_differs,1919-1944,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-025346,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-025449,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-025523,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-025524,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-025532,band_differs,D,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-025577,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-025580,age_band_differs,2000 or later,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-025608,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-025627,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-025713,construction_differs,"Cavity brick, full fill",Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-025732,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-025747,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-025773,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-025799,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-025823,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-025834,age_band_differs,pre-1919,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-025860,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-025937,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-025947,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-025951,age_band_differs,1981-1999,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-026033,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026102,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-026226,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026258,construction_differs,Cavity brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-026261,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026300,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026348,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-026359,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026393,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026405,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026464,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026470,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-026482,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-026538,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-026582,age_band_differs,pre-1919,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-026676,age_band_differs,1945-1964,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-026687,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026692,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026725,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-026728,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-026762,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026880,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026894,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-026916,construction_differs,"Cavity brick, partial fill",Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-026941,construction_differs,Cavity brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-026993,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-026997,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027077,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027103,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027128,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027130,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027195,age_band_differs,pre-1919,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-027199,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027255,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027266,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-027299,construction_differs,"Cavity brick, full fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-027312,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027348,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027369,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027448,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-027476,age_band_differs,1919-1944,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-027477,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027528,age_band_differs,1981-1999,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-027596,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-027680,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-027691,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-027726,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-027808,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-027829,heating_differs,Mains gas boiler,Communal or district,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-027844,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027868,heating_differs,Communal or district,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-027957,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-027985,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028018,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-028067,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028077,age_band_differs,1981-1999,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-028083,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028129,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028136,age_band_differs,2000 or later,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-028149,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028171,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-028201,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028228,age_band_differs,2000 or later,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-028269,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-028388,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028414,age_band_differs,pre-1919,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-028430,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-028462,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028495,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-028544,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028626,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028636,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-028637,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028674,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-028695,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-028710,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028714,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-028742,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028760,age_band_differs,2000 or later,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-028821,construction_differs,Non-traditional (precast concrete),Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-028829,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028881,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-028934,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-028969,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-029031,age_band_differs,pre-1919,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-029049,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029055,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029100,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029140,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029154,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029189,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029240,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-029296,age_band_differs,1919-1944,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-029348,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029360,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029399,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-029401,age_band_differs,1945-1964,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-029410,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029444,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029491,age_band_differs,1981-1999,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-029495,construction_differs,Solid brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-029496,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029499,age_band_differs,1945-1964,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-029516,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029537,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029540,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029560,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029603,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029619,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029625,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-029671,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029740,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029838,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029851,age_band_differs,1945-1964,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-029882,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-029913,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029925,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-029981,heating_differs,Mains gas boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-029983,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-029994,heating_differs,Communal or district,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-030000,construction_differs,Stone,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-030062,construction_differs,Solid brick,Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-030084,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030106,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-030119,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-030132,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030141,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030182,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030184,construction_differs,Timber frame,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-030202,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-030263,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030269,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030281,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030353,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-030408,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-030492,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030528,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030544,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030580,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030607,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-030621,construction_differs,Non-traditional (precast concrete),"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-030741,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-030752,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030759,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030814,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030840,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030890,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030923,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-030927,age_band_differs,1945-1964,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-031020,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031022,construction_differs,"Cavity brick, full fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-031049,construction_differs,Non-traditional (precast concrete),Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-031072,construction_differs,Cavity brick,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-031090,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-031134,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-031229,construction_differs,Stone,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-031301,band_differs,C,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031310,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031359,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-031412,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031503,age_band_differs,1965-1980,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-031535,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-031547,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031599,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031614,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-031621,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-031627,construction_differs,Solid brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-031633,age_band_differs,1945-1964,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-031730,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031743,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031746,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-031757,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031763,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031775,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031814,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031879,age_band_differs,1919-1944,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-031884,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031903,age_band_differs,2000 or later,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-031906,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-031943,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-032169,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-032184,construction_differs,Solid brick,Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-032217,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-032223,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-032261,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-032362,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-032365,construction_differs,"Cavity brick, partial fill",Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-032366,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-032507,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-032521,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-032522,construction_differs,"Cavity brick, full fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-032525,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-032555,age_band_differs,1965-1980,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-032639,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-032699,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-032714,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-032791,construction_differs,Stone,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-032860,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-032917,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-032927,construction_differs,Cavity brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-032965,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033030,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033031,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033090,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033120,age_band_differs,1919-1944,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-033184,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033239,heating_differs,Air source heat pump,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-033358,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033366,construction_differs,Solid brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-033397,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033402,construction_differs,"Cavity brick, full fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-033407,age_band_differs,1919-1944,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-033411,band_differs,B,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033422,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-033515,construction_differs,Non-traditional (precast concrete),Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-033529,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-033532,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033542,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033553,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033653,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-033654,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033713,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033770,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-033789,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-033882,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-034033,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-034139,age_band_differs,1981-1999,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-034151,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-034222,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-034322,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-034347,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-034403,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-034405,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-034476,age_band_differs,1981-1999,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-034487,construction_differs,Non-traditional (precast concrete),Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-034549,construction_differs,Stone,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-034678,construction_differs,Timber frame,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-034692,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-034707,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-034725,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-034748,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-034834,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-034849,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-034963,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-034978,band_differs,C,A,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035014,construction_differs,"Cavity brick, full fill",Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-035030,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035037,construction_differs,Solid brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-035058,age_band_differs,2000 or later,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-035073,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035098,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035178,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035186,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035236,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-035245,construction_differs,Stone,Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-035327,age_band_differs,1945-1964,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-035394,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035404,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-035412,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035418,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035453,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035458,construction_differs,Timber frame,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-035610,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035646,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-035648,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035679,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035725,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035740,heating_differs,Mains gas boiler,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-035765,age_band_differs,2000 or later,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-035772,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035811,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035829,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-035846,age_band_differs,2000 or later,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-035866,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-035953,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-035999,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036034,construction_differs,"Cavity brick, full fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-036076,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036078,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036102,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036116,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036117,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-036120,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036155,age_band_differs,1965-1980,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-036199,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036201,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036299,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036335,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036354,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-036364,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036387,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-036398,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-036413,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-036436,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-036484,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036514,heating_differs,Air source heat pump,Communal or district,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-036568,construction_differs,"Cavity brick, full fill",Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-036610,heating_differs,Communal or district,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-036648,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-036695,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-036731,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036754,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-036822,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036839,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036843,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036844,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-036866,age_band_differs,1919-1944,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-036928,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036947,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-036967,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-037023,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-037039,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-037049,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-037055,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-037336,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-037343,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-037347,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-037387,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-037401,heating_differs,Air source heat pump,Communal or district,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-037402,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-037457,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-037467,heating_differs,Mains gas boiler,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-037531,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-037541,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-037576,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-037601,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-037672,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-037678,construction_differs,"Cavity brick, full fill","Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-037784,age_band_differs,1965-1980,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-037828,age_band_differs,2000 or later,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-037939,age_band_differs,2000 or later,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-037946,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-037967,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-037974,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-037982,age_band_differs,2000 or later,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-038002,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038051,construction_differs,Solid brick,Non-traditional (precast concrete),Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-038058,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038091,age_band_differs,1919-1944,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-038177,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038204,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038218,age_band_differs,1981-1999,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-038219,heating_differs,Air source heat pump,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-038228,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038296,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038339,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-038359,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038414,age_band_differs,pre-1919,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-038483,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038484,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038492,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038560,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038567,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038599,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038604,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-038608,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038625,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038643,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038722,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038723,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038775,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-038866,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038883,age_band_differs,1945-1964,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-038887,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038889,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-038918,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-039047,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-039101,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039119,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039128,age_band_differs,2000 or later,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-039136,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039273,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-039282,age_band_differs,2000 or later,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-039307,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039352,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-039358,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039492,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039535,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039540,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039648,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039676,heating_differs,Air source heat pump,Oil boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-039702,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039767,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-039784,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039830,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039871,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039930,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-039997,age_band_differs,1981-1999,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-040041,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040068,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-040092,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040100,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040116,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-040186,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040268,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-040280,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040323,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040334,band_differs,C,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040340,age_band_differs,1965-1980,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-040351,age_band_differs,1945-1964,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-040354,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040362,heating_differs,Communal or district,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-040399,heating_differs,Communal or district,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-040421,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-040469,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-040470,construction_differs,"Cavity brick, partial fill",Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-040495,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040525,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-040537,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-040583,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040588,age_band_differs,1981-1999,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-040614,age_band_differs,1919-1944,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-040623,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040645,construction_differs,"Cavity brick, full fill",Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-040661,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040706,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040709,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-040721,construction_differs,Non-traditional (precast concrete),Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-040722,age_band_differs,1945-1964,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-040809,construction_differs,Non-traditional (precast concrete),Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-040835,age_band_differs,2000 or later,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-040846,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-040878,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-040899,age_band_differs,1981-1999,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-040923,age_band_differs,1981-1999,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-041005,age_band_differs,2000 or later,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-041027,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041161,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041191,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041212,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041278,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-041289,age_band_differs,1965-1980,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-041300,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041353,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041429,band_differs,D,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041436,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041450,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041485,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-041487,construction_differs,Timber frame,Non-traditional (precast concrete),Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-041616,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-041620,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041666,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041744,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041748,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041765,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041802,construction_differs,Cavity brick,Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-041815,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041861,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041885,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041886,heating_differs,Communal or district,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-041935,construction_differs,Timber frame,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-041940,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-041999,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-042090,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-042124,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-042128,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-042175,band_differs,D,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-042183,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-042200,construction_differs,Timber frame,Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-042213,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-042245,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-042321,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-042329,construction_differs,Cavity brick,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-042354,construction_differs,"Cavity brick, full fill",Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-042366,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-042456,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-042507,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-042549,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-042591,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-042597,age_band_differs,2000 or later,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-042676,age_band_differs,1981-1999,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-042779,construction_differs,Cavity brick,Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-042784,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-042801,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-042838,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-042861,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-042954,heating_differs,Oil boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-043016,heating_differs,Mains gas boiler,Communal or district,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-043046,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043048,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043054,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043076,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043081,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-043115,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043145,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-043279,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043306,band_differs,D,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043346,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-043348,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043354,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043373,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043389,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043408,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043425,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043472,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-043475,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043477,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043505,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043511,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-043513,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043530,age_band_differs,1919-1944,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-043538,age_band_differs,1981-1999,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-043557,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043610,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043638,heating_differs,Mains gas boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-043647,heating_differs,Communal or district,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-043661,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043697,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043725,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-043779,band_differs,D,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043788,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043790,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043804,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043848,age_band_differs,1919-1944,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-043855,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-043872,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-043897,heating_differs,Electric storage,Communal or district,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-043936,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-044019,age_band_differs,1981-1999,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-044154,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-044174,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-044262,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-044271,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-044319,construction_differs,Stone,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-044346,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-044357,age_band_differs,1945-1964,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-044360,construction_differs,"Cavity brick, full fill","Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-044395,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-044397,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-044456,construction_differs,"Cavity brick, partial fill",Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-044507,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-044628,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-044633,age_band_differs,2000 or later,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-044665,construction_differs,Solid brick,Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-044696,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-044720,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-044770,construction_differs,Cavity brick,Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-044801,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-044802,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-044818,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-044851,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-044934,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-044953,age_band_differs,1965-1980,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-044998,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045004,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045038,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045039,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045053,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045097,age_band_differs,1965-1980,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-045104,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045117,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045148,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045186,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045273,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045400,age_band_differs,1945-1964,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-045404,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-045436,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-045444,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045480,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045482,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045485,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045508,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045555,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045567,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-045582,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045685,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045690,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045732,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-045748,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045764,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045790,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045810,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045841,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045863,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045891,construction_differs,"Cavity brick, full fill",Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-045911,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-045914,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-045932,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-045964,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-046027,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046081,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046089,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046113,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046139,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046212,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-046217,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-046242,construction_differs,Timber frame,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-046262,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046331,heating_differs,Mains gas boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-046373,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046440,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046460,age_band_differs,2000 or later,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-046469,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046503,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046512,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046546,age_band_differs,pre-1919,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-046552,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046560,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-046566,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-046584,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046684,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-046690,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-046775,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046804,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046829,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046838,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046847,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046848,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046864,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046878,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046927,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-046949,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-046954,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-046969,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047004,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047010,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-047024,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047027,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-047036,construction_differs,"Cavity brick, partial fill",Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-047091,construction_differs,Stone,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-047116,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047134,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-047191,heating_differs,Oil boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-047309,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047323,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-047371,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-047387,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047408,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047419,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047450,band_differs,D,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047482,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047488,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-047502,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047510,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-047584,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047589,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-047620,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047627,construction_differs,Cavity brick,Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-047642,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047656,heating_differs,Communal or district,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-047723,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047759,heating_differs,Air source heat pump,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-047845,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047865,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-047948,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-047981,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048003,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-048025,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048082,construction_differs,Timber frame,Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-048101,age_band_differs,1919-1944,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-048140,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048233,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048250,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048313,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048347,age_band_differs,1965-1980,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-048390,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048412,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048428,construction_differs,Non-traditional (precast concrete),"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-048429,band_differs,D,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048443,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048501,heating_differs,Air source heat pump,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-048683,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048713,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048825,age_band_differs,2000 or later,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-048838,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048840,age_band_differs,1965-1980,2000 or later,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-048841,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048874,construction_differs,"Cavity brick, full fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-048899,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048907,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048917,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-048996,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049029,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-049125,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049232,construction_differs,Timber frame,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-049274,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049287,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049297,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049301,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049334,construction_differs,"Cavity brick, partial fill",Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-049341,heating_differs,Electric storage,Oil boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-049342,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049363,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049364,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-049383,construction_differs,Solid brick,Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-049441,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049448,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049582,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049595,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049643,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049688,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049712,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049722,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049723,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-049788,construction_differs,Cavity brick,Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-049790,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049815,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049864,age_band_differs,1945-1964,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-049895,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-049902,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049911,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049930,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049950,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-049957,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-049986,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-050093,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-050218,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-050325,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-050455,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-050464,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-050502,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-050520,heating_differs,Mains gas boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-050542,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-050552,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-050586,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-050619,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-050674,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-050754,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-050794,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-050877,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-050943,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-051049,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051166,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051176,heating_differs,Mains gas boiler,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-051235,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051311,construction_differs,Timber frame,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-051320,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051334,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051458,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051494,construction_differs,Cavity brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-051558,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051579,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051591,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051598,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-051652,heating_differs,Mains gas boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-051714,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-051727,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051822,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051854,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-051871,heating_differs,Air source heat pump,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-051911,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-051923,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051937,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-051961,heating_differs,Mains gas boiler,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-051969,age_band_differs,1965-1980,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-051981,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052157,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-052195,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052215,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-052221,heating_differs,Air source heat pump,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-052228,construction_differs,Non-traditional (precast concrete),Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-052295,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052306,band_differs,F,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052309,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052429,band_differs,D,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052542,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052554,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052559,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052590,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-052623,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052626,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-052692,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052723,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052754,age_band_differs,1945-1964,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-052807,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052809,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-052810,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-052820,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-052828,band_differs,D,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052834,construction_differs,Cavity brick,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-052907,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-052951,construction_differs,"Cavity brick, full fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-052954,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-052959,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-052969,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-053036,construction_differs,Solid brick,Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-053058,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053076,heating_differs,Air source heat pump,Communal or district,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-053112,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053149,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053153,heating_differs,Communal or district,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-053161,age_band_differs,2000 or later,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-053170,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053284,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-053323,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053369,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053386,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053424,construction_differs,"Cavity brick, full fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-053488,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053499,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053507,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053571,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-053575,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-053595,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053603,age_band_differs,1919-1944,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-053605,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053616,band_differs,D,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053659,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053801,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-053816,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-053844,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-053900,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-053942,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-054130,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-054134,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-054202,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-054213,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-054219,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-054271,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-054428,heating_differs,Communal or district,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-054439,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-054453,construction_differs,Cavity brick,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-054469,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-054474,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-054522,heating_differs,Communal or district,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-054583,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-054604,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-054627,age_band_differs,1981-1999,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-054659,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-054802,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-054862,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-054887,construction_differs,"Cavity brick, partial fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-054921,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-054983,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055057,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055104,heating_differs,Electric storage,Air source heat pump,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-055128,age_band_differs,1945-1964,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-055140,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055141,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055193,construction_differs,"Cavity brick, full fill",Timber frame,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-055261,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055315,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055331,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055405,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055458,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055495,construction_differs,Timber frame,Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-055578,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055599,construction_differs,"Cavity brick, full fill",Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-055614,construction_differs,Cavity brick,Non-traditional (precast concrete),Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-055616,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055701,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055906,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-055935,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056015,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056036,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056065,age_band_differs,1981-1999,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-056103,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-056132,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056194,construction_differs,Non-traditional (precast concrete),Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-056204,band_differs,C,A,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056210,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-056240,heating_differs,Communal or district,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-056269,age_band_differs,1965-1980,1981-1999,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-056306,construction_differs,Cavity brick,"Cavity brick, partial fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-056475,age_band_differs,1981-1999,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-056479,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056489,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056508,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056578,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-056580,age_band_differs,1919-1944,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-056622,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056734,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056768,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056785,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-056795,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-056801,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-056814,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-056824,age_band_differs,1981-1999,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-056837,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-056873,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056885,age_band_differs,1965-1980,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-056943,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-056950,band_differs,D,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057042,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057138,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057149,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057160,age_band_differs,1919-1944,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-057164,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057167,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057212,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057216,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057238,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057252,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057302,age_band_differs,pre-1919,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-057324,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057361,band_differs,D,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057437,heating_differs,Mains gas boiler,Electric storage,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-057469,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057496,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057520,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-057582,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-057657,construction_differs,"Cavity brick, partial fill",Solid brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-057706,age_band_differs,2000 or later,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-057737,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-057749,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057784,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-057829,band_differs,C,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057838,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057842,band_differs,C,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057851,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057891,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057913,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057934,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-057951,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057953,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-057979,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-057987,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-057993,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-058126,construction_differs,Solid brick,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-058230,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-058355,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-058378,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058382,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-058399,band_differs,C,A,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058417,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-058457,age_band_differs,1919-1944,pre-1919,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-058477,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058491,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058522,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058533,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058549,construction_differs,Timber frame,"Cavity brick, full fill",Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-058555,band_differs,C,B,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058570,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058616,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058677,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058768,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058771,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058777,construction_differs,Timber frame,Stone,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-058803,band_differs,F,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058834,heating_differs,Air source heat pump,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-058866,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058894,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058901,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-058958,band_differs,C,A,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-059015,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-059081,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-059147,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-059225,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-059360,band_differs,E,F,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-059405,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-059474,band_differs,F,G,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-059505,age_band_differs,1981-1999,1945-1964,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-059516,construction_differs,Timber frame,Cavity brick,Lodged EPC wall construction differs from the surveyed construction.
+SYN-NE-059607,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-059632,age_band_differs,1965-1980,1919-1944,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-059646,band_differs,E,C,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-059649,band_differs,D,E,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-059729,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-059803,heating_differs,Oil boiler,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-059829,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-059857,heating_differs,Electric storage,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-059876,heating_differs,Communal or district,Mains gas boiler,Lodged EPC main heating differs from the surveyed main heating.
+SYN-NE-059899,band_differs,E,D,Lodged EPC band differs from the band implied by the survey SAP.
+SYN-NE-059946,age_band_differs,1919-1944,1965-1980,Lodged EPC build age band differs from the surveyed build age band.
+SYN-NE-059997,band_differs,D,C,Lodged EPC band differs from the band implied by the survey SAP.

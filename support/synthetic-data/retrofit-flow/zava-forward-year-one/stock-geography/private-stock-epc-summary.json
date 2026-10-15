@@ -1,0 +1,45 @@
+{
+  "assumptions": {
+    "conflict_rate_of_surveyed": 0.08,
+    "conflict_type_weights": {
+      "age_band_differs": 0.1,
+      "band_differs": 0.55,
+      "construction_differs": 0.15,
+      "heating_differs": 0.2
+    },
+    "reconciliation": "Without a seeded conflict, EPC and survey age band, dwelling type, construction and heating equal the stock fabric attributes, and the EPC and surveyed SAP agree within 3 points.",
+    "sap_model": "Base SAP by age band plus offsets for construction, heating and dwelling type, with bounded noise; the EPC band is derived from the SAP with the standard A-G cut-offs.",
+    "survey_rate": 0.35
+  },
+  "conflict_type_counts": {
+    "age_band_differs": 182,
+    "band_differs": 933,
+    "construction_differs": 250,
+    "heating_differs": 314
+  },
+  "conflict_types": {
+    "age_band_differs": "Lodged EPC build age band differs from the surveyed build age band.",
+    "band_differs": "Lodged EPC band differs from the band implied by the survey SAP.",
+    "construction_differs": "Lodged EPC wall construction differs from the surveyed construction.",
+    "heating_differs": "Lodged EPC main heating differs from the surveyed main heating."
+  },
+  "epc_band_counts": {
+    "B": 165,
+    "C": 5678,
+    "D": 21030,
+    "E": 23700,
+    "F": 9423,
+    "G": 4
+  },
+  "epc_status_counts": {
+    "Expired": 23421,
+    "Valid": 36579
+  },
+  "homes": 60000,
+  "is_synthetic": true,
+  "label": "Synthetic assumption; not a lodged EPC, a survey result or a company fact.",
+  "seed": 4820261015,
+  "seeded_conflicts": 1679,
+  "surveyed_homes": 20893,
+  "version": "stock-epc-v1"
+}

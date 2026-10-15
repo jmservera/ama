@@ -2794,3 +2794,11 @@ metadata when the knowledge base was created.
   fields in the [data dictionary](./research/retrofit-synthetic-data/data-dictionary.md#stock-scale-household-and-tenancy-fixture-2026-10-15).
 * Distributions are invented; consent and representative rules are demonstrator
   rules, not legal advice. No index change.
+
+## [2026-10-15] update | Synthetic stock EPC, survey and conflict fixtures
+
+* Extended `research/retrofit-synthetic-data/README.md` and its index entry for
+  issue #170: EPC and survey records for the 60,000-home stock derived from the
+  fabric attributes, plus a committed manifest of seeded EPC conflicts.
+* Labelled synthetic fixtures under ADR 0005 (2026-10-15); not lodged EPCs.
+* Open: conflict mix and rates are unconfirmed generator assumptions.
