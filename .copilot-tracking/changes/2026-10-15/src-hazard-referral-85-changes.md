@@ -102,6 +102,10 @@ source/artifact diff; executable command invocations are recorded below.
 | `python3` relative-link check over changed tracked Markdown (git diff --name-only, Markdown relative target existence) | Exit 0; 301 relative file links checked, all exist. Anchor targets manually reviewed for new headings. |
 | `git diff --check && test -s .gitignore && test ! -L /home/azureuser/source/ama-wt/issue-85/.venv && rm -r -- /home/azureuser/source/ama-wt/issue-85/.venv` | Exit 0; removed only the local venv created for this task, not repository/user content. |
 | `rm -- /tmp/ama-85-core-tests.log /tmp/ama-85-api-tests.log /tmp/ama-85-core-tests-final.log /tmp/ama-85-api-tests-final.log /tmp/ama-85-core-complete.log /tmp/ama-85-api-complete.log && git config --local user.email 8036360+jmservera@users.noreply.github.com && git status --short` | Exit 0; own temporary logs removed after outcomes were persisted; repository-local safe email configured. No excluded paths changed. |
+| `git add -A && git diff --cached --check && git diff --cached --stat` followed by exact Conventional Commit message piped to `git commit -F -` with safe author/committer email environment | Exit 0; implementation/evidence commit `58c6b39`, 32 files, required Co-authored-by trailer, both emails verified as 8036360+jmservera@users.noreply.github.com. |
+| `python3` generation of PR body from canonical changes command table and Review reproduction | Exit 0; 18710-character body stored only in session files, explicitly Not accepted and not merge-ready. |
+| `git push -u origin feat/src-hazard-referral-85 && gh pr create --repo jmservera/ama --base main --head feat/src-hazard-referral-85 --draft --title 'feat(core): evidence hazard referrals and retrofit holds (Refs #85)' --body-file /home/azureuser/.copilot/session-state/20c846f3-50a6-4526-84fd-673f414a769c/files/issue-85-pr.md` | Exit 0; topic pushed, draft PR https://github.com/jmservera/ama/pull/314 opened to main. No push to main, no merge. |
+| `gh pr view 314 --repo jmservera/ama --json number,url,isDraft,baseRefName,headRefName,headRefOid,state && gh pr checks 314 --repo jmservera/ama --json name,state,bucket,link && git status --short && git log -1 --format='%h %ae %ce%n%B'` | Exit 0; OPEN draft on correct head/base, clean tree, safe author/committer/trailer. Eleven observed checks in progress: five src projects, src-namespace/no-working-data, test, validate, image, mssql. No CI pass or rubric score asserted. |
 
 ## Amendments and Divergences
 
@@ -114,8 +118,9 @@ fabricates historic receipt or acceptance.
 
 P01-T01, P02-T01 and P03-T01 complete. All five src suites and lint/format/type
 checks passed locally; migration suite and local synthetic HTTP app passed.
-One Review executed Complete with outcome Not accepted. Commit/push/draft PR
-delivery remains authorized; no source corrections or second Review follow.
+One Review executed Complete with outcome Not accepted. Implementation and all
+RPI artifacts committed/pushed, draft PR #314 opened; only final delivery-state
+bookkeeping is being committed. No source corrections or second Review follow.
 Owner timing/escalation policy,
 verified repairs transport, real model/SQL Server/Azure and human acceptance
 remain unavailable; do not mark full issue acceptance or activate live controls.
@@ -158,3 +163,16 @@ planning; RV-003 routes verified transport and real AI/SQL Server/Azure/human
 evidence to later research/validation. No child was selected.
 The PR must be draft, use Refs #85, and prominently state Not accepted and not
 merge-ready. This is incomplete product delivery, not a passed safety gate.
+
+## Delivery
+
+Draft PR: https://github.com/jmservera/ama/pull/314, base main,
+head feat/src-hazard-referral-85. First implementation/evidence commit 58c6b39.
+The final documentation-only bookkeeping commit records these completed
+operations and is pushed without amendment or history rewriting; its exact
+commit/push result is persisted in the PR body after execution to avoid a
+self-referential commit record.
+Automatic RPI task execution is completed at Follow-up, session remains running
+awaiting an owner-selected follow-up/Stop/manual mode. No follow-up was selected
+in this non-interactive run. RV-001 blocks acceptance/merge; original issue
+criteria and live/owner evidence remain open.

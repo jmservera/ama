@@ -26,6 +26,11 @@
       "evidence": ".copilot-tracking/plans/2026-10-15/src-hazard-referral-85-plan.md#critique-disposition"
     },
     {
+      "decision": "Authorized delivery completed as draft PR #314 to main using Refs #85. Implementation/evidence commit 58c6b39 pushed; CI observed in progress. No merge or product acceptance.",
+      "status": "delivered-draft-not-accepted",
+      "evidence": "https://github.com/jmservera/ama/pull/314"
+    },
+    {
       "decision": "Exactly one post-implementation Review executed Complete; outcome Not accepted. RV-001 High concurrency defect reproduced; RV-002/RV-003 owner/live gaps remain.",
       "status": "reviewed-not-accepted",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-15/src-hazard-referral-85-review.md"
@@ -45,7 +50,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Await owner-selected follow-up, Stop or manual mode; complete only the already authorized draft PR bookkeeping. RV-001 blocks merge."
+    "action": "Await owner selection of ranked follow-up, Stop automatic session or manual mode. Draft PR #314 is not merge-ready; RV-001 remains open."
   },
   "prioritized_follow_ups": [
     {

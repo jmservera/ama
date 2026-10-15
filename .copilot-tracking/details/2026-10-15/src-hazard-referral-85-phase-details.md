@@ -5,8 +5,10 @@ ms.date: 2026-10-15
 ---
 
 Task 85, src-hazard-referral-85. Uses research C1-C7 and W1-W2.
-Implementation state: P01-T01, P02-T01 and P03-T01 complete, with command/results
-in the canonical changes record. P03-T02 awaits the single Review and delivery.
+Execution state: P01-T01, P02-T01, P03-T01 and P03-T02 complete, with command/results
+in the canonical changes record. Single Review Complete / Not accepted: RV-001
+High concurrency defect routed to a distinct later implementation. Draft PR
+https://github.com/jmservera/ama/pull/314 targets main, Refs #85, not merge-ready.
 No full issue, operational policy or real-platform acceptance is asserted.
 
 <!-- P01 -->

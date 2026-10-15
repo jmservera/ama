@@ -90,7 +90,7 @@ in core, no SQL/blob changes to agents image. Existing AI human gates remain.
 
 * [x] P03-T01 Update related docs, run project checks and synthetic local app,
   record commands/results and unresolved acceptance.
-* [ ] P03-T02 Run one post-implementation RPI review; commit/push and open PR.
+* [x] P03-T02 Run one post-implementation RPI review; commit/push and open PR.
 
 ## Locked Test and Target Contract
 
@@ -122,6 +122,10 @@ applied directly; no new owner decision and no second critique:
 
 ## Follow-Up Items
 
+RV-001 High: two-store review reproduction proves a concurrent hazard can bypass
+procurement restriction checks. Route transactional dependent-case validation
+and interleaved regression to a distinct later implementation, not this loop.
+Single Review Complete / Not accepted; draft PR #314 is not merge-ready.
 Owner-approved timing/escalation policy; verified external transport/service
 receipt; real permitted model task, SQL Server durability, Azure run and human
 acceptance. Do not implement or mark these complete without evidence.
@@ -131,6 +135,8 @@ acceptance. Do not implement or mark these complete without evidence.
 Phase details: `.copilot-tracking/details/2026-10-15/src-hazard-referral-85-phase-details.md`.
 Planned changes record: `.copilot-tracking/changes/2026-10-15/src-hazard-referral-85-changes.md`.
 Readiness: Ready for bounded engineering after direct critique dispositions.
-Implementation P01/P02/P03-T01 complete; one Review assesses the source/docs/
-test boundary before P03-T02 delivery bookkeeping. Full issue acceptance and
-owner/live platform follow-ups remain explicitly open.
+All planned execution/delivery tasks complete. The one Review returned
+Not accepted, with RV-001 High open; task execution completion is not
+product acceptance. Draft PR https://github.com/jmservera/ama/pull/314 targets
+main and uses Refs #85. Owner/live acceptance and CI remain open; no source
+correction, repeat Review, child task or merge was performed.
