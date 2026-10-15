@@ -9,7 +9,7 @@ const assistantNames = {
 };
 
 function assistantProposal(p, reload) {
-  const status = h("p", { role: "status" }, `${p.display_state}. ${p.reason || ""} ${p.manual}`);
+  const status = h("p", { role: "status" }, `${p.display_state}. ${p.release_denial ? p.release_denial.reason : (p.reason || "")} ${p.manual}`);
   const note = h("textarea", { "aria-label": "Source verification or review note", maxlength: "1000" });
   const verified = h("input", { type: "checkbox", id: `verified-${p.id}` });
   const editing = h("textarea", { "aria-label": "Edited evidence proposal JSON", maxlength: "16000" },

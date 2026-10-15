@@ -12,6 +12,7 @@ import re
 import time
 import urllib.parse
 import urllib.request
+from . import ai_prompts
 
 SCOPE = "https://cognitiveservices.azure.com"
 FORBIDDEN = re.compile(r"\b(i have sent|has been sent|we have sent|i've sent|email sent|message sent)\b", re.I)
@@ -22,9 +23,12 @@ class Ai:
         self.endpoint = os.environ.get("AI_ENDPOINT", "").rstrip("/")
         self.fast = os.environ.get("AI_DEPLOYMENT", "standard")
         self.strong = os.environ.get("AI_DEPLOYMENT_STRONG", "capable")
+        self.model_version = os.environ.get("AI_MODEL_VERSION", "unattested")
+        self.model_version_strong = os.environ.get("AI_MODEL_VERSION_STRONG", self.model_version)
         self.token = None
         self.expires = 0
         self.gate = None  # (task, deployment) -> reason the task is suspended, or None
+        self.release = None  # Per-invocation selected record; never mutable shared request state.
 
     @property
     def configured(self):
@@ -57,7 +61,11 @@ class Ai:
         req = urllib.request.Request(f"{self.endpoint}/openai/deployments/{deployment}/chat/completions?api-version=2024-10-21",
                                      data=body, headers={"Authorization": f"Bearer {self._token()}", "Content-Type": "application/json"})
         with urllib.request.urlopen(req, timeout=40) as r:
-            return json.load(r)["choices"][0]["message"]["content"].strip()
+            result = json.load(r)
+        expected = self.model_version_strong if deployment == self.strong else self.model_version
+        if expected != "unattested" and result.get("model") != expected:
+            raise ValueError("Returned model differs from the released model version.")
+        return result["choices"][0]["message"]["content"].strip()
 
     def evidence(self, system, user, max_tokens=600, timeout=20):
         """No fallback, raw output or exception text in the durable usage envelope."""
@@ -96,9 +104,12 @@ class Ai:
         off=True is the explicit workflow-only mode: the model is not called.
         """
         t0 = time.perf_counter()
+        selected = None
 
         def out(**kw):
-            return dict(kw, task=task, latency_ms=round((time.perf_counter() - t0) * 1000, 1))
+            return dict(kw, task=task, release=selected,
+                        prompt_version=ai_prompts.version(task) if task in ai_prompts.PROMPTS else None,
+                        latency_ms=round((time.perf_counter() - t0) * 1000, 1))
         if off:
             return out(text=template, source="template", model=None, validated=True, reason="workflow-only mode selected")
         dep = self.strong if strong else self.fast
@@ -107,6 +118,10 @@ class Ai:
             return out(text=template, source="template", model=None, validated=True, reason=held)
         if not self.configured:
             return out(text=template, source="template", model=None, validated=True, reason="AI is not configured")
+        selected = self.release(task, dep) if self.release else None
+        if self.release and selected is None:
+            return out(text=template, source="template", model=None, validated=True,
+                       reason="Release changed before dispatch; use the manual route.")
         try:
             text = self._chat(dep, system, user)
         except Exception as e:  # network, auth, quota: never block the person
@@ -117,6 +132,8 @@ class Ai:
             return out(text=template, source="template", model=dep, validated=False, ai_text=text,
                        reason="model output failed validation")
         held = self.gate(task, dep) if self.gate else None
+        if self.release and selected != self.release(task, dep):
+            held = "activation release changed; use the manual route"
         if held:  # completion recheck: suspension or revocation during the call discards the text
             return out(text=template, source="template", model=None, validated=True, quarantined=True,
                        reason=f"result discarded: {held}")
@@ -124,14 +141,12 @@ class Ai:
 
     def look_at(self, name, data, mime, off=False):
         """Describe an uploaded document. Reads text and images; other types are stored only."""
-        system = ("You help a housing association retrofit team file documents. Say what kind of document this is "
-                  "(for example EPC, survey, photo of damp, consent form, invoice), list the key facts you can see in at "
-                  "most six short bullet points, and flag anything unclear. Do not guess. Plain English.")
+        system, instruction = ai_prompts.render("read_document", name=name)
         if mime.startswith("image/"):
-            content = [{"type": "text", "text": f"File name: {name}"},
+            content = [{"type": "text", "text": instruction},
                        {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{base64.b64encode(data).decode()}"}}]
         elif mime.startswith("text/") or mime in ("application/json", "text/csv"):
-            content = f"File name: {name}\n\n" + data.decode("utf-8", "replace")[:6000]
+            content = instruction + "\n\n" + data.decode("utf-8", "replace")[:6000]
         else:
             return dict(text="This file type is stored but not read. Add a short note about what it is.", source="template",
                         model=None, validated=True, task="read_document")
@@ -143,15 +158,24 @@ class Ai:
             return dict(text="AI reading is not switched on here. The file is stored.", source="template", model=None,
                         validated=True, task="read_document",
                         reason="workflow-only mode selected" if off else "AI is not configured")
+        selected = None
         try:
+            selected = self.release("read_document", self.strong) if self.release else None
+            if self.release and selected is None:
+                return dict(text="The file is stored. Add a short note about what it is.",
+                            source="template", model=None, validated=True, task="read_document",
+                            reason="Release changed before dispatch; use the manual route.")
             text = self._chat(self.strong, system, content, 500)
             held = self.gate("read_document", self.strong) if self.gate else None
+            if self.release and selected != self.release("read_document", self.strong):
+                held = "activation release changed; use the manual route"
             if held:
                 return dict(text="The file is stored. AI reading is suspended; add a short note about what it is.",
                             source="template", model=None, validated=True, task="read_document", quarantined=True,
-                            reason=f"result discarded: {held}")
-            return dict(text=text, source="ai", model=self.strong, validated=True, task="read_document")
+                            release=selected, reason=f"result discarded: {held}")
+            return dict(text=text, source="ai", model=self.strong, validated=True, task="read_document",
+                        release=selected, prompt_version=ai_prompts.version("read_document"))
         except Exception as e:
             return dict(text="The file is stored. AI could not read it just now.", source="template", model=None,
-                        validated=True, task="read_document", error=type(e).__name__,
+                        validated=True, task="read_document", release=selected, error=type(e).__name__,
                         reason=f"model unavailable ({type(e).__name__})")
