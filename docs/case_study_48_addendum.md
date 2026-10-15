@@ -103,7 +103,7 @@ regulatory currentness claim is made by this register.
 | E5 | [UX profile review](./reference/research/ux/zava-forward-prototype-profile-review.md) and [simplicity review](./reference/research/ux/prototype-learnings-and-simplicity-review.md): rationale for ownership, evidence, non-digital service and clear workspaces; not direct user validation |
 | E6 | [Decision 1 reassessment](./ideas/typesafe-system-one-agent-fit.md): bounded task fit, API/serving limits, comparative evaluation and pricing uncertainty |
 | E7 | [Pilot measurement challenge](./reference/research/company/pilot-measurement-challenge.md): frozen cohorts, paired comparisons, guardrails and attributable rather than assumed benefit |
-| E8 | [ADR 0001](./adrs/0001-azure-architecture.md), [ADR 0002](./adrs/0002-pilot-readiness-architecture.md) and [MVP limits](../mvp/README.md): reusable contracts and production-path alternatives; not full PRD acceptance |
+| E8 | [ADR 0001](./adrs/0001-azure-architecture.md), [ADR 0002](./adrs/0002-pilot-readiness-architecture.md) and [MVP limits](../src/api/README.md): reusable contracts and production-path alternatives; not full PRD acceptance |
 
 ### Assumption and Decision Register
 

@@ -29,7 +29,7 @@ the Zava Forward retrofit programme at Zava North Homes.
 * [Zava Forward Workbench PRD](./docs/prds/zava-forward-retrofit-programme-demonstrator.md)
 * [Azure architecture](./docs/adrs/0001-azure-architecture.md) and
   [pilot-readiness decisions](./docs/adrs/0002-pilot-readiness-architecture.md)
-* [Working MVP and current limits](./mvp/README.md)
+* [Working MVP and current limits](./src/api/README.md)
 * [Deployment and identity initialization](./infra/README.md)
 * [Branding migration and historical exceptions](./tools/rename-zava.md)
 * [Housing Association Primer](./docs/reference/research/sector/housing-association-primer.md)

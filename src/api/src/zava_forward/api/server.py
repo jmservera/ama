@@ -622,7 +622,7 @@ def main():
     try:
         store = open_store()
     except FileNotFoundError:
-        sys.exit("No data file. Run build_mvp_dataset.py first (see mvp/README.md).")
+        sys.exit("No data file. Run build_mvp_dataset.py first (see src/api/README.md).")
     law = lawstore.LawStore.from_env()
     app = App(store, password, law=law)
     host, port = os.environ.get("ZF_BIND", "127.0.0.1"), int(os.environ.get("PORT", "8088"))

@@ -201,6 +201,12 @@ On 2026-10-15 (#199 M5) the moved code, web assets, tests and Dockerfile are
 counted through `src/**/*`, so the `mvp/zavaforward_mvp`, `mvp/web`, `mvp/tests`
 and `mvp/Dockerfile` globs were removed; only `mvp/README.md` remains.
 
+On 2026-10-15 (#199 M6) `mvp/README.md` was split into the per-project READMEs
+(`src/api`, `src/core`, `src/agents`, `src/orchestrator`, `src/importer`), which
+`src/**/*` already counts, so the `mvp/README.md` glob was removed. The dated
+evidence sections moved unchanged; only the `mvp/` pointer README is left, and
+it is not scored.
+
 ### Solution code and infrastructure
 
 The `solution-code` entry covers `src/**/*` and the transitional `mvp/` globs.

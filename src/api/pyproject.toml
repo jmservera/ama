@@ -30,7 +30,7 @@ src = ["src", "tests"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
 
-# Moved unchanged from mvp/ in M2 and M5 of #199; exemptions end in M6.
+# Moved unchanged from mvp/ in M2 and M5 of #199; exemptions are a follow-up to #199 (see src/README.md).
 [tool.ruff.lint.per-file-ignores]
 "tests/test_content_standard.py" = ["E501"]
 "src/zava_forward/api/{server,auth,timecapture}.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B", "F841", "F401", "E731", "F541", "F811"]

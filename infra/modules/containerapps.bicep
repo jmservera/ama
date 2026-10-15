@@ -132,7 +132,7 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
             { name: 'SHAREPOINT_SITE_ID', value: sharePointSiteId }
             { name: 'ENTRA_TENANT_ID', value: tenant().tenantId }
             { name: 'ENTRA_CLIENT_ID', value: entraClientId }
-            // Settings read by the MVP workbench image (mvp/README.md, Configuration).
+            // Settings read by the MVP workbench image (src/api/README.md, Configuration).
             { name: 'ZF_TILE_URL', value: tileUrl }
             { name: 'ZF_TILE_ATTRIBUTION', value: tileAttribution }
             { name: 'ZF_STORE', value: 'mssql' }

@@ -8,8 +8,8 @@ ms.topic: reference
 ## Scope and evidence
 
 Implements issue #153 under epic #149 (PRD SA-003 and SA-004, BRD RULE-022).
-Sources: `src/api/src/zava_forward/api/web/*.js`, `mvp/zavaforward_mvp/store.py`,
-`mvp/zavaforward_mvp/signoffs.py` and the
+Sources: `src/api/src/zava_forward/api/web/*.js`, `src/core/src/zava_forward/core/store.py`,
+`src/core/src/zava_forward/core/signoffs.py` and the
 [design system foundations](./design-system.md). This is a content standard for
 a synthetic-data demonstrator. It has not been tested with real staff or
 residents, and no resident-facing wording is approved for use (see Human
