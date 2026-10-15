@@ -2911,3 +2911,11 @@ metadata when the knowledge base was created.
 
 * mvp/README.md, ADR 0002 implementation status and open items, and the retrofit synthetic data README updated. New synthetic control fixtures for 120 homes from the 60,000-home stock register.
 * No regulatory snapshot changed. Open: real malware scanner and Defender enablement, DPO and Legal retention periods (PR-003), the real legal-hold delegate, and retention job scheduling.
+
+## 2026-10-15 Export completeness and ledger head check (#122)
+
+* `mvp/README.md` continuity section documents that the evidence export flags
+  truncation and incompleteness, records the ledger head for tail-truncation
+  detection, and that assistant proposals are unsupported on the JSON store.
+* No regulatory snapshot changed. Open: externally held head in an immutable
+  Azure container and Azure SQL drill evidence.

@@ -456,6 +456,37 @@ Tests: `tests/test_governance.py` (JSON and SQL stores, labelled synthetic demon
   should carry a WORM/immutability policy, which is infrastructure and unproven here;
   cost (storage, transactions, restore) is not measured.
 
+## Service continuity, versioning and export (issue #122)
+
+`continuity.py` adds a persisted AI suspension (whole release or one registered task), a restart gate, a versioned
+change register and a supplier-independent evidence export. Synthetic demonstration data only.
+
+* Suspend: `POST /api/continuity/suspend` records scope, incident owner, containment, constructed communication
+  (never sent), and the affected queued, leased and ready proposals, and raises an epoch.
+* Enforcement: the epoch is read on the caller's own SQL connection at invoke, scan, claim, dispatch, complete and
+  review, and shown in list and detail views; it does not depend on disabled buttons. In-flight provider calls may
+  finish and stay charged or unknown; late results are quarantined and never actionable. No remote cancellation or
+  exactly-once billing is claimed.
+* Manual fallback: suspended AI paths return the workflow template with the reason; case work, resident challenge
+  and hazard response are unaffected. Reject stays available.
+* Restart: `restart-propose` (corrective evidence) then `restart-decide` by a different manager, with the current
+  epoch and a named authority reference. Self-approved, stale, replayed or unauthorised restarts fail. The authority
+  reference is recorded, not verified.
+* Changes: `POST /api/continuity/change` and `change-reverse` version model, rule and configuration changes with an
+  evaluation result (a failed evaluation is Blocked); reversal is a superseding record.
+* Export: `GET /api/continuity/export` returns `zf-evidence-export/1` with a digest and ledger chain checked offline by
+  `continuity.verify_export`, with no AI supplier needed. The bundle carries `complete` and `incomplete_reasons`: when
+  the 5,000 assistant-proposal limit is hit it is flagged incomplete (with total and exported counts) and
+  `verify_export` reports it not valid, so a truncated bundle is never presented as whole. The bundle records the ledger
+  head (count and hash) and any sealed digests; `verify_export` fails when the entries do not reach that head. A
+  recorded head can be rewritten together with the entries, so pass `expected_head` from a copy held outside the
+  application (an immutable digest) to detect that.
+* JSON store: AI task suspension, restart gating, the change register and export are enforced and tested on the JSON
+  store. The five assistants are durable SQL only, so the bundle states `assistants.supported: false` and exports no
+  assistant proposals there; assistant suspension on a JSON store is unsupported.
+* Open owner items: witnessed authorised drill, recovery and response limits, supplier contract terms, Azure SQL
+  drill evidence, interface identifier mapping, and the named restart authority.
+
 ## Honest limits
 
 Current scope is the continuing exercise, not production acceptance. Dated

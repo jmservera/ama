@@ -15,7 +15,7 @@ import uuid
 from contextlib import contextmanager
 from datetime import datetime, timezone
 
-from . import projection, quality, ranking
+from . import continuity, projection, quality, ranking
 from .ai import FORBIDDEN
 from .store import ConflictError
 
@@ -293,6 +293,15 @@ MSSQL_DDL = (
 )
 
 
+class Affected(list):
+    """Affected proposals with the full count, so a capped list is never mistaken for the whole set."""
+
+    def __init__(self, items=(), total=None):
+        super().__init__(items)
+        self.total = len(self) if total is None else total
+        self.truncated = self.total > len(self)
+
+
 class Assistants:
     def __init__(self, store, env=None):
         self.store, self.limits = store, Limits(env)
@@ -398,7 +407,42 @@ class Assistants:
             proc = json.loads(row[0]) if row else {}
         return capture(capability, c, proc)
 
-    def disabled(self, db=None):
+    def continuity(self, db):
+        """The persisted suspension state, read on the caller's own SQL connection so no process caches it."""
+        row = db.execute("SELECT value FROM meta WHERE key='continuity'").fetchone()
+        return continuity.load(row[0] if row else None)
+
+    def suspended(self, db, capability):
+        s = continuity.active(self.continuity(db), capability)
+        return continuity.reason_text(s) if s else None
+
+    def affected(self, scope, limit=500):
+        """Queued, leased and ready proposals a suspension of this scope covers; `.truncated` says whether the limit cut the list."""
+        if not self.sql:
+            return Affected()
+        with self.transaction() as db:
+            rows = db.execute("SELECT id,capability,state,body FROM assistant_tasks WHERE state IN ('pending','leased','ready') ORDER BY id").fetchall()
+        found = [dict(id=i, task=c, version=json.loads(b).get("version"), state=s) for i, c, s, b in rows
+                 if scope in (continuity.ALL, c)]
+        return Affected(found[:limit], total=len(found))
+
+    def export(self, limit=5000):
+        """Proposals with append-only provenance for the supplier-independent export, and whether the limit cut them off."""
+        if not self.sql:
+            return dict(proposals=[], total=0, truncated=False, supported=False,
+                        note="Assistant proposals are durable SQL only; this JSON store holds none, so none are exported.")
+        with self.transaction() as db:
+            ids = [r[0] for r in db.execute("SELECT id FROM assistant_tasks ORDER BY id").fetchall()]
+            out = []
+            for tid in ids[:limit]:
+                body = self._row(db, tid)
+                events = [json.loads(r[0]) for r in db.execute("SELECT body FROM assistant_events WHERE task_id=? ORDER BY at,id", (tid,)).fetchall()]
+                s = continuity.active(self.continuity(db), body["capability"])
+                out.append(dict(body, provenance=events, relied_on=body["state"] == "accepted" and not s,
+                                suspension=s["id"] if s else None))
+            return dict(proposals=out, total=len(ids), truncated=len(ids) > limit, supported=True, limit=limit)
+
+    def disabled(self, db=None, capability=None):
         l = self.limits
         if self.schema_error:
             return self.schema_error
@@ -406,6 +450,8 @@ class Assistants:
             return "Durable SQL is required; use the ordinary case/manual route."
         if not l.valid:
             return l.error
+        if db is not None and (held := self.suspended(db, capability)):
+            return held
         if db is not None and self.now(db) >= l.expiry:
             return "Operator authority/allowance has expired."
         if not self.store.ai.configured:
@@ -442,7 +488,7 @@ class Assistants:
         tid = digest([capability, VERSION, c["id"], signature, identity])
         row = db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()
         if row is None:
-            reason = self.disabled(db)
+            reason = self.disabled(db, capability)
             body = dict(id=tid, capability=capability, version=VERSION, case_id=c["id"], proposal_identity=identity,
                         source_signature=signature, snapshot=snapshot, output=None, verification=None, review=None, envelope=None,
                         manual=f"Review the ordinary case with {', '.join(REGISTRY[capability]['roles'])}.",
@@ -452,7 +498,7 @@ class Assistants:
                 state, body["reason"] = "failed", "Source capture exceeds bounded input. Review manually."
             db.execute("INSERT INTO assistant_tasks (id,capability,case_id,signature,body,state,fence,owner,lease_until,attempts,not_before,revision) VALUES (?,?,?,?,?,?,0,'',0,0,0,1)",
                        (tid, capability, c["id"], signature, canonical(body), state))
-        elif not self.disabled(db):
+        elif not self.disabled(db, capability):
             task = self._row(db, tid)
             if task["state"] == "disabled" and task["attempts"] < self.limits.attempts:
                 task["reason"] = None
@@ -494,6 +540,11 @@ class Assistants:
         body["history_next_offset"] = history_offset + history_limit if total > history_offset + history_limit else None
         body["history_count"] = total
         body["display_state"] = "stale" if body["stale"] else body["state"]
+        held = continuity.active(self.continuity(db), body["capability"])
+        body["actionable"] = held is None and body["state"] not in ("quarantined", "disabled")
+        body["suspension"] = held["id"] if held else None
+        if held:
+            body["display_state"] = "suspended"
         return body
 
     def detail(self, user, tid, history_offset=0):
@@ -573,6 +624,8 @@ class Assistants:
                 for cid, raw in rows:
                     c = json.loads(raw)
                     for cap in REGISTRY:
+                        if self.suspended(db, cap):
+                            continue
                         s = self.snapshot(db, cap, c)
                         signatures = db.execute("SELECT signature FROM assistant_tasks WHERE capability=? AND case_id=?",
                                                 (cap, cid)).fetchall()
@@ -593,7 +646,7 @@ class Assistants:
                 db.execute("UPDATE assistant_tasks SET state='failed',body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
                 self.event(db, tid, kind="exhausted", outcome="attempts-exhausted")
                 return None
-            reason = self.disabled(db)
+            reason = self.disabled(db, task["capability"])
             if reason:
                 task["reason"] = reason
                 db.execute("UPDATE assistant_tasks SET state='disabled',body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
@@ -628,6 +681,7 @@ class Assistants:
                 return None
             fence = task["fence"] + 1
             task["reason"] = None
+            task["claim_epoch"] = self.continuity(db)["epoch"]
             result = db.execute("UPDATE assistant_tasks SET state='leased',body=?,owner=?,fence=?,lease_until=?,attempts=attempts+1,revision=revision+1 WHERE id=? AND fence=? AND revision=?",
                                 (canonical(task), owner, fence, now + l.lease, tid, task["fence"], task["revision"]))
             if result.rowcount != 1:
@@ -660,9 +714,18 @@ class Assistants:
             current, now = self._row(db, task["id"]), self.now(db)
             if current["state"] != "leased" or current["owner"] != task["owner"] or current["fence"] != task["fence"] or current["lease_until"] <= now:
                 return False
+            epoch = self.continuity(db)["epoch"]
+            quarantined = epoch != current.get("claim_epoch", epoch) or bool(self.suspended(db, current["capability"]))
+            held_output = output
+            if quarantined:
+                # The call may have been charged; its result is kept as a digest only and never becomes a proposal.
+                output = None
+                failure = failure or "Late result quarantined after a suspension or restart; use manual work."
+                current["quarantine"] = dict(epoch=epoch, claim_epoch=current.get("claim_epoch"),
+                                             output_digest=digest(held_output) if held_output is not None else None)
             current.update(envelope=envelope, output=output, reason=failure,
                            verification=None, review=None)
-            state = "ready" if output is not None and not failure else (
+            state = "quarantined" if quarantined else "ready" if output is not None and not failure else (
                 "pending" if envelope.get("outcome") in ("timeout", "provider-unavailable") and current["attempts"] < self.limits.attempts else "failed")
             delay = self.limits.backoff * current["attempts"] if state == "pending" else 0
             result = db.execute("UPDATE assistant_tasks SET body=?,state=?,not_before=?,lease_until=0,revision=revision+1 WHERE id=? AND owner=? AND fence=? AND state='leased' AND lease_until>?",
@@ -729,6 +792,11 @@ class Assistants:
                 # A timed-out physical call continues owning its local slot until it returns.
                 self.call_slots.release()
                 returned.set()
+        with self.transaction() as db:
+            held = self.suspended(db, task["capability"])
+        if held:
+            self.call_slots.release()
+            return self.complete(task, dict(outcome="suspended-before-dispatch", usage=None, source="unverified"), None, held)
         try:
             with self.dispatch_lock:
                 stopped = self.stop_event.is_set()
@@ -792,6 +860,8 @@ class Assistants:
             if type(revision) is not int or revision != task["revision"]:
                 raise ConflictError(tid)
             if action != "reject":
+                if task["suspension"]:
+                    raise PermissionError(self.suspended(db, task["capability"]))
                 if task["stale"] or task["state"] != "ready" or task["output"] is None or task["envelope"].get("source") != "ai":
                     raise ValueError("Only current, valid AI proposals can be verified/accepted. Use manual work or reject.")
                 validate_output(task["output"], task["snapshot"], self.limits.output_chars)
@@ -815,7 +885,7 @@ class Assistants:
                 task["review"] = dict(action=action, by=user["email"], note=note, at=self.now(db))
             state = task["state"] if action == "verify" else ("rejected" if action == "reject" else "accepted")
             task.pop("provenance", None)
-            for key in ("history_next_offset", "history_count", "display_state", "stale"):
+            for key in ("history_next_offset", "history_count", "display_state", "stale", "actionable", "suspension"):
                 task.pop(key, None)
             res = db.execute("UPDATE assistant_tasks SET body=?,state=?,revision=revision+1 WHERE id=? AND revision=?",
                              (canonical(task), state, tid, revision))

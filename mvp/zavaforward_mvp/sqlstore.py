@@ -22,7 +22,7 @@ import sqlite3
 import threading
 from datetime import datetime
 
-from . import insights, ledger, projection, ranking
+from . import continuity, insights, ledger, projection, ranking
 from .ai import Ai
 from .doc_controls import open_scanner
 from .documents import open_document_store
@@ -128,6 +128,7 @@ class SqlStore(Store):
         self.scanner = open_scanner(self.docstore)
         self.digest_dir = digest_dir or os.environ.get("ZF_DIGEST_DIR") or os.path.join(os.path.dirname(db_path) or ".", "digests")
         self.ai = Ai()
+        self.ai.gate = lambda task: self.continuity_block(task)
         self.version = 0
         self._briefings = {}
         self._ranks = None
@@ -166,6 +167,12 @@ class SqlStore(Store):
 
     def _columns(self):
         return {r[1] for r in self.db.execute("PRAGMA table_info(cases)")}
+
+    def continuity_suspension(self, task):
+        """Read the persisted suspension from the database, so another process's suspension is seen without a cache."""
+        with self.dblock:
+            row = self.db.execute("SELECT value FROM meta WHERE key='continuity'").fetchone()
+        return continuity.active(continuity.load(row[0] if row else None), task)
 
     def _meta_set(self, key, value):
         self.db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)", (key, value))
@@ -383,7 +390,7 @@ class SqlStore(Store):
         self._sync()
 
     # ---- procurement and governance data kept as checked documents
-    DOCS = ("procurement", "governance")
+    DOCS = ("procurement", "governance", "continuity")
 
     def _proc_sync(self):
         self._proc_snap = {}
