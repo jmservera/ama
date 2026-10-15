@@ -21,7 +21,7 @@ order on identical input, latency per run, model and prompt version, reviewer
 accept/edit/reject counts with reasons, and the AI's added value (recall of the
 cases a person said must surface, AI minus deterministic order).
 
-Run: cd mvp && PYTHONPATH=. python3 -m zavaforward_mvp.ai_eval
+Run: python3 -m zava_forward.agents.ai_eval (with src/core and src/agents installed)
 """
 import copy
 import hashlib
@@ -35,7 +35,8 @@ from pathlib import Path
 from zava_forward.core import ai_tasks
 from zava_forward.core.store import Store
 
-GOLDEN = Path(__file__).resolve().parents[1] / "evals" / "ai_priority_golden.json"
+# The golden file lives in the project evals/ folder, outside the package; an installed image sets ZF_AI_GOLDEN.
+GOLDEN = Path(os.environ.get("ZF_AI_GOLDEN") or Path(__file__).resolve().parents[3] / "evals" / "ai_priority_golden.json")
 OWNER = dict(code="EV-01", name="Eval Owner", email="owner@eval.example", role="Resident Liaison Officer")
 OTHER = dict(code="EV-02", name="Eval Other", email="other@eval.example", role="Resident Liaison Officer")
 

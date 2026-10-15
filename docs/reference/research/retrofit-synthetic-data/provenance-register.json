@@ -5,7 +5,7 @@
   "dictionary": "data-dictionary.md",
   "rules": [
     "Every dataset has a visibility of public or private and a data_dictionary pointer.",
-    "Public datasets are committed under docs/ or an evals folder (mvp/evals or src/<project>/evals) and carry is_synthetic=true on every record or an explicit exemption.",
+    "Public datasets are committed under docs/ or an evals folder (src/<project>/evals) and carry is_synthetic=true on every record or an explicit exemption.",
     "Private datasets hold real OpenStreetMap map anchors or private tenant bindings and stay under support/, the gitignored mvp/data folder or the per-user ZF_DATA folder outside the repository (ADR 0006).",
     "Real map addresses are anchors only. No resident, case, safety, complaint or contractor event is attached to a real person."
   ],
@@ -117,7 +117,7 @@
       "id": "DS-AI-GOLDEN",
       "name": "AI priority evaluation scenarios (constructed cases and scripted model outputs)",
       "visibility": "public",
-      "location": "mvp/evals/ai_priority_golden.json",
+      "location": "src/agents/evals/ai_priority_golden.json",
       "sources": [],
       "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
       "personal_data": "none; constructed cases"

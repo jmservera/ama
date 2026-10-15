@@ -2,10 +2,10 @@ name: MVP CI
 
 on:
   pull_request:
-    paths: ["mvp/**", "src/core/**", "src/agents/tests/**", ".github/workflows/mvp-ci.yml"]
+    paths: ["mvp/**", "src/core/**", "src/agents/**", ".github/workflows/mvp-ci.yml"]
   push:
     branches: [main]
-    paths: ["mvp/**", "src/core/**", "src/agents/tests/**"]
+    paths: ["mvp/**", "src/core/**", "src/agents/**"]
   workflow_dispatch:
 
 permissions:
@@ -31,8 +31,8 @@ jobs:
           if git ls-files -- 'mvp/.assistant-test-*' | grep -q .; then
             echo "Tracked test sandbox files found:"; git ls-files -- 'mvp/.assistant-test-*'; exit 1
           fi
-      - name: Install the core package that mvp imports
-        run: pip install --no-deps -e src/core
+      - name: Install the core and agents packages that mvp imports
+        run: pip install --no-deps -e src/core -e src/agents
       - name: Unit, API, role matrix, ledger and AI evaluation tests
         run: cd mvp && PYTHONPATH=.:../src/core/tests:../src/agents/tests python3 -m unittest discover -s tests
       - name: Check browser JavaScript syntax
@@ -119,7 +119,7 @@ jobs:
       - name: Install driver system libraries
         run: sudo apt-get update && sudo apt-get install -y libltdl7 libkrb5-3
       - name: Install pinned driver
-        run: pip install --require-hashes -r mvp/requirements.txt && pip install --no-deps -e src/core
+        run: pip install --require-hashes -r mvp/requirements.txt && pip install --no-deps -e src/core -e src/agents
       - name: Store and five-assistant contracts on SQL Server
         env:
           ZF_TEST_MSSQL: "1"

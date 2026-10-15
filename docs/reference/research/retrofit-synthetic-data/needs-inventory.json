@@ -226,7 +226,7 @@
     {
       "id": "SN-10",
       "need": "Evaluation and golden sets",
-      "source_reference": "mvp/evals/ai_priority_golden.json",
+      "source_reference": "src/agents/evals/ai_priority_golden.json",
       "consuming_issues": [
         "#104"
       ],

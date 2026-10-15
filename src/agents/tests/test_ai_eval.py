@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from zavaforward_mvp import ai_eval
+from zava_forward.agents import ai_eval
 from zava_forward.core.store import Store
 
 

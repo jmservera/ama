@@ -17,7 +17,7 @@ import re
 from datetime import datetime, timedelta, timezone
 
 from zava_forward.core import projection
-from .chat_privacy import ChatPrivacy, redact
+from zava_forward.core.chat_privacy import ChatPrivacy, redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
 
 MAX_PURPOSE = 200

@@ -1,16 +1,16 @@
 {
  "version": "2026-10-15",
- "note": "Every golden and evaluation dataset, with version, owner and purpose. Add an entry here when a dataset is added; tests/test_eval_registry.py fails for an unregistered file in mvp/evals/ or any src/<project>/evals/ folder. This registry lives with the agents project; the files it lists stay with their owning project. All data is constructed or synthetic.",
+ "note": "Every golden and evaluation dataset, with version, owner and purpose. Add an entry here when a dataset is added; tests/test_eval_registry.py fails for an unregistered file in any src/<project>/evals/ folder. This registry lives with the agents project; the files it lists stay with their owning project. All data is constructed or synthetic.",
  "datasets": [
   {
    "id": "ai-priority-golden",
-   "path": "mvp/evals/ai_priority_golden.json",
+   "path": "src/agents/evals/ai_priority_golden.json",
    "version": "2026-10-09",
    "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
    "purpose": "Constructed scenarios for the offline AI priority evaluation harness: ranking and case data never change, output stays Proposed, no critical miss, cited facts exist.",
    "used_by": [
-    "mvp/zavaforward_mvp/ai_eval.py",
-    "mvp/tests/test_ai_eval.py"
+    "src/agents/src/zava_forward/agents/ai_eval.py",
+    "src/agents/tests/test_ai_eval.py"
    ],
    "contains_real_data": false
   },

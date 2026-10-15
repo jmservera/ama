@@ -6,8 +6,8 @@ import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[3]
-# Eval folders: each project's own evals/ plus mvp/evals until M4 moves the golden file.
-EVAL_DIRS = [ROOT / "mvp/evals", *sorted((ROOT / "src").glob("*/evals"))]
+# Eval folders: each project's own evals/ folder.
+EVAL_DIRS = sorted((ROOT / "src").glob("*/evals"))
 PRIVATE_LOCATIONS = ("mvp/data/", "ZF_DATA")
 PACK = ROOT / "docs/reference/research/retrofit-synthetic-data"
 REGISTER = json.loads((PACK / "provenance-register.json").read_text())
@@ -103,7 +103,7 @@ class ProvenanceRegisterTests(unittest.TestCase):
             if d["visibility"] == "private" and "/" in loc and not loc.startswith("serving"):
                 self.assertTrue(loc.startswith("support/") or loc.startswith(PRIVATE_LOCATIONS), d["id"])
             if d["visibility"] == "public":
-                self.assertTrue(loc.startswith(("docs/", "mvp/evals/")) or "/evals/" in loc, d["id"])
+                self.assertTrue(loc.startswith("docs/") or "/evals/" in loc, d["id"])
         stock = dataset("DS-STOCK-REGISTER")["location"]
         self.assertTrue((ROOT / stock / "README-private.txt").read_text().startswith("PRIVATE REPOSITORY DATA"))
         # real map addresses must not leak into public docs

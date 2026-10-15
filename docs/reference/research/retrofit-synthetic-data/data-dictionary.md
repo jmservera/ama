@@ -272,7 +272,7 @@ No free-form chat transcripts are generated. The assistant surfaces create
 `assistant_tasks`, `assistant_attempts` and `assistant_events` rows from the
 synthetic seed; these hold prompts built from synthetic case fields, bounded
 model output labelled as an AI suggestion, and append-only audit events. They
-stay in the private serving database. `mvp/evals/ai_priority_golden.json`
+stay in the private serving database. `src/agents/evals/ai_priority_golden.json`
 holds constructed public scenarios and scripted model outputs.
 
 ### Chat and memory test fixtures (2026-10-15)

@@ -6,10 +6,10 @@ import unittest
 import urllib.parse
 from pathlib import Path
 
-import test_mvp
+import dataset
 from zava_forward.core import ledger
 from zava_forward.core.synthetic import loadcheck
-from zavaforward_mvp import recovery
+from zava_forward.core import recovery
 from zava_forward.core.documents import AzureBlobDocumentStore, DocumentStoreError
 from zava_forward.core.sqlstore import SqlStore
 
@@ -63,13 +63,13 @@ class YearLedgerTests(unittest.TestCase):
     def test_sql_store_seals_past_years_once(self):
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / "zavaforward.json"
-            p.write_text(json.dumps(test_mvp.DATA))
+            p.write_text(json.dumps(dataset.DATA))
             s = SqlStore(str(p), os.path.join(tmp, "pw.sqlite"))
             with s.dblock:
                 s.db.execute("BEGIN IMMEDIATE")
                 s._append_audit([("a", "x", "ZF-1", "d", at(2025)), ("a", "x", "ZF-1", "d", at(2025))])
                 s.db.execute("COMMIT")
-            s.log_call(test_mvp.DATA["staff"][0], "ZF-1", "Call", "")
+            s.log_call(dataset.DATA["staff"][0], "ZF-1", "Call", "")
             files = s.write_year_digests()
             self.assertEqual([os.path.basename(f) for f in files], ["year-2025.json"])
             self.assertEqual(s.write_year_digests(), files)
@@ -109,11 +109,11 @@ class RecoveryTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         p = Path(self.tmp.name) / "zavaforward.json"
-        p.write_text(json.dumps(test_mvp.DATA))
+        p.write_text(json.dumps(dataset.DATA))
         self.data = str(p)
         self.db = os.path.join(self.tmp.name, "pw.sqlite")
         self.store = SqlStore(self.data, self.db)
-        self.sam = test_mvp.DATA["staff"][0]
+        self.sam = dataset.DATA["staff"][0]
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -194,7 +194,7 @@ class RecoveryTests(unittest.TestCase):
 
 class LoadCheckTests(unittest.TestCase):
     def test_grow_clones_to_requested_synthetic_homes_and_run_reports_classes(self):
-        src = loadcheck.grow(json.loads(json.dumps(test_mvp.DATA)), 40)
+        src = loadcheck.grow(json.loads(json.dumps(dataset.DATA)), 40)
         self.assertEqual(len({c["id"] for c in src["cases"]}), 40)
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / "d.json"

@@ -10,7 +10,7 @@ import urllib.error
 
 from zava_forward.core import projection
 import chat_fixture  # src/agents/tests, on PYTHONPATH until M5
-from zavaforward_mvp.chat_isolation import ChatForbidden, ChatIsolation, neutralise
+from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation, neutralise
 from test_role_matrix import Matrix, PHONE, REASON, ROLES
 
 APPROVED = dict(CHAT_DPIA_REF="SYNTH-DPIA-1", CHAT_LAWFUL_BASIS_REF="SYNTH-LB-1", CHAT_NOTICE_REF="SYNTH-NOTICE-1")

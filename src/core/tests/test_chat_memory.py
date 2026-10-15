@@ -3,14 +3,14 @@ import tempfile
 import unittest
 from pathlib import Path
 
-import test_mvp
+import dataset
 import test_sqlstore as base
-from zavaforward_mvp import chat_privacy as cp
-from zavaforward_mvp.chat_privacy import ChatNotApproved, ChatPrivacy
+from zava_forward.core import chat_privacy as cp
+from zava_forward.core.chat_privacy import ChatNotApproved, ChatPrivacy
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
 
-U1, ADMIN = test_mvp.DATA["staff"]
+U1, ADMIN = dataset.DATA["staff"]
 TASK = "stock-prioritisation"
 APPROVED = dict(CHAT_DPIA_REF="SYNTH-DPIA-1", CHAT_LAWFUL_BASIS_REF="SYNTH-LB-1", CHAT_NOTICE_REF="SYNTH-NOTICE-1")
 OTHER = dict(U1, email="other@example.test")
@@ -140,7 +140,7 @@ class MemoryLifecycle:
 class MemoryStoreLifecycle(MemoryLifecycle, unittest.TestCase):
     def make_store(self, tmp):
         data = Path(tmp) / "zavaforward.json"
-        data.write_text(json.dumps(test_mvp.DATA))
+        data.write_text(json.dumps(dataset.DATA))
         return Store(str(data))
 
 
