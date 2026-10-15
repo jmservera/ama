@@ -11,6 +11,7 @@ Each task also leaves one comparison record in the recommendation store (same
 for the JSON and SQLite stores): the input case ids, the AI output, the
 workflow-only output, why there was a fallback, and what the reviewer did.
 """
+import hashlib
 import json
 import os
 import re
@@ -191,15 +192,26 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
         verified = bool(cites) and not bad
     reason = r.get("reason")
     mode = "workflow-only" if reason == "workflow-only mode selected" else "ai"
+    from . import ai_registry
+    env = ai_registry.envelope(task, case_ids, {cid: hashlib.sha256("\n".join(sorted(labels)).encode()).hexdigest()[:16]
+                                               for cid, labels in sources.items()},
+                               dict(r, prompt_version=PROMPT_VERSION), store.version)
     rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
                      latency_ms=r.get("latency_ms"), ai_output=ai_output, workflow_output=workflow_text, shown_output=text,
-                     fallback_reason=reason, verified=verified, citations=cites, unresolved=bad, dropped_uncited=dropped)
+                     fallback_reason=reason, envelope=env, verified=verified, citations=cites, unresolved=bad, dropped_uncited=dropped)
     return dict(r, text=text, citations=cites, unresolved=bad, dropped_uncited=dropped, verified=verified,
-                approval=NOT_REVIEWED, record_id=rec["id"], mode=mode, prompt_version=PROMPT_VERSION)
+                approval=NOT_REVIEWED, envelope=env, record_id=rec["id"], mode=mode, prompt_version=PROMPT_VERSION)
+
+
+def require_registered(task):
+    from . import ai_registry
+    if ai_registry.get(task) is None:
+        raise ValueError("This AI task is not registered. Use the manual route.")
 
 
 def run_text_task(store, user, task, cases, sysmsg, prompt, template, template_cites, strong=False, check=None, mode=None,
                   bullets=False):
+    require_registered(task)
     with store.lock:
         ok = projection.can_see_reason(user)
         sources = {c["id"]: source_labels(c, ok) for c in cases}
@@ -208,6 +220,7 @@ def run_text_task(store, user, task, cases, sysmsg, prompt, template, template_c
 
 
 def run_document(store, user, case_id, doc, data, mode=None):
+    require_registered("read_document")
     off = workflow_only(mode)
     t0 = time.perf_counter()
     r = store.ai.look_at(doc["name"], data, doc["mime"], off=off)

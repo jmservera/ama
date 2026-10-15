@@ -752,6 +752,8 @@ class Assistants:
         # Only the safe, known envelope fields survive; text is never saved on failure.
         envelope = pick(result, ("provider", "deployment", "model", "outcome", "source"))
         envelope["usage"] = result.get("usage")
+        envelope.update(task=task["capability"], task_version=task["version"], case_id=task["case_id"],
+                        source_signature=task["source_signature"], approved=False)
         for key in ("provider", "deployment", "model", "outcome", "source"):
             envelope[key] = envelope[key][:120] if isinstance(envelope[key], str) else None
         usage = envelope["usage"]
