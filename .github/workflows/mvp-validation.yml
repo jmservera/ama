@@ -33,7 +33,11 @@ jobs:
         env:
           PYTHONPATH: .
         run: python -m unittest discover -s tests -v
+      - name: Show Azure CLI and Bicep
+        run: az bicep version
       - name: API authentication initialization tests
+        env:
+          REQUIRE_AZ_BICEP: "1"
         run: python -m unittest discover -s infra/tests -v
       - name: Build and lint infrastructure
         run: |

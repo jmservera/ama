@@ -56,9 +56,24 @@ The flag does not delete existing apps in incremental deployment mode.
 | Registry quarantine | Enabled: pushed images wait for scan and release | Disabled: new images can be pulled at once |
 | Key Vault | 90 day soft delete with purge protection | 7 day soft delete, no purge protection |
 
-`allowPublicNetworkAccess` and `keyVaultPurgeProtection` still work on their own to relax a single control in a production profile. Do not use the development profile as evidence for the private-network claims in ADR 0001.
+`allowPublicNetworkAccess=true` and `keyVaultPurgeProtection=false` are rejected in the production profile (see Quality gates). Use `deploymentProfile=development` for a throwaway stack. Do not use the development profile as evidence for the private-network claims in ADR 0001.
 
 Example from the repository root: `az deployment group create -g ama -f infra/main.bicep -p infra/main.bicepparam -p deploymentProfile=development`.
+
+## Quality gates
+
+Run before a pull request (CI runs the same in `.github/workflows/mvp-validation.yml`):
+
+```bash
+az bicep lint --file infra/main.bicep
+python3 -m unittest discover -s infra/tests -v
+```
+
+* `bicepconfig.json` sets every enabled linter rule to `error`, so a warning that matters (unused parameters, secrets in parameters or outputs, hardcoded environment URLs or locations, unsafe resource identifiers) fails `az bicep lint` and the build.
+* `tests/test_bicep_policy.py` compiles `main.bicep` and checks the claims in this README against the template: every public access setting follows the single computed switch, no storage or Application Insights/Foundry keys, no registry admin user, Entra-only SQL with no login or password, Key Vault purge protection and RBAC, immutability policies on the audit containers, and private endpoints for each data service. It evaluates the profile logic to show the default production profile cannot set public access.
+* `modules/guard.bicep` rejects unsupported parameter combinations before resources change: every module and top-level resource in `main.bicep` declares `dependsOn: [guard]` (directly or through another module), and a test fails if one can deploy first. CI sets `REQUIRE_AZ_BICEP=1`, so the infra tests fail rather than skip when `az` is missing. The failing parameter name states the problem: production profile with `allowPublicNetworkAccess=true` or `keyVaultPurgeProtection=false`, `evidenceStore=sharepoint` without `sharePointSiteId`, `entraTokenStoreReady` without `enableEntraTokenStore`, and `entraRoleMap` without `entraClientId`.
+
+Open items: confirm in a subscription that `az deployment group validate` (or `what-if`) reports the guard parameter name and description for an unsupported combination (not verified here, no Azure session); the tests check the compiled template, not the deployed resources, so live policy evidence (for example Azure Policy compliance) remains separate.
 
 ## Development access from external networks
 
