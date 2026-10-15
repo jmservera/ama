@@ -4,7 +4,7 @@
   "parent_task": {"task_id": "167", "task_slug": "src-generator-coverage-167"},
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "active",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": null,
@@ -19,10 +19,11 @@
     {"decision": "Research reused; evidence adequate for Plan. Use the explicitly allowed honest shape-only route contract, not an invented issue registry.", "status": "Ready", "evidence": "User findings; coverage.py, test_generator_coverage.py, canonical needs inventory, provenance register and issue #167 inspected. Consuming issues omit child routes; provenance register has no issue registry. Remove routing_validated and explicitly mark issue existence not assessed."},
     {"decision": "Exactly one independent plan critique executed; Pass with no findings. Plan and details ready.", "status": "complete", "evidence": ".copilot-tracking/reviews/plans/2026-10-15/generator-coverage-review-fixes-167-plan-critique.md"},
     {"decision": "P01 complete. All 307 core tests, ruff lint/format and mypy pass; coverage mutation cases and canonical CLI semantics verified.", "status": "validated", "evidence": ".copilot-tracking/changes/2026-10-15/generator-coverage-review-fixes-167-changes.md"},
-    {"decision": "One post-implementation Review executed Complete; outcome Conformant for the bounded review repairs, no in-scope findings.", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-15/generator-coverage-review-fixes-167-review.md"}
+    {"decision": "One post-implementation Review executed Complete; outcome Conformant for the bounded review repairs, no in-scope findings.", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-15/generator-coverage-review-fixes-167-review.md"},
+    {"decision": "Repair commit 0f1b556 pushed to feat/src-generator-coverage-167; PR #312 updated with honest shape-only claims and unmet acceptance unticked; remote, PR and local head match.", "status": "published", "evidence": ".copilot-tracking/changes/2026-10-15/generator-coverage-review-fixes-167-changes.md"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Publication active: commit/push the validated repair and update PR #312; task remains active until verified."},
+  "next_action": {"phase": "Follow-up", "action": "Repair completed and published; persist final tracking commit, then await PR #312 CI/owner review. No unselected follow-up starts."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Reconcile per-record synthetic conventions and historical output compatibility.", "rationale": "Concrete generator-conformity gap; broader than route repair.", "evidence": "Parent Review RV-001; current repair review Residual Work."},
     {"rank": 2, "task": "Owner ratification of routes, proposed owners and scope/volume decisions.", "rationale": "Required human decisions cannot be supplied by metadata checks.", "evidence": "Inventory open_items and repair review Residual Work."}

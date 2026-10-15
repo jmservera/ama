@@ -13,9 +13,10 @@ feat/src-generator-coverage-167, base main. Initial worktree clean.
 Research reused/Ready from caller findings, direct source/tests, public needs
 inventory/provenance and issue #167. No new research artifact. Plan and
 details ready; exactly one independent critique Complete/Pass, no findings.
-P01-T01 and P01-T02 complete. One post-implementation Review Complete,
-outcome Conformant for these bounded repairs; P02-T01 publication pending.
-No blockers. This is not full issue #167 acceptance.
+P01/P02 complete. One post-implementation Review Complete, outcome Conformant
+for these bounded repairs. Fix commit 0f1b556 pushed to the existing branch;
+PR #312 updated, remote head verified. No blockers. This is not full issue
+#167 acceptance; CI and owner merge remain separate.
 
 ## Evidence Pointers
 
@@ -109,7 +110,7 @@ Pass: focused implementation/docs diff reviewed, append-only log preserved,
 canonical metadata unchanged, required branch and 8036360/jmservera identity
 confirmed; no unexpected changes.
 
-Authorized publication commands (results recorded after execution):
+Executed publication commands:
 
 ```bash
 git config --local user.email 8036360+jmservera@users.noreply.github.com
@@ -119,3 +120,45 @@ git --no-pager diff --cached --stat
 GIT_AUTHOR_EMAIL=8036360+jmservera@users.noreply.github.com GIT_COMMITTER_EMAIL=8036360+jmservera@users.noreply.github.com git commit -m 'fix(core): report generator coverage gaps honestly' -m 'Refs #167' -m 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>'
 git push origin feat/src-generator-coverage-167
 ```
+
+Pass: commit 0f1b55607d503103b30c41e72ae930e4d51028a9 contains source,
+tests, docs and all six repair RPI artifacts, 12 files total; push succeeded.
+
+Executed verification and existing-PR update:
+
+```bash
+gh pr edit 312 --body-file .copilot-tracking/changes/2026-10-15/generator-coverage-review-fixes-167-changes.md
+gh pr view 312 --json number,state,headRefName,baseRefName,headRefOid,url
+git status --short
+git --no-pager log -1 --format='%h %s%nAuthor: %ae%nCommitter: %ce%n%b'
+git ls-remote origin refs/heads/feat/src-generator-coverage-167
+git rev-parse HEAD
+```
+
+Pass: PR remains OPEN, base main, requested head branch; PR head, remote branch
+and local HEAD all match 0f1b556. Worktree clean. Both author and committer
+use 8036360+jmservera@users.noreply.github.com; Copilot trailer present.
+PR body preserves Refs #167 and unmet criteria unticked.
+
+### Tracking Closeout
+
+This final evidence-only update marks all plan tasks complete and records
+publication in state, details and this ledger. No source/test behavior changed
+after the successful checks or the one Review.
+
+Closeout command group:
+
+```bash
+git add -- .copilot-tracking/plans/2026-10-15/generator-coverage-review-fixes-167-plan.md .copilot-tracking/details/2026-10-15/generator-coverage-review-fixes-167-phase-details.md .copilot-tracking/changes/2026-10-15/generator-coverage-review-fixes-167-changes.md .copilot-tracking/rpi-sessions/2026-10-15/generator-coverage-review-fixes-167-state.json
+git diff --cached --check
+GIT_AUTHOR_EMAIL=8036360+jmservera@users.noreply.github.com GIT_COMMITTER_EMAIL=8036360+jmservera@users.noreply.github.com git commit -m 'docs: record generator coverage review repair delivery' -m 'Refs #167' -m 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>'
+git push origin feat/src-generator-coverage-167
+gh pr edit 312 --body-file .copilot-tracking/changes/2026-10-15/generator-coverage-review-fixes-167-changes.md
+git status --short
+git rev-parse HEAD
+git ls-remote origin refs/heads/feat/src-generator-coverage-167
+gh pr view 312 --json number,state,headRefName,baseRefName,headRefOid,statusCheckRollup
+```
+
+CI observations are not treated as local test evidence or owner approval.
+No automatic follow-up work or merge is authorized by this closeout.

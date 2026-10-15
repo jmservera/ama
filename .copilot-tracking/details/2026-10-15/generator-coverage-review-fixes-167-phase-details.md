@@ -11,8 +11,10 @@ No blockers, new dependencies or generated targets.
 
 P01-T01 and P01-T02 complete. Nine focused tests, 307 full core tests, ruff
 lint/format and mypy pass. Changes artifact records exact commands and the
-initial formatter correction. P02-T01 remains; source implementation is
-review-ready with no unresolved decision or unvalidated behavior change.
+initial formatter correction. P02-T01 complete: one Review Complete/Conformant,
+repair commit 0f1b556 pushed, existing PR #312 body updated, matching remote/PR
+head and clean worktree verified. Final tracking closeout persists publication
+evidence; no unresolved repair decision or unvalidated behavior change.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Repair and verify

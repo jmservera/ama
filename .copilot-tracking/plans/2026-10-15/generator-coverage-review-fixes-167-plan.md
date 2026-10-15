@@ -91,10 +91,10 @@ typed new code, unchanged human/consent/release controls.
 #### [x] P01-T02: Synchronize docs and execute requested checks
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Review and publish
+### [x] P02: Review and publish
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Review once, commit evidence and push existing branch
+#### [x] P02-T01: Review once, commit evidence and push existing branch
 
 ## Critique Disposition
 
@@ -111,6 +111,8 @@ No revision or additional decision required.
 
 Details: .copilot-tracking/details/2026-10-15/generator-coverage-review-fixes-167-phase-details.md.
 Changes: .copilot-tracking/changes/2026-10-15/generator-coverage-review-fixes-167-changes.md.
-P01 complete: nine coverage tests and all 307 core tests pass; ruff lint,
-format check and mypy pass. P02-T01 remains for one Review and publication.
-No unresolved product decision or implementation blocker.
+P01/P02 complete: nine coverage tests and all 307 core tests pass; ruff lint,
+format check and mypy pass. One Review Complete/Conformant for the bounded
+repairs. Commit 0f1b556 pushed and remote/PR head verified; existing PR body
+updated honestly. Closeout tracking commit persists final publication evidence.
+No unresolved repair decision or blocker. CI and owner merge remain separate.
