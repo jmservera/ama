@@ -15,7 +15,7 @@ GENERATOR = Path(__file__).resolve().parents[3] / "support/synthetic-data/retrof
 sys.path.insert(0, str(GENERATOR))
 builder = importlib.import_module("build_mvp_dataset")
 pack = importlib.import_module("generate_pack")
-fabric = importlib.import_module("zf_stock_fabric")
+fabric = importlib.import_module("zava_forward.core.synthetic.stock_fabric")
 epc = importlib.import_module("zf_stock_epc")
 
 builder_band = importlib.import_module("zf_model").band_from_sap
@@ -172,19 +172,19 @@ class GeneratedDatasetTests(unittest.TestCase):
         def run(name):
             root = Path(self.tmp.name) / name
             root.mkdir()
-            fabric.main(["--seed", "7", "--register", str(reg), "--out", str(root / "fab.csv"),
-                         "--summary", str(root / "fab.json")])
+            fabric.main(["--seed", "7", "--register", str(reg), "--out", str(root / "fabric")])
             epc.main(["--seed", "8", "--register", str(reg), "--out", str(root / "epc.csv"),
                       "--manifest", str(root / "conf.csv"), "--summary", str(root / "epc.json")])
             return root
         one, two = run("stock1"), run("stock2")
-        for name in sorted(p.name for p in one.iterdir()):
+        for name in sorted(str(p.relative_to(one)) for p in one.rglob("*") if p.is_file()):
             self.assertEqual((one / name).read_bytes(), (two / name).read_bytes(), name)
-        for name, seed in (("fab.json", 7), ("epc.json", 8)):
+        for name, seed in (("fabric/summary.json", 7), ("epc.json", 8)):
             summary = json.loads((one / name).read_text())
             self.assertEqual(summary["seed"], seed)
             self.assertIn("version", summary)
-            self.assertRegex(summary["generator_revision"], r"^sha256:[0-9a-f]{16}$")
+            size = 64 if seed == 7 else 16
+            self.assertRegex(summary["generator_revision"], rf"^sha256:[0-9a-f]{{{size}}}$")
 
     def test_visible_visit_cohort_owner_partition_and_history_contrasts(self):
         cases = self.data["cases"]

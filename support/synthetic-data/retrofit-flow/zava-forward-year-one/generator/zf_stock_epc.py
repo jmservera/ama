@@ -11,7 +11,7 @@ import sys
 from collections import Counter
 from datetime import date, timedelta
 
-import zf_stock_fabric as fab
+from zava_forward.core.synthetic import stock_fabric as fab
 from zf_manifest import generator_revision
 from zf_model import band_from_sap
 

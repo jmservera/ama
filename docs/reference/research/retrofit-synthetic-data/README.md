@@ -56,7 +56,7 @@ bookings; historical contrasts do not enter the booked-visits queue.
 | --- | --- | --- |
 | Retained geography stock / programme cases | 60000 / 980 | Separate denominators; 443 open programme cases |
 | Distinct geography anchors | 825 | Flats may share a building anchor; not unique stock-unit linkage |
-| Cases linked to a stock home ID / unlinked | 980 / 0 | Reported in `stock_link`; 16 stock homes are shared by more than one case |
+| Cases linked to a stock reference / unlinked | 980 / 0 | Historical PR 246 report, not revalidated here; 16 source anchors shared by cases, not verified unit linkage |
 | Stock fabric attributes (60000 homes) | 5 | Build year, age band, dwelling type, construction, heating; synthetic assumptions, not company facts |
 | Appointments / visible booked visits | 1578 / 38 | Source bookings plus clearly labelled fixtures |
 | Current-week booked visits | 11 | Receipt counts 2026-10-12 to 2026-10-18; API has no date-range filter |
@@ -107,7 +107,7 @@ under accepted ADR 0006. New executable work belongs in `src/`, not `mvp/`.
 | --- | --- | --- | --- |
 | `build_mvp_dataset.py` (MVP JSON) | `--seed`, `--as-of` (defaults to the clock, so always pass it) and the stock register | `seed`, `as_of`, `generator_version`, `generator_revision` in the JSON and its `.coverage.json` receipt | `test_same_seed_date_and_register_are_byte_deterministic` |
 | `generate_pack.py` (public CSV pack) | `--seed` (omitted draws a random seed, so always pass it) and `--as-of` (defaults to the extract date 2026-09-30; sets `generated_at`, never the clock) | `seed`, `version`, `generated_at`, `as_of`, `generator_revision`, per-file `file_sha256` in `manifest.json` | `test_pack_generator_is_byte_deterministic_with_manifest` |
-| Stock fabric (`zf_stock_fabric.py`, seed 4820260930) and EPC (`zf_stock_epc.py`, seed 4820261015) | `--seed` and the register CSV; output depends only on seed and home ID, no clock | `seed`, `version`, `generator_revision` in each summary JSON | `test_stock_fabric_and_epc_generators_are_byte_deterministic_with_revision` |
+| Stock fabric (`zava_forward.core.synthetic.stock_fabric`, seed 4820260930) and EPC (`zf_stock_epc.py`, seed 4820261015) | `--seed` and the register CSV; output depends only on seed and home ID, no clock | `seed`, `version`, `generator_revision` in each summary JSON; core CLI adds payload hashes and uses full SHA-256, support retains 16-hex revisions covering moved dependencies | `test_stock_fabric.py` and `test_stock_fabric_and_epc_generators_are_byte_deterministic_with_revision` |
 | Stock register (seed 4820260930, 60000 homes) | Seed recorded in `private-stock-manifest.json` | Seed, version, generated date only | None: the register generator is not in the repository (it samples real OpenStreetMap anchors) |
 | Wholly fictional stock-scale fixture (not the private stock register) | `--seed`, `--as-of` snapshot label, `--homes`, `--events-per-home`; events remain calendar-year 2026 | `seed`, `version` 1.2.0, `as_of`, dependency-aware `generator_revision`, per-file `file_sha256` | `src/core/tests/test_synthetic_determinism.py`: all files, changed seed, historical payload hashes |
 | Sensor backfill (labelled synthetic climate, not device evidence) | `--seed`, `--as-of` exclusive UTC end, `--days`, `--cadence`, `--homes`; fixed recorded stock seed | `seed`, `version` sensor-backfill-v2, `as_of`, UTC start/end, dependency-aware `generator_revision`, per-file `file_sha256` including estimate and register | Same src test file: all files/multiple shards, changed seed/date, exact window, estimate propagation, historical payload hashes |
@@ -453,22 +453,39 @@ No deferral is recorded yet.
 
 ## Stock-to-case link and fabric attributes (2026-10-15)
 
-Closes the generator gap in [#168](https://github.com/jmservera/ama/issues/168).
+Partial engineering delivery for [#168](https://github.com/jmservera/ama/issues/168),
+inventory row SN-01. PR 246's private-output counts are historical reports,
+not current private-corpus or verified unit-link evidence.
 
 * Every case carries `synthetic_stock_anchor_id`. The private MVP JSON now has
-  a `stock_link` report (linked, unlinked with IDs, distinct homes, shared
-  homes) and a `stock_fabric` block per case, derived from the linked stock row.
-* `zf_stock_fabric.py` adds build year, age band, dwelling type, construction
+  a `stock_link` report (linked, unlinked with IDs/reasons, distinct and shared
+  anchors) and a `stock_fabric` block for unique register-reference matches.
+  Each `case.stock_link` labels its status, nullable stock reference, reason,
+  shared-anchor flag and source-anchor-only scope. Duplicate register IDs are
+  ambiguous, not last-row-wins; duplicate case IDs fail explicitly.
+* `zava_forward.core.synthetic.stock_fabric` adds build year, age band, dwelling type, construction
   and heating to each of the 60,000 register homes. Output depends only on the
   seed and the home ID. Rebuild with
-  `python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_stock_fabric.py`
-  (writes a git-untracked fabric CSV and the committed
-  `private-stock-fabric-summary.json` with counts and weights).
+  `python3 -m zava_forward.core.synthetic.stock_fabric`
+  after installing core with pip. Defaults read the register through `ZF_DATA`
+  and write a fresh `stock-fabric/` snapshot there, never in the repository.
+  See the [core command and schema](../../../../src/core/README.md#stock-fabric-and-case-references-168)
+  for explicit inputs, optional case enrichment, hashes, nonempty refusal and
+  EPC invalidation. The old support module is moved, not copied; retained
+  builder/EPC consumers import core. Existing private summaries are historical
+  snapshots and are not regenerated or committed by this iteration.
 * The distributions (age band by locality, construction by age band, heating by
   locality) are exercise assumptions chosen by the generator author. They are
   not Zava North Homes facts, surveys or EPC data and must not be cited as such.
 * The case `home.built` and `home.type` values from the 980-case model remain a
   separate denominator and are not reconciled with `stock_fabric`.
+* Local tests connect exactly 60,000 wholly fictional register/fabric rows to
+  the retained 980-case builder and compare case linkage/fabric/EPC, history
+  and resident decisions after closed SQLite restart. They do not reproduce
+  the private geography or prove unit-level identity. The source stock register
+  generator remains unavailable; owner approval of SN-01, regeneration or
+  explicit deferral, and field/unit reconciliation remain open. No dataset,
+  resident consent, model activation or live SQL/Azure acceptance is implied.
 
 ## Stock EPC, survey and conflict fixtures (2026-10-15)
 
@@ -482,7 +499,7 @@ values are labelled synthetic fixtures under the owner decision in ADR 0005
   (type, date, surveyed SAP and band, surveyed age band, construction, heating).
   Output depends only on the seed and the home ID.
 * Reconciliation: EPC and survey attributes are derived from the stock fabric
-  (`zf_stock_fabric.py`). Without a seeded conflict they equal the fabric
+  (`zava_forward.core.synthetic.stock_fabric`). Without a seeded conflict they equal the fabric
   values and the EPC and surveyed SAP differ by at most 3 points. The EPC band
   is derived from the SAP with the standard A-G cut-offs.
 * Seeded conflicts (8% of surveyed homes, 1,679 in the default build) are
