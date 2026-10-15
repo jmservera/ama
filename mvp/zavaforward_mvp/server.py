@@ -43,7 +43,7 @@ def tile_config(env=None):
 class App:
     def __init__(self, store, password=None, timecap=None, provider=None, law=None):
         self.store = store
-        self.time = timecap or TimeCapture()
+        self.time = timecap or TimeCapture(store)
         self.tiles = tile_config()
         self.csp = "default-src 'self'; img-src 'self' data: blob:" + (f" {self.tiles['host']}" if self.tiles["host"] else "") + "; frame-ancestors 'none'"
         self.provider = provider or auth.make_provider(store, password or secrets.token_urlsafe(9))
@@ -395,11 +395,17 @@ def make_handler(app):
                     ver = app.time.acknowledge(u)
                     s.audit(u["email"], "time_notice_acknowledged", "-", f"notice {ver}")
                     return self._json(200, app.time.status(u))
+                if url.path == "/api/time/request-enable":
+                    if u["role"] not in MANAGER_ROLES:
+                        raise PermissionError("Only a manager can request the enabling action.")
+                    refs = app.time.request_enable(u)
+                    s.audit(u["email"], "time_capture_enable_requested", "-", f"as {u['role']}; DPIA {refs['dpia_ref']}; consultation {refs['consultation_ref']}; notice {refs['notice_ref']}")
+                    return self._json(200, app.time.status(u))
                 if url.path == "/api/time/enable":
                     if u["role"] not in MANAGER_ROLES:
                         raise PermissionError("Only a manager can take the enabling action.")
                     refs = app.time.activate(u)
-                    s.audit(u["email"], "time_capture_enabled", "-", f"DPIA {refs['dpia_ref']}; consultation {refs['consultation_ref']}; notice {refs['notice_ref']}")
+                    s.audit(u["email"], "time_capture_enabled", "-", f"requested by {refs['requested_by']} ({refs['requested_role']}), enabled as {u['role']}; DPIA {refs['dpia_ref']}; consultation {refs['consultation_ref']}; notice {refs['notice_ref']}")
                     return self._json(200, app.time.status(u))
                 if url.path == "/api/time":
                     s._case(body.get("case_id"))

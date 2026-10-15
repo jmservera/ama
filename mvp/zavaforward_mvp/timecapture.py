@@ -9,12 +9,16 @@ It records nothing unless all of these hold:
   stored with every entry;
 * ZF_TIME_NOTICE_APPROVED=<reference of the approval of the staff notice
   wording>, stored with the enabling record;
-* a manager has taken the audited enabling action (activate), which stores the
-  three references and who took it;
+* a manager has requested enabling (request_enable) and a manager in a different
+  role has taken the audited enabling action (activate); the record stores the
+  three references, who asked, who enabled and both roles;
 * the person has acknowledged the current staff notice (NOTICE_VERSION). The
   acknowledgement is stored with the time and is audited by the server.
 
-Entries live in their own database, apart from case data. A person sees only
+The enabling record, the entries and the notice acknowledgements live in the
+shared SQL store (SQLite or Azure SQL, in their own tables, apart from case
+data), so they share its backup, access control and retention. Only the JSON demo
+store, which has no database, falls back to a local SQLite file (ZF_TIME_DB). A person sees only
 their own entries. Reports are totals by activity for process measurement,
 suppressed when fewer than ZF_TIME_MIN_GROUP different people (default 5)
 contributed. There is no per-person report and no export of individual rows.
@@ -25,6 +29,7 @@ paired-measurement definitions (OD-18) are not built here.
 import os
 import sqlite3
 import threading
+from contextlib import contextmanager
 from datetime import datetime
 
 ACTIVITIES = ("Calling the resident", "Case notes and updates", "Booking visits", "Funding and evidence", "Checking safety issues",
@@ -37,6 +42,31 @@ NOTICE_TEXT = ("Time capture records the minutes you choose to enter against a c
                "once you have read this notice.")
 
 
+SQLITE_DDL = (
+    "CREATE TABLE IF NOT EXISTS time_entry (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, user_code TEXT NOT NULL, case_id TEXT NOT NULL, "
+    "minutes INTEGER NOT NULL, activity TEXT NOT NULL, dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL)",
+    "CREATE TABLE IF NOT EXISTS time_request (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by_user TEXT NOT NULL, by_role TEXT NOT NULL, "
+    "dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL)",
+    "CREATE TABLE IF NOT EXISTS time_enabled (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by_user TEXT NOT NULL, by_role TEXT NOT NULL, "
+    "requested_by TEXT NOT NULL, requested_role TEXT NOT NULL, dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL)",
+    "CREATE TABLE IF NOT EXISTS notice_ack (user_code TEXT NOT NULL, version TEXT NOT NULL, at TEXT NOT NULL, PRIMARY KEY (user_code, version))",
+    "CREATE INDEX IF NOT EXISTS ix_time_user ON time_entry (user_code, id)",
+)
+MSSQL_DDL = (
+    "CREATE TABLE time_entry (id BIGINT IDENTITY(1,1) PRIMARY KEY, at NVARCHAR(40) NOT NULL, user_code NVARCHAR(50) NOT NULL, case_id NVARCHAR(64) NOT NULL, "
+    "minutes INT NOT NULL, activity NVARCHAR(100) NOT NULL, dpia_ref NVARCHAR(200) NOT NULL, consultation_ref NVARCHAR(200) NOT NULL)",
+    "CREATE TABLE time_request (id BIGINT IDENTITY(1,1) PRIMARY KEY, at NVARCHAR(40) NOT NULL, by_user NVARCHAR(200) NOT NULL, by_role NVARCHAR(100) NOT NULL, "
+    "dpia_ref NVARCHAR(200) NOT NULL, consultation_ref NVARCHAR(200) NOT NULL, notice_ref NVARCHAR(200) NOT NULL)",
+    "CREATE TABLE time_enabled (id BIGINT IDENTITY(1,1) PRIMARY KEY, at NVARCHAR(40) NOT NULL, by_user NVARCHAR(200) NOT NULL, by_role NVARCHAR(100) NOT NULL, "
+    "requested_by NVARCHAR(200) NOT NULL, requested_role NVARCHAR(100) NOT NULL, dpia_ref NVARCHAR(200) NOT NULL, consultation_ref NVARCHAR(200) NOT NULL, "
+    "notice_ref NVARCHAR(200) NOT NULL)",
+    "CREATE TABLE notice_ack (user_code NVARCHAR(50) NOT NULL, version NVARCHAR(50) NOT NULL, at NVARCHAR(40) NOT NULL, PRIMARY KEY (user_code, version))",
+)
+MSSQL_INDEX = ("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_time_user' AND object_id = OBJECT_ID(N'time_entry')) "
+               "CREATE INDEX ix_time_user ON time_entry (user_code, id)")
+TABLES = ("time_entry", "time_request", "time_enabled", "notice_ack")
+
+
 class TimeCaptureOff(PermissionError):
     pass
 
@@ -45,18 +75,67 @@ class NoticeNotAcknowledged(PermissionError):
     pass
 
 
+class SeparationOfDuties(PermissionError):
+    pass
+
+
 class TimeCapture:
-    def __init__(self, db_path=None, env=None):
+    def __init__(self, store=None, env=None, db_path=None):
         self.env = os.environ if env is None else env
+        self.store = store if hasattr(store, "assistant_connection") else None
+        self.mssql = self.store is not None and hasattr(self.store, "_env")
         self.db_path = db_path or self.env.get("ZF_TIME_DB") or os.path.join(self.env.get("ZF_STATE") or ".", "time.sqlite")
         self.lock = threading.Lock()
-        self.db = None
+        self.ready = False
+
+    @property
+    def where(self):
+        return "the shared SQL store" if self.store is not None else f"a local SQLite file ({self.db_path}; JSON demo store only)"
+
+    @contextmanager
+    def _conn(self):
+        """One connection per operation, to the shared SQL store when there is one."""
+        if self.store is not None:
+            db = self.store.assistant_connection()
+        else:
+            os.makedirs(os.path.dirname(self.db_path) or ".", exist_ok=True)
+            db = sqlite3.connect(self.db_path, isolation_level=None)
+        try:
+            self._ensure(db)
+            yield db
+        finally:
+            db.close()
+
+    def _ensure(self, db):
+        if self.ready:
+            return
+        with self.lock:
+            if self.mssql:
+                for ddl in MSSQL_DDL:
+                    db.execute(f"IF OBJECT_ID(N'{ddl.split()[2]}', N'U') IS NULL {ddl}")
+                db.execute(MSSQL_INDEX)
+            else:
+                for ddl in SQLITE_DDL:
+                    db.execute(ddl)
+            self.ready = True
+
+    def _top(self, n):
+        return self.store._limit(n, 0) if self.store is not None else (" LIMIT ? OFFSET ?", [n, 0])
+
+    def _exists(self):
+        """Reading before anything was ever written must not create tables in a database that never used the feature."""
+        return self.ready or self.store is not None or os.path.exists(self.db_path)
+
+    @staticmethod
+    def _now():
+        return datetime.now().isoformat(timespec="minutes")
 
     def status(self, user=None):
         flag = (self.env.get("ZF_TIME_CAPTURE") or "").strip().lower() in ("1", "on", "true", "yes")
         dpia = (self.env.get("DPIA_APPROVED") or "").strip()
         consult = (self.env.get("ZF_TIME_CONSULTATION") or "").strip()
         notice = (self.env.get("ZF_TIME_NOTICE_APPROVED") or "").strip()
+        req = self.request()
         act = self.activation()
         if not flag:
             why = "Time capture is switched off."
@@ -66,13 +145,16 @@ class TimeCapture:
             why = "Time capture cannot be switched on until the staff consultation is recorded (ZF_TIME_CONSULTATION)."
         elif not notice:
             why = "Time capture cannot be switched on until the staff notice is approved (ZF_TIME_NOTICE_APPROVED)."
+        elif not req:
+            why = "Time capture is ready but needs an enabling request from a manager, then enabling by a manager in a different role."
         elif not act:
-            why = "Time capture is ready but waiting for the audited enabling action by a manager."
+            why = f"Time capture is requested by {req['role']}; it needs enabling by a manager in a different role."
         else:
             why = ""
         out = dict(enabled=not why, flag_on=flag, dpia_recorded=bool(dpia), consultation_recorded=bool(consult),
-                   notice_approved=bool(notice), activated=bool(act), activated_by=act and act["by"], activated_at=act and act["at"],
-                   reason=why, activities=list(ACTIVITIES), min_group=self.min_group(), notice_version=NOTICE_VERSION)
+                   notice_approved=bool(notice), requested=bool(req), requested_by=req and req["by"], requested_role=req and req["role"],
+                   activated=bool(act), activated_by=act and act["by"], activated_at=act and act["at"], activated_role=act and act["role"],
+                   reason=why, activities=list(ACTIVITIES), min_group=self.min_group(), notice_version=NOTICE_VERSION, storage=self.where)
         if out["enabled"]:
             out["notice"] = NOTICE_TEXT
             if user is not None:
@@ -88,28 +170,55 @@ class TimeCapture:
     def _refs(self):
         return tuple((self.env.get(k) or "").strip() for k in ("DPIA_APPROVED", "ZF_TIME_CONSULTATION", "ZF_TIME_NOTICE_APPROVED"))
 
+    def _latest(self, sql):
+        if not self._exists():
+            return None
+        lim, args = self._top(1)
+        with self._conn() as db:
+            return db.execute(sql + lim, args).fetchone()
+
+    def request(self):
+        """The enabling request, if it was made against the references currently configured."""
+        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref FROM time_request ORDER BY id DESC")
+        if not r or tuple(r[3:]) != self._refs():
+            return None
+        return dict(at=r[0], by=r[1], role=r[2])
+
     def activation(self):
         """The enabling record, if it was taken against the references currently configured."""
-        if not os.path.exists(self.db_path) and self.db is None:
+        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref FROM time_enabled ORDER BY id DESC")
+        if not r or tuple(r[3:]) != self._refs():
             return None
-        with self.lock:
-            r = self._db().execute("SELECT at, by_user, dpia_ref, consultation_ref, notice_ref FROM time_enabled ORDER BY id DESC LIMIT 1").fetchone()
-        if not r or tuple(r[2:]) != self._refs():
-            return None
-        return dict(at=r[0], by=r[1])
+        return dict(at=r[0], by=r[1], role=r[2])
 
-    def activate(self, user):
-        """The enabling action: needs the flag and all three references, and is stored with who took it. The caller audits it."""
+    def _ready_to_enable(self):
         st = self.status()
         if not (st["flag_on"] and st["dpia_recorded"] and st["consultation_recorded"] and st["notice_approved"]):
             raise TimeCaptureOff(st["reason"])
+
+    def request_enable(self, user):
+        """A manager asks for capture to be enabled against the configured references. It enables nothing by itself. The caller audits it."""
+        self._ready_to_enable()
         dpia, consult, notice = self._refs()
-        with self.lock:
-            db = self._db()
-            db.execute("INSERT INTO time_enabled (at, by_user, dpia_ref, consultation_ref, notice_ref) VALUES (?,?,?,?,?)",
-                       (datetime.now().isoformat(timespec="minutes"), user["email"], dpia, consult, notice))
-            db.commit()
+        with self._conn() as db:
+            db.execute("INSERT INTO time_request (at, by_user, by_role, dpia_ref, consultation_ref, notice_ref) VALUES (?,?,?,?,?,?)",
+                       (self._now(), user["email"], user["role"], dpia, consult, notice))
         return dict(dpia_ref=dpia, consultation_ref=consult, notice_ref=notice)
+
+    def activate(self, user):
+        """The enabling action. Needs the flag, the three references and a request by a manager in a different role: the
+        person who asked cannot also enable, so no single role both proposes and switches on staff monitoring. The caller audits it."""
+        self._ready_to_enable()
+        req = self.request()
+        if not req:
+            raise SeparationOfDuties("Enabling needs a request first, made by a manager in a different role from the one who enables.")
+        if req["by"] == user["email"] or req["role"] == user["role"]:
+            raise SeparationOfDuties(f"The enabling request was made by {req['role']}. A manager in a different role must enable it.")
+        dpia, consult, notice = self._refs()
+        with self._conn() as db:
+            db.execute("INSERT INTO time_enabled (at, by_user, by_role, requested_by, requested_role, dpia_ref, consultation_ref, notice_ref) "
+                       "VALUES (?,?,?,?,?,?,?,?)", (self._now(), user["email"], user["role"], req["by"], req["role"], dpia, consult, notice))
+        return dict(dpia_ref=dpia, consultation_ref=consult, notice_ref=notice, requested_by=req["by"], requested_role=req["role"])
 
     def _require(self):
         st = self.status()
@@ -117,35 +226,19 @@ class TimeCapture:
             raise TimeCaptureOff(st["reason"])
         return (self.env.get("DPIA_APPROVED") or "").strip(), (self.env.get("ZF_TIME_CONSULTATION") or "").strip()
 
-    def _db(self):
-        if self.db is None:
-            os.makedirs(os.path.dirname(self.db_path) or ".", exist_ok=True)
-            self.db = sqlite3.connect(self.db_path, check_same_thread=False)
-            self.db.execute("CREATE TABLE IF NOT EXISTS time_entry (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, "
-                            "user_code TEXT NOT NULL, case_id TEXT NOT NULL, minutes INTEGER NOT NULL, activity TEXT NOT NULL, dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL DEFAULT '')")
-            if "consultation_ref" not in [r[1] for r in self.db.execute("PRAGMA table_info(time_entry)")]:
-                self.db.execute("ALTER TABLE time_entry ADD COLUMN consultation_ref TEXT NOT NULL DEFAULT ''")
-            self.db.execute("CREATE TABLE IF NOT EXISTS time_enabled (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by_user TEXT NOT NULL, "
-                            "dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL)")
-            self.db.execute("CREATE INDEX IF NOT EXISTS ix_time_user ON time_entry (user_code, id)")
-            self.db.execute("CREATE TABLE IF NOT EXISTS notice_ack (user_code TEXT NOT NULL, version TEXT NOT NULL, at TEXT NOT NULL, "
-                            "PRIMARY KEY (user_code, version))")
-        return self.db
-
     def acknowledged(self, user):
-        if not os.path.exists(self.db_path) and self.db is None:
+        if not self._exists():
             return False
-        with self.lock:
-            return self._db().execute("SELECT 1 FROM notice_ack WHERE user_code=? AND version=?", (user["code"], NOTICE_VERSION)).fetchone() is not None
+        with self._conn() as db:
+            return db.execute("SELECT 1 FROM notice_ack WHERE user_code=? AND version=?", (user["code"], NOTICE_VERSION)).fetchone() is not None
 
     def acknowledge(self, user):
         """Record that this person has read the current notice. Idempotent. Refused while capture is not enabled."""
         self._require()
-        with self.lock:
-            db = self._db()
-            db.execute("INSERT OR IGNORE INTO notice_ack (user_code, version, at) VALUES (?,?,?)",
-                       (user["code"], NOTICE_VERSION, datetime.now().isoformat(timespec="minutes")))
-            db.commit()
+        with self._conn() as db:
+            db.execute("INSERT INTO notice_ack (user_code, version, at) SELECT ?, ?, ? WHERE NOT EXISTS "
+                       "(SELECT 1 FROM notice_ack WHERE user_code=? AND version=?)",
+                       (user["code"], NOTICE_VERSION, self._now(), user["code"], NOTICE_VERSION))
         return NOTICE_VERSION
 
     def _require_ack(self, user):
@@ -163,26 +256,25 @@ class TimeCapture:
             raise ValueError(f"Minutes must be between 1 and {MAX_MINUTES}.")
         if activity not in ACTIVITIES:
             raise ValueError("Choose an activity from the list.")
-        with self.lock:
-            db = self._db()
+        with self._conn() as db:
             db.execute("INSERT INTO time_entry (at, user_code, case_id, minutes, activity, dpia_ref, consultation_ref) VALUES (?,?,?,?,?,?,?)",
-                       (datetime.now().isoformat(timespec="minutes"), user["code"], str(case_id)[:40], minutes, activity, dpia, consult))
-            db.commit()
+                       (self._now(), user["code"], str(case_id)[:40], minutes, activity, dpia, consult))
 
     def mine(self, user):
         self._require()
         self._require_ack(user)
-        with self.lock:
-            rows = self._db().execute("SELECT at, case_id, minutes, activity FROM time_entry WHERE user_code=? ORDER BY id DESC LIMIT 200",
-                                      (user["code"],)).fetchall()
+        lim, args = self._top(200)
+        with self._conn() as db:
+            rows = db.execute("SELECT at, case_id, minutes, activity FROM time_entry WHERE user_code=? ORDER BY id DESC" + lim,
+                              (user["code"], *args)).fetchall()
         return [dict(at=a, case_id=c, minutes=m, activity=t) for a, c, m, t in rows]
 
     def report(self):
         """Totals by activity, with groups of too few people suppressed. Never lists a person."""
         self._require()
         k = self.min_group()
-        with self.lock:
-            rows = self._db().execute("SELECT activity, COUNT(*), SUM(minutes), COUNT(DISTINCT user_code) FROM time_entry GROUP BY activity").fetchall()
+        with self._conn() as db:
+            rows = db.execute("SELECT activity, COUNT(*), SUM(minutes), COUNT(DISTINCT user_code) FROM time_entry GROUP BY activity").fetchall()
         out = [dict(activity=a, entries=n, minutes=m) for a, n, m, people in rows if people >= k]
         hidden = sum(1 for _, _, _, people in rows if people < k)
         return dict(by_activity=out, suppressed_activities=hidden, min_group=k,

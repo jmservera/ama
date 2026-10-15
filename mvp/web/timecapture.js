@@ -8,9 +8,15 @@ async function timeView() {
       h("p", { role: "status" }, st.enabled ? "Time capture is on." : st.reason),
       h("ul", {}, check(st.flag_on, "feature switched on"), check(st.dpia_recorded, "DPIA reference recorded"),
         check(st.consultation_recorded, "staff consultation recorded"), check(st.notice_approved, "staff notice approved"),
-        check(st.activated, st.activated ? `enabled by ${st.activated_by} at ${st.activated_at} (audited)` : "enabling action by a manager (audited)"))];
-    if (isManager() && !st.activated && st.flag_on && st.dpia_recorded && st.consultation_recorded && st.notice_approved) {
-      body.push(h("button", { onclick: async () => { await api("/api/time/enable", {}); timeView(); } }, "Enable time capture (audited)"));
+        check(st.requested, st.requested ? `enabling requested by ${st.requested_by} (${st.requested_role}, audited)` : "enabling request by a manager (audited)"),
+        check(st.activated, st.activated ? `enabled by ${st.activated_by} (${st.activated_role}) at ${st.activated_at} (audited)` : "enabling by a manager in a different role (audited)"))];
+    const ready = st.flag_on && st.dpia_recorded && st.consultation_recorded && st.notice_approved;
+    if (isManager() && ready && !st.requested) {
+      body.push(h("button", { onclick: async () => { await api("/api/time/request-enable", {}); timeView(); } }, "Request enabling (audited)"));
+    }
+    if (isManager() && ready && st.requested && !st.activated) {
+      body.push(h("button", { onclick: async () => { await api("/api/time/enable", {}); timeView(); } }, "Enable time capture (audited)"),
+        h("p", { class: "muted" }, "Refused if you made the request or hold the same role as the requester."));
     }
     if (st.enabled) {
       body.push(h("h2", {}, "Staff notice"), h("p", {}, st.notice));

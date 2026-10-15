@@ -2882,5 +2882,17 @@ metadata when the knowledge base was created.
 * `mvp/README.md` and ADR 0002 status row updated: capture also needs a notice
   approval reference and an audited manager enabling action; `#/time` screens
   added. No regulatory snapshot changed.
+* Follow-up (#120, PR 267 review): the enabling record, entries and notice
+  acknowledgements moved from a local SQLite file into the shared SQL store
+  (portable DDL, tested on SQL Server); enabling now needs a request by one
+  manager role and enabling by a different role. No regulatory snapshot changed.
 * Open (owner decisions, not invented): the real OD-36 DPIA, consultation and
   notice approval references, the minimum group size and the notice wording.
+
+## 2026-10-15 Key Vault secret lifecycle (#142)
+
+* `infra/README.md` gains a Key Vault secret lifecycle section: inventory,
+  expiry and denied-access alerts on Log Analytics, zero-downtime Entra client
+  secret rotation order and quarterly access review.
+* No regulatory snapshot changed. Open: named secret owners, a live rotation
+  exercise, deployed alert verification and review scheduling.

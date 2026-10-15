@@ -148,12 +148,23 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   run.
 * Staff time capture (PR-004) is off by default. It records only when
   `ZF_TIME_CAPTURE=on`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION` and
-  `ZF_TIME_NOTICE_APPROVED` each hold a reference, a manager has taken the
-  audited enabling action (`POST /api/time/enable`, audit `time_capture_enabled`;
-  void if a reference later changes), and the person has acknowledged the staff notice
+  `ZF_TIME_NOTICE_APPROVED` each hold a reference, one manager has requested
+  enabling (`POST /api/time/request-enable`, audit
+  `time_capture_enable_requested`) and a manager in a different role has taken
+  the audited enabling action (`POST /api/time/enable`, audit
+  `time_capture_enabled`, which names the requester; void if a reference later
+  changes), and the person has acknowledged the staff notice
   (`POST /api/time/acknowledge`, audited); own entries only; screens at `#/time`;
   reports are manager-only, aggregated and suppress groups under
-  `ZF_TIME_MIN_GROUP` (default 5). It uses its own database, never the case store.
+  `ZF_TIME_MIN_GROUP` (default 5). The enabling record, entries and
+  acknowledgements are tables (`time_request`, `time_enabled`, `time_entry`,
+  `notice_ack`) in the shared SQL store (SQLite, or Azure SQL with
+  `ZF_STORE=mssql`), apart from case data, with portable DDL. Only the JSON demo
+  store falls back to a local SQLite file (`ZF_TIME_DB`). Why the requester and
+  the enabler differ: one role should not both propose and switch on monitoring
+  of staff. The demo data has a single manager role, so enabling there needs a
+  second user with the `Programme Support Officer` role (Entra app role
+  `ZavaForward.SupportOfficer`); the status reason says so.
 * Download any list for Excel, and check a spreadsheet: columns are matched
   for you, rows to fix are listed and the file is never changed.
 
@@ -468,8 +479,9 @@ records the tested/deployed image and identity initialization.
   data is one document, so two managers writing at once get a conflict and
   retry; the screens were syntax-checked and exercised through the API, not
   run in a browser or with a screen reader.
-* Time capture has no screens, only the API. It is enabled by environment, not
-  an audited admin action. The staff notice text is a draft and the
+* Time capture is enabled by environment references plus a requested and
+  separately enabled audited action; the screens were exercised through the
+  API, not in a browser. The staff notice text is a draft and the
   consultation reference is a flag, not evidence of the consultation. The AI
   evaluation uses a scripted model, so it checks behaviour, not model quality:
   latency, run-to-run variation and added value are scripted figures, not
