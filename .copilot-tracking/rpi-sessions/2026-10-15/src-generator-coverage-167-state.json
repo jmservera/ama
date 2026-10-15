@@ -1,0 +1,64 @@
+{
+  "task_id": "167",
+  "task_slug": "src-generator-coverage-167",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-15/src-generator-coverage-167-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-15/src-generator-coverage-167-plan.md",
+    "details": ".copilot-tracking/details/2026-10-15/src-generator-coverage-167-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-15/src-generator-coverage-167-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-15/src-generator-coverage-167-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-15/src-generator-coverage-167-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full loop and publish on the explicitly named branch; only metadata-level closure without owner-dependent data generation.",
+      "status": "confirmed",
+      "evidence": "Caller explicitly requested research, plan, implement, review, commit, push and PR."
+    },
+    {
+      "decision": "One critique executed; Revise. PC-001 addressed directly by explicit worktree-local ignored scratch paths. Research executed and Ready; plan implementation-ready.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/reviews/2026-10-15/src-generator-coverage-167-plan-critique.md"
+    },
+    {
+      "decision": "One post-implementation Review executed Complete; outcome Residual work. Metadata implementation has no identified defect; RV-001/002/003 remain outside acceptance.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-15/src-generator-coverage-167-review.md"
+    },
+    {
+      "decision": "Published PR #312 to main from feat/src-generator-coverage-167, implementation commit 88497f6. All RPI artifacts committed; issue remains open via Refs #167.",
+      "status": "completed",
+      "evidence": "https://github.com/jmservera/ama/pull/312"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Publication complete in PR #312; await CI and owner-selected ranked follow-up, Stop automatic session, or manual mode. Start no child work without selection."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Reconcile per-record synthetic conventions with versioned scale output.",
+      "rationale": "Small, concrete engineering-quality gap; plan historical hash/version compatibility before implementation.",
+      "evidence": "Review RV-001 and research C6."
+    },
+    {
+      "rank": 2,
+      "task": "Ratify mapping and decide SN-01 private register regeneration scope or owner deferral.",
+      "rationale": "Required for full issue acceptance; owner decision/source evidence blocks responsible implementation.",
+      "evidence": "Review RV-002; unchanged inventory open_items; issues #167/#168."
+    },
+    {
+      "rank": 3,
+      "task": "Resolve scope/volume and collect profile, full-volume and real-platform evidence in existing workstreams.",
+      "rationale": "Higher-cost and approval-dependent than the bounded convention gap; do not replace missing evidence with local tests.",
+      "evidence": "Review RV-003; issues #103/#144/#172/#109/#176."
+    }
+  ]
+}
