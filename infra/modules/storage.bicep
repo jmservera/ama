@@ -7,6 +7,9 @@ param zoneIds object
 param enableLock bool
 @description('Days audit archive blobs stay immutable (time-based retention, unlocked until the owner locks the policy).')
 param auditImmutabilityDays int = 365
+@description('Days ledger digests stay immutable. Must be no shorter than the legal audit retention period (open owner decision). The policy is created unlocked; locking is irreversible and is done by the owner.')
+@minValue(1)
+param ledgerDigestImmutabilityDays int = 365
 @description('Array of { principalId, roleDefinitionId, scope } where scope is blob or queue.')
 param roleAssignments array
 param zoneRedundant bool = false
@@ -51,7 +54,7 @@ resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2024-01-01'
   }
 }
 
-var containers = ['evidence', 'imports', 'quarantine', 'exports', 'audit-archive']
+var containers = ['evidence', 'imports', 'quarantine', 'exports', 'audit-archive', 'ledger-digests']
 
 resource blobContainers 'Microsoft.Storage/storageAccounts/blobServices/containers@2024-01-01' = [for container in containers: {
   parent: blobService
@@ -65,6 +68,15 @@ resource auditRetention 'Microsoft.Storage/storageAccounts/blobServices/containe
   properties: {
     immutabilityPeriodSinceCreationInDays: auditImmutabilityDays
     allowProtectedAppendWrites: true
+  }
+}
+
+resource digestRetention 'Microsoft.Storage/storageAccounts/blobServices/containers/immutabilityPolicies@2024-01-01' = {
+  parent: blobContainers[5]
+  name: 'default'
+  properties: {
+    immutabilityPeriodSinceCreationInDays: ledgerDigestImmutabilityDays
+    allowProtectedAppendWrites: false
   }
 }
 

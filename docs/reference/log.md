@@ -2877,6 +2877,16 @@ metadata when the knowledge base was created.
 * No regulatory snapshot changed. Open: pilot cohort enrolment and work package
   and workstream pause scopes.
 
+## 2026-10-15 Immutable Blob ledger digests (#115)
+
+* `mvp/README.md` section added and ADR 0002 implementation status row for the
+  ledger updated: Blob digest publisher, scheduled verifier and alert built,
+  not deployed or locked.
+* Follow-up: missing-success alert added, `--publish` trust-on-first-use gap and
+  owner-chosen retention before locking documented.
+* No regulatory snapshot changed. Open: legal retention period, policy lock,
+  deployed run and unconfirmed Log Analytics table names.
+
 ## 2026-10-15 Key Vault secret lifecycle (#142)
 
 * `infra/README.md` gains a Key Vault secret lifecycle section: inventory,
@@ -2884,6 +2894,11 @@ metadata when the knowledge base was created.
   secret rotation order and quarterly access review.
 * No regulatory snapshot changed. Open: named secret owners, a live rotation
   exercise, deployed alert verification and review scheduling.
+
+## 2026-10-15 Document scanning, retention and legal hold (#117)
+
+* mvp/README.md, ADR 0002 implementation status and open items, and the retrofit synthetic data README updated. New synthetic control fixtures for 120 homes from the 60,000-home stock register.
+* No regulatory snapshot changed. Open: real malware scanner and Defender enablement, DPO and Legal retention periods (PR-003), the real legal-hold delegate, and retention job scheduling.
 
 ## 2026-10-15 Export completeness and ledger head check (#122)
 

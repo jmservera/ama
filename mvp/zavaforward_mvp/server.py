@@ -74,7 +74,7 @@ def get_kind(path):
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/packages": "packages",
-            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/finance": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/continuity/export": "continuity_export"}.get(path, "unknown")
+            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/finance": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/continuity/export": "continuity_export", "/api/retention": "retention"}.get(path, "unknown")
 
 
 GOVERNANCE_ACTIONS = {"protocol-freeze": "protocol_freeze", "protocol-approve": "protocol_approve", "benefits-record": "benefits_record",
@@ -286,6 +286,11 @@ def make_handler(app):
                     return self._json(200, s.continuity_export(u, app.assistants.export()))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
+            if url.path == "/api/retention":
+                try:
+                    return self._json(200, s.retention_due(u))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
             if url.path == "/api/governance":
                 try:
                     return self._json(200, s.governance_view(u))
@@ -469,6 +474,14 @@ def make_handler(app):
                         except (binascii.Error, ValueError):
                             raise ValueError("Could not read that file.")
                         s.add_document(u, cid, body.get("name"), body.get("kind"), raw)
+                    elif act == "rescan-doc":
+                        return self._json(200, s.rescan_document(u, cid, body.get("id")))
+                    elif act == "legal-hold":
+                        s.place_legal_hold(u, cid, body.get("reference"))
+                    elif act == "legal-hold-release":
+                        s.release_legal_hold(u, cid)
+                    elif act == "retention-approve":
+                        s.approve_retention_deletion(u, cid, body.get("id"))
                     elif act == "read-doc":
                         return self._json(200, s.read_document(u, cid, body.get("id"), body.get("mode")))
                     elif act in ("finance", "grant", "technical", "resident"):
