@@ -22,9 +22,9 @@ import sqlite3
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from zava_forward.core.synthetic import output_dir, scale_fixture
+from zava_forward.core.synthetic import output_dir, provenance, scale_fixture
 
-VERSION = "sensor-backfill-v1"
+VERSION = "sensor-backfill-v2"
 SCHEMA_VERSION = "reading-v1"
 SEED = 183
 SOURCE_TYPE = "SYNTHETIC"
@@ -68,13 +68,13 @@ def _magnus_sat(t):
     return 6.112 * math.exp(17.62 * t / (243.12 + t))
 
 
-def outdoor_series(seed=SEED, days=DAYS, cadence=CADENCE_MIN):
+def outdoor_series(seed=SEED, days=DAYS, cadence=CADENCE_MIN, start=START):
     """Shared synthetic outdoor (temperature, RH) per step: seasonal + diurnal + autocorrelated noise."""
     rnd = random.Random(f"{seed}-outdoor")
     steps = days * 24 * 60 // cadence
     out, noise = [], 0.0
     for k in range(steps):
-        ts = START + timedelta(minutes=k * cadence)
+        ts = start + timedelta(minutes=k * cadence)
         doy = ts.timetuple().tm_yday
         hour = ts.hour + ts.minute / 60
         noise = 0.97 * noise + rnd.gauss(0, 0.6)
@@ -96,12 +96,12 @@ def _indoor(sensor, rnd, ts, t_out, rh_out):
     return t_in, rh_in
 
 
-def readings(sensor, seed=SEED, days=DAYS, cadence=CADENCE_MIN, outdoor=None):
-    outdoor = outdoor or outdoor_series(seed, days, cadence)
+def readings(sensor, seed=SEED, days=DAYS, cadence=CADENCE_MIN, outdoor=None, start=START):
+    outdoor = outdoor if outdoor is not None else outdoor_series(seed, days, cadence, start)
     rnd = random.Random(f"{seed}-series-{sensor['home_id']}")
     stuck_at, stuck = None, None
     for k, (t_out, rh_out) in enumerate(outdoor):
-        ts = START + timedelta(minutes=k * cadence)
+        ts = start + timedelta(minutes=k * cadence)
         t_in, rh_in = _indoor(sensor, rnd, ts, t_out, rh_out)
         fault, profile = "", sensor["fault_profile"]
         if profile == "dropout" and rnd.random() < 0.02:
@@ -115,7 +115,7 @@ def readings(sensor, seed=SEED, days=DAYS, cadence=CADENCE_MIN, outdoor=None):
                 t_in, rh_in = stuck
                 fault = "STUCK"
         yield dict(sensor_id=sensor["sensor_id"], reading_id=f"{sensor['sensor_id']}-{int(ts.timestamp())}",
-                   home_id=sensor["home_id"], observed_at=ts.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                   home_id=sensor["home_id"], observed_at=ts.isoformat(timespec="seconds").replace("+00:00", "Z"),
                    temperature_c=f"{t_in:.2f}", humidity_pct=f"{rh_in:.2f}", source_type=SOURCE_TYPE,
                    scenario=SCENARIO, seed=seed, schema_version=SCHEMA_VERSION, injected_fault=fault)
 
@@ -126,12 +126,29 @@ def _csv_line(row, fields=READING_FIELDS):
     return buf.getvalue()
 
 
-def estimate(homes=scale_fixture.HOMES, days=DAYS, cadence=CADENCE_MIN, seed=SEED, sample_homes=20):
+def resolve_window(days: int, cadence: int, as_of: str | None = None) -> tuple[datetime, datetime]:
+    """Resolve the complete UTC half-open window before writing any output."""
+    if days <= 0 or cadence <= 0 or 1440 % cadence:
+        raise ValueError("days must be positive; cadence must be positive and divide 1440 minutes")
+    try:
+        if as_of is None:
+            return START, START + timedelta(days=days)
+        end = datetime.combine(provenance.parse_as_of(as_of), datetime.min.time(), timezone.utc)
+        return end - timedelta(days=days), end
+    except OverflowError as exc:
+        raise ValueError("Requested sensor window is outside supported calendar dates") from exc
+
+
+def estimate(homes=scale_fixture.HOMES, days=DAYS, cadence=CADENCE_MIN, seed=SEED, sample_homes=20,
+             start=START):
     """Volume and size estimate from a measured sample, computed before any full generation."""
-    outdoor = outdoor_series(seed, days, cadence)
+    if homes <= 0 or sample_homes <= 0:
+        raise ValueError("homes and sample_homes must be positive")
+    resolve_window(days, cadence, (start + timedelta(days=days)).date().isoformat())
+    outdoor = outdoor_series(seed, days, cadence, start)
     rows = nbytes = 0
     for h in scale_fixture.homes(sample_homes, scale_fixture.SEED):
-        for r in readings(sensor_for(h, seed), seed, days, cadence, outdoor):
+        for r in readings(sensor_for(h, seed), seed, days, cadence, outdoor, start):
             rows += 1
             nbytes += len(_csv_line(r).encode())
     per_row = nbytes / rows
@@ -143,12 +160,20 @@ def estimate(homes=scale_fixture.HOMES, days=DAYS, cadence=CADENCE_MIN, seed=SEE
                 basis=f"measured on {sample_homes} homes; dropout faults reduce rows below nominal; SQL clustered index adds overhead")
 
 
-def write(out, homes=SHARD_HOMES, seed=SEED, days=DAYS, cadence=CADENCE_MIN):
-    out = Path(out)
-    out.mkdir(parents=True, exist_ok=True)
-    est = estimate(homes, days, cadence, seed, sample_homes=min(20, homes))
-    (out / "estimate.json").write_text(json.dumps(est, indent=2) + "\n")
-    outdoor = outdoor_series(seed, days, cadence)
+def revision_sources() -> tuple[Path, ...]:
+    return (*scale_fixture.revision_sources(), Path(__file__))
+
+
+def write(out: str | Path, homes: int = SHARD_HOMES, seed: int = SEED, days: int = DAYS,
+          cadence: int = CADENCE_MIN, *, as_of: str | None = None) -> dict[str, object]:
+    start, end = resolve_window(days, cadence, as_of)
+    if homes <= 0:
+        raise ValueError("homes must be positive")
+    revision = provenance.source_revision(revision_sources())
+    out = provenance.prepare_output(out)
+    est = estimate(homes, days, cadence, seed, sample_homes=min(20, homes), start=start)
+    (out / "estimate.json").write_text(json.dumps(est, indent=2) + "\n", encoding="utf-8", newline="\n")
+    outdoor = outdoor_series(seed, days, cadence, start)
     digest, shards, total, sensors_rows = hashlib.sha256(), [], 0, []
     batch, shard_no = [], 0
 
@@ -159,7 +184,7 @@ def write(out, homes=SHARD_HOMES, seed=SEED, days=DAYS, cadence=CADENCE_MIN):
         with open(out / name, "w", encoding="utf-8", newline="") as f:
             f.write(",".join(READING_FIELDS) + "\n")
             for sensor in batch:
-                for r in readings(sensor, seed, days, cadence, outdoor):
+                for r in readings(sensor, seed, days, cadence, outdoor, start):
                     line = _csv_line(r)
                     digest.update(line.encode())
                     f.write(line)
@@ -181,14 +206,17 @@ def write(out, homes=SHARD_HOMES, seed=SEED, days=DAYS, cadence=CADENCE_MIN):
         w = csv.DictWriter(f, SENSOR_FIELDS, lineterminator="\n")
         w.writeheader()
         w.writerows(sensors_rows)
-    manifest = dict(version=VERSION, schema_version=SCHEMA_VERSION, seed=seed, source_type=SOURCE_TYPE, scenario=SCENARIO,
+    manifest = dict(version=VERSION, schema_version=SCHEMA_VERSION, seed=seed, as_of=end.date().isoformat(),
+                    generator_revision=revision, source_type=SOURCE_TYPE, scenario=SCENARIO,
                     synthetic_label="Synthetic demonstration data under ADR 0005; not real device or resident data.",
                     climate_source=CLIMATE_SOURCE, stock_fixture_version=scale_fixture.VERSION, stock_seed=scale_fixture.SEED,
-                    stock_homes_declared=scale_fixture.HOMES, homes_covered=homes, start=START.isoformat(), days=days,
+                    stock_homes_declared=scale_fixture.HOMES, homes_covered=homes, start=start.isoformat(), end_exclusive=end.isoformat(), days=days,
                     cadence_minutes=cadence, parameters=dict(dwellings=DWELLINGS, age_bands=AGE_BANDS, bounds=BOUNDS),
                     estimate=est, rows=total, shards=shards, readings_sha256=digest.hexdigest(),
                     storage="UTF-8 CSV shards; DDL in SQL_DDL for Azure SQL; load with load_into()")
-    (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    manifest["file_sha256"] = provenance.file_hashes(
+        [out / "estimate.json", out / "sensors.csv", *(out / shard["file"] for shard in shards)])
+    (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     return manifest
 
 
@@ -259,14 +287,20 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--out", default=str(output_dir("sensor-backfill")))
     ap.add_argument("--seed", type=int, default=SEED)
-    ap.add_argument("--homes", type=int, default=SHARD_HOMES)
+    ap.add_argument("--homes", type=int)
     ap.add_argument("--cadence", type=int, default=CADENCE_MIN)
+    ap.add_argument("--days", type=int, default=DAYS)
+    ap.add_argument("--as-of", help="YYYY-MM-DD exclusive UTC end; omitted preserves the historical start")
     ap.add_argument("--estimate-only", action="store_true")
     a = ap.parse_args(argv)
+    homes = a.homes if a.homes is not None else (scale_fixture.HOMES if a.estimate_only else SHARD_HOMES)
+    start, _ = resolve_window(a.days, a.cadence, a.as_of)
     if a.estimate_only:
-        print(json.dumps(estimate(cadence=a.cadence, seed=a.seed), indent=2))
+        print(json.dumps(estimate(homes=homes, days=a.days, cadence=a.cadence, seed=a.seed,
+                                  sample_homes=min(20, homes), start=start), indent=2))
     else:
-        print(json.dumps({k: v for k, v in write(a.out, a.homes, a.seed, cadence=a.cadence).items() if k != "parameters"}, indent=2))
+        print(json.dumps({k: v for k, v in write(a.out, homes, a.seed, days=a.days, cadence=a.cadence,
+                                                as_of=a.as_of).items() if k != "parameters"}, indent=2))
 
 
 if __name__ == "__main__":

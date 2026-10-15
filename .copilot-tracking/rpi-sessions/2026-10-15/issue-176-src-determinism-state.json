@@ -1,0 +1,64 @@
+{
+  "task_id": "176",
+  "task_slug": "issue-176-src-determinism",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-15/issue-176-src-determinism-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-15/issue-176-src-determinism-plan.md",
+    "details": ".copilot-tracking/details/2026-10-15/issue-176-src-determinism-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-15/issue-176-src-determinism-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-15/issue-176-src-determinism-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-15/issue-176-src-determinism-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full automatic RPI loop, commit, push and PR to main explicitly requested; reuse prescribed branch",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-15"
+    },
+    {
+      "decision": "Research executed; bounded engineering slice planning-ready",
+      "status": "Ready",
+      "evidence": ".copilot-tracking/research/2026-10-15/issue-176-src-determinism-research.md"
+    },
+    {
+      "decision": "Single independent critique completed with Revise; PC-001 through PC-006 disposition recorded; bounded plan Ready",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-15/issue-176-src-determinism-plan.md"
+    },
+    {
+      "decision": "One post-implementation Review executed Complete; outcome Residual work; no in-scope engineering blocker",
+      "status": "executed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-15/issue-176-src-determinism-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Complete authorized commit/push/PR administration; review complete with residual work, no child selected"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Approve or amend proposed refresh policy",
+      "rationale": "Low effort owner decision unlocks controlled future refresh",
+      "evidence": "RV-002"
+    },
+    {
+      "rank": 2,
+      "task": "Recover private stock generator and immutable input provenance",
+      "rationale": "Highest remaining issue acceptance value, unavailable owner source required",
+      "evidence": "RV-001"
+    },
+    {
+      "rank": 3,
+      "task": "Obtain CI and authorized Azure/full-scale runtime evidence",
+      "rationale": "Platform assurance requires Docker/SQL permissions and storage-cost or model authorization",
+      "evidence": "RV-003"
+    }
+  ]
+}

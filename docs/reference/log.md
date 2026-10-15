@@ -3124,3 +3124,19 @@ metadata when the knowledge base was created.
   importer 39; all suites, dependency-rule tests, ruff and mypy passed. The
   24-scenario/61-turn golden CLI correctly exits 1 with one critical known gap
   (two failed assertions), `passed: false` and enablement `fail`, disabled.
+
+## [2026-10-15] implementation | Src synthetic determinism and protected refresh (#176)
+
+* Extended the migrated core scale and sensor generators, not `mvp/` or a
+  replacement private register. Manifests record seed, as-of, version,
+  dependency-aware source revision and per-payload hashes. Sensor estimates
+  and output share an explicit UTC date window; omitted dates preserve
+  historical payloads. Nonempty destinations are refused without overwrite.
+* Added whole-directory/multi-shard byte comparisons, pre-change payload
+  digests, date/seed sensitivity, dependency-source mutation tests and
+  fail-before-write/refresh preservation checks in core/tests.
+* Corrected the stale sensor-generator absence claim and linked current src
+  recipes in the knowledge-base index. Private OSM-register reproduction,
+  full-stock sensor evidence and owner approval of refresh defaults remain
+  open; no real data, model evidence, consent or live reset authority is
+  invented. No deployment or live records changed.
