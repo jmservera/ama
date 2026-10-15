@@ -9,7 +9,7 @@ import threading
 import uuid
 from datetime import datetime
 
-from . import ai_tasks, insights, ledger, projection, ranking
+from . import ai_tasks, buildings, insights, ledger, projection, ranking
 from .finance import FinanceMixin
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
@@ -154,9 +154,12 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def summary(self, c):
         last = c["contacts"][-1]["at"] if c["contacts"] else None
         nxt = next((a for a in c["appointments"] if a["outcome"] == "Booked"), None)
+        status = self.status_line(c)
+        if status == "Ready" and buildings.blockers(self.data, self.cases, c):
+            status = "Waiting on shared building review"
         return dict(id=c["id"], resident=c["resident"]["name"], address=c["home"]["address"],
                     town=c["home"]["town"], postcode=c["home"]["postcode"], phone=c["resident"]["phone"],
-                    stage=c["stage"], status=self.status_line(c), owner=c["owner"], days=c["days_in_stage"],
+                    stage=c["stage"], status=status, owner=c["owner"], days=c["days_in_stage"],
                     last_contact=last, next_visit=nxt["date"] if nxt else None, area=c["home"]["area"],
                     wave=c["wave"], funding=c["funding"]["status"], owner_code=c["owner_code"],
                     hazard=any(not h["released"] for h in c["hazards"]),
@@ -302,7 +305,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 return None
             d = json.loads(json.dumps(c))
             d["status"] = self.status_line(c)
-            d["gate"] = self.gate_reasons(c)
+            d["gate"] = self.gate_reasons(c) + buildings.blockers(self.data, self.cases, c)
+            if d["status"] == "Ready" and d["gate"]:
+                d["status"] = "Waiting on shared building review"
         d["can_advance"] = c["stage"] == READY_STAGE
         d["suggestions"] = insights.recommend_handover(c, list(self.cases.values()), self.data["staff"])
         d["checklist"] = self.checklist(c)
@@ -314,6 +319,15 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         if projection.is_contractor(user):
             return projection.contractor_detail(c, d)
         return projection.redact_staff_detail(user, d)
+
+    def building_view(self, user, building_id):
+        with self.lock:
+            return buildings.view(self.data, self.cases, building_id, user)
+
+    def require_building_clear(self, c, package_id=None):
+        reasons = buildings.blockers(self.data, self.cases, c, package_id)
+        if reasons:
+            raise GateError(reasons)
 
     def log_call(self, user, case_id, outcome, note, channel="Phone"):
         outcome = (outcome or "").strip()[:80]
@@ -355,6 +369,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if c["stage"] != READY_STAGE:
                 raise ValueError("This case is not at the final checks.")
             why = self.gate_reasons(c)
+            why += buildings.blockers(self.data, self.cases, c)
             if why:
                 raise GateError(why)
             c.update(stage=BOOKED_STAGE, reason="to book the installation", waiting_on=c["contractor"]["contact"])

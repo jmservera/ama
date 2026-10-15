@@ -64,3 +64,8 @@ follow_imports = "skip"
 
 [tool.setuptools.package-data]
 "zava_forward.api" = ["web/*", "web/vendor/*", "web/vendor/images/*"]
+
+# Runtime PYTHONPATH supplies the shared fixture, strictly checked by the core project.
+[[tool.mypy.overrides]]
+module = ["building_fixture"]
+ignore_missing_imports = true

@@ -135,6 +135,8 @@ function route() {
   const m = location.hash.match(/^#\/case\/(.+)$/);
   if (me.user.role === "Contractor") return m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView();
   if (m) return caseView(decodeURIComponent(m[1]));
+  const building = location.hash.match(/^#\/building\/(.+)$/);
+  if (building) return buildingView(decodeURIComponent(building[1]));
   if (location.hash === "#/assistants") return assistantQueueView();
   if (location.hash === "#/time") return timeView();
   if (location.hash === "#/closed") return closedView();
@@ -350,6 +352,11 @@ async function caseView(id) {
       h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: x.email })) }, `Hand over to ${x.name.split(" ")[0]}`)))));
   show(
     h("a", { class: "back", href: "#/" }, "Back to the list"),
+    c.building_id ? h("a", { class: "back", href: `#/building/${encodeURIComponent(c.building_id)}` }, `Shared building context: ${c.building_id}`) :
+      h("p", { class: "muted" }, "Building link not recorded; shared context is unknown."),
+    c.cost_allocation && h("section", { class: "card" }, h("h2", {}, "This home's cost allocation"),
+      h("p", {}, "Recorded allocations only, not additional building costs or payment approval."),
+      h("ul", {}, c.cost_allocation.map((x) => h("li", {}, `${x.shared_cost_id}: GBP ${x.amount_gbp}. Source: ${x.source}`)))),
     h("div", { class: "row between" },
       h("h1", {}, r.name, c.hazards.some((x) => !x.released) && h("span", { class: "flag danger" }, "Safety issue open")),
       h("span", { class: "muted" }, `Reference ${c.id}`)),
@@ -411,6 +418,42 @@ async function caseView(id) {
     h("section", { class: "card" }, h("h2", {}, "History"),
       c.contacts.length ? h("ul", { class: "tl" }, c.contacts.slice(0, 15).map((k) => h("li", {},
         h("strong", {}, `${fmtDate(k.at)} ${k.channel}: ${k.outcome}`), h("div", { class: "muted" }, `${k.by}${k.note ? `. ${k.note}` : ""}`)))) : h("p", {}, "No contact recorded yet.")));
+}
+
+async function buildingView(id) {
+  try {
+    const b = await api(`/api/buildings/${encodeURIComponent(id)}`);
+    const category = (key, title) => h("section", { class: "card" }, h("h2", {}, title),
+      b[key] == null ? h("p", {}, "Unknown: no source-backed records supplied.") :
+        b[key].length === 0 ? h("p", {}, "Source records explicitly list none.") :
+          h("ul", {}, b[key].map((x) => h("li", {},
+            h("strong", {}, `${x.id}: ${x.label}`),
+            x.status && h("p", {}, `Recorded status: ${x.status}. Owner: ${x.owner}`),
+            x.case_ids !== undefined && h("p", {}, `Affected homes: ${x.case_ids === null ? "Unknown" : x.case_ids.join(", ") || "None"}. Packages: ${x.package_ids === null ? "Unknown" : x.package_ids.join(", ") || "None"}.`),
+            h("p", { class: "muted" }, `Source: ${x.source}`)))));
+    show(h("a", { class: "back", href: "#/" }, "Back to the list"),
+      h("h1", {}, `${b.name} (${b.id})`),
+      h("p", {}, `Version ${b.version}. Source: ${b.source}`),
+      h("p", { role: "status" }, b.notice),
+      category("systems", "Shared systems"), category("dependencies", "Dependencies"),
+      category("holds", "Work stopped pending review"), category("works", "Shared works"),
+      h("section", { class: "card" }, h("h2", {}, "Shared building costs"),
+        b.costs_restricted ? h("p", {}, "Restricted to authorised Finance roles.") :
+          b.costs === null ? h("p", {}, "Unknown: costs have not been supplied.") :
+            b.costs.length === 0 ? h("p", {}, "No shared costs recorded.") :
+              h("ul", {}, b.costs.map((x) => h("li", {}, `${x.id}: GBP ${x.amount_gbp}, shared work ${x.work_id}. Source: ${x.source}`))),
+        h("p", {}, "Home allocations are retained on each home, not added to these shared costs. These are recorded costs, not spending or payment approval.")),
+      h("section", { class: "card" }, h("h2", {}, "Linked home cases"),
+        h("p", {}, "A link does not prove shared-work applicability or transfer an approval."),
+        b.homes.length ? h("ul", {}, b.homes.map((c) => h("li", {},
+          h("a", { href: `#/case/${encodeURIComponent(c.id)}` }, c.id),
+          `: ${c.stage}; ${c.closed ? "closed" : "open"}. Review this home's own checks.`))) :
+          h("p", {}, "No home links recorded.")));
+  } catch (e) {
+    show(h("a", { class: "back", href: "#/" }, "Back to the list"),
+      h("h1", {}, "Shared building context unavailable"),
+      h("p", { class: "err", role: "alert" }, e.message));
+  }
 }
 
 const STAGES_ORDER = ["Home identified", "Checking lease", "Rescheduled", "Contacting resident", "Contact paused", "Survey being booked", "Survey booked", "Survey write-up", "Design starting", "Design in progress", "Design awaiting approval", "Design being corrected", "Waiting on other works", "Waiting for resident decision", "Resident paused works", "Funding check", "Final checks before ordering", "Waiting for block programme", "With contractor", "Install booked", "Works under way", "Handover to arrange", "Quality check", "Closing down", "Aftercare issue"];

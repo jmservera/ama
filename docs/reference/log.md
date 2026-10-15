@@ -3124,3 +3124,22 @@ metadata when the knowledge base was created.
   importer 39; all suites, dependency-rule tests, ruff and mypy passed. The
   24-scenario/61-turn golden CLI correctly exits 1 with one critical known gap
   (two failed assertions), `passed: false` and enablement `fail`, disabled.
+
+## [2026-10-15] implementation | Building shared systems model and views (#75)
+
+* Added the source-backed building model in `src/core`, with separate systems,
+  dependencies, holds, shared works and GBP costs. Exact home/package references
+  determine applicability; unknown scope is not approval. Home evidence,
+  consent, funding, technical, quality, closure and allocations stay home.
+* Reused JSON and checked-document SQL persistence, including the inherited
+  MSSQL path, without new SQL or workload dependencies. Existing stores are
+  not silently reseeded; linked missing building context is explicitly unknown.
+* Added staff-only API and home/building navigation in `src/api`, Finance-only
+  shared costs and home allocations, scoped progression/instruction checks and
+  wholly fictional regression fixtures. Hazard intake/referral stays independent;
+  existing AI remains proposal-only with human gates and no new prompt data.
+* Indexed the component guides rather than creating another synthesis page.
+  No real register/owner authority, live SQL Server, inference, Azure deployment
+  or direct human UX/accessibility acceptance is claimed. The BRD FR-002
+  cross-reference in issue #75 differs from the PRD building requirement; this
+  implementation follows the explicit issue criteria and PRD FR-002.
