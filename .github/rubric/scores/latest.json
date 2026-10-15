@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-15T08:20:34+00:00",
-  "commit": "8b0e03da51600e4e07ef8e41a60230c8c6433fd3",
+  "scored_at": "2026-10-15T08:55:19+00:00",
+  "commit": "1ecd42a758f47553d074d2a4d69fdf0a9cab1b62",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38704195131",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38708251576",
   "fingerprints": {
     "brd": "47e831254e5b5e466f767473541d5bf4593a44d0080caa75a0307e150895a2ac",
     "prd": "1f2f0be0530396e6b37d2b824eaebaf163fb9c7b5cf34a5fad22fa586c119463",
@@ -29,7 +29,7 @@
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:46-70"
       ],
-      "rationale": "ADR 0005 reuses existing runtime components with a clearly bounded architecture, consistent with the existing modular baseline. New diff adds a standalone synthetic-data generator (zf_documents.py) following the existing zf_*.py pattern; no material architecture change."
+      "rationale": "ADR 0005 reuses existing runtime components (api, agents, orchestrator, import) with a clearly bounded law store/rule-engine/chat architecture, consistent with the existing modular baseline. Still a design proposal, not implemented, so the score does not move."
     },
     "A2": {
       "score": 5,
@@ -43,31 +43,30 @@
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:170-192"
       ],
-      "rationale": "Section 6 names role-scoped data handling and safeguards. Already at the ceiling; this diff's fixtures are clearly labelled synthetic with no real PII, consistent with existing practice but not a new improvement."
+      "rationale": "Section 6 names role-scoped data handling, author/approver separation of duties, UK GDPR Art. 22A-22C safeguards and prompt-injection treatment of retrieved text as untrusted data. The new diff adds synthetic document fixtures only (no security/compliance content), so no material change. Already ..."
     },
     "A4": {
       "score": 5,
-      "evidence": [],
-      "rationale": "Unchanged baseline: already at ceiling. New generator and passing test add a working, tested capability but do not change an already-maximum score."
+      "evidence": [
+        "mvp/tests/test_document_form_fixtures.py:1-103",
+        "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:1-211"
+      ],
+      "rationale": "New generator and tests are well-formed and pass structural review, but they build isolated fixture/eval data for a schema explicitly unresolved (PRD OQ-015), not end-to-end capability completion. ADR 0005/BRD/PRD remain proposed; no change to overall implementation completeness."
     },
     "A5": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: this diff adds a data-generation script and test, with no instrumentation, reliability or cost evidence."
+      "rationale": "Unchanged baseline: operational readiness (logging, metrics, cost) evidence not affected by this synthetic-fixture test diff."
     },
     "A6": {
       "score": 3,
-      "evidence": [
-        "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:1-20"
-      ],
-      "rationale": "New fixture builds golden document/field data with seeded defects, potentially useful for a future AI extraction evaluation harness, but nothing in mvp/ currently consumes it for model evaluation; no harness or model choice is affected. Keeps baseline."
+      "evidence": [],
+      "rationale": "Unchanged baseline: diff adds synthetic document/form test fixtures, not an AI model choice or evaluation harness; no justification or harness evidence added for A6."
     },
     "A7": {
       "score": 4,
-      "evidence": [
-        "docs/adrs/0005-regulatory-compliance-assistant.md:7-15"
-      ],
-      "rationale": "Unchanged baseline: this diff is a synthetic-data generator, not agentic code; no orchestration or autonomous action changed."
+      "evidence": [],
+      "rationale": "Unchanged baseline: ADR 0005 proposes a deterministic rule engine plus non-autonomous retrieval chat; the new diff is deterministic fixture generation/testing with no agentic orchestration change."
     },
     "B1": {
       "score": 3,
@@ -97,9 +96,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0005-regulatory-compliance-assistant.md:1-239"
+        "docs/reference/research/retrofit-synthetic-data/README.md:225-250"
       ],
-      "rationale": "This diff touches only test/generator code, not the capstone deck or core documentation structure; capped score at Good(4) unaffected."
+      "rationale": "README documents the new fixtures clearly and navigably, but this is knowledge-base documentation, not capstone deck/documentation content; existing capstone deck thinness is unaffected so the capped score stays at Good(4), not Excellent(5)."
     },
     "B7": {
       "score": 3,
