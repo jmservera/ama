@@ -116,6 +116,7 @@ async function assistantQueueView(after = "", append = false) {
       ...cards, more,
       !queue.proposals.length && h("p", {}, "No proposals in your current role and case scope. Use the ordinary case controls."));
   } catch (e) {
+    if (e.name === "AbortError" || !me) return;
     show(h("h1", {}, "Assistant proposals"), h("p", { role: "alert" }, e.message),
       h("a", { href: "#/" }, "Continue manual case work"));
   }

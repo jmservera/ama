@@ -39,6 +39,7 @@ async function timeView() {
     }
     show(...body);
   } catch (e) {
+    if (e.name === "AbortError" || !me) return;
     show(h("h1", {}, "Staff time capture"), h("p", { role: "alert" }, e.message));
   }
 }

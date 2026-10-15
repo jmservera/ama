@@ -3,6 +3,11 @@ const app = document.getElementById("app");
 let me = null;
 const microsoftSignIn = document.body.dataset.authProvider === "trusted-proxy";
 let photoUrl = null;
+let routeController = new AbortController();
+let searchTimer = 0;
+let queueOrigin = "mine";
+let resetFocus = false;
+const workspaceStatus = document.getElementById("workspace-status");
 
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
@@ -19,10 +24,12 @@ function h(tag, attrs, ...kids) {
 }
 
 async function api(path, body, signal) {
+  signal = signal || routeController.signal;
   const res = await fetch(path, body === undefined ? { signal } : {
     method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body), signal,
   });
   const data = await res.json().catch(() => ({}));
+  signal.throwIfAborted();
   if (res.status === 401 && path !== "/api/login") { me = null; login("Your session has ended. Sign in again."); throw new Error("Your session has ended. Sign in again."); }
   if (!res.ok) { const e = new Error(data.error || "Something went wrong."); e.reasons = data.reasons; throw e; }
   return data;
@@ -41,6 +48,7 @@ const ago = (s) => {
 const show = (...nodes) => { app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType)); app.focus(); };
 
 function login(msg) {
+  workspaceStatus.textContent = "";
   document.getElementById("nav").hidden = true;
   document.getElementById("account").hidden = true;
   clearPhoto();
@@ -68,14 +76,13 @@ function login(msg) {
 
 async function start() {
   me = await api("/api/me");
+  Object.assign(listState, defaultListState());
+  queueOrigin = "mine";
+  briefingBox = null;
   document.getElementById("who").textContent = `${me.user.name}, ${me.user.role}`;
   showAccount();
   const nav = document.getElementById("nav");
-  const contractor = me.user.role === "Contractor";
-  nav.querySelectorAll("a").forEach((a) => { if (a.dataset.dyn) a.remove(); else a.hidden = contractor; });
-  if (contractor) nav.prepend(h("a", { href: "#/", "data-dyn": "1" }, "My jobs"));
-  else if (isManager()) nav.querySelector("a[href='#/funding']").after(h("a", { href: "#/capacity", "data-dyn": "1" }, "Capacity and work orders"), h("a", { href: "#/closed", "data-dyn": "1" }, "Closed cases"));
-  if (!contractor) nav.append(h("a", { href: "#/assistants", "data-dyn": "1" }, "Assistant proposals"), h("a", { href: "#/time", "data-dyn": "1" }, "Time capture"));
+  nav.replaceChildren(...me.navigation.map((item) => h("a", { href: item.href }, item.label)));
   nav.hidden = false;
   route();
 }
@@ -131,25 +138,46 @@ async function loadPhoto(account) {
   }
 }
 
-function route() {
+async function route() {
+  routeController.abort();
+  routeController = new AbortController();
+  clearTimeout(searchTimer);
+  const signal = routeController.signal;
+  const hash = location.hash || "#/";
   const m = location.hash.match(/^#\/case\/(.+)$/);
-  if (me.user.role === "Contractor") return m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView();
-  if (m) return caseView(decodeURIComponent(m[1]));
+  const active = m ? (queueOrigin === "all" ? "#/all" : "#/") : hash;
+  document.querySelectorAll("#nav a").forEach((link) => {
+    if (link.getAttribute("href") === active) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+  const destination = me.navigation.find((item) => item.href === active);
+  workspaceStatus.textContent = `${me.user.role}. ${destination?.scope || "Case workspace"}.`;
+  try {
+  if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
+  if (m) return await caseView(decodeURIComponent(m[1]));
   const building = location.hash.match(/^#\/building\/(.+)$/);
-  if (building) return buildingView(decodeURIComponent(building[1]));
-  if (location.hash === "#/assistants") return assistantQueueView();
-  if (location.hash === "#/time") return timeView();
-  if (location.hash === "#/closed") return closedView();
-  if (location.hash === "#/capacity") return capacityView();
-  if (location.hash === "#/import") return importView();
-  if (location.hash === "#/overview") return overviewView();
-  if (location.hash === "#/visits") return visitsView();
-  if (location.hash === "#/funding") return fundingView();
-  if (location.hash === "#/finance") return financeQueueView();
-  return listView(location.hash === "#/all" ? "all" : "mine");
+  if (building) return await buildingView(decodeURIComponent(building[1]));
+  if (hash === "#/assistants") return await assistantQueueView();
+  if (hash === "#/time") return await timeView();
+  if (hash === "#/closed") return await closedView();
+  if (hash === "#/capacity") return await capacityView();
+  if (hash === "#/import") return await importView();
+  if (hash === "#/overview") return await overviewView();
+  if (hash === "#/visits") return await visitsView();
+  if (hash === "#/funding") return await fundingView();
+  if (hash === "#/finance") return await financeQueueView();
+  return await listView(hash === "#/all" ? "all" : "mine");
+  } catch (error) {
+    if (signal.aborted || !me) return;
+    workspaceStatus.textContent = `Workspace unavailable: ${error.message}`;
+    show(h("h1", {}, "Workspace unavailable"), h("p", { class: "err", role: "alert" }, error.message),
+      h("button", { onclick: route }, "Try again"));
+  }
 }
 
-const listState = { q: "", stage: "", area: "", flag: "", sort: "urgent", wave: "", owner: "" };
+const defaultListState = () => ({ q: "", stage: "", area: "", flag: "", sort: "urgent", wave: "", owner: "" });
+const listState = defaultListState();
+const queueHref = () => queueOrigin === "all" ? "#/all" : "#/";
 const qs = (o) => Object.entries(o).filter(([, v]) => v).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
 const isManager = () => ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
 const FLAGS = [["hazard", "Safety issue open"], ["support", "Needs extra support"], ["long", "Waiting 60+ days"], ["nodecision", "No resident decision yet"], ["funding", "Funding not confirmed"]];
@@ -185,10 +213,21 @@ const REVIEWED = { accept: "Accepted", edit: "Edited", reject: "Rejected" };
 function aiBox() {
   const box = h("section", { class: "card ai" }, h("h2", {}, "Today's briefing"), h("p", { class: "muted" }, "Reading your cases..."));
   const toggle = h("input", { type: "checkbox", id: "wf-mode", checked: aiMode.workflow, onchange: () => { aiMode.workflow = toggle.checked; load(); } });
-  const load = () => api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`).then((b) => box.replaceChildren(h("h2", {}, "Today's briefing"), h("p", {}, b.text),
-    h("p", { class: "muted" }, `${b.label}. Suggestions only. Refreshed when your cases change.`), aiNotes(b),
-    h("p", {}, toggle, h("label", { for: "wf-mode" }, " Workflow only (no AI) for my AI requests"))))
-    .catch(() => box.remove());
+  const load = () => {
+    const signal = routeController.signal;
+    const cancel = () => { if (briefingBox === box) briefingBox = null; };
+    signal.addEventListener("abort", cancel, { once: true });
+    return api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`, undefined, signal).then((b) => box.replaceChildren(h("h2", {}, "Today's briefing"), h("p", {}, b.text),
+      h("p", { class: "muted" }, `${b.label}. Suggestions only. Refreshed when your cases change.`), aiNotes(b),
+      h("p", {}, toggle, h("label", { for: "wf-mode" }, " Workflow only (no AI) for my AI requests"))))
+      .catch((error) => {
+        if (signal.aborted) { box.remove(); return; }
+        box.replaceChildren(h("h2", {}, "Today's briefing"),
+          h("p", { class: "err", role: "alert" }, `Briefing unavailable: ${error.message}`),
+          h("button", { onclick: load }, "Try loading briefing again"));
+      })
+      .finally(() => signal.removeEventListener("abort", cancel));
+  };
   load();
   return box;
 }
@@ -249,15 +288,18 @@ function pendingHandoffs() {
 
 let briefingBox = null;
 async function listView(view) {
+  queueOrigin = view;
+  const signal = routeController.signal;
   const fx = await api("/api/facets");
   if (!briefingBox) briefingBox = aiBox();
   const results = h("div", { "aria-live": "polite" });
   const title = h("h1", {}, view === "mine" ? "My cases today" : "All open cases");
   const csv = h("a", { class: "btn alt", download: "cases.csv" }, "Download for Excel");
-  let timer = 0, seq = 0;
+  let seq = 0;
   let rows = [], total = 0, policy = "", cursor = null;
   const PAGE = 50;
   const render = () => {
+    workspaceStatus.textContent = `${me.user.role}. ${view === "mine" ? "My assigned cases" : "All permitted open cases"}. ${total} ${total === 1 ? "case" : "cases"}. Search: ${listState.q || "none"}. Stage: ${listState.stage || "any"}. Area: ${listState.area || "any"}. Wave: ${listState.wave || "any"}. Owner: ${listState.owner || "any"}. Show only: ${listState.flag || "any"}. Order: ${fx.sorts[listState.sort]}.`;
     results.replaceChildren(...[
       h("p", { class: "muted" }, `${total} ${total === 1 ? "case" : "cases"}${listState.sort === "urgent" ? `. Ranked by policy version ${policy}, a fixed rule order (safety first). The order is the same every time.` : ""}`),
       h("ul", { class: "list" }, rows.length ? rows.map((r) => h("li", {},
@@ -267,24 +309,34 @@ async function listView(view) {
             r.support && h("span", { class: "flag" }, "Needs extra support"),
             h("div", {}, `${r.address}, ${r.town} ${r.postcode}`),
             h("div", { class: "status" }, r.status),
+            h("div", { class: "next-action" }, "Next action: open case to review recorded steps"),
             h("div", { class: "muted" }, `Rank ${r.rank}: ${r.reasons.slice(0, 3).join("; ")}`),
             view === "all" && h("div", { class: "muted" }, `Owner: ${r.owner}`),
             r.focus && h("dl", { class: "focus" }, r.focus.flatMap(([k, v]) => [h("dt", {}, k), h("dd", {}, /^\d{4}-\d\d-\d\d$/.test(v) ? fmtDate(v) : v)]))),
           h("div", { class: "meta" }, h("div", {}, r.stage), h("div", {}, `${r.days} days in this stage`), h("div", {}, `Last contact: ${ago(r.last_contact)}`),
-            r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "card" }, "Nothing matches. Try clearing a filter.")),
+            r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "empty" }, Object.entries(listState).some(([key, value]) => key !== "sort" && value) ? "No cases match these filters. Reset my queue to try again." : view === "mine" ? "No open cases are assigned to you. This does not mean the programme has no work." : "No permitted open cases are available.")),
       rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null].filter(Boolean));
   };
   const load = async (more) => {
     const my = ++seq;
     const paging = more && cursor ? `after=${encodeURIComponent(cursor)}` : `offset=${more ? rows.length : 0}`;
-    const d = await api(`/api/cases?view=${view}&${qs(listState)}&limit=${PAGE}&${paging}`);
-    if (my !== seq) return;
+    let d;
+    try { d = await api(`/api/cases?view=${view}&${qs(listState)}&limit=${PAGE}&${paging}`, undefined, signal); }
+    catch (error) {
+      if (signal.aborted || my !== seq || !me) return;
+      workspaceStatus.textContent = `Cases unavailable: ${error.message}`;
+      results.replaceChildren(h("p", { class: "err", role: "alert" }, error.message),
+        h("button", { onclick: () => load(false) }, "Try loading cases again"));
+      return;
+    }
+    if (signal.aborted || my !== seq) return;
     cursor = d.next_cursor || null;
     csv.href = `/api/cases.csv?view=${view}&${qs(listState)}`;
     rows = more ? rows.concat(d.items) : d.items;
     total = d.total;
     policy = d.policy_version;
     render();
+    if (resetFocus) { resetFocus = false; document.getElementById("reset-queue").focus(); }
   };
   const field = (label, key, opts) => {
     const el = h("select", { id: `f-${key}` }, h("option", { value: "" }, "Any"), opts.map(([v, t]) => h("option", { value: v }, t)));
@@ -294,7 +346,7 @@ async function listView(view) {
   };
   const search = h("input", { id: "f-q", type: "search", placeholder: "Name, address or postcode" });
   search.value = listState.q;
-  search.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(() => { listState.q = search.value; load(); }, 250); });
+  search.addEventListener("input", () => { listState.q = search.value; clearTimeout(searchTimer); searchTimer = setTimeout(() => load(), 250); });
   const sort = h("select", { id: "f-sort" }, Object.entries(fx.sorts).map(([k, t]) => h("option", { value: k }, t)));
   sort.value = listState.sort;
   sort.addEventListener("change", () => { listState.sort = sort.value; load(); });
@@ -306,7 +358,14 @@ async function listView(view) {
     view === "all" && field("Owner", "owner", me.staff.map((x) => [x.code, x.name])),
     field("Show only", "flag", FLAGS),
     h("label", { for: "f-sort" }, "Sort by"), sort,
-    h("p", {}, h("button", { class: "alt", onclick: () => { Object.assign(listState, { q: "", stage: "", area: "", flag: "", wave: "", owner: "" }); listView(view); } }, "Clear filters")));
+    h("p", {}, h("button", { id: "reset-queue", class: "alt", onclick: () => {
+      clearTimeout(searchTimer);
+      Object.assign(listState, defaultListState());
+      resetFocus = true;
+      if (location.hash && location.hash !== "#/") location.hash = "#/";
+      else route();
+    } }, "Reset my queue")),
+    h("p", { class: "muted" }, "Returns to your assigned cases, safety-first order and first page. No records change."));
   show(h("div", { class: "layout" }, side, h("div", { class: "main" },
     briefingBox,
     view === "mine" && pendingHandoffs(),
@@ -315,7 +374,7 @@ async function listView(view) {
       h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See all cases" : "See my cases"),
       h("a", { class: "btn alt", href: "#/import" }, "Check a spreadsheet"), csv)),
     results)));
-  load();
+  await load();
 }
 
 async function caseView(id) {
@@ -356,7 +415,7 @@ async function caseView(id) {
       h("strong", {}, `${x.name}, ${x.role}`), h("div", { class: "muted" }, x.reasons.join(". ")),
       canOffer && h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: x.email })) }, `Offer to ${x.name.split(" ")[0]}`)))));
   show(
-    h("a", { class: "back", href: "#/" }, "Back to the list"),
+    h("a", { class: "back", href: queueHref() }, "Back to the list"),
     c.building_id ? h("a", { class: "back", href: `#/building/${encodeURIComponent(c.building_id)}` }, `Shared building context: ${c.building_id}`) :
       h("p", { class: "muted" }, "Building link not recorded; shared context is unknown."),
     c.cost_allocation && h("section", { class: "card" }, h("h2", {}, "This home's cost allocation"),
@@ -366,6 +425,7 @@ async function caseView(id) {
       h("h1", {}, r.name, c.hazards.some((x) => !x.released) && h("span", { class: "flag danger" }, "Safety issue open")),
       h("span", { class: "muted" }, `Reference ${c.id}`)),
     h("div", { class: `status-line${openHaz.length ? " danger" : ""}`, role: "status" }, c.status),
+    safetyPanel(c, id, refresh),
     h("div", { class: "grid" },
       h("section", { class: "card" }, h("h2", {}, "Contact"),
         h("div", { class: "big" }, h("a", { href: `tel:${r.phone.replace(/\s/g, "")}` }, r.phone)),
@@ -391,7 +451,6 @@ async function caseView(id) {
           h("dt", {}, "Resident decision"), h("dd", {}, `${c.decision.status}${c.decision.by ? ` (recorded by ${c.decision.by})` : ""}`)))),
     returnPanel(c, id, refresh),
     handoffPanel(c, id, refresh),
-    safetyPanel(c, id, refresh),
     qualityPanel(c, id, refresh),
     stockPanel(c),
     h("section", { class: "card" }, h("h2", {}, "Log a call"),
@@ -455,6 +514,7 @@ async function buildingView(id) {
           `: ${c.stage}; ${c.closed ? "closed" : "open"}. Review this home's own checks.`))) :
           h("p", {}, "No home links recorded.")));
   } catch (e) {
+    if (e.name === "AbortError" || !me) return;
     show(h("a", { class: "back", href: "#/" }, "Back to the list"),
       h("h1", {}, "Shared building context unavailable"),
       h("p", { class: "err", role: "alert" }, e.message));
@@ -661,7 +721,7 @@ async function contractorListView() {
 
 async function contractorCaseView(id) {
   let c;
-  try { c = await api(`/api/cases/${encodeURIComponent(id)}`); } catch (e) { return show(h("a", { class: "back", href: "#/" }, "Back to your jobs"), h("p", { class: "err" }, e.message)); }
+  try { c = await api(`/api/cases/${encodeURIComponent(id)}`); } catch (e) { if (e.name === "AbortError" || !me) return; return show(h("a", { class: "back", href: "#/" }, "Back to your jobs"), h("p", { class: "err" }, e.message)); }
   show(h("a", { class: "back", href: "#/" }, "Back to your jobs"),
     h("h1", {}, `${c.home.address}, ${c.home.town} ${c.home.postcode}`),
     h("div", { class: "status-line", role: "status" }, c.status),
@@ -759,6 +819,7 @@ async function signOut(switchAccount) {
 }
 document.getElementById("signout").addEventListener("click", () => signOut(false));
 document.getElementById("switch-account").addEventListener("click", () => signOut(true));
+document.querySelector(".skip-link").addEventListener("click", (event) => { event.preventDefault(); app.focus(); });
 document.addEventListener("keydown", (e) => {
   const menu = document.getElementById("account");
   if (e.key === "Escape" && menu.open) { menu.open = false; menu.querySelector("summary").focus(); }
@@ -824,6 +885,7 @@ function mapAction(marker, action) {
 }
 
 function mapPanel() {
+  const signal = routeController.signal;
   const el = h("div", { id: "leaflet", class: "leafmap", role: "region", "aria-label": "Map of open cases. Zoom with the buttons, mouse wheel or pinch." });
   const info = h("p", { class: "muted", role: "status", "aria-live": "polite" });
   const open = h("a", { href: "#/all" }, "Show these as a list");
@@ -843,6 +905,7 @@ function mapPanel() {
   };
   let fitting = false, seq = 0;
   const draw = async (fit) => {
+    if (signal.aborted) return;
     const my = ++seq;
     open.onclick = () => { Object.assign(listState, { flag: ovState.flag === "fundingprog" ? "funding" : ovState.flag, area: ovState.area }); };
     if (!map) {
@@ -855,8 +918,18 @@ function mapPanel() {
     }
     const b = map.getBounds();
     const view = fit ? "" : `&bbox=${[b.getSouth(), b.getWest(), b.getNorth(), b.getEast()].join(",")}`;
-    const d = await api(`/api/map?${qs(ovState)}&zoom=${map.getZoom()}${view}`);
-    if (my !== seq) return;
+    let d;
+    try { d = await api(`/api/map?${qs(ovState)}&zoom=${map.getZoom()}${view}`, undefined, signal); }
+    catch (error) {
+      if (signal.aborted || my !== seq || !me) return;
+      layer.clearLayers();
+      listUl.replaceChildren();
+      info.setAttribute("role", "alert");
+      info.textContent = `Map unavailable: ${error.message}. Use the case list or try changing the map filter.`;
+      return;
+    }
+    if (signal.aborted || my !== seq) return;
+    info.setAttribute("role", "status");
     info.textContent = d.mode === "clusters"
       ? `${d.total} homes in this view, grouped into ${d.shown} areas. Zoom in to see each home.`
       : `${d.total} ${d.total === 1 ? "home" : "homes"} shown`;

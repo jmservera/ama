@@ -3341,6 +3341,44 @@ metadata when the knowledge base was created.
   actual-model, SQL Server/Azure or human application acceptance. Existing AI,
   consent and release gates are unchanged.
 
+## [2026-10-15] query | Register-backed historical sensor backfill (#177)
+
+* Added a src/core register adapter to the existing sensor writer, reusing
+  merged stock-fabric-v1 with sorted declared subsets, synthetic monitoring
+  choices and no copied resident/address fields. Unknown/declined fixtures
+  produce no readings; coverage, sanitized fabric and hashes remain explicit.
+* Added stock-mode SQL column bounds without migrating legacy stores or
+  changing historical fixture payloads. Core guide, synthetic-data synthesis
+  and reference index distinguish bounded 730-day fictional tests from a
+  full-stock, historical-climate or real-device result.
+* Children #178-#183 remain open, not owner-deferred. Climate provenance and
+  licence, dated measures, full behaviour/fault truth, #110 integration,
+  full-stock storage approval and real AI/SQL Server/Azure/human evidence
+  remain unavailable. No new model authority, deployment or resident consent.
+
+## [2026-10-15] query | Shared role workbench IA and recovery (#152)
+
+* Reused the merged Fluent-derived design foundations and migrated API web
+  under accepted ADR 0006. No code was added to `mvp/`.
+* Added server-described navigation using existing access rules, labelled
+  own/programme scope, current destination, keyboard skip and persistent result
+  announcements. No client role simulator or new authorization policy.
+* Reset restores own cases, all filter defaults and safety-first order with
+  logical focus. Case return retains mine/all filters but deliberately reloads
+  page one; full previous selection/position/focus restoration remains open.
+* Kept safety details expanded before routine forms and retained contractor
+  minimum projection. Cancelled obsolete route loads, exposed retry/session
+  failures and preserved wide-table keyboard scrolling during narrow reflow.
+* Added a versioned bounded eleven-perspective/nine-workflow manifest and
+  real loopback synthetic checks for eight existing login roles, five CSS
+  widths and 200% root text. Updated the [API guide](../../src/api/README.md#shared-workbench-information-architecture-152),
+  [UX synthesis](./research/ux/zava-forward-prototype-profile-review.md#shared-workbench-ia-engineering-slice-2026-10-15)
+  and this index. Existing CI browser entry point runs both check suites.
+* Owner-supported devices/browsers, full AC-034/043 journey acceptance,
+  browser zoom, human/screen-reader and actual model/SQL Server/Azure evidence
+  remain unmet. Local Docker access was permission denied; no deployment or
+  AI release/approval/consent authority changed.
+
 ## [2026-10-15] fix | Stock query lifecycle and case responsibility (#84)
 
 * Corrected PR #318's permanent stock-query hold: separate append-only

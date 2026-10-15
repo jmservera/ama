@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Prototype Profile Review
 description: Company-role critique, dated owner usability feedback and proposed next-prototype acceptance checks
-ms.date: 2026-10-13
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
@@ -240,3 +240,37 @@ results and remaining gaps when these checks are eventually run. No timing,
 completion-rate or satisfaction threshold is invented from this feedback.
 Staff and accessible resident validation, production authority and privacy
 review remain separate future gates.
+
+## Shared Workbench IA Engineering Slice (2026-10-15)
+
+Issue [#152](https://github.com/jmservera/ama/issues/152) retains shared
+information architecture and layout; role-specific screens belong to #225 to
+#233. Its owner comments move legacy paths to the accepted
+[ADR 0006](../../../adrs/0006-src-layout-and-cutover.md) API web project without
+changing acceptance criteria. The migrated runtime, not the retired prototype
+perspective selector, is the implementation base.
+
+The [API workbench guide](../../../../src/api/README.md#shared-workbench-information-architecture-152)
+and [versioned synthetic manifest](../../../../src/api/checks/workbench-manifest.json)
+define this bounded slice: server-described existing navigation, explicit
+own/programme scope, reset to own defaults, mine/all return with retained
+filters, early expanded safety information and responsive wrapping using the
+merged Fluent-derived foundations. Navigation does not grant access. Existing
+server role/case/field projection, human approval, resident consent and AI
+release controls remain unchanged.
+
+Engineering checks use fictional identities and records against a real local
+API, including queue and hazard-case layouts at 320, 390, 768, 1024 and 1280 CSS
+pixels and 200% root text enlargement. These widths are test inputs, not an
+owner-approved supported-device matrix. The manifest distinguishes eight
+implemented auth roles from eleven PRD research perspectives; all nine
+workflows remain partial or deferred rather than being declared accepted.
+
+UX-07 above remains only partially addressed: returning to a list retains its
+mine/all scope, query, filters and sort but reloads the first page and focuses
+main, not the originating row or previous queue position. Reset separately
+restores own/default order and focuses its control. Full selection/focus/
+position restoration, complete AC-034/043 profile journeys, browser zoom,
+screen-reader/human task validation and owner device/browser decisions remain
+unmet. Local browser checks do not establish actual model inference,
+SQL Server/Azure durability, operational safety authority or customer outcomes.

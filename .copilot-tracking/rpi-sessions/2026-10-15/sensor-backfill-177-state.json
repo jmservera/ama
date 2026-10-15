@@ -1,0 +1,41 @@
+{
+  "task_id": "177",
+  "task_slug": "sensor-backfill-177",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-15/sensor-backfill-177-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-15/sensor-backfill-177-plan.md",
+    "details": ".copilot-tracking/details/2026-10-15/sensor-backfill-177-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-15/sensor-backfill-177-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-15/sensor-backfill-177-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-15/sensor-backfill-177-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute Research, Plan, Implement and Review for issue 177, then commit, push and open PR to main",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-15 authorizes each phase without a general automatic-session mode switch"
+    },
+    {
+      "decision": "One final-candidate critique executed: Revise; PC-001 and PC-003 applied; PC-002 rejected because claimed temp prohibition is not a parent constraint",
+      "status": "disposed; plan Ready",
+      "evidence": ".copilot-tracking/plans/2026-10-15/sensor-backfill-177-plan.md#critique-disposition"
+    },
+    {
+      "decision": "One post-implementation Review executed; outcome Residual work, bounded engineering slice validated but full issue acceptance unproven",
+      "status": "Complete; findings routed RV-001 through RV-003, no repeat Review",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-15/sensor-backfill-177-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Owner evaluates PR 320 and remote CI; #177 remains open. No unselected child task started."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "#182 configurable fault injection and separate truth", "rationale": "High analytics/test leverage using existing writer; no real climate/resident data required", "evidence": "RV-001; child #182 acceptance"},
+    {"rank": 2, "task": "#178 historical climate provenance and licence", "rationale": "Foundational plausibility evidence, dependent on retrieval and owner reuse approval", "evidence": "RV-001; owner synthetic fallback and child #178"},
+    {"rank": 3, "task": "#180 dated retrofit effects", "rationale": "Valuable before/after validation but depends on supplied dated measures and #173/#179", "evidence": "RV-001; child #180 acceptance"}
+  ]
+}

@@ -434,7 +434,7 @@ generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
   cases to `chat-fixture/` under the `ZF_DATA` folder. Case IDs come from the
   60,000-home stock. Retention is an illustrative 90 days, not a policy
   (BRD OD-45/OD-46 open); expectations are targets for #160 to #164.
-* Sensor backfill (#183): `python3 -m zava_forward.core.synthetic.sensor_backfill
+* Sensor backfill (#177/#183): `python3 -m zava_forward.core.synthetic.sensor_backfill
   --estimate-only` prints the volume and size estimate for two years of hourly
   temperature and humidity across all 60,000 homes (about 1.05 billion rows,
   about 118 GiB as CSV, measured on a 20-home sample); `--homes N` writes
@@ -448,6 +448,79 @@ generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
   #110 consumer validation is mirrored by `validate_reading()` and must be
   reconciled when #110 lands, and a full-stock run needs a storage and cost
   decision.
+### Register-backed sensor history (#177)
+
+The explicit `--register` mode (`sensor-backfill-stock-v1`) reuses merged
+`stock-fabric-v1`, seed 4820260930, rather than drawing unrelated dwelling
+attributes or treating the scale fixture as the private stock. Supply a wholly
+synthetic CSV with `synthetic_home_id`, `is_synthetic=true`,
+`building_form_osm`, `locality_theme` and `monitoring_consent`. Building form and
+locality use the same defaults as the fabric generator when absent. Monitoring
+choices are exactly `granted`, `declined`, or `unknown`; missing/blank is unknown.
+These are fictional fixture choices, never real resident consent or permission
+to activate devices. Other columns are discarded, not copied or fingerprinted.
+Do not supply private resident/device data.
+
+Both estimate and write require explicit positive `--homes N` no larger than
+the register. IDs are unique opaque strings, sorted before selecting the first
+N, then monitoring choices are applied. Excluded homes are not replaced by
+other opted-in homes. Declined and unknown homes have no sensor or readings;
+an all-excluded subset produces zero-count metadata and an empty sensor CSV.
+Coverage records register/selected/unselected/monitored counts, every selected
+ID and each exclusion reason. Register anchors are not verified stock-unit IDs.
+
+```bash
+python -m zava_forward.core.synthetic.sensor_backfill \
+  --register /private/synthetic-fixtures/stock.csv --homes 12 \
+  --days 730 --as-of 2026-10-15 --estimate-only
+python -m zava_forward.core.synthetic.sensor_backfill \
+  --register /private/synthetic-fixtures/stock.csv --homes 12 \
+  --days 730 --as-of 2026-10-15 \
+  --out /private/synthetic-fixtures/new-sensor-history
+```
+
+Outputs must be outside any repository and in a new/empty nonsymlink folder.
+`estimate.json` is written before reading shards, measured from up to 20 of the
+actual granted sensors. The estimate includes dropout; it is not a guaranteed
+upper bound or SQL storage quote. No full-stock write is an implied approval.
+Manifest metadata records normalized allowlisted register SHA-256, source
+fingerprints, fabric/adapter versions, window, coverage and all payload hashes.
+`stock-fabric.csv` preserves selected v1 fabric plus fictional monitoring choices.
+Changing only an ignored column or CSV row order does not change output.
+
+The projection reuses the existing equations: loss = dwelling factor * age
+factor * construction factor. Stock build year selects the existing age bucket.
+Construction factors are Solid brick 1.15, Stone 1.20, Cavity brick 1.0,
+precast concrete 1.10, Timber frame 0.90, partial-fill cavity 0.85 and full-fill
+cavity 0.75. Heating schedules are seeded equal-choice morning/evening, all-day
+or low; they are variation fixtures, not judgements of residents. All factors
+and bounds are exercise assumptions, not calibrated physics or climatic facts.
+The current equations and basic fault rates remain in `sensor_backfill.py`;
+construction factors and exact fabric mappings are in `sensor_stock.py`.
+No dated measure history is supplied: `retrofitted=False` is a modelling
+assumption, not evidence that no works occurred, and no before/after claim follows.
+
+Stock sensor IDs are `SENS-SYN-` plus full SHA-256 of the home ID; reading IDs
+append epoch seconds. Home IDs must fit 128 UTF-16 code units. For a fresh
+SQL Server database apply `STOCK_SQL_DDL` (`stock-reading-v1`, sensor
+VARCHAR(73), reading VARCHAR(96), home NVARCHAR(128)), then call
+`load_into(conn, output, create_schema=None)`. Legacy `SQL_DDL` and CSV payloads
+are unchanged; do not use the narrow legacy DDL for stock mode. The loader
+does not migrate databases. SQLite tests and portable conditional-insert checks
+do not prove live SQL Server execution.
+
+This is partial #177 delivery: #178-#183 remain open, not owner-deferred.
+Historical Met Office/Environment Agency records and licence confirmation,
+dated retrofit measures, full behaviour and configurable fault/truth classes,
+and #110's future consumer validation are still missing. Owner #178 permits
+clearly labelled synthetic climate as fallback; no CO2/energy is generated.
+No AI review, hazard diagnosis, ranking change, resident action or approval
+occurs in the generator. Existing AI release/human gates are unchanged.
+`tests/test_sensor_stock.py` covers bounded 730-day histories, fabric/ID/choice
+reconciliation, byte reproducibility, bounds, estimates, hashes and local loads.
+
+### Existing reproducibility and plausibility evidence
+
 * Reproducibility and refresh (#176): scale fixture v1.2.0 and sensor backfill
   v2 record seed, version, `as_of`, dependency-aware `generator_revision` and
   SHA-256 for every payload file. Both require a new or empty output folder;

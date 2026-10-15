@@ -73,5 +73,6 @@ disallow_untyped_calls = false
 [[tool.mypy.overrides]]
 module = ["test_stock_reconciliation", "tests.test_stock_reconciliation",
           "test_handoff_lifecycle", "tests.test_handoff_lifecycle",
-          "test_hazard_referral", "tests.test_hazard_referral"]
+          "test_hazard_referral", "tests.test_hazard_referral",
+          "test_sensor_stock", "tests.test_sensor_stock"]
 disallow_untyped_calls = false

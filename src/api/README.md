@@ -238,6 +238,67 @@ dependency; production requirements/images do not gain a browser dependency.
 Human/screen-reader acceptance, full Fluent component integration and live
 AI/SQL Server/Azure validation are not established by these local checks.
 
+## Shared workbench information architecture (#152)
+
+`/api/me` includes `navigation` entries with `href`, `label` and `scope`,
+computed by the API from existing endpoint/Finance/manager rules. The client
+renders these entries without a new role map. Metadata is not authorization:
+direct API calls retain all existing server checks. The default remains the
+signed-in person's assigned cases, or assigned contractor jobs; programme
+directories and overview are explicitly labelled broader scopes. There is no
+role simulator. No role-specific screen redesign or new permission is included.
+
+The shell has a keyboard skip link, named navigation, visible/semantic current
+destination and a persistent scope/result announcement. Each staff case row has
+one case-opening link, plain recorded status and a review prompt, not an
+AI-invented workflow decision. Cases open full screen. Back to the list keeps
+the last mine/all scope and filters, but deliberately reloads page one: it does
+not promise restored pagination, selected row, scroll position or row focus.
+Direct case entry falls back to the own queue.
+
+"Reset my queue" clears search, stage, authority area, wave, owner, flag, sort
+and all-cases override; it restores own cases in the existing safety-first
+policy order, focuses the reset control and announces refreshed results.
+Obsolete loads/debounce are cancelled on route replacement; failed loads show
+an explicit retry, and session expiry returns to sign-in. An empty own queue
+is distinguished from no filter matches. Reset does not modify records.
+Cancelling a pending briefing invalidates its cached panel so the next queue
+requests it again; a completed briefing remains cached. Briefing failures show
+an explicit retry. The browser check holds responses across My cases -> All
+cases -> My cases and verifies recovery without stale-response replacement.
+Safety reports and stopped-work details remain expanded ahead of routine case
+forms, with existing named owners, external timings and explicit unknowns.
+Contractors retain their minimum-necessary projection, not staff safety data.
+
+The versioned [shared-IA manifest](./checks/workbench-manifest.json) declares
+eight implemented auth roles, exact synthetic own queues/navigation and all
+eleven PRD perspectives/nine workflows with partial or deferred coverage.
+It is not full AC-034/043, accepted role mapping or validated user research.
+From `src/api`, using the installed src packages and `.[dev]`:
+
+```bash
+python -m checks.workbench_browser_check
+python -m checks.design_system_browser_check
+```
+
+The second command is the existing CI entry point and runs both browser suites.
+Each starts and stops its own healthy loopback API with constructed data in an
+automatically cleaned, ignored repository-root `.venv/` scratch subdirectory;
+no credentials, model endpoints or private data settings are inherited.
+The IA checks cover eight roles, mine/all/reset/back/history, delayed and failed
+requests, expiry, contractor projection, queue/case reflow at 320/390/768/1024/
+1280 CSS pixels and 200% root text enlargement. This is Chromium engineering
+evidence, not browser-zoom, screen-reader or human acceptance. The baseline
+also exercises return from a queue with more than 50 rows.
+
+Supported devices/browsers and field/mobile use still need the owner's
+decision. The full eleven-profile/nine-workflow journey manifest remains
+incomplete. AI routes, real-provider configuration and human review/release
+gates are unchanged; the isolated checks make no live model call and do not
+satisfy mandatory real-inference/SQL Server/Azure exercise acceptance.
+No SQL, deployment, resident consent or controlled approval behavior changed.
+Local Docker access was permission denied; image evidence must come from CI.
+
 ## Return and handoff API (#83)
 
 All mutations below are authenticated, one-case human actions. The server
