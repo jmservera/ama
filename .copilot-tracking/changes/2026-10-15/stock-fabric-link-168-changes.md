@@ -6,12 +6,19 @@ ms.date: 2026-10-15
 
 Refs #168. Inventory row: SN-01 (partial); dependency #167.
 
-Draft delivery: one Review completed with **Defects found**. RV-001 remains open:
+Draft PR: https://github.com/jmservera/ama/pull/316, base `main`, head
+`feat/src-stock-fabric-link-168`. One Review completed with **Defects found**.
+RV-001 remains open:
 a wheel-installed CLI invoked outside a checkout can miss a repository at its
 explicit output destination. Editable-source checks pass, but the general
 containment guarantee is incomplete. Do not merge or treat this as full issue
 acceptance until a later implementation addresses the finding. No second
 implementation/review cycle ran inside this task.
+
+Delivery blocker: GitHub reports `mergeable=CONFLICTING`,
+`mergeStateStatus=DIRTY` after concurrent `main` progress. No CI checks are
+reported; this is not a green CI result. No rebase, force-push or main merge was
+performed to resolve lineage without owner direction.
 
 Task 168 / stock-fabric-link-168. Scope: full ready plan, P01 and P02.
 Implementation complete for P01/P02-T01/T02; one critique completed and
@@ -139,11 +146,30 @@ and installed-wheel regression). RV-002 routes to owner-directed SN-01/private
 data/unit reconciliation. RV-003 routes to authorized real-platform/human
 validation. This task makes no source fixes after Review.
 
-Topic commit/push and draft PR to main are authorized and pending; remote CI
-has not run for this branch yet. Final delivery receipts will be appended
-without amending or rewriting the implementation commit.
+Implementation committed as `d72bc87` and pushed to the requested branch.
+Draft PR #316 is open to main with `Refs #168`; the GitHub file list contains
+only the 19 intended task paths. Both author and committer use the requested
+privacy-safe email and the prescribed coauthor trailer. No amendment or
+history rewrite occurred. CI is unavailable while GitHub reports conflicts.
 
 | Delivery command | Result |
 | --- | --- |
 | `gh api user --jq '{id,login}' && git config --local user.email 8036360+jmservera@users.noreply.github.com` | Authenticated identity reconfirmed; repository-local author/committer email configured. |
 | `git branch --show-current && git diff --check && test -s .gitignore && git status --short` | Named branch, whitespace pass, existing ignore safety; only intended task changes. |
+| `git add -A && git diff --cached --check && git diff --cached --stat && git diff --cached --name-only` | Exactly 19 intended paths staged; no private data, root venv, .env, .vscode, issue-cache or mvp changes. |
+| `printf '%s\n' <Conventional Commit subject/body/Refs/trailer> \| GIT_AUTHOR_EMAIL=8036360+jmservera@users.noreply.github.com GIT_COMMITTER_EMAIL=8036360+jmservera@users.noreply.github.com git commit -F -` | Commit d72bc87 created successfully; all task artifacts included. |
+| `bash <pr-reference-skill>/scripts/generate.sh --base-branch origin/main --output src/core/.venv/stock-fabric-link-168-reference.xml`; `bash <pr-reference-skill>/scripts/read-diff.sh --input src/core/.venv/stock-fabric-link-168-reference.xml --summary` | Initial two-dot reference included unrelated concurrent main changes; not used for PR scope. Summary helper printed zero-count formatting noise; no code impact. |
+| `git push -u origin feat/src-stock-fabric-link-168` | Authorized topic pushed successfully, upstream set; never main. |
+| `bash <pr-reference-skill>/scripts/generate.sh --base-branch origin/main --merge-base --output src/core/.venv/stock-fabric-link-168-reference.xml` | Correct merge-base reference generated (2249 lines), only intended task changes; temporary ignored XML, not data. |
+| `gh pr create --base main --head feat/src-stock-fabric-link-168 --draft --title 'feat(core): migrate stock fabric and make case links explicit (Refs #168)' --body-file .copilot-tracking/changes/2026-10-15/stock-fabric-link-168-changes.md` | Draft https://github.com/jmservera/ama/pull/316 created, with command evidence and unmet criteria. |
+| `gh pr view 316 --json url,isDraft,state,baseRefName,headRefName,mergeable,mergeStateStatus,files,statusCheckRollup && gh pr checks 316` | OPEN/DRAFT, requested head and main base, 19 intended files; CONFLICTING/DIRTY, no checks. gh checks exit 1 means no checks reported, not pass. |
+| `git status --short && git log -1 --format='%h %s%nAuthor: %ae%nCommitter: %ce%n%b' && git rev-list --count origin/main..HEAD && git diff --stat origin/main...HEAD` | Clean after first commit; author/committer/trailer verified; exactly one task commit/19 files despite concurrent main advancement. |
+| `git diff --check`; JSON parse and seven-artifact existence check using `src/core/.venv/bin/python -` | Final delivery metadata validation; no source behavior changed after Review. |
+| `rm src/core/.venv/stock-fabric-link-168-reference.xml` | Remove the exact ignored, temporary generated reference after PR-scope verification; no broad cleanup. |
+| `git add -A && printf '%s\n' <docs commit message and prescribed trailer> \| GIT_AUTHOR_EMAIL=8036360+jmservera@users.noreply.github.com GIT_COMMITTER_EMAIL=8036360+jmservera@users.noreply.github.com git commit -F - && git push origin feat/src-stock-fabric-link-168` | Final metadata-only publication, separately verified against remote head; no amendment or source fix. Commit receipt is in the PR commit list. |
+| `gh pr edit 316 --body-file .copilot-tracking/changes/2026-10-15/stock-fabric-link-168-changes.md`; `gh pr view 316 --json url,isDraft,mergeable,mergeStateStatus,commits,statusCheckRollup`; `git status --short` | Final PR body carries this evidence and open blockers; verify DRAFT state and clean worktree after publication. No passing CI claim. |
+
+The installed PR-reference skill path is
+`/home/azureuser/.copilot/installed-plugins/hve-core/hve-core-all/skills/shared/pr-reference`.
+Its temporary XML was used only to verify PR scope and is not a canonical or
+private-data artifact. No working data is committed.

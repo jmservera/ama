@@ -83,7 +83,7 @@ at the row level. CLI errors are explicit and do not produce success reports.
   record unchecked criteria and owner decisions.
 * [x] P02-T02 Run all five src suites, ruff/format/mypy, synthetic local app,
   coverage CLI and Docker attempt. Record commands/results and limits.
-* [ ] P02-T03 Review once, commit and push artifacts/code and open PR to main.
+* [x] P02-T03 Review once, commit and push artifacts/code and open PR to main.
 
 ## Locked Test Ownership and Validation
 
@@ -129,6 +129,11 @@ No significant/divergent owner decision. No repeated critique.
   inventory scope and mapping and whether unit-level linkage is required.
 * Owner: decide reconciliation of 980-case home.built/type and stock fabric.
 * Authorized environment: actual AI/SQL Server/Azure/human acceptance.
+* Delivery: PR #316 reports conflicts after concurrent main progress, so no CI
+  checks have run. Resolve with owner-directed lineage handling, not a silent
+  rebase, force-push or main merge.
+* Review RV-001: general installed-wheel destination containment needs a later
+  implementation; do not treat this draft as accepted.
 
 ## Handoff
 
@@ -139,4 +144,6 @@ Continue automatically after compatible critique dispositions are applied.
 Implementation evidence: P01 and P02-T01/T02 complete. One post-implementation
 Review complete, outcome Defects found: RV-001 destination containment needs
 later implementation; owner/private/live gates remain unverified. P02-T03
-pending authorized draft topic-branch delivery, not another source/review pass.
+complete: d72bc87 pushed, draft PR #316 open to main. GitHub reports conflicts
+and no checks, so delivery exists but acceptance/merge is blocked. No further
+source changes or second Review in this lifecycle.

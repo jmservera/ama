@@ -80,3 +80,13 @@ set repository-local privacy-safe email, Conventional Commit plus prescribed
 trailer. Commit all task artifacts, push only named topic branch; PR base main,
 Refs #168, command/results table and unchecked original acceptance items.
 CI is the authority for unavailable image/SQL checks; do not merge.
+
+## Execution Reconciliation
+
+P01-T01/T02 and P02-T01/T02 completed with the evidence in the changes record.
+P02-T03 completed one Review, implementation commit d72bc87, authorized topic
+push and draft PR #316 to main. Review outcome Defects found; RV-001 remains
+open for later implementation. GitHub reports concurrent-main conflicts and
+no CI checks, not a passing remote result. Private corpus/owner reconciliation,
+actual model/SQL Server/Azure/human gates remain unverified; this is lifecycle
+execution completion, not original issue acceptance. No further source edits.

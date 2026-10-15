@@ -3,8 +3,8 @@
   "task_slug": "stock-fabric-link-168",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-15/stock-fabric-link-168-research.md",
@@ -44,11 +44,12 @@
   "blockers": [
     {"id": "RV-001", "summary": "General installed-wheel destination containment incomplete; draft PR only.", "resolution": "Later implementation must inspect resolved output ancestors and test wheel/external cwd."},
     {"id": "RV-002", "summary": "Private corpus/owner inventory and reconciliation acceptance unavailable.", "resolution": "Owner supplies stock regeneration or explicit deferral and confirms unit/field mapping."},
-    {"id": "RV-003", "summary": "Docker permission denied; real model/SQL Server/Azure/human acceptance unverified.", "resolution": "CI plus separately authorized environment and human validation."}
+    {"id": "RV-003", "summary": "Docker permission denied; real model/SQL Server/Azure/human acceptance unverified.", "resolution": "CI plus separately authorized environment and human validation."},
+    {"id": "DELIVERY-001", "summary": "Draft PR #316 is CONFLICTING/DIRTY after concurrent main progress; no CI checks reported.", "resolution": "Owner-directed conflict/lineage resolution before CI; no automatic rebase, force-push or main merge."}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Publish authorized draft PR using Refs #168; one Review complete with Defects found. Do not start another implementation/review pass."},
+  "next_action": {"phase": "Follow-up", "action": "Await owner-selected follow-up, Stop or manual mode. Draft PR #316 published; complete lifecycle, Defects found, acceptance blocked. No child work started."},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "RV-001: inspect destination ancestors and add installed-wheel/external-cwd containment regression", "rationale": "Bounded, high-value correction prevents generated output under a destination checkout; existing defaults/editable tests do not cover it.", "evidence": ".copilot-tracking/reviews/logs/2026-10-15/stock-fabric-link-168-review.md"},
+    {"rank": 1, "task": "RV-001: inspect destination ancestors and add installed-wheel/external-cwd containment regression; resolve PR #316 lineage with owner direction", "rationale": "Bounded, high-value correction prevents generated output under a destination checkout; concurrent main conflicts also block CI. No child implementation is started automatically.", "evidence": ".copilot-tracking/reviews/logs/2026-10-15/stock-fabric-link-168-review.md; gh pr view 316"},
     {"rank": 2, "task": "RV-002: resolve SN-01 private generator/deferral, owner mapping and unit/field reconciliation", "rationale": "Needed to establish original issue acceptance without inventing private data or identity.", "evidence": "needs-inventory SN-01; original unchecked issue criteria; research C7"},
     {"rank": 3, "task": "RV-003: execute CI and authorized AI/SQL Server/Azure/human acceptance", "rationale": "Local Docker permission denied and 97 unavailable contracts cannot establish live delivery.", "evidence": ".copilot-tracking/changes/2026-10-15/stock-fabric-link-168-changes.md"}
   ]
