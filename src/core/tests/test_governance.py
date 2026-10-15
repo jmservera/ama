@@ -6,9 +6,9 @@ import unittest
 from pathlib import Path
 
 import test_finance_signoffs as tf
-from zavaforward_mvp import governance as g
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import Store
+from zava_forward.core import governance as g
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import Store
 
 PROTOCOL = {key: f"Synthetic demonstration {key}" for key, _ in g.PROTOCOL_FIELDS}
 BENEFITS = {key: f"Synthetic demonstration {key}" for key, _ in g.BG011_FIELDS}
@@ -91,7 +91,7 @@ class Gov:
         s.release_record(self.pm1, dict(RELEASE, scope="Live pilot", decision="Withhold"))
 
     def test_pilot_case_events_need_open_capture_gate(self):
-        d = copy.deepcopy(tf.test_mvp.DATA)
+        d = copy.deepcopy(tf.dataset.DATA)
         d["staff"] = tf.STAFF
         d["cases"][0]["pilot"] = True
         tmp = tempfile.TemporaryDirectory()

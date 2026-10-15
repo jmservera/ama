@@ -11,7 +11,7 @@ from pathlib import Path
 
 import test_mvp
 from zavaforward_mvp.server import App, make_handler
-from zavaforward_mvp.store import Store
+from zava_forward.core.store import Store
 from zavaforward_mvp.timecapture import ACTIVITIES, NoticeNotAcknowledged, SeparationOfDuties, TimeCapture, TimeCaptureOff
 
 SAM = test_mvp.DATA["staff"][0]
@@ -273,7 +273,7 @@ class SharedStoreTests(unittest.TestCase):
     def make_store(self, tmp):
         import test_sqlstore as base
         data, db = base.seed(tmp)
-        from zavaforward_mvp.sqlstore import SqlStore
+        from zava_forward.core.sqlstore import SqlStore
         return SqlStore(data, db)
 
     ENV = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")

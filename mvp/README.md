@@ -5,6 +5,18 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 [PRD](../docs/prds/zava-forward-retrofit-programme-demonstrator.md) and the
 [prototype learnings review](../docs/reference/research/ux/prototype-learnings-and-simplicity-review.md).
 
+Source location (ADR 0006, issue #199): the store layer and domain modules named
+in this file without a path (`store`, `sqlstore`, `mssqlstore`, `factory`, `ledger`,
+`continuity`, `chatthreads`, `doc_controls`, `documents`, `controls`, `finance`,
+`grants`, `governance`, `signoffs`, `resident_decisions`, `workflows`, `quality`,
+`procurement`, `insights`, `projection`, `ranking`, `ai_tasks`, `assistants`,
+`assistant_release` and `ai_registry`) moved in M2 to
+`src/core/src/zava_forward/core/` and are imported as `zava_forward.core.<module>`.
+Their tests moved to `src/core/tests/`, which the `mvp` test commands put on
+`PYTHONPATH` for the shared fixtures (`dataset.py`, `release_support.py`).
+Local runs need `pip install --no-deps -e src/core` first. When `ZF_DATA` is not
+set, the data file defaults to `data/zavaforward.json` under the current folder.
+
 ## What staff see
 
 * Sign in once and land on "My cases today", with open safety issues first.
@@ -17,12 +29,12 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 * Filter the list by stage, local authority, wave, owner or flag, and sort by
   urgency, longest wait, last contact, name or next visit.
 * The default "Most urgent first" order is a deterministic ranking
-  (`zavaforward_mvp/ranking.py`): open safety issue, then priority support or an
+  (`src/core/src/zava_forward/core/ranking.py`): open safety issue, then priority support or an
   adjustment, then longest time in stage, then earlier stage, then case id as
   the fixed tie-break. Each card shows its rank and plain reasons, the list
   header shows the policy version, policy hash and as-of date, and
   `GET /api/ranking/policy` returns the versioned rules. The rules live in
-  versioned files in `policies/` (for example `ranking-v1.json`) with a policy
+  versioned files in `src/core/src/zava_forward/core/policies/` (for example `ranking-v1.json`) with a policy
   id, version, owner, status, effective date and a SHA-256 content hash over
   the canonical JSON. Every file is verified when loaded and a mismatch stops
   the load. Old versions stay in the folder and can be re-run. Ranking takes
@@ -84,7 +96,7 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   submitted and confirmed. Approval needs complete evidence and the Grants
   and Evidence Officer or a manager. The system never submits anything.
 * A hash-chained audit log records every change. `GET /api/audit-check`
-  (manager) and `python -m zavaforward_mvp.ledger` verify the chain; a digest of
+  (manager) and `python -m zava_forward.core.ledger` verify the chain; a digest of
   the head can be written to `ZF_DIGEST_DIR` (`POST /api/ledger/digest`) and is
   re-checked on verify. The digest is a local file, not yet an immutable Blob.
 * Role-based field projection is enforced on the server (`projection.py`).
@@ -389,7 +401,7 @@ or shared. The repository must stay private.
 
 ```bash
 python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py --seed 20260901
-python3 -m pip install --no-deps -e src/core   # the moved ai, profile and rulecards modules (ADR 0006)
+python3 -m pip install --no-deps -e src/core   # the modules moved to core in M1 and M2 (ADR 0006)
 cd mvp
 ZF_PASSWORD=choose-a-password python3 -m zavaforward_mvp.server
 ```
@@ -425,7 +437,7 @@ when `ZF_TEST_MSSQL=1` (and `ZF_SQL_*` point at a throwaway database).
 
 ## Frozen protocol, benefits register and release gates (issue #126)
 
-`zavaforward_mvp/governance.py` records, and never decides, the pilot governance in the existing store (JSON or SQL, so it survives a restart). Managers use `GET /api/governance` and `POST /api/governance/{protocol-freeze,protocol-approve,benefits-record,benefits-approve,release,breach,restart}`. No AI assistant, ranking or tool has any part in it.
+`src/core/src/zava_forward/core/governance.py` records, and never decides, the pilot governance in the existing store (JSON or SQL, so it survives a restart). Managers use `GET /api/governance` and `POST /api/governance/{protocol-freeze,protocol-approve,benefits-record,benefits-approve,release,breach,restart}`. No AI assistant, ranking or tool has any part in it.
 
 * Protocol (RULE-019, AC-062): a version freezes all thirteen required fields. A different person approves it with the OD-36 DPIA and lawful measurement-basis references. A change needs a reason and a new approval. `capture_gate()` keeps Phase 0 capture closed until the latest version and the BG-011 register are approved.
 * Benefits register (BG-011, OD-18): event definitions and the MDE are recorded. `target_verdict` never returns pass or fail when the MDE is missing or exceeds a target (20% cycle time, 25% coordination hours); it returns "Not assessable" or "Interval estimate only".
@@ -463,7 +475,7 @@ Tests: `tests/test_governance.py` (JSON and SQL stores, labelled synthetic demon
 
 ### Per-year ledger digests, load check and recovery drill (issue #114)
 
-* `python -m zavaforward_mvp.ledger --seal-years` writes one immutable `year-YYYY.json`
+* `python -m zava_forward.core.ledger --seal-years` writes one immutable `year-YYYY.json`
   digest per completed year (entries, first link, head); `--by-year` verifies every
   year on its own, the links between years and each sealed digest, and reports a
   dropped sealed year. A self-consistent rewrite of a sealed year is caught only by
@@ -915,12 +927,12 @@ exercise uses fixtures, not the retained dataset:
 
 ```bash
 cd mvp
-PYTHONPATH=. python3 -m unittest discover -s tests -p test_assistants.py
+PYTHONPATH=.:../src/core/tests python3 -m unittest discover -s tests -p test_assistants.py
 PYTHONPATH=. python3 tests/assistants_browser_check.py
 node --check web/assistants.js
 
 # Disposable local SQL only; set the existing ZF_SQL_* test settings first.
-ZF_TEST_MSSQL=1 PYTHONPATH=.:tests python3 -m unittest \
+ZF_TEST_MSSQL=1 PYTHONPATH=.:tests:../src/core/tests python3 -m unittest \
   test_assistants.MssqlContractTests test_assistants.MssqlReviewTests \
   test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests \
   test_assistants.MssqlLedgerTests
@@ -969,7 +981,7 @@ authority remains absent/proactive off; this is not standing spend approval,
 staff-browser acceptance, semantic calibration or measured value.
 
 ```bash
-cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests -v
+cd mvp && PYTHONPATH=.:../src/core/tests python3 -m unittest discover -s tests -v
 ```
 
 The tests also cover the SQL store (including `test_sqlreads.py`), documents, ledger, role matrix, workflows, auth and time capture. They use small fixtures and a generated 60,000-case dataset, and need no

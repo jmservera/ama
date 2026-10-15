@@ -144,7 +144,7 @@ def read_digests(directory):
 
 
 def main(argv=None):
-    """python -m zavaforward_mvp.ledger [--digest] [--seal-years] [--by-year] : verify the configured ledger, exit 1 if broken."""
+    """python -m zava_forward.core.ledger [--digest] [--seal-years] [--by-year] : verify the configured ledger, exit 1 if broken."""
     from .factory import open_store
     argv = sys.argv[1:] if argv is None else argv
     store = open_store()

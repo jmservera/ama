@@ -178,7 +178,7 @@ class MssqlDb:
     """Azure SQL (or SQL Server in CI) backend reusing the store's connection settings (ZF_SQL_*)."""
 
     def __init__(self, env=None):
-        from .mssqlstore import _Conn, connection_string
+        from zava_forward.core.mssqlstore import _Conn, connection_string
         env = os.environ if env is None else env
         self.db = _Conn(connection_string(env), env.get("ZF_SQL_TOKEN"))
         self.ledger = bool(self.db.execute("SELECT is_ledger_on FROM sys.databases WHERE name = DB_NAME()").fetchone()[0])

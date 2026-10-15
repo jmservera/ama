@@ -2,8 +2,8 @@
 import json
 import time
 
-from zavaforward_mvp import assistant_release as rel
-from zavaforward_mvp import assistants
+from zava_forward.core import assistant_release as rel
+from zava_forward.core import assistants
 
 
 def fixture(task, binding, model="test-model", cls="constructed-fixture", expires=None, **over):
@@ -18,7 +18,7 @@ def fixture(task, binding, model="test-model", cls="constructed-fixture", expire
 
 def install(store, ai=None, model="test-model", cls="constructed-fixture", tasks=None, legacy=True, **over):
     """Insert active releases directly on a SQL store (all assistants and, if the AI is live, legacy tasks)."""
-    from zavaforward_mvp.ai_registry import LEGACY, legacy_binding
+    from zava_forward.core.ai_registry import LEGACY, legacy_binding
     ai = ai or store.ai
     db = store.assistant_connection()
     try:

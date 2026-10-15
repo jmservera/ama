@@ -19,7 +19,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from . import scale_fixture
-from .assistants import REGISTRY as ASSISTANTS
+from zava_forward.core.assistants import REGISTRY as ASSISTANTS
 from .auth import DEFAULT_ROLE_MAP
 
 VERSION = "chat-fixture-v1"

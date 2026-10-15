@@ -8,7 +8,7 @@ from .store import Store
 
 def open_store(env=None):
     env = os.environ if env is None else env
-    data = env.get("ZF_DATA", str(Path(__file__).resolve().parents[1] / "data" / "zavaforward.json"))
+    data = env.get("ZF_DATA", str(Path.cwd() / "data" / "zavaforward.json"))
     state = env.get("ZF_STATE")
     kind = (env.get("ZF_STORE") or "json").lower()
     if kind == "sqlite":

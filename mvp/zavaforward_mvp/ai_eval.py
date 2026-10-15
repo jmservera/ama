@@ -32,8 +32,8 @@ import tempfile
 import time
 from pathlib import Path
 
-from . import ai_tasks
-from .store import Store
+from zava_forward.core import ai_tasks
+from zava_forward.core.store import Store
 
 GOLDEN = Path(__file__).resolve().parents[1] / "evals" / "ai_priority_golden.json"
 OWNER = dict(code="EV-01", name="Eval Owner", email="owner@eval.example", role="Resident Liaison Officer")

@@ -5,8 +5,9 @@ import urllib.parse
 from pathlib import Path
 
 import test_mvp
-from zavaforward_mvp import digest_blob, ledger
-from zavaforward_mvp.store import Store
+from zava_forward.core import ledger
+from zavaforward_mvp import digest_blob
+from zava_forward.core.store import Store
 
 URL = "https://acct.blob.core.windows.net"
 

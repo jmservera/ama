@@ -10,10 +10,10 @@ import urllib.request
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 
-from zavaforward_mvp import ranking
-from zavaforward_mvp.insights import STAGE_ORDER
+from zava_forward.core import ranking
+from zava_forward.core.insights import STAGE_ORDER
 from zavaforward_mvp.server import App, make_handler
-from zavaforward_mvp.store import Store
+from zava_forward.core.store import Store
 from test_mvp import case
 
 STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role="Resident Liaison Officer"),

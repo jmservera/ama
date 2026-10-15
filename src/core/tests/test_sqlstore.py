@@ -6,32 +6,32 @@ import unittest
 from unittest.mock import patch
 from pathlib import Path
 
-import test_mvp
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import ConflictError
+import dataset
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import ConflictError
 
 
 def seed(tmp):
     p = Path(tmp) / "zavaforward.json"
-    p.write_text(json.dumps(test_mvp.DATA))
+    p.write_text(json.dumps(dataset.DATA))
     return str(p), os.path.join(tmp, "pw.sqlite")
 
 
-class SqlImproveTests(test_mvp.ImproveTests):
+class SqlImproveTests(dataset.ImproveTests):
     """The whole store behaviour suite again, against the SQL store."""
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         data, db = seed(self.tmp.name)
         self.store = SqlStore(data, db)
-        self.sam, self.pam = test_mvp.DATA["staff"]
+        self.sam, self.pam = dataset.DATA["staff"]
 
 
 class SqlStoreTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.data, self.db = seed(self.tmp.name)
-        self.sam, self.pam = test_mvp.DATA["staff"]
+        self.sam, self.pam = dataset.DATA["staff"]
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -90,7 +90,7 @@ class SqlStoreTests(unittest.TestCase):
 
     def test_gate_error_leaves_no_partial_change(self):
         s = SqlStore(self.data, self.db)
-        from zavaforward_mvp.store import GateError
+        from zava_forward.core.store import GateError
         with self.assertRaises(GateError):
             s.advance(self.sam, "ZF-2")
         self.assertEqual(SqlStore(self.data, self.db).detail("ZF-2")["stage"], "Final checks before ordering")

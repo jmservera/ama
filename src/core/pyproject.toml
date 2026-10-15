@@ -39,15 +39,22 @@ files = ["src", "tests"]
 # Modules moved unchanged from mvp/ (ADR 0006 move-not-copy). Formatting and typing follow after
 # the migration so the renames stay pure and git history follows the files.
 [tool.ruff.format]
-exclude = ["src/zava_forward/core/ai.py", "src/zava_forward/core/profile.py", "src/zava_forward/core/rulecards.py", "tests/test_profile.py", "tests/test_rulecards.py"]
+exclude = [
+  "src/zava_forward/core/{ai,ai_registry,ai_tasks,assistant_release,assistants,chatthreads,continuity,controls,doc_controls,documents,factory,finance,governance,grants,insights,ledger,mssqlstore,procurement,profile,projection,quality,ranking,resident_decisions,rulecards,signoffs,sqlstore,store,workflows}.py",
+  "tests/{dataset,release_support,test_chatthreads,test_documents,test_finance_signoffs,test_generated_dataset,test_governance,test_profile,test_quality_procurement,test_rulecards,test_sqlreads,test_sqlstore}.py",
+]
 
 [tool.ruff.lint.per-file-ignores]
-"src/zava_forward/core/ai.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B"]
-"src/zava_forward/core/profile.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B"]
-"src/zava_forward/core/rulecards.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B", "F841"]
-"tests/test_profile.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B"]
-"tests/test_rulecards.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B"]
+"src/zava_forward/core/{ai,ai_registry,ai_tasks,assistant_release,assistants,chatthreads,continuity,controls,doc_controls,documents,factory,finance,governance,grants,insights,ledger,mssqlstore,procurement,profile,projection,quality,ranking,resident_decisions,rulecards,signoffs,sqlstore,store,workflows}.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B", "F841"]
+"tests/{dataset,release_support,test_chatthreads,test_documents,test_finance_signoffs,test_generated_dataset,test_governance,test_profile,test_quality_procurement,test_rulecards,test_sqlreads,test_sqlstore}.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B", "F841", "F401"]
 
 [[tool.mypy.overrides]]
-module = ["zava_forward.core.ai", "zava_forward.core.profile", "zava_forward.core.rulecards", "test_profile", "test_rulecards", "tests.test_profile", "tests.test_rulecards"]
+module = [
+  "zava_forward.core.ai", "zava_forward.core.ai_registry", "zava_forward.core.ai_tasks", "zava_forward.core.assistant_release", "zava_forward.core.assistants", "zava_forward.core.chatthreads", "zava_forward.core.continuity", "zava_forward.core.controls", "zava_forward.core.doc_controls", "zava_forward.core.documents", "zava_forward.core.factory", "zava_forward.core.finance", "zava_forward.core.governance", "zava_forward.core.grants", "zava_forward.core.insights", "zava_forward.core.ledger", "zava_forward.core.mssqlstore", "zava_forward.core.procurement", "zava_forward.core.profile", "zava_forward.core.projection", "zava_forward.core.quality", "zava_forward.core.ranking", "zava_forward.core.resident_decisions", "zava_forward.core.rulecards", "zava_forward.core.signoffs", "zava_forward.core.sqlstore", "zava_forward.core.store", "zava_forward.core.workflows",
+  "dataset", "release_support", "test_chatthreads", "test_documents", "test_finance_signoffs", "test_generated_dataset", "test_governance", "test_profile", "test_quality_procurement", "test_rulecards", "test_sqlreads", "test_sqlstore",
+  "tests.dataset", "tests.release_support", "tests.test_chatthreads", "tests.test_documents", "tests.test_finance_signoffs", "tests.test_generated_dataset", "tests.test_governance", "tests.test_profile", "tests.test_quality_procurement", "tests.test_rulecards", "tests.test_sqlreads", "tests.test_sqlstore",
+]
 ignore_errors = true
+
+[tool.setuptools.package-data]
+"zava_forward.core" = ["policies/*.json"]

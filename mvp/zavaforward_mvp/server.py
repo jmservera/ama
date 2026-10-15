@@ -13,15 +13,17 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 from zava_forward.core import profile
 
-from . import auth, lawstore, projection, quality
-from .assistants import Assistants
+from zava_forward.core import projection, quality
+
+from . import auth, lawstore
+from zava_forward.core.assistants import Assistants
 from .chat_isolation import ChatForbidden, ChatIsolation
 from .chat_privacy import ChatNotApproved
-from .chatthreads import ChatNotFound
-from .documents import DocumentStoreError
-from .factory import open_store
+from zava_forward.core.chatthreads import ChatNotFound
+from zava_forward.core.documents import DocumentStoreError
+from zava_forward.core.factory import open_store
 from .timecapture import TimeCapture
-from .store import MANAGER_ROLES, ConflictError, GateError
+from zava_forward.core.store import MANAGER_ROLES, ConflictError, GateError
 
 WEB = Path(__file__).resolve().parents[1] / "web"
 TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
@@ -338,7 +340,9 @@ def make_handler(app):
             if url.path == "/api/ai/report":
                 if u["role"] not in MANAGER_ROLES:
                     return self._json(403, {"error": "Only a manager can see the AI evaluation report."})
-                from . import ai_eval, ai_registry
+                from zava_forward.core import ai_registry
+
+                from . import ai_eval
                 return self._json(200, {"evaluation": ai_eval.run_eval(), "live": s.ai_live_report(), "registry": ai_registry.registry()})
             if url.path.startswith("/api/docs/"):
                 try:

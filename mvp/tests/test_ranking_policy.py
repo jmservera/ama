@@ -7,9 +7,9 @@ import unittest
 from pathlib import Path
 
 import test_mvp
-from zavaforward_mvp import ranking
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import Store
+from zava_forward.core import ranking
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import Store
 from test_ranking_scale import STAFF, hazard, varied
 
 AS_OF = "2026-10-09"

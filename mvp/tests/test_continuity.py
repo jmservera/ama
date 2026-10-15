@@ -6,10 +6,10 @@ import unittest
 
 import test_mvp
 from test_assistants import Base, Provider, canonical, proposal
-from zavaforward_mvp import continuity
+from zava_forward.core import continuity
 from zava_forward.core.ai import Ai
-from zavaforward_mvp.assistants import Assistants
-from zavaforward_mvp.store import Store
+from zava_forward.core.assistants import Assistants
+from zava_forward.core.store import Store
 
 SUSPEND = dict(scope="all", reason="Suspect output quality", incident_owner="Programme manager",
                containment="Stop all AI work", comms_owner="Programme manager", comms_audience="Staff only")

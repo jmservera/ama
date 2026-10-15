@@ -9,11 +9,11 @@ import time
 import unittest
 from pathlib import Path
 
-import test_mvp
-from zavaforward_mvp import ranking
-from zavaforward_mvp.insights import STAGE_ORDER
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import Store
+import dataset as fixtures
+from zava_forward.core import ranking
+from zava_forward.core.insights import STAGE_ORDER
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import Store
 
 STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role="Resident Liaison Officer"),
          dict(code="PM-01", name="Pam Lead", email="pam@example.test", role="Retrofit Programme Manager"),
@@ -26,8 +26,8 @@ def make_cases(n, seed=11):
     rnd = random.Random(seed)
     out = []
     for i in range(n):
-        c = test_mvp.case(f"ZF-{i:05d}", owner_code=rnd.choice(["RLO-01", "PM-01"]), stage=rnd.choice(STAGE_ORDER),
-                          decision=rnd.choice(test_mvp.DECISIONS if hasattr(test_mvp, "DECISIONS") else ["Waiting", "Accepted", "Declined", "Not yet asked"]))
+        c = fixtures.case(f"ZF-{i:05d}", owner_code=rnd.choice(["RLO-01", "PM-01"]), stage=rnd.choice(STAGE_ORDER),
+                          decision=rnd.choice(fixtures.DECISIONS if hasattr(fixtures, "DECISIONS") else ["Waiting", "Accepted", "Declined", "Not yet asked"]))
         c["days_in_stage"] = rnd.choice([0, 1, 5, 5, 30, 60, 61, 120, 400])
         c["resident"].update(name=rnd.choice(NAMES), priority_support=rnd.random() < 0.1, adjustment=rnd.choice(["None", "None", "Hearing"]))
         c["home"].update(area=rnd.choice(["North", "South", "East"]), address=f"{i} Test Road", postcode=f"TE{i % 9} 1ST", lat=54 + rnd.random(), lon=-2 + rnd.random())
@@ -46,7 +46,7 @@ def make_cases(n, seed=11):
 
 
 def dataset(cases):
-    d = copy.deepcopy(test_mvp.DATA)
+    d = copy.deepcopy(fixtures.DATA)
     d["staff"], d["cases"] = copy.deepcopy(STAFF), cases
     return d
 

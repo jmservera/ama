@@ -5,10 +5,10 @@ import tempfile
 import unittest
 from pathlib import Path
 
-import test_mvp
-from zavaforward_mvp.quality import CHECKLISTS, checklist_for
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import Store
+import dataset
+from zava_forward.core.quality import CHECKLISTS, checklist_for
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import Store
 
 STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role="Resident Liaison Officer"),
          dict(code="PM-01", name="Pam Lead", email="pam@example.test", role="Retrofit Programme Manager"),
@@ -25,7 +25,7 @@ class Flows:
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        d = copy.deepcopy(test_mvp.DATA)
+        d = copy.deepcopy(dataset.DATA)
         d["staff"] = STAFF
         self.store = self.make(d, self.tmp.name)
 

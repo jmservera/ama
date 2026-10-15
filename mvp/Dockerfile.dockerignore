@@ -2,7 +2,6 @@
 *
 !mvp/requirements.txt
 !mvp/zavaforward_mvp
-!mvp/policies
 !mvp/law
 !mvp/web
 !src/build-requirements.txt

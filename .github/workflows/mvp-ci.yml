@@ -34,7 +34,7 @@ jobs:
       - name: Install the core package that mvp imports
         run: pip install --no-deps -e src/core
       - name: Unit, API, role matrix, ledger and AI evaluation tests
-        run: cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests
+        run: cd mvp && PYTHONPATH=.:../src/core/tests python3 -m unittest discover -s tests
       - name: Check browser JavaScript syntax
         run: node --check mvp/web/app.js && node --check mvp/web/assistants.js
 
@@ -131,7 +131,7 @@ jobs:
           ZF_SQL_TRUST_CERT: "1"
         run: |
           cd mvp
-          PYTHONPATH=.:tests python3 -m unittest test_mssqlstore test_lawstore.MssqlStoreTests \
+          PYTHONPATH=.:tests:../src/core/tests python3 -m unittest test_mssqlstore test_lawstore.MssqlStoreTests \
             test_assistants.MssqlContractTests test_assistants.MssqlReviewTests \
             test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests \
             test_assistants.MssqlLedgerTests

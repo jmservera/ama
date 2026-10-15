@@ -4,8 +4,9 @@ import re
 import unittest
 from pathlib import Path
 
-from zavaforward_mvp import projection, server
-from zavaforward_mvp.assistants import Assistants
+from zava_forward.core import projection
+from zavaforward_mvp import server
+from zava_forward.core.assistants import Assistants
 from test_role_matrix import Matrix, PHONE, REASON, RESIDENT, ROLES
 
 NOTE_CANARY = "FREETEXT-CANARY-reason-in-a-note"
@@ -107,7 +108,7 @@ class RoleEndpointInventory(Matrix):
                     self.assertNotIn(canary, text, (role, path))
 
     def test_ai_citations_and_assistant_source_hold_outcomes_without_need(self):
-        from zavaforward_mvp import ai_tasks, assistants
+        from zava_forward.core import ai_tasks, assistants
         c = self.store.cases["ZF-1"]
         self.assertTrue(any(OUTCOME_CANARY in x for x in ai_tasks.cites_for(c, "Contact", reason_ok=True)))
         self.assertFalse(any(OUTCOME_CANARY in x for x in ai_tasks.cites_for(c, "Contact")))
@@ -140,7 +141,7 @@ class RoleEndpointInventory(Matrix):
             del self.store.ai.evidence
 
     def test_assistant_capture_never_carries_reason_or_notes(self):
-        from zavaforward_mvp import assistants
+        from zava_forward.core import assistants
         c = self.store.cases["ZF-1"]
         for cap in assistants.REGISTRY:
             text = json.dumps(assistants.capture(cap, c))

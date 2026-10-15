@@ -13,7 +13,7 @@ from pathlib import Path
 import test_mvp
 from zavaforward_mvp import auth
 from zavaforward_mvp.server import App, make_handler
-from zavaforward_mvp.store import Store
+from zava_forward.core.store import Store
 
 REASON = "SEEDED-REASON-hearing-loss"
 STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role="Resident Liaison Officer"),
@@ -159,7 +159,7 @@ class MapListAndTiles(Base):
         self.assertEqual(d["total"], len(d["items"]))
         self.assertTrue(all({"id", "name", "kind"} <= set(p) for p in d["items"]))
         self.assertTrue(any(p["kind"] == "hazard" for p in d["items"]))
-        from zavaforward_mvp import insights
+        from zava_forward.core import insights
         d = insights.map_view(self.store.cases.values(), {}, None, 8, cap=2)
         self.assertEqual(d["mode"], "clusters")
         self.assertEqual(sum(p["count"] for p in d["items"]), d["total"])

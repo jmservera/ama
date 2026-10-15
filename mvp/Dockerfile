@@ -22,7 +22,6 @@ RUN pip install --no-cache-dir --require-hashes -r requirements.txt && rm requir
 RUN --mount=type=bind,from=build,source=/wheels,target=/wheels \
     pip install --no-cache-dir --no-index --no-deps /wheels/*.whl
 COPY mvp/zavaforward_mvp ./zavaforward_mvp
-COPY mvp/policies ./policies
 COPY mvp/law ./law
 COPY mvp/web ./web
 RUN chmod -R a+rX ./web

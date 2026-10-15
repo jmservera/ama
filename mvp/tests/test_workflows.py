@@ -6,8 +6,8 @@ import unittest
 from pathlib import Path
 
 import test_mvp
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import GateError, Store
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import GateError, Store
 
 STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role="Resident Liaison Officer"),
          dict(code="RLO-02", name="Rae Other", email="rae@example.test", role="Resident Liaison Officer"),

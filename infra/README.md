@@ -363,6 +363,8 @@ PYTHONPATH=mvp python3 infra/scripts/initialize-workbench-staff.py \
   --roster "$HOME/.azure/zava-forward-staff/roster.json" --apply --restart
 ```
 
+The initializer imports `ledger` and `mssqlstore` from `zava_forward.core` (moved in M2 of #199), so run `pip install --no-deps -e src/core` first; `PYTHONPATH=mvp` still supplies `zavaforward_mvp.auth`.
+
 Use the existing MVP dependencies and an operator allowed through the SQL
 firewall/private endpoint with SQL write authority. Graph management uses the
 isolated `~/.azure/zava-entra-init` profile, or `--tenant-profile`. It needs

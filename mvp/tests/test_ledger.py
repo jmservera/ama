@@ -9,11 +9,11 @@ import threading
 from pathlib import Path
 
 import test_mvp
-from zavaforward_mvp import ledger
-from zavaforward_mvp.factory import open_store
+from zava_forward.core import ledger
+from zava_forward.core.factory import open_store
 from zavaforward_mvp.server import App, make_handler
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import Store
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import Store
 
 
 class LedgerCases:

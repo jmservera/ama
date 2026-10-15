@@ -8,7 +8,8 @@ import os
 import unittest
 import urllib.error
 
-from zavaforward_mvp import chat_fixture, projection
+from zava_forward.core import projection
+from zavaforward_mvp import chat_fixture
 from zavaforward_mvp.chat_isolation import ChatForbidden, ChatIsolation, neutralise
 from test_role_matrix import Matrix, PHONE, REASON, ROLES
 

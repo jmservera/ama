@@ -5,12 +5,12 @@ import unittest
 import urllib.parse
 from pathlib import Path
 
-import test_mvp
-from zavaforward_mvp.documents import (AzureBlobDocumentStore, DocumentStoreError, LocalDocumentStore, open_document_store)
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import Store
+import dataset
+from zava_forward.core.documents import (AzureBlobDocumentStore, DocumentStoreError, LocalDocumentStore, open_document_store)
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import Store
 
-SAM, PAM = test_mvp.DATA["staff"]
+SAM, PAM = dataset.DATA["staff"]
 CONTRACTOR = dict(code="C-1", name="Kim Builder", email="kim@example.test", role="Contractor", contractor="Test Ltd")
 
 
@@ -117,7 +117,7 @@ class StoreDocumentTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         p = Path(self.tmp.name) / "zavaforward.json"
-        p.write_text(json.dumps(test_mvp.DATA))
+        p.write_text(json.dumps(dataset.DATA))
         st = SqlStore(str(p), os.path.join(self.tmp.name, "pw.sqlite")) if sql else Store(str(p))
         self.blob = FakeBlob()
         st.docstore = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=self.blob)

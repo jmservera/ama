@@ -7,11 +7,12 @@ from pathlib import Path
 
 import test_mvp
 import test_sqlstore as base
-from zavaforward_mvp import chat_privacy as cp, chatthreads
+from zava_forward.core import chatthreads
+from zavaforward_mvp import chat_privacy as cp
 from zavaforward_mvp.chat_privacy import ChatNotApproved, ChatPrivacy
-from zavaforward_mvp.chatthreads import ChatNotFound
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import Store
+from zava_forward.core.chatthreads import ChatNotFound
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import Store
 
 U1, U2 = test_mvp.DATA["staff"]
 TASK = "stock-prioritisation"

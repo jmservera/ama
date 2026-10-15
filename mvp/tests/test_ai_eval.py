@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 from zavaforward_mvp import ai_eval
-from zavaforward_mvp.store import Store
+from zava_forward.core.store import Store
 
 
 class AiEvalTests(unittest.TestCase):

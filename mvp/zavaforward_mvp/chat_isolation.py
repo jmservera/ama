@@ -16,9 +16,9 @@ import os
 import re
 from datetime import datetime, timedelta, timezone
 
-from . import projection
+from zava_forward.core import projection
 from .chat_privacy import ChatPrivacy, redact
-from .chatthreads import MAX_CONTENT, ChatNotFound, user_key
+from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
 
 MAX_PURPOSE = 200
 MIN_PURPOSE = 10

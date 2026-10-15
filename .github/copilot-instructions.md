@@ -56,7 +56,7 @@ Zava Forward demonstrator, infrastructure and supporting tools.
 There is no repository-wide documentation build or lint command. Validate
 documentation with Markdown/link review and the Git diff. Executable changes
 also require the relevant existing tests: for example, from `mvp/`,
-`PYTHONPATH=. python3 -m unittest discover -s tests -q`; migration regressions
+`PYTHONPATH=.:../src/core/tests python3 -m unittest discover -s tests -q`; migration regressions
 use `python3 tools/rename-zava-tests.py` from the repository root. Use the
 component guides and existing workflows rather than infer that no tests exist.
 

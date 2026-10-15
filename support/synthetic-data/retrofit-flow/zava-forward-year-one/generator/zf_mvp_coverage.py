@@ -2,7 +2,7 @@
 from collections import Counter
 from datetime import date, timedelta
 
-from zavaforward_mvp import insights, quality
+from zava_forward.core import insights, quality
 import zf_names as names
 
 NOTE = "Synthetic exercise fixture; evidence unverified, not an operational approval."

@@ -8,10 +8,10 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from zavaforward_mvp import insights
-from zavaforward_mvp.sqlstore import SqlStore
+from zava_forward.core import insights
+from zava_forward.core.sqlstore import SqlStore
 
-GENERATOR = Path(__file__).resolve().parents[2] / "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator"
+GENERATOR = Path(__file__).resolve().parents[3] / "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator"
 sys.path.insert(0, str(GENERATOR))
 builder = importlib.import_module("build_mvp_dataset")
 pack = importlib.import_module("generate_pack")
