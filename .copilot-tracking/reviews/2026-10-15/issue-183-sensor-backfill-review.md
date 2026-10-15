@@ -6,3 +6,7 @@
 * AC3 estimate recorded before generation (`estimate.json`, manifest, README): tested.
 * AC4 load reuses a validation contract: mirrored `validate_reading()`; reconciliation with #110 is routed follow-up.
 * Follow-ups: Met Office/EA data retrieval; #110 reconciliation; full-stock storage and cost decision.
+
+## Review-fix outcome (PR #272)
+
+* Findings 1 and 3 resolved and tested; finding 2 deferred as an open item until #110 defines a contract. Climate values remain labelled synthetic in the manifest.

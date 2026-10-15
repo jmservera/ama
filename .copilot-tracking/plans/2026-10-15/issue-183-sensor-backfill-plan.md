@@ -5,3 +5,9 @@
 * [x] Update `mvp/README.md` and `docs/reference/log.md`.
 * [x] Run the mvp unit suite.
 * Critique (single pass): keep one sensor per home and hourly cadence; do not import #110 code; record open items instead of inventing climate data. Applied directly.
+
+## Review-fix plan (PR #272)
+
+* [x] Portable load: conditional insert plus schema hook, with a portability test.
+* [x] #110 contract reuse: not possible yet; open item in the PR body.
+* [x] Store the volume estimate as an artefact; keep the synthetic climate label in the manifest.

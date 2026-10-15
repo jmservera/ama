@@ -59,6 +59,30 @@ class SensorBackfillTests(unittest.TestCase):
             self.assertEqual(sb.validate_reading(bad, ids), "unmapped_sensor")
             self.assertEqual(sb.validate_reading({**bad, "sensor_id": "S", "humidity_pct": "150"}, ids), "out_of_range_humidity_pct")
 
+    def test_load_sql_is_portable_to_azure_sql(self):
+        seen = []
+
+        class Cur:
+            rowcount = 1
+
+        class Conn:
+            def execute(self, sql, params=()):
+                seen.append(sql)
+                return Cur()
+
+            def commit(self):
+                pass
+
+        with tempfile.TemporaryDirectory() as d:
+            build(d)
+            sb.load_into(Conn(), d, create_schema=None)
+        self.assertTrue(seen)
+        for sql in seen:
+            self.assertNotIn("OR IGNORE", sql.upper())
+            self.assertTrue(sql.startswith("INSERT INTO"))
+            self.assertIn("WHERE NOT EXISTS", sql)
+        self.assertNotIn("CREATE", " ".join(seen).upper())
+
 
 if __name__ == "__main__":
     unittest.main()

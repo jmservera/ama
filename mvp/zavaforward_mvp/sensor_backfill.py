@@ -211,17 +211,36 @@ def validate_reading(row, register_ids):
     return None
 
 
-def load_into(conn, out):
-    """Idempotent append keyed on (sensor_id, reading_id); rejects are counted by reason, not stored."""
-    out = Path(out)
+def _insert_if_absent(table, cols, keys):
+    """Portable conditional insert (SQLite and Azure SQL/T-SQL); '?' placeholders, key values repeated at the end."""
+    where = " AND ".join(f"{k} = ?" for k in keys)
+    return (f"INSERT INTO {table} ({', '.join(cols)}) SELECT {', '.join('?' * len(cols))} "
+            f"WHERE NOT EXISTS (SELECT 1 FROM {table} WHERE {where})")
+
+
+def _create_sqlite_schema(conn):
     conn.execute("CREATE TABLE IF NOT EXISTS sensor_register (sensor_id TEXT PRIMARY KEY, home_id TEXT NOT NULL, dwelling_type TEXT, "
                  "age_band TEXT, retrofitted TEXT, heating_pattern TEXT, fault_profile TEXT, source_type TEXT NOT NULL)")
     conn.execute("CREATE TABLE IF NOT EXISTS sensor_reading (" + ", ".join(f"{f} TEXT" for f in READING_FIELDS)
                  + ", PRIMARY KEY (sensor_id, reading_id))")
+
+
+def load_into(conn, out, create_schema=_create_sqlite_schema):
+    """Idempotent append keyed on (sensor_id, reading_id); rejects are counted by reason, not stored.
+
+    Uses INSERT ... WHERE NOT EXISTS so it runs on Azure SQL as well as SQLite. For Azure SQL apply SQL_DDL
+    first and pass create_schema=None (the default hook creates SQLite-only DDL).
+    """
+    out = Path(out)
+    if create_schema:
+        create_schema(conn)
     with open(out / "sensors.csv", encoding="utf-8", newline="") as f:
         sensors = list(csv.DictReader(f))
-    conn.executemany("INSERT OR IGNORE INTO sensor_register VALUES (?,?,?,?,?,?,?,?)", [[s[k] for k in SENSOR_FIELDS] for s in sensors])
+    reg_sql = _insert_if_absent("sensor_register", SENSOR_FIELDS, ["sensor_id"])
+    for s in sensors:
+        conn.execute(reg_sql, [s[k] for k in SENSOR_FIELDS] + [s["sensor_id"]])
     ids = {s["sensor_id"] for s in sensors}
+    read_sql = _insert_if_absent("sensor_reading", READING_FIELDS, ["sensor_id", "reading_id"])
     inserted, rejected = 0, {}
     for shard in sorted(out.glob("readings-*.csv")):
         with open(shard, encoding="utf-8", newline="") as f:
@@ -230,8 +249,7 @@ def load_into(conn, out):
                 if reason:
                     rejected[reason] = rejected.get(reason, 0) + 1
                     continue
-                cur = conn.execute("INSERT OR IGNORE INTO sensor_reading VALUES (" + ",".join("?" * len(READING_FIELDS)) + ")",
-                                   [row[k] for k in READING_FIELDS])
+                cur = conn.execute(read_sql, [row[k] for k in READING_FIELDS] + [row["sensor_id"], row["reading_id"]])
                 inserted += cur.rowcount
     conn.commit()
     return dict(inserted=inserted, rejected=rejected)
