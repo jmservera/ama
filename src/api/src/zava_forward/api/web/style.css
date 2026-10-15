@@ -159,3 +159,5 @@ input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true]{b
 .ai-suggestion .ai-label{display:inline-block;font-weight:700;color:var(--brand-d);border:1px solid var(--brand);border-radius:1rem;padding:0 var(--sp-2);background:var(--surface)}
 .ai-suggestion .ai-label:before{content:"\2728\00a0"}
 .ai-suggestion.reviewed{border-style:solid}
+
+.chat-log{list-style:none;margin:.5rem 0;padding:0;max-height:20rem;overflow:auto}.chat-msg{padding:.4rem .6rem;margin-bottom:.4rem;border-left:.25rem solid var(--line)}.chat-assistant{border-left-color:var(--brand)}#chat-panel textarea{width:100%}

@@ -17,10 +17,12 @@ from zava_forward.core import projection, quality
 
 from zava_forward.core import lawstore
 from zava_forward.api import auth
+from zava_forward.agents.chat import ChatModel
 from zava_forward.agents.dispatch import AgentWorker
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved
+from zava_forward.core.chat_panel import ChatPanel
 from zava_forward.core.chatthreads import ChatNotFound
 from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.factory import open_store
@@ -59,6 +61,7 @@ class App:
         # The provider call is agents code; the API composes it in process until the queue transport (#144) replaces it.
         self.assistants = Assistants(store, provider=AgentWorker(lambda *args: store.ai.evidence(*args)).provider_call)
         self.chat = ChatIsolation(store)
+        self.panel = ChatPanel(self.chat, ChatModel(AgentWorker(lambda *args: store.ai.evidence(*args))))
         self.law = law
         self.law_lock = threading.Lock()
 
@@ -390,6 +393,16 @@ def make_handler(app):
                     u, tid = c.current_user(user), parts[1]
                     if parts[2] == "messages":
                         return self._json(200, c.turn(u, tid, body.get("content")))
+                    if parts[2] == "ask":
+                        return self._json(200, app.panel.ask(u, tid, body.get("content")))
+                    if parts[2] == "proposals":
+                        # Proposal-only: the existing assistants path queues it for the independent review.
+                        t = s.chat_resume(u, tid)
+                        if not t["case_id"]:
+                            raise ValueError("Open the panel from a case to request a proposal.")
+                        p = app.assistants.invoke(u, str(body.get("capability") or ""), t["case_id"])
+                        s.chat_add_message(u, tid, "assistant", "Proposal requested. It needs a separate source check and role review before anything changes.", evidence=[p["id"]] if isinstance(p, dict) and p.get("id") else ())
+                        return self._json(202, p)
                     if parts[2] == "archive":
                         return self._json(200, s.chat_archive(u, tid))
                     if parts[2] == "delete":

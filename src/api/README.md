@@ -205,6 +205,29 @@ set, the data file defaults to `data/zavaforward.json` under the current folder.
     request. Contractors get none of it and other staff roles do not see
     finance or grant detail.
 
+## Conversation panel (issue #159)
+
+An optional, collapsed panel on the case card ("Ask the assistant about this case") for staff roles that may chat.
+It is never needed to finish a task: every ordinary control stays on the page and works when chat is refused or
+the model is down.
+
+* `POST /api/chat/threads/{id}/ask` returns `{kind, reply, citations, label, model, workflow_only}`. The logic is
+  `zava_forward.core.chat_panel` (core); the provider call is `zava_forward.agents.chat.ChatModel` (agents),
+  composed in `server.py` in process until #144. Thread storage, consent gate (`CHAT_DPIA_REF`,
+  `CHAT_LAWFUL_BASIS_REF`, `CHAT_NOTICE_REF`), redaction and per-user isolation are the merged #160 to #163 code.
+* Every turn re-reads the staff role and the case through the user's own projection, so a revoked role or a case
+  out of scope stops the next turn (403 or 404).
+* Citations are ids of the projected case facts (`ZF-1/stage`). Uncited or unknown citations are dropped; with none
+  left, or no case facts, the panel abstains and says so. Every reply carries "AI suggestion, not approved".
+* A model failure (`disabled`, `timeout`, `provider-unavailable` or an unusable reply) returns `kind: fallback`,
+  `workflow_only: true` and a plain message. A reply that carries tool or record-change syntax is withheld.
+* `POST /api/chat/threads/{id}/proposals` with a `capability` calls the existing `Assistants.invoke`, so the request
+  follows the existing source check and independent role review. The chat has no other write path.
+* Web: `web/chat.js` (a `details` disclosure, a labelled form, an `aria-live="polite"` log and a `role="status"`
+  line). Tests: `tests/test_chat_panel.py`, `core/tests/test_chat_panel.py`, `agents/tests/test_chat_model.py`.
+* Not evidenced here: a screen-reader test (needs a manual run with a named reader), a live model run (no Azure
+  endpoint locally) and real chat data (DPIA, lawful basis and notice references are unset, so storage stays refused).
+
 ## Configuration
 
 | Variable | Purpose |

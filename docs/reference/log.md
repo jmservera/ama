@@ -3082,3 +3082,11 @@ metadata when the knowledge base was created.
 
 * Added `infra/main.test.bicepparam`; dev file now sets the development relaxations explicitly; all three files set `location` and `sqlLocation` to `uksouth` and mark placeholders. `environmentName` allows `pilot`, and a new guard rejects a pilot with relaxations.
 * `infra/README.md` gains an Environments section: one differences table, promotion rules, recorded region and quota checks (zone and pilot quota checks left open) and the naming and tagging convention. Tests extended.
+
+## [2026-10-15] implementation | Case conversation panel in src (#159)
+
+* Added the optional case chat panel: `src/core/.../chat_panel.py` (cited, labelled, abstaining answers and workflow-only fallback over the merged chat isolation and thread code), `src/agents/.../chat.py` (provider adapter), `POST /api/chat/threads/{id}/ask` and `/proposals` in `src/api` (proposals use the existing assistants invoke and independent review) and `web/chat.js`.
+* Documented in the `src/api` README ("Conversation panel") and the reference index task routing. No `mvp/` change.
+* Tests: `core` 256, `agents` 47, `api` 457 (92 skipped), `orchestrator` 17, `importer` 9; ruff and mypy clean. Docker is permission denied and SQL Server is absent locally, so the image and `mssql` jobs rely on CI.
+* Open on #159: screen-reader test, live model run, and real chat data (OD-45 to OD-49) need owner action, so those criteria stay unticked and the PR uses `Refs #159`.
+
