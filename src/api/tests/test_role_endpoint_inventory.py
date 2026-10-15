@@ -22,6 +22,13 @@ GET_ENDPOINTS = ["/api/me", "/api/account/photo", "/api/cases?view=all", "/api/c
                  "/api/time/status", "/api/time/mine", "/api/time/report", "/api/law/sources", "/api/law/search?q=x",
                  "/api/assistants", "/api/assistants/proposals", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1", "/api/nothing"]
 POST_ENDPOINTS = [("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
+                  ("/api/cases/ZF-1/hazard-raise", {"category": "Electrical", "priority": "Routine", "source": "Synthetic report", "aware_at": "2026-01-01T10:00:00Z"}),
+                  ("/api/cases/ZF-1/hazard-refer", {"index": 0, "to": "u3@example.test", "job": "SYN", "evidence": "SYN"}),
+                  ("/api/cases/ZF-1/hazard-receive", {"index": 0, "evidence": "SYN"}),
+                  ("/api/cases/ZF-1/hazard-accept", {"index": 0, "evidence": "SYN"}),
+                  ("/api/cases/ZF-1/hazard-times", {"index": 0, "evidence": "SYN", "responded_at": "2026-01-02T10:00:00Z"}),
+                  ("/api/cases/ZF-1/hazard-repaired", {"index": 0, "evidence": "SYN"}),
+                  ("/api/cases/ZF-1/hazard-release", {"index": 0, "note": "Synthetic independent check", "evidence": "SYN"}),
                   ("/api/cases/ZF-1/receive-handoff", {}), ("/api/cases/ZF-1/escalate-handoff", {"to": "u0@example.test", "reason": "Synthetic chase"}),
                   ("/api/cases/ZF-1/complete-handoff", {"note": "Synthetic completion"}),
                   ("/api/cases/ZF-1/draft", {"kind": "update"}), ("/api/cases/ZF-1/funding-draft", {}), ("/api/cases/ZF-1/read-doc", {}),

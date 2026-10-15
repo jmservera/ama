@@ -27,7 +27,7 @@ from zava_forward.core.ai import Ai
 from .chatthreads import SQLITE_DDL as CHAT_DDL, MEMORY_ADDED as CHAT_MEMORY_ADDED
 from .doc_controls import open_scanner
 from .documents import open_document_store
-from .store import ConflictError, Store
+from .store import ConflictError, GateError, Store
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -327,14 +327,32 @@ class SqlStore(Store):
     def _touched(self):
         if not hasattr(self.local, "touched"):
             self.local.touched, self.local.pending = set(), []
+            self.local.safety_clear = set()
         return self.local.touched
 
     def _touch(self, case_id):
         self._touched().add(case_id)
 
+    def require_safety_clear(self, c):
+        super().require_safety_clear(c)
+        self._touched()
+        self.local.safety_clear.add(c["id"])
+
+    def _validate_safety_clear(self):
+        """Recheck dependent cases under the transaction's cross-process writer lock."""
+        for cid in sorted(self.local.safety_clear):
+            row = self.db.execute("SELECT rowversion, body FROM cases WHERE id=?", (cid,)).fetchone()
+            if row is None:
+                raise ConflictError(cid)
+            rv, body = row
+            super().require_safety_clear(json.loads(body))
+            if rv != self._rv[cid]:
+                raise ConflictError(cid)
+
     def _finish(self):
         """Outermost lock exit: write audit-only entries, drop unsaved edits."""
         touched = self._touched()
+        self.local.safety_clear.clear()
         pending = self.local.pending
         if touched:
             with self.dblock:
@@ -360,6 +378,7 @@ class SqlStore(Store):
         with self.dblock:
             self.db.execute("BEGIN IMMEDIATE")
             try:
+                self._validate_safety_clear()
                 cur = self._db_seq()
                 new = cur + 1
                 changed = []
@@ -390,7 +409,7 @@ class SqlStore(Store):
                 self._append_audit(pending)
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
                 self.db.execute("COMMIT")
-            except ConflictError:
+            except (ConflictError, GateError):
                 self.db.execute("ROLLBACK")
                 self._discard()
                 raise
@@ -405,6 +424,7 @@ class SqlStore(Store):
                 self._recs[rid] = [rv, rec, body]
             pending.clear()
             touched.clear()
+            self.local.safety_clear.clear()
             if cur == self._seq:
                 self._seq = new
                 self.version = new
@@ -423,6 +443,7 @@ class SqlStore(Store):
             rec.clear()
             rec.update(json.loads(body))
         self._touched().clear()
+        self.local.safety_clear.clear()
         self.local.pending.clear()
         self._proc_sync()
         self._sync()

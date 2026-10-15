@@ -99,9 +99,23 @@ class BuildingTests(unittest.TestCase):
                     self.assertEqual(store.detail("ZF-3")["stage"], "Install booked")
                     store.log_call(manager, "ZF-2", "Safety referral", "Synthetic hazard intake")
                     self.assertEqual(len(store.cases["ZF-2"]["contacts"]), 1)
-                    store.raise_hazard(manager, "ZF-2", "Damp and mould", "Emergency", "Synthetic")
+                    store.raise_hazard(
+                        manager,
+                        "ZF-2",
+                        "Damp and mould",
+                        "Emergency",
+                        "Synthetic",
+                        metadata=dict(source="Synthetic report", aware_at="2026-01-01T10:00:00Z"),
+                    )
                     self.assertFalse(store.cases["ZF-2"]["hazards"][-1]["released"])
-                    store.refer_hazard(manager, "ZF-2", 0, manager["email"], "SYN-REPAIR")
+                    store.refer_hazard(
+                        manager,
+                        "ZF-2",
+                        0,
+                        manager["email"],
+                        "SYN-REPAIR",
+                        metadata=dict(evidence="Synthetic sending reference"),
+                    )
                     self.assertEqual(store.cases["ZF-2"]["hazards"][-1]["job"], "SYN-REPAIR")
                     self.assertTrue(store.verify_audit())
                 finally:

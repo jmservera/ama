@@ -561,35 +561,69 @@ function handoffPanel(c, id, refresh) {
 }
 
 function hazardState(x) {
-  return x.released ? "Released" : x.repaired ? "Repaired, awaiting release" : x.referred ? "Referred" : "Raised";
+  if (x.released) return "Retrofit work restriction lifted";
+  if (x.repaired) return "Repair evidenced; retrofit work still stopped";
+  return x.state || "Legacy evidence needed";
 }
 
 function safetyPanel(c, id, refresh) {
   const canRelease = SAFETY_ROLES.includes(me.user.role);
   const safeStaff = me.staff.filter((s) => SAFETY_ROLES.includes(s.role));
+  const iso = (v) => v ? new Date(v).toISOString() : "";
+  const timingLabels = {
+    response_due_at: "Service response due", responded_at: "Service responded",
+    resident_update_due_at: "Service resident update due", resident_updated_at: "Service resident updated"
+  };
   const items = c.hazards.map((x, i) => {
     const st = hazardState(x);
-    const job = h("input", { type: "text", maxlength: 40, "aria-label": `Repair job reference for ${x.category}` });
+    const job = h("input", { type: "text", maxlength: 40, "aria-label": `External service case reference for ${x.category}` });
     const to = h("select", { "aria-label": `Refer ${x.category} to` }, safeStaff.map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
-    const note = h("input", { type: "text", maxlength: 300, "aria-label": `Release note for ${x.category}` });
+    const evidence = h("input", { type: "text", maxlength: 300, "aria-label": `External evidence reference for ${x.category}` });
+    const note = h("input", { type: "text", maxlength: 300, "aria-label": `Reason to restart retrofit work for ${x.category}` });
+    const receiver = x.destination && x.destination.code === me.user.code && canRelease;
+    const action = (name) => refresh(() => post(id, name, { index: i, evidence: evidence.value, note: note.value }));
+    const times = Object.entries(timingLabels).filter(([key]) => !x[key]).map(([key, label]) => [
+      key, h("input", { type: "datetime-local", "aria-label": `${label} for ${x.category}` })
+    ]);
     return h("li", {},
-      h("strong", {}, `${x.category}, ${x.priority || ""}`.replace(/, $/, "")), ` ${st}. Noticed ${fmtDate(x.noticed)}. Owner: ${x.owner}.`,
-      x.job && ` Job ${x.job}.`,
-      st === "Raised" && h("div", { class: "row" }, to, job, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-refer", { index: i, to: to.value, job: job.value })) }, "Refer for repair")),
-      st === "Referred" && h("div", { class: "row" }, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-repaired", { index: i })) }, "Record that the repair is done")),
-      st === "Repaired, awaiting release" && (canRelease
-        ? h("div", { class: "row" }, note, h("button", { onclick: () => refresh(() => post(id, "hazard-release", { index: i, note: note.value })) }, "Release (needs someone other than who raised or repaired it)"))
-        : h("div", { class: "muted" }, "The Building Safety Liaison or a manager releases it.")));
+      h("strong", {}, `Reported: ${x.category}, ${x.priority || "urgency unknown"}`), ` ${st}.`,
+      h("p", {}, `Source: ${x.source || "Unknown (legacy)"}. Awareness: ${x.aware_at || "Unknown (legacy)"}.`),
+      h("p", {}, `Stopped work scope: home ${x.hold.case_id}. Accountable role: ${x.hold.accountable_role || "Unknown (legacy)"}. Follow-up: ${x.follow_up ? x.follow_up.name : "Unknown (legacy)"}.`),
+      h("p", {}, `Destination: ${x.destination ? `${x.destination.name} (${x.destination.role})` : "Not bound"}. External case: ${x.job || "Unknown"}.`),
+      h("p", {}, `Sent: ${x.sent_at || "Unknown"}; receipt: ${x.received_at || "Not evidenced"}; acceptance: ${x.accepted_at || "Not evidenced"}.`),
+      h("p", {}, `Sending evidence: ${x.sent_evidence || "Unknown"}; receipt evidence: ${x.receipt_evidence || "Unknown"}; acceptance evidence: ${x.acceptance_evidence || "Unknown"}.`),
+      h("p", {}, `Repair evidence: ${x.repair_evidence || "Unknown"}. Restart decision: ${x.hold.decision ? `${x.hold.decision.actor.name} (${x.hold.decision.actor.role}): ${x.hold.decision.reason}; ${x.hold.decision.evidence}` : "Not recorded"}.`),
+      h("ul", {}, Object.entries(timingLabels).map(([key, label]) => h("li", {}, `${label}: ${x[key] || "Unknown (external service owns timing)"}`))),
+      (!x.released || (receiver && x.accepted_at && times.length > 0)) && h("div", {}, h("label", {}, "External evidence reference", evidence)),
+      !x.released && !x.referral_version && h("div", { class: "row" }, to, job, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-refer", { index: i, to: to.value, job: job.value, evidence: evidence.value })) }, x.referred ? "Bind legacy referral prospectively" : "Record referral sent")),
+      receiver && !x.received_at && h("button", { class: "alt", onclick: () => action("hazard-receive") }, "Record separate receipt evidence"),
+      receiver && x.received_at && !x.accepted_at && h("button", { class: "alt", onclick: () => action("hazard-accept") }, "Record separate acceptance evidence"),
+      receiver && x.accepted_at && h("div", {},
+        times.map(([key, input]) => h("label", {}, timingLabels[key], input)),
+        times.length > 0 && h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-times", {
+          index: i, evidence: evidence.value, ...Object.fromEntries(times.map(([key, input]) => [key, iso(input.value)]))
+        })) }, "Record externally supplied times"),
+        !x.repaired && !x.released && h("button", { class: "alt", onclick: () => action("hazard-repaired") }, "Record external repair evidence")),
+      x.repaired && !x.released && canRelease && h("div", { class: "row" }, note,
+        h("button", { onclick: () => action("hazard-release") }, "Allow home retrofit work to restart (independent reviewer)")));
   });
   const cat = h("select", { id: "hz-cat" }, HAZ_CATEGORIES.map((x) => h("option", {}, x)));
   const pri = h("select", { id: "hz-pri" }, HAZ_PRIORITIES.map((x) => h("option", {}, x)));
   const note = h("input", { id: "hz-note", type: "text", maxlength: 300 });
-  return h("section", { class: "card" }, h("h2", {}, "Safety issues"),
+  const source = h("input", { id: "hz-source", type: "text", maxlength: 300 });
+  const aware = h("input", { id: "hz-aware", type: "datetime-local" });
+  return h("section", { class: "card" }, h("h2", {}, "Safety referrals and stopped retrofit work"),
+    h("p", { class: "muted" }, "The existing hazard and repairs service owns categorisation, clocks, resident updates and closure. These are unverified reports and human-recorded external evidence, not service commands or verified transport. No message is sent here. Use the existing hazard service immediately for urgent concerns; AI and stopped retrofit work must not delay it."),
     items.length ? h("ul", { class: "list" }, items) : h("p", {}, "No safety issues recorded."),
-    !c.closed && h("div", {}, h("h3", {}, "Raise a safety issue"),
-      h("p", { class: "muted" }, "An Emergency is flagged for the Building Safety Liaison the same day. The case stops until it is released."),
-      h("label", { for: "hz-cat" }, "What kind"), cat, h("label", { for: "hz-pri" }, "How urgent"), pri, h("label", { for: "hz-note" }, "What you saw"), note,
-      h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-raise", { category: cat.value, priority: pri.value, note: note.value })) }, "Raise safety issue"))));
+    h("div", {}, h("h3", {}, "Raise a safety observation (also available after retrofit closure)"),
+      h("label", { for: "hz-cat" }, "Reported observation (not service classification)"), cat,
+      h("label", { for: "hz-pri" }, "Reported urgency (not service priority)"), pri,
+      h("label", { for: "hz-note" }, "What you saw"), note,
+      h("label", { for: "hz-source" }, "Source and channel reference"), source,
+      h("label", { for: "hz-aware" }, "When the landlord first became aware (local time)"), aware,
+      h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-raise", {
+        category: cat.value, priority: pri.value, note: note.value, source: source.value, aware_at: iso(aware.value)
+      })) }, "Raise safety issue"))));
 }
 
 async function closedView() {

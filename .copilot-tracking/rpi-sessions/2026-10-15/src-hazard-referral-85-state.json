@@ -1,0 +1,75 @@
+{
+  "task_id": "85",
+  "task_slug": "src-hazard-referral-85",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-15/src-hazard-referral-85-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-15/src-hazard-referral-85-plan.md",
+    "details": ".copilot-tracking/details/2026-10-15/src-hazard-referral-85-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-15/src-hazard-referral-85-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-15/src-hazard-referral-85-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-15/src-hazard-referral-85-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the full RPI loop automatically, then commit, push and open a PR to main using Refs #85.",
+      "status": "confirmed",
+      "evidence": "Explicit caller request on 2026-10-15; no merge authority."
+    },
+    {
+      "decision": "Research executed, Ready for bounded engineering. Exactly one critique Complete/Revise; PC-001, PC-002 and PC-003 applied directly in plan/details.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-15/src-hazard-referral-85-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Authorized delivery completed as draft PR #314 to main using Refs #85. Implementation/evidence commit 58c6b39 pushed; CI observed in progress. No merge or product acceptance.",
+      "status": "delivered-draft-not-accepted",
+      "evidence": "https://github.com/jmservera/ama/pull/314"
+    },
+    {
+      "decision": "Exactly one post-implementation Review executed Complete; outcome Not accepted. RV-001 High concurrency defect reproduced; RV-002/RV-003 owner/live gaps remain.",
+      "status": "reviewed-not-accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-15/src-hazard-referral-85-review.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "RV-001",
+      "summary": "Concurrent hazard intake can bypass newly guarded procurement transitions; not merge-ready.",
+      "resolution": "Distinct later implementation must validate the dependent case inside the committing transaction and add a two-store regression."
+    },
+    {
+      "id": "RV-002-RV-003",
+      "summary": "Operational owner acceptance, verified service transport, real model/SQL Server/Azure and human evidence unavailable.",
+      "resolution": "Keep original issue criteria unchecked and obtain explicit owner/live evidence in later selected work."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await owner selection of ranked follow-up, Stop automatic session or manual mode. Draft PR #314 is not merge-ready; RV-001 remains open."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Fix transactional dependent-case validation for guarded procurement transitions.",
+      "rationale": "Highest safety/value impact; reproduced High defect blocks merge and reliable hold enforcement.",
+      "evidence": "RV-001 in the canonical Review."
+    },
+    {
+      "rank": 2,
+      "task": "Ratify operational safety responsibility, release authority and timing/escalation policy.",
+      "rationale": "Named owner decisions unlock legitimate acceptance without invented legal/service rules.",
+      "evidence": "RV-002 and original issue acceptance."
+    },
+    {
+      "rank": 3,
+      "task": "Verify actual repairs transport and permitted real AI/SQL Server/Azure workflow.",
+      "rationale": "Required application acceptance evidence cannot be substituted by local fixtures or passing CI.",
+      "evidence": "RV-003 and mandatory platform boundary."
+    }
+  ]
+}

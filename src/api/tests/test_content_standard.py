@@ -10,7 +10,7 @@ WEB = ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web"
 DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "content-standard.md").read_text()
 BANNED = re.compile(r"\b(gates?|holds?|provenance|traces?)\b", re.I)
 # Code identifiers and one stored value that are not shown as wording to a person.
-ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "i.hold", "Keep on hold", 'category("holds",')
+ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "i.hold", "x.hold", "Keep on hold", 'category("holds",')
 
 
 def visible_lines(path):

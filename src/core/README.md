@@ -77,6 +77,75 @@ project contact in a denial is not a grant of those authorities. Approved real
 evaluation, provider attestation, Azure SQL race evidence and direct human
 oversight remain separate gates. Local synthetic checks do not approve live use.
 
+## Hazard referral and home retrofit holds (#85)
+
+The existing `workflows` module records an unverified observation and links an
+external hazard/repair case. Reported category and urgency are not the service's
+classification. The existing hazard and repairs service owns categorisation,
+clocks, action, resident updates and closure; no command here changes them.
+No transport is implemented: sending, receipt, acceptance, repair and timing
+references are human-recorded assertions, not independently verified delivery.
+
+New observations require a source/channel reference and timezone-aware
+`aware_at`. Reporter, recording time and hold scope are server-derived.
+Every hold explicitly covers the linked home/case, not its whole building or
+another household. Referral requires a destination staff safety receiver,
+external case/job reference and sending evidence. It does not imply receipt.
+Only that receiver can separately record receipt and then acceptance, each
+with evidence. Sender retains referral follow-up until acceptance; the retrofit
+case owner and resident decision never change through these actions.
+
+The receiver may record external response/resident-update due and actual
+times, supported by an evidence reference. Unknown times stay unknown;
+existing observations cannot be overwritten here. These are not calculated
+statutory clocks, service updates or promises of compliance. Previously unknown
+external times can still be recorded after retrofit work restarts; lifting that
+restriction does not end the external response or updates. Each transition
+has an immutable versioned snapshot and an audit-ledger entry, persisted using
+the existing case body on JSON, SQLite and SQL Server without a new schema.
+Local durability evidence covers JSON/SQLite, not actual SQL Server.
+
+External repair evidence must follow receipt and acceptance. A different
+safety-role actor, neither reporter nor repair recorder, must record the
+release reason and external supporting evidence. This releases only the
+retrofit hold, not the external hazard case. Active holds block technical
+sign-off, installation advancement, new/reissued/corrective work orders,
+booking/completion and quality acceptance/handover. Existing building,
+resident consent, funding and technical gates remain independent.
+Manual hazard intake/referral remains available despite AI failure, retrofit
+pause or a closed retrofit record, without reopening or changing that record.
+
+SQL-backed guarded transitions reload the dependent home's hazards and check
+its row version inside the committing transaction, including work orders that
+do not modify the case itself. The existing SQLite writer transaction and
+SQL Server transaction-owned application lock serialize intake against that
+validation and commit. A hold or stale dependency refuses the entire transition
+and its audit entry; it cannot be waived by a process-local precheck.
+
+The safety-role mapping and independent release check above are demonstrator
+controls, not ratified operational authority. Repairs, Safety and Housing owners
+have not approved who may release a retrofit hold, response/resident-update
+timing, or escalation policy (RV-002). Recorded due times are external assertions,
+not an approved timetable. Original issue acceptance remains unmet and unchecked.
+
+Legacy hazards display unknown missing provenance rather than inferred dates
+or receivers. Active legacy referrals/repairs need a prospective evidenced
+referral binding, retaining the original record, then new receipt, acceptance
+and repair evidence. Already released legacy holds stay released.
+New evidence/source narratives are withheld from staff without a recorded
+need and contractors see no hazard record; they are not added to AI prompts.
+
+`tests/test_hazard_referral.py` covers these semantics on JSON and SQLite,
+including restart, legacy continuation, invalid actors/indexes/replays,
+closed-record intake, consent/building gates and model-source minimisation.
+Interleaved two-store SQLite regressions cover all guarded transitions,
+including the previously reproducible work-order completion race; these do
+not claim actual SQL Server durability or operational approval.
+Operational timing/escalation policy, real service integration, permitted real
+model inference, SQL Server/Azure workflow and human acceptance remain open.
+AI remains available through existing configuration/release/human-review
+gates; this slice grants it no safety authority and cannot certify those gates.
+
 ## Return, reopen and handoff accountability (#83)
 
 `workflows.py` is shared by JSON/SQLite local stores and the Azure SQL store.
