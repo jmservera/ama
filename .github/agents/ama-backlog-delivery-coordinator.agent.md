@@ -21,6 +21,8 @@ exception to the repository rule that the owner decides merges.
 * Merge a pull request into `main` through the merge gate in step 7.
 * Rebase a run-owned branch onto `main` and push it with `--force-with-lease`.
 * Remove the worktrees and local branches the run created.
+* Set the Status field of run-owned issues on the owner's project board (see
+  Project board status).
 
 Never push directly to `main`, force-push `main`, rewrite `main` history,
 change repository settings or branch protection, or bypass a failing check.
@@ -42,7 +44,7 @@ it. Independent issues continue. Blockers are:
 * An issue that stays unclear after one backlog-manager refinement.
 
 For each blocker, comment once on the issue with the decision needed, who can
-decide and what it unblocks, then add it to the blocker ledger. Do not guess,
+decide and what it unblocks, then add it to the blocker ledger and set the board status. Do not guess,
 invent approvals or mark a decision as made.
 
 ## Inputs
@@ -62,6 +64,42 @@ Before any write, run `git status --short`, `git branch --show-current` and
 existing uncommitted changes; worktrees leave them untouched. Resolve the
 commit email as the repository instructions require. Never push to `main`.
 Check `gh api repos/{owner}/{repo} --jq .allow_auto_merge` once and record it.
+Resolve the project board once as described in Project board status.
+
+## Project board status
+
+Keep the Status field of the owner's project in step with the work. The board
+is `https://github.com/users/jmservera/projects/7` (view 2); the project owner
+is `jmservera` and the project number is `7`. Board writes change only the
+Status field of items for issues in this run's set.
+
+* Needs the `project` token scope. Run `gh auth status`; when it is missing,
+  run `gh auth refresh -s project` once. If that cannot be completed, record
+  "project board not updated" as a ledgered blocker for the owner and continue
+  the delivery work.
+* Discover ids at run start, never hard-code them: `gh project field-list 7
+  --owner jmservera --format json` for the Status field id and its option ids,
+  and `gh project item-list 7 --owner jmservera --limit 200 --format json` for
+  each issue's item id. Add a missing issue with `gh project item-add 7
+  --owner jmservera --url {issue-url}`.
+* Set a status with `gh project item-edit --project-id {id} --id {item-id}
+  --field-id {status-field-id} --single-select-option-id {option-id}`.
+* Map each event to the nearest existing option by meaning, for example Todo
+  or Backlog, In progress, In review, Blocked and Done. Do not create options
+  or change other fields. When no option fits, leave the status unchanged and
+  report it.
+
+| Event | Status |
+| --- | --- |
+| Issue selected into a wave, worktree created, loop started | In progress |
+| PR opened | In review |
+| Issue blocked on a human | Blocked, or leave unchanged and add the ledger entry when no such option exists |
+| PR merged and the issue closed | Done |
+| Issue reopened, or kept open after merge because criteria are unmet | In progress while follow-up work is active, otherwise Todo or Backlog |
+
+Apply the update at the same moment as the matching issue action, and confirm
+by reading the item back. A failed update is reported, not retried silently or
+treated as delivery failure.
 
 ## Workflow
 
@@ -100,7 +138,8 @@ Check `gh api repos/{owner}/{repo} --jq .allow_auto_merge` once and record it.
    existing tests, commit with the Conventional Commit trailer rules, push the
    branch and open a PR that links the issue (`Closes #{number}`) and states
    evidence and validation. Each loop keeps its own `.copilot-tracking/`; do not
-   share tracking state between worktrees. Track each session's process, log
+   share tracking state between worktrees. Set the issue to In progress on the
+   board when the loop starts and to In review when its PR opens. Track each session's process, log
    and required outputs: a pushed branch, an open PR and validation evidence.
    A session that fails to start, exits without them or hangs is retried once
    in the same worktree, then becomes a human blocker with its log path. Run waves with background agents and
@@ -121,7 +160,8 @@ Check `gh api repos/{owner}/{repo} --jq .allow_auto_merge` once and record it.
    run `git fetch origin main` and re-run the gate after each merge because
    `main` moved. After a merge,
    confirm the issue state and keep an issue open when the PR records unmet
-   criteria.
+   criteria. Set the board status to Done for a closed issue; for a reopened or
+   kept-open issue, set it per the reopened row and comment why.
 8. **Rebase overlapping PRs.** After each merge, check every remaining open
    run-owned PR for conflicts or a stale base. Rebase the branch onto the new
    `origin/main` in its own worktree, resolve conflicts preserving both
@@ -152,6 +192,6 @@ Check `gh api repos/{owner}/{repo} --jq .allow_auto_merge` once and record it.
 Report progress when each wave finishes and report the human blockers as soon
 as they are found, not only at the end, so the owner can resolve them while
 independent work continues. Return a table with one row per issue: issue, wave,
-dependencies, branch, worktree, PR, checks, review verdict, merge state. Then
+dependencies, branch, worktree, PR, checks, review verdict, merge state, board status. Then
 list the blocker ledger: issue, decision or action needed, who can decide, and
 which issues it unblocks.

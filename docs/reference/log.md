@@ -2758,3 +2758,10 @@ metadata when the knowledge base was created.
 * Real-source applicability, personal delegation, actual data processing,
   paid/provider calls and operational acceptance retain their existing gates.
   No application implementation or operational approval is recorded here.
+
+## [2026-10-15] update | Coordinator updates project board status
+
+* Updated `.github/agents/ama-backlog-delivery-coordinator.agent.md` so the
+  coordinator sets the Status field on the owner's project 7 when an issue
+  starts, opens a PR, blocks, closes or reopens. Ids are discovered at run
+  time and the `project` token scope is a precondition. No index change.
