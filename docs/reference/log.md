@@ -2928,3 +2928,13 @@ metadata when the knowledge base was created.
 * No regulatory snapshot changed. Open: DPO and Legal confirmation of the roles
   allowed to see a vulnerability reason (OD-14, OD-19), Entra B2B guest
   contractor identity model, and browser acceptance for every role.
+## 2026-10-15 Azure Policy, Defender plans, locks and tagging as code (#147)
+
+* infra/README.md gains a Governance controls section; ADR 0001 open item updated. New `infra/governance.bicep`, `main.pilot.example.bicepparam`, `policy-exceptions.json` and tests.
+* Review fixes: pilot parameter file renamed `main.pilot.example.bicepparam` and labelled non-deployable (test rejects a deployable `main.pilot.example.bicepparam`); EX-001 expiry set to 2026-12-31; docs state policy is audit-only and Defender stays Free until a cost is accepted.
+* No regulatory snapshot changed. Open: Defender cost estimate and enablement, audit versus Deny stance.
+
+## 2026-10-15 IoT Hub Bicep module (#140)
+
+* `infra/README.md` records the proposed IoT Hub tier, region, retention, identity, network and credential-owner decisions; ADR 0003 open items point to them. No regulatory snapshot changed.
+* Open: owner approval of ADR 0003, verified pricing, live what-if, BRD OD-43.
