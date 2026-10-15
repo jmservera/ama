@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-14
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
@@ -505,6 +505,32 @@ Automation must not trade speed for rights or safety. A source update, sensor
 reading, missed contact or generated interpretation cannot diagnose a hazard,
 infer consent, remove a resident's priority, satisfy a statutory duty, approve
 professional work or certify an external submission.
+
+### Regulatory Compliance Assistant (Proposed, 2026-10-15)
+
+The [regulatory literacy synthesis](./reference/research/ux/regulatory-literacy-for-journeys.md)
+finds that most journey users need to recognise a legal trigger and act safely,
+not interpret law. [ADR 0004](./adrs/0004-regulatory-compliance-assistant.md)
+proposes an assistant built on the existing runtime, recorded as BRD FR-049,
+PRD FR-051 and open decision BRD OD-44:
+
+* A versioned law store in Azure SQL, with immutable source snapshots and a
+  retrieval index. It is seeded from the local regulatory snapshots and
+  records gaps (leasehold, complaints handling, TrustMark, the licensed PAS
+  2035 text) as no source held.
+* Owner-approved rule cards and a deterministic rule engine that run at
+  journey steps and raise role-appropriate alerts. Missing evidence returns
+  unknown, never clear, and a future rule is never applied as active.
+* A chat on the home and case view that answers from cited provisions and that
+  home's role-scoped facts. It states what is unknown and who decides, and it
+  refuses compliance conclusions, legal advice and invented lease, grant or
+  contract terms.
+
+This is a proposal and a sector-informed hypothesis. It does not establish
+which duties apply to Zava North Homes, name approvers or show that users want
+these alerts. Hazard and emergency intake must keep working without it, and
+named humans interpret law, approve cards and decide that a duty is met.
+Value must be shown against deterministic rule cards with provision links.
 
 ### Data Handling and Retention Baseline (Proposed)
 

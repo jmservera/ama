@@ -2457,3 +2457,10 @@ metadata when the knowledge base was created.
 * Proposed a law store, deterministic rule cards with proactive alerts and a
   home-specific cited chat. Records open items and approval boundaries; no
   legal interpretation or owner approval is claimed.
+
+## [2026-10-15] update | Regulatory compliance assistant added to addendum, BRD, PRD and ADRs
+
+* Added BRD FR-049, AC-091 and OD-44, PRD FR-051, AC-069 to AC-071 and OQ-017,
+  an addendum section, ADR 0004 traceability and an ADR 0003 pointer. Version
+  numbers were not bumped; each change is dated 2026-10-15. Proposal only; no
+  owner approval, legal interpretation or fresh quality review.

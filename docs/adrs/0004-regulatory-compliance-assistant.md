@@ -14,6 +14,18 @@ it does not decide which duties apply to Zava North Homes. It builds on
 [ADR 0001](./0001-azure-architecture.md), [ADR 0002](./0002-pilot-readiness-architecture.md)
 and the [regulatory literacy synthesis](../reference/research/ux/regulatory-literacy-for-journeys.md).
 
+## Requirements traceability
+
+| Requirement | Document |
+| --- | --- |
+| FR-049, AC-091, OD-44 | [BRD](../brds/agentic-retrofit-programme-brd.md) |
+| FR-051, AC-069 to AC-071, OQ-017 | [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) |
+| Proposal summary | [Case Study 48 Addendum](../case_study_48_addendum.md) |
+
+It extends BRD FR-038 to FR-040 and RULE-021, which already require a source
+register, monitoring and human-approved change. BRD and PRD numbers differ, so
+cite the document.
+
 ## Context
 
 Journey roles meet legal duties at many steps: hazard intake clocks, PAS 2035

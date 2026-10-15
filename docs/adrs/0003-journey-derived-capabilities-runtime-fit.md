@@ -143,3 +143,9 @@ build).
 
 Not implemented. No migration, API or screen change, IoT Hub provisioning,
 test run or deployment follows from this ADR.
+
+## Related decisions
+
+[ADR 0004](./0004-regulatory-compliance-assistant.md) (2026-10-15, proposed) adds a
+regulatory law store, rule cards, proactive alerts and a home chat on the same
+single-API, Azure SQL and assistant runtime. It does not amend any decision here.

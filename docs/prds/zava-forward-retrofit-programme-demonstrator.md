@@ -2,7 +2,7 @@
 title: "Zava Forward Retrofit Programme Workbench"
 description: "Product requirements for a role-based retrofit delivery workbench covering the Zava Forward workflow portfolio"
 author: AMA Research Team
-ms.date: "2026-10-14"
+ms.date: "2026-10-15"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "in-review"
@@ -13,7 +13,7 @@ version: "0.15.0"
 owners: ["AMA project owner (exercise approval)", "Retrofit Programme Manager (exercise product-owner role)"]
 reviewers: ["Independent PRD Quality Reviewer", "AMA project owner (final exercise acceptance); live control owners remain unconfirmed"]
 created_date: "2026-10-03"
-last_updated: "2026-10-14"
+last_updated: "2026-10-15"
 product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003", "GOAL-004"]
 product_goal_smart_status: "pass"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -763,11 +763,15 @@ owner, named control owners and affected users before implementation approval.
 | FR-048 | The product shall distinguish an offered appointment, visit bundle or contractor slot from a commitment confirmed by the resident or authorised representative, staff and contractor capacity, with no bundle delaying urgent safety work, record household constraints, options offered, deferral or pause and a named update owner, and keep provider no-shows separate from resident non-access. | Authorized user offers, confirms, defers or records a visit outcome | AC-062, AC-065 | Given an offered slot, a proposed visit bundle and a constructed contractor capacity, when each is recorded, then it remains an offer, not a commitment, until the resident or authorised representative and an authorised staff member confirm it and the contractor confirms capacity (FR-019); bundling needs recorded resident agreement and competence checks and never delays urgent safety work (FR-002); a non-digital confirmation route is shown; and no contact, booking or instruction is sent. | FR-048 | Not run |
 | AC-063 | Given a closed complaint response, a completed package and an open household remedy, defect or leaseholder charge query, when package, handover or financial status changes, then each status keeps its own owner and date, the open item stays visible and ages by fixture-configured bands owned by Housing/Complaints (Unknown until set), an affected approval is flagged for review on scope change, missing lease evidence stays Unknown and holds the decision, leasehold text appears only as a constructed Legal-reviewed position ID, and the complaints route stays available without detriment (BRD RULE-005). | FR-049 | Not run |
 | FR-050 | The product shall capture simulated in-use monitoring observations (humidity and temperature) through Azure IoT Hub as the ingestion product, validate and append them to the Azure SQL record with provenance, and derive versioned deterministic review signals that can only create a human condition-review task. | Simulator or authenticated device sends telemetry; scheduled analysis runs | AC-066, AC-067, AC-068 | GOAL-002, GOAL-003 |
+| FR-051 | The product shall provide a regulatory compliance assistant with a versioned store of approved regulatory sources and owner-approved rule cards, deterministic proactive checks and role-appropriate alerts at journey steps, and a chat that answers questions about one home from cited sources and that home's role-scoped facts. It shall retrieve, compare, cite, flag and route only; it shall not decide that a duty is met, interpret law, activate a rule or send resident communications. | Workflow step transition, change to a home or case, scheduled clock, source change, or a user question on a home | AC-069, AC-070, AC-071 | GOAL-001, GOAL-002 |
 | AC-064 | Given a representative with expired, interpreter-only, disputed or several authorities and a changed safe contact, when a decision or disclosure is attempted, then only the recorded task, scope, source, review date and the resident's own stated wishes apply; a representative's agreement is not the resident's consent unless the authority covers that decision; expired or disputed authority holds disclosure and consent actions as a constructed staff confirmation task with nothing sent; representative fields show only to roles in the permitted-field matrix (NFR-003) and retention is Unknown until approved. See also AC-037. | FR-045 | Not run |
 | AC-065 | Given household constraints (care, noise, work pattern, outage), options offered, a deferral or pause, a provider no-show and a verified resident no-access event, when each is recorded, then constraints and options are visible to scheduling with a named update owner, the provider no-show is recorded separately and never attributed to the resident (FR-031/AC-033), and preference breaches and abortive visits are counted by cause and owner; breach thresholds are Unknown until the programme owner sets them. | FR-048 | Not run |
 | AC-066 | Given a simulator device identity sending valid, duplicate, out-of-order, unmapped, wrong-unit, clock-skewed and uncalibrated telemetry through Azure IoT Hub, when the API consumer processes it, then valid readings are appended once per sensor and reading ID with source type, scenario, seed, schema version and receipt time; others create an owned data-quality exception and never change a property record; ingestion has no public unauthenticated endpoint and no secret in source or telemetry; and the accepted build exercises actual IoT Hub, Azure SQL persistence after restart and a registered real AI task under CON-009. | FR-050, FR-044 | Not run |
 | AC-067 | Given sufficient, insufficient, stale, declined-monitoring and condition-triggering synthetic series, when analysis runs, then outputs are versioned, reproducible from retained readings and labelled by sufficiency; only an approved rule creates `SENSOR_REVIEW_DUE` for a human; no signal diagnoses a hazard, starts a clock, overrides a resident report, releases a hold or changes ranking; insufficient or declined data never lowers priority or service; raw readings and device identifiers are absent from AI prompts, map clusters and diagnostic logs; and the accessible list mirrors the map status text. | FR-050, FR-008, FR-003 | Not run |
 | AC-068 | Given the analytics research plan, when a derived measure such as dew point, dew point margin or sustained-high-humidity duration is proposed for use, then research phases R1 to R3 have cited primary sources, a versioned method specification and a synthetic validation result, every threshold is sourced or labelled an exercise value, and the deterministic result is the comparator for any AI-assisted trend finding. | FR-050 | Not run |
+| AC-069 | Given sources that are in force, guidance, consultation, historical, partial or missing, when the store is loaded, queried or changed, then each source and provision keeps official URL, status, effective, retrieval and review dates, hash, completeness and owner; a newer retrieval is a new version; a detected change never overwrites an approved rule card; only a card approved by its named owner (not its author) is active; and a gap is recorded as no source held. |
+| AC-070 | Given seeded cases including a possible hazard report, a case with missing evidence, an unapproved or future rule, a measure changed after review and a significant automated recommendation, when step transitions, data changes and scheduled clocks run, then deterministic checks return clear, attention, breach risk, unknown or not applicable with cited source and status; missing evidence is unknown, never clear; a model never sets an awareness date or suppresses a check; an alert names the safe action, the owner and the clock; a breach risk alert needs owner acknowledgement and outcome; and no alert sends a resident message. |
+| AC-071 | Given graded home questions, adversarial prompts, conflicting or stale sources, a future-law question and a request for lease, grant or contract terms, when the chat answers, then every statement cites a provision or fact ID with status and dates, unsupported claims are dropped, role-scoped facts exclude unneeded fields, no compliance conclusion, legal advice or future-as-active rule is given, a doubt route sends the turn to the named owner, retrieved text is treated as data not instruction, and a paired comparison reports value against deterministic rule cards with provision links alone. |
 
 ### Independently reportable review checks
 
@@ -790,6 +794,9 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | AC-066 | iot-ingestion-idempotency | Independently replay valid, duplicate, out-of-order and unmapped telemetry and compare appended rows and exception records; confirm no public endpoint and actual hub, SQL and AI evidence. |
 | AC-067 | review-signal-authority | Verify the signal only creates a human task and that insufficient or declined data leaves priority and service unchanged. |
 | AC-068 | method-evidence | Verify cited sources, method version, synthetic result and labelled thresholds for each derived measure. |
+| AC-069 | store-integrity | Verify versions, status, hash, approval separation and gap records. |
+| AC-070 | rule-check | Verify deterministic results, unknown handling, clocks and no auto-communication. |
+| AC-071 | chat-evidence | Verify citation validity, refusals, scoping, injection resistance and the non-AI comparison. |
 | AC-055 | measure-version-authority | Independently compare each decision's home/measure/scope/version/source and representative permissions; contact/access alone leaves unknown. |
 | AC-056 | withdrawal-isolation | Compare exact affected discretionary-readiness IDs and unaffected choices; verify no inferred sanction or hazard pause. |
 | AC-012 | return-disposition | Compare expected reason/source/actor/receiver/next-action record independently of history and invalidation tests. |
@@ -870,6 +877,7 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-048 | AC-062, AC-065 | Linked |
 | FR-049 | AC-063 | Linked |
 | FR-050 | AC-066, AC-067, AC-068 | Linked |
+| FR-051 | AC-069, AC-070, AC-071 | Linked |
 
 Link coverage: 50/50 FRs linked to at least one criterion (100%); this matrix
 matches both requirement and criterion tables. Behavioral acceptance remains
@@ -880,8 +888,8 @@ been implemented or tested.
 
 | Requirements | Goals |
 | --- | --- |
-| FR-001 to FR-006, FR-009, FR-011, FR-014, FR-024 to FR-026, FR-029 to FR-035, FR-038 to FR-040, FR-042, FR-044 to FR-046, FR-048 to FR-049 | GOAL-001 |
-| FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-031, FR-033, FR-035 to FR-038, FR-040 to FR-050 | GOAL-002 |
+| FR-001 to FR-006, FR-009, FR-011, FR-014, FR-024 to FR-026, FR-029 to FR-035, FR-038 to FR-040, FR-042, FR-044 to FR-046, FR-048 to FR-049, FR-051 | GOAL-001 |
+| FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-031, FR-033, FR-035 to FR-038, FR-040 to FR-051 | GOAL-002 |
 | FR-004, FR-020 to FR-024, FR-030, FR-050 | GOAL-003 |
 | FR-025 to FR-028, FR-034, FR-036 to FR-037, FR-039 to FR-040, FR-044, FR-047 | GOAL-004 |
 
@@ -941,6 +949,7 @@ BRD and PRD numbers differ, so always cite the document:
 | AC-023 purpose-scoped reuse | AC-035 (changed safe contact or consent stops reuse) |
 | AC-065 owned review and challenge | Deferred; no PRD requirement covers the nomination challenge (BRD FR-037) |
 | FR-048, AC-090 (Should), OD-43 | FR-050, AC-066 to AC-068; IoT Hub ingestion per [ADR 0003](../adrs/0003-journey-derived-capabilities-runtime-fit.md) and [research plan](../reference/research/iot-sensor-analytics-research-plan.md); real data waits for OD-43 |
+| FR-049, AC-091 (Should), OD-44 | FR-051, AC-069 to AC-071; design in [ADR 0004](../adrs/0004-regulatory-compliance-assistant.md); live use waits for OD-44 |
 | OD-41, OD-42 | Deferred to Open Questions; no resident, staff or contractor validation yet |
 
 Historical approval is not inherited.
@@ -1196,7 +1205,7 @@ device/environment, accessibility and actual decision rights (OQ-004/005/011).
 
 ## Open Questions
 
-All sixteen questions below are retained for future operational validation.
+The first sixteen questions below are retained for future operational validation; OQ-017 is added on 2026-10-15 and has no EXA disposition yet.
 For the exercise, each is dispositioned by the owner-approved EXA record
 with the same suffix in the addendum; zero unanswered exercise design
 questions remain. This is not evidence of real company answers. OQ-016's
@@ -1221,6 +1230,7 @@ dependency and cannot be assumed away.
 | OQ-014 | What approval and change governance applies to the owner-directed missed-appointment exercise scenario before any operational consideration? | Housing, Repairs, Resident Engagement, Programme/Digital under BRD OD-40 | Operational use remains prohibited |
 | OQ-015 | Which evidenced funding routes, current application/award/claim templates, scheme terms, field/attachment authorities and financial-readiness criteria should the form workspace support, and who approves each version? | Finance and Grants, Legal, Data and competent technical owners; scheme/award evidence and approved constructed schema for the exercise | Unknown route blocks bid preparation; no current round, eligibility, award terms or external submission assumed |
 | OQ-016 | Which decision-scoring tasks justify activation, with what adjudicated datasets, probability/abstention thresholds and reviewer budgets, and can the target Foundry deployment meet response-contract, quota, inference-role, network, processing-location/terms and whole-life-cost gates? | Product, task/control owners, Digital, DPO, Procurement and Finance; conformance and versioned paired-experiment evidence | #58 demonstrates narrow selection/generation feasibility, not calibration, screening, value or production approval. Decision placement remains conditional; whole-app real AI is mandatory under CON-009. |
+| OQ-017 | Which regulatory duties, sources and delegations apply to Zava North Homes, who approves rule cards and interprets sources, what alert and chat audiences and alert-fatigue tolerance are acceptable, and does chat add value over deterministic rule cards with provision links (BRD OD-44)? | Legal, compliance, DPO, Building Safety, Assets, Digital | Blocks live use of FR-051 and any compliance claim; the synthetic exercise may proceed with fixture cards |
 
 ## Sign-Off and Handoff Readiness
 
@@ -1300,6 +1310,6 @@ human user research and live-use approval remain future operational gates.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-14 (v0.15.0 candidate, BRD v0.17.0 journey amendment; v0.14.0 five-assistant scope retained)
+* **Last Updated:** 2026-10-15 (FR-051 regulatory compliance assistant added, proposal only; v0.15.0 candidate, BRD v0.17.0 journey amendment; v0.14.0 five-assistant scope retained)
 * **Authoring Status:** Amended candidate awaiting requirements review and owner acceptance; formal governance remains in-review
 * **Next Review:** Full-PRD requirement quality and amended exercise acceptance; implementation and governed adoption are separate gates
