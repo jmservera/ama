@@ -17,7 +17,7 @@
   {
    "id": "chat-golden",
    "path": "src/agents/evals/chat_golden.json",
-   "version": "chat-golden-2026-10-15",
+   "version": "chat-golden-2026-10-15-pr307",
    "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
    "purpose": "Constructed multi-turn conversation scenarios for the offline chat evaluation (#164): grounding, abstention, permission change, out-of-scope refusal, prompt injection and memory poisoning. Development set, not an independently labelled held-out set.",
    "used_by": [

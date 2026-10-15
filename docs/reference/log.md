@@ -3094,6 +3094,33 @@ metadata when the knowledge base was created.
 ## [2026-10-15] implementation | Chat grounding, evaluation and refusal boundaries (#164)
 
 * Added `src/agents/.../chat_eval.py` and `evals/chat_golden.json` (registered in the eval registry, reusing the #108 harness): 21 synthetic multi-turn scenarios across grounding, permission, out-of-scope, prompt injection and memory poisoning, a comparison with the non-AI path, version bindings and failure recording. Three known gaps are recorded as failures, not hidden. The harness never enables chat.
-* `src/core` `chat_panel` now refuses approve, decide, consent, contact and diagnose requests before any model call, with a workflow route, and drops stale assistant turns from model history. `web/chat.js` shows the refusal. No `mvp/` change.
+* `src/core` `chat_panel` now refuses approve, decide, consent, contact and diagnose requests before any model call, with a workflow route. Its initial stale-history filtering was partial: it checked citation identifiers and role permissions, not changed source values. `web/chat.js` shows the refusal. No `mvp/` change.
 * Tests: `core` 258, `agents` 62, `api` 458 (92 skipped); ruff and mypy clean. Docker is permission denied locally; image and `mssql` evidence rely on CI.
 * Open on #164, left unticked: thresholds, accountable reviewer and enablement, independently labelled held-out set, live model run, human exercises and review-effort comparison. The PR uses `Refs #164`.
+
+## [2026-10-15] correction | PR 307 chat refusal and critical evaluation gaps (#164)
+
+* Normalized lexical refusal input with NFKC, format-character removal, common
+  Greek/Cyrillic confusable folding and whitespace collapse. Added synthetic
+  scenarios for need/want requests, marking a case/person as consented, named
+  contact targets, Cyrillic/Greek substitutions and zero-width variants.
+* Refusal is lexical and still paraphrase-bypassable. Output approval/consent
+  action-claim checks are also lexical; the model's own refusal behaviour is
+  unmeasured. No semantic safety or actual-model effectiveness is established.
+* Replaced partial assistant-history filtering with exclusion of all assistant
+  turns from model input. Stored conversation remains available; current
+  projected sources and untrusted user questions still supply context. User
+  history may itself contain stale claims or injections, so this is not complete
+  stale-content or injection protection.
+* The stale-assistant-history and lexical plain-prose approval/consent scenarios
+  now pass their real checks. Unsupported claims with valid citations remain an
+  open critical gap. Category totals no longer count known gaps as passes;
+  critical gap details block report success, CLI exit and enablement.
+* Corrected the historical stale-history statement above; the earlier aggregate
+  success/insufficient result was not acceptance evidence. Thresholds, reviewer,
+  held-out data, live model and human exercises remain open. Synthetic data
+  only, ADR 0006 dependencies unchanged, nothing enabled.
+* Local validation: core 261, agents 70, api 459 (92 skipped), orchestrator 17,
+  importer 39; all suites, dependency-rule tests, ruff and mypy passed. The
+  24-scenario/61-turn golden CLI correctly exits 1 with one critical known gap
+  (two failed assertions), `passed: false` and enablement `fail`, disabled.

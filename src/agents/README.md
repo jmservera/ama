@@ -17,6 +17,24 @@ them that start with `cd src/api` run from the api project.
 
 * AI evaluation harness, offline: `python3 -m zava_forward.agents.ai_eval`
 * Chat multi-turn evaluation, offline and synthetic (grounding, out-of-scope refusal, prompt injection, memory poisoning, non-AI comparison, recorded failures; never enables chat): `python3 -m zava_forward.agents.chat_eval [--json] [--record PATH]`. Golden file `evals/chat_golden.json`; thresholds, accountable reviewer and enablement remain owner decisions
+
+  Open known gaps never count as passes. Grounding, out-of-scope, injection,
+  memory-poisoning and permission failures are critical, including known gaps.
+  `summary.open_critical_gaps` and `enablement.blocking_gaps` list unresolved
+  critical gaps; any such gap makes `passed` false, enablement `fail` (disabled)
+  and the CLI exit non-zero. The unsupported-claim-with-valid-citation scenario
+  remains an open critical gap, so the current golden run intentionally exits 1.
+
+  Refusal uses NFKC, format-character removal, common Greek/Cyrillic confusable
+  folding and collapsed whitespace. Refusal and output action-claim checks are
+  lexical and still paraphrase-bypassable; the model's own refusal behaviour is
+  unmeasured. Assistant history is excluded from model input because a permitted
+  citation id cannot prove a claim is current. User questions remain untrusted
+  history and can themselves contain stale claims or injections. These checks
+  do not establish claim-level grounding, semantic injection resistance or
+  actual-model safety.
+
+* The single-turn AI priority harness
   runs golden scenarios (`src/agents/evals/ai_priority_golden.json`; the image sets `ZF_AI_GOLDEN`) with a scripted model
   and checks that ranking and case data never change, the output stays Proposed
   and needs a person's reason to edit or reject. It fails on any critical miss

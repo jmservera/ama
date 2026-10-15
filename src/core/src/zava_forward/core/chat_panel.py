@@ -16,14 +16,16 @@ provider code.
   stay available.
 * A request to approve, decide, record consent, diagnose or contact a resident is
   refused before any model call, with the human workflow route (issue #164).
-* Earlier assistant turns that cite a source the user can no longer see, or that
-  carry a value the user's role may not read, are not sent back to the model.
+* Earlier assistant turns are never sent back to the model: citation identifiers
+  alone cannot establish that their claims are still current.
+* Refusal and action-claim checks are lexical, not semantic safety guarantees.
 """
 
 from __future__ import annotations
 
 import json
 import re
+import unicodedata
 from collections.abc import Callable
 from typing import Any
 
@@ -56,11 +58,81 @@ SYSTEM = (
     '{"answer": "", "citations": []}.'
 )
 REFUSED = "That is a decision for a person, so the assistant cannot do it. "
-_LEAD = (
-    r"(?:^|[.;:!?,]\s+|\b(?:and|then)\s+)(?:please\s+)?"
-    r"(?:(?:can|could|would|will)\s+you\s+(?:please\s+)?)?(?:go\s+ahead\s+and\s+)?"
-)
+_LEAD = r"\b"
 _PERSON = r"(?:the\s+|this\s+|that\s+)?(?:resident|tenant|customer|household|them|him|her)"
+_NAMED_PERSON = r"(?:(?:mrs?|ms|dr)\.?\s+[a-z]+|(?-i:[A-Z][a-z]+))"
+# Common visual substitutions, not a complete Unicode confusables catalogue.
+CONFUSABLES = str.maketrans(
+    {
+        "\u0410": "A",
+        "\u0430": "a",
+        "\u0412": "B",
+        "\u0432": "b",
+        "\u0421": "C",
+        "\u0441": "c",
+        "\u0415": "E",
+        "\u0435": "e",
+        "\u041d": "H",
+        "\u043d": "h",
+        "\u0406": "I",
+        "\u0456": "i",
+        "\u0408": "J",
+        "\u0458": "j",
+        "\u041a": "K",
+        "\u043a": "k",
+        "\u041c": "M",
+        "\u043c": "m",
+        "\u041e": "O",
+        "\u043e": "o",
+        "\u0420": "P",
+        "\u0440": "p",
+        "\u0405": "S",
+        "\u0455": "s",
+        "\u0422": "T",
+        "\u0442": "t",
+        "\u0425": "X",
+        "\u0445": "x",
+        "\u0423": "Y",
+        "\u0443": "y",
+        "\u04bb": "h",
+        "\u0501": "d",
+        "\u0391": "A",
+        "\u03b1": "a",
+        "\u0392": "B",
+        "\u03b2": "b",
+        "\u0395": "E",
+        "\u03b5": "e",
+        "\u0397": "H",
+        "\u0399": "I",
+        "\u03b9": "i",
+        "\u039a": "K",
+        "\u03ba": "k",
+        "\u039c": "M",
+        "\u039d": "N",
+        "\u039f": "O",
+        "\u03bf": "o",
+        "\u03a1": "P",
+        "\u03c1": "p",
+        "\u03a4": "T",
+        "\u03c4": "t",
+        "\u03a5": "Y",
+        "\u03a7": "X",
+        "\u03c7": "x",
+        "\u03f2": "c",
+        "\u03f9": "C",
+        "\u03f3": "j",
+        "\u03f5": "e",
+    }
+)
+
+
+def normalise_policy_text(text: str) -> str:
+    """Canonical text for lexical checks; preserve case for named-contact matching."""
+    text = unicodedata.normalize("NFKC", text)
+    text = "".join(c for c in text if unicodedata.category(c) != "Cf")
+    return " ".join(text.translate(CONFUSABLES).split())
+
+
 OUT_OF_SCOPE: tuple[tuple[str, re.Pattern[str], str], ...] = tuple(
     (name, re.compile(_LEAD + pattern, re.I), route)
     for name, pattern, route in (
@@ -78,13 +150,15 @@ OUT_OF_SCOPE: tuple[tuple[str, re.Pattern[str], str], ...] = tuple(
         ),
         (
             "consent",
-            r"(?:record|give|confirm|mark|log)\s+(?:the\s+|their\s+|my\s+)?(?:resident'?s?\s+)?consent\b",
+            r"(?:(?:record|give|confirm|mark|log)\s+(?:the\s+|their\s+|my\s+)?"
+            r"(?:resident'?s?\s+)?consent\b|mark\s+[^.;!?]{1,100}?\s+as\s+consented\b)",
             "Resident consent is recorded by the named officer using the case's consent "
             "control, from what the resident says.",
         ),
         (
             "contact",
-            rf"(?:(?:contact|email|e-mail|phone|call|ring|text|message|write\s+to|notify)\s+{_PERSON}\b"
+            rf"(?:(?:contact|email|e-mail|phone|call|ring|text|message|write\s+to|notify)"
+            rf"\s+(?:{_PERSON}|{_NAMED_PERSON})\b"
             r"|send\s+(?:the\s+|a\s+)?(?:letter|email|message|text)\b)",
             "Contact with a resident is made by the case owner and logged in the case contact log.",
         ),
@@ -96,6 +170,16 @@ OUT_OF_SCOPE: tuple[tuple[str, re.Pattern[str], str], ...] = tuple(
         ),
     )
 )
+ACTION_CLAIM = re.compile(
+    r"\b(?:i|we|the\s+assistant)\s+(?:(?:have|has|had|will|already|now|just)\s+)*"
+    r"(?:approve[ds]?|sign(?:ed)?[\s-]off|certif(?:y|ied)|authori[sz](?:e[ds]?|ing)"
+    r"|(?:record(?:ed)?|confirm(?:ed)?|log(?:ged)?|give|given|mark(?:ed)?)"
+    r"\s+[^.;!?]{0,100}?\b(?:consent|consented))\b"
+    r"|\b(?:consent\s+(?:has\s+been|is|was)\s+(?:recorded|confirmed|logged)"
+    r"|(?:case|work|proposal)\s+(?:has\s+been|is|was)\s+(?:approved|signed[\s-]off))\b",
+    re.I,
+)
+HISTORY_POLICY = "user-only; assistant claims are not current evidence"
 MAX_SOURCES = 60
 MAX_VALUE = 200
 MAX_CITATIONS = 12
@@ -109,6 +193,7 @@ class ModelUnavailable(RuntimeError):
 
 def out_of_scope(question: str) -> tuple[str, str] | None:
     """The kind and workflow route when the question asks the assistant to act, else None."""
+    question = normalise_policy_text(question)
     for name, pattern, route in OUT_OF_SCOPE:
         if pattern.search(question):
             return name, route
@@ -172,18 +257,6 @@ class ChatPanel:
             workflow_only=kind in ("fallback", "refused"),
         )
 
-    def _carry(
-        self,
-        user: dict[str, Any],
-        thread: dict[str, Any],
-        m: dict[str, Any],
-        sources: dict[str, str],
-    ) -> bool:
-        """An earlier answer keeps no authority once its sources or content are not permitted."""
-        return set(m.get("evidence") or ()) <= set(sources) and not self.iso._withheld(
-            user, thread, m["content"]
-        )
-
     def ask(self, user: dict[str, Any], tid: str, question: object) -> dict[str, Any]:
         """One turn. Raises ChatForbidden or ChatNotFound when no longer permitted."""
         iso, store = self.iso, self.iso.store
@@ -204,11 +277,7 @@ class ChatPanel:
             return self._reply("refused", text, [], model_name, sources)
         kind, text, cites = "abstain", ABSTAIN, []
         if sources and self.model is not None:
-            kept = [
-                m
-                for m in thread["messages"]
-                if m["role"] == "user" or self._carry(user, thread, m, sources)
-            ]
+            kept = [m for m in thread["messages"] if m["role"] == "user"]
             history = "\n".join(f"{m['role']}: {m['content']}" for m in kept[-CONTEXT_MESSAGES:])
             parts = [block("sources", json.dumps(sources, sort_keys=True))]
             if history:
@@ -225,7 +294,10 @@ class ChatPanel:
                 else:
                     parsed = parse_reply(raw, sources)
                     if parsed:
-                        kind, (text, cites) = "answer", (redact(parsed[0])[0], parsed[1])
+                        if ACTION_CLAIM.search(normalise_policy_text(parsed[0])):
+                            kind, text = "withheld", WITHHELD
+                        else:
+                            kind, (text, cites) = "answer", (redact(parsed[0])[0], parsed[1])
         elif sources:
             kind, text = "fallback", FALLBACK
         store.chat_add_message(user, tid, "assistant", text, evidence=cites, model=model_name)
