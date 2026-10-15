@@ -70,7 +70,9 @@ invocation correction, not a test or dependency fallback.
 PC-001/002 safeguards were executed. PC-003 identity check passed: fresh
 `gh api user` returned 8036360/jmservera; configured repository-local
 `8036360+jmservera@users.noreply.github.com`. Author/committer verification
-will follow the commit.
+passed after commit 029f15f: both author and committer are
+`jmservera <8036360+jmservera@users.noreply.github.com>`, with the requested
+Copilot coauthor trailer.
 
 ## Command ledger: implementation and local verification
 
@@ -242,11 +244,13 @@ print(f'PASS: three JSON files parse, {checked} changed-section relative links r
 P01 complete; P02-T01 complete. No significant divergence: invocation and
 formatting corrections were ordinary local judgment. Five new test methods,
 one manifest, no new runtime module/dependency/SQL, no removed test coverage.
-P02-T02 review/publication remain. Required owner evidence remains unchecked.
+P02-T02 review/publication are complete. Required owner evidence remains unchecked.
 One post-implementation Review is Complete, outcome Residual work. No bounded
 engineering defect identified; RV-001 owner ratification/historical matrix,
 RV-002 full #103 evidence and RV-003 CI verification are routed. No second
-Review or implementation of residuals is performed. Publication follows.
+Review or implementation of residuals is performed. PR #308 is open on main
+with Refs #166; first commit 029f15f is pushed. All eleven initial CI jobs
+were IN_PROGRESS when checked; no remote success or merge is claimed.
 
 ## Command ledger: Review and publication preflight
 
@@ -262,6 +266,30 @@ No repository PR template was found. PR body uses the one RPI Review and
 this command ledger rather than creating another source review or parallel
 review artifacts. Publication remains under the caller's explicit request;
 the PR uses Refs #166 and leaves unavailable acceptance unchecked.
+
+## Publication outcome and command record
+
+PR: https://github.com/jmservera/ama/pull/308. Base main, head
+feat/src-needs-inventory-166. The public body includes this command/result
+ledger, the exact fixture selection and local smoke code. No tracked private,
+configuration or mvp path changed. All fifteen staged paths were explicitly
+named rather than staging the owned validation environment.
+
+| Command | Result |
+| --- | --- |
+| `git add --` the fifteen scoped files listed by the preflight, then `git diff --cached --check && git diff --cached --stat` | Exit 0; fifteen intended files, no scratch/private data |
+| `git -c user.email=8036360+jmservera@users.noreply.github.com commit -F -` with subject `feat(core): link synthetic needs inventory to iteration review`, Refs #166 and requested coauthor trailer | Exit 0; commit 029f15f, fifteen files |
+| `git --no-pager show -s --format='%h%nAuthor: %an <%ae>%nCommitter: %cn <%ce>%n%B' HEAD` | Exit 0; both identities and trailer verified |
+| `bash /home/azureuser/.copilot/installed-plugins/hve-core/hve-core-all/skills/shared/pr-reference/scripts/generate.sh --base-branch origin/main --merge-base --output .validation-166/pr-reference.xml` | Exit 0; generated 1702-line temporary reference, not staged; existing one-pass RPI Review reused |
+| `git push --set-upstream origin feat/src-needs-inventory-166` | Exit 0; only assigned topic branch pushed |
+| `gh pr create --base main --head feat/src-needs-inventory-166 --title 'feat(core): version synthetic needs inventory and iteration gate' --body "$(cat .validation-166/pr-body.md .copilot-tracking/changes/2026-10-15/issue-166-needs-inventory-changes.md)"` | Exit 0; PR #308 created |
+| `gh pr view 308 --json number,url,state,baseRefName,headRefName,body --jq '{number,url,state,baseRefName,headRefName,refs166:(.body\|contains("Refs #166")),closes166:(.body\|contains("Closes #166"))}' && gh pr checks 308 --json name,state,link && git status --short` | Exit 0; correct open PR/base/head, Refs true/Closes false; eleven CI jobs IN_PROGRESS; only owned scratch untracked |
+
+Closeout updates only these RPI evidence files, refreshes the PR body with
+the final ledger, removes the explicitly owned `.validation-166/` directory,
+and commits/pushes that evidence without amending history. Final CLI checks
+verify the remote head and clean worktree. It does not run another Review,
+start routed work, merge, change issue acceptance or claim pending CI passed.
 
 ## Open acceptance and follow-up
 

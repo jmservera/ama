@@ -15,7 +15,7 @@ Research: .copilot-tracking/research/2026-10-15/issue-166-needs-inventory-resear
 | Phase | Intent | Status |
 | --- | --- | --- |
 | P01 | Reconcile canonical metadata and tests | Complete |
-| P02 | Validate, review and publish | Validation complete; Review/publication remaining |
+| P02 | Validate, review and publish | Complete; PR #308 open, CI running |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Inventory and scenario integration
@@ -105,4 +105,7 @@ skipped), orchestrator 17, importer 39; five-project quality checks and isolated
 changed-file checks pass. Synthetic local HTTP/SQLite smoke and link/diff
 checks pass. Docker socket permission denied; SQL Server/image rely on CI.
 No runtime change, live AI, Azure deployment or owner approval is claimed.
-P02-T02 is ready for the one Review, then publication.
+P02-T02 complete: one Review executed Complete with Residual work, commit
+029f15f pushed to the assigned branch, PR #308 open against main using
+Refs #166. Author and committer match the freshly resolved privacy identity.
+CI started; no CI success or owner approval is claimed.

@@ -29,12 +29,17 @@
       "decision": "One implementation Review executed Complete; outcome Residual work; metadata/test engineering boundary assessed, owner and full scenario evidence remain open",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-15/issue-166-needs-inventory-review.md"
+    },
+    {
+      "decision": "Published commit 029f15f and PR #308 to main with Refs #166; CI started, merge remains owner-only",
+      "status": "verified",
+      "evidence": "https://github.com/jmservera/ama/pull/308"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "RPI task complete with residual work; publish authorized Refs #166 PR, then await owner selection without starting child work"
+    "action": "PR #308 published; await owner-selected ranked follow-up, Stop or manual mode; no child work starts automatically"
   },
   "prioritized_follow_ups": [
     {

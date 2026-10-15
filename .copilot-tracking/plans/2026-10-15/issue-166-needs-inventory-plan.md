@@ -8,7 +8,7 @@ ms.date: 2026-10-15
 
 * Task ID: issue-166
 * Task slug: issue-166-needs-inventory
-* Planning status: Ready; one critique completed and directly resolved
+* Planning status: Executed; one critique completed and directly resolved
 * Plan date: 2026-10-15
 * Phase details: .copilot-tracking/details/2026-10-15/issue-166-needs-inventory-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-15/issue-166-needs-inventory-plan-critique.md
@@ -79,7 +79,8 @@ full #103 scripts/endpoints or application acceptance claim.
   broken reciprocal paths and claimed owner approval.
 * [x] Existing src suites (two private-reader exclusions), ruff, mypy and
   local synthetic app smoke recorded; Docker unavailable locally.
-* [ ] RPI artifacts, knowledge index/log and PR evidence committed.
+* [x] RPI artifacts, knowledge index/log and PR evidence committed in
+  029f15f and published as PR #308 to main.
 * [ ] Owner ratification of inventory/row owners and historical matrix
   reconciliation (unavailable; deliberately not part of local completion).
 
@@ -107,7 +108,7 @@ version/date, synthetic label and pending owner review. Include mutation
 regressions for stale/missing metadata. No source module or new test file.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate, review and publish
+### [x] P02: Validate, review and publish
 
 Dependencies: P01.
 
@@ -125,7 +126,7 @@ availability. No billable calls or deployment; actual AI/SQL/Azure application
 acceptance stays Not run, not replaced by synthetic smoke.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Review once and publish
+#### [x] P02-T02: Review once and publish
 
 Run one post-implementation RPI Review, route residuals rather than loop.
 Resolve `gh api user` again immediately before committing and derive the
@@ -162,7 +163,8 @@ directly without another critique.
 ## Handoff
 
 Implementation creates .copilot-tracking/changes/2026-10-15/issue-166-needs-inventory-changes.md.
-P01 and P02-T01 complete; eleven inventory tests, five src suites (qualified
-core selection), lint/type checks and local synthetic HTTP smoke evidenced.
-Ready for the one implementation Review; P02-T02 publication follows it.
-Human ratification and full #103 evidence remain open.
+All engineering plan tasks complete. One Review executed Complete, outcome
+Residual work; first commit 029f15f published in PR #308 to main with Refs #166.
+CI started; image/SQL Server outcomes not yet claimed. Automatic task is
+completed in Follow-up, session remains running awaiting an owner-selected
+follow-up. Human ratification and full #103 evidence remain open.
