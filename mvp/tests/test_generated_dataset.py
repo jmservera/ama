@@ -194,7 +194,7 @@ class GeneratedDatasetTests(unittest.TestCase):
             used = sum(w["contractor"] == contractor for w in orders)
             self.assertGreaterEqual(capacity["committed"], used)
             self.assertGreaterEqual(capacity["offered"], capacity["committed"])
-        filled = [c for c in cases.values() if c.get("finance")]
+        filled = [c for c in cases.values() if c.get("grants")]
         self.assertEqual(len(filled), 12)
         for c in filled:
             self.assertIn(c["owner_code"], people)
@@ -210,6 +210,25 @@ class GeneratedDatasetTests(unittest.TestCase):
                 self.assertIn(c["handoff"]["to_code"], people)
                 self.assertEqual(c["handoff"]["state"], "Offered")
 
+    def test_lifecycle_coverage_seeds_or_defers_every_state_without_outcomes(self):
+        life = json.loads(Path(str(self.path) + ".coverage.json").read_text())["lifecycle"]
+        seeded = life["seeded"]
+        self.assertEqual(set(seeded["work order"]), {"Issued", "Completed"})
+        self.assertEqual(set(seeded["budget"]), {"Proposed"})
+        self.assertEqual(set(seeded["commitment"]), {"Raised"})
+        self.assertIn("Valuation: Received", seeded["invoice"])
+        self.assertEqual(set(seeded["payment"]), {"Not payable yet"})
+        self.assertEqual(set(seeded["grant"]), {"Not recorded"})
+        self.assertEqual(set(seeded["quality"]), {"Submitted"})
+        self.assertEqual(seeded["resident decision"], {})
+        self.assertTrue(seeded["safety hold"].get("Open") and seeded["safety hold"].get("Released"))
+        for outcome in ("Approved",):
+            self.assertIn(outcome, life["deferred"]["budget"])
+        for key in ("grant", "quality", "resident decision", "payment"):
+            self.assertFalse(set(seeded[key]) & set(life["deferred"][key]), key)
+        self.assertTrue(all(i["payment_status"] == "Not payable yet" for c in self.data["cases"]
+                            for i in c.get("finance", {}).get("invoices", [])))
+
     def test_generated_queues_survive_sql_seed_and_restart(self):
         db = Path(self.tmp.name) / "coverage.sqlite"
         first = SqlStore(str(self.path), str(db))
@@ -217,7 +236,7 @@ class GeneratedDatasetTests(unittest.TestCase):
             count = len(insights.visits(list(first.cases.values())))
             self.assertGreater(count, 6)
             self.assertEqual(first.data["procurement"], self.data["procurement"])
-            self.assertEqual(len(first.finance_queue(next(p for p in first.staff.values() if p["code"] == "PM-01"))), 12)
+            self.assertEqual(len(first.finance_queue(next(p for p in first.staff.values() if p["code"] == "PM-01"))), 13)
             reopened = SqlStore(str(self.path), str(db))
             try:
                 self.assertEqual(reopened.as_of, self.data["as_of"])

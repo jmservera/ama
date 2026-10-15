@@ -62,7 +62,7 @@ bookings; historical contrasts do not enter the booked-visits queue.
 | Current-week booked visits | 11 | Receipt counts 2026-10-12 to 2026-10-18; API has no date-range filter |
 | Designated forward visits | 6 | Four in that week; no invented works release or consent |
 | Packages / source-issued work orders | 1 / 601 | Imported simulation issuance/completion, not live instructions or QA acceptance |
-| Invoices / quality records / pending grants | 12 / 12 / 12 | Proposed budgets, unpayable received/held invoices, unverified submissions and pending opportunities |
+| Invoices / quality records / pending grants | 13 / 12 / 12 | Proposed budgets, unpayable received/held invoices, unverified submissions and pending opportunities |
 | Offered handoffs / open service requests | 4 / 12 | No invented acceptance, resolution or redress |
 
 The generator writes a private `.coverage.json` receipt beside its output.
@@ -73,6 +73,28 @@ instead of generating identities from the generator's ten fictional staff.
 Initial SQL loading preserves procurement/as-of; restart never silently
 replaces live records. Four focused tests cover determinism, exact visit
 cohorts, referential/control boundaries and SQL seed/restart persistence.
+
+### Contractor, finance, grant, safety and consent lifecycle coverage (2026-10-15)
+
+Issue #173, parent #167. Labelled synthetic fixtures under ADR 0005; none is
+law, an approval, an acceptance or a payment. The `.coverage.json` receipt now
+carries a `lifecycle` block with seeded counts per state and the deferred
+list. Two further open cases gain one Raised commitment and one Valuation
+(Received), so the receipt shows 1 raised commitment and 13 invoices or valuations.
+
+| Record | Seeded states | Deferred (recorded, not invented) |
+| --- | --- | --- |
+| Work order | Issued, Completed (source simulation facts) | Appointed, Withdrawn |
+| Budget / commitment | Proposed / Raised | Approved (needs a different named approver) |
+| Invoice / payment | Received, Exceptions (held); Not payable yet | Matched, accepted, rejected; Awaiting payment run, Paid outside this system |
+| Grant | Not recorded, with a pending proposal to Opportunity | Opportunity (proposed only, not confirmed), Award, Claimable, Submitted, Accepted, Rejected, Cash received |
+| Quality | Submitted | Accepted, Returned, Fixed, Handed over |
+| Safety hold | Open and Released, from source hazards | None |
+| Resident decision | Not recorded (default) | Waiting, Accepted, Declined, Paused, Withdrawn |
+
+Open items for the owner: whether a labelled demo-only approved/paid/awarded
+or consent-answered record is wanted for UI demonstrations; and the sibling
+issues #90, #94, #95, #85 and #86 that may own those states.
 
 ### Determinism, manifests and refresh policy (2026-10-15)
 
