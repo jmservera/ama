@@ -88,7 +88,10 @@ references. An administrator can switch memory off globally or per task (`chat_m
 
 ## Open items
 
-* Owner decision: which Entra app role is the memory administrator. `MEMORY_ADMIN_ROLES` uses Retrofit Programme Manager as a placeholder.
+* Owner decision (open): which Entra app role is the memory administrator. `MEMORY_ADMIN_ROLES` uses Retrofit Programme Manager as a placeholder. The role is read from the staff register record, not from the caller's session data.
+* Retention (expiry) is Unknown until the DPO approves a period. Expired items are filtered on read once an expiry is set.
+* Memory scoping and wiring to users (UI, endpoints, which users see memory) remain open.
+* Schema: `chat_memory` gains `item_class`, `source`, `updated_at` through an idempotent ALTER on SQLite and Azure SQL start-up, so a #163-era table is upgraded. `add_memory` requires a known task so the per-task switch always applies.
 
 * DPO and Legal: lawful basis, staff notice, DPIA decision, retention per class, access and break-glass policy (BRD OD-45, OD-46).
 * Retrieve and record current Microsoft Azure OpenAI data handling, abuse-monitoring and region terms.

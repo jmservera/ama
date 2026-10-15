@@ -47,6 +47,13 @@ MSSQL_DDL = (
 )
 MSSQL_INDEX = ("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_chat_thread_owner' AND object_id = OBJECT_ID(N'chat_thread')) "
                "CREATE INDEX ix_chat_thread_owner ON chat_thread (owner, status, updated_at)")
+# Columns added to chat_memory after the #163 table; CREATE TABLE IF NOT EXISTS would not add them to an existing table.
+MEMORY_ADDED = (("item_class", "working_preference"), ("source", ""), ("updated_at", ""))
+MSSQL_MIGRATE = tuple(
+    f"IF COL_LENGTH(N'chat_memory', N'{c}') IS NULL ALTER TABLE chat_memory ADD {c} NVARCHAR({40 if c != 'source' else 200}) NOT NULL "
+    f"CONSTRAINT df_chat_memory_{c} DEFAULT N'{d}'" for c, d in MEMORY_ADDED)
+
+
 TABLE_NAMES = ("chat_memory_control", "chat_memory", "chat_message", "chat_thread")
 
 THREAD_COLS = ("id", "owner", "owner_role", "case_id", "title", "task", "task_version", "model", "status", "rowversion",

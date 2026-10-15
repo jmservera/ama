@@ -2979,3 +2979,9 @@ metadata when the knowledge base was created.
 
 * `chat_privacy.py` gains opt-in, item class and source, edit, delete, clear, global and per-task switches and a non-evidence prompt view; `chat_memory` gains `item_class`, `source`, `updated_at` and `chat_memory_control` is added in the same dialect hooks. `research/chat-memory-dpia.md` updated; no new knowledge base page, so the index is unchanged. No regulatory snapshot changed.
 * Open: DPO retention per class, memory administrator app role (placeholder in code), UI and endpoint wiring.
+
+## 2026-10-15 Memory lifecycle review fixes (#161, PR 285)
+
+* `chat_privacy.py`: `add_memory` requires a known task (fails closed); expired items are hidden by `list_memory`, `edit_memory` and the prompt view; the administrator role is read from the staff register record; memory ids sort by creation time (fixes a CI ordering flake).
+* `chatthreads.py`, `sqlstore.py`, `mssqlstore.py`: idempotent ALTER adds `item_class`, `source`, `updated_at` to an existing `chat_memory` table.
+* Open: administrator Entra app role (owner decision), DPO retention, scoping and wiring to users.

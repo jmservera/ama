@@ -26,6 +26,7 @@ in docs/reference/research/chat-memory-dpia.md.
 import json
 import os
 import re
+import time
 import uuid
 from datetime import datetime, timedelta, timezone
 
@@ -41,6 +42,7 @@ MEMORY_CLASSES = ("working_preference", "terminology", "task_context")
 MEMORY_MAX = 1000
 MEMORY_LIMIT = 50
 # Placeholder pending an owner decision on the administrator persona: no Entra app role is named for it yet.
+# OPEN OWNER DECISION (see docs/reference/research/chat-memory-dpia.md): the role is checked against the register record.
 MEMORY_ADMIN_ROLES = ("Retrofit Programme Manager",)
 MEMORY_NOTICE = ("Memory is off until you turn it on. It keeps short working preferences you choose, for you only. You can see, edit or "
                  "delete every item, or clear all. It never holds resident or special-category data, never changes rules, ranking or "
@@ -195,7 +197,9 @@ class ChatPrivacy:
         return n
 
     def _admin(self, user):
-        if (user or {}).get("role") not in MEMORY_ADMIN_ROLES:
+        # The role comes from the register record, never from the caller's dict.
+        rec = self.store.staff.get(user_key(user)) or {}
+        if rec.get("role") not in MEMORY_ADMIN_ROLES:
             raise PermissionError("Only an administrator can change the memory switches.")
 
     def _switch(self, user, scope, ref, enabled, action):
@@ -220,9 +224,21 @@ class ChatPrivacy:
             raise ValueError("A memory item needs content.")
         return text, kinds
 
-    def add_memory(self, user, content, item_class="working_preference", source="typed by the user", task=""):
-        """Opt-in memory. Refused if memory is off, or if the text looks special-category (rather than stored masked)."""
+    @staticmethod
+    def _tasks():
+        from .assistants import REGISTRY
+        return REGISTRY
+
+    def _known_task(self, task):
+        from .assistants import REGISTRY
+        if task not in REGISTRY:
+            raise ValueError("Memory needs a known assistant task, so the per-task switch can apply.")
+
+    def add_memory(self, user, content, item_class="working_preference", source="typed by the user", *, task):
+        """Opt-in memory. Refused if memory is off, or if the text looks special-category (rather than stored masked).
+        The task is required so the per-task administrator switch always applies (fails closed)."""
         d = self._require()
+        self._known_task(task)
         st = self.memory_status(user, task)
         if not st["active"]:
             raise ChatNotApproved("Memory is not active: " + st["reason"])
@@ -231,7 +247,7 @@ class ChatPrivacy:
         owner, repo = user_key(user), self.store.chat_repo
         text, kinds = self._clean(content)
         now = self._now()
-        m = dict(id=MEMORY_ID_PREFIX + uuid.uuid4().hex[:16], owner=owner, owner_role=str(user.get("role") or ""), content=text,
+        m = dict(id=MEMORY_ID_PREFIX + f"{time.time_ns():x}" + uuid.uuid4().hex[:4], owner=owner, owner_role=str(user.get("role") or ""), content=text,
                  redactions=",".join(kinds), item_class=item_class, source=str(source)[:200], created_at=now, updated_at=now,
                  expires_at=self._expiry(d))
         with repo.txn():
@@ -247,13 +263,19 @@ class ChatPrivacy:
         return [dict(id=m["id"], content=m["content"], source=m["source"], item_class=m["item_class"], created_at=m["created_at"],
                      updated_at=m["updated_at"], expires_at=m["expires_at"],
                      expiry="Unknown until the DPO approves a retention period" if not m["expires_at"] else m["expires_at"])
-                for m in self.store.chat_repo.memories(user_key(user))]
+                for m in self._live(user_key(user))]
+
+    def _live(self, owner):
+        now = self._now()
+        return [m for m in self.store.chat_repo.memories(owner) if not (m["expires_at"] and m["expires_at"] < now)]
 
     def edit_memory(self, user, memory_id, content):
         """Edit content only; the same checks apply and the expiry is not extended."""
         self._require()
         owner, repo = user_key(user), self.store.chat_repo
         text, kinds = self._clean(content)
+        if memory_id not in {m["id"] for m in self._live(owner)}:
+            raise LookupError(memory_id)
         with repo.txn():
             ok = repo.update_memory(owner, memory_id, content=text, redactions=",".join(kinds), updated_at=self._now())
             repo.commit()
@@ -281,11 +303,10 @@ class ChatPrivacy:
     def prompt_memory(self, user, task=""):
         """What may enter a prompt: the user's own preferences, labelled as non-authoritative and non-evidence. Empty unless active.
         Rules, ranking, permissions and evidence are never read from here."""
-        if not self.memory_status(user, task)["active"]:
+        if task not in self._tasks() or not self.memory_status(user, task)["active"]:
             return []
-        now = self._now()
         return [dict(preference=m["content"], authority="none", evidence=False, item_class=m["item_class"])
-                for m in self.store.chat_repo.memories(user_key(user)) if not (m["expires_at"] and m["expires_at"] < now)]
+                for m in self._live(user_key(user))]
 
     def _held(self, owner):
         repo = self.store.chat_repo

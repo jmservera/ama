@@ -16,7 +16,7 @@ import os
 import re
 import struct
 
-from .chatthreads import MSSQL_DDL as CHAT_DDL, MSSQL_INDEX as CHAT_INDEX
+from .chatthreads import MSSQL_DDL as CHAT_DDL, MSSQL_INDEX as CHAT_INDEX, MSSQL_MIGRATE as CHAT_MIGRATE
 from .sqlstore import INDEXES, SqlStore
 
 COLLATE = "COLLATE Latin1_General_100_BIN2"
@@ -224,7 +224,7 @@ class MssqlStore(SqlStore):
 
     def _create_indexes(self):
         with self.dblock:
-            for stmt in _indexes() + [CHAT_INDEX]:
+            for stmt in list(CHAT_MIGRATE) + _indexes() + [CHAT_INDEX]:
                 self.db.execute(stmt)
 
     def _columns(self):

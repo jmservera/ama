@@ -42,7 +42,7 @@ class ChatPrivacyBehaviour:
         with self.assertRaises(ChatNotApproved):
             c.start_thread(U1, "ZF-1", TASK)
         with self.assertRaises(ChatNotApproved):
-            c.add_memory(U1, "prefers short summaries")
+            c.add_memory(U1, "prefers short summaries", task=TASK)
         self.assertEqual(self.store.chat_list_threads(U1), [])
 
     def test_no_retention_period_before_approval(self):
@@ -52,7 +52,7 @@ class ChatPrivacyBehaviour:
     def test_no_expiry_without_retention(self):
         c = self.cp(**APPROVED)
         c.opt_in(U1, True)
-        c.add_memory(U1, "likes tables")
+        c.add_memory(U1, "likes tables", task=TASK)
         self.assertIsNone(c.export(U1)["memory"][0]["expires_at"])
         self.assertEqual(c.purge_expired("9999"), 0)
 
@@ -62,7 +62,7 @@ class ChatPrivacyBehaviour:
             t = c.start_thread(u, "ZF-1", TASK)
             c.add_message(u, t, "user", f"hello from {u['name']}")
             c.opt_in(u, True)
-            c.add_memory(u, f"note {u['email']}")
+            c.add_memory(u, f"note {u['email']}", task=TASK)
         self.assertEqual(len(self.store.chat_list_threads(U1)), 1)
         found = c.locate(U1)
         self.assertEqual((len(found["threads"]), found["messages"], len(found["memory"])), (1, 1, 1))
@@ -92,7 +92,7 @@ class ChatPrivacyBehaviour:
         self.assertEqual(c.add_message(U1, t, "user", "tenant has asthma"), ["special_category"])
         self.assertNotIn("asthma", c.export(U1)["messages"][0]["content"])
         with self.assertRaises(ValueError):
-            c.add_memory(U1, "tenant has asthma")
+            c.add_memory(U1, "tenant has asthma", task=TASK)
         self.assertIn("special-category", cp.WARNING)
 
     def test_diagnostics_exclude_content(self):
@@ -102,7 +102,7 @@ class ChatPrivacyBehaviour:
     def test_expiry_set_and_purged_when_retention_approved(self):
         c = self.cp(**APPROVED, CHAT_RETENTION_REF="SYNTH-RET-1", CHAT_RETENTION_DAYS="1")
         c.opt_in(U1, True)
-        c.add_memory(U1, "likes tables")
+        c.add_memory(U1, "likes tables", task=TASK)
         self.assertIsNotNone(c.export(U1)["memory"][0]["expires_at"])
         self.assertEqual(c.purge_expired("0000"), 0)
         self.assertEqual(c.purge_expired("9999"), 1)
