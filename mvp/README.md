@@ -144,6 +144,13 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   `PYTHONPATH=. python3 -m zavaforward_mvp.scale_fixture`, writes to the
   Git-ignored `data/scale-fixture/` and is never committed. Dataset owners are
   an open owner decision.
+* Chat and memory fixtures (#172): `PYTHONPATH=. python3 -m
+  zavaforward_mvp.chat_fixture` writes seeded, labelled-synthetic personas
+  (two per PRD perspective, mapped to existing app roles), threads, memory
+  items, opt-in states, exclusion probes, and isolation, expiry and deletion
+  cases to the Git-ignored `data/chat-fixture/`. Case IDs come from the
+  60,000-home stock. Retention is an illustrative 90 days, not a policy
+  (BRD OD-45/OD-46 open); expectations are targets for #160 to #164.
 * Sensor backfill (#183): `PYTHONPATH=. python3 -m zavaforward_mvp.sensor_backfill
   --estimate-only` prints the volume and size estimate for two years of hourly
   temperature and humidity across all 60,000 homes (about 1.05 billion rows,
