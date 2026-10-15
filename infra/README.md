@@ -169,7 +169,7 @@ Deployed on 2026-10-08 to resource group `ama` with `location=uksouth environmen
 Observed 2026-10-11 in resource group `ama` (`uksouth`, `environmentName=test`, `deploymentProfile=development`):
 
 ```bash
-az acr build -r <registry> -t zava-forward-mvp:<tag> mvp
+az acr build -r <registry> -f mvp/Dockerfile -t zava-forward-mvp:<tag> .
 az login --tenant <tenant> --allow-no-subscriptions          # as an Application or Global Administrator
 infra/scripts/create-api-app-registration.sh -u https://<api-fqdn> -a <admin-upn>:ProgrammeManager -v <key-vault>
 python3 infra/scripts/create-sql-users.py ama <sql-server> retrofit id-forward-test   # as the SQL Entra admin
@@ -585,7 +585,7 @@ Rebuild sequence:
    quota must be rechecked, not assumed for another subscription.
 2. Deploy with `deployApplications=false`. Use deployment outputs to discover
    the registry, SQL server, model endpoint and vault; do not guess hashed names.
-3. Build a versioned `zava-forward-mvp` image with `az acr build`. Provision
+3. Build a versioned `zava-forward-mvp` image with `az acr build` from the repository root (`-f mvp/Dockerfile .`). Provision
    `entra-client-secret` in the new vault through an authorised operator. RG
    Owner alone does not grant Key Vault data-plane access. Transfer a retained
    credential only through a private file or the provisioning script, not a
