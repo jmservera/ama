@@ -44,10 +44,15 @@
       "decision": "Review outcome Residual work: no in-scope defect found; RV-001 timing and RV-002 CI/live evidence remain open, so no full issue acceptance.",
       "status": "Residual work",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-15/src-handoffs-83-review.md"
+    },
+    {
+      "decision": "Implementation and all RPI artifacts committed and pushed; non-closing PR opened to main; no merge authorized or performed.",
+      "status": "published",
+      "evidence": "Commit 996dfcd; https://github.com/jmservera/ama/pull/311; verified noreply author/committer and required trailer."
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Publish completed bounded RPI result on assigned branch with Refs #83; do not start child work or merge."},
+  "next_action": {"phase": "Follow-up", "action": "Await PR #311 CI and owner review/selection; approved-time escalation remains unmet. No child work or merge."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Confirm PR image and SQL Server CI", "rationale": "Lowest-effort immediate release evidence; new HTTP replays are already wired into mssql.", "evidence": "RV-002; local Docker socket denial and five new guarded replay skips."},
     {"rank": 2, "task": "Approve operational handoff timing and escalation ownership", "rationale": "Unlocks remaining issue criterion without inventing a live SLA or scheduling authority.", "evidence": "RV-001; BG-010/OD-09."},

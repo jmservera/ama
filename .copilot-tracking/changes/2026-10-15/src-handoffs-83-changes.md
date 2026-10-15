@@ -202,6 +202,27 @@ are explicit residuals, not claimed local successes. Use Refs #83, not Closes.
 
 ## Publication
 
-Pending authorized topic-branch commit/push and PR creation. Review permits a
-bounded non-closing PR; issue criterion 3 stays unticked. CI image/SQL Server
-results must be checked on GitHub, not inferred from local skips.
+Published implementation commit `996dfcd` on `feat/src-handoffs-83` and opened
+https://github.com/jmservera/ama/pull/311 targeting main with Refs #83, not Closes.
+The commit contains research, plan, details, critique, changes, review and state
+artifacts. Author and committer both use the verified noreply address, with the
+required Copilot co-author trailer.
+
+Commands/results:
+
+* Explicit `git add` of the 26 task-owned source/test/docs/artifact paths,
+  `git diff --cached --check`: passed; no virtualenv/private/prohibited path.
+* `git commit -m "feat(core): add accountable return and handoff lifecycle"`
+  with Refs #83 body and required trailer: `996dfcd`, 26 files.
+* `git push --set-upstream origin feat/src-handoffs-83`: succeeded.
+* `gh pr create --base main --head feat/src-handoffs-83 --title "feat(core): add accountable return and handoff lifecycle" --body`
+  using this full evidence record prefixed with Refs #83: PR #311 created.
+* `gh pr view 311 --json url,state,baseRefName,headRefName,statusCheckRollup`:
+  OPEN, base main, correct topic head; initial check rollup empty, not a pass.
+* `git log -1 --format='%h %ae %ce%n%B'`: author/committer noreply and
+  co-author trailer verified.
+
+This publication record and final plan/state reconciliation are delivered in
+a documentation-only follow-up commit, with no post-Review source changes.
+Issue criterion 3 remains unticked. CI image/SQL Server results must be checked
+on GitHub, not inferred from local skips. No merge or main push performed.

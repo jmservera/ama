@@ -71,7 +71,7 @@ no workload. Existing AI proposal paths remain intact. Preserve safety/consent.
 ### P03 Validation and delivery
 * [x] P03-T01 Run all project suites, ruff/format/mypy, local app synthetic run,
   migration checks and attempted Docker; record commands/results.
-* [ ] P03-T02 One post-implementation review; commit, push and open PR.
+* [x] P03-T02 One post-implementation review; commit, push and open PR.
 
 ## Test Ownership and Change Budget
 
@@ -104,6 +104,8 @@ Planning Readiness: Ready. No owner decision needed for these corrections.
 
 OD-09 approved escalation periods and human operating authority; SQL Server,
 image and live AI/Azure acceptance evidence. These do not block this bounded PR.
+Published as #311, Refs #83. All implementation tasks complete; Review execution
+Complete, outcome Residual work. No full issue acceptance or merge claimed.
 
 ## Handoff
 

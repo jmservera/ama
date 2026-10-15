@@ -108,3 +108,14 @@ Broader selective approval invalidation (FR-043) is not silently claimed here.
 Ready for bounded implementation; owner/live criteria excluded explicitly.
 Research disposition: executed. No additional cycle needed: remaining gaps need
 owner or CI/live evidence, not another source search. Parent continues to Plan.
+
+## Implementation Reconciliation
+
+The initial direct-call compatibility option above was strengthened during
+implementation: every new core/API disposition requires source and next action.
+Only previously persisted records retain unknown provenance. The receiving
+owner selection option was simplified after PC-001: dispositions always record
+the current case owner and never reassign. Current plan/details/changes and the
+single Review record own the delivered contract; this section preserves the
+research-to-implementation decision trail without claiming legacy data was
+verified. Published as PR #311 using Refs #83.
