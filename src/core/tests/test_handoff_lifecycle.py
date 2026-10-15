@@ -6,8 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tests.dataset import DATA
-
+from dataset import DATA
 from zava_forward.core import projection
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
