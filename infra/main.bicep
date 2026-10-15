@@ -388,6 +388,60 @@ resource apiRestarts 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployAp
   }
 }
 
+resource ledgerDigestMismatch 'Microsoft.Insights/scheduledQueryRules@2023-03-15-preview' = if (deployApplications) {
+  name: 'alert-${prefix}-ledger-digest-mismatch'
+  location: location
+  tags: allTags
+  properties: {
+    displayName: 'Ledger does not match the immutable digests'
+    description: 'The scheduled ledger verification job reported LEDGER_DIGEST_ALERT, or the job run failed.'
+    severity: 1
+    enabled: true
+    scopes: [monitoring.outputs.workspaceId]
+    evaluationFrequency: 'PT1H'
+    windowSize: 'PT1H'
+    criteria: {
+      allOf: [
+        {
+          query: 'ContainerAppConsoleLogs_CL | where ContainerJobName_s startswith "job-${prefix}-ledger-verify" and Log_s has "LEDGER_DIGEST_ALERT"'
+          timeAggregation: 'Count'
+          operator: 'GreaterThan'
+          threshold: 0
+          failingPeriods: { numberOfEvaluationPeriods: 1, minFailingPeriodsToAlert: 1 }
+        }
+      ]
+    }
+    actions: { actionGroups: [monitoring.outputs.actionGroupId] }
+  }
+}
+
+resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-preview' = if (deployApplications) {
+  name: 'alert-${prefix}-ledger-verify-missing'
+  location: location
+  tags: allTags
+  properties: {
+    displayName: 'Ledger verification did not report success'
+    description: 'No LEDGER_DIGEST_OK line from the daily verification job in 26 hours: the job failed to start or run, or logs are missing. Table names are unconfirmed until checked in the deployed workspace.'
+    severity: 1
+    enabled: true
+    scopes: [monitoring.outputs.workspaceId]
+    evaluationFrequency: 'PT1H'
+    windowSize: 'P1D'
+    criteria: {
+      allOf: [
+        {
+          query: 'ContainerAppConsoleLogs_CL | where ContainerJobName_s startswith "job-${prefix}-ledger-verify" and Log_s has "LEDGER_DIGEST_OK" | where TimeGenerated > ago(26h)'
+          timeAggregation: 'Count'
+          operator: 'LessThan'
+          threshold: 1
+          failingPeriods: { numberOfEvaluationPeriods: 1, minFailingPeriodsToAlert: 1 }
+        }
+      ]
+    }
+    actions: { actionGroups: [monitoring.outputs.actionGroupId] }
+  }
+}
+
 resource budget 'Microsoft.Consumption/budgets@2023-05-01' = {
   name: 'budget-${prefix}'
   properties: {
