@@ -11,6 +11,7 @@ from datetime import datetime
 
 from . import ai_tasks, insights, ledger, projection, ranking
 from .finance import FinanceMixin
+from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
 from .grants import GrantMixin, grant_summary
 from .resident_decisions import ResidentDecisionMixin, measure_decision_view
@@ -36,7 +37,7 @@ class ConflictError(Exception):
     """Another writer changed the same record first, so this write was refused."""
 
 
-class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin, GovernanceMixin):
+class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin, GovernanceMixin, ContinuityMixin):
     def __init__(self, data_path, live_path=None, audit_path=None):
         self.lock = threading.RLock()
         base = os.path.dirname(data_path)
@@ -57,6 +58,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
         self.docs_dir = os.path.join(os.path.dirname(self.live_path), "docs")
         self.docstore = open_document_store(self.docs_dir)
         self.ai = Ai()
+        self.ai.gate = lambda task: self.continuity_block(task)
         self.version = 0
         self._briefings = {}
         self._ranks = None

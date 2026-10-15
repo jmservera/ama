@@ -24,6 +24,7 @@ class Ai:
         self.strong = os.environ.get("AI_DEPLOYMENT_STRONG", "capable")
         self.token = None
         self.expires = 0
+        self.gate = None  # task -> reason the task is suspended, or None
 
     @property
     def configured(self):
@@ -100,6 +101,9 @@ class Ai:
             return dict(kw, task=task, latency_ms=round((time.perf_counter() - t0) * 1000, 1))
         if off:
             return out(text=template, source="template", model=None, validated=True, reason="workflow-only mode selected")
+        held = self.gate(task) if self.gate else None
+        if held:
+            return out(text=template, source="template", model=None, validated=True, reason=held)
         if not self.configured:
             return out(text=template, source="template", model=None, validated=True, reason="AI is not configured")
         dep = self.strong if strong else self.fast
@@ -127,6 +131,10 @@ class Ai:
         else:
             return dict(text="This file type is stored but not read. Add a short note about what it is.", source="template",
                         model=None, validated=True, task="read_document")
+        held = self.gate("read_document") if self.gate else None
+        if held:
+            return dict(text="The file is stored. AI reading is suspended; add a short note about what it is.", source="template",
+                        model=None, validated=True, task="read_document", reason=held)
         if off or not self.configured:
             return dict(text="AI reading is not switched on here. The file is stored.", source="template", model=None,
                         validated=True, task="read_document",

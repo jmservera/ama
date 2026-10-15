@@ -28,6 +28,7 @@ BULLET = re.compile(r"^\s*[-*\u2022]\s")
 REVIEW_ACTIONS = {"accept": "Accepted", "edit": "Edited", "reject": "Rejected"}
 NOT_REVIEWED = "Not reviewed"
 HOLD = "Hold"
+QUARANTINED = "Quarantined"
 
 
 def workflow_only(mode=None):
@@ -185,7 +186,7 @@ def source_hashes(store, user, case_ids):
             for cid in case_ids}
 
 
-def finish(store, user, task, case_ids, r, workflow_text, sources, template_cites=None, bullets=False, record_cites=None):
+def finish(store, user, task, case_ids, r, workflow_text, sources, template_cites=None, bullets=False, record_cites=None, epoch0=None):
     """Turn an Ai result into the shown output, with citations checked, plus its comparison record."""
     ai_output = r["text"] if r["source"] == "ai" else r.get("ai_text")
     dropped = 0
@@ -199,6 +200,9 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
         cites = [x for x in cites if x not in bad]
         verified = bool(cites) and not bad
     reason = r.get("reason")
+    late = r["source"] == "ai" and epoch0 is not None and store.continuity_epoch() != epoch0
+    if late:  # the call began before a suspension or restart: keep it for reconstruction, never as a proposal
+        reason, text, cites, verified = "late result quarantined after a suspension or restart", workflow_text, [], False
     mode = "workflow-only" if reason == "workflow-only mode selected" else "ai"
     from . import ai_registry
     env = ai_registry.envelope(task, case_ids, {cid: hashlib.sha256("\n".join(sorted(labels)).encode()).hexdigest()[:16]
@@ -207,8 +211,15 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
     rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
                      latency_ms=r.get("latency_ms"), ai_output=ai_output, workflow_output=workflow_text, shown_output=text,
                      fallback_reason=reason, envelope=env, verified=verified,
+                     continuity_epoch=epoch0, quarantine=dict(reason=reason, at=_now()) if late else None,
                      provenance=dict(citation_resolved=verified, source_verified=False, human_reviewed=False,
                                      source_hashes=env["source_versions"], case_version=store.version, hold=None), citations=cites, unresolved=bad, dropped_uncited=dropped)
+    if late:
+        with store.lock:
+            rec["status"] = QUARANTINED
+            store.audit(user["email"], "ai_quarantine", "-", f"{task} {rec['id']}")
+            store.save()
+        r = dict(r, source="template", model=None)
     return dict(r, text=text, citations=cites, unresolved=bad, dropped_uncited=dropped, verified=verified,
                 approval=NOT_REVIEWED, envelope=env, record_id=rec["id"], mode=mode, prompt_version=PROMPT_VERSION)
 
@@ -225,13 +236,15 @@ def run_text_task(store, user, task, cases, sysmsg, prompt, template, template_c
     with store.lock:
         ok = projection.can_see_reason(user)
         sources = {c["id"]: source_labels(c, ok) for c in cases}
+    epoch0 = store.continuity_epoch()
     r = store.ai.run(task, sysmsg, prompt + cite_instruction(sources), template, strong, check, off=workflow_only(mode))
-    return finish(store, user, task, list(sources), r, template, sources, template_cites, bullets)
+    return finish(store, user, task, list(sources), r, template, sources, template_cites, bullets, epoch0=epoch0)
 
 
 def run_document(store, user, case_id, doc, data, mode=None):
     require_registered("read_document")
     off = workflow_only(mode)
+    epoch0 = store.continuity_epoch()
     t0 = time.perf_counter()
     r = store.ai.look_at(doc["name"], data, doc["mime"], off=off)
     r.setdefault("reason", None if r["source"] == "ai" else "file type is stored but not read")
@@ -240,7 +253,7 @@ def run_document(store, user, case_id, doc, data, mode=None):
     with store.lock:
         sources = {case_id: source_labels(store._case(case_id), projection.can_see_reason(user))}
     return finish(store, user, "read_document", [case_id], r, "The file is stored. Add a short note about what it is.",
-                  sources, record_cites=[label])
+                  sources, record_cites=[label], epoch0=epoch0)
 
 
 def review(store, user, rec_id, action, reason="", text=None):
@@ -255,8 +268,12 @@ def review(store, user, rec_id, action, reason="", text=None):
             raise KeyError(rec_id)
         if rec["user"] != user["email"]:
             raise PermissionError("This AI output was made for someone else.")
+        if rec["status"] == QUARANTINED:
+            raise PermissionError("This AI output was quarantined after a suspension or restart and cannot be relied on.")
         if rec["status"] != NOT_REVIEWED:
             raise ValueError("This AI output has already been reviewed.")
+        if action != "reject" and store.continuity_suspension(rec["task"]):
+            raise PermissionError(store.continuity_block(rec["task"]))
         prov = rec.setdefault("provenance", dict(citation_resolved=rec.get("verified", False), source_verified=False,
                                                  human_reviewed=False, source_hashes={}, hold=None))
         try:
@@ -292,7 +309,7 @@ def live_report(store):
     for r in recs:
         task = "priority" if r.get("kind") != "ai_task" else r["task"]
         status = NOT_REVIEWED if r["status"] == "Proposed" else r["status"]
-        t = tasks.setdefault(task, dict(total=0, ai=0, workflow=0, unverified=0, **{s: 0 for s in (NOT_REVIEWED, "Accepted", "Edited", "Rejected", HOLD)}))
+        t = tasks.setdefault(task, dict(total=0, ai=0, workflow=0, unverified=0, **{s: 0 for s in (NOT_REVIEWED, "Accepted", "Edited", "Rejected", HOLD, QUARANTINED)}))
         t["total"] += 1
         t["ai" if r["source"] == "ai" else "workflow"] += 1
         t["unverified"] += 0 if r.get("verified", r.get("validated", True)) else 1

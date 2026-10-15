@@ -381,7 +381,7 @@ class SqlStore(Store):
         self._sync()
 
     # ---- procurement and governance data kept as checked documents
-    DOCS = ("procurement", "governance")
+    DOCS = ("procurement", "governance", "continuity")
 
     def _proc_sync(self):
         self._proc_snap = {}
