@@ -12,6 +12,10 @@ import sqlite3
 from datetime import date
 
 AUTHOR, OWNER = "rule_author", "rule_owner"
+
+
+def _canon(name):
+    return " ".join(str(name).split()).casefold()
 STATES = ("draft", "approved", "active", "held", "retired")
 EXERCISE_LABEL = "EXERCISE CARD: synthetic fixture, not approved by a named owner. Not law and not a real approval (ADR 0005 owner decision, 2026-10-15)."
 APPEND_ONLY = ("rule_card_version", "rule_card_event", "rule_card_review")
@@ -78,8 +82,13 @@ class RuleCardStore:
                         (card_id, version, state, actor, role, at, int(simulated), note))
         self.db.commit()
 
-    def propose(self, card_id, author, role, today=None, exercise=False, **f):
-        """Create the next immutable draft version. Needs the author role. Never touches earlier versions."""
+    def propose(self, card_id, author, role, today=None, exercise=True, **f):
+        """Create the next immutable draft version. Needs the author role. Never touches earlier versions.
+
+        Only labelled exercise cards are allowed until a named owner and the #116 role binding exist (ADR 0005).
+        """
+        if not exercise:
+            raise RuleError("only labelled exercise cards are allowed until real approvers and #116 roles exist")
         if role != AUTHOR:
             raise RuleError("only the rule author role can draft a card")
         missing = [k for k in FIELDS if k not in ("retirement",) and not f.get(k)]
@@ -105,13 +114,13 @@ class RuleCardStore:
 
     def _owner_only(self, card_id, version, actor, role):
         c = self._version(card_id, version)
-        if role != OWNER or actor != c["approver"]:
+        if role != OWNER or _canon(actor) != _canon(c["approver"]):
             raise RuleError("only the named owner role of this card can do this")
         return c
 
     def approve(self, card_id, version, actor, role, today=None):
         c = self._owner_only(card_id, version, actor, role)
-        if actor == c["author"]:
+        if _canon(actor) == _canon(c["author"]):
             raise RuleError("an author cannot approve their own card")
         if self.state(card_id, version) != "draft":
             raise RuleError("only a draft can be approved")

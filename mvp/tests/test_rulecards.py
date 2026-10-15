@@ -45,7 +45,15 @@ class RuleCardTests(unittest.TestCase):
         with self.assertRaises(rc.RuleError):
             self.s.approve("c", v, "Pat", rc.AUTHOR)
         with self.assertRaises(rc.RuleError):
+            self.s.approve("c", v, " pat ", rc.OWNER)
+        with self.assertRaises(rc.RuleError):
             self.s.propose("c", "Lee", rc.OWNER, title="t")
+
+    def test_unlabelled_cards_are_refused(self):
+        with self.assertRaises(rc.RuleError):
+            self.s.propose("c", "Pat", rc.AUTHOR, exercise=False, title="t", trigger="x", applicability="a",
+                           provisions=["p"], clock="c", safe_default="s", escalation_role="e",
+                           approver="Lee", effective="2026-01-01")
 
     def test_hold_by_owner_only_and_stops_firing(self):
         self.activate()
