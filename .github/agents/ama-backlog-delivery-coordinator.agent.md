@@ -173,6 +173,16 @@ treated as delivery failure.
    report the blocker ledger. Stop that schedule (`manage_schedule` `stop`)
    when every issue is merged or blocked, and name the schedule id in the
    report. Between checks, continue with independent work.
+   End every check with a status summary in plain language, not a bare
+   command result. Cover, in this order: what changed since the last check
+   (sessions finished, PRs opened, merged or reviewed, issues reopened);
+   what is running now (tmux session, issue and phase from the log tail); each
+   open PR with its checks, mergeability, review verdict and the next action;
+   what is waiting and why (dependency, failing check, fix session, human
+   decision); and what you will do at the next check. Name the failing check
+   and its cause when known, and say plainly when a cause is not yet known.
+   When nothing changed, say so in one line and name what you are waiting for.
+   Keep it short, but never leave the owner to infer state from tool output.
    Verify RPI use before review: the PR diff must contain that issue's
    research, plan, changes and review artifacts
    (`gh pr diff {n} --name-only | grep .copilot-tracking`), and the session
