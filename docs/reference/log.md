@@ -2803,6 +2803,26 @@ metadata when the knowledge base was created.
 * Labelled synthetic fixtures under ADR 0005 (2026-10-15); not lodged EPCs.
 * Open: conflict mix and rates are unconfirmed generator assumptions.
 
+## [2026-10-15] update | Coordinator requires RPI loop evidence
+
+* Updated `.github/agents/ama-backlog-delivery-coordinator.agent.md`: briefs
+  must require the full research, plan, implement and review loop, the
+  `.copilot-tracking/` artifacts are committed and pushed in each PR, and the
+  coordinator verifies them before review. Prompted by wave 1 to 5 sessions
+  that implemented directly and pushed no RPI artifacts. No index change.
+
+## [2026-10-15] update | RPI loop made a merge-gate condition
+
+* Updated the coordinator agent so the RPI loop is mandatory for every issue
+  and the merge gate checks for research, plan, changes and review artifacts
+  in the PR. No index change.
+
+## [2026-10-15] update | Coordinator runs RPI loops in tmux sessions
+
+* Updated the coordinator agent so each issue's RPI loop runs in its own named
+  tmux session with the agent and brief passed as Copilot CLI parameters, and
+  is the only allowed execution route. No index change.
+
 ## [2026-10-15] update | Contractor, finance, grant, safety and consent lifecycle coverage
 
 * Added a lifecycle coverage section to `research/retrofit-synthetic-data/README.md`
