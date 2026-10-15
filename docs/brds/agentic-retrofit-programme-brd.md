@@ -30,9 +30,9 @@ requirement_id_prefixes:
 
 Version 0.18.0 adds a proposal, not an adopted requirement set: per-user
 agent chat and memory (BG-013, FR-049, FR-050, RULE-025, RULE-026, NFR-010,
-NFR-011, AC-091 to AC-098 and OD-44 to OD-49). The owner has not decided to
-adopt it, so every new row is a proposal that stays inactive until OD-44 is
-decided and the DPO and Legal decisions in OD-45 and OD-46 are recorded. It
+NFR-011, AC-091 to AC-098 and OD-44 to OD-49). The owner accepted ADR 0004 as
+written on 2026-10-15 (OD-44 decided), but every new row stays inactive for live
+personal data until the DPO and Legal decisions in OD-45 and OD-46 are recorded. It
 was raised by review as backlog epic #157 and children #158 to #164 on GitHub
 and sits in no earlier BRD, PRD or ADR. The new rows add no agent authority
 beyond RULE-018 and FR-036.
@@ -1525,8 +1525,8 @@ authorize spending or supersede legal, resident or professional controls.
 
 ### Conversational Assistance and Memory (proposed)
 
-This subsection is a proposal. The owner has not decided to adopt per-user
-chat or memory (OD-44), and the DPO and Legal have not approved a lawful basis,
+This subsection is a proposal. The owner accepted ADR 0004 on 2026-10-15
+(OD-44 decided), but the DPO and Legal have not approved a lawful basis,
 notice, DPIA or retention (OD-45, OD-46). Until then every row below is
 inactive and no build, pilot or release may depend on it. The rows are
 solution-agnostic: they do not name a store, product or model. They add no
@@ -1841,7 +1841,7 @@ continues. No result automatically activates a live control.
 | OD-41 | Validate the journey atlas stages, pains, gains and handoffs through voluntary, accessible research with real residents, staff, contractors and representatives, including declined or deferred work, failed visits, reopened defects and non-digital households | Resident Engagement and Programme, with Data and Performance input | Blocks use of journey claims as company facts or targets; does not block the exercise demonstrator |
 | OD-42 | Approve how representative authority is evidenced, reviewed, revoked and retained, and which channels may record it | DPO, Legal and Resident Engagement | Blocks operational use of FR-045 with real residents |
 | OD-43 | Confirm the actual in-use monitoring inventory and ownership: device types, count, protocol, sampling cadence, device-to-property mapping and calibration owner, lawful basis and DPIA, resident choice, retention, freshness and gap rules, analysis windows and thresholds, and the operational review owner | Assets, Building Safety, DPO and data owners, with Digital input | Blocks operational use of FR-048 with real data; does not block the simulator exercise |
-| OD-44 | Whether to adopt per-user agent chat at all, for which staff roles and tasks, and whether it is a registry change under FR-036. Proposed default: not adopted until decided; staff first, embedded in the case view, no new assistant | Owner and Executive Director of Assets as proposed sponsor | Blocks FR-049, FR-050, RULE-025, RULE-026, NFR-010 and NFR-011 |
+| OD-44 | Whether to adopt per-user agent chat at all, for which staff roles and tasks, and whether it is a registry change under FR-036. Decided 2026-10-15: adopted as in ADR 0004 (staff first, registry change under FR-036). Original proposed default: not adopted until decided; staff first, embedded in the case view, no new assistant | Owner and Executive Director of Assets as proposed sponsor | Blocks FR-049, FR-050, RULE-025, RULE-026, NFR-010 and NFR-011 |
 | OD-45 | Lawful basis, staff notice and DPIA for processing employee conversation and memory data, treatment of resident personal data that appears in case text, model provider and region terms, and how access, rectification and erasure requests are met | Data Protection Officer and Legal | Blocks any live personal data in conversation or memory (RULE-022) |
 | OD-46 | Retention period for each class (conversation, memory item, event metadata), who may access what (including administrator and break-glass), any aggregate use, and the prohibition on performance use in RULE-026 | Data Protection Officer, Legal and HR or employee relations if named | Retention is Unknown until decided; blocks FR-050 and NFR-011 |
 | OD-47 | Whether residents, representatives or providers may ever use a conversational channel, and what consent, accessibility, identity and authority evidence they would need. Depends on OD-41, OD-42 and FR-045 | Resident Engagement, DPO, Legal and the Owner | Blocks any non-staff chat; out of scope until decided |

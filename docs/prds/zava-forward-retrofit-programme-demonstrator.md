@@ -708,13 +708,13 @@ scheme application:
 
 ## Per-user agent chat and memory (proposed)
 
-Status: proposal, inactive. The owner has not decided to adopt per-user agent
-chat or memory (BRD OD-44), and the DPO and Legal have not decided lawful basis,
+Status: owner accepted ADR 0004 on 2026-10-15 (BRD OD-44 decided); live use
+stays inactive. The DPO and Legal have not decided lawful basis,
 notice, DPIA or retention (BRD OD-45, OD-46). Nothing in this section changes
 the exercise baseline, CON-009, FR-036 or FR-047. The capability appears in no
 earlier BRD, PRD or ADR; it is tracked as backlog epic #157 and children #158
 to #164 on GitHub and is analysed in
-[ADR 0004](../adrs/0004-per-user-agent-chat-and-memory.md), status Proposed.
+[ADR 0004](../adrs/0004-per-user-agent-chat-and-memory.md), status Accepted (2026-10-15).
 Identifiers here are PRD identifiers; the BRD uses the same FR, AC and NFR
 prefixes for different rows, so every trace below names its document.
 
