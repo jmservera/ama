@@ -20,7 +20,17 @@ param tokenStoreReadyRequiresTokenStore string
 @description('Must not be empty. Empty means entraRoleMap was set without entraClientId.')
 param entraRoleMapRequiresEntraClientId string
 
+@minLength(1)
+@description('Must not be empty. Empty means enablePublicEdge=true in the development profile or with allowPublicNetworkAccess=true; the edge needs the internal production environment.')
+param publicEdgeRequiresProductionProfile string
+
+@minLength(1)
+@description('Must not be empty. Empty means enablePublicEdge=true without deployApplications=true.')
+param publicEdgeRequiresApplications string
+
 output checked array = [
+  publicEdgeRequiresProductionProfile
+  publicEdgeRequiresApplications
   productionProfileForbidsPublicNetworkAccess
   productionProfileRequiresKeyVaultPurgeProtection
   sharePointEvidenceStoreRequiresSiteId

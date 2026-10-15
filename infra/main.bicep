@@ -51,6 +51,12 @@ param deployApplications bool = true
 param agentImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 param orchestratorImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 param importImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
+@description('Deploy Front Door Premium, a WAF policy and a Private Link origin to the internal environment (ADR 0002 decision 6). Production profile only; the private endpoint connection needs approval (infra/README.md, Public edge).')
+param enablePublicEdge bool = false
+@description('Optional edge custom domain (managed TLS certificate). Empty uses the default azurefd.net host.')
+param edgeCustomDomain string = ''
+@allowed(['Detection', 'Prevention'])
+param edgeWafMode string = 'Prevention'
 @description('Enable zone redundancy where the region supports it.')
 param zoneRedundant bool = false
 
@@ -115,6 +121,8 @@ module guard 'modules/guard.bicep' = {
   params: {
     productionProfileForbidsPublicNetworkAccess: isDev || !allowPublicNetworkAccess ? 'ok' : ''
     productionProfileRequiresKeyVaultPurgeProtection: isDev || keyVaultPurgeProtection ? 'ok' : ''
+    publicEdgeRequiresProductionProfile: !enablePublicEdge || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
+    publicEdgeRequiresApplications: !enablePublicEdge || deployApplications ? 'ok' : ''
     sharePointEvidenceStoreRequiresSiteId: evidenceStore != 'sharepoint' || !empty(sharePointSiteId) ? 'ok' : ''
     tokenStoreReadyRequiresTokenStore: !entraTokenStoreReady || enableEntraTokenStore ? 'ok' : ''
     entraRoleMapRequiresEntraClientId: empty(entraRoleMap) || !empty(entraClientId) ? 'ok' : ''
@@ -277,6 +285,7 @@ module apps 'modules/containerapps.bicep' = if (deployApplications) {
   dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
+    behindPublicEdge: enablePublicEdge
     prefix: prefix
     location: location
     tags: allTags
@@ -312,6 +321,21 @@ module apps 'modules/containerapps.bicep' = if (deployApplications) {
     importImage: importImage
   }
 
+}
+
+module edge 'modules/edge.bicep' = if (enablePublicEdge) {
+  name: 'edge'
+  dependsOn: [guard]
+  params: {
+    prefix: prefix
+    tags: allTags
+    environmentId: apps!.outputs.environmentId
+    originHostName: apps!.outputs.apiFqdn
+    privateLinkLocation: location
+    customDomain: edgeCustomDomain
+    wafMode: edgeWafMode
+    workspaceId: monitoring.outputs.workspaceId
+  }
 }
 
 module authTokenStore 'modules/authTokenStore.bicep' = if (enableEntraTokenStore) {
@@ -531,3 +555,5 @@ output iotHubConsumerGroup string = iotHub.outputs.consumerGroup
 output foundryEndpoint string = foundry.outputs.endpoint
 output identityPrincipalIds object = identity.outputs.principalIds
 output logAnalyticsWorkspace string = monitoring.outputs.workspaceName
+output publicEdgeHostName string = enablePublicEdge ? edge!.outputs.publicHostName : ''
+output entraRedirectUri string = enablePublicEdge ? edge!.outputs.entraRedirectUri : ''

@@ -633,3 +633,29 @@ python3 -m unittest infra/tests/test_governance.py
 | Credential owner | Juan Manuel Servera issues and rotates device credentials (owner decision); device keys are held in Key Vault, never in source |
 
 Gates: `az bicep build` and `az bicep lint` run in `mvp-validation.yml`; `infra/tests/test_iothub_module.py` guards the module. Open: a live `az deployment group what-if` against the target resource group needs subscription access and has not been run; real pricing confirmation; B1 private endpoint behaviour verified in a deployment.
+
+## Private networking and public edge (issue 143, ADR 0002 decision 6)
+
+Private-endpoint and DNS coverage per service (checked by `infra/tests/test_edge_module.py`; any module with a public-access switch must have a private endpoint):
+
+| Service | Private endpoint group | Private DNS zone |
+|---|---|---|
+| Azure SQL | `sqlServer` | `privatelink.database.windows.net` |
+| Storage | `blob`, `queue` | `privatelink.blob...`, `privatelink.queue...` |
+| Token-only auth storage | `blob` | `privatelink.blob...` |
+| Key Vault | `vault` | `privatelink.vaultcore.azure.net` |
+| Container Registry | `registry` | `privatelink.azurecr.io` |
+| Foundry (Azure OpenAI) | `account` | `cognitiveservices`, `openai`, `services.ai` zones |
+| IoT Hub | `iotHub` | `privatelink.azure-devices.net`, `privatelink.servicebus.windows.net` |
+| Monitor (AMPLS) | `azuremonitor` | `monitor`, `oms`, `ods`, `agentsvc`, `blob` zones |
+| Container Apps environment | Internal environment in the delegated subnet (no endpoint) | Environment DNS zone (`envDns.bicep`) |
+
+Any new store must add a `privateEndpoint.bicep` call, a zone in `network.bicep`, and an entry in the test's coverage map.
+
+Public edge: `enablePublicEdge=true` deploys `modules/edge.bicep` (Front Door Premium, WAF policy with the default and bot rule sets, Private Link origin to the internal environment, diagnostics to Log Analytics). The guard rejects it in the development profile or with `allowPublicNetworkAccess=true`, so development public access cannot be enabled together with the edge or in the production profile. After deployment an owner must approve the pending private endpoint connection on the Container Apps environment (Networking, Private endpoint connections). `edgeCustomDomain` adds a managed-certificate custom domain; the DNS validation TXT and CNAME records are an owner step. The `entraRedirectUri` output is the callback URL to register (`infra/scripts/create-api-app-registration.sh -u https://<edge host>`), and the API sets the forward-proxy convention so sign-in callbacks use the edge host.
+
+Open items (not verified here):
+
+* Evidence for private-network claims must come from a production-profile deployment (uksouth, Azure only). This change was validated by `az bicep build`, lint and static tests only; no deployment ran. Record the deployment evidence before any claim.
+* Confirm Front Door Premium Private Link support for Container Apps environments in uksouth and its current pricing at deployment time.
+* Custom domain name and DNS ownership, and the pilot edge go/no-go, are owner decisions (ADR 0002 open: pilot network design).
