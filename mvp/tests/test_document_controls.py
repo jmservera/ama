@@ -76,8 +76,11 @@ class ScanTests(Base):
         self.assertEqual(st.docstore.list_ids("ZF-1"), [])
         self.assertEqual(self.actions(st).count("upload_document_rejected"), 4)
 
-    def test_unscanned_document_is_blocked_everywhere(self):
+    def test_unscanned_document_is_blocked_while_scan_pending(self):
+        blob = DefenderBlob()
         st = self.make()
+        st.docstore = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=blob)
+        st.scanner = DefenderForStorageScanner(st.docstore)
         doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
         del st._case("ZF-1")["documents"][0]["scan"]
         with self.assertRaises(DocumentUnavailable):
@@ -98,6 +101,43 @@ class ScanTests(Base):
         blob.result = "No threats found"
         self.assertEqual(st.rescan_document(SAM, "ZF-1", doc["id"])["status"], "clean")
         self.assertEqual(st.get_document("ZF-1", doc["id"], SAM)[2], b"%PDF-1")
+
+    def test_pending_rescans_on_read_and_by_job(self):
+        blob = DefenderBlob()
+        st = self.make()
+        st.docstore = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=blob)
+        st.scanner = DefenderForStorageScanner(st.docstore)
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
+        self.assertEqual(st.rescan_pending()["pending"], 1)
+        blob.result = "No threats found"
+        self.assertEqual(st.get_document("ZF-1", doc["id"], SAM)[2], b"%PDF-1")
+        blob.result = None
+        st.add_document(SAM, "ZF-1", "b.pdf", "EPC", b"%PDF-1")
+        blob.result = "Malicious"
+        self.assertEqual(st.rescan_pending()["removed"], 1)
+
+    def test_document_without_scan_field_is_scanned_on_first_use(self):
+        st = self.make()
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
+        for d in st._case("ZF-1")["documents"]:
+            d.pop("scan", None)
+        self.assertEqual(st.get_document("ZF-1", doc["id"], SAM)[2], b"%PDF-1")
+        self.assertEqual(st.detail("ZF-1")["documents"][-1]["scan"]["status"], "clean")
+
+    def test_blob_kept_when_save_fails(self):
+        blob = DefenderBlob()
+        st = self.make()
+        st.docstore = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=blob)
+        st.scanner = DefenderForStorageScanner(st.docstore)
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
+        blob.result = "Malicious"
+        def boom():
+            raise OSError("save failed")
+        st.save = boom
+        with self.assertRaises(OSError):
+            st.rescan_document(SAM, "ZF-1", doc["id"])
+        self.assertEqual(len(blob.blobs), 1)
+        self.assertEqual(len(st.detail("ZF-1")["documents"]), 1)
 
     def test_defender_malicious_result_removes_the_document(self):
         blob = DefenderBlob()

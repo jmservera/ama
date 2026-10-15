@@ -455,6 +455,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
             doc = next((d for d in c["documents"] if d["id"] == doc_id and not d["generated"]), None)
             if not doc:
                 raise KeyError(doc_id)
+            self.ensure_scanned(case_id, doc, user["email"] if user else "system")
             self.require_clean(doc)
             data = self.docstore.get(case_id, doc_id)
         self.audit(user["email"], "ai_run_start", case_id, f"read_document {doc['name']}")
@@ -478,6 +479,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                 text = (f"{doc['name']}\nCase {c['id']}: {c['home']['address']}, {c['home']['postcode']}\n"
                         f"Filed {doc['at']} by {doc['by']}\nType: {doc['kind']}\n")
                 return doc["name"].rsplit(".", 1)[0] + ".txt", "text/plain", text.encode()
+            self.ensure_scanned(case_id, doc, user["email"] if user else "system")
             self.require_clean(doc)
             data = self.docstore.get(case_id, doc_id)
             if user is not None:

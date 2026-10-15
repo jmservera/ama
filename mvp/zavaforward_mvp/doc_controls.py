@@ -144,24 +144,62 @@ class DocControlsMixin:
         if not doc.get("generated") and scan.get("status") != "clean":
             raise DocumentUnavailable("This document is not available until it has passed the content scan.")
 
+    def _remove_document(self, case_id, doc, action, who, detail):
+        """Drop the record and save first; delete the blob only once the save has succeeded."""
+        docs = self._case(case_id)["documents"]
+        idx = docs.index(doc)
+        docs.remove(doc)
+        try:
+            self.audit(who, action, case_id, detail)
+            self.save()
+        except Exception:
+            docs.insert(idx, doc)
+            raise
+        self.docstore.delete(case_id, doc["id"])
+
+    def _scan_stored(self, case_id, doc, who):
+        """Scan a stored document (caller holds the lock). A missing scan field counts as pending. Returns the scan record."""
+        data = self.docstore.get(case_id, doc["id"])
+        verdict, detail = self.scanner.scan(case_id, doc["id"], doc["name"], data, doc["mime"])
+        if verdict in ("infected", "mismatch"):
+            self._remove_document(case_id, doc, "document_quarantined_deleted", who, f"{doc['id']}: {doc['kind']}: {verdict}")
+            raise ValueError("That file failed the content check and was removed.")
+        doc["scan"] = dict(status=verdict, scanner=self.scanner.name, at=datetime.now().isoformat(timespec="seconds"), detail=detail)
+        self.audit(who, "document_rescanned", case_id, f"{doc['id']}: {verdict}")
+        self.save()
+        return doc["scan"]
+
+    def ensure_scanned(self, case_id, doc, who="system"):
+        """Rescan on first use when the scan is missing (stored before scanning existed) or pending."""
+        if doc.get("generated") or (doc.get("scan") or {}).get("status", "pending") != "pending":
+            return
+        self._scan_stored(case_id, doc, who)
+
+    def rescan_pending(self, who="system"):
+        """Job entry point: rescan every missing or pending document. Returns counts."""
+        out = dict(checked=0, clean=0, pending=0, removed=0)
+        with self.lock:
+            for cid in list(self.cases):
+                for d in list(self.cases[cid]["documents"]):
+                    if d.get("generated") or (d.get("scan") or {}).get("status", "pending") != "pending":
+                        continue
+                    out["checked"] += 1
+                    try:
+                        st = self._scan_stored(cid, d, who)["status"]
+                        out["clean" if st == "clean" else "pending"] += 1
+                    except ValueError:
+                        out["removed"] += 1
+                    except DocumentStoreError:
+                        out["pending"] += 1
+        return out
+
     def rescan_document(self, user, case_id, doc_id):
         self._doc_role(user, "rescan")
         with self.lock:
             doc = next((d for d in self._case(case_id)["documents"] if d["id"] == doc_id and not d["generated"]), None)
             if not doc:
                 raise KeyError(doc_id)
-            data = self.docstore.get(case_id, doc_id)
-            verdict, detail = self.scanner.scan(case_id, doc_id, doc["name"], data, doc["mime"])
-            if verdict in ("infected", "mismatch"):
-                self.docstore.delete(case_id, doc_id)
-                self._case(case_id)["documents"].remove(doc)
-                self.audit(user["email"], "document_quarantined_deleted", case_id, f"{doc_id}: {doc['kind']}: {verdict}")
-                self.save()
-                raise ValueError("That file failed the content check and was removed.")
-            doc["scan"] = dict(status=verdict, scanner=self.scanner.name, at=datetime.now().isoformat(timespec="seconds"), detail=detail)
-            self.audit(user["email"], "document_rescanned", case_id, f"{doc_id}: {verdict}")
-            self.save()
-            return dict(doc["scan"])
+            return dict(self._scan_stored(case_id, doc, user["email"]))
 
     # ---- legal hold
     def place_legal_hold(self, user, case_id, reference):
@@ -233,7 +271,4 @@ class DocControlsMixin:
             trig = self._trigger(c, doc)
             if trig is None or trig + timedelta(days=365 * RETENTION_YEARS.get(doc["kind"], 1)) > today:
                 raise ValueError("This document is not past its retention trigger.")
-            self.docstore.delete(case_id, doc_id)
-            c["documents"].remove(doc)
-            self.audit(user["email"], "retention_deleted", case_id, f"{doc_id}: {doc['kind']}: approved by {user['name']}")
-            self.save()
+            self._remove_document(case_id, doc, "retention_deleted", user["email"], f"{doc_id}: {doc['kind']}: approved by {user['name']}")
