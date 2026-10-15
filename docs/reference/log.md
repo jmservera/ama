@@ -2451,3 +2451,9 @@ metadata when the knowledge base was created.
 * Used only local snapshots; recorded gaps (leasehold, complaints, TrustMark,
   licensed PAS 2035) and the unresolved Phase 2 commencement. No legal
   currentness check was made.
+
+## [2026-10-15] create | ADR 0004 regulatory compliance assistant
+
+* Proposed a law store, deterministic rule cards with proactive alerts and a
+  home-specific cited chat. Records open items and approval boundaries; no
+  legal interpretation or owner approval is claimed.
