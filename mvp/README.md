@@ -137,6 +137,20 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   `PYTHONPATH=. python3 -m zavaforward_mvp.scale_fixture`, writes to the
   Git-ignored `data/scale-fixture/` and is never committed. Dataset owners are
   an open owner decision.
+* Sensor backfill (#183): `PYTHONPATH=. python3 -m zavaforward_mvp.sensor_backfill
+  --estimate-only` prints the volume and size estimate for two years of hourly
+  temperature and humidity across all 60,000 homes (about 1.05 billion rows,
+  about 118 GiB as CSV, measured on a 20-home sample); `--homes N` writes
+  sharded CSV, `sensors.csv`, `estimate.json` and `manifest.json` (seed,
+  versions, climate source, parameters, hash) to the Git-ignored
+  `data/sensor-backfill/`. Same seed gives identical bytes. Every row is
+  `SYNTHETIC` with a stock home ID and `SENS-SYN-` sensor ID; `load_into()`
+  validates and appends idempotently on sensor ID plus reading ID, and
+  `SQL_DDL` is the Azure SQL schema. Open: Met Office and Environment Agency
+  open data are not yet retrieved (climate is a labelled synthetic model),
+  #110 consumer validation is mirrored by `validate_reading()` and must be
+  reconciled when #110 lands, and a full-stock run needs a storage and cost
+  decision.
 * AI evaluation harness, offline: `PYTHONPATH=. python3 -m zavaforward_mvp.ai_eval`
   runs golden scenarios (`evals/ai_priority_golden.json`) with a scripted model
   and checks that ranking and case data never change, the output stays Proposed

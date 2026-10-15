@@ -2919,3 +2919,8 @@ metadata when the knowledge base was created.
   detection, and that assistant proposals are unsupported on the JSON store.
 * No regulatory snapshot changed. Open: externally held head in an immutable
   Azure container and Azure SQL drill evidence.
+
+## 2026-10-15 Deterministic sensor backfill generator (#183)
+
+* `mvp/README.md` documents the sensor backfill generator, its volume and size estimate (about 1.05 billion hourly rows, about 118 GiB CSV for 60,000 homes over two years), manifest and idempotent load.
+* No regulatory snapshot changed. Open: Met Office and Environment Agency data retrieval, reconciliation with #110 validation, and a full-stock storage and cost decision.
