@@ -158,6 +158,13 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   #110 consumer validation is mirrored by `validate_reading()` and must be
   reconciled when #110 lands, and a full-stock run needs a storage and cost
   decision.
+* Sensor plausibility tests (#191): `tests/test_sensor_plausibility.py` runs in
+  the existing MVP CI unittest step over 150 stock homes for two years. It
+  fails on out-of-bounds or flat-line series, checks seasonal and diurnal
+  structure and humidity by age band and dwelling, and checks that dropout,
+  outlier and stuck fault rates match the configured injection. Expected
+  outdoor ranges are labelled exercise values until the climate source in #178
+  is retrieved and recorded (open item).
 * AI evaluation harness, offline: `PYTHONPATH=. python3 -m zavaforward_mvp.ai_eval`
   runs golden scenarios (`evals/ai_priority_golden.json`) with a scripted model
   and checks that ranking and case data never change, the output stays Proposed
