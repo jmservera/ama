@@ -1,0 +1,76 @@
+{
+  "task_id": "152",
+  "task_slug": "role-workbench-ia-152",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-15/role-workbench-ia-152-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-15/role-workbench-ia-152-plan.md",
+    "details": ".copilot-tracking/details/2026-10-15/role-workbench-ia-152-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-15/role-workbench-ia-152-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-15/role-workbench-ia-152-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-15/role-workbench-ia-152-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the full RPI loop on the specified branch and publish a Refs #152 PR",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-15"
+    },
+    {
+      "decision": "Do not decide supported devices or claim unavailable acceptance evidence",
+      "status": "confirmed",
+      "evidence": "User scope and issue #152"
+    },
+    {
+      "decision": "Research executed Ready; exactly one critique executed Revise, six direct plan dispositions",
+      "status": "executed",
+      "evidence": ".copilot-tracking/reviews/2026-10-15/role-workbench-ia-152-plan-critique.md"
+    },
+    {
+      "decision": "One Review executed Complete; outcome Defects found; shared IA assessed, not full issue acceptance",
+      "status": "not accepted while RV-001 remains open",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-15/role-workbench-ia-152-review.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "RV-001",
+      "summary": "Cancelled cached briefing remains loading after queue navigation",
+      "resolution": "Later implementation task fixes cache lifecycle and adds delayed-briefing regression; publish draft only"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Publish draft Refs #152 PR with complete evidence; highest-ranked later work is RV-001, no child task selected"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Fix cancelled briefing cache recovery",
+      "rationale": "Small coupled lifecycle fix with high leverage; blocks shared-slice readiness",
+      "evidence": "RV-001, one request and persistent loading after mine/all/mine navigation"
+    },
+    {
+      "rank": 2,
+      "task": "Decide supported devices and browser scope",
+      "rationale": "Small owner decision enables meaningful device acceptance without inventing support",
+      "evidence": "RV-002 and first unchecked #152 criterion"
+    },
+    {
+      "rank": 3,
+      "task": "Plan full profile/recovery acceptance",
+      "rationale": "Higher effort; connect existing eight auth roles to eleven perspectives and nine workflows",
+      "evidence": "RV-003, bounded manifest and UX-07 first-page/row-focus limitation"
+    },
+    {
+      "rank": 4,
+      "task": "Obtain authorized live-platform and human validation evidence",
+      "rationale": "Environment/budget/authority dependent; cannot be replaced by local mocks or generic CI",
+      "evidence": "RV-004, Docker permission denied and 97 SQL skips"
+    }
+  ]
+}

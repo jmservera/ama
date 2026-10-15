@@ -1,0 +1,45 @@
+{
+  "version": "152-ia-v1",
+  "active_slice": "Shared IA engineering only, not complete historical Slice A or MVP acceptance",
+  "widths": [320, 390, 768, 1024, 1280],
+  "default_sort": "urgent",
+  "default_selection": null,
+  "selection_reason": "Full-screen case links, no implicit selected case; return reloads first page",
+  "roles": [
+    {"role": "Resident Liaison Officer", "code": "RLO-01", "email": "sam@example.test", "ids": ["ZF-4", "ZF-1"], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/assistants", "#/time"]},
+    {"role": "Retrofit Programme Manager", "code": "PM-01", "email": "pam@example.test", "ids": ["ZF-5"], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/finance", "#/capacity", "#/closed", "#/assistants", "#/time"]},
+    {"role": "Retrofit Coordinator", "code": "RC-01", "email": "coordinator@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/assistants", "#/time"]},
+    {"role": "Building Safety Liaison", "code": "BS-01", "email": "safety@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/assistants", "#/time"]},
+    {"role": "Grants and Evidence Officer", "code": "GE-01", "email": "grants@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/finance", "#/assistants", "#/time"]},
+    {"role": "Quality Inspector", "code": "QI-01", "email": "quality@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/assistants", "#/time"]},
+    {"role": "Programme Support Officer", "code": "PS-01", "email": "support@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/finance", "#/capacity", "#/closed", "#/assistants", "#/time"]},
+    {"role": "Contractor", "code": "CON-01", "email": "contractor@example.test", "ids": ["ZF-4", "ZF-1"], "navigation": ["#/"]}
+  ],
+  "all_case_ids": ["ZF-4", "ZF-1", "ZF-5"],
+  "profiles": [
+    {"perspective": "Asset and investment", "status": "deferred", "reason": "No corresponding login role or investment script"},
+    {"perspective": "Programme coordinator", "status": "partial", "identity": "pam@example.test", "fixture": ["ZF-5"], "endpoint": "#/", "checks": ["scope", "navigation"], "deferred": "Full orchestration journey"},
+    {"perspective": "Retrofit case team", "status": "partial", "identity": "coordinator@example.test", "fixture": [], "endpoint": "#/", "checks": ["empty-own-queue", "navigation"], "deferred": "Connected lifecycle"},
+    {"perspective": "Retrofit Assessor, designer and Coordinator", "status": "partial", "identity": "coordinator@example.test", "fixture": [], "endpoint": "#/", "checks": ["navigation"], "deferred": "Technical script and separate assessor/designer roles"},
+    {"perspective": "Housing and Resident Engagement", "status": "partial", "identity": "sam@example.test", "fixture": ["ZF-4", "ZF-1"], "endpoint": "#/", "checks": ["scope", "reset", "back", "reflow"], "deferred": "Service and consent journey"},
+    {"perspective": "Repairs and Building Safety", "status": "partial", "identity": "safety@example.test", "fixture": ["ZF-4"], "endpoint": "#/case/ZF-4", "checks": ["navigation", "safety"], "deferred": "Authoritative external service and response clocks"},
+    {"perspective": "Procurement and contract manager", "status": "deferred", "reason": "No corresponding login role or package script"},
+    {"perspective": "Provider / contractor contact", "status": "partial", "identity": "contractor@example.test", "fixture": ["ZF-1", "ZF-4"], "endpoint": "#/", "checks": ["assigned-jobs", "navigation", "projection"], "deferred": "Submission and independent acceptance"},
+    {"perspective": "Quality and assurance", "status": "partial", "identity": "quality@example.test", "fixture": [], "endpoint": "#/", "checks": ["navigation", "empty-own-queue"], "deferred": "Inspection and independent QA script"},
+    {"perspective": "Finance and Grants", "status": "partial", "identity": "grants@example.test", "fixture": [], "endpoint": "#/finance", "checks": ["navigation", "endpoint-access"], "deferred": "Invoice/grant/cash reconciliation"},
+    {"perspective": "Digital operator and auditor", "status": "deferred", "reason": "No corresponding login role or operator script"}
+  ],
+  "workflows": [
+    {"name": "Stock data, safety triage and fair prioritisation", "status": "partial", "fixture": ["ZF-4", "ZF-1"], "endpoint": "#/", "checks": ["default-order", "safety-marker"], "deferred": "Cohort and eligibility journey"},
+    {"name": "Technical assessment and design readiness", "status": "deferred", "reason": "No technical script in shared IA slice"},
+    {"name": "Resident service, access, choice and redress", "status": "deferred", "reason": "No service/consent script in shared IA slice"},
+    {"name": "Procurement, committed capacity and work release", "status": "deferred", "reason": "No procurement script in shared IA slice"},
+    {"name": "Hazard awareness and damp-and-mould response", "status": "partial", "fixture": ["ZF-4"], "endpoint": "#/case/ZF-4", "checks": ["safety", "reflow"], "deferred": "External response service and transport"},
+    {"name": "Quality acceptance, defects and handover", "status": "deferred", "reason": "No QA script in shared IA slice"},
+    {"name": "Budget, provider invoice, grant claim and cash reconciliation", "status": "deferred", "reason": "No financial script in shared IA slice"},
+    {"name": "Programme handoffs and case orchestration", "status": "deferred", "reason": "No handoff script in shared IA slice"},
+    {"name": "Portfolio investment, performance and scale decisions", "status": "deferred", "reason": "Overview regression only, not investment acceptance"}
+  ],
+  "unknowns": ["Supported devices/browsers", "External hazard timing", "Formal profile mappings", "Human task comprehension"],
+  "unavailable": ["Full AC-034/043 acceptance", "Live AI inference", "Live SQL Server", "Azure deployment", "Human and screen-reader acceptance"]
+}
