@@ -123,6 +123,16 @@ treated as delivery failure.
    possible but undeclared, add an edge or flag it rather than assume
    independence. A dependency cycle is a human blocker for its members and their
    dependants only; ledger it and continue every other node.
+   Source layout rule (owner, 2026-10-15): `mvp/` and `prototype/` are being
+   retired (epic #195). No new feature code goes into `mvp/`. New features are
+   built in `src/` under the packages fixed by the layout ADR (#196), and tests
+   outside the package. Treat #195 to #203 as the first priority: any feature
+   issue that needs code the ADR has not yet placed, or that touches a module
+   not yet migrated, gets an ordering edge on the migration issue that moves that
+   module group (#199). In-flight PRs finish; each is recorded in the parity
+   matrix (#197) as migrate or rebuild. A merged feature that cannot be moved
+   cleanly is reopened with a comment and rebuilt in `src/`, with the issue's
+   acceptance criteria unchanged.
 3. **Select waves.** Wave 1 holds issues with no unmerged dependencies. Each
    later wave holds issues whose dependencies are merged. Run a wave in
    parallel up to the parallel limit; sequence the rest.
