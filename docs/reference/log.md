@@ -2838,3 +2838,12 @@ metadata when the knowledge base was created.
   Azure Blob snapshot interface; SQLite and local files are test doubles only.
 * No regulatory snapshot changed. Open: Blob immutability policy and Azure SQL
   deployment are unverified infrastructure items.
+
+## 2026-10-15 AI evaluation harness evidence gate (#108)
+
+* Noted in `mvp/README.md` the harness `evidence` block: golden hash, scripted
+  provider, not-evaluated and calibration-not-applicable statements, no benefit
+  claim, and open items. No regulatory snapshot changed.
+* Open: Foundry model, version and quota confirmation in the chosen region,
+  authorised live calls, held-out split and thresholds, human participant
+  protocol and Finance validation need owner decisions or retrieval. No index change.
