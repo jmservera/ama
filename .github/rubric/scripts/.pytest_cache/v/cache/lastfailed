@@ -1,0 +1,21 @@
+{
+  "test_gate.py::test_given_seed_baseline_when_summed_then_total_is_66": true,
+  "test_gate.py::test_given_equal_scores_when_evaluated_then_passes": true,
+  "test_gate.py::test_given_unknown_criterion_when_evaluated_then_fails_with_actionable_error": true,
+  "test_gate.py::test_given_supported_drop_when_evaluated_then_fails_with_warning": true,
+  "test_gate.py::test_given_change_without_changed_evidence_when_evaluated_then_baseline_kept": true,
+  "test_gate.py::test_given_closed_criterion_when_agent_changes_it_then_carried_forward": true,
+  "test_gate.py::test_given_drop_citing_removed_file_when_evaluated_then_fails": true,
+  "test_gate.py::test_given_increase_citing_removed_file_when_evaluated_then_baseline_kept": true,
+  "test_prepare.py::test_given_registered_implementation_change_when_computed_then_expected_criteria_open[prototype/zavaforward/domain.py-solution-code-criteria0]": true,
+  "test_prepare.py::test_given_registered_implementation_change_when_computed_then_expected_criteria_open[prototype/web/app.js-solution-code-criteria1]": true,
+  "test_prepare.py::test_given_registered_implementation_change_when_computed_then_expected_criteria_open[prototype/tests/test_domain.py-solution-code-criteria2]": true,
+  "test_prepare.py::test_given_registered_implementation_change_when_computed_then_expected_criteria_open[prototype/scripts/build_container_seed.py-solution-code-criteria3]": true,
+  "test_prepare.py::test_given_registered_implementation_change_when_computed_then_expected_criteria_open[prototype/Dockerfile-solution-code-criteria4]": true,
+  "test_prepare.py::test_given_registered_implementation_change_when_computed_then_expected_criteria_open[prototype/requirements.txt-solution-code-criteria5]": true,
+  "test_prepare.py::test_given_registered_implementation_change_when_computed_then_expected_criteria_open[prototype/README.md-solution-code-criteria6]": true,
+  "test_prepare.py::test_given_registered_implementation_change_when_computed_then_expected_criteria_open[prototype/architecture/zava-forward-local-prototype.excalidraw-solution-code-criteria7]": true,
+  "test_prepare.py::test_given_pr_deleting_scored_file_when_gated_then_drop_counts": true,
+  "test_scorecard_adapter.py::test_complete_card_round_trips_without_mutating_baseline": true,
+  "test_scorecard_adapter.py::test_gate_incremental_carry_forward_and_calibration_leave_baseline_unchanged": true
+}
