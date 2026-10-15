@@ -23,17 +23,30 @@ before any real use, and nothing in it decides a legal question:
 Tests use labelled synthetic values only. Open items stay with the DPO and Legal
 in docs/reference/research/chat-memory-dpia.md.
 """
+import json
 import os
 import re
+import time
 import uuid
 from datetime import datetime, timedelta, timezone
 
-from .chatthreads import MAX_CONTENT, user_key
+from .chatthreads import MAX_CONTENT, MEMORY_ID_PREFIX, user_key
 
 WARNING = ("Do not type health, disability, safeguarding, religion, ethnicity, sexual orientation, trade union, criminal, "
            "financial hardship or other special-category details, and do not paste resident contact details. Use the case record "
            "instead. Matching text is masked before it is saved, but masking can miss things.")
 REDACTION_VERSION = "draft-1"
+
+# Memory item classes (ADR 0004). Each stays Unknown until the DPO approves a period (CHAT_RETENTION_REF, CHAT_RETENTION_DAYS).
+MEMORY_CLASSES = ("working_preference", "terminology", "task_context")
+MEMORY_MAX = 1000
+MEMORY_LIMIT = 50
+# Placeholder pending an owner decision on the administrator persona: no Entra app role is named for it yet.
+# OPEN OWNER DECISION (see docs/reference/research/chat-memory-dpia.md): the role is checked against the register record.
+MEMORY_ADMIN_ROLES = ("Retrofit Programme Manager",)
+MEMORY_NOTICE = ("Memory is off until you turn it on. It keeps short working preferences you choose, for you only. You can see, edit or "
+                 "delete every item, or clear all. It never holds resident or special-category data, never changes rules, ranking or "
+                 "permissions, and is never cited as evidence. Items expire when the approved retention period ends; it is Unknown until the DPO approves it.")
 
 PATTERNS = (
     ("email", re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")),
@@ -143,20 +156,157 @@ class ChatPrivacy:
         self.store.chat_add_message(user, thread_id, role, text)
         return kinds
 
-    def add_memory(self, user, content):
-        """Opt-in memory. Refused outright if the text looks special-category, rather than stored masked."""
-        d = self._require()
-        owner = user_key(user)
-        text, kinds = redact(str(content)[:1000])
-        if "special_category" in kinds:
-            raise ValueError("Memory must not hold special-category data. " + WARNING)
-        m = dict(id="CM-" + uuid.uuid4().hex[:16], owner=owner, owner_role=str(user.get("role") or ""), content=text,
-                 redactions=",".join(kinds), created_at=self._now(), expires_at=self._expiry(d))
+    def _enabled(self, scope, ref, default):
+        c = self.store.chat_repo.get_control(scope, ref)
+        return default if c is None else bool(c["enabled"])
+
+    def _set_control(self, scope, ref, enabled, actor, note, at):
         repo = self.store.chat_repo
         with repo.txn():
+            repo.set_control(scope, ref, enabled, actor, note, at)
+            repo.commit()
+
+    def _audit(self, user, action, **meta):
+        self.store.audit(user_key(user), action, "", json.dumps(meta, sort_keys=True))
+
+    def memory_status(self, user, task=""):
+        """Why memory is or is not in use for this user and task. Off by default; every switch must be on."""
+        owner = user_key(user)
+        gl, opted = self._enabled("global", "all", True), self._enabled("user", owner, False)
+        tk = self._enabled("task", task, True) if task else True
+        reason = None if (gl and opted and tk) else ("disabled by an administrator" if not gl else "not opted in" if not opted else f"disabled for task {task}")
+        return dict(active=reason is None, reason=reason, opted_in=opted, global_enabled=gl, task_enabled=tk, notice=MEMORY_NOTICE,
+                    retention={c: self.decision()["retention"] for c in MEMORY_CLASSES})
+
+    def opt_in(self, user, acknowledged):
+        """Informed opt-in: the user must acknowledge the notice, and the recorded staff notice must exist."""
+        self._require()
+        if acknowledged is not True:
+            raise ValueError("Memory needs the user's informed opt-in: acknowledge the notice.")
+        self._set_control("user", user_key(user), True, user_key(user), "opt-in", self._now())
+        self._audit(user, "chat.memory.opt_in")
+
+    def opt_out(self, user):
+        """Withdrawing consent switches memory off and deletes the user's items."""
+        owner, repo = user_key(user), self.store.chat_repo
+        with repo.txn():
+            repo.set_control("user", owner, False, owner, "opt-out", self._now())
+            n = repo.delete_memories(owner)
+            repo.commit()
+        self._audit(user, "chat.memory.opt_out", deleted=n)
+        return n
+
+    def _admin(self, user):
+        # The role comes from the register record, never from the caller's dict.
+        rec = self.store.staff.get(user_key(user)) or {}
+        if rec.get("role") not in MEMORY_ADMIN_ROLES:
+            raise PermissionError("Only an administrator can change the memory switches.")
+
+    def _switch(self, user, scope, ref, enabled, action):
+        self._admin(user)
+        self._set_control(scope, ref, enabled, user_key(user), action, self._now())
+        self._audit(user, action, scope=scope, ref=ref, enabled=bool(enabled))
+
+    def set_global(self, user, enabled):
+        self._switch(user, "global", "all", enabled, "chat.memory.global")
+
+    def set_task(self, user, task, enabled):
+        from .assistants import REGISTRY
+        if task not in REGISTRY:
+            raise ValueError("Unknown assistant task.")
+        self._switch(user, "task", task, enabled, "chat.memory.task")
+
+    def _clean(self, content):
+        text, kinds = redact(str(content or "").strip()[:MEMORY_MAX])
+        if "special_category" in kinds:
+            raise ValueError("Memory must not hold special-category data. " + WARNING)
+        if not text:
+            raise ValueError("A memory item needs content.")
+        return text, kinds
+
+    @staticmethod
+    def _tasks():
+        from .assistants import REGISTRY
+        return REGISTRY
+
+    def _known_task(self, task):
+        from .assistants import REGISTRY
+        if task not in REGISTRY:
+            raise ValueError("Memory needs a known assistant task, so the per-task switch can apply.")
+
+    def add_memory(self, user, content, item_class="working_preference", source="typed by the user", *, task):
+        """Opt-in memory. Refused if memory is off, or if the text looks special-category (rather than stored masked).
+        The task is required so the per-task administrator switch always applies (fails closed)."""
+        d = self._require()
+        self._known_task(task)
+        st = self.memory_status(user, task)
+        if not st["active"]:
+            raise ChatNotApproved("Memory is not active: " + st["reason"])
+        if item_class not in MEMORY_CLASSES:
+            raise ValueError("Unknown memory class.")
+        owner, repo = user_key(user), self.store.chat_repo
+        text, kinds = self._clean(content)
+        now = self._now()
+        m = dict(id=MEMORY_ID_PREFIX + f"{time.time_ns():x}" + uuid.uuid4().hex[:4], owner=owner, owner_role=str(user.get("role") or ""), content=text,
+                 redactions=",".join(kinds), item_class=item_class, source=str(source)[:200], created_at=now, updated_at=now,
+                 expires_at=self._expiry(d))
+        with repo.txn():
+            if len(repo.memories(owner)) >= MEMORY_LIMIT:
+                raise ValueError(f"At most {MEMORY_LIMIT} memory items; delete one first.")
             repo.insert_memory(m)
             repo.commit()
+        self._audit(user, "chat.memory.added", item=m["id"], item_class=item_class)
         return m["id"]
+
+    def list_memory(self, user):
+        """The user's own items for inspection: content, source, class, creation date and expiry (None means Unknown retention)."""
+        return [dict(id=m["id"], content=m["content"], source=m["source"], item_class=m["item_class"], created_at=m["created_at"],
+                     updated_at=m["updated_at"], expires_at=m["expires_at"],
+                     expiry="Unknown until the DPO approves a retention period" if not m["expires_at"] else m["expires_at"])
+                for m in self._live(user_key(user))]
+
+    def _live(self, owner):
+        now = self._now()
+        return [m for m in self.store.chat_repo.memories(owner) if not (m["expires_at"] and m["expires_at"] < now)]
+
+    def edit_memory(self, user, memory_id, content):
+        """Edit content only; the same checks apply and the expiry is not extended."""
+        self._require()
+        owner, repo = user_key(user), self.store.chat_repo
+        text, kinds = self._clean(content)
+        if memory_id not in {m["id"] for m in self._live(owner)}:
+            raise LookupError(memory_id)
+        with repo.txn():
+            ok = repo.update_memory(owner, memory_id, content=text, redactions=",".join(kinds), updated_at=self._now())
+            repo.commit()
+        if not ok:
+            raise LookupError(memory_id)
+        self._audit(user, "chat.memory.edited", item=memory_id)
+
+    def delete_memory(self, user, memory_id):
+        owner, repo = user_key(user), self.store.chat_repo
+        with repo.txn():
+            ok = repo.delete_memory(owner, memory_id)
+            repo.commit()
+        if not ok:
+            raise LookupError(memory_id)
+        self._audit(user, "chat.memory.deleted", item=memory_id)
+
+    def clear_memory(self, user):
+        owner, repo = user_key(user), self.store.chat_repo
+        with repo.txn():
+            n = repo.delete_memories(owner)
+            repo.commit()
+        self._audit(user, "chat.memory.cleared", deleted=n)
+        return n
+
+    def prompt_memory(self, user, task=""):
+        """What may enter a prompt: the user's own preferences, labelled as non-authoritative and non-evidence. Empty unless active.
+        Rules, ranking, permissions and evidence are never read from here."""
+        if task not in self._tasks() or not self.memory_status(user, task)["active"]:
+            return []
+        return [dict(preference=m["content"], authority="none", evidence=False, item_class=m["item_class"])
+                for m in self._live(user_key(user))]
 
     def _held(self, owner):
         repo = self.store.chat_repo
