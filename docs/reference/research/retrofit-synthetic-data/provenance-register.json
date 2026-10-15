@@ -1,0 +1,159 @@
+{
+  "warning": "SYNTHETIC DATA REGISTER. Records provenance and visibility of every generated dataset. Not Zava North Homes data.",
+  "version": "1.0.0",
+  "register_date": "2026-10-15",
+  "dictionary": "data-dictionary.md",
+  "rules": [
+    "Every dataset has a visibility of public or private and a data_dictionary pointer.",
+    "Public datasets are committed under docs/ or mvp/evals and carry is_synthetic=true on every record or an explicit exemption.",
+    "Private datasets hold real OpenStreetMap map anchors or private tenant bindings and stay under support/ or the gitignored mvp/data folder.",
+    "Real map addresses are anchors only. No resident, case, safety, complaint or contractor event is attached to a real person."
+  ],
+  "sources": [
+    {
+      "id": "SRC-OSM",
+      "name": "OpenStreetMap address-bearing building and map objects via Overpass API",
+      "url": "https://www.openstreetmap.org/copyright",
+      "licence": "ODbL 1.0",
+      "retrieval_date": "2026-09-30",
+      "attribution": "Contains OpenStreetMap data (c) OpenStreetMap contributors",
+      "verification": "recorded in support/synthetic-data/retrofit-flow/zava-forward-year-one/stock-geography/README-private.txt"
+    },
+    {
+      "id": "SRC-CENSUS-TS054",
+      "name": "Census 2021 TS054 household tenure, local authority, ONS/Nomis",
+      "url": "https://www.nomisweb.co.uk/datasets/c2021ts054",
+      "licence": "Open Government Licence v3.0 (expected, owner to confirm)",
+      "retrieval_date": null,
+      "attribution": "Source: Office for National Statistics, Census 2021, licensed under the Open Government Licence v3.0 (wording to confirm)",
+      "verification": "open item: retrieval date and licence text not recorded in the private README; owner to confirm",
+      "reference_date": "2021-03-21"
+    },
+    {
+      "id": "SRC-IMD-2025",
+      "name": "English Indices of Deprivation 2025, MHCLG, LSOA ranks, scores and deciles (corrected files)",
+      "url": "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2025",
+      "licence": "Open Government Licence v3.0 (expected, owner to confirm)",
+      "retrieval_date": null,
+      "attribution": "Source: Ministry of Housing, Communities and Local Government, licensed under the Open Government Licence v3.0 (wording to confirm)",
+      "verification": "open item: retrieval date and licence text not recorded; owner to confirm",
+      "reference_date": "2025-10-30"
+    },
+    {
+      "id": "SRC-ONS-BOUNDARIES",
+      "name": "ONS LSOA 2021 BGC V5 and LAD December 2021 BFC boundaries",
+      "url": "https://geoportal.statistics.gov.uk/",
+      "licence": "Open Government Licence v3.0 (expected, owner to confirm)",
+      "retrieval_date": null,
+      "attribution": "Contains public sector information licensed under the Open Government Licence v3.0 (wording to confirm)",
+      "verification": "open item: retrieval date and licence text not recorded; owner to confirm"
+    },
+    {
+      "id": "SRC-OWNER-MODEL",
+      "name": "Owner-modelled portfolio mix from the Company Profile Research",
+      "url": "docs/reference/research/company/company-profile-research.md",
+      "licence": "Internal project material",
+      "retrieval_date": "2026-09-30",
+      "attribution": "Project owner estimates, not company facts",
+      "verification": "internal; not an external retrieval"
+    }
+  ],
+  "datasets": [
+    {
+      "id": "DS-OPS-PACK",
+      "name": "Year-one operating evidence pack (14 CSV tables)",
+      "visibility": "public",
+      "location": "docs/reference/research/retrofit-synthetic-data/",
+      "files_glob": "*.csv",
+      "label_field": "is_synthetic",
+      "label_exempt": [
+        "evidence-gap-register.csv"
+      ],
+      "sources": [],
+      "generator": "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/generate_pack.py",
+      "data_dictionary": "data-dictionary.md",
+      "personal_data": "none; fictional names, staff codes and addresses"
+    },
+    {
+      "id": "DS-OPS-MANIFEST",
+      "name": "Pack manifest and row counts",
+      "visibility": "public",
+      "location": "docs/reference/research/retrofit-synthetic-data/manifest.json",
+      "sources": [],
+      "data_dictionary": "data-dictionary.md",
+      "personal_data": "none"
+    },
+    {
+      "id": "DS-STOCK-REGISTER",
+      "name": "60,000-home North East synthetic stock register and map overlay",
+      "visibility": "private",
+      "location": "support/synthetic-data/retrofit-flow/zava-forward-year-one/stock-geography/",
+      "label_field": "is_synthetic",
+      "sources": [
+        "SRC-OSM",
+        "SRC-CENSUS-TS054",
+        "SRC-IMD-2025",
+        "SRC-ONS-BOUNDARIES",
+        "SRC-OWNER-MODEL"
+      ],
+      "generator": "support/synthetic-data/retrofit-flow/zava-forward-year-one/stock-geography/README-private.txt",
+      "data_dictionary": "data-dictionary.md#private-stock-geography-register",
+      "personal_data": "none; real map addresses are anchors only and carry invented tenure and condition"
+    },
+    {
+      "id": "DS-MVP-SEED",
+      "name": "MVP operational JSON seed (980 cases over the 60,000-home stock)",
+      "visibility": "private",
+      "location": "mvp/data/",
+      "label_field": "is_synthetic",
+      "sources": [
+        "SRC-OSM"
+      ],
+      "generator": "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py",
+      "data_dictionary": "data-dictionary.md#separate-private-mvp-json-extension",
+      "personal_data": "none; invented residents on real map anchors"
+    },
+    {
+      "id": "DS-AI-GOLDEN",
+      "name": "AI priority evaluation scenarios (constructed cases and scripted model outputs)",
+      "visibility": "public",
+      "location": "mvp/evals/ai_priority_golden.json",
+      "sources": [],
+      "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
+      "personal_data": "none; constructed cases"
+    },
+    {
+      "id": "DS-DOC-FORM-FIXTURES",
+      "name": "Document, form-schema and seeded-defect fixtures (120 families)",
+      "visibility": "public",
+      "location": "mvp/evals/document_form_fixtures.json",
+      "sources": [],
+      "data_dictionary": "data-dictionary.md#document-and-form-data",
+      "personal_data": "none; constructed documents, gold labels await human adjudication"
+    },
+    {
+      "id": "DS-ASSISTANT-RUNTIME",
+      "name": "Assistant task, attempt and event tables (prompts, model outputs and audit events)",
+      "visibility": "private",
+      "location": "serving database tables assistant_tasks, assistant_attempts, assistant_events",
+      "sources": [],
+      "generator": "mvp/zavaforward_mvp/assistants.py",
+      "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
+      "personal_data": "none; derived only from the private synthetic seed. No free-form chat transcripts are generated or stored"
+    },
+    {
+      "id": "DS-SENSOR",
+      "name": "Sensor and monitoring readings (temperature, humidity, moisture)",
+      "visibility": "not-generated",
+      "location": "none",
+      "sources": [],
+      "data_dictionary": "data-dictionary.md#sensor-data",
+      "personal_data": "none; nothing exists",
+      "open_item": "No sensor dataset or generator exists in the repository. Owner decision needed on whether a synthetic sensor feed is in scope; until then this entry records the gap."
+    }
+  ],
+  "open_items": [
+    "Retrieval dates and licence wording for SRC-CENSUS-TS054, SRC-IMD-2025 and SRC-ONS-BOUNDARIES need owner confirmation against the official pages.",
+    "Owner decision: whether a synthetic sensor dataset is in scope (DS-SENSOR)."
+  ]
+}
