@@ -155,7 +155,23 @@ treated as delivery failure.
    dated artifacts under `.copilot-tracking/` (research, plans and details,
    changes, reviews) for that issue. Passing `--agent` only preloads the agent;
    a session can still skip the loop and edit files directly, so the brief
-   states the loop and the required artifacts explicitly. Each loop keeps its
+   states the loop and the required artifacts explicitly.
+   The brief also requires local-first testing before any push, so CI/CD is
+   not the first place a change runs: (1) run the unit suite in `mvp/`;
+   (2) run the CI jobs locally where possible: the SQL Server parity suite
+   against a local SQL Server container and the Docker image build and
+   non-root run, using the local Docker daemon; (3) start the app locally and
+   exercise the changed behaviour (Playwright for UI changes); (4) only when
+   the issue needs Azure behaviour that cannot be reproduced locally, deploy to
+   the owner's `ama` resource group with the already signed-in `az` account and
+   test there. Azure use is limited to that resource group, to Azure services
+   (SQLite and other non-Azure services stay local), to the least resources
+   needed, and to resources the session created: record each in the PR and
+   delete them when done. Never create or change subscriptions, role
+   assignments or other resource groups, and never print secrets. Record each
+   step, its command and its result in the changes artifact and the PR
+   validation. If Docker or `az` is unavailable to the session, say so in the
+   PR and mark the criterion unmet rather than claiming it passed. Each loop keeps its
    own `.copilot-tracking/` per worktree; do not share tracking state between
    worktrees. The RPI artifacts are part of the delivery: commit them on the
    issue branch and push them in the same PR (the repository already tracks
