@@ -22,7 +22,7 @@ from .doc_controls import DocControlsMixin, open_scanner
 from .documents import ACCEPTED, MAX_BYTES, DocumentStoreError, open_document_store
 from .procurement import ProcurementMixin
 from .quality import QualityMixin
-from .workflows import MANAGER_ROLES, WorkflowMixin
+from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
 READY_STAGE = "Final checks before ordering"
@@ -301,6 +301,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if not c or (user is not None and projection.is_contractor(user) and not projection.own_case(user, c)):
                 return None
             d = json.loads(json.dumps(c))
+            if c.get("handoff"):
+                d["handoff"] = handoff_view(c)
             d["status"] = self.status_line(c)
             d["gate"] = self.gate_reasons(c)
         d["can_advance"] = c["stage"] == READY_STAGE
@@ -339,14 +341,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             self.save()
 
     def hand_over(self, user, case_id, to_email, note=""):
-        to = self.staff.get((to_email or "").lower())
-        if not to:
-            raise ValueError("Choose who is taking this over.")
-        with self.lock:
-            c = self._case(case_id)
-            c.update(owner=to["name"], owner_code=to["code"], owner_role=to["role"], waiting_on=to["name"])
-            self.audit(user["email"], "hand_over", case_id, f"to {to['name']} {note}".strip())
-            self.save()
+        """Legacy entry point: offer responsibility, never bypass receiver acceptance."""
+        return self.offer_handoff(user, case_id, to_email, note)
 
     def advance(self, user, case_id):
         with self.lock:

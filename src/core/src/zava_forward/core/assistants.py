@@ -47,7 +47,7 @@ RULES = {
     "stock-prioritisation": "Missing/unknown home.epc, home.type or home.built; supplied survey.epc/type/built conflicts with home.",
     "assessment-preparation": "Missing Survey/Design metadata/content hash or technical.design_version; relevant permitted source signature changes.",
     "funding-evidence": "Missing measures, funding.route/reference, grants or budget amount; incomplete supplied invoice ref/lines/milestone inputs; claim-phase grant lacks sourced history or hashed Funding evidence metadata; relevant permitted terms/evidence signature changes.",
-    "works-resident-coordination": "handoff.state=Offered; past appointment.date with missing/Booked/Planned/No access/Missed outcome; past open service_request.next_update.",
+    "works-resident-coordination": "handoff.state=Offered/Received/Escalated; past appointment.date with missing/Booked/Planned/No access/Missed outcome; past open service_request.next_update.",
     "quality-evidence": "Missing measures; not exactly one quality record per measure; missing/conflicting checklist item evidence or checklist version mismatch; relevant permitted signature changes.",
 }
 OUTPUT_SCHEMA = dict(required=("summary", "findings", "unknowns"), summary_chars=1200,
@@ -193,7 +193,7 @@ def eligible(capability, snapshot, now_date, changed=False):
                 d["kind"] == "Funding evidence" and d["content_sha256"] for d in s["documents"])) for g in s["grants"])
         return changed or basic or invoices_missing or claim_missing
     if capability == "works-resident-coordination":
-        return s["handoff"]["state"] == "Offered" or any(
+        return s["handoff"]["state"] in ("Offered", "Received", "Escalated") or any(
             a["date"] and a["date"] < now_date and a["outcome"] in (None, "", "Booked", "Planned", "No access", "Missed")
             for a in s["appointments"]) or any(
             r["next_update"] and r["next_update"] < now_date and r["status"] not in ("Closed", "Resolved")

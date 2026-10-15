@@ -236,8 +236,10 @@ function pendingHandoffs() {
     box.hidden = false;
     box.replaceChildren(h("h2", {}, "Handoffs waiting for you"), h("ul", { class: "list" }, rows.map((x) => h("li", {},
       h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, `${x.resident}, ${x.address}`),
-      h("div", { class: "muted" }, `Offered by ${x.from_name}${x.note ? `: ${x.note}` : ""}. Open the case to accept or decline.`)))));
-  }).catch(() => {});
+      h("div", { class: "muted" }, `${x.status}. Current owner: ${x.accountable_owner}; proposed receiver: ${x.proposed_receiver || "Unassigned"}; confirmed receiver: ${x.confirmed_receiver || "Unconfirmed"}; destination: ${x.destination || "Unknown"}; chase: ${x.chase_owner || "Unassigned"}.`),
+      h("div", { class: "muted" }, `Urgency: ${x.urgency || "Unknown"}; due: ${x.due_at || "Unknown"}; next action: ${x.next_action || "Unknown"}. Resident update: ${x.resident_update_owner || "Unassigned"}, ${x.resident_update_due_at || "Unknown"}.`),
+      h("div", {}, x.to_code === me.user.code ? "Open to record receipt, accept or decline." : "Open to chase, escalate or withdraw.")))));
+  }).catch((e) => { box.hidden = false; box.replaceChildren(h("p", { role: "alert" }, `Could not load handoffs: ${e.message}`)); });
   return box;
 }
 
@@ -327,7 +329,6 @@ async function caseView(id) {
   const note = h("textarea", { id: "note", "aria-label": "Notes" });
   const channel = h("select", { "aria-label": "How you spoke" }, ["Phone", "Text message", "Email", "Visit"].map((x) => h("option", {}, x)));
   const decision = h("select", { id: "dec" }, ["Not yet asked", "Waiting", "Accepted", "Declined"].map((x) => h("option", { selected: x === c.decision.status }, x)));
-  const to = h("select", { id: "to" }, me.staff.map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
   const draftBox = h("div", {});
   const kind = async (k) => {
     const d = await api(`/api/cases/${encodeURIComponent(id)}/draft`, { kind: k });
@@ -343,11 +344,13 @@ async function caseView(id) {
       draftBox.replaceChildren(h("p", { class: "muted" }, `${d.label}. Nothing is sent. Change it as you like.`), ta, aiNotes(d, null, () => ta.value));
     } catch (e) { draftBox.replaceChildren(h("p", { class: "err" }, e.message)); }
   };
+  const canOffer = !c.closed && (c.owner_code === me.user.code || isManager()) &&
+    (!c.handoff || !["Offered", "Received", "Escalated", "Accepted"].includes(c.handoff.state));
   const sugg = h("section", { class: "card" }, h("h2", {}, "Who could take this on"),
     h("p", { class: "muted" }, "Suggested by role and workload rules. You decide."),
     h("ul", { class: "list" }, c.suggestions.map((x) => h("li", {},
       h("strong", {}, `${x.name}, ${x.role}`), h("div", { class: "muted" }, x.reasons.join(". ")),
-      h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: x.email })) }, `Hand over to ${x.name.split(" ")[0]}`)))));
+      canOffer && h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: x.email })) }, `Offer to ${x.name.split(" ")[0]}`)))));
   show(
     h("a", { class: "back", href: "#/" }, "Back to the list"),
     h("div", { class: "row between" },
@@ -390,9 +393,7 @@ async function caseView(id) {
         h("p", { class: "muted" }, "Record their answer in their words. It is never worked out for them."),
         h("label", { for: "dec" }, "Do they want the works?"), decision,
         h("p", {}, h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/decision`, { status: decision.value })) }, "Save answer"))),
-      h("section", { class: "card" }, h("h2", {}, "Hand this case to someone"),
-        h("label", { for: "to" }, "Who is taking it"), to,
-        h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: to.value })) }, "Hand over")))),
+      ),
     sugg,
     c.can_advance && h("section", { class: "card" }, h("h2", {}, "Final checks"),
       c.gate.length ? [h("p", {}, "This case cannot move on yet:"), h("ul", {}, c.gate.map((x) => h("li", {}, x)))] : h("p", {}, "Everything is in place."),
@@ -421,51 +422,95 @@ const post = (id, act, body) => api(`/api/cases/${encodeURIComponent(id)}/${act}
 
 function returnPanel(c, id, refresh) {
   const why = h("input", { id: "ret-why", type: "text", maxlength: 300, required: true });
+  const source = h("input", { id: "ret-source", type: "text", maxlength: 300, required: true });
+  const next = h("input", { id: "ret-next", type: "text", maxlength: 300, required: true });
+  const metadata = () => ({ reason: why.value, source: source.value, next_action: next.value });
+  const fields = () => [h("label", { for: "ret-source" }, "Source reference (human-recorded, not verified automatically)"), source,
+    h("label", { for: "ret-next" }, "Next action"), next,
+    h("p", { class: "muted" }, `Receiving owner: ${c.owner}. Return or reopen does not transfer ownership. Use a handoff for another colleague.`)];
+  const history = c.returns && c.returns.length ? h("ul", { class: "tl" }, c.returns.slice(-5).reverse().map((x) => h("li", {},
+    h("strong", {}, `${fmtDate(x.at)} ${x.reopened ? "Reopened" : "Returned"}: ${x.from_stage} to ${x.to_stage}`),
+    h("div", { class: "muted" }, `${x.by}. ${x.reason}. Source: ${x.source || "Unknown"}; authority: ${x.initiating_authority?.role || "Unknown"}; receiving owner: ${x.receiving_owner?.name || "Unknown"}; next action: ${x.next_action || "Unknown"}.`)))) : null;
   if (c.closed) {
-    if (!isManager()) return h("section", { class: "card" }, h("h2", {}, "Closed case"), h("p", {}, "This case is closed. A manager can reopen it."));
+    if (!isManager()) return h("section", { class: "card" }, h("h2", {}, "Closed case"), h("p", {}, "This case is closed. A manager can reopen it."), history);
     return h("section", { class: "card" }, h("h2", {}, "Reopen this case"),
       h("p", { class: "muted" }, "Only a manager can reopen a closed case. Your reason is kept in the audit log."),
       h("label", { for: "ret-why" }, "Why it is being reopened"), why,
-      h("p", {}, h("button", { onclick: () => refresh(() => post(id, "reopen", { reason: why.value })) }, "Reopen case")));
+      ...fields(),
+      h("p", {}, h("button", { onclick: () => refresh(() => post(id, "reopen", metadata())) }, "Reopen case")), history);
   }
   const earlier = STAGES_ORDER.slice(0, Math.max(0, STAGES_ORDER.indexOf(c.stage)));
-  if (!earlier.length) return null;
+  if (!earlier.length) return history ? h("section", { class: "card" }, h("h2", {}, "Return and reopen history"), history) : null;
   const to = h("select", { id: "ret-to" }, earlier.map((x) => h("option", { value: x, selected: x === earlier[earlier.length - 1] }, x)));
   return h("section", { class: "card" }, h("h2", {}, "Send this case back"),
     h("p", { class: "muted" }, "Use this when something earlier needs redoing. A case can only go back to an earlier stage, and the reason is kept in the audit log."),
     h("label", { for: "ret-to" }, "Back to which stage"), to,
     h("label", { for: "ret-why" }, "Why it is going back"), why,
-    h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "return", { to_stage: to.value, reason: why.value })) }, "Send back")),
-    c.returns && c.returns.length ? h("ul", { class: "tl" }, c.returns.slice(-5).reverse().map((x) => h("li", {},
-      h("strong", {}, `${fmtDate(x.at)} ${x.reopened ? "Reopened" : "Returned"}: ${x.from_stage} to ${x.to_stage}`), h("div", { class: "muted" }, `${x.by}. ${x.reason}`)))) : null);
+    ...fields(),
+    h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "return", { ...metadata(), to_stage: to.value })) }, "Send back")), history);
 }
 
 function handoffPanel(c, id, refresh) {
   const hd = c.handoff;
-  const open = hd && hd.state === "Offered";
+  const open = hd && ["Offered", "Received", "Escalated"].includes(hd.state);
   const kids = [h("h2", {}, "Handoff to a colleague")];
+  if (hd) kids.push(
+    h("p", { role: "status" }, `${hd.status}. Current accountable owner: ${hd.accountable_owner}. Destination: ${hd.destination || "Unknown"}. Proposed receiver: ${hd.proposed_receiver || "Unassigned"}. Confirmed receiver: ${hd.confirmed_receiver || "Unconfirmed"}. Chase owner: ${hd.chase_owner || "Unassigned"}.`),
+    h("p", {}, `Urgency: ${hd.urgency || "Unknown"}. Due: ${hd.due_at || "Unknown"}. Next action: ${hd.next_action || "Unknown"}.`),
+    h("p", {}, `Resident update owner: ${hd.resident_update_owner || "Unassigned"}; commitment: ${hd.resident_update_due_at || "Unknown"}. No message is sent automatically.`),
+    hd.state === "Escalated" && h("p", {}, `Escalated to ${hd.escalation_owner}. ${hd.answer_note}`));
   if (open) {
     kids.push(h("p", { role: "status" }, `Offered to ${hd.to_name} by ${hd.offered_by} on ${fmtDate(hd.offered_at)}. Waiting for an answer. The case stays with ${hd.from_name} until it is accepted.`),
       hd.note && h("p", { class: "muted" }, hd.note));
     const why = h("input", { id: "ho-why", type: "text", maxlength: 300 });
     if (hd.to_code === me.user.code) {
+      if (hd.state === "Offered") kids.push(h("button", { class: "alt", onclick: () => refresh(() => post(id, "receive-handoff", {})) }, "Record receipt (not acceptance)"));
       kids.push(h("div", { class: "row" }, h("button", { onclick: () => refresh(() => post(id, "accept-handoff", {})) }, "Accept this case")),
         h("div", { class: "row" }, h("label", { for: "ho-why" }, "Reason if you cannot take it"), why,
           h("button", { class: "alt", onclick: () => refresh(() => post(id, "decline-handoff", { reason: why.value })) }, "Decline")));
     }
-    if (hd.from_code === me.user.code || isManager()) kids.push(h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "withdraw-handoff", {})) }, "Withdraw the offer")));
+    if (hd.from_code === me.user.code || isManager()) {
+      kids.push(h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "withdraw-handoff", {})) }, "Withdraw the offer")));
+      if (hd.state !== "Escalated") {
+        const manager = h("select", { id: "ho-escalate-to" }, me.staff.filter((s) => ["Retrofit Programme Manager", "Programme Support Officer"].includes(s.role)).map((s) => h("option", { value: s.email }, s.name)));
+        const reason = h("input", { id: "ho-escalate-why", maxlength: 300 });
+        kids.push(h("label", { for: "ho-escalate-to" }, "Escalate to manager"), manager,
+          h("label", { for: "ho-escalate-why" }, "Escalation reason"), reason,
+          h("button", { class: "alt", onclick: () => refresh(() => post(id, "escalate-handoff", { to: manager.value, reason: reason.value })) }, "Record manual escalation"));
+      }
+    }
   } else {
     if (hd) kids.push(h("p", { class: "muted" }, `Last handoff to ${hd.to_name}: ${hd.state}${hd.answer_note ? `. ${hd.answer_note}` : ""}.`));
-    if (!c.closed && (c.owner_code === me.user.code || isManager())) {
+    if (hd && hd.state === "Accepted" && hd.to_code === me.user.code && c.owner_code === me.user.code) {
+      const done = h("input", { id: "ho-done", maxlength: 300 });
+      kids.push(h("label", { for: "ho-done" }, "Completed action"), done,
+        h("button", { onclick: () => refresh(() => post(id, "complete-handoff", { note: done.value })) }, "Complete handoff"));
+    }
+    if (!c.closed && (!hd || hd.state !== "Accepted") && (c.owner_code === me.user.code || isManager())) {
       const to = h("select", { id: "ho-to" }, me.staff.filter((s) => s.code !== c.owner_code && s.role !== "Contractor").map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
       const note = h("input", { id: "ho-note", type: "text", maxlength: 300 });
+      const next = h("input", { id: "ho-next", maxlength: 300 });
+      const urgency = h("select", { id: "ho-urgency" }, ["", "Routine", "Urgent"].map((x) => h("option", { value: x }, x || "Unknown")));
+      const due = h("input", { id: "ho-due", type: "datetime-local" });
+      const updateTo = h("select", { id: "ho-update-to" }, h("option", { value: "" }, "Unassigned"), me.staff.filter((s) => s.role !== "Contractor").map((s) => h("option", { value: s.email }, s.name)));
+      const updateDue = h("input", { id: "ho-update-due", type: "datetime-local" });
+      const iso = (value) => value ? new Date(value).toISOString() : null;
       kids.push(h("p", { class: "muted" }, "Offer the case. It only moves when the other person accepts."),
         h("label", { for: "ho-to" }, "Offer to"), to, h("label", { for: "ho-note" }, "Note for them (optional)"), note,
-        h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "offer-handoff", { to: to.value, note: note.value })) }, "Offer the case")));
+        h("label", { for: "ho-next" }, "Next action"), next, h("label", { for: "ho-urgency" }, "Urgency"), urgency,
+        h("label", { for: "ho-due" }, "Human-selected due date (not an approved SLA)"), due,
+        c.resident_update ? h("p", {}, "The existing resident-update commitment is preserved.") : h("div", {},
+          h("label", { for: "ho-update-to" }, "Resident-update owner"), updateTo,
+          h("label", { for: "ho-update-due" }, "Resident-update commitment"), updateDue),
+        h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "offer-handoff", {
+          to: to.value, note: note.value, next_action: next.value, urgency: urgency.value, due_at: iso(due.value),
+          resident_update_to: updateTo.value, resident_update_due_at: iso(updateDue.value)
+        })) }, "Offer the case")));
     }
   }
-  if (c.handoff_log && c.handoff_log.length) {
-    kids.push(h("ul", { class: "tl" }, c.handoff_log.slice(-5).reverse().map((x) => h("li", {}, `${fmtDate(x.answered_at)}: ${x.from_name} to ${x.to_name}, ${x.state}`))));
+  const history = c.handoff_history || c.handoff_log;
+  if (history && history.length) {
+    kids.push(h("ul", { class: "tl" }, history.slice(-8).reverse().map((x) => h("li", {}, `${fmtDate(x.at || x.answered_at)}: ${x.from_name} to ${x.to_name}, ${x.status || x.state}; current owner at event: ${x.accountable_owner || "Unknown"}; chase: ${x.chase_owner || "Unknown"}`))));
   }
   return h("section", { class: "card" }, ...kids);
 }

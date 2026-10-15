@@ -3124,3 +3124,26 @@ metadata when the knowledge base was created.
   importer 39; all suites, dependency-rule tests, ruff and mypy passed. The
   24-scenario/61-turn golden CLI correctly exits 1 with one critical known gap
   (two failed assertions), `passed: false` and enablement `fail`, disabled.
+
+## [2026-10-15] query | Return, reopen and role-owned handoff controls (#83)
+
+* Extended the migrated core workflow and API/web panels in `src/`, following
+  accepted ADR 0006 and the parity matrix; no new `mvp/` code or SQL schema.
+* New returns/reopens require reason, human-recorded source and next action;
+  versioned history records authenticated authority and the existing receiving
+  owner without transferring accountability.
+* Kept Offered/Declined storage compatibility and added canonical Sent/Rejected
+  status, Received, Escalated and Completed, immutable transition snapshots and
+  explicit current/proposed/confirmed/chase responsibility. Legacy handover is
+  now an offer, not an acceptance bypass.
+* Sender, receiver and manager pending views use existing need-role projection.
+  Human-selected due dates, urgency and resident-update commitments remain
+  distinct; reassignment/rejection never silently replaces a pending update.
+* Updated the [API guide](../../src/api/README.md#return-and-handoff-api-83),
+  [core guide](../../src/core/README.md#return-reopen-and-handoff-accountability-83)
+  and index. New synthetic JSON/SQLite and HTTP contracts, plus CI-only SQL
+  Server replay, cover the bounded controls.
+* BG-010/OD-09 approved operational escalation timings remain unresolved.
+  Manual escalation and exercise hours are not operational acceptance.
+  Existing AI proposal/human-review gates, resident consent and safety controls
+  remain; no live inference, Azure deployment or human acceptance is claimed.

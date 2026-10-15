@@ -6,7 +6,8 @@ import urllib.request
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 
-from dataset import DATA, ImproveTests, case  # noqa: F401  shared fixtures live in src/core/tests (M2 of #199)
+from dataset import DATA as DATA
+from dataset import ImproveTests, case  # noqa: F401  shared fixtures live in src/core/tests (M2 of #199)
 from zava_forward.core.store import Store
 from zava_forward.api import server
 from zava_forward.api.server import App, make_handler

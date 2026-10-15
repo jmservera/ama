@@ -463,8 +463,8 @@ def make_handler(app):
             url = urlparse(self.path)
             try:
                 body = self._body()
-                if url.path.startswith("/api/assistants") and not isinstance(body, dict):
-                    raise ValueError("Assistant request must be an object.")
+                if not isinstance(body, dict):
+                    raise ValueError("Request must be an object.")
             except ValueError:
                 return self._json(400, {"error": "Could not read that."})
             if url.path == "/api/login":
@@ -554,11 +554,17 @@ def make_handler(app):
                     elif act == "handover":
                         s.hand_over(u, cid, body.get("to"), body.get("note", ""))
                     elif act == "return":
-                        s.return_case(u, cid, body.get("to_stage"), body.get("reason"))
+                        s.return_case(u, cid, body.get("to_stage"), body.get("reason"), metadata=body)
                     elif act == "reopen":
-                        s.reopen_case(u, cid, body.get("reason"))
+                        s.reopen_case(u, cid, body.get("reason"), metadata=body)
                     elif act == "offer-handoff":
-                        s.offer_handoff(u, cid, body.get("to"), body.get("note", ""))
+                        s.offer_handoff(u, cid, body.get("to"), body.get("note", ""), metadata=body)
+                    elif act == "receive-handoff":
+                        s.receive_handoff(u, cid)
+                    elif act == "escalate-handoff":
+                        s.escalate_handoff(u, cid, body.get("to"), body.get("reason"))
+                    elif act == "complete-handoff":
+                        s.complete_handoff(u, cid, body.get("note"))
                     elif act == "accept-handoff":
                         s.accept_handoff(u, cid)
                     elif act == "decline-handoff":
