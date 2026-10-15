@@ -1,6 +1,6 @@
 {
   "warning": "SYNTHETIC DATA. This inventory describes fictional data needs. It contains no personal data.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "review_date": "2026-10-15",
   "status": "draft-awaiting-owner-review",
   "issue": "#166",
@@ -29,7 +29,14 @@
       "dataset_ids": [
         "DS-STOCK-REGISTER"
       ],
-      "note": "Register exists privately; its generator is not in the repository, so it cannot be regenerated or tested."
+      "note": "Register exists privately; its generator is not in the repository, so it cannot be regenerated or tested.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#168"
+        ],
+        "note": "Stock-to-case link and fabric attributes; regenerating the private register from a committed generator is part of #168 scope or an owner deferral."
+      }
     },
     {
       "id": "SN-02",
@@ -46,7 +53,14 @@
         "DS-OPS-PACK",
         "DS-MVP-SEED"
       ],
-      "note": "No resident or tenancy records for the 60,000-home stock; resident-to-stock linkage is absent."
+      "note": "No resident or tenancy records for the 60,000-home stock; resident-to-stock linkage is absent.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#169"
+        ],
+        "note": "Residents, households and tenancy at stock scale."
+      }
     },
     {
       "id": "SN-03",
@@ -63,7 +77,14 @@
         "DS-OPS-PACK",
         "DS-MVP-SEED"
       ],
-      "note": "Case-level assessment records only; no per-home survey or EPC for 60,000 stock. Volume needs owner decision."
+      "note": "Case-level assessment records only; no per-home survey or EPC for 60,000 stock. Volume needs owner decision.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#170"
+        ],
+        "note": "Survey, EPC and assessment fixtures; volume needs an owner decision."
+      }
     },
     {
       "id": "SN-04",
@@ -80,7 +101,14 @@
         "DS-OPS-PACK",
         "DS-MVP-SEED"
       ],
-      "note": "Covers 980 cases, not the 60,000 stock."
+      "note": "Covers 980 cases, not the 60,000 stock.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#173"
+        ],
+        "note": "Contractor records beyond the 980-case snapshot."
+      }
     },
     {
       "id": "SN-05",
@@ -95,7 +123,14 @@
       "dataset_ids": [
         "DS-OPS-PACK"
       ],
-      "note": "Case-level only."
+      "note": "Case-level only.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#173"
+        ],
+        "note": "Finance and grant records beyond the 980-case snapshot."
+      }
     },
     {
       "id": "SN-06",
@@ -112,7 +147,14 @@
         "DS-OPS-PACK",
         "DS-MVP-SEED"
       ],
-      "note": "Holds exist; resident consent records are not generated for the full stock."
+      "note": "Holds exist; resident consent records are not generated for the full stock.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#173"
+        ],
+        "note": "Safety and consent records beyond the 980-case snapshot."
+      }
     },
     {
       "id": "SN-07",
@@ -127,7 +169,14 @@
       "dataset_ids": [
         "DS-DOC-FORM-FIXTURES"
       ],
-      "note": "Constructed fixtures with a regression test."
+      "note": "Constructed fixtures with a regression test.",
+      "gap_closure": {
+        "kind": "delivered",
+        "issues": [
+          "#171"
+        ],
+        "note": "Closed; fixtures and regression test exist."
+      }
     },
     {
       "id": "SN-08",
@@ -142,7 +191,14 @@
       "dataset_ids": [
         "DS-ASSISTANT-RUNTIME"
       ],
-      "note": "No generated per-user chat or memory history; #157 must define volume before build."
+      "note": "No generated per-user chat or memory history; #157 must define volume before build.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#172"
+        ],
+        "note": "Agent chat and memory test data and personas; volume needs an owner decision."
+      }
     },
     {
       "id": "SN-09",
@@ -157,7 +213,15 @@
       "dataset_ids": [
         "DS-SENSOR"
       ],
-      "note": "No sensor generator exists. Volume, sampling interval and homes covered need an owner decision."
+      "note": "No sensor generator exists. Volume, sampling interval and homes covered need an owner decision.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#177",
+          "#184"
+        ],
+        "note": "Sensor simulator stages 1 and 2 under the same epic; volume needs an owner decision."
+      }
     },
     {
       "id": "SN-10",
@@ -172,7 +236,14 @@
       "dataset_ids": [
         "DS-AI-GOLDEN"
       ],
-      "note": "Covered by test_ai_eval.py; scale and category coverage reviewed under #104."
+      "note": "Covered by test_ai_eval.py; scale and category coverage reviewed under #104.",
+      "gap_closure": {
+        "kind": "delivered",
+        "issues": [
+          "#174"
+        ],
+        "note": "Closed; registry and stock-scale fixture exist."
+      }
     },
     {
       "id": "SN-11",
@@ -187,7 +258,14 @@
       "dataset_ids": [
         "DS-OPS-MANIFEST"
       ],
-      "note": "Manifest is owned by #103; this row links to it once #103 lands."
+      "note": "Manifest is owned by #103; this row links to it once #103 lands.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#103"
+        ],
+        "note": "Owned by the scenario manifest issue."
+      }
     },
     {
       "id": "SN-12",
@@ -202,7 +280,15 @@
       "dataset_ids": [
         "DS-STOCK-REGISTER"
       ],
-      "note": "Home stock exists; 600,000-event fixture is not generated."
+      "note": "Home stock exists; 600,000-event fixture is not generated.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#144",
+          "#174"
+        ],
+        "note": "Stock-scale fixture delivered by #174; the 600,000-event load fixture stays with #144."
+      }
     },
     {
       "id": "SN-13",
@@ -218,13 +304,27 @@
         "DS-OPS-PACK",
         "DS-MVP-SEED"
       ],
-      "note": "Seeds and manifests exist for two generators; refresh policy is proposed and not approved."
+      "note": "Seeds and manifests exist for two generators; refresh policy is proposed and not approved.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#176"
+        ],
+        "note": "Determinism, seeds and refresh policy issue."
+      }
     }
   ],
   "open_items": [
     "Owner approval of this inventory and of each row owner (all owners are proposed).",
     "Volumes for SN-03, SN-08 and SN-09 need owner decisions.",
     "Link from the scenario manifest once #103 delivers it.",
-    "The first inventory and coverage matrix from the 2026-10-14 backlog handoff was not available in the repository; this inventory was rebuilt from repository evidence and needs reconciling with it."
-  ]
+    "The first inventory and coverage matrix from the 2026-10-14 backlog handoff was not available in the repository; this inventory was rebuilt from repository evidence and needs reconciling with it.",
+    "Owner to confirm the gap_closure mapping, and whether SN-01 register regeneration is in #168 or deferred (no recorded deferral exists yet)."
+  ],
+  "generator_conventions": {
+    "reuse_rule": "Extensions iterate the existing 60,000-home register and extend the existing generator modules; no second generator.",
+    "seed": "Derive every random stream from the recorded generator seed (stock seed 4820260930); never use unseeded randomness or wall-clock time.",
+    "identifiers": "Reuse the existing stock, case and resident identifier patterns so new records join to existing ones.",
+    "is_synthetic": "Every generated record carries is_synthetic=true."
+  }
 }

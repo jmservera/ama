@@ -317,3 +317,29 @@ manifest (#103) should link to it once delivered.
 Open items: owner approval of the inventory and row owners, volumes for
 SN-03, SN-08 and SN-09, and reconciliation with the 2026-10-14 backlog
 handoff matrix, which is not in the repository.
+
+### Generator gap closure (2026-10-15)
+
+Issue #167, parent #165. Inventory version 1.1.0 adds a `gap_closure` entry to
+every need and a `generator_conventions` block in
+[needs-inventory.json](./needs-inventory.json).
+
+| Gap | Child story or owner |
+| --- | --- |
+| SN-01 stock link and fabric attributes | #168 |
+| SN-02 residents and tenancy | #169 |
+| SN-03 surveys and EPC | #170 |
+| SN-04 to SN-06 contractors, finance, grants, safety and consent | #173 |
+| SN-08 chat and memory | #172 |
+| SN-09 sensors | #177 and #184 |
+| SN-11, SN-12, SN-13 | #103, #144 (load fixture) and #176 |
+| SN-07, SN-10 (delivered) | #171 and #174, closed |
+
+Extensions reuse the existing generator modules, the recorded seed, the
+existing identifiers and `is_synthetic=true`; no second generator is added.
+`mvp/tests/test_needs_inventory.py` checks that every need has a child story or
+a recorded deferral.
+
+Open items: owner confirmation of the mapping, and whether regenerating the
+private SN-01 register from a committed generator sits in #168 or is deferred.
+No deferral is recorded yet.
