@@ -72,6 +72,34 @@ real-platform application exercise remain unmet without the outstanding
 owner/live evidence. Docker image checks are delegated to CI if the local
 daemon is inaccessible.
 
+## Design-system foundations (#150)
+
+The [design-system inventory](../../docs/reference/research/ux/design-system.md)
+records the owner's Fluent UI (Fluent 2) adoption decision, the sourced token
+mapping, seven component states and AI draft-review boundaries. This is a partial
+native-foundation/non-colour slice, not a completed Fluent UI runtime migration.
+Markers use circle/O, square/W and triangle/! with matching key and status names.
+Clusters show home and safety counts (including zero); filter tiles visibly say
+"Selected". Overview data tables use named keyboard-scrollable regions on narrow
+screens. Existing consent, approval, AI and server authority are unchanged.
+
+From `src/api`, after installing the projects and `.[dev]` with pip:
+
+```bash
+python -m playwright install chromium
+python -m checks.design_system_browser_check
+```
+
+This check starts the real API on a temporary loopback port against 505 fictional
+homes from the shared test fixture. Real map APIs exercise point and cluster modes;
+only basemap tiles are replaced by a synthetic pixel, so no external tile service
+or private dataset is used. It checks rendered tokens, non-colour signals,
+keyboard navigation, 320/390/1280px reflow, forced colours and reduced motion.
+The source API CI job runs it with pinned Playwright as a development-only
+dependency; production requirements/images do not gain a browser dependency.
+Human/screen-reader acceptance, full Fluent component integration and live
+AI/SQL Server/Azure validation are not established by these local checks.
+
 ## Return and handoff API (#83)
 
 All mutations below are authenticated, one-case human actions. The server
@@ -172,8 +200,9 @@ editor or automatic retrofit of building data into an already populated store.
 * Filters sit in a left panel and update the list without reloading the page.
   The briefing is cached until case data changes.
 * Overview: counts that filter the map when clicked, a zoomable OpenStreetMap
-  of open cases (Leaflet bundled in `web/vendor`; names show on hover; teal normal, amber waiting 60+ days,
-  red open safety issue), charts by stage, authority, wave and waiting time,
+  of open cases (Leaflet bundled in `web/vendor`; circle/O normal, square/W waiting
+  60+ days, triangle/! open safety issue; status names and matching list),
+  charts by stage, authority, wave and waiting time,
   contractor and team workload. Visits lists booked appointments by day.
   The dated synthetic generator now guarantees six additional forward
   assessment visits and retains historical attended/no-access/cancelled

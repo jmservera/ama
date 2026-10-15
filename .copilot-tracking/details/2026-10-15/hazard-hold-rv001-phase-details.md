@@ -7,8 +7,8 @@ ms.date: 2026-10-15
 Task: hazard-hold-rv001. Research reused, single critique Pass.
 P01-T01/P01-T02/P02-T01 complete; targeted 18 core hazard and 3 HTTP tests pass,
 including nine interleaved guarded-transition subtests and writer serialization.
-Full core 325 passed; API 475 run/OK with 97 optional/environment skips.
-Core/API lint/format/types passed. P02-T02 review and delivery remain.
+Full integrated core 325 passed; API 477 run/OK with 97 optional/environment skips.
+Core/API lint/format/types passed. Single Review complete; P02-T02 delivery remains.
 No local implementation blocker; operational acceptance is deliberately outside
 this correction. Plan owns requirements and acceptance criteria.
 
@@ -53,6 +53,10 @@ Extend PYTHONPATH with all five current worktree src paths because the supplied
 interpreter's editable installs target another worktree. This is required to
 test the actual changes without modifying shared package installations.
 API mypy also uses current source paths via MYPYPATH.
+After main advanced (#313), its missing pinned Playwright dev dependency was
+restored in isolated temporary locations with pip. Requested mypy uses the
+isolated venv's --python-executable for dependency discovery. Shared tools and
+editable package installations remain unchanged.
 Run targeted tests first, then both full suites plus lint/format/type checks.
 Record failures as well as final results in the changes artifact.
 No package installs unless a requested command fails for missing dependency;
