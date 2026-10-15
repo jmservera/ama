@@ -2564,6 +2564,13 @@ metadata when the knowledge base was created.
   Acceptance Criteria sections that PR #71 dropped, so the earlier flagged
   defect no longer applies to main.
 
+## [2026-10-15] update | Regulatory literacy synthesis and ADR 0005 regulatory compliance assistant
+
+* Added the regulatory literacy synthesis and ADR 0005 (numbered after main took
+  ADR 0004 for per-user chat). Added BRD FR-051, AC-099 and OD-50, PRD FR-060,
+  AC-104 to AC-106 and OQ-026, and an addendum section. Proposal only; no owner
+  approval, legal interpretation or fresh quality review.
+
 ## [2026-10-15] review | Post-merge RAI issue coverage
 
 * PR #72 merged into main as `7a8b1fe65475752fcf242ed52acab8e7e43b58d3`
@@ -2626,3 +2633,16 @@ metadata when the knowledge base was created.
   payloads, enable chat or satisfy qualified operational evidence gates.
 * No application behavior or GitHub issue body was changed by this conflict
   resolution. The thirteen previously verified issue updates remain completed.
+
+## [2026-10-15] merge | Concurrent regulatory proposal retained
+
+* While PR #205 checks ran, PR #207 added the regulatory-literacy synthesis and
+  proposed regulatory assistant. Retained its addendum, BRD, PRD, ADR 0005 and
+  index changes without modifying their scope or approval status.
+* Preserved both append-only log additions. Kept main's generated 47/100 rubric
+  record as the current merged baseline rather than hand-combining generated
+  provenance or inventing a score. The RAI branch's successful hosted score
+  remains available in its original workflow run.
+* The thirteen issue updates and their original review/source binding remain
+  unchanged; the newer assistant proposal is not silently added to that completed
+  execution or activated by this merge.

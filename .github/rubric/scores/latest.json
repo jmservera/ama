@@ -2,14 +2,14 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-15T07:32:10+00:00",
-  "commit": "ed321b8992273832b2c79d0db01c1412c119da8a",
+  "scored_at": "2026-10-15T07:25:46+00:00",
+  "commit": "bf1d54ccc0ba3062dfa65de366d0dbb52894cd41",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38698599283",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38697062709",
   "fingerprints": {
-    "brd": "b0752d93d8f553c47308fa99fcd531280995d6e75d085b52a648c9b70f7a7e02",
-    "prd": "fb7fde4d345fd2e07c05173283a41fb7f439e63608e427623a0c8ff1b55888bf",
-    "adr": "fc1a1fe8c13f53dfcd97ce43af6685eb942fa94bf1599bac9fb8742078682318",
+    "brd": "47e831254e5b5e466f767473541d5bf4593a44d0080caa75a0307e150895a2ac",
+    "prd": "1f2f0be0530396e6b37d2b824eaebaf163fb9c7b5cf34a5fad22fa586c119463",
+    "adr": "62a728686af7e0557bd3452b01f8e34a32772ace2f4a48a80928ea3471001f9b",
     "solution-code": "0708f6ce7afa4510f3f0f951b62714ab6fc7fc207ea502f21f9eacb6f1359ac4",
     "infrastructure": "f5ee52836ffcddda14f2c5a85e6f0b1e3ac9baf444d4f81001b172409d7a623b",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
@@ -27,31 +27,28 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0004-per-user-agent-chat-and-memory.md:106-120",
-        "docs/adrs/0001-azure-architecture.md:120-129"
+        "docs/adrs/0005-regulatory-compliance-assistant.md:46-70"
       ],
-      "rationale": "New ADR 0004 adds an isolation model section describing a decoupled optional channel reusing the existing Store interface, consistent with existing modular decoupling; it is a proposal, not implemented, so does not move the score."
+      "rationale": "ADR 0005 reuses existing runtime components (api, agents, orchestrator, import) with a clearly bounded law store/rule-engine/chat architecture, consistent with the existing modular baseline. Still a design proposal, not implemented, so the score does not move."
     },
     "A2": {
       "score": 5,
       "evidence": [
-        "docs/adrs/0004-per-user-agent-chat-and-memory.md:63-69",
-        "docs/adrs/0004-per-user-agent-chat-and-memory.md:137-150"
+        "docs/adrs/0005-regulatory-compliance-assistant.md:227-233"
       ],
-      "rationale": "ADR 0004 names five options (A-E) and explicitly rejects two with reasons (D: cross-user exposure; E: preview status, extraction-vs-consent conflict), reinforcing deliberate trade-off reasoning already evidenced elsewhere."
+      "rationale": "ADR 0005 names three rejected alternatives (chat-only, fine-tuned model, separate product) with explicit reasons, reinforcing the existing deliberate trade-off pattern. Already at the ceiling; no change."
     },
     "A3": {
       "score": 5,
       "evidence": [
-        "docs/adrs/0004-per-user-agent-chat-and-memory.md:106-120",
-        "docs/adrs/0004-per-user-agent-chat-and-memory.md:121-136"
+        "docs/adrs/0005-regulatory-compliance-assistant.md:170-192"
       ],
-      "rationale": "ADR 0004 states isolation controls (server-derived identity, per-turn re-auth, injection treated as inert data) and names risks (row-level isolation depends on app filters, memory as monitoring risk) with mitigations; still a design proposal, not implemented."
+      "rationale": "Section 6 names role-scoped data handling, author/approver separation of duties, UK GDPR Art. 22A-22C safeguards and prompt-injection treatment of retrieved text as untrusted data. Already at the ceiling; still a proposal, not implemented."
     },
     "A4": {
       "score": 5,
       "evidence": [],
-      "rationale": "Unchanged baseline: no mvp/ implementation changes in this diff; the new ADR/BRD/PRD content is explicitly proposed and not implemented."
+      "rationale": "Unchanged baseline: ADR 0005, BRD FR-051 and PRD FR-060 are explicitly proposed; no mvp/ implementation changed in this diff."
     },
     "A5": {
       "score": 3,
@@ -60,13 +57,17 @@
     },
     "A6": {
       "score": 3,
-      "evidence": [],
-      "rationale": "Unchanged baseline: no evaluation harness or model-choice code changed; PRD FR-055 only proposes a future harness, not evidence of one."
+      "evidence": [
+        "docs/adrs/0005-regulatory-compliance-assistant.md:195-210"
+      ],
+      "rationale": "ADR 0005 adds a concrete evaluation table (citation validity, refusal accuracy, rule recall, alert precision, baseline comparison) but still does not justify the Foundry model choice against alternatives on cost/latency/quality, and no harness is run. Keeps the baseline score."
     },
     "A7": {
       "score": 4,
-      "evidence": [],
-      "rationale": "Unchanged baseline: no agentic orchestration code changed; ADR 0004 explicitly states no new agent and no orchestrator is deployed."
+      "evidence": [
+        "docs/adrs/0005-regulatory-compliance-assistant.md:7-15"
+      ],
+      "rationale": "Unchanged baseline: ADR 0005 proposes a deterministic rule engine plus a non-autonomous retrieval chat with no new orchestrator or independent agent action; no agentic code changed."
     },
     "B1": {
       "score": 3,
@@ -96,9 +97,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0004-per-user-agent-chat-and-memory.md:1-192"
+        "docs/adrs/0005-regulatory-compliance-assistant.md:1-239"
       ],
-      "rationale": "New ADR is well organised and clearly labelled as proposed, but adds BRD/PRD/ADR prose, not deck material; existing slide thinness is unresolved so the capped score stays at Good(4), not Excellent(5)."
+      "rationale": "New ADR 0005 is well organised and clearly labelled Proposed, adding BRD/PRD/ADR prose only; existing capstone deck thinness is unaffected so the capped score stays at Good(4), not Excellent(5)."
     },
     "B7": {
       "score": 3,
@@ -108,9 +109,9 @@
     "C1": {
       "score": 5,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:599-607"
+        "docs/brds/agentic-retrofit-programme-brd.md:1521-1521"
       ],
-      "rationale": "New BG-013 row names stakeholders (employees, DPO, HR) and states guardrail measures qualitatively (zero cross-user exposures, zero unconsented memory) without a numeric business value target, consistent with existing qualitative-value baseline."
+      "rationale": "New FR-051 row names seven stakeholder groups (employees, residents, Legal, compliance, DPO, Building Safety, finance, digital, audit) and the ADR's evaluation section gives quantified targets (100 percent citation validity/refusal accuracy), consistent with the existing ceiling score."
     },
     "C2": {
       "score": 0,

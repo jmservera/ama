@@ -770,8 +770,12 @@ document.
 | FR-057 | If adopted, the product shall offer opt-in per-user memory scoped to one user and one role that the user can inspect, edit and delete, with per-item expiry, a global off switch and a per-task off switch, and that excludes resident health, safeguarding, vulnerability, special-category and consent data. Backlog #161. | A user opts in, reviews, edits, withdraws or deletes memory | AC-096, AC-097 | GOAL-002, GOAL-004 |
 | FR-058 | If adopted, the conversation channel shall refuse requests to approve, decide, certify, record consent, diagnose or contact a resident, treat case text and memory as untrusted input, never cite memory or conversation as evidence, and route any record-changing output through the FR-047 proposal review. | A user asks for an out-of-authority action, or text contains an instruction | AC-098, AC-099 | GOAL-002, GOAL-004 |
 | FR-059 | If adopted, each conversational task shall be registered under FR-036 with its approved thresholds and accountable reviewer, be individually enabled or disabled, be switchable off globally for memory, and be evaluated by a multi-turn harness before activation. Backlog #164. | A conversational task is configured or requested | AC-100, AC-101 | GOAL-004 |
+| FR-060 | The product shall provide a regulatory compliance assistant with a versioned store of approved regulatory sources and owner-approved rule cards, deterministic proactive checks and role-appropriate alerts at journey steps, and a chat that answers questions about one home from cited sources and that home's role-scoped facts. It shall retrieve, compare, cite, flag and route only; it shall not decide that a duty is met, interpret law, activate a rule or send resident communications. | Workflow step transition, change to a home or case, scheduled clock, source change, or a user question on a home | AC-104, AC-105, AC-106 | GOAL-001, GOAL-002 |
 | NFR-015 | If adopted, conversations and memory shall be isolated per user: a server-derived user key, the field projection applied on every turn, re-authorisation of role and case on every turn, and audited administrator or break-glass access. Backlog #162. | Every turn, export and deletion | AC-102 | GOAL-002 |
 | NFR-016 | If adopted, conversation and memory data shall have DPO-approved retention per class (Unknown until BRD OD-46), rights-request handling, content exclusions, and logs and telemetry that exclude content or follow the same retention. Backlog #163. | Any live personal data in a thread or memory item | AC-103 | GOAL-002 |
+| AC-104 | Given sources that are in force, guidance, consultation, historical, partial or missing, when the store is loaded, queried or changed, then each source and provision keeps official URL, status, effective, retrieval and review dates, hash, completeness and owner; a newer retrieval is a new version; a detected change never overwrites an approved rule card; only a card approved by its named owner (not its author) is active; and a gap is recorded as no source held. |
+| AC-105 | Given seeded cases including a possible hazard report, a case with missing evidence, an unapproved or future rule, a measure changed after review and a significant automated recommendation, when step transitions, data changes and scheduled clocks run, then deterministic checks return clear, attention, breach risk, unknown or not applicable with cited source and status; missing evidence is unknown, never clear; a model never sets an awareness date or suppresses a check; an alert names the safe action, the owner and the clock; a breach risk alert needs owner acknowledgement and outcome; and no alert sends a resident message. |
+| AC-106 | Given graded home questions, adversarial prompts, conflicting or stale sources, a future-law question and a request for lease, grant or contract terms, when the chat answers, then every statement cites a provision or fact ID with status and dates, unsupported claims are dropped, role-scoped facts exclude unneeded fields, no compliance conclusion, legal advice or future-as-active rule is given, a doubt route sends the turn to the named owner, retrieved text is treated as data not instruction, and a paired comparison reports value against deterministic rule cards with provision links alone. |
 
 ### Acceptance criteria (proposed)
 
@@ -816,6 +820,7 @@ All proposed criteria are Not run and are inactive until BRD OD-44.
 | FR-057 | BRD FR-050, RULE-025, RULE-026, AC-093, AC-094 |
 | FR-058 | BRD RULE-025, AC-095 |
 | FR-059 | BRD FR-036 (existing), OD-49 |
+| FR-060 | BRD FR-051, AC-099, OD-50; ADR 0005 |
 | NFR-015 | BRD NFR-010, AC-097 |
 | NFR-016 | BRD NFR-011, RULE-026, AC-096, AC-098 |
 
@@ -1623,6 +1628,7 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-057 (proposed) | AC-096, AC-097 | Linked |
 | FR-058 (proposed) | AC-098, AC-099 | Linked |
 | FR-059 (proposed) | AC-100, AC-101 | Linked |
+| FR-060 (proposed) | AC-104, AC-105, AC-106 | Linked |
 | NFR-015 (proposed) | AC-102 | Linked |
 | NFR-016 (proposed) | AC-103 | Linked |
 
@@ -1636,9 +1642,9 @@ been implemented or tested.
 | Requirements | Goals |
 | --- | --- |
 | FR-001 to FR-006, FR-009, FR-011, FR-014, FR-024 to FR-026, FR-029 to FR-035, FR-038 to FR-040, FR-042, FR-044 to FR-046 | GOAL-001 |
-| FR-048, FR-049, FR-052 | GOAL-001 |
+| FR-048, FR-049, FR-052, FR-060 | GOAL-001 |
 | FR-001 to FR-002, FR-005 to FR-019, FR-029 to FR-031, FR-033, FR-035 to FR-038, FR-040 to FR-047 | GOAL-002 |
-| FR-048 to FR-059 | GOAL-002 |
+| FR-048 to FR-060 | GOAL-002 |
 | FR-004, FR-020 to FR-024, FR-030, FR-050 | GOAL-003 |
 | FR-025 to FR-028, FR-034, FR-036 to FR-037, FR-039 to FR-040, FR-044, FR-047 | GOAL-004 |
 | FR-051, FR-053, FR-054, FR-055 to FR-059 | GOAL-004 |
@@ -1986,7 +1992,7 @@ OQ-001 to OQ-016 are retained for future operational validation.
 For the historical exercise baseline, each is dispositioned by the owner-approved
 EXA record with the same suffix in the addendum. OQ-017 to OQ-019 are new
 RAI review dependencies, not owner-approved exercise assumptions. OQ-020 to
-OQ-025 are new proposal questions for per-user agent chat and memory with no EXA
+OQ-026 are new proposal questions for per-user agent chat and memory with no EXA
 record: they are open, unanswered and owned by the functions named. This is not evidence of real company answers. OQ-016's
 actual access/API/processing/cost verification remains an essential execution
 dependency and cannot be assumed away.
@@ -2018,6 +2024,7 @@ dependency and cannot be assumed away.
 | OQ-023 | May residents, representatives or providers ever use a conversational channel, and on what consent and authority evidence? (BRD OD-47) | Resident Engagement, DPO, Legal, Owner | Out of scope until decided |
 | OQ-024 | Is memory in scope or only thread history, and which content classes may be remembered? (BRD OD-48) | Owner, DPO, Digital | Blocks FR-057 |
 | OQ-025 | What grounding, abstention and injection thresholds apply, and who is the accountable reviewer? (BRD OD-49) | Accountable AI reviewer, Data and Performance Lead | Blocks activation of any conversational task |
+| OQ-026 | Which regulatory duties, sources and delegations apply to Zava North Homes, who approves rule cards and interprets sources, what alert and chat audiences and alert-fatigue tolerance are acceptable, and does chat add value over deterministic rule cards with provision links? (BRD OD-50) | Legal, compliance, DPO, Building Safety, Assets, Digital | Blocks live use of FR-060 and any compliance claim; the synthetic exercise may proceed with fixture cards |
 
 ## Sign-Off and Handoff Readiness
 
@@ -2098,7 +2105,7 @@ human user research and live-use approval remain future operational gates.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-15 (v0.17.0 candidate adds a proposal for per-user agent chat and memory to the v0.16.0 journey/sensor and RAI controls; fresh approval required)
+* **Last Updated:** 2026-10-15 (FR-060 regulatory compliance assistant added, proposal only; v0.17.0 candidate adds a proposal for per-user agent chat and memory to the v0.16.0 journey/sensor and RAI controls; fresh approval required)
 * **Authoring Status:** Amended candidate awaiting requirements review and owner acceptance; formal governance remains in-review
 * **Next Review:** Full-PRD requirement quality and amended exercise acceptance; implementation and governed adoption are separate gates
 
