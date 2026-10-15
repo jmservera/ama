@@ -25,6 +25,7 @@ from zf_export_rules import Recorder, tracker_owner
 from zf_manifest import generator_revision
 from zf_model import SIM_START, SNAP
 from zf_names import STAFF_NAMES
+import zf_stock_fabric
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, *[".."] * 5))
@@ -273,6 +274,12 @@ def main():
                           detail=cat, source="year-one simulation", is_synthetic=True)
                      for d, state, cat in c.history if d <= SNAP]))
 
+    by_stock = {r["synthetic_home_id"]: r for r in register}
+    for case in cases:
+        row = by_stock.get(case["synthetic_stock_anchor_id"])
+        if row:
+            fab = zf_stock_fabric.fabric(row)
+            case["stock_fabric"] = {k: v for k, v in fab.items() if k != "synthetic_home_id"}
     staff = []
     for code in [x for x in staff_codes if x != "RLO-03"]:
         s = names.staff(code)
@@ -281,7 +288,8 @@ def main():
                is_synthetic=True, seed=seed, generator_version="operational-coverage-v1",
                generator_revision=generator_revision(),
                stock_link_kind="Source geography row; flats may share a building anchor, not unique stock-unit linkage.",
-               stock_register_rows=len(register), staff=staff, cases=cases)
+               stock_register_rows=len(register),
+               stock_link=zf_stock_fabric.link_report(cases, register), staff=staff, cases=cases)
     orders = [(shift(d, off), cid.replace("CAND-", "ZF-"), supplier,
                shift(sim.by_cid[cid].dates["install_complete"], off)
                if sim.by_cid[cid].dates.get("install_complete", SNAP + timedelta(days=1)) <= SNAP else None)
