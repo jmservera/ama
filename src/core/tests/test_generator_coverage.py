@@ -33,15 +33,21 @@ class GeneratorCoverageTests(unittest.TestCase):
         self.assertEqual(
             report["declared_generator_conventions"], inventory["generator_conventions"]
         )
-        self.assertIs(report["routing_validated"], True)
+        self.assertNotIn("routing_validated", report)
+        self.assertIs(report["routing_shape_validated"], True)
+        self.assertEqual(report["issue_existence"], "not-assessed")
+        self.assertEqual(report["open_gaps"], [])
         self.assertEqual(report["generator_output_conformance"], "not-assessed")
         self.assertEqual(report["owner_approval"], "not-established")
         self.assertEqual(report["application_acceptance"], "not-assessed")
 
     def test_report_does_not_mutate_inventory_and_orders_rows_and_issues(self) -> None:
         inventory = json.loads(INVENTORY.read_text())
+        for need in inventory["needs"][:2]:
+            need["coverage"] = "missing"
         original = copy.deepcopy(inventory)
         expected = build_baseline(inventory)
+        self.assertEqual(expected["open_gaps"], ["SN-01", "SN-02"])
         self.assertEqual(inventory, original)
         inventory["needs"].reverse()
         for need in inventory["needs"]:
@@ -58,6 +64,62 @@ class GeneratorCoverageTests(unittest.TestCase):
         }
         report = build_baseline(inventory)
         self.assertEqual(report["coverage_counts"], {"covered": 2, "partial": 10, "missing": 1})
+        self.assertEqual(report["open_gaps"], ["SN-01"])
+
+    def test_covered_and_delivered_must_agree_in_both_directions(self) -> None:
+        for coverage, kind in (
+            ("covered", "child"),
+            ("covered", "deferred"),
+            ("partial", "delivered"),
+            ("missing", "delivered"),
+        ):
+            with self.subTest(coverage=coverage, kind=kind):
+                inventory = json.loads(INVENTORY.read_text())
+                inventory["needs"][0]["coverage"] = coverage
+                inventory["needs"][0]["gap_closure"]["kind"] = kind
+                with self.assertRaisesRegex(ValueError, "SN-01:.*delivered"):
+                    build_baseline(inventory)
+
+    def test_review_mutations_have_honest_reports_and_cli_exit_status(self) -> None:
+        inventory = json.loads(INVENTORY.read_text())
+        unknown = copy.deepcopy(inventory)
+        unknown["needs"][0]["gap_closure"]["issues"] = ["#99999"]
+        deferred = copy.deepcopy(inventory)
+        deferred["needs"][0]["gap_closure"] = {
+            "kind": "deferred",
+            "issues": [],
+            "note": "Constructed test deferral, not owner approval.",
+        }
+        covered_child = copy.deepcopy(inventory)
+        covered_child["needs"][0]["coverage"] = "covered"
+        missing = copy.deepcopy(inventory)
+        missing["needs"][0]["coverage"] = "missing"
+        command = [sys.executable, "-m", "zava_forward.core.synthetic.coverage"]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "metadata.json"
+            for label, value, exit_code, gaps in (
+                ("unknown route", unknown, 0, []),
+                ("partial deferral", deferred, 1, ["SN-01"]),
+                ("covered child", covered_child, 1, None),
+                ("missing child", missing, 1, ["SN-01"]),
+            ):
+                with self.subTest(mutation=label):
+                    path.write_text(json.dumps(value), encoding="utf-8")
+                    result = subprocess.run([*command, str(path)], capture_output=True, check=False)
+                    self.assertEqual(result.returncode, exit_code)
+                    if gaps is None:
+                        with self.assertRaisesRegex(ValueError, "covered.*delivered"):
+                            build_baseline(value)
+                        self.assertEqual(result.stdout, b"")
+                        self.assertIn(b"coverage:", result.stderr)
+                    else:
+                        report = build_baseline(value)
+                        self.assertEqual(json.loads(result.stdout), report)
+                        self.assertEqual(report["open_gaps"], gaps)
+                        self.assertNotIn("routing_validated", report)
+                        self.assertIs(report["routing_shape_validated"], True)
+                        self.assertEqual(report["issue_existence"], "not-assessed")
+                        self.assertEqual(result.stderr, b"")
 
     def test_rejects_invalid_rows(self) -> None:
         mutations: tuple[tuple[str, object], ...] = (
@@ -139,9 +201,7 @@ class GeneratorCoverageTests(unittest.TestCase):
             json.loads(first.stdout), build_baseline(json.loads(INVENTORY.read_text()))
         )
         self.assertEqual(first.stderr, b"")
-        scratch = Path(__file__).parent / "__pycache__"
-        scratch.mkdir(exist_ok=True)
-        with tempfile.TemporaryDirectory(dir=scratch) as tmp:
+        with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "metadata.json"
             for payload in (b"not json", b"\xff", b"{}", b'{"needs": []}'):
                 path.write_bytes(payload)

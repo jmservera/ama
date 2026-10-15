@@ -3215,3 +3215,19 @@ metadata when the knowledge base was created.
 * Owner mapping/row-owner ratification, private stock regeneration, scope and
   volume decisions, full profile/SQL-scale and actual AI/Azure/human acceptance
   remain open. Human approvals, resident consent and AI release gates are unchanged.
+
+## [2026-10-15] query | Generator coverage review repairs (#167, PR #312)
+
+* Require covered/delivered consistency in both directions. Missing needs and
+  deferred closures are reported as open gaps with CLI exit 1; partial child
+  routes retain exit 0 without claiming delivery or acceptance.
+* Replace the overbroad `routing_validated` field with
+  `routing_shape_validated` and `issue_existence=not-assessed`. Issue references
+  are shape-checked only; neither public consuming epics nor dataset provenance
+  provides a complete issue registry.
+* Add mutation/CLI tests for unknown routes, issue-less partial deferrals,
+  covered child closures and missing needs without closure changes. Use normal
+  temporary directories rather than tests/__pycache__.
+* Update the core/pack explanations and knowledge index. Inventory values and
+  scenario bindings remain unchanged; no private data, generator output, SQL,
+  owner approval or real-platform acceptance is introduced.

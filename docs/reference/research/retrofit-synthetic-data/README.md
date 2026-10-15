@@ -415,7 +415,8 @@ Extensions reuse the existing generator modules, the recorded seed, the
 existing identifiers and `is_synthetic=true`; no second generator is added.
 `src/core/tests/test_needs_inventory.py` retains the inventory binding checks.
 The src [coverage baseline tool](../../../../src/core/README.md#generator-coverage-baseline-167)
-adds semantic route validation and a deterministic, read-only JSON report:
+adds route-shape and coverage/closure consistency checks with a deterministic,
+read-only JSON report:
 
 ```bash
 python3 -m zava_forward.core.synthetic.coverage \
@@ -424,15 +425,23 @@ python3 -m zava_forward.core.synthetic.coverage \
 
 Run from the repository root after installing core. It rejects malformed or
 duplicate need/issue identifiers, missing convention declarations, blank
-closure rationale, unexplained deferrals and delivered claims for partial or
-missing needs. Negative and CLI tests live in
+closure rationale, unexplained deferrals and inconsistent covered/delivered
+claims in either direction. Missing needs and deferred closures are reported
+in `open_gaps` and return CLI exit 1, even with a child route or rationale.
+Partial needs with child routes retain exit 0. The report uses
+`routing_shape_validated=true`, not the previous overbroad `routing_validated`;
+`issue_existence=not-assessed` explicitly records that issue references are
+shape-checked only, not checked against GitHub or a complete known-issue set.
+For example, `#99999` passes reference syntax without proving existence.
+Negative and CLI tests live in
 `src/core/tests/test_generator_coverage.py`; existing generator tests continue
 to check seeded output, links, labels and human-decision boundaries using a
 wholly fictional register rather than private geography.
 
 The unchanged merged v1.2.0 baseline has 13 routed needs: two covered, eleven
-partial, none missing. This validates recorded routes and declaration presence,
-not child delivery, owner scope decisions or generated-record conformity.
+partial, none missing. This checks route shape, coverage/closure consistency
+and declaration presence, not issue existence, child delivery, owner scope
+decisions or generated-record conformity.
 The scale fixture's homes/events carry a manifest-level synthetic label,
 not per-record `is_synthetic=true`; the universal convention above is therefore
 an intended rule with an unevidenced existing-output gap, not a proven result.

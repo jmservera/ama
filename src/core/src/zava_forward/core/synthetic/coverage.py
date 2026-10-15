@@ -32,9 +32,9 @@ def _texts(value: object, field: str) -> list[str]:
 
 
 def build_baseline(value: object) -> dict[str, object]:
-    """Validate routing metadata, not generated records or human acceptance.
+    """Check route shape and consistency, not issue existence or acceptance.
 
-    Raise ValueError for malformed metadata; never emit a partial success report.
+    Raise ValueError for malformed metadata; report missing/deferred needs as gaps.
     """
     inventory = _mapping(value, "inventory")
     version = _text(inventory.get("version"), "version")
@@ -49,6 +49,7 @@ def build_baseline(value: object) -> dict[str, object]:
     if not isinstance(needs, list) or not needs:
         raise ValueError("needs: expected a nonempty list")
     rows: list[dict[str, object]] = []
+    open_gaps: list[str] = []
     seen: set[str] = set()
     counts: Counter[str] = Counter()
     for item in needs:
@@ -75,8 +76,12 @@ def build_baseline(value: object) -> dict[str, object]:
             raise ValueError(f"{need_id}: duplicate closure issue references")
         if kind != "deferred" and not issues:
             raise ValueError(f"{need_id}: {kind} closure needs at least one issue")
+        if coverage == "covered" and kind != "delivered":
+            raise ValueError(f"{need_id}: covered coverage requires delivered closure")
         if kind == "delivered" and coverage != "covered":
             raise ValueError(f"{need_id}: partial/missing coverage cannot be delivered")
+        if coverage == "missing" or kind == "deferred":
+            open_gaps.append(need_id)
         counts[coverage] += 1
         rows.append(
             {
@@ -90,7 +95,9 @@ def build_baseline(value: object) -> dict[str, object]:
         "inventory_version": version,
         "review_date": review_date,
         "inventory_status": status,
-        "routing_validated": True,
+        "routing_shape_validated": True,
+        "issue_existence": "not-assessed",
+        "open_gaps": sorted(open_gaps),
         "generator_output_conformance": "not-assessed",
         "owner_approval": "not-established",
         "application_acceptance": "not-assessed",
@@ -102,7 +109,7 @@ def build_baseline(value: object) -> dict[str, object]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Print deterministic JSON for an explicit public metadata file, or fail."""
+    """Print deterministic JSON; fail on invalid metadata or reported open gaps."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("inventory", type=Path, help="Public needs-inventory.json, not a dataset")
     args = parser.parse_args(argv)
@@ -112,7 +119,7 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, UnicodeError, ValueError) as error:
         parser.exit(1, f"coverage: {args.inventory}: {error}\n")
     sys.stdout.write(json.dumps(report, indent=2, sort_keys=True) + "\n")
-    return 0
+    return 1 if report["open_gaps"] else 0
 
 
 if __name__ == "__main__":
