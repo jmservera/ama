@@ -163,7 +163,14 @@ Open items for the owner (not decided here).
   from the register are now tested byte-identical; the committed private
   summaries predate `generator_revision` and are not rewritten here.
 * The earlier "no sensor generator" statement is superseded by the migrated
-  sensor-backfill tool and bounded byte-level tests above. Approve full-stock
+  sensor-backfill tool and bounded byte-level tests above. The explicit
+  [register-backed mode](../../../../src/core/README.md#register-backed-sensor-history-177)
+  now uses merged stock-fabric-v1, sorted declared subsets and synthetic monitoring
+  choices. It emits coverage/exclusion accounting and sanitized fabric, excludes
+  unknown/declined homes and retains legacy fixture bytes. Its 730-day tests use
+  fictional homes, not private stock or historical climate observations.
+  #178-#183 stay open: no owner deferral, climate licence approval, dated measure
+  validation, full fault truth or #110 consumer acceptance follows. Approve full-stock
   storage/cost and resolve external climate/device evidence separately (see
   [IoT sensor analytics research plan](../iot-sensor-analytics-research-plan.md));
   a small deterministic sample is not a verified full-stock sensor run.

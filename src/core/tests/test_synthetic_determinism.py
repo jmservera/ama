@@ -218,8 +218,8 @@ class SyntheticDeterminismTests(unittest.TestCase):
         original = Path.read_bytes
         for sources in (sf.revision_sources(), sb.revision_sources()):
             expected = {"scale_fixture.py", "provenance.py", "__init__.py", "insights.py"}
-            if len(sources) == 5:
-                expected.add("sensor_backfill.py")
+            if len(sources) == 7:
+                expected.update({"sensor_backfill.py", "sensor_stock.py", "stock_fabric.py"})
             self.assertEqual({p.name for p in sources}, expected)
             base = provenance.source_revision(sources)
             for source in sources:

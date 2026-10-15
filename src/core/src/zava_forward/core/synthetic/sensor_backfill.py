@@ -22,7 +22,7 @@ import sqlite3
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from zava_forward.core.synthetic import output_dir, provenance, scale_fixture
+from zava_forward.core.synthetic import output_dir, provenance, scale_fixture, sensor_stock, stock_fabric
 
 VERSION = "sensor-backfill-v2"
 SCHEMA_VERSION = "reading-v1"
@@ -48,6 +48,9 @@ CREATE TABLE sensor_reading (sensor_id VARCHAR(20) NOT NULL, reading_id VARCHAR(
   observed_at DATETIME2(0) NOT NULL, temperature_c DECIMAL(5,2) NULL, humidity_pct DECIMAL(5,2) NULL,
   source_type VARCHAR(12) NOT NULL, scenario VARCHAR(20) NOT NULL, seed BIGINT NOT NULL, schema_version VARCHAR(12) NOT NULL,
   injected_fault VARCHAR(12) NULL, CONSTRAINT pk_sensor_reading PRIMARY KEY (sensor_id, reading_id));"""
+STOCK_SQL_DDL = (SQL_DDL.replace("sensor_id VARCHAR(20)", "sensor_id VARCHAR(73)")
+                 .replace("home_id VARCHAR(12)", "home_id NVARCHAR(128)")
+                 .replace("reading_id VARCHAR(40)", "reading_id VARCHAR(96)"))
 
 
 def sensor_id(home_id):
@@ -86,6 +89,7 @@ def outdoor_series(seed=SEED, days=DAYS, cadence=CADENCE_MIN, start=START):
 
 def _indoor(sensor, rnd, ts, t_out, rh_out):
     loss = DWELLINGS[sensor["dwelling_type"]] * AGE_BANDS[sensor["age_band"]] * (0.75 if sensor["retrofitted"] else 1.0)
+    loss *= sensor.get("construction_loss", 1.0)
     hour = ts.hour
     heated = {"all_day": 7 <= hour < 23, "morning_evening": 6 <= hour < 9 or 17 <= hour < 22, "low": 17 <= hour < 21}[sensor["heating_pattern"]]
     setpoint = 20.5 if heated and t_out < 15 else 17.0
@@ -139,39 +143,56 @@ def resolve_window(days: int, cadence: int, as_of: str | None = None) -> tuple[d
         raise ValueError("Requested sensor window is outside supported calendar dates") from exc
 
 
-def estimate(homes=scale_fixture.HOMES, days=DAYS, cadence=CADENCE_MIN, seed=SEED, sample_homes=20,
-             start=START):
+def estimate(homes=None, days=DAYS, cadence=CADENCE_MIN, seed=SEED, sample_homes=20,
+             start=START, *, stock: sensor_stock.Selection | None = None):
     """Volume and size estimate from a measured sample, computed before any full generation."""
-    if homes <= 0 or sample_homes <= 0:
+    if stock is not None and homes is not None:
+        raise ValueError("Pass homes to stock selection, not alongside a prepared selection")
+    sensors = stock.sensors(seed) if stock is not None else None
+    homes = len(sensors) if sensors is not None else (scale_fixture.HOMES if homes is None else homes)
+    if (homes <= 0 and stock is None) or sample_homes <= 0:
         raise ValueError("homes and sample_homes must be positive")
     resolve_window(days, cadence, (start + timedelta(days=days)).date().isoformat())
     outdoor = outdoor_series(seed, days, cadence, start)
     rows = nbytes = 0
-    for h in scale_fixture.homes(sample_homes, scale_fixture.SEED):
-        for r in readings(sensor_for(h, seed), seed, days, cadence, outdoor, start):
+    sample = (sensors[:sample_homes] if sensors is not None else
+              [sensor_for(h, seed) for h in scale_fixture.homes(sample_homes, scale_fixture.SEED)])
+    for sensor in sample:
+        for r in readings(sensor, seed, days, cadence, outdoor, start):
             rows += 1
             nbytes += len(_csv_line(r).encode())
-    per_row = nbytes / rows
+    per_row = nbytes / rows if rows else 0.0
     steps = days * 24 * 60 // cadence
-    total = round(homes * steps * rows / (sample_homes * steps))
-    return dict(homes=homes, days=days, cadence_minutes=cadence, readings_per_home_nominal=steps,
+    total = round(homes * rows / len(sample)) if sample else 0
+    result = dict(homes=homes, days=days, cadence_minutes=cadence, readings_per_home_nominal=steps,
                 estimated_rows=total, bytes_per_row_csv=round(per_row, 1),
                 estimated_csv_gib=round(total * per_row / 2**30, 2),
-                basis=f"measured on {sample_homes} homes; dropout faults reduce rows below nominal; SQL clustered index adds overhead")
+                basis=f"measured on {len(sample)} homes; dropout faults reduce rows below nominal; SQL clustered index adds overhead")
+    if stock is not None:
+        result.update(coverage=stock.coverage(), stock_input_sha256=stock.input_sha256)
+    return result
 
 
 def revision_sources() -> tuple[Path, ...]:
-    return (*scale_fixture.revision_sources(), Path(__file__))
+    return (*scale_fixture.revision_sources(), Path(__file__), Path(sensor_stock.__file__),
+            Path(stock_fabric.__file__))
 
 
-def write(out: str | Path, homes: int = SHARD_HOMES, seed: int = SEED, days: int = DAYS,
-          cadence: int = CADENCE_MIN, *, as_of: str | None = None) -> dict[str, object]:
+def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int = DAYS,
+          cadence: int = CADENCE_MIN, *, as_of: str | None = None,
+          stock: sensor_stock.Selection | None = None) -> dict[str, object]:
     start, end = resolve_window(days, cadence, as_of)
-    if homes <= 0:
+    if stock is not None and homes is not None:
+        raise ValueError("Pass homes to stock selection, not alongside a prepared selection")
+    sensors = stock.sensors(seed) if stock is not None else None
+    homes = len(sensors) if sensors is not None else (SHARD_HOMES if homes is None else homes)
+    if homes <= 0 and stock is None:
         raise ValueError("homes must be positive")
     revision = provenance.source_revision(revision_sources())
+    out = stock_fabric._destination(out) if stock is not None else Path(out)
+    est = estimate(None if stock is not None else homes, days, cadence, seed,
+                   sample_homes=max(1, min(20, homes)), start=start, stock=stock)
     out = provenance.prepare_output(out)
-    est = estimate(homes, days, cadence, seed, sample_homes=min(20, homes), start=start)
     (out / "estimate.json").write_text(json.dumps(est, indent=2) + "\n", encoding="utf-8", newline="\n")
     outdoor = outdoor_series(seed, days, cadence, start)
     digest, shards, total, sensors_rows = hashlib.sha256(), [], 0, []
@@ -194,8 +215,9 @@ def write(out: str | Path, homes: int = SHARD_HOMES, seed: int = SEED, days: int
         shard_no += 1
         batch = []
 
-    for h in scale_fixture.homes(homes, scale_fixture.SEED):
-        s = sensor_for(h, seed)
+    source_sensors = (sensors if sensors is not None else
+                      (sensor_for(h, seed) for h in scale_fixture.homes(homes, scale_fixture.SEED)))
+    for s in source_sensors:
         sensors_rows.append(s)
         batch.append(s)
         if len(batch) == SHARD_HOMES:
@@ -203,7 +225,7 @@ def write(out: str | Path, homes: int = SHARD_HOMES, seed: int = SEED, days: int
     if batch:
         flush()
     with open(out / "sensors.csv", "w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, SENSOR_FIELDS, lineterminator="\n")
+        w = csv.DictWriter(f, SENSOR_FIELDS, lineterminator="\n", extrasaction="ignore")
         w.writeheader()
         w.writerows(sensors_rows)
     manifest = dict(version=VERSION, schema_version=SCHEMA_VERSION, seed=seed, as_of=end.date().isoformat(),
@@ -214,8 +236,27 @@ def write(out: str | Path, homes: int = SHARD_HOMES, seed: int = SEED, days: int
                     cadence_minutes=cadence, parameters=dict(dwellings=DWELLINGS, age_bands=AGE_BANDS, bounds=BOUNDS),
                     estimate=est, rows=total, shards=shards, readings_sha256=digest.hexdigest(),
                     storage="UTF-8 CSV shards; DDL in SQL_DDL for Azure SQL; load with load_into()")
+    extra_files = []
+    if stock is not None:
+        fabric_path = out / "stock-fabric.csv"
+        with fabric_path.open("w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, sensor_stock.FABRIC_FIELDS, lineterminator="\n")
+            writer.writeheader()
+            writer.writerows(stock.fabric_rows())
+        extra_files.append(fabric_path)
+        manifest.update(
+            version="sensor-backfill-stock-v1", stock_fixture_version=None,
+            stock_seed=stock_fabric.SEED, stock_homes_declared=stock.register_homes,
+            stock_input_sha256=stock.input_sha256, stock_fabric_version=stock_fabric.VERSION,
+            stock_adapter_version=sensor_stock.VERSION, coverage=stock.coverage(),
+            ddl_contract="stock-reading-v1", storage="Apply STOCK_SQL_DDL for a fresh SQL Server store; load_into(create_schema=None)",
+            retrofit_history="Not supplied; no dated retrofit effects modelled. retrofitted=False is a model assumption, not evidence of no works.",
+            monitoring="Synthetic granted fixtures only; unknown/declined excluded. No real consent or monitoring authority.",
+        )
+        manifest["parameters"]["construction_loss"] = sensor_stock.CONSTRUCTION_LOSS
+        manifest["parameters"]["classification"] = "All projection and fault parameters are exercise values, not calibrated building physics or resident judgements."
     manifest["file_sha256"] = provenance.file_hashes(
-        [out / "estimate.json", out / "sensors.csv", *(out / shard["file"] for shard in shards)])
+        [out / "estimate.json", out / "sensors.csv", *extra_files, *(out / shard["file"] for shard in shards)])
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     return manifest
 
@@ -288,19 +329,25 @@ def main(argv=None):
     ap.add_argument("--out", default=str(output_dir("sensor-backfill")))
     ap.add_argument("--seed", type=int, default=SEED)
     ap.add_argument("--homes", type=int)
+    ap.add_argument("--register", type=Path, help="Synthetic stock CSV; requires explicit --homes subset")
     ap.add_argument("--cadence", type=int, default=CADENCE_MIN)
     ap.add_argument("--days", type=int, default=DAYS)
     ap.add_argument("--as-of", help="YYYY-MM-DD exclusive UTC end; omitted preserves the historical start")
     ap.add_argument("--estimate-only", action="store_true")
     a = ap.parse_args(argv)
-    homes = a.homes if a.homes is not None else (scale_fixture.HOMES if a.estimate_only else SHARD_HOMES)
-    start, _ = resolve_window(a.days, a.cadence, a.as_of)
-    if a.estimate_only:
-        print(json.dumps(estimate(homes=homes, days=a.days, cadence=a.cadence, seed=a.seed,
-                                  sample_homes=min(20, homes), start=start), indent=2))
-    else:
-        print(json.dumps({k: v for k, v in write(a.out, homes, a.seed, days=a.days, cadence=a.cadence,
-                                                as_of=a.as_of).items() if k != "parameters"}, indent=2))
+    try:
+        stock = sensor_stock.read_register(a.register, a.homes) if a.register else None
+        homes = None if stock is not None else a.homes
+        start, _ = resolve_window(a.days, a.cadence, a.as_of)
+        if a.estimate_only:
+            result = estimate(homes=homes, days=a.days, cadence=a.cadence, seed=a.seed,
+                              sample_homes=min(20, homes) if homes else 20, start=start, stock=stock)
+        else:
+            result = {k: v for k, v in write(a.out, homes, a.seed, days=a.days, cadence=a.cadence,
+                                             as_of=a.as_of, stock=stock).items() if k != "parameters"}
+    except (OSError, ValueError) as exc:
+        ap.error(str(exc))
+    print(json.dumps(result, indent=2))
 
 
 if __name__ == "__main__":
