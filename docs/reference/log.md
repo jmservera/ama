@@ -2855,3 +2855,7 @@ metadata when the knowledge base was created.
 * Open for the owner: the stock register generator is not in the repository,
   and the sensor generator does not exist (depends on #177 to #183), so those
   two criteria remain unmet; refresh-policy approval is still pending.
+
+## [2026-10-15] update | Coordinator uses /every to monitor tmux sessions
+
+* Changed `.github/agents/ama-backlog-delivery-coordinator.agent.md` so the coordinator registers a recurring `/every` check for its tmux RPI sessions instead of a long blocking loop, and stops the schedule when all issues are merged or blocked.
