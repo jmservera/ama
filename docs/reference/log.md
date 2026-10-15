@@ -2876,3 +2876,11 @@ metadata when the knowledge base was created.
   event paths, breach role check, Shadow and Live release need Phase 0 released.
 * No regulatory snapshot changed. Open: pilot cohort enrolment and work package
   and workstream pause scopes.
+
+## 2026-10-15 Immutable Blob ledger digests (#115)
+
+* `mvp/README.md` section added and ADR 0002 implementation status row for the
+  ledger updated: Blob digest publisher, scheduled verifier and alert built,
+  not deployed or locked.
+* No regulatory snapshot changed. Open: legal retention period, policy lock,
+  deployed run and alert table check.

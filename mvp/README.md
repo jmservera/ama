@@ -374,6 +374,22 @@ when `ZF_TEST_MSSQL=1` (and `ZF_SQL_*` point at a throwaway database).
 
 Tests: `tests/test_governance.py` (JSON and SQL stores, labelled synthetic demonstration values). Open items, not invented here: the real OD-18 definitions and MDE, the OD-36 DPIA and lawful basis, the OD-35 named authority, actual approvers, how cases are enrolled in the pilot cohort (the `pilot` flag), pause scopes for work package and workstream, and extending the guard to the remaining case workflows. The RAI closure registers in the issue (eleven residuals and eleven unassessed checks, a fresh current-source assessment, owner acceptances) are not delivered or claimed closed by this change; every item stays proposed or insufficient until qualified owners and fresh evidence exist, and live use stays blocked.
 
+### Immutable Blob ledger digests and scheduled verification (issue #115)
+
+* `python -m zavaforward_mvp.digest_blob [--publish]` uploads the head and sealed
+  year digests to the `ledger-digests` container (create-only, managed identity
+  via `ZF_DIGEST_ACCOUNT_URL`, `ZF_DIGEST_CONTAINER`, `ZF_DIGEST_CLIENT_ID`), then
+  verifies the ledger against the digests read back from the container, not local
+  files. A broken chain is never anchored. Any mismatch, empty container or
+  unreachable container prints `LEDGER_DIGEST_ALERT` and exits 1.
+* `infra/modules/storage.bicep` adds the container with a time-based retention
+  policy (created unlocked); `containerapps.bicep` adds a daily
+  `job-*-ledger-verify`; `main.bicep` adds a log alert on the marker to the
+  action group. Tests: `tests/test_digest_blob.py` (in-memory immutable container
+  fake over the labelled synthetic stock). Open items, not invented here: the
+  legal retention period, the owner's irreversible policy lock, a deployed run
+  and the exact Log Analytics table name for job console logs.
+
 ### Per-year ledger digests, load check and recovery drill (issue #114)
 
 * `python -m zavaforward_mvp.ledger --seal-years` writes one immutable `year-YYYY.json`
