@@ -12,10 +12,11 @@ from pathlib import Path
 import test_mvp
 import test_sqlreads as reads
 import test_sqlstore as base
+import test_timecapture as timetests
 from zavaforward_mvp.sqlstore import SqlStore
 
 ON = os.environ.get("ZF_TEST_MSSQL") == "1"
-TABLES = ("assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance", "audit_head", "audit", "recommendations", "cases", "staff", "meta")
+TABLES = ("time_entry", "time_request", "time_enabled", "notice_ack", "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance", "audit_head", "audit", "recommendations", "cases", "staff", "meta")
 
 
 def wipe():
@@ -81,6 +82,26 @@ class SharedSqlIsPortableTests(unittest.TestCase):
                 hook = m.group(1) if m else hook
                 if self.SQLITE_ONLY.search(line):
                     self.assertIn(hook, ("_meta_set", "_insert_ignore"), f"{name}: SQLite-only SQL in {hook}: {line.strip()}")
+
+
+    def test_time_capture_sql_is_portable(self):
+        src = (Path(__file__).resolve().parent.parent / "zavaforward_mvp" / "timecapture.py").read_text()
+        a, b = src.index("SQLITE_DDL = ("), src.index("MSSQL_DDL = (")
+        shared = src[:a] + src[b:]
+        banned = re.compile(r"(?i)\bINSERT\s+OR\s+(REPLACE|IGNORE)\b|\bREPLACE\s+INTO\b|\bAUTOINCREMENT\b|\bPRAGMA\b|\bINSERT OR\b")
+        self.assertEqual([l.strip() for l in shared.splitlines() if banned.search(l) and not l.lstrip().startswith(("*", "#"))], [])
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlTimeCapture(timetests.SharedStoreTests):
+    """Enabling record, entries and acknowledgements in Azure SQL / SQL Server, not a local file."""
+
+    def setUp(self):
+        wipe()
+
+    def make_store(self, tmp):
+        data, db = base.seed(tmp)
+        return factory(data, db)
 
 
 @unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")

@@ -75,7 +75,7 @@ async function start() {
   nav.querySelectorAll("a").forEach((a) => { if (a.dataset.dyn) a.remove(); else a.hidden = contractor; });
   if (contractor) nav.prepend(h("a", { href: "#/", "data-dyn": "1" }, "My jobs"));
   else if (isManager()) nav.querySelector("a[href='#/funding']").after(h("a", { href: "#/capacity", "data-dyn": "1" }, "Capacity and work orders"), h("a", { href: "#/closed", "data-dyn": "1" }, "Closed cases"));
-  if (!contractor) nav.append(h("a", { href: "#/assistants", "data-dyn": "1" }, "Assistant proposals"));
+  if (!contractor) nav.append(h("a", { href: "#/assistants", "data-dyn": "1" }, "Assistant proposals"), h("a", { href: "#/time", "data-dyn": "1" }, "Time capture"));
   nav.hidden = false;
   route();
 }
@@ -136,6 +136,7 @@ function route() {
   if (me.user.role === "Contractor") return m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView();
   if (m) return caseView(decodeURIComponent(m[1]));
   if (location.hash === "#/assistants") return assistantQueueView();
+  if (location.hash === "#/time") return timeView();
   if (location.hash === "#/closed") return closedView();
   if (location.hash === "#/capacity") return capacityView();
   if (location.hash === "#/import") return importView();
