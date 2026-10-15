@@ -77,7 +77,18 @@ are masked for emails, phone numbers, National Insurance numbers, postcodes and
 special-category cue words before storage. Memory containing a cue word is
 refused, not masked. Masking is best effort and cannot prove absence.
 
+## Memory lifecycle (#161)
+
+Built in `chat_privacy.py`, not wired to any UI or endpoint. Memory is off until the user acknowledges the notice (`opt_in`) and
+only after the DPO and Legal references exist. Items carry content, source, class, creation date and expiry; the user can list,
+edit, delete one or clear all, and withdrawing deletes them. Classes: `working_preference`, `terminology`, `task_context`; each
+retention period stays Unknown until `CHAT_RETENTION_REF` and `CHAT_RETENTION_DAYS` are recorded. Special-category text is refused.
+Memory enters a prompt only as non-authoritative, non-evidence preferences, and ids with prefix `CM-` are rejected as evidence
+references. An administrator can switch memory off globally or per task (`chat_memory_control`); items stay visible and deletable.
+
 ## Open items
+
+* Owner decision: which Entra app role is the memory administrator. `MEMORY_ADMIN_ROLES` uses Retrofit Programme Manager as a placeholder.
 
 * DPO and Legal: lawful basis, staff notice, DPIA decision, retention per class, access and break-glass policy (BRD OD-45, OD-46).
 * Retrieve and record current Microsoft Azure OpenAI data handling, abuse-monitoring and region terms.

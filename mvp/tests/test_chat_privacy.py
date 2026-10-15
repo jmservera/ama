@@ -51,6 +51,7 @@ class ChatPrivacyBehaviour:
 
     def test_no_expiry_without_retention(self):
         c = self.cp(**APPROVED)
+        c.opt_in(U1, True)
         c.add_memory(U1, "likes tables")
         self.assertIsNone(c.export(U1)["memory"][0]["expires_at"])
         self.assertEqual(c.purge_expired("9999"), 0)
@@ -60,6 +61,7 @@ class ChatPrivacyBehaviour:
         for u in (U1, U2):
             t = c.start_thread(u, "ZF-1", TASK)
             c.add_message(u, t, "user", f"hello from {u['name']}")
+            c.opt_in(u, True)
             c.add_memory(u, f"note {u['email']}")
         self.assertEqual(len(self.store.chat_list_threads(U1)), 1)
         found = c.locate(U1)
@@ -86,6 +88,7 @@ class ChatPrivacyBehaviour:
     def test_message_stored_redacted_and_memory_rejects_special_category(self):
         c = self.cp(**APPROVED)
         t = c.start_thread(U1, "ZF-1", TASK)
+        c.opt_in(U1, True)
         self.assertEqual(c.add_message(U1, t, "user", "tenant has asthma"), ["special_category"])
         self.assertNotIn("asthma", c.export(U1)["messages"][0]["content"])
         with self.assertRaises(ValueError):
@@ -98,6 +101,7 @@ class ChatPrivacyBehaviour:
 
     def test_expiry_set_and_purged_when_retention_approved(self):
         c = self.cp(**APPROVED, CHAT_RETENTION_REF="SYNTH-RET-1", CHAT_RETENTION_DAYS="1")
+        c.opt_in(U1, True)
         c.add_memory(U1, "likes tables")
         self.assertIsNotNone(c.export(U1)["memory"][0]["expires_at"])
         self.assertEqual(c.purge_expired("0000"), 0)

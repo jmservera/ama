@@ -46,6 +46,7 @@ TABLES = {
     "chat_thread": CHAT_DDL[0],
     "chat_message": CHAT_DDL[1],
     "chat_memory": CHAT_DDL[2],
+    "chat_memory_control": CHAT_DDL[3],
 }
 
 APPEND_ONLY = ("IF OBJECT_ID(N'audit_append_only', N'TR') IS NULL EXEC(N'CREATE TRIGGER audit_append_only ON audit "

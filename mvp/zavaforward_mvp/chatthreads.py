@@ -25,7 +25,10 @@ SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS chat_message (thread_id TEXT NOT NULL, seq INTEGER NOT NULL, role TEXT NOT NULL, content TEXT NOT NULL, "
     "model TEXT NOT NULL, task_version TEXT NOT NULL, evidence TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY (thread_id, seq))",
     "CREATE TABLE IF NOT EXISTS chat_memory (id TEXT PRIMARY KEY, owner TEXT NOT NULL, owner_role TEXT NOT NULL, content TEXT NOT NULL, "
-    "redactions TEXT NOT NULL, created_at TEXT NOT NULL, expires_at TEXT NULL)",
+    "redactions TEXT NOT NULL, item_class TEXT NOT NULL, source TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, "
+    "expires_at TEXT NULL)",
+    "CREATE TABLE IF NOT EXISTS chat_memory_control (scope TEXT NOT NULL, ref TEXT NOT NULL, enabled INTEGER NOT NULL, actor TEXT NOT NULL, "
+    "note TEXT NOT NULL, at TEXT NOT NULL, PRIMARY KEY (scope, ref))",
     "CREATE INDEX IF NOT EXISTS ix_chat_thread_owner ON chat_thread (owner, status, updated_at)",
 )
 MSSQL_DDL = (
@@ -37,16 +40,20 @@ MSSQL_DDL = (
     "content NVARCHAR(MAX) NOT NULL, model NVARCHAR(100) NOT NULL, task_version NVARCHAR(40) NOT NULL, evidence NVARCHAR(MAX) NOT NULL, "
     "created_at NVARCHAR(40) NOT NULL, PRIMARY KEY (thread_id, seq))",
     "CREATE TABLE chat_memory (id NVARCHAR(40) COLLATE Latin1_General_100_BIN2 NOT NULL PRIMARY KEY, owner NVARCHAR(200) COLLATE Latin1_General_100_BIN2 NOT NULL, "
-    "owner_role NVARCHAR(100) NOT NULL, content NVARCHAR(MAX) NOT NULL, redactions NVARCHAR(200) NOT NULL, created_at NVARCHAR(40) NOT NULL, "
-    "expires_at NVARCHAR(40) COLLATE Latin1_General_100_BIN2 NULL)",
+    "owner_role NVARCHAR(100) NOT NULL, content NVARCHAR(MAX) NOT NULL, redactions NVARCHAR(200) NOT NULL, item_class NVARCHAR(40) NOT NULL, source NVARCHAR(200) NOT NULL, "
+    "created_at NVARCHAR(40) NOT NULL, updated_at NVARCHAR(40) NOT NULL, expires_at NVARCHAR(40) COLLATE Latin1_General_100_BIN2 NULL)",
+    "CREATE TABLE chat_memory_control (scope NVARCHAR(20) COLLATE Latin1_General_100_BIN2 NOT NULL, ref NVARCHAR(200) COLLATE Latin1_General_100_BIN2 NOT NULL, "
+    "enabled INT NOT NULL, actor NVARCHAR(200) NOT NULL, note NVARCHAR(200) NOT NULL, at NVARCHAR(40) NOT NULL, PRIMARY KEY (scope, ref))",
 )
 MSSQL_INDEX = ("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_chat_thread_owner' AND object_id = OBJECT_ID(N'chat_thread')) "
                "CREATE INDEX ix_chat_thread_owner ON chat_thread (owner, status, updated_at)")
-TABLE_NAMES = ("chat_memory", "chat_message", "chat_thread")
+TABLE_NAMES = ("chat_memory_control", "chat_memory", "chat_message", "chat_thread")
 
 THREAD_COLS = ("id", "owner", "owner_role", "case_id", "title", "task", "task_version", "model", "status", "rowversion",
                "message_count", "created_at", "updated_at")
-MEMORY_COLS = ("id", "owner", "owner_role", "content", "redactions", "created_at", "expires_at")
+MEMORY_COLS = ("id", "owner", "owner_role", "content", "redactions", "item_class", "source", "created_at", "updated_at", "expires_at")
+CONTROL_COLS = ("scope", "ref", "enabled", "actor", "note", "at")
+MEMORY_ID_PREFIX = "CM-"
 MESSAGE_COLS = ("thread_id", "seq", "role", "content", "model", "task_version", "evidence", "created_at")
 
 
@@ -122,6 +129,30 @@ class MemoryRepo:
         n = len(self.memory_doc) - len(keep)
         self.memory_doc[:] = keep
         return n
+
+    def update_memory(self, owner, mid, **fields):
+        for m in self.memory_doc:
+            if m["id"] == mid and m["owner"] == owner:
+                m.update(fields)
+                return True
+        return False
+
+    def delete_memory(self, owner, mid):
+        keep = [m for m in self.memory_doc if not (m["id"] == mid and m["owner"] == owner)]
+        n = len(self.memory_doc) - len(keep)
+        self.memory_doc[:] = keep
+        return n == 1
+
+    @property
+    def control_doc(self):
+        return self.store.data.setdefault("chat_memory_control", {})
+
+    def get_control(self, scope, ref):
+        c = self.control_doc.get(f"{scope}:{ref}")
+        return dict(c) if c else None
+
+    def set_control(self, scope, ref, enabled, actor, note, at):
+        self.control_doc[f"{scope}:{ref}"] = dict(scope=scope, ref=ref, enabled=int(enabled), actor=actor, note=note, at=at)
 
     def purge_memory(self, now):
         keep = [m for m in self.memory_doc if not (m["expires_at"] and m["expires_at"] < now)]
@@ -203,6 +234,25 @@ class SqlRepo:
     def delete_memories(self, owner):
         return self.store.db.execute("DELETE FROM chat_memory WHERE owner=?", (owner,)).rowcount
 
+    def update_memory(self, owner, mid, **fields):
+        sets = ", ".join(f"{k}=?" for k in fields)
+        return self.store.db.execute(f"UPDATE chat_memory SET {sets} WHERE id=? AND owner=?", tuple(fields.values()) + (mid, owner)).rowcount == 1
+
+    def delete_memory(self, owner, mid):
+        return self.store.db.execute("DELETE FROM chat_memory WHERE id=? AND owner=?", (mid, owner)).rowcount == 1
+
+    def get_control(self, scope, ref):
+        with self.store.dblock:
+            row = self.store.db.execute(f"SELECT {', '.join(CONTROL_COLS)} FROM chat_memory_control WHERE scope=? AND ref=?", (scope, ref)).fetchone()
+        return self._row(CONTROL_COLS, row) if row else None
+
+    def set_control(self, scope, ref, enabled, actor, note, at):
+        cur = self.store.db.execute("UPDATE chat_memory_control SET enabled=?, actor=?, note=?, at=? WHERE scope=? AND ref=?",
+                                    (int(enabled), actor, note, at, scope, ref))
+        if cur.rowcount == 0:
+            self.store.db.execute(f"INSERT INTO chat_memory_control ({', '.join(CONTROL_COLS)}) VALUES ({','.join('?' * len(CONTROL_COLS))})",
+                                  (scope, ref, int(enabled), actor, note, at))
+
     def purge_memory(self, now):
         return self.store.db.execute("DELETE FROM chat_memory WHERE expires_at IS NOT NULL AND expires_at < ?", (now,)).rowcount
 
@@ -214,6 +264,8 @@ def _clean_evidence(evidence):
     refs = [str(r).strip() for r in (evidence or ()) if str(r).strip()]
     if len(refs) > MAX_EVIDENCE or any(len(r) > 200 for r in refs):
         raise ValueError(f"At most {MAX_EVIDENCE} evidence references of 200 characters.")
+    if any(r.upper().startswith(MEMORY_ID_PREFIX) for r in refs):
+        raise ValueError("Memory is never evidence and cannot be cited.")
     return refs
 
 
