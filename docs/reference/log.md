@@ -2942,3 +2942,8 @@ metadata when the knowledge base was created.
 
 * `infra/README.md` records the proposed IoT Hub tier, region, retention, identity, network and credential-owner decisions; ADR 0003 open items point to them. No regulatory snapshot changed.
 * Open: owner approval of ADR 0003, verified pricing, live what-if, BRD OD-43.
+
+## 2026-10-15 Identity and RBAC as code (#141)
+
+* `infra/role-assignments.json`, `infra/entra/app-registration.json`, `infra/tests/test_identity_rbac.py` and an `infra/README.md` section added; index row added. No regulatory snapshot changed.
+* Open: owner sign-off of the review, contractor B2B decision (#116), live role-assignment comparison, chat store roles when ADR 0004 resources exist.

@@ -20,6 +20,7 @@ private production profile. They do not authorize deployment.
 * `main.bicep`: resource group scope entry point wiring all modules.
 * `main.bicepparam`: dev parameters; replace the placeholder alert email and Entra group.
 * `modules/`: identity, network (VNet, NSGs, private DNS), monitoring (Log Analytics, App Insights, AMPLS), Key Vault, storage, registry, SQL, Foundry, IoT Hub, Container Apps and the generic private endpoint.
+* `role-assignments.json`: role-assignment matrix; `entra/app-registration.json`: declarative Entra registration and owners. Both are checked by `tests/test_identity_rbac.py`.
 * `scripts/create-sql-users.sql`: contained SQL users for the managed identities. `scripts/create-sql-users.py` runs the same grants idempotently from the Azure CLI login.
 * `scripts/create-api-app-registration.sh`: Entra app registration, app roles and secret (Key Vault) for API sign-in.
 * `scripts/initialize-api-auth.py`: post-deployment callback synchronization for an existing API registration, without replacing roles, assignments or credentials.
@@ -103,6 +104,29 @@ az deployment sub create -l uksouth -f infra/governance.bicep
 ```
 
 Open items: Defender cost estimate and the decision to enable; renewal of EX-001 after 2026-12-31 (never on a pilot group); whether to switch any policy from audit to Deny; the group must carry the required tags before Deny is considered. The platform-wide MCAPS policy itself is managed outside this repository.
+
+## Identity and role assignments (issue 141)
+
+[role-assignments.json](role-assignments.json) lists every identity, scope, role and reason, plus SQL grants. `tests/test_identity_rbac.py` fails when the Bicep and the matrix disagree, when Owner, Contributor, User Access Administrator or Reader appear, or when a shared key, SQL login or connection string is introduced. The only connection string is the Application Insights ingestion string (not a data credential); `entra-client-secret` and `entra-token-store-sas` are inventoried in [secret-inventory.json](secret-inventory.json).
+
+| Identity | Scope and role | Reason |
+| --- | --- | --- |
+| api | Key Vault Secrets User; blob Data Contributor; queue Message Sender; AcrPull; OpenAI User and Azure AI User (only when `enableApiAi`); IoT Hub Event Hubs Data Receiver; SQL reader, writer, ddladmin | Serve the workbench, enqueue tasks, read telemetry |
+| agents | queue Data Contributor; AcrPull; OpenAI User and Azure AI User; no SQL | Run agents, reach data only through the API |
+| orchestrator | queue Message Sender; AcrPull; no SQL | Enqueue only |
+| import | blob and queue Data Contributor; AcrPull; SQL reader and writer | Imports |
+| token-maintenance | Blob Delegator (account); blob Data Contributor (container); Secrets Officer (one secret); AcrPull | Renew the short-lived SAS |
+
+Chat and memory store (ADR 0004, accepted by the owner 2026-10-15): no Bicep resource exists yet. When added it gets one data-plane role for the api identity, local auth disabled, and a new matrix row.
+
+Entra registration: [entra/app-registration.json](entra/app-registration.json) is the declarative record (audience, callback, eight app roles mapped to the MVP personas, assignment required). `create-api-app-registration.sh` applies it idempotently; a test keeps manifest, script and `DEFAULT_ROLE_MAP` identical. Existing sign-in, picture and user switching are unchanged. Owner of all manual tenant steps: Juan Manuel Servera.
+
+Open items:
+
+* Owner sign-off of the matrix review (reviewer line is pending).
+* Contractor B2B guest model (ADR 0002, #116) is proposed, not confirmed; tenant guest and cross-tenant policy are manual tenant steps.
+* Drop `db_ddladmin` from the api identity after schema migration moves out of app start.
+* Live `az role assignment list` comparison against a deployed group was not run here.
 
 ## Key Vault secret lifecycle
 
