@@ -2959,3 +2959,8 @@ metadata when the knowledge base was created.
 ## 2026-10-15 Identity and RBAC review fixes (#141)
 
 * Matrix test now compares parsed (identity, role, scope) tuples; Entra owner wording corrected; criterion 4 stated as manual steps plus owner. Open: db_ddladmin drop, contractor B2B decision (#116).
+
+## 2026-10-15 Chat and memory test fixtures (#172)
+
+* `mvp/zavaforward_mvp/chat_fixture.py` and `mvp/tests/test_chat_fixture.py` added; provenance register entry `DS-CHAT-MEMORY-FIXTURE`, data dictionary section, eval registry entry and `mvp/README.md` updated. No regulatory snapshot changed.
+* Open: approved retention policy and legal retention lock (OD-45/OD-46), persona-to-app-role mapping confirmation by the owner, dataset owner, and runtime enforcement evidence from #160 to #164.

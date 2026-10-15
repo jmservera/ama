@@ -142,6 +142,17 @@
       "personal_data": "none; derived only from the private synthetic seed. No free-form chat transcripts are generated or stored"
     },
     {
+      "id": "DS-CHAT-MEMORY-FIXTURE",
+      "name": "Per-user chat and memory test fixtures (personas, threads, memory, isolation and deletion cases)",
+      "visibility": "private",
+      "location": "mvp/data/",
+      "sources": [],
+      "generator": "mvp/zavaforward_mvp/chat_fixture.py",
+      "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
+      "personal_data": "none; written to the Git-ignored mvp/data/chat-fixture/; fixed labelled templates, fictional names, no real conversation content",
+      "open_item": "Retention period is illustrative (90 days); the approved retention policy and legal retention lock are not decided (BRD OD-45/OD-46). Expectations are targets for #160 to #164, not runtime evidence."
+    },
+    {
       "id": "DS-SENSOR",
       "name": "Sensor and monitoring readings (temperature, humidity, moisture)",
       "visibility": "not-generated",

@@ -275,6 +275,26 @@ model output labelled as an AI suggestion, and append-only audit events. They
 stay in the private serving database. `mvp/evals/ai_priority_golden.json`
 holds constructed public scenarios and scripted model outputs.
 
+### Chat and memory test fixtures (2026-10-15)
+
+`mvp/zavaforward_mvp/chat_fixture.py` (version `chat-fixture-v1`, seed 172) writes
+JSONL to the Git-ignored `mvp/data/chat-fixture/` for the per-user chat and memory
+backlog (#172, ADR 0004). Every row has `is_synthetic` set to `true`. Text comes
+from fixed templates prefixed `[SYNTHETIC`; no real conversation content is used.
+
+| File | Content |
+| --- | --- |
+| `personas.jsonl` | Two fictional users for each of the eleven PRD perspectives, mapped to an existing Entra app role (fixture mapping, not authorisation) and the assistant tasks that role may use |
+| `threads.jsonl`, `turns.jsonl` | Three threads per eligible user, tied to a `ZF-nnnnn` stock case and a registered assistant task; states `active`, `expired` and `deleted_by_owner`, with content removed once expired or deleted |
+| `ledger_events.jsonl` | Event metadata only (`content` is null), kept after deletion |
+| `memory_state.jsonl`, `memory_items.jsonl` | Opt-in states `not_opted_in`, `opted_in` and `withdrawn`, global and per-task switches, items with source and expiry in `active`, `edited`, `expired` and `deleted` states |
+| `exclusion_probes.jsonl` | Seeded health, safeguarding, vulnerability, special-category and consent values that must be rejected |
+| `isolation_cases.jsonl` | Same-role and cross-role reads, spoofed user key, role revoked mid-thread, administrator access with and without reason (AC-094, AC-102) |
+| `deletion_cases.jsonl` | Expected absence of content and metadata-only ledger after deletion or expiry (AC-095, AC-097) |
+
+The 90-day retention is an illustrative parameter, not a policy. Expected outcomes
+are fixture targets for #160 to #164, not evidence that a runtime enforces them.
+
 ### Sensor data
 
 No sensor dataset or generator exists. The register records this as an open

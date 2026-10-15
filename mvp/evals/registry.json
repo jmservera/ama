@@ -28,6 +28,19 @@
    "contains_real_data": false
   },
   {
+   "id": "chat-memory-fixture",
+   "path": "mvp/data/chat-fixture/ (generated, not committed)",
+   "generator": "mvp/zavaforward_mvp/chat_fixture.py",
+   "version": "chat-fixture-v1",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "Synthetic personas for the eleven perspectives, chat threads, memory items, consent/opt-in states and expiry, deletion and cross-user isolation cases for ADR 0004 testing. Retention is illustrative.",
+   "used_by": [
+    "mvp/tests/test_chat_fixture.py"
+   ],
+   "seed": 172,
+   "contains_real_data": false
+  },
+  {
    "id": "document-form-fixtures",
    "path": "mvp/evals/document_form_fixtures.json",
    "version": "document-form-fixtures-v1",
