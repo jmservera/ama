@@ -8,3 +8,6 @@ support/synthetic-data/**/answer-key/
 
 # MVP working data holds real map addresses and must never be committed
 /mvp/data/
+
+# Assistant test sandboxes must never be tracked
+/mvp/.assistant-test-*/

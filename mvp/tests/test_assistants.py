@@ -4,6 +4,7 @@ import json
 import os
 import re
 import shutil
+import tempfile
 import threading
 import time
 import unittest
@@ -72,8 +73,8 @@ class Provider:
 
 class Base(unittest.TestCase):
     def setUp(self):
-        self.root = Path.cwd() / f".assistant-test-{uuid.uuid4().hex}"
-        self.root.mkdir()
+        self.root = Path(tempfile.mkdtemp(prefix="assistant-test-"))
+        self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
         self.seed = self.root / "seed.json"
         self.dbpath = self.root / "cases.sqlite"
         data = copy.deepcopy(test_mvp.DATA)
@@ -99,7 +100,6 @@ class Base(unittest.TestCase):
     def tearDown(self):
         self.service.stop()
         self.store.db.close()
-        shutil.rmtree(self.root)
 
     def other(self, **cfg):
         store = self.open_store()
