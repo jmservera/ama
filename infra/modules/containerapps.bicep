@@ -35,6 +35,8 @@ var queueEndpoint = 'https://${storageAccountName}.queue.${environment().suffixe
 var blobEndpoint = 'https://${storageAccountName}.blob.${environment().suffixes.storage}'
 @description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
 param allowPublicNetworkAccess bool = false
+@description('True when Front Door fronts the app; EasyAuth then builds callback URLs from the forwarded edge host.')
+param behindPublicEdge bool = false
 @description('Map tile URL template (https). Empty means no map background in production.')
 param tileUrl string = ''
 @description('Attribution text shown with the map tiles.')
@@ -180,6 +182,7 @@ resource apiAuth 'Microsoft.App/containerApps/authConfigs@2025-07-01' = if (!emp
   name: 'current'
   properties: {
     platform: { enabled: true }
+    httpSettings: { forwardProxy: { convention: behindPublicEdge ? 'Standard' : 'NoProxy' } }
     login: {
       tokenStore: {
         enabled: tokenStoreReady
