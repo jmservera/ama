@@ -2698,3 +2698,12 @@ metadata when the knowledge base was created.
   retrofit synthetic data README, and linked it from the index (issue #176).
 * Recorded owner decisions still open: policy approval, the missing stock
   register generator and the absent sensor generator.
+
+## [2026-10-15] update | Design system foundations
+
+* Added `research/ux/design-system.md` and linked it from the index (issue
+  #150): tokens now defined in `mvp/web/style.css`, component and state
+  inventory, blocked-step and AI suggestion patterns, extend-versus-adopt
+  decision.
+* Open items: owner confirmation of the extend decision, Zava brand colours,
+  non-colour map marker shapes and contrast verification.
