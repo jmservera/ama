@@ -22,6 +22,7 @@ from datetime import date, datetime, timedelta
 import zf_names as names
 from generate_pack import Sim, build
 from zf_export_rules import Recorder, tracker_owner
+from zf_manifest import generator_revision
 from zf_model import SIM_START, SNAP
 from zf_names import STAFF_NAMES
 
@@ -278,6 +279,7 @@ def main():
         staff.append(dict(code=code, name=s["name"], email=s["email"], role=ROLE_TITLE[code.split("-")[0]]))
     out = dict(built=a.as_of.isoformat(), as_of=a.as_of.isoformat(),
                is_synthetic=True, seed=seed, generator_version="operational-coverage-v1",
+               generator_revision=generator_revision(),
                stock_link_kind="Source geography row; flats may share a building anchor, not unique stock-unit linkage.",
                stock_register_rows=len(register), staff=staff, cases=cases)
     orders = [(shift(d, off), cid.replace("CAND-", "ZF-"), supplier,

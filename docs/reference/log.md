@@ -2655,3 +2655,10 @@ metadata when the knowledge base was created.
   in dependency order under owner approval.
 * Updated the `ama-*` agent row in the index. No research or regulatory content
   changed.
+
+## [2026-10-15] update | Synthetic data determinism, manifests and refresh policy
+
+* Added a determinism, manifest and proposed refresh-policy section to the
+  retrofit synthetic data README, and linked it from the index (issue #176).
+* Recorded owner decisions still open: policy approval, the missing stock
+  register generator and the absent sensor generator.

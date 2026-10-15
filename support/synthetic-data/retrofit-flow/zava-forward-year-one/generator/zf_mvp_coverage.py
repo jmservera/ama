@@ -108,6 +108,7 @@ def receipt(data):
     visits = insights.visits(data["cases"])
     appointments = [a for c in data["cases"] for a in c["appointments"]]
     return dict(is_synthetic=True, seed=data["seed"], as_of=data["as_of"], generator_version=data["generator_version"],
+        generator_revision=data["generator_revision"],
         stock_register_rows=data["stock_register_rows"], programme_cases=len(data["cases"]),
         distinct_stock_anchors=len({c["synthetic_stock_anchor_id"] for c in data["cases"]}),
         open_cases=sum(not c["closed"] for c in data["cases"]),
