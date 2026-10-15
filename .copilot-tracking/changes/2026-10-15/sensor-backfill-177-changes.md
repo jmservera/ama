@@ -164,6 +164,29 @@ native git diff and generated PR reference supplied the evidence instead.
 The final delivery-state audit is committed separately without amending history,
 then the PR body is refreshed with this final record. Merge remains the owner.
 
+### Final publication receipts
+
+* `git diff --check; git add` the four updated delivery artifacts, then
+  `git commit -F -`: passed, 09eb737 (`docs: record sensor backfill delivery
+  evidence`), same verified author/committer and required trailer.
+* `git push origin feat/src-sensor-backfill-177`: passed, 00c0137 -> 09eb737.
+* Summary plus updated record piped to `gh pr edit 320 --body-file -`: passed.
+* `git status --short`: clean after the delivery-state push.
+* `gh pr checks 320 --watch --interval 30` attempted twice: exit 1, no checks
+  reported yet on the new head. This was not a failed test or a passing CI run.
+* `gh pr view 320 --json headRefOid,mergeable,mergeStateStatus,statusCheckRollup`
+  and `gh run list --repo jmservera/ama --branch feat/src-sensor-backfill-177
+  --limit 10 --json databaseId,headSha,name,status,conclusion,event`: PR mergeable,
+  CLEAN; delivery head 09eb737. Source projects CI, MVP CI and MVP validation
+  were pending for that head; earlier-head runs were still in progress.
+* `git rev-parse HEAD; git ls-remote origin
+  refs/heads/feat/src-sensor-backfill-177`: local and remote both
+  09eb73719b504db563ba1108807d139a2d44cdaa.
+
+This receipt-only update is published with a normal additional commit (no
+amend/rewrite), topic push and PR-body refresh. CI on the final receipt commit
+remains a remote handoff; no rubric/image/SQL success is inferred from queuing.
+
 ## Open Acceptance and Evidence
 
 Parent children criterion stays unchecked: #178-#183 are open, not owner-deferred.
