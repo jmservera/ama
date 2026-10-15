@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-15T07:25:46+00:00",
-  "commit": "bf1d54ccc0ba3062dfa65de366d0dbb52894cd41",
+  "scored_at": "2026-10-15T08:21:20+00:00",
+  "commit": "0eca261839c4660877356ebf890317c1a19fff35",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38697062709",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38704267393",
   "fingerprints": {
     "brd": "47e831254e5b5e466f767473541d5bf4593a44d0080caa75a0307e150895a2ac",
     "prd": "1f2f0be0530396e6b37d2b824eaebaf163fb9c7b5cf34a5fad22fa586c119463",
     "adr": "62a728686af7e0557bd3452b01f8e34a32772ace2f4a48a80928ea3471001f9b",
-    "solution-code": "0708f6ce7afa4510f3f0f951b62714ab6fc7fc207ea502f21f9eacb6f1359ac4",
+    "solution-code": "c15d4ea80c084a919264ac90205b322ef43b00b6c121b55d42548b78576219a7",
     "infrastructure": "f5ee52836ffcddda14f2c5a85e6f0b1e3ac9baf444d4f81001b172409d7a623b",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
@@ -48,12 +48,12 @@
     "A4": {
       "score": 5,
       "evidence": [],
-      "rationale": "Unchanged baseline: ADR 0005, BRD FR-051 and PRD FR-060 are explicitly proposed; no mvp/ implementation changed in this diff."
+      "rationale": "New test_eval_registry.py and scale_fixture.py add a reproducible synthetic-data generator with its own tests, but this is tooling/fixtures, not a required end-to-end capability gap closed. Baseline unchanged."
     },
     "A5": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: operational readiness evidence not affected by this documentation-only diff."
+      "rationale": "scale_fixture.py and test_sqlreads/test_ranking_scale report ad hoc timing prints (ms) but there is no structured logging, metrics/traces pipeline or stated-and-measured cost model. Unchanged: basic, qualitative-leaning evidence only."
     },
     "A6": {
       "score": 3,
