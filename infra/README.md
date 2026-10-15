@@ -179,7 +179,7 @@ az deployment group create ... -p entraClientId=<client id> apiImage=<registry>.
 Notes:
 
 * The registry accepts `az acr build` when public access is on (development profile).
-* The image carries no data. Seed the SQL database once from an operator machine (see `mvp/README.md`, Azure SQL store); set `oid` on a staff record to a signed-in user's object id so that user maps to a workbench role.
+* The image carries no data. Seed the SQL database once from an operator machine (see `src/core/README.md`, Azure SQL store); set `oid` on a staff record to a signed-in user's object id so that user maps to a workbench role.
 * With `entraClientId` set, `/` is a public branded welcome and `/sign-in`
   deliberately enters Microsoft sign-in. `/app` and every data API stay
   protected; anonymous APIs return 401. Only the welcome, its stylesheet/logo,
@@ -355,10 +355,10 @@ in committed examples. Title/group-based allocation is illustrative exercise
 coherence, not evidence of professional competence or delegated authority.
 
 ```bash
-PYTHONPATH=mvp python3 infra/scripts/initialize-workbench-staff.py \
+python3 infra/scripts/initialize-workbench-staff.py \
   --resource-group ama --container-app ca-forward-test-api \
   --roster "$HOME/.azure/zava-forward-staff/roster.json" --check
-PYTHONPATH=mvp python3 infra/scripts/initialize-workbench-staff.py \
+python3 infra/scripts/initialize-workbench-staff.py \
   --resource-group ama --container-app ca-forward-test-api \
   --roster "$HOME/.azure/zava-forward-staff/roster.json" --apply --restart
 ```
@@ -593,7 +593,7 @@ Rebuild sequence:
    credential only through a private file or the provisioning script, not a
    command argument or tracked parameter file.
 4. Run `create-sql-users.py` as the configured SQL Entra administrator. Seed
-   through the [Azure SQL store instructions](../mvp/README.md#azure-sql-store)
+   through the [Azure SQL store instructions](../src/core/README.md#azure-sql-store)
    before exposing replicas. Retain the continuing synthetic stock/cases and
    privately restore any signed-in staff object-id mapping. The image contains
    no fixture; a new, empty SQL database is not equivalent to the previous MVP.

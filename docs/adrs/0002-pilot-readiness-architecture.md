@@ -56,7 +56,7 @@ with one shared password, draws every open case on a Leaflet map using
 OpenStreetMap public tiles, and calls Azure OpenAI through a managed identity.
 On Azure Container Apps that disk is lost on restart, so it runs as one replica
 and is a demonstration, not a pilot (see the
-[MVP README](../../mvp/README.md) honest limits and
+[MVP README](../../src/api/README.md) honest limits and
 [Gap Analysis and Next Build](../reference/research/gap-analysis-next-build.md)).
 
 Owner direction recorded on 2026-10-08 and now written into the
@@ -155,7 +155,7 @@ acceptance, comparative benefit or production approval.
 Initial candidate source `c4b28e3168770252fb35a79074dc2202ef375514` implements the five v1.0.0
 contracts, shared case controls/review queue, SQL claims/reservations and
 source-verified proposal review in the existing MVP. The
-[operator/API contract](../../mvp/README.md#five-retrofit-assistants-2026-10-13-implementation)
+[operator/API contract](../../src/agents/README.md#five-retrofit-assistants-2026-10-13-implementation)
 lists exact disabled defaults and finite authority/expiry/call/token limits.
 Safe fixed worker/scan warnings expose failures without private exception text;
 worker polling backs off instead of silently failing every second.
@@ -851,7 +851,7 @@ time capture.
 * [ADR 0001](./0001-azure-architecture.md)
 * [Zava Forward Workbench PRD v0.10.0](../prds/zava-forward-retrofit-programme-demonstrator.md)
 * [Gap Analysis and Next Build](../reference/research/gap-analysis-next-build.md)
-* [Zava Forward MVP](../../mvp/README.md)
+* [Zava Forward MVP](../../src/api/README.md)
 
 ## Implementation status
 
@@ -887,7 +887,7 @@ blocked/unrun rows below are not the current #65 status; see the later delta.
 | Documents and audit | SQL/Blob configuration replaces the local-only development defaults; append-only audit controls and startup-cache convergence are implemented | Malware/content scanning, external immutable digests, deletion/retention approval and recovery remain open |
 
 The [current handover](../../infra/README.md#current-exercise-handover-2026-10-13)
-and [MVP limits](../../mvp/README.md#honest-limits) own the version-linked
+and [MVP limits](../../src/api/README.md#honest-limits) own the version-linked
 operator detail. This delta neither rewrites the historical table nor approves
 the proposed decisions, control-owner matrix or production rollout.
 

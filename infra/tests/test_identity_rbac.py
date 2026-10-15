@@ -1,12 +1,10 @@
 """Role-assignment matrix, no-shared-key and Entra registration checks (issue 141)."""
 import json
 import re
-import sys
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT.parent / "mvp"))
 MATRIX = json.loads((ROOT / "role-assignments.json").read_text(encoding="utf-8"))
 ENTRA = json.loads((ROOT / "entra" / "app-registration.json").read_text(encoding="utf-8"))
 MAIN = (ROOT / "main.bicep").read_text(encoding="utf-8")

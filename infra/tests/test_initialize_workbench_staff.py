@@ -2,13 +2,11 @@ import importlib.util
 import json
 from pathlib import Path
 import sqlite3
-import sys
 import tempfile
 import unittest
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "mvp"))
 spec = importlib.util.spec_from_file_location("staff_initializer", ROOT / "infra/scripts/initialize-workbench-staff.py")
 INIT = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(INIT)
