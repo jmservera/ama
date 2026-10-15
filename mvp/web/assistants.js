@@ -34,18 +34,18 @@ function assistantProposal(p, reload) {
       offset = earlier.history_next_offset;
       moreHistory.hidden = offset == null;
     } catch (e) { status.textContent = e.message; }
-  } }, "Earlier proposal history");
+  } }, "Earlier changes to this suggestion");
   return h("article", { class: "card" },
     h("h3", {}, `${assistantNames[p.capability]} v${p.version}`),
     h("a", { href: `#/case/${encodeURIComponent(p.case_id)}` }, p.case_id), status,
-    h("p", { class: "muted" }, "Proposal only. Nothing is sent, booked, paid, ranked, signed off or released. Citations establish provenance, not truth."),
+    h("p", { class: "muted" }, "AI suggestion, not approved. Nothing is sent, booked, paid, ranked, signed off or released. Sources show where a statement came from, not that it is true."),
     h("p", {}, `Invocation: ${p.provenance.filter((e) => e.kind === "invocation").map((e) => e.mode).join(", ")}. Attempts: ${p.attempts}.`),
     p.output && h("div", {}, h("p", {}, p.output.summary),
       h("ul", {}, p.output.findings.map((f) => h("li", {}, `${f.text} [${f.citations.join(", ")}]`))),
       h("h4", {}, "Unknowns"), h("ul", {}, p.output.unknowns.map((u) => h("li", {}, u)))),
     h("details", {}, h("summary", {}, "Permitted sources, versions and hashes"),
       h("pre", {}, JSON.stringify(p.snapshot, null, 2))),
-    h("details", {}, h("summary", {}, "Provider usage and proposal history"),
+    h("details", {}, h("summary", {}, "AI usage and changes to this suggestion"),
       history, moreHistory),
     h("label", {}, "Source verification/review note", note),
     ready && h("div", {}, h("label", { for: `verified-${p.id}` }, verified,

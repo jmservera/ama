@@ -30,7 +30,7 @@ function financePanel(c, id, refresh) {
     fx.commitments.length ? h("ul", {}, fx.commitments.map((m) => h("li", {}, `${m.id}: ${m.supplier}, ${m.measure}, ${money(m.amount)}, work order ${m.work_order}. ${m.status}${m.approved_by ? ` by ${m.approved_by}` : ` (raised by ${m.raised_name})`}.`))) : h("p", { class: "muted" }, "No commitments yet."),
     fx.invoices.length ? fx.invoices.map((i) => h("div", { class: "card" },
       h("strong", {}, `${i.id}: ${i.kind.toLowerCase()} ${i.ref} from ${i.supplier}. ${i.status}.`),
-      h("div", { class: "muted" }, `Payment: ${i.payment_status}. ${i.disposition ? `Finance decision: ${i.disposition} (${i.disposition_by}).` : "No Finance decision yet."}${i.hold ? ` On hold: ${i.hold.reason}.` : ""}`),
+      h("div", { class: "muted" }, `Payment: ${i.payment_status}. ${i.disposition ? `Finance decision: ${i.disposition} (${i.disposition_by}).` : "No Finance decision yet."}${i.hold ? ` Payment paused: ${i.hold.reason}.` : ""}`),
       i.exceptions.length ? h("ul", {}, i.exceptions.map((e) => h("li", {}, `${e.line == null ? "Whole invoice" : `Line ${e.line + 1}`}: ${e.message}`))) : null)) : null,
     actForm("Propose a budget", [["amount", "Amount in pounds"], ["note", "Note"]], (b) => go("budget_propose", b), "Save proposed budget"),
     fx.budget && fx.budget.status === "Proposed" ? h("p", {}, h("button", { onclick: () => go("budget_approve") }, `Approve the budget as ${me.user.name}`)) : null,
@@ -40,8 +40,8 @@ function financePanel(c, id, refresh) {
       (b) => go("invoice_receive", { kind: b.kind, supplier: b.supplier, work_order: b.work_order, ref: b.ref, lines: [{ measure: b.measure, quantity: b.quantity, amount: b.amount, milestone_ref: b.milestone_ref }] }), "Record invoice"),
     invoiceIds.length ? [
       actForm("Check an invoice against the commitment", [["id", "Invoice", pick()]], (b) => go("invoice_match", b), "Check now"),
-      actForm("Put an invoice on hold", [["id", "Invoice", pick()], ["reason", "Why"]], (b) => go("hold_place", b), "Put on hold"),
-      actForm("Release a hold", [["id", "Invoice", pick()], ["note", "Why it is released"]], (b) => go("hold_release", b), "Release hold"),
+      actForm("Pause payment on an invoice", [["id", "Invoice", pick()], ["reason", "Why"]], (b) => go("hold_place", b), "Pause payment"),
+      actForm("Restart payment on an invoice", [["id", "Invoice", pick()], ["note", "Why it is restarted"]], (b) => go("hold_release", b), "Restart payment"),
       actForm("Finance decision", [["id", "Invoice", pick()], ["decision", "Decision", { options: ["Accept for payment", "Reject and return to provider", "Keep on hold"] }], ["note", "Note"]], (b) => go("disposition", b), "Record decision"),
       actForm("Note the payment status", [["id", "Invoice", pick()], ["status", "Status", { options: ["Not payable yet", "Awaiting payment run", "Paid outside this system"] }]], (b) => go("payment_status", b), "Save note"),
     ] : null);
@@ -112,8 +112,8 @@ async function financeQueueView() {
   let rows;
   try { rows = await api("/api/finance"); } catch (e) { return show(h("h1", {}, "Finance queue"), h("p", {}, e.message)); }
   show(h("h1", {}, "Finance queue"),
-    h("p", { class: "muted" }, "Invoices with exceptions, holds or no check yet. A person decides each one. Nothing is paid from here."),
+    h("p", { class: "muted" }, "Invoices with exceptions, paused payments or no check yet. A person decides each one. Nothing is paid from here."),
     rows.length ? h("table", {}, h("thead", {}, h("tr", {}, ["Home", "Invoice", "Supplier", "Status", "Exceptions", "Total"].map((x) => h("th", {}, x)))),
       h("tbody", {}, rows.map((r) => h("tr", {}, h("td", {}, h("a", { href: `#/case/${encodeURIComponent(r.case_id)}` }, r.address)), h("td", {}, `${r.invoice} ${r.ref}`),
-        h("td", {}, r.supplier), h("td", {}, r.on_hold ? `${r.status}, on hold` : r.status), h("td", {}, r.exceptions), h("td", {}, money(r.total)))))) : h("p", {}, "Nothing is waiting."));
+        h("td", {}, r.supplier), h("td", {}, r.on_hold ? `${r.status}, payment paused` : r.status), h("td", {}, r.exceptions), h("td", {}, money(r.total)))))) : h("p", {}, "Nothing is waiting."));
 }

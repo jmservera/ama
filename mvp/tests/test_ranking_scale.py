@@ -162,7 +162,7 @@ class SmallApiTests(ApiBase):
         before = self.snapshot()
         code, rec = self.post("/api/ai/priority", {"n": 5})
         self.assertEqual(code, 200)
-        self.assertEqual(rec["label"], "AI-drafted, human-approved")
+        self.assertEqual(rec["label"], "AI suggestion, not approved")
         self.assertEqual(len(rec["items"]), 5)
         self.assertTrue(all(i["reason"] for i in rec["items"]))
         mine = {c["id"] for c in self.store.cases.values() if c["owner_code"] == "RLO-01"}

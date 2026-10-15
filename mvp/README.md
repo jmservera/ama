@@ -32,7 +32,7 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   and deciding rule. It is also written beside the data when it changes. The
   policy owner is "to be named" and the rule order is an unsigned draft.
 * "Suggest my top 5" on My cases asks AI for a second opinion beside the
-  rule-based order, labelled "AI-drafted, human-approved", with a cited reason
+  rule-based order, labelled "AI suggestion, not approved", with a cited reason
   per case. It is stored in a separate recommendations list and is never read
   by the ranking, owners, stages or queues. A person accepts, edits (untick
   cases) or rejects it, with a reason for edit and reject, and the answer goes
@@ -62,7 +62,7 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   booked", "Case history 2026-09-30"). They are checked on the server: output
   whose citations do not resolve is marked Unverified, uncited summary bullets
   and uncited priority items are dropped, and the sources are shown beside the
-  AI-drafted label. Output stays "Not reviewed" until a person accepts, edits or
+  "AI suggestion, not approved" label. Output stays "Not reviewed" until a person accepts, edits or
   rejects it. Workflow-only mode (request flag `mode: "workflow"`, the "Workflow
   only" tick box, or `ZF_AI=off`) skips the model for every task and is
   recorded. Each task leaves a comparison record (case ids, AI output,

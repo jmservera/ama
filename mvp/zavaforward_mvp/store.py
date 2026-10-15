@@ -117,11 +117,12 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
     def gate_reasons(c):
         why = []
         if c["decision"]["status"] != "Accepted":
-            why.append("The resident has not confirmed they want the works.")
+            why.append(f"The resident has not confirmed they want the works. Owner: {c['owner']}. Next action: ask the resident and save their answer.")
         if not c["funding_ok"]:
-            why.append("Funding has not been confirmed.")
-        if any(not h["released"] for h in c["hazards"]):
-            why.append("A safety issue is still open.")
+            why.append(f"Funding has not been confirmed. Owner: {c['owner']}. Next action: check the funding and record it.")
+        open_h = [h for h in c["hazards"] if not h["released"]]
+        if open_h:
+            why.append(f"A safety issue is still open. Owner: {open_h[0]['owner']}. Next action: the owner confirms it is resolved.")
         return why + technical_gate(c)
 
     @staticmethod
@@ -497,7 +498,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
         r = ai_tasks.run_text_task(self, user, task, [case], sysmsg, instr + "\n\nFacts:\n" + facts, tmpl, tcites, strong, mode=mode,
                                    bullets=task == "summary")
         self.audit(user["email"], "ai_run_end", case_id, f"{task} source={r['source']} model={r['model']} validated={r['validated']} verified={r['verified']}")
-        return dict(r, label=("AI-drafted, for you to check" if r["source"] == "ai" else "Template draft, for you to check")
+        return dict(r, label=("AI suggestion, not approved" if r["source"] == "ai" else "Template draft, not approved")
                     + ("" if r["verified"] else ". Unverified: its sources do not match the case record"))
 
     def briefing(self, user, mode=None):
@@ -518,7 +519,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                                    [x for c in top[:3] for x in [f"{c['id']}: Stage: {c['stage']}", f"{c['id']}: Days in stage: {c['days_in_stage']}"]],
                                    mode=mode)
         self.audit(user["email"], "ai_run", "-", f"briefing source={r['source']} model={r['model']} verified={r['verified']}")
-        out = dict(r, label=("AI-drafted" if r["source"] == "ai" else "Summary by rules")
+        out = dict(r, label=("AI suggestion, not approved" if r["source"] == "ai" else "Summary by rules")
                    + ("" if r["verified"] else ". Unverified: its sources do not match the case record"))
         with self.lock:
             if self.version - ver <= 1:  # only our own comparison record was saved meanwhile
@@ -526,7 +527,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
         return out
 
     # ---- AI priority recommendation: advice beside the deterministic order, never part of it
-    REC_LABEL = "AI-drafted, human-approved"
+    REC_LABEL = "AI suggestion, not approved"
     REC_ACTIONS = {"accept": "Accepted", "edit": "Edited", "reject": "Rejected"}
 
     def _rec_view(self, rec):
@@ -700,7 +701,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                 c["funding"]["status"] = "Draft ready"
             self.audit(user["email"], "ai_run_end", case_id, f"funding_draft source={r['source']} model={r['model']}")
             self.save()
-        return dict(r, label="AI-drafted, human-approved: nothing is submitted until a person approves and submits it"
+        return dict(r, label="AI suggestion, not approved: nothing is submitted until a person approves and submits it"
                     + ("" if r["verified"] else ". Unverified: its sources do not match the case record"))
 
     # ---- review of any AI output, the comparison records and the live report
@@ -723,7 +724,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                     raise ValueError("Write or generate a draft first.")
                 missing = [x["kind"] for x in self.checklist(c) if not x["present"]]
                 if missing:
-                    raise GateError([f"Missing evidence: {', '.join(missing)}"])
+                    raise GateError([f"Evidence is missing: {', '.join(missing)}. Owner: {c['owner']}. Next action: add it to the case."])
                 f.update(status="Approved", approved_by=user["name"])
             elif action == "submit":
                 if f["status"] != "Approved":

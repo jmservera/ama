@@ -132,7 +132,7 @@ def _run(sc, workdir, fails, measures):
 
     for rec_i, got_i in zip(recs, runs):
         check(rec_i["status"] == "Proposed", "recommendation must start as Proposed")
-        check(rec_i["label"] == Store.REC_LABEL, "recommendation must be labelled AI-drafted, human-approved")
+        check(rec_i["label"] == Store.REC_LABEL, "recommendation must be labelled AI suggestion, not approved")
         check(set(got_i) <= ids and len(set(got_i)) == len(got_i) and got_i, "only listed case ids, no duplicates")
         check(all(i["reason"].strip() for i in rec_i["items"]), "every item needs a reason")
         check(not any("sent" in i["reason"].lower() and "not" not in i["reason"].lower() for i in rec_i["items"]), "no claim that something was sent")

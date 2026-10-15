@@ -39,7 +39,7 @@ def missing_items(c):
 
 
 def technical_gate(c):
-    return [f"Technical stage: {m['item']}, for the {m['assigned_to']}." for m in missing_items(c)]
+    return [f"Technical stage: {m['item']}. Owner: {m['assigned_to']}. Next action: complete it and record it." for m in missing_items(c)]
 
 
 class SignoffMixin:
@@ -102,9 +102,9 @@ class SignoffMixin:
             if other != key and s["status"] == "Signed off" and s.get("by_email") == user["email"]:
                 raise PermissionError("Each sign-off needs a different person.")
         if key == "coordination":
-            why = [f"{v['label']} sign-off is not in place" for o, v in SIGNOFFS.items() if o != key
+            why = [f"{v['label']} sign-off is not in place. Owner: {v['roles'][0]}. Next action: give the sign-off." for o, v in SIGNOFFS.items() if o != key
                    and (t["signoffs"].get(o) or {}).get("status") != "Signed off"]
-            why += [f"Missing evidence: {kind}" for kind in _missing_evidence(c)]
+            why += [f"Evidence is missing: {kind}. Owner: {EVIDENCE_OWNER}. Next action: add it to the case." for kind in _missing_evidence(c)]
             if why:
                 from .store import GateError
                 raise GateError(why)
