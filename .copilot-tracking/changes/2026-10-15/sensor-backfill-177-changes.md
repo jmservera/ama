@@ -9,7 +9,7 @@ ms.date: 2026-10-15
 Full plan execution for task 177 / sensor-backfill-177.
 Plan: .copilot-tracking/plans/2026-10-15/sensor-backfill-177-plan.md.
 Details: .copilot-tracking/details/2026-10-15/sensor-backfill-177-phase-details.md.
-P01 and P02-T01 complete; P02-T02 Review complete, publication remains.
+P01 and P02 complete for the bounded engineering slice; issue #177 remains open.
 No source changes before research and final-candidate critique.
 
 ## Intake Command Evidence
@@ -136,10 +136,33 @@ implementation defect identified in the bounded slice. RV-001 routes existing
 child evidence; RV-002 routes full-stock/activation owner decisions; RV-003
 routes CI image/SQL evidence. No repeat review or unselected follow-up work.
 
-Publication pending. Intended commit: feat(core): add register-backed sensor history.
+Published commit 00c0137: feat(core): add register-backed sensor history.
 Authenticated identity was verified before configuration; use the requested
 privacy-safe repository-local email for author and committer. Explicitly stage
 only intended src/docs/RPI artifacts; no private output belongs in the commit.
+
+PR: https://github.com/jmservera/ama/pull/320, main base,
+feat/src-sensor-backfill-177 head, OPEN, Refs #177 (not Closes).
+No merge, rebase, force push or main push. Initial checks are queued/in progress;
+no CI success is claimed from this initial observation.
+
+| Delivery command | Result |
+| --- | --- |
+| test -s .gitignore; git diff --check; python -m json.tool .copilot-tracking/rpi-sessions/2026-10-15/sensor-backfill-177-state.json | Pass before staging |
+| git config --local user.email 8036360+jmservera@users.noreply.github.com; git config --local user.name jmservera | Configured verified authenticated account, repository-local only |
+| git add (16 explicitly named source/docs/RPI files); printf commit message piped to git commit -F - with explicit GIT_AUTHOR_EMAIL and GIT_COMMITTER_EMAIL | Pass: 00c0137, Conventional Commit and required Co-authored-by trailer |
+| bash pr-reference/scripts/generate.sh --base-branch origin/main --merge-base --output SESSION/files/sensor-177-pr-reference.xml | Pass: generated 1,907-line XML in session workspace, not committed |
+| git push --set-upstream origin feat/src-sensor-backfill-177 | Pass: only topic branch created remotely and tracking configured |
+| cat session PR summary plus changes record piped to gh pr create --repo jmservera/ama --base main --head feat/src-sensor-backfill-177 --title 'feat(core): add register-backed sensor history (Refs #177)' --body-file - | Pass: PR #320, full command/evidence record in body |
+| gh pr view 320 --json url,baseRefName,headRefName,state,statusCheckRollup | Pass: correct head/base, OPEN; src, MVP validation, image and mssql checks queued/in progress |
+| git status --short; git log -1 --format author/committer/message; git ls-files 'mvp/*'; git diff --check | Clean; author+committer both verified noreply; mvp contains only README.md; whitespace clean |
+| python heredoc resolving newly added register-backed Markdown links | Pass: index and synthesis links resolve to core README |
+
+PR-description helper instruction/citation files were not present in the
+checkout. Unavailable host-only diff tools were not invented; the reviewed
+native git diff and generated PR reference supplied the evidence instead.
+The final delivery-state audit is committed separately without amending history,
+then the PR body is refreshed with this final record. Merge remains the owner.
 
 ## Open Acceptance and Evidence
 

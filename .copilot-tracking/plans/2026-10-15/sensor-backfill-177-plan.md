@@ -4,7 +4,7 @@ description: Bounded register-backed backfill with explicit evidence limits
 ms.date: 2026-10-15
 ---
 
-Task ID: 177. Slug: sensor-backfill-177. Status: Ready after one critique.
+Task ID: 177. Slug: sensor-backfill-177. Status: Completed bounded delivery; parent issue remains open.
 
 ## Executive Summary
 
@@ -83,7 +83,7 @@ smoke; scripted inference is not claimed as live AI.
 * [x] Actual selected-sensor estimate is recorded before payload generation.
 * [x] Invalid input and unsafe destinations fail without payload writes.
 * [x] Local src suites/lint/types/app evidence recorded, limitations explicit.
-* [ ] Documentation and RPI artifacts committed in a Refs #177 PR.
+* [x] Documentation and RPI artifacts committed in a Refs #177 PR.
 
 ## Phase Checklist
 
@@ -99,7 +99,11 @@ P01 complete: 14 new contract tests plus existing sensor/byte regressions pass.
 ### P02: Evidence and delivery
 
 * [x] P02-T01: Update core/synthesis/index/log and run local validation.
-* [ ] P02-T02: One RPI review, then commit, push and create PR.
+* [x] P02-T02: One RPI review, then commit, push and create PR.
+
+P02 complete: review Complete / Residual work; implementation commit 00c0137,
+pushed feat/src-sensor-backfill-177 and opened PR #320 to main with Refs #177.
+CI was queued/in progress at first observation, not assumed passing.
 
 ## Test Ownership and Validation Lock
 
