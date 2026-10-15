@@ -88,6 +88,8 @@ param sqlLocation string = location
 param tileUrl string = ''
 param tileAttribution string = ''
 param tags object = {}
+@description('Owner tag value required by the tagging standard (infra/README.md, Governance controls).')
+param ownerTag string = 'Juan Manuel Servera'
 
 var isDev = deploymentProfile == 'development'
 var publicAccess = isDev || allowPublicNetworkAccess
@@ -101,24 +103,39 @@ var allTags = union(tags, {
   environment: environmentName
   dataClassification: 'constructed-non-identifying'
   purpose: 'non-production-demonstrator'
+  owner: ownerTag
 })
 
 var storageBlobDataContributor = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
 var storageQueueDataContributor = '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
 var storageQueueDataSender = 'c6a89b2d-59bc-44d0-9896-0f6e12d7b80a'
 
+module guard 'modules/guard.bicep' = {
+  name: 'parameter-guard'
+  params: {
+    productionProfileForbidsPublicNetworkAccess: isDev || !allowPublicNetworkAccess ? 'ok' : ''
+    productionProfileRequiresKeyVaultPurgeProtection: isDev || keyVaultPurgeProtection ? 'ok' : ''
+    sharePointEvidenceStoreRequiresSiteId: evidenceStore != 'sharepoint' || !empty(sharePointSiteId) ? 'ok' : ''
+    tokenStoreReadyRequiresTokenStore: !entraTokenStoreReady || enableEntraTokenStore ? 'ok' : ''
+    entraRoleMapRequiresEntraClientId: empty(entraRoleMap) || !empty(entraClientId) ? 'ok' : ''
+  }
+}
+
 module identity 'modules/identity.bicep' = {
   name: 'identity'
+  dependsOn: [guard]
   params: { prefix: prefix, location: location, tags: allTags }
 }
 
 module network 'modules/network.bicep' = {
   name: 'network'
+  dependsOn: [guard]
   params: { prefix: prefix, location: location, tags: allTags }
 }
 
 module monitoring 'modules/monitoring.bicep' = {
   name: 'monitoring'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     prefix: prefix
@@ -133,6 +150,7 @@ module monitoring 'modules/monitoring.bicep' = {
 
 module keyvault 'modules/keyvault.bicep' = {
   name: 'keyvault'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     purgeProtection: purgeProtection
@@ -150,6 +168,7 @@ module keyvault 'modules/keyvault.bicep' = {
 
 module storage 'modules/storage.bicep' = {
   name: 'storage'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     name: 'st${compact}${unique}'
@@ -173,6 +192,7 @@ module storage 'modules/storage.bicep' = {
 
 module registry 'modules/registry.bicep' = {
   name: 'registry'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     quarantine: !isDev
@@ -194,6 +214,7 @@ module registry 'modules/registry.bicep' = {
 
 module sql 'modules/sql.bicep' = {
   name: 'sql'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     name: 'sql-${prefix}-${unique}'
@@ -214,6 +235,7 @@ module sql 'modules/sql.bicep' = {
 
 module foundry 'modules/foundry.bicep' = {
   name: 'foundry'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     name: 'aif-${prefix}-${unique}'
@@ -252,6 +274,7 @@ module iotHub 'modules/iothub.bicep' = {
 
 module apps 'modules/containerapps.bicep' = if (deployApplications) {
   name: 'containerapps'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     prefix: prefix
@@ -293,6 +316,7 @@ module apps 'modules/containerapps.bicep' = if (deployApplications) {
 
 module authTokenStore 'modules/authTokenStore.bicep' = if (enableEntraTokenStore) {
   name: 'auth-token-store'
+  dependsOn: [guard]
   params: {
     name: 'st${take(compact, 13)}auth${unique}'
     prefix: prefix
@@ -474,6 +498,7 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
 
 resource budget 'Microsoft.Consumption/budgets@2023-05-01' = {
   name: 'budget-${prefix}'
+  dependsOn: [guard]
   properties: {
     category: 'Cost'
     amount: monthlyBudget

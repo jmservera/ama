@@ -1,0 +1,26 @@
+{
+  "analyzers": {
+    "core": {
+      "rules": {
+        "no-hardcoded-env-urls": { "level": "error" },
+        "no-unused-params": { "level": "error" },
+        "no-unused-vars": { "level": "error" },
+        "no-unused-existing-resources": { "level": "error" },
+        "no-hardcoded-location": { "level": "error" },
+        "outputs-should-not-contain-secrets": { "level": "error" },
+        "secure-secrets-in-params": { "level": "error" },
+        "secure-params-in-nested-deploy": { "level": "error" },
+        "protect-commandtoexecute-secrets": { "level": "error" },
+        "use-secure-value-for-secure-inputs": { "level": "error" },
+        "adminusername-should-not-be-literal": { "level": "error" },
+        "use-resource-id-functions": { "level": "error" },
+        "use-stable-resource-identifiers": { "level": "error" },
+        "simplify-interpolation": { "level": "error" },
+        "prefer-interpolation": { "level": "error" },
+        "no-conflicting-metadata": { "level": "error" },
+        "decompiler-cleanup": { "level": "error" },
+        "explicit-values-for-loc-params": { "level": "error" }
+      }
+    }
+  }
+}

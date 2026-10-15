@@ -2920,6 +2920,12 @@ metadata when the knowledge base was created.
 * No regulatory snapshot changed. Open: externally held head in an immutable
   Azure container and Azure SQL drill evidence.
 
+## 2026-10-15 Azure Policy, Defender plans, locks and tagging as code (#147)
+
+* infra/README.md gains a Governance controls section; ADR 0001 open item updated. New `infra/governance.bicep`, `main.pilot.example.bicepparam`, `policy-exceptions.json` and tests.
+* Review fixes: pilot parameter file renamed `main.pilot.example.bicepparam` and labelled non-deployable (test rejects a deployable `main.pilot.example.bicepparam`); EX-001 expiry set to 2026-12-31; docs state policy is audit-only and Defender stays Free until a cost is accepted.
+* No regulatory snapshot changed. Open: Defender cost estimate and enablement, audit versus Deny stance.
+
 ## 2026-10-15 Deterministic sensor backfill generator (#183)
 
 * `mvp/README.md` documents the sensor backfill generator, its volume and size estimate (about 1.05 billion hourly rows, about 118 GiB CSV for 60,000 homes over two years), manifest and idempotent load.
