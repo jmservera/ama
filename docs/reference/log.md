@@ -2364,6 +2364,68 @@ metadata when the knowledge base was created.
   calibration ownership, lawful basis and resident choice, retention, data
   quality rules, analysis window, thresholds and operational triage owner.
 
+
+## [2026-10-14] assessment | Responsible AI review and proposed release gates
+
+* Read the preserved original case study, current addendum, Zava Forward PRD
+  and both proposed ADRs. The older Proper Warm PRD and owner memory remain
+  unchanged; the current requirements candidate advances to v0.15.0.
+* Delegated an audit of baseline commit `1cb398c7b90bec05a5700008a97d0cfac494144a`
+  / PRD v0.14.0. Six framework assessments returned 29 preliminary checks:
+  7 PASS, 11 PARTIAL and 11 NOT_ASSESSED. Measure and AI STRIDE verification
+  terminated with `INVALID_PAYLOAD` / `Retryable=false` because full finding
+  records could not be consumed through temporary-file references. No retry,
+  consolidated verified counts, severity breakdown or RAI report is claimed.
+* Preserved that limitation and preliminary review priorities in the
+  [addendum assessment status](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits),
+  with human acceptance PENDING. UK operational scope and conditional EU AI
+  Act screening do not establish a legal classification or currentness check.
+* Proposed [PRD RAI controls](../prds/zava-forward-retrofit-programme-demonstrator.md#responsible-ai-release-and-oversight-contract-2026-10-14):
+  FR-048 to FR-051, AC-062 to AC-066 and NFR-014 cover release/impact records,
+  meaningful oversight, challenge/correction, cohort fairness and incident
+  suspension/restart. Strengthened semantic truth/unsafe-advice evaluation and
+  source-permission parity across every retained model path. All new criteria
+  remain Not run; three new RAI approval/evidence questions remain open.
+* Amended [ADR 0001](../adrs/0001-azure-architecture.md#responsible-ai-architecture-boundary-2026-10-14)
+  and [ADR 0002](../adrs/0002-pilot-readiness-architecture.md#responsible-ai-control-plane-2026-10-14)
+  with proposed version-bound release, privacy, incident and review boundaries
+  in the future worker estate and current shared API/SQL design respectively.
+  Updated this index. No runtime, deployment, model call, regulatory snapshot,
+  processor approval or operational authority was changed.
+* Local documentation checks verify relative links/anchors, table structure,
+  frontmatter presence, 51 FRs/66 ACs/14 NFRs, exact FR-to-AC traceability and
+  new reciprocal references. Git patch hygiene and historical-file preservation
+  are checked separately; formal RAI verification, PRD approval, hosted CI,
+  direct human review and real-data activation remain unproved.
+
+
+## [2026-10-14] validation | Authorized RAI verifier-handoff recovery
+
+* Preserved the original terminal `INVALID_PAYLOAD` attempt and executed a
+  separately owner-authorized bounded recovery using full original findings
+  and codebase profile inline for AI STRIDE and NIST Measure. Reused complete
+  compatible Govern/Map/Manage verdicts; no finding was reconstructed from a
+  count summary, omitted or changed into plan-mode pass-through.
+* Generated the [RAI_REPORT_V1 baseline report](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md)
+  for commit `1cb398c7b90bec05a5700008a97d0cfac494144a` / PRD v0.14.0.
+  All six frameworks yield 29 checks: 7 PASS, 0 FAIL, 11 PARTIAL and
+  11 NOT_ASSESSED. Residual severity: 0 CRITICAL, 0 HIGH, 8 MEDIUM, 3 LOW.
+  Verification: 2 CONFIRMED, 0 DISPROVED, 9 DOWNGRADED, 18 UNCHANGED.
+* Deterministically checked full input fields and inline payloads, every
+  original/response/collection ID, all 11 verification records and total
+  verdict mappings, unchanged-record fidelity, all 29 principal report rows,
+  summary/severity/verification counts, exact path/hash/caution, failed-attempt
+  history and PENDING human acceptance. Session-only structured handoff is
+  validation evidence, not an additional public report or professional sign-off.
+* Updated the addendum, PRD, both ADRs and index with verified review
+  dispositions and baseline limitations. v0.15.0 safeguards remain proposed/
+  Not run, not verified fixes. Explicitly flagged actual staff/tenant identity
+  privacy scope despite synthetic resident content, and distinguished restart
+  persistence from witnessed backup recovery/erasure reconciliation.
+* No application, installed plugin, cloud resource, model call, real-data scope,
+  legal rule, deployment or operational approval changed. Human acceptance
+  remains PENDING and live use BLOCKED; legal currentness, representative
+  fairness/oversight, held-out model quality and net benefit remain unassessed.
 ## [2026-10-14] update | BRD v0.17.0, PRD v0.15.0 and ADR 0003 from the journey atlas
 
 * Reviewed the customer journey atlas, the updated addendum and the Zava
@@ -2442,3 +2504,43 @@ metadata when the knowledge base was created.
   the 2011-based thresholds must be re-confirmed against the 2021 edition.
 * The Scribd copy could not be read (access challenge) and its provenance and
   right to use are unconfirmed, so it is not used. R1 stays open.
+
+## [2026-10-15] update | Reconcile journey/sensor and Responsible AI requirements
+
+* Merged main's BRD v0.17.0, journey learning tests, ADR 0003 and IoT research
+  into the RAI topic. Preserved both index/log contributions and the original
+  audit report, case study and owner memory.
+* Reconciled the two draft v0.15.0 ID allocations in PRD v0.16.0: main keeps
+  FR-048 to FR-050 / AC-062 to AC-068; unmerged RAI additions move to FR-051
+  to FR-054 / AC-069 to AC-073. Updated current addendum/ADR references and
+  recorded the explicit draft-to-current mapping in the PRD.
+* Restored the incoming PRD's omitted NFR and existing acceptance sections;
+  separated its combined offer requirement/criterion and supplied FR-049
+  from BRD FR-047/AC-089. Counts are 54 FRs, 73 ACs, 14 NFRs, nine constraints.
+  Fresh requirements review, human approval and implementation remain open.
+
+## [2026-10-15] approval | Owner acceptance of the bounded RAI baseline report
+
+* Recorded the owner's explicit instruction to accept the recovered RAI report.
+  Acceptance covers its bounded findings, limitations and remediation-planning
+  basis, not legal/privacy sign-off, remediation closure, PRD acceptance or live use.
+* Added dated acceptance metadata and the pre-annotation report commit/hash;
+  retained all 29 findings and counts, the eleven PARTIAL and eleven NOT_ASSESSED
+  checks, the unchecked qualified-review gates and live-use BLOCKED disposition.
+* Updated current addendum, PRD, ADR and index references. Historical generation
+  and log entries remain unchanged. Merge fixes are local; no push was performed.
+
+## [2026-10-15] plan | Responsible AI remediation and independent critique
+
+* Added the [RAI remediation plan](../../.copilot-tracking/plans/2026-10-15/rai-remediation-plan.md)
+  with six phases/thirteen tasks, mapping all eleven verified residuals and eleven
+  unassessed checks to engineering and separately authorized evidence/approval work.
+* The independent [standard critique](../../.copilot-tracking/reviews/plans/2026-10-15/rai-remediation-plan-critique.md)
+  completed with Pass and no actionable findings. Canonical helper projection and
+  hash bind the assessed content; unchanged candidate identity is checked at delivery.
+* Offline engineering is planning-ready; actual staff-data, serving-model attestation,
+  lawful cohorts/thresholds, participant/budget, restore/erasure and qualified release
+  gates remain. No application code, tests, paid inference or deployment was run.
+* Owner then authorized merging PR #72 into main after completion/checks and a
+  subsequent read-only Functional Planner review of GitHub issue coverage. Issue
+  creation is a separate reviewed execution pass.
