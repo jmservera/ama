@@ -303,12 +303,12 @@ Suggested discovery questions:
 
 Issue #171 adds `generator/zf_documents.py` (under
 `support/synthetic-data/retrofit-flow/zava-forward-year-one/`) and the committed
-output `mvp/evals/document_form_fixtures.json`, tested by
-`mvp/tests/test_document_form_fixtures.py`.
+output `src/importer/evals/document_form_fixtures.json`, tested by
+`src/importer/tests/test_document_form_fixtures.py`.
 
 Document-control fixtures (scan classes, retention triggers and legal holds for
 120 homes from the same register) come from `generator/zf_document_controls.py`,
-output `mvp/evals/document_control_fixtures.json`, tested by
+output `src/core/evals/document_control_fixtures.json`, tested by
 `mvp/tests/test_document_controls.py`.
 
 * Source: one home per neighbourhood cluster drawn from the 60,000-home synthetic
@@ -369,7 +369,7 @@ every need and a `generator_conventions` block in
 
 Extensions reuse the existing generator modules, the recorded seed, the
 existing identifiers and `is_synthetic=true`; no second generator is added.
-`mvp/tests/test_needs_inventory.py` checks that every need has a child story or
+`src/core/tests/test_needs_inventory.py` checks that every need has a child story or
 a recorded deferral.
 
 Open items: owner confirmation of the mapping, and whether regenerating the

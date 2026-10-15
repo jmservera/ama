@@ -5,7 +5,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from zavaforward_mvp import scale_fixture, sensor_backfill as sb
+from zava_forward.core.synthetic import scale_fixture
+from zava_forward.core.synthetic import sensor_backfill as sb
 
 DAYS = 3
 

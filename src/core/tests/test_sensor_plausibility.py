@@ -8,7 +8,8 @@ import collections
 import statistics
 import unittest
 
-from zavaforward_mvp import scale_fixture, sensor_backfill as sb
+from zava_forward.core.synthetic import scale_fixture
+from zava_forward.core.synthetic import sensor_backfill as sb
 
 DAYS, CADENCE, HOMES = 730, 360, 150
 # Exercise values for a North East England-style outdoor climate (labelled, not retrieved data).

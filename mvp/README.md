@@ -14,6 +14,12 @@ in this file without a path (`store`, `sqlstore`, `mssqlstore`, `factory`, `ledg
 `src/core/src/zava_forward/core/` and are imported as `zava_forward.core.<module>`.
 Their tests moved to `src/core/tests/`, which the `mvp` test commands put on
 `PYTHONPATH` for the shared fixtures (`dataset.py`, `release_support.py`).
+M3 moved `scale_fixture`, `sensor_backfill` and `loadcheck` to
+`src/core/src/zava_forward/core/synthetic/`, the document-control fixtures to
+`src/core/evals/`, the document-form fixtures to `src/importer/evals/`, the
+eval registry to `src/agents/evals/`, and `chat_fixture` (test support) to
+`src/agents/tests/`, which the `mvp` test commands also put on `PYTHONPATH`.
+Generated fixture data goes to the per-user `ZF_DATA` folder, never under `src/`.
 Local runs need `pip install --no-deps -e src/core` first. When `ZF_DATA` is not
 set, the data file defaults to `data/zavaforward.json` under the current folder.
 
@@ -149,27 +155,28 @@ set, the data file defaults to `data/zavaforward.json` under the current folder.
   live status line. The tile provider comes from `ZF_TILE_URL` (https only) and
   the CSP follows it. With `ZF_ENV=production` and no `ZF_TILE_URL` no tiles
   load and only the list works.
-* Evaluation dataset registry (`evals/registry.json`) lists every golden and
+* Evaluation dataset registry (`src/agents/evals/registry.json`) lists every golden and
   evaluation dataset with version, owner and purpose; a test fails for an
-  unregistered file in `evals/`. The stock-scale fixture (60,000 homes, 600,000
+  unregistered file in `mvp/evals/` or any `src/<project>/evals/` folder. The stock-scale fixture (60,000 homes, 600,000
   events, wholly fictional, seeded) is rebuilt with
-  `PYTHONPATH=. python3 -m zavaforward_mvp.scale_fixture`, writes to the
-  Git-ignored `data/scale-fixture/` and is never committed. Dataset owners are
+  `python3 -m zava_forward.core.synthetic.scale_fixture` (moved in M3), writes to
+  `scale-fixture/` under the per-user `ZF_DATA` folder (default
+  `~/.zava-forward/data/`, outside the repository) and is never committed. Dataset owners are
   an open owner decision.
-* Chat and memory fixtures (#172): `PYTHONPATH=. python3 -m
-  zavaforward_mvp.chat_fixture` writes seeded, labelled-synthetic personas
+* Chat and memory fixtures (#172): `PYTHONPATH=src/agents/tests python3 -m
+  chat_fixture` (test support, moved to `src/agents/tests` in M3) writes seeded, labelled-synthetic personas
   (two per PRD perspective, mapped to existing app roles), threads, memory
   items, opt-in states, exclusion probes, and isolation, expiry and deletion
-  cases to the Git-ignored `data/chat-fixture/`. Case IDs come from the
+  cases to `chat-fixture/` under the `ZF_DATA` folder. Case IDs come from the
   60,000-home stock. Retention is an illustrative 90 days, not a policy
   (BRD OD-45/OD-46 open); expectations are targets for #160 to #164.
-* Sensor backfill (#183): `PYTHONPATH=. python3 -m zavaforward_mvp.sensor_backfill
+* Sensor backfill (#183): `python3 -m zava_forward.core.synthetic.sensor_backfill
   --estimate-only` prints the volume and size estimate for two years of hourly
   temperature and humidity across all 60,000 homes (about 1.05 billion rows,
   about 118 GiB as CSV, measured on a 20-home sample); `--homes N` writes
   sharded CSV, `sensors.csv`, `estimate.json` and `manifest.json` (seed,
-  versions, climate source, parameters, hash) to the Git-ignored
-  `data/sensor-backfill/`. Same seed gives identical bytes. Every row is
+  versions, climate source, parameters, hash) to `sensor-backfill/` under
+  the `ZF_DATA` folder. Same seed gives identical bytes. Every row is
   `SYNTHETIC` with a stock home ID and `SENS-SYN-` sensor ID; `load_into()`
   validates and appends idempotently on sensor ID plus reading ID, and
   `SQL_DDL` is the Azure SQL schema. Open: Met Office and Environment Agency
@@ -481,7 +488,7 @@ Tests: `tests/test_governance.py` (JSON and SQL stores, labelled synthetic demon
   dropped sealed year. A self-consistent rewrite of a sealed year is caught only by
   its digest, so those files belong in the immutable Blob container. Proven in
   `tests/test_recovery.py`; run the scheduled `--by-year` check before relying on the ledger.
-* `python -m zavaforward_mvp.loadcheck --data zavaforward.json --homes 60000` runs the
+* `python -m zava_forward.core.synthetic.loadcheck --data zavaforward.json --homes 60000` runs the
   NFR-002 mix (five sessions, two writers) against the configured store and prints
   p50/p95/max per class. Local SQLite on 2026-10-15 over 60,000 labelled synthetic
   homes for 30 s: list p95 0.28 s, detail 0.30 s, write 0.33 s, no errors (limits 1 s,
@@ -927,12 +934,12 @@ exercise uses fixtures, not the retained dataset:
 
 ```bash
 cd mvp
-PYTHONPATH=.:../src/core/tests python3 -m unittest discover -s tests -p test_assistants.py
+PYTHONPATH=.:../src/core/tests:../src/agents/tests python3 -m unittest discover -s tests -p test_assistants.py
 PYTHONPATH=. python3 tests/assistants_browser_check.py
 node --check web/assistants.js
 
 # Disposable local SQL only; set the existing ZF_SQL_* test settings first.
-ZF_TEST_MSSQL=1 PYTHONPATH=.:tests:../src/core/tests python3 -m unittest \
+ZF_TEST_MSSQL=1 PYTHONPATH=.:tests:../src/core/tests:../src/agents/tests python3 -m unittest \
   test_assistants.MssqlContractTests test_assistants.MssqlReviewTests \
   test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests \
   test_assistants.MssqlLedgerTests
@@ -981,7 +988,7 @@ authority remains absent/proactive off; this is not standing spend approval,
 staff-browser acceptance, semantic calibration or measured value.
 
 ```bash
-cd mvp && PYTHONPATH=.:../src/core/tests python3 -m unittest discover -s tests -v
+cd mvp && PYTHONPATH=.:../src/core/tests:../src/agents/tests python3 -m unittest discover -s tests -v
 ```
 
 The tests also cover the SQL store (including `test_sqlreads.py`), documents, ledger, role matrix, workflows, auth and time capture. They use small fixtures and a generated 60,000-case dataset, and need no

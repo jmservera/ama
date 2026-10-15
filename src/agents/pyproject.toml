@@ -36,11 +36,11 @@ files = ["src", "tests"]
 
 # Moved unchanged from mvp/ (ADR 0006 move-not-copy); formatting and typing follow after the migration.
 [tool.ruff.format]
-exclude = ["tests/test_ai_identity.py"]
+exclude = ["tests/{chat_fixture,test_ai_identity,test_chat_fixture,test_eval_registry}.py"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/test_ai_identity.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B"]
+"tests/{chat_fixture,test_ai_identity,test_chat_fixture,test_eval_registry}.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B", "F841"]
 
 [[tool.mypy.overrides]]
-module = ["test_ai_identity", "tests.test_ai_identity"]
+module = ["chat_fixture", "test_ai_identity", "test_chat_fixture", "test_eval_registry", "tests.chat_fixture", "tests.test_ai_identity", "tests.test_chat_fixture", "tests.test_eval_registry"]
 ignore_errors = true

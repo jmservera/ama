@@ -9,7 +9,7 @@ import unittest
 import urllib.error
 
 from zava_forward.core import projection
-from zavaforward_mvp import chat_fixture
+import chat_fixture  # src/agents/tests, on PYTHONPATH until M5
 from zavaforward_mvp.chat_isolation import ChatForbidden, ChatIsolation, neutralise
 from test_role_matrix import Matrix, PHONE, REASON, ROLES
 

@@ -8,7 +8,8 @@ from pathlib import Path
 
 import test_mvp
 from zava_forward.core import ledger
-from zavaforward_mvp import loadcheck, recovery
+from zava_forward.core.synthetic import loadcheck
+from zavaforward_mvp import recovery
 from zava_forward.core.documents import AzureBlobDocumentStore, DocumentStoreError
 from zava_forward.core.sqlstore import SqlStore
 
