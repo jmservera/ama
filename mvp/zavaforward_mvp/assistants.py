@@ -293,6 +293,15 @@ MSSQL_DDL = (
 )
 
 
+class Affected(list):
+    """Affected proposals with the full count, so a capped list is never mistaken for the whole set."""
+
+    def __init__(self, items=(), total=None):
+        super().__init__(items)
+        self.total = len(self) if total is None else total
+        self.truncated = self.total > len(self)
+
+
 class Assistants:
     def __init__(self, store, env=None):
         self.store, self.limits = store, Limits(env)
@@ -407,14 +416,15 @@ class Assistants:
         s = continuity.active(self.continuity(db), capability)
         return continuity.reason_text(s) if s else None
 
-    def affected(self, scope):
-        """Queued, leased and ready proposals a suspension of this scope covers."""
+    def affected(self, scope, limit=500):
+        """Queued, leased and ready proposals a suspension of this scope covers; `.truncated` says whether the limit cut the list."""
         if not self.sql:
-            return []
+            return Affected()
         with self.transaction() as db:
             rows = db.execute("SELECT id,capability,state,body FROM assistant_tasks WHERE state IN ('pending','leased','ready') ORDER BY id").fetchall()
-        return [dict(id=i, task=c, version=json.loads(b).get("version"), state=s) for i, c, s, b in rows
-                if scope in (continuity.ALL, c)][:500]
+        found = [dict(id=i, task=c, version=json.loads(b).get("version"), state=s) for i, c, s, b in rows
+                 if scope in (continuity.ALL, c)]
+        return Affected(found[:limit], total=len(found))
 
     def export(self, limit=5000):
         """Proposals with append-only provenance for the supplier-independent export, and whether the limit cut them off."""

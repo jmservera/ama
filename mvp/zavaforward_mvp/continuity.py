@@ -122,6 +122,8 @@ class ContinuityMixin:
                                for r in self.data["recommendations"]
                                if r.get("kind") == "ai_task" and scope in (ALL, r["task"]) and r["status"] == "Not reviewed"]
             rec["affected_assistant_tasks"] = list(assistant_affected or [])
+            rec["affected_assistant_total"] = getattr(assistant_affected, "total", len(rec["affected_assistant_tasks"]))
+            rec["affected_assistant_truncated"] = bool(getattr(assistant_affected, "truncated", False))
             doc["epoch"] = rec["epoch"]
             doc["suspensions"].append(rec)
             self.audit(user["email"], "ai_suspend", "-", f"{rec['id']} {scope} epoch={rec['epoch']}")

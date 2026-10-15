@@ -59,6 +59,21 @@ class Suspension(Base):
         self.assertFalse(v["actionable"])
         self.assertEqual(v["state"], "quarantined")
 
+    def test_sql_store_wires_the_ai_gate_and_flags_truncated_affected_list(self):
+        self.assertIsNotNone(self.store.ai.gate)
+        self.assertIsNone(self.store.ai.gate("priority"))
+        queued = [self.service.invoke(self.pm, "stock-prioritisation", "ZF-1") for _ in range(3)]
+        self.assertEqual(len(self.service.affected("all", limit=2)), 2)
+        self.assertTrue(self.service.affected("all", limit=2).truncated)
+        self.assertFalse(self.service.affected("all").truncated)
+        s = self.store.suspend(self.qi, dict(SUSPEND), self.service.affected("all", limit=2))
+        self.assertTrue(s["affected_assistant_truncated"])
+        self.assertEqual(s["affected_assistant_total"], len(queued))
+        self.assertTrue(self.store.ai.gate("priority"))
+        r = self.store.ai.run("priority", "s", "u", "template", False)
+        self.assertEqual(r["source"], "template")
+        self.assertEqual(r["reason"], self.store.continuity_block("priority"))
+
     def test_invoke_refused_while_suspended_then_allowed_after_restart(self):
         s = self.suspend()
         held = self.service.invoke(self.pm, "stock-prioritisation", "ZF-1")

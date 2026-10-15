@@ -126,6 +126,7 @@ class SqlStore(Store):
         self.docstore = open_document_store(self.docs_dir)
         self.digest_dir = digest_dir or os.environ.get("ZF_DIGEST_DIR") or os.path.join(os.path.dirname(db_path) or ".", "digests")
         self.ai = Ai()
+        self.ai.gate = lambda task: self.continuity_block(task)
         self.version = 0
         self._briefings = {}
         self._ranks = None
