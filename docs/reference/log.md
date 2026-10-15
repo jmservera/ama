@@ -2745,3 +2745,16 @@ metadata when the knowledge base was created.
 * Open items: owner confirmation of target, rendered-page scanner for CI,
   manual screen-reader, keyboard, zoom and target-size results per role,
   contact route for the statement, re-retrieval of WCAG 2.2.
+
+## [2026-10-15] decision | Synthetic regulatory demo assumptions permitted
+
+* Owner permits synthetic development without waiting for real Legal,
+  Compliance or DPO delegates and missing company source documents. Recorded
+  the scope in [ADR 0005](../adrs/0005-regulatory-compliance-assistant.md#owner-decision-synthetic-demo-development-2026-10-15).
+* Fictional role accounts, simulated review/approval records and original demo
+  contract/grant fixtures must be labelled synthetic-demo and remain distinct
+  from official evidence. The decision does not authorize fabricating law,
+  licensed standards, official dates, company facts or real human sign-off.
+* Real-source applicability, personal delegation, actual data processing,
+  paid/provider calls and operational acceptance retain their existing gates.
+  No application implementation or operational approval is recorded here.

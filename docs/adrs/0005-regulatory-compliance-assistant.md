@@ -8,11 +8,55 @@ ms.topic: reference
 
 ## Status
 
-Proposed. This is a design proposal by the AMA programme. It records no
-approval by the owner, Legal, Compliance, the DPO or any control owner, and
-it does not decide which duties apply to Zava North Homes. It builds on
+Proposed for operational use. On 2026-10-15 the owner permitted synthetic
+development and clearly labelled fictional demo assumptions, as bounded below.
+This is not Legal, Compliance, DPO or control-owner approval and does not decide
+which duties apply to Zava North Homes. It builds on
 [ADR 0001](./0001-azure-architecture.md), [ADR 0002](./0002-pilot-readiness-architecture.md)
 and the [regulatory literacy synthesis](../reference/research/ux/regulatory-literacy-for-journeys.md).
+
+## Owner Decision: Synthetic Demo Development (2026-10-15)
+
+The owner directed that missing real approval delegates and source documents
+must not block synthetic development: use made-up demo details and record the
+decision. This authorizes development fixtures and simulated review workflows,
+not invented evidence of legal compliance or permission for real processing.
+
+* Use fictional role accounts such as `demo-compliance-reviewer`,
+  `demo-legal-reviewer` and `demo-privacy-reviewer`. Label their identity and
+  authority records `synthetic-demo`; they are not real delegates or signatories.
+* Simulated card approvals, acknowledgements and incident/restart decisions may
+  exercise the complete demo flow. Label each as simulated and bind it only to
+  the synthetic exercise; it cannot approve an operational release or a real
+  person's data processing.
+* Missing grants, contracts and leases may have wholly original fictional
+  fixtures labelled `synthetic-demo`, with no claim of company provenance,
+  legal force or real retrieval. Example: a fictional demo grant requires an
+  evidence checklist before a simulated claim can be submitted. This is a test
+  condition, not a funding condition imposed on Zava.
+* Missing official or licensed standards remain gap records. Do not fabricate
+  statutory provisions, official publication/retrieval dates, commencement
+  dates or licensed PAS text to fill them. Separate synthetic rule cards from
+  cited official sources and never display fixture conditions as law.
+* Safe offline development and synthetic demonstrations can proceed despite
+  these gaps. Keep fixture identities, approvals, source records and outputs
+  visibly distinguishable from actual evidence, including in exports and logs.
+  Synthetic approval records cannot be promoted to operational approvals.
+* Actual staff identities, live provider processing, paid calls, participant
+  exercises and deployment retain their separate existing authorization gates.
+  Synthetic resident records do not remove actual staff privacy obligations.
+* Before operational reliance, replace fictional assumptions with verified
+  applicable sources, actual accountable delegates and their qualified approval
+  evidence, and rerun affected tests. Until then, report the operational result
+  as unassessed or blocked, never compliant or approved.
+
+The chosen option is to unblock synthetic development using explicit fixtures,
+rather than wait for real company delegates/documents or silently portray
+invented details as genuine. The benefit is a demonstrable end-to-end workflow;
+the cost is later replacement, revalidation and the risk of fixture assumptions
+leaking into real use. Visible labelling and non-transferable exercise authority
+are required to reduce that risk. This decision records no completed
+implementation, model evaluation, human trial or operational approval.
 
 ## Requirements traceability
 
@@ -230,9 +274,11 @@ alone.
 ## Open items
 
 * Named Legal, Compliance and DPO owners and their approval capacity are
-  unknown company details.
+  unknown company details. They gate actual reliance, not synthetic development;
+  labelled fictional exercise roles are permitted under the owner decision.
 * Which sources Zava is actually bound by (grant award, contracts, leases) is
-  unverified and needs the real documents.
+  unverified and needs the real documents before actual reliance. Original
+  fictional demo fixtures do not establish applicability or fill official gaps.
 * Licensed PAS 2035 text and official sources for the gaps are not yet held.
 * Cost of Azure AI Search and monitoring jobs is not estimated.
 * Phase 2 commencement on 30 November 2026 is planned, not confirmed here.
