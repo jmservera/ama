@@ -125,6 +125,7 @@ build).
   challenge refinement.
 * DPO decision on representative data retention and minimisation.
 * Atlas-owner confirmation of the bundle to opportunity mapping in the PRD.
+* IoT Hub infrastructure proposals (B1, one unit, uksouth, 1 day retention, private endpoint in production, individual device identities, credential owner Juan Manuel Servera) are recorded in `infra/README.md` for issue 140; owner approval, a verified cost and a live what-if remain open.
 * IoT Hub tier, sizing, cost estimate, device provisioning approach, network
   exposure and Entra role design and device credential ownership; BRD OD-43 inventory, lawful basis, DPIA,
   retention and thresholds.

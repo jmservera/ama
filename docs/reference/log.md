@@ -2919,3 +2919,8 @@ metadata when the knowledge base was created.
   detection, and that assistant proposals are unsupported on the JSON store.
 * No regulatory snapshot changed. Open: externally held head in an immutable
   Azure container and Azure SQL drill evidence.
+
+## 2026-10-15 IoT Hub Bicep module (#140)
+
+* `infra/README.md` records the proposed IoT Hub tier, region, retention, identity, network and credential-owner decisions; ADR 0003 open items point to them. No regulatory snapshot changed.
+* Open: owner approval of ADR 0003, verified pricing, live what-if, BRD OD-43.

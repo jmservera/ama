@@ -19,6 +19,16 @@ param sharePointSiteId string = ''
 @description('Monthly budget in the billing currency, with alerts at 80 and 100 percent forecast and actual.')
 param monthlyBudget int = 300
 param budgetStartDate string = utcNow('yyyy-MM-01')
+@description('IoT Hub tier for simulated in-use monitoring (ADR 0003 decision 6, issue 140).')
+@allowed(['B1', 'S1'])
+param iotHubSku string = 'B1'
+@minValue(1)
+param iotHubUnits int = 1
+@minValue(1)
+@maxValue(7)
+param iotHubRetentionDays int = 1
+@description('Estimated monthly IoT Hub cost in the billing currency; sets the hub-scoped budget. An estimate to confirm against the Azure pricing page before provisioning.')
+param iotHubMonthlyCost int = 25
 @description('Entra security group that administers the SQL server (no SQL logins exist).')
 param sqlAdminGroupName string
 param sqlAdminGroupObjectId string
@@ -236,6 +246,26 @@ module foundry 'modules/foundry.bicep' = {
       ? [identity.outputs.principalIds.agents, identity.outputs.principalIds.api]
       : [identity.outputs.principalIds.agents]
     deployments: modelDeployments
+  }
+}
+
+module iotHub 'modules/iothub.bicep' = {
+  name: 'iothub'
+  params: {
+    allowPublicNetworkAccess: publicAccess
+    name: 'iot-${prefix}-${unique}'
+    location: location
+    tags: allTags
+    workspaceId: monitoring.outputs.workspaceId
+    peSubnetId: network.outputs.peSubnetId
+    zoneIds: network.outputs.zoneIds
+    consumerPrincipalIds: [identity.outputs.principalIds.api]
+    skuName: iotHubSku
+    unitCount: iotHubUnits
+    retentionDays: iotHubRetentionDays
+    monthlyCostEstimate: iotHubMonthlyCost
+    alertEmail: alertEmail
+    budgetStartDate: budgetStartDate
   }
 }
 
@@ -493,6 +523,8 @@ resource budget 'Microsoft.Consumption/budgets@2023-05-01' = {
 output apiInternalFqdn string = deployApplications ? apps!.outputs.apiFqdn : ''
 output containerRegistry string = registry.outputs.loginServer
 output sqlServer string = sql.outputs.fqdn
+output iotHubName string = iotHub.outputs.name
+output iotHubConsumerGroup string = iotHub.outputs.consumerGroup
 output foundryEndpoint string = foundry.outputs.endpoint
 output identityPrincipalIds object = identity.outputs.principalIds
 output logAnalyticsWorkspace string = monitoring.outputs.workspaceName
