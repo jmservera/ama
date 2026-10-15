@@ -405,7 +405,7 @@ class SqlStore(Store):
             row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
             if (row[0] if row else None) != self._proc_snap.get(key):
                 raise ConflictError(key)
-            self.db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)", (key, body))
+            self._meta_set(key, body)
             written[key] = body
         return written
 

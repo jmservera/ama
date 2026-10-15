@@ -2877,6 +2877,14 @@ metadata when the knowledge base was created.
 * No regulatory snapshot changed. Open: pilot cohort enrolment and work package
   and workstream pause scopes.
 
+## 2026-10-15 Key Vault secret lifecycle (#142)
+
+* `infra/README.md` gains a Key Vault secret lifecycle section: inventory,
+  expiry and denied-access alerts on Log Analytics, zero-downtime Entra client
+  secret rotation order and quarterly access review.
+* No regulatory snapshot changed. Open: named secret owners, a live rotation
+  exercise, deployed alert verification and review scheduling.
+
 ## 2026-10-15 Document scanning, retention and legal hold (#117)
 
 * mvp/README.md, ADR 0002 implementation status and open items, and the retrofit synthetic data README updated. New synthetic control fixtures for 120 homes from the 60,000-home stock register.

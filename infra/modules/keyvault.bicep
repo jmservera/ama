@@ -2,6 +2,7 @@ param name string
 param location string
 param tags object
 param workspaceId string
+param actionGroupId string
 param peSubnetId string
 param zoneId string
 param secretsUserPrincipalIds array
@@ -71,3 +72,58 @@ module endpoint 'privateEndpoint.bicep' = {
 
 output id string = vault.id
 output name string = vault.name
+
+// Secret expiry and failed-access alerts read the AuditEvent logs sent by the diagnostic setting above.
+resource expiryAlert 'Microsoft.Insights/scheduledQueryRules@2023-03-15-preview' = {
+  name: 'alert-${name}-secret-expiry'
+  location: location
+  tags: tags
+  properties: {
+    displayName: 'Key Vault secret near expiry or expired (${name})'
+    description: 'A secret is within its Key Vault near-expiry window or has expired. Rotate it using infra/README.md, Key Vault secret lifecycle.'
+    severity: 2
+    enabled: true
+    scopes: [workspaceId]
+    evaluationFrequency: 'PT1H'
+    windowSize: 'P1D'
+    criteria: {
+      allOf: [
+        {
+          query: 'AzureDiagnostics | where ResourceProvider == "MICROSOFT.KEYVAULT" and OperationName in ("SecretNearExpiryEventGridNotification", "SecretExpiredEventGridNotification") and Resource =~ "${name}"'
+          timeAggregation: 'Count'
+          operator: 'GreaterThan'
+          threshold: 0
+          failingPeriods: { numberOfEvaluationPeriods: 1, minFailingPeriodsToAlert: 1 }
+        }
+      ]
+    }
+    actions: { actionGroups: [actionGroupId] }
+  }
+}
+
+resource deniedAccessAlert 'Microsoft.Insights/scheduledQueryRules@2023-03-15-preview' = {
+  name: 'alert-${name}-denied-access'
+  location: location
+  tags: tags
+  properties: {
+    displayName: 'Key Vault data-plane access denied (${name})'
+    description: 'Repeated 401 or 403 results on the vault data plane. Review the caller and the access review record.'
+    severity: 3
+    enabled: true
+    scopes: [workspaceId]
+    evaluationFrequency: 'PT15M'
+    windowSize: 'PT1H'
+    criteria: {
+      allOf: [
+        {
+          query: 'AzureDiagnostics | where ResourceProvider == "MICROSOFT.KEYVAULT" and Resource =~ "${name}" and httpStatusCode_d in (401, 403)'
+          timeAggregation: 'Count'
+          operator: 'GreaterThan'
+          threshold: 4
+          failingPeriods: { numberOfEvaluationPeriods: 1, minFailingPeriodsToAlert: 1 }
+        }
+      ]
+    }
+    actions: { actionGroups: [actionGroupId] }
+  }
+}
