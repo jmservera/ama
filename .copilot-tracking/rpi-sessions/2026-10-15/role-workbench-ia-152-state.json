@@ -39,11 +39,6 @@
       "decision": "Publish draft PR 317 to main using Refs #152 and complete command ledger",
       "status": "published; CI blocked by conflicting reference-log append",
       "evidence": "https://github.com/jmservera/ama/pull/317; initial commit 35f29a6"
-    },
-    {
-      "id": "PUB-001",
-      "summary": "PR 317 conflicts with main in docs/reference/log.md; CI has not run",
-      "resolution": "Explicitly authorized topic-branch reconciliation must preserve both append-only entries; no merge/rebase/force push performed"
     }
   ],
   "blockers": [
@@ -51,6 +46,11 @@
       "id": "RV-001",
       "summary": "Cancelled cached briefing remains loading after queue navigation",
       "resolution": "Later implementation task fixes cache lifecycle and adds delayed-briefing regression; publish draft only"
+    },
+    {
+      "id": "PUB-001",
+      "summary": "PR 317 conflicts with main in docs/reference/log.md; CI has not run",
+      "resolution": "Explicitly authorized topic-branch reconciliation must preserve both append-only entries; no merge/rebase/force push performed"
     }
   ],
   "next_action": {

@@ -221,6 +221,13 @@ clarifies 931 run = 834 passed + 97 skipped, then uses an ordinary second
 Conventional Commit with the same privacy-safe identity/trailer and a normal
 topic push. It does not alter the completed Review or source.
 
+* Evidence sync commit `efa6141` and normal topic push succeeded. Its preceding
+  `python3 -` state-schema assertion failed because PUB-001 was accidentally
+  inserted in `confirmed_decisions` rather than `blockers`; the shell continued
+  to the separate commit command. Corrected that metadata location in a new
+  commit without amending history. Re-run uses fail-fast shell execution and
+  asserts exact blocker IDs, decision shape, unique keys and artifact existence.
+
 ## Open Acceptance and Evidence
 
 Owner device/browser support, full eleven-profile/nine-workflow journey,
