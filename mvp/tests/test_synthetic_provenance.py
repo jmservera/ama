@@ -70,7 +70,7 @@ class ProvenanceRegisterTests(unittest.TestCase):
             for i, r in enumerate(rows, 2):
                 hits = scan(" ".join(v or "" for v in r.values()))
                 self.assertEqual(hits, [], f"{f.name} line {i}: {hits}")
-        for f in [PACK / "manifest.json", ROOT / "mvp/evals/ai_priority_golden.json"]:
+        for f in [PACK / "manifest.json", *sorted((ROOT / "mvp/evals").glob("*.json"))]:
             self.assertEqual(scan(f.read_text()), [], f.name)
 
     def test_checker_detects_real_person_patterns(self):

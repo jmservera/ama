@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-15T08:21:22+00:00",
-  "commit": "914d12f2f61e820658a001565252b69b2f4d5d5d",
+  "scored_at": "2026-10-15T08:55:19+00:00",
+  "commit": "1ecd42a758f47553d074d2a4d69fdf0a9cab1b62",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38704326307",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38708251576",
   "fingerprints": {
     "brd": "47e831254e5b5e466f767473541d5bf4593a44d0080caa75a0307e150895a2ac",
     "prd": "1f2f0be0530396e6b37d2b824eaebaf163fb9c7b5cf34a5fad22fa586c119463",
     "adr": "62a728686af7e0557bd3452b01f8e34a32772ace2f4a48a80928ea3471001f9b",
-    "solution-code": "50baf7d7d493b60a096eec8d6fc5afa7a0b495747c6ac44a5dad8cbb69aa8071",
+    "solution-code": "c2699af43ec38a86ca61fe979bbdb4bd4fa819795b2f4c742daa7ea0effec46a",
     "infrastructure": "f5ee52836ffcddda14f2c5a85e6f0b1e3ac9baf444d4f81001b172409d7a623b",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
@@ -43,29 +43,30 @@
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:170-192"
       ],
-      "rationale": "Section 6 names role-scoped data handling, author/approver separation of duties, UK GDPR Art. 22A-22C safeguards and prompt-injection treatment of retrieved text as untrusted data. The new test_synthetic_provenance.py adds PII-leakage and public/private separation checks for synthetic data, but t..."
+      "rationale": "Section 6 names role-scoped data handling, author/approver separation of duties, UK GDPR Art. 22A-22C safeguards and prompt-injection treatment of retrieved text as untrusted data. The new diff adds synthetic document fixtures only (no security/compliance content), so no material change. Already ..."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "mvp/tests/test_synthetic_provenance.py:1-113"
+        "mvp/tests/test_document_form_fixtures.py:1-103",
+        "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:1-211"
       ],
-      "rationale": "New unit tests verify provenance register completeness, PII-free public CSVs, licence/attribution metadata and private/public output separation for the synthetic data pack. This strengthens test coverage but the baseline was already at ceiling (5) on implementation completeness, so no change."
+      "rationale": "New generator and tests are well-formed and pass structural review, but they build isolated fixture/eval data for a schema explicitly unresolved (PRD OQ-015), not end-to-end capability completion. ADR 0005/BRD/PRD remain proposed; no change to overall implementation completeness."
     },
     "A5": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: operational readiness evidence (observability, reliability, cost) not affected by this test-only diff."
+      "rationale": "Unchanged baseline: operational readiness (logging, metrics, cost) evidence not affected by this synthetic-fixture test diff."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "ADR 0005 adds an evaluation table but still does not justify the Foundry model choice against alternatives on cost/latency/quality, and no harness is run. The new diff only adds data-governance tests, unrelated to AI evaluation. Keeps the baseline score."
+      "rationale": "Unchanged baseline: diff adds synthetic document/form test fixtures, not an AI model choice or evaluation harness; no justification or harness evidence added for A6."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Unchanged baseline: ADR 0005 proposes a deterministic rule engine plus a non-autonomous retrieval chat; the new diff is a test file with no agentic or orchestration code. No change."
+      "rationale": "Unchanged baseline: ADR 0005 proposes a deterministic rule engine plus non-autonomous retrieval chat; the new diff is deterministic fixture generation/testing with no agentic orchestration change."
     },
     "B1": {
       "score": 3,
@@ -95,9 +96,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0005-regulatory-compliance-assistant.md:1-239"
+        "docs/reference/research/retrofit-synthetic-data/README.md:225-250"
       ],
-      "rationale": "ADR 0005 is well organised and clearly labelled Proposed; the new test file is code, not documentation, and does not affect deck/documentation quality. Capped score stays at Good(4), not Excellent(5)."
+      "rationale": "README documents the new fixtures clearly and navigably, but this is knowledge-base documentation, not capstone deck/documentation content; existing capstone deck thinness is unaffected so the capped score stays at Good(4), not Excellent(5)."
     },
     "B7": {
       "score": 3,

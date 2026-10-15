@@ -217,6 +217,7 @@ data dictionary entry and its external sources. The automated check
 | MVP operational JSON seed | Private (`mvp/data/`, gitignored) | [Private MVP JSON extension](#separate-private-mvp-json-extension) |
 | 60,000-home stock register and map overlay | Private (`support/`) | [Private stock geography register](#private-stock-geography-register) |
 | AI evaluation scenarios and assistant runtime tables | Public scenarios, private runtime tables | [Chat and assistant data](#chat-and-assistant-data) |
+| Document, form-schema and seeded-defect fixtures | Public | [Document and form data](#document-and-form-data) |
 | Sensor readings | Not generated | [Sensor data](#sensor-data) |
 
 External sources record licence, retrieval date and attribution in the register.
@@ -232,6 +233,13 @@ items for the owner, not inferred here.
 (`location_is_real_map_anchor` is `true`). Tenure, portfolio category, EPC
 need, occupancy and condition are invented (`is_synthetic` is `true`,
 `actual_owner_or_tenure_verified` is `false`). No resident or person field exists.
+
+### Document and form data
+
+`mvp/evals/document_form_fixtures.json` holds 120 constructed document families,
+form schemas and seeded defects with gold labels. All content is synthetic and
+holds no personal data. The real funding form schema (OQ-015) and human
+adjudication of the gold labels are open items, not inferred here.
 
 ### Chat and assistant data
 

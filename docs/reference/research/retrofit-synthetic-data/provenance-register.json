@@ -66,7 +66,9 @@
       "location": "docs/reference/research/retrofit-synthetic-data/",
       "files_glob": "*.csv",
       "label_field": "is_synthetic",
-      "label_exempt": ["evidence-gap-register.csv"],
+      "label_exempt": [
+        "evidence-gap-register.csv"
+      ],
       "sources": [],
       "generator": "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/generate_pack.py",
       "data_dictionary": "data-dictionary.md",
@@ -87,7 +89,13 @@
       "visibility": "private",
       "location": "support/synthetic-data/retrofit-flow/zava-forward-year-one/stock-geography/",
       "label_field": "is_synthetic",
-      "sources": ["SRC-OSM", "SRC-CENSUS-TS054", "SRC-IMD-2025", "SRC-ONS-BOUNDARIES", "SRC-OWNER-MODEL"],
+      "sources": [
+        "SRC-OSM",
+        "SRC-CENSUS-TS054",
+        "SRC-IMD-2025",
+        "SRC-ONS-BOUNDARIES",
+        "SRC-OWNER-MODEL"
+      ],
       "generator": "support/synthetic-data/retrofit-flow/zava-forward-year-one/stock-geography/README-private.txt",
       "data_dictionary": "data-dictionary.md#private-stock-geography-register",
       "personal_data": "none; real map addresses are anchors only and carry invented tenure and condition"
@@ -98,7 +106,9 @@
       "visibility": "private",
       "location": "mvp/data/",
       "label_field": "is_synthetic",
-      "sources": ["SRC-OSM"],
+      "sources": [
+        "SRC-OSM"
+      ],
       "generator": "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py",
       "data_dictionary": "data-dictionary.md#separate-private-mvp-json-extension",
       "personal_data": "none; invented residents on real map anchors"
@@ -111,6 +121,15 @@
       "sources": [],
       "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
       "personal_data": "none; constructed cases"
+    },
+    {
+      "id": "DS-DOC-FORM-FIXTURES",
+      "name": "Document, form-schema and seeded-defect fixtures (120 families)",
+      "visibility": "public",
+      "location": "mvp/evals/document_form_fixtures.json",
+      "sources": [],
+      "data_dictionary": "data-dictionary.md#document-and-form-data",
+      "personal_data": "none; constructed documents, gold labels await human adjudication"
     },
     {
       "id": "DS-ASSISTANT-RUNTIME",
