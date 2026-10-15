@@ -2816,3 +2816,9 @@ metadata when the knowledge base was created.
 * Updated the coordinator agent so the RPI loop is mandatory for every issue
   and the merge gate checks for research, plan, changes and review artifacts
   in the PR. No index change.
+
+## [2026-10-15] update | Coordinator runs RPI loops in tmux sessions
+
+* Updated the coordinator agent so each issue's RPI loop runs in its own named
+  tmux session with the agent and brief passed as Copilot CLI parameters, and
+  is the only allowed execution route. No index change.

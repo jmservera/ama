@@ -133,11 +133,19 @@ treated as delivery failure.
    branch on the merged `main`, never on an unmerged sibling, unless the owner
    approves deliberate stacking and the PR declares the parent.
 5. **Run one RPI loop per issue.** Start one Copilot CLI session per
-   worktree with the `hve-core-all:rpi-agent` agent preloaded, for example
-   `copilot --agent hve-core-all:rpi-agent --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p "<issue brief>"`,
-   run in the background with that worktree as its working directory. The
-   agent name must be the qualified `hve-core-all:rpi-agent`; the bare
-   `rpi-agent` does not resolve. No other execution route is allowed.
+   worktree inside its own named tmux session, with the agent and the issue
+   brief passed as parameters. Write the brief to
+   `/tmp/brief-{number}.md`, then run:
+   `tmux new-session -d -s rpi-{number} -c ../ama-wt/issue-{number} "copilot --agent hve-core-all:rpi-agent --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat /tmp/brief-{number}.md)\" 2>&1 | tee /tmp/rpi-{number}.log; echo exit=\$? >> /tmp/rpi-{number}.log"`.
+   Check `command -v tmux` first; when tmux is missing, that is a missing tool
+   blocker. The agent name must be the qualified `hve-core-all:rpi-agent`; the
+   bare `rpi-agent` does not resolve. This tmux plus Copilot CLI route is the
+   only allowed execution route: never implement an issue in the coordinator's
+   session or through a general-purpose subagent. Monitor a session with
+   `tmux has-session -t rpi-{number}` and `tmux capture-pane -p -t rpi-{number}`
+   and read its log; stop a hung one with `tmux kill-session -t rpi-{number}`.
+   Session names are unique per issue and a retry reuses the name only after
+   the old session is gone.
    The brief carries the issue text, acceptance criteria, branch, worktree path,
    repository conventions and the instruction to validate with the relevant
    existing tests, commit with the Conventional Commit trailer rules, push the
@@ -153,7 +161,7 @@ treated as delivery failure.
    issue branch and push them in the same PR (the repository already tracks
    `.copilot-tracking/`). Never commit secrets or unrelated tracking files from
    other work. Set the issue to In progress on the
-   board when the loop starts and to In review when its PR opens. Track each session's process, log
+   board when the loop starts and to In review when its PR opens. Track each session's tmux name, log
    and required outputs: a pushed branch, an open PR and validation evidence.
    A session that fails to start, exits without them or hangs is retried once
    in the same worktree, then becomes a human blocker with its log path. Run waves with background agents and
@@ -200,7 +208,8 @@ treated as delivery failure.
    blocker ledger. End the loop when all issues are merged or blocked, or a
    limit is reached.
 10. **Clean up.** After a PR merges, remove its worktree with
-    `git worktree remove` and its local branch. Delete the remote branch only
+    `tmux kill-session -t rpi-{number}` if it still exists, `git worktree remove`
+    and its local branch. Delete the remote branch only
     when the PR is merged, run-owned and still present (`--delete-branch`
     does this); report any leftover. Delete no other branches.
 
