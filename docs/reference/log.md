@@ -2442,3 +2442,12 @@ metadata when the knowledge base was created.
   the 2011-based thresholds must be re-confirmed against the 2021 edition.
 * The Scribd copy could not be read (access challenge) and its provenance and
   right to use are unconfirmed, so it is not used. R1 stays open.
+
+## [2026-10-15] create | Regulatory literacy for journey users and agents
+
+* Added a synthesis mapping journey roles to the law and regulation they
+  should recognise, apply or leave to named interpreters, and a proposed
+  rule-card, citation and escalation design for the assistants.
+* Used only local snapshots; recorded gaps (leasehold, complaints, TrustMark,
+  licensed PAS 2035) and the unresolved Phase 2 commencement. No legal
+  currentness check was made.
