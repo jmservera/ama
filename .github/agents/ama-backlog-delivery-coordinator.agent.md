@@ -50,8 +50,8 @@ commit email as the repository instructions require. Never push to `main`.
    branch on the merged `main`, never on an unmerged sibling, unless the owner
    approves deliberate stacking and the PR declares the parent.
 5. **Run one RPI loop per issue.** Start one Copilot CLI session per
-   worktree with the `rpi-agent` preloaded, for example
-   `copilot --agent rpi-agent -p "<issue brief>"`, run with that worktree as its
+   worktree with the `hve-core-all:rpi-agent` agent preloaded, for example
+   `copilot --agent hve-core-all:rpi-agent -p "<issue brief>"`, run with that worktree as its
    working directory. No other execution route is allowed.
    The brief carries the issue text, acceptance criteria, branch, worktree path,
    repository conventions and the instruction to validate with the relevant
