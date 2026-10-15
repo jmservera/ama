@@ -34,12 +34,17 @@
       "decision": "One post-implementation Review executed Complete; outcome Residual work; no in-scope engineering blocker",
       "status": "executed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-15/issue-176-src-determinism-review.md"
+    },
+    {
+      "decision": "Implementation 774137a pushed; PR 309 open to main with Refs #176; all eleven CI checks successful",
+      "status": "verified",
+      "evidence": "https://github.com/jmservera/ama/pull/309"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Complete authorized commit/push/PR administration; review complete with residual work, no child selected"
+    "action": "Await owner follow-up selection; no child selected. PR 309 open, leave merge to owner."
   },
   "prioritized_follow_ups": [
     {
@@ -56,8 +61,8 @@
     },
     {
       "rank": 3,
-      "task": "Obtain CI and authorized Azure/full-scale runtime evidence",
-      "rationale": "Platform assurance requires Docker/SQL permissions and storage-cost or model authorization",
+      "task": "Obtain authorized Azure model and full-scale sensor/runtime evidence",
+      "rationale": "CI images and SQL Server now pass; remaining model/storage evidence needs owner authorization",
       "evidence": "RV-003"
     }
   ]

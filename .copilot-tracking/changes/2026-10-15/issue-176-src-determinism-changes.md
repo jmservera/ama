@@ -6,8 +6,9 @@ ms.date: 2026-10-15
 
 ## Scope and status
 
-Task #176; automatic full RPI requested. P01/P02 and P03-T01 complete;
-P03-T02 commit/push/PR pending.
+Task #176; automatic full RPI requested. P01/P02/P03 complete; implementation
+commit 774137a pushed, PR #309 open to main. Evidence-only handoff commit
+records delivery. Review Complete / Residual work; issue remains open.
 Plan and details share slug issue-176-src-determinism. No private data or live
 service reset. Source changes limited to migrated core/synthetic and core tests.
 
@@ -206,14 +207,15 @@ with (root / 'server.log').open('w') as log:
 ```
 
 The process was terminated and reaped in `finally`; no local server remains.
-Temporary generated data and environment will be removed before delivery.
+Temporary generated data and environment are excluded from staging and removed
+during final delivery cleanup.
 
 ## Review readiness
 
 P01/P02 complete and plan/details reconciled. Single post-implementation Review
 executed Complete, outcome Residual work. No in-scope engineering blocker found.
 Review record: .copilot-tracking/reviews/logs/2026-10-15/issue-176-src-determinism-review.md.
-P03 delivery pending. RV-001 private-source recovery routes to research,
+P03 delivered in PR #309. RV-001 private-source recovery routes to research,
 RV-002 approval to owner/planning, RV-003 platform evidence to distinct CI/
 authorized validation follow-up. All issue-wide ACs remain open.
 
@@ -230,6 +232,114 @@ exit 0, correct branch, no existing PR, tool caches ignored. Explicit staging
 will exclude the untracked worktree-local virtual environment and generated
 synthetic files. Conventional commit trailer and privacy-safe author/committer
 identity are required. No amend, rebase, force-push or merge.
+
+## P03 delivered result and CI
+
+Implementation commit: `774137a`, subject
+`feat(core): record synthetic provenance and protect fixture refreshes`.
+Author and committer both `8036360+jmservera@users.noreply.github.com`.
+Required Copilot co-author trailer verified.
+PR: https://github.com/jmservera/ama/pull/309, OPEN,
+head feat/src-synthetic-determinism-176, base main, uses Refs #176.
+All seven RPI phase/state artifacts are in the implementation commit.
+
+| Command | Result |
+| --- | --- |
+| `git add` with explicit 16 implementation/documentation/RPI artifact paths, followed by `git diff --cached --check && git diff --cached --stat` | Exit 0; only intended paths, no .venv/generated data |
+| `printf '%s\n\n%s\n' 'feat(core): record synthetic provenance and protect fixture refreshes' 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>' \| GIT_AUTHOR_EMAIL=8036360+jmservera@users.noreply.github.com GIT_COMMITTER_EMAIL=8036360+jmservera@users.noreply.github.com git commit -F -` | Exit 0, 774137a, 16 files |
+| `git push --set-upstream origin feat/src-synthetic-determinism-176` | Exit 0, new remote topic branch; no main push |
+| PR creation pipeline below | Exit 0, PR #309 created |
+| `gh pr view 309 --json url,state,baseRefName,headRefName,mergeStateStatus,statusCheckRollup --jq '{url,state,baseRefName,headRefName,mergeStateStatus,checks:[.statusCheckRollup[]\|{name,status,conclusion}]}' && git log -1 --format='%h %s%nAuthor: %ae%nCommitter: %ce%n%b' && git diff --check && git status --short` | Exit 0, PR OPEN/correct branches, CI started, exact author/committer/trailer verified; only .venv remained untracked |
+| `bash /home/azureuser/.copilot/installed-plugins/hve-core/hve-core-all/skills/shared/pr-reference/scripts/generate.sh --base-branch origin/main --merge-base --no-md-diff --exclude-path .copilot-tracking --output /home/azureuser/source/ama-wt/issue-176/.venv/issue-176-evidence/pr-reference.xml && bash /home/azureuser/.copilot/installed-plugins/hve-core/hve-core-all/skills/shared/pr-reference/scripts/read-diff.sh --input /home/azureuser/source/ama-wt/issue-176/.venv/issue-176-evidence/pr-reference.xml --summary` | Exit 0, source-only PR reference generated; source paths checked. Summary helper printed malformed per-file counts, not used as validation |
+| `mkdir -p .copilot-tracking/pr/2026-10-15 && cp .venv/issue-176-evidence/pr-reference.xml .copilot-tracking/pr/2026-10-15/issue-176-src-determinism-reference.xml && git diff --check && gh pr view 309 --json body --jq '.body' \| grep -E '^Refs #176\|^##\|^<summary>\|^\| Core\|^\| Docker'` | Exit 0; generated XML preserved, published PR includes exact command-ledger appendix |
+| `timeout 480 gh pr checks 309 --watch --interval 20` | Exit 0, all eleven checks passed on 774137a |
+
+PR creation, including the complete committed changes/command ledger:
+
+```bash
+{
+  cat .venv/issue-176-evidence/pr-body.md
+  printf '\n\n<details>\n<summary>Exact local command and result ledger (committed changes artifact)</summary>\n\n'
+  cat .copilot-tracking/changes/2026-10-15/issue-176-src-determinism-changes.md
+  printf '\n</details>\n'
+} | gh pr create --base main --head feat/src-synthetic-determinism-176 \
+  --title 'feat(core): deterministic synthetic snapshots and protected refresh (Refs #176)' \
+  --body-file -
+```
+
+CI observed on implementation commit:
+
+| Check | Conclusion | Duration |
+| --- | --- | --- |
+| src-core | SUCCESS | 39s |
+| src-api | SUCCESS | 2m0s |
+| src-agents | SUCCESS | 57s |
+| src-orchestrator | SUCCESS | 1m3s |
+| src-importer | SUCCESS | 1m4s |
+| src-namespace | SUCCESS | 17s |
+| src-no-working-data | SUCCESS | 7s |
+| test | SUCCESS | 1m27s |
+| image | SUCCESS | 1m20s |
+| mssql | SUCCESS | 2m54s |
+| validate | SUCCESS | 2m17s |
+
+Source CI run: https://github.com/jmservera/ama/actions/runs/38806176933.
+MVP compatibility/image/SQL run:
+https://github.com/jmservera/ama/actions/runs/38806176779.
+Validation run: https://github.com/jmservera/ama/actions/runs/38806176943.
+CI does not supply real Azure model, private stock-generator, owner approval
+or full-scale sensor evidence. Those remain RV-001/RV-002/RV-003 follow-ups.
+
+Final administration uses one further conventional documentation-only commit,
+the same author/committer/trailer and a normal push to the same topic.
+PR body is refreshed from this ledger using `gh pr edit 309 --body-file -`.
+The specifically created `/home/azureuser/source/ama-wt/issue-176/.venv`
+environment is removed after publishing; no pre-existing directory is removed.
+Final remote-head and clean-worktree verification is recorded in the PR
+delivery comment rather than requiring a self-referential commit.
+
+### Generated reference serialization
+
+The first evidence-only delivery chain stopped before commit at
+`git diff --cached --check` (exit 2): raw unified-diff context blank lines in
+the generated XML contain trailing spaces. No second commit or push occurred
+in that attempt. An initial `python3 -` formatter attempting
+`ET.fromstring(path.read_text())` failed before writing (exit 1, invalid XML
+at line 11): the installed generator emits escaped CDATA markers and an
+unescaped full_diff. This is a tool artifact issue, not a source change or
+an implementation Review finding.
+
+Repaired the generated reference only with `python3 -` (exit 0), without
+altering the installed tool. The complete successful formatter follows;
+round-trip assertions preserve decoded diff and metadata:
+
+```python
+from pathlib import Path
+import re
+import xml.etree.ElementTree as ET
+from xml.sax.saxutils import escape
+path = Path('.copilot-tracking/pr/2026-10-15/issue-176-src-determinism-reference.xml')
+raw = path.read_text()
+prefix, rest = raw.split('<full_diff>', 1)
+diff, suffix = rest.rsplit('</full_diff>', 1)
+parseable = prefix.replace('<\\![CDATA[', '<![CDATA[') + '<full_diff>' + escape(diff) + '</full_diff>' + suffix
+root = ET.fromstring(parseable)
+assert root.findtext('full_diff') == diff
+serialized = ET.tostring(root, encoding='unicode')
+encoded = re.sub(r'[ \t]+(?=\n)', lambda m: ''.join(f'&#{ord(c)};' for c in m[0]), serialized)
+assert ET.tostring(ET.fromstring(encoded)) == ET.tostring(root)
+path.write_text(encoded + '\n')
+print('Generated XML repaired/serialized; decoded unified diff and metadata preserved')
+```
+
+Final administrative command sequence: explicit staging of changes/details/
+plan/state and generated reference, `git diff --cached --check`, conventional
+commit `docs: record synthetic determinism delivery and CI evidence` with the
+same required co-author trailer, normal topic push, PR-body pipeline above
+using `gh pr edit 309 --body-file -`, exact-path
+`rm -r -- /home/azureuser/source/ama-wt/issue-176/.venv`,
+`git status --short`, `git log -2 --format='%h %s%nAuthor: %ae%nCommitter: %ce'`,
+and `gh pr view 309 --json url,state,baseRefName,headRefName,headRefOid`.
 
 ## Open issue acceptance
 

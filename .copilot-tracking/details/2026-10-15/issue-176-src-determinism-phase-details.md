@@ -103,4 +103,7 @@ are unchanged. All five component suites and strict gates pass. Smoke app uses
 980 generated fictional cases, ZF_AI=on, explicit ZF_DATA and SQLite; template
 fallback is labelled unapproved, no actual model configured. Docker access
 denied. Changes artifact records failures, recovery and exact commands.
-P03 review and delivery remain; issue-wide ACs still unticked.
+P03 Review completed Complete/Residual work, implementation commit 774137a
+pushed and PR #309 opened to main. All eleven implementation-commit CI checks
+passed, including image and mssql. Evidence-only handoff commit follows.
+Issue-wide ACs stay unticked; no operational acceptance or merge.
