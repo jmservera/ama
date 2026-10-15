@@ -474,6 +474,11 @@ def make_handler(app):
             try:
                 if len(parts) == 4 and parts[:2] == ["api", "assistants"] and parts[3] == "invoke":
                     return self._json(202, app.assistants.invoke(u, parts[2], body.get("case_id")))
+                if url.path == "/api/assistants/releases":
+                    return self._json(201, app.assistants.record_release(u, body))
+                if len(parts) == 5 and parts[:3] == ["api", "assistants", "releases"] and parts[4] in ("suspend", "revoke"):
+                    return self._json(200, app.assistants.change_release(
+                        u, parts[3], "suspended" if parts[4] == "suspend" else "revoked", body.get("reason")))
                 if len(parts) == 5 and parts[:3] == ["api", "assistants", "proposals"] and parts[4] == "review":
                     return self._json(200, app.assistants.review(
                         u, parts[3], body.get("action"), body.get("revision"), body.get("note", ""),

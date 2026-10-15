@@ -9,6 +9,8 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 from unittest import mock
 
+import release_support
+
 import test_mvp
 from zavaforward_mvp import ai_eval, ai_tasks
 from zavaforward_mvp.server import App, make_handler
@@ -29,6 +31,8 @@ class TasksMixin:
         self.store.ai.endpoint = "http://scripted-model.invalid"
         self.out = {"text": ""}
         self.store.ai._chat = lambda *a, **k: self.out["text"]
+        if hasattr(self.store, "assistant_connection"):
+            release_support.install(self.store)
 
     def tearDown(self):
         self.tmp.cleanup()

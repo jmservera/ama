@@ -1,0 +1,31 @@
+{
+  "task_id": "issue-196",
+  "task_slug": "issue-196-src-layout-adr",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-15/issue-196-src-layout-adr-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-15/issue-196-src-layout-adr-plan.instructions.md",
+    "details": ".copilot-tracking/details/2026-10-15/issue-196-src-layout-adr-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-15/issue-196-src-layout-adr-plan.instructions.md",
+    "changes": ".copilot-tracking/changes/2026-10-15-issue-196-src-layout-adr-changes.md",
+    "review": ".copilot-tracking/reviews/2026-10-15/issue-196-src-layout-adr-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition executed, planning readiness Ready", "status": "recorded", "evidence": "research artifact"},
+    {"decision": "Critique executed once, compatible findings applied", "status": "recorded", "evidence": "plan artifact"},
+    {"decision": "Review executed once, conformant for documentation scope", "status": "recorded", "evidence": "review artifact"}
+  ],
+  "blockers": [
+    {"id": "owner-approval", "summary": "Owner approval of ADR 0006 is a human gate", "resolution": "Owner approves in the pull request or issue 196"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Owner reviews the pull request and approves the ADR"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Registry PR for src vendor and data excludes (#198)", "rationale": "Prerequisite to first move", "evidence": "ADR 0006 Rubric counting"},
+    {"rank": 2, "task": "Parity matrix (#197)", "rationale": "Confirms per-file mapping", "evidence": "ADR 0006 Module mapping"},
+    {"rank": 3, "task": "Repoint CI, Docker, Bicep (#200)", "rationale": "Needed with first image from src", "evidence": "containerapps.bicep lines 241 and 380"}
+  ]
+}

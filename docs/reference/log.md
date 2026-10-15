@@ -2991,6 +2991,15 @@ metadata when the knowledge base was created.
 * Added `mvp/zavaforward_mvp/chat_isolation.py`, chat and memory endpoints, `mvp/tests/test_chat_isolation.py` and a `mvp/README.md` section. No knowledge base page or regulatory snapshot changed, so the index is unchanged.
 * Open: break-glass and administrator content-access policy (BRD OD-46, owner), contractor use of chat, live-model injection evaluation (OD-49).
 
+## [2026-10-15] restructure | ADR 0006 source layout and cut-over policy (#196)
+
+* Added `docs/adrs/0006-src-layout-and-cutover.md` (Proposed, owner approval pending) and indexed it in `docs/reference/README.md`. It records the owner decisions of 2026-10-14 and 2026-10-15 (standard `src` layout, `zava_forward` namespace, one isolated package per ADR 0001 workload plus a shared core), the module mapping, move-not-copy and new-feature rules, phases, cut-over gate, rubric counting and `mvp/data/` relocation.
+* No code moved and no regulatory snapshot changed. Open: owner approval, soak period, whether the temporary `api` to `agents` import is acceptable until #144.
+
+## [2026-10-15] restructure | ADR 0006 accepted (#196)
+
+* ADR 0006 status set to Accepted by the owner. Recorded answers: no soak period before deleting `mvp/`; the `agents` image carries no `core[sql]` or blob code and the temporary `api` to `agents` import is accepted until #144; old workflow and check names stay until after cut-over; a GitHub release accompanies the archive tag. Index row updated.
+
 ## 2026-10-15 MVP to src parity matrix (#197)
 
 * Added `docs/architecture/mvp-to-src-parity-matrix.md` (outcome for all 125 tracked `mvp/` and `prototype/` files, review of PRs 235 to 287, issues to reopen, migration order for #199) and two index rows. Baseline recorded: 703 tests, 92 skipped.

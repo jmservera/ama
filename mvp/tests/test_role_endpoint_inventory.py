@@ -24,7 +24,7 @@ POST_ENDPOINTS = [("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task"
                   ("/api/cases/ZF-1/draft", {"kind": "update"}), ("/api/cases/ZF-1/funding-draft", {}), ("/api/cases/ZF-1/read-doc", {}),
                   ("/api/cases/ZF-1/call", {"outcome": "x"}), ("/api/import-check", {"text": "a"}), ("/api/time/acknowledge", {}), ("/api/time/request-enable", {}), ("/api/time/enable", {}),
                   ("/api/ledger/digest", {}), ("/api/assistants/stock-prioritisation/invoke", {"case_id": "ZF-1"}),
-                  ("/api/continuity/suspend", {})]
+                  ("/api/continuity/suspend", {}), ("/api/assistants/releases", {})]
 
 
 class RoleEndpointInventory(Matrix):

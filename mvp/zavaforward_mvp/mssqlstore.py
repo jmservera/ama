@@ -195,6 +195,8 @@ class MssqlStore(SqlStore):
     def _open(self, db_path):
         self.db = _Conn(connection_string(self._env), self._env.get("ZF_SQL_TOKEN"))
 
+    _epoch_sql = "SELECT DATEDIFF_BIG(MILLISECOND, CONVERT(datetime2,'1970-01-01'), SYSUTCDATETIME()) / 1000.0"
+
     def assistant_connection(self):
         return _Conn(connection_string(self._env), self._env.get("ZF_SQL_TOKEN"))
 
