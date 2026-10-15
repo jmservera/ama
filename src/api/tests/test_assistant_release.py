@@ -379,6 +379,166 @@ class TaskReleaseRecord(Base):
         self.assertEqual(calls, [])
         self.assertIn("release records are unavailable", r["reason"])
 
+    def test_missing_and_malformed_references_deny_even_with_inference_off(self):
+        ai = self.legacy()
+        good = self.store.release_context("summary", ai.fast)
+        self.assertTrue(self.store.release_current("summary", good, ai.fast))
+        for endpoint in (ai.endpoint, ""):
+            ai.endpoint = endpoint
+            for reference in (None, {}, "", {"id": "old"}, dict(good, digest=""),
+                              dict(good, version=None), dict(good, id=17)):
+                with self.subTest(endpoint=bool(endpoint), reference=reference):
+                    self.assertFalse(self.store.release_current("summary", reference, ai.fast))
+        self.assertFalse(self.store.release_current("summary", good, ai.fast))
+        ai.endpoint = "http://scripted-model.invalid"
+        with self.service.transaction() as db:
+            db.execute("DELETE FROM assistant_releases WHERE capability='legacy:summary'")
+        self.assertFalse(self.store.release_current("summary", good, ai.fast))
+
+    def test_inference_off_historical_reviews_fail_closed_in_sql_and_json(self):
+        from zava_forward.core import ai_tasks
+        from zava_forward.core.store import Store
+        json_store = Store(str(self.seed), str(self.root / "json-live.json"), str(self.root / "json-audit.jsonl"))
+        self.store.ai = Ai()
+        for store in (self.store, json_store):
+            store.ai.endpoint = ""
+            calls = []
+            store.ai._chat = lambda *a, **k: calls.append(1) or "unexpected"
+            for task in ("summary", "read_document"):
+                for source in ("ai", "template", "manual"):
+                    for action in ("accept", "edit", "reject"):
+                        with self.subTest(store=type(store).__name__, task=task, source=source, action=action):
+                            if task == "summary":
+                                out = store.ai_run(self.pm, "ZF-1", task, mode="workflow-only")
+                            else:
+                                doc = dict(store._case("ZF-1")["documents"][0], mime="text/plain")
+                                out = ai_tasks.run_document(store, self.pm, "ZF-1", doc, b"synthetic", mode="workflow-only")
+                            with store.lock:
+                                rec = next(r for r in store.data["recommendations"] if r["id"] == out["record_id"])
+                                rec.update(source=source, model=store.ai.fast)
+                                rec.pop("release", None)
+                                store.save()
+                            if source == "ai" and action != "reject":
+                                with self.assertRaises(PermissionError):
+                                    store.review_ai(self.pm, rec["id"], action, "Review", "Edited")
+                            else:
+                                result = store.review_ai(self.pm, rec["id"], action, "Review", "Edited")
+                                self.assertEqual(result["status"], ai_tasks.REVIEW_ACTIONS[action])
+            self.assertEqual(calls, [])
+
+    def test_inference_off_historical_priority_and_cached_ai_are_not_authorised(self):
+        from zava_forward.core.store import Store
+        json_store = Store(str(self.seed), str(self.root / "json-live.json"), str(self.root / "json-audit.jsonl"))
+        self.store.ai = Ai()
+        for store in (self.store, json_store):
+            store.ai.endpoint = ""
+            user = dict(self.people[assistants.RC], code=store._case("ZF-1")["owner_code"])
+            for source in ("ai", "template"):
+                for action in ("accept", "edit", "reject"):
+                    with self.subTest(store=type(store).__name__, source=source, action=action):
+                        out = store.ai_priority(user, 1, mode="workflow-only")
+                        with store.lock:
+                            rec = next(r for r in store.data["recommendations"] if r["id"] == out["id"])
+                            rec.update(source=source, model=store.ai.strong)
+                            rec.pop("release", None)
+                            store.save()
+                        view = store.latest_priority(user)
+                        self.assertEqual(view["actionable"], source != "ai")
+                        if source == "ai" and action != "reject":
+                            with self.assertRaises(PermissionError):
+                                store.resolve_priority(user, rec["id"], action, "Review", out["items"])
+                        else:
+                            self.assertEqual(store.resolve_priority(user, rec["id"], action, "Review", out["items"])["status"],
+                                             store.REC_ACTIONS[action])
+            with store.lock:
+                old = dict(store.briefing(user), source="ai", model=store.ai.fast)
+                old.pop("release", None)
+                store._briefings[(user["code"], False)] = (store.version, old)
+            self.assertEqual(store.briefing(user)["source"], "template")
+
+    def test_current_fast_and_strong_routes_invalidate_review_and_exact_reference(self):
+        from zava_forward.core import ai_tasks
+        ai = self.legacy()
+        ai._chat = lambda *a, **k: "- Fact [[Stage: Contacting resident]]"
+        for task, route in (("summary", "fast"), ("message", "fast"),
+                            ("funding_draft", "strong"), ("read_document", "strong")):
+            with self.subTest(task=task):
+                if task == "read_document":
+                    doc = dict(self.store._case("ZF-1")["documents"][0], mime="text/plain")
+                    out = ai_tasks.run_document(self.store, self.pm, "ZF-1", doc, b"synthetic")
+                else:
+                    out = ai_tasks.run_text_task(self.store, self.pm, task, [self.store._case("ZF-1")],
+                                                 "system", "prompt", "template", [], strong=route == "strong")
+                self.assertEqual(out["source"], "ai")
+                original = getattr(ai, route)
+                self.assertTrue(self.store.release_current(task, out["release"], original))
+                setattr(ai, route, "changed-" + original)
+                self.assertIsNotNone(self.store.release_assessment(task)[1])
+                self.assertFalse(self.store.release_current(task, out["release"], original))
+                for action in ("accept", "edit"):
+                    with self.assertRaises(PermissionError):
+                        self.store.review_ai(self.pm, out["record_id"], action, "Review", "Edited")
+                release_support.install(self.store, tasks=[])
+                self.assertFalse(self.store.release_current(task, out["release"], original))
+                setattr(ai, route, original)
+                release_support.install(self.store, tasks=[])
+
+    def test_fast_route_change_invalidates_cached_briefing_with_zero_new_calls(self):
+        ai = self.legacy()
+        user = dict(self.people[assistants.RC], code=self.store._case("ZF-1")["owner_code"])
+        calls = []
+        ai._chat = lambda *a, **k: calls.append(1) or "- Fact [[ZF-1: Stage: Contacting resident]]"
+        first = self.store.briefing(user)
+        self.assertEqual(first["source"], "ai")
+        self.assertIs(self.store.briefing(user), first)
+        ai.fast = "changed-fast"
+        denied = self.store.briefing(user)
+        self.assertEqual(denied["source"], "template")
+        self.assertIn("release admission denied", denied["reason"].lower())
+        self.assertEqual(calls, [1])
+
+    def test_strong_route_change_invalidates_priority_view_and_reviews(self):
+        ai = self.legacy()
+        user = dict(self.people[assistants.RC], code=self.store._case("ZF-1")["owner_code"])
+        ai._chat = lambda *a, **k: json.dumps([dict(case_id="ZF-4", reason="Safety", cites=["Open safety issues: 1"])])
+        out = self.store.ai_priority(user, 1)
+        self.assertEqual(out["source"], "ai")
+        self.assertTrue(out["actionable"])
+        ai.strong = "changed-strong"
+        self.assertFalse(self.store.latest_priority(user)["actionable"])
+        for action in ("accept", "edit"):
+            with self.assertRaises(PermissionError):
+                self.store.resolve_priority(user, out["id"], action, "Review", out["items"])
+        self.assertEqual(self.store.resolve_priority(user, out["id"], "reject", "Old route")["status"], "Rejected")
+
+    def test_denied_briefing_recovers_after_recording_release_without_case_edit(self):
+        from zava_forward.core import ai_registry
+        ai = self.legacy()
+        user = dict(self.people[assistants.RC], code=self.store._case("ZF-1")["owner_code"])
+        calls = []
+        ai._chat = lambda *a, **k: calls.append(1) or "- Fact [[ZF-1: Stage: Contacting resident]]"
+        with self.service.transaction() as db:
+            db.execute("DELETE FROM assistant_releases WHERE capability='legacy:briefing'")
+        denied = self.store.briefing(user)
+        self.assertEqual(denied["source"], "template")
+        self.assertEqual(self.store._briefings[(user["code"], False)], (self.store.version, denied))
+        self.assertEqual(self.store.briefing(user)["source"], "template")
+        self.assertEqual(calls, [])
+        version = self.store.version
+        payload = release_support.fixture("legacy:briefing", ai_registry.legacy_binding("briefing", ai, ai.fast),
+                                          cls="actual")
+        payload.update(expires="2099-01-01T00:00:00Z")
+        with self.service.transaction() as db:
+            rid = rel.record(db, self.service.now(db), self.pm, payload, self.service.approvers,
+                             {"legacy:briefing"})
+        self.assertEqual(self.store.version, version)
+        out = self.store.briefing(user)
+        self.assertEqual(out["source"], "ai")
+        self.assertEqual(out["release"]["id"], rid)
+        self.assertEqual(calls, [1])
+        self.assertIs(self.store.briefing(user), out)
+        self.assertEqual(calls, [1])
+
 
 def assistants_proposal(task):
     from test_assistants import proposal

@@ -57,6 +57,14 @@ priority views/reviews also recheck the selected record. Changed releases
 during calls discard/quarantine results, even when a replacement has the same
 binding. Manual templates, human review, consent and safety controls remain.
 
+Historical AI output requires a nonempty exact release reference and a currently
+selected matching record even when inference is switched off. Reliance uses the
+task's registered current fast/strong deployment, not its stored historical
+alias. Configured briefing fallbacks without a current release are retried rather
+than reused from cache, so recording matching approval restores generation
+without an unrelated case edit. Workflow-only and unconfigured template caching
+and manual/template acceptance remain available.
+
 Configured JSON-store inference now denies because it has no SQL-owned release
 record; it remains usable for manual/workflow-only work. Synthetic output
 tests explicitly install test-only authorization rather than weakening this

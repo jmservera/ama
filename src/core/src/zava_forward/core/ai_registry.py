@@ -35,22 +35,22 @@ APPROVAL_EVIDENCE = (
 AUTHORITY_STATES = ("owner_report_acceptance", "prd_acceptance", "task_control_acceptance", "operational_release")
 
 LEGACY = {
-    "briefing": dict(purpose="Draft a morning briefing for a housing officer", roles=("Retrofit Coordinator", "Resident Liaison Officer"),
+    "briefing": dict(route="fast", purpose="Draft a morning briefing for a housing officer", roles=("Retrofit Coordinator", "Resident Liaison Officer"),
                      categories=("stage", "waiting", "safety"), influence="Draft text a person reads; no ranking input",
                      affected=("staff", "residents"), reviewer="Retrofit Programme Manager"),
-    "message": dict(purpose="Draft a resident visit or update message", roles=("Retrofit Coordinator", "Resident Liaison Officer"),
+    "message": dict(route="fast", purpose="Draft a resident visit or update message", roles=("Retrofit Coordinator", "Resident Liaison Officer"),
                     categories=("stage", "preferences", "adjustments"), influence="Draft text; a person edits and sends outside the product",
                     affected=("residents", "staff"), reviewer="Retrofit Programme Manager"),
-    "summary": dict(purpose="Catch-me-up summary for a colleague taking over a case", roles=("Retrofit Coordinator", "Resident Liaison Officer"),
+    "summary": dict(route="fast", purpose="Catch-me-up summary for a colleague taking over a case", roles=("Retrofit Coordinator", "Resident Liaison Officer"),
                     categories=("stage", "history", "contacts"), influence="Reading aid; cited bullets only",
                     affected=("staff", "residents"), reviewer="Retrofit Programme Manager"),
-    "priority": dict(purpose="Explain a suggested order of work for a person to accept or reject", roles=("Retrofit Coordinator", "Retrofit Programme Manager"),
+    "priority": dict(route="strong", purpose="Explain a suggested order of work for a person to accept or reject", roles=("Retrofit Coordinator", "Retrofit Programme Manager"),
                      categories=("stage", "safety", "ranking"), influence="Advisory; ranking and queue membership unchanged",
                      affected=("residents", "staff"), reviewer="Retrofit Programme Manager"),
-    "funding_draft": dict(purpose="Draft funding application wording", roles=("Grants and Evidence Officer", "Retrofit Programme Manager"),
+    "funding_draft": dict(route="strong", purpose="Draft funding application wording", roles=("Grants and Evidence Officer", "Retrofit Programme Manager"),
                           categories=("measures", "funding"), influence="Draft wording; no submission or eligibility decision",
                           affected=("residents", "funders"), reviewer="Grants and Evidence Officer"),
-    "read_document": dict(purpose="Describe an uploaded document", roles=("Retrofit Coordinator", "Grants and Evidence Officer", "Quality Inspector"),
+    "read_document": dict(route="strong", purpose="Describe an uploaded document", roles=("Retrofit Coordinator", "Grants and Evidence Officer", "Quality Inspector"),
                           categories=("documents",), influence="Filing note; no extraction into the case",
                           affected=("staff", "providers"), reviewer="Retrofit Programme Manager"),
 }
@@ -60,6 +60,11 @@ LEGACY_SCHEMA = "legacy-text-v1"
 LEGACY_PROMPT = "legacy-prompts-2026-10-15"
 LEGACY_POLICY = "legacy-forbidden-output-filter-v1"
 LEGACY_PROVENANCE = "constructed-synthetic-demo-labelled"
+
+
+def legacy_deployment(task, ai):
+    """Current registered route, independent of a retained output's historical alias."""
+    return getattr(ai, LEGACY[task]["route"])
 
 
 def legacy_binding(task, ai, deployment):

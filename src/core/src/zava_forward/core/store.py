@@ -81,7 +81,15 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
 
     def release_current(self, task, release, deployment=None):
         """Exact per-invocation reference; a replacement never authorizes an old output."""
-        return not self.release_block(task, deployment) and release == self.release_context(task, deployment)
+        from .ai_registry import LEGACY, legacy_deployment
+        if task not in LEGACY or not isinstance(release, dict) or not all(
+                isinstance(release.get(key), str) and release[key].strip() for key in ("id", "version", "digest")):
+            return False
+        current = legacy_deployment(task, self.ai)
+        if deployment is not None and deployment != current:
+            return False
+        selected = self.release_context(task, current)
+        return bool(selected) and release == selected
 
     def _tail_hash(self):
         h = ledger.GENESIS
@@ -551,8 +559,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         off = ai_tasks.workflow_only(mode)
         with self.lock:
             hit = self._briefings.get((user["code"], off))
-            if hit and hit[0] == self.version and (hit[1]["source"] != "ai" or self.release_current(
-                    "briefing", hit[1].get("release"), hit[1].get("model"))):
+            if hit and hit[0] == self.version and (
+                    (hit[1]["source"] != "ai" and (off or not self.ai.configured)) or self.release_current(
+                        "briefing", hit[1].get("release"), hit[1].get("model"))):
                 return hit[1]
             ver = self.version
             mine = [c for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]]

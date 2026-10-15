@@ -32,7 +32,7 @@ import tempfile
 import time
 from pathlib import Path
 
-from zava_forward.core import ai_tasks
+from zava_forward.core import ai_tasks, ai_registry
 from zava_forward.core.store import Store
 
 # The golden file lives in the project evals/ folder, outside the package; an installed image sets ZF_AI_GOLDEN.
@@ -103,6 +103,11 @@ def _scripted(store, outputs):
     store.ai.endpoint = "http://scripted-model.invalid"
     # This harness evaluates scripted output controls, not release authorization.
     store.release_block = lambda *a, **k: None
+    store.release_context = lambda task, dep=None: dict(
+        id=f"offline-output-test:{task}", version="scripted-output-v1",
+        digest=ai_registry.digest(ai_registry.legacy_binding(
+            task, store.ai, dep or ai_registry.legacy_deployment(task, store.ai))))
+    store.ai.release = store.release_context
     seq = iter(range(10 ** 6))
     store.ai._chat = lambda *a, **k: outputs[next(seq) % len(outputs)]
 
@@ -235,8 +240,7 @@ def run_task_checks(workdir):
         p.write_text(json.dumps(data))
         store = Store(str(p), os.path.join(workdir, "live.json"), os.path.join(workdir, "audit.jsonl"))
         state0, rank0 = _state(store), _ranking(store)
-        store.ai.endpoint = "http://scripted-model.invalid"
-        store.release_block = lambda *a, **k: None  # Scripted output checks, not release approval.
+        _scripted(store, [""])
         script = {}
         store.ai._chat = lambda *a, **k: script["out"]
 

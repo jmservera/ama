@@ -169,10 +169,10 @@ class SqlStore(Store):
 
     def release_assessment(self, task, deployment=None):
         from . import assistant_release as rel
-        from .ai_registry import LEGACY, legacy_binding
+        from .ai_registry import LEGACY, legacy_binding, legacy_deployment
         if task not in LEGACY:
             return None, rel.denial("task is not registered", ["registered task"], task)
-        binding = legacy_binding(task, self.ai, deployment or self.ai.fast)
+        binding = legacy_binding(task, self.ai, deployment or legacy_deployment(task, self.ai))
         db = self.assistant_connection()
         try:
             now = float(db.execute(self._epoch_sql).fetchone()[0])

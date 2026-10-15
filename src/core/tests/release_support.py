@@ -32,6 +32,10 @@ def install(store, ai=None, model="test-model", cls="constructed-fixture", tasks
     if not hasattr(store, "assistant_connection"):
         # Explicit offline output-test authorization, never a production Store option.
         store.release_block = lambda *a, **k: None
+        store.release_context = lambda task, dep=None: dict(
+            id=f"offline-output-test:{task}", version="scripted-output-v1",
+            digest=ai_registry.digest(legacy_binding(task, ai, dep or ai_registry.legacy_deployment(task, ai))))
+        ai.release = store.release_context
         return
     ai.release = store.release_context
     db = store.assistant_connection()
