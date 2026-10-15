@@ -2778,3 +2778,10 @@ metadata when the knowledge base was created.
   "to be named". Official-source change checks have not been performed.
 * Open: named Legal, Compliance and DPO owners (#209), licensed PAS 2035 and
   official sources for leasehold, complaints handling and TrustMark.
+
+## [2026-10-15] update | Coordinator updates project board status
+
+* Updated `.github/agents/ama-backlog-delivery-coordinator.agent.md` so the
+  coordinator sets the Status field on the owner's project 7 when an issue
+  starts, opens a PR, blocks, closes or reopens. Ids are discovered at run
+  time and the `project` token scope is a precondition. No index change.
