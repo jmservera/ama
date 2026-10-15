@@ -78,7 +78,9 @@ function stockPanel(c) {
       h("h3", {}, `${q.id}: ${q.field}. ${q.status}`),
       h("p", {}, `Query owner: ${q.query_owner.name}, ${q.query_owner.role}.`),
       h("div", { class: "grid" }, assertion("First source", q.left), assertion("Compared source", q.right)),
-      h("p", {}, `Authority: ${q.authority}. Resolution: ${q.resolution}. Eligibility: ${q.eligibility}.`))) :
+      h("p", {}, `Authority: ${q.authority}. Resolution: ${q.resolution}. Eligibility: ${q.eligibility}.`),
+      ...(c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).map((e) =>
+        h("p", {}, `${e.id}: ${e.status}, recorded by ${e.recorded_by.name} (${e.recorded_by.role}) at ${e.at}. Reason: ${e.reason}. Evidence: ${e.evidence || "Not supplied"}.`)))) :
       h("p", {}, "No comparison recorded. Source authority and eligibility are Unknown."));
 }
 

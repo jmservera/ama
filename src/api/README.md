@@ -41,6 +41,39 @@ Invalid inputs return 400, unauthenticated requests 401, denied roles/bulk
 requests 403. The response is the projected case detail; contractors receive
 neither comparisons nor technical decisions.
 
+Opening additionally requires the registered case owner or programme/manager
+role. Staff role membership alone does not grant responsibility for every case.
+
+`POST /api/cases/{id}/stock-query-event` appends a disposition:
+
+```json
+{
+  "query_id": "SQ-1",
+  "action": "withdraw",
+  "reason": "Duplicate of another recorded query"
+}
+```
+
+The original raiser or a programme/manager role may withdraw. For a human
+reconciliation attestation use `"action": "resolve"` and add a nonempty
+`"evidence": "SYN-HUMAN-REVIEW-84"` reference. Resolution is restricted to
+registered named humans with the existing Retrofit Programme Manager or
+Programme Support Officer role. The server binds identity from the session,
+not the body; agents cannot resolve or sign off. Every disposition needs a
+reason, refers to a query on this case and is terminal. Invalid/repeated
+dispositions return 400; unauthorized requests return 403.
+
+The response derives each query's current `Unresolved`, `Withdrawn` or
+`Reconciled` status and retains the separate `stock_reconciliation_events`
+history (event ID, query ID, status, action, reason, optional evidence,
+timestamp and recorder identity). The original comparison remains unchanged
+in storage. The read-only panel shows the status and human event provenance.
+Only unresolved queries block technical approval; disposition never releases
+other stock, safety, building or independent approval gates. No source or
+home field is automatically selected/updated. Source-authority, resolution
+rules and eligibility stay Unknown/owner-approval-needed, not an approved
+operational reconciliation policy.
+
 The case view displays both values, source metadata and query owner, with
 authority/resolution/eligibility explicitly `Unknown`. A different case shows
 its own comparisons, never a carried-over rationale. Existing technical forms

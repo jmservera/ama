@@ -103,7 +103,8 @@ rules and source resolution cannot be invented from a synthetic conflict.
 
 ## Defects and residual work
 
-No high-confidence implementation defect identified in the assessed boundary.
+The original Review identified no high-confidence implementation defect.
+That conclusion was superseded by the owner's PR #318 finding below.
 RV-001..003 are explicitly unmet acceptance/follow-up gates, not silently
 completed criteria or requirements added to the engineering slice. There is no
 second Review and no return to Implement in this task. Source code was not
@@ -123,3 +124,26 @@ acceptance remains blocked by RV-001..003. Parent next action: persist outcome,
 commit the artifacts/code/docs, push the named branch and open a PR to main;
 do not merge or imply issue closure. Ranked future choices: CI/live evidence,
 source-authority policy, professional/direct-human acceptance.
+
+## Owner-selected PR #318 finding and implementation disposition
+
+The subsequent owner review identified a High defect: every comparison was
+permanently Unresolved, all technical sign-off types were blocked, and any
+staff role could raise a query on any case. RV-002 did not justify that
+permanent lockout. This section records the requested correction, not a
+second Review execution or an operational policy approval.
+
+| Finding | Disposition and evidence |
+| --- | --- |
+| Permanent unresolved hold | Separate immutable SQE-n withdrawal/reconciliation events derive effective status. Original assertions and prior events are never edited. All four sign-offs fail while unresolved and succeed after authorised withdrawal in JSON and SQLite. |
+| Overbroad opening rights | Registered case owner or existing programme/manager role only; unrelated roles/cases and forged identities are denied in core and authenticated HTTP tests. |
+| Human authority and audit | Original raiser or manager withdrawal; named human programme-role resolution with reason/evidence. Query owner alone cannot withdraw another raiser's query. No agent resolution/sign-off, selected source or changed home/eligibility decision. Original query and terminal event provenance/audit survive restart. |
+| SQL concurrency | Existing case-body rowversion plus audit transaction; concurrent terminal event loses with ConflictError, no duplicate event/audit. Sign-off rechecks fresh stock and safety gates within writer transaction. No added dialect syntax or driver-specific IntegrityError handling. |
+| Regression credibility | Before production edits, JSON-first and SQL-first core runs failed with missing event method and unrestricted opening; HTTP tests failed with 200 instead of 403 and missing 404 lifecycle route. See changes ledger for red/green and complete required validation commands/results. |
+
+Operational source-authority, resolution/eligibility policy and actual
+competence/delegation remain Unknown/owner-approval-needed. Reconciled is a
+human-attested query disposition, not a selected authoritative value or
+technical sign-off. RV-001 and RV-003 external/human acceptance remain open.
+The historical Review outcome remains Residual work; no second critique,
+Review, deployment, merge or issue closure is implied.

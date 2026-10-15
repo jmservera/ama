@@ -6,11 +6,12 @@ import tempfile
 import unittest
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
 import dataset
 from zava_forward.core import ai_tasks, insights, ranking, stock
 from zava_forward.core.sqlstore import SqlStore
-from zava_forward.core.store import GateError, Store
+from zava_forward.core.store import ConflictError, GateError, Store
 
 
 def query() -> dict[str, Any]:
@@ -181,6 +182,255 @@ class StockReconciliation(unittest.TestCase):
             signed = store.detail("ZF-3")["technical"]["signoffs"]["design"]
             self.assertEqual(signed["version"], 2)
             self.assertEqual(signed["history"][-1]["by_email"], "rc2@example.test")
+
+    def test_withdraw_unblocks_all_signoffs_without_editing_history(self) -> None:
+        for store in self.stores():
+            self.tech(store, "rc1", "design_submit", note="Synthetic design")
+            for kind in store.EVIDENCE:
+                store.add_document(self.users["sam"], "ZF-3", f"{kind}.pdf", kind, b"%PDF-SYN")
+            store.stock_reconcile(self.users["sam"], "ZF-3", query())
+            original = copy.deepcopy(store.cases["ZF-3"]["stock_reconciliation"])
+            for actor, kind in (
+                ("qi", "assessment"),
+                ("rc2", "design"),
+                ("bs", "building"),
+                ("pam", "coordination"),
+            ):
+                with self.assertRaises(GateError):
+                    self.tech(store, actor, "signoff_give", type=kind)
+            store.stock_query_event(
+                self.users["sam"],
+                "ZF-3",
+                dict(
+                    query_id="SQ-1",
+                    action="withdraw",
+                    reason="Duplicate synthetic query",
+                ),
+            )
+            for actor, kind in (
+                ("qi", "assessment"),
+                ("rc2", "design"),
+                ("bs", "building"),
+                ("pam", "coordination"),
+            ):
+                self.tech(store, actor, "signoff_give", type=kind)
+            self.assertEqual(store.cases["ZF-3"]["stock_reconciliation"], original)
+            detail = store.detail("ZF-3")
+            self.assertEqual(detail["stock_reconciliation"][0]["status"], "Withdrawn")
+            self.assertEqual(stock.blockers(store.cases["ZF-3"]), [])
+            events = detail["stock_reconciliation_events"]
+            self.assertEqual(events[0]["recorded_by"]["email"], "sam@example.test")
+            self.assertEqual(events[0]["query_id"], "SQ-1")
+            self.assertEqual(events[0]["reason"], "Duplicate synthetic query")
+            self.assertTrue(events[0]["at"])
+            self.assertEqual(events[0]["status"], "Withdrawn")
+            audit = list(store.audit_entries())
+            self.assertEqual(audit[0]["action"], "technical_design_submit")
+            event_audit = next(e for e in audit if e["action"] == "stock_query_withdraw")
+            self.assertIn("SQ-1", event_audit["detail"])
+            self.assertIn(events[0]["id"], event_audit["detail"])
+            reopened = (
+                Store(store.live_path)
+                if type(store) is Store
+                else SqlStore(str(Path(self.tmp.name) / "sql/synthetic.json"), store.db_path)
+            )
+            if isinstance(reopened, SqlStore):
+                self.addCleanup(reopened.db.close)
+            self.assertEqual(reopened.detail("ZF-3")["stock_reconciliation_events"], events)
+            self.assertEqual(
+                reopened.detail("ZF-3")["stock_reconciliation"][0]["status"], "Withdrawn"
+            )
+            self.assertTrue(reopened.verify_audit())
+
+    def test_only_case_owner_or_manager_can_open_queries(self) -> None:
+        for store in self.stores():
+            before = store.detail("ZF-3")
+            for actor in ("qi", "rc1", "bs"):
+                with self.subTest(actor=actor), self.assertRaises(PermissionError):
+                    store.stock_reconcile(self.users[actor], "ZF-3", query())
+            with self.assertRaises(PermissionError):
+                store.stock_reconcile(self.users["sam"], "ZF-5", query())
+            self.assertEqual(store.detail("ZF-3"), before)
+            self.assertEqual(list(store.audit_entries()), [])
+            store.stock_reconcile(self.users["pam"], "ZF-3", query())
+
+    def test_query_owner_is_not_raiser_and_manager_can_withdraw(self) -> None:
+        for store in self.stores():
+            store.stock_reconcile(self.users["pam"], "ZF-3", query())
+            before = store.detail("ZF-3")
+            with self.assertRaises(PermissionError):
+                store.stock_query_event(
+                    self.users["sam"],
+                    "ZF-3",
+                    dict(
+                        query_id="SQ-1",
+                        action="withdraw",
+                        reason="Not my query",
+                    ),
+                )
+            self.assertEqual(store.detail("ZF-3"), before)
+            store.stock_query_event(
+                self.users["pam"],
+                "ZF-3",
+                dict(
+                    query_id="SQ-1",
+                    action="withdraw",
+                    reason="Manager withdrawal",
+                ),
+            )
+            store.stock_reconcile(self.users["sam"], "ZF-3", query())
+            store.stock_query_event(
+                self.users["pam"],
+                "ZF-3",
+                dict(
+                    query_id="SQ-2",
+                    action="withdraw",
+                    reason="Programme review",
+                ),
+            )
+            self.assertEqual(len(store.detail("ZF-3")["stock_reconciliation_events"]), 2)
+
+    def test_reconciliation_is_named_human_attestation_not_source_selection(self) -> None:
+        for store in self.stores():
+            store.stock_reconcile(self.users["sam"], "ZF-3", query())
+            before = store.detail("ZF-3")
+            body = dict(
+                query_id="SQ-1",
+                action="resolve",
+                reason="Human review recorded",
+                evidence="SYN-REVIEW-84",
+            )
+            with self.assertRaises(PermissionError):
+                store.stock_query_event(self.users["sam"], "ZF-3", body)
+            store.stock_query_event(self.users["pam"], "ZF-3", body)
+            after = store.detail("ZF-3")
+            self.assertEqual(after["home"], before["home"])
+            self.assertEqual(after["decision"], before["decision"])
+            row = after["stock_reconciliation"][0]
+            self.assertEqual(row["status"], "Reconciled")
+            for key in ("authority", "resolution", "eligibility"):
+                self.assertEqual(row[key], "Unknown")
+            self.assertEqual(stock.blockers(store.cases["ZF-3"]), [])
+            event = after["stock_reconciliation_events"][0]
+            self.assertEqual(event["evidence"], "SYN-REVIEW-84")
+            self.assertEqual(event["recorded_by"]["name"], "Pam Lead")
+            self.assertEqual(list(store.audit_entries())[-1]["action"], "stock_query_resolve")
+
+    def test_invalid_repeated_and_agent_events_are_atomic(self) -> None:
+        for store in self.stores():
+            store.stock_reconcile(self.users["sam"], "ZF-3", query())
+            body = dict(query_id="SQ-1", action="withdraw", reason="Synthetic correction")
+            before = store.detail("ZF-3")
+            audit = list(store.audit_entries())
+            mutations: list[dict[str, object]] = [
+                {"query_id": "SQ-missing"},
+                {"reason": ""},
+                {"reason": []},
+                {"action": "resolve"},
+                {"action": "approve"},
+                {"recorded_by": "pam"},
+                {"status": "Reconciled"},
+                {"evidence": []},
+                {"query_id": []},
+            ]
+            for mutation in mutations:
+                with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                    store.stock_query_event(self.users["pam"], "ZF-3", dict(body, **mutation))
+            for actor in (
+                dict(self.users["pam"], email="agent@example.test"),
+                dict(self.users["pam"], name="Forged"),
+                dict(self.users["pam"], role="Agent"),
+            ):
+                with self.assertRaises(PermissionError):
+                    store.stock_query_event(actor, "ZF-3", body)
+            self.assertEqual(store.detail("ZF-3"), before)
+            self.assertEqual(list(store.audit_entries()), audit)
+            store.stock_query_event(self.users["sam"], "ZF-3", body)
+            terminal = store.detail("ZF-3")
+            with self.assertRaises(ValueError):
+                store.stock_query_event(self.users["pam"], "ZF-3", body)
+            self.assertEqual(store.detail("ZF-3"), terminal)
+
+    def test_closing_one_query_does_not_clear_other_holds(self) -> None:
+        for store in self.stores():
+            for _ in range(2):
+                store.stock_reconcile(self.users["sam"], "ZF-3", query())
+            store.stock_query_event(
+                self.users["sam"],
+                "ZF-3",
+                dict(
+                    query_id="SQ-1",
+                    action="withdraw",
+                    reason="Synthetic duplicate",
+                ),
+            )
+            self.assertEqual(len(stock.blockers(store.cases["ZF-3"])), 1)
+            self.assertIn("SQ-2", stock.blockers(store.cases["ZF-3"])[0])
+            self.assertEqual(store.detail("ZF-2")["stock_reconciliation"], [])
+
+    def test_withdrawal_does_not_release_safety_or_building_holds(self) -> None:
+        for store in self.stores():
+            self.tech(store, "rc1", "design_submit", note="Synthetic design")
+            store.stock_reconcile(self.users["sam"], "ZF-3", query())
+            store.stock_query_event(
+                self.users["sam"],
+                "ZF-3",
+                dict(
+                    query_id="SQ-1",
+                    action="withdraw",
+                    reason="Duplicate query",
+                ),
+            )
+            with store.lock:
+                store._case("ZF-3")["building_id"] = "SYN-MISSING-BUILDING"
+                store.save()
+            with self.assertRaises(GateError):
+                self.tech(store, "bs", "signoff_give", type="building")
+            store.raise_hazard(
+                self.users["sam"],
+                "ZF-3",
+                "Electrical",
+                "Emergency",
+                "Synthetic hazard",
+                metadata=dict(
+                    source="SYN",
+                    aware_at="2026-01-01T10:00:00Z",
+                ),
+            )
+            with self.assertRaises(GateError):
+                self.tech(store, "qi", "signoff_give", type="assessment")
+
+    def test_sql_concurrent_query_and_terminal_events_fail_closed(self) -> None:
+        _, a = self.stores()
+        self.tech(a, "rc1", "design_submit", note="Synthetic design")
+        b = SqlStore(str(Path(self.tmp.name) / "sql/synthetic.json"), a.db_path)
+        self.addCleanup(b.db.close)
+        save = a.save
+
+        def query_before_signoff_commit() -> None:
+            b.stock_reconcile(self.users["sam"], "ZF-3", query())
+            save()
+
+        with patch.object(a, "save", side_effect=query_before_signoff_commit):
+            with self.assertRaises(GateError):
+                self.tech(a, "qi", "signoff_give", type="assessment")
+        self.assertEqual(a.detail("ZF-3")["technical"]["signoffs"], {})
+        self.assertEqual(list(a.audit_entries())[-1]["action"], "stock_comparison")
+        body = dict(query_id="SQ-1", action="withdraw", reason="Duplicate query")
+
+        def withdraw_before_commit() -> None:
+            b.stock_query_event(self.users["pam"], "ZF-3", body)
+            save()
+
+        with patch.object(a, "save", side_effect=withdraw_before_commit):
+            with self.assertRaises(ConflictError):
+                a.stock_query_event(self.users["sam"], "ZF-3", body)
+        events = a.detail("ZF-3")["stock_reconciliation_events"]
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0]["recorded_by"]["email"], "pam@example.test")
+        self.assertEqual(list(a.audit_entries())[-1]["who"], "pam@example.test")
+        self.tech(a, "qi", "signoff_give", type="assessment")
+        self.assertTrue(a.verify_audit())
 
     def test_bad_technical_input_and_agent_identity_never_mutate(self) -> None:
         for store in self.stores():

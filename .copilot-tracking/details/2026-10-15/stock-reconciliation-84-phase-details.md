@@ -6,6 +6,20 @@ ms.date: 2026-10-15
 
 Task ID: 84. Slug: stock-reconciliation-84.
 
+## Owner-directed correction
+
+PR #318 finding: stock comparisons were permanent holds and any staff role
+could raise them on unrelated cases. Implement immutable terminal events
+referencing the original query, derive effective status for blockers/views,
+retain assertions and all prior events. Opening requires the registered
+case owner or programme/manager role; withdrawal requires original raiser
+or manager; human manager reconciliation records a reason and evidence only.
+No automatic source selection, home mutation, professional approval or
+operational resolution rule is authorized. Reject repeated terminal events,
+forged identity, unknown/agent roles and malformed event input before writes.
+Use inherited SQL case-body rowversion/audit transaction, with commit-time
+stock checks for technical approval. Add red/green JSON/SQL and HTTP tests.
+
 ## P01
 
 P01-T01: Use typed core helpers for strict comparison shape; allowlist only EPC,

@@ -98,10 +98,7 @@ class SignoffMixin:
 
     def _tech_signoff_give(self, user, c, body):
         self.require_safety_clear(c)
-        from .store import GateError
-        conflicts = stock.blockers(c)
-        if conflicts:
-            raise GateError(conflicts)
+        self.require_stock_clear(c)
         t = c.get("technical")
         if not t:
             raise ValueError("Record the design first.")

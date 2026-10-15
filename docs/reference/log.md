@@ -3340,3 +3340,22 @@ metadata when the knowledge base was created.
   evidence after closed SQLite restart. It does not establish private-corpus,
   actual-model, SQL Server/Azure or human application acceptance. Existing AI,
   consent and release gates are unchanged.
+
+## [2026-10-15] fix | Stock query lifecycle and case responsibility (#84)
+
+* Corrected PR #318's permanent stock-query hold: separate append-only
+  withdrawal or human reconciliation events derive current status without
+  editing the original comparison or prior events. Audit retains named
+  recorder, event/query references, reason and human evidence.
+* Opening requires case ownership or a programme/manager role. Withdrawal
+  requires the original raiser or manager; reconciliation is a registered
+  named human programme-role attestation, never an agent or sign-off.
+* JSON/SQL and authenticated HTTP regressions were observed failing before
+  the fix. The lifecycle preserves independent approvals, safety/building
+  holds and sibling case isolation; SQL uses existing rowversion/audit
+  transactions, with commit-time stock checks and no new SQL dialect.
+* Updated [core](../../src/core/README.md#stock-comparisons-and-human-technical-sign-offs-84)
+  and [API](../../src/api/README.md#stock-reconciliation-api-84) contracts and
+  index. Source authority, resolution rules and eligibility remain
+  Unknown/owner-approval-needed. Local evidence is not professional,
+  operational, real-model or SQL Server/Azure acceptance; Refs #84 remains.

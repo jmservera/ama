@@ -28,6 +28,12 @@ class StockApi(unittest.TestCase):
         data["staff"].extend(
             [
                 dict(
+                    code="RC-2",
+                    name="Synthetic Designer",
+                    email="rex2@example.test",
+                    role="Retrofit Coordinator",
+                ),
+                dict(
                     code="RC-1",
                     name="Synthetic Coordinator",
                     email="rex@example.test",
@@ -167,6 +173,59 @@ class StockApi(unittest.TestCase):
         self.assertEqual(design["design_by"], "rex@example.test")
         self.assertEqual(design["signoffs"], {})
 
+    def test_withdraw_unblocks_http_signoff_and_retains_audit(self) -> None:
+        path = "/api/cases/ZF-1"
+        self.assertEqual(
+            self.call(
+                "rex2",
+                path + "/technical",
+                dict(
+                    action="design_submit",
+                    note="Synthetic design",
+                ),
+            )[0],
+            200,
+        )
+        self.assertEqual(self.call("sam", path + "/stock-reconciliation", self.query())[0], 200)
+        signoff = dict(action="signoff_give", type="design")
+        self.assertEqual(self.call("rex", path + "/technical", signoff)[0], 409)
+        event = dict(query_id="SQ-1", action="withdraw", reason="Duplicate query")
+        self.assertEqual(self.call("rex", path + "/stock-query-event", event)[0], 403)
+        code, detail = self.call("sam", path + "/stock-query-event", event)
+        self.assertEqual(code, 200, detail)
+        self.assertEqual(detail["stock_reconciliation"][0]["status"], "Withdrawn")
+        self.assertEqual(
+            detail["stock_reconciliation_events"][0]["recorded_by"]["email"], "sam@example.test"
+        )
+        self.assertEqual(self.call("rex", path + "/technical", signoff)[0], 200)
+        self.assertEqual(self.call("rex2", path + "/technical", signoff)[0], 403)
+        self.assertEqual(self.call("sam", path + "/stock-query-event", event)[0], 400)
+        self.assertTrue(self.store.verify_audit())
+
+    def test_http_case_responsibility_and_human_resolution(self) -> None:
+        path = "/api/cases/ZF-1"
+        self.assertEqual(self.call("rex", path + "/stock-reconciliation", self.query())[0], 403)
+        self.assertEqual(
+            self.call("sam", "/api/cases/ZF-5/stock-reconciliation", self.query())[0], 403
+        )
+        self.assertEqual(self.call("sam", path + "/stock-reconciliation", self.query())[0], 200)
+        body = dict(
+            query_id="SQ-1", action="resolve", reason="Human attestation", evidence="SYN-REVIEW"
+        )
+        self.assertEqual(self.call("sam", path + "/stock-query-event", body)[0], 403)
+        self.assertEqual(self.call("kim", path + "/stock-query-event", body)[0], 403)
+        self.assertEqual(
+            self.call("pam", path + "/stock-query-event", dict(body, recorded_by="agent"))[0], 400
+        )
+        code, detail = self.call("pam", path + "/stock-query-event", body)
+        self.assertEqual(code, 200, detail)
+        self.assertEqual(detail["stock_reconciliation"][0]["status"], "Reconciled")
+        self.assertEqual(detail["stock_reconciliation"][0]["authority"], "Unknown")
+        self.assertEqual(
+            detail["stock_reconciliation_events"][0]["recorded_by"]["name"], "Pam Lead"
+        )
+        self.assertEqual(self.call("sam", "/api/cases/ZF-2")[1]["stock_reconciliation"], [])
+
     @unittest.skipUnless(
         os.environ.get("ZF_STOCK_BROWSER") == "1",
         "Opt-in rendered check requires local Playwright browser.",
@@ -220,6 +279,24 @@ class StockApi(unittest.TestCase):
                     .inner_text(),
                     "Unknown",
                 )
+                self.assertEqual(
+                    self.call(
+                        "sam",
+                        "/api/cases/ZF-1/stock-query-event",
+                        dict(
+                            query_id="SQ-1",
+                            action="withdraw",
+                            reason="Synthetic duplicate",
+                        ),
+                    )[0],
+                    200,
+                )
+                page.reload()
+                panel = page.get_by_role("region", name="Stock source comparisons")
+                panel.get_by_text("SQ-1: epc. Withdrawn", exact=True).wait_for()
+                self.assertIn("SQE-1: Withdrawn, recorded by Sam Example", panel.inner_text())
+                self.assertIn("Synthetic duplicate", panel.inner_text())
+                self.assertIn("SYN-REGISTER-84", panel.inner_text())
                 page.goto(self.base + "/app#/case/ZF-2")
                 page.get_by_text("No comparison recorded.", exact=False).wait_for()
                 self.assertNotIn("SYN-REGISTER-84", page.locator("main").inner_text())

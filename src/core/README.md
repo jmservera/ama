@@ -32,6 +32,32 @@ remove a home from ranking or block independent hazard intake. There is no
 automatic resolver, eligibility-rule engine or stock overwrite. An approved
 source-authority/resolution workflow remains future work.
 
+Only the registered case owner or a programme/manager role may open a query.
+`stock_query_event` appends a separate `SQE-n` event referencing `SQ-n`; it
+never edits the original assertion or any previous event. A query's original
+raiser (not merely its assigned query owner), or a programme/manager role,
+may `withdraw` with a reason. Only a registered named human in the existing
+`Retrofit Programme Manager` or `Programme Support Officer` roles may `resolve`,
+with a reason and human review evidence reference. Agents and client-supplied
+actor identities cannot exercise these rights. Repeated terminal events fail.
+
+Effective `Withdrawn`/`Reconciled` status is derived from those events in
+views and blockers. Reconciliation records a human attestation only: no
+source wins, no home value changes, no professional sign-off is given, and
+authority, resolution policy and eligibility remain `Unknown`/
+owner-approval-needed. These are minimal exercise permissions, not ratified
+operational resolution rules or competence/delegation. A new query is needed
+to raise a later concern; closed history cannot be reopened or overwritten.
+Other unresolved queries and independent technical, building and hazard gates
+remain effective after disposition.
+
+JSON retains assertions/events and the hash-chained audit. SQL inherits this
+case-body contract and commits the new event and audit together using existing
+rowversion checks; concurrent terminal events fail closed. Technical approval
+also rechecks current stock holds inside the SQL writer transaction. No new
+schema or dialect-specific inserts/error classes are introduced. Local
+SQLite evidence does not establish SQL Server/Azure acceptance.
+
 The existing `signoffs.py` owns separate assessment, design, building and
 coordination decisions. They require registered staff identities in the
 existing exercise roles, distinct people and no self-approval of the recorded

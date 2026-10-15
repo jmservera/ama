@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Owner selected bounded PR #318 correction: merge main, append-only authorised resolve/withdraw lifecycle in src, red/green regressions, evidence update and topic push. Historical Review is not repeated.",
+      "status": "implementation-complete",
+      "evidence": "2026-10-15 explicit request; main merged as 365760c preserving both sides. JSON-first/SQL-first and HTTP regressions observed failing before production edits. Final core 357 and API 500 (99 skips) OK; mypy/ruff in both projects pass; all 5 opt-in HTTP/browser methods pass. Changes/review docs record owner finding and bounded correction without repeating Review. Publication next."
+    },
+    {
       "decision": "Execute the full RPI loop, commit evidence, push the named topic branch and open a PR to main with Refs #84.",
       "status": "confirmed",
       "evidence": "Explicit owner request 2026-10-15; clean worktree on feat/src-stock-reconciliation-84."
@@ -37,7 +42,7 @@
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "PR #318 is open to main; consume CI, preserve unmet RV-001..RV-003 gates and await owner-selected follow-up, Stop or manual mode. No child work or merge authorized."},
+  "next_action": {"phase": "Follow-up", "action": "Publish owner-selected PR #318 correction: commit requested source/evidence with privacy email/trailer, push feat/src-stock-reconciliation-84 and update non-closing PR body. No merge/deployment or operational source-policy approval authorized."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Consume CI and collect approved live-platform/model evidence", "rationale": "Existing checks provide the easiest next evidence; deployment and inference require approved synthetic access.", "evidence": "RV-001; changes artifact Docker permission denial and local-only evidence."},
     {"rank": 2, "task": "Approve source-authority, resolution and eligibility contract", "rationale": "Highest functional leverage for resolving intentionally held queries, but requires named owner policy.", "evidence": "RV-002; stock assertions preserve Unknown authority/resolution/eligibility."},

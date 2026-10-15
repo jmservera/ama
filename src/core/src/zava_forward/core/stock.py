@@ -94,6 +94,38 @@ def comparison(body: Mapping[str, object]) -> dict[str, object]:
     )
 
 
+def query_status(case: Mapping[str, object], query_id: str) -> str:
+    """Derive terminal state without rewriting the original comparison."""
+    events = case.get("stock_reconciliation_events", [])
+    if not isinstance(events, list):
+        raise ValueError("Stock reconciliation events must be a list.")
+    for event in reversed(events):
+        if event["query_id"] == query_id:
+            if event["status"] not in ("Withdrawn", "Reconciled"):
+                raise ValueError("Unknown stock query event status.")
+            return str(event["status"])
+    return "Unresolved"
+
+
+def query_event(body: Mapping[str, object]) -> dict[str, object]:
+    """Validate a terminal human disposition, not a winning-source decision."""
+    required = {"query_id", "action", "reason"}
+    if not required <= set(body) or set(body) - required - {"evidence"}:
+        raise ValueError("A query event needs query_id, action, reason and optional evidence.")
+    action = body["action"]
+    if action not in ("withdraw", "resolve"):
+        raise ValueError("Choose withdraw or resolve for the stock query.")
+    result: dict[str, object] = dict(
+        query_id=_text(body["query_id"], "the query identifier"),
+        action=action,
+        reason=_text(body["reason"], "the reason"),
+        status="Withdrawn" if action == "withdraw" else "Reconciled",
+    )
+    if action == "resolve" or "evidence" in body:
+        result["evidence"] = _text(body.get("evidence"), "the human review evidence reference")
+    return result
+
+
 def blockers(case: Mapping[str, object]) -> list[str]:
     """Expose owned unresolved queries independently of any design record."""
     rows = case.get("stock_reconciliation", [])
@@ -103,5 +135,5 @@ def blockers(case: Mapping[str, object]) -> list[str]:
         f"Stock conflict {row['id']} ({row['field']}) is unresolved. "
         f"Owner: {row['query_owner']['name']}. Next action: obtain source-authority review."
         for row in rows
-        if row["status"] == "Unresolved"
+        if query_status(case, row["id"]) == "Unresolved"
     ]

@@ -6,6 +6,89 @@ ms.date: 2026-10-15
 
 ## Scope and status
 
+### Owner-directed PR #318 correction
+
+2026-10-15 request authorizes a bounded follow-up in this worktree and branch.
+First command `git fetch && git merge origin/main` produced one conflict in
+the append-only log. Kept both entries and both automatically merged index/
+core README sections; merge commit `365760c`. Authenticated account
+8036360/jmservera verified and requested local privacy email configured.
+The first execution boundary was to add regressions and capture their
+failure against the merged pre-fix implementation, then implement terminal
+events and server-side authorization. Required full core/API commands use
+absolute PYTHONPATH; tooling is /tmp/zf164/bin/{mypy,ruff}.
+
+This follows an owner-selected review finding; the historical one-pass Review
+is not repeated. Operational resolution rules stay Unknown/owner-approval-needed.
+
+#### Correction implementation and red/green evidence
+
+New tests were added before any production change:
+
+| Command | Result |
+| --- | --- |
+| `cd src/core && PYTHONPATH=$PWD/src:$PWD/tests python3 -m unittest discover -s tests -p test_stock_reconciliation.py -q` (pre-fix) | 16 methods, failed: 4 authorization failures and 14 missing-lifecycle errors including subtests. Existing ten methods passed. |
+| `cd src/core && PYTHONPATH=$PWD/src:$PWD/tests python3 -` with `StockReconciliation.stores` reversed and the withdrawal/opening tests selected (pre-fix) | SQLite-first: missing SqlStore.stock_query_event and four authorization failures. This explicitly verifies the SQL pre-fix behavior rather than stopping at JSON. |
+| `cd src/api && PYTHONPATH=$PWD/src:$PWD/tests:$PWD/../core/src:$PWD/../core/tests:$PWD/../agents/src:$PWD/../agents/tests python3 -m unittest discover -s tests -p test_stock_reconciliation_api.py -q` (pre-fix) | 5 methods: 2 failures, 1 browser skip. Unrelated coordinator could open (200 rather than 403); lifecycle route missing (404 rather than 403). |
+| Focused core/API commands above after production change | Core 16 passed; API 5 OK, browser skipped. |
+| `/tmp/zf164/bin/mypy .` in core, first correction run | One missing test mutation annotation; explicitly typed the mutation collection and reran successfully. |
+| Required full core command, first correction run | 357 methods: one existing hazard-race error because new stock rowversion check ran ahead of safety check. Fixed combined commit-time validation to retain safety-first GateError before rowversion conflict. No test expectation relaxed. |
+| Focused core stock and hazard commands after safety-first correction | 18 stock and 18 hazard methods passed. Both core mypy/ruff checks passed. |
+| Required full API command, first correction run, then `/tmp/zf164/bin/mypy .`, `ruff check .`, `ruff format --check .`, `node --check src/zava_forward/api/web/panels.js` | 500 methods OK, 99 skipped; all quality checks passed. |
+| `cd src/api && ZF_STOCK_BROWSER=1 PYTHONPATH=$PWD/src:$PWD/tests:$PWD/../core/src:$PWD/../core/tests:$PWD/../agents/src:$PWD/../agents/tests /tmp/zf164/bin/python -m unittest discover -s tests -p test_stock_reconciliation_api.py -q` | 5 passed including real loopback Chromium. Extended retained browser check to observe terminal status/event provenance and preserved source assertions. |
+
+Stock helpers now validate a strict terminal-event shape and derive effective
+status. Store binds the registered actor, checks opening/withdrawal/resolution
+rights before mutation, appends event and audit and never edits comparisons.
+SQL inherits event persistence with existing case-body/audit transactions and
+optimistic concurrency; fresh stock holds are checked before sign-off commit.
+No added SQL schema/dialect or driver-specific IntegrityError class is needed.
+The API route uses existing authenticated session identity and exception mapping;
+the read-only panel shows event provenance and effective status.
+
+Eight new core methods and two API methods (23 total across the two stock
+modules) cover all four blocked-then-withdrawn sign-offs, unauthorized roles,
+raiser versus owner, manager withdrawal, human resolution evidence, invalid
+and repeated events, immutable history/restart/audit, remaining stock and
+safety/building holds, siblings and SQL races. No test or approval was removed.
+New implementation/test paths stay in src/core and src/api. Guides, index/log,
+existing RPI artifacts and PR description are the requested supporting docs.
+
+Final validation:
+
+```bash
+cd src/core
+PYTHONPATH=$PWD/src:$PWD/tests python3 -m unittest discover -s tests -q
+/tmp/zf164/bin/mypy .
+/tmp/zf164/bin/ruff check .
+/tmp/zf164/bin/ruff format --check .
+```
+
+Result: 357 methods OK; mypy (78 files), lint and format (25 files) passed.
+Existing sensor ResourceWarnings are unchanged and unrelated.
+
+```bash
+cd src/api
+PYTHONPATH=$PWD/src:$PWD/tests:$PWD/../core/src:$PWD/../core/tests:$PWD/../agents/src:$PWD/../agents/tests python3 -m unittest discover -s tests -q
+/tmp/zf164/bin/mypy .
+/tmp/zf164/bin/ruff check .
+/tmp/zf164/bin/ruff format --check .
+node --check src/zava_forward/api/web/panels.js
+ZF_STOCK_BROWSER=1 PYTHONPATH=$PWD/src:$PWD/tests:$PWD/../core/src:$PWD/../core/tests:$PWD/../agents/src:$PWD/../agents/tests /tmp/zf164/bin/python -m unittest discover -s tests -p test_stock_reconciliation_api.py -q
+```
+
+Final result: 500 methods OK, 99 skipped; mypy (38 files), lint and format
+(10 files), JS syntax and all 5 opt-in stock API/browser methods passed.
+Browser observed Withdrawn and SQE-1 human provenance/reason after reload,
+both original assertions, then clean sibling-case navigation. No dependencies
+installed; no private operating data read; no deployment attempted.
+
+The historical no-defect Review conclusion is explicitly superseded by the
+owner's High finding and its implementation disposition. The Review was not
+repeated and external gates remain unmet. Existing pre-correction PR checks
+were all SUCCESS, including image/mssql; they are not evidence for the new
+commit. Delivery uses the same topic branch and non-closing Refs #84 body.
+
 Full plan for task 84, stock-reconciliation-84. Implementation complete;
 ready for the one post-implementation Review.
 Plan/details and one critique under the same dated slug are authoritative.

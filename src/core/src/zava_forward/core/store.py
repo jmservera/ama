@@ -335,6 +335,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if not d["resident"].get("adjustment"):
                 d["resident"]["adjustment"] = "Unknown"
             d.setdefault("stock_reconciliation", [])
+            d.setdefault("stock_reconciliation_events", [])
+            for row in d["stock_reconciliation"]:
+                row["status"] = stock.query_status(c, row["id"])
             d["hazards"] = [hazard_view(h, case_id) for h in c["hazards"]]
             if c.get("handoff"):
                 d["handoff"] = handoff_view(c)
@@ -358,17 +361,25 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         with self.lock:
             return buildings.view(self.data, self.cases, building_id, user)
 
+    def _stock_actor(self, user):
+        from . import controls
+        controls.require_role(user, projection.STAFF_ROLES, "registered human staff")
+        actor = self.staff.get(user["email"].lower())
+        if not actor or not isinstance(actor.get("name"), str) or not actor["name"].strip() or any(
+                actor.get(key) != user.get(key) for key in ("code", "role", "name")):
+            raise PermissionError("Stock decisions require a registered named human staff identity.")
+        return actor
+
     def stock_reconcile(self, user, case_id, body):
         from . import controls
         controls.refuse_bulk(body)
-        controls.require_role(user, projection.STAFF_ROLES, "authorised staff")
         with self.lock:
-            actor = self.staff.get(user["email"].lower())
-            if not actor or any(actor.get(key) != user.get(key) for key in ("code", "role", "name")):
-                raise PermissionError("Use a registered staff identity to record a stock query.")
+            actor = self._stock_actor(user)
+            c = self._case(case_id)
+            if actor["role"] not in MANAGER_ROLES and actor["code"] != c["owner_code"]:
+                raise PermissionError("Only the case owner or a programme manager can open a stock query.")
             query = stock.comparison(body)
             owner = self._staff_person(query["query_owner"])
-            c = self._case(case_id)
             rows = c.get("stock_reconciliation", [])
             query.update(id=f"SQ-{len(rows) + 1}", version=len(rows) + 1,
                          query_owner={key: owner[key] for key in ("email", "code", "name", "role")},
@@ -377,6 +388,36 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             c.setdefault("stock_reconciliation", []).append(query)
             self.audit(actor["email"], "stock_comparison", case_id, f"{query['id']} {query['field']}; owner {owner['code']}; unresolved")
             self.save()
+
+    def stock_query_event(self, user, case_id, body):
+        from . import controls
+        controls.refuse_bulk(body)
+        with self.lock:
+            actor = self._stock_actor(user)
+            event = stock.query_event(body)
+            c = self._case(case_id)
+            query = next((q for q in c.get("stock_reconciliation", []) if q["id"] == event["query_id"]), None)
+            if query is None:
+                raise ValueError("Choose a stock query on this case.")
+            manager = actor["role"] in MANAGER_ROLES
+            if event["action"] == "resolve" and not manager:
+                raise PermissionError("Only a named human programme manager can record reconciliation.")
+            if event["action"] == "withdraw" and not manager and actor["email"].lower() != query["recorded_by"]["email"].lower():
+                raise PermissionError("Only the query raiser or a programme manager can withdraw it.")
+            if stock.query_status(c, query["id"]) != "Unresolved":
+                raise ValueError("This stock query already has a terminal disposition. Open a new query if needed.")
+            events = c.get("stock_reconciliation_events", [])
+            event.update(id=f"SQE-{len(events) + 1}", at=controls.now(),
+                         recorded_by={key: actor[key] for key in ("email", "code", "name", "role")})
+            c.setdefault("stock_reconciliation_events", []).append(event)
+            self.audit(actor["email"], f"stock_query_{event['action']}", case_id,
+                       f"{event['id']} {query['id']}: {event['status']}; {event['reason']}; evidence {event.get('evidence', 'Not supplied')}")
+            self.save()
+
+    def require_stock_clear(self, c):
+        reasons = stock.blockers(c)
+        if reasons:
+            raise GateError(reasons)
 
     def require_building_clear(self, c, package_id=None):
         reasons = buildings.blockers(self.data, self.cases, c, package_id)

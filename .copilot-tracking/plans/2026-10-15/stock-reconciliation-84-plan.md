@@ -120,5 +120,21 @@ The plan is Ready for this bounded slice, not full operational acceptance.
 
 ## Follow-Up Items
 
+## Owner-directed PR #318 correction scope
+
+The 2026-10-15 owner request authorizes this bounded implementation follow-up,
+not a repeated critique or Review. Merge origin/main first, retaining both
+documentation entries. Source/test edits stay in src/core and src/api.
+
+* [x] Add append-only Withdrawn/Reconciled events, authenticated human
+  provenance, raiser/manager withdrawal and case-owner/manager query opening.
+* [x] Require manager human attestation plus evidence for reconciliation;
+  do not choose a winning source or change home/eligibility/technical decisions.
+  Operational rules remain Unknown/owner-approval-needed.
+* [x] Prove regression tests fail before implementation, then pass JSON/SQL
+  and HTTP tests and required absolute-PYTHONPATH suites and quality checks.
+* [ ] Update changes/review evidence, source guides, index/log and non-closing
+  PR body; commit with requested identity/trailer and push named topic.
+
 Source authority/resolution policy, operational competence/delegation, live
 Azure SQL/model and direct human acceptance remain outside this local slice.
