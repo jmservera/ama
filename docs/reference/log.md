@@ -2802,3 +2802,11 @@ metadata when the knowledge base was created.
   fabric attributes, plus a committed manifest of seeded EPC conflicts.
 * Labelled synthetic fixtures under ADR 0005 (2026-10-15); not lodged EPCs.
 * Open: conflict mix and rates are unconfirmed generator assumptions.
+
+## [2026-10-15] update | Coordinator requires RPI loop evidence
+
+* Updated `.github/agents/ama-backlog-delivery-coordinator.agent.md`: briefs
+  must require the full research, plan, implement and review loop, the
+  `.copilot-tracking/` artifacts are committed and pushed in each PR, and the
+  coordinator verifies them before review. Prompted by wave 1 to 5 sessions
+  that implemented directly and pushed no RPI artifacts. No index change.
