@@ -8,7 +8,7 @@ ms.topic: reference
 ## Scope and evidence
 
 Implements issue #153 under epic #149 (PRD SA-003 and SA-004, BRD RULE-022).
-Sources: `mvp/web/*.js`, `mvp/zavaforward_mvp/store.py`,
+Sources: `src/api/src/zava_forward/api/web/*.js`, `mvp/zavaforward_mvp/store.py`,
 `mvp/zavaforward_mvp/signoffs.py` and the
 [design system foundations](./design-system.md). This is a content standard for
 a synthetic-data demonstrator. It has not been tested with real staff or
@@ -81,7 +81,7 @@ Scope: staff case list, case page, final checks, drafts and AI notes, priority
 suggestion, assistant proposal card, finance panels and import summary.
 Method: search the web scripts for the banned terms gate, hold, provenance and
 trace, then read each match; review of server-supplied messages in `store.py`
-and `signoffs.py`. Automated by `mvp/tests/test_content_standard.py`.
+and `signoffs.py`. Automated by `src/api/tests/test_content_standard.py`.
 
 | Finding | Location | Change |
 | --- | --- | --- |

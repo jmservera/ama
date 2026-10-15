@@ -18,4 +18,4 @@ support/synthetic-data/**/answer-key/
 
 
 # Assistant test sandboxes must never be tracked
-/mvp/.assistant-test-*/
+/src/api/.assistant-test-*/

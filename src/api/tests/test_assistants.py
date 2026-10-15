@@ -22,7 +22,7 @@ from zava_forward.core.ai import Ai
 from zava_forward.core.assistants import (
     Assistants, Limits, MSSQL_DDL, PURPOSE, REGISTRY, RULES, VERSION, canonical, capture, digest, eligible,
 )
-from zavaforward_mvp.server import App, make_handler
+from zava_forward.api.server import App, make_handler
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError
 

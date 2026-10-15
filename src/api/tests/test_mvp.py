@@ -8,7 +8,8 @@ from pathlib import Path
 
 from dataset import DATA, ImproveTests, case  # noqa: F401  shared fixtures live in src/core/tests (M2 of #199)
 from zava_forward.core.store import Store
-from zavaforward_mvp.server import App, make_handler
+from zava_forward.api import server
+from zava_forward.api.server import App, make_handler
 
 
 class StoreTests(unittest.TestCase):
@@ -125,7 +126,7 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(code, 200)
         self.assertEqual(headers["Content-Type"], "image/png")
         self.assertTrue(body.startswith(b"\x89PNG\r\n\x1a\n"))
-        expected = Path(__file__).resolve().parents[1] / "web" / "zava-logo.png"
+        expected = Path(server.__file__).resolve().parent / "web" / "zava-logo.png"
         self.assertEqual(body, expected.read_bytes())
 
 

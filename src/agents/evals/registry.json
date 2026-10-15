@@ -59,7 +59,7 @@
    "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
    "purpose": "Synthetic scan classes, retention triggers and legal holds for 120 homes from the 60,000-home stock register; no real retention decision.",
    "used_by": [
-    "mvp/tests/test_document_controls.py"
+    "src/api/tests/test_document_controls.py"
    ],
    "seed": 20260901,
    "contains_real_data": false

@@ -12,7 +12,7 @@ from pathlib import Path
 
 from zava_forward.core import ranking
 from zava_forward.core.insights import STAGE_ORDER
-from zavaforward_mvp.server import App, make_handler
+from zava_forward.api.server import App, make_handler
 from zava_forward.core.store import Store
 from test_mvp import case
 

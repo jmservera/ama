@@ -169,7 +169,7 @@ Deployed on 2026-10-08 to resource group `ama` with `location=uksouth environmen
 Observed 2026-10-11 in resource group `ama` (`uksouth`, `environmentName=test`, `deploymentProfile=development`):
 
 ```bash
-az acr build -r <registry> -f mvp/Dockerfile -t zava-forward-mvp:<tag> .
+az acr build -r <registry> -f src/api/Dockerfile -t zava-forward-mvp:<tag> src
 az login --tenant <tenant> --allow-no-subscriptions          # as an Application or Global Administrator
 infra/scripts/create-api-app-registration.sh -u https://<api-fqdn> -a <admin-upn>:ProgrammeManager -v <key-vault>
 python3 infra/scripts/create-sql-users.py ama <sql-server> retrofit id-forward-test   # as the SQL Entra admin
@@ -363,7 +363,7 @@ PYTHONPATH=mvp python3 infra/scripts/initialize-workbench-staff.py \
   --roster "$HOME/.azure/zava-forward-staff/roster.json" --apply --restart
 ```
 
-The initializer imports `ledger` and `mssqlstore` from `zava_forward.core` (moved in M2 of #199), so run `pip install --no-deps -e src/core -e src/agents` first (M4 of #199 moved `chat_privacy`, `chat_isolation`, `recovery` to `core` and `ai_eval` to `agents`; no infra script imports them); `PYTHONPATH=mvp` still supplies `zavaforward_mvp.auth`.
+The initializer imports `ledger` and `mssqlstore` from `zava_forward.core` (moved in M2 of #199), so run `pip install --no-deps -e src/core -e src/agents -e src/api` first (M4 of #199 moved `chat_privacy`, `chat_isolation`, `recovery` to `core` and `ai_eval` to `agents`; no infra script imports them); `zava_forward.api.auth` (moved in M5 of #199) supplies the role map.
 
 Use the existing MVP dependencies and an operator allowed through the SQL
 firewall/private endpoint with SQL write authority. Graph management uses the
@@ -587,7 +587,7 @@ Rebuild sequence:
    quota must be rechecked, not assumed for another subscription.
 2. Deploy with `deployApplications=false`. Use deployment outputs to discover
    the registry, SQL server, model endpoint and vault; do not guess hashed names.
-3. Build a versioned `zava-forward-mvp` image with `az acr build` from the repository root (`-f mvp/Dockerfile .`). Provision
+3. Build a versioned `zava-forward-mvp` image with `az acr build` with the `src/` folder as build context (`-f src/api/Dockerfile src`). Provision
    `entra-client-secret` in the new vault through an authorised operator. RG
    Owner alone does not grant Key Vault data-plane access. Transfer a retained
    credential only through a private file or the provisioning script, not a

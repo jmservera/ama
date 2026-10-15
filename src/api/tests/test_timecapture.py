@@ -10,9 +10,9 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 import test_mvp
-from zavaforward_mvp.server import App, make_handler
+from zava_forward.api.server import App, make_handler
 from zava_forward.core.store import Store
-from zavaforward_mvp.timecapture import ACTIVITIES, NoticeNotAcknowledged, SeparationOfDuties, TimeCapture, TimeCaptureOff
+from zava_forward.api.timecapture import ACTIVITIES, NoticeNotAcknowledged, SeparationOfDuties, TimeCapture, TimeCaptureOff
 
 SAM = test_mvp.DATA["staff"][0]
 MGR = dict(code="MGR", email="manager@example.test", role="Retrofit Programme Manager")
@@ -113,7 +113,7 @@ class TimeTests(unittest.TestCase):
         self.assertEqual(sqlite3.connect(self.db).execute("SELECT COUNT(*) FROM notice_ack").fetchone()[0], 1)
 
     def test_acknowledgement_is_per_person_and_per_notice_version(self):
-        from zavaforward_mvp import timecapture
+        from zava_forward.api import timecapture
         t = self.on(SAM)
         with self.assertRaises(NoticeNotAcknowledged):
             t.record(dict(code="OTHER"), "ZF-1", 5, ACTIVITIES[0])

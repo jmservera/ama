@@ -3,7 +3,7 @@ import unittest
 from datetime import datetime, timedelta, timezone
 from unittest.mock import MagicMock, patch
 
-from zavaforward_mvp import token_store
+from zava_forward.orchestrator import token_store
 
 
 class RenewalTests(unittest.TestCase):
@@ -38,7 +38,7 @@ class RenewalTests(unittest.TestCase):
         credential = MagicMock()
         credential.get_token.return_value.token = "fake-keyvault-token"
         expiry = datetime(2026, 10, 17, tzinfo=timezone.utc)
-        with patch("zavaforward_mvp.token_store.urlopen") as open_url:
+        with patch("zava_forward.orchestrator.token_store.urlopen") as open_url:
             open_url.return_value.__enter__.return_value.status = 200
             token_store.put_secret("https://testvault.vault.azure.net/", credential, "private-sas", expiry)
         request = open_url.call_args.args[0]

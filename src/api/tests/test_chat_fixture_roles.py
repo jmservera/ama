@@ -1,8 +1,8 @@
-"""Keeps the chat fixture role names equal to the auth role map until auth moves in M5."""
+"""Keeps the chat fixture role names equal to the auth role map (auth moved to src/api in M5 of #199)."""
 import unittest
 
-import chat_fixture  # src/agents/tests, on PYTHONPATH until M5
-from zavaforward_mvp import auth
+import chat_fixture  # src/agents/tests, on PYTHONPATH
+from zava_forward.api import auth
 
 
 class ChatFixtureRoleNames(unittest.TestCase):

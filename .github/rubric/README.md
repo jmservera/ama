@@ -197,6 +197,10 @@ so third-party, private and generated files under `src/` are not scored.
 globs stay until the cut-over registry pull request. A registry change takes
 effect only after it merges; `rubric_version` is not bumped.
 
+On 2026-10-15 (#199 M5) the moved code, web assets, tests and Dockerfile are
+counted through `src/**/*`, so the `mvp/zavaforward_mvp`, `mvp/web`, `mvp/tests`
+and `mvp/Dockerfile` globs were removed; only `mvp/README.md` remains.
+
 ### Solution code and infrastructure
 
 The `solution-code` entry covers `src/**/*` and the transitional `mvp/` globs.

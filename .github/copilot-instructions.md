@@ -49,14 +49,15 @@ Zava Forward demonstrator, infrastructure and supporting tools.
   Their shared evidence base is
   `docs/reference/research/company/company-profile-research.md`.
 * `.github/agents/ama-*` are AMA helper agents with knowledge extracted from the AMA trainings.
-* `mvp/` contains the continuing application and its tests; `infra/` contains
+* `src/` holds the migrated Zava Forward projects (`core`, `agents`, `api`, `orchestrator`, `importer`); `mvp/`
+  keeps only its README until M6 of the ADR 0006 migration; `infra/` contains
   Bicep and initialization helpers; `tools/` contains migration and authoring
   tools. Their READMEs define current commands and evidence boundaries.
 
 There is no repository-wide documentation build or lint command. Validate
 documentation with Markdown/link review and the Git diff. Executable changes
-also require the relevant existing tests: for example, from `mvp/`,
-`PYTHONPATH=.:../src/core/tests:../src/agents/tests python3 -m unittest discover -s tests -q`; migration regressions
+also require the relevant existing tests: for example, from `src/api`,
+`PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -q`; migration regressions
 use `python3 tools/rename-zava-tests.py` from the repository root. Use the
 component guides and existing workflows rather than infer that no tests exist.
 

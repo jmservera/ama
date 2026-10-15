@@ -254,7 +254,7 @@ def restart_api(group: str, app: str) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     """Resolve deployed configuration and reconcile only explicitly selected private people."""
-    from zavaforward_mvp.auth import DEFAULT_ROLE_MAP
+    from zava_forward.api.auth import DEFAULT_ROLE_MAP
     from zava_forward.core.mssqlstore import _Conn, connection_string
 
     parser = argparse.ArgumentParser(description=__doc__)

@@ -182,7 +182,7 @@ class RouteTests(unittest.TestCase):
         import urllib.error
         import urllib.request
         from http.server import ThreadingHTTPServer
-        from zavaforward_mvp.server import App, make_handler
+        from zava_forward.api.server import App, make_handler
         with tempfile.TemporaryDirectory() as tmp:
             d = copy.deepcopy(test_mvp.DATA)
             d["staff"] = STAFF

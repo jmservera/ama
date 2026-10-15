@@ -11,8 +11,8 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 import test_mvp
-from zavaforward_mvp import auth
-from zavaforward_mvp.server import App, make_handler
+from zava_forward.api import auth
+from zava_forward.api.server import WEB, App, make_handler
 from zava_forward.core.store import Store
 
 REASON = "SEEDED-REASON-hearing-loss"
@@ -168,7 +168,7 @@ class MapListAndTiles(Base):
         self.assertEqual(self.call(sam, "/api/map?bbox=bad")[0], 400)
 
     def test_front_end_wires_the_list_alternative_and_tile_config(self):
-        js = (Path(__file__).resolve().parents[1] / "web" / "app.js").read_text()
+        js = (WEB / "app.js").read_text()
         for needle in ("maplist", "me.map.tiles", "aria-live", "Show the map areas as a list"):
             self.assertIn(needle, js)
 

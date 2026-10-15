@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 from zava_forward.core import projection
-from zavaforward_mvp import server
+from zava_forward.api import server
 from zava_forward.core.assistants import Assistants
 from test_role_matrix import Matrix, PHONE, REASON, RESIDENT, ROLES
 
