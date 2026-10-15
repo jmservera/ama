@@ -38,7 +38,7 @@
       "title": "Infrastructure as code",
       "status": "active",
       "extractor": "text",
-      "include": ["infra/**/*", "prototype/deploy/**/*.bicep"],
+      "include": ["infra/**/*"],
       "exclude": ["**/.terraform/**"],
       "criteria": ["A1", "A3", "A5"]
     },

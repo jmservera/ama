@@ -74,7 +74,6 @@ Scores are readiness estimates from repository evidence. Live-scored criteria (B
 | [scripts/test_safe_output_runtime.py](scripts/test_safe_output_runtime.py) | Generated-schema and pinned real MCP runtime tests |
 | [scripts/test_gate.py](scripts/test_gate.py)         | Unit tests for the gate                                     |
 | [scripts/test_prepare.py](scripts/test_prepare.py)   | Change-detection tests on temporary git repositories        |
-| [prototype-validation.yml](../workflows/prototype-validation.yml) | Separate, secretless validation for the local prototype |
 
 ## Owner Setup
 
@@ -186,9 +185,10 @@ On 2026-10-08 the owner directed that the MVP replaces the earlier prototype as
 the scored solution code. `solution-code` now includes `mvp/zavaforward_mvp/`,
 `mvp/web/` (without `vendor/`), `mvp/tests/`, `mvp/Dockerfile`, `mvp/README.md`
 and the data generator scripts under `support/synthetic-data/`. The private
-`mvp/data/` is excluded. The prototype description below is retained for
-history; the registry no longer reads `prototype/`. The Prototype validation
-workflow still checks only `prototype/`, so MVP tests are not yet run in CI.
+`mvp/data/` is excluded. The registry no longer reads `prototype/`. The prototype
+was removed in #202 step 1, together with its validation workflow and the dead
+`prototype/deploy/**/*.bicep` infrastructure glob; the registry edit takes
+effect only after that pull request merges.
 
 On 2026-10-15 (#198, ADR 0006) `solution-code` also excludes
 `src/**/web/vendor/**`, `src/**/data/**`, `**/*.egg-info/**` and `**/build/**`,
@@ -197,24 +197,19 @@ so third-party, private and generated files under `src/` are not scored.
 globs stay until the cut-over registry pull request. A registry change takes
 effect only after it merges; `rubric_version` is not bumped.
 
-### Zava Forward Prototype
+### Solution code and infrastructure
 
-The existing `solution-code` entry preserves `src/**/*` and also includes the
-prototype's Python implementation (`prototype/zavaforward/`), web UI, Python
-tests and build scripts, `Dockerfile`, `requirements.txt`, `README.md` and
-Excalidraw architecture diagram. It informs A1, A3, A4, A5, A6 and A7, plus B6:
-the README is capstone documentation, whose completeness and navigability are
-explicitly assessed by B6 in the [assessment guide](../../docs/reference/method/ama-capstone-assessment-guide.md).
+The `solution-code` entry covers `src/**/*` and the transitional `mvp/` globs.
+It informs A1, A3, A4, A5, A6 and A7, plus B6: the README is capstone
+documentation, whose completeness and navigability are explicitly assessed by
+B6 in the [assessment guide](../../docs/reference/method/ama-capstone-assessment-guide.md).
 Criteria are mapped per artifact, not per file, so any solution-code change
 reopens those seven criteria; a score move still needs relevant changed-file
 evidence. This mapping does not establish implementation completeness or AI
-quality, and does not map the prototype to Section D thought leadership.
+quality, and does not map the code to Section D thought leadership.
 
-The existing `infrastructure` entry preserves `infra/**/*` and includes
-`prototype/deploy/**/*.bicep`, informing A1, A3 and A5. Bicep is not included
-in `solution-code`. Generated fixtures and the import workbook under
-`prototype/seed/` are excluded; their generator scripts remain implementation
-evidence.
+The `infrastructure` entry covers `infra/**/*`, informing A1, A3 and A5. Bicep
+is not included in `solution-code`.
 
 Pull request preparation and gating load `artifacts.json` from the base branch
 (`origin/main`), not the proposed registry in the pull request. The registry
@@ -289,26 +284,6 @@ from github/gh-aw-actions commit
 checkout's `setup/js` directory to run it. It skips if the runtime is absent.
 This confirms single-item acceptance at the trusted gate, not a transport
 quota.
-
-### Separate prototype validation
-
-The ordinary
-[Prototype validation workflow](../workflows/prototype-validation.yml) runs
-after checkout with `contents: read`, no OIDC permissions, no persisted
-checkout credentials and no Azure or application secrets. Dependency
-installation and test execution happen only in this isolated job, not in the
-scoring agent. When `prototype/` is present it installs the declared
-requirements through pip with normal TLS, compiles the Python package, runs
-the standard-library unittest suite, executes `evaluate_agent.py` without
-`--live` and checks browser JavaScript syntax. It does not deploy Bicep or
-contact Azure. When the directory is absent, the job summary explicitly says
-that no prototype checks or test evidence were produced; detection occurs
-after checkout so the check activates when prototype files arrive.
-
-On this repair branch, `prototype/` is absent. Merge the scorer repair to
-`main` first, then synchronize prototype PR #15 with `main` and push to trigger
-the base-branch workflow against its checked-out prototype. The resulting
-validation is independent of rubric scoring and is not deployment approval.
 
 ## Limits and Risks
 

@@ -273,7 +273,8 @@ must not add capability. No new module is added under `mvp/` or `prototype/`.
 | 6 Verify | Rebuild images from `src/`, deploy to the existing Container Apps, verify health, check links and references (#203) | Images healthy; no stale path references |
 
 Phase 3 may run any time after the parity matrix maps `prototype/`; it does not
-wait for phase 2.
+wait for phase 2. Status 2026-10-15: delivered for #202 step 1 in a pull request
+that removes `prototype/`, `prototype-validation.yml` and the dead registry glob.
 
 ### Cut-over gate
 
@@ -310,7 +311,7 @@ blocked until every item is evidenced there and the owner signs off:
 * While both trees exist the scorer sees one `solution-code` artifact, so lines
   are not double counted. Move-not-copy prevents ambiguous duplicate evidence.
 * `mvp/` stops counting in the dedicated cut-over registry pull request that
-  removes the `mvp/` globs and `prototype/deploy/**/*.bicep`. The deletion pull
+  removes the `mvp/` globs (the dead `prototype/deploy/**/*.bicep` glob was removed with `prototype/` in phase 3). The deletion pull
   request that precedes it is scored by the old registry.
 * A deleted or moved-out-of-glob file counts as a change and can lower scores
   but never raise them. The temporary dip is accepted by the owner (2026-10-14);
