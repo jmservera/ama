@@ -74,9 +74,11 @@ def get_kind(path):
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/packages": "packages",
-            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/finance": "finance_queue"}.get(path, "unknown")
+            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/finance": "finance_queue", "/api/governance": "governance"}.get(path, "unknown")
 
 
+GOVERNANCE_ACTIONS = {"protocol-freeze": "protocol_freeze", "protocol-approve": "protocol_approve", "benefits-record": "benefits_record",
+                      "benefits-approve": "benefits_approve", "release": "release_record", "breach": "breach_record", "restart": "breach_restart"}
 QUALITY_ACTIONS = {
     "quality-submit": lambda s, u, cid, b: s.submit_quality(u, cid, b.get("measure"), b.get("submitted_by"), b.get("source"), b.get("items")),
     "quality-accept": lambda s, u, cid, b: s.accept_quality(u, cid, b.get("index"), b.get("note", "")),
@@ -275,6 +277,11 @@ def make_handler(app):
                     return self._json(200, app.time.mine(u))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e), "enabled": app.time.status()["enabled"]})
+            if url.path == "/api/governance":
+                try:
+                    return self._json(200, s.governance_view(u))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
             if url.path == "/api/finance":
                 try:
                     return self._json(200, s.finance_queue(u))
@@ -396,6 +403,8 @@ def make_handler(app):
                     if u["role"] not in MANAGER_ROLES:
                         raise PermissionError("Only a manager can write a ledger digest.")
                     return self._json(200, {"written": os.path.basename(s.write_digest()), "report": s.verify_ledger()})
+                if parts[:2] == ["api", "governance"] and len(parts) == 3 and parts[2] in GOVERNANCE_ACTIONS:
+                    return self._json(200, getattr(s, GOVERNANCE_ACTIONS[parts[2]])(u, body))
                 if url.path == "/api/import-check":
                     return self._json(200, s.import_check(body.get("text", "")))
                 if url.path == "/api/ai/priority":

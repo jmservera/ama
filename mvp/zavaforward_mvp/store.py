@@ -11,6 +11,7 @@ from datetime import datetime
 
 from . import ai_tasks, insights, ledger, projection, ranking
 from .finance import FinanceMixin
+from .governance import GovernanceMixin
 from .grants import GrantMixin, grant_summary
 from .resident_decisions import ResidentDecisionMixin, measure_decision_view
 from .signoffs import SignoffMixin, missing_items, technical_gate
@@ -35,7 +36,7 @@ class ConflictError(Exception):
     """Another writer changed the same record first, so this write was refused."""
 
 
-class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin):
+class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin, GovernanceMixin):
     def __init__(self, data_path, live_path=None, audit_path=None):
         self.lock = threading.RLock()
         base = os.path.dirname(data_path)
@@ -315,6 +316,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
             raise ValueError("Say how the call went.")
         with self.lock:
             c = self._case(case_id)
+            self.guard_case_event(c)
             c["contacts"].append(dict(at=datetime.now().isoformat(timespec="minutes"), purpose="Update",
                                       channel=channel, direction="Outbound", outcome=outcome,
                                       note=(note or "")[:500], by=user["name"]))
@@ -326,6 +328,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
             raise ValueError("Choose one of the listed answers.")
         with self.lock:
             c = self._case(case_id)
+            self.guard_case_event(c)
             c["decision"] = dict(status=status, by=user["name"], at=datetime.now().date().isoformat())
             self.audit(user["email"], "resident_decision", case_id, f"{status} {note}".strip())
             self.save()
@@ -343,6 +346,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
     def advance(self, user, case_id):
         with self.lock:
             c = self._case(case_id)
+            self.guard_case_event(c)
             if c["stage"] != READY_STAGE:
                 raise ValueError("This case is not at the final checks.")
             why = self.gate_reasons(c)

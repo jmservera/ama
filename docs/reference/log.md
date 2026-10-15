@@ -2859,3 +2859,20 @@ metadata when the knowledge base was created.
 ## [2026-10-15] update | Coordinator uses /every to monitor tmux sessions
 
 * Changed `.github/agents/ama-backlog-delivery-coordinator.agent.md` so the coordinator registers a recurring `/every` check for its tmux RPI sessions instead of a long blocking loop, and stops the schedule when all issues are merged or blocked.
+
+## 2026-10-15 Frozen protocol, benefits register and release gates (#126)
+
+* Added a governance section to `mvp/README.md`: versioned frozen protocol,
+  BG-011 definitions and MDE register (no pass or fail when the MDE exceeds a
+  target), per-phase and tranche release decisions, and breach pauses with
+  authorised restart. Index row for the MVP updated.
+* Synthetic demonstration values only. Open: OD-18 definitions and MDE, OD-36
+  DPIA and lawful basis, OD-35 authority, real approvers, and the RAI closure
+  registers and fresh assessment, which need qualified owners and evidence.
+
+## 2026-10-15 Governance gates wired into case workflows (#126)
+
+* `mvp/README.md` governance section updated: capture and pause guard on case
+  event paths, breach role check, Shadow and Live release need Phase 0 released.
+* No regulatory snapshot changed. Open: pilot cohort enrolment and work package
+  and workstream pause scopes.

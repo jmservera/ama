@@ -42,6 +42,7 @@ class WorkflowMixin:
             raise ValueError("Say why the case is being returned.")
         with self.lock:
             c = self._case(case_id)
+            self.guard_case_event(c)
             if c["closed"]:
                 raise ValueError("This case is closed. A manager can reopen it.")
             order = insights.STAGE_ORDER
