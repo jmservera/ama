@@ -15,7 +15,8 @@ class RegistryTests(unittest.TestCase):
         files = {p.name for p in (MVP / "evals").glob("*.json")} - {"registry.json"}
         self.assertEqual(files, set(reg))
         for name, d in reg.items():
-            self.assertEqual(json.loads((MVP / "evals" / name).read_text())["version"], d["version"])
+            data = json.loads((MVP / "evals" / name).read_text())
+            self.assertEqual(data.get("version", data.get("generator_version")), d["version"])
             self.assertFalse(d["contains_real_data"])
 
     def test_entries_have_required_fields(self):
