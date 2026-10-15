@@ -3090,3 +3090,10 @@ metadata when the knowledge base was created.
 * Tests: `core` 256, `agents` 47, `api` 457 (92 skipped), `orchestrator` 17, `importer` 9; ruff and mypy clean. Docker is permission denied and SQL Server is absent locally, so the image and `mssql` jobs rely on CI.
 * Open on #159: screen-reader test, live model run, and real chat data (OD-45 to OD-49) need owner action, so those criteria stay unticked and the PR uses `Refs #159`.
 
+
+## [2026-10-15] implementation | Chat grounding, evaluation and refusal boundaries (#164)
+
+* Added `src/agents/.../chat_eval.py` and `evals/chat_golden.json` (registered in the eval registry, reusing the #108 harness): 21 synthetic multi-turn scenarios across grounding, permission, out-of-scope, prompt injection and memory poisoning, a comparison with the non-AI path, version bindings and failure recording. Three known gaps are recorded as failures, not hidden. The harness never enables chat.
+* `src/core` `chat_panel` now refuses approve, decide, consent, contact and diagnose requests before any model call, with a workflow route, and drops stale assistant turns from model history. `web/chat.js` shows the refusal. No `mvp/` change.
+* Tests: `core` 258, `agents` 62, `api` 458 (92 skipped); ruff and mypy clean. Docker is permission denied locally; image and `mssql` evidence rely on CI.
+* Open on #164, left unticked: thresholds, accountable reviewer and enablement, independently labelled held-out set, live model run, human exercises and review-effort comparison. The PR uses `Refs #164`.

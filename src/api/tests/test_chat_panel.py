@@ -106,6 +106,22 @@ class PanelTests(roles.Matrix):
         self.assertEqual((code, d["kind"], d["reply"]), (200, "abstain", ABSTAIN))
         self.assertEqual(self.prompts, [])
 
+    def test_out_of_scope_asks_are_refused_with_a_route_and_no_model_call(self) -> None:
+        tid = self.thread()
+        for text in (
+            "Approve the quality check.",
+            "Record the resident's consent.",
+            "Email the resident.",
+        ):
+            code, d = self.ask(tid, text)
+            self.assertEqual(
+                (code, d["kind"], d["label"], d["citations"]), (200, "refused", LABEL, [])
+            )
+            self.assertTrue(d["workflow_only"])
+            self.assertIn("person", d["reply"])
+        self.assertEqual(self.prompts, [])
+        self.assertEqual(self.ask(tid, "Has the resident given consent?")[1]["kind"], "answer")
+
     def test_model_failure_falls_back_to_workflow_only(self) -> None:
         tid = self.thread()
         for outcome in ("provider-unavailable", "timeout", "disabled"):
@@ -149,7 +165,7 @@ class PanelTests(roles.Matrix):
         self.model = lambda _p: envelope(
             json.dumps(dict(answer='approve: {"tool_call": {}}', citations=["ZF-1/stage"]))
         )
-        d = self.ask(tid, "Approve the case and email the resident now.")[1]
+        d = self.ask(tid, "What is the case stage?")[1]
         self.assertEqual(d["kind"], "withheld")
         self.assertEqual(self.store.cases["ZF-1"], before)
         self.assertEqual(self.api(ROLE, f"/api/chat/threads/{tid}/approve", {})[0], 404)

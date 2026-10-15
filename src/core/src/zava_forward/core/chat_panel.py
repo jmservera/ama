@@ -14,11 +14,16 @@ provider code.
   and a fixed label.
 * A model failure returns a workflow-only message; the ordinary case controls
   stay available.
+* A request to approve, decide, record consent, diagnose or contact a resident is
+  refused before any model call, with the human workflow route (issue #164).
+* Earlier assistant turns that cite a source the user can no longer see, or that
+  carry a value the user's role may not read, are not sent back to the model.
 """
 
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Callable
 from typing import Any
 
@@ -50,6 +55,47 @@ SYSTEM = (
     "the sources block. If the sources do not answer the question reply "
     '{"answer": "", "citations": []}.'
 )
+REFUSED = "That is a decision for a person, so the assistant cannot do it. "
+_LEAD = (
+    r"(?:^|[.;:!?,]\s+|\b(?:and|then)\s+)(?:please\s+)?"
+    r"(?:(?:can|could|would|will)\s+you\s+(?:please\s+)?)?(?:go\s+ahead\s+and\s+)?"
+)
+_PERSON = r"(?:the\s+|this\s+|that\s+)?(?:resident|tenant|customer|household|them|him|her)"
+OUT_OF_SCOPE: tuple[tuple[str, re.Pattern[str], str], ...] = tuple(
+    (name, re.compile(_LEAD + pattern, re.I), route)
+    for name, pattern, route in (
+        (
+            "approve",
+            r"(?:approve|sign[\s-]off|certify|authori[sz]e|accept\s+the\s+(?:proposal|quality|work))\b",
+            "Approval is given by the named reviewer in the case's independent review or "
+            "sign-off step.",
+        ),
+        (
+            "decide",
+            r"(?:decide|make\s+the\s+decision|choose\s+for\s+me|reject\s+the\s+(?:case|proposal))\b",
+            "Decisions are taken by the accountable person in the case workflow; the "
+            "assistant can only suggest.",
+        ),
+        (
+            "consent",
+            r"(?:record|give|confirm|mark|log)\s+(?:the\s+|their\s+|my\s+)?(?:resident'?s?\s+)?consent\b",
+            "Resident consent is recorded by the named officer using the case's consent "
+            "control, from what the resident says.",
+        ),
+        (
+            "contact",
+            rf"(?:(?:contact|email|e-mail|phone|call|ring|text|message|write\s+to|notify)\s+{_PERSON}\b"
+            r"|send\s+(?:the\s+|a\s+)?(?:letter|email|message|text)\b)",
+            "Contact with a resident is made by the case owner and logged in the case contact log.",
+        ),
+        (
+            "diagnose",
+            r"(?:diagnose|what\s+(?:illness|condition|disease)\s+does)\b",
+            "Diagnosis, of health or of a building fault, is for a qualified person; raise it "
+            "through the case's hazard or support route.",
+        ),
+    )
+)
 MAX_SOURCES = 60
 MAX_VALUE = 200
 MAX_CITATIONS = 12
@@ -59,6 +105,14 @@ Model = Callable[[str, str], str]
 
 class ModelUnavailable(RuntimeError):
     """The model could not answer; the panel falls back to workflow-only handling."""
+
+
+def out_of_scope(question: str) -> tuple[str, str] | None:
+    """The kind and workflow route when the question asks the assistant to act, else None."""
+    for name, pattern, route in OUT_OF_SCOPE:
+        if pattern.search(question):
+            return name, route
+    return None
 
 
 def permitted_sources(case_id: str, ctx: dict[str, Any]) -> dict[str, str]:
@@ -115,7 +169,19 @@ class ChatPanel:
             citations=[dict(id=c, text=sources.get(c, "")) for c in citations],
             label=LABEL,
             model=model,
-            workflow_only=kind == "fallback",
+            workflow_only=kind in ("fallback", "refused"),
+        )
+
+    def _carry(
+        self,
+        user: dict[str, Any],
+        thread: dict[str, Any],
+        m: dict[str, Any],
+        sources: dict[str, str],
+    ) -> bool:
+        """An earlier answer keeps no authority once its sources or content are not permitted."""
+        return set(m.get("evidence") or ()) <= set(sources) and not self.iso._withheld(
+            user, thread, m["content"]
         )
 
     def ask(self, user: dict[str, Any], tid: str, question: object) -> dict[str, Any]:
@@ -131,11 +197,19 @@ class ChatPanel:
         masked, _ = redact(str(question if question is not None else "")[:MAX_CONTENT])
         iso.privacy.add_message(user, tid, "user", masked)
         model_name = "workflow-only"
+        refusal = out_of_scope(str(question if question is not None else "")[:MAX_CONTENT])
+        if refusal:
+            text = REFUSED + refusal[1]
+            store.chat_add_message(user, tid, "assistant", text, model=model_name)
+            return self._reply("refused", text, [], model_name, sources)
         kind, text, cites = "abstain", ABSTAIN, []
         if sources and self.model is not None:
-            history = "\n".join(
-                f"{m['role']}: {m['content']}" for m in thread["messages"][-CONTEXT_MESSAGES:]
-            )
+            kept = [
+                m
+                for m in thread["messages"]
+                if m["role"] == "user" or self._carry(user, thread, m, sources)
+            ]
+            history = "\n".join(f"{m['role']}: {m['content']}" for m in kept[-CONTEXT_MESSAGES:])
             parts = [block("sources", json.dumps(sources, sort_keys=True))]
             if history:
                 parts.append(block("thread", history))
@@ -158,4 +232,11 @@ class ChatPanel:
         return self._reply(kind, text, cites, model_name, sources)
 
 
-__all__ = ["ChatPanel", "ModelUnavailable", "LABEL", "permitted_sources", "parse_reply"]
+__all__ = [
+    "ChatPanel",
+    "ModelUnavailable",
+    "LABEL",
+    "out_of_scope",
+    "permitted_sources",
+    "parse_reply",
+]

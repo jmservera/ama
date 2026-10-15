@@ -16,6 +16,7 @@ them that start with `cd src/api` run from the api project.
 ## AI evaluation harness
 
 * AI evaluation harness, offline: `python3 -m zava_forward.agents.ai_eval`
+* Chat multi-turn evaluation, offline and synthetic (grounding, out-of-scope refusal, prompt injection, memory poisoning, non-AI comparison, recorded failures; never enables chat): `python3 -m zava_forward.agents.chat_eval [--json] [--record PATH]`. Golden file `evals/chat_golden.json`; thresholds, accountable reviewer and enablement remain owner decisions
   runs golden scenarios (`src/agents/evals/ai_priority_golden.json`; the image sets `ZF_AI_GOLDEN`) with a scripted model
   and checks that ranking and case data never change, the output stays Proposed
   and needs a person's reason to edit or reject. It fails on any critical miss
