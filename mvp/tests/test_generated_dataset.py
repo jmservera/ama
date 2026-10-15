@@ -15,6 +15,7 @@ GENERATOR = Path(__file__).resolve().parents[2] / "support/synthetic-data/retrof
 sys.path.insert(0, str(GENERATOR))
 builder = importlib.import_module("build_mvp_dataset")
 pack = importlib.import_module("generate_pack")
+fabric = importlib.import_module("zf_stock_fabric")
 
 
 def register():
@@ -52,6 +53,31 @@ class GeneratedDatasetTests(unittest.TestCase):
         self.assertEqual(self.path.read_bytes(), second.read_bytes())
         self.assertEqual(self.data["as_of"], "2026-10-13")
         self.assertEqual(len(self.data["cases"]), 980)
+
+    def test_every_case_links_to_one_stock_home_or_is_reported_unlinked(self):
+        link = self.data["stock_link"]
+        ids = {r["synthetic_home_id"] for r in register()}
+        linked = [c for c in self.data["cases"] if c["synthetic_stock_anchor_id"] in ids]
+        self.assertEqual(link["linked_cases"] + link["unlinked_cases"], len(self.data["cases"]))
+        self.assertEqual(link["linked_cases"], len(linked))
+        self.assertEqual(link["unlinked_cases"], len(link["unlinked_case_ids"]))
+        for c in linked:
+            self.assertTrue(c["stock_fabric"]["fabric_is_synthetic"])
+        missing = fabric.link_report([dict(id="ZF-X", synthetic_stock_anchor_id="NOPE")], register())
+        self.assertEqual(missing["unlinked_case_ids"], ["ZF-X"])
+
+    def test_stock_fabric_is_seeded_labelled_and_reproducible(self):
+        rows = register()[:50]
+        one, two = fabric.fabric_rows(rows, 1), fabric.fabric_rows(rows, 1)
+        self.assertEqual(one, two)
+        self.assertNotEqual(one, fabric.fabric_rows(rows, 2))
+        for r in one:
+            self.assertTrue(r["fabric_is_synthetic"])
+            lo, hi = fabric.AGE_BANDS[r["age_band"]]
+            self.assertTrue(lo <= r["build_year"] <= hi)
+        summary = fabric.summary(one, 1)
+        self.assertIn("not a company fact", summary["label"])
+        self.assertIn("age_band_weights_by_locality", summary["assumptions"])
 
     def test_mvp_output_and_receipt_record_seed_version_and_revision(self):
         self.assertEqual(self.data["seed"], 20260901)

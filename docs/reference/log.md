@@ -2759,6 +2759,13 @@ metadata when the knowledge base was created.
   paid/provider calls and operational acceptance retain their existing gates.
   No application implementation or operational approval is recorded here.
 
+## [2026-10-15] update | Stock-to-case link and fabric attributes
+
+* Added a synthetic stock-link report (980 of 980 cases linked, 825 distinct
+  homes) and seeded fabric attributes for the 60,000-home register to the
+  [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md#stock-to-case-link-and-fabric-attributes-2026-10-15).
+  Distributions are stated as assumptions, not company facts (#168).
+
 ## [2026-10-15] implementation | Versioned law store seeded from local snapshots
 
 * Added the Phase 1 law store of [ADR 0005](../adrs/0005-regulatory-compliance-assistant.md)
