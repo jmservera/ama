@@ -89,6 +89,27 @@ repeated and external gates remain unmet. Existing pre-correction PR checks
 were all SUCCESS, including image/mssql; they are not evidence for the new
 commit. Delivery uses the same topic branch and non-closing Refs #84 body.
 
+#### Correction publication
+
+* `git add -u`, staged diff/whitespace checks, then `git commit -F -`:
+  correction commit `ed5cd19`. `git push origin feat/src-stock-reconciliation-84`
+  succeeded without rewriting history or touching main.
+* Rendered the existing PR document without frontmatter, expanded evidence
+  links to this branch's GitHub paths and piped it to
+  `gh pr edit 318 --body-file -`; update succeeded.
+* `gh pr view 318 --json url,headRefName,baseRefName,closingIssuesReferences,headRefOid`
+  confirmed head `ed5cd19`, named topic, base main and no closing references.
+  `git log -1 --format=...` verified both author/committer use
+  8036360+jmservera@users.noreply.github.com and the required co-author trailer.
+  Worktree was clean after the source/evidence commit.
+* `gh pr checks 318 --json name,state,link` after correction reported no
+  checks yet (exit 1). New-head CI is not claimed passed; earlier successful
+  CI was explicitly for the pre-correction head. No merge attempted.
+
+Final plan/state publication metadata is delivered as a separate docs-only
+commit on the same topic. All requested correction markers are complete;
+historical operational approval and live/human acceptance gates remain open.
+
 Full plan for task 84, stock-reconciliation-84. Implementation complete;
 ready for the one post-implementation Review.
 Plan/details and one critique under the same dated slug are authoritative.
