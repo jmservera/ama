@@ -409,7 +409,7 @@ class SqlHazardReferral(JsonHazardReferral):
                             if transition == "accept":
                                 c["quality"][0]["state"] = "Submitted"
                         a.save()
-                inspector = dict(self.bo, role="Quality Inspector")
+                inspector = self.bo
                 operations: dict[str, Callable[[], object]] = {
                     "issue": partial(a.issue_work_order, self.pam, pid, "ZF-3"),
                     "reissue": partial(a.reissue_work_order, self.pam, wid, "Loft", "Reason"),
@@ -424,7 +424,7 @@ class SqlHazardReferral(JsonHazardReferral):
                         a.technical_action,
                         inspector,
                         "ZF-3",
-                        dict(action="signoff_give", type="assessment"),
+                        dict(action="signoff_give", type="building"),
                     ),
                     "advance": partial(a.advance, self.sam, "ZF-3"),
                 }

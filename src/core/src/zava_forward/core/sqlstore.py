@@ -22,7 +22,7 @@ import sqlite3
 import threading
 from datetime import datetime
 
-from . import continuity, insights, ledger, projection, ranking
+from . import continuity, insights, ledger, projection, ranking, stock
 from zava_forward.core.ai import Ai
 from .chatthreads import SQLITE_DDL as CHAT_DDL, MEMORY_ADDED as CHAT_MEMORY_ADDED
 from .doc_controls import open_scanner
@@ -236,7 +236,9 @@ class SqlStore(Store):
                 self.db.execute(f"ALTER TABLE cases ADD COLUMN {col} {'INTEGER' if col in ('support', 'days') else 'TEXT'} NOT NULL DEFAULT {defaults.get(col, chr(39) * 2)}")
         want = ranking.CURRENT["version"]
         row = self.db.execute("SELECT value FROM meta WHERE key='rank_policy'").fetchone()
-        stale = (row[0] if row else None) != want or (not have >= set(CASE_COLS))
+        encoding = self.db.execute("SELECT value FROM meta WHERE key='support_encoding'").fetchone()
+        stale = ((row[0] if row else None) != want or (not have >= set(CASE_COLS))
+                 or (encoding[0] if encoding else None) != stock.SUPPORT_ENCODING)
         if stale and self.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0]:
             self.db.execute("BEGIN IMMEDIATE")
             try:
@@ -244,6 +246,7 @@ class SqlStore(Store):
                     r = self._row(json.loads(body))
                     self.db.execute("UPDATE cases SET " + ", ".join(f"{c}=?" for c in CASE_COLS) + " WHERE id=?", r[1:] + (cid,))
                 self._meta_set("rank_policy", want)
+                self._meta_set("support_encoding", stock.SUPPORT_ENCODING)
                 self.db.execute("COMMIT")
             except BaseException:
                 self.db.execute("ROLLBACK")
@@ -263,6 +266,7 @@ class SqlStore(Store):
                     self.db.executemany(f"INSERT INTO cases (id, rowversion, seq, {', '.join(CASE_COLS)}) VALUES (?,1,1,{','.join('?' * len(CASE_COLS))})",
                                         [self._row(c) for c in src["cases"]])
                     self._meta_set("rank_policy", ranking.CURRENT["version"])
+                    self._meta_set("support_encoding", stock.SUPPORT_ENCODING)
                     for s in src["staff"]:
                         self._insert_ignore("staff", ("email", "body"), (s["email"].lower(), json.dumps(s)))
                     for doc in self.DOCS:

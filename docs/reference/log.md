@@ -3299,3 +3299,24 @@ metadata when the knowledge base was created.
 * OQ-017 live holders/delegations, approved real evaluation, independent model
   attestation, direct human oversight and Azure execution remain open. The
   project contact is not a release/risk/suspension/restart authorization.
+
+## [2026-10-15] query | Stock comparisons and human technical decisions (#84)
+
+* Added owned, append-only competing stock assertions in `src/core` with both
+  values, source IDs/dates/versions and recorded validation states. Source
+  authority, resolution and eligibility remain Unknown; no automatic merge
+  or silent cohort exclusion was added.
+* Reused four separate human sign-offs, affected-only design reassessment,
+  building blockers and hazard holds. Strengthened registered-actor history
+  and pre-mutation validation without treating an agent as a professional.
+* Centralised observed support versus missing coverage for ranking, staff
+  views, filters, counts and AI facts. Existing SQL-derived support/rank keys
+  receive an idempotent encoding refresh; no new SQL dialect was introduced.
+* Added staff API/read-only evidence panel and JSON/SQLite plus loopback
+  HTTP/rendered-browser synthetic checks. Updated the
+  [core contract](../../src/core/README.md#stock-comparisons-and-human-technical-sign-offs-84),
+  [API guide](../../src/api/README.md#stock-reconciliation-api-84) and index.
+* Nomination/challenge and tenure routing stay with #130/#131. Source-authority
+  policy, eligibility decisions, operational competence/delegation, real model,
+  SQL Server/Azure and direct human acceptance remain unmet. Local engineering
+  evidence is not permission for operational use or issue closure.

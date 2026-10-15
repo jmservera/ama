@@ -16,6 +16,51 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Stock comparisons and human technical sign-offs (#84)
+
+`stock.py` validates staff-recorded conflicting assertions for `epc`, `type`
+or `built`. Each comparison preserves two different values and each source's
+identifier, ISO date, version and recorded validation state, plus a registered
+query owner and authenticated recorder. Comparisons append as `SQ-n` with a
+case-local version. The original home value is unchanged; authority,
+resolution and eligibility remain `Unknown`. A source assertion labelled
+`Validated` is not a decision that it is authoritative.
+
+Unresolved queries expose an owned blocker before a design exists and after
+sign-off. They prevent technical approval and installation progression, never
+remove a home from ranking or block independent hazard intake. There is no
+automatic resolver, eligibility-rule engine or stock overwrite. An approved
+source-authority/resolution workflow remains future work.
+
+The existing `signoffs.py` owns separate assessment, design, building and
+coordination decisions. They require registered staff identities in the
+existing exercise roles, distinct people and no self-approval of the recorded
+design. History records the actor email/role and design version. A design change
+returns only the selected design-dependent sign-offs; omitted selection returns
+all design-dependent sign-offs, but empty, duplicate or invalid selections are
+rejected before mutation. Unaffected decisions keep their original version.
+Human reapproval is explicit. Existing building blockers and home hazard holds
+are reused, with no transfer of sibling approvals or resident consent.
+These role mappings do not attest professional competence or actual delegation.
+
+Support is tri-state: `Yes` for an observed true flag or recorded adjustment;
+`No` only for an explicit false flag and `"None"` adjustment; otherwise
+`Unknown`. `support_coverage` separately reports `Unknown` if either input is
+missing, including mixed positive cases. Compatibility Boolean `support` and
+contractor `needs_notice` mean observed positive only, not known absence.
+Staff detail/list, counts, visits, filters and AI facts share this meaning.
+Unknown inputs remain in the existing nonpositive support ranking bucket;
+safety, waiting time, stage and case-ID factors remain independent. No new
+health inference or policy weight is introduced. SQL refreshes existing
+derived support/rank columns once using `meta.support_encoding=1`, preserving
+source assertions, workflow state and audit; no new SQL schema/dialect is added.
+
+`tests/test_stock_reconciliation.py` covers JSON/SQLite semantics and upgrade
+behavior. The [API guide](../api/README.md#stock-reconciliation-api-84) describes
+the staff endpoint, rendered synthetic check and remaining acceptance gates.
+Live SQL Server/Azure, real model use, source authority, competent human review
+and direct user acceptance are not established by these local tests.
+
 ## Task-bound RAI release records (#219)
 
 `assistant_release.py` reuses the migrated `assistant_releases` and

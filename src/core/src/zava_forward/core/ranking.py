@@ -10,6 +10,8 @@ import hashlib
 import json
 import os
 
+from .stock import support_status
+
 POLICY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "policies")
 
 
@@ -65,7 +67,7 @@ def _hazard(c):
 
 
 def _support(c):
-    return bool(c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None")
+    return support_status(c["resident"]) == "Yes"
 
 
 def _rule_keys(policy):
@@ -113,6 +115,8 @@ def reasons(c):
         out.append(("safety_open", "Safety issue open"))
     if _support(c):
         out.append(("support", "Needs extra support"))
+    if support_status(c["resident"]) == "Unknown":
+        out.append(("support_unknown", "Support flags unknown; human review needed"))
     d = c["days_in_stage"]
     out.append(("waiting_days", f"Waiting {d} {'day' if d == 1 else 'days'} in this stage"))
     out.append(("stage_order", f"At '{c['stage']}'"))

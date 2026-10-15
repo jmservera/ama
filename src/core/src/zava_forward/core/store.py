@@ -9,7 +9,7 @@ import threading
 import uuid
 from datetime import datetime
 
-from . import ai_tasks, ai_prompts, buildings, insights, ledger, projection, ranking
+from . import ai_tasks, ai_prompts, buildings, insights, ledger, projection, ranking, stock
 from .finance import FinanceMixin
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
@@ -186,7 +186,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                     last_contact=last, next_visit=nxt["date"] if nxt else None, area=c["home"]["area"],
                     wave=c["wave"], funding=c["funding"]["status"], owner_code=c["owner_code"],
                     hazard=any(not h["released"] for h in c["hazards"]),
-                    support=c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None",
+                    support=stock.support_status(c["resident"]) == "Yes",
+                    support_status=stock.support_status(c["resident"]),
+                    support_coverage=stock.support_coverage(c["resident"]),
                     closed=c["closed"])
 
     def _ranking(self):
@@ -296,7 +298,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         rs = c["resident"]
         if role == "Resident Liaison Officer":
             return [("Resident prefers", rs["preferred"]),
-                    ("Extra support", "Yes" if rs["priority_support"] else (rs["adjustment"] if rs["adjustment"] != "None" else "None recorded")),
+                    ("Extra support", stock.support_status(rs)),
                     ("Decision on works", c["decision"]["status"]),
                     ("Next visit", nxt["date"] if nxt else "None booked")]
         if role == "Retrofit Coordinator":
@@ -327,6 +329,12 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if not c or (user is not None and projection.is_contractor(user) and not projection.own_case(user, c)):
                 return None
             d = json.loads(json.dumps(c))
+            d["support_status"] = stock.support_status(c["resident"])
+            d["support_coverage"] = stock.support_coverage(c["resident"])
+            d["resident"].setdefault("priority_support", None)
+            if not d["resident"].get("adjustment"):
+                d["resident"]["adjustment"] = "Unknown"
+            d.setdefault("stock_reconciliation", [])
             d["hazards"] = [hazard_view(h, case_id) for h in c["hazards"]]
             if c.get("handoff"):
                 d["handoff"] = handoff_view(c)
@@ -349,6 +357,26 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def building_view(self, user, building_id):
         with self.lock:
             return buildings.view(self.data, self.cases, building_id, user)
+
+    def stock_reconcile(self, user, case_id, body):
+        from . import controls
+        controls.refuse_bulk(body)
+        controls.require_role(user, projection.STAFF_ROLES, "authorised staff")
+        with self.lock:
+            actor = self.staff.get(user["email"].lower())
+            if not actor or any(actor.get(key) != user.get(key) for key in ("code", "role", "name")):
+                raise PermissionError("Use a registered staff identity to record a stock query.")
+            query = stock.comparison(body)
+            owner = self._staff_person(query["query_owner"])
+            c = self._case(case_id)
+            rows = c.get("stock_reconciliation", [])
+            query.update(id=f"SQ-{len(rows) + 1}", version=len(rows) + 1,
+                         query_owner={key: owner[key] for key in ("email", "code", "name", "role")},
+                         recorded_by={key: actor[key] for key in ("email", "code", "name", "role")},
+                         at=controls.now())
+            c.setdefault("stock_reconciliation", []).append(query)
+            self.audit(actor["email"], "stock_comparison", case_id, f"{query['id']} {query['field']}; owner {owner['code']}; unresolved")
+            self.save()
 
     def require_building_clear(self, c, package_id=None):
         reasons = buildings.blockers(self.data, self.cases, c, package_id)
@@ -533,7 +561,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     # ---- AI drafting (always a draft for a person)
     def _facts(self, c, reason_ok=False):
         r = c["resident"]
-        adjust = r["adjustment"] if reason_ok else ("extra support needed" if projection.needs_notice(c) else "None")
+        adjust = (r.get("adjustment") or "Unknown") if reason_ok else (
+            "extra support needed" if projection.needs_notice(c) else
+            "Unknown" if stock.support_status(r) == "Unknown" else "None")
         return (f"Case {c['id']}. Resident: {r['name']}. Home: {c['home']['address']}, {c['home']['town']}. "
                 f"Stage: {c['stage']} for {c['days_in_stage']} days. Waiting on {c['waiting_on']} {c['reason']}. "
                 f"Resident adjustments: {adjust}. Resident prefers: {r['preferred']}. "
@@ -660,7 +690,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         def score(c):
             s = 0
             s += 100 if any(not h["released"] for h in c["hazards"]) else 0
-            s += 30 if c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None" else 0
+            s += 30 if stock.support_status(c["resident"]) == "Yes" else 0
             s += 20 if c["decision"]["status"] in ("Not yet asked", "Waiting") else 0
             return s + min(c["days_in_stage"], 120) / 4
         out = []
@@ -668,7 +698,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             why = []
             if any(not h["released"] for h in c["hazards"]):
                 why.append("an open safety issue")
-            if c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None":
+            if stock.support_status(c["resident"]) == "Yes":
                 why.append("the resident needs extra support")
             if c["decision"]["status"] in ("Not yet asked", "Waiting"):
                 why.append("no resident decision yet")

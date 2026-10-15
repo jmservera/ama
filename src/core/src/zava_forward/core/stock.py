@@ -1,0 +1,107 @@
+"""Owned stock comparisons and explicit support uncertainty, never source authority."""
+
+from collections.abc import Mapping
+from datetime import UTC, date, datetime
+from typing import Literal
+
+type SupportState = Literal["Yes", "No", "Unknown"]
+STOCK_FIELDS = ("epc", "type", "built")
+SUPPORT_ENCODING = "1"
+
+
+def support_status(resident: Mapping[str, object]) -> SupportState:
+    """Return observed support, keeping missing evidence distinct from a negative."""
+    adjustment = resident.get("adjustment")
+    positive = (
+        isinstance(adjustment, str)
+        and bool(adjustment.strip())
+        and adjustment not in ("None", "Unknown")
+    )
+    if resident.get("priority_support") is True or positive:
+        return "Yes"
+    if resident.get("priority_support") is False and adjustment == "None":
+        return "No"
+    return "Unknown"
+
+
+def support_coverage(resident: Mapping[str, object]) -> str:
+    """Report incomplete inputs even when another input records a positive need."""
+    adjustment = resident.get("adjustment")
+    complete = (
+        type(resident.get("priority_support")) is bool
+        and isinstance(adjustment, str)
+        and bool(adjustment.strip())
+        and adjustment != "Unknown"
+    )
+    return "Recorded" if complete else "Unknown"
+
+
+def _text(value: object, label: str) -> str:
+    if not isinstance(value, str) or not value.strip() or len(value) > 160:
+        raise ValueError(f"Add {label}, at most 160 characters.")
+    return value.strip()
+
+
+def _assertion(value: object, field: str) -> dict[str, object]:
+    fields = {"value", "source_id", "date", "version", "validation_state"}
+    if not isinstance(value, dict) or set(value) != fields:
+        raise ValueError(
+            "Each stock assertion needs value, source_id, date, version and validation_state."
+        )
+    result: dict[str, object] = {key: _text(value[key], key) for key in fields if key != "value"}
+    try:
+        observed = date.fromisoformat(str(result["date"]))
+    except ValueError:
+        raise ValueError("Stock source date must be an ISO date.") from None
+    if observed > datetime.now(UTC).date():
+        raise ValueError("Stock source date cannot be in the future.")
+    if result["validation_state"] not in ("Unvalidated", "Validated", "Disputed", "Unknown"):
+        raise ValueError("Choose a recorded stock validation state.")
+    raw = value["value"]
+    if field == "built":
+        if type(raw) is not int or not 1000 <= raw <= datetime.now(UTC).year:
+            raise ValueError("Build year must be a recorded integer year.")
+    elif field == "epc":
+        if not isinstance(raw, str) or raw not in tuple("ABCDEFG"):
+            raise ValueError("EPC value must be a recorded band A to G.")
+    else:
+        raw = _text(raw, "the recorded home type")
+    result["value"] = raw
+    return result
+
+
+def comparison(body: Mapping[str, object]) -> dict[str, object]:
+    """Validate two competing stock assertions without selecting either as true."""
+    if set(body) != {"field", "left", "right", "query_owner"}:
+        raise ValueError("A comparison needs exactly field, left, right and query_owner.")
+    field = body["field"]
+    if not isinstance(field, str) or field not in STOCK_FIELDS:
+        raise ValueError("Compare EPC, home type or build year, not resident data.")
+    left, right = _assertion(body["left"], field), _assertion(body["right"], field)
+    if left["value"] == right["value"]:
+        raise ValueError("A conflict needs two different compared values.")
+    if (left["source_id"], left["version"]) == (right["source_id"], right["version"]):
+        raise ValueError("Use distinct source identifiers or versions.")
+    return dict(
+        field=field,
+        left=left,
+        right=right,
+        query_owner=_text(body["query_owner"], "a query owner"),
+        authority="Unknown",
+        resolution="Unknown",
+        eligibility="Unknown",
+        status="Unresolved",
+    )
+
+
+def blockers(case: Mapping[str, object]) -> list[str]:
+    """Expose owned unresolved queries independently of any design record."""
+    rows = case.get("stock_reconciliation", [])
+    if not isinstance(rows, list):
+        raise ValueError("Stock reconciliation must be a list.")
+    return [
+        f"Stock conflict {row['id']} ({row['field']}) is unresolved. "
+        f"Owner: {row['query_owner']['name']}. Next action: obtain source-authority review."
+        for row in rows
+        if row["status"] == "Unresolved"
+    ]
