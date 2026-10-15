@@ -299,6 +299,41 @@ def runtime_binding(capability, ai):
                 permission_version=digest([spec["roles"], PURPOSE])[:16])
 
 
+def build_request(task):
+    """The system and user text sent to the provider; shared by the API and the agents worker."""
+    return SYSTEM, canonical(dict(capability=task["capability"], purpose=REGISTRY[task["capability"]]["purpose"],
+                                  evidence=task["snapshot"]))
+
+
+def shape_result(task, result, limits):
+    """Reduce a raw provider result to (envelope, output, failure). Only safe, known fields survive; text is never saved on failure."""
+    if not isinstance(result, dict):
+        result = dict(outcome="malformed-provider-envelope", usage=None, source="unverified", text=None)
+    envelope = pick(result, ("provider", "deployment", "model", "outcome", "source"))
+    envelope["usage"] = result.get("usage")
+    envelope.update(task=task["capability"], task_version=task["version"], case_id=task["case_id"],
+                    source_signature=task["source_signature"], approved=False)
+    for key in ("provider", "deployment", "model", "outcome", "source"):
+        envelope[key] = envelope[key][:120] if isinstance(envelope[key], str) else None
+    usage = envelope["usage"]
+    envelope["usage"] = {k: usage[k] for k in ("prompt_tokens", "completion_tokens", "total_tokens")} if (
+        isinstance(usage, dict) and all(type(usage.get(k)) is int and usage[k] >= 0
+                                       for k in ("prompt_tokens", "completion_tokens", "total_tokens")) and
+        usage["prompt_tokens"] > 0 and usage["total_tokens"] == usage["prompt_tokens"] + usage["completion_tokens"]) else None
+    output, failure = None, None
+    try:
+        if result.get("source") != "ai" or result.get("outcome") != "returned":
+            raise ValueError("AI unavailable/unverified; use the manual route.")
+        text = result.get("text")
+        if not isinstance(text, str) or len(text) > limits.output_chars:
+            raise ValueError("Output exceeds bounds.")
+        output = validate_output(json.loads(text), task["snapshot"], limits.output_chars)
+    except (ValueError, TypeError, KeyError):
+        failure = "Failed or malformed evidence proposal; human/manual work required."
+        envelope["source"] = "unverified"
+    return envelope, output, failure
+
+
 SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS assistant_tasks (id TEXT PRIMARY KEY, capability TEXT NOT NULL, case_id TEXT NOT NULL, signature TEXT NOT NULL, body TEXT NOT NULL, state TEXT NOT NULL, fence INTEGER NOT NULL, owner TEXT NOT NULL, lease_until REAL NOT NULL, attempts INTEGER NOT NULL, not_before REAL NOT NULL, revision INTEGER NOT NULL)",
     "CREATE TABLE IF NOT EXISTS assistant_allowance (id TEXT PRIMARY KEY, calls INTEGER NOT NULL, tokens INTEGER NOT NULL, expires REAL NOT NULL, used_calls INTEGER NOT NULL, reserved_tokens INTEGER NOT NULL)",
@@ -324,8 +359,10 @@ class Affected(list):
 
 
 class Assistants:
-    def __init__(self, store, env=None):
+    def __init__(self, store, env=None, provider=None):
         self.store, self.limits = store, Limits(env)
+        # The provider port: (system, prompt, max_tokens, timeout) -> raw envelope. The default late-binds to the store's AI client.
+        self.provider = provider or (lambda *args: self.store.ai.evidence(*args))
         self.sql = hasattr(store, "assistant_connection")
         self.mssql = hasattr(store, "_env")
         self.stop_event = threading.Event()
@@ -836,9 +873,7 @@ class Assistants:
         if task is None:
             self.call_slots.release()
             return False
-        system = SYSTEM
-        prompt = canonical(dict(capability=task["capability"], purpose=REGISTRY[task["capability"]]["purpose"],
-                                evidence=task["snapshot"]))
+        system, prompt = build_request(task)
         if len(system) + len(prompt) > self.limits.input_chars:
             self.call_slots.release()
             return self.complete(task, dict(outcome="input-too-large", usage=None, source="unverified"),
@@ -848,7 +883,7 @@ class Assistants:
 
         def call():
             try:
-                values.append(self.store.ai.evidence(system, prompt, self.limits.output_tokens, self.limits.timeout))
+                values.append(self.provider(system, prompt, self.limits.output_tokens, self.limits.timeout))
             except Exception:
                 values.append(dict(outcome="provider-unavailable", usage=None, source="unverified", text=None))
             finally:
@@ -878,31 +913,7 @@ class Assistants:
                 break
         result = values[0] if returned.is_set() and time.perf_counter() - started <= self.limits.timeout else dict(
             outcome="timeout", usage=None, source="unverified", text=None)
-        if not isinstance(result, dict):
-            result = dict(outcome="malformed-provider-envelope", usage=None, source="unverified", text=None)
-        # Only the safe, known envelope fields survive; text is never saved on failure.
-        envelope = pick(result, ("provider", "deployment", "model", "outcome", "source"))
-        envelope["usage"] = result.get("usage")
-        envelope.update(task=task["capability"], task_version=task["version"], case_id=task["case_id"],
-                        source_signature=task["source_signature"], approved=False)
-        for key in ("provider", "deployment", "model", "outcome", "source"):
-            envelope[key] = envelope[key][:120] if isinstance(envelope[key], str) else None
-        usage = envelope["usage"]
-        envelope["usage"] = {k: usage[k] for k in ("prompt_tokens", "completion_tokens", "total_tokens")} if (
-            isinstance(usage, dict) and all(type(usage.get(k)) is int and usage[k] >= 0
-                                           for k in ("prompt_tokens", "completion_tokens", "total_tokens")) and
-            usage["prompt_tokens"] > 0 and usage["total_tokens"] == usage["prompt_tokens"] + usage["completion_tokens"]) else None
-        output, failure = None, None
-        try:
-            if result.get("source") != "ai" or result.get("outcome") != "returned":
-                raise ValueError("AI unavailable/unverified; use the manual route.")
-            text = result.get("text")
-            if not isinstance(text, str) or len(text) > self.limits.output_chars:
-                raise ValueError("Output exceeds bounds.")
-            output = validate_output(json.loads(text), task["snapshot"], self.limits.output_chars)
-        except (ValueError, TypeError, KeyError):
-            failure = "Failed or malformed evidence proposal; human/manual work required."
-            envelope["source"] = "unverified"
+        envelope, output, failure = shape_result(task, result, self.limits)
         try:
             return self.complete(task, envelope, output, failure)
         except Exception:
