@@ -2838,3 +2838,13 @@ metadata when the knowledge base was created.
   Azure Blob snapshot interface; SQLite and local files are test doubles only.
 * No regulatory snapshot changed. Open: Blob immutability policy and Azure SQL
   deployment are unverified infrastructure items.
+
+## 2026-10-15 Frozen protocol, benefits register and release gates (#126)
+
+* Added a governance section to `mvp/README.md`: versioned frozen protocol,
+  BG-011 definitions and MDE register (no pass or fail when the MDE exceeds a
+  target), per-phase and tranche release decisions, and breach pauses with
+  authorised restart. Index row for the MVP updated.
+* Synthetic demonstration values only. Open: OD-18 definitions and MDE, OD-36
+  DPIA and lawful basis, OD-35 authority, real approvers, and the RAI closure
+  registers and fresh assessment, which need qualified owners and evidence.

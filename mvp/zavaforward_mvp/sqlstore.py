@@ -133,7 +133,7 @@ class SqlStore(Store):
         self.cases, self.staff = {}, {}
         self.data = dict(staff=[], recommendations=[])
         self._rv, self._snap = {}, {}
-        self._proc_snap = None
+        self._proc_snap = {}
         self._recs = {}
         self._seed(data_path)
         self._insert_ignore("meta", ["key", "value"], ["as_of", os.environ.get("ZF_AS_OF") or datetime.now().date().isoformat()])
@@ -218,8 +218,9 @@ class SqlStore(Store):
                     self._meta_set("rank_policy", ranking.CURRENT["version"])
                     for s in src["staff"]:
                         self._insert_ignore("staff", ("email", "body"), (s["email"].lower(), json.dumps(s)))
-                    if "procurement" in src:
-                        self._meta_set("procurement", json.dumps(src["procurement"]))
+                    for doc in self.DOCS:
+                        if doc in src:
+                            self._meta_set(doc, json.dumps(src[doc]))
                     if src.get("as_of") and not os.environ.get("ZF_AS_OF"):
                         self._meta_set("as_of", src["as_of"])
                     self._insert_ignore("meta", ("key", "value"), ("seq", "1"))
@@ -349,8 +350,7 @@ class SqlStore(Store):
             except BaseException:
                 self.db.execute("ROLLBACK")
                 raise
-            if proc_body is not None:
-                self._proc_snap = proc_body
+            self._proc_snap.update(proc_body)
             for cid, body in changed:
                 self._rv[cid] += 1
                 self._snap[cid] = body
@@ -380,26 +380,32 @@ class SqlStore(Store):
         self._proc_sync()
         self._sync()
 
-    # ---- procurement data (packages, capacity, work orders) kept as one checked document
+    # ---- procurement and governance data kept as checked documents
+    DOCS = ("procurement", "governance")
+
     def _proc_sync(self):
-        row = self.db.execute("SELECT value FROM meta WHERE key='procurement'").fetchone()
-        self._proc_snap = row[0] if row else None
-        if row:
-            fresh = json.loads(row[0])
-            self.data["procurement"] = fresh
+        self._proc_snap = {}
+        for key in self.DOCS:
+            row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
+            self._proc_snap[key] = row[0] if row else None
+            if row:
+                self.data[key] = json.loads(row[0])
 
     def _proc_write(self):
-        """Inside the save transaction: write changed procurement data, refusing if someone else changed it first."""
-        if "procurement" not in self.data:
-            return None
-        body = json.dumps(self.data["procurement"])
-        if body == self._proc_snap:
-            return None
-        row = self.db.execute("SELECT value FROM meta WHERE key='procurement'").fetchone()
-        if (row[0] if row else None) != self._proc_snap:
-            raise ConflictError("procurement")
-        self.db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('procurement', ?)", (body,))
-        return body
+        """Inside the save transaction: write changed documents, refusing if someone else changed one first."""
+        written = {}
+        for key in self.DOCS:
+            if key not in self.data:
+                continue
+            body = json.dumps(self.data[key])
+            if body == self._proc_snap.get(key):
+                continue
+            row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
+            if (row[0] if row else None) != self._proc_snap.get(key):
+                raise ConflictError(key)
+            self.db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)", (key, body))
+            written[key] = body
+        return written
 
     def _append_audit(self, entries):
         if not entries:
