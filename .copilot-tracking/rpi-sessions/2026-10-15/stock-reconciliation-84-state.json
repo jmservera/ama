@@ -37,7 +37,7 @@
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Publish the reviewed topic PR as authorized, then await owner-selected follow-up; no automatic child task or merge."},
+  "next_action": {"phase": "Follow-up", "action": "PR #318 is open to main; consume CI, preserve unmet RV-001..RV-003 gates and await owner-selected follow-up, Stop or manual mode. No child work or merge authorized."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Consume CI and collect approved live-platform/model evidence", "rationale": "Existing checks provide the easiest next evidence; deployment and inference require approved synthetic access.", "evidence": "RV-001; changes artifact Docker permission denial and local-only evidence."},
     {"rank": 2, "task": "Approve source-authority, resolution and eligibility contract", "rationale": "Highest functional leverage for resolving intentionally held queries, but requires named owner policy.", "evidence": "RV-002; stock assertions preserve Unknown authority/resolution/eligibility."},

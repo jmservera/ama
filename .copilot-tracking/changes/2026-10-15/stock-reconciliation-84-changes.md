@@ -110,6 +110,27 @@ Existing one-pass Review is reused for PR description, not repeated or fanned
 out into another review. Explicit user direction authorizes push and PR, never
 merge. Get-changed-files host tool is unavailable; git's staged diff is used.
 
+## Published delivery
+
+Feature/evidence commit: `3cb71ed`. PR:
+https://github.com/jmservera/ama/pull/318, head
+`feat/src-stock-reconciliation-84`, base `main`, open. Correct author/committer
+privacy address and required co-author trailer verified.
+
+| Command | Result |
+| --- | --- |
+| `git add -u` plus explicit new src and task-artifact paths, `git diff --cached --check && git diff --cached --stat`, then `printf` Conventional Commit message piped to `git commit -F -` | Commit 3cb71ed, 28 files; all required RPI phase artifacts included. Protected paths and private data not staged. |
+| `bash /home/azureuser/.copilot/installed-plugins/hve-core/hve-core-all/skills/shared/pr-reference/scripts/generate.sh --base-branch origin/main --merge-base --output .copilot-tracking/pr/issue-84-reference.xml && wc -c .copilot-tracking/pr/issue-84-reference.xml` | Generated temporary branch reference: 143702 bytes, 2281 lines. Used for publication provenance, not a second Review or a committed duplicate diff. |
+| `git push -u origin feat/src-stock-reconciliation-84` then Python-rendered PR document/complete changes ledger piped to `gh pr create --base main --head feat/src-stock-reconciliation-84 --title 'feat(core): reconcile stock sources and preserve human technical decisions' --body-file -` | Named topic pushed; PR #318 created. PR contains the complete command/result ledger plus explicit unmet gates. |
+| `gh pr view 318 --json url,state,headRefName,baseRefName,closingIssuesReferences,statusCheckRollup && git status --short && git log -1 --format='%h %an <%ae>%n%b' && git diff --name-only origin/main...HEAD -- .env .vscode .copilot-tracking/github-issues mvp && rm .copilot-tracking/pr/issue-84-reference.xml` | Correct open PR, branch/base and identity; CI queued/running. No protected-path/mvp changes. Removed exact temporary XML. GitHub detected an automatic-closing phrase in negative explanatory wording; PR document was immediately changed to unambiguous non-closing wording and republished. |
+| Python-rendered PR document/full ledger piped to `gh pr edit 318 --body-file -`, then `gh pr view 318 --json closingIssuesReferences,url && git diff --check && python3 -m json.tool .copilot-tracking/rpi-sessions/2026-10-15/stock-reconciliation-84-state.json >/dev/null` | PR refreshed; closingIssuesReferences is empty, so #84 will not be closed automatically. Diff/state checks pass. |
+| `gh pr checks 318 --json name,state,link && git status --short && git diff --stat` | src-core, src-namespace and src-no-working-data already SUCCESS; other jobs in progress. Final delta contains four tracking metadata files only, no source/test changes. |
+
+CI was running at publication; image and mssql evidence remain CI-owned.
+No merge, deployment, source-policy approval or human professional acceptance
+was performed. The final metadata-only evidence commit/push and PR refresh
+complete publication without repeating implementation or Review.
+
 ## Acceptance and limits
 
 * [x] Compared source values and named query owner evidenced locally.

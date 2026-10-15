@@ -41,7 +41,8 @@ Nomination/challenge and tenure routing remain #130/#131 by owner comment.
   and image build checks. Local Docker socket access is permission denied.
 
 These checks evidence the local engineering slice, not full operational
-acceptance. This PR references rather than closes #84.
+acceptance. This PR uses a non-closing issue reference; operational acceptance
+remains open.
 
 ## Validation
 

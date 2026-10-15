@@ -86,7 +86,7 @@ JSON and SQL persistence use existing Store contracts, no new SQL.
 
 * [x] P03-T01: Run src suites, ruff/mypy, JS checks and synthetic local HTTP run.
 * [x] P03-T02: Update core/API guides, reference routing and append-only log.
-* [ ] P03-T03: One post-implementation Review, commit, push and open PR.
+* [x] P03-T03: One post-implementation Review, commit, push and open PR #318.
 
 ## Locked Test Ownership and Validation
 
