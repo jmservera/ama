@@ -6,12 +6,12 @@ ms.date: 2026-10-14
 ms.topic: reference
 brd_id: "BRD-2026-AMA48-001"
 status: "draft"
-version: "0.17.0"
+version: "0.18.0"
 owners: ["AMA Research Team"]
 reviewers: ["Executive Director of Assets (proposed sponsor)", "Named Zava North Homes control owners (to be confirmed)"]
 created_date: "2026-09-11"
 last_updated: "2026-10-14"
-business_goal_ids: ["BG-001", "BG-002", "BG-003", "BG-004", "BG-005", "BG-006", "BG-007", "BG-008", "BG-009", "BG-010", "BG-011", "BG-012"]
+business_goal_ids: ["BG-001", "BG-002", "BG-003", "BG-004", "BG-005", "BG-006", "BG-007", "BG-008", "BG-009", "BG-010", "BG-011", "BG-012", "BG-013"]
 business_goal_smart_status: "fail"
 fr_to_ac_coverage_threshold_pct: 80.0
 diagram_format: "none"
@@ -27,6 +27,15 @@ requirement_id_prefixes:
 ---
 
 ## Document Status
+
+Version 0.18.0 adds a proposal, not an adopted requirement set: per-user
+agent chat and memory (BG-013, FR-049, FR-050, RULE-025, RULE-026, NFR-010,
+NFR-011, AC-091 to AC-098 and OD-44 to OD-49). The owner has not decided to
+adopt it, so every new row is a proposal that stays inactive until OD-44 is
+decided and the DPO and Legal decisions in OD-45 and OD-46 are recorded. It
+was raised by review as backlog epic #157 and children #158 to #164 on GitHub
+and sits in no earlier BRD, PRD or ADR. The new rows add no agent authority
+beyond RULE-018 and FR-036.
 
 Version 0.17.0 is a candidate amendment for fresh business/requirements
 review, not a newly accepted BRD. It keeps the v0.16.0 owner direction that
@@ -326,7 +335,7 @@ approved requirements or measured company data. This BRD uses it only to find
 business-control gaps. Every journey pain, gain and request remains a
 sector-informed hypothesis until OD-41 is closed.
 
-| Journey theme | Existing coverage | Disposition in v0.17.0 |
+| Journey theme | Existing coverage | Disposition in v0.17.0 and v0.18.0 |
 | --- | --- | --- |
 | Continuity: tell the story once | FR-017, AC-023 | AC-023 now limits reuse to a stated purpose and recipient; FR-045 adds representative authority |
 | Resident-controlled coordination | FR-012, FR-013, FR-014, RULE-006 | FR-046 separates an offer from a confirmed commitment and records household constraints, deferral and pause |
@@ -335,6 +344,7 @@ sector-informed hypothesis until OD-41 is closed.
 | Accountable recovery after closure | FR-015, FR-029, FR-030, CON-004 | FR-047 keeps complaint remedy, defect and household-level lease or charge disputes open after package progress |
 | Controlled source-to-rule change | FR-038, FR-039, FR-040, RULE-021 | No change; the journey confirms the existing human-owned activation control |
 | Effort shifted to residents, staff or suppliers | RULE-019, Benefits Validation Register | No change; review, correction, resident and supplier effort are already counted |
+| Staff questions asked repeatedly of the same case record (several opportunities, for example O01 to O09 and O16 to O17) | FR-036, FR-044, RULE-018, RULE-022 | Proposed in v0.18.0: FR-049 and FR-050 add case-linked conversations and opt-in memory for staff only, inactive until OD-44. The atlas does not show that staff want or need chat; that is an OD-41 question |
 | Portfolio narrative, analytical supervision and cash rehearsal (opportunities O10, O18 to O20) | Out of scope for this phase | Exploratory later scope; initial programme supervision stays deterministic |
 
 The journey outputs do not widen agent authority. The twenty-four
@@ -589,6 +599,7 @@ remains the Phase 0 readiness gate (OD-06, OD-33) before pilot mobilisation.
 | BG-010 | OBJ-10 | Improve accountability | Exception handoffs accepted by a named human owner | Unknown | 100% accepted or escalated within approved times | Proposed |
 | BG-011 | OBJ-11 | Reduce avoidable coordination effort and delay | Primary cycle-time measure: assessment-to-ready-to-install elapsed time. Also measure manual coordination hours per accepted home, net of review and assurance. Report accepted handover separately as an outcome. | Measure in Phase 0 using a comparable cohort | Owner-confirmed proposed pilot improvements: at least 20% lower cycle time and 25% fewer coordination hours per accepted home against the measured baseline | Owner-delegated reviewer requested changes before draft-target ratification; endpoint direction recorded, OD-18 remains open |
 | BG-012 | OBJ-12 | Demonstrate proportionate technology value | Incremental benefit, whole-life cost, draft accuracy, overrides and critical exceptions versus non-agentic alternatives | Establish options and shadow-mode baseline | Positive attributable value before scale; zero autonomous controlled approvals and no missed critical exceptions in agreed tests | Proposed scale gate, not proof of zero live risk |
+| BG-013 | OBJ-13 | Offer bounded conversational assistance without loss of control, privacy or safety (proposed; inactive until OD-44) | Share of conversational turns that stay inside registered scope, refusals of out-of-authority requests, cross-user exposures, memory items held without consent, rights requests met on time | No baseline exists; conversation and memory are not in any earlier requirement set | No numeric benefit target is proposed. Proposed guardrails: zero cross-user exposures, zero memory items held without consent, zero conversation or memory content used as evidence or for performance rating | Proposed guardrails for the OD-44 to OD-49 decisions, not a benefit claim or proof of zero live risk |
 
 Every FR, RULE and NFR requirement row carries one canonical identifier, its
 legacy alias, the business goals it supports and one or more acceptance
@@ -597,10 +608,10 @@ reordering.
 
 BG-002 to BG-005 and BG-011 have measurable targets and timeframes, although
 the BG-002 and BG-011 targets remain unvalidated proposals. BG-001 and BG-006
-to BG-010 and BG-012 do not yet state a numeric target, a timeframe or both,
+to BG-010, BG-012 and BG-013 do not yet state a numeric target, a timeframe or both,
 because the value depends on company data or a board decision: OD-01 for
 BG-001, OD-13 and OD-18 for BG-006, OD-11 for BG-007, OD-12 and OD-15 for
-BG-008, OD-08 and OD-18 for BG-009, OD-09 for BG-010 and OD-18 for BG-012.
+BG-008, OD-08 and OD-18 for BG-009, OD-09 for BG-010, OD-18 for BG-012 and OD-44 to OD-46 for BG-013.
 These goals fail the SMART check until the owners supply the values. This BRD
 does not invent them.
 
@@ -689,6 +700,8 @@ Detailed sources, caveats, calculations and unsupported-average gaps are in
 | Data Protection Officer | Personal-data and special-category-data governance | Reviews lawful use, access, retention and resident rights |
 | Digital service owner and data owners | Integrations, data stewardship, workflow, AI operation and continuity | Accept interfaces, recovery, model and rule changes, access controls and service support within delegated authority |
 | Benefit owners | Attributable operational, financial and resident outcomes | Finance validates value; Programme validates effort and delivery; Resident Engagement validates lived-outcome evidence |
+| Employees who would use conversational assistants (proposed) | Ask case-linked questions of a registered assistant and own their conversation and memory content | Opt in or out of memory, inspect, edit and delete their own items; no manager or peer visibility by default (OD-44, OD-46) |
+| Human resources or employee relations (to be named) | Staff notice and the prohibition on using conversation or memory content for performance management | Named only if OD-46 identifies the need; reviews the use limits in RULE-026 |
 | Independent assurance | Quality, audit or specialist review | Verifies evidence where risk or funding conditions require it |
 
 ## Scope
@@ -736,6 +749,7 @@ Detailed sources, caveats, calculations and unsupported-average gaps are in
   hazards, complaints or defects
 * Mandatory sensors or a new platform as a prerequisite for current services
 * An upfront commitment to five agents or portfolio-wide capital acceleration
+* Per-user agent chat and memory (FR-049, FR-050) until the owner decides under OD-44 and the DPO and Legal decide under OD-45 and OD-46; chat and memory for residents, representatives or providers until OD-47 is decided
 
 ### Digital Foundation and Authority
 
@@ -1314,18 +1328,18 @@ measured incremental value and no agreed critical-control failure.
 Every requirement row carries one canonical identifier, its legacy alias, the
 business goals it supports and one or more acceptance criteria. Numbering is
 sequential in creation order within each family. Identifiers added in later
-amendments (FR-045 to FR-048) sit beside their related requirements and are not
+amendments (FR-045 to FR-050) sit beside their related requirements and are not
 renumbered after insertion, deletion or reordering.
 
 | Prefix | Family | Use in this BRD | Count |
 | --- | --- | --- | --- |
-| BG | Business goal | Outcome in Business Objectives and Success Metrics; legacy alias OBJ-## | 12 |
-| FR | Functional requirement | Business capability or control the programme must provide | 48 |
-| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 90 |
-| NFR | Non-functional requirement | Quality attribute classified by ISO/IEC 25010 category | 9 |
+| BG | Business goal | Outcome in Business Objectives and Success Metrics; legacy alias OBJ-## | 13 |
+| FR | Functional requirement | Business capability or control the programme must provide | 50 |
+| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 98 |
+| NFR | Non-functional requirement | Quality attribute classified by ISO/IEC 25010 category | 11 |
 | CON | Constraint | Imposed boundary from legislation, regulation, funding, case study or owner-directed exercise delivery | 7 |
-| RULE | Business rule | Standing policy or authority rule that outlives the solution; replaces the canonical BR prefix to avoid a clash with legacy BR-### aliases | 24 |
-| OD | Open decision | Unresolved company decision; not a requirement | 43 |
+| RULE | Business rule | Standing policy or authority rule that outlives the solution; replaces the canonical BR prefix to avoid a clash with legacy BR-### aliases | 26 |
+| OD | Open decision | Unresolved company decision; not a requirement | 49 |
 
 Requirement rows remain grouped by business domain below, so a domain table
 can hold FR, RULE and NFR rows together. The prefix states the type.
@@ -1362,7 +1376,8 @@ authorize spending or supersede legal, resident or professional controls.
 | Compatibility | NFR-005 | Interfaces to authoritative systems |
 | Interaction capability (usability) | NFR-008, NFR-009 | Accessibility, fair access, non-digital alternatives and plain-language explanation comprehension |
 | Reliability | NFR-004 | Safe operation during model, integration or platform failure |
-| Security | NFR-001, NFR-002, NFR-003 | Minimum necessary access, immutable versions and role-based access |
+| Security | NFR-001, NFR-002, NFR-003, NFR-010 | Minimum necessary access, immutable versions, role-based access and, if conversational assistance is adopted, isolation of each user's conversations and memory |
+| Privacy (cross-cutting; proposed) | NFR-011 | Retention, rights handling and content exclusions for conversation and memory data; ISO/IEC 25010 has no privacy category, so this row follows RULE-022 |
 | Maintainability | NFR-007 | Versioned, evaluated and reversible change |
 | Portability (flexibility) | NFR-006 | Exportable evidence independent of an AI supplier |
 
@@ -1506,6 +1521,27 @@ authorize spending or supersede legal, resident or professional controls.
 | FR-041 | BR-056 | The service shall provide role-appropriate evidence views that reduce repeated entry and evidence chasing without exposing unnecessary personal or commercially sensitive information. | BG-005, BG-007, BG-009, BG-010, BG-011 | Employees, residents, contractors, officials, data protection | AC-070: Employees have named queues and one controlled evidence pack; residents have accessible explanations and correction or challenge routes; contractors receive authorised scope and minimum necessary adjustments; officials receive qualified, reusable assurance packs. Management views show complaints and challenges where AI was involved, linked to RULE-005, without exposing unnecessary personal data. | Must |
 | NFR-009 | BR-057 | Each material user journey shall have accountable ownership, service-time measures, escalation and tested manual or non-digital alternatives. | BG-003, BG-004, BG-005, BG-009, BG-010, BG-011 | Residents, employees, contractors, officials | AC-071: Measures cover intake-to-owner, hazard action, professional review, resident contact and adjustment, appointment recovery, evidence review, defect resolution and external-query response. Results expose overdue, paused and reopened work and lawful accessibility differences. Thresholds for each measure are set by the journey owners under OD-09 and OD-25 before live use. | Must |
 | RULE-022 | BR-058 | Personal-data use by agents shall pass purpose, lawful-basis, special-category, transparency, automated-decision, DPIA, security, supplier and incident gates before live processing. | BG-003, BG-005, BG-009, BG-012 | Residents, employees, DPO, digital, suppliers | AC-072: Processing records separate each purpose. Pilot design keeps agent outputs below the solely automated threshold by requiring meaningful, not token, human involvement before any significant outcome. Where Article 22C safeguards would apply, records show the four safeguards: information about the decision, ability to make representations, ability to obtain human intervention and ability to contest. Reviewers can depart from an output and record reasons. Resident works decisions are not treated as blanket data-processing consent. Vulnerability data is minimised, and contractor access is limited to functional adjustments.<br>AC-079: Before live processing, the DPO approves privacy notice updates covering each agent purpose under UK GDPR Articles 13 and 14 and a published plain-language statement of where AI is used in the programme, what it does and does not decide, and how to reach a person. Resident-facing AI-drafted content is approved by a named human before sending. Residents can ask for a human explanation or review at any time through digital and non-digital channels. The gate supports Safety and Quality Standard 2.3.3 on clear and timely communication about planned improvements ([local snapshot](../reference/regulatory/social-housing-regulation/social-housing-safety-and-quality-standard-2024.md), effective 1 April 2024, converted 2026-09-19). The Transparency, Influence and Accountability Standard is noted only as a secondary reference through Awaab's Law Phase 2 guidance section 3 ([local snapshot](../reference/regulatory/social-housing-regulation/awaabs-law-phase-2-guidance-2026.md), converted 2026-09-19) pending OD-39 local snapshot. | Must |
+
+### Conversational Assistance and Memory (proposed)
+
+This subsection is a proposal. The owner has not decided to adopt per-user
+chat or memory (OD-44), and the DPO and Legal have not approved a lawful basis,
+notice, DPIA or retention (OD-45, OD-46). Until then every row below is
+inactive and no build, pilot or release may depend on it. The rows are
+solution-agnostic: they do not name a store, product or model. They add no
+agent authority; they restate RULE-018 and FR-036 for a conversational channel.
+Priority is conditional: "Should (if adopted)" for capability rows and "Must
+(if adopted)" for guardrails. Backlog epic #157 and children #158 to #164 on
+GitHub carry the delivery detail.
+
+| ID | Legacy ID | Requirement | Business goals | Impacted stakeholders | Acceptance criteria | Priority |
+| --- | --- | --- | --- | --- | --- | --- |
+| FR-049 | None | If adopted under OD-44, an authorised employee shall be able to hold a conversation with an already-registered AI-assisted task about a case the employee may access, and the conversation shall belong to that one user and be tied to the case and task it concerns. | BG-011, BG-012, BG-013 | Employees using AI-assisted tasks, case owners, DPO, digital | AC-091: Each conversation is visible only to its owner. A different user, including one in the same role, cannot read, list or search it. Every turn re-checks the user's current role and case permission, and revoked access ends visibility on the next turn. AC-092: The owner can view, export and delete a conversation. Case access and permitted manual completion do not depend on the conversational channel or model availability (FR-044). Deleting a conversation does not alter case records, proposals or the audit record of an event. | Should (if adopted) |
+| FR-050 | None | If adopted under OD-44, the product shall offer opt-in memory of a user's working preferences and recurring context, scoped to one user and one role, which the user can inspect, edit and delete and which expires. | BG-012, BG-013 | Employees using AI-assisted tasks, DPO, Legal, digital | AC-093: Memory is off by default. Opting in is per user and per role, shows what categories will be kept, and can be withdrawn at any time with the effect visible on the next turn. AC-094: A user can list, edit and delete each memory item, and each item shows its source and expiry. Memory is never shared across users or roles, never shown to a manager or peer by default, and never holds resident health, safeguarding, vulnerability, special-category or consent data. The retention period is Unknown until OD-46 is decided. | Should (if adopted) |
+| RULE-025 | None | Conversation and memory content shall be context, not evidence and not a system of record; a conversational channel shall not approve, decide, certify, record consent, diagnose or contact a resident, and any output that would change a record shall be a proposal that passes the existing independent human review. | BG-003, BG-005, BG-006, BG-013 | Employees, residents, competent roles, DPO, audit | AC-095: Memory and conversation text never override a deterministic rule, rank, permission or approval and are never cited as evidence for a decision. Requests to approve, decide, certify, record consent, diagnose or contact a resident are refused and logged as event metadata. Proposals raised in a conversation use the same review, provenance and disposition record as FR-044. Case text and stored memory are treated as untrusted input in injection tests. | Must (if adopted) |
+| RULE-026 | None | Conversation and memory content shall not be used for performance rating, disciplinary or capability assessment of an employee without a separate, named decision that follows RULE-022 and DPIA review. | BG-013 | Employees, HR or employee relations, DPO, Legal | AC-096: Employees receive notice of what is kept and who can access it before opting in. No management view, report or export exposes an individual's conversation or memory content. Aggregate use data, if any, is approved under OD-46 and cannot identify an individual. | Must (if adopted) |
+| NFR-010 | None | If adopted, the solution shall isolate each user's conversations and memory from every other user and shall resist attempts to extract or alter them through the conversation. | BG-005, BG-013 | Employees, DPO, digital, suppliers | AC-097: Tests cover cross-user and cross-role probing, a changed or revoked role mid-conversation, prompt injection through case text and stored memory, and export and deletion paths. Administrator or break-glass access is rare, reasoned, time-limited and audited. | Must (if adopted) |
+| NFR-011 | None | If adopted, conversation and memory data shall have approved retention, rights handling and content exclusions before any live personal data enters them. | BG-005, BG-013 | Employees, residents named in case text, DPO, Legal, digital | AC-098: The DPO has approved retention for each data class (Unknown until OD-46), the DPIA and the staff notice (OD-45). Access, rectification and erasure requests can find and act on conversation and memory data. Logs and telemetry exclude content or follow the same retention. Tests show that excluded categories are not stored. | Must (if adopted) |
 
 ## Data and Reporting Requirements
 
@@ -1804,6 +1840,12 @@ continues. No result automatically activates a live control.
 | OD-41 | Validate the journey atlas stages, pains, gains and handoffs through voluntary, accessible research with real residents, staff, contractors and representatives, including declined or deferred work, failed visits, reopened defects and non-digital households | Resident Engagement and Programme, with Data and Performance input | Blocks use of journey claims as company facts or targets; does not block the exercise demonstrator |
 | OD-42 | Approve how representative authority is evidenced, reviewed, revoked and retained, and which channels may record it | DPO, Legal and Resident Engagement | Blocks operational use of FR-045 with real residents |
 | OD-43 | Confirm the actual in-use monitoring inventory and ownership: device types, count, protocol, sampling cadence, device-to-property mapping and calibration owner, lawful basis and DPIA, resident choice, retention, freshness and gap rules, analysis windows and thresholds, and the operational review owner | Assets, Building Safety, DPO and data owners, with Digital input | Blocks operational use of FR-048 with real data; does not block the simulator exercise |
+| OD-44 | Whether to adopt per-user agent chat at all, for which staff roles and tasks, and whether it is a registry change under FR-036. Proposed default: not adopted until decided; staff first, embedded in the case view, no new assistant | Owner and Executive Director of Assets as proposed sponsor | Blocks FR-049, FR-050, RULE-025, RULE-026, NFR-010 and NFR-011 |
+| OD-45 | Lawful basis, staff notice and DPIA for processing employee conversation and memory data, treatment of resident personal data that appears in case text, model provider and region terms, and how access, rectification and erasure requests are met | Data Protection Officer and Legal | Blocks any live personal data in conversation or memory (RULE-022) |
+| OD-46 | Retention period for each class (conversation, memory item, event metadata), who may access what (including administrator and break-glass), any aggregate use, and the prohibition on performance use in RULE-026 | Data Protection Officer, Legal and HR or employee relations if named | Retention is Unknown until decided; blocks FR-050 and NFR-011 |
+| OD-47 | Whether residents, representatives or providers may ever use a conversational channel, and what consent, accessibility, identity and authority evidence they would need. Depends on OD-41, OD-42 and FR-045 | Resident Engagement, DPO, Legal and the Owner | Blocks any non-staff chat; out of scope until decided |
+| OD-48 | Whether memory is in scope at all or only conversation history, which content classes may be remembered, and how staff memory differs from any later resident memory | Owner, DPO and Digital service owner | Blocks FR-050 |
+| OD-49 | Grounding, abstention and injection-resistance thresholds for conversational turns and the accountable reviewer who approves them | Accountable AI reviewer named under FR-036 and Data and Performance Lead | Blocks activation of any conversational task (FR-036, NFR-010) |
 
 ### Owner Direction and Company Role-Profile Challenge (2026-10-04)
 
@@ -1951,21 +1993,22 @@ Acceptance criteria are not yet written in Given/When/Then form.
 | --- | --- | --- | --- |
 | BG-001 | FR-033, FR-035, FR-042 | RULE-011 | NFR-008 |
 | BG-002 | FR-005, FR-019, FR-020, FR-021, FR-022, FR-033, FR-035 | RULE-007, RULE-011, RULE-016, RULE-019, RULE-020 | None |
-| BG-003 | FR-001, FR-002, FR-003, FR-004, FR-007, FR-008, FR-009, FR-010, FR-016, FR-029, FR-030, FR-032, FR-033, FR-035, FR-036, FR-037, FR-038, FR-039, FR-040, FR-043, FR-044, FR-048 | RULE-001, RULE-003, RULE-012, RULE-014, RULE-015, RULE-017, RULE-018, RULE-020, RULE-021, RULE-022, RULE-024 | NFR-003, NFR-004, NFR-009 |
+| BG-003 | FR-001, FR-002, FR-003, FR-004, FR-007, FR-008, FR-009, FR-010, FR-016, FR-029, FR-030, FR-032, FR-033, FR-035, FR-036, FR-037, FR-038, FR-039, FR-040, FR-043, FR-044, FR-048 | RULE-001, RULE-003, RULE-012, RULE-014, RULE-015, RULE-017, RULE-018, RULE-020, RULE-021, RULE-022, RULE-024, RULE-025 | NFR-003, NFR-004, NFR-009 |
 | BG-004 | FR-001, FR-002, FR-003, FR-004, FR-016, FR-033, FR-036, FR-038, FR-039, FR-040 | RULE-002, RULE-003, RULE-018, RULE-021, RULE-024 | NFR-004, NFR-009 |
-| BG-005 | FR-008, FR-011, FR-012, FR-013, FR-014, FR-015, FR-016, FR-031, FR-033, FR-034, FR-036, FR-037, FR-040, FR-041, FR-042, FR-043, FR-044, FR-045, FR-046, FR-047 | RULE-005, RULE-006, RULE-012, RULE-018, RULE-020, RULE-022, RULE-024 | NFR-001, NFR-002, NFR-003, NFR-005, NFR-006, NFR-007, NFR-008, NFR-009 |
-| BG-006 | FR-005, FR-006, FR-007, FR-008, FR-009, FR-010, FR-019, FR-021, FR-022, FR-028, FR-029, FR-030, FR-033, FR-036, FR-038, FR-040, FR-043, FR-044, FR-046, FR-047 | RULE-004, RULE-007, RULE-008, RULE-012, RULE-013, RULE-014, RULE-015, RULE-017, RULE-018, RULE-019, RULE-020, RULE-021, RULE-024 | NFR-002, NFR-005, NFR-006, NFR-007 |
+| BG-005 | FR-008, FR-011, FR-012, FR-013, FR-014, FR-015, FR-016, FR-031, FR-033, FR-034, FR-036, FR-037, FR-040, FR-041, FR-042, FR-043, FR-044, FR-045, FR-046, FR-047 | RULE-005, RULE-006, RULE-012, RULE-018, RULE-020, RULE-022, RULE-024, RULE-025 | NFR-001, NFR-002, NFR-003, NFR-005, NFR-006, NFR-007, NFR-008, NFR-009, NFR-010, NFR-011 |
+| BG-006 | FR-005, FR-006, FR-007, FR-008, FR-009, FR-010, FR-019, FR-021, FR-022, FR-028, FR-029, FR-030, FR-033, FR-036, FR-038, FR-040, FR-043, FR-044, FR-046, FR-047 | RULE-004, RULE-007, RULE-008, RULE-012, RULE-013, RULE-014, RULE-015, RULE-017, RULE-018, RULE-019, RULE-020, RULE-021, RULE-024, RULE-025 | NFR-002, NFR-005, NFR-006, NFR-007 |
 | BG-007 | FR-023, FR-024, FR-025, FR-026, FR-027, FR-030, FR-033, FR-036, FR-038, FR-039, FR-040, FR-041, FR-042 | RULE-004, RULE-009, RULE-010, RULE-014, RULE-015, RULE-018, RULE-021 | None |
 | BG-008 | FR-022, FR-025, FR-027, FR-033, FR-035, FR-043 | RULE-008, RULE-010, RULE-011, RULE-012, RULE-016, RULE-020 | NFR-003, NFR-005, NFR-006, NFR-007 |
 | BG-009 | FR-012, FR-015, FR-020, FR-021, FR-029, FR-031, FR-032, FR-033, FR-037, FR-041, FR-042, FR-043, FR-045, FR-046, FR-047, FR-048 | RULE-005, RULE-006, RULE-014, RULE-019, RULE-022 | NFR-008, NFR-009 |
 | BG-010 | FR-003, FR-006, FR-016, FR-017, FR-018, FR-033, FR-034, FR-038, FR-039, FR-040, FR-041, FR-044, FR-045 | RULE-003, RULE-008, RULE-021 | NFR-004, NFR-005, NFR-006, NFR-007, NFR-009 |
-| BG-011 | FR-010, FR-022, FR-033, FR-041 | RULE-016, RULE-019 | NFR-009 |
-| BG-012 | FR-004, FR-025, FR-026, FR-027, FR-033, FR-036, FR-038, FR-039, FR-042, FR-043, FR-044 | RULE-016, RULE-018, RULE-019, RULE-020, RULE-021, RULE-022 | NFR-004, NFR-005, NFR-006, NFR-007 |
+| BG-011 | FR-010, FR-022, FR-033, FR-041, FR-049 | RULE-016, RULE-019 | NFR-009 |
+| BG-012 | FR-004, FR-025, FR-026, FR-027, FR-033, FR-036, FR-038, FR-039, FR-042, FR-043, FR-044, FR-049, FR-050 | RULE-016, RULE-018, RULE-019, RULE-020, RULE-021, RULE-022 | NFR-004, NFR-005, NFR-006, NFR-007 |
+| BG-013 | FR-049, FR-050 | RULE-025, RULE-026 | NFR-010, NFR-011 |
 
 ### FR-to-AC and FR-to-BG Coverage
 
-48 of 48 functional requirements have at least one acceptance criterion
-(100.0%, against the 80.0% threshold). 48 of 48 link to at least one business
+50 of 50 functional requirements have at least one acceptance criterion
+(100.0%, against the 80.0% threshold). 50 of 50 link to at least one business
 goal (100.0%, against the 100.0% target). Coverage shows that a link exists,
 not that the linked goal or criterion has been validated.
 
@@ -2019,6 +2062,8 @@ not that the linked goal or criterion has been validated.
 | FR-045 | None | AC-087 | BG-005, BG-009, BG-010 |
 | FR-046 | None | AC-088 | BG-005, BG-006, BG-009 |
 | FR-047 | None | AC-089 | BG-005, BG-006, BG-009 |
+| FR-049 | None | AC-091, AC-092 | BG-011, BG-012, BG-013 |
+| FR-050 | None | AC-093, AC-094 | BG-012, BG-013 |
 
 ### Business Rule Enforcement
 
@@ -2051,10 +2096,12 @@ verified by the record named in the Verification column.
 | RULE-022 | BR-058 | NFR-003 | AC-072, AC-079; DPO-approved DPIA, transparency and gate record |
 | RULE-023 | BR-066 | FR-022 | AC-073 |
 | RULE-024 | None | None | AC-078; Guardrail breach and restart record approved by the OD-35 authority under RULE-020 |
+| RULE-025 | None | FR-049, FR-050, FR-036 | AC-095 |
+| RULE-026 | None | None | AC-096; Employee notice and DPO-approved use limits recorded under OD-45 and OD-46 |
 
 ### Legacy Identifier Map
 
-OBJ-01 to OBJ-12 map one to one to BG-001 to BG-012. The legacy BR identifiers
+OBJ-01 to OBJ-13 map one to one to BG-001 to BG-013. The legacy BR identifiers
 map as follows.
 
 | Legacy ID | Canonical identifiers | Acceptance criteria | Note |
@@ -2215,6 +2262,13 @@ licenses mock substitution or silently waives spend controls.
   plus Board approval where its risk or investment envelope is affected.
 
 ## Source and Review Record
+
+The 2026-10-14 proposal amendment (v0.18.0) adds BG-013, FR-049, FR-050, RULE-025, RULE-026, NFR-010, NFR-011, AC-091 to AC-098 and OD-44 to OD-49 for per-user agent chat and memory (backlog epic #157, children #158 to #164). The sources are the GitHub backlog issues, the journey atlas, [ADR 0004](../adrs/0004-per-user-agent-chat-and-memory.md) and the current assistant behaviour in the MVP; no owner, DPO or Legal decision has been made and no resident, staff or company fact is added. Counts after this amendment are 50 FRs, 98 ACs, 11 NFRs, 7 constraints, 26 rules, 13 business goals and 49 open decisions.
+
+| Version | Date | Change |
+| --- | --- | --- |
+| 0.18.0 | 2026-10-14 | Proposal: per-user agent chat and memory (BG-013, FR-049, FR-050, RULE-025, RULE-026, NFR-010, NFR-011, AC-091 to AC-098, OD-44 to OD-49); no existing ID renumbered |
+| 0.17.0 | 2026-10-14 | Journey atlas amendment: FR-045 to FR-048, AC-087 to AC-090, OD-41 to OD-43 |
 
 The 2026-10-14 candidate amendment (v0.17.0) follows the
 [customer journey atlas](../reference/research/ux/customer-journeys/customer-journey-atlas.md),

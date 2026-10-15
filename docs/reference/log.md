@@ -2544,3 +2544,22 @@ metadata when the knowledge base was created.
 * Owner then authorized merging PR #72 into main after completion/checks and a
   subsequent read-only Functional Planner review of GitHub issue coverage. Issue
   creation is a separate reviewed execution pass.
+
+## [2026-10-15] update | Per-user agent chat and memory proposal (BRD v0.18.0, PRD v0.17.0, ADR 0004)
+
+* Added a proposal, not an adopted requirement set, for per-user agent chat and
+  memory (GitHub backlog epic #157, children #158 to #164). It appeared in no
+  earlier BRD, PRD or ADR, and the owner has not decided to adopt it.
+* BRD v0.18.0 adds BG-013, FR-049, FR-050, RULE-025, RULE-026, NFR-010, NFR-011,
+  AC-091 to AC-098 and OD-44 to OD-49. PRD v0.17.0 adds FR-055 to FR-059,
+  NFR-015, NFR-016, AC-091 to AC-103, OQ-020 to OQ-025 and a journey, agent and
+  UI mapping. ADR 0004 is Proposed.
+* Evidence: the backlog issues, the customer journey atlas (desk research),
+  ADR 0001 to ADR 0003 and the current assistant code. Microsoft Learn
+  documentation on Foundry Agent Service memory (a preview, retrieved
+  2026-10-14) was compared and not chosen.
+* Merged with main after the RAI controls took FR-051 to FR-054, NFR-014,
+  AC-069 to AC-073 and OQ-017 to OQ-019; the proposal PRD IDs were renumbered
+  to avoid collisions. Main had already restored the PRD NFR, Constraints and
+  Acceptance Criteria sections that PR #71 dropped, so the earlier flagged
+  defect no longer applies to main.
