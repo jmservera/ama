@@ -28,6 +28,7 @@ def install(store, ai=None, model="test-model", cls="constructed-fixture", tasks
         else:
             for ddl in rel.SQLITE_DDL:
                 db.execute(ddl)
+        db.execute("DELETE FROM assistant_releases WHERE id LIKE 'fx-%'")
         for cap in assistants.REGISTRY if tasks is None else tasks:
             rec = fixture(cap, assistants.runtime_binding(cap, ai), model, cls, **over)
             db.execute("INSERT INTO assistant_releases (id,capability,status,body,revision) VALUES (?,?,'active',?,1)",

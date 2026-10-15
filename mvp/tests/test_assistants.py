@@ -1136,7 +1136,7 @@ class MssqlLedgerTests(Base):
         store = MssqlStore(str(self.seed), env=env, state_dir=str(self.root))
         self.addCleanup(store.db.close)
         store.ai = self.provider
-        store.db.execute(MSSQL_DDL[-1])
+        store.db.execute(next(d for d in MSSQL_DDL if d.startswith("CREATE TABLE assistant_events")))
         store.db.execute("INSERT INTO assistant_events (id,task_id,at,body) VALUES ('retained','task',0,'{}')")
         service = Assistants(store, config())
         self.addCleanup(service.stop)

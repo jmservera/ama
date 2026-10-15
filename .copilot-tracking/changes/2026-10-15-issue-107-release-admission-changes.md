@@ -17,3 +17,5 @@ ms.date: 2026-10-15
 * Legacy completion recheck added in `ai.py` (`run`, `look_at`).
 * Returned-model wording corrected in `assistants.py` and `mvp/README.md`; open items listed.
 * Tests added: deployment binding, version binding, completion recheck. Full suite: 719 tests OK (92 skipped; SQL Server tests run in CI only).
+
+* Follow-up: SQL Server tests share one database, so `release_support.install` clears prior `fx-%` rows; the ledger test now picks the assistant_events DDL by name.
