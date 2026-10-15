@@ -2671,3 +2671,11 @@ metadata when the knowledge base was created.
 * Added a section on the 120-family document, form-schema and seeded-defect fixtures
   to the retrofit synthetic data README, with open items for the real funding schema
   (OQ-015) and human adjudication of gold labels. No index entry changes needed.
+
+## [2026-10-15] update | Evaluation dataset registry and scale fixture (#174)
+
+* Added `mvp/evals/registry.json` (version, owner, purpose per dataset) and the
+  seeded `mvp/zavaforward_mvp/scale_fixture.py` for a fictional 60,000-home /
+  600,000-event fixture, output Git-ignored. Documented in `mvp/README.md`.
+* Open: named dataset owners; migrating in-test 60,000-case builders. No
+  research or regulatory content changed.

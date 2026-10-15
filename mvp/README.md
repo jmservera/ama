@@ -120,6 +120,13 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   live status line. The tile provider comes from `ZF_TILE_URL` (https only) and
   the CSP follows it. With `ZF_ENV=production` and no `ZF_TILE_URL` no tiles
   load and only the list works.
+* Evaluation dataset registry (`evals/registry.json`) lists every golden and
+  evaluation dataset with version, owner and purpose; a test fails for an
+  unregistered file in `evals/`. The stock-scale fixture (60,000 homes, 600,000
+  events, wholly fictional, seeded) is rebuilt with
+  `PYTHONPATH=. python3 -m zavaforward_mvp.scale_fixture`, writes to the
+  Git-ignored `data/scale-fixture/` and is never committed. Dataset owners are
+  an open owner decision.
 * AI evaluation harness, offline: `PYTHONPATH=. python3 -m zavaforward_mvp.ai_eval`
   runs golden scenarios (`evals/ai_priority_golden.json`) with a scripted model
   and checks that ranking and case data never change, the output stays Proposed
