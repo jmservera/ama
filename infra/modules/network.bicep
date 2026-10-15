@@ -18,6 +18,8 @@ var dnsZones = [
   'privatelink.oms.opinsights.azure.com'
   'privatelink.ods.opinsights.azure.com'
   'privatelink.agentsvc.azure-automation.net'
+  'privatelink.azure-devices.net'
+  'privatelink.servicebus.windows.net'
 ]
 
 resource peNsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
@@ -157,4 +159,6 @@ output zoneIds object = {
   oms: zones[9].id
   ods: zones[10].id
   agentsvc: zones[11].id
+  iotHub: zones[12].id
+  iotHubEndpoint: zones[13].id
 }
