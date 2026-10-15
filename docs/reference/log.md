@@ -3068,6 +3068,11 @@ metadata when the knowledge base was created.
 * Removed the `importer` ruff and mypy exemptions. `core`, `api`, `orchestrator` and `agents` keep theirs (about 2,300 findings without them), recorded as a follow-up in `src/README.md` and the parity matrix.
 * Tests: baseline on `main` 747 (core 252, agents 31, orchestrator 17, importer 9, api 438; 92 skipped); after, 747. Open: docker and SQL Server are not available locally, so the image and `mssql` jobs rely on CI.
 
+## [2026-10-15] restructure | CI, generator and docs repoint verified against main (#200)
+
+* Verified each #200 criterion against main (see `.copilot-tracking/changes/2026-10-15/issue-200-src-repoint-changes.md`). Most work landed in M1 to M6. Gaps fixed: `build_mvp_dataset.py` no longer puts `mvp` on `sys.path` and defaults its output to `ZF_DATA` (`~/.zava-forward/data/zavaforward.json`); the `mvp-validation.yml` committed-data check now also covers `src/**/data/**`; `src/api/README.md` notes the output location.
+* Left open and unticked: new-tag deploy and verification on Container Apps (needs the Azure subscription and a CI-built image; Docker is not available locally), the branch-protection rename (owner decision 2026-10-15: keep names until after cut-over, #201).
+
 ## [2026-10-15] implementation | Case conversation panel in src (#159)
 
 * Added the optional case chat panel: `src/core/.../chat_panel.py` (cited, labelled, abstaining answers and workflow-only fallback over the merged chat isolation and thread code), `src/agents/.../chat.py` (provider adapter), `POST /api/chat/threads/{id}/ask` and `/proposals` in `src/api` (proposals use the existing assistants invoke and independent review) and `web/chat.js`.

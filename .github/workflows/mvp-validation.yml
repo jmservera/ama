@@ -48,4 +48,4 @@ jobs:
       - name: Check browser JavaScript syntax
         run: node --check src/api/src/zava_forward/api/web/app.js
       - name: Refuse committed working data
-        run: test -z "$(git ls-files mvp/data)"
+        run: test -z "$(git ls-files mvp/data ':(glob)src/**/data/**')"

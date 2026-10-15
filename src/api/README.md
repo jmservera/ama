@@ -308,7 +308,7 @@ it is git-ignored, binds to loopback only and must never be committed, deployed
 or shared. The repository must stay private.
 
 ```bash
-python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py --seed 20260901
+python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py --seed 20260901   # writes to ZF_DATA, default ~/.zava-forward/data/zavaforward.json
 python3 -m pip install --no-deps -e src/core -e src/agents -e src/api   # modules moved in M1 to M5 (ADR 0006)
 ZF_PASSWORD=choose-a-password python3 -m zava_forward.api.server
 ```
