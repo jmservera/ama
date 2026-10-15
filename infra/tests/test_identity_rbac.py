@@ -22,15 +22,64 @@ def module_principals(name: str) -> set[str]:
     return set(re.findall(r"principalIds\.(\w+)", block))
 
 
+SCOPE_NAMES = {
+    ("modules/keyvault.bicep", "vault"): "Key Vault",
+    ("modules/registry.bicep", "registry"): "Container registry",
+    ("modules/foundry.bicep", "account"): "Foundry account",
+    ("modules/iothub.bicep", "hub"): "IoT Hub",
+    ("modules/authTokenStore.bicep", "account"): "Token store account",
+    ("modules/authTokenStore.bicep", "tokens"): "auth-tokens container",
+    ("modules/authTokenStore.bicep", "secret"): "Secret entra-token-store-sas only",
+    ("modules/authTokenStore.bicep", "registry"): "Container registry",
+}
+STORAGE_SCOPES = {"blob": "Storage account, blob service", "queue": "Storage account, queue service"}
+MODULE_FILES = {"modules/keyvault.bicep": "keyvault", "modules/registry.bicep": "registry",
+                "modules/foundry.bicep": "foundry", "modules/iothub.bicep": "iotHub"}
+ROLE_RESOURCE = re.compile(
+    r"^resource \w+ 'Microsoft\.Authorization/roleAssignments@[^']+' = .*?^\}", re.S | re.M)
+
+
+def parse_bicep_assignments() -> list[tuple[str, str, str]]:
+    """Return (identity, roleId, scope) for every role assignment resource in the Bicep."""
+    found = []
+    for path, text in BICEP.items():
+        if path in ("main.bicep",):
+            continue
+        variables = dict(re.findall(r"^(?:var|param) (\w+)(?: string)? = '(" + GUID.pattern + ")'", text, re.M))
+        for block in ROLE_RESOURCE.findall(text):
+            if path == "modules/storage.bicep":
+                continue
+            scope = re.search(r"scope: (\w+)", block).group(1)
+            principal = re.search(r"principalId: ([\w.]+)", block).group(1)
+            role = re.search(r"roleDefinitions', ('?[\w-]+'?)\)", block).group(1)
+            role = role.strip("'") if role.startswith("'") else variables[role]
+            identities = ({"token-maintenance"} if principal == "maintenance.properties.principalId"
+                          else module_principals(MODULE_FILES[path]))
+            for identity in identities:
+                found.append((identity, role, SCOPE_NAMES[(path, scope)]))
+    var_ids = dict(re.findall(r"var (\w+) = '(" + GUID.pattern + ")'", MAIN))
+    for ident, role, scope in re.findall(
+            r"principalId: identity\.outputs\.principalIds\.(\w+), roleDefinitionId: (\w+), scope: '(\w+)'", MAIN):
+        found.append((ident, var_ids[role], STORAGE_SCOPES[scope]))
+    return found
+
+
 class RoleMatrixTests(unittest.TestCase):
     def rows(self, resource):
         return [r for r in MATRIX["assignments"] if r["resource"] == resource]
 
-    def test_every_matrix_row_is_in_its_bicep_and_complete(self) -> None:
+    def test_matrix_rows_are_complete(self) -> None:
         for row in MATRIX["assignments"]:
             self.assertTrue(row["reason"] and row["scope"], row)
             self.assertIn(row["roleId"], MATRIX["builtInRoles"])
-            self.assertIn(row["roleId"], BICEP[row["bicep"]] + MAIN, row)
+
+    def test_bicep_assignments_equal_matrix_tuples(self) -> None:
+        parsed = parse_bicep_assignments()
+        self.assertEqual(len(parsed), len(set(parsed)), "duplicate Bicep assignment")
+        matrix = [(r["identity"], r["roleId"], r["scope"]) for r in MATRIX["assignments"]]
+        self.assertEqual(len(matrix), len(set(matrix)), "duplicate matrix row")
+        self.assertEqual(set(parsed), set(matrix))
+        self.assertGreaterEqual(len(parsed), 19)
 
     def test_every_bicep_role_is_in_the_matrix_and_none_is_broad(self) -> None:
         all_text = "".join(BICEP.values())
@@ -38,25 +87,6 @@ class RoleMatrixTests(unittest.TestCase):
             self.assertNotIn(guid, all_text, name)
         used = {r["roleId"] for r in MATRIX["assignments"]}
         self.assertEqual(used, set(MATRIX["builtInRoles"]))
-        for guid in MATRIX["builtInRoles"]:
-            self.assertTrue(any(guid in text for text in BICEP.values()), guid)
-
-    def test_module_consumers_match_matrix(self) -> None:
-        for module, resource in (("keyvault", "keyvault"), ("registry", "registry"), ("iotHub", "iotHub")):
-            expected = {r["identity"] for r in self.rows(resource) if r["identity"] != "token-maintenance"}
-            self.assertEqual(module_principals(module), expected, module)
-        foundry = {r["identity"] for r in self.rows("foundry")}
-        self.assertEqual(module_principals("foundry"), foundry)
-
-    def test_storage_assignments_match_matrix(self) -> None:
-        var_ids = dict(re.findall(r"var (\w+) = '(" + GUID.pattern + ")'", MAIN))
-        parsed = set()
-        for ident, role, scope in re.findall(
-                r"principalId: identity\.outputs\.principalIds\.(\w+), roleDefinitionId: (\w+), scope: '(\w+)'", MAIN):
-            parsed.add((ident, var_ids[role], scope))
-        matrix = {(r["identity"], r["roleId"], "blob" if "blob" in r["scope"] else "queue")
-                  for r in self.rows("storage")}
-        self.assertEqual(parsed, matrix)
 
     def test_iot_hub_grants_receiver_only_to_api(self) -> None:
         self.assertEqual([(r["identity"], r["roleId"]) for r in self.rows("iotHub")],

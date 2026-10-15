@@ -1,7 +1,8 @@
 {
   "displayName": "zava-forward-api",
   "signInAudience": "AzureADMyOrg",
-  "owner": "Juan Manuel Servera (tenant and subscription owner)",
+  "owner": "Juan Manuel Servera (subscription owner and Legal/Compliance/DPO owner per the 2026-10-15 owner decisions; tenant ownership unconfirmed)",
+  "enforcement": "Not declarative: the script is not driven by this manifest and a test only checks they agree. Criterion 4 (reproducible registration) is met by the explicit manual steps below and their named owner. Callback hostnames are passed with the script -u option at run time and are not recorded here.",
   "appRoleAssignmentRequired": true,
   "callbackPath": "/.auth/login/aad/callback",
   "idTokenIssuance": true,
@@ -19,7 +20,7 @@
   "contractorIdentity": {
     "status": "Proposed in ADR 0002, owner confirmation open (#116)",
     "model": "Entra B2B guest users assigned only the ZavaForward.Contractor app role; appRoleAssignmentRequired blocks every other guest",
-    "requires": "Tenant owner confirms guest invitation, access reviews and cross-tenant settings"
+    "requires": "Tenant owner (not yet confirmed as Juan Manuel Servera) confirms guest invitation, access reviews and cross-tenant settings"
   },
   "manualSteps": [
     {"step": "Run infra/scripts/create-api-app-registration.sh as an Application Administrator", "owner": "Juan Manuel Servera"},

@@ -107,7 +107,7 @@ Open items: Defender cost estimate and the decision to enable; renewal of EX-001
 
 ## Identity and role assignments (issue 141)
 
-[role-assignments.json](role-assignments.json) lists every identity, scope, role and reason, plus SQL grants. `tests/test_identity_rbac.py` fails when the Bicep and the matrix disagree, when Owner, Contributor, User Access Administrator or Reader appear, or when a shared key, SQL login or connection string is introduced. The only connection string is the Application Insights ingestion string (not a data credential); `entra-client-secret` and `entra-token-store-sas` are inventoried in [secret-inventory.json](secret-inventory.json).
+[role-assignments.json](role-assignments.json) lists every identity, scope, role and reason, plus SQL grants. `tests/test_identity_rbac.py` parses every Bicep role assignment (principal, role definition and scope, including the token-maintenance rows) and fails when the set of (identity, role, scope) tuples differs from the matrix, when Owner, Contributor, User Access Administrator or Reader appear, or when a shared key, SQL login or connection string is introduced. The only connection string is the Application Insights ingestion string (not a data credential); `entra-client-secret` and `entra-token-store-sas` are inventoried in [secret-inventory.json](secret-inventory.json).
 
 | Identity | Scope and role | Reason |
 | --- | --- | --- |
@@ -119,7 +119,7 @@ Open items: Defender cost estimate and the decision to enable; renewal of EX-001
 
 Chat and memory store (ADR 0004, accepted by the owner 2026-10-15): no Bicep resource exists yet. When added it gets one data-plane role for the api identity, local auth disabled, and a new matrix row.
 
-Entra registration: [entra/app-registration.json](entra/app-registration.json) is the declarative record (audience, callback, eight app roles mapped to the MVP personas, assignment required). `create-api-app-registration.sh` applies it idempotently; a test keeps manifest, script and `DEFAULT_ROLE_MAP` identical. Existing sign-in, picture and user switching are unchanged. Owner of all manual tenant steps: Juan Manuel Servera.
+Entra registration: [entra/app-registration.json](entra/app-registration.json) is the declarative record (audience, callback, eight app roles mapped to the MVP personas, assignment required). `create-api-app-registration.sh` applies the registration idempotently but does not read the manifest: a test only keeps manifest, script app roles and `DEFAULT_ROLE_MAP` identical, and callback hostnames are supplied with `-u` at run time. Reproducibility (criterion 4) is therefore met by explicit manual steps and a named owner, not declaratively. Existing sign-in, picture and user switching are unchanged. Owner of the manual steps: Juan Manuel Servera (subscription owner; tenant ownership unconfirmed).
 
 Open items:
 

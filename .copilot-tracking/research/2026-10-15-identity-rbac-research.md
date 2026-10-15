@@ -9,3 +9,8 @@ Research disposition: executed. Planning Readiness: Ready.
 * Entra registration is created by infra/scripts/create-api-app-registration.sh; roles match mvp DEFAULT_ROLE_MAP.
 * Owner decisions: uksouth, Azure only, existing sign-in kept, Juan Manuel Servera owns tenant steps. ADR 0005 permits synthetic fixtures only; no data touched.
 * Open: B2B guest decision (#116), live role comparison.
+
+## Review-fix research
+
+* Evidence supports Juan Manuel Servera as subscription owner and Legal/Compliance/DPO owner (infra/README.md governance section); tenant ownership is not evidenced.
+* The registration script hard-codes roles and takes callbacks via -u; it does not read the manifest.
