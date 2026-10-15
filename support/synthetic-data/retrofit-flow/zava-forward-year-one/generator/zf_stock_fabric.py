@@ -9,6 +9,8 @@ import random
 import sys
 from collections import Counter
 
+from zf_manifest import generator_revision
+
 VERSION = "stock-fabric-v1"
 SEED = 4820260930
 LABEL = "Synthetic assumption; not a company fact, survey result or EPC record."
@@ -100,7 +102,8 @@ def link_report(cases, register):
 
 
 def summary(rows, seed=SEED):
-    out = dict(is_synthetic=True, label=LABEL, version=VERSION, seed=seed, homes=len(rows), assumptions=ASSUMPTIONS)
+    out = dict(is_synthetic=True, label=LABEL, version=VERSION, seed=seed, generator_revision=generator_revision(),
+               homes=len(rows), assumptions=ASSUMPTIONS)
     for k in ("age_band", "dwelling_type", "construction", "heating"):
         out[f"{k}_counts"] = dict(sorted(Counter(r[k] for r in rows).items()))
     return out

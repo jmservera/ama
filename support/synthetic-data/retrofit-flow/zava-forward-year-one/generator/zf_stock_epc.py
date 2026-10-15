@@ -12,6 +12,7 @@ from collections import Counter
 from datetime import date, timedelta
 
 import zf_stock_fabric as fab
+from zf_manifest import generator_revision
 from zf_model import band_from_sap
 
 VERSION = "stock-epc-v1"
@@ -127,7 +128,8 @@ def conflict_manifest(rows):
 
 def summary(rows, seed=SEED):
     conflicts = conflict_manifest(rows)
-    return dict(is_synthetic=True, label=LABEL, version=VERSION, seed=seed, homes=len(rows),
+    return dict(is_synthetic=True, label=LABEL, version=VERSION, seed=seed,
+                generator_revision=generator_revision(), homes=len(rows),
                 surveyed_homes=sum(1 for r in rows if r["survey_status"] == "Surveyed"),
                 seeded_conflicts=len(conflicts),
                 conflict_type_counts=dict(sorted(Counter(c["conflict_type"] for c in conflicts).items())),

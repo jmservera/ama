@@ -18,18 +18,25 @@ def _canon(name):
     return " ".join(str(name).split()).casefold()
 STATES = ("draft", "approved", "active", "held", "retired")
 EXERCISE_LABEL = "EXERCISE CARD: synthetic fixture, not approved by a named owner. Not law and not a real approval (ADR 0005 owner decision, 2026-10-15)."
-APPEND_ONLY = ("rule_card_version", "rule_card_event", "rule_card_review")
+APPEND_ONLY = ("rule_card_version", "rule_card_event", "rule_card_review", "rule_card_review_event")
+REVIEW_STATES = ("open", "assessed")
+TRACE = {
+    "hazard-awareness-clock": dict(requirements=["CON-001", "FR-003", "RULE-003"], tests=["tests/test_rulecards.py", "tests/test_lawstore.py"]),
+    "automated-decision-safeguard": dict(requirements=["FR-034", "RULE-021"], tests=["tests/test_rulecards.py", "tests/test_ai_eval.py"]),
+}
 FIELDS = ("title", "trigger", "applicability", "provisions", "clock", "safe_default", "escalation_role", "approver", "effective", "retirement")
 
 SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS rule_card_version (card_id TEXT NOT NULL, version INTEGER NOT NULL, title TEXT NOT NULL, trigger_text TEXT NOT NULL, applicability TEXT NOT NULL, provisions TEXT NOT NULL, clock TEXT NOT NULL, safe_default TEXT NOT NULL, escalation_role TEXT NOT NULL, approver TEXT NOT NULL, author TEXT NOT NULL, effective TEXT, retirement TEXT, exercise INTEGER NOT NULL, created TEXT NOT NULL, PRIMARY KEY (card_id, version))",
     "CREATE TABLE IF NOT EXISTS rule_card_event (id INTEGER PRIMARY KEY AUTOINCREMENT, card_id TEXT NOT NULL, version INTEGER NOT NULL, state TEXT NOT NULL, actor TEXT NOT NULL, role TEXT NOT NULL, at TEXT NOT NULL, simulated INTEGER NOT NULL, note TEXT)",
-    "CREATE TABLE IF NOT EXISTS rule_card_review (id INTEGER PRIMARY KEY AUTOINCREMENT, card_id TEXT NOT NULL, source_id TEXT NOT NULL, source_version INTEGER NOT NULL, detected TEXT NOT NULL, status TEXT NOT NULL, note TEXT)",
+    "CREATE TABLE IF NOT EXISTS rule_card_review (id INTEGER PRIMARY KEY AUTOINCREMENT, card_id TEXT NOT NULL, source_id TEXT NOT NULL, source_version INTEGER NOT NULL, detected TEXT NOT NULL, status TEXT NOT NULL, note TEXT, affected TEXT, prior_version INTEGER, source_effective TEXT)",
+    "CREATE TABLE IF NOT EXISTS rule_card_review_event (id INTEGER PRIMARY KEY AUTOINCREMENT, review_id INTEGER NOT NULL, state TEXT NOT NULL, actor TEXT NOT NULL, role TEXT NOT NULL, at TEXT NOT NULL, record TEXT)",
 )
 MSSQL_DDL = (
     "CREATE TABLE rule_card_version (card_id VARCHAR(100) NOT NULL, version INT NOT NULL, title NVARCHAR(200) NOT NULL, trigger_text NVARCHAR(600) NOT NULL, applicability NVARCHAR(600) NOT NULL, provisions NVARCHAR(MAX) NOT NULL, clock NVARCHAR(400) NOT NULL, safe_default NVARCHAR(600) NOT NULL, escalation_role NVARCHAR(200) NOT NULL, approver NVARCHAR(200) NOT NULL, author NVARCHAR(200) NOT NULL, effective VARCHAR(10) NULL, retirement VARCHAR(10) NULL, exercise BIT NOT NULL, created VARCHAR(10) NOT NULL, PRIMARY KEY (card_id, version))",
     "CREATE TABLE rule_card_event (id INT IDENTITY PRIMARY KEY, card_id VARCHAR(100) NOT NULL, version INT NOT NULL, state VARCHAR(20) NOT NULL, actor NVARCHAR(200) NOT NULL, role VARCHAR(40) NOT NULL, at VARCHAR(10) NOT NULL, simulated BIT NOT NULL, note NVARCHAR(400) NULL)",
-    "CREATE TABLE rule_card_review (id INT IDENTITY PRIMARY KEY, card_id VARCHAR(100) NOT NULL, source_id VARCHAR(100) NOT NULL, source_version INT NOT NULL, detected VARCHAR(10) NOT NULL, status VARCHAR(20) NOT NULL, note NVARCHAR(400) NULL)",
+    "CREATE TABLE rule_card_review (id INT IDENTITY PRIMARY KEY, card_id VARCHAR(100) NOT NULL, source_id VARCHAR(100) NOT NULL, source_version INT NOT NULL, detected VARCHAR(10) NOT NULL, status VARCHAR(20) NOT NULL, note NVARCHAR(400) NULL, affected NVARCHAR(MAX) NULL, prior_version INT NULL, source_effective VARCHAR(10) NULL)",
+    "CREATE TABLE rule_card_review_event (id INT IDENTITY PRIMARY KEY, review_id INT NOT NULL, state VARCHAR(20) NOT NULL, actor NVARCHAR(200) NOT NULL, role VARCHAR(40) NOT NULL, at VARCHAR(10) NOT NULL, record NVARCHAR(MAX) NULL)",
 )
 LEDGER_SUFFIX = " WITH (LEDGER = ON (APPEND_ONLY = ON))"
 
@@ -178,22 +185,72 @@ class RuleCardStore:
             out.append(d)
         return out
 
-    def source_changed(self, source_id, source_version, today=None):
-        """Record a review item for each card citing the source. Approved cards are never modified."""
+    def source_changed(self, source_id, source_version, today=None, source_effective=None, prior_version=None):
+        """Record a review item for each card citing the source. Approved cards are never modified.
+
+        Each item names the affected rule card, its active version, the requirements and tests the card traces to,
+        and the source versions and effective date, so a human owner can assess it. It stays open until the
+        card's named owner records an assessment; it never activates, changes or retires anything.
+        """
         today = today or date.today().isoformat()
+        prior_version = source_version - 1 if prior_version is None and source_version > 1 else prior_version
         hit = []
         for (cid,) in self.db.execute("SELECT DISTINCT card_id FROM rule_card_version WHERE provisions LIKE ?", (f"%{source_id}%",)).fetchall():
-            self.db.execute("INSERT INTO rule_card_review (card_id, source_id, source_version, detected, status, note) VALUES (?,?,?,?,?,?)",
-                            (cid, source_id, source_version, today, "open", "Source changed. Owner to review and, if needed, draft a new card version."))
+            t = TRACE.get(cid, {})
+            affected = dict(rules=[cid], active_version=self.is_active(cid, today), requirements=t.get("requirements", []), tests=t.get("tests", []),
+                            unmapped=not t)
+            self.db.execute("INSERT INTO rule_card_review (card_id, source_id, source_version, detected, status, note, affected, prior_version, source_effective) VALUES (?,?,?,?,?,?,?,?,?)",
+                            (cid, source_id, source_version, today, "open", "Source changed. Owner to review and, if needed, draft a new card version.",
+                             json.dumps(affected), prior_version, source_effective))
             hit.append(cid)
         self.db.commit()
         return hit
+
+    def assess_review(self, review_id, actor, role, today=None, *, interpretation, outcome, tests, effective, notification, rollback, hold=None):
+        """Record the named owner's assessment of a review item (RULE-021, AC-068). Only the owner of the card can do this.
+
+        outcome is no_change or new_version_required. A new version still needs propose, approve and activate.
+        If hold is given, the card's active version is held at once; the assessment itself never activates a rule.
+        """
+        r = self.db.execute("SELECT * FROM rule_card_review WHERE id=?", (review_id,)).fetchone()
+        if not r:
+            raise RuleError("unknown review item")
+        latest = self.db.execute("SELECT MAX(version) FROM rule_card_version WHERE card_id=?", (r["card_id"],)).fetchone()[0]
+        c = self._owner_only(r["card_id"], latest, actor, role)
+        if self._review_state(review_id) != "open":
+            raise RuleError("review item is already assessed")
+        if outcome not in ("no_change", "new_version_required"):
+            raise RuleError("outcome must be no_change or new_version_required")
+        rec = dict(interpretation=interpretation, outcome=outcome, tests=tests, effective=effective, notification=notification, rollback=rollback, hold=hold)
+        missing = [k for k in ("interpretation", "tests", "effective", "notification", "rollback") if not rec[k]]
+        if missing:
+            raise RuleError("missing assessment fields: " + ", ".join(missing))
+        today = today or date.today().isoformat()
+        if hold:
+            for (v,) in self.db.execute("SELECT DISTINCT version FROM rule_card_version WHERE card_id=?", (r["card_id"],)).fetchall():
+                if self.state(r["card_id"], v) == "active":
+                    self.hold(r["card_id"], v, actor, role, f"review {review_id}: {hold}", today)
+        self.db.execute("INSERT INTO rule_card_review_event (review_id, state, actor, role, at, record) VALUES (?,?,?,?,?,?)",
+                        (review_id, "assessed", actor, role, today, json.dumps(rec)))
+        self.db.commit()
+
+    def _review_state(self, review_id):
+        r = self.db.execute("SELECT state FROM rule_card_review_event WHERE review_id=? ORDER BY id DESC LIMIT 1", (review_id,)).fetchone()
+        return r[0] if r else "open"
 
     def reviews(self, card_id=None):
         q, a = "SELECT * FROM rule_card_review", ()
         if card_id:
             q, a = q + " WHERE card_id=?", (card_id,)
-        return [dict(r) for r in self.db.execute(q + " ORDER BY id", a)]
+        out = []
+        for r in self.db.execute(q + " ORDER BY id", a).fetchall():
+            d = dict(r)
+            d["affected"] = json.loads(d["affected"]) if d["affected"] else None
+            d["status"] = self._review_state(d["id"])
+            ev = self.db.execute("SELECT actor, role, at, record FROM rule_card_review_event WHERE review_id=? ORDER BY id DESC LIMIT 1", (d["id"],)).fetchone()
+            d["assessment"] = dict(actor=ev["actor"], at=ev["at"], **json.loads(ev["record"])) if ev else None
+            out.append(d)
+        return out
 
     def seed(self, today="2026-10-15"):
         """Load the two exercise cards as drafts. Idempotent. They stay draft until a named owner approves."""

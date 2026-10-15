@@ -164,8 +164,15 @@ treated as delivery failure.
    board when the loop starts and to In review when its PR opens. Track each session's tmux name, log
    and required outputs: a pushed branch, an open PR and validation evidence.
    A session that fails to start, exits without them or hangs is retried once
-   in the same worktree, then becomes a human blocker with its log path. Run waves with background agents and
-   continue with independent work rather than polling.
+   in the same worktree, then becomes a human blocker with its log path. Do not hold a long
+   blocking loop or sleep while sessions run. After launching a wave, register
+   a recurring check with the `/every` command (the `manage_schedule` tool,
+   action `create`, for example interval `5m`) whose prompt says: list `tmux ls`,
+   read each `/tmp/rpi-{number}.log` tail, and for every finished session run
+   the verify, review and gate steps below, start newly unblocked issues, and
+   report the blocker ledger. Stop that schedule (`manage_schedule` `stop`)
+   when every issue is merged or blocked, and name the schedule id in the
+   report. Between checks, continue with independent work.
    Verify RPI use before review: the PR diff must contain that issue's
    research, plan, changes and review artifacts
    (`gh pr diff {n} --name-only | grep .copilot-tracking`), and the session

@@ -73,13 +73,13 @@ class TasksMixin:
 
     def test_comparison_record_for_every_task_and_review_roundtrip(self):
         self.out["text"] = "- ok [[Stage: Contacting resident]]"
+        self.store.briefing(self.sam)
+        self.store.funding_draft(self.pam, "ZF-1")
         r = self.store.ai_run(self.sam, "ZF-1", "summary")
         rec = next(x for x in self.records() if x["id"] == r["record_id"])
         self.assertEqual(rec["case_ids"], ["ZF-1"])
         self.assertTrue(rec["ai_output"] and rec["workflow_output"])
         self.assertIsNone(rec["fallback_reason"])
-        self.store.briefing(self.sam)
-        self.store.funding_draft(self.pam, "ZF-1")
         self.assertGreaterEqual({x["task"] for x in self.records()}, {"summary", "briefing", "funding_draft"})
         with self.assertRaises(ValueError):
             self.store.review_ai(self.sam, r["record_id"], "reject", "")
@@ -92,6 +92,33 @@ class TasksMixin:
         self.assertEqual(rep["tasks"]["summary"]["Edited"], 1)
         self.assertEqual(rep["reviewer_reasons"][0]["reason"], "too stiff")
         self.assertTrue(self.store.verify_audit())
+
+    def test_provenance_states_are_separate_and_review_keeps_evidence(self):
+        self.out["text"] = "- ok [[Stage: Contacting resident]]"
+        r = self.store.ai_run(self.sam, "ZF-1", "summary")
+        rec = next(x for x in self.records() if x["id"] == r["record_id"])
+        self.assertEqual({k: rec["provenance"][k] for k in ("citation_resolved", "source_verified", "human_reviewed")},
+                         dict(citation_resolved=True, source_verified=False, human_reviewed=False))
+        before = json.dumps(self.store.data.get("cases"), sort_keys=True, default=str)
+        self.store.review_ai(self.sam, r["record_id"], "accept")
+        self.assertTrue(rec["provenance"]["human_reviewed"])
+        self.assertFalse(rec["provenance"]["source_verified"])
+        ev = rec["review_evidence"]
+        self.assertEqual((ev["reviewer"], ev["disposition"]), (self.sam["email"], "accept"))
+        self.assertTrue(ev["compared"]["ai"] and ev["compared"]["workflow"])
+        self.assertEqual(before, json.dumps(self.store.data.get("cases"), sort_keys=True, default=str))
+
+    def test_changed_source_holds_instead_of_accepting(self):
+        self.out["text"] = "- ok [[Stage: Contacting resident]]"
+        r = self.store.ai_run(self.sam, "ZF-1", "summary")
+        rec = next(x for x in self.records() if x["id"] == r["record_id"])
+        with mock.patch.object(ai_tasks, "source_hashes", return_value={"ZF-1": "changed"}):
+            with self.assertRaises(ValueError):
+                self.store.review_ai(self.sam, r["record_id"], "accept")
+        self.assertEqual(rec["status"], "Hold")
+        self.assertEqual(rec["provenance"]["hold"]["owner"], self.sam["email"])
+        self.assertFalse(rec["provenance"]["human_reviewed"])
+        self.assertEqual(self.store.ai_live_report()["tasks"]["summary"]["Hold"], 1)
 
     def test_failed_model_records_the_reason_and_falls_back(self):
         def boom(*a, **k):
@@ -237,3 +264,35 @@ class Endpoints(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RegistryEnvelopeTests(unittest.TestCase):
+    def test_all_assistants_and_retained_paths_are_registered_unapproved(self):
+        from zavaforward_mvp import ai_registry
+        from zavaforward_mvp.assistants import REGISTRY
+        reg = ai_registry.registry()
+        ids = {t["id"] for t in reg["tasks"]}
+        self.assertTrue(set(REGISTRY) <= ids)
+        self.assertTrue({"briefing", "message", "summary", "priority", "funding_draft", "read_document"} <= ids)
+        for t in reg["tasks"]:
+            for k in ("scope", "permitted_capability", "source_permissions", "accountable_function", "approval_state",
+                      "impact_record", "prohibited_uses", "required_approval_evidence"):
+                self.assertTrue(t[k], (t["id"], k))
+            self.assertEqual((t["accountable_individual"], t["delegation"], t["approval_state"]),
+                             ("unknown", "unknown", "unapproved"))
+            self.assertTrue(all(v == "unknown" for v in t["authority"].values()))
+            self.assertFalse(ai_registry.authorizes_live(t["id"]))
+        self.assertIn("tenant social scoring", ai_registry.PROHIBITED_PURPOSES)
+
+    def test_unregistered_task_gets_no_model_call(self):
+        with self.assertRaises(ValueError):
+            ai_tasks.require_registered("invented-task")
+
+    def test_envelope_binds_versions_and_model_and_stays_unapproved(self):
+        from zavaforward_mvp import ai_registry
+        ok = ai_registry.envelope("summary", ["ZF-1"], {"ZF-1": "abc"}, dict(source="ai", model="m1", prompt_version="p"), 3)
+        self.assertEqual((ok["provider"], ok["deployment"], ok["model"], ok["case_version"], ok["approved"], ok["approval"]),
+                         ("azure-openai", "m1", "m1", 3, False, "Not reviewed"))
+        self.assertEqual(ok["source_versions"], {"ZF-1": "abc"})
+        bad = ai_registry.envelope("summary", ["ZF-1"], {}, dict(source="template", reason="AI is not configured"))
+        self.assertEqual((bad["outcome"], bad["failure"], bad["model"]), ("abstained-or-failed", "AI is not configured", None))

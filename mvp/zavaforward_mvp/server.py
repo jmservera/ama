@@ -314,8 +314,8 @@ def make_handler(app):
             if url.path == "/api/ai/report":
                 if u["role"] not in MANAGER_ROLES:
                     return self._json(403, {"error": "Only a manager can see the AI evaluation report."})
-                from . import ai_eval
-                return self._json(200, {"evaluation": ai_eval.run_eval(), "live": s.ai_live_report()})
+                from . import ai_eval, ai_registry
+                return self._json(200, {"evaluation": ai_eval.run_eval(), "live": s.ai_live_report(), "registry": ai_registry.registry()})
             if url.path.startswith("/api/docs/"):
                 try:
                     _, _, _, cid, did = url.path.split("/")
