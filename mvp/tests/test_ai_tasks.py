@@ -237,3 +237,35 @@ class Endpoints(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RegistryEnvelopeTests(unittest.TestCase):
+    def test_all_assistants_and_retained_paths_are_registered_unapproved(self):
+        from zavaforward_mvp import ai_registry
+        from zavaforward_mvp.assistants import REGISTRY
+        reg = ai_registry.registry()
+        ids = {t["id"] for t in reg["tasks"]}
+        self.assertTrue(set(REGISTRY) <= ids)
+        self.assertTrue({"briefing", "message", "summary", "priority", "funding_draft", "read_document"} <= ids)
+        for t in reg["tasks"]:
+            for k in ("scope", "permitted_capability", "source_permissions", "accountable_function", "approval_state",
+                      "impact_record", "prohibited_uses", "required_approval_evidence"):
+                self.assertTrue(t[k], (t["id"], k))
+            self.assertEqual((t["accountable_individual"], t["delegation"], t["approval_state"]),
+                             ("unknown", "unknown", "unapproved"))
+            self.assertTrue(all(v == "unknown" for v in t["authority"].values()))
+            self.assertFalse(ai_registry.authorizes_live(t["id"]))
+        self.assertIn("tenant social scoring", ai_registry.PROHIBITED_PURPOSES)
+
+    def test_unregistered_task_gets_no_model_call(self):
+        with self.assertRaises(ValueError):
+            ai_tasks.require_registered("invented-task")
+
+    def test_envelope_binds_versions_and_model_and_stays_unapproved(self):
+        from zavaforward_mvp import ai_registry
+        ok = ai_registry.envelope("summary", ["ZF-1"], {"ZF-1": "abc"}, dict(source="ai", model="m1", prompt_version="p"), 3)
+        self.assertEqual((ok["provider"], ok["deployment"], ok["model"], ok["case_version"], ok["approved"], ok["approval"]),
+                         ("azure-openai", "m1", "m1", 3, False, "Not reviewed"))
+        self.assertEqual(ok["source_versions"], {"ZF-1": "abc"})
+        bad = ai_registry.envelope("summary", ["ZF-1"], {}, dict(source="template", reason="AI is not configured"))
+        self.assertEqual((bad["outcome"], bad["failure"], bad["model"]), ("abstained-or-failed", "AI is not configured", None))
