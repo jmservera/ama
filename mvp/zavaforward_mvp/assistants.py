@@ -17,7 +17,7 @@ from datetime import datetime, timezone
 
 from . import assistant_release as rel
 from . import continuity, projection, quality, ranking
-from .ai import FORBIDDEN, Ai
+from zava_forward.core.ai import FORBIDDEN, Ai
 from .store import ConflictError
 
 LOG = logging.getLogger(__name__)

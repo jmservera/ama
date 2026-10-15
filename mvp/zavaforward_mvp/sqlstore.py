@@ -23,7 +23,7 @@ import threading
 from datetime import datetime
 
 from . import continuity, insights, ledger, projection, ranking
-from .ai import Ai
+from zava_forward.core.ai import Ai
 from .chatthreads import SQLITE_DDL as CHAT_DDL, MEMORY_ADDED as CHAT_MEMORY_ADDED
 from .doc_controls import open_scanner
 from .documents import open_document_store

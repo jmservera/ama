@@ -7,7 +7,7 @@ import unittest
 import test_mvp
 from test_assistants import Base, Provider, canonical, proposal
 from zavaforward_mvp import continuity
-from zavaforward_mvp.ai import Ai
+from zava_forward.core.ai import Ai
 from zavaforward_mvp.assistants import Assistants
 from zavaforward_mvp.store import Store
 

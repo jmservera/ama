@@ -16,7 +16,7 @@ from .governance import GovernanceMixin
 from .grants import GrantMixin, grant_summary
 from .resident_decisions import ResidentDecisionMixin, measure_decision_view
 from .signoffs import SignoffMixin, missing_items, technical_gate
-from .ai import Ai
+from zava_forward.core.ai import Ai
 from .chatthreads import ChatMixin
 from .doc_controls import DocControlsMixin, open_scanner
 from .documents import ACCEPTED, MAX_BYTES, DocumentStoreError, open_document_store

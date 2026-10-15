@@ -1,0 +1,13 @@
+# Build context is the repository root (docker build -f mvp/Dockerfile .). Allow only what the image copies.
+*
+!mvp/requirements.txt
+!mvp/zavaforward_mvp
+!mvp/policies
+!mvp/law
+!mvp/web
+!src/build-requirements.txt
+!src/core/pyproject.toml
+!src/core/src
+**/__pycache__
+**/*.pyc
+**/data

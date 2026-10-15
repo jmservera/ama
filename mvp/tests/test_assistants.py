@@ -18,7 +18,7 @@ from unittest.mock import patch
 import release_support
 import test_mvp
 from zavaforward_mvp import projection, quality
-from zavaforward_mvp.ai import Ai
+from zava_forward.core.ai import Ai
 from zavaforward_mvp.assistants import (
     Assistants, Limits, MSSQL_DDL, PURPOSE, REGISTRY, RULES, VERSION, canonical, capture, digest, eligible,
 )

@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import patch
 from urllib.parse import parse_qs, urlsplit
 
-from zavaforward_mvp.ai import Ai, SCOPE
+from zava_forward.core.ai import Ai, SCOPE
 
 
 class AiIdentityTests(unittest.TestCase):

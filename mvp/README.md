@@ -261,7 +261,7 @@ legal advice or approval. Seed metadata is `law/law-source-register.json`.
 
 ## Rule cards (ADR 0005, phase 2)
 
-`zavaforward_mvp/rulecards.py` holds versioned rule cards in append-only tables
+`src/core/src/zava_forward/core/rulecards.py` (moved from `mvp/` in M1 of #199) holds versioned rule cards in append-only tables
 (`rule_card_version`, `rule_card_event`, `rule_card_review`, `rule_card_review_event`) with a draft, approved,
 active, held, retired lifecycle. A card is drafted by the `rule_author` role and only
 its named `rule_owner` can approve, activate, hold, release or retire it; an author
@@ -389,6 +389,7 @@ or shared. The repository must stay private.
 
 ```bash
 python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py --seed 20260901
+python3 -m pip install --no-deps -e src/core   # the moved ai, profile and rulecards modules (ADR 0006)
 cd mvp
 ZF_PASSWORD=choose-a-password python3 -m zavaforward_mvp.server
 ```

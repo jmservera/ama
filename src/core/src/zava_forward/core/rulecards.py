@@ -21,8 +21,8 @@ EXERCISE_LABEL = "EXERCISE CARD: synthetic fixture, not approved by a named owne
 APPEND_ONLY = ("rule_card_version", "rule_card_event", "rule_card_review", "rule_card_review_event")
 REVIEW_STATES = ("open", "assessed")
 TRACE = {
-    "hazard-awareness-clock": dict(requirements=["CON-001", "FR-003", "RULE-003"], tests=["tests/test_rulecards.py", "tests/test_lawstore.py"]),
-    "automated-decision-safeguard": dict(requirements=["FR-034", "RULE-021"], tests=["tests/test_rulecards.py", "tests/test_ai_eval.py"]),
+    "hazard-awareness-clock": dict(requirements=["CON-001", "FR-003", "RULE-003"], tests=["src/core/tests/test_rulecards.py", "mvp/tests/test_lawstore.py"]),
+    "automated-decision-safeguard": dict(requirements=["FR-034", "RULE-021"], tests=["src/core/tests/test_rulecards.py", "mvp/tests/test_ai_eval.py"]),
 }
 FIELDS = ("title", "trigger", "applicability", "provisions", "clock", "safe_default", "escalation_role", "approver", "effective", "retirement")
 

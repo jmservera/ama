@@ -35,3 +35,19 @@ mypy_path = ["src"]
 explicit_package_bases = true
 namespace_packages = true
 files = ["src", "tests"]
+
+# Modules moved unchanged from mvp/ (ADR 0006 move-not-copy). Formatting and typing follow after
+# the migration so the renames stay pure and git history follows the files.
+[tool.ruff.format]
+exclude = ["src/zava_forward/core/ai.py", "src/zava_forward/core/profile.py", "src/zava_forward/core/rulecards.py", "tests/test_profile.py", "tests/test_rulecards.py"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/zava_forward/core/ai.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B"]
+"src/zava_forward/core/profile.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B"]
+"src/zava_forward/core/rulecards.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B", "F841"]
+"tests/test_profile.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B"]
+"tests/test_rulecards.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B"]
+
+[[tool.mypy.overrides]]
+module = ["zava_forward.core.ai", "zava_forward.core.profile", "zava_forward.core.rulecards", "test_profile", "test_rulecards", "tests.test_profile", "tests.test_rulecards"]
+ignore_errors = true
