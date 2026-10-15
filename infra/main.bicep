@@ -88,6 +88,8 @@ param sqlLocation string = location
 param tileUrl string = ''
 param tileAttribution string = ''
 param tags object = {}
+@description('Owner tag value required by the tagging standard (infra/README.md, Governance controls).')
+param ownerTag string = 'Juan Manuel Servera'
 
 var isDev = deploymentProfile == 'development'
 var publicAccess = isDev || allowPublicNetworkAccess
@@ -101,6 +103,7 @@ var allTags = union(tags, {
   environment: environmentName
   dataClassification: 'constructed-non-identifying'
   purpose: 'non-production-demonstrator'
+  owner: ownerTag
 })
 
 var storageBlobDataContributor = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
