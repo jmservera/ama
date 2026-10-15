@@ -2943,6 +2943,14 @@ metadata when the knowledge base was created.
 * `infra/README.md` records the proposed IoT Hub tier, region, retention, identity, network and credential-owner decisions; ADR 0003 open items point to them. No regulatory snapshot changed.
 * Open: owner approval of ADR 0003, verified pricing, live what-if, BRD OD-43.
 
+## 2026-10-15 ADR 0004 accepted (#158)
+
+* ADR 0004 status set to Accepted as written by the owner (OD-44); BRD and PRD status text and the index updated. Authority limits, FR-036 registry change, Azure SQL storage and Azure-only uksouth deployment recorded.
+* No regulatory snapshot changed. Open: OD-45 to OD-49 (lawful basis, DPIA, retention, access, thresholds) carried forward; no live personal data until recorded.
+
+## 2026-10-15 ADR 0004 review fixes (#158)
+
+* Removed an unsourced deployment sentence, restored the original fallback and A-or-B wording, and updated stale proposal wording in the ADR, BRD and PRD. OD-45 to OD-49 stay open. No regulatory snapshot changed.
 ## 2026-10-15 Identity and RBAC as code (#141)
 
 * `infra/role-assignments.json`, `infra/entra/app-registration.json`, `infra/tests/test_identity_rbac.py` and an `infra/README.md` section added; index row added. No regulatory snapshot changed.

@@ -1,16 +1,20 @@
 ---
 title: ADR 0004 Per-User Agent Chat and Memory
-description: Proposed decision on whether and how staff users could hold case-linked conversations with the existing assistants and keep opt-in per-user memory, within the existing single-API, Azure SQL and proposal-only runtime
+description: Accepted decision on whether and how staff users could hold case-linked conversations with the existing assistants and keep opt-in per-user memory, within the existing single-API, Azure SQL and proposal-only runtime
 author: AMA programme
-ms.date: 2026-10-14
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
 ## Status
 
-Proposed. This ADR records a proposal by the AMA programme. It does not record
-approval by the owner, the DPO, Legal, HR or any control owner, and the owner
-has not decided to adopt the capability (BRD OD-44). It applies the runtime of
+Accepted as written by the owner, Juan Manuel Servera, on 2026-10-15 (GitHub
+#158; BRD OD-44 decided). Acceptance adopts option C, staged, as the direction
+and registers conversational tasks as a registry change under FR-036. It does
+not activate the capability for live personal data: lawful basis, staff notice,
+DPIA, retention and access (BRD OD-45, OD-46, OD-48, OD-49) remain open items
+below, and no DPO, Legal, HR or control-owner approval is recorded here. It
+applies the runtime of
 [ADR 0001](./0001-azure-architecture.md),
 [ADR 0002](./0002-pilot-readiness-architecture.md) and
 [ADR 0003](./0003-journey-derived-capabilities-runtime-fit.md) to the proposal
@@ -70,8 +74,29 @@ Assumptions and unknowns:
 
 ## Decision
 
-The programme proposes option C, staged, subject to the open decisions below.
-If the owner chooses A or B, the BRD and PRD rows stay inactive or are reduced.
+The owner accepted option C, staged, as written on 2026-10-15. The options
+compared above (A no chat, B threads over existing proposals, C threads plus
+opt-in per-user memory in Azure SQL, D and E rejected or deferred) are
+confirmed unamended. Option B is the fallback if the DPO and Legal later
+reject memory (BRD OD-48). Option A remains the default comparator and is
+rejected only if the owner wants follow-up questions. If the owner chooses A or
+B, the BRD and PRD rows stay inactive or are reduced.
+
+Authority: chat may recommend, draft, reconcile and flag only. It can never
+approve, decide, certify, record consent, diagnose, contact a resident, change a
+record without independent human review, or act as a system of record (decision
+6, RULE-018, RULE-025).
+
+Registry: a conversational task is a registry change under FR-036. It needs
+registration with thresholds and a named accountable reviewer (BRD OD-49 names
+the approver of thresholds) before it is enabled. No new assistant is created.
+
+Storage: Azure SQL behind the `Store` interface (decision 3). No new store is
+justified; Foundry Agent Service memory is not used.
+
+Deployment: Azure only, region `uksouth`. Fixtures in tests and
+demonstrations are labelled synthetic (ADR 0005 permits labelled synthetic-demo
+fixtures only).
 
 1. Chat extends the five existing assistants. It adds no sixth agent. A
    conversational task is registered under FR-036 with its thresholds and
@@ -80,7 +105,7 @@ If the owner chooses A or B, the BRD and PRD rows stay inactive or are reduced.
 2. The first slice is staff only, embedded as a panel in the role workbench case
    view (PRD FR-055). Resident, representative, provider and installer chat is
    deferred to BRD OD-47. The journey, agent and UI mapping is in PRD section
-   Per-user agent chat and memory (proposed).
+   Per-user agent chat and memory.
 3. Threads are stored in the existing Azure SQL store behind the `Store`
    interface through additive idempotent migrations (PRD FR-056). A thread is
    owned by a server-derived user key, tied to a case and task, and deletable by
@@ -149,9 +174,13 @@ If the owner chooses A or B, the BRD and PRD rows stay inactive or are reduced.
 
 ## Open items
 
+Decided 2026-10-15 by the owner:
+
+* OD-44: adopted as written; staff only, embedded in the case view; registry
+  change under FR-036.
+
 Owner:
 
-* OD-44: adopt or reject, which roles and tasks, and registry change.
 * OD-48: memory in scope or thread history only; staff memory versus any later
   resident memory.
 
@@ -168,6 +197,11 @@ Others:
   Engagement, DPO and Legal.
 * OD-49: grounding, abstention and injection thresholds and accountable
   reviewer.
+
+The owner is also the named owner for DPO and Legal decisions, but no lawful
+basis, DPIA, retention, access or threshold decision has been recorded, so
+OD-45 to OD-49 stay open and are not invented here. Live personal data stays
+excluded until they are recorded.
 
 Not decided here: storage hardening such as row-level security, a retention
 number, model choice per task and any cost target.
@@ -188,5 +222,6 @@ number, model choice per task and any cost target.
 
 ## Implementation status
 
-Not implemented. No migration, API, screen change, test run or deployment
-follows from this ADR.
+Not implemented. Acceptance changes status only. No migration, API, screen
+change, test run or deployment follows from this ADR; implementation is tracked
+in #159 to #164.
