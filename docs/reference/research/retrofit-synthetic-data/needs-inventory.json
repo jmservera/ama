@@ -1,11 +1,11 @@
 {
   "warning": "SYNTHETIC DATA. This inventory describes fictional data needs. It contains no personal data.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "review_date": "2026-10-15",
   "status": "draft-awaiting-owner-review",
   "issue": "#166",
   "parent": "#165",
-  "scenario_manifest": "#103 (link from the manifest once it lands)",
+  "scenario_manifest": "scenario-manifest.json",
   "gate_rule": "A build epic that consumes synthetic data must cite its inventory row id (SN-nn) in its issue or PR before work starts. A consuming row whose coverage is partial or missing needs a recorded owner decision on volume and scope first.",
   "review_cadence": "Review on every iteration; bump version and review_date, and append to docs/reference/log.md.",
   "coverage_values": [
@@ -29,7 +29,7 @@
       "dataset_ids": [
         "DS-STOCK-REGISTER"
       ],
-      "note": "Register exists privately; its generator is not in the repository, so it cannot be regenerated or tested.",
+      "note": "Private register regeneration remains unavailable. Stock-to-case linkage and deterministic fabric extensions are documented in README.md; private output was not revalidated in this inventory review.",
       "gap_closure": {
         "kind": "child",
         "issues": [
@@ -53,7 +53,7 @@
         "DS-OPS-PACK",
         "DS-MVP-SEED"
       ],
-      "note": "No resident or tenancy records for the 60,000-home stock; resident-to-stock linkage is absent.",
+      "note": "src/core/src/zava_forward/core/synthetic/scale_fixture.py generates 60,000 fictional home-linked households, residents and tenancies. This separate scale fixture does not prove full private stock/programme linkage or accepted application coverage.",
       "gap_closure": {
         "kind": "child",
         "issues": [
@@ -70,14 +70,14 @@
         "#104",
         "#109"
       ],
-      "volume": "unquantified",
+      "volume": "Generator target: one EPC per 60,000 stock homes; surveys for about 35%; scope/mix awaiting owner confirmation",
       "owner": "owner, via #165",
       "coverage": "partial",
       "dataset_ids": [
         "DS-OPS-PACK",
         "DS-MVP-SEED"
       ],
-      "note": "Case-level assessment records only; no per-home survey or EPC for 60,000 stock. Volume needs owner decision.",
+      "note": "README.md documents seeded stock EPC, survey and conflict fixtures. Counts and mix are constructed assumptions, not lodged EPCs or observed surveys; private outputs were not read in this review.",
       "gap_closure": {
         "kind": "child",
         "issues": [
@@ -185,13 +185,14 @@
       "consuming_issues": [
         "#157"
       ],
-      "volume": "assistant runtime tables only",
+      "volume": "Fixture target: 22 personas (two per eleven perspectives), seeded threads and memory probes; approved volume remains open",
       "owner": "owner, via #157",
       "coverage": "partial",
       "dataset_ids": [
-        "DS-ASSISTANT-RUNTIME"
+        "DS-ASSISTANT-RUNTIME",
+        "DS-CHAT-MEMORY-FIXTURE"
       ],
-      "note": "No generated per-user chat or memory history; #157 must define volume before build.",
+      "note": "src/agents/tests/chat_fixture.py generates scripted synthetic personas, threads and memory cases. Fixture expectations do not prove runtime privacy, approved retention, real inference or human evaluation; #157 still needs approved volume/scope.",
       "gap_closure": {
         "kind": "child",
         "issues": [
@@ -207,13 +208,13 @@
       "consuming_issues": [
         "#109"
       ],
-      "volume": "not defined",
+      "volume": "Backfill target: 60,000 homes, 730 days, hourly (1,051,200,000 readings); full-run scope/storage and live cadence need owner decisions",
       "owner": "owner, via #109",
-      "coverage": "missing",
+      "coverage": "partial",
       "dataset_ids": [
         "DS-SENSOR"
       ],
-      "note": "No sensor generator exists. Volume, sampling interval and homes covered need an owner decision.",
+      "note": "src/core/src/zava_forward/core/synthetic/sensor_backfill.py provides seeded temperature/humidity backfill and small-fixture tests. Full-stock materialization, verified external climate inputs and accepted live simulator coverage are not evidenced. DS-SENSOR remains not-generated for the canonical dataset.",
       "gap_closure": {
         "kind": "child",
         "issues": [
@@ -256,9 +257,10 @@
       "owner": "owner, via #103",
       "coverage": "partial",
       "dataset_ids": [
-        "DS-OPS-MANIFEST"
+        "DS-OPS-MANIFEST",
+        "DS-SCENARIO-MANIFEST"
       ],
-      "note": "Manifest is owned by #103; this row links to it once #103 lands.",
+      "note": "scenario-manifest.json binds this iteration's inventory review. All eleven profile scripts and nine workflow execution checks remain explicitly deferred to #103; this integration seed is not full FR-035 acceptance.",
       "gap_closure": {
         "kind": "child",
         "issues": [
@@ -280,7 +282,7 @@
       "dataset_ids": [
         "DS-STOCK-REGISTER"
       ],
-      "note": "Home stock exists; 600,000-event fixture is not generated.",
+      "note": "src/core/src/zava_forward/core/synthetic/scale_fixture.py can generate a separate wholly fictional 60,000-home/600,000-event fixture. This does not evidence an executed full-volume SQL load or performance acceptance under #144.",
       "gap_closure": {
         "kind": "child",
         "issues": [
@@ -317,7 +319,7 @@
   "open_items": [
     "Owner approval of this inventory and of each row owner (all owners are proposed).",
     "Volumes for SN-03, SN-08 and SN-09 need owner decisions.",
-    "Link from the scenario manifest once #103 delivers it.",
+    "Complete #103 profile/workflow scripts, defaults, safe endpoints and execution evidence; the inventory integration manifest now links this version but does not satisfy full FR-035.",
     "The first inventory and coverage matrix from the 2026-10-14 backlog handoff was not available in the repository; this inventory was rebuilt from repository evidence and needs reconciling with it.",
     "Owner to confirm the gap_closure mapping, and whether SN-01 register regeneration is in #168 or deferred (no recorded deferral exists yet)."
   ],

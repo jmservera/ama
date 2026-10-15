@@ -24,7 +24,7 @@
     {"decision": "One post-implementation Review executed Complete; outcome Residual work for bounded local model/view assessment", "status": "executed", "evidence": ".copilot-tracking/reviews/logs/2026-10-15/shared-systems-75-review.md"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Complete task and perform explicitly authorized topic commit/push/PR; do not start follow-up implementation"},
+  "next_action": {"phase": "Follow-up", "action": "Commit validated topic synchronization, push PR 310 and consume CI; do not merge the PR or start follow-up implementation"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Consume CI and authorize outstanding actual SQL Server/Azure/model verification", "rationale": "Highest release-evidence value; begin with already running PR checks, no new authority assumed", "evidence": "RV-001"},
     {"rank": 2, "task": "Run human staff/accessibility acceptance of home/building navigation", "rationale": "Small read-only journey with direct user value and existing browser baseline", "evidence": "RV-003"},

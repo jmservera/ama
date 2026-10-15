@@ -172,3 +172,36 @@ the reviewed files, commit with Conventional Commit and coauthor trailer, push
 only feat/src-shared-systems-75 and create the main PR using Refs #75.
 Actual publication results will be appended after creation, without amending
 or rewriting any commit.
+
+## Publication Results and Concurrent Main Synchronization
+
+* Source and all RPI artifacts committed as `acf40ba`
+  (`feat(core): model scoped building systems and costs`), correct privacy-safe
+  author/committer and coauthor trailer. Topic push succeeded.
+* PR https://github.com/jmservera/ama/pull/310 opened against main with Refs #75,
+  complete acceptance limitations, validation results and command ledger.
+* Main advanced concurrently to `a63351f` (merged #308). Initial PR state was
+  CONFLICTING with no checks scheduled; the conflict was the simultaneous
+  append to `docs/reference/log.md`, not executable code.
+* Administrative topic synchronization uses a regular merge, never rebase,
+  amend, force push or merge into main. Kept both log entries verbatim, removed
+  only conflict markers; index/core README changes auto-merged. Main's accepted
+  inventory documents/tests are inherited, not reimplemented. This is not a
+  Review-finding correction or a second Review.
+
+| Administrative command | Result |
+| --- | --- |
+| `rm --` the eight exact task-generated `.playwright-mcp` snapshot/log files, then `rmdir .playwright-mcp` | Browser scratch files removed; no broad/recursive deletion |
+| `git config --local user.email 8036360+jmservera@users.noreply.github.com && git config --local user.name jmservera && git add -A` then `printf ... \| GIT_AUTHOR_EMAIL=8036360+jmservera@users.noreply.github.com GIT_COMMITTER_EMAIL=8036360+jmservera@users.noreply.github.com git commit -F -` | acf40ba created, 25 files, full RPI artifacts included |
+| `git push --set-upstream origin feat/src-shared-systems-75` | Topic pushed, upstream set; main untouched |
+| `bash .../skills/shared/pr-reference/scripts/generate.sh --base-branch origin/main --merge-base --output .../files/shared-systems-75-pr-reference.xml` | Generated 2061-line reference in session artifacts |
+| `git fetch origin main && git rev-list --left-right --count origin/main...HEAD && git ls-files .github docs \| grep -i pull_request_template \|\| true` | Main advanced one commit; branch one commit ahead; no PR template |
+| Python generated session PR body from summary plus existing command ledger; `gh pr create --base main --head feat/src-shared-systems-75 --title 'feat(core): model building shared systems and scoped costs' --body-file .../files/shared-systems-75-pr-body.md` | PR #310 created |
+| `gh pr view 310 --json number,url,state,baseRefName,headRefName,mergeable,statusCheckRollup && gh pr checks 310` | Correct head/base; CONFLICTING, no checks reported |
+| `git log --oneline HEAD..origin/main && git diff --name-only HEAD...origin/main && git merge-tree "$(git merge-base HEAD origin/main)" HEAD origin/main \| grep ...` | Read-only conflict inspection; log append overlap from #308 |
+| `git status --short && git branch --show-current && git merge --no-commit origin/main` | Clean expected topic; log conflict only, index and core README auto-merged |
+| Post-sync core full suite/static command, then API focused building suite/static/JS command; `git add` resolved log and delivery evidence, `git diff --cached --check && git diff --check` | Core now **275 passed** (five inherited #308 tests); API 3 passed; all affected static checks passed; staged resolution clean |
+
+Post-synchronization validation and the resulting merge commit/push/CI status
+are recorded below when executed. No changes to this feature's executable
+implementation were made after its one Review.

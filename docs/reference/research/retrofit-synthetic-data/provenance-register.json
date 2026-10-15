@@ -1,6 +1,6 @@
 {
   "warning": "SYNTHETIC DATA REGISTER. Records provenance and visibility of every generated dataset. Not Zava North Homes data.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "register_date": "2026-10-15",
   "dictionary": "data-dictionary.md",
   "rules": [
@@ -84,6 +84,15 @@
       "personal_data": "none"
     },
     {
+      "id": "DS-SCENARIO-MANIFEST",
+      "name": "Constructed-scenario inventory integration manifest (full #103 evidence deferred)",
+      "visibility": "public",
+      "location": "docs/reference/research/retrofit-synthetic-data/scenario-manifest.json",
+      "sources": [],
+      "data_dictionary": "data-dictionary.md",
+      "personal_data": "none; versioned scenario and inventory-review metadata only"
+    },
+    {
       "id": "DS-STOCK-REGISTER",
       "name": "60,000-home North East synthetic stock register and map overlay",
       "visibility": "private",
@@ -137,7 +146,7 @@
       "visibility": "private",
       "location": "serving database tables assistant_tasks, assistant_attempts, assistant_events",
       "sources": [],
-      "generator": "mvp/zavaforward_mvp/assistants.py",
+      "generator": "src/core/src/zava_forward/core/assistants.py",
       "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
       "personal_data": "none; derived only from the private synthetic seed. No free-form chat transcripts are generated or stored"
     },
@@ -156,15 +165,16 @@
       "id": "DS-SENSOR",
       "name": "Sensor and monitoring readings (temperature, humidity, moisture)",
       "visibility": "not-generated",
-      "location": "none",
+      "location": "ZF_DATA/sensor-backfill (intended generated output; canonical full-stock dataset not materialized here)",
+      "generator": "src/core/src/zava_forward/core/synthetic/sensor_backfill.py",
       "sources": [],
       "data_dictionary": "data-dictionary.md#sensor-data",
-      "personal_data": "none; nothing exists",
-      "open_item": "No sensor dataset or generator exists in the repository. Owner decision needed on whether a synthetic sensor feed is in scope; until then this entry records the gap."
+      "personal_data": "none; seeded fictional home IDs and synthetic readings only",
+      "open_item": "Backfill generator and small-fixture tests exist. not-generated describes the unmaterialized canonical full-stock dataset, not generator absence. Full-run scope/storage, external climate verification and live simulator acceptance remain open."
     }
   ],
   "open_items": [
     "Retrieval dates and licence wording for SRC-CENSUS-TS054, SRC-IMD-2025 and SRC-ONS-BOUNDARIES need owner confirmation against the official pages.",
-    "Owner decision: whether a synthetic sensor dataset is in scope (DS-SENSOR)."
+    "Owner decision: full-stock sensor run scope/storage, live simulator volume/cadence and verified external climate inputs (DS-SENSOR)."
   ]
 }
