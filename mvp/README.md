@@ -139,6 +139,13 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   same cases. `--json` prints the full report; managers can read it, with the
   live reviewer counts, at `GET /api/ai/report`. Negative controls in
   `tests/test_ai_tasks.py` break each property and expect the harness to fail.
+  The report also carries an `evidence` block (issue #108): SHA-256 of the
+  frozen golden file, prompt version, provider (scripted), "not evaluated" for
+  actual-model and human effectiveness, calibration "not applicable", benefit
+  claim "not permitted", and the open items (Foundry model, version and quota
+  confirmation in the chosen region, authorised live calls, held-out split and
+  thresholds, human protocol, Finance validation). Any critical miss fails the
+  run.
 * Staff time capture (PR-004) is off by default. It records only when
   `ZF_TIME_CAPTURE=on`, `DPIA_APPROVED` and `ZF_TIME_CONSULTATION` each hold a
   reference, and the person has acknowledged the staff notice
