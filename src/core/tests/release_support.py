@@ -4,14 +4,21 @@ import time
 
 from zava_forward.core import assistant_release as rel
 from zava_forward.core import assistants
+from zava_forward.core import ai_registry, rai_release
 
 
 def fixture(task, binding, model="test-model", cls="constructed-fixture", expires=None, **over):
+    spec = ai_registry.get(task.removeprefix("legacy:"))
     rec = dict(binding, task=task, evidence_class=cls, evidence=["constructed-fixture:synthetic-demo"],
                residual_risk_decision="Accept", residual_risk_note="Constructed fixture; not a real decision.",
                serving_model=model, approver=dict(name="Fixture Approver", email="approver@example.test",
                                                   role="Retrofit Programme Manager"),
-               expires=expires or time.time() + 86400, recorded_at=0, actual_authorisation=cls == "actual")
+               expires=expires or time.time() + 86400, recorded_at=0, actual_authorisation=cls == "actual",
+               release_version="fixture-v1", intended_use=spec["intended_use"],
+               prohibited_uses=spec["prohibited_uses"], affected_stakeholders=spec["affected"],
+               accountable_owner="Fixture Approver (not live authority)",
+               impact_assessment="Constructed synthetic scenario only; no real resident reliance.",
+               material_change_triggers=list(rai_release.CHANGE_TRIGGERS), evaluation_decision="Pass")
     rec.update(over)
     return rec
 
@@ -20,6 +27,13 @@ def install(store, ai=None, model="test-model", cls="constructed-fixture", tasks
     """Insert active releases directly on a SQL store (all assistants and, if the AI is live, legacy tasks)."""
     from zava_forward.core.ai_registry import LEGACY, legacy_binding
     ai = ai or store.ai
+    ai.model_version = model
+    ai.model_version_strong = model
+    if not hasattr(store, "assistant_connection"):
+        # Explicit offline output-test authorization, never a production Store option.
+        store.release_block = lambda *a, **k: None
+        return
+    ai.release = store.release_context
     db = store.assistant_connection()
     try:
         if hasattr(store, "_env"):

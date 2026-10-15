@@ -3200,3 +3200,22 @@ metadata when the knowledge base was created.
   Manual escalation and exercise hours are not operational acceptance.
   Existing AI proposal/human-review gates, resident consent and safety controls
   remain; no live inference, Azure deployment or human acceptance is claimed.
+
+## [2026-10-15] query | Task-bound RAI release evidence (#219)
+
+* Extended the merged registry/release gate in `src/core`, following ADR 0006
+  and the parity matrix rather than adding a parallel service or `mvp` code.
+* Records now require versioned use, prohibited uses, stakeholders, accountable
+  owner, impact, residual-risk acceptance, evaluation references and material
+  change triggers. Activations retain the exact release ID/version/digest;
+  supersession invalidates old work and cannot revive historical routing approval.
+* Canonical retained prompts share their hashes with binding/output metadata.
+  Cached briefings, ordinary/document and priority review paths recheck release
+  validity. JSON configured inference denies without SQL-owned evidence.
+* Updated the [core contract](../../src/core/README.md#task-bound-rai-release-records-219),
+  [API guide](../../src/api/README.md#rai-task-release-api-219),
+  [agents guide](../../src/agents/README.md) and index. Synthetic local HTTP
+  checks demonstrate deny/record/propose/revoke without changing case state.
+* OQ-017 live holders/delegations, approved real evaluation, independent model
+  attestation, direct human oversight and Azure execution remain open. The
+  project contact is not a release/risk/suspension/restart authorization.

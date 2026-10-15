@@ -7,12 +7,16 @@ This module records what a named human decides; it never approves, and it grants
 """
 import json
 import uuid
+import logging
+import sqlite3
 from datetime import datetime, timezone
+from . import rai_release
 
-OWNER = "Juan Manuel Servera (Legal, Compliance and DPO owner)"
+OWNER = "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)"
 CLASSES = ("constructed-fixture", "actual")
 BOUND = ("registry_version", "schema_version", "provider", "endpoint", "deployment", "prompt_version",
-         "policy_version", "data_version", "provenance_version", "permission_version")
+         "policy_version", "data_version", "provenance_version", "permission_version",
+         "model_version", "task_contract_version", "evaluation_version")
 STATUSES = ("active", "suspended", "revoked")
 SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS assistant_releases (id TEXT PRIMARY KEY, capability TEXT NOT NULL, status TEXT NOT NULL, body TEXT NOT NULL, revision INTEGER NOT NULL)",
@@ -42,7 +46,8 @@ def parse_expiry(value):
 
 def denial(reason, missing, task):
     return dict(reason=f"Release admission denied: {reason}. Owner: {OWNER}. Manual route: use the ordinary case controls.",
-                missing=missing, owner=OWNER, manual="Use the ordinary case controls.", task=task)
+                missing=missing, owner=OWNER, manual="Use the ordinary case controls.", task=task,
+                authority_gap=rai_release.AUTHORITY_GAP)
 
 
 def releases(db, task):
@@ -50,28 +55,28 @@ def releases(db, task):
     return [dict(json.loads(b), id=i, status=s) for i, s, b in rows]
 
 
-def admission(db, task, binding, now, live=False):
-    """None when a matching, unexpired, active release exists; otherwise the retained denial."""
+def assessment(db, task, binding, now, live=False):
+    """Return the selected record and no denial, or no record and an explicit denial."""
+    from . import ai_registry
+    spec = ai_registry.get(task.removeprefix("legacy:"))
+    if spec is None:
+        return None, denial("task is not registered", ["registered task"], task)
+    store_error = db.driver.Error if hasattr(db, "driver") else sqlite3.Error
     try:
         found = releases(db, task)
-    except Exception:
-        return denial("release records are unavailable", ["release record store"], task)
-    active = [r for r in found if r["status"] == "active"]
-    if not active:
-        states = sorted({r["status"] for r in found})
-        why = f"release is {'/'.join(states)}" if states else "no approved release record"
-        return denial(why, ["approved, unexpired release record"], task)
-    first = None
-    for r in active:
-        missing = [k for k in BOUND if r.get(k) != binding.get(k)]
-        if r["expires"] <= now:
-            missing.append("unexpired release")
-        if live and (r["evidence_class"] != "actual" or not r.get("serving_model")):
-            missing.append("actual authorisation with serving-version attestation")
-        if not missing:
-            return None
-        first = first or missing
-    return denial("release no longer matches (" + ", ".join(first) + ")", first, task)
+    except store_error:
+        logging.getLogger(__name__).warning("Release record store unavailable; dispatch denied.")
+        return None, denial("release records are unavailable", ["release record store"], task)
+    except (ValueError, TypeError):
+        logging.getLogger(__name__).warning("Malformed release record; dispatch denied.")
+        return None, denial("malformed release record", ["valid release record"], task)
+    selected, missing = rai_release.select(found, spec, binding, BOUND, now, live)
+    return (selected, None) if selected else (
+        None, denial("no approved release matches (" + ", ".join(missing) + ")", missing, task))
+
+
+def admission(db, task, binding, now, live=False):
+    return assessment(db, task, binding, now, live)[1]
 
 
 def record(db, now, user, body, approvers, task_ids):
@@ -98,9 +103,20 @@ def record(db, now, user, body, approvers, task_ids):
                actual_authorisation=cls == "actual")
     for k in BOUND:
         rec[k] = text(body.get(k), k, 200)
+    from . import ai_registry
+    spec = ai_registry.get(task.removeprefix("legacy:"))
+    for k in ("release_version", "intended_use", "prohibited_uses", "affected_stakeholders",
+              "accountable_owner", "impact_assessment", "material_change_triggers", "evaluation_decision"):
+        rec[k] = body.get(k)
+    missing = rai_release.missing_contract(rec, spec)
+    if missing:
+        raise ValueError("Release record missing or mismatched: " + ", ".join(missing))
     if rec["expires"] <= now:
         raise ValueError("Expiry must be in the future.")
     rid = uuid.uuid4().hex
+    for prior in releases(db, task):
+        if prior["status"] == "active":
+            change(db, now, user, prior["id"], "revoked", f"Superseded by release {rid}.")
     db.execute("INSERT INTO assistant_releases (id,capability,status,body,revision) VALUES (?,?,'active',?,1)",
                (rid, task, canonical(rec)))
     event(db, now, rid, kind="release-recorded", task=task, approver=user["email"], evidence_class=cls)

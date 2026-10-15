@@ -996,6 +996,39 @@ class ApiTests(Base):
         except urllib.error.HTTPError as error:
             return error.code, json.load(error)
 
+    def test_release_record_local_http(self):
+        cap = "stock-prioritisation"
+        self.service.approvers = {self.pm["email"].lower()}
+        with self.service.transaction() as db:
+            db.execute("DELETE FROM assistant_releases WHERE capability=?", (cap,))
+        before = self.domain()
+        with urllib.request.urlopen(self.url + "/healthz") as health:
+            self.assertEqual(health.status, 200)
+        status, denied = self.request(f"/api/assistants/{cap}/invoke", {"case_id": "ZF-1"})
+        self.assertEqual(status, 202)
+        self.assertIn("approved, unexpired release record", denied["release_denial"]["missing"])
+        self.assertFalse(self.service.execute(denied["id"]))
+        self.assertEqual(self.provider.calls, 0)
+        registry = self.request("/api/assistants")[1]
+        contract = next(t for t in registry["registered_tasks"] if t["id"] == cap)
+        record = release_support.fixture(cap, contract["binding"])
+        record["expires"] = "2099-01-01T00:00:00Z"
+        status, release = self.request("/api/assistants/releases", record)
+        self.assertEqual(status, 201)
+        status, pending = self.request(f"/api/assistants/{cap}/invoke", {"case_id": "ZF-1"})
+        self.assertEqual(status, 202)
+        self.assertEqual(pending["release"]["id"], release["id"])
+        self.assertTrue(self.service.execute(pending["id"]))
+        ready = self.request(f"/api/assistants/proposals/{pending['id']}")[1]
+        self.assertEqual(ready["state"], "ready")
+        self.assertIs(ready["envelope"]["approved"], False)
+        self.assertEqual(self.provider.calls, 1)
+        self.assertEqual(before, self.domain())
+        status, _ = self.request(f"/api/assistants/releases/{release['id']}/revoke",
+                                 {"reason": "Synthetic exercise complete."})
+        self.assertEqual(status, 200)
+        self.assertFalse(self.request(f"/api/assistants/proposals/{pending['id']}")[1]["actionable"])
+
     def test_registry_invoke_list_detail_separate_review_and_denials(self):
         self.assertEqual(self.request("/api/assistants")[0], 200)
         for cap in REGISTRY:

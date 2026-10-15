@@ -9,6 +9,7 @@ is not registered gets no model call.
 """
 import hashlib
 import json
+from . import ai_prompts, rai_release
 
 from .assistants import REGISTRY as ASSISTANTS, VERSION as ASSISTANT_VERSION
 
@@ -66,9 +67,12 @@ def legacy_binding(task, ai, deployment):
     spec = LEGACY[task]
     return dict(registry_version=REGISTRY_VERSION, schema_version=LEGACY_SCHEMA, provider=PROVIDER,
                 endpoint=getattr(ai, "endpoint", "") or "", deployment=deployment or "",
-                prompt_version=digest([LEGACY_PROMPT, task, spec["purpose"]])[:16], policy_version=LEGACY_POLICY,
+                prompt_version=ai_prompts.version(task), policy_version=LEGACY_POLICY,
                 data_version=digest([LEGACY_SCHEMA, spec["categories"]])[:16], provenance_version=LEGACY_PROVENANCE,
-                permission_version=digest([spec["roles"], spec["affected"]])[:16])
+                permission_version=digest([spec["roles"], spec["affected"]])[:16],
+                model_version=(getattr(ai, "model_version_strong", getattr(ai, "model_version", "unattested"))
+                               if deployment == getattr(ai, "strong", None) else getattr(ai, "model_version", "unattested")),
+                task_contract_version=digest(get(task)), evaluation_version=rai_release.EVALUATION_VERSION)
 
 
 def digest(value):
@@ -137,4 +141,5 @@ def envelope(task_id, case_ids, source_versions, result, case_version=None):
         outcome="abstained-or-failed" if abstained else "proposed",
         failure=result.get("reason") if abstained else None,
         approval="Not reviewed", approved=False, reviewer_function=t["accountable_function"] if t else None,
+        release=result.get("release"),
     )

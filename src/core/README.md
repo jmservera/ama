@@ -16,6 +16,59 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Task-bound RAI release records (#219)
+
+`assistant_release.py` reuses the migrated `assistant_releases` and
+`assistant_events` tables. `rai_release.py` owns pure typed validation/selection;
+`ai_registry.py` owns the eleven registered tasks. No workload import, new
+schema, SQL dialect extension or SQL/blob dependency for agents is added.
+Existing records without the extended contract deny dispatch until a human
+records a replacement; startup never upgrades an old approval automatically.
+
+A record requires `release_version`, registry-matching `intended_use`,
+`prohibited_uses` and `affected_stakeholders`, a named `accountable_owner`,
+`impact_assessment`, `residual_risk_decision: Accept`, a residual-risk note,
+`evaluation_decision: Pass`, 1-20 approved evaluation references in `evidence`,
+and all seven `material_change_triggers`: `intended_use`, `model`, `prompt`,
+`policy`, `data`, `evidence`, `permissions`. A reference is a human-recorded
+assertion, not an automated finding that an evaluation passed. Evidence class
+distinguishes `constructed-fixture` from `actual`; constructed records cannot
+authorize the real `Ai` client.
+
+Bindings include the task use/impact contract hash and evaluation protocol
+version, model, registry/schema, prompt, policy, data/provenance and permission
+versions. `ai_prompts.py` supplies actual retained-task instructions and their
+hash for dispatch, release matching and stored output metadata. Routine case
+edits stale source-dependent proposals; changed use, model, instructions,
+policy, evidence or permissions invalidate the release or its dependent work.
+`AI_MODEL_VERSION` supplies the expected provider model identifier for the fast
+deployment; `AI_MODEL_VERSION_STRONG` supplies it for strong requests (defaults
+to the fast value). Unattested configured models deny actual dispatch. A
+returned model comparison is not independent serving-version attestation.
+
+Approval supersedes every active record for that task, including old routing
+configurations, while preserving events. One record approves one deployment;
+changing the task's fast/strong route requires renewed approval. A rollback
+cannot revive a superseded record. Activations retain release ID/version/body
+digest; renewal creates a distinct assistant activation without overwriting
+old work. Claim, dispatch, completion, detail/review and export reliance recheck
+that reference. Cached briefings, ordinary/document reviews and separate
+priority views/reviews also recheck the selected record. Changed releases
+during calls discard/quarantine results, even when a replacement has the same
+binding. Manual templates, human review, consent and safety controls remain.
+
+Configured JSON-store inference now denies because it has no SQL-owned release
+record; it remains usable for manual/workflow-only work. Synthetic output
+tests explicitly install test-only authorization rather than weakening this
+production boundary. No real resident data or model call is needed to exercise
+the release-control semantics.
+
+OQ-017 remains open: live release, residual-risk acceptance, suspension and
+restart holders and competent-review delegations are not evidenced. The
+project contact in a denial is not a grant of those authorities. Approved real
+evaluation, provider attestation, Azure SQL race evidence and direct human
+oversight remain separate gates. Local synthetic checks do not approve live use.
+
 ## Return, reopen and handoff accountability (#83)
 
 `workflows.py` is shared by JSON/SQLite local stores and the Azure SQL store.

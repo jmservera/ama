@@ -130,6 +130,7 @@ class SqlStore(Store):
         self.digest_dir = digest_dir or os.environ.get("ZF_DIGEST_DIR") or os.path.join(os.path.dirname(db_path) or ".", "digests")
         self.ai = Ai()
         self.ai.gate = lambda task, deployment=None: self.continuity_block(task) or self.release_block(task, deployment)
+        self.ai.release = self.release_context
         self.version = 0
         self._briefings = {}
         self._ranks = None
@@ -159,23 +160,30 @@ class SqlStore(Store):
         """Retained legacy dispatch needs a matching release before any provider call; unconfigured AI never calls out."""
         if not self.ai.configured:
             return None
+        _, denied = self.release_assessment(task, deployment)
+        if denied:
+            with self.lock:
+                self.audit("system", "ai_release_denied", "-", denied["reason"])
+            return denied["reason"]
+        return None
+
+    def release_assessment(self, task, deployment=None):
         from . import assistant_release as rel
         from .ai_registry import LEGACY, legacy_binding
-        ai = self.ai
         if task not in LEGACY:
-            return rel.denial("task is not registered", ["registered task"], task)["reason"]
-        binding = legacy_binding(task, ai, deployment or ai.fast)
+            return None, rel.denial("task is not registered", ["registered task"], task)
+        binding = legacy_binding(task, self.ai, deployment or self.ai.fast)
         db = self.assistant_connection()
         try:
-            found = [r for r in rel.releases(db, f"legacy:{task}") if r["status"] == "active"]
             now = float(db.execute(self._epoch_sql).fetchone()[0])
-            ok = any(r["expires"] > now and r["evidence_class"] == "actual" and r.get("serving_model") and
-                     all(r.get(k) == binding[k] for k in rel.BOUND) for r in found)
-        except Exception:
-            ok = False
+            return rel.assessment(db, f"legacy:{task}", binding, now, live=True)
         finally:
             db.close()
-        return None if ok else rel.denial("no matching release for this retained AI task", ["approved, unexpired release record"], task)["reason"]
+
+    def release_context(self, task, deployment=None):
+        from . import rai_release
+        selected, _ = self.release_assessment(task, deployment)
+        return rai_release.reference(selected) if selected else None
 
     def assistant_connection(self):
         """A request/worker owns its connection; inference never owns the Store lock."""

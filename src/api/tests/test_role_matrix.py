@@ -169,6 +169,8 @@ class Matrix(unittest.TestCase):
     def test_ai_prompt_never_carries_reason_without_need(self):
         prompts = []
         self.store.ai.endpoint = "http://x"
+        import release_support
+        release_support.install(self.store)
         self.store.ai._chat = lambda *a, **k: prompts.append(json.dumps(a) + json.dumps(k)) or "Draft."
         try:
             coordinator = dict(next(s for s in self.store.data["staff"] if s["role"] == "Retrofit Coordinator"), code="U1")

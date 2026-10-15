@@ -101,6 +101,8 @@ def _scripted(store, outputs):
     if outputs is None:
         return
     store.ai.endpoint = "http://scripted-model.invalid"
+    # This harness evaluates scripted output controls, not release authorization.
+    store.release_block = lambda *a, **k: None
     seq = iter(range(10 ** 6))
     store.ai._chat = lambda *a, **k: outputs[next(seq) % len(outputs)]
 
@@ -234,6 +236,7 @@ def run_task_checks(workdir):
         store = Store(str(p), os.path.join(workdir, "live.json"), os.path.join(workdir, "audit.jsonl"))
         state0, rank0 = _state(store), _ranking(store)
         store.ai.endpoint = "http://scripted-model.invalid"
+        store.release_block = lambda *a, **k: None  # Scripted output checks, not release approval.
         script = {}
         store.ai._chat = lambda *a, **k: script["out"]
 

@@ -27,6 +27,46 @@ Run the suites from `src/api` with
 `pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator`. When `ZF_DATA` is not
 set, the data file defaults to `data/zavaforward.json` under the current folder.
 
+## RAI task release API (#219)
+
+`GET /api/assistants` now includes role-filtered `registered_tasks` for the
+merged eleven-task registry: intended/prohibited use, stakeholders, current
+`binding`, selected `release` (ID/version/digest), structured `release_denial`
+and the explicit OQ-017 authority gap. Existing five-assistant fields remain.
+Configured JSON-store AI denies without durable SQL release evidence; use
+SQLite locally or Azure SQL for deployment, not a JSON bypass.
+
+`POST /api/assistants/releases` uses the existing authenticated Programme
+Manager plus `ZF_ASSIST_RELEASE_APPROVERS` allowlist. Copy the task's current
+binding and supply the [core contract](../core/README.md#task-bound-rai-release-records-219)
+fields, `task` (assistant ID or `legacy:<retained-task>`), `evidence_class`,
+`serving_model`, residual-risk note and future ISO expiry. The server records
+the authenticated approver, never a client-supplied approver identity. Posting
+a replacement revokes previous active records for that task across endpoints
+and deployments; it does not overwrite historical proposals. Suspend/revoke
+routes are unchanged; restart requires a newly recorded release.
+
+Denials expose missing evidence, the unappointed authority/project contact and
+manual route, and persist in assistant events or the legacy audit/comparison
+record. Web draft notes show the denial reason. Superseded priority proposals
+are visibly non-actionable; server-side accept/edit checks remain authoritative.
+Release does not grant sending, works consent, safety, financial or domain-write
+authority. It permits bounded proposals that still require human review.
+
+Local synthetic HTTP exercise (no real AI, Azure or private data):
+
+```bash
+cd src/api
+PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
+  test_assistants.ApiTests.test_release_record_local_http -v
+```
+
+This starts the real App on an ephemeral loopback port, checks health,
+authenticated registry/release/invoke/detail/revoke routes, zero calls while
+denied, one nonbillable scripted provider call when released, unapproved output
+and unchanged domain state. It shuts down the listener and removes its temporary
+synthetic files. Direct human, live model and Azure acceptance are not implied.
+
 ## Return and handoff API (#83)
 
 All mutations below are authenticated, one-case human actions. The server

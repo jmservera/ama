@@ -32,8 +32,7 @@ class TasksMixin:
         self.store.ai.endpoint = "http://scripted-model.invalid"
         self.out = {"text": ""}
         self.store.ai._chat = lambda *a, **k: self.out["text"]
-        if hasattr(self.store, "assistant_connection"):
-            release_support.install(self.store)
+        release_support.install(self.store)
 
     def tearDown(self):
         self.tmp.cleanup()
