@@ -3320,6 +3320,21 @@ metadata when the knowledge base was created.
   actual-model, SQL Server/Azure or human application acceptance. Existing AI,
   consent and release gates are unchanged.
 
+## [2026-10-15] query | Register-backed historical sensor backfill (#177)
+
+* Added a src/core register adapter to the existing sensor writer, reusing
+  merged stock-fabric-v1 with sorted declared subsets, synthetic monitoring
+  choices and no copied resident/address fields. Unknown/declined fixtures
+  produce no readings; coverage, sanitized fabric and hashes remain explicit.
+* Added stock-mode SQL column bounds without migrating legacy stores or
+  changing historical fixture payloads. Core guide, synthetic-data synthesis
+  and reference index distinguish bounded 730-day fictional tests from a
+  full-stock, historical-climate or real-device result.
+* Children #178-#183 remain open, not owner-deferred. Climate provenance and
+  licence, dated measures, full behaviour/fault truth, #110 integration,
+  full-stock storage approval and real AI/SQL Server/Azure/human evidence
+  remain unavailable. No new model authority, deployment or resident consent.
+
 ## [2026-10-15] query | Shared role workbench IA and recovery (#152)
 
 * Reused the merged Fluent-derived design foundations and migrated API web
