@@ -2706,3 +2706,12 @@ metadata when the knowledge base was created.
   Checked by `mvp/tests/test_needs_inventory.py`.
 * Open: owner approval, volumes for sensor, chat and survey needs, link from
   the scenario manifest (#103), reconciliation with the 2026-10-14 handoff.
+
+## [2026-10-15] update | Design system foundations
+
+* Added `research/ux/design-system.md` and linked it from the index (issue
+  #150): tokens now defined in `mvp/web/style.css`, component and state
+  inventory, blocked-step and AI suggestion patterns, extend-versus-adopt
+  decision.
+* Open items: owner confirmation of the extend decision, Zava brand colours,
+  non-colour map marker shapes and contrast verification.
