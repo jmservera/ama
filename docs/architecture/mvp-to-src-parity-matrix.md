@@ -114,8 +114,8 @@ installed. Pull request 287 is merged; its 16 tests in test_assistant_release
 account for the rise from 703. The migration gate is equal or greater count
 with the same skips explained. `node --check` on the web scripts and the image checks
 (non-root, read-only, no data) are the other recorded gates. The prototype
-suite is not part of this baseline: it has 15 tests in two files that
-`prototype-validation` runs separately.
+suite is not part of this baseline: it had 15 tests in two files that
+`prototype-validation` ran separately. Both were removed in P1 (#202 step 1).
 
 ## Architecture Fit Findings
 
@@ -307,7 +307,9 @@ tests that drive `server` (`test_lawstore`, `test_ledger`, `test_ranking_scale`,
 `prototype/` is a retired 199-line slice (125-line domain, 73-line server) that
 is not scored by the rubric and not deployed. Its useful ideas are already in
 `mvp/`, with the exception noted. Owner decided on 2026-10-14 that it may retire
-before `mvp/`, once this mapping exists.
+before `mvp/`, once this mapping exists. P1 status 2026-10-15: all ten tracked
+files are mapped below and were removed in the #202 step 1 pull request; the
+rows stay as the record of what was retired.
 
 | File | Outcome | Target or reason | Group | Evidence |
 | --- | --- | --- | --- | --- |
@@ -335,7 +337,7 @@ check is recorded as an open item, not as a reason to keep `prototype/`.
 | Item | Reference to repoint | New path or change | Issue |
 | --- | --- | --- | --- |
 | `.github/workflows/mvp-ci.yml`, `mvp-validation.yml` | `mvp/` filters, `docker build mvp`, requirements path, image tag names | `src/**`, per-package install, `src/api` build context; keep the old check names until after the cut-over, then rename in one pull request (owner, 2026-10-15) | #200, #138 |
-| `.github/workflows/prototype-validation.yml` | `prototype/` detection | Delete with `prototype/` in P1 | #202 |
+| `.github/workflows/prototype-validation.yml` | `prototype/` detection | Deleted with `prototype/` in P1 (done in the #202 step 1 pull request) | #202 |
 | `infra/modules/containerapps.bicep` | Job command `python -m zavaforward_mvp.token_store`, digest job command from PR 268 | `python -m zava_forward.orchestrator.token_store` and `python -m zava_forward.orchestrator.digest_blob --publish`; `bicep build` and lint | #200, #144 |
 | `infra/README.md` | `az acr build ... mvp`, `PYTHONPATH=mvp` | `src/api` build context, installed package | #200 |
 | `infra/scripts/initialize-workbench-staff.py`, `create-sql-users.py`, `infra/tests/test_initialize_workbench_staff.py`, `infra/tests/test_identity_rbac.py` | `PYTHONPATH=mvp`, `zavaforward_mvp` imports | Import from `zava_forward.core` after M2 | #200 |

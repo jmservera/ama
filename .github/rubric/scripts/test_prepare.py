@@ -187,15 +187,6 @@ def test_given_unchanged_main_when_computed_then_no_scoring(tmp_path):
 @pytest.mark.parametrize(
     ("path", "artifact_id", "criteria"),
     [
-        ("prototype/zavaforward/domain.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
-        ("prototype/web/app.js", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
-        ("prototype/tests/test_domain.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
-        ("prototype/scripts/build_container_seed.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
-        ("prototype/Dockerfile", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
-        ("prototype/requirements.txt", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
-        ("prototype/README.md", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
-        ("prototype/architecture/zava-forward-local-prototype.excalidraw", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
-        ("prototype/deploy/main.bicep", "infrastructure", ["A1", "A3", "A5"]),
         ("src/app.py", "solution-code", ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]),
         ("infra/main.bicep", "infrastructure", ["A1", "A3", "A5"]),
     ],
@@ -286,14 +277,14 @@ def test_given_src_vendor_data_or_build_file_when_computed_then_no_scoring(tmp_p
 @pytest.mark.parametrize(
     "path",
     [
-        "prototype/seed/container-source/candidate-lifecycle.csv",
-        "prototype/seed/container-source/safety-holds.csv",
-        "prototype/seed/demo-import.xlsx",
-        "prototype/zavaforward/__pycache__/domain.py",
-        "prototype/web/node_modules/library/index.js",
+        "src/api/data/candidate-lifecycle.csv",
+        "src/core/data/demo-import.xlsx",
+        "src/core/__pycache__/domain.py",
+        "src/api/web/vendor/library/index.js",
+        "src/api/web/node_modules/library/index.js",
     ],
 )
-def test_given_generated_prototype_file_when_computed_then_no_scoring(tmp_path, path):
+def test_given_generated_file_when_computed_then_no_scoring(tmp_path, path):
     # Arrange
     root = make_repo(tmp_path)
     git(root, "checkout", "-b", "feature")
