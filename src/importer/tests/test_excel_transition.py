@@ -1,0 +1,396 @@
+import hashlib
+import sqlite3
+import tempfile
+import unittest
+import zipfile
+from collections.abc import Mapping
+from pathlib import Path
+from unittest import mock
+
+from zava_forward.importer.export import compare, history_rows, to_csv, to_xlsx
+from zava_forward.importer.mapping import CASE_LIST, build_preview, preview_file
+from zava_forward.importer.quarantine import ImportError_, QuarantineStore
+from zava_forward.importer.xlsx import WorkbookError, read_workbook, write_workbook
+
+GOOD = [
+    ["Ref", "Property Address", "Post code", "Stage", "Owner"],
+    ["ZF-1", "1 Synthetic Row", "AB1 2CD", "Survey", "Sam"],
+    ["ZF-2", "2 Synthetic Row", "AB1 2CE", "Design", "Alex"],
+]
+SYNTHETIC_BYTES = write_workbook({"Cases": GOOD})
+
+
+def preview_of(rows: list[list[str]]):  # type: ignore[no-untyped-def]
+    return build_preview(CASE_LIST, "demo.xlsx", "a" * 64, {"Cases": rows})
+
+
+class XlsxTests(unittest.TestCase):
+    def test_round_trip(self) -> None:
+        self.assertEqual(read_workbook(SYNTHETIC_BYTES)["Cases"], GOOD)
+
+    def test_formula_text_is_neutralised_on_write(self) -> None:
+        data = write_workbook({"S": [["=1+1", "@x", "ok"]]})
+        self.assertEqual(read_workbook(data)["S"], [["'=1+1", "'@x", "ok"]])
+
+    def test_rejects_non_workbook_and_entities(self) -> None:
+        with self.assertRaises(WorkbookError):
+            read_workbook(b"not a zip")
+        buf = Path(tempfile.mkdtemp()) / "x.xlsx"
+        with zipfile.ZipFile(buf, "w") as zf:
+            zf.writestr("xl/workbook.xml", '<!DOCTYPE x [<!ENTITY a "b">]><workbook/>')
+            zf.writestr("xl/_rels/workbook.xml.rels", "<r/>")
+        with self.assertRaises(WorkbookError):
+            read_workbook(buf.read_bytes())
+
+    def _zip(self, parts: Mapping[str, bytes | str]) -> bytes:
+        import io
+
+        out = io.BytesIO()
+        with zipfile.ZipFile(out, "w") as zf:
+            for name, body in parts.items():
+                zf.writestr(name, body)
+        return out.getvalue()
+
+    def test_malformed_parts_become_workbook_errors(self) -> None:
+        wb = '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"/>'
+        cases = {
+            "missing rels": {"xl/workbook.xml": wb},
+            "malformed xml": {"xl/workbook.xml": "<workbook", "xl/_rels/workbook.xml.rels": "<r/>"},
+        }
+        for label, parts in cases.items():
+            with self.subTest(label), self.assertRaises(WorkbookError):
+                read_workbook(self._zip(parts))
+
+    def test_bad_cell_ref_and_shared_index(self) -> None:
+        base = write_workbook({"S": [["a"]]})
+        for old, new in (
+            (b'r="A1"', b'r="1"'),
+            (b't="inlineStr"><is><t xml:space="preserve">a</t></is>', b't="s"><v>x</v>'),
+        ):
+            import io
+
+            src = zipfile.ZipFile(io.BytesIO(base))
+            out = io.BytesIO()
+            with zipfile.ZipFile(out, "w") as zf:
+                for n in src.namelist():
+                    body = src.read(n)
+                    if n.endswith("sheet1.xml"):
+                        body = body.replace(old, new)
+                    zf.writestr(n, body)
+            with self.subTest(new), self.assertRaises(WorkbookError):
+                read_workbook(out.getvalue())
+
+    def test_entity_guard_is_case_insensitive_and_utf8_only(self) -> None:
+        rels = "<r/>"
+        for body in (
+            b'<!doctype x [<!entity a "b">]><workbook/>',
+            "<!DOCTYPE x><workbook/>".encode("utf-16"),
+            b"\xff\xfe<workbook/>\x80",
+        ):
+            with self.assertRaises(WorkbookError):
+                read_workbook(
+                    self._zip({"xl/workbook.xml": body, "xl/_rels/workbook.xml.rels": rels})
+                )
+
+    def test_total_size_and_sheet_caps(self) -> None:
+        from zava_forward.importer import xlsx
+
+        with mock.patch.object(xlsx, "MAX_TOTAL_BYTES", 50), self.assertRaises(WorkbookError):
+            read_workbook(SYNTHETIC_BYTES)
+        with mock.patch.object(xlsx, "MAX_SHEETS", 0), self.assertRaises(WorkbookError):
+            read_workbook(SYNTHETIC_BYTES)
+
+    def test_cli_reports_clean_error(self) -> None:
+        import subprocess
+        import sys
+
+        bad = Path(tempfile.mkdtemp()) / "bad.xlsx"
+        bad.write_bytes(self._zip({"xl/workbook.xml": "<workbook"}))
+        done = subprocess.run(
+            [sys.executable, "-m", "zava_forward.importer", "preview", str(bad)],
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(done.returncode, 2)
+        self.assertIn("Cannot import", done.stderr)
+        self.assertNotIn("Traceback", done.stderr)
+
+
+class PreviewTests(unittest.TestCase):
+    def test_mapping_by_alias_and_ready_rows(self) -> None:
+        prev = preview_of(GOOD)
+        how = {c.field: c.how for c in prev.columns}
+        self.assertEqual(how["reference"], "alias")
+        self.assertEqual(how["status"], "unmapped")
+        self.assertFalse(prev.blocking)
+        self.assertEqual(prev.ready, 2)
+        self.assertEqual(prev.rows[0].lineage["row"], 2)
+        self.assertEqual(prev.rows[0].lineage["source_sha256"], "a" * 64)
+
+    def test_conflicts_missing_required_and_duplicates(self) -> None:
+        self.assertTrue(preview_of([["Ref", "Address"], ["1", "x"]]).blocking)
+        dup = preview_of([*GOOD, ["ZF-1", "3 Synthetic Row", "AB1 2CF", "Survey", ""]])
+        self.assertTrue(dup.blocking)
+        self.assertTrue(any("duplicate" in p for p in dup.rows[-1].problems))
+        both = preview_of([["Ref", "Case ID", "Address", "Postcode", "Stage"]])
+        self.assertTrue(any("Several columns" in c for c in both.conflicts))
+
+    def test_row_problems(self) -> None:
+        prev = preview_of([GOOD[0], ["ZF-9", "", "nope", "Survey", ""]])
+        self.assertEqual(prev.rows[0].problems, ["address is empty", "postcode looks wrong"])
+        self.assertEqual(len(prev.to_fix), 1)
+
+    def test_source_file_is_never_changed(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "demo.xlsx"
+            path.write_bytes(SYNTHETIC_BYTES)
+            path.chmod(0o444)
+            before = (hashlib.sha256(path.read_bytes()).hexdigest(), path.stat().st_mtime_ns)
+            prev, _ = preview_file(path)
+            self.assertEqual(
+                before, (hashlib.sha256(path.read_bytes()).hexdigest(), path.stat().st_mtime_ns)
+            )
+            self.assertEqual(prev.source_sha256, before[0])
+
+    def test_scanner_blocks_marker_and_type_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            bad = Path(folder) / "bad.xlsx"
+            bad.write_bytes(b"plain text, not a zip")
+            with self.assertRaises(WorkbookError):
+                preview_file(bad)
+            marked = Path(folder) / "m.xlsx"
+            marked.write_bytes(SYNTHETIC_BYTES + b"ZF-SYNTHETIC-MALWARE-TEST-MARKER")
+            with self.assertRaises(WorkbookError):
+                preview_file(marked)
+
+
+class QuarantineTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.store = QuarantineStore.in_memory()
+
+    def test_stage_needs_clean_mapping_and_name(self) -> None:
+        with self.assertRaises(ImportError_):
+            self.store.stage(preview_of([["Ref"], ["1"]]), "Sam")
+        with self.assertRaises(ImportError_):
+            self.store.stage(preview_of(GOOD), " ")
+
+    def test_human_approval_gate(self) -> None:
+        rec = self.store.stage(preview_of(GOOD), "Sam")
+        self.assertEqual((rec.status, rec.version), ("staged", 1))
+        for who in ("", "AI", "system", "sam"):
+            with self.assertRaises(ImportError_):
+                self.store.approve(rec.batch_id, who)
+        done = self.store.approve(rec.batch_id, "Priya", "checked")
+        self.assertEqual((done.status, done.decided_by), ("approved", "Priya"))
+        with self.assertRaises(ImportError_):
+            self.store.approve(rec.batch_id, "Priya")
+
+    def test_row_problems_need_explicit_acceptance(self) -> None:
+        rec = self.store.stage(preview_of([GOOD[0], ["ZF-9", "", "AB1 2CD", "Survey", ""]]), "Sam")
+        with self.assertRaises(ImportError_):
+            self.store.approve(rec.batch_id, "Priya")
+        self.assertEqual(
+            self.store.approve(rec.batch_id, "Priya", accept_row_problems=True).status, "approved"
+        )
+
+    def test_supersession_history(self) -> None:
+        a = self.store.stage(preview_of(GOOD), "Sam")
+        self.store.approve(a.batch_id, "Priya")
+        b = self.store.stage(preview_of(GOOD[:2]), "Sam")
+        self.store.approve(b.batch_id, "Priya")
+        hist = self.store.history("case-list")
+        self.assertEqual([h.status for h in hist], ["superseded", "approved"])
+        self.assertEqual(hist[0].superseded_by, b.batch_id)
+        current = self.store.current("case-list")
+        self.assertIsNotNone(current)
+        assert current is not None
+        self.assertEqual(current.version, 2)
+        self.assertEqual(history_rows(hist)[0][8], 2)
+        self.assertEqual(len(self.store.rows(a.batch_id)), 2)
+
+    def test_reject_and_portable_sql(self) -> None:
+        rec = self.store.stage(preview_of(GOOD), "Sam")
+        self.assertEqual(self.store.reject(rec.batch_id, "Priya", "no").status, "rejected")
+        with self.assertRaises(ImportError_):
+            self.store.reject(rec.batch_id, "ai")
+        import zava_forward.importer.quarantine as q
+
+        text = Path(q.__file__).read_text(encoding="utf-8").upper()
+        for banned in ("INSERT OR", "AUTOINCREMENT", "PRAGMA", "ON CONFLICT"):
+            self.assertNotIn(banned, text)
+
+    def test_unknown_batch(self) -> None:
+        with self.assertRaises(KeyError):
+            self.store.get("none")
+        self.assertIsInstance(self.store.conn, sqlite3.Connection)
+
+    def test_second_decision_loses_the_race(self) -> None:
+        rec = self.store.stage(preview_of(GOOD), "Sam")
+        stale = self.store.get(rec.batch_id)
+        self.store.reject(rec.batch_id, "Priya")
+        with mock.patch.object(self.store, "get", return_value=stale):
+            with self.assertRaises(ImportError_):
+                self.store.approve(rec.batch_id, "Alex")
+            with self.assertRaises(ImportError_):
+                self.store.reject(rec.batch_id, "Alex")
+        self.assertEqual(self.store.get(rec.batch_id).status, "rejected")
+        self.assertIsNone(self.store.current("case-list"))
+
+    def test_duplicate_version_is_refused_by_the_database(self) -> None:
+        rec = self.store.stage(preview_of(GOOD), "Sam")
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.store.conn.execute(
+                "INSERT INTO import_batches (batch_id, structure, version, source_name, "
+                "source_sha256, status, staged_by, staged_at, data_label) "
+                "VALUES ('x', ?, ?, 's', 'h', 'staged', 'p', 't', 'd')",
+                (rec.structure, rec.version),
+            )
+
+    def test_stage_after_gap_keeps_versions_unique(self) -> None:
+        first = self.store.stage(preview_of(GOOD), "Sam")
+        second = self.store.stage(preview_of(GOOD), "Sam")
+        self.assertEqual((first.version, second.version), (1, 2))
+
+
+class _RacingCursor:
+    """Inserts a competing batch between the MAX(version) SELECT and our INSERT."""
+
+    def __init__(self, real: sqlite3.Cursor, conn: sqlite3.Connection, races: list[int]) -> None:
+        self.real, self.conn, self.races = real, conn, races
+
+    def execute(self, sql: str, params: tuple = ()) -> "_RacingCursor":  # type: ignore[type-arg]
+        if sql.startswith("INSERT INTO import_batches") and self.races[0] > 0:
+            self.races[0] -= 1
+            version = self.conn.execute("SELECT MAX(version) FROM import_batches").fetchone()[0]
+            self.conn.execute(
+                "INSERT INTO import_batches (batch_id, structure, version, source_name, "
+                "source_sha256, status, staged_by, staged_at, data_label) "
+                "VALUES (?, ?, ?, 's', 'h', 'staged', 'p', 't', 'd')",
+                (f"rival-{self.races[0]}", params[1], (version or 0) + 1),
+            )
+            self.conn.commit()
+        self.real.execute(sql, params)
+        return self
+
+    def __getattr__(self, name: str):  # type: ignore[no-untyped-def]
+        return getattr(self.real, name)
+
+
+class _RacingConn:
+    def __init__(self, conn: sqlite3.Connection, races: int) -> None:
+        self.conn, self.races = conn, [races]
+
+    def cursor(self) -> _RacingCursor:
+        return _RacingCursor(self.conn.cursor(), self.conn, self.races)
+
+    def __getattr__(self, name: str):  # type: ignore[no-untyped-def]
+        return getattr(self.conn, name)
+
+
+class IntegrityError(Exception):
+    """Stands in for pyodbc.IntegrityError: same name, no shared base with sqlite3's."""
+
+
+class _RaisingCursor:
+    def __init__(self, real: sqlite3.Cursor, raises: list[int]) -> None:
+        self.real, self.raises = real, raises
+
+    def execute(self, sql: str, params: tuple = ()) -> "_RaisingCursor":  # type: ignore[type-arg]
+        if sql.startswith("INSERT INTO import_batches") and self.raises[0] > 0:
+            self.raises[0] -= 1
+            raise IntegrityError("UNIQUE KEY violation")
+        self.real.execute(sql, params)
+        return self
+
+    def __getattr__(self, name: str):  # type: ignore[no-untyped-def]
+        return getattr(self.real, name)
+
+
+class _RaisingConn:
+    def __init__(self, conn: sqlite3.Connection, raises: int) -> None:
+        self.conn, self.raises = conn, [raises]
+
+    def cursor(self) -> _RaisingCursor:
+        return _RaisingCursor(self.conn.cursor(), self.raises)
+
+    def __getattr__(self, name: str):  # type: ignore[no-untyped-def]
+        return getattr(self.conn, name)
+
+
+class StageRetryTests(unittest.TestCase):
+    def _racing(self, races: int) -> QuarantineStore:
+        base = QuarantineStore.in_memory()
+        return QuarantineStore(_RacingConn(base.conn, races))  # type: ignore[arg-type]
+
+    def test_collision_between_select_and_insert_is_retried(self) -> None:
+        store = self._racing(1)
+        rec = store.stage(preview_of(GOOD), "Sam")
+        self.assertEqual(rec.version, 2)
+        self.assertEqual(store.get("rival-0").version, 1)
+
+    def test_retries_are_exhausted_with_a_clear_error(self) -> None:
+        store = self._racing(99)
+        with self.assertRaisesRegex(ImportError_, "Could not allocate a batch version"):
+            store.stage(preview_of(GOOD), "Sam")
+
+    def test_other_driver_integrity_error_is_retried_by_class_name(self) -> None:
+        base = QuarantineStore.in_memory()
+        conn = _RaisingConn(base.conn, 1)
+        store = QuarantineStore(conn)  # type: ignore[arg-type]
+        self.assertEqual(store.stage(preview_of(GOOD), "Sam").version, 1)
+        self.assertEqual(conn.raises[0], 0)
+
+    def test_injected_integrity_errors_are_honoured(self) -> None:
+        class Custom(Exception):
+            pass
+
+        class Cur(_RaisingCursor):
+            def execute(self, sql, params=()):  # type: ignore[no-untyped-def]
+                if sql.startswith("INSERT INTO import_batches") and self.raises[0] > 0:
+                    self.raises[0] -= 1
+                    raise Custom()
+                self.real.execute(sql, params)
+                return self
+
+        class Conn(_RaisingConn):
+            def cursor(self):  # type: ignore[no-untyped-def]
+                return Cur(self.conn.cursor(), self.raises)
+
+        base = QuarantineStore.in_memory()
+        store = QuarantineStore(Conn(base.conn, 1), integrity_errors=(Custom,))  # type: ignore[arg-type]
+        self.assertEqual(store.stage(preview_of(GOOD), "Sam").version, 1)
+
+    def test_other_errors_propagate(self) -> None:
+        base = QuarantineStore.in_memory()
+        base.conn.execute("DROP TABLE import_rows")
+        with self.assertRaises(sqlite3.OperationalError):
+            base.stage(preview_of(GOOD), "Sam")
+
+
+class ExportTests(unittest.TestCase):
+    def test_csv_neutralises_formulas(self) -> None:
+        self.assertEqual(to_csv(["a"], [["=cmd"]]).splitlines(), ["a", "'=cmd"])
+
+    def test_xlsx_has_read_me_list_and_history_without_provider(self) -> None:
+        store = QuarantineStore.in_memory()
+        rec = store.stage(preview_of(GOOD), "Sam")
+        store.approve(rec.batch_id, "Priya")
+        sheets = read_workbook(to_xlsx("Cases", ["Ref"], [["ZF-1"]], store.history("case-list")))
+        self.assertEqual(list(sheets), ["Read me", "Cases", "History"])
+        self.assertIn("Read-only", sheets["Read me"][0][0])
+        self.assertEqual(sheets["History"][1][3], "approved")
+        self.assertEqual(sheets["History"][1][6], "Priya")
+        self.assertNotIn("provider", " ".join(sheets["History"][0]).lower())
+
+    def test_compare_is_read_only(self) -> None:
+        cur = {"1": {"stage": "Survey"}, "2": {"stage": "Design"}, "3": {"stage": "Install"}}
+        inc = {"1": {"stage": "Survey"}, "2": {"stage": "Install"}, "4": {"stage": "Survey"}}
+        snapshot = {k: dict(v) for k, v in cur.items()}
+        out = compare(cur, inc)
+        self.assertEqual((out.added, out.removed, out.unchanged), (["4"], ["3"], ["1"]))
+        self.assertEqual(out.changed, {"2": {"stage": ("Design", "Install")}})
+        self.assertEqual(cur, snapshot)
+
+
+if __name__ == "__main__":
+    unittest.main()
