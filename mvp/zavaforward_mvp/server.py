@@ -489,7 +489,7 @@ def main():
         store = open_store()
     except FileNotFoundError:
         sys.exit("No data file. Run build_mvp_dataset.py first (see mvp/README.md).")
-    law = lawstore.LawStore(os.environ["ZF_LAW_DB"], os.environ.get("ZF_LAW_BLOBS", "/state/law-blobs")) if os.environ.get("ZF_LAW_DB") else None
+    law = lawstore.LawStore.from_env()
     app = App(store, password, law=law)
     host, port = os.environ.get("ZF_BIND", "127.0.0.1"), int(os.environ.get("PORT", "8088"))
     print(f"Zava Forward is running at http://{host}:{port}")

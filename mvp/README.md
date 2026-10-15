@@ -174,15 +174,23 @@ It follows the simplicity requirements SA-001 to SA-010 in the
 ## Law store (ADR 0005, phase 1)
 
 `zavaforward_mvp/lawstore.py` loads the dated snapshots in `docs/reference/regulatory/`
-into append-only tables (`reg_source`, `reg_version`, `reg_provision`, `reg_gap`;
-Azure SQL DDL uses ledger append-only tables) and writes each snapshot once, content
-hashed, to a blob folder. Seed with
-`python -m zavaforward_mvp.lawstore REGULATORY_DIR DB_FILE BLOB_DIR`; a changed file
+into append-only tables (`reg_source`, `reg_version`, `reg_provision`, `reg_gap`) and
+writes each snapshot once, content hashed, through a snapshot interface. The target is
+Azure only: `ZF_LAW_STORE=mssql` uses Azure SQL (the `ZF_SQL_*` settings of the main
+store; append-only ledger tables when the database is ledger enabled, otherwise an
+append-only trigger) and `AzureBlobSnapshots` (`ZF_LAW_BLOB_ACCOUNT_URL`,
+`ZF_LAW_BLOB_CONTAINER`, `DefaultAzureCredential`; writes never overwrite). SQLite and a
+local folder (`ZF_LAW_DB`, `ZF_LAW_BLOBS`) are local test doubles only. Seed with
+`python -m zavaforward_mvp.lawstore REGULATORY_DIR DB_FILE BLOB_DIR` (or
+`ZF_LAW_STORE=mssql python -m zavaforward_mvp.lawstore REGULATORY_DIR`); a changed file
 becomes a new version and nothing existing is altered. Partial sources carry
 `completeness: partial` and results say so. Leasehold, complaints handling, TrustMark
 and licensed PAS 2035 are gaps answered as "no source held". The keyword index
-(`rebuild_index`) is derived from SQL. Set `ZF_LAW_DB` (and `ZF_LAW_BLOBS`) to serve the
-read-only viewer at `/law.html` and `/api/law/*` for staff roles, with no AI. Seeded
+(`rebuild_index`) is derived from SQL. The same suite runs on SQL Server in the CI
+`mssql` job (`test_lawstore.MssqlStoreTests`). Open items: the Azure Blob container
+immutability (WORM) policy and the Azure SQL deployment are infrastructure and are not
+verified here; the Azure Blob client is tested only against a fake container. The
+read-only viewer at `/law.html` and `/api/law/*` serves staff roles with no AI. Seeded
 versions are `not_reviewed` with owner "to be named"; this is a reference copy, not
 legal advice or approval. Seed metadata is `law/law-source-register.json`.
 

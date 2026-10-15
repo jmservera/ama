@@ -2802,3 +2802,10 @@ metadata when the knowledge base was created.
   fabric attributes, plus a committed manifest of seeded EPC conflicts.
 * Labelled synthetic fixtures under ADR 0005 (2026-10-15); not lodged EPCs.
 * Open: conflict mix and rates are unconfirmed generator assumptions.
+
+## 2026-10-15 Law store Azure SQL and Blob backends (#210)
+
+* Noted in `mvp/README.md` (law store section) the Azure SQL ledger backend and
+  Azure Blob snapshot interface; SQLite and local files are test doubles only.
+* No regulatory snapshot changed. Open: Blob immutability policy and Azure SQL
+  deployment are unverified infrastructure items.

@@ -124,7 +124,7 @@ jobs:
           ZF_SQL_TRUST_CERT: "1"
         run: |
           cd mvp
-          PYTHONPATH=.:tests python3 -m unittest test_mssqlstore \
+          PYTHONPATH=.:tests python3 -m unittest test_mssqlstore test_lawstore.MssqlStoreTests \
             test_assistants.MssqlContractTests test_assistants.MssqlReviewTests \
             test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests \
             test_assistants.MssqlLedgerTests
