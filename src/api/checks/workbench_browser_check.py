@@ -8,8 +8,9 @@ import runpy
 from pathlib import Path
 from typing import Any
 
-from checks.design_system_browser_check import ROOT, check, main
 from playwright.sync_api import Page, Route, sync_playwright
+
+from checks.design_system_browser_check import ROOT, check, main
 
 MANIFEST = json.loads(Path(__file__).with_name("workbench-manifest.json").read_text())
 
@@ -82,6 +83,12 @@ def run_browser(base: str) -> None:
                 context = browser.new_context(viewport={"width": 1280, "height": 900})
                 page = context.new_page()
                 page.on("pageerror", lambda error: errors.append(str(error)))
+                briefings: list[Route] = []
+                if role["role"] == "Resident Liaison Officer":
+                    page.route(
+                        "**/api/briefing",
+                        lambda route, _request, pending=briefings: pending.append(route),
+                    )
                 page.goto(base + "/app")
                 page.locator("#email").fill(role["email"])
                 page.locator("#pw").fill("synthetic-check")
@@ -139,6 +146,65 @@ def run_browser(base: str) -> None:
                     continue
 
                 wait_cases(page, 2)
+                page.wait_for_function(
+                    "() => document.querySelector('.ai')?.textContent"
+                    ".includes('Reading your cases...')"
+                )
+                check("initial briefing held before queue navigation", len(briefings) == 1)
+                page.get_by_role("link", name="All cases", exact=True).click()
+                wait_cases(page, 3)
+                page.get_by_role("link", name="My cases", exact=True).click()
+                wait_cases(page, 2)
+                check("cancelled briefing retried on each queue return", len(briefings) == 3)
+                briefings[-1].fulfill(
+                    json={"text": "Current synthetic briefing", "label": "Synthetic check"}
+                )
+                page.get_by_text("Current synthetic briefing", exact=True).wait_for()
+                for obsolete in briefings[:-1]:
+                    obsolete.fulfill(
+                        json={"text": "Obsolete synthetic briefing", "label": "Synthetic check"}
+                    )
+                page.wait_for_timeout(100)
+                check(
+                    "late cancelled briefings cannot replace the recovered briefing",
+                    page.get_by_role("heading", name="Today's briefing", exact=True).count() == 1
+                    and page.get_by_text("Current synthetic briefing", exact=True).is_visible()
+                    and page.get_by_text("Reading your cases...", exact=True).count() == 0
+                    and page.get_by_text("Obsolete synthetic briefing", exact=True).count() == 0,
+                )
+                page.get_by_role("link", name="All cases", exact=True).click()
+                wait_cases(page, 3)
+                page.get_by_role("link", name="My cases", exact=True).click()
+                wait_cases(page, 2)
+                check(
+                    "completed briefing stays cached across queue navigation",
+                    len(briefings) == 3
+                    and page.get_by_text("Current synthetic briefing", exact=True).is_visible(),
+                )
+                page.unroute("**/api/briefing")
+                page.route(
+                    "**/api/briefing?mode=workflow",
+                    lambda route: route.fulfill(
+                        status=503, json={"error": "Synthetic briefing failure"}
+                    ),
+                    times=1,
+                )
+                page.locator("#wf-mode").check()
+                page.get_by_role("alert").filter(has_text="Synthetic briefing failure").wait_for()
+                page.route(
+                    "**/api/briefing?mode=workflow",
+                    lambda route: route.fulfill(
+                        json={"text": "Retried synthetic briefing", "label": "Synthetic check"}
+                    ),
+                    times=1,
+                )
+                page.get_by_role("button", name="Try loading briefing again").click()
+                page.get_by_text("Retried synthetic briefing", exact=True).wait_for()
+                check(
+                    "briefing failure explicitly retries in the selected workflow mode",
+                    page.locator("#wf-mode").is_checked()
+                    and page.get_by_role("alert").count() == 0,
+                )
                 before = page.request.get(base + "/api/cases/ZF-4").json()
                 page.locator(".skip-link").focus()
                 page.keyboard.press("Enter")

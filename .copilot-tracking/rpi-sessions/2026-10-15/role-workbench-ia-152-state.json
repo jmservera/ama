@@ -32,52 +32,40 @@
     },
     {
       "decision": "One Review executed Complete; outcome Defects found; shared IA assessed, not full issue acceptance",
-      "status": "not accepted while RV-001 remains open",
+      "status": "historical defects-found outcome retained; RV-001 fixed in authorized follow-up, no second Review",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-15/role-workbench-ia-152-review.md"
     },
     {
       "decision": "Publish draft PR 317 to main using Refs #152 and complete command ledger",
-      "status": "published; CI blocked by conflicting reference-log append",
-      "evidence": "https://github.com/jmservera/ama/pull/317; initial commit 35f29a6"
-    }
-  ],
-  "blockers": [
-    {
-      "id": "RV-001",
-      "summary": "Cancelled cached briefing remains loading after queue navigation",
-      "resolution": "Later implementation task fixes cache lifecycle and adds delayed-briefing regression; publish draft only"
+      "status": "published; prior main reconciliation resolved the reference-log conflict",
+      "evidence": "https://github.com/jmservera/ama/pull/317; initial commit 35f29a6; merges f879827 and 84ca1d0"
     },
     {
-      "id": "PUB-001",
-      "summary": "PR 317 conflicts with main in docs/reference/log.md; CI has not run",
-      "resolution": "Explicitly authorized topic-branch reconciliation must preserve both append-only entries; no merge/rebase/force push performed"
+      "decision": "Bounded RV-001 implementation follow-up requested on PR 317",
+      "status": "fixed and validated; evidence reconciled without another Review",
+      "evidence": "Explicit user request; delayed-briefing browser regression fails before app.js fix and passes after; 498 API tests run, 98 skipped; browser/types/lint/format pass"
     }
   ],
+  "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Draft PR 317 published. Branch reconciliation required before CI; then select a distinct RV-001 repair. No child task or history rewrite authorized."
+    "action": "RV-001 fixed and validated. PR 317 retains open device, full AC-034/043 and live/human gates; no further child work selected."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Fix cancelled briefing cache recovery",
-      "rationale": "Small coupled lifecycle fix with high leverage; blocks shared-slice readiness",
-      "evidence": "RV-001, one request and persistent loading after mine/all/mine navigation"
-    },
-    {
-      "rank": 2,
       "task": "Decide supported devices and browser scope",
       "rationale": "Small owner decision enables meaningful device acceptance without inventing support",
       "evidence": "RV-002 and first unchecked #152 criterion"
     },
     {
-      "rank": 3,
+      "rank": 2,
       "task": "Plan full profile/recovery acceptance",
       "rationale": "Higher effort; connect existing eight auth roles to eleven perspectives and nine workflows",
       "evidence": "RV-003, bounded manifest and UX-07 first-page/row-focus limitation"
     },
     {
-      "rank": 4,
+      "rank": 3,
       "task": "Obtain authorized live-platform and human validation evidence",
       "rationale": "Environment/budget/authority dependent; cannot be replaced by local mocks or generic CI",
       "evidence": "RV-004, Docker permission denied and 97 SQL skips"

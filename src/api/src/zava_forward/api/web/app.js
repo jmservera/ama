@@ -213,10 +213,21 @@ const REVIEWED = { accept: "Accepted", edit: "Edited", reject: "Rejected" };
 function aiBox() {
   const box = h("section", { class: "card ai" }, h("h2", {}, "Today's briefing"), h("p", { class: "muted" }, "Reading your cases..."));
   const toggle = h("input", { type: "checkbox", id: "wf-mode", checked: aiMode.workflow, onchange: () => { aiMode.workflow = toggle.checked; load(); } });
-  const load = () => api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`).then((b) => box.replaceChildren(h("h2", {}, "Today's briefing"), h("p", {}, b.text),
-    h("p", { class: "muted" }, `${b.label}. Suggestions only. Refreshed when your cases change.`), aiNotes(b),
-    h("p", {}, toggle, h("label", { for: "wf-mode" }, " Workflow only (no AI) for my AI requests"))))
-    .catch(() => box.remove());
+  const load = () => {
+    const signal = routeController.signal;
+    const cancel = () => { if (briefingBox === box) briefingBox = null; };
+    signal.addEventListener("abort", cancel, { once: true });
+    return api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`, undefined, signal).then((b) => box.replaceChildren(h("h2", {}, "Today's briefing"), h("p", {}, b.text),
+      h("p", { class: "muted" }, `${b.label}. Suggestions only. Refreshed when your cases change.`), aiNotes(b),
+      h("p", {}, toggle, h("label", { for: "wf-mode" }, " Workflow only (no AI) for my AI requests"))))
+      .catch((error) => {
+        if (signal.aborted) { box.remove(); return; }
+        box.replaceChildren(h("h2", {}, "Today's briefing"),
+          h("p", { class: "err", role: "alert" }, `Briefing unavailable: ${error.message}`),
+          h("button", { onclick: load }, "Try loading briefing again"));
+      })
+      .finally(() => signal.removeEventListener("abort", cancel));
+  };
   load();
   return box;
 }

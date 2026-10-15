@@ -6,6 +6,25 @@ ms.date: 2026-10-15
 
 ## Execution Scope
 
+Current invocation: bounded RV-001 follow-up on PR #317, related to P01-T02
+and PC-003. Reuse the existing browser harness to hold the initial briefing
+through My cases -> All cases -> My cases, prove failure before the fix, then
+repair only its request/cache lifecycle in `src/api`. Update this ledger,
+the original review disposition and PR body without repeating Review.
+Run the requested absolute-PYTHONPATH API suite, CI design-system browser
+entry point, `/tmp/zf164/bin/mypy .`, ruff lint and format checks. Preserve
+the open device decision and full AC-034/043 gates. No new product decision,
+private-data access, deployment or dependency change is intended.
+
+Regression-first evidence: `/tmp/zf164/bin/python -m
+checks.workbench_browser_check` with the requested absolute PYTHONPATH first
+failed because the sanitized server subprocess could not import the local
+namespace packages. Restored missing editable installs with
+`/tmp/zf164/bin/python -m pip install --no-deps -q -e src/core -e src/agents
+-e src/api`; no manifests changed. Rerun against unchanged app.js reached the
+held briefing and failed `cancelled briefing retried on each queue return`.
+This is the expected RV-001 failure, not a passing regression.
+
 Full plan for task `152`, slug `role-workbench-ia-152`. Implementing P01 then
 P02 on the specified branch. Research Ready; one critique executed and all
 six dispositions recorded in plan/details. No owner decisions inferred.
@@ -233,3 +252,49 @@ topic push. It does not alter the completed Review or source.
 Owner device/browser support, full eleven-profile/nine-workflow journey,
 human/screen-reader checks, real model/SQL Server/Azure remain unproven.
 Offline synthetic checks do not satisfy actual inference acceptance.
+
+## RV-001 Follow-Up Result on PR #317
+
+RV-001 is fixed. This later user-authorized implementation supersedes the
+historical open-defect/publication status above without repeating Review.
+Only production code, tests and the component guide under `src/api` changed;
+the review disposition and existing tracking evidence are reconciled separately.
+
+`aiBox` captures each load's route signal, registers a pending-request abort
+listener that synchronously invalidates only that box's cache, and unregisters
+it when the request settles. Completed briefings remain cached across routes.
+Late cancelled responses cannot mutate the replacement panel. Non-abort
+failures show an alert and retry instead of silently removing assistance.
+API guide documents the recovery boundary. No rights, model configuration,
+human approval or resident consent gates changed.
+
+The existing workbench browser check holds the first briefing before login
+completes, navigates mine/all/mine, requires one new request per route, fulfills
+the newest response, then releases obsolete responses. It checks recovered
+content, one panel, no stale/loading content, completed-cache retention, and
+failure/retry with workflow-only mode preserved. Its request-count assertion
+failed without the production fix and passes with it.
+
+| Command | Result |
+| --- | --- |
+| `cd src/api && PYTHONPATH=$PWD/src:$PWD/tests:$PWD/../core/src:$PWD/../core/tests:$PWD/../agents/src:$PWD/../agents/tests python3 -m unittest discover -s tests -q` | Pass: 498 run, 400 passed, 98 skipped, 126.171s |
+| `cd src/api && /tmp/zf164/bin/python -m checks.design_system_browser_check` | Pass twice after production fix; final run includes explicit failure/retry test. Both complete suites; Chromium 156.0.8078.4, no uncaught JS errors |
+| `cd src/api && /tmp/zf164/bin/mypy .` | Pass: 40 source files |
+| `cd src/api && /tmp/zf164/bin/ruff check . && /tmp/zf164/bin/ruff format --check .` | Pass: 11 files formatted |
+| `cd src/api && /tmp/zf164/bin/ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 checks/design_system_browser_check.py checks/workbench_browser_check.py` | Initial additional strict check found local-import ordering and an unbound loop capture in the new callback; corrected both. Final pass |
+| `cd src/api && /tmp/zf164/bin/ruff format --isolated --line-length 100 --check checks/design_system_browser_check.py checks/workbench_browser_check.py` | Pass: two files formatted |
+| `cd src/api && node --check src/zava_forward/api/web/app.js` | Pass |
+| `git fetch origin && git rev-list --left-right --count HEAD...origin/main` | `5 0`: main already merged by pre-existing topic commits f879827 and 84ca1d0. PUB-001 is resolved; no additional merge needed at this check |
+| `gh api user --jq '{id,login}'` | Authenticated id 8036360, login jmservera; required privacy-safe email matches |
+| `git diff --check` | Pass |
+
+Existing browser launcher checked its owned loopback server health and
+terminated browser/server processes and temporary synthetic fixtures.
+Pip was used only to restore missing editable imports after observed failure;
+no uv, dependency changes or private data access. No `.env`, `.vscode`,
+issue-sync-tracking or `mvp/` changes; no properwarm.json read.
+
+RV-001 is no longer an open implementation blocker. RV-002 supported-device
+decision, RV-003 complete AC-034/043/recovery acceptance and RV-004 live/human
+evidence remain open. Preserve all related unchecked acceptance gates, draft
+status and Refs #152. No second Review, full acceptance or main write.

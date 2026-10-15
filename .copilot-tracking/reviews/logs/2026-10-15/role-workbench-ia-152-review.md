@@ -10,6 +10,12 @@ Task `152`, slug `role-workbench-ia-152`. Execution: Complete.
 Outcome: Defects found. Boundary: shared API navigation, responsive layout and
 recovery, not role-specific screens or full issue/product acceptance.
 
+Current disposition: RV-001 fixed in the explicitly requested follow-up on
+PR #317. The delayed-briefing regression failed against the original app.js
+and passes with the fix. This updates finding disposition, not the historical
+Review outcome or its one-pass execution. RV-002 to RV-004 remain open; device
+support and full AC-034/043 acceptance are still unchecked.
+
 ## Compared Artifacts
 
 * `.copilot-tracking/research/2026-10-15/role-workbench-ia-152-research.md`
@@ -80,8 +86,25 @@ No significant owner decision was invented; no extra critique ran.
 * Smallest next action: reset or scope the cached briefing when its request is
   cancelled; show an explicit current failure/retry instead of cached loading.
   Add this exact delayed-briefing scenario to the existing browser check.
-* Disposition: open, blocks ready/conformant shared-slice claim. Do not fix or
-  repeat Review inside this task; publish only a clearly labelled draft.
+* Original disposition: open, blocks ready/conformant shared-slice claim.
+  Repair was routed to a distinct later invocation, not performed inside Review.
+* Current disposition: fixed by the user-requested PR #317 follow-up. `aiBox`
+  captures each request's route signal and synchronously clears only its own
+  cached panel on abort while pending. Completion removes the abort listener,
+  preserving successful cached briefings. Non-abort failures expose an alert
+  and retry; old cancelled responses cannot replace the new panel.
+* Regression: existing CI design-system entry point invokes the extended
+  workbench check. Hold the initial response through My cases -> All cases ->
+  My cases; assert three requests, fulfill the current one, then release old
+  responses. Assert recovered content, no stale/loading content, one panel and
+  no additional calls when navigating with a completed cache. Also assert
+  explicit failure/retry preserves workflow-only mode. The exact request-count
+  assertion fails before the production fix and passes afterward.
+* Follow-up validation: requested absolute-PYTHONPATH API suite passes,
+  498 run / 400 passed / 98 skipped; both browser suites pass in Chromium
+  156.0.8078.4; `/tmp/zf164/bin/mypy .` passes (40 files), ruff lint/format and
+  isolated browser-harness lint/format pass, as does app.js syntax.
+  No second Review or independent human acceptance is claimed.
 
 ### RV-002 [Medium]: Supported devices and field/mobile use remain undecided
 
@@ -139,20 +162,21 @@ No significant owner decision was invented; no extra critique ran.
 
 ## Blockers, Residual Work and Outcome
 
-No further source change or second Review is performed. RV-001 is an introduced
-readiness blocker. RV-002 to RV-004 are known owner/evidence/residual boundaries,
+The original Review performed no source change or second Review. Its RV-001
+readiness blocker has since been fixed and regression-tested by the authorized
+follow-up above. RV-002 to RV-004 remain known owner/evidence/residual boundaries,
 not waived acceptance criteria. No high/critical finding was identified.
 
-Execution: Complete. Outcome: Defects found. The RPI pass completed; product
-and shared-slice readiness are not accepted while RV-001 remains open.
-Return to parent: commit evidence and publish a draft Refs #152 PR, with
-RV-001 and unchecked criteria prominent, never Closes or a conformant claim.
+Historical execution: Complete. Outcome: Defects found. RV-001 is now fixed;
+this does not accept full issue/product readiness or close residual findings.
+Keep the draft Refs #152 PR and unchecked criteria, never Closes or a
+conformant/human-acceptance claim.
 
 ## Closeout Routing
 
 | Finding | Destination | Owner / next action |
 | --- | --- | --- |
-| RV-001 | Later rpi-implement | Fix cancelled briefing cache and add exact regression |
+| RV-001 | Fixed in authorized follow-up | Cancelled cache invalidated; regression fails before fix and passes after |
 | RV-002 | Owner decision / rpi-plan | Supported browser/device/field-use scope |
 | RV-003 | Distinct journey/recovery plan | Full profile/workflow and row-focus evidence |
 | RV-004 | Authorized validation / rpi-research | Live platform and human-test prerequisites |

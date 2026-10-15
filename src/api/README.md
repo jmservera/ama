@@ -164,6 +164,10 @@ policy order, focuses the reset control and announces refreshed results.
 Obsolete loads/debounce are cancelled on route replacement; failed loads show
 an explicit retry, and session expiry returns to sign-in. An empty own queue
 is distinguished from no filter matches. Reset does not modify records.
+Cancelling a pending briefing invalidates its cached panel so the next queue
+requests it again; a completed briefing remains cached. Briefing failures show
+an explicit retry. The browser check holds responses across My cases -> All
+cases -> My cases and verifies recovery without stale-response replacement.
 Safety reports and stopped-work details remain expanded ahead of routine case
 forms, with existing named owners, external timings and explicit unknowns.
 Contractors retain their minimum-necessary projection, not staff safety data.
