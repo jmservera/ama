@@ -3067,3 +3067,11 @@ metadata when the knowledge base was created.
 * Split `mvp/README.md` into `src/api`, `src/core`, `src/agents`, `src/orchestrator` and `src/importer` READMEs, keeping the dated evidence sections and validation record unchanged, and left a short pointer README in `mvp/`. Repointed `README.md`, `infra/README.md`, the architecture index, ADR 0002, the case study addendum, the UX content standard, `src/README.md`, `.github/copilot-instructions.md` and the rubric README; removed the dead `mvp` `sys.path` lines from two infra tests and the `mvp/README.md` rubric glob.
 * Removed the `importer` ruff and mypy exemptions. `core`, `api`, `orchestrator` and `agents` keep theirs (about 2,300 findings without them), recorded as a follow-up in `src/README.md` and the parity matrix.
 * Tests: baseline on `main` 747 (core 252, agents 31, orchestrator 17, importer 9, api 438; 92 skipped); after, 747. Open: docker and SQL Server are not available locally, so the image and `mssql` jobs rely on CI.
+
+## [2026-10-15] implementation | Case conversation panel in src (#159)
+
+* Added the optional case chat panel: `src/core/.../chat_panel.py` (cited, labelled, abstaining answers and workflow-only fallback over the merged chat isolation and thread code), `src/agents/.../chat.py` (provider adapter), `POST /api/chat/threads/{id}/ask` and `/proposals` in `src/api` (proposals use the existing assistants invoke and independent review) and `web/chat.js`.
+* Documented in the `src/api` README ("Conversation panel") and the reference index task routing. No `mvp/` change.
+* Tests: `core` 256, `agents` 47, `api` 457 (92 skipped), `orchestrator` 17, `importer` 9; ruff and mypy clean. Docker is permission denied and SQL Server is absent locally, so the image and `mssql` jobs rely on CI.
+* Open on #159: screen-reader test, live model run, and real chat data (OD-45 to OD-49) need owner action, so those criteria stay unticked and the PR uses `Refs #159`.
+

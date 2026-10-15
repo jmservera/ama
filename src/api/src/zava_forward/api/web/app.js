@@ -405,6 +405,7 @@ async function caseView(id) {
     documentsPanel(c, id, refresh),
     fundingPanel(c, id, refresh),
     assistantPanel,
+    chatCasePanel(id),
     financePanel(c, id, refresh), grantPanel(c, id, refresh), technicalPanel(c, id, refresh), residentPanel(c, id, refresh),
     msg,
     h("section", { class: "card" }, h("h2", {}, "History"),

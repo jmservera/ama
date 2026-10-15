@@ -61,5 +61,10 @@ module = [
 ]
 ignore_errors = true
 
+# chat_panel is typed; it calls siblings that still wait for their typing pass (M6).
+[[tool.mypy.overrides]]
+module = ["zava_forward.core.chat_panel"]
+disallow_untyped_calls = false
+
 [tool.setuptools.package-data]
 "zava_forward.core" = ["policies/*.json", "law/*.json"]
