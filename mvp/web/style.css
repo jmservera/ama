@@ -139,7 +139,7 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .top{flex-wrap:wrap;gap:.75rem}.brand{flex-shrink:0}.top nav{flex-wrap:wrap;min-width:0}
 
 /* Design system components: see docs/reference/research/ux/design-system.md */
-.flag.danger:before,.status-line.danger:before,.err:before{content:"\26A0\00a0";font-weight:700}
+.flag.danger:before,.status-line.danger:before,.err:not(:empty):before{content:"\26A0\00a0";font-weight:700}
 .status-line.ok{border-color:var(--ok);background:var(--ok-bg)}
 .status-line.ok:before{content:"\2713\00a0";font-weight:700}
 .status-line.wait:before{content:"\23F3\00a0"}

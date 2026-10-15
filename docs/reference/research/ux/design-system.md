@@ -97,12 +97,12 @@ so the state is readable without colour.
   stages or queues.
 * The label is text, so it is not colour- or border-style-only.
 
-## Colour is never the only signal
+## Colour as a signal: delivered and open
 
 * Danger, ok and wait statuses add a glyph and words, not only a colour.
-* Disabled controls change cursor and text as well as colour.
+* Disabled controls change cursor and text colour; the disabled label wording is not yet distinct.
 * Errors use a thicker border, a glyph and message text.
-* Open item: map markers (`.dot.normal`, `.dot.long`, `.dot.hazard`) differ by
+* Open items: `.cluster.hazard` and `.tile.danger strong` rely on colour (the tile has a label); map markers (`.dot.normal`, `.dot.long`, `.dot.hazard`) differ by
   colour only on the SVG; the list view is the non-colour alternative. Shape
   variants need the accessibility feature to confirm.
 
