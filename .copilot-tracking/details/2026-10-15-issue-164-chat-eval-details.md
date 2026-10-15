@@ -42,4 +42,6 @@ Validation: core 261, agents 70, api 459 (92 skipped), orchestrator 17, importer
 39, all successful; ruff check/format and mypy successful in every project.
 The existing environment lacked the orchestrator/importer editable installs;
 initial imports failed, then pip restored those packages and both suites passed.
-P05-T03 awaits final commit and normal push.
+P05-T03 complete: source fix `2f6f73a` committed and pushed normally to
+`feat/src-chat-eval-164`. Final delivery-record reconciliation follows on the
+same branch. No force push, main push, merge or enablement.

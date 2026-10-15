@@ -53,5 +53,8 @@ second independent Review, new critique, human sign-off or enablement approval.
 * ADR 0006 dependency tests pass; no runtime dependencies, SQL schema, working
   data, deployment, inference calls or enablement changes. Synthetic fixtures
   only. Existing SQL/environment skips do not prove SQL integration.
-* Plan/details/changes and reference index/log are reconciled; final commit and
-  ordinary push to `feat/src-chat-eval-164` are pending.
+* Plan/details/changes and reference index/log are reconciled. Source fix
+  `2f6f73a190e82909dc1013af726fef9e990c0ebd` committed and pushed normally to
+  `feat/src-chat-eval-164`; this delivery-record reconciliation follows on that
+  same branch. No force push, main push or merge. Acceptance remains blocked by
+  the explicitly reported critical grounding gap; nothing is enabled.

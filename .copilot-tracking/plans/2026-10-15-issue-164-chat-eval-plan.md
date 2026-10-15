@@ -22,12 +22,13 @@ The earlier completion and critique remain historical evidence.
   phrasings, drop assistant history and withhold lexical action claims.
 * [x] P05-T02: Count critical known gaps as blockers, never passes; cover report,
   category totals, CLI and enablement with synthetic regression tests.
-* [ ] P05-T03: Run all five src suites, ruff and mypy; reconcile changes, review,
+* [x] P05-T03: Run all five src suites, ruff and mypy; reconcile changes, review,
   documentation and state; commit and push to the existing branch without force.
 
 Approval thresholds, reviewer, real-model behaviour and human review remain
 unapproved or unmeasured. Nothing is enabled.
 
-P05-T03 validation is complete; artifact reconciliation and ordinary push remain.
+P05-T03 complete: validated source fix `2f6f73a` was pushed normally to the same
+branch; this delivery-record update follows on that branch.
 The golden CLI intentionally exits 1 for the open critical unsupported-claim gap,
 not an unexpected regression.

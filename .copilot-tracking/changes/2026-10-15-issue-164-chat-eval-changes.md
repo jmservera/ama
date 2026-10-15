@@ -9,8 +9,8 @@ ms.date: 2026-10-15
 ### PR 307 review-fix continuation (P05-T01 to P05-T03)
 
 The owner requested fixes before acceptance, on the existing branch only.
-P05-T01/P05-T02 are complete; P05-T03 validation is complete and commit/push
-remains. The earlier results below are historical, not evidence for the review
+P05-T01 to P05-T03 are complete; source fix `2f6f73a` was committed and pushed
+normally to the existing branch. The earlier results below are historical, not evidence for the review
 fixes. No new critique or approval is claimed. Synthetic data only; ADR 0006 and
 disabled enablement remain unchanged.
 
@@ -81,7 +81,13 @@ worktree. No uv used. From each `src/<project>`:
   partial filtering, and appended current limitations/results without changing
   unrelated earlier entries. Existing critique and single Review stay historical;
   review artifact now records the fixes and remaining critical blocker.
-* `git diff --check` passed. Commit and ordinary push pending.
+* `git diff --check` passed. Source fix commit
+  `2f6f73a190e82909dc1013af726fef9e990c0ebd` was pushed normally to
+  `origin/feat/src-chat-eval-164` (`2fb276d..2f6f73a`). This delivery-record
+  reconciliation follows as a documentation commit on the same branch.
+* Authenticated account resolved with `gh api user`; repository-local
+  privacy-safe noreply email used for author and committer, with the requested
+  Copilot trailer. No force push, main push, merge, live inference or enablement.
 
 * Added `src/agents/src/zava_forward/agents/chat_eval.py`, `src/agents/evals/chat_golden.json`, `src/agents/tests/test_chat_eval.py`; registry entry `chat-golden`.
 * Modified core `chat_panel.py` (refusal, history carry filter), core and api `test_chat_panel.py`, `web/chat.js`, agents README, reference index and log.
