@@ -2999,3 +2999,8 @@ metadata when the knowledge base was created.
 ## [2026-10-15] restructure | ADR 0006 accepted (#196)
 
 * ADR 0006 status set to Accepted by the owner. Recorded answers: no soak period before deleting `mvp/`; the `agents` image carries no `core[sql]` or blob code and the temporary `api` to `agents` import is accepted until #144; old workflow and check names stay until after cut-over; a GitHub release accompanies the archive tag. Index row updated.
+
+## [2026-10-15] restructure | Rubric registry excludes for src (#198)
+
+* Added `src/**/web/vendor/**`, `src/**/data/**`, `**/*.egg-info/**` and `**/build/**` to the `solution-code` excludes in `.github/rubric/artifacts.json`, fixture tests in `test_prepare.py` and a note in `.github/rubric/README.md`. `mvp/` globs kept until the cut-over registry PR (#201, #202); `rubric_version` not bumped.
+* Baseline 47 of 100; file sets before and after are identical on the current tree. The change takes effect only after merge. Open: 19 pre-existing test failures, post-merge workflow score.

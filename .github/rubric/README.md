@@ -190,6 +190,13 @@ and the data generator scripts under `support/synthetic-data/`. The private
 history; the registry no longer reads `prototype/`. The Prototype validation
 workflow still checks only `prototype/`, so MVP tests are not yet run in CI.
 
+On 2026-10-15 (#198, ADR 0006) `solution-code` also excludes
+`src/**/web/vendor/**`, `src/**/data/**`, `**/*.egg-info/**` and `**/build/**`,
+so third-party, private and generated files under `src/` are not scored.
+`src/**/*` already counts tests, `pyproject.toml` and Dockerfiles. The `mvp/`
+globs stay until the cut-over registry pull request. A registry change takes
+effect only after it merges; `rubric_version` is not bumped.
+
 ### Zava Forward Prototype
 
 The existing `solution-code` entry preserves `src/**/*` and also includes the

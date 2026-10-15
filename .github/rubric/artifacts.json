@@ -31,7 +31,7 @@
       "status": "active",
       "extractor": "text",
       "include": ["src/**/*", "mvp/zavaforward_mvp/**/*.py", "mvp/web/*", "mvp/tests/**/*.py", "mvp/Dockerfile", "mvp/README.md", "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/*.py"],
-      "exclude": ["**/node_modules/**", "**/.venv/**", "**/__pycache__/**", "**/bin/**", "**/obj/**", "**/dist/**", "mvp/data/**", "mvp/web/vendor/**"],
+      "exclude": ["**/node_modules/**", "**/.venv/**", "**/__pycache__/**", "**/bin/**", "**/obj/**", "**/dist/**", "mvp/data/**", "mvp/web/vendor/**", "src/**/web/vendor/**", "src/**/data/**", "**/*.egg-info/**", "**/build/**"],
       "criteria": ["A1", "A3", "A4", "A5", "A6", "A7", "B6"]
     },
     {"id": "infrastructure",
