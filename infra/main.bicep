@@ -4,7 +4,8 @@ targetScope = 'resourceGroup'
 @minLength(3)
 @maxLength(10)
 param workload string = 'forward'
-@allowed(['dev', 'test'])
+@description('Environment name; drives resource naming and the environment tag. pilot requires the production profile.')
+@allowed(['dev', 'test', 'pilot'])
 param environmentName string = 'dev'
 param location string = resourceGroup().location
 @description('Mailbox for platform alerts.')
@@ -122,6 +123,7 @@ module guard 'modules/guard.bicep' = {
     productionProfileForbidsPublicNetworkAccess: isDev || !allowPublicNetworkAccess ? 'ok' : ''
     productionProfileRequiresKeyVaultPurgeProtection: isDev || keyVaultPurgeProtection ? 'ok' : ''
     publicEdgeRequiresProductionProfile: !enablePublicEdge || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
+    pilotRequiresProductionProfile: environmentName != 'pilot' || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
     publicEdgeRequiresApplications: !enablePublicEdge || deployApplications ? 'ok' : ''
     sharePointEvidenceStoreRequiresSiteId: evidenceStore != 'sharepoint' || !empty(sharePointSiteId) ? 'ok' : ''
     tokenStoreReadyRequiresTokenStore: !entraTokenStoreReady || enableEntraTokenStore ? 'ok' : ''

@@ -103,8 +103,7 @@ class BicepPolicyTests(unittest.TestCase):
         self.assertEqual(self.defaults["deploymentProfile"], "production")
         self.assertIs(self.defaults["allowPublicNetworkAccess"], False)
         self.assertIs(self.defaults["keyVaultPurgeProtection"], True)
-        parameter_file = (INFRA / "main.bicepparam").read_text(encoding="utf-8")
-        self.assertIn("param deploymentProfile = 'production'", parameter_file)
+        self.assertIn("param deploymentProfile = 'production'", (INFRA / "main.pilot.example.bicepparam").read_text(encoding="utf-8"))
 
     def test_every_public_access_setting_follows_the_single_switch(self) -> None:
         seen = 0
