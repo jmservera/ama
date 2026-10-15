@@ -2884,3 +2884,11 @@ metadata when the knowledge base was created.
   not deployed or locked.
 * No regulatory snapshot changed. Open: legal retention period, policy lock,
   deployed run and alert table check.
+
+## 2026-10-15 Key Vault secret lifecycle (#142)
+
+* `infra/README.md` gains a Key Vault secret lifecycle section: inventory,
+  expiry and denied-access alerts on Log Analytics, zero-downtime Entra client
+  secret rotation order and quarterly access review.
+* No regulatory snapshot changed. Open: named secret owners, a live rotation
+  exercise, deployed alert verification and review scheduling.

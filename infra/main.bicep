@@ -130,6 +130,7 @@ module keyvault 'modules/keyvault.bicep' = {
     location: location
     tags: allTags
     workspaceId: monitoring.outputs.workspaceId
+    actionGroupId: monitoring.outputs.actionGroupId
     peSubnetId: network.outputs.peSubnetId
     zoneId: network.outputs.zoneIds.vault
     secretsUserPrincipalIds: [identity.outputs.principalIds.api]
