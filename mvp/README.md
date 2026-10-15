@@ -70,6 +70,16 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   recommendation store, in both the JSON and the sqlite store.
 * Documents: upload pdf, png, jpg, docx, xlsx, csv or txt (5 MB), see an
   evidence checklist (EPC, survey, design, consent) and download files.
+  Every upload is scanned before it can be downloaded or read by the document
+  assistant (`doc_controls.py`; `ZF_SCANNER=local|defender`). The local scanner
+  is a labelled synthetic test: a marker and a type check, not an antivirus
+  engine. The Defender scanner reads the Defender for Storage blob tag through a
+  fake transport only, and a pending result keeps the file unavailable. A
+  programme manager lists documents past their retention trigger
+  (`GET /api/retention`), approves each deletion (`retention-approve`) and can
+  place or release a case legal hold (`legal-hold`, `legal-hold-release`); a
+  hold blocks deletion. Periods are synthetic-demo placeholders, not an approved
+  schedule, and the deletion log keeps no file name or content.
 * Funding: a person moves each application through draft, approved,
   submitted and confirmed. Approval needs complete evidence and the Grants
   and Evidence Officer or a manager. The system never submits anything.
@@ -235,6 +245,7 @@ and the rule engine are not done here.
 | `ZF_TILE_URL`, `ZF_TILE_ATTRIBUTION` | map tile provider |
 | `ZF_TIME_CAPTURE`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION`, `ZF_TIME_DB`, `ZF_TIME_MIN_GROUP` | time capture |
 | `ZF_DOC_STORE`, `ZF_DOC_DIR`, `ZF_BLOB_ACCOUNT_URL`, `ZF_BLOB_CONTAINER`, `ZF_BLOB_SAS`, `ZF_BLOB_CLIENT_ID` | document store |
+| `ZF_SCANNER` | `local` (default) or `defender` content scanner |
 
 ### SQL store
 

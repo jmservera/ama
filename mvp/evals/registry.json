@@ -38,6 +38,18 @@
    ],
    "seed": 20260901,
    "contains_real_data": false
+  },
+  {
+   "id": "document-control-fixtures",
+   "path": "mvp/evals/document_control_fixtures.json",
+   "version": "document-control-fixtures-v1",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "Synthetic scan classes, retention triggers and legal holds for 120 homes from the 60,000-home stock register; no real retention decision.",
+   "used_by": [
+    "mvp/tests/test_document_controls.py"
+   ],
+   "seed": 20260901,
+   "contains_real_data": false
   }
  ],
  "open_items": [

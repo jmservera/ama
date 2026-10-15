@@ -16,6 +16,7 @@ from .grants import GrantMixin, grant_summary
 from .resident_decisions import ResidentDecisionMixin, measure_decision_view
 from .signoffs import SignoffMixin, missing_items, technical_gate
 from .ai import Ai
+from .doc_controls import DocControlsMixin, open_scanner
 from .documents import ACCEPTED, MAX_BYTES, DocumentStoreError, open_document_store
 from .procurement import ProcurementMixin
 from .quality import QualityMixin
@@ -36,7 +37,7 @@ class ConflictError(Exception):
     """Another writer changed the same record first, so this write was refused."""
 
 
-class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin, GovernanceMixin):
+class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin, GovernanceMixin, DocControlsMixin):
     def __init__(self, data_path, live_path=None, audit_path=None):
         self.lock = threading.RLock()
         base = os.path.dirname(data_path)
@@ -56,6 +57,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
         self.digest_dir = os.environ.get("ZF_DIGEST_DIR") or os.path.join(base, "digests")
         self.docs_dir = os.path.join(os.path.dirname(self.live_path), "docs")
         self.docstore = open_document_store(self.docs_dir)
+        self.scanner = open_scanner(self.docstore)
         self.ai = Ai()
         self.version = 0
         self._briefings = {}
@@ -427,8 +429,13 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
             except DocumentStoreError as e:
                 self.audit(user["email"], "upload_document_failed", case_id, f"{kind}: {name}: {e}")
                 raise
+            try:
+                scan = self.scan_new_document(case_id, did, name, data, mime)
+            except ValueError as e:
+                self.audit(user["email"], "upload_document_rejected", case_id, f"{did}: {kind}: {e}")
+                raise
             doc = dict(id=did, name=name, kind=kind, at=datetime.now().date().isoformat(), by=user["name"],
-                       generated=False, mime=mime, summary="", content_sha256=hashlib.sha256(data).hexdigest(), version=1)
+                       generated=False, mime=mime, summary="", content_sha256=hashlib.sha256(data).hexdigest(), version=1, scan=scan)
             c["documents"].append(doc)
             self.audit(user["email"], "upload_document", case_id, f"{kind}: {name}")
             try:
@@ -448,6 +455,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
             doc = next((d for d in c["documents"] if d["id"] == doc_id and not d["generated"]), None)
             if not doc:
                 raise KeyError(doc_id)
+            self.require_clean(doc)
             data = self.docstore.get(case_id, doc_id)
         self.audit(user["email"], "ai_run_start", case_id, f"read_document {doc['name']}")
         r = ai_tasks.run_document(self, user, case_id, doc, data, mode)
@@ -470,6 +478,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                 text = (f"{doc['name']}\nCase {c['id']}: {c['home']['address']}, {c['home']['postcode']}\n"
                         f"Filed {doc['at']} by {doc['by']}\nType: {doc['kind']}\n")
                 return doc["name"].rsplit(".", 1)[0] + ".txt", "text/plain", text.encode()
+            self.require_clean(doc)
             data = self.docstore.get(case_id, doc_id)
             if user is not None:
                 self.audit(user["email"], "download_document", case_id, f"{doc['kind']}: {doc['name']}")

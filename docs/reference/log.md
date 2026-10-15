@@ -2876,3 +2876,8 @@ metadata when the knowledge base was created.
   event paths, breach role check, Shadow and Live release need Phase 0 released.
 * No regulatory snapshot changed. Open: pilot cohort enrolment and work package
   and workstream pause scopes.
+
+## 2026-10-15 Document scanning, retention and legal hold (#117)
+
+* mvp/README.md, ADR 0002 implementation status and open items, and the retrofit synthetic data README updated. New synthetic control fixtures for 120 homes from the 60,000-home stock register.
+* No regulatory snapshot changed. Open: real malware scanner and Defender enablement, DPO and Legal retention periods (PR-003), the real legal-hold delegate, and retention job scheduling.
