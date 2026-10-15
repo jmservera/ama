@@ -82,6 +82,30 @@ class GeneratedDatasetTests(unittest.TestCase):
         self.assertIn("not a company fact", summary["label"])
         self.assertIn("age_band_weights_by_locality", summary["assumptions"])
 
+    def test_stock_fabric_v1_pinned_rows_preserve_draw_order(self):
+        # Literal v1 rows pin both paths: mapped forms must not consume a dwelling draw.
+        expected = [
+            ("A", "apartments", 1900, "pre-1919", "Flat", "Solid brick", "Mains gas boiler"),
+            ("A", "house", 1896, "pre-1919", "Terraced house", "Solid brick", "Electric storage"),
+            ("B", "apartments", 1928, "1919-1944", "Flat", "Cavity brick", "Mains gas boiler"),
+            ("B", "house", 1941, "1919-1944", "Terraced house", "Cavity brick", "Mains gas boiler"),
+            ("C", "apartments", 1961, "1945-1964", "Flat", "Cavity brick", "Air source heat pump"),
+            ("C", "house", 1961, "1945-1964", "Detached house", "Cavity brick", "Air source heat pump"),
+        ]
+        for locality, form, year, age, dwelling, construction, heating in expected:
+            with self.subTest(locality=locality, form=form):
+                self.assertEqual(
+                    fabric.fabric(
+                        dict(synthetic_home_id=f"GOLD-{locality}",
+                             locality_theme=f"Locality {locality}", building_form_osm=form),
+                        7,
+                    ),
+                    dict(synthetic_home_id=f"GOLD-{locality}", build_year=year, age_band=age,
+                         dwelling_type=dwelling, construction=construction, heating=heating,
+                         fabric_is_synthetic=True, fabric_version="stock-fabric-v1",
+                         is_synthetic=True),
+                )
+
     def test_epc_and_survey_fields_reconcile_to_fabric_and_conflicts_are_manifested(self):
         rows = register()
         recs = epc.epc_rows(rows, 1)

@@ -308,6 +308,8 @@ def _destination(value: str | Path) -> Path:
     # Installed CLI may run outside a checkout; reject checkout destinations when present.
     roots = [p for p in Path(__file__).resolve().parents if (p / ".git").exists()]
     roots.extend(p for p in (Path.cwd(), *Path.cwd().parents) if (p / ".git").exists())
+    # Include existing ancestors even when the requested snapshot does not exist yet.
+    roots.extend(p for p in (path, *path.parents) if (p / ".git").exists())
     if any(path.is_relative_to(root) for root in roots):
         raise ValueError("Private stock output must be outside the repository")
     if Path(value).expanduser().is_symlink():

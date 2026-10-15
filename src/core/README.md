@@ -276,7 +276,10 @@ Without explicit paths, the register is `private-north-east-stock-register.csv`
 and the new snapshot is `stock-fabric/` under `ZF_DATA` (or
 `~/.zava-forward/data/`). `ZF_DATA` can be a directory or the runtime seed file;
 a file selects its parent. The CLI refuses repository destinations, symlinks
-to them and nonempty snapshots. It validates inputs before creating output.
+to them and nonempty snapshots. It checks the resolved destination and its
+ancestors for `.git` files or directories, including when installed outside
+a checkout and when the snapshot directory does not exist yet. It validates
+inputs before creating output.
 Snapshots contain `stock-fabric.csv`, `summary.json` and, with `--cases`,
 `linked-cases.json`. No generated output belongs in git or an image.
 

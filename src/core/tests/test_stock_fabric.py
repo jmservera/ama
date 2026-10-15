@@ -7,6 +7,7 @@ import importlib
 import io
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -240,6 +241,69 @@ class StockFabricTests(unittest.TestCase):
                 self.assertNotEqual(bad.returncode, 0)
                 self.assertIn("outside the repository", bad.stderr)
                 self.assertFalse(dest.exists())
+
+    def test_installed_cli_outside_checkout_refuses_destination_repository(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            installed = root / "site-packages"
+            package = installed / "zava_forward/core/synthetic"
+            package.mkdir(parents=True)
+            source = Path(fabric.__file__).parent
+            for name in ("__init__.py", "provenance.py", "stock_fabric.py"):
+                shutil.copyfile(source / name, package / name)
+            reg = root / "register.csv"
+            reg.write_text("synthetic_home_id\nFICTION-ONE\n")
+            env = dict(os.environ, PYTHONPATH=str(installed))
+            cmd = [
+                sys.executable,
+                "-S",
+                "-m",
+                "zava_forward.core.synthetic.stock_fabric",
+                "--register",
+                str(reg),
+            ]
+            for marker in ("file", "directory"):
+                repo = root / marker
+                repo.mkdir()
+                if marker == "file":
+                    (repo / ".git").write_text("gitdir: /fictional/worktree\n")
+                else:
+                    (repo / ".git").mkdir()
+                existing = repo / "empty"
+                existing.mkdir()
+                alias = root / f"{marker}-alias"
+                alias.symlink_to(repo, target_is_directory=True)
+                for dest in (
+                    repo,
+                    existing,
+                    repo / "missing" / "nested" / "snapshot",
+                    alias / "missing" / "snapshot",
+                ):
+                    with self.subTest(marker=marker, destination=dest):
+                        bad = subprocess.run(
+                            cmd + ["--out", str(dest)],
+                            env=env,
+                            cwd=root,
+                            capture_output=True,
+                            text=True,
+                        )
+                        self.assertEqual(bad.returncode, 2)
+                        self.assertEqual(bad.stdout, "")
+                        self.assertIn("outside the repository", bad.stderr)
+                        self.assertEqual(list(existing.iterdir()), [])
+                        self.assertFalse((repo / "missing").exists())
+                        self.assertFalse((repo / "stock-fabric.csv").exists())
+            allowed = root / "allowed" / "snapshot"
+            good = subprocess.run(
+                cmd + ["--out", str(allowed)],
+                env=env,
+                cwd=root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            self.assertEqual(good.stdout, "")
+            self.assertTrue((allowed / "stock-fabric.csv").is_file())
 
     def test_revisions_cover_moved_dependency_and_ignore_physical_roots(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
