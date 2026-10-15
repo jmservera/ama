@@ -59,12 +59,39 @@ def handoff_view(c):
 
 def hazard_state(h):
     if h["released"]:
-        return "Released"
+        return "Retrofit hold released"
     if h.get("repaired"):
-        return "Repaired, awaiting release"
+        return "Repair evidenced, hold active"
+    if h.get("accepted_at"):
+        return "Accepted"
+    if h.get("received_at"):
+        return "Received"
     if h.get("referred"):
-        return "Referred"
+        return "Sent" if h.get("referral_version") else "Legacy referral, evidence needed"
     return "Raised"
+
+
+def hazard_view(h, case_id):
+    out = deepcopy(h)
+    out["state"] = hazard_state(h)
+    out["service_authority"] = "Existing hazard and repairs service"
+    out["classification"] = "Unverified report; service categorisation not recorded here"
+    for key in ("source", "aware_at", "sent_at", "received_at", "accepted_at",
+                "response_due_at", "responded_at", "resident_update_due_at", "resident_updated_at"):
+        out.setdefault(key, None)
+    out.setdefault("hold", dict(scope="Home", case_id=case_id, status="Released" if h["released"] else "Active",
+                                accountable_role=None, legacy=True))
+    out["follow_up"] = deepcopy(h.get("accepted_by") or h.get("sender"))
+    return out
+
+
+def _hazard_time(value, label, actual=False):
+    result = _due(value)
+    if result is None:
+        raise ValueError(f"Add {label} with a time and timezone.")
+    if actual and datetime.fromisoformat(value) > datetime.now(UTC):
+        raise ValueError(f"{label} cannot be in the future.")
+    return result
 
 
 class WorkflowMixin:
@@ -274,72 +301,159 @@ class WorkflowMixin:
                                      address=c["home"]["address"], **h))
             return rows if projection.can_see_reason(user) else projection.hold_notes(rows)
 
-    # ---- safety referral: raised, referred, repaired, then released by someone else
+    # ---- external hazard referral; only the linked home's retrofit hold is controlled here
     def _hazard(self, c, idx):
+        if isinstance(idx, bool) or not isinstance(idx, (str, int)) or (
+            isinstance(idx, str) and not idx.isdecimal()
+        ):
+            raise ValueError("Choose one of this case's safety issues.")
         try:
+            if int(idx) < 0:
+                raise ValueError
             return c["hazards"][int(idx)]
         except (IndexError, ValueError, TypeError):
-            raise ValueError("Choose one of this case's safety issues.")
+            raise ValueError("Choose one of this case's safety issues.") from None
 
-    def raise_hazard(self, user, case_id, category, priority, note=""):
+    @staticmethod
+    def _hazard_actor(user):
+        return dict(code=user["code"], email=user["email"], name=user["name"], role=user["role"])
+
+    def _hazard_event(self, c, h, user, action, evidence):
+        events = h.setdefault("history", [])
+        snapshot = deepcopy({k: v for k, v in h.items() if k != "history"})
+        events.append(dict(version=len(events) + 1, action=action, at=_now(),
+                           actor=self._hazard_actor(user), evidence=evidence, snapshot=snapshot))
+        self.audit(user["email"], action, c["id"], f"Home retrofit hold; {h.get('job', '')}; {evidence}")
+        self.save()
+
+    def raise_hazard(self, user, case_id, category, priority, note="", metadata=None):
+        controls.require_role(user, projection.STAFF_ROLES, "authorised staff")
         if category not in HAZARD_CATEGORIES or priority not in HAZARD_PRIORITIES:
-            raise ValueError("Choose a category and a priority from the lists.")
+            raise ValueError("Choose the reported observation and urgency from the lists.")
+        metadata = metadata or {}
+        source = controls.text(metadata.get("source"), "the report source")
+        aware = _hazard_time(metadata.get("aware_at"), "the awareness time", actual=True)
         with self.lock:
             c = self._case(case_id)
-            if c["closed"]:
-                raise ValueError("This case is closed.")
-            c["hazards"].append(dict(category=category, priority=priority, noticed=_today(), referred=None, repaired=None, released=False,
-                                     job="", owner=c["owner"], raised_by=user["name"], note=(note or "")[:300]))
-            self.audit(user["email"], "safety_raised", case_id, f"{category} {priority} {note or ''}".strip())
+            h = dict(category=category, priority=priority, noticed=aware[:10], aware_at=aware,
+                     source=source, recorded_at=_now(), referred=None, repaired=None, released=False,
+                     job="", owner=user["name"], sender=self._hazard_actor(user),
+                     raised_by=user["name"], raised_by_email=user["email"],
+                     note=controls.text(note, "", required=False),
+                     hold=dict(scope="Home", case_id=case_id, status="Active",
+                               accountable_role="Building Safety Liaison", decision=None))
+            c["hazards"].append(h)
             if priority == "Emergency":
-                self.audit(user["email"], "safety_emergency", case_id, "Emergency safety issue: refer to Building Safety Liaison the same day")
-            self.save()
+                self.audit(user["email"], "safety_emergency", case_id,
+                           "Reported emergency: use the existing hazard service immediately; retrofit and AI gates must not delay referral")
+            self._hazard_event(c, h, user, "safety_raised", source)
             return len(c["hazards"]) - 1
 
-    def refer_hazard(self, user, case_id, idx, to_email, job):
-        job = (job or "").strip()[:40]
-        if not job:
-            raise ValueError("Enter the repair job reference.")
+    def refer_hazard(self, user, case_id, idx, to_email, job, metadata=None):
+        controls.require_role(user, projection.STAFF_ROLES, "authorised staff")
+        job = controls.text(job, "the external hazard or repair case reference", 40)
+        evidence = controls.text((metadata or {}).get("evidence"), "evidence of sending the referral")
         to = self._staff_person(to_email)
         if to["role"] not in SAFETY_ROLES:
             raise ValueError("Refer a safety issue to the Building Safety Liaison or a manager.")
         with self.lock:
             c = self._case(case_id)
             h = self._hazard(c, idx)
-            if h["released"] or h.get("referred"):
+            if h["released"] or h.get("referral_version"):
                 raise ValueError("This safety issue has already been referred.")
-            h.update(referred=_today(), job=job, owner=to["name"], referred_by=user["name"])
-            self.audit(user["email"], "safety_referred", case_id, f"{h['category']} to {to['name']} job {job}")
-            self.save()
+            if h.get("referred") or h.get("repaired"):
+                h["legacy_record"] = deepcopy(h)
+                h.update(repaired=None, repaired_by=None)
+            h.update(referral_version=1, referred=_today(), sent_at=_now(), job=job,
+                     destination=self._hazard_actor(to), sender=self._hazard_actor(user),
+                     owner=user["name"], referred_by=user["name"], sent_evidence=evidence,
+                     hold=dict(scope="Home", case_id=case_id, status="Active",
+                               accountable_role=to["role"], decision=None))
+            self._hazard_event(c, h, user, "safety_referred", evidence)
 
-    def record_repair(self, user, case_id, idx):
+    def _hazard_receiver(self, c, idx, user, allow_released=False):
+        controls.require_role(user, SAFETY_ROLES, "the designated safety receiver")
+        h = self._hazard(c, idx)
+        if (h["released"] and not allow_released) or not h.get("referral_version"):
+            raise ValueError("Record a prospective evidenced referral before continuing.")
+        if h["destination"]["code"] != user["code"]:
+            raise PermissionError("Only the designated safety receiver can record this event.")
+        return h
+
+    def receive_hazard(self, user, case_id, idx, evidence):
+        evidence = controls.text(evidence, "the external receipt evidence")
         with self.lock:
             c = self._case(case_id)
-            h = self._hazard(c, idx)
+            h = self._hazard_receiver(c, idx, user)
+            if h.get("received_at"):
+                raise ValueError("Receipt has already been recorded.")
+            h.update(received_at=_now(), received_by=self._hazard_actor(user), receipt_evidence=evidence)
+            self._hazard_event(c, h, user, "safety_received", evidence)
+
+    def accept_hazard(self, user, case_id, idx, evidence):
+        evidence = controls.text(evidence, "the external acceptance evidence")
+        with self.lock:
+            c = self._case(case_id)
+            h = self._hazard_receiver(c, idx, user)
+            if not h.get("received_at") or h.get("accepted_at"):
+                raise ValueError("Record receipt first; acceptance can only be recorded once.")
+            h.update(accepted_at=_now(), accepted_by=self._hazard_actor(user),
+                     acceptance_evidence=evidence, owner=user["name"])
+            self._hazard_event(c, h, user, "safety_accepted", evidence)
+
+    def observe_hazard_times(self, user, case_id, idx, metadata):
+        evidence = controls.text(metadata.get("evidence"), "the external service timing evidence")
+        fields = ("response_due_at", "responded_at", "resident_update_due_at", "resident_updated_at")
+        times = {k: _hazard_time(metadata[k], k, actual=k in ("responded_at", "resident_updated_at"))
+                 for k in fields if metadata.get(k) not in (None, "")}
+        if not times:
+            raise ValueError("Add at least one externally recorded response or resident-update time.")
+        with self.lock:
+            c = self._case(case_id)
+            h = self._hazard_receiver(c, idx, user, allow_released=True)
+            if not h.get("accepted_at"):
+                raise ValueError("Record acceptance before observing service times.")
+            if any(h.get(k) is not None for k in times):
+                raise ValueError("Recorded service times cannot be overwritten here; retain the external service record.")
+            if h.get("aware_at") and any(times[k] < h["aware_at"] for k in times):
+                raise ValueError("Service times cannot precede recorded awareness.")
+            h.update(times)
+            self._hazard_event(c, h, user, "safety_times_observed", evidence)
+
+    def record_repair(self, user, case_id, idx, evidence=None):
+        evidence = controls.text(evidence, "the external repair evidence")
+        with self.lock:
+            c = self._case(case_id)
+            h = self._hazard_receiver(c, idx, user)
             if h["released"] or h.get("repaired"):
                 raise ValueError("This repair is already recorded.")
-            if not h.get("referred"):
-                raise ValueError("Refer the safety issue before recording a repair.")
-            h.update(repaired=_today(), repaired_by=user["name"])
-            self.audit(user["email"], "safety_repaired", case_id, f"{h['category']} job {h['job']}")
-            self.save()
+            if not h.get("accepted_at"):
+                raise ValueError("Record acceptance before observing repair evidence.")
+            h.update(repaired=_today(), repaired_by=user["name"], repaired_by_email=user["email"],
+                     repair_evidence=evidence)
+            self._hazard_event(c, h, user, "safety_repaired", evidence)
 
-    def release_hazard(self, user, case_id, idx, note=""):
+    def release_hazard(self, user, case_id, idx, note="", evidence=None):
         if user["role"] not in SAFETY_ROLES:
-            raise PermissionError("Only the Building Safety Liaison or a manager can release a safety issue.")
+            raise PermissionError("Only the Building Safety Liaison or a manager can release a retrofit hold.")
+        note = controls.text(note, "the retrofit hold release reason")
+        evidence = controls.text(evidence, "the external evidence supporting hold release")
         with self.lock:
             c = self._case(case_id)
             h = self._hazard(c, idx)
             if h["released"]:
-                raise ValueError("This safety issue is already released.")
-            if not h.get("repaired"):
-                raise ValueError("The repair must be recorded before release.")
-            if user["name"] in (h.get("raised_by"), h.get("repaired_by")):
-                raise PermissionError("Someone else must confirm the release: a safety issue is not released by the person who raised or repaired it.")
-            h.update(released=True, released_by=user["name"], released_at=_today(), release_note=(note or "")[:300])
-            self.audit(user["email"], "safety_released", case_id, f"{h['category']} job {h['job']} {note or ''}".strip())
-            self.save()
+                raise ValueError("This retrofit hold is already released.")
+            if not h.get("repair_evidence") or not h.get("accepted_at"):
+                raise ValueError("Record receipt, acceptance and external repair evidence before hold release.")
+            if user["email"] in (h.get("raised_by_email"), h.get("repaired_by_email")) or (
+                not h.get("raised_by_email") and user["name"] == h.get("raised_by")
+            ):
+                raise PermissionError("Someone other than the reporter and repair recorder must release the retrofit hold.")
+            h.update(released=True, released_by=user["name"], released_at=_now(), release_note=note)
+            h["hold"].update(status="Released", decision=dict(at=_now(), actor=self._hazard_actor(user),
+                                                            reason=note, evidence=evidence))
+            self._hazard_event(c, h, user, "safety_released", evidence)
 
     def hazard_states(self, case_id):
         with self.lock:
-            return [dict(index=i, category=h["category"], priority=h["priority"], state=hazard_state(h)) for i, h in enumerate(self._case(case_id)["hazards"])]
+            return [dict(index=i, **hazard_view(h, case_id)) for i, h in enumerate(self._case(case_id)["hazards"])]

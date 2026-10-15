@@ -586,13 +586,19 @@ def make_handler(app):
                     elif act == "withdraw-handoff":
                         s.withdraw_handoff(u, cid)
                     elif act == "hazard-raise":
-                        s.raise_hazard(u, cid, body.get("category"), body.get("priority"), body.get("note", ""))
+                        s.raise_hazard(u, cid, body.get("category"), body.get("priority"), body.get("note", ""), metadata=body)
                     elif act == "hazard-refer":
-                        s.refer_hazard(u, cid, body.get("index"), body.get("to"), body.get("job"))
+                        s.refer_hazard(u, cid, body.get("index"), body.get("to"), body.get("job"), metadata=body)
+                    elif act == "hazard-receive":
+                        s.receive_hazard(u, cid, body.get("index"), body.get("evidence"))
+                    elif act == "hazard-accept":
+                        s.accept_hazard(u, cid, body.get("index"), body.get("evidence"))
+                    elif act == "hazard-times":
+                        s.observe_hazard_times(u, cid, body.get("index"), body)
                     elif act == "hazard-repaired":
-                        s.record_repair(u, cid, body.get("index"))
+                        s.record_repair(u, cid, body.get("index"), body.get("evidence"))
                     elif act == "hazard-release":
-                        s.release_hazard(u, cid, body.get("index"), body.get("note", ""))
+                        s.release_hazard(u, cid, body.get("index"), body.get("note", ""), body.get("evidence"))
                     elif act in QUALITY_ACTIONS:
                         QUALITY_ACTIONS[act](s, u, cid, body)
                     elif act == "advance":

@@ -71,5 +71,6 @@ disallow_untyped_calls = false
 
 # Typed test harness calling the migrated, not-yet-typed Store interface.
 [[tool.mypy.overrides]]
-module = ["test_handoff_lifecycle", "tests.test_handoff_lifecycle"]
+module = ["test_handoff_lifecycle", "tests.test_handoff_lifecycle",
+          "test_hazard_referral", "tests.test_hazard_referral"]
 disallow_untyped_calls = false

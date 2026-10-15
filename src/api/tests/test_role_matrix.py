@@ -198,7 +198,10 @@ class Matrix(unittest.TestCase):
         pid = self.store.create_package(mgr, "Wave", "2026-01-01", "2099-12-31", "Loft", "CALL-1")
         self.store.set_capacity(mgr, pid, "Test Ltd", 2, 2, "Signed plan")
         self.store.set_capacity(mgr, pid, "Other Ltd", 2, 2, "Signed plan")
-        w1 = self.store.issue_work_order(mgr, pid, "ZF-1")
+        order_case = copy.deepcopy(self.store.cases["ZF-1"])
+        order_case.update(id="ZF-ROLE-ORDER", hazards=[])
+        self.store.cases[order_case["id"]] = order_case
+        w1 = self.store.issue_work_order(mgr, pid, order_case["id"])
         w2 = self.store.issue_work_order(mgr, pid, "ZF-2")
         for role in ROLES:
             ck = self.session(next(s["email"] for s in self.store.data["staff"] if s["role"] == role))
@@ -208,6 +211,8 @@ class Matrix(unittest.TestCase):
             else:
                 self.assertEqual(set(codes.values()), {200}, role)
             for path, body in NEW_POSTS:
+                if path == "/api/workorders":
+                    body = dict(body, case_id=order_case["id"])
                 code, text = self.call(ck, path, body)
                 self.assertNotIn(code, (200, 500) if role in (projection.CONTRACTOR, "Mystery") else (500,), (role, path))
                 if role == projection.CONTRACTOR:

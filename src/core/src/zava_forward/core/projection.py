@@ -21,7 +21,8 @@ CONTRACTOR = "Contractor"
 DEFAULT_REASON_ROLES = ("Resident Liaison Officer", "Building Safety Liaison", "Retrofit Programme Manager")
 REDACTED = "Extra support noted"
 NOTE_HELD = "Held for roles with a recorded need"
-NOTE_KEYS = ("note", "release_note", "answer_note", "next_action", "completion_note")
+NOTE_KEYS = ("note", "release_note", "answer_note", "next_action", "completion_note",
+             "sent_evidence", "receipt_evidence", "acceptance_evidence", "repair_evidence")
 
 STAFF_ROLES = ("Retrofit Coordinator", "Resident Liaison Officer", "Building Safety Liaison", "Grants and Evidence Officer",
                "Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer")
@@ -96,7 +97,11 @@ def hold_notes(c):
                 if c.get(key):
                     c[key] = NOTE_HELD
         for k, v in c.items():
-            if k in NOTE_KEYS and v:
+            private_hazard = (
+                ("category" in c and "released" in c and k in ("source", "job"))
+                or ("actor" in c and k in ("reason", "evidence"))
+            )
+            if (k in NOTE_KEYS or private_hazard) and v:
                 c[k] = NOTE_HELD
             else:
                 hold_notes(v)

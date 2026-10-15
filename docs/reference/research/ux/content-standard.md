@@ -71,7 +71,8 @@ in one sentence, for example "Choose which sign-off this is."
 | Not reviewed by a person yet | Pending, unreviewed | No person has looked at it |
 | Accepted / Edited / Rejected as a draft | Approved | A person's view of a draft, not an approval decision |
 | Waiting on | Blocked by (internal), assigned to | The person or team who must act next |
-| Safety issue open | Hazard unresolved | A safety concern the owner has not confirmed as resolved |
+| Safety issue open | Hazard unresolved | Reported safety concern; affected retrofit work needs an evidenced independent restart decision, not hazard-service closure |
+| Stopped retrofit work / Restart decision | Retrofit hold / Release hold | The restriction covers the linked home's retrofit work only; the hazard service still owns its case |
 | Resident has not confirmed | Consent pending | The resident has not said they want the works |
 | Ready to book the installation | Advance | The next step for a case at final checks |
 

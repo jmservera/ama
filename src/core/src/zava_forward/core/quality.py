@@ -102,6 +102,7 @@ class QualityMixin:
         self._need_quality_role(user, "accept work")
         with self.lock:
             c = self._case(case_id)
+            self.require_safety_clear(c)
             rec = self._qrec(c, idx)
             if rec["state"] not in (SUBMITTED, FIXED):
                 raise ValueError(f"This work is '{rec['state']}'. It can only be accepted after it is submitted or reinspected.")
@@ -158,6 +159,7 @@ class QualityMixin:
             raise ValueError("Confirm the resident was told and note what they were given, such as guarantees and how to use it.")
         with self.lock:
             c = self._case(case_id)
+            self.require_safety_clear(c)
             rec = self._qrec(c, idx)
             self._qmove(rec, HANDED, user, note)
             rec["handover"] = dict(by=user["name"], at=_now(), note=note, resident_told=True)

@@ -91,6 +91,7 @@ class SignoffMixin:
         return f"design version {t['design_version']} affects {','.join(affects)}"
 
     def _tech_signoff_give(self, user, c, body):
+        self.require_safety_clear(c)
         t = c.get("technical")
         if not t:
             raise ValueError("Record the design first.")
