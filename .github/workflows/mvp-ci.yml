@@ -26,6 +26,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: No test sandboxes are tracked
+        run: |
+          if git ls-files -- 'mvp/.assistant-test-*' | grep -q .; then
+            echo "Tracked test sandbox files found:"; git ls-files -- 'mvp/.assistant-test-*'; exit 1
+          fi
       - name: Unit, API, role matrix, ledger and AI evaluation tests
         run: cd mvp && PYTHONPATH=. python3 -m unittest discover -s tests
       - name: Check browser JavaScript syntax
