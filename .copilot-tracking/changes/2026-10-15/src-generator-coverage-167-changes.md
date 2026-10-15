@@ -23,7 +23,8 @@ Task #167, `src-generator-coverage-167`. Full plan execution, metadata-only.
 Research executed/Ready; one critique executed/Revise, PC-001 addressed in plan.
 P01-T01/T02 and P02-T01 complete; no generator output, inventory values or
 private data changed. One Review executed Complete, outcome Residual work;
-no in-scope source defect found. Parent publication is next.
+no in-scope source defect found. Published PR #312 to main from the requested
+topic branch: https://github.com/jmservera/ama/pull/312 . Not merged.
 
 ## RPI Evidence
 
@@ -260,3 +261,59 @@ existing workstreams and CI. No source correction loop or second Review.
 
 Publication will use this complete changes ledger as the PR body so every
 inspection/validation command and result is visible in the PR as requested.
+
+### Published Delivery
+
+* Implementation commit: `88497f664db9e0a3bb0a3f00fd56c341c873b6dc`.
+* PR #312 is OPEN, base `main`, head `feat/src-generator-coverage-167`.
+* Author and committer use `8036360+jmservera@users.noreply.github.com`;
+  the commit has the requested Copilot trailer.
+* Research, plan, details, critique, changes, Review and state are committed
+  with source/tests/docs. No forbidden path or private output is staged.
+
+Publication commands (the staging list is intentionally explicit):
+
+```bash
+git config --local user.email 8036360+jmservera@users.noreply.github.com
+git add -- src/core/src/zava_forward/core/synthetic/coverage.py src/core/tests/test_generator_coverage.py src/core/README.md docs/reference/README.md docs/reference/log.md docs/reference/research/retrofit-synthetic-data/README.md .copilot-tracking/research/2026-10-15/src-generator-coverage-167-research.md .copilot-tracking/plans/2026-10-15/src-generator-coverage-167-plan.md .copilot-tracking/details/2026-10-15/src-generator-coverage-167-phase-details.md .copilot-tracking/changes/2026-10-15/src-generator-coverage-167-changes.md .copilot-tracking/reviews/2026-10-15/src-generator-coverage-167-plan-critique.md .copilot-tracking/reviews/logs/2026-10-15/src-generator-coverage-167-review.md .copilot-tracking/rpi-sessions/2026-10-15/src-generator-coverage-167-state.json
+git diff --cached --check
+git --no-pager diff --cached --stat
+printf 'feat(core): validate synthetic generator coverage routes\n\nRefs #167\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n' | GIT_AUTHOR_EMAIL=8036360+jmservera@users.noreply.github.com GIT_COMMITTER_EMAIL=8036360+jmservera@users.noreply.github.com git commit -F -
+git push --set-upstream origin feat/src-generator-coverage-167
+gh pr create --base main --head feat/src-generator-coverage-167 --title 'feat(core): validate synthetic generator coverage routes' --body-file .copilot-tracking/changes/2026-10-15/src-generator-coverage-167-changes.md
+```
+
+All succeeded: 13 files in implementation commit, topic branch pushed,
+PR #312 created. No direct main push, force push, amend or merge.
+
+Verification command group:
+
+```bash
+gh pr view 312 --json number,url,state,baseRefName,headRefName,commits,statusCheckRollup
+git status --short
+git --no-pager log -1 --format='%h %s%nAuthor: %ae%nCommitter: %ce%n%b'
+gh pr checks 312
+```
+
+PR/branch/identity/trailer verified; worktree clean after implementation commit.
+Initial CI observation: `src-no-working-data` passed; ten other checks queued
+or running, including image, mssql and all project jobs. `gh pr checks` exit 8
+means pending, not failure. CI results must not be inferred from local results.
+The final closeout commit changes tracking evidence only.
+
+### Closeout Commands
+
+```bash
+rm -- src/core/.venv/tmp/core-tests.log src/core/.venv/tmp/agents-tests.log src/core/.venv/tmp/agents-tests-corrected.log src/core/.venv/tmp/api-tests.log src/core/.venv/tmp/orchestrator-tests.log src/core/.venv/tmp/importer-tests.log src/core/.venv/tmp/rename-tests.log src/core/.venv/tmp/coverage-report.json
+git add -- .copilot-tracking/changes/2026-10-15/src-generator-coverage-167-changes.md .copilot-tracking/plans/2026-10-15/src-generator-coverage-167-plan.md .copilot-tracking/details/2026-10-15/src-generator-coverage-167-phase-details.md .copilot-tracking/rpi-sessions/2026-10-15/src-generator-coverage-167-state.json
+git diff --cached --check
+printf 'docs: record generator coverage delivery evidence\n\nRefs #167\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n' | GIT_AUTHOR_EMAIL=8036360+jmservera@users.noreply.github.com GIT_COMMITTER_EMAIL=8036360+jmservera@users.noreply.github.com git commit -F -
+git push origin feat/src-generator-coverage-167
+gh pr edit 312 --body-file .copilot-tracking/changes/2026-10-15/src-generator-coverage-167-changes.md
+git status --short
+gh pr view 312 --json url,state,headRefOid,baseRefName,headRefName,statusCheckRollup
+```
+
+Temporary diagnostics are disposable after results are persisted here; the
+virtual environment remains ignored for reproducibility. Smoke data/process
+was already removed/stopped. The PR body mirrors this complete ledger.

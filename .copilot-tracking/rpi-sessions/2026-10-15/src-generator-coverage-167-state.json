@@ -29,12 +29,17 @@
       "decision": "One post-implementation Review executed Complete; outcome Residual work. Metadata implementation has no identified defect; RV-001/002/003 remain outside acceptance.",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-15/src-generator-coverage-167-review.md"
+    },
+    {
+      "decision": "Published PR #312 to main from feat/src-generator-coverage-167, implementation commit 88497f6. All RPI artifacts committed; issue remains open via Refs #167.",
+      "status": "completed",
+      "evidence": "https://github.com/jmservera/ama/pull/312"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Complete parent publication with Refs #167, then leave distinct residuals for owner-selected later work and CI."
+    "action": "Publication complete in PR #312; await CI and owner-selected ranked follow-up, Stop automatic session, or manual mode. Start no child work without selection."
   },
   "prioritized_follow_ups": [
     {

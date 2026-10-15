@@ -4,9 +4,9 @@ description: Issue 167 task-level completion boundaries
 ms.date: 2026-10-15
 ---
 
-Task #167, slug `src-generator-coverage-167`. P01-T01/T02 and P02-T01 complete,
-with matching changes evidence. P02-T02 is parent-owned publication after the
-single Review, not pending source implementation. Critique PC-001 addressed.
+Task #167, slug `src-generator-coverage-167`. All P01/P02 tasks complete,
+with matching changes evidence. P02-T02 parent publication produced PR #312
+after the single Review. Critique PC-001 addressed; no merge authorized.
 
 <!-- P01 -->
 ## P01: Metadata coverage gate

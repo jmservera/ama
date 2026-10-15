@@ -65,7 +65,7 @@ Preserve AI proposal/release/human/consent gates; local smoke is not real infere
 * [x] Malformed routes, IDs, notes, deferrals and missing conventions fail.
 * [x] Existing generator tests still pass without private register access.
 * [x] All requested local checks recorded with honest skips/blockers.
-* [ ] Owner-dependent and unproduced evidence remain unticked in PR (publication pending).
+* [x] Owner-dependent and unproduced evidence remain unticked in PR #312.
 
 ## Phase Checklist
 
@@ -77,7 +77,7 @@ Preserve AI proposal/release/human/consent gates; local smoke is not real infere
 <!-- P02 -->
 ### P02: Validation and delivery evidence
 * [x] P02-T01: Run src suites, ruff/format/mypy, report CLI and local app smoke.
-* [ ] P02-T02: Record one review, then commit/push/open PR; do not merge (parent delivery after Review).
+* [x] P02-T02: Record one review, then commit/push/open PR; do not merge (PR #312).
 
 ## Test Ownership and Change Budget
 
@@ -108,8 +108,9 @@ No follow-up is part of active implementation acceptance.
 
 Details: `.copilot-tracking/details/2026-10-15/src-generator-coverage-167-phase-details.md`.
 Changes: `.copilot-tracking/changes/2026-10-15/src-generator-coverage-167-changes.md`.
-Implementation and validation ready for Review; P02-T02 is parent-owned
-publication after the one Review and is not an unimplemented code task.
+Implementation, validation and parent publication complete. One Review executed
+Complete, outcome Residual work; PR #312 uses Refs #167 and retains unmet items.
+No merge, second Review or follow-up implementation was performed.
 Local validation: 903 src tests, 97 skipped; all five lint/format/mypy checks
 pass; 25 migration tests pass after restoring missing tool dependencies.
 CLI and actual fictional SQLite API smoke pass. Docker socket denied;
