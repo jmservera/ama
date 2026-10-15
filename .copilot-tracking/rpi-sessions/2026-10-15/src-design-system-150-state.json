@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "active",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-15/src-design-system-150-research.md",
@@ -29,12 +29,17 @@
       "decision": "One implementation Review executed Complete; outcome Residual work",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-15/src-design-system-150-review.md; RV-001 adoption, RV-002 human accessibility and RV-003 runtime evidence stay open"
+    },
+    {
+      "decision": "P03 delivered as an open main-targeted Refs #150 PR; no merge or issue closure",
+      "status": "confirmed",
+      "evidence": "https://github.com/jmservera/ama/pull/313; implementation commit 9f80a45115c5c8cebb8d3506518251fd7c75b074 pushed on feat/src-design-system-150; first CI snapshot in progress"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "P03 delivery: commit reviewed source and artifacts, then push topic branch and create Refs #150 PR"
+    "action": "Owner reviews PR #313 and selects any later follow-up; CI is not an approval or merge authorization, and no child task has started"
   },
   "prioritized_follow_ups": [
     {
