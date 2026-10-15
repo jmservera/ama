@@ -68,7 +68,7 @@ All proposed fields other than body remain unchanged. Exact acceptance additions
 
 ## Secondary Comparisons and Fan-Out Review
 
-The following are supporting or alternative matches, not additional proposed Updates. They must be considered together with the primary targets rather than silently selecting the first search result.
+The following are supporting or alternative matches. Issue 164 became an additional proposed Update after the owner explicitly requested its inclusion during check 2. They must be considered together with the primary targets rather than silently selecting the first search result.
 
 | Candidate / existing | Summary overlap | Type | State | Labels/fields | Criteria coverage | Hierarchy fit and decision |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -78,7 +78,7 @@ The following are supporting or alternative matches, not additional proposed Upd
 | Evidence / 129 | Journey experiments and non-AI comparison overlap | null | OPEN | feature, prd, adr, area:governance, N | Five bundles and scope mapping do not cover all assistant/legacy held-out or human criteria | Text parent 123. Similar; preserve bundle boundaries, do not treat it as complete RAI evaluation. |
 | Evidence / 174 | Evaluation dataset registry overlap | null | OPEN | story, prd, area:synthetic-data, P | Version/purpose and reproducible scale fixture do not prove held-out independence or model/human results | Text parent 167. Similar; consume registry evidence, do not duplicate scale-fixture work. |
 | Processing / 163 | Privacy, staff notice and provider handling overlap | null | OPEN | feature, brd, prd, area:agent-chat, N | Criteria cover future chat/memory messages and rights, not every current legacy/assistant path | Text parent 157. Similar subject, different future capability. No Change; do not activate chat scope through this delta. |
-| Evaluation / 164 | Grounding, review and injection overlap | null | OPEN | feature, prd, adr, area:agent-chat, N | Multi-turn and memory criteria do not replace current task evaluation | Text parent 157. Similar subject, separate future capability. No Change. |
+| Evaluation / 164 | Grounding, review and injection overlap | null | OPEN | feature, prd, adr, area:agent-chat, N | Multi-turn and memory criteria do not replace current task evaluation | Text parent 157. Similar subject, separate future capability. Owner-requested Update IS013 adds chat-specific assurance without activating chat. |
 | RAI closure / 23 | Rubric recording failure, not RAI closure | null | CLOSED | No labels, no milestone, no assignee | Body records failure to supply 20 rubric criterion IDs at historical commit 3d7ad6d799a5654b4c61cdcc9070ae34d9d4914c; no RAI acceptance criteria | No established RAI parent. Distinct; historical closed work only, not remediation evidence and not reopened. |
 
 There is no Match for a complete RAI task outcome. No missing/truncated primary body requires Uncertain. Unknown authority, thresholds and relationship metadata remain needs_review rather than being converted into Distinct creates.
@@ -171,8 +171,45 @@ The current backlog covers subject areas but does not fully ensure execution of 
 * Independent held-out, representative-human and complete-effort benefit evidence.
 * Actual backup/erasure reconciliation and qualified version-bound closure.
 
-The smallest proposed plan is twelve Updates, zero Creates and zero Links. One existing review issue carries two closely connected remediation tasks. This closes planning coverage only; it does not execute remediation or close findings.
+The initial minimum was twelve Updates. Owner review adds issue 164, making thirteen Updates, zero Creates and zero Links. One existing review issue carries two closely connected remediation tasks. This closes planning coverage only; it does not execute remediation or close findings.
 
-All twelve Updates require human review of Similar reuse boundaries. Exact hierarchy pairs, operational delegates, legal applicability, cohorts, thresholds, participant authority and budgets remain needs_review. Existing labels and native types are preserved; no speculative owner, date or milestone is assigned.
+All thirteen Updates require saved human-review gates for their Similar reuse boundaries. Exact hierarchy pairs, operational delegates, legal applicability, cohorts, thresholds, participant authority and budgets remain needs_review. Existing labels and native types are preserved; no speculative owner, date or milestone is assigned.
+
+## Owner-Requested Chat Extension (2026-10-15)
+
+The owner approved the original twelve issue homes, then requested issue 164 and
+approved check 2. Read-only issue 164 retrieval confirms an OPEN issue with a
+hydrated multi-turn grounding/injection/review body; native type and milestone
+are null, assignees empty, and labels feature, prd, adr, status:not-started and
+area:agent-chat. No field changes are proposed.
+
+Six-aspect assessment: summary directly overlaps chat grounding and human review;
+null native type is preserved; OPEN state is compatible; existing chat/PRD/ADR
+labels corroborate scope; criteria already cover multi-turn citation, refusal,
+permission changes, memory poisoning and approved thresholds but lack explicit
+held-out/version-bound human and finite-authority evidence; textual parent 157
+is context, not a verified native pair. Category: Similar. Approved boundary:
+issue 108 retains shared evaluation and current-task evidence; issue 164 applies
+that contract to future chat/memory. No chat activation or new baseline finding
+is implied. The thirteen-task and 22-check core coverage matrices stay unchanged.
+
+All eight review decisions were approved in conversation. The owner subsequently
+completed the saved human checkboxes; the body-only execution result is below.
+
+## Live Execution Result (2026-10-15)
+
+After the owner completed all eight saved human-review boxes, the authorized
+body-only updates were applied to issues 105, 121, 116, 106, 107, 146, 122, 130,
+128, 108, 145, 126 and 164. Each issue was read immediately before mutation and
+again after saving. Exact saved bodies and preserved metadata were verified.
+
+* Updated: 13. Created, linked, closed, commented, failed and skipped: 0.
+* Titles, states, native types, labels, milestones, assignees and relationship
+  metadata were unchanged. Existing criteria were retained; new criteria remain
+  unchecked. The three approved factual corrections were applied.
+* The [live execution log](./handoff-logs.md) records each success and saved-body
+  hash before its operation box was marked complete or the next update began.
+* This completes backlog updates only. No remediation implementation, actual-model
+  exercise, human effectiveness test, recovery drill or live release occurred.
 
 <!-- markdown-table-prettify-ignore-end -->

@@ -18,9 +18,9 @@ ms.topic: reference
 | PRD | v0.16.0 |
 | Lens | Generic platform-native |
 | Autonomy | partial |
-| State | Proposed; persisted and validated; awaiting human review |
+| State | Executed; thirteen body-only updates verified |
 | Executor | Backlog Manager, separate explicitly authorized pass |
-| Tracker operations completed | None |
+| Tracker operations completed | Thirteen body-only Updates; no other mutations |
 | Temporary mappings | None |
 
 Source of truth: [issues-plan.md](./issues-plan.md). Evidence and comparisons: [artifact-analysis.md](./artifact-analysis.md). Resume context: [planning-log.md](./planning-log.md).
@@ -33,44 +33,59 @@ Merged sources:
 
 ## Required Human Review
 
-All boxes intentionally remain unchecked.
+The owner completed the eight review boxes below after explicit one-by-one review.
 
-* [ ] Confirm the twelve Similar reuse decisions and exact acceptance additions, including combining provenance and meaningful review in issue 106.
-* [ ] Review the multi-match boundaries together: restore 145/114, evaluation 108/129/174, privacy 121/117/163, cohorts 128/79, and current-task versus future-chat evaluation 108/164.
-* [ ] Confirm extending infrastructure monitoring issue 146 with current-runtime harm indicators and release-governance issue 126 with bounded RAI closure.
-* [ ] Confirm that generic challenge additions to issue 130 do not resolve nomination-specific OD-41/OD-42 or expand representative authority.
-* [ ] Review the factual-status corrections for issues 105, 107 and 121 against the merged evidence.
-* [ ] Confirm no native type, label, state, milestone, owner or date changes.
-* [ ] Accept that exact parent-child pairs remain needs_review and no hierarchy operation is authorized.
-* [ ] Explicitly authorize a separate backlog execution pass if desired. This planning review itself grants none.
+* [x] Confirm the original twelve Similar reuse decisions and the owner-requested additional chat issue 164, preserving exact acceptance additions, including combining provenance and meaningful review in issue 106.
+* [x] Review the multi-match boundaries together: restore 145/114, evaluation 108/129/174, privacy 121/117/163, cohorts 128/79, and current-task versus future-chat evaluation 108/164.
+* [x] Confirm extending infrastructure monitoring issue 146 with current-runtime harm indicators and release-governance issue 126 with bounded RAI closure.
+* [x] Confirm that generic challenge additions to issue 130 do not resolve nomination-specific OD-41/OD-42 or expand representative authority.
+* [x] Review the factual-status corrections for issues 105, 107 and 121 against the merged evidence.
+* [x] Confirm no native type, label, state, milestone, owner or date changes.
+* [x] Accept that exact parent-child pairs remain needs_review and no hierarchy operation is authorized.
+* [x] Explicitly authorize a separate backlog execution pass if desired. This planning review itself grants none.
+
+## Conversation Review Decisions (2026-10-15)
+
+The owner explicitly approved checks 1 through 8 in conversation. Check 2 adds
+issue 164 as a thirteenth body-only update with chat-specific evaluation criteria;
+shared current-task evaluation remains in issue 108. Checks 3 through 7 retain
+the monitoring/release, nomination/representation, factual-status, metadata and
+relationship boundaries. Check 8 authorizes the agreed issue updates only, not
+remediation implementation or live use.
+
+These dated decisions record owner statements, not self-approval. The owner then
+checked and saved the eight required human-review boxes. Execution proceeded
+only after those saved approvals were read and verified.
 
 ## Executor Preflight
 
-* [ ] Resolve GitHub readiness and authenticated context through the executor's supported surface; verify destination jmservera/ama.
-* [ ] Re-read every target, current body and metadata. Reconcile concurrent changes and equivalent criteria before composing updates.
-* [ ] Validate source version and retain current titles, OPEN states, null native types, labels, null milestones and empty assignee sets unless a separately reviewed change supersedes this plan.
-* [ ] Compose each body from existing content plus the common and item-specific blocks in issues-plan.md. Preserve unrelated scope and history.
-* [ ] Remove all local tracking/session paths, IS references, local trace lines and execution instructions from outbound bodies.
-* [ ] Apply all sanitization guards, including credential detection and neutralization of ingested mentions, images, references and closing directives.
-* [ ] Present final composed bodies for confirmation under partial autonomy because all twelve are Similar scope/acceptance changes, not automatically approved low-risk metadata edits.
-* [ ] Initialize live handoff-logs.md only when execution is authorized. A dry run uses handoff-dryrun.md and leaves these boxes unchecked.
+* [x] Resolve GitHub readiness and authenticated context through the executor's supported surface; verify destination jmservera/ama.
+* [x] Re-read every target, current body and metadata. Reconcile concurrent changes and equivalent criteria before composing updates.
+* [x] Validate source version and retain current titles, OPEN states, null native types, labels, null milestones and empty assignee sets unless a separately reviewed change supersedes this plan.
+* [x] Compose each body from existing content plus the common and item-specific blocks in issues-plan.md. Preserve unrelated scope and history.
+* [x] Remove all local tracking/session paths, IS references, local trace lines and execution instructions from outbound bodies.
+* [x] Apply all sanitization guards, including credential detection and neutralization of ingested mentions, images, references and closing directives.
+* [x] Present final composed bodies for confirmation under partial autonomy because all thirteen are Similar scope/acceptance changes, not automatically approved low-risk metadata edits.
+* [x] Initialize live handoff-logs.md only when execution is authorized. A dry run uses handoff-dryrun.md and leaves these boxes unchecked.
 
 ## Ordered Update Operations
 
 These are proposed body edits, not remediation implementation. Preserve existing fields and native relationships.
 
-* [ ] Update IS001, issue 105: whole-system task impact, prohibited uses, affected people, personal authority and separate acceptance.
-* [ ] Update IS002, issue 121: actual staff/tenant processing, task manifests, raw-content necessity, provider/retention/erasure decisions; correct constructed-only scope assertion.
-* [ ] Update IS003, issue 116: all provider/legacy/document boundaries, exact payload-spy tests, no-call denials and output/review/export permissions.
-* [ ] Update IS004, issue 106: provenance and factual support distinct from citations; atomic review, critical defect cases and meaningful human oversight.
-* [ ] Update IS005, issue 107: durable approved release/actual serving-version admission, material invalidation, race/restart and reliance controls.
-* [ ] Update IS006, issue 146: task/release harm indicators, denominators/windows/owners, approved thresholds, insufficient status and suspension trigger.
-* [ ] Update IS007, issue 122: persisted incident suspension, pending/ready proposal denial, late-result quarantine and distinct authorized restart.
-* [ ] Update IS008, issue 130: version-bound accessible AI challenge, explanation, next update and exactly dependent correction.
-* [ ] Update IS009, issue 128: paired deterministic/AI cohorts, lawful fields, subgroup denominators/burden, insufficient samples and activation blocking.
-* [ ] Update IS010, issue 108: independent held-out quality, authorized competent humans, complete effort/non-AI comparators, finite budget and honest results.
-* [ ] Update IS011, issue 145: witnessed actual backup/document/audit restore, erasure/hold reconciliation and no authority/allowance resurrection.
-* [ ] Update IS012, issue 126: all 22 open-check dispositions, fresh assessment and separate qualified/current-PRD/operational acceptance.
+* [x] Update IS001, issue 105: whole-system task impact, prohibited uses, affected people, personal authority and separate acceptance.
+* [x] Update IS002, issue 121: actual staff/tenant processing, task manifests, raw-content necessity, provider/retention/erasure decisions; correct constructed-only scope assertion.
+* [x] Update IS003, issue 116: all provider/legacy/document boundaries, exact payload-spy tests, no-call denials and output/review/export permissions.
+* [x] Update IS004, issue 106: provenance and factual support distinct from citations; atomic review, critical defect cases and meaningful human oversight.
+* [x] Update IS005, issue 107: durable approved release/actual serving-version admission, material invalidation, race/restart and reliance controls.
+* [x] Update IS006, issue 146: task/release harm indicators, denominators/windows/owners, approved thresholds, insufficient status and suspension trigger.
+* [x] Update IS007, issue 122: persisted incident suspension, pending/ready proposal denial, late-result quarantine and distinct authorized restart.
+* [x] Update IS008, issue 130: version-bound accessible AI challenge, explanation, next update and exactly dependent correction.
+* [x] Update IS009, issue 128: paired deterministic/AI cohorts, lawful fields, subgroup denominators/burden, insufficient samples and activation blocking.
+* [x] Update IS010, issue 108: independent held-out quality, authorized competent humans, complete effort/non-AI comparators, finite budget and honest results.
+* [x] Update IS011, issue 145: witnessed actual backup/document/audit restore, erasure/hold reconciliation and no authority/allowance resurrection.
+* [x] Update IS012, issue 126: all 22 open-check dispositions, fresh assessment and separate qualified/current-PRD/operational acceptance.
+
+* [x] Update IS013, issue 164: held-out multi-turn grounding, memory/injection and permission-change cases, human review and separately authorized evidence; no chat activation.
 
 ## Create Operations
 
@@ -92,11 +107,11 @@ Closed issue 23 remains unchanged. Its historical rubric-recording failure is Di
 
 ## Verification After an Authorized Execution Pass
 
-* [ ] Re-read all twelve updated issues and verify the approved criteria, preserved scope and absence of local planning artifacts in published content.
-* [ ] Verify zero unintended state, title, type, label, milestone, assignee or relationship changes.
-* [ ] Record each successful live operation before checking its execution box; use handoff-logs.md as resume authority.
-* [ ] Confirm 13/13 tasks, 11/11 residuals, 11/11 unassessed checks, FR-051 to FR-054, AC-069 to AC-073 and NFR-014 remain traceable.
-* [ ] Report actual operation counts, failures and skipped items without claiming remediation completion.
+* [x] Re-read all thirteen updated issues and verify the approved criteria, preserved scope and absence of local planning artifacts in published content.
+* [x] Verify zero unintended state, title, type, label, milestone, assignee or relationship changes.
+* [x] Record each successful live operation before checking its execution box; use handoff-logs.md as resume authority.
+* [x] Confirm 13/13 tasks, 11/11 residuals, 11/11 unassessed checks, FR-051 to FR-054, AC-069 to AC-073 and NFR-014 remain traceable.
+* [x] Report actual operation counts, failures and skipped items without claiming remediation completion.
 
 ## Evidence and Authority Gates That Remain Open
 
@@ -128,5 +143,21 @@ Safe constructed offline implementation may proceed only in its separately autho
 | Executed operations | 0 |
 
 Functional Planner stops at this proposed handoff. Parent persistence and validation are still required; Backlog Manager execution is a separate user-reviewed pass.
+
+## Live Execution Result (2026-10-15)
+
+After the owner completed all eight saved human-review boxes, the authorized
+body-only updates were applied to issues 105, 121, 116, 106, 107, 146, 122, 130,
+128, 108, 145, 126 and 164. Each issue was read immediately before mutation and
+again after saving. Exact saved bodies and preserved metadata were verified.
+
+* Updated: 13. Created, linked, closed, commented, failed and skipped: 0.
+* Titles, states, native types, labels, milestones, assignees and relationship
+  metadata were unchanged. Existing criteria were retained; new criteria remain
+  unchecked. The three approved factual corrections were applied.
+* The [live execution log](./handoff-logs.md) records each success and saved-body
+  hash before its operation box was marked complete or the next update began.
+* This completes backlog updates only. No remediation implementation, actual-model
+  exercise, human effectiveness test, recovery drill or live release occurred.
 
 <!-- markdown-table-prettify-ignore-end -->

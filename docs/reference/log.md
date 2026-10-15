@@ -2565,3 +2565,33 @@ metadata when the knowledge base was created.
 * Focused artifact validation confirms four planning artifacts, 23 relative links,
   exact task/check coverage and unchecked human gates. No remediation implementation,
   model calls, recovery drills or live-use approval is implied.
+
+## [2026-10-15] review | Owner RAI issue decisions and chat coverage
+
+* The owner approved the eight review decisions in conversation and requested
+  adding existing chat evaluation issue 164. The [updated issue plan](../../.copilot-tracking/github-issues/prds/rai-remediation/issues-plan.md)
+  now proposes thirteen body-only updates, zero creates and zero links.
+* Chat-specific held-out, memory/injection, permission-change, human review and
+  finite-authority criteria reuse shared evaluation methods without authorizing
+  chat implementation or enablement. Original thirteen-task/22-check coverage
+  remains unchanged; this is an owner extension, not a new baseline finding.
+* Dated decisions are recorded in the [handoff](../../.copilot-tracking/github-issues/prds/rai-remediation/handoff.md).
+  Human-review checkboxes remain untouched and require the owner's saved edits
+  before execution. No GitHub issues have been changed by this review update.
+
+## [2026-10-15] execute | Approved RAI issue updates applied
+
+* After explicit one-by-one owner approval and eight owner-completed saved human
+  review boxes, applied thirteen body-only updates in jmservera/ama: 105, 121,
+  116, 106, 107, 146, 122, 130, 128, 108, 145, 126 and 164.
+* The [live operation log](../../.copilot-tracking/github-issues/prds/rai-remediation/handoff-logs.md)
+  records each successful mutation and saved-body SHA-256 before the next update.
+  All bodies were re-read immediately before update and after saving; titles,
+  state, type, labels, milestone, assignees and relationship metadata were verified
+  unchanged. No issues were created, linked, closed or commented on; no failures.
+* Preserved existing criteria and history, applied the three approved factual
+  corrections and left new acceptance criteria unchecked. Issue 164 adds future
+  chat assurance, not chat implementation or enablement authority.
+* This executes the approved backlog update only. The thirteen remediation tasks,
+  22 outstanding checks and qualified legal/privacy, human, model, recovery and
+  operational evidence gates remain work to be completed and accepted.

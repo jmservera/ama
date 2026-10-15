@@ -19,7 +19,7 @@ Sources:
 * [Bounded baseline report](../../../rai-reviews/2026-10-14/rai-report-ama-20261014.md).
 * [PRD v0.16.0](../../../../docs/prds/zava-forward-retrofit-programme-demonstrator.md).
 
-This plan proposes twelve body-only Updates. It does not authorize execution. Current issue titles, OPEN states, null native types, labels, null milestones and empty assignee sets remain unchanged. No priority field, due date or owner is invented.
+This plan defines thirteen body-only Updates, including the owner-requested chat evaluation extension in issue 164. The owner separately authorized execution and completed the saved human-review gates; all thirteen updates are now verified. Current issue titles, OPEN states, null native types, labels, null milestones and empty assignee sets remain unchanged. No priority field, due date or owner is invented.
 
 Each item is Similar and needs_review. Body additions below are proposed acceptance conditions, not statements that tests or approvals have passed. All checkboxes remain unchecked.
 
@@ -39,6 +39,7 @@ Each item is Similar and needs_review. Body additions below are proposed accepta
 | IS010 | Update | 108 | P06-T01 | Held-out, human and net-benefit evidence |
 | IS011 | Update | 145 | P06-T02 | Witnessed backup and erasure reconciliation |
 | IS012 | Update | 126 | P06-T03 | Qualified current-version closure |
+| IS013 | Update | 164 | Owner-requested extension; shared P06-T01 evaluation contract | Multi-turn grounding, memory and human-review evidence |
 
 ## Body Composition Rules
 
@@ -371,6 +372,41 @@ Consume completed engineering, held-out/human evidence and witnessed restore res
 
 Local trace: P06-T03 and all 22 baseline open checks. The executor must not copy local trace lines into GitHub.
 
+## IS013 - Update issue 164
+
+Current title: Grounding, evaluation and human-review boundaries for chat.
+
+Current labels: feature, prd, adr, status:not-started, area:agent-chat. Retain all.
+
+Owner requested this additional issue home during check 2 on 2026-10-15. This is
+future chat-specific assurance, not a new core remediation task or authorization
+to implement or enable chat. Issue 108 retains the shared evaluation methodology
+and current-task evidence; this issue applies that contract to conversations and
+memory. Preserve existing chat and memory dependencies and acceptance criteria.
+
+Specific outbound block:
+
+## RAI Multi-Turn and Memory Evaluation Acceptance Criteria
+
+* [ ] Freeze independently labelled held-out conversation scenarios, expected outcomes, critical errors and task/model/prompt/policy/source/memory versions before testing. Held-out answers never enter prompts or tuning.
+* [ ] Cover unsupported claims with valid citations, stale/conflicting sources, ambiguity, abstention and permission or source changes mid-thread. Prior-turn content cannot retain authority after permission or source revocation.
+* [ ] Exercise memory poisoning and embedded-instruction cases across user turns, retrieved sources and retained memory. Untrusted content cannot expand task scope, reveal unauthorized information or grant decision authority.
+* [ ] Requests to approve, decide, consent, diagnose or contact residents preserve existing refusal and human workflow routes; previous conversation or memory cannot manufacture approval or resident consent.
+* [ ] Bind results and any enablement decision to actual serving-model and relevant control versions, with approved thresholds, accountable reviewers and explicit pass/fail/insufficient outcomes. Material changes require renewed evidence.
+* [ ] Authorized competent human exercises demonstrate detection and blocking of seeded critical unsupported, stale and permission-invalid suggestions. Scripted tests and citation resolution alone do not establish human or real-model effectiveness.
+* [ ] Reuse the shared evaluation harness, held-out methodology and non-AI comparators, while reporting chat-specific failures and complete review effort separately from current single-turn task results.
+* [ ] Actual calls require separately approved payload/provider handling and finite call/token/budget/expiry authorization. Human exercises require applicable consent, accessibility and privacy approval; absent evidence blocks affected enablement.
+* [ ] Adding these criteria does not authorize chat implementation, memory capture, model calls, deployment or live use, and does not mark any existing chat requirement delivered.
+
+## RAI Prerequisites
+
+Consume shared evaluation and approved chat/memory permission, privacy and release
+controls. Preserve existing dependencies. No native relationship changes are
+proposed; no current-task pass is inherited as chat assurance.
+
+Local trace: owner-approved check 2 extension; shared P06-T01 methods. No new
+baseline finding or remediation task is invented.
+
 ## Hierarchy and Dependency Record
 
 | Ref | Textual existing parent | Exact native pair | Planned relationship operation |
@@ -387,6 +423,7 @@ Local trace: P06-T03 and all 22 baseline open checks. The executor must not copy
 | IS010 | 104 | needs_review | None |
 | IS011 | 136 | needs_review | None |
 | IS012 | 123 | needs_review | None |
+| IS013 | 157 | needs_review | None |
 
 All affected relationships are flattened in this plan. Do not relink an existing item based on this table.
 
@@ -403,15 +440,31 @@ No native dependency links are proposed.
 
 ## Totals and Missing Categories
 
-* Updates: 12, all body-only and needs_review.
+* Updates: 13, all body-only; saved human-review gates remain required.
 * Creates: 0. Existing capabilities provide coherent homes for the missing criteria.
 * Links: 0. No new endpoints are created; exact existing pairings were not hydrated.
 * Comments, transitions, closes, assignments, label/type/milestone changes: 0.
 * Match: none for a complete primary task outcome.
 * Uncertain: none from missing primary body hydration.
 * Distinct primary creates: none; closed rubric issue 23 is Distinct context.
-* Thirteen remediation tasks map to twelve issues because source provenance and meaningful source review are combined in issue 106.
+* Thirteen core remediation tasks map to twelve issues because source provenance and meaningful source review are combined in issue 106. Issue 164 is an additional owner-requested chat assurance update, not a fourteenth remediation task.
 
-Coverage is reviewable, not executed. No existing issue currently contains the complete relevant delta, and proposed checklists do not prove completed controls.
+At initial review, no existing issue contained the complete relevant delta. All thirteen approved body updates have now been verified; the added checklists do not prove completed controls.
+
+## Live Execution Result (2026-10-15)
+
+After the owner completed all eight saved human-review boxes, the authorized
+body-only updates were applied to issues 105, 121, 116, 106, 107, 146, 122, 130,
+128, 108, 145, 126 and 164. Each issue was read immediately before mutation and
+again after saving. Exact saved bodies and preserved metadata were verified.
+
+* Updated: 13. Created, linked, closed, commented, failed and skipped: 0.
+* Titles, states, native types, labels, milestones, assignees and relationship
+  metadata were unchanged. Existing criteria were retained; new criteria remain
+  unchecked. The three approved factual corrections were applied.
+* The [live execution log](./handoff-logs.md) records each success and saved-body
+  hash before its operation box was marked complete or the next update began.
+* This completes backlog updates only. No remediation implementation, actual-model
+  exercise, human effectiveness test, recovery drill or live release occurred.
 
 <!-- markdown-table-prettify-ignore-end -->
