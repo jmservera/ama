@@ -132,7 +132,7 @@
     {
       "id": "SN-08",
       "need": "Agent chat and memory",
-      "source_reference": "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-035; assistants runtime",
+      "source_reference": "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-035 (profile paths), FR-057 (memory); assistants runtime",
       "consuming_issues": [
         "#157"
       ],
