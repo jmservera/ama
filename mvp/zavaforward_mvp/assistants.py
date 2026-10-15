@@ -86,6 +86,8 @@ def measures(c):
 def capture(capability, c, procurement=None):
     """Closed field allowlists, never whole records, notes, vulnerability or AI summaries."""
     source = {"home": pick(c.get("home"), ("address", "town", "postcode", "type", "built", "epc", "tenure"))}
+    # Role-independent so the source signature is stable: outcomes only when every role of the assistant has a recorded need.
+    need_ok = all(projection.can_see_reason(dict(role=r)) for r in REGISTRY[capability]["roles"])
     if "measures" in REGISTRY[capability]["categories"]:
         source["measures"] = measures(c)
     if capability in ("stock-prioritisation", "assessment-preparation"):
@@ -128,7 +130,8 @@ def capture(capability, c, procurement=None):
                             for g in c.get("grants", [])]
     if capability == "works-resident-coordination":
         source["preferences"] = pick(c.get("resident"), ("preferred", "unavailable"))
-        source["appointments"] = [pick(a, ("type", "date", "slot", "outcome")) for a in c.get("appointments", [])]
+        source["appointments"] = [dict(pick(a, ("type", "date", "slot", "outcome")), **(
+            {} if need_ok else {"outcome": projection.status_only(a.get("outcome"))})) for a in c.get("appointments", [])]
         source["handoff"] = pick(c.get("handoff"), ("state", "to_code", "at"))
         source["requests"] = [pick(r, ("id", "status", "next_update")) for r in c.get("service_requests", [])]
         name = (c.get("contractor") or {}).get("name")

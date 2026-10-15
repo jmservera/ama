@@ -93,7 +93,14 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   details. Staff see the reason only for the roles in `ZF_REASON_ROLES`
   (default Resident Liaison Officer, Building Safety Liaison, Retrofit Programme
   Manager); others see "Extra support noted". Every role is tested against every
-  endpoint (`tests/test_role_matrix.py`). Free-text notes are not redacted.
+  endpoint (`tests/test_role_matrix.py`, plus `tests/test_role_endpoint_inventory.py`,
+  which fails when a server route is missing from its inventory and checks
+  contractor canaries across API, CSV export, search, audit and AI prompts).
+  Free-text notes (decided for the exercise): no pattern redaction, which gives
+  false assurance. Free-text fields are excluded by allow-list from contractor
+  responses and AI prompts, and roles without a recorded need see "Held for
+  roles with a recorded need" for contact notes and outcomes, appointment and
+  hazard notes. The reason-role list remains a proposal (OD-14, OD-19).
 * Workflow screens on the case page: send a case back to an earlier stage with a
   reason, reopen a closed case (manager, from the "Closed cases" page), offer,
   accept, decline or withdraw a handoff (pending handoffs show on the work

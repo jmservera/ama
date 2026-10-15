@@ -497,7 +497,7 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
                 f"Resident adjustments: {adjust}. Resident prefers: {r['preferred']}. "
                 f"Resident decision: {c['decision']['status']}. Funding: {c['funding']['route']} ({c['funding']['status']}). "
                 f"Open safety issues: {sum(not h['released'] for h in c['hazards'])}. "
-                f"Recent contacts: " + "; ".join(f"{k['at'][:10]} {k['outcome']}" for k in c["contacts"][-4:]))
+                f"Recent contacts: " + "; ".join(f"{k['at'][:10]} {k['outcome'] if reason_ok else k['channel']}" for k in c["contacts"][-4:]))
 
     def ai_run(self, user, case_id, task, mode=None):
         with self.lock:

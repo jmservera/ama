@@ -2920,6 +2920,14 @@ metadata when the knowledge base was created.
 * No regulatory snapshot changed. Open: externally held head in an immutable
   Azure container and Azure SQL drill evidence.
 
+## 2026-10-15 Role endpoint inventory and free-text note handling (#116)
+
+* `mvp/README.md` role projection section updated: free-text notes are held
+  (not pattern-redacted) for roles without a recorded need, with a route
+  inventory test across every role.
+* No regulatory snapshot changed. Open: DPO and Legal confirmation of the roles
+  allowed to see a vulnerability reason (OD-14, OD-19), Entra B2B guest
+  contractor identity model, and browser acceptance for every role.
 ## 2026-10-15 Azure Policy, Defender plans, locks and tagging as code (#147)
 
 * infra/README.md gains a Governance controls section; ADR 0001 open item updated. New `infra/governance.bicep`, `main.pilot.example.bicepparam`, `policy-exceptions.json` and tests.

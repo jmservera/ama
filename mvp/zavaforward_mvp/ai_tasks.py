@@ -66,7 +66,7 @@ def source_labels(c, reason_ok=False):
         out.append(f"Unavailable: {r['unavailable']}")
     for k in c.get("contacts", [])[-10:]:
         d = str(k["at"])[:10]
-        out += [f"Contact {d}: {k['outcome']}", f"Case history {d}"]
+        out += [f"Contact {d}: {k['outcome'] if reason_ok else k['channel']}", f"Case history {d}"]
     for e in (c.get("history") or [])[-10:]:
         if isinstance(e, dict) and e.get("at"):
             out.append(f"Case history {str(e['at'])[:10]}")
