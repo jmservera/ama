@@ -21,7 +21,7 @@ the [Capstone Assessment Guide](../reference/method/ama-capstone-assessment-guid
 | A1 to A7, B6, C1 | Product requirements | `docs/prds/` | Markdown |
 | A1 to A3, B6 | Architecture decision records | `docs/adrs/` | Markdown |
 | A1, A3 to A7, B6 | Solution code, tests, README and diagrams | `src/` and `mvp/` (see the registry globs) | Source files |
-| A1, A3, A5 | Infrastructure as code | `infra/` and `prototype/deploy/*.bicep` | Bicep, Terraform |
+| A1, A3, A5 | Infrastructure as code | `infra/` | Bicep, Terraform |
 | B1, B2, B6, B7 | Capstone deck, with speaker notes | `docs/capstone/deck/` (sole published executive deck; no duplicate in `docs/presentations/`) | `.pptx` (scorer reads slide and notes text) |
 | B1 to B5, B7, C2, C3 | Pitch rehearsal and Q&A transcripts, timing notes, demo script and recovery notes, restated-challenge examples | `docs/capstone/pitch/` | `.md`, `.txt`, `.vtt` |
 | D1 to D3 | Thought leadership artifact | `docs/capstone/thought-leadership/<artifact-name>/` | `.md`, `.txt`, `.vtt`, plus `.pptx` as support |

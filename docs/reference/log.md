@@ -3014,3 +3014,8 @@ metadata when the knowledge base was created.
 
 * Updated `docs/architecture/mvp-to-src-parity-matrix.md` after ADR 0006 was accepted and PR 287 merged: targets follow the ADR module mapping (no `devtools` package), deviations are stated as proposed amendments A1 to A5, three PR 287 files added, the 450 `mvp/.assistant-test-*` sandbox files mapped as retire, the hold action removed, and the owner answers of 2026-10-15 recorded (check names renamed after cut-over, GitHub release with the archive tag, agents image without the `sql` extra, no soak period). Baseline re-recorded: 719 tests, 92 skipped. The index row is updated.
 * Open: owner decision on A1 to A5 (core importing `ai_registry` and `assistants`, `assistant_release` placement, agents and orchestrator test dependencies).
+
+## 2026-10-15 Retire prototype/ (#202 step 1)
+
+* Removed all ten tracked `prototype/` files, `.github/workflows/prototype-validation.yml` and the dead `prototype/deploy/**/*.bicep` glob from the `infrastructure` entry in `.github/rubric/artifacts.json`. All ten files were already mapped as archive or retire in the parity matrix (P1). Updated live references in the rubric README, rubric test fixtures, capstone README, ADR 0006 status, the parity matrix, the backlog coordinator agent and the index. Dated historical records and `tools/rename-zava*` identifiers are unchanged.
+* The registry edit takes effect only after merge; any score dip is accepted by the owner (2026-10-14). Open: whether `Prototype validation / validate` is a required check (branch protection could not be read with the available token); the service-role denial test remains an open item for `src/api/tests/`.

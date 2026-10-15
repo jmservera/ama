@@ -123,8 +123,8 @@ treated as delivery failure.
    possible but undeclared, add an edge or flag it rather than assume
    independence. A dependency cycle is a human blocker for its members and their
    dependants only; ledger it and continue every other node.
-   Source layout rule (owner, 2026-10-15): `mvp/` and `prototype/` are being
-   retired (epic #195). No new feature code goes into `mvp/`. New features are
+   Source layout rule (owner, 2026-10-15): `mvp/` is being retired
+   (epic #195; `prototype/` was retired in #202 step 1). No new feature code goes into `mvp/`. New features are
    built in `src/` under the packages fixed by the layout ADR (#196), and tests
    outside the package. Treat #195 to #203 as the first priority: any feature
    issue that needs code the ADR has not yet placed, or that touches a module
