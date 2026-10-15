@@ -14,6 +14,7 @@ from zavaforward_mvp.store import Store
 from zavaforward_mvp.timecapture import ACTIVITIES, NoticeNotAcknowledged, TimeCapture, TimeCaptureOff
 
 SAM = test_mvp.DATA["staff"][0]
+MGR = dict(code="MGR", email="manager@example.test")
 
 
 class TimeTests(unittest.TestCase):
@@ -29,7 +30,8 @@ class TimeTests(unittest.TestCase):
 
     def on(self, *users, dpia="DPIA-2026-007"):
         """Capture fully enabled (flag, DPIA, consultation) with the given users having acknowledged the notice."""
-        t = self.tc(ZF_TIME_CAPTURE="on", DPIA_APPROVED=dpia, ZF_TIME_CONSULTATION="CONS-2026-02")
+        t = self.tc(ZF_TIME_CAPTURE="on", DPIA_APPROVED=dpia, ZF_TIME_CONSULTATION="CONS-2026-02", ZF_TIME_NOTICE_APPROVED="NOTICE-2026-01")
+        t.activate(MGR)
         for u in users:
             t.acknowledge(u)
         return t
@@ -131,7 +133,8 @@ class TimeTests(unittest.TestCase):
         p = Path(self.tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(test_mvp.DATA))
         store = Store(str(p))
-        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1")
+        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+        TimeCapture(self.db, env).activate(MGR)
         httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(store, "zf-test", TimeCapture(self.db, env))))
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
         try:
@@ -139,6 +142,48 @@ class TimeTests(unittest.TestCase):
             ck = urllib.request.urlopen(urllib.request.Request(base + "/api/login", json.dumps(dict(email=SAM["email"], password="zf-test")).encode())).headers["Set-Cookie"].split(";")[0]
             urllib.request.urlopen(urllib.request.Request(base + "/api/time/acknowledge", b"{}", headers={"Cookie": ck}))
             self.assertIn("time_notice_acknowledged", [e["action"] for e in store.audit_entries()])
+            self.assertTrue(store.verify_audit())
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+
+    def test_notice_approval_and_audited_enabling_are_required(self):
+        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1")
+        t = self.tc(**env)
+        with self.assertRaises(TimeCaptureOff):
+            t.activate(MGR)
+        env["ZF_TIME_NOTICE_APPROVED"] = "N1"
+        t = self.tc(**env)
+        self.assertIn("enabling action", t.status()["reason"])
+        with self.assertRaises(TimeCaptureOff):
+            t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
+        t.activate(MGR)
+        self.assertTrue(t.status()["enabled"])
+        env["DPIA_APPROVED"] = "D2"
+        self.assertFalse(self.tc(**env).status()["enabled"])
+
+    def test_enabling_is_manager_only_and_audited_through_the_api(self):
+        p = Path(self.tmp.name) / "zavaforward.json"
+        p.write_text(json.dumps(test_mvp.DATA))
+        store = Store(str(p))
+        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(store, "zf-test", TimeCapture(self.db, env))))
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        try:
+            base = f"http://127.0.0.1:{httpd.server_address[1]}"
+            mgr = next(u for u in test_mvp.DATA["staff"] if u["role"] == "Retrofit Programme Manager")
+            nonmgr = next(u for u in test_mvp.DATA["staff"] if u["role"] not in ("Retrofit Programme Manager", "Programme Support Officer"))
+
+            def enable(user):
+                ck = urllib.request.urlopen(urllib.request.Request(base + "/api/login", json.dumps(dict(email=user["email"], password="zf-test")).encode())).headers["Set-Cookie"].split(";")[0]
+                return urllib.request.urlopen(urllib.request.Request(base + "/api/time/enable", b"{}", headers={"Cookie": ck}))
+            with self.assertRaises(urllib.error.HTTPError) as cm:
+                enable(nonmgr)
+            self.assertEqual(cm.exception.code, 403)
+            self.assertNotIn("time_capture_enabled", [e["action"] for e in store.audit_entries()])
+            self.assertTrue(json.load(enable(mgr))["enabled"])
+            entry = [e for e in store.audit_entries() if e["action"] == "time_capture_enabled"][0]
+            self.assertIn("notice N1", entry["detail"])
             self.assertTrue(store.verify_audit())
         finally:
             httpd.shutdown()
@@ -159,7 +204,8 @@ class TimeTests(unittest.TestCase):
     def test_api_disabled_then_enabled(self):
         p = Path(self.tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(test_mvp.DATA))
-        for env, expect in (({}, 403), (dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1"), 200)):
+        TimeCapture(self.db, dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")).activate(MGR)
+        for env, expect in (({}, 403), (dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1"), 200)):
             httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(Store(str(p)), "zf-test", TimeCapture(self.db, env))))
             threading.Thread(target=httpd.serve_forever, daemon=True).start()
             base = f"http://127.0.0.1:{httpd.server_address[1]}"

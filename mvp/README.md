@@ -147,9 +147,11 @@ It follows the simplicity requirements SA-001 to SA-010 in the
   thresholds, human protocol, Finance validation). Any critical miss fails the
   run.
 * Staff time capture (PR-004) is off by default. It records only when
-  `ZF_TIME_CAPTURE=on`, `DPIA_APPROVED` and `ZF_TIME_CONSULTATION` each hold a
-  reference, and the person has acknowledged the staff notice
-  (`POST /api/time/acknowledge`, audited); own entries only;
+  `ZF_TIME_CAPTURE=on`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION` and
+  `ZF_TIME_NOTICE_APPROVED` each hold a reference, a manager has taken the
+  audited enabling action (`POST /api/time/enable`, audit `time_capture_enabled`;
+  void if a reference later changes), and the person has acknowledged the staff notice
+  (`POST /api/time/acknowledge`, audited); own entries only; screens at `#/time`;
   reports are manager-only, aggregated and suppress groups under
   `ZF_TIME_MIN_GROUP` (default 5). It uses its own database, never the case store.
 * Download any list for Excel, and check a spreadsheet: columns are matched
@@ -233,7 +235,7 @@ and the rule engine are not done here.
 | `ZF_ENTRA_TENANT_ID`, `ZF_TRUSTED_PROXY`, `ZF_ROLE_MAP`, `ZF_AUTH_EMAIL_FALLBACK` | Entra provider |
 | `ZF_REASON_ROLES` | roles that may see a vulnerability reason |
 | `ZF_TILE_URL`, `ZF_TILE_ATTRIBUTION` | map tile provider |
-| `ZF_TIME_CAPTURE`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION`, `ZF_TIME_DB`, `ZF_TIME_MIN_GROUP` | time capture |
+| `ZF_TIME_CAPTURE`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION`, `ZF_TIME_NOTICE_APPROVED`, `ZF_TIME_DB`, `ZF_TIME_MIN_GROUP` | time capture |
 | `ZF_DOC_STORE`, `ZF_DOC_DIR`, `ZF_BLOB_ACCOUNT_URL`, `ZF_BLOB_CONTAINER`, `ZF_BLOB_SAS`, `ZF_BLOB_CLIENT_ID` | document store |
 
 ### SQL store

@@ -395,6 +395,12 @@ def make_handler(app):
                     ver = app.time.acknowledge(u)
                     s.audit(u["email"], "time_notice_acknowledged", "-", f"notice {ver}")
                     return self._json(200, app.time.status(u))
+                if url.path == "/api/time/enable":
+                    if u["role"] not in MANAGER_ROLES:
+                        raise PermissionError("Only a manager can take the enabling action.")
+                    refs = app.time.activate(u)
+                    s.audit(u["email"], "time_capture_enabled", "-", f"DPIA {refs['dpia_ref']}; consultation {refs['consultation_ref']}; notice {refs['notice_ref']}")
+                    return self._json(200, app.time.status(u))
                 if url.path == "/api/time":
                     s._case(body.get("case_id"))
                     app.time.record(u, body.get("case_id"), body.get("minutes"), body.get("activity"))

@@ -7,6 +7,10 @@ It records nothing unless all of these hold:
   reference is stored with every entry);
 * ZF_TIME_CONSULTATION=<reference of the completed staff consultation>, also
   stored with every entry;
+* ZF_TIME_NOTICE_APPROVED=<reference of the approval of the staff notice
+  wording>, stored with the enabling record;
+* a manager has taken the audited enabling action (activate), which stores the
+  three references and who took it;
 * the person has acknowledged the current staff notice (NOTICE_VERSION). The
   acknowledgement is stored with the time and is audited by the server.
 
@@ -52,15 +56,22 @@ class TimeCapture:
         flag = (self.env.get("ZF_TIME_CAPTURE") or "").strip().lower() in ("1", "on", "true", "yes")
         dpia = (self.env.get("DPIA_APPROVED") or "").strip()
         consult = (self.env.get("ZF_TIME_CONSULTATION") or "").strip()
+        notice = (self.env.get("ZF_TIME_NOTICE_APPROVED") or "").strip()
+        act = self.activation()
         if not flag:
             why = "Time capture is switched off."
         elif not dpia:
             why = "Time capture cannot be switched on until a DPIA reference is recorded (DPIA_APPROVED)."
         elif not consult:
             why = "Time capture cannot be switched on until the staff consultation is recorded (ZF_TIME_CONSULTATION)."
+        elif not notice:
+            why = "Time capture cannot be switched on until the staff notice is approved (ZF_TIME_NOTICE_APPROVED)."
+        elif not act:
+            why = "Time capture is ready but waiting for the audited enabling action by a manager."
         else:
             why = ""
-        out = dict(enabled=flag and bool(dpia) and bool(consult), flag_on=flag, dpia_recorded=bool(dpia), consultation_recorded=bool(consult),
+        out = dict(enabled=not why, flag_on=flag, dpia_recorded=bool(dpia), consultation_recorded=bool(consult),
+                   notice_approved=bool(notice), activated=bool(act), activated_by=act and act["by"], activated_at=act and act["at"],
                    reason=why, activities=list(ACTIVITIES), min_group=self.min_group(), notice_version=NOTICE_VERSION)
         if out["enabled"]:
             out["notice"] = NOTICE_TEXT
@@ -73,6 +84,32 @@ class TimeCapture:
             return max(2, int(self.env.get("ZF_TIME_MIN_GROUP", "5")))
         except ValueError:
             return 5
+
+    def _refs(self):
+        return tuple((self.env.get(k) or "").strip() for k in ("DPIA_APPROVED", "ZF_TIME_CONSULTATION", "ZF_TIME_NOTICE_APPROVED"))
+
+    def activation(self):
+        """The enabling record, if it was taken against the references currently configured."""
+        if not os.path.exists(self.db_path) and self.db is None:
+            return None
+        with self.lock:
+            r = self._db().execute("SELECT at, by_user, dpia_ref, consultation_ref, notice_ref FROM time_enabled ORDER BY id DESC LIMIT 1").fetchone()
+        if not r or tuple(r[2:]) != self._refs():
+            return None
+        return dict(at=r[0], by=r[1])
+
+    def activate(self, user):
+        """The enabling action: needs the flag and all three references, and is stored with who took it. The caller audits it."""
+        st = self.status()
+        if not (st["flag_on"] and st["dpia_recorded"] and st["consultation_recorded"] and st["notice_approved"]):
+            raise TimeCaptureOff(st["reason"])
+        dpia, consult, notice = self._refs()
+        with self.lock:
+            db = self._db()
+            db.execute("INSERT INTO time_enabled (at, by_user, dpia_ref, consultation_ref, notice_ref) VALUES (?,?,?,?,?)",
+                       (datetime.now().isoformat(timespec="minutes"), user["email"], dpia, consult, notice))
+            db.commit()
+        return dict(dpia_ref=dpia, consultation_ref=consult, notice_ref=notice)
 
     def _require(self):
         st = self.status()
@@ -88,6 +125,8 @@ class TimeCapture:
                             "user_code TEXT NOT NULL, case_id TEXT NOT NULL, minutes INTEGER NOT NULL, activity TEXT NOT NULL, dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL DEFAULT '')")
             if "consultation_ref" not in [r[1] for r in self.db.execute("PRAGMA table_info(time_entry)")]:
                 self.db.execute("ALTER TABLE time_entry ADD COLUMN consultation_ref TEXT NOT NULL DEFAULT ''")
+            self.db.execute("CREATE TABLE IF NOT EXISTS time_enabled (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by_user TEXT NOT NULL, "
+                            "dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL)")
             self.db.execute("CREATE INDEX IF NOT EXISTS ix_time_user ON time_entry (user_code, id)")
             self.db.execute("CREATE TABLE IF NOT EXISTS notice_ack (user_code TEXT NOT NULL, version TEXT NOT NULL, at TEXT NOT NULL, "
                             "PRIMARY KEY (user_code, version))")

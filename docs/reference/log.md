@@ -2876,3 +2876,11 @@ metadata when the knowledge base was created.
   event paths, breach role check, Shadow and Live release need Phase 0 released.
 * No regulatory snapshot changed. Open: pilot cohort enrolment and work package
   and workstream pause scopes.
+
+## 2026-10-15 Staff time capture gated on DPIA, notice and audited enabling (#120)
+
+* `mvp/README.md` and ADR 0002 status row updated: capture also needs a notice
+  approval reference and an audited manager enabling action; `#/time` screens
+  added. No regulatory snapshot changed.
+* Open (owner decisions, not invented): the real OD-36 DPIA, consultation and
+  notice approval references, the minimum group size and the notice wording.
