@@ -227,6 +227,65 @@ def test_given_registered_implementation_change_when_computed_then_expected_crit
 @pytest.mark.parametrize(
     "path",
     [
+        "src/core/src/zava_forward/core/config.py",
+        "src/core/tests/test_config.py",
+        "src/core/pyproject.toml",
+        "src/api/Dockerfile",
+        "src/api/src/zava_forward/api/web/app.js",
+    ],
+)
+def test_given_src_project_file_when_computed_then_solution_code_opens(tmp_path, path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "checkout", "-b", "feature")
+    candidate = root / path
+    candidate.parent.mkdir(parents=True, exist_ok=True)
+    candidate.write_text("implementation evidence\n", encoding="utf-8")
+    git(root, "add", path)
+    git(root, "commit", "-m", "add src file")
+
+    # Act
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Assert
+    assert state["should_score"] is True
+    assert state["changed_artifacts"] == ["solution-code"]
+    assert state["changed_files"] == [path]
+    assert state["artifacts"]["solution-code"]["files"] == [path]
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "src/api/src/zava_forward/api/web/vendor/lib.js",
+        "src/core/data/private-cases.csv",
+        "src/core/src/zava_forward/core/data/cases.json",
+        "src/core/src/zava_forward.egg-info/PKG-INFO",
+        "src/core/build/lib/zava_forward/core.py",
+    ],
+)
+def test_given_src_vendor_data_or_build_file_when_computed_then_no_scoring(tmp_path, path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "checkout", "-b", "feature")
+    candidate = root / path
+    candidate.parent.mkdir(parents=True, exist_ok=True)
+    candidate.write_text("excluded fixture\n", encoding="utf-8")
+    git(root, "add", path)
+    git(root, "commit", "-m", "add excluded fixture")
+
+    # Act
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Assert
+    assert state["should_score"] is False
+    assert state["changed_files"] == []
+    assert all(path not in artifact["files"] for artifact in state["artifacts"].values())
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
         "prototype/seed/container-source/candidate-lifecycle.csv",
         "prototype/seed/container-source/safety-holds.csv",
         "prototype/seed/demo-import.xlsx",
