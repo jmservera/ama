@@ -90,6 +90,31 @@ class RoleEndpointInventory(Matrix):
                 self.assertNotIn(OUTCOME_CANARY, text, role)
                 self.assertIn(projection.NOTE_HELD, text, role)
 
+    def test_notes_held_in_list_export_search_and_case_for_roles_without_need(self):
+        c = self.store.cases["ZF-1"]
+        c["appointments"].append(dict(type="Survey", date="2026-01-03", slot="AM", outcome=OUTCOME_CANARY))
+        c["quality"] = [dict(measure="Loft", state="Accepted", checklist_version="1", items=[],
+                             history=[dict(at="2026-01-02", by="x", note=NOTE_CANARY)], aftercare=[dict(note=NOTE_CANARY)])]
+        views = ["/api/cases?view=all", "/api/cases?view=all&q=" + OUTCOME_CANARY, "/api/cases?view=all&q=" + NOTE_CANARY,
+                 "/api/cases.csv?view=all", "/api/cases/ZF-1", "/api/briefing", "/api/visits?view=all"]
+        for role in ROLES:
+            if role == projection.CONTRACTOR or role in projection.DEFAULT_REASON_ROLES:
+                continue
+            ck = self.session(self.email(role))
+            for path in views:
+                text = self.call(ck, path)[1]
+                for canary in (NOTE_CANARY, OUTCOME_CANARY):
+                    self.assertNotIn(canary, text, (role, path))
+
+    def test_ai_citations_and_assistant_source_hold_outcomes_without_need(self):
+        from zavaforward_mvp import ai_tasks, assistants
+        c = self.store.cases["ZF-1"]
+        self.assertTrue(any(OUTCOME_CANARY in x for x in ai_tasks.cites_for(c, "Contact", reason_ok=True)))
+        self.assertFalse(any(OUTCOME_CANARY in x for x in ai_tasks.cites_for(c, "Contact")))
+        c["appointments"].append(dict(type="Survey", date="2026-01-03", slot="AM", outcome=OUTCOME_CANARY))
+        src = assistants.capture("works-resident-coordination", c)
+        self.assertNotIn(OUTCOME_CANARY, json.dumps(src))
+
     def test_provider_never_called_for_contractor_and_prompts_carry_no_free_text(self):
         prompts = []
         self.store.ai.endpoint = "http://x"

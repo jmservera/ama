@@ -74,19 +74,32 @@ def contractor_detail(c, d):
     keep = {k: out[k] for k in DETAIL_FIELDS if k in out}
     keep["home"] = {k: c["home"][k] for k in ("address", "town", "postcode", "type")}
     keep["contractor"] = {"name": c["contractor"]["name"], "contact": c["contractor"]["contact"]}
-    keep["appointments"] = [{k: a[k] for k in ("type", "date", "slot", "outcome")} for a in c["appointments"]]
+    keep["appointments"] = [{k: a[k] for k in ("type", "date", "slot")} | {"outcome": status_only(a["outcome"])} for a in c["appointments"]]
     return keep
 
 
+APPOINTMENT_STATUS = ("Booked", "Planned", "Completed", "No access", "Missed", "Cancelled", "Rescheduled")
+
+
+def status_only(outcome):
+    return outcome if outcome in (None, "") + APPOINTMENT_STATUS else NOTE_HELD
+
+
 def hold_notes(c):
-    """Replace staff-written free text in a case-shaped dict for roles without a need."""
-    for group in ("contacts", "appointments", "hazards"):
-        for item in c.get(group) or []:
-            for k in NOTE_KEYS:
-                if item.get(k):
-                    item[k] = NOTE_HELD
-            if group == "contacts" and item.get("outcome"):
-                item["outcome"] = NOTE_HELD
+    """Replace staff-written free text anywhere in a case-shaped dict for roles without a need."""
+    if isinstance(c, list):
+        for item in c:
+            hold_notes(item)
+    elif isinstance(c, dict):
+        for k, v in c.items():
+            if k in NOTE_KEYS and v:
+                c[k] = NOTE_HELD
+            else:
+                hold_notes(v)
+        if c.get("channel") and c.get("outcome"):
+            c["outcome"] = NOTE_HELD
+        elif c.get("date") and c.get("outcome") and c["outcome"] not in APPOINTMENT_STATUS:
+            c["outcome"] = NOTE_HELD
     return c
 
 
