@@ -131,14 +131,17 @@ class SqlRepo:
                               tuple(t[c] for c in THREAD_COLS))
 
     def get(self, tid, owner):
-        row = self.store.db.execute(f"SELECT {', '.join(THREAD_COLS)} FROM chat_thread WHERE id=? AND owner=?", (tid, owner)).fetchone()
+        with self.store.dblock:
+            row = self.store.db.execute(f"SELECT {', '.join(THREAD_COLS)} FROM chat_thread WHERE id=? AND owner=?", (tid, owner)).fetchone()
         return self._row(THREAD_COLS, row) if row else None
 
     def list(self, owner, status):
         sql, args = f"SELECT {', '.join(THREAD_COLS)} FROM chat_thread WHERE owner=?", [owner]
         if status:
             sql, args = sql + " AND status=?", args + [status]
-        return [self._row(THREAD_COLS, r) for r in self.store.db.execute(sql + " ORDER BY updated_at DESC, id DESC", args).fetchall()]
+        with self.store.dblock:
+            rows = self.store.db.execute(sql + " ORDER BY updated_at DESC, id DESC", args).fetchall()
+        return [self._row(THREAD_COLS, r) for r in rows]
 
     def update(self, tid, owner, expected, **fields):
         sets = "".join(f", {k}=?" for k in fields)
@@ -152,7 +155,8 @@ class SqlRepo:
                               tuple(row[c] for c in MESSAGE_COLS))
 
     def messages(self, tid):
-        rows = self.store.db.execute(f"SELECT {', '.join(MESSAGE_COLS)} FROM chat_message WHERE thread_id=? ORDER BY seq", (tid,)).fetchall()
+        with self.store.dblock:
+            rows = self.store.db.execute(f"SELECT {', '.join(MESSAGE_COLS)} FROM chat_message WHERE thread_id=? ORDER BY seq", (tid,)).fetchall()
         return [dict(self._row(MESSAGE_COLS, r), evidence=json.loads(r[6])) for r in rows]
 
     def delete(self, tid):
