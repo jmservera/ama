@@ -118,7 +118,7 @@ def verify(store, blob):
 
 
 def main(argv=None, env=None, store=None, blob=None, out=print):
-    """python -m zavaforward_mvp.digest_blob [--publish] : publish then verify; exit 1 and alert on mismatch."""
+    """python -m zava_forward.orchestrator.digest_blob [--publish] : publish then verify; exit 1 and alert on mismatch."""
     argv = sys.argv[1:] if argv is None else argv
     if store is None:
         from zava_forward.core.factory import open_store

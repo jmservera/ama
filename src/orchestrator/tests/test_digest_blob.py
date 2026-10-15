@@ -4,9 +4,9 @@ import unittest
 import urllib.parse
 from pathlib import Path
 
-import test_mvp
+import dataset
 from zava_forward.core import ledger
-from zavaforward_mvp import digest_blob
+from zava_forward.orchestrator import digest_blob
 from zava_forward.core.store import Store
 
 URL = "https://acct.blob.core.windows.net"
@@ -43,9 +43,9 @@ class BlobDigestTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         p = Path(self.tmp.name) / "zavaforward.json"
-        p.write_text(json.dumps(test_mvp.DATA))
+        p.write_text(json.dumps(dataset.DATA))
         self.store = Store(str(p))
-        self.sam = test_mvp.DATA["staff"][0]
+        self.sam = dataset.DATA["staff"][0]
         for i in range(3):
             self.store.log_call(self.sam, "ZF-1", f"Call {i}", "")
         self.container = FakeImmutableContainer()

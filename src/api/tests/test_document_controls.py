@@ -16,7 +16,7 @@ from zava_forward.core.store import Store
 from test_documents import FakeBlob
 
 SAM, PAM = test_mvp.DATA["staff"]
-FIXTURES = json.loads((Path(__file__).resolve().parents[2] / "src/core/evals/document_control_fixtures.json").read_text())
+FIXTURES = json.loads((Path(__file__).resolve().parents[3] / "src/core/evals/document_control_fixtures.json").read_text())
 AS_OF = date.fromisoformat(FIXTURES["as_of"])
 
 

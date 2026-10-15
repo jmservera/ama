@@ -1,7 +1,7 @@
 """Manual browser check (not part of unittest discovery). Needs python3 playwright with chromium.
 
-Run: cd mvp && PYTHONPATH=. python3 tests/browser_check.py
-Starts the real server on a scratch state directory against data/zavaforward.json, then drives it as a manager.
+Run: python3 src/api/checks/browser_check.py (packages installed, dataset at ZF_DATA)
+Starts the real server on a scratch state directory against the ZF_DATA dataset, then drives it as a manager.
 """
 import os
 import shutil
@@ -13,8 +13,7 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-ROOT = Path(__file__).resolve().parents[1]
-STATE = ROOT / ".browser-check-state"
+STATE = Path.cwd() / ".browser-check-state"
 PORT = os.environ.get("CHECK_PORT", "8099")
 BASE = f"http://127.0.0.1:{PORT}"
 results = []
@@ -28,8 +27,8 @@ def check(name, ok, detail=""):
 def main():
     shutil.rmtree(STATE, ignore_errors=True)
     STATE.mkdir()
-    env = dict(os.environ, ZF_PASSWORD="check-pass", ZF_STATE=str(STATE), PORT=PORT, PYTHONPATH=str(ROOT))
-    srv = subprocess.Popen([sys.executable, "-m", "zavaforward_mvp.server"], cwd=ROOT, env=env, stdout=subprocess.DEVNULL)
+    env = dict(os.environ, ZF_PASSWORD="check-pass", ZF_STATE=str(STATE), PORT=PORT)
+    srv = subprocess.Popen([sys.executable, "-m", "zava_forward.api.server"], env=env, stdout=subprocess.DEVNULL)
     try:
         for _ in range(50):
             try:

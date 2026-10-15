@@ -3,8 +3,8 @@ import re
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-WEB = ROOT / "mvp" / "web"
+ROOT = Path(__file__).resolve().parents[3]
+WEB = ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web"
 CSS = (WEB / "style.css").read_text()
 APP = (WEB / "app.js").read_text()
 DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "wcag-conformance-baseline.md").read_text()

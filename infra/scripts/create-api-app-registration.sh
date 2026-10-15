@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Creates (idempotently) the single-tenant Entra app registration that protects the workbench
 # API through Container Apps built-in authentication, with the app roles the MVP maps to
-# workbench roles (mvp/zavaforward_mvp/auth.py DEFAULT_ROLE_MAP).
+# workbench roles (src/api/src/zava_forward/api/auth.py DEFAULT_ROLE_MAP).
 #
 # Run as a user who can create applications (Application Administrator or Global Administrator).
 # Sign in first with: az login --tenant <tenant> --allow-no-subscriptions

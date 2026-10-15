@@ -8,7 +8,7 @@ dynamic = ["version"]
 description = "Zava Forward HTTP API and web workbench"
 requires-python = ">=3.12"
 dependencies = [
-    "zava-forward-core[sql]>=0.1.0,<0.2",
+    "zava-forward-core[sql,blob]>=0.1.0,<0.2",
     "zava-forward-agents>=0.1.0,<0.2",
 ]
 
@@ -30,21 +30,35 @@ src = ["src", "tests"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
 
-# Moved unchanged from mvp/tests in M2 of #199; exemptions end in M6.
+# Moved unchanged from mvp/ in M2 and M5 of #199; exemptions end in M6.
 [tool.ruff.lint.per-file-ignores]
 "tests/test_content_standard.py" = ["E501"]
+"src/zava_forward/api/{server,auth,timecapture}.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B", "F841", "F401", "E731", "F541", "F811"]
+"tests/{test_accessibility_baseline,test_ai_tasks,test_assistant_release,test_assistants,test_auth,test_chat_fixture_roles,test_chat_isolation,test_continuity,test_design_system,test_document_controls,test_lawstore,test_ledger,test_mssqlstore,test_mvp,test_ranking_policy,test_ranking_scale,test_role_endpoint_inventory,test_role_matrix,test_timecapture,test_ui_support,test_workflows}.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B", "F841", "F401", "E731", "F541", "F811"]
+"checks/*.py" = ["E501", "E701", "E702", "E741", "I001", "UP", "B", "F841", "F401", "E731", "F541", "F811"]
 
 [tool.ruff.format]
-exclude = ["tests/test_content_standard.py"]
+exclude = [
+  "tests/test_content_standard.py",
+  "src/zava_forward/api/{server,auth,timecapture}.py",
+  "tests/{test_accessibility_baseline,test_ai_tasks,test_assistant_release,test_assistants,test_auth,test_chat_fixture_roles,test_chat_isolation,test_continuity,test_design_system,test_document_controls,test_lawstore,test_ledger,test_mssqlstore,test_mvp,test_ranking_policy,test_ranking_scale,test_role_endpoint_inventory,test_role_matrix,test_timecapture,test_ui_support,test_workflows}.py",
+  "checks/*.py",
+]
 
 [tool.mypy]
 strict = true
 mypy_path = ["src"]
 explicit_package_bases = true
 namespace_packages = true
-files = ["src", "tests"]
+files = ["src", "tests", "checks"]
 
 [[tool.mypy.overrides]]
-module = ["tests.test_content_standard", "test_content_standard", "zava_forward.core.*"]
+module = [
+  "tests.test_content_standard", "test_content_standard", "zava_forward.core.*", "zava_forward.agents.*",
+  "zava_forward.api.server", "zava_forward.api.auth", "zava_forward.api.timecapture", "test_accessibility_baseline", "test_ai_tasks", "test_assistant_release", "test_assistants", "test_auth", "test_chat_fixture_roles", "test_chat_isolation", "test_continuity", "test_design_system", "test_document_controls", "test_lawstore", "test_ledger", "test_mssqlstore", "test_mvp", "test_ranking_policy", "test_ranking_scale", "test_role_endpoint_inventory", "test_role_matrix", "test_timecapture", "test_ui_support", "test_workflows", "tests.test_accessibility_baseline", "tests.test_ai_tasks", "tests.test_assistant_release", "tests.test_assistants", "tests.test_auth", "tests.test_chat_fixture_roles", "tests.test_chat_isolation", "tests.test_continuity", "tests.test_design_system", "tests.test_document_controls", "tests.test_lawstore", "tests.test_ledger", "tests.test_mssqlstore", "tests.test_mvp", "tests.test_ranking_policy", "tests.test_ranking_scale", "tests.test_role_endpoint_inventory", "tests.test_role_matrix", "tests.test_timecapture", "tests.test_ui_support", "tests.test_workflows", "assistants_browser_check", "browser_check", "checks.assistants_browser_check", "checks.browser_check",
+]
 ignore_errors = true
 follow_imports = "skip"
+
+[tool.setuptools.package-data]
+"zava_forward.api" = ["web/*", "web/vendor/*", "web/vendor/images/*"]

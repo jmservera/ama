@@ -87,7 +87,7 @@ class SharedSqlIsPortableTests(unittest.TestCase):
 
 
     def test_time_capture_sql_is_portable(self):
-        src = (Path(__file__).resolve().parent.parent / "zavaforward_mvp" / "timecapture.py").read_text()
+        src = Path(importlib.import_module("zava_forward.api.timecapture").__file__).read_text()
         a, b = src.index("SQLITE_DDL = ("), src.index("MSSQL_DDL = (")
         shared = src[:a] + src[b:]
         banned = re.compile(r"(?i)\bINSERT\s+OR\s+(REPLACE|IGNORE)\b|\bREPLACE\s+INTO\b|\bAUTOINCREMENT\b|\bPRAGMA\b|\bINSERT OR\b")

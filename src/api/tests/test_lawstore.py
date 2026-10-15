@@ -11,12 +11,12 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 import test_mvp
-from zavaforward_mvp import lawstore
+from zava_forward.core import lawstore
 from zava_forward.core.projection import STAFF_ROLES
-from zavaforward_mvp.server import App, make_handler
+from zava_forward.api.server import App, make_handler
 from zava_forward.core.sqlstore import SqlStore
 
-REG = Path(__file__).resolve().parents[2] / "docs" / "reference" / "regulatory"
+REG = Path(__file__).resolve().parents[3] / "docs" / "reference" / "regulatory"
 
 
 class LawBase(unittest.TestCase):

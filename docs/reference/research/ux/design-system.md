@@ -7,8 +7,8 @@ ms.topic: reference
 
 ## Scope and evidence
 
-Implements issue #150 under epic #149. Sources: `mvp/web/style.css`,
-`mvp/web/*.js`, PRD SA-001 to SA-004
+Implements issue #150 under epic #149. Sources: `src/api/src/zava_forward/api/web/style.css`,
+`src/api/src/zava_forward/api/web/*.js`, PRD SA-001 to SA-004
 ([PRD](../../../prds/zava-forward-retrofit-programme-demonstrator.md)) and the
 [prototype learnings review](./prototype-learnings-and-simplicity-review.md).
 This is a design specification for a synthetic-data demonstrator. It is not
@@ -34,7 +34,7 @@ Status: proposed by the delivery agent, pending owner confirmation.
 
 ## Design tokens
 
-Defined once in `:root` in `mvp/web/style.css` and used by components.
+Defined once in `:root` in `src/api/src/zava_forward/api/web/style.css` and used by components.
 
 | Group | Tokens |
 | --- | --- |
@@ -108,6 +108,6 @@ so the state is readable without colour.
 
 ## Verification
 
-`mvp/tests/test_design_system.py` checks the tokens exist, are referenced, that
+`src/api/tests/test_design_system.py` checks the tokens exist, are referenced, that
 the state components are defined and that the documented component classes
 exist. It does not replace a browser or accessibility review.

@@ -1,6 +1,6 @@
 """Nonbillable Chromium exercise on an isolated fixture, not the retained dataset.
 
-Run from mvp with PYTHONPATH=.: python3 tests/assistants_browser_check.py.
+Run: PYTHONPATH=src/api/tests:src/core/tests python3 src/api/checks/assistants_browser_check.py.
 """
 import json
 import os
@@ -16,7 +16,7 @@ from playwright.sync_api import expect, sync_playwright
 from test_assistants import Provider, config
 from test_mvp import DATA
 from zava_forward.core.assistants import Assistants, REGISTRY, canonical
-from zavaforward_mvp.server import App, make_handler
+from zava_forward.api.server import App, make_handler
 from zava_forward.core.sqlstore import SqlStore
 
 

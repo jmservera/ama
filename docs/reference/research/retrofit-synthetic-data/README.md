@@ -309,7 +309,7 @@ output `src/importer/evals/document_form_fixtures.json`, tested by
 Document-control fixtures (scan classes, retention triggers and legal holds for
 120 homes from the same register) come from `generator/zf_document_controls.py`,
 output `src/core/evals/document_control_fixtures.json`, tested by
-`mvp/tests/test_document_controls.py`.
+`src/api/tests/test_document_controls.py`.
 
 * Source: one home per neighbourhood cluster drawn from the 60,000-home synthetic
   stock register, seeded (`--seed 20260901`), so output is byte-identical for the

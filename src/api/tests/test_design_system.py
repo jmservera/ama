@@ -3,8 +3,8 @@ import re
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-CSS = (ROOT / "mvp" / "web" / "style.css").read_text()
+ROOT = Path(__file__).resolve().parents[3]
+CSS = (ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web" / "style.css").read_text()
 DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "design-system.md").read_text()
 TOKEN_GROUPS = {"colour": "--brand", "type": "--font", "spacing": "--sp-1", "focus": "--focus", "motion": "--motion"}
 COMPONENTS = [".empty", ".blocked", ".ai-suggestion", ".ai-label", ".field-error", ".status-line.ok", ".flag.danger"]

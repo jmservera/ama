@@ -12,8 +12,8 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 import test_mvp
-from zavaforward_mvp import auth
-from zavaforward_mvp.server import App, make_handler
+from zava_forward.api import auth
+from zava_forward.api.server import App, make_handler
 from zava_forward.core.store import Store
 
 TENANT = "11111111-2222-3333-4444-555555555555"
@@ -257,7 +257,7 @@ class ProxyHttpTests(Base):
             photo.assert_called_once_with(None)
 
     def test_photo_binary_response_is_private_and_does_not_expose_platform_token(self):
-        from zavaforward_mvp.server import WEB
+        from zava_forward.api.server import WEB
         raw = (WEB / "zava-logo.png").read_bytes()
         headers = {"X-MS-CLIENT-PRINCIPAL": principal(),
                    "X-MS-TOKEN-AAD-ACCESS-TOKEN": "synthetic-platform-token"}
@@ -301,24 +301,24 @@ class TileConfigTests(Base):
                 self.assertNotIn("blob:", sources)
 
     def test_default_dev_uses_osm_and_csp_allows_only_it(self):
-        from zavaforward_mvp.server import tile_config
+        from zava_forward.api.server import tile_config
         t = tile_config({})
         self.assertIn("tile.openstreetmap.org", t["url"])
 
     def test_production_without_url_has_no_tiles(self):
-        from zavaforward_mvp.server import tile_config
+        from zava_forward.api.server import tile_config
         t = tile_config({"ZF_ENV": "production"})
         self.assertEqual((t["url"], t["host"]), (None, None))
 
     def test_custom_provider_and_validation(self):
-        from zavaforward_mvp.server import tile_config
+        from zava_forward.api.server import tile_config
         t = tile_config({"ZF_TILE_URL": "https://{s}.tiles.example.org/{z}/{x}/{y}.png", "ZF_TILE_ATTRIBUTION": "Example"})
         self.assertEqual(t["host"], "https://a.tiles.example.org")
         with self.assertRaises(SystemExit):
             tile_config({"ZF_TILE_URL": "http://insecure.example.org/{z}/{x}/{y}.png"})
 
     def test_csp_header_and_me_payload_follow_config(self):
-        import zavaforward_mvp.server as srv
+        import zava_forward.api.server as srv
         old = os.environ.get("ZF_TILE_URL"), os.environ.get("ZF_ENV")
         os.environ["ZF_TILE_URL"] = "https://tiles.example.org/{z}/{x}/{y}.png"
         try:

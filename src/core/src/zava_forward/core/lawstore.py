@@ -19,7 +19,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
-REGISTER = Path(__file__).resolve().parent.parent / "law" / "law-source-register.json"
+REGISTER = Path(__file__).resolve().parent / "law" / "law-source-register.json"
 NO_SOURCE = "No source is held for this topic. Do not rely on this system; ask the named owner."
 PARTIAL = "This source is held only in part, so the answer may be incomplete."
 NOT_REVIEWED = "Not yet reviewed by a named owner. This is a reference copy, not legal advice."
@@ -394,10 +394,10 @@ def main(argv=None):
     a = argv or sys.argv[1:]
     if (os.environ.get("ZF_LAW_STORE") or "").lower() == "mssql":
         if len(a) != 1:
-            sys.exit("usage: ZF_LAW_STORE=mssql python -m zavaforward_mvp.lawstore REGULATORY_DIR (Azure SQL and Blob settings from ZF_SQL_* and ZF_LAW_BLOB_*)")
+            sys.exit("usage: ZF_LAW_STORE=mssql python -m zava_forward.core.lawstore REGULATORY_DIR (Azure SQL and Blob settings from ZF_SQL_* and ZF_LAW_BLOB_*)")
         store = LawStore.from_env()
     elif len(a) != 3:
-        sys.exit("usage: python -m zavaforward_mvp.lawstore REGULATORY_DIR DB_FILE BLOB_DIR")
+        sys.exit("usage: python -m zava_forward.core.lawstore REGULATORY_DIR DB_FILE BLOB_DIR")
     else:
         store = LawStore(a[1], a[2])
     print(json.dumps(store.seed(a[0]), indent=2))

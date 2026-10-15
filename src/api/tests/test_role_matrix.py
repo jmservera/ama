@@ -10,7 +10,7 @@ from pathlib import Path
 
 import test_mvp
 from zava_forward.core import projection
-from zavaforward_mvp.server import App, make_handler
+from zava_forward.api.server import App, make_handler
 from zava_forward.core.store import Store
 
 REASON = "SEEDED-REASON-dementia-and-hearing-loss"

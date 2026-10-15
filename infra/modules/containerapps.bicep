@@ -238,7 +238,7 @@ resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (!empty(tokenMaintena
       containers: [{
         name: 'auth-renewal'
         image: apiImage
-        command: ['python', '-m', 'zavaforward_mvp.token_store']
+        command: ['python', '-m', 'zava_forward.orchestrator.token_store']
         resources: { cpu: json('0.25'), memory: '0.5Gi' }
         env: [
           { name: 'AZURE_CLIENT_ID', value: tokenMaintenanceClientId }
@@ -377,7 +377,7 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = {
         {
           name: 'ledger-verify'
           image: apiImage
-          command: ['python', '-m', 'zavaforward_mvp.digest_blob', '--publish']
+          command: ['python', '-m', 'zava_forward.orchestrator.digest_blob', '--publish']
           resources: { cpu: json('0.5'), memory: '1Gi' }
           env: concat(commonEnv, [
             { name: 'AZURE_CLIENT_ID', value: identityClientIds.api }

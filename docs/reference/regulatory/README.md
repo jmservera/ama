@@ -94,7 +94,7 @@ from the searchable document index. Each source record needs:
 * Review, approval, activation and retirement history
 
 The MVP implements the first step of this register as a versioned law store
-(`mvp/zavaforward_mvp/lawstore.py`) seeded from the snapshots in this folder,
+(`src/core/src/zava_forward/core/lawstore.py`) seeded from the snapshots in this folder,
 with seed metadata in `mvp/law/law-source-register.json`. Missing sources
 (leasehold, complaints handling, TrustMark, licensed PAS 2035) are recorded as
 gaps and answered as "no source held". Seeded versions carry review status

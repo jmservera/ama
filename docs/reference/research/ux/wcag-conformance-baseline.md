@@ -8,7 +8,7 @@ ms.topic: reference
 ## Scope and evidence
 
 Implements issue #151 under epic #149, after the design system (#150). Sources:
-`mvp/web/style.css`, `mvp/web/*.js`, `mvp/web/*.html`, `mvp/tests/browser_check.py`,
+`src/api/src/zava_forward/api/web/style.css`, `src/api/src/zava_forward/api/web/*.js`, `src/api/src/zava_forward/api/web/*.html`, `src/api/checks/browser_check.py`,
 BRD NFR-008, PRD AC-034, SA-009 and the Accessibility engineering row of the
 PRD test strategy, and the accessibility requirements in the
 [document workspace journey](./program-manager-document-workspace-journey.md).
@@ -57,7 +57,7 @@ change), Gap (known, not fixed), Not tested.
 ### Contrast results
 
 Computed with the WCAG relative luminance formula from the tokens in
-`mvp/web/style.css`; reproduced by `test_accessibility_baseline.py`.
+`src/api/src/zava_forward/api/web/style.css`; reproduced by `test_accessibility_baseline.py`.
 
 | Pair | Ratio | Needed |
 | --- | --- | --- |
@@ -73,14 +73,14 @@ Computed with the WCAG relative luminance formula from the tokens in
 
 ## Automated checks
 
-`mvp/tests/test_accessibility_baseline.py` runs with the existing unit test
+`src/api/tests/test_accessibility_baseline.py` runs with the existing unit test
 discovery in `.github/workflows/mvp-ci.yml`. It checks page language and
 viewport, the contrast ratios above, the focus indicator, the chart table
 equivalent, the map list alternative and live regions, and that this record
 exists. These are static checks, not a rendered-page scan.
 
 Rendered-page scanning against key screens (axe-core through the existing
-Playwright `mvp/tests/browser_check.py`) is not added: the browser check is a
+Playwright `src/api/checks/browser_check.py`) is not added: the browser check is a
 manual script and the dependency choice needs the owner (O-2).
 
 ## Manual check record

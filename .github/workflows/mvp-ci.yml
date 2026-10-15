@@ -2,10 +2,10 @@ name: MVP CI
 
 on:
   pull_request:
-    paths: ["mvp/**", "src/core/**", "src/agents/**", ".github/workflows/mvp-ci.yml"]
+    paths: ["mvp/**", "src/core/**", "src/agents/**", "src/api/**", "src/orchestrator/**", ".github/workflows/mvp-ci.yml"]
   push:
     branches: [main]
-    paths: ["mvp/**", "src/core/**", "src/agents/**"]
+    paths: ["mvp/**", "src/core/**", "src/agents/**", "src/api/**", "src/orchestrator/**"]
   workflow_dispatch:
 
 permissions:
@@ -28,15 +28,17 @@ jobs:
           python-version: "3.12"
       - name: No test sandboxes are tracked
         run: |
-          if git ls-files -- 'mvp/.assistant-test-*' | grep -q .; then
-            echo "Tracked test sandbox files found:"; git ls-files -- 'mvp/.assistant-test-*'; exit 1
+          if git ls-files -- '*/.assistant-test-*' | grep -q .; then
+            echo "Tracked test sandbox files found:"; git ls-files -- '*/.assistant-test-*'; exit 1
           fi
-      - name: Install the core and agents packages that mvp imports
-        run: pip install --no-deps -e src/core -e src/agents
+      - name: Install the source packages
+        run: pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator
       - name: Unit, API, role matrix, ledger and AI evaluation tests
-        run: cd mvp && PYTHONPATH=.:../src/core/tests:../src/agents/tests python3 -m unittest discover -s tests
+        run: |
+          (cd src/api && PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests)
+          (cd src/orchestrator && PYTHONPATH=../core/tests python3 -m unittest discover -s tests)
       - name: Check browser JavaScript syntax
-        run: node --check mvp/web/app.js && node --check mvp/web/assistants.js
+        run: node --check src/api/src/zava_forward/api/web/app.js && node --check src/api/src/zava_forward/api/web/assistants.js
 
   image:
     runs-on: ubuntu-latest
@@ -47,8 +49,8 @@ jobs:
           persist-credentials: false
       - name: Build image
         run: |
-          chmod 600 mvp/web/zava-logo.png
-          docker build -f mvp/Dockerfile -t zavaforward-mvp:ci .
+          chmod 600 src/api/src/zava_forward/api/web/zava-logo.png
+          docker build -f src/api/Dockerfile -t zavaforward-mvp:ci src
       - name: Image runs as a non-root user
         run: test "$(docker run --rm --entrypoint id zavaforward-mvp:ci -u)" = "10001"
       - name: Image contains no working data
@@ -72,7 +74,7 @@ jobs:
           with urlopen("http://127.0.0.1:8088/zava-logo.png", timeout=10) as response:
               assert response.status == 200
               assert response.headers["Content-Type"] == "image/png"
-              assert response.read() == Path("mvp/web/zava-logo.png").read_bytes()
+              assert response.read() == Path("src/api/src/zava_forward/api/web/zava-logo.png").read_bytes()
           PY
           docker exec zf-ro sh -c 'touch /state/probe && ! touch /app/probe 2>/dev/null && ! touch /probe 2>/dev/null'
           docker exec zf-ro sh -c 'grep -q "^CapEff:.0000000000000000$" /proc/1/status'
@@ -119,7 +121,7 @@ jobs:
       - name: Install driver system libraries
         run: sudo apt-get update && sudo apt-get install -y libltdl7 libkrb5-3
       - name: Install pinned driver
-        run: pip install --require-hashes -r mvp/requirements.txt && pip install --no-deps -e src/core -e src/agents
+        run: pip install --require-hashes -r src/api/requirements.txt && pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator
       - name: Store and five-assistant contracts on SQL Server
         env:
           ZF_TEST_MSSQL: "1"
@@ -130,8 +132,8 @@ jobs:
           ZF_SQL_PASSWORD: "Zf-Test-12345!"
           ZF_SQL_TRUST_CERT: "1"
         run: |
-          cd mvp
-          PYTHONPATH=.:tests:../src/core/tests:../src/agents/tests python3 -m unittest test_mssqlstore test_lawstore.MssqlStoreTests \
+          cd src/api
+          PYTHONPATH=tests:../core/tests:../agents/tests python3 -m unittest test_mssqlstore test_lawstore.MssqlStoreTests \
             test_assistants.MssqlContractTests test_assistants.MssqlReviewTests \
             test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests \
             test_assistants.MssqlLedgerTests

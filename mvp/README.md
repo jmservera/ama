@@ -25,8 +25,15 @@ M4 moved `chat_privacy`, `chat_isolation` and `recovery` to `src/core/src/zava_f
 `src/agents/evals/`, with `test_chat_privacy`, `test_chat_memory` and `test_recovery` in
 `src/core/tests/` and `test_ai_eval` in `src/agents/tests/`. `mvp` imports them from
 `zava_forward.core` and `zava_forward.agents`, so install both (`pip install --no-deps -e src/core -e src/agents`).
-`test_chat_isolation` stays here until M5 because it extends the role matrix and the server harness.
-Local runs need `pip install --no-deps -e src/core` first. When `ZF_DATA` is not
+M5 moved the rest: `server`, `auth` and `timecapture` to `src/api/src/zava_forward/api/`, `web/` to
+`src/api/src/zava_forward/api/web/` (package data), `lawstore` and `law/law-source-register.json` to
+`src/core/src/zava_forward/core/` (the register is package data in `law/`), `digest_blob` and `token_store` to
+`src/orchestrator/src/zava_forward/orchestrator/`, the Dockerfile and hashed requirements to `src/api/`, the browser
+checks to `src/api/checks/`, and every remaining test to `src/api/tests/` (the two job tests to
+`src/orchestrator/tests/`). Paths such as `tests/test_x.py` and `web/` below are relative to `src/api/` unless a
+`src/` path is given. Run the suites from `src/api` with
+`PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests`.
+Local runs need `pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator` first. When `ZF_DATA` is not
 set, the data file defaults to `data/zavaforward.json` under the current folder.
 
 ## What staff see
@@ -263,7 +270,7 @@ set, the data file defaults to `data/zavaforward.json` under the current folder.
 
 ## Law store (ADR 0005, phase 1)
 
-`zavaforward_mvp/lawstore.py` loads the dated snapshots in `docs/reference/regulatory/`
+`src/core/src/zava_forward/core/lawstore.py` loads the dated snapshots in `docs/reference/regulatory/`
 into append-only tables (`reg_source`, `reg_version`, `reg_provision`, `reg_gap`) and
 writes each snapshot once, content hashed, through a snapshot interface. The target is
 Azure only: `ZF_LAW_STORE=mssql` uses Azure SQL (the `ZF_SQL_*` settings of the main
@@ -271,8 +278,8 @@ store; append-only ledger tables when the database is ledger enabled, otherwise 
 append-only trigger) and `AzureBlobSnapshots` (`ZF_LAW_BLOB_ACCOUNT_URL`,
 `ZF_LAW_BLOB_CONTAINER`, `DefaultAzureCredential`; writes never overwrite). SQLite and a
 local folder (`ZF_LAW_DB`, `ZF_LAW_BLOBS`) are local test doubles only. Seed with
-`python -m zavaforward_mvp.lawstore REGULATORY_DIR DB_FILE BLOB_DIR` (or
-`ZF_LAW_STORE=mssql python -m zavaforward_mvp.lawstore REGULATORY_DIR`); a changed file
+`python -m zava_forward.core.lawstore REGULATORY_DIR DB_FILE BLOB_DIR` (or
+`ZF_LAW_STORE=mssql python -m zava_forward.core.lawstore REGULATORY_DIR`); a changed file
 becomes a new version and nothing existing is altered. Partial sources carry
 `completeness: partial` and results say so. Leasehold, complaints handling, TrustMark
 and licensed PAS 2035 are gaps answered as "no source held". The keyword index
@@ -282,7 +289,7 @@ immutability (WORM) policy and the Azure SQL deployment are infrastructure and a
 verified here; the Azure Blob client is tested only against a fake container. The
 read-only viewer at `/law.html` and `/api/law/*` serves staff roles with no AI. Seeded
 versions are `not_reviewed` with owner "to be named"; this is a reference copy, not
-legal advice or approval. Seed metadata is `law/law-source-register.json`.
+legal advice or approval. Seed metadata is `src/core/src/zava_forward/core/law/law-source-register.json`.
 
 ## Rule cards (ADR 0005, phase 2)
 
@@ -414,9 +421,8 @@ or shared. The repository must stay private.
 
 ```bash
 python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py --seed 20260901
-python3 -m pip install --no-deps -e src/core   # the modules moved to core in M1 and M2 (ADR 0006)
-cd mvp
-ZF_PASSWORD=choose-a-password python3 -m zavaforward_mvp.server
+python3 -m pip install --no-deps -e src/core -e src/agents -e src/api   # modules moved in M1 to M5 (ADR 0006)
+ZF_PASSWORD=choose-a-password python3 -m zava_forward.api.server
 ```
 
 Open `http://127.0.0.1:8088` and sign in with a staff email from the data (for
@@ -427,7 +433,7 @@ history ends today and prints no real personal data.
 ### Azure SQL store
 
 `ZF_STORE=mssql` uses `mssqlstore.py`, a T-SQL dialect over the same `SqlStore`
-logic, with the pinned `mssql-python` driver (`requirements.txt`, hashes
+logic, with the pinned `mssql-python` driver (`src/api/requirements.txt`, hashes
 checked in the image build; the image adds `libltdl7` and `libkrb5-3`). Writers are
 serialised across replicas by a transaction holding an exclusive application
 lock (the equivalent of SQLite's write lock), every compared text column uses a
@@ -461,7 +467,7 @@ Tests: `tests/test_governance.py` (JSON and SQL stores, labelled synthetic demon
 
 ### Immutable Blob ledger digests and scheduled verification (issue #115)
 
-* `python -m zavaforward_mvp.digest_blob [--publish]` uploads the head and sealed
+* `python -m zava_forward.orchestrator.digest_blob [--publish]` uploads the head and sealed
   year digests to the `ledger-digests` container (create-only, managed identity
   via `ZF_DIGEST_ACCOUNT_URL`, `ZF_DIGEST_CONTAINER`, `ZF_DIGEST_CLIENT_ID`), then
   verifies the ledger against the digests read back from the container, not local
@@ -643,7 +649,7 @@ records the tested/deployed image and identity initialization.
   live-model measurements, and the golden cases are small and constructed.
   Citations prove a cited fact exists in the case, not that the claim made from
   it is right, and document reading cites the document record, not a passage.
-* Browser checks: `tests/browser_check.py` drives the real server with
+* Browser checks: `src/api/checks/browser_check.py` drives the real server with
   Playwright (login, list with rank and reasons, show more, return, reopen,
   map list). It is run by hand, is not in the unittest run or CI, and was
   run in desktop Chromium only. No screen reader or mobile run was done.
@@ -939,13 +945,13 @@ emulation alone is still not actual SQL proof. The isolated non-billable browser
 exercise uses fixtures, not the retained dataset:
 
 ```bash
-cd mvp
-PYTHONPATH=.:../src/core/tests:../src/agents/tests python3 -m unittest discover -s tests -p test_assistants.py
-PYTHONPATH=. python3 tests/assistants_browser_check.py
-node --check web/assistants.js
+cd src/api
+PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -p test_assistants.py
+PYTHONPATH=tests:../core/tests python3 checks/assistants_browser_check.py
+node --check src/zava_forward/api/web/assistants.js
 
 # Disposable local SQL only; set the existing ZF_SQL_* test settings first.
-ZF_TEST_MSSQL=1 PYTHONPATH=.:tests:../src/core/tests:../src/agents/tests python3 -m unittest \
+ZF_TEST_MSSQL=1 PYTHONPATH=tests:../core/tests:../agents/tests python3 -m unittest \
   test_assistants.MssqlContractTests test_assistants.MssqlReviewTests \
   test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests \
   test_assistants.MssqlLedgerTests
@@ -994,11 +1000,12 @@ authority remains absent/proactive off; this is not standing spend approval,
 staff-browser acceptance, semantic calibration or measured value.
 
 ```bash
-cd mvp && PYTHONPATH=.:../src/core/tests:../src/agents/tests python3 -m unittest discover -s tests -v
+cd src/api && PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -v
+(cd ../orchestrator && PYTHONPATH=../core/tests python3 -m unittest discover -s tests -v)
 ```
 
 The tests also cover the SQL store (including `test_sqlreads.py`), documents, ledger, role matrix, workflows, auth and time capture. They use small fixtures and a generated 60,000-case dataset, and need no
 private data. The AI tests use a scripted model or the template path (no network).
 
 Browser check (needs python3 playwright and chromium, and the built dataset):
-`cd mvp && PYTHONPATH=. python3 tests/browser_check.py`.
+`python3 src/api/checks/browser_check.py` (the dataset at `ZF_DATA`).

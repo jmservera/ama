@@ -31,6 +31,7 @@ jobs:
           - project: api
             dist: zava-forward-api
             deps: "-e ../core -e ../agents"
+            pythonpath: "../core/tests:../agents/tests"
             image: true
           - project: agents
             dist: zava-forward-agents
@@ -39,6 +40,7 @@ jobs:
           - project: orchestrator
             dist: zava-forward-orchestrator
             deps: "-e ../core"
+            pythonpath: "../core/tests"
             image: true
           - project: importer
             dist: zava-forward-import
@@ -59,6 +61,8 @@ jobs:
           DEPS: ${{ matrix.deps }}
         run: pip install $DEPS -e ".[dev]"
       - name: Unit tests and dependency-rule test
+        env:
+          PYTHONPATH: ${{ matrix.pythonpath }}
         run: python -m unittest discover -s tests -v
       - name: Lint
         run: ruff check . && ruff format --check .
@@ -87,12 +91,14 @@ jobs:
         working-directory: .
         env:
           DIST: ${{ matrix.dist }}
+          # The api image runs the server by default; the version check overrides it (mvp-ci image job runs the server).
+          RUN_CMD: ${{ matrix.project == 'api' && 'python -m zava_forward.api' || '' }}
         run: |
           mkdir -p "$RUNNER_TEMP/seed"
           chmod -R a+rX "$RUNNER_TEMP/seed"
           out="$(docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges \
             --tmpfs /tmp --tmpfs /state:uid=10001,gid=10001 \
-            -v "$RUNNER_TEMP/seed:/data:ro" zava-forward-${{ matrix.project }}:ci)"
+            -v "$RUNNER_TEMP/seed:/data:ro" zava-forward-${{ matrix.project }}:ci $RUN_CMD)"
           echo "$out"
           test "$out" = "$DIST 0.1.0"
       - name: Scan image for high and critical vulnerabilities

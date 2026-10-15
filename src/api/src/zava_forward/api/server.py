@@ -15,17 +15,18 @@ from zava_forward.core import profile
 
 from zava_forward.core import projection, quality
 
-from . import auth, lawstore
+from zava_forward.core import lawstore
+from zava_forward.api import auth
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved
 from zava_forward.core.chatthreads import ChatNotFound
 from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.factory import open_store
-from .timecapture import TimeCapture
+from zava_forward.api.timecapture import TimeCapture
 from zava_forward.core.store import MANAGER_ROLES, ConflictError, GateError
 
-WEB = Path(__file__).resolve().parents[1] / "web"
+WEB = Path(__file__).resolve().parent / "web"
 TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
          ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png"}
 OSM_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
