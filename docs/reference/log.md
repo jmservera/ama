@@ -3299,3 +3299,23 @@ metadata when the knowledge base was created.
 * OQ-017 live holders/delegations, approved real evaluation, independent model
   attestation, direct human oversight and Azure execution remain open. The
   project contact is not a release/risk/suspension/restart authorization.
+
+## [2026-10-15] implementation | Stock fabric and exact case references (#168)
+
+* Moved PR 246's fabric generator into installed `src/core` synthetic tooling,
+  preserving v1 seeded attribute draws and adding per-record `is_synthetic`.
+  Retained builder/EPC consumers import core; legacy manifests fingerprint
+  the moved dependency. No second stock generator or code in `mvp/`.
+* Added explicit per-case linked/unlinked reasons, duplicate-ID diagnostics,
+  shared-anchor/non-unit scope and a fresh-snapshot CLI through `ZF_DATA`.
+  Unknown or ambiguous references are never guessed; home fields, histories,
+  resident decisions and human approvals remain independent.
+* Updated the synthesis, data dictionary, core guide and index. SN-01 remains
+  partial; the private stock generator is unavailable and the owner has not
+  approved its regeneration/deferral, inventory mapping or field/unit
+  reconciliation. Historical PR 246 private counts were not revalidated.
+* Local engineering evidence connects a wholly fictional 60,000-row register
+  and seeded fabric to the retained 980-case builder, then compares case
+  evidence after closed SQLite restart. It does not establish private-corpus,
+  actual-model, SQL Server/Azure or human application acceptance. Existing AI,
+  consent and release gates are unchanged.

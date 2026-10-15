@@ -1,7 +1,7 @@
 ---
 title: Data Dictionary - Retrofit Synthetic Evidence Pack
 description: Field definitions, keys, allowed values and record-keeping notes for the Zava Forward year-one synthetic evidence pack
-ms.date: 2026-10-14
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
@@ -25,6 +25,9 @@ extends the separate private MVP export, not these public CSV schemas.
 | `as_of`, `built`, `seed`, `generator_version`, `is_synthetic` | Explicit deterministic exercise date and provenance |
 | `stock_register_rows` | Geography-stock denominator, not programme-case count |
 | `case.synthetic_stock_anchor_id` | Selected private geography row; multiple flats may share a building anchor |
+| `stock_link` | Seed-only report with one resolution per case, linked/unlinked totals, unlinked IDs/reasons and shared source-anchor counts; legacy home-count keys do not count verified dwellings |
+| `case.stock_link` | `case_id`, nullable `stock_home_id`, `status` (`linked` or `unlinked`), nullable `reason`, `shared_anchor`, `scope`, `is_synthetic`; exact source-reference match, not verified unit identity |
+| `case.stock_fabric` | Unique matched source row's seeded build year/age band, dwelling type, construction, heating, v1 draw version and both synthetic labels; not survey/EPC/company evidence |
 | `case.history` | Retained shifted simulation states, labelled source export, not workbench approvals |
 | `case.appointments[].fixture` | `forward-visit` or `historical-visit` for added labelled scenarios; source appointments remain |
 | `procurement.packages`, `procurement.work_orders` | Source-issued simulation orders and synthetic capacity allocation; not live contract authority |
@@ -34,6 +37,16 @@ extends the separate private MVP export, not these public CSV schemas.
 The private coverage sidecar counts booked visits and their current-week
 intersection. `/api/visits` returns booked appointments by owner/all; it does
 not implement a date-range filter. Historical outcomes stay in case detail.
+
+The [stock fabric CLI](../../../../src/core/README.md#stock-fabric-and-case-references-168)
+records `missing_stock_anchor`, `invalid_stock_anchor`, `stock_anchor_not_found`
+or `ambiguous_stock_anchor`; invalid/duplicate case IDs fail the run. Stock IDs
+are exact opaque strings without outer whitespace. Shared references remain
+source matches, never merged households. Fabric refresh removes the previous
+derived `stock_epc` block; the retained builder regenerates it, the standalone
+CLI does not. Operational `home.built`/`home.type`, consent and history are not
+reconciled or overwritten. Existing populated stores are not automatically
+reseeded; top-level link reports remain seed metadata while case fields persist.
 
 ## Identifiers and Relationships
 
