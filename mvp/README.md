@@ -20,6 +20,12 @@ M3 moved `scale_fixture`, `sensor_backfill` and `loadcheck` to
 eval registry to `src/agents/evals/`, and `chat_fixture` (test support) to
 `src/agents/tests/`, which the `mvp` test commands also put on `PYTHONPATH`.
 Generated fixture data goes to the per-user `ZF_DATA` folder, never under `src/`.
+M4 moved `chat_privacy`, `chat_isolation` and `recovery` to `src/core/src/zava_forward/core/`,
+`ai_eval` to `src/agents/src/zava_forward/agents/` and `ai_priority_golden.json` to
+`src/agents/evals/`, with `test_chat_privacy`, `test_chat_memory` and `test_recovery` in
+`src/core/tests/` and `test_ai_eval` in `src/agents/tests/`. `mvp` imports them from
+`zava_forward.core` and `zava_forward.agents`, so install both (`pip install --no-deps -e src/core -e src/agents`).
+`test_chat_isolation` stays here until M5 because it extends the role matrix and the server harness.
 Local runs need `pip install --no-deps -e src/core` first. When `ZF_DATA` is not
 set, the data file defaults to `data/zavaforward.json` under the current folder.
 
@@ -191,8 +197,8 @@ set, the data file defaults to `data/zavaforward.json` under the current folder.
   outlier and stuck fault rates match the configured injection. Expected
   outdoor ranges are labelled exercise values until the climate source in #178
   is retrieved and recorded (open item).
-* AI evaluation harness, offline: `PYTHONPATH=. python3 -m zavaforward_mvp.ai_eval`
-  runs golden scenarios (`evals/ai_priority_golden.json`) with a scripted model
+* AI evaluation harness, offline: `python3 -m zava_forward.agents.ai_eval`
+  runs golden scenarios (`src/agents/evals/ai_priority_golden.json`; the image sets `ZF_AI_GOLDEN`) with a scripted model
   and checks that ranking and case data never change, the output stays Proposed
   and needs a person's reason to edit or reject. It fails on any critical miss
   (a case with an open safety issue missing from the AI top-k) and on any cited
@@ -487,14 +493,14 @@ Tests: `tests/test_governance.py` (JSON and SQL stores, labelled synthetic demon
   year on its own, the links between years and each sealed digest, and reports a
   dropped sealed year. A self-consistent rewrite of a sealed year is caught only by
   its digest, so those files belong in the immutable Blob container. Proven in
-  `tests/test_recovery.py`; run the scheduled `--by-year` check before relying on the ledger.
+  `src/core/tests/test_recovery.py`; run the scheduled `--by-year` check before relying on the ledger.
 * `python -m zava_forward.core.synthetic.loadcheck --data zavaforward.json --homes 60000` runs the
   NFR-002 mix (five sessions, two writers) against the configured store and prints
   p50/p95/max per class. Local SQLite on 2026-10-15 over 60,000 labelled synthetic
   homes for 30 s: list p95 0.28 s, detail 0.30 s, write 0.33 s, no errors (limits 1 s,
   1 s, 2 s). Open items: the same run against Azure SQL, dashboard and import preview
   classes, and cost (needs Azure meter rates and measured vCore time).
-* `zavaforward_mvp/recovery.py` erases a resident's personal fields and keeps a
+* `src/core/src/zava_forward/core/recovery.py` erases a resident's personal fields and keeps a
   personal-data-free deletion register outside the database. The register is one
   write-once entry per erasure under the reserved case id `_erasures` in the document
   backend: Azure Blob Storage when `ZF_DOC_STORE=azure-blob` (same configuration as case

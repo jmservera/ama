@@ -7,6 +7,9 @@
 !src/build-requirements.txt
 !src/core/pyproject.toml
 !src/core/src
+!src/agents/pyproject.toml
+!src/agents/src
+!src/agents/evals/ai_priority_golden.json
 **/__pycache__
 **/*.pyc
 **/data

@@ -12,7 +12,7 @@ Draft working record, not an approved DPIA. The owner named Juan Manuel Servera
 as the Legal, Compliance and DPO owner on 2026-10-15. No lawful basis, staff
 notice or DPIA decision is recorded here, because none has been given. The
 demonstrator holds constructed, labelled synthetic data only (ADR 0005). Chat
-and memory are not built; the controls are in `mvp/zavaforward_mvp/chat_privacy.py`
+and memory are not built; the controls are in `src/core/src/zava_forward/core/chat_privacy.py`
 and stay refused until the DPO and Legal record references.
 
 Limits of this change, stated plainly:

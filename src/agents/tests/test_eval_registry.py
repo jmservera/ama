@@ -7,8 +7,8 @@ from zava_forward.core.synthetic import scale_fixture
 
 ROOT = Path(__file__).resolve().parents[3]
 REG = json.loads((ROOT / "src/agents/evals/registry.json").read_text())
-# Eval folders: each project's own evals/ plus mvp/evals until M4 moves the golden file.
-EVAL_DIRS = [ROOT / "mvp/evals", *sorted((ROOT / "src").glob("*/evals"))]
+# Eval folders: each project's own evals/ folder.
+EVAL_DIRS = sorted((ROOT / "src").glob("*/evals"))
 
 
 class RegistryTests(unittest.TestCase):

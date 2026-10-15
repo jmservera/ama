@@ -17,8 +17,8 @@ from zava_forward.core import projection, quality
 
 from . import auth, lawstore
 from zava_forward.core.assistants import Assistants
-from .chat_isolation import ChatForbidden, ChatIsolation
-from .chat_privacy import ChatNotApproved
+from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
+from zava_forward.core.chat_privacy import ChatNotApproved
 from zava_forward.core.chatthreads import ChatNotFound
 from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.factory import open_store
@@ -342,7 +342,7 @@ def make_handler(app):
                     return self._json(403, {"error": "Only a manager can see the AI evaluation report."})
                 from zava_forward.core import ai_registry
 
-                from . import ai_eval
+                from zava_forward.agents import ai_eval
                 return self._json(200, {"evaluation": ai_eval.run_eval(), "live": s.ai_live_report(), "registry": ai_registry.registry()})
             if url.path.startswith("/api/docs/"):
                 try:
