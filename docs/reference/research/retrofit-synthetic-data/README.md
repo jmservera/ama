@@ -105,7 +105,8 @@ Reproducibility (issue #176, parent #165). The generators are in
 | --- | --- | --- | --- |
 | `build_mvp_dataset.py` (MVP JSON) | `--seed`, `--as-of` (defaults to the clock, so always pass it) and the stock register | `seed`, `as_of`, `generator_version`, `generator_revision` in the JSON and its `.coverage.json` receipt | `test_same_seed_date_and_register_are_byte_deterministic` |
 | `generate_pack.py` (public CSV pack) | `--seed` (omitted draws a random seed, so always pass it) and `--as-of` (defaults to the extract date 2026-09-30; sets `generated_at`, never the clock) | `seed`, `version`, `generated_at`, `as_of`, `generator_revision`, per-file `file_sha256` in `manifest.json` | `test_pack_generator_is_byte_deterministic_with_manifest` |
-| Stock register (seed 4820260930) | Seed recorded in `private-stock-manifest.json` | Seed, version, generated date only | None: the register generator is not in the repository |
+| Stock fabric (`zf_stock_fabric.py`, seed 4820260930) and EPC (`zf_stock_epc.py`, seed 4820261015) | `--seed` and the register CSV; output depends only on seed and home ID, no clock | `seed`, `version`, `generator_revision` in each summary JSON | `test_stock_fabric_and_epc_generators_are_byte_deterministic_with_revision` |
+| Stock register (seed 4820260930, 60000 homes) | Seed recorded in `private-stock-manifest.json` | Seed, version, generated date only | None: the register generator is not in the repository (it samples real OpenStreetMap anchors) |
 | Sensor data | None | None | None: no sensor generator exists in the repository |
 
 `generator_revision` is a SHA-256 prefix over the generator source files, so
@@ -139,7 +140,9 @@ Open items for the owner (not decided here).
 * Approve or amend the cadence, approver and versioning defaults above.
 * Provide or commit the stock register generator, or accept the recorded seed
   as the only reproduction route; the first acceptance criterion is not met
-  for the stock register until then.
+  for the stock register until then. The fabric and EPC generators derived
+  from the register are now tested byte-identical; the committed private
+  summaries predate `generator_revision` and are not rewritten here.
 * Define scope for sensor data (see
   [IoT sensor analytics research plan](../iot-sensor-analytics-research-plan.md));
   no generator exists to make deterministic yet.

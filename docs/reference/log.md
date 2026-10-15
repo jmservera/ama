@@ -2847,3 +2847,11 @@ metadata when the knowledge base was created.
 * Open: Foundry model, version and quota confirmation in the chosen region,
   authorised live calls, held-out split and thresholds, human participant
   protocol and Finance validation need owner decisions or retrieval. No index change.
+
+## [2026-10-15] update | Stock fabric and EPC generator determinism (#176)
+
+* `retrofit-synthetic-data/README.md`: fabric and EPC generators now record
+  `generator_revision` in their summaries and have a byte-identical test.
+* Open for the owner: the stock register generator is not in the repository,
+  and the sensor generator does not exist (depends on #177 to #183), so those
+  two criteria remain unmet; refresh-policy approval is still pending.
