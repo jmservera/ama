@@ -24,7 +24,7 @@ class Ai:
         self.strong = os.environ.get("AI_DEPLOYMENT_STRONG", "capable")
         self.token = None
         self.expires = 0
-        self.gate = None  # task -> reason the task is suspended, or None
+        self.gate = None  # (task, deployment) -> reason the task is suspended, or None
 
     @property
     def configured(self):
@@ -101,12 +101,12 @@ class Ai:
             return dict(kw, task=task, latency_ms=round((time.perf_counter() - t0) * 1000, 1))
         if off:
             return out(text=template, source="template", model=None, validated=True, reason="workflow-only mode selected")
-        held = self.gate(task) if self.gate else None
+        dep = self.strong if strong else self.fast
+        held = self.gate(task, dep) if self.gate else None
         if held:
             return out(text=template, source="template", model=None, validated=True, reason=held)
         if not self.configured:
             return out(text=template, source="template", model=None, validated=True, reason="AI is not configured")
-        dep = self.strong if strong else self.fast
         try:
             text = self._chat(dep, system, user)
         except Exception as e:  # network, auth, quota: never block the person
@@ -116,6 +116,10 @@ class Ai:
         if not ok:
             return out(text=template, source="template", model=dep, validated=False, ai_text=text,
                        reason="model output failed validation")
+        held = self.gate(task, dep) if self.gate else None
+        if held:  # completion recheck: suspension or revocation during the call discards the text
+            return out(text=template, source="template", model=None, validated=True, quarantined=True,
+                       reason=f"result discarded: {held}")
         return out(text=text, source="ai", model=dep, validated=True, reason=None)
 
     def look_at(self, name, data, mime, off=False):
@@ -131,7 +135,7 @@ class Ai:
         else:
             return dict(text="This file type is stored but not read. Add a short note about what it is.", source="template",
                         model=None, validated=True, task="read_document")
-        held = self.gate("read_document") if self.gate else None
+        held = self.gate("read_document", self.strong) if self.gate else None
         if held:
             return dict(text="The file is stored. AI reading is suspended; add a short note about what it is.", source="template",
                         model=None, validated=True, task="read_document", reason=held)
@@ -141,6 +145,11 @@ class Ai:
                         reason="workflow-only mode selected" if off else "AI is not configured")
         try:
             text = self._chat(self.strong, system, content, 500)
+            held = self.gate("read_document", self.strong) if self.gate else None
+            if held:
+                return dict(text="The file is stored. AI reading is suspended; add a short note about what it is.",
+                            source="template", model=None, validated=True, task="read_document", quarantined=True,
+                            reason=f"result discarded: {held}")
             return dict(text=text, source="ai", model=self.strong, validated=True, task="read_document")
         except Exception as e:
             return dict(text="The file is stored. AI could not read it just now.", source="template", model=None,

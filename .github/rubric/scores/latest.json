@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-15T16:02:49+00:00",
-  "commit": "2e454f4cf52836383134cf677cf36acf65021fde",
+  "scored_at": "2026-10-15T15:58:33+00:00",
+  "commit": "fa730d63190c200e36b9a09c890445f17e8cb164",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38764770949",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38763347056",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "3b6b9a783b413c3e44d57b81fd669f8c4d3adf3b5b623ac0d398d3f8c653192c",
     "adr": "275f5ff093398a1170b0fd91d35bc80fe0a0d8016deac94ec47ccbfdc39974dd",
-    "solution-code": "ea8a8e24b9c08cb35533eddbff1723be76f426694983bcd1662a32170eadfe84",
+    "solution-code": "0a295918240d8e97a81ac39568a67e7ed271cdedc71c09b1a67ad53314637bf3",
     "infrastructure": "fab2d87f31ab28dd7d5f047f7f24e2ceaa06a89b0fcbfdf2b373b9b8e807bdb6",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
@@ -29,44 +29,51 @@
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:46-70"
       ],
-      "rationale": "ADR 0005 reuses existing runtime components (api, agents, orchestrator, import) with a clearly bounded law store/rule-engine/chat architecture, consistent with the existing modular baseline. Design proposal, not implemented; score unchanged."
+      "rationale": "ADR 0005 reuses existing runtime components with a bounded architecture, consistent with the existing modular baseline. New assistant_release.py module is cleanly decoupled but doesn't change the design-proposal status; no material change to this criterion."
     },
     "A2": {
       "score": 5,
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:227-233"
       ],
-      "rationale": "ADR 0005 names three rejected alternatives (chat-only, fine-tuned model, separate product) with explicit reasons. Already at ceiling; no change."
+      "rationale": "ADR 0005 names three rejected alternatives with explicit reasons. Diff adds no new trade-off reasoning text. Already at ceiling; no change."
     },
     "A3": {
       "score": 5,
       "evidence": [
-        "docs/adrs/0005-regulatory-compliance-assistant.md:170-192"
+        "mvp/zavaforward_mvp/assistant_release.py:1-124",
+        "mvp/tests/test_assistant_release.py:32-45,127-150"
       ],
-      "rationale": "Section 6 names role-scoped data handling, separation of duties, UK GDPR Art. 22A-22C safeguards and prompt-injection treatment. No security/compliance content changed in this PR's diff; score unchanged."
+      "rationale": "Diff implements a concrete, tested RAI control: a release-admission gate binding provider/endpoint/deployment/prompt/policy/data/permission versions to a named approver and residual-risk decision, denying dispatch with zero provider calls when absent/expired/revoked, and quarantining plus suspend..."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "mvp/tests/test_document_form_fixtures.py:1-103",
-        "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:1-211"
+        "mvp/zavaforward_mvp/assistant_release.py:1-124",
+        "mvp/zavaforward_mvp/assistants.py:285-310,441-446",
+        "mvp/zavaforward_mvp/server.py:477-481"
       ],
-      "rationale": "Prior generator/tests build isolated fixture/eval data for a schema still unresolved (PRD OQ-015), not end-to-end capability completion. This PR's diff only touches an agent definition doc, no change."
+      "rationale": "Release admission is a real, working, end-to-end capability (record/suspend/revoke API endpoints, SQL DDL, gating wired into invoke/claim/complete/review, passing test suite), not just fixtures. Already at ceiling (5); stays."
     },
     "A5": {
       "score": 3,
-      "evidence": [],
-      "rationale": "Unchanged baseline: operational readiness (logging, metrics, cost) evidence not affected by this PR's diff, which only edits an agent markdown file."
+      "evidence": [
+        "mvp/zavaforward_mvp/assistant_release.py:122-124"
+      ],
+      "rationale": "New assistant_events audit records for release-recorded/suspended/revoked add retained audit trail, but no logging/metrics/cost measurement or instrumentation changed. No material change to the operations criterion."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff is an agent-definition policy edit, not an AI model choice or evaluation harness change; no new justification or harness evidence."
+      "rationale": "Unchanged baseline: diff is a governance/admission-control feature, not an AI model choice or evaluation harness; no justification or harness evidence added for A6."
     },
     "A7": {
       "score": 4,
-      "evidence": [],
-      "rationale": "Unchanged baseline: ADR 0005 proposes a deterministic rule engine plus non-autonomous retrieval chat; this PR's diff is unrelated to agentic orchestration."
+      "evidence": [
+        "mvp/zavaforward_mvp/assistants.py:441-446",
+        "mvp/zavaforward_mvp/assistants.py:767-785"
+      ],
+      "rationale": "Adds a guardrail that blocks autonomous dispatch/claim/completion reliance without a matching named-approver release, and quarantines completions when the binding or serving model drifts mid-flight. This strengthens guardrail enforcement around existing autonomous scan/dispatch but does not add n..."
     },
     "B1": {
       "score": 3,
@@ -95,8 +102,10 @@
     },
     "B6": {
       "score": 4,
-      "evidence": [],
-      "rationale": "Unchanged baseline: this diff only edits an agent markdown policy file, no new deck or artifact evidence relevant to B6."
+      "evidence": [
+        "mvp/README.md:866-880"
+      ],
+      "rationale": "README documents the new release-admission feature clearly with concrete API/behaviour detail, well-integrated into existing capstone documentation prose. Still capped at Good(4): capstone deck itself remains thin and this is solution-code documentation, not deck content."
     },
     "B7": {
       "score": 3,
@@ -105,8 +114,10 @@
     },
     "C1": {
       "score": 5,
-      "evidence": [],
-      "rationale": "Unchanged baseline: diff does not touch BRD/PRD/ADR content relevant to C1 synthesis quality."
+      "evidence": [
+        "docs/brds/agentic-retrofit-programme-brd.md:1521-1521"
+      ],
+      "rationale": "No BRD/stakeholder-framing changes in this diff; baseline FR-051 stakeholder naming and quantified targets unaffected. No change."
     },
     "C2": {
       "score": 0,
