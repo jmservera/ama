@@ -5,8 +5,10 @@ import json
 import tempfile
 import unittest
 from collections.abc import Callable
+from concurrent.futures import Future, ThreadPoolExecutor
 from functools import partial
 from pathlib import Path
+from threading import Event
 from typing import Any
 from unittest.mock import patch
 
@@ -14,7 +16,7 @@ from building_fixture import fixture, hold
 from dataset import DATA
 from zava_forward.core import ai_tasks, projection
 from zava_forward.core.sqlstore import SqlStore
-from zava_forward.core.store import GateError, Store
+from zava_forward.core.store import ConflictError, GateError, Store
 
 SOURCE = dict(source="SYN-SOURCE-CANARY", aware_at="2026-01-01T10:00:00+01:00")
 SENT = dict(evidence="SYN-SENT-CANARY")
@@ -358,3 +360,184 @@ class JsonHazardReferral(unittest.TestCase):
 
 class SqlHazardReferral(JsonHazardReferral):
     sql = True
+
+    def sql_store(self, name: str) -> SqlStore:
+        store = SqlStore(str(self.path), str(self.path.parent / f"{name}.sqlite"))
+        self.addCleanup(store.db.close)
+        return store
+
+    def test_interleaved_emergency_hold_blocks_every_guarded_commit(self) -> None:
+        def intake_before_commit(
+            other: SqlStore, commit: Callable[[], None], expected: list[dict[str, Any]]
+        ) -> None:
+            other.raise_hazard(self.sam, "ZF-3", "Electrical", "Emergency", metadata=SOURCE)
+            expected.extend(other.audit_entries())
+            commit()
+
+        for transition in (
+            "issue",
+            "reissue",
+            "book",
+            "complete",
+            "correct",
+            "accept",
+            "handover",
+            "signoff",
+            "advance",
+        ):
+            with self.subTest(transition=transition):
+                a = self.sql_store(transition)
+                pid = a.create_package(
+                    self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN"
+                )
+                a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY")
+                wid = ""
+                if transition != "issue":
+                    wid = a.issue_work_order(self.pam, pid, "ZF-3")
+                    a.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
+                if transition == "correct":
+                    a.complete_work_order(self.pam, wid)
+                if transition in ("accept", "handover", "signoff"):
+                    with a.lock:
+                        c = a._case("ZF-3")
+                        if transition == "signoff":
+                            c["technical"] = dict(
+                                design_by=self.rex["email"], design_version=1, signoffs={}
+                            )
+                        else:
+                            c["quality"] = copy.deepcopy(fixture()["cases"][1]["quality"])
+                            if transition == "accept":
+                                c["quality"][0]["state"] = "Submitted"
+                        a.save()
+                inspector = dict(self.bo, role="Quality Inspector")
+                operations: dict[str, Callable[[], object]] = {
+                    "issue": partial(a.issue_work_order, self.pam, pid, "ZF-3"),
+                    "reissue": partial(a.reissue_work_order, self.pam, wid, "Loft", "Reason"),
+                    "book": partial(a.record_wo_appointment, self.pam, wid, "Booked", "2099-01-02"),
+                    "complete": partial(a.complete_work_order, self.pam, wid, "SYN-DONE"),
+                    "correct": partial(a.correct_work_order, self.pam, wid, "SYN-CORRECTION"),
+                    "accept": partial(a.accept_quality, self.pam, "ZF-3", 0),
+                    "handover": partial(
+                        a.hand_over_quality, self.pam, "ZF-3", 0, "Guarantees", True
+                    ),
+                    "signoff": partial(
+                        a.technical_action,
+                        inspector,
+                        "ZF-3",
+                        dict(action="signoff_give", type="assessment"),
+                    ),
+                    "advance": partial(a.advance, self.sam, "ZF-3"),
+                }
+                before_case = a.detail("ZF-3")
+                before_proc = copy.deepcopy(a.data["procurement"])
+                b = self.sql_store(transition)
+                save = a.save
+                expected_audit: list[dict[str, Any]] = []
+
+                with patch.object(
+                    a, "save", side_effect=partial(intake_before_commit, b, save, expected_audit)
+                ):
+                    with self.assertRaises(GateError):
+                        operations[transition]()
+                self.assertEqual(a.data["procurement"], before_proc)
+                reopened = self.sql_store(transition)
+                self.assertEqual(reopened.data["procurement"], before_proc)
+                after_case = reopened.detail("ZF-3")
+                for key in ("stage", "closed", "quality", "technical"):
+                    self.assertEqual(after_case.get(key), before_case.get(key))
+                self.assertEqual(sum(not h["released"] for h in after_case["hazards"]), 1)
+                self.assertEqual(list(reopened.audit_entries()), expected_audit)
+                self.assertTrue(reopened.verify_audit())
+
+    def test_stale_clear_dependency_refuses_procurement_and_discards_audit(self) -> None:
+        a = self.sql_store("stale")
+        pid = a.create_package(
+            self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN"
+        )
+        a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY")
+        wid = a.issue_work_order(self.pam, pid, "ZF-3")
+        a.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
+        before = copy.deepcopy(a.data["procurement"])
+        b = self.sql_store("stale")
+        save = a.save
+
+        def change_before_commit() -> None:
+            b.log_call(self.sam, "ZF-3", "Contacted", "SYN-CONCURRENT")
+            save()
+
+        with patch.object(a, "save", side_effect=change_before_commit):
+            with self.assertRaises(ConflictError):
+                a.complete_work_order(self.pam, wid)
+        self.assertEqual(a.data["procurement"], before)
+        self.assertEqual(list(a.audit_entries())[-1]["action"], "log_contact")
+        b.raise_hazard(self.sam, "ZF-3", "Electrical", "Emergency", metadata=SOURCE)
+        # A refused request must not poison an unrelated home or a safe withdrawal.
+        a.issue_work_order(self.pam, pid, "ZF-2")
+        a.withdraw_work_order(self.pam, wid, "Safety hold")
+        self.assertTrue(a.verify_audit())
+
+    def test_unsaved_precheck_does_not_leak_to_next_request(self) -> None:
+        a = self.sql_store("aborted")
+        b = self.sql_store("aborted")
+        with self.assertRaisesRegex(ValueError, "Synthetic cancellation"):
+            with a.lock:
+                a.require_safety_clear(a.cases["ZF-3"])
+                raise ValueError("Synthetic cancellation")
+        b.raise_hazard(self.sam, "ZF-3", "Electrical", "Emergency", metadata=SOURCE)
+        a.log_call(self.sam, "ZF-2", "Contacted", "Unrelated home")
+        self.assertEqual(list(a.audit_entries())[-1]["action"], "log_contact")
+
+    def test_transaction_reload_and_writer_lock_cover_validation_to_commit(self) -> None:
+        a = self.sql_store("serialized")
+        pid = a.create_package(
+            self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN"
+        )
+        a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY")
+        wid = a.issue_work_order(self.pam, pid, "ZF-3")
+        a.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
+        b = self.sql_store("serialized")
+        statements: list[str] = []
+        a.db.set_trace_callback(statements.append)
+        entered = Event()
+        save = b.save
+        validate = a._validate_safety_clear
+        futures: list[Future[object]] = []
+
+        def announced_save() -> None:
+            entered.set()
+            save()
+
+        with ThreadPoolExecutor(max_workers=1) as pool:
+
+            def intake_after_transaction_check() -> None:
+                validate()
+                self.assertTrue(a.db.in_transaction)
+                futures.append(
+                    pool.submit(
+                        b.raise_hazard,
+                        self.sam,
+                        "ZF-3",
+                        "Electrical",
+                        "Emergency",
+                        metadata=SOURCE,
+                    )
+                )
+                self.assertTrue(entered.wait(timeout=5))
+                self.assertFalse(futures[0].done())
+
+            with (
+                patch.object(b, "save", side_effect=announced_save),
+                patch.object(
+                    a, "_validate_safety_clear", side_effect=intake_after_transaction_check
+                ),
+            ):
+                a.complete_work_order(self.pam, wid)
+                futures[0].result(timeout=10)
+        reload_at = statements.index("SELECT rowversion, body FROM cases WHERE id='ZF-3'")
+        self.assertLess(statements.index("BEGIN IMMEDIATE"), reload_at)
+        self.assertLess(reload_at, statements.index("COMMIT"))
+        actions = [e["action"] for e in a.audit_entries()]
+        self.assertLess(actions.index("workorder_completed"), actions.index("safety_raised"))
+        with self.assertRaises(GateError):
+            a.correct_work_order(self.pam, wid, "Cannot restart held work")
+        self.assertTrue(a.verify_audit())

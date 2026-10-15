@@ -54,6 +54,12 @@ exists. Server-supplied actors and home scope ignore forged client authority.
 All actions are manual, one-case decisions; consent and other home/building
 gates stay independent. See the [core contract](../core/README.md#hazard-referral-and-home-retrofit-holds-85).
 
+The listed release-role checks are demonstrator safeguards, not ratified
+release authority. Repairs, Safety and Housing owner approval of release
+responsibility, response/resident-update timing and escalation policy remains
+outstanding (RV-002). Human-recorded due times do not establish an approved
+service timetable. These acceptance criteria remain unchecked.
+
 `tests/test_hazard_api.py` runs a real HTTP application on loopback with
 fictional staff/home data and SQLite state. It exercises health/static serving,
 authenticated closed-record intake, receipt/acceptance/timing/repair/release,

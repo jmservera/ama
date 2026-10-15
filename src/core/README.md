@@ -41,7 +41,7 @@ statutory clocks, service updates or promises of compliance. Previously unknown
 external times can still be recorded after retrofit work restarts; lifting that
 restriction does not end the external response or updates. Each transition
 has an immutable versioned snapshot and an audit-ledger entry, persisted using
-the existing case body on JSON, SQLite and SQL Server without new SQL.
+the existing case body on JSON, SQLite and SQL Server without a new schema.
 Local durability evidence covers JSON/SQLite, not actual SQL Server.
 
 External repair evidence must follow receipt and acceptance. A different
@@ -54,6 +54,19 @@ resident consent, funding and technical gates remain independent.
 Manual hazard intake/referral remains available despite AI failure, retrofit
 pause or a closed retrofit record, without reopening or changing that record.
 
+SQL-backed guarded transitions reload the dependent home's hazards and check
+its row version inside the committing transaction, including work orders that
+do not modify the case itself. The existing SQLite writer transaction and
+SQL Server transaction-owned application lock serialize intake against that
+validation and commit. A hold or stale dependency refuses the entire transition
+and its audit entry; it cannot be waived by a process-local precheck.
+
+The safety-role mapping and independent release check above are demonstrator
+controls, not ratified operational authority. Repairs, Safety and Housing owners
+have not approved who may release a retrofit hold, response/resident-update
+timing, or escalation policy (RV-002). Recorded due times are external assertions,
+not an approved timetable. Original issue acceptance remains unmet and unchecked.
+
 Legacy hazards display unknown missing provenance rather than inferred dates
 or receivers. Active legacy referrals/repairs need a prospective evidenced
 referral binding, retaining the original record, then new receipt, acceptance
@@ -64,6 +77,9 @@ need and contractors see no hazard record; they are not added to AI prompts.
 `tests/test_hazard_referral.py` covers these semantics on JSON and SQLite,
 including restart, legacy continuation, invalid actors/indexes/replays,
 closed-record intake, consent/building gates and model-source minimisation.
+Interleaved two-store SQLite regressions cover all guarded transitions,
+including the previously reproducible work-order completion race; these do
+not claim actual SQL Server durability or operational approval.
 Operational timing/escalation policy, real service integration, permitted real
 model inference, SQL Server/Azure workflow and human acceptance remain open.
 AI remains available through existing configuration/release/human-review

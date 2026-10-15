@@ -374,6 +374,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             why += buildings.blockers(self.data, self.cases, c)
             if why:
                 raise GateError(why)
+            self.require_safety_clear(c)
             c.update(stage=BOOKED_STAGE, reason="to book the installation", waiting_on=c["contractor"]["contact"])
             self.audit(user["email"], "advance", case_id, BOOKED_STAGE)
             self.save()
