@@ -22,7 +22,7 @@ import sqlite3
 import threading
 from datetime import datetime
 
-from . import insights, ledger, projection, ranking
+from . import continuity, insights, ledger, projection, ranking
 from .ai import Ai
 from .documents import open_document_store
 from .store import ConflictError, Store
@@ -165,6 +165,12 @@ class SqlStore(Store):
 
     def _columns(self):
         return {r[1] for r in self.db.execute("PRAGMA table_info(cases)")}
+
+    def continuity_suspension(self, task):
+        """Read the persisted suspension from the database, so another process's suspension is seen without a cache."""
+        with self.dblock:
+            row = self.db.execute("SELECT value FROM meta WHERE key='continuity'").fetchone()
+        return continuity.active(continuity.load(row[0] if row else None), task)
 
     def _meta_set(self, key, value):
         self.db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)", (key, value))
