@@ -3004,3 +3004,8 @@ metadata when the knowledge base was created.
 
 * Added `docs/architecture/mvp-to-src-parity-matrix.md` (outcome for all 125 tracked `mvp/` and `prototype/` files, review of PRs 235 to 287, issues to reopen, migration order for #199) and two index rows. Baseline recorded: 703 tests, 92 skipped.
 * Based on the owner layout decisions of 2026-10-15; ADR 0006 is in draft on another branch, so targets are a working assumption. Open: confirm the `devtools` package, job placement, the handling of PR 287 and each retire row.
+
+## 2026-10-15 MVP to src parity matrix aligned to ADR 0006 (#197)
+
+* Updated `docs/architecture/mvp-to-src-parity-matrix.md` after ADR 0006 was accepted and PR 287 merged: targets follow the ADR module mapping (no `devtools` package), deviations are stated as proposed amendments A1 to A5, three PR 287 files added, the 450 `mvp/.assistant-test-*` sandbox files mapped as retire, the hold action removed, and the owner answers of 2026-10-15 recorded (check names renamed after cut-over, GitHub release with the archive tag, agents image without the `sql` extra, no soak period). Baseline re-recorded: 719 tests, 92 skipped. The index row is updated.
+* Open: owner decision on A1 to A5 (core importing `ai_registry` and `assistants`, `assistant_release` placement, agents and orchestrator test dependencies).

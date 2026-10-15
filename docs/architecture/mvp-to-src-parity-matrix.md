@@ -15,64 +15,75 @@ pull requests 235 to 287 delivered against their issues, and proposes the
 migration order for issue
 [#199](https://github.com/jmservera/ama/issues/199).
 
-Status: proposal for owner review, built on a working assumption. The layout
-below follows the owner decisions of 2026-10-15. ADR 0006 (branch
-`docs/src-layout-adr`, issue #196) is being drafted in parallel; if it differs,
-only the target column changes, not the outcomes.
+Status: proposal for owner review. The target column follows the module
+mapping of [ADR 0006](../adrs/0006-src-layout-and-cutover.md), accepted on
+2026-10-15 (issue #196). Where the code shows that the mapping cannot be applied
+as written, the row keeps the ADR target and the point is listed under
+[Proposed ADR amendments](#proposed-adr-amendments).
 
-Evidence base: `git ls-files mvp prototype` on `main` at commit `1ffcfbc`
-(125 tracked files), the import graph of `mvp/zavaforward_mvp/` (top-level and
-function-level imports read from source), the issue bodies and comments of #195
-to #203, the pull request bodies, file lists and linked issues of #235 to #287,
-and a run of the MVP unit suite on 2026-10-15.
+Evidence base: `git ls-files mvp prototype` on the branch merged with `main` at
+commit `736b387` (578 tracked files: 128 real files plus 450 sandbox files, see
+[Sandbox Debris](#sandbox-debris)), the import graph of `mvp/zavaforward_mvp/`
+(top-level and function-level imports read from source), the issue bodies and
+comments of #195 to #203, the pull request bodies, file lists and linked issues
+of #235 to #287, and a run of the MVP unit suite on 2026-10-15.
 
-Limits: no Azure resource was used or created. Pull request 287 is open and not
-on `main`; it is assessed from its file list and body only. Acceptance criteria
-are read from the issue text; a criterion is "unmet" only where the pull
-request body, the code or the repository record shows it is not delivered.
+Limits: no Azure resource was used or created. Acceptance criteria are read from
+the issue text; a criterion is "unmet" only where the pull request body, the
+code or the repository record shows it is not delivered.
 
 ## Working Layout
 
-Owner decisions of 2026-10-15: standard Python `src` layout, tests outside the
-packages, `pyproject.toml` packaging, namespace `zava_forward`, several isolated
-packages (one per deployable workload plus a shared core, per
-[ADR 0001](../adrs/0001-azure-architecture.md)), name `zavaforward_mvp` not kept.
+The layout is the one accepted in ADR 0006: five projects under `src/`, each
+with its own `pyproject.toml`, importable code under `src/<project>/src/zava_forward/<name>/`,
+tests and evals outside the package. There is no `devtools` package.
 
-```text
-src/
-  core/          pyproject.toml, src/zava_forward/core/, tests/      shared library
-  api/           pyproject.toml, src/zava_forward/api/, tests/       workbench API, web assets, Dockerfile
-  agents/        pyproject.toml, src/zava_forward/agents/, tests/    queue-driven agent task service
-  orchestrator/  pyproject.toml, src/zava_forward/orchestrator/, tests/
-  importer/      pyproject.toml, src/zava_forward/importer/, tests/  (import is a Python keyword)
-  devtools/      pyproject.toml, src/zava_forward/devtools/, tests/  not deployed
-```
+| Project | Holds |
+| --- | --- |
+| `core` | Shared domain, stores, model client, policies, law register, `synthetic` tools, `evals/` (document controls), `tests/` |
+| `api` | `server`, `auth`, `profile`, `timecapture`, `web/`, `Dockerfile`, `tests/`, `checks/` |
+| `agents` | `assistants`, `ai_registry`, `ai_eval`, `evals/` (golden, registry), `tests/` |
+| `orchestrator` | `digest_blob`, `token_store`, `tests/` |
+| `importer` | `evals/` (document forms), `tests/`; new import service later |
 
-`zava_forward` is a PEP 420 namespace: it has no `__init__.py` in any package.
-Target paths in the tables use short prefixes:
+`zava_forward` is a PEP 420 namespace: no `__init__.py` at that level. Target
+paths in the tables use short prefixes:
 
 | Prefix | Expands to |
 | --- | --- |
-| `core/` | `src/core/src/zava_forward/core/` |
-| `api/` | `src/api/src/zava_forward/api/` |
-| `devtools/` | `src/devtools/src/zava_forward/devtools/` |
-| `core-tests/`, `api-tests/`, `devtools-tests/` | `src/<package>/tests/` |
+| `core/`, `api/`, `agents/`, `orchestrator/`, `importer/` | `src/<project>/src/zava_forward/<project>/` |
+| `core-evals/`, `agents-evals/`, `importer-evals/` | `src/<project>/evals/` |
+| `core-tests/`, `api-tests/`, `agents-tests/`, `orchestrator-tests/`, `importer-tests/` | `src/<project>/tests/` |
+| `api-checks/` | `src/api/checks/` |
 
-Assumptions to confirm in ADR 0006:
+Placement notes taken from ADR 0006:
 
-* `devtools` is a sixth package that the owner did not list. It keeps synthetic
-  fixture builders out of deployable images (the no-data image rule). Fallback:
-  a `zava_forward.core.testing` subpackage excluded from the image.
-* `agents`, `orchestrator` and `importer` have no existing `mvp/` code to
-  receive. They are created when the first rebuilt or new code needs them, not
-  as empty packages. See [Architecture fit findings](#architecture-fit-findings).
-* Digest verification and token renewal are scheduled jobs that need SQL, Blob
-  and Key Vault. ADR 0001 gives the orchestrator no SQL or Blob access, so they
-  are placed under `api/jobs/` (the API identity holds those roles). ADR 0006
-  should confirm or give them their own job identity.
+* `scale_fixture`, `sensor_backfill` and `loadcheck` go to
+  `zava_forward.core.synthetic`, a sub-package that no image entry point
+  imports. `chat_fixture` is test support and goes to the test tree of the
+  project that owns its subject (`agents-tests/`, because it drives `assistants`).
+* `digest_blob` and `token_store` go to `orchestrator`; their Bicep job
+  commands become `python -m zava_forward.orchestrator.<module>` (#200).
+* `importer` has no existing `mvp/` module. Its first content is the document
+  form fixtures and their test; the import service is new code.
 * Each image installs its package and `core` from `pyproject.toml`; no
   `PYTHONPATH` use. During the dual window the remaining `mvp/` code installs
-  `core` from `src/core` in CI.
+  `core` from `src/core` in CI. The `agents` image installs `core` without the
+  `sql` extra (owner, 2026-10-15).
+
+## Proposed ADR Amendments
+
+Rows keep the ADR 0006 target. These points are where the code does not fit
+the mapping or the mapping is silent. They are proposals for the owner, not
+decisions.
+
+| # | Finding | Evidence | Proposed amendment |
+| --- | --- | --- | --- |
+| A1 | Core imports workload code, which the dependency rule forbids | `ai_tasks`, `continuity` and `sqlstore` import `ai_registry` (agents); `chat_privacy`, `chatthreads` import `assistants` (agents) lazily inside functions | Move the registry data (`ai_registry`, the `REGISTRY` and `VERSION` constants) to `core` and keep dispatch in `agents`; or invert the call by injection. Until decided, M2 moves both sides in one pull request |
+| A2 | `assistant_release.py` (PR 287) is not in the mapping | Imported by `assistants` (agents) and, lazily, by `sqlstore` (core) | Place it in `core/assistant_release.py`; tests with it |
+| A3 | Agents tests import the API server | `test_assistants`, `test_ai_tasks` use `server`; ADR sends both to `agents/tests`, and `agents` may not import `api` | Allow `agents/tests` to depend on `api` for the temporary in-process edge until #144, or split the HTTP cases to `api/tests` |
+| A4 | `test_digest_blob` and `test_token_store` use SQL and Blob fakes | They go to `orchestrator/tests` per ADR, but the jobs need SQL and Blob roles that ADR 0001 withholds from the orchestrator identity | Confirm the job identity for the two jobs, or the roles ADR 0001 grants the orchestrator |
+| A5 | Four core-subject tests drive the API server | `test_lawstore`, `test_ledger`, `test_ranking_scale`, `test_workflows` import `server`; ADR sends the remainder to `core/tests` | Keep them in `api/tests`, or split the pure-store cases into `core/tests` |
 
 ## Outcome Definitions
 
@@ -88,20 +99,20 @@ Migration group column: M1 to M6 are defined in
 
 ## Coverage Baseline
 
-Recorded on 2026-10-15 on `main` (`1ffcfbc`), from `mvp/`:
+Recorded on 2026-10-15 on the branch merged with `main` (`736b387`), from `mvp/`:
 
 ```text
 PYTHONPATH=. python3 -m unittest discover -s tests -q
-Ran 703 tests in 134.875s
+Ran 719 tests in 201.736s
 OK (skipped=92)
 ```
 
 The skips are SQL Server contract tests guarded by `ZF_TEST_MSSQL=1`
 (test_mssqlstore, test_assistants, test_lawstore) that run in the `mvp-ci`
 job with a SQL Server service, plus a test skipped when `azure-core` is not
-installed. Open pull request 287 reports 716 tests (92 skipped)
-once it merges. The migration gate is equal or greater count with the same
-skips explained. `node --check` on the web scripts and the image checks
+installed. Pull request 287 is merged; its 16 tests in test_assistant_release
+account for the rise from 703. The migration gate is equal or greater count
+with the same skips explained. `node --check` on the web scripts and the image checks
 (non-root, read-only, no data) are the other recorded gates. The prototype
 suite is not part of this baseline: it has 15 tests in two files that
 `prototype-validation` runs separately.
@@ -116,7 +127,8 @@ These drive the rebuild outcomes below.
   (`assistant_tasks`) inside the API process, and `ai.py` calls the model from
   the API process. The proposal logic can move. The dispatch path (lease,
   provider call, completion) cannot be moved as is to the target; it is a
-  rebuild under issue #107 (open). PR 287 extends exactly this path.
+  rebuild under issue #107 (open). PR 287, merged on 2026-10-15, extends exactly
+  this path with release admission (`assistant_release.py`).
 * `store.py` imports 18 sibling modules at top level and `sqlstore.py` imports
   10. Together with `assistants`, `continuity`, `ai_registry`, `ai_tasks` and
   `ledger` they form one import cluster that cannot be split without leaving
@@ -125,9 +137,21 @@ These drive the rebuild outcomes below.
 * `store.py` (JSON file store) and `sqlstore.py` (SQLite) serve local and test
   use. The owner rule (Azure only for deployment) means they migrate as local
   and test engines; the deployed engine is Azure SQL through `mssqlstore.py`.
-* PR 287 commits 36 `.assistant-test-*` sandbox directories (72 files:
-  `cases.sqlite`, `seed.json`) under `mvp/`. They are test debris, must not
-  merge and must be git-ignored.
+* Core modules lazily import `assistants` and `ai_registry`, which ADR 0006 maps
+  to `agents`; see amendment A1.
+
+## Sandbox Debris
+
+Pull request 287 committed 225 `mvp/.assistant-test-*` directories, 450 files
+(`cases.sqlite`, `seed.json`), which are test debris. Outcome for all 450:
+retire, group S1. A separate pull request, `fix/remove-assistant-test-sandboxes`,
+removes them and adds a `.gitignore` pattern, so they are not carried into
+`src/`.
+
+| Pattern | Files | Outcome | Target | Group | Evidence and note |
+| --- | --- | --- | --- | --- | --- |
+| `mvp/.assistant-test-*/cases.sqlite` | 225 | retire | none | S1 | Generated by test runs; reproducible |
+| `mvp/.assistant-test-*/seed.json` | 225 | retire | none | S1 | Generated seed for the same runs |
 
 ## Module Matrix: mvp/zavaforward_mvp
 
@@ -138,18 +162,19 @@ Delivery evidence is the pull request or test that proves current behaviour.
 | --- | --- | --- | --- | --- |
 | `mvp/zavaforward_mvp/__init__.py` | retire | none | M6 | Empty file (0 lines). The new namespace has no `__init__.py` |
 | `mvp/zavaforward_mvp/ai.py` | migrate | `core/ai.py` | M1 | Model client and `FORBIDDEN` guard; test_ai_identity. `store` and `sqlstore` import it, so it cannot sit in `agents`. In-process call sites are a rebuild, see assistants.py |
-| `mvp/zavaforward_mvp/ai_eval.py` | migrate | `core/ai_eval.py` | M4 | PR 258 (#108, open); test_ai_eval. Reads `evals/ai_priority_golden.json` |
-| `mvp/zavaforward_mvp/ai_registry.py` | migrate | `core/ai_registry.py` | M2 | PR 260 (#105); test_ai_tasks. Imports `assistants` at top level, so it moves with the cluster |
+| `mvp/zavaforward_mvp/ai_eval.py` | migrate | `agents/ai_eval.py` | M4 | PR 258 (#108, open); test_ai_eval. Reads `evals/ai_priority_golden.json` |
+| `mvp/zavaforward_mvp/ai_registry.py` | migrate | `agents/ai_registry.py` | M2 | PR 260 (#105); test_ai_tasks. Imports `assistants` at top level and is imported lazily by core (A1), so it moves with the cluster |
 | `mvp/zavaforward_mvp/ai_tasks.py` | migrate | `core/ai_tasks.py` | M2 | PRs 260, 263 (#105, #106); test_ai_tasks. Citations resolve or are marked Unverified |
-| `mvp/zavaforward_mvp/assistants.py` | rebuild | `core/assistants/` (capture, eligibility, validation) and `agents/` (dispatch worker) | M2 then #107 | Proposal logic moves as is. SQL leases and in-process dispatch conflict with ADR 0001 agents isolation. Issue #107 stays open. test_assistants (50 tests) is the behaviour to preserve |
+| `mvp/zavaforward_mvp/assistants.py` | rebuild | `agents/assistants.py` (proposal logic moves as is; dispatch worker rebuilt in `agents/`) | M2 then #107 | Proposal logic moves as is. SQL leases and in-process dispatch conflict with ADR 0001 agents isolation. Issue #107 stays open. test_assistants (50 tests) is the behaviour to preserve |
+| `mvp/zavaforward_mvp/assistant_release.py` | migrate | `core/assistant_release.py` (A2) | M2 | PR 287 (#107, merged 2026-10-15); 124 lines, release admission for the five assistants; test_assistant_release. Imported by `assistants` and lazily by `sqlstore`. Not in the ADR mapping |
 | `mvp/zavaforward_mvp/auth.py` | migrate | `api/auth.py` | M5 | PR 275 (#116, open); test_auth |
-| `mvp/zavaforward_mvp/chat_fixture.py` | migrate | `devtools/chat_fixture.py` | M3 | PR 283 (#172, open); test_chat_fixture |
+| `mvp/zavaforward_mvp/chat_fixture.py` | migrate | `agents-tests/chat_fixture.py` (test support) | M3 | PR 283 (#172, open); test_chat_fixture |
 | `mvp/zavaforward_mvp/chat_isolation.py` | migrate | `core/chat_isolation.py` | M4 | PR 286 (#162, open); test_chat_isolation |
 | `mvp/zavaforward_mvp/chat_privacy.py` | migrate | `core/chat_privacy.py` | M4 | PRs 281, 285 (#163, #161, open); test_chat_privacy, test_chat_memory |
 | `mvp/zavaforward_mvp/chatthreads.py` | migrate | `core/chatthreads.py` | M2 | PRs 282, 285 (#160, #161, open); test_chatthreads. `sqlstore` imports it at top level |
 | `mvp/zavaforward_mvp/continuity.py` | migrate | `core/continuity.py` | M2 | PR 269 (#122, open); test_continuity |
 | `mvp/zavaforward_mvp/controls.py` | migrate | `core/controls.py` | M2 | Pre-235; test_finance_signoffs |
-| `mvp/zavaforward_mvp/digest_blob.py` | migrate | `api/jobs/digest_blob.py` | M5 | PR 268 (#115, open); test_digest_blob. Job command in `containerapps.bicep` changes (#200) |
+| `mvp/zavaforward_mvp/digest_blob.py` | migrate | `orchestrator/digest_blob.py` | M5 | PR 268 (#115, open); test_digest_blob. Job command in `containerapps.bicep` changes (#200) |
 | `mvp/zavaforward_mvp/doc_controls.py` | migrate | `core/doc_controls.py` | M2 | PR 270 (#117, open); test_document_controls |
 | `mvp/zavaforward_mvp/documents.py` | migrate | `core/documents.py` | M2 | Pre-235, extended by PR 262; test_documents |
 | `mvp/zavaforward_mvp/factory.py` | migrate | `core/factory.py` | M2 | Store selection (JSON, SQLite, Azure SQL); test_ledger |
@@ -159,7 +184,7 @@ Delivery evidence is the pull request or test that proves current behaviour.
 | `mvp/zavaforward_mvp/insights.py` | migrate | `core/insights.py` | M2 | Pre-235; test_ranking_scale, test_sqlreads, test_generated_dataset |
 | `mvp/zavaforward_mvp/lawstore.py` | migrate | `core/lawstore.py` (CLI later to `importer`) | M5 | PRs 248, 253 (#210). Azure SQL ledger and Blob backends verified against fakes only. test_lawstore. The seed CLI becomes an importer job when #213 lands |
 | `mvp/zavaforward_mvp/ledger.py` | migrate | `core/ledger.py` | M2 | PRs 262, 268 (#114, #115, open); test_ledger, test_recovery |
-| `mvp/zavaforward_mvp/loadcheck.py` | migrate | `devtools/loadcheck.py` | M3 | PR 262 (#114, open); test_recovery. Load run on dev Azure SQL not done |
+| `mvp/zavaforward_mvp/loadcheck.py` | migrate | `core/synthetic/loadcheck.py` | M3 | PR 262 (#114, open); test_recovery. Load run on dev Azure SQL not done |
 | `mvp/zavaforward_mvp/mssqlstore.py` | migrate | `core/mssqlstore.py` | M2 | Azure SQL engine (deployed path). test_mssqlstore skips without SQL Server; runs in `mvp-ci` |
 | `mvp/zavaforward_mvp/procurement.py` | migrate | `core/procurement.py` | M2 | Pre-235; test_quality_procurement |
 | `mvp/zavaforward_mvp/profile.py` | migrate | `core/profile.py` | M1 | Pre-235; test_profile |
@@ -169,14 +194,14 @@ Delivery evidence is the pull request or test that proves current behaviour.
 | `mvp/zavaforward_mvp/recovery.py` | migrate | `core/recovery.py` | M4 | PR 262 (#114, open); test_recovery |
 | `mvp/zavaforward_mvp/resident_decisions.py` | migrate | `core/resident_decisions.py` | M2 | Pre-235; test_workflows |
 | `mvp/zavaforward_mvp/rulecards.py` | migrate | `core/rulecards.py` | M1 | PRs 250, 259 (#211 open, #127); test_rulecards. No import of siblings |
-| `mvp/zavaforward_mvp/scale_fixture.py` | migrate | `devtools/scale_fixture.py` | M3 | PRs 236, 249 (#174, #169); test_eval_registry, test_chat_fixture |
-| `mvp/zavaforward_mvp/sensor_backfill.py` | migrate | `devtools/sensor_backfill.py` | M3 | PR 272 (#183, open); test_sensor_backfill. `validate_reading` mirrors a contract #110 has not defined |
+| `mvp/zavaforward_mvp/scale_fixture.py` | migrate | `core/synthetic/scale_fixture.py` | M3 | PRs 236, 249 (#174, #169); test_eval_registry, test_chat_fixture |
+| `mvp/zavaforward_mvp/sensor_backfill.py` | migrate | `core/synthetic/sensor_backfill.py` | M3 | PR 272 (#183, open); test_sensor_backfill. `validate_reading` mirrors a contract #110 has not defined |
 | `mvp/zavaforward_mvp/server.py` | migrate | `api/server.py`, routers split in later work | M5 | 626-line single HTTP server. In-process model calls via `assistants` are the rebuild noted above. test_mvp (21), test_role_matrix, test_ui_support |
 | `mvp/zavaforward_mvp/signoffs.py` | migrate | `core/signoffs.py` | M2 | Pre-235, edited by PR 242; test_finance_signoffs |
 | `mvp/zavaforward_mvp/sqlstore.py` | migrate | `core/sqlstore.py` | M2 | Local and test SQLite engine and shared DDL; test_sqlstore, test_sqlreads |
 | `mvp/zavaforward_mvp/store.py` | migrate | `core/store.py` | M2 | Hub (817 lines, 18 imports); JSON local engine. test_mvp and most suites |
 | `mvp/zavaforward_mvp/timecapture.py` | migrate | `api/timecapture.py` | M5 | PR 267 (#120, open); test_timecapture. Gated on DPIA, notice approval and audited enabling |
-| `mvp/zavaforward_mvp/token_store.py` | migrate | `api/jobs/token_store.py` | M5 | EasyAuth SAS renewal job; test_token_store. Bicep job command `python -m zavaforward_mvp.token_store` changes (#200) |
+| `mvp/zavaforward_mvp/token_store.py` | migrate | `orchestrator/token_store.py` | M5 | EasyAuth SAS renewal job; test_token_store. Bicep job command `python -m zavaforward_mvp.token_store` becomes `python -m zava_forward.orchestrator.token_store` (#200). Identity: A4 |
 | `mvp/zavaforward_mvp/workflows.py` | migrate | `core/workflows.py` | M2 | Pre-235, edited by PR 261; test_workflows |
 
 ## Web Assets, Policies, Evals and Law Data
@@ -201,39 +226,46 @@ Delivery evidence is the pull request or test that proves current behaviour.
 | `mvp/web/vendor/images/marker-icon.png` | migrate | `api/web/vendor/images/marker-icon.png` | M5 | Vendored |
 | `mvp/policies/ranking-v1.json` | migrate | `core/policies/ranking-v1.json` (package data) | M2 | Loaded by `ranking.py`; test_ranking_policy. Policy file must be declared as package data and checked in the image |
 | `mvp/law/law-source-register.json` | migrate | `core/law/law-source-register.json` (package data) | M5 | PR 248 seed; Dockerfile copies `law/` today. Snapshots stay out of the image; ingest is a later importer job |
-| `mvp/evals/ai_priority_golden.json` | migrate | `core/evals/ai_priority_golden.json` | M4 | PR 258 (#108); test_ai_eval |
-| `mvp/evals/document_control_fixtures.json` | migrate | `devtools/evals/document_control_fixtures.json` | M3 | PR 270 (#117); test_document_controls |
-| `mvp/evals/document_form_fixtures.json` | migrate | `devtools/evals/document_form_fixtures.json` | M3 | PR 235 (#171); test_document_form_fixtures. Set split is 30 tuning, 30 calibration, 60 held-out |
-| `mvp/evals/registry.json` | migrate | `devtools/evals/registry.json` | M3 | PRs 236, 249, 270, 283; test_eval_registry |
+| `mvp/evals/ai_priority_golden.json` | migrate | `agents-evals/ai_priority_golden.json` | M4 | PR 258 (#108); test_ai_eval |
+| `mvp/evals/document_control_fixtures.json` | migrate | `core-evals/document_control_fixtures.json` | M3 | PR 270 (#117); test_document_controls |
+| `mvp/evals/document_form_fixtures.json` | migrate | `importer-evals/document_form_fixtures.json` | M3 | PR 235 (#171); test_document_form_fixtures. Set split is 30 tuning, 30 calibration, 60 held-out |
+| `mvp/evals/registry.json` | migrate | `agents-evals/registry.json` | M3 | PRs 236, 249, 270, 283; test_eval_registry |
 
 ## Tests
 
-Rule used: a test moves with the highest-numbered group among the modules it
-imports; a test that uses the HTTP server moves with the API (M5).
+Rule used: ADR 0006 sends each test to the project of its subject (`test_ai_*`
+and `test_eval_registry` to `agents-tests`, job tests to `orchestrator-tests`,
+document form fixtures to `importer-tests`, the remainder to `core-tests`). The
+migration group is the highest group among the modules a test imports. Four
+tests that drive `server` (`test_lawstore`, `test_ledger`, `test_ranking_scale`,
+`test_workflows`) stay in `api-tests` because `core` may not import `api`
+(amendment A5).
 
 | File | Outcome | Target | Group | Evidence and note |
 | --- | --- | --- | --- | --- |
-| `mvp/tests/assistants_browser_check.py` | migrate | `api-tests/assistants_browser_check.py` | M5 | Browser check for the assistants panel; not in unittest discovery |
-| `mvp/tests/browser_check.py` | migrate | `api-tests/browser_check.py` | M5 | Browser check; not in unittest discovery |
+| `mvp/tests/assistants_browser_check.py` | migrate | `api-checks/assistants_browser_check.py` | M5 | Browser check for the assistants panel; not in unittest discovery |
+| `mvp/tests/browser_check.py` | migrate | `api-checks/browser_check.py` | M5 | Browser check; not in unittest discovery |
 | `mvp/tests/test_accessibility_baseline.py` | migrate | `api-tests/test_accessibility_baseline.py` | M5 | PR 244 (#151). Static checks only; no rendered scanner |
-| `mvp/tests/test_ai_eval.py` | migrate | `core-tests/test_ai_eval.py` | M4 | 6 tests |
-| `mvp/tests/test_ai_identity.py` | migrate | `core-tests/test_ai_identity.py` | M1 | 2 tests |
-| `mvp/tests/test_ai_tasks.py` | migrate | `api-tests/test_ai_tasks.py` | M5 | 22 tests, uses `server` |
-| `mvp/tests/test_assistants.py` | migrate | `api-tests/test_assistants.py` | M5 | 50 tests, uses `server`. Preserved as the behaviour contract for the #107 rebuild |
+| `mvp/tests/test_ai_eval.py` | migrate | `agents-tests/test_ai_eval.py` | M4 | 6 tests |
+| `mvp/tests/test_ai_identity.py` | migrate | `agents-tests/test_ai_identity.py` | M1 | 2 tests |
+| `mvp/tests/test_ai_tasks.py` | migrate | `agents-tests/test_ai_tasks.py` | M5 | 22 tests, uses `server` (A3) |
+| `mvp/tests/test_assistant_release.py` | migrate | `agents-tests/test_assistant_release.py` | M5 | PR 287 (#107); 16 tests, 245 lines; imports `test_assistants` Base and `release_support`, so it moves with them (A2, A3) |
+| `mvp/tests/release_support.py` | migrate | `agents-tests/release_support.py` | M5 | PR 287; 44 lines of test helpers for test_assistant_release; not a test module |
+| `mvp/tests/test_assistants.py` | migrate | `agents-tests/test_assistants.py` | M5 | 50 tests, uses `server` (A3). Preserved as the behaviour contract for the #107 rebuild |
 | `mvp/tests/test_auth.py` | migrate | `api-tests/test_auth.py` | M5 | 23 tests |
-| `mvp/tests/test_chat_fixture.py` | migrate | `devtools-tests/test_chat_fixture.py` | M3 | 9 tests |
+| `mvp/tests/test_chat_fixture.py` | migrate | `agents-tests/test_chat_fixture.py` | M3 | 9 tests |
 | `mvp/tests/test_chat_isolation.py` | migrate | `core-tests/test_chat_isolation.py` | M4 | 12 tests |
 | `mvp/tests/test_chat_memory.py` | migrate | `core-tests/test_chat_memory.py` | M4 | 11 tests |
 | `mvp/tests/test_chat_privacy.py` | migrate | `core-tests/test_chat_privacy.py` | M4 | 13 tests |
 | `mvp/tests/test_chatthreads.py` | migrate | `core-tests/test_chatthreads.py` | M2 | 12 tests |
-| `mvp/tests/test_content_standard.py` | migrate | `core-tests/test_content_standard.py` | M2 | PR 242 (#153); 4 tests over store copy |
+| `mvp/tests/test_content_standard.py` | migrate | `api-tests/test_content_standard.py` | M2 | PR 242 (#153); 4 tests over store copy |
 | `mvp/tests/test_continuity.py` | migrate | `core-tests/test_continuity.py` | M2 | 15 tests |
 | `mvp/tests/test_design_system.py` | migrate | `api-tests/test_design_system.py` | M5 | PR 241 (#150); reads `web/style.css` |
-| `mvp/tests/test_digest_blob.py` | migrate | `api-tests/test_digest_blob.py` | M5 | 9 tests |
+| `mvp/tests/test_digest_blob.py` | migrate | `orchestrator-tests/test_digest_blob.py` | M5 | 9 tests |
 | `mvp/tests/test_document_controls.py` | migrate | `core-tests/test_document_controls.py` | M2 | 12 tests |
-| `mvp/tests/test_document_form_fixtures.py` | migrate | `devtools-tests/test_document_form_fixtures.py` | M3 | Imports the `support/` generator; path repointed by #200 |
+| `mvp/tests/test_document_form_fixtures.py` | migrate | `importer-tests/test_document_form_fixtures.py` | M3 | Imports the `support/` generator; path repointed by #200 |
 | `mvp/tests/test_documents.py` | migrate | `core-tests/test_documents.py` | M2 | 10 tests |
-| `mvp/tests/test_eval_registry.py` | migrate | `devtools-tests/test_eval_registry.py` | M3 | 7 tests |
+| `mvp/tests/test_eval_registry.py` | migrate | `agents-tests/test_eval_registry.py` | M3 | 7 tests |
 | `mvp/tests/test_finance_signoffs.py` | migrate | `core-tests/test_finance_signoffs.py` | M2 | 15 tests |
 | `mvp/tests/test_generated_dataset.py` | migrate | `core-tests/test_generated_dataset.py` | M2 | 12 tests; imports `support/` generator and writes private data |
 | `mvp/tests/test_governance.py` | migrate | `core-tests/test_governance.py` | M2 | 12 tests |
@@ -241,7 +273,7 @@ imports; a test that uses the HTTP server moves with the API (M5).
 | `mvp/tests/test_ledger.py` | migrate | `api-tests/test_ledger.py` | M5 | 6 tests, uses `server` |
 | `mvp/tests/test_mssqlstore.py` | migrate | `core-tests/test_mssqlstore.py` | M2 | Skips without SQL Server; keep the CI service |
 | `mvp/tests/test_mvp.py` | migrate | `api-tests/test_mvp.py` | M5 | 21 tests, end-to-end API |
-| `mvp/tests/test_needs_inventory.py` | migrate | `devtools-tests/test_needs_inventory.py` | M3 | PRs 240, 243; reads `docs/reference/research/retrofit-synthetic-data` |
+| `mvp/tests/test_needs_inventory.py` | migrate | `core-tests/test_needs_inventory.py` | M3 | PRs 240, 243; reads `docs/reference/research/retrofit-synthetic-data` |
 | `mvp/tests/test_profile.py` | migrate | `core-tests/test_profile.py` | M1 | 4 tests |
 | `mvp/tests/test_quality_procurement.py` | migrate | `core-tests/test_quality_procurement.py` | M2 | 11 tests |
 | `mvp/tests/test_ranking_policy.py` | migrate | `core-tests/test_ranking_policy.py` | M2 | 10 tests |
@@ -250,13 +282,13 @@ imports; a test that uses the HTTP server moves with the API (M5).
 | `mvp/tests/test_role_endpoint_inventory.py` | migrate | `api-tests/test_role_endpoint_inventory.py` | M5 | PRs 275, 286 (#116) |
 | `mvp/tests/test_role_matrix.py` | migrate | `api-tests/test_role_matrix.py` | M5 | Role matrix gate in #199 |
 | `mvp/tests/test_rulecards.py` | migrate | `core-tests/test_rulecards.py` | M1 | 11 tests |
-| `mvp/tests/test_sensor_backfill.py` | migrate | `devtools-tests/test_sensor_backfill.py` | M3 | 5 tests |
-| `mvp/tests/test_sensor_plausibility.py` | migrate | `devtools-tests/test_sensor_plausibility.py` | M3 | PR 280 (#191); 8 tests |
+| `mvp/tests/test_sensor_backfill.py` | migrate | `core-tests/test_sensor_backfill.py` | M3 | 5 tests |
+| `mvp/tests/test_sensor_plausibility.py` | migrate | `core-tests/test_sensor_plausibility.py` | M3 | PR 280 (#191); 8 tests |
 | `mvp/tests/test_sqlreads.py` | migrate | `core-tests/test_sqlreads.py` | M2 | 14 tests |
 | `mvp/tests/test_sqlstore.py` | migrate | `core-tests/test_sqlstore.py` | M2 | 9 tests |
-| `mvp/tests/test_synthetic_provenance.py` | migrate | `devtools-tests/test_synthetic_provenance.py` | M3 | PR 238 (#175); reads the register under `docs/` |
+| `mvp/tests/test_synthetic_provenance.py` | migrate | `core-tests/test_synthetic_provenance.py` | M3 | PR 238 (#175); reads the register under `docs/` |
 | `mvp/tests/test_timecapture.py` | migrate | `api-tests/test_timecapture.py` | M5 | 16 tests |
-| `mvp/tests/test_token_store.py` | migrate | `api-tests/test_token_store.py` | M5 | 4 tests |
+| `mvp/tests/test_token_store.py` | migrate | `orchestrator-tests/test_token_store.py` | M5 | 4 tests |
 | `mvp/tests/test_ui_support.py` | migrate | `api-tests/test_ui_support.py` | M5 | 9 tests |
 | `mvp/tests/test_workflows.py` | migrate | `api-tests/test_workflows.py` | M5 | 10 tests, uses `server` |
 
@@ -302,12 +334,12 @@ check is recorded as an open item, not as a reason to keep `prototype/`.
 
 | Item | Reference to repoint | New path or change | Issue |
 | --- | --- | --- | --- |
-| `.github/workflows/mvp-ci.yml`, `mvp-validation.yml` | `mvp/` filters, `docker build mvp`, requirements path, image tag names | `src/**`, per-package install, `src/api` build context; keep or rename checks deliberately | #200, #138 |
+| `.github/workflows/mvp-ci.yml`, `mvp-validation.yml` | `mvp/` filters, `docker build mvp`, requirements path, image tag names | `src/**`, per-package install, `src/api` build context; keep the old check names until after the cut-over, then rename in one pull request (owner, 2026-10-15) | #200, #138 |
 | `.github/workflows/prototype-validation.yml` | `prototype/` detection | Delete with `prototype/` in P1 | #202 |
-| `infra/modules/containerapps.bicep` | Job command `python -m zavaforward_mvp.token_store`, digest job command from PR 268 | `python -m zava_forward.api.jobs.token_store` and `...digest_blob`; `bicep build` and lint | #200, #144 |
+| `infra/modules/containerapps.bicep` | Job command `python -m zavaforward_mvp.token_store`, digest job command from PR 268 | `python -m zava_forward.orchestrator.token_store` and `python -m zava_forward.orchestrator.digest_blob --publish`; `bicep build` and lint | #200, #144 |
 | `infra/README.md` | `az acr build ... mvp`, `PYTHONPATH=mvp` | `src/api` build context, installed package | #200 |
 | `infra/scripts/initialize-workbench-staff.py`, `create-sql-users.py`, `infra/tests/test_initialize_workbench_staff.py`, `infra/tests/test_identity_rbac.py` | `PYTHONPATH=mvp`, `zavaforward_mvp` imports | Import from `zava_forward.core` after M2 | #200 |
-| `support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py`, `zf_mvp_coverage.py`, `zf_documents.py`, `zf_document_controls.py` | Import from `mvp`; writes `mvp/data/zavaforward.json` | Import `zava_forward.core` and `zava_forward.devtools`; write to a git-ignored path outside the package | #200, #165 |
+| `support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py`, `zf_mvp_coverage.py`, `zf_documents.py`, `zf_document_controls.py` | Import from `mvp`; writes `mvp/data/zavaforward.json` | Import `zava_forward.core` (including `zava_forward.core.synthetic`); write to the `ZF_DATA` directory outside git and the package | #200, #165 |
 | `tools/rename-zava.py`, `rename-zava.md`, `rename-zava-tests.py` | `mvp/` paths | Update live paths only; dated historical identifiers stay exact | #200 |
 | `.github/rubric/artifacts.json`, `README.md`, `scripts/test_prepare.py`, `scripts/test_safe_output_runtime.py`, `scores/latest.json` | `mvp/` globs, dead `prototype/deploy/**/*.bicep` | `src/**/*` already registered; add `tests/` and `pyproject.toml` globs in a registry-only pull request; drop `mvp/` globs at cut-over | #198 |
 | `.github/copilot-instructions.md`, `README.md`, `.gitignore` (`/mvp/data/`) | `mvp/` paths | `src/` paths; private data ignore path | #200, #203 |
@@ -355,16 +387,16 @@ on 2026-10-15.
 | 281 | #163 open | Chat privacy controls, DPIA record | Move as is (M4) | Not wired to UI; provider terms not recorded |
 | 282, 283, 285 | #160, #172, #161 open | Chat threads, fixtures, memory lifecycle | Move as is (M2, M3, M4) | Retention, memory administrator role, wiring |
 | 286 | #162 open | Chat and memory isolation | Move as is (M4) | Break-glass policy (OD-46) undecided; no live injection evaluation |
-| 287 (open) | #107 open | Release admission for five assistants (not on `main`) | Rebuild the dispatch part in `src/`; do not merge as is | See the note below the table |
+| 287 | #107 open | Release admission for five assistants; merged 2026-10-15 into `mvp/` | Move `assistant_release.py` and its tests as is (M2, A2); rebuild the dispatch part in `src/agents` (R1) | #107 stays open: dispatch rebuild and the queue-driven worker (#144) |
 
-Pull request 287 note. It extends the in-process lease and dispatch path that
-the architecture review marks for rebuild, adds `assistant_release.py` (124
-lines) and `release_support.py`, and commits 72 sandbox files under
-`mvp/.assistant-test-*`. Under the owner rule "all new code in `src/`", it should
-not land in `mvp/`. Recommendation for the owner: hold it, delete the sandbox
-files and git-ignore the pattern, and re-land `assistant_release.py`, its tests
-and the SQL DDL in `src/core` after M2, with the dispatch rebuild in
-`src/agents`. Its test count (716) then re-baselines the coverage gate.
+Pull request 287 note. It merged on 2026-10-15, so there is no hold action. It
+extends the in-process lease and dispatch path that the architecture review
+marks for rebuild, and adds `assistant_release.py` (124 lines),
+`release_support.py` (44) and test_assistant_release (245 lines, 16 tests).
+These are mapped in the tables above. Its 450 sandbox files are retired by the
+separate `fix/remove-assistant-test-sandboxes` pull request, which also adds a
+`.gitignore` pattern (see [Sandbox Debris](#sandbox-debris)). The SQL DDL it
+added to `sqlstore.py` moves with M2.
 
 ## Issues to Reopen
 
@@ -401,13 +433,14 @@ and needs its cause and a recovery expectation in the description.
 | --- | --- | --- | --- | --- |
 | M0 | ADR 0006 accepted; scaffold `src/core` and `src/api` `pyproject.toml`, tooling config, additive `src-ci` workflow | none | none | Blocks everything (#196) |
 | M1 | Isolated leaves | `profile`, `rulecards`, `ai` | test_profile, test_rulecards, test_ai_identity | No sibling imports; proves packaging, namespace and CI. About 450 lines |
-| M2 | Core hub, mechanical move, one pull request | `store`, `sqlstore`, `mssqlstore`, `factory`, `ledger`, `continuity`, `chatthreads`, `doc_controls`, `documents`, `controls`, `finance`, `grants`, `governance`, `signoffs`, `resident_decisions`, `workflows`, `quality`, `procurement`, `insights`, `projection`, `ranking`, `ai_registry`, `ai_tasks`, `assistants`; `policies/ranking-v1.json` | the 13 `core-tests/` rows marked M2 | `store` imports 18 siblings and the cluster is cyclic through `assistants`, `ai_registry` and `ledger`, so no smaller step leaves a working tree. Use `git mv` and keep it free of behaviour change so rename detection shows a small diff. `mvp/` CI installs `core` from `src/core` |
-| M3 | Fixtures and data governance | `scale_fixture`, `sensor_backfill`, `chat_fixture`, `loadcheck`; evals JSON except the golden set | the `devtools-tests/` rows | Depends only on M2 `insights`. Coordinate with #165 (generator imports) |
-| M4 | Core features | `chat_privacy`, `chat_isolation`, `recovery`, `ai_eval`; `evals/ai_priority_golden.json` | the `core-tests/` rows marked M4 | Depend on M2 and M3. Open work on #160 to #163 and #108 must be merged or rebased first |
-| M5 | API workload and image | `server`, `auth`, `timecapture`, `lawstore`, `digest_blob`, `token_store`; all of `mvp/web/`; `law/` register; Dockerfile, hashed requirements, Bicep job commands, mvp-ci replacement | all `api-tests/` rows, browser checks, `node --check` | Needs every module. Image gates (non-root, read-only, no data) re-run. Coordinate with #149 (UX edits to `mvp/web`), #144, #138 |
+| M2 | Core hub, mechanical move, one pull request | `store`, `sqlstore`, `mssqlstore`, `factory`, `ledger`, `continuity`, `chatthreads`, `doc_controls`, `documents`, `controls`, `finance`, `grants`, `governance`, `signoffs`, `resident_decisions`, `workflows`, `quality`, `procurement`, `insights`, `projection`, `ranking`, `ai_tasks`, `assistant_release` to `core`; `ai_registry`, `assistants` to `agents`; `policies/ranking-v1.json` | the rows marked M2 | `store` imports 18 siblings and the cluster is cyclic through `assistants`, `ai_registry` and `ledger` (A1), so no smaller step leaves a working tree. Use `git mv` and keep it free of behaviour change so rename detection shows a small diff. `mvp/` CI installs `core` from `src/core` |
+| M3 | Synthetic tools and data governance | `scale_fixture`, `sensor_backfill`, `loadcheck` to `core/synthetic`; `chat_fixture` to `agents-tests`; `document_control_fixtures.json`, `document_form_fixtures.json`, `registry.json` | the rows marked M3 | Depends only on M2 `insights`. Coordinate with #165 (generator imports) |
+| M4 | Core features | `chat_privacy`, `chat_isolation`, `recovery` to `core`; `ai_eval` to `agents`; `evals/ai_priority_golden.json` | the rows marked M4 | Depend on M2 and M3. Open work on #160 to #163 and #108 must be merged or rebased first |
+| M5 | API and orchestrator workloads and image | `server`, `auth`, `timecapture`, `lawstore` (core), `digest_blob`, `token_store` (orchestrator); all of `mvp/web/`; `law/` register; Dockerfile, hashed requirements, Bicep job commands, mvp-ci replacement | the rows marked M5, browser checks, `node --check` | Needs every module. Image gates (non-root, read-only, no data) re-run. The `agents` image installs `core` without the `sql` extra. Coordinate with #149 (UX edits to `mvp/web`), #144, #138 |
 | M6 | Remaining files and docs | `README.md` split, `__init__.py` removal; repoint docs | none | Leaves `mvp/` empty for #201 and #202 |
+| S1 | Remove assistant test sandboxes | 450 `mvp/.assistant-test-*` files; `.gitignore` pattern | none | Separate pull request `fix/remove-assistant-test-sandboxes`; independent of the move |
 | P1 | Retire `prototype/` | all prototype files, `prototype-validation.yml`, dead registry glob | none | Independent; may run any time after this matrix is approved |
-| R1 | Rebuild assistants dispatch | `assistants.py` dispatch half, `agents` package, #107 release admission | `test_assistants` contract | After M2; new code only in `src/` |
+| R1 | Rebuild assistants dispatch | `assistants.py` dispatch half, `agents` package, #107 dispatch worker | `test_assistants` and `test_assistant_release` contracts | After M2; new code only in `src/` |
 
 Sequencing rules:
 
@@ -415,21 +448,28 @@ Sequencing rules:
   boundary during the dual window, `mvp/` imports the installed `zava_forward`
   package; no shim copies remain after M5.
 * New features start in `src/` from M0. Open feature branches that edit moved
-  files (#287, and any pull request touching `store.py`, `sqlstore.py` or
+  files (any pull request touching `store.py`, `sqlstore.py`, `assistants.py` or
   `server.py`) need a rebase onto the moved path; schedule M2 and M5 when those
   branches are quiet.
 * Hashed requirements are regenerated in M5 without loosening pins.
 * The M2 test list is every row above in the Tests table with group M2.
-  Test totals are checked after each step against 703 tests (92 skipped).
+  Test totals are checked after each step against 719 tests (92 skipped).
+
+## Owner Answers of 2026-10-15
+
+Recorded from the owner; they close the open questions of the earlier draft.
+
+| Question | Answer | Effect |
+| --- | --- | --- |
+| Rename of the old CI check names (#200) | Keep the old check names until after the cut-over, then rename them in one pull request | Workflows keep `mvp-ci` and `mvp-validation` job names while paths change; one rename pull request follows cut-over |
+| GitHub release (#202) | The GitHub release accompanies the archive tag `v<BRD version>` | The cut-over checklist creates both together |
+| `agents` image and the SQL driver | The `agents` image installs `core` without the `sql` extra | Matches the ADR 0001 identity; reflected in M5 |
+| Soak period | None | Deletion follows owner sign-off and a healthy deployment, as in the ADR 0006 cut-over gate |
 
 ## Open Decisions for the Owner
 
-* Confirm the `devtools` package, or place fixtures in a `core` testing
-  subpackage.
-* Confirm placement of `digest_blob` and `token_store` under `api/jobs/`, or give
-  them a job identity in ADR 0006.
-* Hold pull request 287 and re-land it in `src/`, or grant a one-off exception
-  to merge into `mvp/` after removing the sandbox files.
+* Decide the ADR 0006 amendments A1 to A5 above, or accept the matrix targets
+  as stated and record the exceptions.
 * Reopen #151 and #175, and agree the rebuild of the assistant dispatch under
   #107.
 * Agree each `retire` row for `prototype/`, and the service-role denial test
@@ -440,6 +480,7 @@ Sequencing rules:
 ## Related Documents
 
 * [ADR 0001 Azure architecture](../adrs/0001-azure-architecture.md)
+* [ADR 0006 Source layout and cut-over policy](../adrs/0006-src-layout-and-cutover.md)
 * [ADR 0002 Pilot readiness architecture](../adrs/0002-pilot-readiness-architecture.md)
 * [Zava Forward MVP README](../../mvp/README.md)
 * [Rubric registry notes](../../.github/rubric/README.md)
