@@ -27,6 +27,33 @@ Run the suites from `src/api` with
 `pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator`. When `ZF_DATA` is not
 set, the data file defaults to `data/zavaforward.json` under the current folder.
 
+## Building shared context (issue #75)
+
+Staff can follow an explicitly linked home to `#/building/{building_id}` and
+back to either linked home. `GET /api/buildings/{building_id}` returns the
+[core source-backed model](../core/README.md#building-shared-context-issue-75),
+with separate systems, dependencies, stopped-work reasons, works and shared
+costs. Missing/unknown data is labelled, not interpreted as an approval.
+Linked homes expose only their case ID, stage and closed flag in this view,
+not resident details, home evidence, decisions or allocations.
+
+Only existing staff roles can read buildings; contractors and unknown roles
+receive 403, unauthenticated requests 401, missing records 404 and invalid
+building data 400. Building costs and home `cost_allocation` are returned only
+to the existing `FINANCE_VIEW` roles. Other staff see a restricted-cost notice,
+with amounts omitted server-side. The building screen is read-only and cannot
+approve, instruct works, release safety restrictions, contact residents or pay.
+Home AI assistance remains available through its existing proposal-only and
+human-review paths; shared free text and costs are not added to prompts.
+
+`tests/test_buildings.py` starts the real application on loopback with a
+wholly fictional two-home SQLite fixture. It checks health/static serving,
+authenticated navigation, role/amount isolation, scoped blocked advancement,
+unaffected sibling advancement and availability of the existing assistant
+registry. No live model inference, Azure deployment, actual SQL Server or
+human/browser accessibility acceptance is implied. There is no register
+editor or automatic retrofit of building data into an already populated store.
+
 ## What staff see
 
 * Sign in once and land on "My cases today", with open safety issues first.

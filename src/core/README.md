@@ -16,6 +16,54 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Building shared context (issue #75)
+
+`buildings.py` implements the PRD FR-002 read model. Seed data can contain a
+`buildings` list and each home case can carry an explicit `building_id`.
+Building records contain exactly `id`, `name`, positive integer `version`,
+`source`, `systems`, `dependencies`, `holds`, `works` and `costs`. Each category
+is `null` when unknown or a list (including `[]` for explicitly none).
+No building approval, resident evidence or home allocation fields are accepted.
+
+* Systems contain `id`, `label` and `source`.
+* Dependencies, holds and works add `owner`, `status`, `case_ids` and
+  `package_ids`. Case IDs must identify homes explicitly linked to this building;
+  package IDs must exist in procurement. `null` applicability is unknown,
+  `[]` means none and nonempty lists are exact explicit references. Building
+  membership and description text never establish package applicability.
+* Dependencies and holds have recorded status `Open`, `Resolved` or `Unknown`;
+  works have `Proposed`, `In progress` or `Completed`. These imported statuses
+  are source assertions, not application-generated approvals or safety releases.
+* Costs contain `id`, `work_id`, `amount_gbp` and `source`. They reference an
+  explicit shared work, and GBP amounts are finite nonnegative decimal strings
+  with at most two fractional places, bounded at GBP 100,000,000. No allocation
+  formula, grant eligibility, spending authority or payment is inferred.
+* Home `cost_allocation` entries (`shared_cost_id`, `amount_gbp`, `source`)
+  remain on each home, as do documents, consent, technical, funding, quality
+  and closure state. Allocations are not added to shared building costs.
+
+Missing/invalid explicitly linked context and applicable unresolved
+dependencies/holds block home advancement. New, reissued and corrective work
+instructions check the exact package; unknown scope fails closed, an explicit
+unaffected home/package does not block. Home readiness considers all applicable
+packages. Hazard intake/referral and resident contact remain independent.
+Unlinked legacy homes retain their existing behavior, not a claim that
+building checks have passed.
+
+JSON Store retains the document in `live.json`; SQL Store seeds, synchronizes
+and persists it through the existing checked-document `DOCS` interface inherited
+by MssqlStore, without new SQL or DDL. Existing live files and populated databases
+are **not reseeded** from a modified seed; absent context stays unknown.
+Loading real registers and governed updates/release authority are future work.
+There is no building editor or release endpoint in this slice.
+
+`tests/building_fixture.py` supplies a wholly fictional two-home block, two
+packages, ventilation work and GBP costs. `tests/test_buildings.py` verifies
+JSON/SQLite reopen, independent gates/evidence, explicit/unknown applicability,
+role projection, blocked instructions, and uninterrupted hazard intake/referral.
+API tests and staff navigation are documented in [api](../api/README.md#building-shared-context-issue-75).
+Local SQLite evidence does not establish live SQL Server or Azure behavior.
+
 ## Datasets, fixtures and synthetic tools
 
 The [synthetic needs inventory](../../docs/reference/research/retrofit-synthetic-data/needs-inventory.json)

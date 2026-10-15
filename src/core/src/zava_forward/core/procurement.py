@@ -129,6 +129,7 @@ class ProcurementMixin:
             p = self._package(pid)
             c = self._case(case_id)
             contractor = c["contractor"]["name"]
+            self.require_building_clear(c, pid)
             if c["closed"]:
                 raise ValueError("This case is closed.")
             if p["period_to"] < _today():
@@ -164,6 +165,7 @@ class ProcurementMixin:
             w = self._work_order(wid)
             if w["state"] not in (ISSUED, APPOINTED):
                 raise ValueError(f"This work order is '{w['state']}' and cannot be changed.")
+            self.require_building_clear(self.cases[w["case_id"]], w["package"])
             self._new_version(w, user, scope, reason)
             self.audit(user["email"], "workorder_reissued", w["case_id"], f"{wid} version {len(w['versions'])}: {reason}")
             self.save()
@@ -202,6 +204,7 @@ class ProcurementMixin:
             raise ValueError("Say what needs correcting.")
         with self.lock:
             w = self._work_order(wid)
+            self.require_building_clear(self.cases[w["case_id"]], w["package"])
             self._wo_move(w, ISSUED, user, f"Correction: {reason}")
             self._new_version(w, user, scope, f"Correction: {reason}")
             w["corrections"].append(dict(reason=reason, by=user["name"], at=_now()))
