@@ -2785,3 +2785,12 @@ metadata when the knowledge base was created.
   coordinator sets the Status field on the owner's project 7 when an issue
   starts, opens a PR, blocks, closes or reopens. Ids are discovered at run
   time and the `project` token scope is a precondition. No index change.
+
+## [2026-10-15] update | Household and tenancy fields at stock scale
+
+* Extended `mvp/zavaforward_mvp/scale_fixture.py` (version 1.1.0) with a
+  `households.jsonl` of 60,000 synthetic households (tenancy, channel,
+  adjustment, representative and works-consent states) and documented the
+  fields in the [data dictionary](./research/retrofit-synthetic-data/data-dictionary.md#stock-scale-household-and-tenancy-fixture-2026-10-15).
+* Distributions are invented; consent and representative rules are demonstrator
+  rules, not legal advice. No index change.
