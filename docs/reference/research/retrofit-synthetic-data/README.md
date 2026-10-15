@@ -413,8 +413,30 @@ every need and a `generator_conventions` block in
 
 Extensions reuse the existing generator modules, the recorded seed, the
 existing identifiers and `is_synthetic=true`; no second generator is added.
-`src/core/tests/test_needs_inventory.py` checks that every need has a child story or
-a recorded deferral.
+`src/core/tests/test_needs_inventory.py` retains the inventory binding checks.
+The src [coverage baseline tool](../../../../src/core/README.md#generator-coverage-baseline-167)
+adds semantic route validation and a deterministic, read-only JSON report:
+
+```bash
+python3 -m zava_forward.core.synthetic.coverage \
+  docs/reference/research/retrofit-synthetic-data/needs-inventory.json
+```
+
+Run from the repository root after installing core. It rejects malformed or
+duplicate need/issue identifiers, missing convention declarations, blank
+closure rationale, unexplained deferrals and delivered claims for partial or
+missing needs. Negative and CLI tests live in
+`src/core/tests/test_generator_coverage.py`; existing generator tests continue
+to check seeded output, links, labels and human-decision boundaries using a
+wholly fictional register rather than private geography.
+
+The unchanged merged v1.2.0 baseline has 13 routed needs: two covered, eleven
+partial, none missing. This validates recorded routes and declaration presence,
+not child delivery, owner scope decisions or generated-record conformity.
+The scale fixture's homes/events carry a manifest-level synthetic label,
+not per-record `is_synthetic=true`; the universal convention above is therefore
+an intended rule with an unevidenced existing-output gap, not a proven result.
+No second generator, private output or owner deferral is introduced.
 
 Open items: owner confirmation of the mapping, and whether regenerating the
 private SN-01 register from a committed generator sits in #168 or is deferred.

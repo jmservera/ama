@@ -1,0 +1,160 @@
+"""Gap routing is engineering metadata, never generator or owner acceptance."""
+
+import copy
+import json
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+from zava_forward.core.synthetic.coverage import build_baseline
+
+ROOT = Path(__file__).resolve().parents[3]
+INVENTORY = ROOT / "docs/reference/research/retrofit-synthetic-data/needs-inventory.json"
+
+
+class GeneratorCoverageTests(unittest.TestCase):
+    def test_merged_baseline_preserves_all_rows_and_pending_items(self) -> None:
+        inventory = json.loads(INVENTORY.read_text())
+        report = build_baseline(inventory)
+        self.assertEqual(report["coverage_counts"], {"covered": 2, "partial": 11, "missing": 0})
+        self.assertEqual(
+            report["needs"],
+            [
+                {key: row[key] for key in ("id", "need", "coverage", "gap_closure")}
+                for row in inventory["needs"]
+            ],
+        )
+        self.assertEqual(report["inventory_version"], inventory["version"])
+        self.assertEqual(report["review_date"], inventory["review_date"])
+        self.assertEqual(report["inventory_status"], "draft-awaiting-owner-review")
+        self.assertEqual(report["open_items"], inventory["open_items"])
+        self.assertEqual(
+            report["declared_generator_conventions"], inventory["generator_conventions"]
+        )
+        self.assertIs(report["routing_validated"], True)
+        self.assertEqual(report["generator_output_conformance"], "not-assessed")
+        self.assertEqual(report["owner_approval"], "not-established")
+        self.assertEqual(report["application_acceptance"], "not-assessed")
+
+    def test_report_does_not_mutate_inventory_and_orders_rows_and_issues(self) -> None:
+        inventory = json.loads(INVENTORY.read_text())
+        original = copy.deepcopy(inventory)
+        expected = build_baseline(inventory)
+        self.assertEqual(inventory, original)
+        inventory["needs"].reverse()
+        for need in inventory["needs"]:
+            need["gap_closure"]["issues"].reverse()
+        self.assertEqual(build_baseline(inventory), expected)
+
+    def test_child_delivered_and_justified_deferral(self) -> None:
+        inventory = json.loads(INVENTORY.read_text())
+        inventory["needs"][0]["coverage"] = "missing"
+        inventory["needs"][0]["gap_closure"] = {
+            "kind": "deferred",
+            "issues": [],
+            "note": "Constructed test rationale only; not an owner decision.",
+        }
+        report = build_baseline(inventory)
+        self.assertEqual(report["coverage_counts"], {"covered": 2, "partial": 10, "missing": 1})
+
+    def test_rejects_invalid_rows(self) -> None:
+        mutations: tuple[tuple[str, object], ...] = (
+            ("id", "SN-00"),
+            ("id", "SN-1"),
+            ("id", "SN-02"),
+            ("id", None),
+            ("need", " \n"),
+            ("coverage", "approved"),
+            ("coverage", None),
+            ("gap_closure", None),
+        )
+        for field, value in mutations:
+            with self.subTest(field=field, value=value):
+                inventory = json.loads(INVENTORY.read_text())
+                inventory["needs"][0][field] = value
+                with self.assertRaises(ValueError):
+                    build_baseline(inventory)
+
+    def test_rejects_invalid_closure_and_unjustified_deferral(self) -> None:
+        mutations: tuple[tuple[str, object], ...] = (
+            ("kind", "approved"),
+            ("kind", "delivered"),
+            ("note", ""),
+            ("note", " \n"),
+            ("issues", []),
+            ("issues", "#168"),
+            ("issues", [168]),
+            ("issues", ["#0"]),
+            ("issues", ["168"]),
+            ("issues", ["https://example.test/issues/168"]),
+            ("issues", ["#168", "#168"]),
+        )
+        for field, value in mutations:
+            with self.subTest(field=field, value=value):
+                inventory = json.loads(INVENTORY.read_text())
+                inventory["needs"][0]["gap_closure"][field] = value
+                with self.assertRaises(ValueError):
+                    build_baseline(inventory)
+        inventory = json.loads(INVENTORY.read_text())
+        inventory["needs"][0]["gap_closure"] = {"kind": "deferred", "issues": [], "note": " "}
+        with self.assertRaisesRegex(ValueError, "SN-01.gap_closure.note"):
+            build_baseline(inventory)
+
+    def test_rejects_invalid_top_level_metadata_and_conventions(self) -> None:
+        mutations: tuple[tuple[str, object], ...] = (
+            ("version", " "),
+            ("review_date", "2026-02-30"),
+            ("review_date", "20261015"),
+            ("status", None),
+            ("needs", []),
+            ("needs", {}),
+            ("needs", [None]),
+            ("open_items", None),
+            ("open_items", [" "]),
+            ("generator_conventions", {}),
+        )
+        for field, value in mutations:
+            with self.subTest(field=field, value=value):
+                inventory = json.loads(INVENTORY.read_text())
+                inventory[field] = value
+                with self.assertRaises(ValueError):
+                    build_baseline(inventory)
+        for field in ("reuse_rule", "seed", "identifiers", "is_synthetic"):
+            inventory = json.loads(INVENTORY.read_text())
+            inventory["generator_conventions"][field] = " "
+            with self.subTest(convention=field), self.assertRaises(ValueError):
+                build_baseline(inventory)
+        for value in (None, [], {1: "not a JSON object key"}):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                build_baseline(value)
+
+    def test_cli_success_is_repeatable_and_bad_input_has_no_success_output(self) -> None:
+        command = [sys.executable, "-m", "zava_forward.core.synthetic.coverage"]
+        first = subprocess.run([*command, str(INVENTORY)], capture_output=True, check=True)
+        second = subprocess.run([*command, str(INVENTORY)], capture_output=True, check=True)
+        self.assertEqual(first.stdout, second.stdout)
+        self.assertEqual(
+            json.loads(first.stdout), build_baseline(json.loads(INVENTORY.read_text()))
+        )
+        self.assertEqual(first.stderr, b"")
+        scratch = Path(__file__).parent / "__pycache__"
+        scratch.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=scratch) as tmp:
+            path = Path(tmp) / "metadata.json"
+            for payload in (b"not json", b"\xff", b"{}", b'{"needs": []}'):
+                path.write_bytes(payload)
+                failed = subprocess.run([*command, str(path)], capture_output=True, check=False)
+                self.assertNotEqual(failed.returncode, 0)
+                self.assertEqual(failed.stdout, b"")
+                self.assertIn(b"coverage:", failed.stderr)
+            path.unlink()
+            missing = subprocess.run([*command, str(path)], capture_output=True, check=False)
+            self.assertNotEqual(missing.returncode, 0)
+            self.assertEqual(missing.stdout, b"")
+            self.assertIn(b"coverage:", missing.stderr)
+
+
+if __name__ == "__main__":
+    unittest.main()

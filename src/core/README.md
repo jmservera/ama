@@ -117,6 +117,35 @@ recorded pre-build gate, not owner approval or full scenario acceptance;
 partial/missing needs still require an owner volume/scope decision before
 data-consuming build work starts.
 
+### Generator coverage baseline (#167)
+
+From the repository root, inspect the public routing metadata without reading
+datasets or generating files:
+
+```bash
+python3 -m zava_forward.core.synthetic.coverage \
+  docs/reference/research/retrofit-synthetic-data/needs-inventory.json
+```
+
+The deterministic JSON report includes every need, coverage totals, child
+issues or justified deferrals, convention declarations and pending owner items.
+Invalid IDs, duplicate rows/references, blank rationale, malformed issues,
+missing declarations or a partial/missing row marked delivered fail explicitly
+with a nonzero exit. `tests/test_generator_coverage.py` owns these semantic
+checks and CLI regressions; the existing generator/determinism tests retain
+their output-contract checks.
+
+Inventory v1.2.0 has two covered and eleven partial needs, with no missing
+rows. A valid route is not proof that the child is delivered, that generated
+records meet every convention, or that the owner approved scope. In particular,
+the scale fixture's homes/events use a synthetic manifest label rather than
+per-record `is_synthetic=true`; the inventory's universal declaration is not
+fully evidenced. This tool does not change those historical snapshots.
+Private regeneration, owner mapping/volume decisions, full SQL-scale tests,
+real AI/Azure and human acceptance remain separate gates. Existing human
+approvals, resident consent and AI release controls are unchanged. Dataset
+generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
+
 * Evaluation dataset registry (`src/agents/evals/registry.json`) lists every golden and
   evaluation dataset with version, owner and purpose; a test fails for an
   unregistered file in `mvp/evals/` or any `src/<project>/evals/` folder. The stock-scale fixture (60,000 homes, 600,000

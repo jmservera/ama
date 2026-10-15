@@ -3200,3 +3200,18 @@ metadata when the knowledge base was created.
   Manual escalation and exercise hours are not operational acceptance.
   Existing AI proposal/human-review gates, resident consent and safety controls
   remain; no live inference, Azure deployment or human acceptance is claimed.
+
+## [2026-10-15] query | Generator gap-routing baseline (#167)
+
+* Added a read-only coverage report in `src/core` against the unchanged merged
+  needs inventory v1.2.0: all 13 needs routed, two covered and eleven partial.
+  Semantic and CLI tests reject malformed/duplicate IDs, issue references,
+  blank rationale, unexplained deferrals and unsupported delivered claims.
+* Reused the existing generator and determinism suites; no private register,
+  new generator, generated output or owner scope/deferral was introduced.
+* Updated the pack gap-closure section, core README and this index. Declaration
+  presence is not output conformity: scale homes/events use manifest-level
+  synthetic labels rather than universal per-record `is_synthetic=true`.
+* Owner mapping/row-owner ratification, private stock regeneration, scope and
+  volume decisions, full profile/SQL-scale and actual AI/Azure/human acceptance
+  remain open. Human approvals, resident consent and AI release gates are unchanged.
