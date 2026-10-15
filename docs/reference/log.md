@@ -2656,6 +2656,16 @@ metadata when the knowledge base was created.
 * Updated the `ama-*` agent row in the index. No research or regulatory content
   changed.
 
+## [2026-10-15] update | Coordinator agent loop and gated automerge
+
+* Updated `.github/agents/ama-backlog-delivery-coordinator.agent.md`: the
+  qualified `hve-core-all:rpi-agent` name, a loop that continues until every
+  issue is merged or blocked, an owner delegation for gated squash merge and
+  run-owned rebases, and a human-blocker ledger that stops only dependent work.
+* Repository auto-merge is disabled and branch protection is unavailable on
+  this plan, so the agent merges after verifying checks itself. No repository
+  settings were changed.
+
 ## [2026-10-15] add | Document and form fixtures
 
 * Added a section on the 120-family document, form-schema and seeded-defect fixtures
