@@ -16,8 +16,8 @@ import sys
 import urllib.parse
 import xml.etree.ElementTree as ET
 
-from . import ledger
-from .documents import AzureBlobDocumentStore, DocumentStoreError
+from zava_forward.core import ledger
+from zava_forward.core.documents import AzureBlobDocumentStore, DocumentStoreError
 
 ALERT_MARKER = "LEDGER_DIGEST_ALERT"
 OK_MARKER = "LEDGER_DIGEST_OK"
@@ -121,7 +121,7 @@ def main(argv=None, env=None, store=None, blob=None, out=print):
     """python -m zavaforward_mvp.digest_blob [--publish] : publish then verify; exit 1 and alert on mismatch."""
     argv = sys.argv[1:] if argv is None else argv
     if store is None:
-        from .factory import open_store
+        from zava_forward.core.factory import open_store
         store = open_store(env)
     blob = blob or open_digest_store(env)
     if blob is None:

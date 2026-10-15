@@ -12,9 +12,9 @@ from pathlib import Path
 
 import test_mvp
 from zavaforward_mvp import lawstore
-from zavaforward_mvp.projection import STAFF_ROLES
+from zava_forward.core.projection import STAFF_ROLES
 from zavaforward_mvp.server import App, make_handler
-from zavaforward_mvp.sqlstore import SqlStore
+from zava_forward.core.sqlstore import SqlStore
 
 REG = Path(__file__).resolve().parents[2] / "docs" / "reference" / "regulatory"
 
@@ -187,7 +187,7 @@ TABLES = ("reg_index", "reg_gap", "reg_provision", "reg_version", "reg_source")
 
 
 def wipe_mssql():
-    from zavaforward_mvp.mssqlstore import _Conn, connection_string
+    from zava_forward.core.mssqlstore import _Conn, connection_string
     c = _Conn(connection_string())
     for t in TABLES:
         c.execute(f"IF OBJECT_ID(N'{t}_append_only', N'TR') IS NOT NULL DROP TRIGGER {t}_append_only")

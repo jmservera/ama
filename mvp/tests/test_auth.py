@@ -14,7 +14,7 @@ from pathlib import Path
 import test_mvp
 from zavaforward_mvp import auth
 from zavaforward_mvp.server import App, make_handler
-from zavaforward_mvp.store import Store
+from zava_forward.core.store import Store
 
 TENANT = "11111111-2222-3333-4444-555555555555"
 OID_SAM = "aaaaaaaa-0000-0000-0000-000000000001"

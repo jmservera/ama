@@ -82,7 +82,7 @@ def main(argv=None):
         data = os.path.join(tmp, "load.json")
         with open(data, "w", encoding="utf-8") as f:
             json.dump(src, f)
-        from .factory import open_store
+        from zava_forward.core.factory import open_store
         env = dict(os.environ, ZF_DATA=data, ZF_STATE=tmp)
         env.setdefault("ZF_STORE", "sqlite")
         store = open_store(env)

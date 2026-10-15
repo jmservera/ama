@@ -30,7 +30,7 @@ import time
 import uuid
 from datetime import datetime, timedelta, timezone
 
-from .chatthreads import MAX_CONTENT, MEMORY_ID_PREFIX, user_key
+from zava_forward.core.chatthreads import MAX_CONTENT, MEMORY_ID_PREFIX, user_key
 
 WARNING = ("Do not type health, disability, safeguarding, religion, ethnicity, sexual orientation, trade union, criminal, "
            "financial hardship or other special-category details, and do not paste resident contact details. Use the case record "
@@ -211,7 +211,7 @@ class ChatPrivacy:
         self._switch(user, "global", "all", enabled, "chat.memory.global")
 
     def set_task(self, user, task, enabled):
-        from .assistants import REGISTRY
+        from zava_forward.core.assistants import REGISTRY
         if task not in REGISTRY:
             raise ValueError("Unknown assistant task.")
         self._switch(user, "task", task, enabled, "chat.memory.task")
@@ -226,11 +226,11 @@ class ChatPrivacy:
 
     @staticmethod
     def _tasks():
-        from .assistants import REGISTRY
+        from zava_forward.core.assistants import REGISTRY
         return REGISTRY
 
     def _known_task(self, task):
-        from .assistants import REGISTRY
+        from zava_forward.core.assistants import REGISTRY
         if task not in REGISTRY:
             raise ValueError("Memory needs a known assistant task, so the per-task switch can apply.")
 

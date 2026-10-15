@@ -15,9 +15,9 @@ from playwright.sync_api import expect, sync_playwright
 
 from test_assistants import Provider, config
 from test_mvp import DATA
-from zavaforward_mvp.assistants import Assistants, REGISTRY, canonical
+from zava_forward.core.assistants import Assistants, REGISTRY, canonical
 from zavaforward_mvp.server import App, make_handler
-from zavaforward_mvp.sqlstore import SqlStore
+from zava_forward.core.sqlstore import SqlStore
 
 
 def main():

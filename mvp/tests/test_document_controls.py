@@ -8,11 +8,11 @@ from datetime import date
 from pathlib import Path
 
 import test_mvp
-from zavaforward_mvp.doc_controls import (DEFENDER_TAG, DefenderForStorageScanner, DocumentUnavailable, LocalSignatureScanner,
+from zava_forward.core.doc_controls import (DEFENDER_TAG, DefenderForStorageScanner, DocumentUnavailable, LocalSignatureScanner,
                                           TEST_MARKER, open_scanner)
-from zavaforward_mvp.documents import AzureBlobDocumentStore
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import Store
+from zava_forward.core.documents import AzureBlobDocumentStore
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import Store
 from test_documents import FakeBlob
 
 SAM, PAM = test_mvp.DATA["staff"]

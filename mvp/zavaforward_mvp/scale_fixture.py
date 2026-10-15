@@ -13,7 +13,7 @@ import json
 import random
 from pathlib import Path
 
-from .insights import STAGE_ORDER
+from zava_forward.core.insights import STAGE_ORDER
 
 VERSION = "1.1.0"
 HOMES = 60000

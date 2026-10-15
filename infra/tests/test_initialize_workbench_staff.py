@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT / "mvp"))
 spec = importlib.util.spec_from_file_location("staff_initializer", ROOT / "infra/scripts/initialize-workbench-staff.py")
 INIT = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(INIT)
-from zavaforward_mvp import ledger
+from zava_forward.core import ledger
 
 ONE = "11111111-1111-4111-8111-111111111111"
 TWO = "22222222-2222-4222-8222-222222222222"

@@ -9,14 +9,14 @@ import threading
 import unittest
 from pathlib import Path
 
-import test_mvp
+import dataset
 import test_sqlstore as base
-from zavaforward_mvp import chatthreads
-from zavaforward_mvp.chatthreads import ChatNotFound
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import ConflictError, Store
+from zava_forward.core import chatthreads
+from zava_forward.core.chatthreads import ChatNotFound
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import ConflictError, Store
 
-SAM, PAM = test_mvp.DATA["staff"]
+SAM, PAM = dataset.DATA["staff"]
 SECRET = "SYNTHETIC-chat-text-must-not-reach-ledger"
 
 
@@ -126,7 +126,7 @@ class ChatBehaviour:
 class MemoryChatTests(ChatBehaviour, unittest.TestCase):
     def make_store(self, tmp):
         data = Path(tmp) / "zavaforward.json"
-        data.write_text(json.dumps(test_mvp.DATA))
+        data.write_text(json.dumps(dataset.DATA))
         return Store(str(data))
 
     def test_restart_keeps_threads(self):

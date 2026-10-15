@@ -12,10 +12,11 @@ from unittest import mock
 import release_support
 
 import test_mvp
-from zavaforward_mvp import ai_eval, ai_tasks
+from zava_forward.core import ai_tasks
+from zavaforward_mvp import ai_eval
 from zavaforward_mvp.server import App, make_handler
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import Store
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import Store
 
 
 class TasksMixin:
@@ -272,8 +273,8 @@ if __name__ == "__main__":
 
 class RegistryEnvelopeTests(unittest.TestCase):
     def test_all_assistants_and_retained_paths_are_registered_unapproved(self):
-        from zavaforward_mvp import ai_registry
-        from zavaforward_mvp.assistants import REGISTRY
+        from zava_forward.core import ai_registry
+        from zava_forward.core.assistants import REGISTRY
         reg = ai_registry.registry()
         ids = {t["id"] for t in reg["tasks"]}
         self.assertTrue(set(REGISTRY) <= ids)
@@ -293,7 +294,7 @@ class RegistryEnvelopeTests(unittest.TestCase):
             ai_tasks.require_registered("invented-task")
 
     def test_envelope_binds_versions_and_model_and_stays_unapproved(self):
-        from zavaforward_mvp import ai_registry
+        from zava_forward.core import ai_registry
         ok = ai_registry.envelope("summary", ["ZF-1"], {"ZF-1": "abc"}, dict(source="ai", model="m1", prompt_version="p"), 3)
         self.assertEqual((ok["provider"], ok["deployment"], ok["model"], ok["case_version"], ok["approved"], ok["approval"]),
                          ("azure-openai", "m1", "m1", 3, False, "Not reviewed"))

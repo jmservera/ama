@@ -9,9 +9,9 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 import test_mvp
-from zavaforward_mvp import projection
+from zava_forward.core import projection
 from zavaforward_mvp.server import App, make_handler
-from zavaforward_mvp.store import Store
+from zava_forward.core.store import Store
 
 REASON = "SEEDED-REASON-dementia-and-hearing-loss"
 PHONE = "01999 888777"

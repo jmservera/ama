@@ -6,8 +6,8 @@ from unittest.mock import patch
 
 import release_support
 from test_assistants import Base, config
-from zavaforward_mvp import assistant_release as rel
-from zavaforward_mvp import assistants
+from zava_forward.core import assistant_release as rel
+from zava_forward.core import assistants
 from zava_forward.core.ai import Ai
 
 CAP = "stock-prioritisation"

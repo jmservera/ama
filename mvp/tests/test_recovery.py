@@ -7,9 +7,10 @@ import urllib.parse
 from pathlib import Path
 
 import test_mvp
-from zavaforward_mvp import ledger, loadcheck, recovery
-from zavaforward_mvp.documents import AzureBlobDocumentStore, DocumentStoreError
-from zavaforward_mvp.sqlstore import SqlStore
+from zava_forward.core import ledger
+from zavaforward_mvp import loadcheck, recovery
+from zava_forward.core.documents import AzureBlobDocumentStore, DocumentStoreError
+from zava_forward.core.sqlstore import SqlStore
 
 
 def at(year):

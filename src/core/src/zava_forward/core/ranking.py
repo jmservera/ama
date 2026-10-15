@@ -10,7 +10,7 @@ import hashlib
 import json
 import os
 
-POLICY_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "policies")
+POLICY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "policies")
 
 
 class PolicyError(Exception):

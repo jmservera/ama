@@ -173,7 +173,7 @@ def prepare_roster(db: Any, wanted: list[dict], directory: Directory) -> list[di
 
 def install_roster(db: Any, roster: list[dict], *, apply: bool) -> dict[str, int]:
     """Atomically reconcile current identities/owner labels; preserve all historical actors."""
-    from zavaforward_mvp import ledger
+    from zava_forward.core import ledger
 
     db.execute("BEGIN IMMEDIATE")
     try:
@@ -255,7 +255,7 @@ def restart_api(group: str, app: str) -> None:
 def main(argv: list[str] | None = None) -> int:
     """Resolve deployed configuration and reconcile only explicitly selected private people."""
     from zavaforward_mvp.auth import DEFAULT_ROLE_MAP
-    from zavaforward_mvp.mssqlstore import _Conn, connection_string
+    from zava_forward.core.mssqlstore import _Conn, connection_string
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--resource-group", required=True)

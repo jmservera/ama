@@ -17,14 +17,14 @@ from unittest.mock import patch
 
 import release_support
 import test_mvp
-from zavaforward_mvp import projection, quality
+from zava_forward.core import projection, quality
 from zava_forward.core.ai import Ai
-from zavaforward_mvp.assistants import (
+from zava_forward.core.assistants import (
     Assistants, Limits, MSSQL_DDL, PURPOSE, REGISTRY, RULES, VERSION, canonical, capture, digest, eligible,
 )
 from zavaforward_mvp.server import App, make_handler
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import ConflictError
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import ConflictError
 
 
 def config(**overrides):
@@ -153,7 +153,7 @@ class WorkerFailureReporting(unittest.TestCase):
             operation = "transaction" if target == "_worker" else "scan"
             with patch.object(service, operation, side_effect=RuntimeError("PRIVATE-DRIVER-DETAIL")):
                 with patch.object(service.stop_event, "wait", side_effect=lambda delay: service.stop_event.set()) as wait:
-                    with self.assertLogs("zavaforward_mvp.assistants", level="WARNING") as messages:
+                    with self.assertLogs("zava_forward.core.assistants", level="WARNING") as messages:
                         getattr(service, target)()
                     self.assertNotIn("PRIVATE-DRIVER-DETAIL", " ".join(messages.output))
                     self.assertIn("manual work remains available", " ".join(messages.output))
@@ -1034,7 +1034,7 @@ class MssqlFixture:
     """Actual disposable SQL, with the same nonbillable provider and contracts."""
 
     def setUp(self):
-        from zavaforward_mvp.mssqlstore import _Conn, connection_string
+        from zava_forward.core.mssqlstore import _Conn, connection_string
         if os.environ.get("ZF_SQL_SERVER") not in ("localhost", "127.0.0.1", "sql"):
             raise ValueError("Assistant SQL tests require the local disposable SQL service, never Azure SQL.")
         self.sql_env = dict(os.environ, ZF_SQL_DATABASE="zf_test_assistants")
@@ -1053,7 +1053,7 @@ class MssqlFixture:
         super().setUp()
 
     def open_store(self):
-        from zavaforward_mvp.mssqlstore import MssqlStore
+        from zava_forward.core.mssqlstore import MssqlStore
         return MssqlStore(str(self.seed), env=self.sql_env, state_dir=str(self.root))
 
 
@@ -1082,7 +1082,7 @@ class MssqlLedgerTests(Base):
     """A fresh ledger database: table drops cannot reset system-versioned ledger objects."""
 
     def setUp(self):
-        from zavaforward_mvp.mssqlstore import _Conn, connection_string
+        from zava_forward.core.mssqlstore import _Conn, connection_string
         if os.environ.get("ZF_SQL_SERVER") not in ("localhost", "127.0.0.1", "sql"):
             raise ValueError("Ledger tests require the local disposable SQL service, never Azure SQL.")
         self.sql_env = dict(os.environ, ZF_SQL_DATABASE="zf_test_assistants_ledger")
@@ -1097,7 +1097,7 @@ class MssqlLedgerTests(Base):
         super().setUp()
 
     def open_store(self):
-        from zavaforward_mvp.mssqlstore import MssqlStore
+        from zava_forward.core.mssqlstore import MssqlStore
         return MssqlStore(str(self.seed), env=self.sql_env, state_dir=str(self.root))
 
     def test_five_paths_append_only_and_restart_on_ledger_database(self):
@@ -1121,7 +1121,7 @@ class MssqlLedgerTests(Base):
         self.assertEqual(before, self.domain())
 
     def test_existing_updatable_ledger_event_table_fails_closed_without_dropping(self):
-        from zavaforward_mvp.mssqlstore import _Conn, connection_string
+        from zava_forward.core.mssqlstore import _Conn, connection_string
         # Create the earlier bad shape before this service's first migration.
         master = _Conn(connection_string(dict(self.sql_env, ZF_SQL_DATABASE="master")))
         try:
@@ -1132,7 +1132,7 @@ class MssqlLedgerTests(Base):
         finally:
             master.close()
         env = dict(self.sql_env, ZF_SQL_DATABASE="zf_test_assistants_ledger_invalid")
-        from zavaforward_mvp.mssqlstore import MssqlStore
+        from zava_forward.core.mssqlstore import MssqlStore
         store = MssqlStore(str(self.seed), env=env, state_dir=str(self.root))
         self.addCleanup(store.db.close)
         store.ai = self.provider

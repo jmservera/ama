@@ -3,9 +3,9 @@ import re
 import unittest
 from pathlib import Path
 
-from zavaforward_mvp.store import Store
+from zava_forward.core.store import Store
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 WEB = ROOT / "mvp" / "web"
 DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "content-standard.md").read_text()
 BANNED = re.compile(r"\b(gates?|holds?|provenance|traces?)\b", re.I)
@@ -28,7 +28,7 @@ class CopyAudit(unittest.TestCase):
 
     def test_ai_label_is_exact_and_never_implies_approval(self):
         self.assertEqual(Store.REC_LABEL, "AI suggestion, not approved")
-        for f in (ROOT / "mvp" / "zavaforward_mvp").glob("*.py"):
+        for f in (*(ROOT / "mvp" / "zavaforward_mvp").glob("*.py"), *(ROOT / "src" / "core" / "src" / "zava_forward" / "core").glob("*.py")):
             self.assertNotIn("human-approved", f.read_text().replace("human-approved by", ""), f.name)
         js = (WEB / "app.js").read_text()
         self.assertIn("This is not an approval, consent or safety decision", js)

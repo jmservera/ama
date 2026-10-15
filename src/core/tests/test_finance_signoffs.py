@@ -5,10 +5,10 @@ import tempfile
 import unittest
 from pathlib import Path
 
-import test_mvp
-from zavaforward_mvp import controls
-from zavaforward_mvp.sqlstore import SqlStore
-from zavaforward_mvp.store import GateError, Store
+import dataset
+from zava_forward.core import controls
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import GateError, Store
 
 
 def person(code, role, **kw):
@@ -34,7 +34,7 @@ class Flows:
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        d = copy.deepcopy(test_mvp.DATA)
+        d = copy.deepcopy(dataset.DATA)
         d["staff"] = STAFF
         d["cases"][0]["measures"] = "Loft insulation, Cavity wall"
         self.store = self.make(d, self.tmp.name)
