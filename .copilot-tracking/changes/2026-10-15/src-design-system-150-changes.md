@@ -114,6 +114,9 @@ Read-only GitHub/docs inspection is research, not application validation.
 | `gh pr view 313 --json number,url,baseRefName,headRefName,state,commits --jq '{number,url,baseRefName,headRefName,state,commits:[.commits[].oid]}' && gh pr checks 313 --json name,state,bucket` | Passed; open main-targeted PR on exact branch, implementation commit confirmed; image/test/all src suites/mssql/data/validate checks in progress, namespace queued |
 | `git diff --check` and inline Python JSON/path/rank assertions over the reconciled state; `git show -s --format='%H%n%ae%n%ce%n%B' HEAD` | Passed; completed Follow-up state, all six artifact pointers exist, ranks 1/2/3, actual implementation author/committer match noreply email and required trailer |
 | `gh pr checks 313 --json name,state,bucket` (second snapshot) | Core, agents, importer, namespace and working-data checks passed; image, test, API, orchestrator, mssql and validate still in progress |
+| `gh pr checks 313 --watch --interval 20 --fail-fast` | Passed, exit 0; all 11 checks green on 046f6dcdcfbfac4d6fbe67b39f58c4b416f5b6ba, including src API, images and SQL Server |
+| `gh run view 38814048100 --job 116694595043 --log` filtered with grep/tail | Passed; job log retrieved, but broad timestamp matches were not treated as browser-step evidence |
+| `gh run view 38814048100 --json jobs --jq '.jobs[] \| select(.name == "src-api") \| .steps[] \| select(.name \| test("design\|browser\|isolated"; "i")) \| {name,conclusion}' && gh pr checks 313 --json name,state,bucket` | Passed; both "Check design-system browser harness without migration exemptions" and "Synthetic design-system browser checks" explicitly succeeded; all 11 checks successful |
 
 The review-time inline Python check parsed all local Markdown targets in
 docs/reference/README.md, docs/reference/log.md,
@@ -166,8 +169,9 @@ local Docker limitations; no unresolved implementation blocker for this slice.
 
 ## Blockers
 
-Docker permission prevents local image validation. Real inference, SQL Server,
-Azure and human accessibility results are unavailable, not simulated as acceptance.
+Docker permission prevents local image validation. Subsequent CI image and
+SQL Server checks passed. Real inference, Azure and human accessibility results
+remain unavailable, not simulated as acceptance.
 
 ## Delivery Evidence
 
@@ -182,6 +186,13 @@ without changing reviewed source; no history rewrite or second Review.
 The closeout uses a separate `docs(tracking)` commit and ordinary topic push,
 then refreshes the PR body from this ledger. Its own SHA and publication are
 recorded by PR commit history rather than a self-referential artifact commit.
+
+Post-publication CI snapshot: all 11 checks passed on
+046f6dcdcfbfac4d6fbe67b39f58c4b416f5b6ba. Runs 38814048100 (src),
+38814049451 (image/test/mssql) and 38814048143 (validate) succeeded.
+Browser-specific CI steps explicitly succeeded, not merely skipped. This final
+evidence-only update does not change reviewed or tested source. The same watch
+command checks the subsequent tracking-only head; the PR retains final results.
 
 ## Remaining Work
 

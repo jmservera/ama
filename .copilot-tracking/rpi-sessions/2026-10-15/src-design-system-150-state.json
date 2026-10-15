@@ -34,6 +34,11 @@
       "decision": "P03 delivered as an open main-targeted Refs #150 PR; no merge or issue closure",
       "status": "confirmed",
       "evidence": "https://github.com/jmservera/ama/pull/313; implementation commit 9f80a45115c5c8cebb8d3506518251fd7c75b074 pushed on feat/src-design-system-150; first CI snapshot in progress"
+    },
+    {
+      "decision": "Post-publication CI passed all 11 checks, including actual browser steps, images and SQL Server",
+      "status": "confirmed",
+      "evidence": "Head 046f6dcdcfbfac4d6fbe67b39f58c4b416f5b6ba; runs 38814048100, 38814049451 and 38814048143; changes ledger records command results; final update is evidence-only"
     }
   ],
   "blockers": [],
@@ -56,9 +61,9 @@
     },
     {
       "rank": 3,
-      "task": "Inspect CI image/SQL checks and arrange authorized real-service validation",
-      "rationale": "Local Docker is denied and 97 environment-dependent tests are skipped; no live inference or Azure acceptance is implied",
-      "evidence": "RV-003 and changes command ledger"
+      "task": "Arrange authorized real inference and Azure validation",
+      "rationale": "CI image/SQL checks now pass, but local Docker is denied and no live inference or Azure acceptance is implied",
+      "evidence": "RV-003, passing CI runs and changes command ledger"
     }
   ]
 }
