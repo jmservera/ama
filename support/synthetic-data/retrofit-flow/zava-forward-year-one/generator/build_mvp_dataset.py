@@ -4,7 +4,7 @@ Runs the year-one simulation, gives every household, contractor and staff
 member a name, and places each home on a real address from the private
 stock-geography register. Dates are shifted to an explicit exercise date.
 
-The output (mvp/data/zavaforward.json) contains real OpenStreetMap addresses
+The output (ZF_DATA, default ~/.zava-forward/data/zavaforward.json) contains real OpenStreetMap addresses
 with invented residents. It is git-ignored and must stay on this machine.
 
 Usage:
@@ -29,10 +29,9 @@ import zf_stock_epc
 import zf_stock_fabric
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.path.abspath(os.path.join(HERE, *[".."] * 5))
 REGISTER = os.path.join(HERE, "..", "stock-geography", "private-north-east-stock-register.csv")
-sys.path.insert(0, os.path.join(REPO, "mvp"))
 from zf_mvp_coverage import enrich, receipt
+from zava_forward.core.synthetic import output_dir
 
 STAGE = {
     "Identified": "Home identified", "Lease review": "Checking lease", "Deferred (resequenced)": "Rescheduled",
@@ -141,7 +140,7 @@ def shift(d, off):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=20260901)
-    ap.add_argument("--out", default=os.path.join(REPO, "mvp", "data", "zavaforward.json"))
+    ap.add_argument("--out", default=str(output_dir("zavaforward.json")))
     ap.add_argument("--as-of", type=date.fromisoformat, default=date.today())
     a = ap.parse_args()
     seed = a.seed

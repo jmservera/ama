@@ -3068,6 +3068,11 @@ metadata when the knowledge base was created.
 * Removed the `importer` ruff and mypy exemptions. `core`, `api`, `orchestrator` and `agents` keep theirs (about 2,300 findings without them), recorded as a follow-up in `src/README.md` and the parity matrix.
 * Tests: baseline on `main` 747 (core 252, agents 31, orchestrator 17, importer 9, api 438; 92 skipped); after, 747. Open: docker and SQL Server are not available locally, so the image and `mssql` jobs rely on CI.
 
+## [2026-10-15] restructure | CI, generator and docs repoint verified against main (#200)
+
+* Verified each #200 criterion against main (see `.copilot-tracking/changes/2026-10-15/issue-200-src-repoint-changes.md`). Most work landed in M1 to M6. Gaps fixed: `build_mvp_dataset.py` no longer puts `mvp` on `sys.path` and defaults its output to `ZF_DATA` (`~/.zava-forward/data/zavaforward.json`); the `mvp-validation.yml` committed-data check now also covers `src/**/data/**`; `src/api/README.md` notes the output location.
+* Left open and unticked: new-tag deploy and verification on Container Apps (needs the Azure subscription and a CI-built image; Docker is not available locally), the branch-protection rename (owner decision 2026-10-15: keep names until after cut-over, #201).
+
 ## [2026-10-15] build | Excel transition library in src/importer (#80)
 
 * Added `xlsx`, `mapping`, `quarantine` and `export` modules to `src/importer` (standard library only, synthetic data): declared workbook structure with column mapping, conflicts and a row-level preview with lineage; scan through `core` `doc_controls`; quarantine store with a named-human approval gate (approver differs from stager, automation refused) and supersession history portable to SQL Server; CSV and one-way read-only Excel export with a History sheet independent of any AI provider; read-only comparison. 17 new tests (importer 26).
