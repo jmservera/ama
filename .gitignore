@@ -8,6 +8,14 @@ support/synthetic-data/**/answer-key/
 
 # MVP working data holds real map addresses and must never be committed
 /mvp/data/
+# Working data lives outside the repository (ZF_DATA); never under src/
+/src/**/data/
+/src/**/.venv/
+/src/**/build/
+/src/**/*.egg-info/
+/src/**/.mypy_cache/
+/src/**/.ruff_cache/
+
 
 # Assistant test sandboxes must never be tracked
 /mvp/.assistant-test-*/
