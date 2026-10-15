@@ -1,5 +1,5 @@
 {
-  "_note": "Known Azure Policy exceptions. expiry null means no date has been set and is an open owner decision.",
+  "_note": "Known Azure Policy exceptions. Every exception needs an owner and a real ISO expiry date within 180 days of firstObserved; renewal needs a new owner decision.",
   "exceptions": [
     {
       "id": "EX-001",
@@ -7,8 +7,8 @@
       "policy": "MCAPS external policy that reverts Azure SQL publicNetworkAccess to Disabled",
       "reason": "Development profile with allowPublicNetworkAccess=true needs SQL reachable from external networks (infra/README.md, Development access from external networks)",
       "owner": "Juan Manuel Servera",
-      "expiry": null,
-      "expiryStatus": "open owner decision: proposed to end when the development stack is retired; never apply to a pilot resource group",
+      "expiry": "2026-12-31",
+      "expiryStatus": "set 2026-10-15: expires 2026-12-31 or when the development stack is retired, whichever is first; never apply to a pilot resource group",
       "firstObserved": "2026-10-08",
       "source": "docs/adrs/0001-azure-architecture.md"
     }

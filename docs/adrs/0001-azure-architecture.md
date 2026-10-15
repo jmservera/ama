@@ -422,7 +422,7 @@ Result: the redeploy `warm-dev2` into `ama` (`uksouth`, `allowPublicNetworkAcces
 * RAI task/impact inventory, named residual-risk and incident owners, version-bound release evidence and PRD AC-069 to AC-073 before operational activation.
 
 * Approve the retention schedule and resolve how ledger tables and immutable audit storage coexist with erasure.
-* Azure Policy assignments and subscription-level Defender plans: defined in [`infra/governance.bicep`](../../infra/README.md#governance-controls) (audit mode, Defender plans Free until the owner accepts the cost); Defender cost, an EX-001 expiry and any Deny stance remain owner decisions.
+* Azure Policy assignments and subscription-level Defender plans: defined in [`infra/governance.bicep`](../../infra/README.md#governance-controls) (policy is audit-only, `DoNotEnforce`, so nothing is blocked; Defender plans stay Free until the owner accepts a cost); EX-001 expires 2026-12-31; Defender cost and any Deny stance remain owner decisions.
 * Add Front Door Premium, WAF and the Private Link origin to the internal environment, plus an Entra app registration, once a public edge is needed.
 * Confirm the Foundry model names, versions, SKUs and quotas in the chosen region, and set `modelDeployments` from the PRD evaluation results.
 * Container hardening (non-root user, read-only root file system, dropped capabilities) is an application image requirement; Container Apps does not expose these settings, so enforce them in the Dockerfile and scan images in CI.

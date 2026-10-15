@@ -19,7 +19,7 @@ private production profile. They do not authorize deployment.
 
 * `main.bicep`: resource group scope entry point wiring all modules.
 * `main.bicepparam`: dev parameters; replace the placeholder alert email and Entra group.
-* `modules/`: identity, network (VNet, NSGs, private DNS), monitoring (Log Analytics, App Insights, AMPLS), Key Vault, storage, registry, SQL, Foundry, Container Apps and the generic private endpoint.
+* `modules/`: identity, network (VNet, NSGs, private DNS), monitoring (Log Analytics, App Insights, AMPLS), Key Vault, storage, registry, SQL, Foundry, IoT Hub, Container Apps and the generic private endpoint.
 * `scripts/create-sql-users.sql`: contained SQL users for the managed identities. `scripts/create-sql-users.py` runs the same grants idempotently from the Azure CLI login.
 * `scripts/create-api-app-registration.sh`: Entra app registration, app roles and secret (Key Vault) for API sign-in.
 * `scripts/initialize-api-auth.py`: post-deployment callback synchronization for an existing API registration, without replacing roles, assignments or credentials.
@@ -76,18 +76,18 @@ Governance as code for issue #147 (ADR 0002 decision 6). Owner decisions (2026-1
 
 | Control | Where | Decision | Owner | Cost |
 | --- | --- | --- | --- | --- |
-| Azure Policy assignments (SQL and storage public access, Key Vault deletion protection, required tags) | [`governance.bicep`](./governance.bicep), subscription scope, deployed separately by the subscription owner | Built-in definitions, audit only (`enforcementMode=DoNotEnforce`); a Deny stance is an open owner decision | Juan Manuel Servera | No charge for Azure Policy |
-| Defender for Cloud plans (Storage, SQL servers, Key Vaults, Containers) | [`governance.bicep`](./governance.bicep) | Decided; stay on Free until `enableDefenderPlans=true` | Juan Manuel Servera | Per-resource pricing, not yet estimated: open item, confirm in the Azure pricing calculator before enabling |
-| Resource locks | `enableLocks` in `main.bicep` (Key Vault, SQL, storage) | `main.pilot.bicepparam` sets `true`; the development file keeps `false` so the stack can be reset | Juan Manuel Servera | None |
+| Azure Policy assignments (SQL and storage public access, Key Vault deletion protection, required tags) | [`governance.bicep`](./governance.bicep), subscription scope, deployed separately by the subscription owner | Built-in definitions, audit only (`enforcementMode=DoNotEnforce`): policy reports non-compliance but blocks nothing; a Deny stance is an open owner decision | Juan Manuel Servera | No charge for Azure Policy |
+| Defender for Cloud plans (Storage, SQL servers, Key Vaults, Containers) | [`governance.bicep`](./governance.bicep) | Decided; plans stay on Free (no protection added) until the owner accepts a cost and sets `enableDefenderPlans=true` | Juan Manuel Servera | Per-resource pricing, not yet estimated: open item, confirm in the Azure pricing calculator before enabling |
+| Resource locks | `enableLocks` in `main.bicep` (Key Vault, SQL, storage) | [`main.pilot.example.bicepparam`](./main.pilot.example.bicepparam) (a non-deployable example with placeholders; copy it to a private file and fill every value) sets `true`; the development file keeps `false` so the stack can be reset | Juan Manuel Servera | None |
 | Tagging standard | `allTags` in `main.bicep` | `workload`, `environment`, `dataClassification`, `purpose`, `owner` on every resource; the required-tag policy checks `workload`, `environment`, `dataClassification` and `owner` on resource groups | Juan Manuel Servera | None |
-| Known exceptions | [`policy-exceptions.json`](./policy-exceptions.json) | EX-001: `SecurityControl=Ignore` on the development resource group (MCAPS SQL public-access policy) | Juan Manuel Servera | None |
+| Known exceptions | [`policy-exceptions.json`](./policy-exceptions.json) | EX-001: `SecurityControl=Ignore` on the development resource group (MCAPS SQL public-access policy); expires 2026-12-31 | Juan Manuel Servera | None |
 
 ```bash
 az deployment sub what-if -l uksouth -f infra/governance.bicep
 az deployment sub create -l uksouth -f infra/governance.bicep
 ```
 
-Open items: Defender cost estimate and the decision to enable; an expiry date for EX-001 (proposed: end of the development stack, never on a pilot group); whether to switch any policy from audit to Deny; the group must carry the required tags before Deny is considered. The platform-wide MCAPS policy itself is managed outside this repository.
+Open items: Defender cost estimate and the decision to enable; renewal of EX-001 after 2026-12-31 (never on a pilot group); whether to switch any policy from audit to Deny; the group must carry the required tags before Deny is considered. The platform-wide MCAPS policy itself is managed outside this repository.
 
 ## Key Vault secret lifecycle
 
@@ -599,3 +599,22 @@ az bicep lint --file infra/main.bicep
 az bicep build --file infra/governance.bicep --stdout > /dev/null
 python3 -m unittest infra/tests/test_governance.py
 ```
+
+## IoT Hub (issue 140, ADR 0003 decision 6)
+
+`modules/iothub.bicep` provisions the device-to-cloud ingestion boundary for simulated in-use monitoring. Decisions recorded here are proposals pending owner approval of ADR 0003.
+
+| Item | Decision |
+| --- | --- |
+| Region | uksouth (owner decision) |
+| Tier and units | B1, 1 unit: device-to-cloud and message routing only, enough for the simulator. Move to S1 (parameter `iotHubSku`) only if twins, cloud-to-device or IoT Edge are needed |
+| Cost | Estimate of 25 per month in the billing currency, set as a hub-scoped budget (`iotHubMonthlyCost`) with 80 percent actual and 100 percent forecast alerts. An estimate: confirm against the Azure pricing page before provisioning |
+| Retention | Built-in endpoint keeps messages 1 day (`iotHubRetentionDays`, maximum 7). Azure SQL is the system of record |
+| Consumer | Consumer group `api-consumer` on the built-in endpoint; the API managed identity has only Azure Event Hubs Data Receiver on the hub |
+| Service credentials | `disableLocalAuth` is true: no shared access policy or connection string exists, so none can be stored in source or logs |
+| Network | Production profile: public access disabled, private endpoint with `privatelink.azure-devices.net` and `privatelink.servicebus.windows.net`. Development profile: public access allowed for a throwaway stack |
+| Diagnostics | Connections, DeviceIdentityOperations, Routes, Configurations and metrics to Log Analytics. DeviceTelemetry is not logged, keeping readings and device ids out of logs |
+| Device identity | Individual device identities with per-device keys or X.509 certificates, issued by the simulator provisioning step (#185). Device Provisioning Service is deferred until real sensors are in scope |
+| Credential owner | Juan Manuel Servera issues and rotates device credentials (owner decision); device keys are held in Key Vault, never in source |
+
+Gates: `az bicep build` and `az bicep lint` run in `mvp-validation.yml`; `infra/tests/test_iothub_module.py` guards the module. Open: a live `az deployment group what-if` against the target resource group needs subscription access and has not been run; real pricing confirmation; B1 private endpoint behaviour verified in a deployment.
