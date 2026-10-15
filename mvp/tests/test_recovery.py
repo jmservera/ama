@@ -3,10 +3,12 @@ import os
 import shutil
 import tempfile
 import unittest
+import urllib.parse
 from pathlib import Path
 
 import test_mvp
 from zavaforward_mvp import ledger, loadcheck, recovery
+from zavaforward_mvp.documents import AzureBlobDocumentStore, DocumentStoreError
 from zavaforward_mvp.sqlstore import SqlStore
 
 
@@ -76,6 +78,31 @@ class YearLedgerTests(unittest.TestCase):
             self.assertFalse(s.verify_ledger_by_year()["intact"])
 
 
+class FakeRegisterBlob:
+    def __init__(self):
+        self.blobs, self.fail_put, self.fail_list = {}, False, False
+
+    def __call__(self, method, url, headers, body):
+        u = urllib.parse.urlparse(url)
+        q = urllib.parse.parse_qs(u.query)
+        if method == "PUT":
+            if self.fail_put:
+                return 500, {}, b""
+            if "If-None-Match" in headers and u.path in self.blobs:
+                return 409, {}, b""
+            self.blobs[u.path] = body
+            return 201, {}, b""
+        if method == "GET" and q.get("comp") == ["list"]:
+            if self.fail_list:
+                return 503, {}, b""
+            pre = "/" + q["prefix"][0]
+            names = "".join(f"<Blob><Name>{k[len('/case-docs/'):]}</Name></Blob>" for k in sorted(self.blobs) if k.startswith("/case-docs" + pre))
+            return 200, {}, f"<EnumerationResults><Blobs>{names}</Blobs><NextMarker /></EnumerationResults>".encode()
+        if method == "GET":
+            return (200, {}, self.blobs[u.path]) if u.path in self.blobs else (404, {}, b"")
+        return 405, {}, b""
+
+
 class RecoveryTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -108,6 +135,55 @@ class RecoveryTests(unittest.TestCase):
         self.assertIn("ZF-1", " ".join(e["case"] for e in restored.audit_entries() if e["action"] == "erasure_reapplied"))
         self.assertTrue(restored.verify_ledger()["intact"])
         self.assertNotIn("Pat Test", json.dumps(recovery.read_register(restored)))
+
+    def test_register_is_in_the_document_backend_not_a_local_register_file(self):
+        recovery.erase_resident(self.store, self.sam, "ZF-1", "ER-1")
+        self.assertEqual([e["case"] for e in recovery.read_register(self.store)], ["ZF-1"])
+        found = [f for _, _, fs in os.walk(self.tmp.name) for f in fs]
+        self.assertFalse([f for f in found if f.endswith(".jsonl")])
+
+    def test_register_survives_on_blob_backend_and_blocks_erasure_when_unwritable(self):
+        blob = FakeRegisterBlob()
+        self.store.docstore = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=blob)
+        recovery.erase_resident(self.store, self.sam, "ZF-1", "ER-1")
+        self.assertTrue(any(k.startswith("/case-docs/_erasures/") for k in blob.blobs))
+        self.assertEqual(self.store.cases["ZF-1"]["resident"]["name"], recovery.REDACTED)
+        self.assertEqual([e["reason"] for e in recovery.read_register(self.store)], ["ER-1"])
+        blob.fail_put = True
+        before = self.store.cases["ZF-2"]["resident"]["name"] if "ZF-2" in self.store.cases else None
+        with self.assertRaises(DocumentStoreError):
+            recovery.erase_resident(self.store, self.sam, "ZF-1", "ER-2")
+        self.assertEqual(len(blob.blobs), 1)
+        if before:
+            self.assertEqual(self.store.cases["ZF-2"]["resident"]["name"], before)
+
+    def test_unreadable_register_is_an_error_not_an_empty_register(self):
+        blob = FakeRegisterBlob()
+        blob.fail_list = True
+        self.store.docstore = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=blob)
+        with self.assertRaises(DocumentStoreError):
+            recovery.reapply_deletions(self.store)
+
+    def test_entry_is_written_before_redaction_so_a_crash_cannot_lose_it(self):
+        def boom():
+            raise RuntimeError("crash after redaction")
+        self.store.save = boom
+        with self.assertRaises(RuntimeError):
+            recovery.erase_resident(self.store, self.sam, "ZF-1", "ER-CRASH")
+        self.assertEqual([e["reason"] for e in recovery.read_register(self.store)], ["ER-CRASH"])
+
+    def test_register_entry_precedes_redaction_and_unknown_case_writes_nothing(self):
+        seen = []
+        real = recovery._redact
+        recovery._redact = lambda c: (seen.append(len(recovery.read_register(self.store))), real(c))[1]
+        try:
+            recovery.erase_resident(self.store, self.sam, "ZF-1", "ER-1")
+        finally:
+            recovery._redact = real
+        self.assertEqual(seen, [1])
+        with self.assertRaises(KeyError):
+            recovery.erase_resident(self.store, self.sam, "ZF-NOPE", "ER-2")
+        self.assertEqual(len(recovery.read_register(self.store)), 1)
 
     def test_reason_required(self):
         with self.assertRaises(ValueError):

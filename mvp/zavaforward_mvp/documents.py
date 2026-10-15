@@ -21,6 +21,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 
 MAX_BYTES = 5 * 1024 * 1024
 ACCEPTED = {"pdf": "application/pdf", "png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg",
@@ -47,6 +48,9 @@ class DocumentStore:
         raise NotImplementedError
 
     def delete(self, case_id, doc_id):
+        raise NotImplementedError
+
+    def list_ids(self, case_id):
         raise NotImplementedError
 
 
@@ -81,6 +85,15 @@ class LocalDocumentStore(DocumentStore):
             os.remove(self._path(case_id, doc_id))
         except FileNotFoundError:
             pass
+
+    def list_ids(self, case_id):
+        check_ids(case_id, "x")
+        try:
+            return sorted(os.listdir(os.path.join(self.root, str(case_id))))
+        except FileNotFoundError:
+            return []
+        except OSError as e:
+            raise DocumentStoreError(str(e))
 
 
 def urllib_transport(method, url, headers, body, timeout=20):
@@ -164,6 +177,26 @@ class AzureBlobDocumentStore(DocumentStore):
         status, _, _ = self.transport("DELETE", self._url(case_id, doc_id), self._headers(), None)
         if status not in (200, 202, 404):
             raise DocumentStoreError(f"storage refused the delete (HTTP {status})")
+
+    def list_ids(self, case_id):
+        check_ids(case_id, "x")
+        prefix, names, marker = f"{urllib.parse.quote(str(case_id))}/", [], None
+        while True:
+            q = {"restype": "container", "comp": "list", "prefix": prefix}
+            if marker:
+                q["marker"] = marker
+            url = f"{self.base}?{urllib.parse.urlencode(q)}" + (f"&{self.sas}" if self.sas else "")
+            status, _, body = self.transport("GET", url, self._headers(), None)
+            if status != 200:
+                raise DocumentStoreError(f"storage refused the listing (HTTP {status})")
+            try:
+                root = ET.fromstring(body)
+            except ET.ParseError:
+                raise DocumentStoreError("unreadable storage listing")
+            names += [n.text[len(prefix):] for n in root.iter("Name") if n.text and n.text.startswith(prefix)]
+            marker = (root.findtext("NextMarker") or "").strip()
+            if not marker:
+                return sorted(names)
 
 
 def open_document_store(default_root, env=None, transport=None):

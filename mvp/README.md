@@ -365,11 +365,22 @@ when `ZF_TEST_MSSQL=1` (and `ZF_SQL_*` point at a throwaway database).
   homes for 30 s: list p95 0.28 s, detail 0.30 s, write 0.33 s, no errors (limits 1 s,
   1 s, 2 s). Open items: the same run against Azure SQL, dashboard and import preview
   classes, and cost (needs Azure meter rates and measured vCore time).
-* `zavaforward_mvp/recovery.py` erases a resident's personal fields, keeps a
-  personal-data-free deletion register outside the database, and re-applies it after a
-  restore (`reapply_deletions`, audited as `erasure_reapplied`). The test restores an
-  older SQLite backup and proves the erasure returns. The Azure SQL point-in-time
-  restore drill (DH-005) is not run and remains an open item.
+* `zavaforward_mvp/recovery.py` erases a resident's personal fields and keeps a
+  personal-data-free deletion register outside the database. The register is one
+  write-once entry per erasure under the reserved case id `_erasures` in the document
+  backend: Azure Blob Storage when `ZF_DOC_STORE=azure-blob` (same configuration as case
+  documents), a local folder only as the local-test backend. The entry is written
+  before the redaction, so a crash between the two leaves an erasure that
+  `reapply_deletions` completes (audited as `erasure_reapplied`), never an unrecorded
+  one; if the register cannot be written, nothing is redacted, and an unreadable
+  register is an error, never an empty one. Tests: a SQLite backup restore proves the
+  erasure returns, a fake Blob transport proves the register backend and the write
+  ordering.
+* Unverified: the Azure SQL point-in-time restore drill (DH-005) has not been run;
+  the register has not been run against a real storage account, nor has its
+  retention or immutability policy been configured or tested; the Blob container
+  should carry a WORM/immutability policy, which is infrastructure and unproven here;
+  cost (storage, transactions, restore) is not measured.
 
 ## Honest limits
 
