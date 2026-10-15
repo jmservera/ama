@@ -9,6 +9,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import test_chatthreads as chattests
 import test_mvp
 import test_sqlreads as reads
 import test_sqlstore as base
@@ -16,7 +17,7 @@ import test_timecapture as timetests
 from zavaforward_mvp.sqlstore import SqlStore
 
 ON = os.environ.get("ZF_TEST_MSSQL") == "1"
-TABLES = ("time_entry", "time_request", "time_enabled", "notice_ack", "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance", "audit_head", "audit", "recommendations", "cases", "staff", "meta")
+TABLES = ("chat_message", "chat_thread", "time_entry", "time_request", "time_enabled", "notice_ack", "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance", "audit_head", "audit", "recommendations", "cases", "staff", "meta")
 
 
 def wipe():
@@ -98,6 +99,19 @@ class MssqlTimeCapture(timetests.SharedStoreTests):
 
     def setUp(self):
         wipe()
+
+    def make_store(self, tmp):
+        data, db = base.seed(tmp)
+        return factory(data, db)
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlChatThreads(chattests.ChatBehaviour, unittest.TestCase):
+    """Chat thread storage in Azure SQL / SQL Server with the same behaviour as the in-memory store."""
+
+    def setUp(self):
+        wipe()
+        super().setUp()
 
     def make_store(self, tmp):
         data, db = base.seed(tmp)
