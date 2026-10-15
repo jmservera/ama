@@ -87,7 +87,7 @@ list. Two further open cases gain one Raised commitment and one Valuation
 | Work order | Issued, Completed (source simulation facts) | Appointed, Withdrawn |
 | Budget / commitment | Proposed / Raised | Approved (needs a different named approver) |
 | Invoice / payment | Received, Exceptions (held); Not payable yet | Matched, accepted, rejected; Awaiting payment run, Paid outside this system |
-| Grant | Not recorded with a pending Opportunity proposal | Award, Claimable, Submitted, Accepted, Rejected, Cash received |
+| Grant | Not recorded, with a pending proposal to Opportunity | Opportunity (proposed only, not confirmed), Award, Claimable, Submitted, Accepted, Rejected, Cash received |
 | Quality | Submitted | Accepted, Returned, Fixed, Handed over |
 | Safety hold | Open and Released, from source hazards | None |
 | Resident decision | Not recorded (default) | Waiting, Accepted, Declined, Paused, Withdrawn |
