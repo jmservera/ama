@@ -1,7 +1,7 @@
 ---
 title: Retrofit Synthetic Evidence Pack - Zava Forward Year One
 description: Fifteen months of synthetic operating records from a professional retrofit delivery team that knows it has bottlenecks but not where they are
-ms.date: 2026-10-14
+ms.date: 2026-10-15
 ms.topic: reference
 ---
 
@@ -356,16 +356,39 @@ rendered PDFs or images.
 ## Synthetic data needs inventory and phase gate (2026-10-15)
 
 Issue #166, parent #165. The machine-readable inventory is
-[needs-inventory.json](./needs-inventory.json) (version 1.0.0, draft awaiting
+[needs-inventory.json](./needs-inventory.json) (version 1.2.0, draft awaiting
 owner review). It lists 13 needs with source reference, consuming issues,
 volume, proposed owner and generator coverage (covered, partial or missing).
 
 Gate rule: a build epic that consumes synthetic data cites its inventory row
 (`SN-nn`) before work starts, and a partial or missing row needs a recorded
 owner decision on volume and scope first. The epics gated today are #109
-(SN-09, missing), #157 (SN-08, partial), #104 (SN-02 to SN-10) and #144
-(SN-01, SN-12). The inventory is reviewed on each iteration, and the scenario
-manifest (#103) should link to it once delivered.
+(SN-09, partial), #157 (SN-08, partial), #104 (its cited rows SN-01 to
+SN-07 and SN-10) and #144 (SN-01, SN-04, SN-12). These are issue-specific
+citations, not blanket approval of every row in a numeric range.
+
+The versioned [constructed-scenario manifest](./scenario-manifest.json)
+links the exact inventory version, review date and all thirteen reviewed rows.
+This iteration records an automated engineering review of public repository
+evidence, not owner ratification. Its eleven profile paths and nine workflow
+checks remain explicitly deferred to #103; no defaults, safe endpoints,
+connected lifecycle or full FR-035 acceptance are claimed.
+
+Before each iteration starts, review every row; bump the inventory version
+and review date, update the manifest binding, version and iteration, and
+append the [knowledge log](../../log.md). Preserve prior versions in Git.
+`src/core/tests/test_needs_inventory.py` checks the reciprocal link, exact
+version/date, complete unique reviewed rows and this iteration's pending-owner
+boundary, including negative mutations. It does not enforce GitHub issue
+chronology or grant approval. A data-consuming epic must record its SN row
+citations and the required owner scope/volume decisions before build work
+starts; an automated review or a passing test cannot waive that gate.
+
+Coverage corrections in v1.2.0 distinguish existing stock, EPC, chat, scale
+and sensor fixture tooling from accepted application coverage. Sensor
+backfill is partial, not missing; full-stock materialization, external climate
+verification and live coverage remain unevidenced. Projected generator volumes
+do not resolve the open owner volume/scope decisions.
 
 Open items: owner approval of the inventory and row owners, volumes for
 SN-03, SN-08 and SN-09, and reconciliation with the 2026-10-14 backlog

@@ -1,0 +1,64 @@
+{
+  "task_id": "issue-166",
+  "task_slug": "issue-166-needs-inventory",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-15/issue-166-needs-inventory-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-15/issue-166-needs-inventory-plan.md",
+    "details": ".copilot-tracking/details/2026-10-15/issue-166-needs-inventory-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-15/issue-166-needs-inventory-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-15/issue-166-needs-inventory-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-15/issue-166-needs-inventory-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full automatic RPI loop, commit, push and PR to main on the specified branch",
+      "status": "confirmed",
+      "evidence": "Explicit caller request 2026-10-15"
+    },
+    {
+      "decision": "Research executed, Ready; one critique executed, Revise with PC-001 through PC-003 directly resolved in plan/details",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-15/issue-166-needs-inventory-plan-critique.md"
+    },
+    {
+      "decision": "One implementation Review executed Complete; outcome Residual work; metadata/test engineering boundary assessed, owner and full scenario evidence remain open",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-15/issue-166-needs-inventory-review.md"
+    },
+    {
+      "decision": "Published commit 029f15f and PR #308 to main with Refs #166; CI started, merge remains owner-only",
+      "status": "verified",
+      "evidence": "https://github.com/jmservera/ama/pull/308"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "PR #308 published; await owner-selected ranked follow-up, Stop or manual mode; no child work starts automatically"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner ratification and historical matrix reconciliation",
+      "rationale": "Smallest next action with highest gate value; required before partial-row consuming builds",
+      "evidence": "RV-001; inventory open_items and pending owner_review"
+    },
+    {
+      "rank": 2,
+      "task": "Complete #103 version-linked profile and workflow evidence",
+      "rationale": "Makes the integration seed useful for application acceptance without duplicating inventory tooling",
+      "evidence": "RV-002; scenario-manifest deferred_checks"
+    },
+    {
+      "rank": 3,
+      "task": "Observe PR CI image and SQL Server results",
+      "rationale": "No implementation cost; supplies verification unavailable on the local Docker daemon",
+      "evidence": "RV-003; Docker permission denied and API skipped checks"
+    }
+  ]
+}

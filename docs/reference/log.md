@@ -3125,6 +3125,24 @@ metadata when the knowledge base was created.
   24-scenario/61-turn golden CLI correctly exits 1 with one critical known gap
   (two failed assertions), `passed: false` and enablement `fail`, disabled.
 
+## [2026-10-15] update | Needs inventory iteration gate and scenario linkage (#166)
+
+* Reviewed all thirteen SN rows against public migrated source evidence and
+  bumped `research/retrofit-synthetic-data/needs-inventory.json` to v1.2.0.
+  Corrected stock/EPC, household, chat, scale and sensor fixture notes without
+  claiming private output validation, full-volume runs or owner approval.
+* Added the versioned `scenario-manifest.json` inventory integration seed:
+  reciprocal path, exact inventory version/date and complete reviewed row set.
+  All eleven profile and nine workflow execution checks remain deferred to
+  #103; no full FR-035, application acceptance or resident consent is claimed.
+* Reconciled public provenance metadata, documented the iteration review and
+  pre-build issue/PR citation rule, updated the knowledge index/core README and
+  extended existing `src/core/tests/test_needs_inventory.py` with positive and
+  mutation regressions. No new runtime code or dependencies.
+* Owner ratification, row owners, scope/volume decisions, gap mapping and the
+  unavailable 2026-10-14 handoff matrix remain open. Tooling checks cannot
+  substitute for approval or prove that a GitHub citation preceded a build.
+
 ## [2026-10-15] implementation | Src synthetic determinism and protected refresh (#176)
 
 * Extended the migrated core scale and sensor generators, not `mvp/` or a
