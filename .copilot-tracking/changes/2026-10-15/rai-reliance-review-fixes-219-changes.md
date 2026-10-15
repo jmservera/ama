@@ -8,8 +8,8 @@ ms.date: 2026-10-15
 
 Task 219-review-fixes / rai-reliance-review-fixes-219; parent 219.
 Research reused/Ready; one final-candidate critique Complete/Pass, no findings.
-Declared scope: complete P01/P02 plan. P01 and P02-T01 complete; single Review
-Complete / Conformant for engineering. Publication pending in P02-T02.
+Declared scope: complete P01/P02 plan, now complete. Single Review Complete /
+Conformant for engineering. Published to existing PR 315, ready for code review.
 No material divergences, new decisions or engineering blockers.
 
 ## Commands and Results
@@ -39,6 +39,13 @@ Session files are uncommitted logs under the supplied Copilot session workspace.
 | `cd src/core && P/python -m unittest discover -s tests -q` final full run | Exit 0: 312 tests in 67.178s. |
 | Single post-implementation Review | Complete / Conformant within RV-001 through RV-003 engineering boundary; no new defects. Independently checked syntax/diff and 67 in-memory assertions; did not rerun full suites. RV-004 retained. |
 | Final publication `git fetch --quiet origin main`; `git rev-list --left-right --count origin/main...HEAD`; `git merge-tree --write-tree HEAD origin/main` | New main a6e26fe arrived after initial merge/validation; one commit behind. Conflicts in append-only log and API README, application JS auto-merges. Integrate before publishing; preserve both README sections and use requested log resolver. |
+| `gh api user --jq '{id,login}'`; local email config; scoped `git add` and Conventional Commit with required trailer | Account 8036360/jmservera confirmed; fix commit 0d44f03, 13 task files; both author and committer privacy-safe. |
+| `git merge --no-commit origin/main`; `python3 /tmp/reslog.py docs/reference/log.md`; manual API README marker removal preserving both sections; `git add`; `git diff --check`; verified identity/config; Conventional merge commit with trailer | Exit 0 after resolving the two expected conflicts; merge 266f292 integrates a6e26fe. No rebase/history rewrite, guards/tests/harness unchanged. |
+| `node --input-type=module --check < src/api/src/zava_forward/api/web/app.js`; `git merge-base --is-ancestor origin/main HEAD`; protected-path diff | Exit 0; merged JS syntax valid, latest fetched main included, protected paths/mvp untouched. |
+| `P/python -m pip install -q -e 'src/api[dev]'` | Exit 0; main changed API dev manifest to include pinned Playwright, so restored its declared dependencies with pip. No task dependency-manifest change. |
+| Post-merge `cd src/api && PYTHONPATH=../core/tests:../agents/tests P/python -m unittest discover -s tests -q`, then `P/ruff check . && P/ruff format --check . && P/mypy` | Exit 0: 492 tests in 122.607s, 98 skipped, no failures/errors; lint/format pass, mypy 36 files. No browser/live-platform acceptance claimed. |
+| `git diff --check`; `git diff origin/main --stat`; protected-path diff; last commit identities | Clean scope; no protected-path/mvp changes; fix/merge commits use required privacy-safe author/committer. |
+| `git push origin feat/src-rai-release-record-219`; `gh pr edit 315 --body-file <session>/files/issue219-pr-body.md`; `gh pr ready 315`; PR metadata and worktree status | Exit 0; head 266f292 on same existing PR, isDraft false, main base, mergeStateStatus CLEAN, statusCheckRollup empty (not a CI success claim), clean worktree. Refs #219 preserved, unmet criteria unticked. |
 
 ## P01: Reliance and Cache
 
@@ -73,14 +80,17 @@ evaluation too, removing its duplicate partial setup. No golden data changed.
 
 ## P02: Validation and Publication
 
-Required local validation complete on reviewed source. Single independent Review
-Complete / Conformant; same-PR publication remains. Static checks include agents because its existing
+Required local validation complete on reviewed source and merged integration.
+Single independent Review Complete / Conformant; same-PR publication complete.
+Static checks include agents because its existing
 scripted harness changed. No Docker/Azure/actual-provider attempt is represented
 by these local checks, and unchanged UI needs no new browser claim.
 
 Review: .copilot-tracking/reviews/logs/2026-10-15/rai-reliance-review-fixes-219-review.md.
 Late main integration is an authorized delivery action, not a repeat Review or
-source-fix cycle; recheck affected API suite/tooling after the merge.
+source-fix cycle; affected API suite/tooling were rechecked after the merge.
+Plan/detail/state closeout artifacts will be committed and pushed to the same
+branch as delivery evidence; this does not add source work or a second Review.
 
 ## Remaining Evidence and Human Gates
 

@@ -72,7 +72,7 @@ to lint/type policy. Tests remain synthetic, never live inference.
   accept/edit; exact original reference and current selection both required.
 * [x] RV-003 deny/repeat/approve/request yields one scripted call without case edit.
 * [x] Core/API full suites, ruff/format/mypy pass; changes record exact results.
-* [ ] Same PR updated honestly and marked ready, without merging.
+* [x] Same PR updated honestly and marked ready, without merging.
 * [ ] RV-004 named holders, actual approved evaluation, Docker/SQL Server/Azure
   and direct human acceptance remain unverified, not acceptance of live use.
 
@@ -85,12 +85,12 @@ to lint/type policy. Tests remain synthetic, never live inference.
 * [x] P01-T01: Add regressions, reproduce defects, correct shared guards and cache.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and publish
+### [x] P02: Validate and publish
 
 <!-- rpi:task id=P02-T01 -->
 * [x] P02-T01: Run required checks; update README and changes evidence.
 <!-- rpi:task id=P02-T02 -->
-* [ ] P02-T02: One post-implementation review; commit/push/update existing PR.
+* [x] P02-T02: One post-implementation review; commit/push/update existing PR.
 
 ## Critique Disposition
 
@@ -111,8 +111,11 @@ Canonical source/README only; no generated targets or exact removals.
 Details: .copilot-tracking/details/2026-10-15/rai-reliance-review-fixes-219-phase-details.md.
 Changes: .copilot-tracking/changes/2026-10-15/rai-reliance-review-fixes-219-changes.md.
 One critique before implementation; one review afterward.
-Implementation P01 and validation P02-T01 complete; P02-T02 review/publication
-pending. Final core 312 pass, API 490 run/98 skipped, agents 70 pass, all three
-lint/format/mypy pass. API full-suite harness correction is recorded in details
-and changes; no change to production JSON authorization. Engineering review
-does not approve RV-004 or constitute human release acceptance.
+P01/P02 complete; one Review Complete / Conformant within engineering scope.
+Fix commit 0d44f03 and ordinary main integration 266f292 pushed to the existing
+branch. PR 315 updated with Refs #219 and marked ready; merge state CLEAN at
+publication, no CI checks reported yet. After late main integration, API 492
+run/98 skipped and lint/format/mypy pass (36 files); core 312 and agents 70 pass.
+All commands and harness corrections are recorded in changes/details.
+RV-004 remains unchecked and does not block code review readiness; it does block
+the affected live/human/platform acceptance. No further source work selected.
