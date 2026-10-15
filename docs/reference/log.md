@@ -2822,3 +2822,12 @@ metadata when the knowledge base was created.
 * Updated the coordinator agent so each issue's RPI loop runs in its own named
   tmux session with the agent and brief passed as Copilot CLI parameters, and
   is the only allowed execution route. No index change.
+
+## [2026-10-15] update | Contractor, finance, grant, safety and consent lifecycle coverage
+
+* Added a lifecycle coverage section to `research/retrofit-synthetic-data/README.md`
+  for issue #173: seeded states plus a recorded deferral for every state that
+  would be an invented approval, acceptance, payment, award or consent outcome.
+* Generator receipt gains a `lifecycle` block; two more cases carry a Raised
+  commitment and a Valuation. Labelled synthetic fixtures under ADR 0005.
+* Open: owner decision on demo-only outcome fixtures. No index change.

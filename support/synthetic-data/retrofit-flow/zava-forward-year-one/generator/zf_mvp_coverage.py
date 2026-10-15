@@ -102,6 +102,58 @@ def enrich(data, as_of, source_orders):
             opened_by=liaison["name"], opened_at=stamp, history=[], is_synthetic=True)]
 
 
+    for j, c in enumerate(open_cases[12:14]):
+        measure = c["measures"][0] if isinstance(c["measures"], list) and c["measures"] else ""
+        c["finance"] = dict(budget=dict(amount=12000 + j * 100, status="Proposed", proposed_by=geo["email"],
+            proposed_name=geo["name"], at=stamp, note=NOTE, approved_by=None), commitments=[], invoices=[])
+        if j == 0:
+            c["finance"]["commitments"].append(dict(id="COM-SYN-001", supplier=c["contractor"]["name"],
+                contract="SYNTHETIC-SOURCE-ONLY", measure=measure or "Unknown measure", amount=5000, quantity=1,
+                work_order=next((w["id"] for w in orders if w["case_id"] == c["id"]), "UNKNOWN-SOURCE-ORDER"),
+                status="Raised", raised_by=geo["email"], raised_name=geo["name"], at=stamp, approved_by=None,
+                is_synthetic=True))
+        else:
+            c["finance"]["invoices"].append(dict(id="INV-SYN-002", kind="Valuation", supplier=c["contractor"]["name"],
+                work_order=next((w["id"] for w in orders if w["case_id"] == c["id"]), "UNKNOWN-SOURCE-ORDER"),
+                ref=f"SYNTHETIC-{c['id']}", lines=[dict(measure=measure or "Unknown measure", quantity=1, amount=500,
+                milestone_ref="")], status="Received", exceptions=[], commitment=None, hold=None, disposition=None,
+                disposition_by=None, payment_status="Not payable yet", payment_note=NOTE, received_by=geo["email"],
+                received_name=geo["name"], received_at=stamp, is_synthetic=True))
+
+
+# Lifecycle states that would record a person's or a funder's outcome are deferred, never invented.
+DEFERRED = {
+    "work order": ("Appointed", "Withdrawn"),
+    "budget": ("Approved",),
+    "commitment": ("Approved",),
+    "invoice": ("Matched", "Accepted for payment", "Rejected and returned"),
+    "payment": ("Awaiting payment run", "Paid outside this system"),
+    "grant": ("Opportunity", "Award", "Claimable", "Submitted", "Accepted", "Rejected", "Cash received"),
+    "quality": ("Accepted", "Returned", "Fixed, awaiting reinspection", "Handed over"),
+    "resident decision": ("Waiting", "Accepted", "Declined", "Paused", "Withdrawn"),
+}
+
+
+def lifecycle(data):
+    cases = data["cases"]
+    invoices = [i for c in cases for i in c.get("finance", {}).get("invoices", [])]
+    commitments = [x for c in cases for x in c.get("finance", {}).get("commitments", [])]
+    budgets = [c["finance"]["budget"] for c in cases if c.get("finance", {}).get("budget")]
+    orders = data["procurement"]["work_orders"]
+    seeded = {
+        "work order": Counter(w["state"] for w in orders),
+        "budget": Counter(b["status"] for b in budgets),
+        "commitment": Counter(x["status"] for x in commitments),
+        "invoice": Counter(f"{i['kind']}: {i['status']}" for i in invoices),
+        "payment": Counter(i["payment_status"] for i in invoices),
+        "grant": Counter(g["state"] for c in cases for g in c.get("grants", [])),
+        "quality": Counter(q["state"] for c in cases for q in c.get("quality", [])),
+        "resident decision": Counter(v[-1]["status"] for c in cases for v in c.get("measure_decisions", {}).values() if v),
+        "safety hold": Counter("Open" if not h["released"] else "Released" for c in cases for h in c["hazards"]),
+    }
+    return dict(seeded={k: dict(v) for k, v in seeded.items()}, deferred={k: list(v) for k, v in DEFERRED.items()})
+
+
 def receipt(data):
     as_of = date.fromisoformat(data["as_of"])
     week = as_of - timedelta(days=as_of.weekday())
@@ -121,4 +173,5 @@ def receipt(data):
         quality_records=sum(len(c.get("quality", [])) for c in data["cases"]),
         pending_grants=sum(len(c.get("grants", [])) for c in data["cases"]),
         offered_handoffs=sum(c.get("handoff", {}).get("state") == "Offered" for c in data["cases"]),
-        service_requests=sum(len(c.get("service_requests", [])) for c in data["cases"]))
+        service_requests=sum(len(c.get("service_requests", [])) for c in data["cases"]),
+        lifecycle=lifecycle(data))
