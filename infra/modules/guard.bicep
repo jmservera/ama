@@ -28,7 +28,12 @@ param publicEdgeRequiresProductionProfile string
 @description('Must not be empty. Empty means enablePublicEdge=true without deployApplications=true.')
 param publicEdgeRequiresApplications string
 
+@minLength(1)
+@description('Must not be empty. Empty means environmentName=pilot with the development profile or allowPublicNetworkAccess=true; the pilot keeps every isolation control.')
+param pilotRequiresProductionProfile string
+
 output checked array = [
+  pilotRequiresProductionProfile
   publicEdgeRequiresProductionProfile
   publicEdgeRequiresApplications
   productionProfileForbidsPublicNetworkAccess

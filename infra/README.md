@@ -18,7 +18,7 @@ private production profile. They do not authorize deployment.
 ## Layout
 
 * `main.bicep`: resource group scope entry point wiring all modules.
-* `main.bicepparam`: dev parameters; replace the placeholder alert email and Entra group.
+* `main.bicepparam`, `main.test.bicepparam`, `main.pilot.example.bicepparam`: dev, test and pilot parameter sets (see [Environments](#environments)); replace the marked placeholders.
 * `modules/`: identity, network (VNet, NSGs, private DNS), monitoring (Log Analytics, App Insights, AMPLS), Key Vault, storage, registry, SQL, Foundry, IoT Hub, Container Apps and the generic private endpoint.
 * `role-assignments.json`: role-assignment matrix; `entra/app-registration.json`: declarative Entra registration and owners. Both are checked by `tests/test_identity_rbac.py`.
 * `scripts/create-sql-users.sql`: contained SQL users for the managed identities. `scripts/create-sql-users.py` runs the same grants idempotently from the Azure CLI login.
@@ -60,6 +60,49 @@ The flag does not delete existing apps in incremental deployment mode.
 `allowPublicNetworkAccess=true` and `keyVaultPurgeProtection=false` are rejected in the production profile (see Quality gates). Use `deploymentProfile=development` for a throwaway stack. Do not use the development profile as evidence for the private-network claims in ADR 0001.
 
 Example from the repository root: `az deployment group create -g ama -f infra/main.bicep -p infra/main.bicepparam -p deploymentProfile=development`.
+
+## Environments
+
+Issue #137. One template deploys dev, test and pilot; the parameter file is the only difference. Each environment gets its own resource group in the subscription owned by Juan Manuel Servera (owner decision 2026-10-15), named `rg-zava-forward-{environmentName}`. The pilot region is `uksouth` (owner decision 2026-10-15). Parameter files contain no secrets; placeholders carry a `PLACEHOLDER` comment (`example.invalid` mailbox, all-zero GUID).
+
+| Setting | dev (`main.bicepparam`) | test (`main.test.bicepparam`) | pilot (`main.pilot.example.bicepparam`) |
+| --- | --- | --- | --- |
+| `environmentName` | `dev` | `test` | `pilot` |
+| `deploymentProfile` | `development` | `development` | `production` (template default) |
+| Public access (`allowPublicNetworkAccess`) | `true` | `true` | `false` (private endpoints only) |
+| Key Vault (`keyVaultPurgeProtection`) | `false`: 7 day soft delete | `false`: 7 day soft delete | `true`: 90 day soft delete, purge protection |
+| Registry quarantine | off | off | on |
+| `enableLocks` | `false` | `false` | `true` |
+| `zoneRedundant` (storage ZRS, SQL zone, registry) | `false` | `false` | `false` until the uksouth zone check below is recorded |
+| SKUs | Template defaults: IoT Hub `B1`, Log Analytics `PerGB2018`, registry Premium | same | same; change by parameter, not by template edit |
+| Fixed retention (all environments) | Log Analytics 90 days, SQL point in time 14 days, blob and container soft delete 30 days | same | same |
+| `location` and `sqlLocation` | `uksouth` | `uksouth` | `uksouth` |
+| Deployable as committed | after placeholders | after placeholders | no: copy to a private untracked file first |
+
+Rules:
+
+* Production is the template default. The dev and test files list every relaxation explicitly, and the template rejects `allowPublicNetworkAccess=true` or `keyVaultPurgeProtection=false` in the production profile.
+* `environmentName=pilot` with the development profile or public access is rejected by the parameter guard (`pilotRequiresProductionProfile`).
+* Promotion is by the same template version and a different parameter file: validate in dev, deploy the same commit to test with `what-if`, then to pilot after the owner approves the `what-if` output. Images are promoted by digest through the registry, never rebuilt per environment.
+* `location`, `sqlLocation` and `modelDeployments` are parameters, never template constants.
+
+Recorded region and quota checks (re-run before each deployment; a check in another subscription or on another date proves nothing):
+
+| Check | Result | Observed |
+| --- | --- | --- |
+| Container Apps environment in `uksouth` | Deployed in resource group `ama` | 2026-10-08 |
+| Container Apps environment in `swedencentral` | `AKSCapacityHeavyUsage` | 2026-10-08 |
+| Azure SQL in `northeurope` | Not accepting new servers | 2026-10-08 |
+| Model `gpt-4.1-mini` and `gpt-4.1`, `GlobalStandard`, capacity 30 in `uksouth` | Deployed | 2026-10-11 |
+| Zone redundancy support and quota in `uksouth` for the pilot subscription | Not yet checked: open item | none |
+| Pilot subscription quota for Container Apps cores and model capacity | Not yet checked: open item | none |
+
+Check with `az vm list-skus -l uksouth` style queries and `az cognitiveservices usage list -l uksouth` before the pilot deployment, and record the result here.
+
+Naming and tagging:
+
+* Names derive from `{workload}-{environmentName}` (for example `forward-pilot`), with a 5 character hash of the resource group, location and a version salt where the Azure namespace is global (Key Vault, storage, registry). Storage and registry names drop hyphens.
+* Every resource carries `workload`, `environment` (the environment name), `dataClassification`, `purpose` and `owner`, applied through `allTags` in `main.bicep`; the required-tag policy checks the resource group (see Governance controls). Add environment-wide tags with the `tags` parameter.
 
 ## Quality gates
 

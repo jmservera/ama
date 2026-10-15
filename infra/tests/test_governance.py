@@ -40,6 +40,28 @@ class GovernanceTests(unittest.TestCase):
         self.assertIn("00000000-0000-0000-0000-000000000000", text)
         self.assertNotIn("environmentName = 'dev'", text)
 
+    def test_environment_parameter_files(self) -> None:
+        expected = {"main.bicepparam": "dev", "main.test.bicepparam": "test", "main.pilot.example.bicepparam": "pilot"}
+        for name, environment in expected.items():
+            text = (INFRA / name).read_text()
+            self.assertIn(f"param environmentName = '{environment}'", text, name)
+            self.assertIn("param location = 'uksouth'", text, name)
+            self.assertIn("PLACEHOLDER", text, name)
+            params = "\n".join(line for line in text.splitlines() if line.startswith("param"))
+            self.assertNotRegex(params, r"(?i)password|secret|webhook|sig=", name)
+        for name in ("main.bicepparam", "main.test.bicepparam"):
+            text = (INFRA / name).read_text()
+            for relaxation in ("deploymentProfile = 'development'", "allowPublicNetworkAccess = true", "keyVaultPurgeProtection = false"):
+                self.assertIn(relaxation, text, name)
+        pilot = (INFRA / "main.pilot.example.bicepparam").read_text()
+        self.assertIn("deploymentProfile = 'production'", pilot)
+        for relaxation in ("allowPublicNetworkAccess", "keyVaultPurgeProtection"):
+            self.assertNotIn(relaxation, pilot)
+
+    def test_pilot_requires_production_profile(self) -> None:
+        self.assertIn("pilotRequiresProductionProfile", (INFRA / "main.bicep").read_text())
+        self.assertIn("pilotRequiresProductionProfile", (INFRA / "modules/guard.bicep").read_text())
+
     def test_policy_is_audit_only_and_defender_free_by_default(self) -> None:
         text = (INFRA / "governance.bicep").read_text()
         self.assertIn("param enforcementMode string = 'DoNotEnforce'", text)
