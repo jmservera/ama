@@ -197,12 +197,17 @@ legal advice or approval. Seed metadata is `law/law-source-register.json`.
 ## Rule cards (ADR 0005, phase 2)
 
 `zavaforward_mvp/rulecards.py` holds versioned rule cards in append-only tables
-(`rule_card_version`, `rule_card_event`, `rule_card_review`) with a draft, approved,
+(`rule_card_version`, `rule_card_event`, `rule_card_review`, `rule_card_review_event`) with a draft, approved,
 active, held, retired lifecycle. A card is drafted by the `rule_author` role and only
 its named `rule_owner` can approve, activate, hold, release or retire it; an author
 cannot approve their own card. Versions, approver, approval date and effective dates
-are retained. `source_changed` records an open review item and never alters an
-approved card. The two seed cards (hazard awareness clock, automated decision
+are retained. `source_changed` records an open review item (RULE-021, AC-068) naming the
+affected card, active version, requirements and tests, source versions and effective date,
+and never alters an approved card. `assess_review` lets only the card's named owner record
+the interpretation, tests, effective date, notification, rollback and any hold; it never
+activates a rule, so activation still needs propose, approve and activate by named humans.
+The card-to-requirement and test trace for the two seed cards is a static exercise map;
+unmapped cards are flagged for the owner. The two seed cards (hazard awareness clock, automated decision
 safeguard) are labelled exercise fixtures with simulated approvals only; they are not
 law or real approval, and the owner, clock durations and citations remain open items
 for named Compliance and DPO approval. Mapping the roles to Entra app roles (#116)
