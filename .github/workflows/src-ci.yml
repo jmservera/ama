@@ -68,6 +68,16 @@ jobs:
         run: ruff check . && ruff format --check .
       - name: Type check
         run: mypy
+      - name: Check design-system browser harness without migration exemptions
+        if: matrix.project == 'api'
+        run: |
+          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 checks/design_system_browser_check.py
+          ruff format --isolated --line-length 100 --check checks/design_system_browser_check.py
+      - name: Synthetic design-system browser checks
+        if: matrix.project == 'api'
+        run: |
+          python -m playwright install --with-deps chromium
+          python -m checks.design_system_browser_check
       - name: Build image
         if: matrix.image
         working-directory: .

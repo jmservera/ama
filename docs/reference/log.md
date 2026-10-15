@@ -3231,3 +3231,25 @@ metadata when the knowledge base was created.
 * Update the core/pack explanations and knowledge index. Inventory values and
   scenario bindings remain unchanged; no private data, generator output, SQL,
   owner approval or real-platform acceptance is introduced.
+
+## [2026-10-15] query | Fluent 2 foundations and non-colour workbench signals (#150)
+
+* Reconciled the [design-system decision](./research/ux/design-system.md) with
+  the owner's 2026-10-15 Fluent UI (Fluent 2) choice, superseding the earlier
+  extend-current-UI proposal. The [index](./README.md) now reflects that decision.
+* Added a source-pinned Fluent token mapping and documented project brand,
+  body-size and focus deviations. This native-foundation slice does not complete
+  Fluent component-library adoption; the integration/evidence gate remains open.
+* Reused migrated `src/api` assets: circle/O, square/W and triangle/! markers,
+  matching keys/status names, explicit cluster home/safety counts including zero,
+  and visible selected-filter wording. DOM construction avoids record HTML.
+* Documented keyboard map activation and named scrollable Overview data tables.
+  Updated the AI inventory to describe actual draft-review actions without
+  implying approval, resident consent or safety authority.
+* Added synthetic local browser coverage of the real API's point/cluster modes,
+  rendered tokens, keyboard behavior, narrow widths, forced colours and reduced
+  motion, with development-only Playwright and source-CI wiring. No private data
+  or external basemap calls are needed.
+* Human accessibility acceptance, full Fluent integration, live inference,
+  SQL Server and Azure results remain separate unmet evidence. Docker access is
+  permission denied locally; image checks remain with CI. No deployment changed.
