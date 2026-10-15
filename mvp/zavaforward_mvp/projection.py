@@ -8,12 +8,20 @@ contractor sees only "needs notice" and a named contact, never the reason.
 
 The set of roles with a need is a proposal for the control owners (OD-14,
 OD-19). Override it with ZF_REASON_ROLES (comma separated) once decided.
+
+Free-text notes (decided for the exercise, issue 116): no pattern-based
+redaction, because a reason can be typed in any words and a filter would give
+false assurance. Instead the default-deny allow-lists keep every free-text
+field out of contractor responses and AI prompts, and roles without a recorded
+need see a "held" marker in place of staff-written notes and contact outcomes.
 """
 import os
 
 CONTRACTOR = "Contractor"
 DEFAULT_REASON_ROLES = ("Resident Liaison Officer", "Building Safety Liaison", "Retrofit Programme Manager")
 REDACTED = "Extra support noted"
+NOTE_HELD = "Held for roles with a recorded need"
+NOTE_KEYS = ("note", "release_note", "answer_note")
 
 STAFF_ROLES = ("Retrofit Coordinator", "Resident Liaison Officer", "Building Safety Liaison", "Grants and Evidence Officer",
                "Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer")
@@ -70,8 +78,21 @@ def contractor_detail(c, d):
     return keep
 
 
+def hold_notes(c):
+    """Replace staff-written free text in a case-shaped dict for roles without a need."""
+    for group in ("contacts", "appointments", "hazards"):
+        for item in c.get(group) or []:
+            for k in NOTE_KEYS:
+                if item.get(k):
+                    item[k] = NOTE_HELD
+            if group == "contacts" and item.get("outcome"):
+                item["outcome"] = NOTE_HELD
+    return c
+
+
 def redact_staff_detail(user, d):
     if not can_see_reason(user):
+        hold_notes(d)
         d["resident"]["adjustment"] = REDACTED if d["resident"]["adjustment"] != "None" else "None"
     if user.get("role") not in FINANCE_VIEW:
         d.pop("finance", None)
