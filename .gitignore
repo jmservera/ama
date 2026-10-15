@@ -15,3 +15,7 @@ support/synthetic-data/**/answer-key/
 /src/**/*.egg-info/
 /src/**/.mypy_cache/
 /src/**/.ruff_cache/
+
+
+# Assistant test sandboxes must never be tracked
+/mvp/.assistant-test-*/
