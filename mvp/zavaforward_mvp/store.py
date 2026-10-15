@@ -95,6 +95,15 @@ class Store(WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMi
         """Verify the chain and, when digests exist, that each digest still matches it."""
         return ledger.verify_entries(self.audit_entries(), ledger.read_digests(self.digest_dir))
 
+    def verify_ledger_by_year(self):
+        return ledger.verify_years(self.audit_entries(), ledger.read_year_digests(self.digest_dir))
+
+    def write_year_digests(self):
+        """Seal every year before the current one. Sealed years are written once and never overwritten."""
+        with self.lock:
+            return [ledger.write_year_digest(self.digest_dir, d)
+                    for d in ledger.year_digests(list(self.audit_entries()), before=datetime.now().year)]
+
     def ledger_head(self):
         count, head = 0, ledger.GENESIS
         for e in self.audit_entries():
