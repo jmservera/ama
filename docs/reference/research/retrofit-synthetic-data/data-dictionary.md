@@ -203,3 +203,62 @@ escalations someone chose to log, so it is not a complete record of returns.
 The v1 codes, used from 2025-07-01 to 2026-02-01, and the v2 codes, used from
 2026-02-02. `maps_to_v2` lists possible v2 codes for each v1 code;
 `v1_equivalent` gives the broad v1 code for each v2 code.
+
+## Dataset Coverage and Provenance
+
+[`provenance-register.json`](./provenance-register.json) is the single machine-readable
+register of every dataset, its public or private visibility, its generator, its
+data dictionary entry and its external sources. The automated check
+`mvp/tests/test_synthetic_provenance.py` enforces it.
+
+| Dataset | Visibility | Dictionary entry |
+| --- | --- | --- |
+| Year-one operating CSV pack and manifest | Public | This file, table sections above |
+| MVP operational JSON seed | Private (`mvp/data/`, gitignored) | [Private MVP JSON extension](#separate-private-mvp-json-extension) |
+| 60,000-home stock register and map overlay | Private (`support/`) | [Private stock geography register](#private-stock-geography-register) |
+| AI evaluation scenarios and assistant runtime tables | Public scenarios, private runtime tables | [Chat and assistant data](#chat-and-assistant-data) |
+| Document, form-schema and seeded-defect fixtures | Public | [Document and form data](#document-and-form-data) |
+| Sensor readings | Not generated | [Sensor data](#sensor-data) |
+
+External sources record licence, retrieval date and attribution in the register.
+OpenStreetMap (ODbL 1.0, retrieved 2026-09-30) is complete. Retrieval dates and
+licence wording for Census 2021 TS054, IMD 2025 and the ONS boundaries are open
+items for the owner, not inferred here.
+
+### Private stock geography register
+
+`private-north-east-stock-register.csv` holds one row per synthetic home
+(`SYN-NE-nnnnnn`). `map_address`, `postcode`, `latitude`, `longitude`,
+`osm_object_type` and `osm_object_id` are a real OpenStreetMap anchor
+(`location_is_real_map_anchor` is `true`). Tenure, portfolio category, EPC
+need, occupancy and condition are invented (`is_synthetic` is `true`,
+`actual_owner_or_tenure_verified` is `false`). No resident or person field exists.
+
+### Document and form data
+
+`mvp/evals/document_form_fixtures.json` holds 120 constructed document families,
+form schemas and seeded defects with gold labels. All content is synthetic and
+holds no personal data. The real funding form schema (OQ-015) and human
+adjudication of the gold labels are open items, not inferred here.
+
+### Chat and assistant data
+
+No free-form chat transcripts are generated. The assistant surfaces create
+`assistant_tasks`, `assistant_attempts` and `assistant_events` rows from the
+synthetic seed; these hold prompts built from synthetic case fields, bounded
+model output labelled as an AI suggestion, and append-only audit events. They
+stay in the private serving database. `mvp/evals/ai_priority_golden.json`
+holds constructed public scenarios and scripted model outputs.
+
+### Sensor data
+
+No sensor dataset or generator exists. The register records this as an open
+item pending an owner decision on scope; no fields are invented here.
+
+### Real-person guarantee
+
+Public datasets must contain no email address, UK phone number, National
+Insurance number or real-looking postcode, and every record carries
+`is_synthetic=true`. Real map addresses appear only in private datasets. The
+check fails when a pattern or an unlabelled record appears, or when a private
+path is not ignored or held under `support/`.

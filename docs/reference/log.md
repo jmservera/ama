@@ -2680,6 +2680,18 @@ metadata when the knowledge base was created.
 * Open: named dataset owners; migrating in-test 60,000-case builders. No
   research or regulatory content changed.
 
+## [2026-10-15] update | Synthetic data provenance register
+
+* Added `research/retrofit-synthetic-data/provenance-register.json` covering
+  every dataset (public pack, private stock register, MVP seed, AI scenarios,
+  assistant runtime tables, sensor gap), external source licence, retrieval
+  date and attribution, and public/private visibility.
+* Extended `data-dictionary.md` with dataset coverage, the private stock
+  register, chat and assistant data, sensor data and the real-person guarantee.
+* Added `mvp/tests/test_synthetic_provenance.py` (PII patterns, unlabelled
+  records, public/private separation). Open items: retrieval dates and licence
+  wording for Census 2021, IMD 2025 and ONS boundaries; sensor data scope.
+
 ## [2026-10-15] update | Synthetic data determinism, manifests and refresh policy
 
 * Added a determinism, manifest and proposed refresh-policy section to the
