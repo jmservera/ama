@@ -27,7 +27,7 @@ STAFF_ROLES = ("Retrofit Coordinator", "Resident Liaison Officer", "Building Saf
                "Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer")
 FINANCE_VIEW = ("Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer")
 STAFF_GET = ("finance_queue", "me", "cases", "cases.csv", "case", "ranking", "ai_priority", "facets", "stats", "map", "visits",
-             "funding", "briefing", "doc", "audit", "handoffs", "time", "packages", "workorders", "checklists", "ai_report", "assistants", "law", "retention")
+             "funding", "briefing", "doc", "audit", "handoffs", "time", "packages", "workorders", "checklists", "ai_report", "assistants", "law", "retention", "chat")
 CONTRACTOR_GET = ("me", "cases", "case", "workorders")
 CONTRACTOR_POST = ("logout",)
 

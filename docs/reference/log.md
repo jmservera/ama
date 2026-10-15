@@ -2974,3 +2974,8 @@ metadata when the knowledge base was created.
 
 * `chat_privacy.py` now runs locate, export and erase through the #160 chat repository and its `owner` column; only `chat_memory` is added, with DDL in the store dialect hooks. The separate `chat.sqlite` and bare `sqlite3` use were removed; portability tests added.
 * Wording corrected: provider data handling is not recorded and the free-text warning is not wired into any UI. Lawful basis, notice and DPIA decision remain unrecorded for the DPO.
+
+## 2026-10-15 Chat and memory isolation (#162)
+
+* Added `mvp/zavaforward_mvp/chat_isolation.py`, chat and memory endpoints, `mvp/tests/test_chat_isolation.py` and a `mvp/README.md` section. No knowledge base page or regulatory snapshot changed, so the index is unchanged.
+* Open: break-glass and administrator content-access policy (BRD OD-46, owner), contractor use of chat, live-model injection evaluation (OD-49).
