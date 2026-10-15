@@ -2758,3 +2758,16 @@ metadata when the knowledge base was created.
 * Real-source applicability, personal delegation, actual data processing,
   paid/provider calls and operational acceptance retain their existing gates.
   No application implementation or operational approval is recorded here.
+
+## [2026-10-15] implementation | Versioned law store seeded from local snapshots
+
+* Added the Phase 1 law store of [ADR 0005](../adrs/0005-regulatory-compliance-assistant.md)
+  in `mvp/` (issue #210): source, version, provision and gap records, immutable
+  content-hashed snapshots, a rebuildable keyword index and a read-only viewer.
+  Source metadata is in `mvp/law/law-source-register.json`; see the
+  [Regulatory Source Register](./regulatory/README.md).
+* Snapshots were not edited. Effective dates are recorded only where the local
+  snapshots state them; review dates and owners are unknown and left empty or
+  "to be named". Official-source change checks have not been performed.
+* Open: named Legal, Compliance and DPO owners (#209), licensed PAS 2035 and
+  official sources for leasehold, complaints handling and TrustMark.

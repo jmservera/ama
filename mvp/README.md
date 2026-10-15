@@ -171,6 +171,21 @@ It follows the simplicity requirements SA-001 to SA-010 in the
     request. Contractors get none of it and other staff roles do not see
     finance or grant detail.
 
+## Law store (ADR 0005, phase 1)
+
+`zavaforward_mvp/lawstore.py` loads the dated snapshots in `docs/reference/regulatory/`
+into append-only tables (`reg_source`, `reg_version`, `reg_provision`, `reg_gap`;
+Azure SQL DDL uses ledger append-only tables) and writes each snapshot once, content
+hashed, to a blob folder. Seed with
+`python -m zavaforward_mvp.lawstore REGULATORY_DIR DB_FILE BLOB_DIR`; a changed file
+becomes a new version and nothing existing is altered. Partial sources carry
+`completeness: partial` and results say so. Leasehold, complaints handling, TrustMark
+and licensed PAS 2035 are gaps answered as "no source held". The keyword index
+(`rebuild_index`) is derived from SQL. Set `ZF_LAW_DB` (and `ZF_LAW_BLOBS`) to serve the
+read-only viewer at `/law.html` and `/api/law/*` for staff roles, with no AI. Seeded
+versions are `not_reviewed` with owner "to be named"; this is a reference copy, not
+legal advice or approval. Seed metadata is `law/law-source-register.json`.
+
 ## Configuration
 
 | Variable | Purpose |

@@ -1,0 +1,174 @@
+"""Law store: versioning, immutability, completeness, gaps, rebuildable index, read-only viewer."""
+import json
+import shutil
+import sqlite3
+import tempfile
+import threading
+import unittest
+import urllib.error
+import urllib.request
+from http.server import ThreadingHTTPServer
+from pathlib import Path
+
+import test_mvp
+from zavaforward_mvp import lawstore
+from zavaforward_mvp.projection import STAFF_ROLES
+from zavaforward_mvp.server import App, make_handler
+from zavaforward_mvp.sqlstore import SqlStore
+
+REG = Path(__file__).resolve().parents[2] / "docs" / "reference" / "regulatory"
+
+
+class LawBase(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.reg = Path(self.tmp.name) / "reg"
+        shutil.copytree(REG, self.reg)
+        self.law = lawstore.LawStore(str(Path(self.tmp.name) / "law.sqlite"), Path(self.tmp.name) / "blobs")
+        self.report = self.law.seed(self.reg, today="2026-10-15")
+
+    def tearDown(self):
+        self.law.close()
+        self.tmp.cleanup()
+
+
+class StoreTests(LawBase):
+    def test_every_snapshot_is_loaded_with_full_records(self):
+        register = json.loads(lawstore.REGISTER.read_text())
+        self.assertEqual(self.report["missing_files"], [])
+        self.assertEqual(len(self.report["added"]), len(register["sources"]))
+        for s in self.law.sources()["sources"]:
+            self.assertTrue(s["official_url"].startswith("https://"), s["id"])
+            self.assertIn(s["status"], lawstore.STATUSES)
+            self.assertIn(s["completeness"], lawstore.COMPLETENESS)
+            self.assertEqual(len(s["content_hash"]), 64)
+            self.assertTrue(s["retrieved"] and s["authority_type"] and s["owner"])
+            self.assertIn("reviewed", s)
+            self.assertTrue(self.law.verify_snapshot(s["id"], s["version"]))
+
+    def test_reseed_is_idempotent_and_newer_retrieval_is_a_new_version(self):
+        again = self.law.seed(self.reg)
+        self.assertEqual(again["added"], [])
+        f = self.reg / "social-housing-regulation" / "awaabs-law-phase-1-guidance-2025.md"
+        old = self.law.source("awaabs-law-phase-1-guidance-2025")["versions"][0]
+        f.write_text(f.read_text() + "\n\n## Later addition\n\nNew text.\n")
+        self.assertEqual(self.law.seed(self.reg)["added"], ["awaabs-law-phase-1-guidance-2025@v2"])
+        d = self.law.source("awaabs-law-phase-1-guidance-2025")
+        self.assertEqual([v["version"] for v in d["versions"]], [2, 1])
+        self.assertEqual(d["versions"][1]["content_hash"], old["content_hash"])
+        self.assertTrue(self.law.verify_snapshot("awaabs-law-phase-1-guidance-2025", 1))
+        self.assertTrue(self.law.provision("awaabs-law-phase-1-guidance-2025@v1#0001"))
+
+    def test_existing_rows_cannot_be_changed_or_deleted(self):
+        for sql in ("UPDATE reg_version SET status='in_force'", "DELETE FROM reg_version", "UPDATE reg_provision SET text='x'",
+                    "DELETE FROM reg_source", "UPDATE reg_gap SET reason='x'"):
+            with self.assertRaises(sqlite3.DatabaseError, msg=sql):
+                self.law.db.execute(sql)
+
+    def test_snapshot_files_are_never_overwritten(self):
+        v = self.law.source("pas-2035-bsi-overview")["versions"][0]
+        with self.assertRaises(FileExistsError):
+            self.law._write_blob("pas-2035-bsi-overview", 1, v["content_hash"], b"x")
+
+    def test_partial_sources_say_so(self):
+        for sid in ("pas-2035-bsi-overview", "awaabs-law-phase-2-hazards-guidance-2026"):
+            v = self.law.source(sid)["versions"][0]
+            self.assertEqual(v["completeness"], "partial")
+            self.assertTrue(any("in part" in c for c in v["caveats"]))
+        hit = self.law.search("PAS 2035 retrofit")
+        self.assertTrue(any(lawstore.PARTIAL in c for c in hit["caveats"]))
+
+    def test_missing_sources_are_gaps_returned_as_no_source_held(self):
+        topics = {g["id"] for g in self.law.gaps()}
+        self.assertEqual(topics, {"gap-leasehold", "gap-complaints-handling", "gap-trustmark", "gap-pas-2035-licensed"})
+        for q, gap in (("leasehold service charge", "gap-leasehold"), ("complaint handling", "gap-complaints-handling"),
+                       ("TrustMark registration", "gap-trustmark"), ("licensed PAS 2035", "gap-pas-2035-licensed")):
+            r = self.law.search(q)
+            self.assertIn(gap, [g["id"] for g in r["no_source_held"]])
+            self.assertEqual(r["no_source_held"][0]["answer"], lawstore.NO_SOURCE)
+        self.assertEqual(self.law.search("zzzqqq")["answer"], lawstore.NO_SOURCE)
+
+    def test_unreviewed_and_historical_are_labelled(self):
+        h = self.law.source("uk-gdpr-adopted-text")["versions"][0]
+        self.assertTrue(any("Historical" in c for c in h["caveats"]))
+        self.assertTrue(any(lawstore.NOT_REVIEWED == c for c in h["caveats"]))
+
+    def test_index_rebuilds_from_sql_alone(self):
+        before = self.law.search("hazard timeframe")["results"]
+        self.assertTrue(before)
+        self.law.db.execute("DELETE FROM reg_index")
+        self.assertEqual(self.law.search("hazard timeframe")["results"], [])
+        self.assertGreater(self.law.rebuild_index(), 0)
+        self.assertEqual([r["id"] for r in self.law.search("hazard timeframe")["results"]], [r["id"] for r in before])
+
+    def test_ledger_ddl_maps_every_append_only_table(self):
+        for t in lawstore.APPEND_ONLY:
+            self.assertTrue(any(d.startswith(f"CREATE TABLE {t} ") for d in lawstore.MSSQL_DDL), t)
+
+    def test_split_provisions_keeps_heading_path(self):
+        out = lawstore.split_provisions("---\ntitle: x\n---\n\n## A\n\ntext a\n\n### B\n\ntext b\n")
+        self.assertEqual(out, [("A", "text a"), ("A > B", "text b")])
+
+
+class ViewerTests(LawBase):
+    def setUp(self):
+        super().setUp()
+        self.user = {"email": "pm@example.org", "name": "PM", "role": "Retrofit Programme Manager", "code": "PM"}
+        test = self
+        tmp = tempfile.TemporaryDirectory()
+        self.tmp2 = tmp
+        data = Path(tmp.name) / "zavaforward.json"
+        data.write_text(json.dumps(test_mvp.DATA))
+
+        class Identity:
+            name = "password"
+
+            def authenticate(self, headers):
+                return test.user
+        self.app = App(SqlStore(str(data), str(Path(tmp.name) / "pw.sqlite")), provider=Identity(), law=self.law)
+        self.http = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(self.app))
+        self.thread = threading.Thread(target=self.http.serve_forever)
+        self.thread.start()
+        self.url = f"http://127.0.0.1:{self.http.server_port}"
+
+    def tearDown(self):
+        self.http.shutdown()
+        self.http.server_close()
+        self.thread.join()
+        self.tmp2.cleanup()
+        super().tearDown()
+
+    def get(self, path):
+        try:
+            with urllib.request.urlopen(self.url + path) as r:
+                return r.status, json.load(r)
+        except urllib.error.HTTPError as e:
+            return e.code, json.load(e)
+
+    def test_viewer_api_works_without_ai(self):
+        self.assertIn(self.user["role"], STAFF_ROLES)
+        status, body = self.get("/api/law/sources")
+        self.assertEqual(status, 200)
+        self.assertEqual(len(body["gaps"]), 4)
+        sid = body["sources"][0]["id"]
+        status, src = self.get(f"/api/law/sources/{sid}")
+        self.assertEqual(status, 200)
+        status, p = self.get(f"/api/law/provisions/{src['provisions'][0]['id'].replace('#', '%23')}")
+        self.assertEqual(status, 200)
+        self.assertIn("caveats", p)
+        self.assertEqual(self.get("/api/law/search?q=leasehold")[1]["no_source_held"][0]["id"], "gap-leasehold")
+        self.assertEqual(self.get("/api/law/sources/nope")[0], 404)
+
+    def test_viewer_is_read_only_and_role_gated(self):
+        req = urllib.request.Request(self.url + "/api/law/sources", data=b"{}", method="POST", headers={"Content-Type": "application/json"})
+        with self.assertRaises(urllib.error.HTTPError):
+            urllib.request.urlopen(req)
+        self.user = dict(self.user, role="Contractor")
+        self.assertEqual(self.get("/api/law/sources")[0], 403)
+        self.user = self.user and dict(self.user, role="Retrofit Programme Manager")
+        self.app.law = None
+        self.assertEqual(self.get("/api/law/sources")[0], 503)
+
+
+if __name__ == "__main__":
+    unittest.main()
