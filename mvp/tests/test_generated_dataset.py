@@ -161,6 +161,31 @@ class GeneratedDatasetTests(unittest.TestCase):
         self.assertRegex(manifest["generator_revision"], r"^sha256:[0-9a-f]{16}$")
         self.assertEqual(set(manifest["file_sha256"]), set(manifest["row_counts"]))
 
+    def test_stock_fabric_and_epc_generators_are_byte_deterministic_with_revision(self):
+        import csv
+        reg = Path(self.tmp.name) / "register.csv"
+        with reg.open("w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, list(register()[0]), lineterminator="\n")
+            w.writeheader()
+            w.writerows(register())
+
+        def run(name):
+            root = Path(self.tmp.name) / name
+            root.mkdir()
+            fabric.main(["--seed", "7", "--register", str(reg), "--out", str(root / "fab.csv"),
+                         "--summary", str(root / "fab.json")])
+            epc.main(["--seed", "8", "--register", str(reg), "--out", str(root / "epc.csv"),
+                      "--manifest", str(root / "conf.csv"), "--summary", str(root / "epc.json")])
+            return root
+        one, two = run("stock1"), run("stock2")
+        for name in sorted(p.name for p in one.iterdir()):
+            self.assertEqual((one / name).read_bytes(), (two / name).read_bytes(), name)
+        for name, seed in (("fab.json", 7), ("epc.json", 8)):
+            summary = json.loads((one / name).read_text())
+            self.assertEqual(summary["seed"], seed)
+            self.assertIn("version", summary)
+            self.assertRegex(summary["generator_revision"], r"^sha256:[0-9a-f]{16}$")
+
     def test_visible_visit_cohort_owner_partition_and_history_contrasts(self):
         cases = self.data["cases"]
         cohort = [(c, a) for c in cases for a in c["appointments"] if a.get("fixture") == "forward-visit"]
