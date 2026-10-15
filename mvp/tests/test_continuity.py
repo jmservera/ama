@@ -8,6 +8,7 @@ import test_mvp
 from test_assistants import Base, Provider, canonical, proposal
 from zavaforward_mvp import continuity
 from zavaforward_mvp.ai import Ai
+from zavaforward_mvp.assistants import Assistants
 from zavaforward_mvp.store import Store
 
 SUSPEND = dict(scope="all", reason="Suspect output quality", incident_owner="Programme manager",
@@ -169,6 +170,36 @@ class Changes(Base):
         with self.assertRaises(PermissionError):
             self.store.continuity_export(self.people["Resident Liaison Officer"])
 
+    def test_truncated_export_is_flagged_incomplete_never_valid(self):
+        self.store.suspend(self.people["Quality Inspector"], SUSPEND, [])
+        part = self.service.export(limit=0)
+        self.assertEqual(part["truncated"], part["total"] > 0)
+        forced = dict(part, truncated=True, limit=0, total=part["total"] + 1)
+        bundle = json.loads(json.dumps(self.store.continuity_export(self.pm, forced)))
+        self.assertFalse(bundle["complete"])
+        self.assertIn("truncated", bundle["incomplete_reasons"][0])
+        check = continuity.verify_export(bundle)
+        self.assertFalse(check["valid"])
+        self.assertFalse(check["complete"])
+
+    def test_ledger_tail_truncation_and_external_head(self):
+        self.change()
+        self.change(subject="other")
+        bundle = json.loads(json.dumps(self.store.continuity_export(self.pm, self.service.export())))
+        self.assertTrue(continuity.verify_export(bundle)["valid"])
+        self.assertTrue(continuity.verify_export(bundle, expected_head=bundle["ledger"]["head"])["valid"])
+        cut = copy.deepcopy(bundle)
+        cut["ledger"]["entries"].pop()
+        cut["digest"] = continuity.sha({k: v for k, v in cut.items() if k != "digest"})
+        res = continuity.verify_export(cut)
+        self.assertFalse(res["valid"])
+        self.assertTrue(any("truncated" in p for p in res["problems"]))
+        rewritten = copy.deepcopy(cut)
+        rewritten["ledger"]["head"] = dict(count=len(cut["ledger"]["entries"]), hash=cut["ledger"]["entries"][-1]["hash"])
+        rewritten["digest"] = continuity.sha({k: v for k, v in rewritten.items() if k != "digest"})
+        self.assertTrue(continuity.verify_export(rewritten)["valid"])
+        self.assertFalse(continuity.verify_export(rewritten, expected_head=bundle["ledger"]["head"])["valid"])
+
     def test_export_independent_of_ai_supplier(self):
         self.store.ai = type("None_", (), {"configured": False, "gate": None})()
         bundle = self.store.continuity_export(self.pm, self.service.export())
@@ -193,7 +224,10 @@ class JsonStore(unittest.TestCase):
             store.restart_propose(pm, dict(id=s["id"], corrective_evidence="Reviewed."))
             store.restart_decide(pso, dict(id=s["id"], epoch=1, decision="Restart", authority_ref="Ref"))
             self.assertFalse(store.continuity_block("priority"))
-            self.assertTrue(continuity.verify_export(json.loads(json.dumps(store.continuity_export(pm))))["valid"])
+            bundle = json.loads(json.dumps(store.continuity_export(pm, Assistants.export(type('J', (), {'sql': False})()))))
+            self.assertTrue(continuity.verify_export(bundle)["valid"])
+            self.assertFalse(bundle["assistants"]["supported"])
+            self.assertIn("JSON store", bundle["assistants"]["note"])
 
 
 if __name__ == "__main__":

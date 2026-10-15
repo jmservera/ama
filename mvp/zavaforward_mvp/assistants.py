@@ -417,19 +417,20 @@ class Assistants:
                 if scope in (continuity.ALL, c)][:500]
 
     def export(self, limit=5000):
-        """Every proposal with its append-only provenance, for the supplier-independent export."""
+        """Proposals with append-only provenance for the supplier-independent export, and whether the limit cut them off."""
         if not self.sql:
-            return []
+            return dict(proposals=[], total=0, truncated=False, supported=False,
+                        note="Assistant proposals are durable SQL only; this JSON store holds none, so none are exported.")
         with self.transaction() as db:
-            rows = db.execute("SELECT id FROM assistant_tasks ORDER BY id").fetchall()[:limit]
+            ids = [r[0] for r in db.execute("SELECT id FROM assistant_tasks ORDER BY id").fetchall()]
             out = []
-            for (tid,) in rows:
+            for tid in ids[:limit]:
                 body = self._row(db, tid)
                 events = [json.loads(r[0]) for r in db.execute("SELECT body FROM assistant_events WHERE task_id=? ORDER BY at,id", (tid,)).fetchall()]
                 s = continuity.active(self.continuity(db), body["capability"])
                 out.append(dict(body, provenance=events, relied_on=body["state"] == "accepted" and not s,
                                 suspension=s["id"] if s else None))
-            return out
+            return dict(proposals=out, total=len(ids), truncated=len(ids) > limit, supported=True, limit=limit)
 
     def disabled(self, db=None, capability=None):
         l = self.limits

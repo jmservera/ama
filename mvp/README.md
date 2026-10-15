@@ -424,7 +424,15 @@ change register and a supplier-independent evidence export. Synthetic demonstrat
 * Changes: `POST /api/continuity/change` and `change-reverse` version model, rule and configuration changes with an
   evaluation result (a failed evaluation is Blocked); reversal is a superseding record.
 * Export: `GET /api/continuity/export` returns `zf-evidence-export/1` with a digest and ledger chain checked offline by
-  `continuity.verify_export`, with no AI supplier needed.
+  `continuity.verify_export`, with no AI supplier needed. The bundle carries `complete` and `incomplete_reasons`: when
+  the 5,000 assistant-proposal limit is hit it is flagged incomplete (with total and exported counts) and
+  `verify_export` reports it not valid, so a truncated bundle is never presented as whole. The bundle records the ledger
+  head (count and hash) and any sealed digests; `verify_export` fails when the entries do not reach that head. A
+  recorded head can be rewritten together with the entries, so pass `expected_head` from a copy held outside the
+  application (an immutable digest) to detect that.
+* JSON store: AI task suspension, restart gating, the change register and export are enforced and tested on the JSON
+  store. The five assistants are durable SQL only, so the bundle states `assistants.supported: false` and exports no
+  assistant proposals there; assistant suspension on a JSON store is unsupported.
 * Open owner items: witnessed authorised drill, recovery and response limits, supplier contract terms, Azure SQL
   drill evidence, interface identifier mapping, and the named restart authority.
 

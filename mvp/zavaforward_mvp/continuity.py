@@ -231,25 +231,37 @@ class ContinuityMixin:
                     suspended=[dict(id=s["id"], scope=s["scope"]) for s in doc["suspensions"] if s["status"] == "Suspended"], note=MANUAL_NOTE)
 
     # ---- supplier-independent export
-    def continuity_export(self, user, assistant_tasks=None):
+    def continuity_export(self, user, assistants=None):
+        """Build the bundle. It says whether it is complete and never presents a truncated or unsupported part as whole."""
         k.require_role(user, MANAGER_ROLES, "a manager can export evidence")
-        from . import ai_registry
+        from . import ai_registry, ledger
+        assistants = assistants or dict(proposals=[], total=0, truncated=False, supported=False, note="No assistant source was supplied.")
         with self.lock:
+            head_count, head_hash = self.ledger_head()
             recs = [dict(r) for r in self.data["recommendations"]]
             gov = self._gov()
             ledger_rows = list(self.audit_entries())
             report = self.verify_ledger()
+            digests = ledger.read_digests(self.digest_dir)
+            reasons = []
+            if assistants.get("truncated"):
+                reasons.append(f"assistant proposals truncated at {assistants.get('limit')} of {assistants.get('total')}")
+            if len(ledger_rows) != head_count or (ledger_rows and ledger_rows[-1]["hash"] != head_hash):
+                reasons.append("ledger changed or could not be read in full during export")
             bundle = dict(
                 format=EXPORT_FORMAT, generated_by=user["email"], generated_at=k.now(), as_of=self.as_of,
                 independence="Plain JSON with its own digest and ledger chain. Provider, deployment and model appear only as recorded data; "
                              "reading, verifying or re-importing it needs no AI supplier or live service.",
                 registry=ai_registry.registry(),
                 ai_records=[self._export_record(r) for r in recs],
-                assistant_proposals=list(assistant_tasks or []),
+                assistant_proposals=list(assistants["proposals"]),
+                assistants=dict(supported=assistants.get("supported", True), total=assistants["total"], exported=len(assistants["proposals"]),
+                                truncated=bool(assistants.get("truncated")), note=assistants.get("note")),
+                complete=not reasons, incomplete_reasons=reasons,
                 versions=dict(effective=effective_versions(self._cont()), changes=self._cont()["changes"]),
                 continuity=dict(epoch=self._cont()["epoch"], suspensions=self._cont()["suspensions"]),
                 approvals=dict(protocol_versions=gov["protocol_versions"], releases=gov["releases"], breaches=gov["breaches"]),
-                ledger=dict(entries=ledger_rows, report=report))
+                ledger=dict(entries=ledger_rows, report=report, head=dict(count=head_count, hash=head_hash), digests=digests))
         bundle["digest"] = sha({k_: v for k_, v in bundle.items() if k_ != "digest"})
         self.audit(user["email"], "evidence_export", "-", f"digest={bundle['digest'][:16]} records={len(bundle['ai_records'])}")
         self.save()
@@ -263,8 +275,12 @@ class ContinuityMixin:
         return {key: r[key] for key in keep if key in r} if r.get("kind") == "ai_task" else dict(r, kind=r.get("kind", "priority"))
 
 
-def verify_export(bundle):
-    """Offline check of an export: its digest and its ledger chain, using nothing but the bundle."""
+def verify_export(bundle, expected_head=None):
+    """Offline check of an export: digest, ledger chain, recorded ledger head and completeness, using only the bundle.
+
+    The head recorded inside the bundle catches a tail cut that leaves the chain valid, but whoever rebuilds the bundle can
+    rewrite it too. Pass expected_head=dict(count, hash) from a copy held outside the application (an immutable
+    digest) to detect that. A bundle marked incomplete is never reported valid."""
     from . import ledger
     problems = []
     body = {k_: v for k_, v in bundle.items() if k_ != "digest"}
@@ -272,9 +288,22 @@ def verify_export(bundle):
         problems.append("unknown format")
     if sha(body) != bundle.get("digest"):
         problems.append("digest mismatch")
-    if not ledger.verify_entries(iter(bundle["ledger"]["entries"]), [])["intact"]:
-        problems.append("ledger chain broken")
-    for need in ("registry", "ai_records", "versions", "continuity", "approvals"):
+    for need in ("registry", "ai_records", "versions", "continuity", "approvals", "ledger", "complete"):
         if need not in bundle:
             problems.append(f"missing {need}")
-    return dict(valid=not problems, problems=problems)
+    if "ledger" in bundle:
+        led = bundle["ledger"]
+        entries = led.get("entries", [])
+        if not ledger.verify_entries(iter(entries), led.get("digests", []))["intact"]:
+            problems.append("ledger chain broken or shorter than a recorded digest")
+        head = led.get("head")
+        tail = entries[-1]["hash"] if entries else ledger.GENESIS
+        if not head:
+            problems.append("missing recorded ledger head")
+        elif head.get("count") != len(entries) or head.get("hash") != tail:
+            problems.append("ledger tail truncated: entries do not reach the recorded head")
+        if expected_head and (expected_head.get("count") != len(entries) or expected_head.get("hash") != tail):
+            problems.append("ledger does not match the externally held head")
+    if bundle.get("complete") is not True:
+        problems.append("bundle is incomplete: " + "; ".join(bundle.get("incomplete_reasons") or ["not marked complete"]))
+    return dict(valid=not problems, problems=problems, complete=bundle.get("complete") is True)

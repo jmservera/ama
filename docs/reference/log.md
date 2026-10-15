@@ -2884,3 +2884,11 @@ metadata when the knowledge base was created.
   secret rotation order and quarterly access review.
 * No regulatory snapshot changed. Open: named secret owners, a live rotation
   exercise, deployed alert verification and review scheduling.
+
+## 2026-10-15 Export completeness and ledger head check (#122)
+
+* `mvp/README.md` continuity section documents that the evidence export flags
+  truncation and incompleteness, records the ledger head for tail-truncation
+  detection, and that assistant proposals are unsupported on the JSON store.
+* No regulatory snapshot changed. Open: externally held head in an immutable
+  Azure container and Azure SQL drill evidence.
