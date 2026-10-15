@@ -55,6 +55,22 @@ LEGACY = {
 }
 
 
+LEGACY_SCHEMA = "legacy-text-v1"
+LEGACY_PROMPT = "legacy-prompts-2026-10-15"
+LEGACY_POLICY = "legacy-forbidden-output-filter-v1"
+LEGACY_PROVENANCE = "constructed-synthetic-demo-labelled"
+
+
+def legacy_binding(task, ai, deployment):
+    """What a retained legacy task would dispatch with; a release must match every field, including the deployment actually called."""
+    spec = LEGACY[task]
+    return dict(registry_version=REGISTRY_VERSION, schema_version=LEGACY_SCHEMA, provider=PROVIDER,
+                endpoint=getattr(ai, "endpoint", "") or "", deployment=deployment or "",
+                prompt_version=digest([LEGACY_PROMPT, task, spec["purpose"]])[:16], policy_version=LEGACY_POLICY,
+                data_version=digest([LEGACY_SCHEMA, spec["categories"]])[:16], provenance_version=LEGACY_PROVENANCE,
+                permission_version=digest([spec["roles"], spec["affected"]])[:16])
+
+
 def digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 

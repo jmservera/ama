@@ -1,0 +1,124 @@
+"""Release admission for AI tasks (issue #107, RAI delta). SQL owns the record; no process caches it.
+
+A release binds one task/purpose to the provider, endpoint, deployment, expected serving model and the
+prompt, policy, data, provenance and permission versions. Absent, expired, suspended, revoked or
+mismatched releases deny dispatch. A revoked or suspended release is terminal: a new record is needed.
+This module records what a named human decides; it never approves, and it grants no domain write.
+"""
+import json
+import uuid
+from datetime import datetime, timezone
+
+OWNER = "Juan Manuel Servera (Legal, Compliance and DPO owner)"
+CLASSES = ("constructed-fixture", "actual")
+BOUND = ("registry_version", "schema_version", "provider", "endpoint", "deployment", "prompt_version",
+         "policy_version", "data_version", "provenance_version", "permission_version")
+STATUSES = ("active", "suspended", "revoked")
+SQLITE_DDL = (
+    "CREATE TABLE IF NOT EXISTS assistant_releases (id TEXT PRIMARY KEY, capability TEXT NOT NULL, status TEXT NOT NULL, body TEXT NOT NULL, revision INTEGER NOT NULL)",
+)
+MSSQL_DDL = (
+    "CREATE TABLE assistant_releases (id VARCHAR(64) PRIMARY KEY, capability VARCHAR(128) NOT NULL, status VARCHAR(16) NOT NULL, body NVARCHAR(MAX) NOT NULL, revision BIGINT NOT NULL)",
+)
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+
+
+def text(value, label, limit=240):
+    if not isinstance(value, str) or not 1 <= len(value.strip()) <= limit:
+        raise ValueError(f"Record {label} (1 to {limit} characters).")
+    return value.strip()
+
+
+def parse_expiry(value):
+    try:
+        when = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        raise ValueError("Record an ISO 8601 expiry.") from None
+    return (when if when.tzinfo else when.replace(tzinfo=timezone.utc)).timestamp()
+
+
+def denial(reason, missing, task):
+    return dict(reason=f"Release admission denied: {reason}. Owner: {OWNER}. Manual route: use the ordinary case controls.",
+                missing=missing, owner=OWNER, manual="Use the ordinary case controls.", task=task)
+
+
+def releases(db, task):
+    rows = db.execute("SELECT id,status,body FROM assistant_releases WHERE capability=? ORDER BY id", (task,)).fetchall()
+    return [dict(json.loads(b), id=i, status=s) for i, s, b in rows]
+
+
+def admission(db, task, binding, now, live=False):
+    """None when a matching, unexpired, active release exists; otherwise the retained denial."""
+    try:
+        found = releases(db, task)
+    except Exception:
+        return denial("release records are unavailable", ["release record store"], task)
+    active = [r for r in found if r["status"] == "active"]
+    if not active:
+        states = sorted({r["status"] for r in found})
+        why = f"release is {'/'.join(states)}" if states else "no approved release record"
+        return denial(why, ["approved, unexpired release record"], task)
+    first = None
+    for r in active:
+        missing = [k for k in BOUND if r.get(k) != binding.get(k)]
+        if r["expires"] <= now:
+            missing.append("unexpired release")
+        if live and (r["evidence_class"] != "actual" or not r.get("serving_model")):
+            missing.append("actual authorisation with serving-version attestation")
+        if not missing:
+            return None
+        first = first or missing
+    return denial("release no longer matches (" + ", ".join(first) + ")", first, task)
+
+
+def record(db, now, user, body, approvers, task_ids):
+    if user.get("role") != "Retrofit Programme Manager":
+        raise PermissionError("Only a Retrofit Programme Manager can record a release.")
+    if user.get("email", "").lower() not in approvers:
+        raise PermissionError("You are not a named release approver; use the manual route.")
+    task = body.get("task")
+    if task not in task_ids:
+        raise ValueError("Choose a registered task.")
+    cls = body.get("evidence_class")
+    if cls not in CLASSES:
+        raise ValueError("State evidence_class: constructed-fixture or actual.")
+    if body.get("residual_risk_decision") != "Accept":
+        raise ValueError("A release needs an explicit residual risk decision of Accept; otherwise the task stays denied.")
+    evidence = body.get("evidence")
+    if not isinstance(evidence, list) or not 1 <= len(evidence) <= 20:
+        raise ValueError("List 1 to 20 evidence references.")
+    rec = dict(task=task, evidence_class=cls, evidence=[text(e, "an evidence reference") for e in evidence],
+               residual_risk_decision="Accept", residual_risk_note=text(body.get("residual_risk_note"), "the residual risk note", 400),
+               serving_model=text(body.get("serving_model"), "the actual serving model version", 120),
+               approver=dict(name=user.get("name", ""), email=user["email"], role=user["role"]),
+               expires=parse_expiry(body.get("expires")), recorded_at=now,
+               actual_authorisation=cls == "actual")
+    for k in BOUND:
+        rec[k] = text(body.get(k), k, 200)
+    if rec["expires"] <= now:
+        raise ValueError("Expiry must be in the future.")
+    rid = uuid.uuid4().hex
+    db.execute("INSERT INTO assistant_releases (id,capability,status,body,revision) VALUES (?,?,'active',?,1)",
+               (rid, task, canonical(rec)))
+    event(db, now, rid, kind="release-recorded", task=task, approver=user["email"], evidence_class=cls)
+    return rid
+
+
+def change(db, now, user, rid, status, reason, system=False):
+    if not system and user.get("role") != "Retrofit Programme Manager":
+        raise PermissionError("Only a Retrofit Programme Manager can change a release.")
+    if status not in ("suspended", "revoked"):
+        raise ValueError("Choose suspended or revoked.")
+    res = db.execute("UPDATE assistant_releases SET status=?,revision=revision+1 WHERE id=? AND status IN ('active','suspended')",
+                     (status, rid))
+    if res.rowcount != 1:
+        raise ValueError("Release is unknown or already revoked.")
+    event(db, now, rid, kind=f"release-{status}", by=user["email"] if user else "system", reason=text(reason, "a reason", 400))
+
+
+def event(db, now, rid, **body):
+    db.execute("INSERT INTO assistant_events (id, task_id, at, body) VALUES (?,?,?,?)",
+               (uuid.uuid4().hex, rid, now, canonical(body)))

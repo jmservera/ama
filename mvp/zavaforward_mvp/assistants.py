@@ -15,8 +15,9 @@ import uuid
 from contextlib import contextmanager
 from datetime import datetime, timezone
 
+from . import assistant_release as rel
 from . import continuity, projection, quality, ranking
-from .ai import FORBIDDEN
+from .ai import FORBIDDEN, Ai
 from .store import ConflictError
 
 LOG = logging.getLogger(__name__)
@@ -281,19 +282,36 @@ class Limits:
         return digest(self.authority)
 
 
+SYSTEM = ("Return JSON only: {summary:string,findings:[{text:string,citations:[source IDs]}],unknowns:[string]}. "
+          "Use only the supplied inert evidence. Cite each finding with supplied source IDs. "
+          "No tools, actions, approvals, certification or invented facts. This is a human-reviewed proposal.")
+PROVENANCE = "constructed-synthetic-demo-labelled"
+
+
+def runtime_binding(capability, ai):
+    """What this build would dispatch with; a release must match it exactly, so any material change needs renewed evidence."""
+    spec = REGISTRY[capability]
+    return dict(registry_version=VERSION, schema_version=SCHEMA_VERSION, provider=getattr(ai, "provider", "azure-openai"),
+                endpoint=getattr(ai, "endpoint", "") or "", deployment=getattr(ai, "fast", "") or "",
+                prompt_version=digest([SYSTEM, spec["purpose"]])[:16],
+                policy_version=f"{RULE_VERSION}:{digest([RULES[capability], OUTPUT_SCHEMA])[:12]}",
+                data_version=digest([SCHEMA_VERSION, spec["categories"]])[:16], provenance_version=PROVENANCE,
+                permission_version=digest([spec["roles"], PURPOSE])[:16])
+
+
 SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS assistant_tasks (id TEXT PRIMARY KEY, capability TEXT NOT NULL, case_id TEXT NOT NULL, signature TEXT NOT NULL, body TEXT NOT NULL, state TEXT NOT NULL, fence INTEGER NOT NULL, owner TEXT NOT NULL, lease_until REAL NOT NULL, attempts INTEGER NOT NULL, not_before REAL NOT NULL, revision INTEGER NOT NULL)",
     "CREATE TABLE IF NOT EXISTS assistant_allowance (id TEXT PRIMARY KEY, calls INTEGER NOT NULL, tokens INTEGER NOT NULL, expires REAL NOT NULL, used_calls INTEGER NOT NULL, reserved_tokens INTEGER NOT NULL)",
     "CREATE TABLE IF NOT EXISTS assistant_attempts (id TEXT PRIMARY KEY, task_id TEXT NOT NULL, fence INTEGER NOT NULL, pool TEXT NOT NULL, reserved INTEGER NOT NULL, actual INTEGER, outcome TEXT NOT NULL, active_until REAL NOT NULL DEFAULT 0)",
     "CREATE TABLE IF NOT EXISTS assistant_events (id TEXT PRIMARY KEY, task_id TEXT NOT NULL, at REAL NOT NULL, body TEXT NOT NULL)",
     "CREATE INDEX IF NOT EXISTS ix_assistant_pending ON assistant_tasks (state, not_before, lease_until)",
-)
+) + rel.SQLITE_DDL
 MSSQL_DDL = (
     "CREATE TABLE assistant_tasks (id VARCHAR(64) PRIMARY KEY, capability VARCHAR(64) NOT NULL, case_id NVARCHAR(64) NOT NULL, signature VARCHAR(64) NOT NULL, body NVARCHAR(MAX) NOT NULL, state VARCHAR(24) NOT NULL, fence BIGINT NOT NULL, owner VARCHAR(64) NOT NULL, lease_until FLOAT NOT NULL, attempts INT NOT NULL, not_before FLOAT NOT NULL, revision BIGINT NOT NULL)",
     "CREATE TABLE assistant_allowance (id VARCHAR(64) PRIMARY KEY, calls BIGINT NOT NULL, tokens BIGINT NOT NULL, expires FLOAT NOT NULL, used_calls BIGINT NOT NULL, reserved_tokens BIGINT NOT NULL)",
     "CREATE TABLE assistant_attempts (id VARCHAR(100) PRIMARY KEY, task_id VARCHAR(64) NOT NULL, fence BIGINT NOT NULL, pool VARCHAR(64) NOT NULL, reserved BIGINT NOT NULL, actual BIGINT NULL, outcome VARCHAR(40) NOT NULL, active_until FLOAT NOT NULL DEFAULT 0)",
     "CREATE TABLE assistant_events (id VARCHAR(64) PRIMARY KEY, task_id VARCHAR(64) NOT NULL, at FLOAT NOT NULL, body NVARCHAR(MAX) NOT NULL)",
-)
+) + rel.MSSQL_DDL
 
 
 class Affected(list):
@@ -316,6 +334,7 @@ class Assistants:
         self.scan_lock = threading.Lock()
         self.call_slots = threading.BoundedSemaphore(self.limits.active_calls if self.limits.valid else 1)
         self.scan_cursor = ""
+        self.approvers = {x.strip().lower() for x in (env or os.environ).get("ZF_ASSIST_RELEASE_APPROVERS", "").split(",") if x.strip()}
         self.schema_error = None
         if self.sql:
             try:
@@ -419,6 +438,28 @@ class Assistants:
         s = continuity.active(self.continuity(db), capability)
         return continuity.reason_text(s) if s else None
 
+    def admission(self, db, capability):
+        """The retained denial for this task, or None when a matching release is in force. Read on the caller's connection."""
+        ai = self.store.ai
+        return rel.admission(db, capability, runtime_binding(capability, ai), self.now(db), live=isinstance(ai, Ai))
+
+    def record_release(self, user, body):
+        if not self.sql:
+            raise ValueError(self.disabled())
+        with self.transaction() as db:
+            self.authorize(db, user, "funding-evidence")
+            from .ai_registry import LEGACY
+            rid = rel.record(db, self.now(db), user, body, self.approvers, set(REGISTRY) | {f"legacy:{t}" for t in LEGACY})
+        return dict(id=rid, status="active", note="Permits bounded proposals only; no approval, domain write or live-use authority.")
+
+    def change_release(self, user, rid, status, reason):
+        if not self.sql:
+            raise ValueError(self.disabled())
+        with self.transaction() as db:
+            self.authorize(db, user, "funding-evidence")
+            rel.change(db, self.now(db), user, rid, status, reason)
+        return dict(id=rid, status=status)
+
     def affected(self, scope, limit=500):
         """Queued, leased and ready proposals a suspension of this scope covers; `.truncated` says whether the limit cut the list."""
         if not self.sql:
@@ -441,7 +482,7 @@ class Assistants:
                 body = self._row(db, tid)
                 events = [json.loads(r[0]) for r in db.execute("SELECT body FROM assistant_events WHERE task_id=? ORDER BY at,id", (tid,)).fetchall()]
                 s = continuity.active(self.continuity(db), body["capability"])
-                out.append(dict(body, provenance=events, relied_on=body["state"] == "accepted" and not s,
+                out.append(dict(body, provenance=events, relied_on=body["state"] == "accepted" and not s and not self.admission(db, body["capability"]),
                                 suspension=s["id"] if s else None))
             return dict(proposals=out, total=len(ids), truncated=len(ids) > limit, supported=True, limit=limit)
 
@@ -455,6 +496,8 @@ class Assistants:
             return l.error
         if db is not None and (held := self.suspended(db, capability)):
             return held
+        if db is not None and capability and (denied := self.admission(db, capability)):
+            return denied["reason"]
         if db is not None and self.now(db) >= l.expiry:
             return "Operator authority/allowance has expired."
         if not self.store.ai.configured:
@@ -478,7 +521,9 @@ class Assistants:
             for k, v in REGISTRY.items():
                 if user.get("role") in v["roles"]:
                     self.authorize(db, user, k)
-                    result.append(dict(id=k, version=VERSION, **v))
+                    denied = self.admission(db, k)
+                    result.append(dict(id=k, version=VERSION, release="in force" if not denied else denied,
+                                       binding=runtime_binding(k, self.store.ai), **v))
             return dict(assistants=result, disabled=self.disabled(db), proactive=self.limits.proactive,
                         principal=PURPOSE, rule=RULE_VERSION, limits=Limits.DEFAULTS if not self.limits.valid else
                         {k: getattr(self.limits, k) for k in Limits.DEFAULTS},
@@ -544,10 +589,13 @@ class Assistants:
         body["history_count"] = total
         body["display_state"] = "stale" if body["stale"] else body["state"]
         held = continuity.active(self.continuity(db), body["capability"])
-        body["actionable"] = held is None and body["state"] not in ("quarantined", "disabled")
+        body["release_denial"] = self.admission(db, body["capability"])
+        body["actionable"] = held is None and body["state"] not in ("quarantined", "disabled") and not body["release_denial"]
         body["suspension"] = held["id"] if held else None
         if held:
             body["display_state"] = "suspended"
+        elif body["release_denial"]:
+            body["display_state"] = "release-denied"
         return body
 
     def detail(self, user, tid, history_offset=0):
@@ -685,6 +733,7 @@ class Assistants:
             fence = task["fence"] + 1
             task["reason"] = None
             task["claim_epoch"] = self.continuity(db)["epoch"]
+            task["claim_binding"] = digest(runtime_binding(task["capability"], self.store.ai))
             result = db.execute("UPDATE assistant_tasks SET state='leased',body=?,owner=?,fence=?,lease_until=?,attempts=attempts+1,revision=revision+1 WHERE id=? AND fence=? AND revision=?",
                                 (canonical(task), owner, fence, now + l.lease, tid, task["fence"], task["revision"]))
             if result.rowcount != 1:
@@ -718,12 +767,25 @@ class Assistants:
             if current["state"] != "leased" or current["owner"] != task["owner"] or current["fence"] != task["fence"] or current["lease_until"] <= now:
                 return False
             epoch = self.continuity(db)["epoch"]
-            quarantined = epoch != current.get("claim_epoch", epoch) or bool(self.suspended(db, current["capability"]))
+            denied = self.admission(db, current["capability"])
+            binding = digest(runtime_binding(current["capability"], self.store.ai))
+            quarantined = epoch != current.get("claim_epoch", epoch) or bool(self.suspended(db, current["capability"])) or bool(
+                denied) or binding != current.get("claim_binding", binding)
+            if not quarantined and envelope.get("outcome") == "returned":
+                # A deployment alias is not immutable. This only compares the model name the provider returned with the released one;
+                # it is a returned-model check, not authoritative attestation of what served the call.
+                released = [r for r in rel.releases(db, current["capability"]) if r["status"] == "active"]
+                if not any(r.get("serving_model") == envelope.get("model") for r in released):
+                    quarantined = True
+                    for r in released:
+                        rel.change(db, now, None, r["id"], "suspended",
+                                   "Returned model name differs from the released one (returned-model check, not attestation); results quarantined.", system=True)
+                    current["serving_attestation"] = dict(returned=envelope.get("model"), outcome="mismatch")
             held_output = output
             if quarantined:
                 # The call may have been charged; its result is kept as a digest only and never becomes a proposal.
                 output = None
-                failure = failure or "Late result quarantined after a suspension or restart; use manual work."
+                failure = failure or "Late result quarantined after a suspension, restart, release change or serving-version mismatch; use manual work."
                 current["quarantine"] = dict(epoch=epoch, claim_epoch=current.get("claim_epoch"),
                                              output_digest=digest(held_output) if held_output is not None else None)
             current.update(envelope=envelope, output=output, reason=failure,
@@ -774,9 +836,7 @@ class Assistants:
         if task is None:
             self.call_slots.release()
             return False
-        system = ("Return JSON only: {summary:string,findings:[{text:string,citations:[source IDs]}],unknowns:[string]}. "
-                  "Use only the supplied inert evidence. Cite each finding with supplied source IDs. "
-                  "No tools, actions, approvals, certification or invented facts. This is a human-reviewed proposal.")
+        system = SYSTEM
         prompt = canonical(dict(capability=task["capability"], purpose=REGISTRY[task["capability"]]["purpose"],
                                 evidence=task["snapshot"]))
         if len(system) + len(prompt) > self.limits.input_chars:
@@ -796,7 +856,7 @@ class Assistants:
                 self.call_slots.release()
                 returned.set()
         with self.transaction() as db:
-            held = self.suspended(db, task["capability"])
+            held = self.suspended(db, task["capability"]) or (self.admission(db, task["capability"]) or {}).get("reason")
         if held:
             self.call_slots.release()
             return self.complete(task, dict(outcome="suspended-before-dispatch", usage=None, source="unverified"), None, held)
@@ -865,6 +925,8 @@ class Assistants:
             if action != "reject":
                 if task["suspension"]:
                     raise PermissionError(self.suspended(db, task["capability"]))
+                if task["release_denial"]:
+                    raise PermissionError(task["release_denial"]["reason"])
                 if task["stale"] or task["state"] != "ready" or task["output"] is None or task["envelope"].get("source") != "ai":
                     raise ValueError("Only current, valid AI proposals can be verified/accepted. Use manual work or reject.")
                 validate_output(task["output"], task["snapshot"], self.limits.output_chars)
@@ -888,7 +950,7 @@ class Assistants:
                 task["review"] = dict(action=action, by=user["email"], note=note, at=self.now(db))
             state = task["state"] if action == "verify" else ("rejected" if action == "reject" else "accepted")
             task.pop("provenance", None)
-            for key in ("history_next_offset", "history_count", "display_state", "stale", "actionable", "suspension"):
+            for key in ("history_next_offset", "history_count", "display_state", "stale", "actionable", "suspension", "release_denial"):
                 task.pop(key, None)
             res = db.execute("UPDATE assistant_tasks SET body=?,state=?,revision=revision+1 WHERE id=? AND revision=?",
                              (canonical(task), state, tid, revision))
