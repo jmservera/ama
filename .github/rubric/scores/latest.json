@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-15T08:55:19+00:00",
-  "commit": "1ecd42a758f47553d074d2a4d69fdf0a9cab1b62",
+  "scored_at": "2026-10-15T16:02:49+00:00",
+  "commit": "2e454f4cf52836383134cf677cf36acf65021fde",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38708251576",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38764770949",
   "fingerprints": {
-    "brd": "47e831254e5b5e466f767473541d5bf4593a44d0080caa75a0307e150895a2ac",
-    "prd": "1f2f0be0530396e6b37d2b824eaebaf163fb9c7b5cf34a5fad22fa586c119463",
-    "adr": "62a728686af7e0557bd3452b01f8e34a32772ace2f4a48a80928ea3471001f9b",
-    "solution-code": "c2699af43ec38a86ca61fe979bbdb4bd4fa819795b2f4c742daa7ea0effec46a",
-    "infrastructure": "f5ee52836ffcddda14f2c5a85e6f0b1e3ac9baf444d4f81001b172409d7a623b",
+    "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
+    "prd": "3b6b9a783b413c3e44d57b81fd669f8c4d3adf3b5b623ac0d398d3f8c653192c",
+    "adr": "275f5ff093398a1170b0fd91d35bc80fe0a0d8016deac94ec47ccbfdc39974dd",
+    "solution-code": "ea8a8e24b9c08cb35533eddbff1723be76f426694983bcd1662a32170eadfe84",
+    "infrastructure": "fab2d87f31ab28dd7d5f047f7f24e2ceaa06a89b0fcbfdf2b373b9b8e807bdb6",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
   "total": 47,
@@ -29,21 +29,21 @@
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:46-70"
       ],
-      "rationale": "ADR 0005 reuses existing runtime components (api, agents, orchestrator, import) with a clearly bounded law store/rule-engine/chat architecture, consistent with the existing modular baseline. Still a design proposal, not implemented, so the score does not move."
+      "rationale": "ADR 0005 reuses existing runtime components (api, agents, orchestrator, import) with a clearly bounded law store/rule-engine/chat architecture, consistent with the existing modular baseline. Design proposal, not implemented; score unchanged."
     },
     "A2": {
       "score": 5,
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:227-233"
       ],
-      "rationale": "ADR 0005 names three rejected alternatives (chat-only, fine-tuned model, separate product) with explicit reasons, reinforcing the existing deliberate trade-off pattern. Already at the ceiling; no change."
+      "rationale": "ADR 0005 names three rejected alternatives (chat-only, fine-tuned model, separate product) with explicit reasons. Already at ceiling; no change."
     },
     "A3": {
       "score": 5,
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:170-192"
       ],
-      "rationale": "Section 6 names role-scoped data handling, author/approver separation of duties, UK GDPR Art. 22A-22C safeguards and prompt-injection treatment of retrieved text as untrusted data. The new diff adds synthetic document fixtures only (no security/compliance content), so no material change. Already ..."
+      "rationale": "Section 6 names role-scoped data handling, separation of duties, UK GDPR Art. 22A-22C safeguards and prompt-injection treatment. No security/compliance content changed in this PR's diff; score unchanged."
     },
     "A4": {
       "score": 5,
@@ -51,22 +51,22 @@
         "mvp/tests/test_document_form_fixtures.py:1-103",
         "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_documents.py:1-211"
       ],
-      "rationale": "New generator and tests are well-formed and pass structural review, but they build isolated fixture/eval data for a schema explicitly unresolved (PRD OQ-015), not end-to-end capability completion. ADR 0005/BRD/PRD remain proposed; no change to overall implementation completeness."
+      "rationale": "Prior generator/tests build isolated fixture/eval data for a schema still unresolved (PRD OQ-015), not end-to-end capability completion. This PR's diff only touches an agent definition doc, no change."
     },
     "A5": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: operational readiness (logging, metrics, cost) evidence not affected by this synthetic-fixture test diff."
+      "rationale": "Unchanged baseline: operational readiness (logging, metrics, cost) evidence not affected by this PR's diff, which only edits an agent markdown file."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff adds synthetic document/form test fixtures, not an AI model choice or evaluation harness; no justification or harness evidence added for A6."
+      "rationale": "Unchanged baseline: diff is an agent-definition policy edit, not an AI model choice or evaluation harness change; no new justification or harness evidence."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Unchanged baseline: ADR 0005 proposes a deterministic rule engine plus non-autonomous retrieval chat; the new diff is deterministic fixture generation/testing with no agentic orchestration change."
+      "rationale": "Unchanged baseline: ADR 0005 proposes a deterministic rule engine plus non-autonomous retrieval chat; this PR's diff is unrelated to agentic orchestration."
     },
     "B1": {
       "score": 3,
@@ -95,10 +95,8 @@
     },
     "B6": {
       "score": 4,
-      "evidence": [
-        "docs/reference/research/retrofit-synthetic-data/README.md:225-250"
-      ],
-      "rationale": "README documents the new fixtures clearly and navigably, but this is knowledge-base documentation, not capstone deck/documentation content; existing capstone deck thinness is unaffected so the capped score stays at Good(4), not Excellent(5)."
+      "evidence": [],
+      "rationale": "Unchanged baseline: this diff only edits an agent markdown policy file, no new deck or artifact evidence relevant to B6."
     },
     "B7": {
       "score": 3,
@@ -107,10 +105,8 @@
     },
     "C1": {
       "score": 5,
-      "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1521-1521"
-      ],
-      "rationale": "New FR-051 row names seven stakeholder groups (employees, residents, Legal, compliance, DPO, Building Safety, finance, digital, audit) and the ADR's evaluation section gives quantified targets (100 percent citation validity/refusal accuracy), consistent with the existing ceiling score."
+      "evidence": [],
+      "rationale": "Unchanged baseline: diff does not touch BRD/PRD/ADR content relevant to C1 synthesis quality."
     },
     "C2": {
       "score": 0,
