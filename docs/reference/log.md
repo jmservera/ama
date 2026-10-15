@@ -2876,3 +2876,11 @@ metadata when the knowledge base was created.
   event paths, breach role check, Shadow and Live release need Phase 0 released.
 * No regulatory snapshot changed. Open: pilot cohort enrolment and work package
   and workstream pause scopes.
+
+## 2026-10-15 Key Vault secret lifecycle (#142)
+
+* `infra/README.md` gains a Key Vault secret lifecycle section: inventory,
+  expiry and denied-access alerts on Log Analytics, zero-downtime Entra client
+  secret rotation order and quarterly access review.
+* No regulatory snapshot changed. Open: named secret owners, a live rotation
+  exercise, deployed alert verification and review scheduling.
