@@ -1,0 +1,10 @@
+{
+  "homes": 60000,
+  "days": 730,
+  "cadence_minutes": 60,
+  "readings_per_home_nominal": 17520,
+  "estimated_rows": 1048263000,
+  "bytes_per_row_csv": 121.0,
+  "estimated_csv_gib": 118.13,
+  "basis": "measured on 20 homes; dropout faults reduce rows below nominal; SQL clustered index adds overhead"
+}

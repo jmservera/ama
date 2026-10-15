@@ -2934,6 +2934,10 @@ metadata when the knowledge base was created.
 * Review fixes: pilot parameter file renamed `main.pilot.example.bicepparam` and labelled non-deployable (test rejects a deployable `main.pilot.example.bicepparam`); EX-001 expiry set to 2026-12-31; docs state policy is audit-only and Defender stays Free until a cost is accepted.
 * No regulatory snapshot changed. Open: Defender cost estimate and enablement, audit versus Deny stance.
 
+## 2026-10-15 Deterministic sensor backfill generator (#183)
+
+* `mvp/README.md` documents the sensor backfill generator, its volume and size estimate (about 1.05 billion hourly rows, about 118 GiB CSV for 60,000 homes over two years), manifest and idempotent load.
+* No regulatory snapshot changed. Open: Met Office and Environment Agency data retrieval, reconciliation with #110 validation, and a full-stock storage and cost decision.
 ## 2026-10-15 IoT Hub Bicep module (#140)
 
 * `infra/README.md` records the proposed IoT Hub tier, region, retention, identity, network and credential-owner decisions; ADR 0003 open items point to them. No regulatory snapshot changed.
