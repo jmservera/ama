@@ -25,6 +25,7 @@ from zf_sim_core import Cand, SimCore
 from zf_flow_a import FlowA
 from zf_flow_b import FlowB
 from zf_export_rules import Recorder
+from zf_manifest import file_sha256, generator_revision
 from zf_export_tables import (appointment_rows, contact_rows, event_rows, property_rows,
                               resident_rows, tracker_rows)
 from zf_export_other import (board_rows, capacity_rows, delay_dictionary, finance_rows,
@@ -240,6 +241,8 @@ def main():
     ap.add_argument("--pack-dir", default=os.path.join(repo, "docs", "reference", "research", "retrofit-synthetic-data"))
     ap.add_argument("--key-dir", default=os.path.join(here, "..", "answer-key"))
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--as-of", type=date.fromisoformat, default=SNAP,
+                    help="Recorded in the manifest as generated_at; never read from the clock")
     a = ap.parse_args()
     seed = a.seed if a.seed is not None else secrets.randbelow(2**31)
     rng = random.Random(seed)
@@ -285,9 +288,11 @@ def main():
     manifest = dict(
         warning="SYNTHETIC DATA. Fictional records for design and analysis practice. Not Zava North Homes data.",
         scenario="zava-forward-year-one", version="2.0.0", seed=seed,
-        generated_at=datetime.now().isoformat(timespec="seconds"),
+        generated_at=datetime.combine(a.as_of, datetime.min.time()).isoformat(timespec="seconds"),
+        as_of=a.as_of.isoformat(), generator_revision=generator_revision(),
         extract_date=SNAP.isoformat(), baseline_window=[BASELINE_START.isoformat(), BASELINE_END.isoformat()],
         simulation_start=SIM_START.isoformat(), row_counts=counts,
+        file_sha256={n: file_sha256(os.path.join(a.pack_dir, n)) for n in sorted(counts)},
         generator="Held outside the knowledge base with the answer key so analysis can stay blind",
         is_synthetic=True)
     with open(os.path.join(a.pack_dir, "manifest.json"), "w", encoding="utf-8") as f:

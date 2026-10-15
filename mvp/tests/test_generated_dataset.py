@@ -14,6 +14,7 @@ from zavaforward_mvp.sqlstore import SqlStore
 GENERATOR = Path(__file__).resolve().parents[2] / "support/synthetic-data/retrofit-flow/zava-forward-year-one/generator"
 sys.path.insert(0, str(GENERATOR))
 builder = importlib.import_module("build_mvp_dataset")
+pack = importlib.import_module("generate_pack")
 
 
 def register():
@@ -51,6 +52,36 @@ class GeneratedDatasetTests(unittest.TestCase):
         self.assertEqual(self.path.read_bytes(), second.read_bytes())
         self.assertEqual(self.data["as_of"], "2026-10-13")
         self.assertEqual(len(self.data["cases"]), 980)
+
+    def test_mvp_output_and_receipt_record_seed_version_and_revision(self):
+        self.assertEqual(self.data["seed"], 20260901)
+        self.assertEqual(self.data["generator_version"], "operational-coverage-v1")
+        self.assertRegex(self.data["generator_revision"], r"^sha256:[0-9a-f]{16}$")
+        receipt = json.loads(Path(str(self.path) + ".coverage.json").read_text())
+        for key in ("seed", "as_of", "generator_version", "generator_revision"):
+            self.assertEqual(receipt[key], self.data[key])
+
+    def test_pack_generator_is_byte_deterministic_with_manifest(self):
+        def run(name):
+            root = Path(self.tmp.name) / name
+            argv = ["pack", "--seed", "1341953496", "--as-of", "2026-09-30",
+                    "--pack-dir", str(root / "pack"), "--key-dir", str(root / "key")]
+            with patch.object(sys, "argv", argv), patch("sys.stdout"):
+                pack.main()
+            return root
+        one, two = run("one"), run("two")
+        names = sorted(p.name for p in (one / "pack").iterdir())
+        self.assertIn("manifest.json", names)
+        for name in names:
+            self.assertEqual((one / "pack" / name).read_bytes(), (two / "pack" / name).read_bytes(), name)
+        for name in sorted(p.name for p in (one / "key").iterdir()):
+            self.assertEqual((one / "key" / name).read_bytes(), (two / "key" / name).read_bytes(), name)
+        manifest = json.loads((one / "pack" / "manifest.json").read_text())
+        self.assertEqual(manifest["seed"], 1341953496)
+        self.assertEqual(manifest["generated_at"], "2026-09-30T00:00:00")
+        self.assertEqual(manifest["version"], "2.0.0")
+        self.assertRegex(manifest["generator_revision"], r"^sha256:[0-9a-f]{16}$")
+        self.assertEqual(set(manifest["file_sha256"]), set(manifest["row_counts"]))
 
     def test_visible_visit_cohort_owner_partition_and_history_contrasts(self):
         cases = self.data["cases"]

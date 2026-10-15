@@ -72,6 +72,56 @@ Initial SQL loading preserves procurement/as-of; restart never silently
 replaces live records. Four focused tests cover determinism, exact visit
 cohorts, referential/control boundaries and SQL seed/restart persistence.
 
+### Determinism, manifests and refresh policy (2026-10-15)
+
+Reproducibility (issue #176, parent #165). The generators are in
+`support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/`.
+
+| Generator | Reproducibility inputs | Manifest or receipt fields | Byte-identical test |
+| --- | --- | --- | --- |
+| `build_mvp_dataset.py` (MVP JSON) | `--seed`, `--as-of` (defaults to the clock, so always pass it) and the stock register | `seed`, `as_of`, `generator_version`, `generator_revision` in the JSON and its `.coverage.json` receipt | `test_same_seed_date_and_register_are_byte_deterministic` |
+| `generate_pack.py` (public CSV pack) | `--seed` (omitted draws a random seed, so always pass it) and `--as-of` (defaults to the extract date 2026-09-30; sets `generated_at`, never the clock) | `seed`, `version`, `generated_at`, `as_of`, `generator_revision`, per-file `file_sha256` in `manifest.json` | `test_pack_generator_is_byte_deterministic_with_manifest` |
+| Stock register (seed 4820260930) | Seed recorded in `private-stock-manifest.json` | Seed, version, generated date only | None: the register generator is not in the repository |
+| Sensor data | None | None | None: no sensor generator exists in the repository |
+
+`generator_revision` is a SHA-256 prefix over the generator source files, so
+a changed generator is visible in the manifest without relying on Git
+metadata or the clock. The committed `manifest.json` predates these fields
+and still carries a wall-clock `generated_at`; it is not rewritten here
+because that would replace published pack files. The next approved refresh
+adds the new fields.
+
+Refresh policy (proposed defaults; the owner has not yet approved them).
+
+* Cadence: regenerate only on a recorded trigger, such as a schema or
+  generator change, a rubric or scenario change, or a new exercise baseline
+  date. No scheduled refresh.
+* Approval: the project owner approves each refresh, naming seed, as-of date
+  and target. Regulatory or scenario-rule changes also need the named human
+  approval required by the repository's legal evidence conventions.
+* Version: a refresh that changes any row, or the seed, bumps the pack
+  `version`; a regeneration with the same seed, as-of date and
+  `generator_revision` must reproduce the manifest hashes exactly.
+* Live records: a refresh writes to a new path or version and never
+  overwrites live exercise records. Operator seeding keeps the existing
+  Azure SQL records and the 11 private tenant staff bindings; restart does
+  not replace them. Replacing a live database needs explicit reset
+  authority, as on 2026-10-14. Prior versions and their manifests are kept.
+* Evidence boundary: refreshed data stays synthetic, with no real personal
+  data, and is not evidence of resident or business outcomes.
+
+Open items for the owner (not decided here).
+
+* Approve or amend the cadence, approver and versioning defaults above.
+* Provide or commit the stock register generator, or accept the recorded seed
+  as the only reproduction route; the first acceptance criterion is not met
+  for the stock register until then.
+* Define scope for sensor data (see
+  [IoT sensor analytics research plan](../iot-sensor-analytics-research-plan.md));
+  no generator exists to make deterministic yet.
+* Decide whether to regenerate the committed pack manifest with the new
+  fields.
+
 This pack gives the Zava Forward discovery a realistic body of operating
 records to analyse. It models a competent, busy retrofit team one year into
 delivery. The team knows the programme is behind plan and suspects several

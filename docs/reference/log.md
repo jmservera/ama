@@ -2691,3 +2691,10 @@ metadata when the knowledge base was created.
 * Added `mvp/tests/test_synthetic_provenance.py` (PII patterns, unlabelled
   records, public/private separation). Open items: retrieval dates and licence
   wording for Census 2021, IMD 2025 and ONS boundaries; sensor data scope.
+
+## [2026-10-15] update | Synthetic data determinism, manifests and refresh policy
+
+* Added a determinism, manifest and proposed refresh-policy section to the
+  retrofit synthetic data README, and linked it from the index (issue #176).
+* Recorded owner decisions still open: policy approval, the missing stock
+  register generator and the absent sensor generator.
