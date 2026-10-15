@@ -3077,3 +3077,8 @@ metadata when the knowledge base was created.
 
 * Added `xlsx`, `mapping`, `quarantine` and `export` modules to `src/importer` (standard library only, synthetic data): declared workbook structure with column mapping, conflicts and a row-level preview with lineage; scan through `core` `doc_controls`; quarantine store with a named-human approval gate (approver differs from stager, automation refused) and supersession history portable to SQL Server; CSV and one-way read-only Excel export with a History sheet independent of any AI provider; read-only comparison. 17 new tests (importer 26).
 * Open on #80, left unticked: owner staged-transition thresholds (ADR 0001), the export control on every list and the import screen (the api may not import `importer` until #144), AI-assisted column suggestion with approval, importer image and limited SQL role. Docker is permission denied locally and SQL Server is unavailable, so image and `mssql` evidence rely on CI.
+
+## [2026-10-15] build | Environment parameter sets and guard (#137)
+
+* Added `infra/main.test.bicepparam`; dev file now sets the development relaxations explicitly; all three files set `location` and `sqlLocation` to `uksouth` and mark placeholders. `environmentName` allows `pilot`, and a new guard rejects a pilot with relaxations.
+* `infra/README.md` gains an Environments section: one differences table, promotion rules, recorded region and quota checks (zone and pilot quota checks left open) and the naming and tagging convention. Tests extended.
