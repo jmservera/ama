@@ -2570,3 +2570,79 @@ metadata when the knowledge base was created.
   ADR 0004 for per-user chat). Added BRD FR-051, AC-099 and OD-50, PRD FR-060,
   AC-104 to AC-106 and OQ-026, and an addendum section. Proposal only; no owner
   approval, legal interpretation or fresh quality review.
+
+## [2026-10-15] review | Post-merge RAI issue coverage
+
+* PR #72 merged into main as `7a8b1fe65475752fcf242ed52acab8e7e43b58d3`
+  after prototype validation and the rubric gate passed at 47/100 against 47/100.
+* The Functional Planner reviewed 144 hydrated GitHub issue bodies and read-only
+  field/hierarchy evidence against the merged PRD and remediation plan. Its
+  [coverage analysis](../../.copilot-tracking/github-issues/prds/rai-remediation/artifact-analysis.md)
+  maps all thirteen tasks, eleven residuals and eleven unassessed checks.
+* Twelve existing open issues provide suitable homes, but each is Similar rather
+  than a complete Match: their acceptance criteria need the RAI delta. The
+  [issue plan](../../.copilot-tracking/github-issues/prds/rai-remediation/issues-plan.md)
+  proposes twelve body-only updates, zero creates and zero links, preserving
+  current state, types, labels, milestones and assignees.
+* The [handoff](../../.copilot-tracking/github-issues/prds/rai-remediation/handoff.md)
+  requires human review and a separate authorized execution pass. No issue was
+  created, edited, commented on, linked or transitioned. Existing native hierarchy
+  pairs and qualified authority remain needs_review where not proven.
+* Focused artifact validation confirms four planning artifacts, 23 relative links,
+  exact task/check coverage and unchecked human gates. No remediation implementation,
+  model calls, recovery drills or live-use approval is implied.
+
+## [2026-10-15] review | Owner RAI issue decisions and chat coverage
+
+* The owner approved the eight review decisions in conversation and requested
+  adding existing chat evaluation issue 164. The [updated issue plan](../../.copilot-tracking/github-issues/prds/rai-remediation/issues-plan.md)
+  now proposes thirteen body-only updates, zero creates and zero links.
+* Chat-specific held-out, memory/injection, permission-change, human review and
+  finite-authority criteria reuse shared evaluation methods without authorizing
+  chat implementation or enablement. Original thirteen-task/22-check coverage
+  remains unchanged; this is an owner extension, not a new baseline finding.
+* Dated decisions are recorded in the [handoff](../../.copilot-tracking/github-issues/prds/rai-remediation/handoff.md).
+  Human-review checkboxes remain untouched and require the owner's saved edits
+  before execution. No GitHub issues have been changed by this review update.
+
+## [2026-10-15] execute | Approved RAI issue updates applied
+
+* After explicit one-by-one owner approval and eight owner-completed saved human
+  review boxes, applied thirteen body-only updates in jmservera/ama: 105, 121,
+  116, 106, 107, 146, 122, 130, 128, 108, 145, 126 and 164.
+* The [live operation log](../../.copilot-tracking/github-issues/prds/rai-remediation/handoff-logs.md)
+  records each successful mutation and saved-body SHA-256 before the next update.
+  All bodies were re-read immediately before update and after saving; titles,
+  state, type, labels, milestone, assignees and relationship metadata were verified
+  unchanged. No issues were created, linked, closed or commented on; no failures.
+* Preserved existing criteria and history, applied the three approved factual
+  corrections and left new acceptance criteria unchecked. Issue 164 adds future
+  chat assurance, not chat implementation or enablement authority.
+* This executes the approved backlog update only. The thirteen remediation tasks,
+  22 outstanding checks and qualified legal/privacy, human, model, recovery and
+  operational evidence gates remain work to be completed and accepted.
+
+## [2026-10-15] merge | RAI execution record and chat proposal reconciled
+
+* Resolved PR #205 against main's chat/memory proposal from PR #204, retaining
+  current BRD v0.18.0, PRD v0.17.0 and ADR 0004 index entries alongside the
+  completed RAI issue-update record. All prior log entries from both branches
+  remain intact.
+* The RAI review and executed payloads retain their dated PRD v0.16.0/source
+  baseline; merging the newer proposal does not retroactively change accepted
+  payloads, enable chat or satisfy qualified operational evidence gates.
+* No application behavior or GitHub issue body was changed by this conflict
+  resolution. The thirteen previously verified issue updates remain completed.
+
+## [2026-10-15] merge | Concurrent regulatory proposal retained
+
+* While PR #205 checks ran, PR #207 added the regulatory-literacy synthesis and
+  proposed regulatory assistant. Retained its addendum, BRD, PRD, ADR 0005 and
+  index changes without modifying their scope or approval status.
+* Preserved both append-only log additions. Kept main's generated 47/100 rubric
+  record as the current merged baseline rather than hand-combining generated
+  provenance or inventing a score. The RAI branch's successful hosted score
+  remains available in its original workflow run.
+* The thirteen issue updates and their original review/source binding remain
+  unchanged; the newer assistant proposal is not silently added to that completed
+  execution or activated by this merge.
