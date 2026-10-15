@@ -69,12 +69,12 @@ All commands below run in the specified worktree. `PY` is written out as
 | `cd src/api && ../../.venv/bin/python -m checks.workbench_browser_check` (second run) | Reached reset then callback failed: Playwright supplies Request as second positional argument. Corrected closure capture, not production behavior |
 | `for project in core agents api orchestrator importer; do (cd "src/$project" && PYTHONPATH=../core/tests:../agents/tests ../../.venv/bin/python -m unittest discover -s tests -q) || exit; done` | Core 325 pass in 120.541s; then agents discovery failed because globally supplied fixture paths shadowed its test_dependency_rule. Corrected command to documented per-project paths |
 | `for project in core agents api orchestrator importer; do (cd "src/$project" && ../../.venv/bin/ruff check . && ../../.venv/bin/ruff format --check . && ../../.venv/bin/mypy) || exit; done` | Initial core/agents pass, API mypy found Any return in new browser IDs helper. Added runtime list/string guard. Final full five-project run passes: core 71, agents 16, API 40, orchestrator 8, importer 10 checked files |
-| `for project in agents api orchestrator importer; do (cd "src/$project" && if [ "$project" = api ]; then export PYTHONPATH=../core/tests:../agents/tests; elif [ "$project" = orchestrator ]; then export PYTHONPATH=../core/tests; fi && ../../.venv/bin/python -m unittest discover -s tests -q) || exit; done` | Agents 70 pass (6.609s), API 480 pass/97 skipped (148.206s), orchestrator 17 pass, importer 39 pass. Total 931 tests, 97 expected SQL Server skips |
+| `for project in agents api orchestrator importer; do (cd "src/$project" && if [ "$project" = api ]; then export PYTHONPATH=../core/tests:../agents/tests; elif [ "$project" = orchestrator ]; then export PYTHONPATH=../core/tests; fi && ../../.venv/bin/python -m unittest discover -s tests -q) || exit; done` | Agents 70 pass (6.609s), API 480 run: 383 pass/97 skipped (148.206s), orchestrator 17 pass, importer 39 pass. Total 931 tests: 834 pass, 97 expected SQL Server skips |
 | `.venv/bin/ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 --fix src/api/checks/design_system_browser_check.py src/api/checks/workbench_browser_check.py` | Fixed import order, left two long lines; manually split. Final strict lint pass |
 | `.venv/bin/ruff format --isolated --line-length 100 --check src/api/checks/design_system_browser_check.py src/api/checks/workbench_browser_check.py` | Final pass, two formatted files |
 | `cd src/api && ../../.venv/bin/python -m checks.workbench_browser_check` (third run) | All staff paths passed; contractor expected order was wrong in independent fixture oracle. Existing server ranks hazard first even in the minimal contractor projection; corrected expected IDs to ZF-4, ZF-1 without changing runtime policy |
 | `docker build -f src/api/Dockerfile -t zava-forward-api:issue-152 src` | Blocked: permission denied connecting to unix:///var/run/docker.sock. No sudo, daemon change or alternate deployment |
-| `cd src/api && PYTHONPATH=../core/tests:../agents/tests ../../.venv/bin/python -m unittest discover -s tests -v 2>&1 \| grep -E 'skipped\|Ran \|^OK'` | API 480 pass/97 skipped (127.002s); all skips require disposable SQL Server with ZF_TEST_MSSQL=1 |
+| `cd src/api && PYTHONPATH=../core/tests:../agents/tests ../../.venv/bin/python -m unittest discover -s tests -v 2>&1 \| grep -E 'skipped\|Ran \|^OK'` | API 480 run: 383 pass/97 skipped (127.002s); all skips require disposable SQL Server with ZF_TEST_MSSQL=1 |
 | `cd src/api && ../../.venv/bin/python -` (local Store inspection, see below) | Confirmed existing contractor IDs ZF-4 then ZF-1; output contains only constructed fixture fields |
 | `.venv/bin/ruff format --isolated --line-length 100 src/api/checks/workbench_browser_check.py src/api/checks/design_system_browser_check.py` | Final formatting pass |
 | `cd src/api && ../../.venv/bin/mypy && PYTHONPATH=../core/tests:../agents/tests ../../.venv/bin/python -m unittest discover -s tests -p test_workbench.py -q` | Pass, 40 typed files and 3 new navigation/manifest unit tests |
@@ -184,6 +184,42 @@ Publication preflight:
 The lifecycle is complete through one Review; this is not product acceptance.
 Parent state is Follow-up/completed, automatic session running without a
 selected child. Publication is explicitly authorized by the original request.
+
+## Publication Results
+
+* Explicit `git add` of the 24 task paths followed by `git -c
+  user.email=8036360+jmservera@users.noreply.github.com commit -F -`: pass,
+  `35f29a6`, Conventional Commit and required coauthor trailer.
+* `git push --set-upstream origin feat/src-role-workbench-ia-152`: pass,
+  only the named topic branch published.
+* `gh pr create --draft --base main --head feat/src-role-workbench-ia-152
+  --title 'feat(api): add shared role workbench IA and responsive layout'
+  --body-file <session>/files/issue-152-pr-body.txt`: pass,
+  https://github.com/jmservera/ama/pull/317. Generated body includes this
+  entire command ledger, not only a link.
+* `gh pr view 317 --json number,url,isDraft,baseRefName,headRefName,
+  mergeStateStatus,statusCheckRollup`: verified draft/main/named-topic;
+  `DIRTY`, empty checks. `git log -1 --format=...` verified both author and
+  committer privacy-safe email and final coauthor trailer. `git diff
+  origin/main...HEAD --name-only` confirmed only the intended 24 paths.
+* `git merge-tree --write-tree HEAD origin/main`: exit 1, read-only merge
+  analysis identifies only `docs/reference/log.md` as conflicting. No worktree,
+  ref or history is altered and no actual merge/rebase/force-push is performed.
+* `gh run list --branch feat/src-role-workbench-ia-152 --limit 5 --json
+  databaseId,name,event,status,conclusion,url`: empty. `gh pr view 317 --json
+  mergeable,mergeStateStatus,statusCheckRollup`: `CONFLICTING`/`DIRTY`, no checks.
+  **CI has not run**; it is not a passing CI claim.
+
+Publication blocker PUB-001: current main advanced during this task and its
+append-only reference-log entry conflicts with this topic's appended entry.
+An explicitly authorized branch reconciliation must preserve both entries
+before PR CI can evaluate the merge. No permission to merge/rebase work or
+rewrite history is inferred. The draft records this in addition to RV-001.
+
+Final evidence synchronization updates only this ledger and parent state,
+clarifies 931 run = 834 passed + 97 skipped, then uses an ordinary second
+Conventional Commit with the same privacy-safe identity/trailer and a normal
+topic push. It does not alter the completed Review or source.
 
 ## Open Acceptance and Evidence
 

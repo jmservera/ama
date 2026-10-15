@@ -34,6 +34,16 @@
       "decision": "One Review executed Complete; outcome Defects found; shared IA assessed, not full issue acceptance",
       "status": "not accepted while RV-001 remains open",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-15/role-workbench-ia-152-review.md"
+    },
+    {
+      "decision": "Publish draft PR 317 to main using Refs #152 and complete command ledger",
+      "status": "published; CI blocked by conflicting reference-log append",
+      "evidence": "https://github.com/jmservera/ama/pull/317; initial commit 35f29a6"
+    },
+    {
+      "id": "PUB-001",
+      "summary": "PR 317 conflicts with main in docs/reference/log.md; CI has not run",
+      "resolution": "Explicitly authorized topic-branch reconciliation must preserve both append-only entries; no merge/rebase/force push performed"
     }
   ],
   "blockers": [
@@ -45,7 +55,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Publish draft Refs #152 PR with complete evidence; highest-ranked later work is RV-001, no child task selected"
+    "action": "Draft PR 317 published. Branch reconciliation required before CI; then select a distinct RV-001 repair. No child task or history rewrite authorized."
   },
   "prioritized_follow_ups": [
     {
