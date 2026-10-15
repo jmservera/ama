@@ -2725,3 +2725,14 @@ metadata when the knowledge base was created.
   `mvp/tests/test_content_standard.py`.
 * Open items: named human reviewer for resident-facing wording, stored
   finance value "Keep on hold", reading-age targets and user testing.
+
+## [2026-10-15] update | WCAG 2.2 conformance baseline
+
+* Added `research/ux/wcag-conformance-baseline.md` and linked it from the index
+  (issue #151): proposed WCAG 2.2 AA target and scope, first audit, computed
+  contrast, manual check record and accessibility statement draft. Design
+  system focus token row updated (`--focus-ink`). Fixes in `mvp/web`: two-tone
+  focus indicator, field border contrast, chart table equivalent.
+* Open items: owner confirmation of target, rendered-page scanner for CI,
+  manual screen-reader, keyboard, zoom and target-size results per role,
+  contact route for the statement, re-retrieval of WCAG 2.2.
