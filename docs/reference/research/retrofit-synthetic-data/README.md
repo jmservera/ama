@@ -56,6 +56,8 @@ bookings; historical contrasts do not enter the booked-visits queue.
 | --- | --- | --- |
 | Retained geography stock / programme cases | 60000 / 980 | Separate denominators; 443 open programme cases |
 | Distinct geography anchors | 825 | Flats may share a building anchor; not unique stock-unit linkage |
+| Cases linked to a stock home ID / unlinked | 980 / 0 | Reported in `stock_link`; 16 stock homes are shared by more than one case |
+| Stock fabric attributes (60000 homes) | 5 | Build year, age band, dwelling type, construction, heating; synthetic assumptions, not company facts |
 | Appointments / visible booked visits | 1578 / 38 | Source bookings plus clearly labelled fixtures |
 | Current-week booked visits | 11 | Receipt counts 2026-10-12 to 2026-10-18; API has no date-range filter |
 | Designated forward visits | 6 | Four in that week; no invented works release or consent |
@@ -343,3 +345,22 @@ a recorded deferral.
 Open items: owner confirmation of the mapping, and whether regenerating the
 private SN-01 register from a committed generator sits in #168 or is deferred.
 No deferral is recorded yet.
+
+## Stock-to-case link and fabric attributes (2026-10-15)
+
+Closes the generator gap in [#168](https://github.com/jmservera/ama/issues/168).
+
+* Every case carries `synthetic_stock_anchor_id`. The private MVP JSON now has
+  a `stock_link` report (linked, unlinked with IDs, distinct homes, shared
+  homes) and a `stock_fabric` block per case, derived from the linked stock row.
+* `zf_stock_fabric.py` adds build year, age band, dwelling type, construction
+  and heating to each of the 60,000 register homes. Output depends only on the
+  seed and the home ID. Rebuild with
+  `python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/zf_stock_fabric.py`
+  (writes a git-untracked fabric CSV and the committed
+  `private-stock-fabric-summary.json` with counts and weights).
+* The distributions (age band by locality, construction by age band, heating by
+  locality) are exercise assumptions chosen by the generator author. They are
+  not Zava North Homes facts, surveys or EPC data and must not be cited as such.
+* The case `home.built` and `home.type` values from the 980-case model remain a
+  separate denominator and are not reconciled with `stock_fabric`.
