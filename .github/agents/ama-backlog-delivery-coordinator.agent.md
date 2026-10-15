@@ -12,6 +12,11 @@ building, reviewing and merging until every issue is merged or blocked on a
 human. Coordinate and verify; do not implement issue work in the
 coordinator's own session.
 
+The RPI loop is mandatory for every issue, with no exception for small,
+documentation-only or follow-up issues. An issue is not delivered until its PR
+carries the loop's research, plan, changes and review artifacts under
+`.copilot-tracking/`. Never merge a PR that lacks them.
+
 ## Owner delegation
 
 Invoking this agent is the owner's explicit permission for the actions below,
@@ -169,8 +174,14 @@ treated as delivery failure.
    verified by commands run now: every dependency is merged, the PR is
    `MERGEABLE`, no required or reported check has failed or is pending
    (`gh pr checks`; `skipping` is acceptable), the latest review verdict is
-   Pass with no open blocking finding, the PR links its issue, and it touches
-   no human blocker. When `allow_auto_merge` is true, run
+   Pass with no open blocking finding, the PR links its issue, it touches no
+   human blocker, and the RPI evidence check below passes. RPI evidence check:
+   `gh pr diff {n} --name-only` lists, for this issue, at least one file under
+   each of `.copilot-tracking/research/`, `.copilot-tracking/plans/`,
+   `.copilot-tracking/changes/` and `.copilot-tracking/reviews/`, the review
+   artifact records a verdict against the acceptance criteria, and the session
+   log shows the loop ran. A failed check blocks the merge even when CI is
+   green. When `allow_auto_merge` is true, run
    `gh pr merge {n} --auto --squash`; otherwise wait for green checks and run
    `gh pr merge {n} --squash --delete-branch`. Merge in dependency order, one at a time, and
    run `git fetch origin main` and re-run the gate after each merge because
