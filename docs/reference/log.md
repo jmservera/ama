@@ -3444,6 +3444,35 @@ metadata when the knowledge base was created.
   authority/retention and actual model/SQL Server/Azure evidence are not
   established. Local checks do not claim hosted CI, deployment or approval.
 
+## [2026-10-16] query | Role task queues and shared case context (#76)
+
+* Audited all seven #76 criteria against existing `src` after #116/#317/#318;
+  preserved delivered identity, role navigation, case card and domain controls.
+  Recorded the before/after boundary in the
+  [parity matrix](../architecture/mvp-to-src-parity-matrix.md#role-task-queue-offline-slice-2026-10-16).
+* Added six visible versioned engineering queue definitions, projected shared
+  case/current-history/suggestion/source context, structured blockers, recorded
+  hazard-clock observations and server-described single reset. Dynamic
+  membership is evaluated before count/page/export using existing JSON/SQL
+  read behavior, with no schema or SQL-dialect additions.
+* New human-text aliases use the existing need-to-know rules; a sentinel test
+  exposed and corrected a coupled derived-status leak. Contractors receive
+  neither staff context nor staff-queue rights. No operational rights or
+  approvals were granted.
+* Local core 401, API 519 (101 skipped), agents 70, orchestrator 17 and
+  importer 39 tests passed, with each project's Ruff and mypy checks.
+  The real loopback Chromium suites covered role navigation/projection,
+  queue membership, consistent current context, responsive case/queue,
+  cancellation and versioned reset. API tests exercised SQLite and 120
+  interleaved records across page boundaries; browser fixtures used JSON.
+* Updated [API](../../src/api/README.md#role-task-queues-and-shared-case-context-76),
+  [core](../../src/core/README.md#derived-role-task-queues-76) and reference
+  routing. Snapshot age is not a live statutory clock, and document-record
+  age is not proof of source freshness or certificate expiry.
+* Queue/ranking-policy owner approval, OQ-005 and OD-14/OD-19 role/redaction/
+  delegation decisions, direct human acceptance and real AI/SQL Server/Azure
+  evidence remain open. Approved priority is visibly unavailable while the
+  existing policy remains draft. Refs #76, not issue closure or deployment.
 ## [2026-10-16] ingest | Rule-card identity and source-review engineering slice
 
 * Extended the existing `src/core` rule-card/law stores and `src/api`
@@ -3517,3 +3546,8 @@ metadata when the knowledge base was created.
   group-scoped access disappeared; a filtered group list is empty. An operator
   with subscription-scoped read access must confirm completion. No zero-cost
   or complete erasure claim is made; this remains the delivery blocker.
+* A later main refresh incorporated accepted PR #325 while retaining both
+  shared-queue privacy and the stricter resident contractor projection.
+  Final combined core 418/API 537 tests and Ruff/format/mypy passed. Resident
+  retention/write persistence and SQL driver remained unchanged; new queue
+  reads were validated locally, not claimed as another Azure run.

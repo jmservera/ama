@@ -77,3 +77,7 @@ module = ["test_stock_reconciliation", "tests.test_stock_reconciliation",
           "test_sensor_stock", "tests.test_sensor_stock",
           "test_resident_decisions", "tests.test_resident_decisions"]
 disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = ["test_taskqueues", "tests.test_taskqueues"]
+disallow_untyped_calls = false

@@ -128,6 +128,9 @@ Review executed once, outcome Residual work. Draft PR 326 published.
 Only P02-T02 remains blocked on subscription-scoped cleanup confirmation.
 Main-to-topic merge resolved append-only log conflict without rewriting history;
 final integrated suites passed (409 core, 534 API).
+Subsequent accepted PR 325 integration preserved both queue privacy and resident
+flags, plus both documentation-session records. Latest suites: 418 core/537 API,
+all passed; Ruff/format/mypy passed. No repeated Review; cleanup blocker unchanged.
 Service-action preservation is an ordinary coupled compatibility correction,
 not a grant to managers to record resident decisions. No material divergence
 from owner choices; no additional critique required.

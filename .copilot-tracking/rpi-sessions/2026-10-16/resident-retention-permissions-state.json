@@ -49,6 +49,11 @@
       "decision": "Normal main-to-topic merge preserves both append-only log histories; integrated core 409/API 534 and lint/types passed; draft PR 326",
       "status": "verified",
       "evidence": "https://github.com/jmservera/ama/pull/326"
+    },
+    {
+      "decision": "Final main PR 325 integration preserves shared queue privacy and resident flags; full core 418/API 537 and Ruff/format/mypy pass; no second Review or Azure run",
+      "status": "verified",
+      "evidence": ".copilot-tracking/changes/2026-10-16/resident-retention-permissions-changes.md"
     }
   ],
   "blockers": [

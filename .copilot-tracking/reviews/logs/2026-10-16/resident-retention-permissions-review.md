@@ -34,7 +34,7 @@ has a platform authorization blocker, recorded as RV-004, not assumed successful
 | --- | --- | --- |
 | P01-T01 | Shared calendar schedule; earliest contact marker; legal-hold-aware retention approval; JSON/SQLite boundary/purge tests | Reconciled |
 | P01-T02 | Registered human writer gate, legacy endpoint, separate view set, detached resident subtrees, contractor flags and record-only form gating | Reconciled |
-| P01-T03 | Final integrated 409 core, 534 API, 70 agents; exact-field tests; local HTTP; Ruff/format/mypy; Node rendering | Reconciled |
+| P01-T03 | Final publication 418 core, 537 API, 70 agents; exact-field tests; local HTTP; Ruff/format/mypy; Node rendering | Reconciled |
 | P02-T01 | Real Azure SQL Basic database; new MssqlStore connections preserve decisions and purge; intact audit; ledger off | Reconciled |
 | P02-T02 | SQL/apps/storage/AI/monitoring observed removed; final operation polling and existence read became forbidden after group-scoped access disappeared; filtered group list empty | Final independent confirmation blocked, RV-004 |
 | P02-T03 | Documentation/log and artifacts committed, draft PR 326 open; final review/evidence commit follows | Parent delivery closeout |
@@ -130,3 +130,14 @@ engineering evidence is accepted within its stated boundary. RV-004 blocks
 verified final cleanup. RV-001 through RV-003 are existing operational
 follow-ups outside this engineering slice, not invented approvals.
 No second Review or implementation correction loop is requested. Issue 86 stays open.
+
+## Post-review Publication Integration Evidence
+
+Main subsequently accepted PR 325. Publication required an ordinary merge,
+not a new lifecycle task or repeated Review. The source conflict combined its
+queue privacy projection with the reviewed stricter contractor status/flag
+contract. A generic documentation-session filename collision retained both
+records. Resident retention/write persistence and SQL driver unchanged.
+Final combined core 418/1 skip and API 537/103 skips passed; Ruff/format and
+mypy (84 core, 43 API files) passed. This records integration evidence only,
+not another Review or a new Azure run. RV-004 remains open.

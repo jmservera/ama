@@ -139,3 +139,18 @@ proof of final environment/group removal. No alternate identity or escalation
 was attempted. Zero remaining cost and completed group deletion are not claimed.
 Final confirmation requires an owner/platform operator with subscription-scoped
 read authority. Draft PR 326 stays draft to expose that blocker honestly.
+
+## Final publication integration
+
+PR 325 then advanced main with shared task queues. A second ordinary main-to-topic
+merge preserved its queue/status privacy projection and this slice's stricter
+contractor stage-only status plus per-measure flags. The shared documentation
+session add/add conflict preserves both authoring records under separate sections.
+No policy choice, history rewrite, force-push or second Review.
+
+Final combined suites: core 418 run/1 opt-in skip (141.506 s), API 537 run/
+103 existing opt-in skips (243.542 s), all passed. Ruff and format passed;
+mypy passed for 84 core and 43 API source files. Azure evidence predates this
+queue-read integration; resident retention/write persistence and the SQL driver
+were not changed by it. Current-main queue read behavior is evidenced locally,
+not represented as a new Azure workflow run.

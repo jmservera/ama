@@ -98,3 +98,7 @@ operation-result and group reads became forbidden; filtered group list is empty.
 The last readable inventory had only a Consumption environment and networking.
 Do not treat lost read access as proof of complete deletion. Subscription-scoped
 reader confirmation is the remaining owner/platform action.
+Publication also integrated accepted PR 325's task queues: stricter contractor
+status/flags and upstream queue privacy both retained. Final combined 418 core/
+537 API tests, Ruff/format/mypy passed. SQL write persistence/retention unchanged;
+new queue read model is covered locally, not claimed as a repeat Azure run.
