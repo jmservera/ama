@@ -436,11 +436,12 @@ class EngineTests(unittest.TestCase):
             barrier = threading.Barrier(2)
             results: list[dict[str, Any]] = []
             errors: list[Exception] = []
+            store_lock = threading.RLock()
 
             def run(engine: rule_engine.RuleEngine) -> None:
                 try:
                     barrier.wait(timeout=10)
-                    store = SimpleNamespace(db=self.db, lock=threading.RLock())
+                    store = SimpleNamespace(db=self.db, lock=store_lock)
                     results.append(engine.run(store, "SYN-1", now=NOW))
                 except Exception as exc:
                     errors.append(exc)
