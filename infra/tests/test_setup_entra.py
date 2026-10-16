@@ -233,8 +233,9 @@ class FakeAzure:
                 return body
             return {"value": self.assignments}
         if route == f"users/{USER}":
-            assert "$select=id,accountEnabled,userType" in url
-            return {"id": USER, "accountEnabled": True, "userType": "Member"}
+            assert "$select=id," in url
+            return {"id": USER, "accountEnabled": True, "userType": "Member",
+                    "displayName": "Fictional Member", "userPrincipalName": "member@example.invalid"}
         if route == "users":
             return {"value": self.users}
         if route.startswith("users/") and route.endswith("/mailboxSettings/userPurpose"):
@@ -1032,7 +1033,10 @@ class SetupTests(unittest.TestCase):
 
     def test_sql_unreachable_returns_exact_private_host_command_and_incomplete_summary(self):
         self.fake.sql_code = 1
-        self.assertEqual(self.invoke(), 2)
+        with patch.object(SETUP.staff_azure, "execute", side_effect=SETUP.staff_azure.StaffJobError(
+                "Existing private job unavailable.")) as job:
+            self.assertEqual(self.invoke(), 2)
+            job.assert_called_once()
         self.assertIn("authorized host with private SQL connectivity", self.output.getvalue())
         self.assertIn("--apply --restart", self.output.getvalue())
         self.assertIn("SQL binding/restart: NOT confirmed", self.output.getvalue())

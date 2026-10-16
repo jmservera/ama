@@ -41,7 +41,7 @@ def parse_bicep_assignments() -> list[tuple[str, str, str]]:
     """Return (identity, roleId, scope) for every role assignment resource in the Bicep."""
     found = []
     for path, text in BICEP.items():
-        if path in ("main.bicep",):
+        if path == "main.bicep" or path in {r["bicep"] for r in MATRIX.get("customRoles", [])}:
             continue
         variables = dict(re.findall(r"^(?:var|param) (\w+)(?: string)? = '(" + GUID.pattern + ")'", text, re.M))
         for block in ROLE_RESOURCE.findall(text):
@@ -85,6 +85,21 @@ class RoleMatrixTests(unittest.TestCase):
             self.assertNotIn(guid, all_text, name)
         used = {r["roleId"] for r in MATRIX["assignments"]}
         self.assertEqual(used, set(MATRIX["builtInRoles"]))
+
+    def test_staff_initializer_custom_role_matches_matrix_and_api_only_assignment(self) -> None:
+        self.assertEqual(len(MATRIX["customRoles"]), 1)
+        role = MATRIX["customRoles"][0]
+        text = BICEP[role["bicep"]]
+        actions = re.search(r"actions: \[(.*?)\]", text, re.S).group(1)
+        self.assertEqual(re.findall(r"'([^']+)'", actions), role["actions"])
+        self.assertTrue(all("*" not in action for action in role["actions"]))
+        assignment, = ROLE_RESOURCE.findall(text)
+        self.assertIn("scope: api", assignment)
+        self.assertIn("roleDefinitionId: restartRole.id", assignment)
+        self.assertIn("principalId: initializer.properties.principalId", assignment)
+        self.assertIn("notActions: []", text)
+        self.assertIn("dataActions: []", text)
+        self.assertIn("notDataActions: []", text)
 
     def test_iot_hub_grants_receiver_only_to_api(self) -> None:
         self.assertEqual([(r["identity"], r["roleId"]) for r in self.rows("iotHub")],

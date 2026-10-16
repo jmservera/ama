@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any, NoReturn
 from urllib.parse import quote, urlencode, urlsplit
 
+import staff_azure
 from staff_roster import person, roster_rows
 
 GRAPH = "https://graph.microsoft.com/v1.0/"
@@ -121,6 +122,7 @@ class Azure:
         self.body_directory = body_directory
         self.extension_directory = extension_directory or profile / "cliextensions"
         self.subscription: str | None = None
+        self.deadline: float | None = None
 
     def environment(self) -> dict[str, str]:
         env = {k: v for k, v in os.environ.items() if k not in ("AZURE_CORE_DEBUG", "AZURE_DEBUG")}
@@ -145,9 +147,12 @@ class Azure:
                     filename = stream.name
                     json.dump(body, stream)
                 args = [*args, "--body", f"@{filename}"]
+            timeout = 120.0 if self.deadline is None else min(120.0, self.deadline - time.monotonic())
+            if timeout <= 0:
+                raise AzureError("network")
             result = subprocess.run(
                 ["az", *args, "--only-show-errors", "-o", "json"], env=self.environment(),
-                capture_output=True, text=True, timeout=120, check=False,
+                capture_output=True, text=True, timeout=timeout, check=False,
             )
             if result.returncode:
                 error = result.stderr.lower()
@@ -599,11 +604,24 @@ def candidate_staff(cli: Azure, args: argparse.Namespace,
     environment = {**cli.environment(), "ZF_SETUP_EXPECTED_APP": app["id"]}
     if cli.subscription:
         environment["ZF_SETUP_SUBSCRIPTION"] = cli.subscription
-    try:
-        result = subprocess.run(command, env=environment, capture_output=True, text=True,
-                                timeout=120, check=False)
-    except (OSError, subprocess.TimeoutExpired):
+    if args.run_in_azure:
         result = subprocess.CompletedProcess(command, 1, "", "")
+    else:
+        try:
+            result = subprocess.run(command, env=environment, capture_output=True, text=True,
+                                    timeout=120, check=False)
+        except (OSError, subprocess.TimeoutExpired):
+            result = subprocess.CompletedProcess(command, 1, "", "")
+    if result.returncode and not args.dry_run:
+        try:
+            failure = json.loads(result.stdout) if result.stdout.strip() else {}
+            if isinstance(failure, dict) and failure.get("error") == "validation":
+                raise SetupError("SQL candidate validation failed; Azure fallback was not attempted.")
+            value = azure_staff(args, app, "candidates", cli)
+            args.run_in_azure = True
+            result = subprocess.CompletedProcess(command, 0, json.dumps(value["candidates"]), "")
+        except (staff_azure.StaffJobError, AzureError) as error:
+            print("Azure staff candidate lookup: blocked. " + str(error))
     if result.returncode:
         handoff = ["python3", "infra/scripts/setup-entra.py", "--container-app", app["name"],
                    "--tenant-profile", str(args.tenant_profile), "--roster", str(args.roster)]
@@ -730,9 +748,12 @@ def generate_roster(graph: Azure, args: argparse.Namespace,
         rows.append({**candidate, "userId": identity["oid"]})
     print(f"Roster plan: {len(rows)} staff codes, {len(rows)} distinct people "
           f"from {len(people)} eligible members.")
-    print("Administrator: Retrofit Programme Manager (ProgrammeManager), "
-          f"code {admin_code}.")
-    print("Codes covered: " + ", ".join(r["code"] for r in rows))
+    if args.run_in_azure:
+        print("Administrator: ProgrammeManager position selected; staff codes remain private.")
+    else:
+        print("Administrator: Retrofit Programme Manager (ProgrammeManager), "
+              f"code {admin_code}.")
+        print("Codes covered: " + ", ".join(r["code"] for r in rows))
     for role in sorted({r["role"] for r in rows}):
         print(f"  {role}: {sum(r['role'] == role for r in rows)}")
     if readonly:
@@ -895,6 +916,40 @@ def staff_command(args: argparse.Namespace, app: dict[str, Any], *, apply: bool 
     return [*command, "--restart"] if apply else command
 
 
+def azure_staff(args: argparse.Namespace, app: dict[str, Any], operation: str,
+                cli: Azure) -> dict[str, Any]:
+    if args.dry_run:
+        raise staff_azure.StaffJobError(
+            "--dry-run never creates Azure jobs. Use --check --run-in-azure for a read-only SQL check "
+            "with temporary management-plane job/secret writes.")
+    payload: dict[str, Any] = {}
+    if operation != "candidates":
+        roles = {r["key"] for r in json.loads(MANIFEST.read_text())["appRoles"]}
+        roster = read_roster(args.roster, roles)
+        wanted = roster_rows(json.loads(args.roster.read_text()))
+        if any(row["kind"] != "users" for row in roster):
+            raise SetupError("Azure SQL staff binding requires individual people.")
+        graph = Azure(args.tenant_profile, extension_directory=cli.extension_directory)
+        payload = {
+            "wanted": wanted,
+            "people": {row["id"]: graph.rest(
+                GRAPH + f"users/{row['id']}?$select=id,displayName,userPrincipalName,accountEnabled,userType")
+                for row in roster},
+        }
+        for uid, principal in payload["people"].items():
+            if person(principal)["oid"] != uid:
+                raise SetupError("Graph returned a different roster person; SQL was not changed.")
+    transport = Azure(cli.profile, body_directory=private_path(args.tenant_profile, directory=True),
+                      extension_directory=cli.extension_directory)
+    transport.subscription = cli.subscription
+    print("SQL in Azure: temporary ama job/secret; "
+          + ("read-only SQL." if operation != "apply" else "bind, verify and restart."))
+    value = staff_azure.execute(transport, app, operation, payload, source_name=args.azure_init_job)
+    if operation != "candidates" and value.get("positions") != len(payload["wanted"]):
+        raise staff_azure.StaffJobError("Azure staff result does not cover the requested roster.")
+    return value
+
+
 def sql_staff_step(args: argparse.Namespace, app: dict[str, Any], *, readonly: bool,
                    cli: Azure | None = None) -> bool:
     cli = cli or Azure(Path(os.environ.get("AZURE_CONFIG_DIR", str(Path.home() / ".azure"))),
@@ -905,12 +960,31 @@ def sql_staff_step(args: argparse.Namespace, app: dict[str, Any], *, readonly: b
         environment["ZF_SETUP_SUBSCRIPTION"] = cli.subscription
 
     def run(apply: bool) -> tuple[int, dict[str, Any]]:
-        try:
-            result = subprocess.run(staff_command(args, app, apply=apply),
-                                    env=environment, capture_output=True, text=True,
-                                    timeout=600, check=False)
-        except (OSError, subprocess.TimeoutExpired):
+        def remote() -> tuple[int, dict[str, Any]]:
+            try:
+                value = azure_staff(args, app, "apply" if apply else "check", cli)
+            except (staff_azure.StaffJobError, AzureError) as error:
+                print("Azure SQL staff step blocked: " + str(error))
+                return 1, {}
+            if not all(type(value.get(k)) is int and value[k] >= 0
+                       for k in ("staff_changes", "owner_labels", "positions")):
+                raise SetupError("Azure staff result has invalid counts; SQL/restart is unverified.")
+            if type(value.get("restart_required")) is not bool or type(value.get("sql_verified")) is not bool:
+                raise SetupError("Azure staff result has invalid verification status.")
+            return (0 if value["sql_verified"] else 2), value
+
+        if args.run_in_azure:
+            code, value = remote()
+            if code in (0, 2):
+                return code, value
             result = subprocess.CompletedProcess([], 1, "", "")
+        else:
+            try:
+                result = subprocess.run(staff_command(args, app, apply=apply),
+                                        env=environment, capture_output=True, text=True,
+                                        timeout=600, check=False)
+            except (OSError, subprocess.TimeoutExpired):
+                result = subprocess.CompletedProcess([], 1, "", "")
         if result.returncode not in (0, 2):
             try:
                 failure = json.loads(result.stdout) if result.stdout.strip() else {}
@@ -921,6 +995,11 @@ def sql_staff_step(args: argparse.Namespace, app: dict[str, Any], *, readonly: b
                       "Review existing staff codes, approved roles, complete coverage and immutable "
                       "bindings with --list-staff; SQL binding/restart: NOT confirmed.")
                 return result.returncode, {}
+            if not apply and not args.run_in_azure and not args.dry_run:
+                args.run_in_azure = True
+                code, value = remote()
+                if code in (0, 2):
+                    return code, value
             print("SQL binding: blocked (private SQL connectivity, installed drivers/packages or "
                   "initializer authority unavailable); SQL binding/restart: NOT confirmed.")
             print("From an authorized host with private SQL connectivity and the same private roster, run:")
@@ -1391,9 +1470,13 @@ def setup(args: argparse.Namespace) -> int:
             return 0
         if args.list_staff:
             candidates = candidate_staff(cli, args, app)
-            print("Existing workbench positions (code / approved role):")
-            for row in candidates:
-                print(label(row["code"]) + " / " + label(row["role"]))
+            if args.run_in_azure:
+                print(f"Existing workbench positions: {len(candidates)}; "
+                      "codes and roles retrieved privately, no SQL changes.")
+            else:
+                print("Existing workbench positions (code / approved role):")
+                for row in candidates:
+                    print(label(row["code"]) + " / " + label(row["role"]))
             return 0
         if generate or generated:
             require_demo(cli, app)
@@ -1593,6 +1676,10 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--edge-profile")
     result.add_argument("--direct-ingress", action="store_true",
                         help="Use only the verified external API FQDN; never discover Front Door")
+    result.add_argument("--run-in-azure", action="store_true",
+                        help="Run SQL staff work in a temporary private Container Apps job, not locally")
+    result.add_argument("--azure-init-job",
+                        help="Existing job-<prefix>-init in the API environment; defaults to API prefix")
     result.add_argument("--public-url", help="Verify this HTTPS origin is linked to the selected API")
     result.add_argument("--registration-name", default="zava-forward-api")
     result.add_argument("--client-id", type=object_id, help="Explicit intended registration; never printed")

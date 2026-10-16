@@ -36,6 +36,21 @@
     {"identity": "token-maintenance", "resource": "keyvault", "scope": "Secret entra-token-store-sas only", "roleId": "b86a8fe4-44ce-4948-aee5-eccb2c155cd7", "reason": "Write the renewed SAS to its one secret", "bicep": "modules/authTokenStore.bicep"},
     {"identity": "token-maintenance", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull the maintenance job image", "bicep": "modules/authTokenStore.bicep"}
   ],
+  "customRoles": [
+    {
+      "name": "staff-initializer-api-restart",
+      "identity": "existing SQL administrator id-<prefix>-init",
+      "scope": "selected API only, ama",
+      "bicep": "staff-initializer-rbac.bicep",
+      "status": "Offline definition; deployment and permission activation not run",
+      "actions": [
+        "Microsoft.App/containerApps/read",
+        "Microsoft.App/containerApps/revisions/read",
+        "Microsoft.App/containerApps/revisions/replicas/read",
+        "Microsoft.App/containerApps/revisions/restart/action"
+      ]
+    }
+  ],
   "sqlGrants": [
     {"identity": "api", "roles": ["db_datareader", "db_datawriter", "db_ddladmin"], "reason": "Serve the API; db_ddladmin only so the MVP creates its tables on first start (open item: drop after schema migration)"},
     {"identity": "import", "roles": ["db_datareader", "db_datawriter"], "reason": "Write imported records"},

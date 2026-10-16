@@ -4457,3 +4457,29 @@ metadata when the knowledge base was created.
   operational owners/sources remain a gap. No Azure, actual model, private data
   attestation or universal PII-free certification is claimed.
 * Updated the knowledge-base index and relevant core/agents/pack READMEs.
+
+## [2026-10-16] ingest | In-VNet staff job continuation
+
+* Refs #360. Added `--run-in-azure` and automatic fallback for blocked local
+  candidate/check SQL work. Directory grants and seeded roster generation stay
+  under the operator login; uncertain local applies never switch execution hosts.
+* Extended the source-based proof image with the SQL-only staff worker, shared
+  protected-roster preparation and manifest. Existing SQL-admin MI performs
+  SQL binding, post-commit verification and API restart through an optional
+  API-only custom role, separately inventoried in the role matrix.
+* Roster/request and fresh encryption key use a temporary job secret, never
+  command-line values. Authenticated encrypted results are captured privately
+  from explicit job execution/replica logs; normal output is codes-free on
+  the Azure path. Owned-job deletion removes the transfer secret; timeout,
+  uncertain creation, interruption and failed cleanup remain explicit.
+* Updated the infra runbook, cut-over acceptance audit and reference index.
+  The runbook records required image build, scoped role deployment, actual
+  log-endpoint access, private-host fallback and leftover-job recovery.
+* Offline validation: 304 infra tests passed without skips, 32 responsive
+  loopback API auth tests passed, all ten CI-gated infra Python files passed
+  Ruff/format, worker/transport mypy and standalone Bicep build/lint passed.
+  Tests use synthetic fixtures, not private datasets or live Azure.
+* No Azure commands against live resources, image builds, network changes,
+  tenant writes, issue ticks or approvals. Image/role activation, actual log
+  access, private SQL binding/restart, real browser sign-in and human cut-over
+  acceptance remain Not run or unmet.
