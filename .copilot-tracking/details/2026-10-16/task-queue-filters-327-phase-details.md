@@ -33,8 +33,8 @@ Copilot trailer, push existing topic and create main-based PR with Refs #327.
 
 ## Current state
 
-P01-T01 and P02-T01 complete. P02-T02 documentation complete; review and
-publication remain. Five test methods added, zero removed, within budget.
+All plan tasks complete, including one Review and publication of PR #336.
+Five test methods added, zero removed, within budget.
 Local suites total 1140 tests, 104 existing skips; all executed tests passed.
 All five project ruff/format/mypy checks passed. One critique Pass; mutation
 killed in JSON/SQLite. Detailed paired timings and cold caveat are in changes

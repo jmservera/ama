@@ -3661,3 +3661,6 @@ metadata when the knowledge base was created.
 * Local suites totalled 1,140 tests with 104 existing conditional skips; all
   executed tests passed. All five projects passed ruff, formatting and mypy.
   Hosted checks and any live-platform performance remain separate evidence.
+* Published PR #336 with Refs #327, no automatic issue-disposition reference.
+  One plan critique passed and one implementation Review was Conformant.
+  Hosted checks started; merge remains the owner's decision.

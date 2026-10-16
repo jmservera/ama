@@ -55,10 +55,11 @@ Status: complete.
 * [x] P01-T01 Record generated baseline and implement snapshot membership index.
 <!-- rpi:phase id=P02 -->
 ### P02 Verification and delivery
+Status: complete.
 <!-- rpi:task id=P02-T01 -->
 * [x] P02-T01 Run parity, mutation, scale timings, unit suites, ruff and mypy.
 <!-- rpi:task id=P02-T02 -->
-* [ ] P02-T02 Update docs, review once, commit, push and publish PR.
+* [x] P02-T02 Update docs, review once, commit, push and publish PR.
 
 ## Critique Disposition
 
@@ -77,6 +78,7 @@ task; this is not needed for the accepted snapshot-cache slice.
 
 ## Current Handoff
 
-Implementation and verification complete. Documentation is updated. P02-T02
-has only the single Review, commit, push and PR publication remaining. No
-unresolved code issue or material divergence; no second critique required.
+Full plan complete. One Review Complete / Conformant, no findings. Commit
+a8a07a5 pushed on perf/task-queue-filters-327; PR #336 targets main with Refs #327.
+PR closingIssuesReferences is empty and #327 remains open. Hosted checks are
+running, not claimed passed. Owner retains merge and any future work selection.
