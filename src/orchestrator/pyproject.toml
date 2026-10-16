@@ -29,7 +29,7 @@ select = ["E", "F", "I", "B", "UP"]
 
 [tool.mypy]
 strict = true
-mypy_path = ["src"]
+mypy_path = ["src", "../core/src", "../core/tests"]
 explicit_package_bases = true
 namespace_packages = true
 files = ["src", "tests"]
@@ -45,4 +45,12 @@ exclude = ["src/zava_forward/orchestrator/{digest_blob,token_store}.py", "tests/
 [[tool.mypy.overrides]]
 module = ["zava_forward.core.*", "zava_forward.orchestrator.digest_blob", "zava_forward.orchestrator.token_store", "test_digest_blob", "test_token_store", "tests.test_digest_blob", "tests.test_token_store"]
 ignore_errors = true
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = ["source_monitor_fixture"]
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = ["dataset", "release_support"]
 follow_imports = "skip"

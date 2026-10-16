@@ -18,6 +18,74 @@ established by changing the template. Tests are in `src/orchestrator/tests/` and
 `PYTHONPATH=../core/tests python3 -m unittest discover -s tests`. The section below is moved
 unchanged from the former `mvp/README.md` (M6 of #199).
 
+## Offline source change job (#213)
+
+`python -m zava_forward.orchestrator.source_monitor` runs a bounded local
+observation page against the existing law store. It adds no network adapter,
+hosted timer or approval command. Existing token/digest schedules and
+infrastructure are unchanged. The job can compare and flag only; Legal,
+Compliance and DPO exercise decisions remain with Juan Manuel Servera.
+See the [core contract and acceptance audit](../core/README.md#source-change-monitoring-and-review-213).
+
+An exercise operator must first seed the law store from public snapshots and
+configure each source through the trusted `SourceMonitor.configure` interface.
+Do not use private working data. For example, a local fixture file can contain:
+
+```json
+{
+  "synthetic-monitor": {
+    "content": "# Synthetic exercise\nConstructed text, not law.\n",
+    "metadata": {
+      "effective": "2026-10-18",
+      "complete": true
+    },
+    "provenance": "SYNTHETIC local publication fixture, not official retrieval",
+    "method": "local-fixture"
+  }
+}
+```
+
+The example ID requires an explicitly constructed exercise source, not an
+invented entry in the official register. `complete: true` is discovery
+metadata, never verification or approval. Omit content and supply `error`
+for a failed retrieval. The job never loads a URL or a supplied content path.
+The supplied file is explicit, local JSON; no environment file is loaded.
+
+```bash
+ZF_LAW_DB=/absolute/exercise/law.sqlite \
+ZF_LAW_BLOBS=/absolute/exercise/law-blobs \
+  /tmp/zf164/bin/python -m zava_forward.orchestrator.source_monitor \
+  /absolute/exercise/observations.json --today 2026-10-16 --limit 100
+```
+
+Each configured source uses its own day cadence. Sources checked too recently
+are skipped; failed attempts also count for cadence, with failures retained
+for the owner. A due source with no observation becomes an explicit failure
+review item. Output lists `checked`, `skipped`, `changes`, `failures` and
+`next_after`; failures exit 1. Repeat with `--after <next_after>` until null
+to cover subsequent pages, and start again from the beginning on the next
+sweep. Limits must be 1..100. Dates are explicit exercise clock inputs, not
+claims of real official retrieval. New configuration revisions invalidate
+earlier release evidence and require a fresh observation/review.
+
+Candidate observations stay outside the law-store index. Every discovered
+change remains unverified until the named owner reviews provenance and
+completeness. The job cannot interpret law, approve a card, activate a rule,
+release a hold or send a staff/resident communication. No endpoint was added.
+Live metadata/legislation/feed adapters, hosted scheduling and missing-run
+alerts require later delivery and authorization; this recipe is not a
+production monitoring claim.
+
+Run from `src/orchestrator`, with installed editable local distributions:
+
+```bash
+PYTHONPATH="$PWD/../core/tests" /tmp/zf164/bin/python -m unittest discover -s tests -q
+/tmp/zf164/bin/ruff check . && /tmp/zf164/bin/ruff format --check . && /tmp/zf164/bin/mypy
+```
+
+Tests use local synthetic fixtures only, including nonzero CLI failures and
+persisted review items; they do not scrape or read private datasets.
+
 ## Ledger digests
 
 ### Immutable Blob ledger digests and scheduled verification (issue #115)

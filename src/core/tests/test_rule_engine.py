@@ -229,9 +229,17 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(self.checks()[0]["result"], "unknown")
 
     def test_approval_does_not_make_future_rule_active(self) -> None:
-        self.card(effective="2027-01-01")
-        self.assertEqual(self.checks()[0]["result"], "unknown")
-        self.assertEqual(self.alerts(), [])
+        version = self.card(approve=False, effective="2027-01-01")
+        self.law.rules.approve(
+            "synthetic-clock", version, OWNER["email"], rulecards.OWNER, "2026-01-01"
+        )
+        with self.assertRaisesRegex(rulecards.RuleError, "effective dates"):
+            self.law.rules.activate(
+                "synthetic-clock", version, OWNER["email"], rulecards.OWNER, "2026-01-01"
+            )
+        self.assertEqual(self.law.rules.state("synthetic-clock", version), "approved")
+        self.assertEqual(self.law.rules.is_active("synthetic-clock", "2026-10-16"), 1)
+        self.assertEqual(self.checks()[0]["result"], "attention")
 
     def test_future_consulted_historical_partial_stale_and_missing_sources(self) -> None:
         for kw in (

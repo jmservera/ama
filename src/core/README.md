@@ -767,6 +767,141 @@ capabilities to a unique provisioned identity; actual tenant assignments, human
 approval of specific cards and the rule-card UI remain open. The bounded
 exercise engine below does not supply those approvals.
 
+## Source change monitoring and review (#213)
+
+`source_monitor.SourceMonitor` extends the delivered #127 review workflow on
+the #210 law store, #211 rule cards and #212 deterministic evaluator.
+It is a bounded offline exercise, not a live legal monitoring service.
+Juan Manuel Servera is the exercise Legal, Compliance and DPO owner.
+Approval-bearing records explicitly say `simulated` and `EXERCISE ONLY`;
+neither agent output nor a fixture is real human legal approval.
+
+The store reuses the law SQL adapter, immutable snapshot store and rule-card
+transaction. Four append-only tables retain configuration revisions,
+observations, candidate changes and lifecycle events. SQLite triggers enforce
+local append-only behavior. SQL Server uses ledger tables when enabled,
+otherwise denial triggers, with the existing transaction-scoped exclusive
+`zavaforward_write` application lock. Only the local adapter/SQL contracts have
+been exercised here, not a live SQL Server or Azure run.
+
+### Detection and bounded impact
+
+`configure(source_id, cadence_days=..., likelihood=..., rationale=...,
+impact=..., actor=..., role=...)` records a positive 1..366-day interval, exact
+`High`/`Medium`/`Low` likelihood, the register rationale and explicit lists of
+`requirements`, `journeys`, `tests` and `communications`. The source must
+already exist. Configuration is owner-controlled and append-only; repeating
+the same configuration is idempotent. Use the
+[register](../../docs/reference/regulatory/README.md#change-assessment-and-monitoring-register)
+to select the interval and rationale, including increased cadence around
+commencement; the code does not guess an interval from prose or turn
+likelihood into legal importance. Unconfigured sources are not monitored.
+
+`observe` accepts explicit UTF-8 bytes, publication metadata, provenance,
+discovery method and an exercise date, or an explicit retrieval error.
+It compares hashes/metadata against the retained law-store baseline and stores
+content, metadata or retrieval-failure review items, including a capped
+200-line unified difference with an explicit truncation flag. Full candidate
+bytes remain in a content-addressed snapshot alongside, not over, the baseline.
+Missing observations are failures, not successful checks. Scraping, feed and
+metadata results all start unverified. Changed bytes do not inherit the old
+source's completeness; an explicit completeness assertion still requires
+owner review.
+
+Candidates never enter `reg_version`, `reg_provision` or the search index.
+Detection does not alter a card or its lifecycle. Exact canonical source IDs
+match cards, not source-name substrings. Each change freezes matched card
+versions/states, requirements, journeys, tests and communications and links the
+existing per-card review records by candidate/configuration IDs. The source
+version on those reviews is the actual baseline, not an invented published
+candidate version. Empty impact fields or no matched cards are explicitly
+unmapped; nonempty lists establish completeness only for that bounded
+configuration, not exhaustive legal impact analysis.
+
+### Simulated owner release and rollback
+
+These are trusted in-process functions, not an authenticated public API.
+`actor="Juan Manuel Servera"` and `role=rulecards.OWNER` are exercise call
+inputs, not proof of identity. No monitor approval/configuration/activation
+endpoint was added; the role endpoint inventory is unchanged. Provisioned
+HTTP card identities keep their existing independent author/owner boundary.
+
+1. The distinct author drafts an immutable replacement with an executable
+   contract; the named card owner separately approves it. Existing active or
+   held cards can instead receive an explicit `no_change` disposition.
+2. The exercise owner calls `monitor.approve` with provenance/completeness
+   review evidence, interpretation, notification and rollback plans, effective
+   date, every affected card's exact target and local regression cases. Failed
+   or explicitly partial retrievals and incomplete impact lists cannot pass.
+   Existing linked card reviews receive the corresponding simulated owner
+   assessment. This does not publish a source or send communications.
+3. `monitor.regress` runs the frozen cases through the existing deterministic
+   evaluator after approval, retaining observed/expected results and pass/fail.
+   Every configured test ID and target must be covered. Cases contain
+   `test_id`, `card_id`, `facts` and `expected` result states. They are bounded
+   data, not Python expressions, arbitrary commands or a Python-suite runner.
+   Configured IDs identify these regression cases; listing a suite path alone
+   is not evidence that that suite ran.
+4. `monitor.activate` is another named-owner action. It requires the latest
+   run for the exact approval to pass and refuses dates before the effective
+   date, candidate date or regression. It rechecks source/configuration,
+   candidate integrity, exact card histories, evaluator version and current,
+   complete, reviewed citations under the transaction. A failed rerun cannot
+   reuse an older pass; material observations invalidate approval even if
+   bytes later revert. Harmless duplicate observations do not.
+5. Replacement activation cannot supersede a human hold. A separately
+   approved/regressed `no_change` decision can release that exact held card.
+   Direct card `activate`/`release`, including alternate versions, cannot
+   bypass monitoring once a card has a detected change.
+   A newly drafted card citing a changed source also joins the gate and
+   requires a refreshed observation. If a card cites multiple changed sources,
+   activation fails closed: coordinated multi-source release is not supplied
+   by this offline slice and one source's approval cannot stand for another.
+6. `monitor.rollback` requires the same owner and a reason. It atomically
+   compares the exact activation histories and restores captured eligible
+   prior active versions, or retires a replacement where none was active.
+   A no-change hold release can be rolled back to the captured hold.
+   Intervening holds, retirements, new card versions, repeated rollback or
+   expired/ineligible prior versions block rollback rather than undo later
+   human decisions. All earlier versions, dates and events remain.
+
+Ordinary unmonitored card activation now also refuses a date outside the
+card's effective/retirement window, preserving the previous active version
+until an eligible replacement is actually activated. Detection never delays
+independent emergency, resident or hazard routes.
+
+Publication of a candidate as a verified law-store version is deliberately
+not implemented. Positive release tests use clearly synthetic reviewed
+baseline provisions already held by the law store. A card citing an
+unpublished candidate, stale, missing, partial or unreviewed provision cannot
+pass runtime-equivalent eligibility. This offline rule-release demonstration
+is not proof of activating a newly published legal interpretation.
+
+### Acceptance audit
+
+| Issue #213 acceptance criterion | Bounded local result | Unmet boundary |
+| --- | --- | --- |
+| Differences stored with affected cards, journeys, tests and communications | Met for configured fixtures: retained differences, exact card histories, source versions, impact lists, owner and linked reviews | Live discovery and exhaustive legal/journey/template impact mapping are not delivered |
+| Scraping is unverified until provenance and completeness review | Met locally: discovery is unverified; simulated owner evidence is required and retained separately | No actual official provenance/currentness or human legal review is claimed |
+| Detection never overwrites approved cards | Met locally: candidate isolation, immutable snapshots/cards and retained lifecycle histories | Live storage permissions and immutable Blob policy remain unverified |
+| Approval, regression, effective-date activation and rollback | Met for simulated single-source existing-source executable cards, including failures, holds and atomic rollback; overlapping changed sources fail closed | Coordinated multi-source release, verified new-source publication, actual human approval, operational regression/accessibility/privacy/communications suites and live activation remain unmet |
+| Configurable cadence per source | Met locally: explicit versioned intervals, due boundary and bounded orchestrator pages | No hosted regulatory timer, official adapter, missed-run alert or adaptive calendar policy is deployed |
+| High/Medium/Low likelihood per register | Met as an exact validated enum with retained register rationale | No automatic register-to-runtime policy synchronization or owner ratification is claimed |
+
+`tests/test_source_monitor.py` covers local detection, authority, provenance,
+coverage, failure/staleness, effective dates, no-change/holds, actual runtime
+eligibility, restart, concurrent adapters, append-only SQL contracts and atomic
+multi-card release/reversal. Run from `src/core`:
+
+```bash
+PYTHONPATH="$PWD/tests" /tmp/zf164/bin/python -m unittest discover -s tests -p 'test_source_monitor.py' -q
+/tmp/zf164/bin/ruff check . && /tmp/zf164/bin/ruff format --check . && /tmp/zf164/bin/mypy
+```
+
+The [offline job recipe](../orchestrator/README.md#offline-source-change-job-213)
+does no scraping and has no approval or activation command. Refs #213; these
+local results do not close the issue.
+
 ## Deterministic checks and alerts (#212)
 
 `rule_engine` reads persisted SQL case bodies and row versions, never a model's
