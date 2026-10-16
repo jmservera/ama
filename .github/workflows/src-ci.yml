@@ -155,8 +155,8 @@ jobs:
         run: |
           python -m unittest discover -s infra/tests -v
           pip install 'ruff==0.17.1'
-          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/tests/test_bicep_policy.py
-          ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.py
+          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py
+          ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py
 
   no-working-data:
     name: src-no-working-data
