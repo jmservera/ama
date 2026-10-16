@@ -2,7 +2,7 @@
   "displayName": "zava-forward-api",
   "signInAudience": "AzureADMyOrg",
   "owner": "Juan Manuel Servera (subscription owner and Legal/Compliance/DPO owner per the 2026-10-15 owner decisions; tenant ownership unconfirmed)",
-  "enforcement": "Not declarative: the script is not driven by this manifest and a test only checks they agree. Criterion 4 (reproducible registration) is met by the explicit manual steps below and their named owner. Callback hostnames are passed with the script -u option at run time and are not recorded here.",
+  "enforcement": "setup-entra.py reads appRoles and callbackPath, discovers deployed API/edge hosts and reconciles additive registration settings. Other identity controls are implemented by the script and verified by offline tests, not a full declarative deployment. Live tenant authority and browser acceptance remain separate gates. The older shell helper is retained for historical procedures.",
   "appRoleAssignmentRequired": true,
   "callbackPath": "/.auth/login/aad/callback",
   "idTokenIssuance": true,
@@ -23,8 +23,8 @@
     "requires": "Tenant owner (not yet confirmed as Juan Manuel Servera) confirms guest invitation, access reviews and cross-tenant settings"
   },
   "manualSteps": [
-    {"step": "Run infra/scripts/create-api-app-registration.sh as an Application Administrator", "owner": "Juan Manuel Servera"},
-    {"step": "Admin-assign users to app roles (script -a option or initialize-workbench-staff.py)", "owner": "Juan Manuel Servera"},
+    {"step": "Run python3 infra/scripts/setup-entra.py as an authorized application owner or administrator; supply private explicit-role roster mappings", "owner": "Juan Manuel Servera"},
+    {"step": "Complete any human admin consent and run private-network initialize-workbench-staff.py for SQL bindings/restart", "owner": "Juan Manuel Servera"},
     {"step": "Tenant-level B2B guest and cross-tenant policy", "owner": "Juan Manuel Servera, open"}
   ]
 }

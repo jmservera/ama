@@ -3934,3 +3934,22 @@ metadata when the knowledge base was created.
   leases remain unverified before operational reliance. Search and monitoring
   costs are explicitly unknown; paid deployment, actual processing, real
   legal approval and benefit evidence are not authorized or proved here.
+
+## [2026-10-16] query | One-command Entra setup and public-edge discovery (Refs #351, Refs #344)
+
+* Added `infra/scripts/setup-entra.py` and routed the old auth initializer CLI
+  to it. The tool discovers the ama API/linked edge, preserves existing
+  redirects and roles, provisions missing registration/enterprise app,
+  reconciles explicit private user/group role mappings and wires auth.
+* Updated the [infra guide](../../infra/README.md#api-registration-management-with-the-existing-m365-session)
+  and [knowledge index](./README.md) with isolated device login, fictional
+  roster schema, human consent/authority, optional private secret storage and
+  interrupted-credential recovery. Added minimal API/edge discovery tags and
+  a browser secret-name parameter for later declarative redeployments.
+* Read the unpublished #344 branch and pending additive infra changes without
+  modifying them. Origin-linked edge discovery and preservation of auth
+  exclusions, token storage and bearer/browser action support both designs.
+* Evidence is offline mocked-az testing, not a tenant write, private roster
+  read, successful browser sign-in or operational approval. Private-network
+  SQL staff binding/restart, actual admin consent and human acceptance remain
+  separate gates. No private dataset or live Entra identifier was recorded.
