@@ -34,6 +34,11 @@
       "decision": "One independent Review executed: Complete; outcome Not accepted; source changes frozen and draft publication required",
       "status": "blocked",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-16/one-command-entra-setup-351-review.md"
+    },
+    {
+      "decision": "Published draft PR #356; no merge or issue-body checkbox edits",
+      "status": "complete",
+      "evidence": "https://github.com/jmservera/ama/pull/356"
     }
   ],
   "blockers": [
@@ -41,7 +46,7 @@
     {"id": "RV-002", "summary": "Selected vault endpoint is not probed before credential creation", "resolution": "Later rpi-implement: bounded read-only vault connectivity preflight"},
     {"id": "RV-003", "summary": "Already-failed runtime rollout can pass a no-op check", "resolution": "Later rpi-implement: inspect provisioning state even without a runtime patch"}
   ],
-  "next_action": {"phase": "Review", "action": "Publish draft PR with complete acceptance audit; ready delivery remains blocked"},
+  "next_action": {"phase": "Implement", "action": "Later rpi-implement invocation resolves RV-001/RV-002/RV-003 on draft PR #356; no second Review required"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "RV-003: failed no-op rollout detection", "rationale": "Small local state guard removes a false clean check outcome", "evidence": "Independent Review memory-only reproduction"},
     {"rank": 2, "task": "RV-001: fresh roster role-conflict preflight", "rationale": "Prevent directory mutations for known-invalid planned role mappings", "evidence": "Independent Review fresh fake-az reproduction: four writes before rejection"},

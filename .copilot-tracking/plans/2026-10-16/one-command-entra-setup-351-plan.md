@@ -74,7 +74,7 @@ binding remain unexecuted and must not be ticked as accepted.
 ### P02: Evidence and delivery
 * [ ] P02-T01: Add infra/tests/test_setup_entra.py; preserve old callback helper tests. 101 pass; fresh-conflict/vault-probe/failed-no-op cases remain per Review.
 * [x] P02-T02: Update infra README, knowledge index/log and run targeted validation.
-* [ ] P02-T03: Execute one independent review; record audit and publish PR.
+* [x] P02-T03: Execute one independent review; record audit and publish draft PR #356. Ready delivery remains blocked by RV-001 through RV-003.
 
 ## Test Ownership and Change Bounds
 

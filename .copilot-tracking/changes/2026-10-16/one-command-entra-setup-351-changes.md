@@ -40,7 +40,11 @@ Updated infra guide, manifest metadata, knowledge index and append-only log.
 No private roster, dataset, live identity, secret or environment file was read.
 Final preservation-patch validation passed: all 39 new setup tests, ruff,
 mypy and git diff --check. Review executed independently once and reproduced
-two gaps with memory-only fake data; see its canonical record. PR pending.
+two gaps with memory-only fake data; see its canonical record.
+Published draft PR #356: https://github.com/jmservera/ama/pull/356.
+Implementation commit: 719016f, pushed without history rewrite.
+Main advanced by one commit during the task; no silent rebase/merge was made.
+The issue body is unchanged. Ready delivery remains blocked, not accepted.
 
 ## Acceptance Audit
 
@@ -60,7 +64,7 @@ two gaps with memory-only fake data; see its canonical record. PR pending.
 | Tests under infra/tests, stdlib implementation | Implemented; 101 combined targeted tests pass |
 | SQL staff binding/restart and human browser acceptance | UNMET / not executed; explicit separate private-network/human gates, not claimed by configuration setup |
 | Legal/consent/safety boundaries and private data | Preserved; no operational approval or source-currentness claim |
-| Push/PR/checks/owner merge | Draft publication pending; ready merge blocked by RV-001 through RV-003; issue body checkboxes intentionally untouched |
+| Push/PR/checks/owner merge | Branch pushed, draft PR #356 opened; ready merge blocked by RV-001 through RV-003; issue body checkboxes intentionally untouched; no merge performed |
 
 ## Amendments and Divergences
 
