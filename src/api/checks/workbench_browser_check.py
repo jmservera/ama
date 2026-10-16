@@ -19,6 +19,7 @@ def synthetic_data() -> dict[str, Any]:
     data: dict[str, Any] = copy.deepcopy(
         runpy.run_path(str(ROOT / "src/core/tests/dataset.py"))["DATA"]
     )
+    data["as_of"] = "2026-10-16"
     data["cases"] = [data["cases"][0], data["cases"][3], data["cases"][4]]
     data["cases"][2]["contractor"]["name"] = "Other Ltd"
     data["staff"] = [
@@ -45,6 +46,13 @@ def synthetic_data() -> dict[str, Any]:
         case["owner"] = owner["name"]
         case["home"].update(lat=0, lon=0)
     data["cases"][1]["hazards"][0]["source"] = "Synthetic-source-" + "x" * 180
+    data["cases"][0].update(stage_since="2026-10-15", reason="SYN-NEW-WORK")
+    data["cases"][0]["documents"] = [
+        dict(id="SYN-EPC-76", kind="EPC", at="2026-09-15", version=2)
+    ]
+    data["cases"][1]["hazards"][0].update(
+        aware_at="2026-10-15T12:00:00Z", response_due_at="2026-10-15T18:00:00Z"
+    )
     return data
 
 
@@ -278,6 +286,87 @@ def run_browser(base: str) -> None:
                     and "My assigned cases. 2 cases"
                     in page.locator("#workspace-status").inner_text(),
                 )
+                page.get_by_text("Queue definitions", exact=True).click()
+                check(
+                    "six visible engineering definitions and unapproved priority limitation",
+                    page.locator(".side details dt").count() == 6
+                    and "approval with a named owner is not recorded" in page.locator(".side details").inner_text(),
+                )
+                for queue, expected in (
+                    ("new", ["ZF-1"]), ("stale", ["ZF-1"]),
+                    ("overdue", ["ZF-4"]), ("priority", []), ("unowned", []),
+                ):
+                    with page.expect_response(
+                        lambda response: "/api/cases?" in response.url
+                        and f"queue={queue}" in response.url
+                    ):
+                        page.locator("#f-queue").select_option(queue)
+                    wait_cases(page, len(expected))
+                    check(f"{queue} queue exact expected IDs", ids(page) == expected)
+                page.locator("#f-queue").select_option("overdue")
+                wait_cases(page, 1)
+                check(
+                    "queue clock and named owner use recorded snapshot",
+                    "12 elapsed hours" in page.locator(".item").inner_text()
+                    and "Bea Safe" in page.locator(".item").inner_text()
+                    and "2026-10-16" in page.locator(".item").inner_text(),
+                )
+                queue_context = page.locator(".item .work-context").inner_text()
+                page.locator(".item").click()
+                page.get_by_role("heading", name="Recorded task context", exact=True).wait_for()
+                check(
+                    "queue case history and suggestion current context agree",
+                    page.locator(".work-context").count() == 3
+                    and all(text == queue_context
+                            for text in page.locator(".work-context").all_inner_texts()),
+                )
+                page.get_by_text("Blocked steps and prerequisites", exact=True).click()
+                check(
+                    "blocked step reason owner and next action are visible",
+                    "Safety review" in page.locator("[aria-label='Recorded task context']").inner_text()
+                    and "Named owner: Bea Safe" in page.locator("[aria-label='Recorded task context']").inner_text(),
+                )
+                page.get_by_text("Task sources", exact=True).click()
+                check(
+                    "source trace belongs to selected case",
+                    "Case ZF-4" in page.locator("[aria-label='Recorded task context']").inner_text(),
+                )
+                page.get_by_role("link", name="Back to the list", exact=True).click()
+                wait_cases(page, 1)
+                page.locator("#reset-queue").click()
+                wait_cases(page, 2)
+                page.locator('.item[href="#/case/ZF-1"]').click()
+                page.get_by_role("heading", name="Recorded task context", exact=True).wait_for()
+                check(
+                    "case switching refreshes reason source and clock without carryover",
+                    "SYN-NEW-WORK" in page.locator(".work-context").first.inner_text()
+                    and "case:ZF-1/stage" in page.locator(".work-context").first.inner_text()
+                    and "Bea Safe" not in page.locator(".work-context").first.inner_text(),
+                )
+                page.get_by_role("link", name="Back to the list", exact=True).click()
+                wait_cases(page, 2)
+                page.get_by_role("link", name="All cases", exact=True).click()
+                wait_cases(page, 3)
+                for key, value in (
+                    ("stage", "Contacting resident"), ("area", "Test"), ("wave", "Wave 1"),
+                    ("owner", "RLO-01"), ("flag", "hazard"), ("queue", "overdue"),
+                ):
+                    page.locator(f"#f-{key}").select_option(value)
+                page.locator("#f-q").fill("Pat")
+                page.locator("#f-sort").select_option("name")
+                page.locator("#reset-queue").click()
+                wait_cases(page, 2)
+                check(
+                    "single reset clears every queue override and selection",
+                    all(page.locator(f"#f-{key}").input_value() == ""
+                        for key in ("q", "stage", "area", "wave", "flag", "queue"))
+                    and page.locator("#f-owner").count() == 0
+                    and page.locator("#f-sort").input_value() == "urgent"
+                    and page.url.endswith("#/")
+                    and page.locator(".work-context").count() == 2
+                    and "work-queues-1; selection: none"
+                    in page.locator("#workspace-status").inner_text(),
+                )
 
                 def delay_name(route: Route) -> None:
                     if "sort=name" in route.request.url:
@@ -347,12 +436,34 @@ def run_browser(base: str) -> None:
                 check(
                     "navigation/filter/reset leave complete case record unchanged", before == after
                 )
+                def alternate_default(route: Route) -> None:
+                    response = route.fetch()
+                    payload = response.json()
+                    payload["work_queues"]["default"]["sort"] = "name"
+                    payload["work_queues"]["version"] = "synthetic-default-contract"
+                    route.fulfill(response=response, json=payload)
+
+                page.route("**/api/me", alternate_default, times=1)
+                page.reload()
+                wait_cases(page, 2)
+                page.locator("#f-sort").select_option("urgent")
+                with page.expect_response(
+                    lambda response: "/api/cases?" in response.url and "sort=name" in response.url
+                ):
+                    page.locator("#reset-queue").click()
+                wait_cases(page, 2)
+                check(
+                    "reset consumes server default rather than a hardcoded browser order",
+                    page.locator("#f-sort").input_value() == "name"
+                    and "synthetic-default-contract" in page.locator("#workspace-status").inner_text()
+                    and page.locator("#reset-queue").evaluate("el => el === document.activeElement"),
+                )
                 page.route(
                     "**/api/cases?**",
                     lambda route: route.fulfill(status=401, json={"error": "Synthetic expiry"}),
                     times=1,
                 )
-                page.locator("#f-sort").select_option("name")
+                page.locator("#f-sort").select_option("urgent")
                 page.get_by_role("heading", name="Sign in", exact=True).wait_for()
                 check(
                     "expired session returns explicit sign-in, no stale queue",

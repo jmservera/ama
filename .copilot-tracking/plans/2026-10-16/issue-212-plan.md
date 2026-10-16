@@ -4,7 +4,7 @@ description: Approved deterministic checks and scoped alerts
 ms.date: 2026-10-16
 ---
 
-Task: 212 / issue-212. Status: implementation-ready candidate.
+Task: 212 / issue-212. Status: published local engineering delivery; residual acceptance work.
 
 ## Executive Summary
 
@@ -66,7 +66,7 @@ limits. SQL Server/live Azure and real human approval/trial remain unmet.
 
 * [x] P02-T01 Add core/API tests; update endpoint inventory and READMEs/log.
 * [x] P02-T02 Run project tests, ruff and mypy; audit criteria for one Review.
-* [ ] P02-T03 Commit, push and publish Refs #212 PR.
+* [x] P02-T03 Commit, push and publish Refs #212 PR.
 
 ## Validation Ownership
 
@@ -124,3 +124,10 @@ is the authorized post-review publication step, not unimplemented product work.
 The core README contains the nine-row acceptance audit: criterion 7 is
 explicitly partial end-to-end where home identity is unresolved; local
 engineering evidence does not satisfy live approval or trial gates.
+
+Publication: PR #328, https://github.com/jmservera/ama/pull/328, targets main
+with no closing issue references. Main advanced independently with #325;
+an ordinary topic integration merge preserves both histories. Only core/API
+pyproject test-boundary entries conflicted; both sets were retained. Combined
+core 43/API 27 integration tests and both project ruff/mypy checks passed.
+No force-push, rebase, issue closure or PR merge.

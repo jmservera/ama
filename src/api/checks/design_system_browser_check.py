@@ -238,6 +238,9 @@ def main(
         # Do not inherit model endpoints, credentials, private data or deployment settings.
         env = {key: os.environ[key] for key in ("PATH", "HOME", "LANG") if key in os.environ}
         env.update(
+            PYTHONPATH=os.pathsep.join(
+                str(ROOT / "src" / project / "src") for project in ("core", "agents", "api")
+            ),
             ZF_DATA=str(data),
             ZF_STATE=str(work),
             ZF_STORE="json",

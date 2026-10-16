@@ -79,5 +79,6 @@ module = ["test_stock_reconciliation", "tests.test_stock_reconciliation",
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
-module = ["test_rule_engine", "tests.test_rule_engine"]
+module = ["test_rule_engine", "tests.test_rule_engine",
+          "test_taskqueues", "tests.test_taskqueues"]
 disallow_untyped_calls = false

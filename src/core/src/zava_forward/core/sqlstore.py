@@ -594,7 +594,7 @@ class SqlStore(Store):
     def page_cases(self, user, view="mine", q="", filters=None, sort="urgent", limit=None, offset=0, after=None):
         """Same result as Store.page_cases, answered by SQL. `after` is a keyset cursor (the last rkey seen) for the default order."""
         # Authority can expire without a row write; never filter current consent on a cached column.
-        if limit is None or view == "closed" or (filters or {}).get("flag") == "nodecision":
+        if limit is None or view == "closed" or (filters or {}).get("flag") == "nodecision" or (filters or {}).get("queue"):
             return super().page_cases(user, view, q, filters, sort, limit, offset, after)
         asked = sort
         if sort not in insights.SORTS:
@@ -621,8 +621,12 @@ class SqlStore(Store):
             if projection.is_contractor(user):
                 r.pop("reasons")
                 r = projection.contractor_summary(c, r)
-            elif view == "mine":
-                r["focus"] = self.focus(c, user["role"], projection.can_see_reason(user))
+            else:
+                r["work"] = self.work_context(c, user)
+                if not projection.can_see_reason(user) and r["status"].startswith("Waiting on "):
+                    r["status"] = "Waiting for the recorded next step"
+                if view == "mine":
+                    r["focus"] = self.focus(c, user["role"], projection.can_see_reason(user))
             out.append(r)
         nxt = rows[-1][1] if rows and sort == "urgent" and len(rows) == limit else None
         return dict(items=out, total=total, limit=limit, offset=offset, sort=asked, policy_version=ranking.CURRENT["version"],

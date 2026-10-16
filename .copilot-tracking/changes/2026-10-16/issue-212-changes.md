@@ -67,3 +67,22 @@ are not supplied and will remain explicitly unmet.
 Ready for one Review of P01 and P02-T01/T02. No known unaddressed local
 implementation defect. P02-T03 is the explicitly authorized publication
 step after Review, with no further source implementation intended.
+
+## P02-T03 publication and concurrent-main integration
+
+Created commit 1f39da1, pushed feat/src-rule-engine-212 normally and opened
+PR #328: https://github.com/jmservera/ama/pull/328. GitHub confirmed an open
+main-targeted PR and an empty closingIssuesReferences list.
+
+Main independently advanced to 0e3b6bf (#325, role task queues). Its two
+conflicts were core/API pyproject test-module overrides. An ordinary merge
+into the topic retains both task-queue and rule-engine test-boundary entries;
+no engine algorithm or authority change was required. Automatic merges
+preserved the upstream server routes, core/store work and README/log entries.
+This is publication integration, not a second implementation/Review loop.
+Post-integration core engine/cards/taskqueue 43 and API alert/taskqueue/
+inventory 27 tests passed. Both whole-project ruff/mypy checks passed
+(core 86 files, API 44). No history rewrite, force-push or main/PR merge.
+Commit identity was resolved with gh api user and the verified supplied
+8036360+jmservera@users.noreply.github.com address was configured locally
+and used for both author and committer, with the required Copilot trailer.
