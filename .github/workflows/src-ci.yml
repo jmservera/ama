@@ -71,11 +71,31 @@ jobs:
         run: |
           ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 checks/design_system_browser_check.py
           ruff format --isolated --line-length 100 --check checks/design_system_browser_check.py
+          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 checks/regulatory_ux_check.py
+          ruff format --isolated --line-length 100 --check checks/regulatory_ux_check.py
       - name: Synthetic design-system browser checks
         if: matrix.project == 'api'
         run: |
           python -m playwright install --with-deps chromium
           python -m checks.design_system_browser_check
+          set --
+          if curl --fail --silent --show-error --location --retry 2 \
+            --connect-timeout 10 --max-time 30 \
+            https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js \
+            --output "$RUNNER_TEMP/axe-4.10.3.min.js"; then
+            set -- --axe "$RUNNER_TEMP/axe-4.10.3.min.js"
+          else
+            echo "::warning::Pinned axe download unavailable; running all non-axe regulatory UX assertions"
+          fi
+          PYTHONPATH="$GITHUB_WORKSPACE/src/api/tests:$GITHUB_WORKSPACE/src/core/tests:$GITHUB_WORKSPACE/src/agents/tests" \
+            python -m checks.regulatory_ux_check "$@" --out "$RUNNER_TEMP/regulatory-ux-results.json"
+      - name: Retain regulatory UX evidence
+        if: always() && matrix.project == 'api'
+        uses: actions/upload-artifact@v4
+        with:
+          name: regulatory-ux-results
+          path: ${{ runner.temp }}/regulatory-ux-results.json
+          if-no-files-found: warn
       - name: Build image
         id: build
         if: matrix.image

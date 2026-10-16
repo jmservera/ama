@@ -1242,12 +1242,13 @@ after installing the project distributions and API dev extras with pip:
 python3 -m playwright install chromium
 curl -fsSL https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js \
   -o /tmp/axe-4.10.3.min.js
-export PYTHONPATH="$PWD/src/api/src:$PWD/src/api/tests:$PWD/src/core/src:$PWD/src/core/tests:$PWD/src/agents/src:$PWD/src/agents/tests"
+export PYTHONPATH="$PWD/src/api/tests:$PWD/src/core/tests:$PWD/src/agents/tests"
 python3 src/api/checks/regulatory_ux_check.py \
   --axe /tmp/axe-4.10.3.min.js --out /tmp/regulatory-ux-results.json
 python3 -m unittest test_regulatory_chat_api test_rule_alerts test_chat_panel \
   test_chat_isolation test_accessibility_baseline test_design_system test_role_matrix -q
-(cd src/api && ruff check . && ruff format --check checks/regulatory_ux_check.py && mypy)
+(cd src/api && python3 -m unittest test_regulatory_ux_check -q)
+(cd src/api && ruff check . && ruff format --isolated --line-length 100 --check checks/regulatory_ux_check.py && mypy)
 ```
 
 The check verifies the axe 4.10.3 SHA-256 before execution:
@@ -1256,6 +1257,11 @@ API tests precede core tests in the absolute `PYTHONPATH` to avoid colliding
 test module names. Checks cover WCAG 2.2 A/AA axe tags on the changed surfaces,
 native Enter/Space controls, Tab/Shift-Tab traversal, visible focus, post-answer
 and doubt focus, text statuses, 320/390/1280px reflow and 200% text sizing.
+Every exercised state also measures visible enabled controls, links and
+disclosure summaries: at least 24px width/height, preserving the cited-lookup
+summary's stronger shipped 44px height. Citation links now have a 24px
+inline-block target rather than an 18px inline text box. The supplier guidance
+is static and has no interactive targets.
 The test also checks persisted doubt/history, missing sources, retained risk
 after source change, service outage, disabled lookup, staff guidance and
 contractor denial. It is an engineering check, not a complete WCAG conformance
@@ -1268,6 +1274,34 @@ results require further assessment, not a pass declaration. Keyboard traversal,
 focus and reflow assertions passed. The 86 targeted API and 33 core regression
 tests, API ruff/format and strict mypy passed. These observations do not satisfy
 the full WCAG criterion or the staff comprehension criterion.
+
+The `src-api` job in [source CI](../../.github/workflows/src-ci.yml) now runs
+this UX regression check next to `checks.design_system_browser_check`, using
+the same installed Chromium and an absolute API/core/agents test path.
+It fetches the pinned axe version with bounded retries/timeouts; the harness
+verifies the SHA-256 before executing it. A failed download emits a CI warning
+and omits only axe, never the target-size, keyboard, reflow, role or local API
+assertions. Supplied wrong-hash content fails rather than downgrading. JSON
+results explicitly record axe execution/skipping and are uploaded as
+`regulatory-ux-results`. To run without axe locally:
+
+```bash
+python3 src/api/checks/regulatory_ux_check.py --out /tmp/regulatory-ux-no-axe.json
+```
+
+Review follow-up on 2026-10-16: the exact new CI shell block passed locally both
+with a successful download and a deliberately failed curl. Both paths checked
+142 targets across 17 states, minimum measured width/height 24px; cited-lookup
+summary height 44px. The axe path retained the same eight contrast incompletes.
+Deleting `.regulatory summary{cursor:pointer;min-height:2.75rem;padding:.5rem 0}`
+from the served stylesheet failed the actual browser check at `cited-answer`:
+the summary measured 1198 x 24px, below its 44px design floor. Restoring the rule
+passed both CI paths. The unstyled 24px summary alone is not an AA violation;
+the stronger assertion protects the existing intended target. Three harness
+unit tests also cover 24px boundaries, static supplier content and corrupt axe.
+The 86 targeted API and 33 core tests, design-system browser check and API
+ruff/format/mypy passed. Hosted CI is pending, not claimed passed: the owner
+requested push without waiting. Full issue acceptance remains unchanged.
 
 ### Staff comprehension protocol (Not run; unmet)
 

@@ -122,3 +122,29 @@ assessed slice. The three original plan follow-ups remain distinct and open,
 with owners/destinations above. No further Review or implementation loop is
 scheduled here. Parent proceeds with the requested commit/push/PR, stating
 Refs #215 and the criterion-by-criterion limits. Human merge decision remains.
+
+## Owner-requested implementation follow-up verification
+
+This section records bounded P03 evidence after the independent CHANGES verdict
+on d79a737. It does not repeat the original full UX Review or replace its
+Residual work outcome.
+
+| Independent finding | Implementation evidence | Disposition |
+| --- | --- | --- |
+| High: regulatory UX harness absent from CI | src-api browser step invokes checks.regulatory_ux_check after design-system checks. Pinned download and SHA guard, explicit fallback warning, retained JSON. Exact new shell commands passed locally with successful and deliberately failed download. | Addressed in code; hosted CI pending per owner instruction not to wait |
+| Medium: target size regression undetected | Per-state real bounding boxes enforce 24px controls, links and summaries, plus shipped 44px cited-lookup summary height. 142 target measurements over 17 states. Deletion of exact CSS rule fails at 1198 x 24px; restoration passes. | Addressed with mutation evidence; 44px assertion protects stronger design, not a claim that 24px violates AA |
+
+The new measurements exposed 18px inline citation links; their directly coupled
+24px inline-block sizing passes narrow/expanded text reflow. Static supplier
+content remains control-free. Three harness unit tests, 86 existing API tests,
+33 core tests, API ruff/format/mypy and existing design-system browser pass.
+Wrong hash fails rather than silently skipping axe. Genuine download failure
+only skips axe, explicitly recorded in JSON, not keyboard/target/API assertions.
+
+No new legal source, approval, rule activation or access right. All five issue
+criteria retain their audited dispositions: role patterns met only as synthetic
+design/existing-role guidance; alert shape met only for scoped contracts; WCAG
+partial/unmet (eight contrast incompletes and unassessed manual criteria);
+doubt/no-source met only in the bounded synthetic slice; staff comprehension
+Not run/unmet. Operational delegates/sources and ADR chat value stay open.
+Issue body untouched. No conformant or hosted-CI-pass verdict is claimed.

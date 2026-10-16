@@ -25,15 +25,45 @@ ROLES = {
     "Programme Support Officer": "Programme support",
     "Grants and Evidence Officer": "Finance and grants",
 }
+CONTROLS = (
+    "summary:visible, a[href]:visible, button:visible:enabled, "
+    "input:visible:enabled, select:visible:enabled, textarea:visible:enabled"
+)
+
+
+def target_sizes(page: Page, selector: str) -> list[dict[str, Any]]:
+    controls = page.locator(selector).locator(CONTROLS)
+    # Preserve the shipped 44px disclosure target as well as the 24px AA floor.
+    sizes: list[dict[str, Any]] = controls.evaluate_all(
+        """nodes => nodes.map(el => {
+          const r = el.getBoundingClientRect();
+          return {control: el.id || el.outerHTML.slice(0, 180),
+            width: r.width, height: r.height,
+            min_height: el.matches('.regulatory summary') ? 44 : 24};
+        })"""
+    )
+    assert sizes or selector == "#regulatory-supplier", (
+        f"No interactive targets checked: {selector}"
+    )
+    for size in sizes:
+        assert size["width"] >= 24 and size["height"] >= size["min_height"], (
+            f"Target size below 24px width / {size['min_height']}px height: {size['control']} "
+            f"({size['width']} x {size['height']})"
+        )
+    return sizes
 
 
 def scan(
     page: Page,
-    axe: str,
+    axe: str | None,
     reports: list[dict[str, Any]],
     state: str,
     selector: str = "#regulatory-alerts, #chat-panel",
 ) -> None:
+    sizes = target_sizes(page, selector)
+    if axe is None:
+        reports.append(dict(state=state, axe="skipped: not supplied", target_sizes=sizes))
+        return
     page.evaluate(axe)
     result: dict[str, Any] = page.evaluate(
         """async selector => await axe.run(
@@ -45,6 +75,7 @@ def scan(
     reports.append(
         dict(
             state=state,
+            target_sizes=sizes,
             violations=result["violations"],
             incomplete=[
                 dict(
@@ -107,10 +138,12 @@ def keyboard_walk(page: Page, selector: str) -> None:
     expect(controls.last).to_be_focused()
 
 
-def run(axe_path: Path) -> dict[str, Any]:
-    raw = axe_path.read_bytes()
-    assert hashlib.sha256(raw).hexdigest() == AXE_SHA256, "Unexpected axe 4.10.3 content"
-    axe = raw.decode()
+def run(axe_path: Path | None) -> dict[str, Any]:
+    axe = None
+    if axe_path is not None:
+        raw = axe_path.read_bytes()
+        assert hashlib.sha256(raw).hexdigest() == AXE_SHA256, "Unexpected axe 4.10.3 content"
+        axe = raw.decode()
     fixture = RegulatoryApi("runTest")
     reports: list[dict[str, Any]] = []
     fixture.setUp()
@@ -337,6 +370,7 @@ def run(axe_path: Path) -> dict[str, Any]:
             scope="Synthetic changed surfaces only; not a WCAG conformance certification",
             axe_version="4.10.3",
             axe_sha256=AXE_SHA256,
+            axe_status="executed" if axe is not None else "skipped: not supplied",
             scans=reports,
             staff_comprehension="Not run; unmet",
         )
@@ -346,12 +380,17 @@ def run(axe_path: Path) -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--axe", type=Path, required=True, help="Pinned local axe 4.10.3 script")
+    parser.add_argument(
+        "--axe", type=Path, help="Pinned local axe 4.10.3 script; omit for non-axe checks"
+    )
     parser.add_argument("--out", type=Path, required=True, help="Local JSON evidence output")
     args = parser.parse_args()
     result = run(args.axe)
     args.out.write_text(json.dumps(result, indent=2) + "\n")
-    print(f"PASS: {len(result['scans'])} axe states, keyboard, reflow, roles and real local API")
+    print(
+        f"PASS: {len(result['scans'])} browser states, target sizes, keyboard, reflow, "
+        f"roles and real local API; axe {result['axe_status']}"
+    )
 
 
 if __name__ == "__main__":

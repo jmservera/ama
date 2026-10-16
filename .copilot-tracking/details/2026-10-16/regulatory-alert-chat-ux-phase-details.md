@@ -58,3 +58,24 @@ P01 and P02 completed; feature commit 82bd6c2 pushed to the existing topic.
 PR #354 targets main with Refs #215, a five-criterion audit and all unmet gates.
 One Review completed with Residual work. No operational/full-WCAG/staff result
 is claimed; issue checkboxes and the owner's merge authority remain unchanged.
+
+## P03 independent review implementation
+
+Scope explicitly requested on 2026-10-16: address both findings from independent
+CHANGES at d79a737 on existing PR #354. Merge main first; keep both log sides.
+Add regulatory_ux_check next to design_system_browser_check in src-api CI.
+Fetch axe 4.10.3 with bounded curl time/retries; validate its existing SHA-256
+before execution. On download failure emit a CI warning, record axe skipped
+and still execute all non-axe assertions; corrupt supplied content must fail.
+Use absolute API/core/agents test paths with API tests first.
+
+Measure all visible enabled interactive targets on the changed surfaces, plus
+the outer chat disclosure, across exercised states and viewport sizes. Include
+the cited-lookup summary and preserve its designed 44px height as a stronger
+regression floor: its unstyled 24px line box already meets the AA minimum.
+Do not infer target size from CSS text or from a few activated controls.
+Remove the regulatory summary rule for a local mutation run and require
+a target-size assertion failure; restore it immediately afterward.
+Run both normal and no-axe browser paths, relevant unit tests, ruff/format/mypy.
+Record that hosted CI is pending because the owner says push and do not wait.
+Leave WCAG/staff/value/operational acceptance gaps unchanged.

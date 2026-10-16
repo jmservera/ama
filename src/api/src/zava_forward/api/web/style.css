@@ -86,7 +86,7 @@ textarea{width:100%;min-height:5rem}
 .regulatory h3,.regulatory h4{margin:.75rem 0 .5rem}
 .regulatory blockquote{margin:.75rem 0;padding-left:1rem;border-left:3px solid var(--brand)}
 .regulatory-excerpt{white-space:pre-wrap}
-.regulatory a{color:var(--brand-d);text-decoration:underline}
+.regulatory a{display:inline-block;min-height:1.5rem;color:var(--brand-d);text-decoration:underline}
 .regulatory summary{cursor:pointer;min-height:2.75rem;padding:.5rem 0}
 .regulatory dl{grid-template-columns:minmax(0,9rem) minmax(0,1fr)}
 @media(max-width:600px){.regulatory dl{grid-template-columns:minmax(0,1fr)}.regulatory dd{margin-bottom:.65rem}.regulatory ol,.regulatory ul{padding-left:1.3rem}}

@@ -92,3 +92,60 @@ author/committer email and required Copilot trailer used. No force push,
 history rewrite, merge, issue-checkbox update or Azure action.
 All active plan tasks are complete; remaining work is the three routed
 acceptance/evidence follow-ups, not unreported implementation work.
+
+## P03 starting state and validation intent
+
+Owner requested both independent CHANGES findings on d79a737, existing branch
+and PR #354. Clean starting worktree verified. Merged origin/main as 91ed90e;
+resolved only docs/reference/log.md by retaining both complete append-only
+histories. Authenticated privacy-safe local email and Copilot trailer used.
+P03 is the only active scope; original critique and Review stay historical.
+Next: wire CI, optional hash-pinned axe, all-control bounding boxes and exact
+CSS-deletion mutation. Validate actual local SQL-backed app plus targeted unit,
+ruff/format/mypy; update PR and push without waiting, as explicitly requested.
+Missing local Playwright/ruff/mypy permits pip dependency restoration.
+
+## P03-T02 CI execution and explicit fallback
+
+Added the regulatory harness to the existing src-api browser step and strict
+isolated lint/format commands. Absolute test paths resolve installed packages
+and shared fixtures. Bounded curl downloads axe 4.10.3; the existing SHA-256
+guard remains mandatory for supplied scripts. Download failure warns, omits
+only axe and still runs all other assertions. JSON records executed/skipped
+status and the workflow uploads it. No blanket continue-on-error.
+
+Executed the exact new workflow shell block locally with genuine download
+and deliberately failed curl, each exit 0 after 17 real local app states.
+Wrong-hash content fails before app startup (unit-tested). Hosted CI is pending;
+owner explicitly says not to wait after pushing. No hosted pass is invented.
+
+## P03-T03 measured targets and CSS mutation
+
+Every scan now measures visible enabled controls, links and summaries in the
+changed surfaces, including the outer chat and cited-lookup disclosure.
+Require width/height >=24px; retain the existing summary's stronger 44px design
+height. The initial real run detected 18px-high citation links; changed only
+their regulatory CSS to inline-block/min-height 1.5rem. This directly coupled
+runtime fix is within the approved boundary. Static supplier guidance has no
+interactive targets and is explicitly distinguished from empty staff surfaces.
+
+Both CI paths measured 142 targets across 17 states; minimum width/height 24px
+and summary height 44px. Deleted the exact regulatory summary rule from the
+served stylesheet, ran the no-axe browser harness and required nonzero exit.
+It failed at cited-answer with:
+`Target size below 24px width / 44px height: <summary>Cited regulatory lookup (synthetic-demo)</summary> (1198 x 24)`.
+Restored the rule immediately; both exact CI shell paths then passed. The
+unstyled 24px summary is already AA-sized; this mutation protects the stronger
+shipped design, not a fabricated AA violation. Axe still has eight incomplete
+contrast states and zero detected violations; no full conformance claim.
+
+## P03-T04 local evidence and publication preparation
+
+Missing tools restored with pip into an isolated session virtualenv, editable
+core/agents/API distributions installed. No private datasets or Azure used.
+86 targeted API tests and 33 core tests pass; three new harness tests cover
+24px boundaries, 44px design retention, static supplier exemption and corrupt
+axe. API ruff, format (17 files), strict mypy (47 files), isolated harness
+lint/format and existing design-system browser pass. Updated READMEs, KB
+index and appended log; criterion audit still keeps full WCAG/staff testing
+unmet. PR body update and ordinary commit/push remain the delivery actions.

@@ -4031,3 +4031,24 @@ metadata when the knowledge base was created.
   Existing PR ready status requires all latest-head checks green. Hosted
   hardening and other unmet criteria remain Partial; owner review and all
   operational/legal/consent/safety/financial approvals remain separate.
+
+## [2026-10-16] implementation | Regulatory UX review regression gates
+
+* Refs #215. Merged origin/main into the existing PR branch and retained both
+  append-only log histories. Updated the [API engineering evidence](../../src/api/README.md#local-engineering-checks),
+  source README and index without changing issue checkboxes or human authority.
+* Wired the regulatory browser harness into src-api CI beside the design-system
+  browser check, with hash-verified axe 4.10.3 and uploaded JSON evidence.
+  Download failure warns and runs every non-axe assertion; wrong-hash content
+  fails. The exact new CI shell block passed locally with successful and
+  deliberately failed downloads; hosted CI remains pending, not claimed passed.
+* Measured 142 interactive targets across 17 browser states, minimum 24px in
+  both axes. Raised citation links from 18px inline boxes to 24px targets.
+  Removing the regulatory summary rule failed the real check at 1198 x 24px
+  against the retained 44px disclosure design floor; restoring it passed.
+  A 24px unstyled summary is not itself an AA violation.
+* Existing 86 API and 33 core regressions, three new harness tests, the existing
+  design-system browser check, API ruff/format/mypy passed. Axe still reports
+  eight contrast-incomplete states; full WCAG, real staff comprehension,
+  measured chat value and real owners/sources remain unmet. No operational
+  approval, rule activation, consent, safety or financial commitment is added.

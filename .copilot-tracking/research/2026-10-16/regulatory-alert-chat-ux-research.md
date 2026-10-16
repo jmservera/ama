@@ -55,3 +55,18 @@ API README without inventing permissions or legal commencement claims.
 Test the actual local SQL-backed app with wholly constructed fixtures.
 Staff comprehension and comprehensive WCAG certification remain unmet.
 No external legal retrieval is needed: no new legal rule or currentness claim.
+
+## Independent review follow-up evidence
+
+Research disposition: reused with focused internal inspection; Ready for P03.
+Owner supplies independent CHANGES verdict on d79a737: the workflow runs only
+the design-system browser harness, never regulatory_ux_check. That check
+requires axe and only measures target size inside keyboard_activate, missing
+the cited-lookup summary's designed 44px height. keyboard_walk checks focus, not
+target dimensions. The default summary line box is already 24px, so the mutation
+must protect the stronger existing 44px design contract, not mislabel 24px as
+an AA violation. Newly measured inline citation links are only 18px high;
+give those changed-surface targets inline-block 24px minimum-height sizing.
+The source-summary CSS rule is therefore not protected by current assertions.
+Use actual per-state bounding boxes, not axe alone, to detect its deletion.
+No new legal, approval or user-research evidence is introduced.

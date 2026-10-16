@@ -69,6 +69,24 @@ is Not run and unmet.
 P01 and P02 complete for the declared synthetic engineering/delivery scope.
 Published PR #354; full issue acceptance remains partial as audited.
 
+<!-- rpi:phase id=P03 -->
+### P03 Owner-requested independent review findings
+
+Bounded continuation after independent CHANGES verdict on d79a737. Existing
+critique remains historical; no additional critique or full UX Review.
+
+* [x] P03-T01 Merge origin/main, keeping both append-only log histories.
+* [x] P03-T02 Run the regulatory harness in src-api CI with pinned optional axe;
+  unavailable download must not skip functional/keyboard/size checks.
+* [x] P03-T03 Measure visible interactive targets at least 24px in both axes,
+  retaining the designed 44px cited-lookup summary; prove removal of its CSS rule fails.
+* [ ] P03-T04 Run local CI-equivalent validation, update README/KB/evidence and
+  PR body with honest unmet criteria, commit and push without waiting on CI.
+
+Approved write boundary: workflow, src/api checks/tests and directly coupled
+web sizing if necessary, READMEs, KB index/log and existing RPI artifacts.
+No backend authority changes, private data, legacy trees, Azure or issue edits.
+
 ## Test Ownership and Boundary
 
 No removals. Maximum two new test/check files, owned by API. Canonical targets:

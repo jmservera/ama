@@ -3,8 +3,8 @@
   "task_slug": "regulatory-alert-chat-ux",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Review",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/regulatory-alert-chat-ux-research.md",
@@ -15,6 +15,16 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-16/regulatory-alert-chat-ux-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "P03 CI shell block passed locally with genuine pinned axe download and deliberately failed curl, 17 states/142 targets each. Exact summary CSS deletion failed at 1198x24 against retained 44px design floor; restoration passed. 86 API, 33 core and three new tests plus browser/lint/type checks pass. Hosted CI pending; WCAG/staff/operational gaps unchanged.",
+      "status": "verified",
+      "evidence": ".copilot-tracking/changes/2026-10-16/regulatory-alert-chat-ux-changes.md; .copilot-tracking/reviews/logs/2026-10-16/regulatory-alert-chat-ux-review.md"
+    },
+    {
+      "decision": "Owner explicitly advances to bounded P03 implementation of both independent CHANGES findings on d79a737; merge main, update existing PR, commit and push without waiting. No automatic-mode switch or repeated full Review.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-16; PR #354; merge 91ed90e"
+    },
     {
       "decision": "Owner explicitly requests research, plan, implementation, review and PR in this invocation; no automatic-mode switch inferred.",
       "status": "confirmed",
@@ -38,8 +48,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Owner reviews PR #354 after its checks; no merge or issue-checkbox update by this session. Full WCAG, real staff comprehension and operational/chat-value gates remain unmet."
+    "phase": "Implement",
+    "action": "Publish verified P03 corrections and updated acceptance audit to existing PR #354 with Refs #215, ordinary commit/push only, no CI wait."
   },
   "prioritized_follow_ups": [
     {
