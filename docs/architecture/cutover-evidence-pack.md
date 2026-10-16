@@ -154,14 +154,14 @@ succeeded. PR checks must establish the new commit's status.
 ## Azure Execution and Deployed-Proof Result
 
 Only resource group `ama` in subscription
-`e51ebc89-79d0-4a52-a82b-01a292eefd5b` was targeted. Group ID:
-`/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama`.
+`<subscription-id>` was targeted. Group ID:
+`/subscriptions/<subscription-id>/resourceGroups/ama`.
 The group already existed in `uksouth`. Initial generic inventory was `[]`,
 but the Consumption budgets endpoint contained `budget-forward-test`.
 That pre-existing budget was preserved.
 
 The active Azure principal is an application
-(`2d4fe550-794a-4ee9-8093-e680ca02fe18`), not the owner's interactive account.
+(`<entra-sql-admin-group-object-id>`), not the owner's interactive account.
 No token, credential, cookie, dataset, secret value or signed storage URL is
 published. The [sanitized Azure evidence](./cutover-azure-evidence.json)
 contains the actual run metadata, terminal deployment errors, resource IDs,
@@ -182,7 +182,7 @@ az account show --query '{subscription:id,tenant:tenantId}' -o json
 az group show -n ama --query '{id:id,location:location}' -o json
 az resource list -g ama --query '[].{id:id,type:type,name:name}' -o json
 az rest --method get --url \
-  'https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Consumption/budgets?api-version=2023-05-01' \
+  'https://management.azure.com/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Consumption/budgets?api-version=2023-05-01' \
   --query 'value[].name'
 ```
 
@@ -190,11 +190,11 @@ Both what-if and create used the following parameter set:
 
 ```bash
 az deployment group what-if \
-  --subscription e51ebc89-79d0-4a52-a82b-01a292eefd5b -g ama \
+  --subscription <subscription-id> -g ama \
   -n cutover-201-bootstrap -f infra/main.bicep -p infra/main.bicepparam \
   -p workload=cutover environmentName=test deployApplications=false \
   sqlAdminGroupName=cutover-evidence-principal \
-  sqlAdminGroupObjectId=2d4fe550-794a-4ee9-8093-e680ca02fe18 \
+  sqlAdminGroupObjectId=<entra-sql-admin-group-object-id> \
   sqlAdminPrincipalType=Application \
   alertEmail=8036360+jmservera@users.noreply.github.com modelDeployments='[]' \
   --no-pretty-print
@@ -234,14 +234,14 @@ with the same safe bootstrap parameters and the final orchestrator digest:
 
 ```bash
 test "$(az account show --query id -o tsv)" = \
-  e51ebc89-79d0-4a52-a82b-01a292eefd5b
+  <subscription-id>
 python infra/scripts/deploy.py \
   --resource-group ama --registry crcutovertestrzsrg \
   --workload cutover --environment test --parameters infra/main.bicepparam \
   --orchestrator-image crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:509d18af6288eb59d6f90eff1655a53dab9830d928140ff9798f7facc2cdaa01 \
   --parameter deployApplications=false \
   --parameter sqlAdminGroupName=cutover-evidence-principal \
-  --parameter sqlAdminGroupObjectId=2d4fe550-794a-4ee9-8093-e680ca02fe18 \
+  --parameter sqlAdminGroupObjectId=<entra-sql-admin-group-object-id> \
   --parameter sqlAdminPrincipalType=Application \
   --parameter alertEmail=8036360+jmservera@users.noreply.github.com \
   --parameter 'modelDeployments=[]'
@@ -278,7 +278,7 @@ The documented [ACR Tasks YAML environment support](https://learn.microsoft.com/
 (checked 2026-10-16) enables a Docker-free alternative:
 
 ```bash
-az acr run --subscription e51ebc89-79d0-4a52-a82b-01a292eefd5b \
+az acr run --subscription <subscription-id> \
   -r crcutovertestrzsrg -f acr-cutover.yaml --timeout 1800 src
 ```
 

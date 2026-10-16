@@ -35,7 +35,9 @@ commit `736b387` (578 tracked files: 128 real files plus 450 sandbox files, see
 comments of #195 to #203, the pull request bodies, file lists and linked issues
 of #235 to #287, and a run of the MVP unit suite on 2026-10-15.
 
-Limits: no Azure resource was used or created. Acceptance criteria are read from
+Limits: as of the 2026-10-15 baseline, no Azure resource had been used or
+created; a later partial deployment is recorded in
+[cutover-evidence-pack.md](cutover-evidence-pack.md). Acceptance criteria are read from
 the issue text; a criterion is "unmet" only where the pull request body, the
 code or the repository record shows it is not delivered.
 
