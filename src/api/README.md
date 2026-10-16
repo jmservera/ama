@@ -19,7 +19,7 @@ fixed five-part answer. No sixth assistant or live AI task is activated.
 
 | Method and path | Contract |
 | --- | --- |
-| `GET /api/chat/regulatory/status` | Synthetic admission only; 403 when disabled or not a declared synthetic dataset |
+| `GET /api/chat/regulatory/status` | Synthetic admission, free-text warning and metadata-only own-role retention review; 403 when disabled or unauthorized |
 | `POST /api/chat/regulatory/threads` | `{"case_id":"ZF-1"}`; owned thread bound to that home/case |
 | `GET /api/chat/regulatory/threads/{id}` | Owner-only historical messages, source snapshots and current role/case checks |
 | `POST /api/chat/regulatory/threads/{id}/ask` | `{"content":"What do the hazard sources say for this home?"}`; exact source/fact answer or explicit refusal |
@@ -84,6 +84,50 @@ temporary synthetic SQL data, checks health/case responsiveness, exercises the
 actual cited routes, historical reads and explicit owner handoff, forbids
 outbound inference, then stops the server. Browser interaction and human
 accessibility/comprehension are not established by HTTP/static DOM tests.
+
+## Regulatory security, privacy and audit (#217)
+
+On trusted-proxy ingress, all regulatory endpoints require the separate
+`ZavaForward.RegulatoryChat` capability in addition to a permitted staff role.
+RuleAuthor and RuleOwner do not imply chat access. Capabilities require a unique
+provisioned principal binding; email fallback cannot grant them. Generic history,
+archive and delete routes enforce the same capability for regulatory threads;
+thread lists omit them when it is absent. Existing owner/role/home isolation
+remains. The claim-derived staff role cannot regain hazard facts from a wider
+register role. Local password mode remains a synthetic development convenience,
+not evidence of Entra authentication or operational segregation.
+
+The regulatory panel displays the existing special-category/free-text warning
+and unknown or simulated retention. Status returns `privacy` with draft DPIA
+state, `dpo_reviewed=false`, `deletion_enabled=false`, own-role regulatory thread
+IDs/counts and unknown per-class law/card/check/alert/audit periods. Simulated
+CHAT_RETENTION settings list review-due ages only; they are not a purge or an
+approved schedule. Both archived sender threads and separately owned referral
+copies require DPO retention/rights/hold alignment.
+
+| #217 acceptance criterion | Evidence and honest disposition |
+| --- | --- |
+| DPIA with DPO completed before live data use | Unmet. [Draft for Juan Manuel Servera's DPO review](../../docs/reference/research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217), no completed consultation/sign-off or live-data permission |
+| Chat/check retention with DPO-set periods | Unmet. Existing chat settings reused for metadata-only simulated review; all real periods, check/alert disposal, holds, backups and immutable history alignment require DPO review |
+| Minimum Foundry fields and special-category purpose controls | Partial. Existing offline retrieval excludes health, contact, narrative, memory and unrelated home fields; role/purpose tests pass and no provider is called. No regulatory Foundry query or actual-provider privacy evidence exists |
+| Separate Entra author, approver and chat roles | Partial. Distinct capability mapping, registration/script parity, no-self-approval and HTTP denials pass locally. Actual tenant assignments, ingress and revocation not tested or applied |
+| Rule changes, approvals, checks, alerts and turns audit-logged | Locally demonstrated with append-only rule/check/alert events and transactional SQL turn/referral metadata audit; failure rollback, restart, idempotency and chain checks pass. Azure SQL/ledger archive evidence not collected; JSON separate-file atomicity remains unsupported |
+| Prompt-injection and cross-role disclosure tests pass | Met for this offline synthetic slice: injected question/source containment, no controlled writes, no health-canary disclosure, current claim role versus register, capability denial on direct/generic routes, foreign threads and role-change denial. No actual-model adversarial or production assurance |
+| Art 22A to 22C proposal/flag-only, named human and reasons | Partial. No chat decision-write path; version-2 significant-decision check requires explicit reasons beyond an evidence ID. Actual human authority/reasons/contestability and legal assessment remain unverified; no statutory compliance claim |
+
+Issue checkboxes remain unchanged for the merge coordinator. ADR 0005 acceptance
+permits synthetic development only. This slice uses no actual staff/resident
+data, Azure changes or model calls and claims no operational approval.
+
+With installed projects and tools, run from the repository root:
+
+```bash
+PYTHONPATH="$PWD/src/api/tests:$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python3 -m unittest test_regulatory_chat_api test_auth test_rule_alerts \
+  test_regulatory_chat test_regulatory_privacy test_rule_engine test_rulecards \
+  test_chat_privacy test_chatthreads test_regulatory_answers -q
+PYTHONPATH="$PWD/infra/tests" python3 -m unittest test_identity_rbac -q
+```
 No Azure resources or private data are required or accessed.
 
 ## Rule-card approval API (#211)

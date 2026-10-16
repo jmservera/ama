@@ -170,9 +170,11 @@ function regulatoryChatPanel(caseId) {
   const root = h("details", { id: "regulatory-chat" },
     h("summary", {}, "Cited regulatory lookup (synthetic-demo)"));
   const status = h("p", { role: "status" });
+  const privacy = h("p", { id: "regulatory-privacy", class: "muted" },
+    "Synthetic data only. Do not enter resident personal or special-category details. DPIA and retention review remain incomplete.");
   const log = h("ol", { "aria-label": "Cited regulatory turns" });
   const liveLog = h("div", { role: "log", "aria-live": "polite", "aria-label": "Cited regulatory updates" }, log);
-  const input = h("textarea", { id: "regulatory-question", maxlength: "1000", rows: "3" });
+  const input = h("textarea", { id: "regulatory-question", maxlength: "1000", rows: "3", "aria-describedby": "regulatory-privacy" });
   const button = h("button", { type: "submit" }, "Look up cited sources");
   let tid = null;
   const show = (answer, thread) => {
@@ -208,6 +210,7 @@ function regulatoryChatPanel(caseId) {
     log.append(item);
   };
   root.append(h("p", {}, "synthetic-demo only. Exact source excerpts and recorded facts, not legal interpretation. Ask about hazard sources or automated decisions. Safety routes and deterministic alerts remain independent."),
+    privacy,
     regulatoryPlainMode(root, "chat-plain-mode"),
     h("p", { class: "plain-explanation" }, "Use short questions to find sources. Missing, conflicting, stale or future sources are not proof of a duty. For lease, grant or contract terms, obtain the actual document and ask the named human owner."),
     regulatoryGuidance(me.user.role),
@@ -240,8 +243,10 @@ function regulatoryChatPanel(caseId) {
         status.textContent = `${here.length} synthetic-demo referrals for this home. No decision recorded.`;
       } catch (e) { status.textContent = `Exercise inbox unavailable: ${e.message}`; }
     } }, "Open my exercise doubt inbox (named owner only)"), status);
-  api("/api/chat/regulatory/status").then(async () => {
+  api("/api/chat/regulatory/status").then(async (admission) => {
     status.textContent = "Synthetic source lookup available. No legal approval is implied.";
+    const schedule = admission.privacy.chat;
+    privacy.textContent = `${admission.warning} DPIA: draft for DPO review. Retention: ${schedule.status === "simulated" ? `${schedule.days} days (simulated only)` : "unknown, DPO period not set"}. No automatic deletion or operational approval.`;
     try {
       const threads = await api("/api/chat/threads");
       const latest = threads.find((thread) => thread.case_id === caseId &&
