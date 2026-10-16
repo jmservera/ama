@@ -102,6 +102,24 @@ Status field of items for issues in this run's set.
 | PR merged and the issue closed | Done |
 | Issue reopened, or kept open after merge because criteria are unmet | In progress while follow-up work is active, otherwise Todo or Backlog |
 
+In progress means an open PR or a live worktree or session exists for the
+issue. Work merged against a still-open issue returns it to Todo; record the
+partial progress in an issue comment and keep the `status:partially-delivered`
+label. An open issue is never Done.
+
+Acceptance criteria are part of the issue body and must stay true. When a PR
+merges, tick (`- [x]`) exactly the criteria its reviewed evidence proves, in the
+same step as the board update, and leave the rest unticked. Close an issue only
+when every criterion is ticked. A closed issue has all criteria ticked and
+board status Done.
+
+Reconcile the whole backlog at the start of every run and at every scheduled
+check: run `python3 tools/backlog-sync.py` (read-only audit), then `--apply`
+to fix board statuses, add missing items and tick the criteria of closed
+issues. Review the "review needed" list it prints: each listed issue has merged
+PRs referencing it but unticked criteria, so tick the proven ones or comment
+why none is proven.
+
 Apply the update at the same moment as the matching issue action, and confirm
 by reading the item back. A failed update is reported, not retried silently or
 treated as delivery failure.
