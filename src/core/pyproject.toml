@@ -81,6 +81,9 @@ disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
 module = ["test_rule_engine", "tests.test_rule_engine",
+          "zava_forward.core.regulatory_chat",
+          "regulatory_fixture", "tests.regulatory_fixture",
+          "test_regulatory_chat", "tests.test_regulatory_chat",
           "test_taskqueues", "tests.test_taskqueues",
           "test_sqlqueues", "tests.test_sqlqueues",
           "test_queue_benchmark", "tests.test_queue_benchmark",
