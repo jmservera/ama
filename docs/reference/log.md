@@ -3706,3 +3706,32 @@ metadata when the knowledge base was created.
   while the fixed method passed all four. One RPI Review found no in-scope
   defect; hosted PR checks and the owner merge decision remain separate.
 * Published PR #335 with Refs #332 only and no issue-closing references.
+## [2026-10-16] update | Image-preserving infrastructure redeploy (Refs #322)
+
+* Applied the owner's 2026-10-16 decision: empty `orchestratorImage` in
+  `main.bicep` means the bootstrap placeholder; explicit tags/digests pass
+  unchanged to the orchestrator, auth-renewal and ledger-verify jobs.
+* Added the [canonical deploy wrapper](../../infra/README.md#orchestrator-image-selection-322),
+  because no deployment script existed under infra/ or tools/. It prints and
+  preserves a unique existing real job image, otherwise chooses the newest
+  updated registry tag, otherwise warns before using the placeholder.
+  Conflicting job images and discovery failures stop deployment. Explicit
+  image selection is required for intentional roll-forward or reconciliation.
+* Discovery distinguishes confirmed absence using group-scoped job/registry
+  lists and a registry repository list; no permission/network error is
+  interpreted as a bootstrap state. Default operation is what-if; `--apply`
+  performs deployment. Workload/environment options bind lookup and deployment
+  identity. No resource-group creation/deletion is performed by the helper.
+* Local pip-venv evidence: all 103 infra tests passed, including 15 fake-az
+  resolver tests and compiled Bicep parameter/consumer assertions. Four
+  resolver mutations and three compiled-template mutations fail the intended
+  assertions; the actual pre-change HEAD Bicep also fails the new contract.
+  Changed Python Ruff check/format and resolver/test mypy passed; main Bicep
+  build/lint and Git diff whitespace checks passed. Existing CI discovery and
+  check names remain unchanged; its lint selector now includes the new files.
+* Updated infrastructure deployment guidance and the knowledge-base routing
+  index. No Azure deployment, Docker execution, private data access, pipeline
+  #138 integration or live maintenance-job acceptance is claimed.
+* One final-candidate RPI critique passed and one implementation Review was
+  Conformant with no findings. Publication and hosted checks follow; merge
+  remains the owner's decision.
