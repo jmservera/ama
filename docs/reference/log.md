@@ -3735,3 +3735,5 @@ metadata when the knowledge base was created.
 * One final-candidate RPI critique passed and one implementation Review was
   Conformant with no findings. Publication and hosted checks follow; merge
   remains the owner's decision.
+* Published PR #337 with Refs #322 only via a normal topic-branch push.
+  Hosted checks were queued at handoff; the owner retains the merge decision.

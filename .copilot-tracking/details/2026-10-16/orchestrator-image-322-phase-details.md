@@ -54,3 +54,11 @@ Record one post-implementation RPI Review. Verify authenticated identity and
 set repository-local privacy-safe author/committer email, include required
 Copilot trailer, push normally and create a main-targeting PR with Refs #322.
 Hosted checks and owner merge remain separate from local acceptance.
+
+## Completion Evidence
+
+P01-T01 and P01-T02 complete. P02-T01: 103 infra tests pass in a pip venv;
+seven killed mutations and actual pre-change Bicep rejection; Ruff/mypy and
+main Bicep build/lint pass. P02-T02: one Review Complete/Conformant with no
+findings; normal push and main-targeted PR #337 published using Refs #322 only.
+All plan markers complete; no blockers. Hosted checks queued at handoff.

@@ -81,12 +81,12 @@ must fail the intended assertions.
 * [x] P01-T02: Add offline resolver and compiled-template regressions.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Evidence and delivery
+### [x] P02: Evidence and delivery
 
 <!-- rpi:task id=P02-T01 -->
 * [x] P02-T01: Run tests, mutations, Ruff and mypy; document contract and limits.
 <!-- rpi:task id=P02-T02 -->
-* [ ] P02-T02: One post-implementation Review; commit/push/open PR.
+* [x] P02-T02: One post-implementation Review; commit/push/open PR.
 
 ## Test Ownership
 
@@ -110,5 +110,6 @@ Implementation ready; explicit user implementation/publication request applies.
 
 Details: .copilot-tracking/details/2026-10-16/orchestrator-image-322-phase-details.md.
 Changes: .copilot-tracking/changes/2026-10-16/orchestrator-image-322-changes.md.
-Implementation and local evidence complete; ready for one post-implementation
-Review. P02-T02 publication is performed after Review, not a review prerequisite.
+Implementation and local evidence complete. One Review executed: Complete,
+Conformant, no findings. Normal push and PR #337 completed after Review.
+Hosted checks queued at handoff; merge remains the owner's decision.

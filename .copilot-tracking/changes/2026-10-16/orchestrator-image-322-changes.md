@@ -47,6 +47,11 @@ Updated infra README with usage, parameter precedence, fallback/override
 semantics, failure behaviour and rollout limits. Added KB routing and appended
 the log. Extended the existing CI lint selector without adding/renaming checks.
 
-One Review executed: Complete, Conformant, no findings. Publication remains
-(P02-T02). Follow-up #138 integration remains outside scope; no source changes
-or further review loop will follow Review.
+One Review executed: Complete, Conformant, no findings. P02-T02 completed:
+implementation commit 3318530 was pushed normally and PR #337 opened against
+main with Refs #322 only. Hosted checks were queued at handoff.
+Author/committer email is the verified 8036360+jmservera@users.noreply.github.com;
+the required Copilot trailer is present. Publication metadata follows in a
+separate documentation commit, without rewriting the implementation commit.
+Follow-up #138 integration remains outside scope; no source changes or further
+review loop follow Review. Task completed; no automatic session was entered.
