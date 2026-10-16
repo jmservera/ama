@@ -7,7 +7,7 @@ ms.date: 2026-10-16
 Task ID: issue-209. Task slug: regulatory-assistant-decision-209.
 
 Current execution: P01-T01/P01-T02 complete; P02-T01 complete with one
-Conformant Review; P02-T02 publication pending. Acceptance evidence is in
+Conformant Review; P02-T02 complete, PR #345 open against main. Acceptance evidence is in
 the changes record; no introduced documentation defect remains known.
 
 <!-- P01 -->

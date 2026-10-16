@@ -5,7 +5,7 @@ ms.date: 2026-10-16
 ---
 
 Task ID: issue-209. Task slug: regulatory-assistant-decision-209.
-Status: documentation complete; single Review Conformant; publication pending.
+Status: complete; single Review Conformant; published as PR #345.
 
 ## Executive Summary
 
@@ -75,7 +75,7 @@ Leave issue checkboxes unchanged for the coordinator.
 
 * [x] P02-T01: Review links, append-only log, scoped diff and six criteria;
   execute one post-implementation RPI Review and record remaining gaps.
-* [ ] P02-T02: Commit, push branch and create PR against main with Refs #209.
+* [x] P02-T02: Commit, push branch and create PR against main with Refs #209.
 
 ## Validation Contract
 
@@ -113,3 +113,5 @@ service sizing/pricing remain out of scope and explicitly unproved.
 Research: .copilot-tracking/research/2026-10-16/regulatory-assistant-decision-209-research.md.
 Details: .copilot-tracking/details/2026-10-16/regulatory-assistant-decision-209-phase-details.md.
 Implementation changes: .copilot-tracking/changes/2026-10-16/regulatory-assistant-decision-209-changes.md.
+Published PR: https://github.com/jmservera/ama/pull/345. No automatic follow-up
+work selected; owner merge and hosted checks remain separate.
