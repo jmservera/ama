@@ -3,8 +3,8 @@
   "task_slug": "issue-118",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Review",
-  "status": "blocked",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/issue-118-research.md",
@@ -19,15 +19,15 @@
     {"decision": "Research reused; Planning Readiness Ready", "status": "confirmed", "evidence": ".copilot-tracking/research/2026-10-16/issue-118-research.md"},
     {"decision": "Single critique executed; Revise verdict; PC-001 through PC-004 directly dispositioned", "status": "applied", "evidence": ".copilot-tracking/plans/2026-10-16/issue-118-plan.md"},
     {"decision": "Single Review executed Complete; outcome Not accepted for full hardened hosted deployment; no new source defects identified in assessed scope", "status": "reviewed", "evidence": ".copilot-tracking/reviews/logs/2026-10-16/issue-118-review.md"},
-    {"decision": "Bounded implementation published as open draft PR 347, no merge, no issue checkbox mutation", "status": "published", "evidence": "https://github.com/jmservera/ama/pull/347"}
+    {"decision": "Bounded implementation published as open draft PR 347, no merge, no issue checkbox mutation", "status": "published", "evidence": "https://github.com/jmservera/ama/pull/347"},
+    {"decision": "Owner directs PR 347 CHANGES implementation: remove shipped guard; external Docker contract; fixable-only scan gate and separate unfixed artifact; ready only on green CI", "status": "confirmed", "evidence": "User continuation request 2026-10-16"}
   ],
   "blockers": [
-    {"id": "hosted-runtime", "summary": "ACA schema lacks required runtime settings; no rollout", "resolution": "Separately reviewed supported host configuration with private runtime evidence"},
-    {"id": "unfixed-cves", "summary": "Every image scan fails on 61 HIGH and 2 CRITICAL unfixed package findings", "resolution": "Base-image security remediation without suppression"}
+    {"id": "hosted-runtime", "summary": "Full criterion remains Partial: ACA lacks required kernel controls; no shipped guard blocks startup", "resolution": "Separately reviewed supported host configuration with private runtime evidence; not a blocker to the authorized bounded PR corrections"}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Owner reviews draft PR 347; base-image Research and supported-hosting Plan must clear RV-002/RV-001 before hardened rollout"},
+  "next_action": {"phase": "Implement", "action": "Publish locally validated corrections to existing PR 347; await every PR check; ready only if all CI green, otherwise retain draft and record failures"},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Research compatible base-image security remediation", "rationale": "All scans currently fail on unfixed HIGH/CRITICAL packages; prevents green security acceptance", "evidence": "Review RV-002 and cutover criterion audit"},
+    {"rank": 1, "task": "Track compatible base-image security remediation", "rationale": "61 HIGH and two CRITICAL unfixed package findings persist per image despite latest digest and fresh upgrade; fixable-only gates pass but risk remains", "evidence": "Review RV-002 disposition and before/after cutover criterion audit"},
     {"rank": 2, "task": "Plan supported hosted runtime enforcement", "rationale": "Current ACA schema lacks required kernel controls; blocks rollout and needs a reviewed hosting decision", "evidence": "Review RV-001 and Microsoft.App 2025-07-01 schema"}
   ]
 }

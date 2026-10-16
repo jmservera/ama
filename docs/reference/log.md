@@ -3953,3 +3953,28 @@ metadata when the knowledge base was created.
   leases remain unverified before operational reliance. Search and monitoring
   costs are explicitly unknown; paid deployment, actual processing, real
   legal approval and benefit evidence are not authorized or proved here.
+
+## [2026-10-16] query | PR 347 deployment hardening review corrections
+
+* Refs #118. Merged origin/main into the existing topic branch and preserved
+  both append-only log histories. Updated the reference index, source/infra
+  READMEs and [criterion audit](../architecture/cutover-evidence-pack.md#deployment-hardening-audit-118-2026-10-16).
+* Removed the shipped fail-closed ENTRYPOINT guard and its two maintenance job
+  command additions so images can start on Container Apps. UID/GID 10001 stays.
+  Docker runtime controls are enforced and probed in local/CI launch contracts;
+  hardened and plain non-root application startup pass. Hosted enforcement
+  remains Partial, not silently treated as fulfilled.
+* Latest same-tag Python base digest is unchanged. Four no-cache builds reran
+  apt upgrade with zero available upgrades. Fresh before/after scans each show
+  61 HIGH/two CRITICAL unfixed package findings per image, zero reduction.
+  Owner-directed scanner ignore-unfixed true gates only fixable findings;
+  separate full/unfixed-inclusive JSON reports remain uploaded and visible.
+  No ignore lists, baselines or vulnerability-specific suppressions.
+* All five local project suites, Ruff and mypy pass; 130 infra tests, every
+  Bicep build/lint, four Docker/application contracts and workflow syntax pass.
+  Corrected step-time absolute CI fixture paths after matrix-time workspace
+  expansion caused API/orchestrator import failures.
+* No public edge changes, Azure execution, policy bypass, SQL public access
+  change, private-data read or invented approvals. ADR 0005 remains synthetic
+  development only; real owners/sources are still a gap. Issue checkboxes stay
+  unchanged; the same PR stays draft until green CI is verified.

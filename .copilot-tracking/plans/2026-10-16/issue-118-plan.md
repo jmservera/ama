@@ -5,14 +5,14 @@ ms.date: 2026-10-16
 ---
 
 Task ID: 118. Slug: issue-118. Scope: full plan.
-Delivery status: implemented and published as draft PR 347. Full hardened hosted
-acceptance remains blocked by RV-001/RV-002; no rollout or merge approval.
+Delivery status: PR 347 review CHANGES implementation in progress on the existing
+branch. User-directed continuation supersedes guard/unfixed-gating choices.
 
 ## Executive Summary
 
-Enforce image startup invariants and test all four images in existing CI.
-Remove vulnerability suppression, retain private gated Bicep and code explicit
-governance decisions. Audit, do not claim, unsupported hosted enforcement.
+Preserve Container Apps startup compatibility and enforce kernel controls in
+local/CI Docker contracts, not shipped entrypoints. Gate fixable HIGH/CRITICAL
+findings and report unfixed findings without ignore lists or baselines.
 
 ## User Decisions and Requirements
 
@@ -24,7 +24,7 @@ governance decisions. Audit, do not claim, unsupported hosted enforcement.
 
 ## Goals
 
-Fail unsafe image startup; produce reproducible runtime/CI/IaC evidence.
+Produce reproducible runtime/CI/IaC evidence without blocking supported ACA startup.
 
 ## Scope and Non-Goals
 
@@ -34,9 +34,11 @@ changes, worker implementation, tenant setup or operational/legal approval.
 
 ## Functional Requirements
 
-Check UID/GID, read-only root, all Linux capability sets and NoNewPrivs before
-exec. Preserve image commands/signals. Validate unsafe launch refusal and actual
-API health on a constructed fixture. Keep job arguments through entrypoint.
+Keep Dockerfile UID/GID 10001. Verify read-only root, zero capability sets and
+NoNewPrivs in the external Docker harness using launch flags; prove omitted
+controls fail the contract, while normal ACA-compatible startup still works.
+Remove guard-only maintenance command changes. Refresh the same-tag base digest
+if newer, rerun apt upgrade and compare fresh before/after scan counts.
 
 ## Non-Functional Requirements
 
@@ -45,13 +47,26 @@ Existing CI names and project isolation remain unchanged.
 
 ## Acceptance Criteria
 
-Four images must pass runtime controls and negative launches; CI tests and
-HIGH/CRITICAL scan include unfixed findings. Compiled Bicep must prove all
+Four images must pass runtime contracts and startup compatibility. CI gates
+fixable HIGH/CRITICAL findings and uploads non-gating full/unfixed reports.
+Compiled Bicep must prove all
 workload images, API probes/replicas, gated Premium/WAF/Private Link and
-explicit policy/Defender decisions. Hosted controls and scans without successful
-execution remain unmet and are reported honestly.
+explicit policy/Defender decisions. Hosted controls remain Partial. Mark PR
+ready only after all PR CI is green; leave issue checkboxes to the coordinator.
 
 ## Phase Checklist
+
+### Current owner-directed continuation (full scope)
+
+* [x] C01 Merge origin/main, preserve both append-only log sides and push.
+* [x] C02 Remove shipped guard; keep non-root images and external runtime contracts;
+  revert only two guard-specific Bicep commands and coupled assertions.
+* [x] C03 Resolve latest same-tag digest, rebuild with fresh apt upgrade, compare
+  before/after scans and split fixable gating from unfixed reporting.
+* [x] C04 Run local suites/Ruff/mypy/infra/Bicep and actual Docker/API checks.
+* [ ] C05 Reconcile README/evidence/log/RPI, push existing PR and confirm CI before ready.
+
+The completed original markers below are historical, not current guard requirements.
 
 <!-- rpi:phase id=P01 -->
 ### P01 Containers and CI
@@ -93,7 +108,7 @@ not only source-text regression.
 * Hosted runtime enforcement requires a supported hosting/security configuration;
   no public deployment or unsupported Bicep properties in this task.
 * Worker transport and operational approval remain 144 and owner gates.
-* All four image scans fail on unfixed base packages. Technical/project owner
-  must research a compatible maintained base/remediation path; no ignore lists.
+* Unfixed base packages require ongoing remediation tracking even when the
+  owner-approved fixable-only gate passes; no ignore lists or baselines.
 * One Review completed: full hardened hosted acceptance Not accepted while
   RV-001/RV-002 remain open. Publication does not approve rollout.

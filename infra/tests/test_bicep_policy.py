@@ -256,8 +256,6 @@ class BicepPolicyTests(unittest.TestCase):
                 containers[name]["command"],
                 [
                     "python",
-                    "/usr/local/bin/container-entrypoint.py",
-                    "python",
                     "-m",
                     f"zava_forward.orchestrator.{module}",
                     *args,

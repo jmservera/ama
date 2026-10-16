@@ -31,7 +31,6 @@ jobs:
           - project: api
             dist: zava-forward-api
             deps: "-e ../core -e ../agents"
-            pythonpath: "${{ github.workspace }}/src/core/tests:${{ github.workspace }}/src/agents/tests"
             image: true
           - project: agents
             dist: zava-forward-agents
@@ -40,7 +39,6 @@ jobs:
           - project: orchestrator
             dist: zava-forward-orchestrator
             deps: "-e ../core"
-            pythonpath: "${{ github.workspace }}/src/core/tests"
             image: true
           - project: importer
             dist: zava-forward-import
@@ -62,7 +60,7 @@ jobs:
         run: pip install $DEPS -e ".[dev]"
       - name: Unit tests and dependency-rule test
         env:
-          PYTHONPATH: ${{ matrix.pythonpath }}
+          PYTHONPATH: ${{ matrix.project == 'api' && format('{0}/src/core/tests:{0}/src/agents/tests', github.workspace) || matrix.project == 'orchestrator' && format('{0}/src/core/tests', github.workspace) || '' }}
         run: python -m unittest discover -s tests -v
       - name: Lint
         run: ruff check . && ruff format --check .
@@ -83,28 +81,44 @@ jobs:
         if: matrix.image
         working-directory: .
         run: docker build -f src/${{ matrix.project }}/Dockerfile -t zava-forward-${{ matrix.project }}:ci src
-      - name: Hardened image contract, unsafe-launch rejection and application smoke
+      - name: Docker security contract and hardened/plain application startup
         if: matrix.image
         working-directory: .
         run: python src/check-container.py ${{ matrix.project }} zava-forward-${{ matrix.project }}:ci
-      - name: Scan image for high and critical vulnerabilities
+      - name: Gate fixable high and critical vulnerabilities
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          version: v0.76.0
+          image-ref: zava-forward-${{ matrix.project }}:ci
+          trivy-config: src/trivy.yaml
+          severity: HIGH,CRITICAL
+          exit-code: "1"
+          vuln-type: os,library
+          ignore-unfixed: true
+          format: json
+          output: trivy-${{ matrix.project }}.json
+      - name: Report all high and critical vulnerabilities including unfixed
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
         with:
           image-ref: zava-forward-${{ matrix.project }}:ci
           trivy-config: src/trivy.yaml
           severity: HIGH,CRITICAL
-          exit-code: "1"
+          exit-code: "0"
           vuln-type: os,library
           ignore-unfixed: false
           format: json
-          output: trivy-${{ matrix.project }}.json
-      - name: Retain unsuppressed scan evidence
+          output: trivy-${{ matrix.project }}-all.json
+          skip-setup-trivy: true
+      - name: Retain fixable gate and full unfixed-inclusive scan evidence
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: trivy-${{ matrix.project }}
-          path: trivy-${{ matrix.project }}.json
+          path: |
+            trivy-${{ matrix.project }}.json
+            trivy-${{ matrix.project }}-all.json
           if-no-files-found: error
 
   namespace:
@@ -142,10 +156,10 @@ jobs:
           ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py
       - name: Check container tooling
         run: |
-          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 src/container-entrypoint.py src/check-container.py infra/tests/test_container_contract.py
-          ruff format --isolated --line-length 100 --check src/container-entrypoint.py src/check-container.py infra/tests/test_container_contract.py
+          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 src/check-container.py infra/tests/test_container_contract.py
+          ruff format --isolated --line-length 100 --check src/check-container.py infra/tests/test_container_contract.py
           pip install 'mypy==2.4.0'
-          mypy --strict src/container-entrypoint.py src/check-container.py
+          mypy --strict src/check-container.py
 
   no-working-data:
     name: src-no-working-data

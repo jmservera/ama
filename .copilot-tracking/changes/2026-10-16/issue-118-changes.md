@@ -6,6 +6,60 @@ ms.date: 2026-10-16
 
 Task ID: 118. Slug: issue-118. Full plan in scope.
 
+## PR 347 owner-directed continuation
+
+Independent review returned CHANGES. Owner directs removal of shipped guard,
+external runtime enforcement, fixable-only Trivy gate and separate unfixed report.
+This is an explicit change to the original guard/scan decision, not an inferred
+approval. No repeated critique or Review of the original task is required.
+C01 completed: inspected PR body/diff and issue criteria, fetched and merged
+origin/main; only conflict was docs/reference/log.md. Kept both sides intact.
+Merge 8ac9367 pushed to existing branch; no new PR.
+C02 is first implementation boundary. Local validation and honest per-criterion
+evidence precede publication. Another loop owns edge changes; Bicep scope is
+only two guard-bearing job commands. Docker available via sudo; no Azure needed.
+
+### C02 external controls and compatible startup
+
+Removed src/container-entrypoint.py and all Dockerfile COPY/ENTRYPOINT wiring;
+retained UID/GID 10001, digest pins and apt upgrade. Reverted only guard additions
+in the two maintenance job commands and their compiled assertion.
+Harness now uses the kernel probe as an external contract under explicit Docker
+flags. Five intentionally incomplete-control probes must fail that contract;
+the image itself is no longer required to refuse normal ACA-compatible startup.
+Both hardened and plain non-root default CLI/API health/static startup are
+exercised. Seven focused infra regressions, isolated Ruff and strict mypy pass.
+
+### C03 scan policy and measured remediation
+
+Docker Hub latest same-tag index equals existing pinned 34386ef... digest.
+All four --pull --no-cache builds reran apt update/upgrade: zero upgrades.
+Before and after full scans, same fresh DB and verified Trivy 0.76.0 binary:
+61 HIGH/two CRITICAL package findings each, 16 unique CVEs, zero with a fix.
+No reduction claimed. All four fixable gates pass with zero findings.
+Both existing image workflows now gate with scanner ignore-unfixed true and
+run non-gating full/unfixed-inclusive reports with exit-code 0 and false.
+Both JSON files upload even after gate failure. Scanner errors remain visible.
+No ignore list, baseline, CVE suppression or metadata removal added.
+CI Trivy version matches local 0.76.0. Runtime scans survive smoke failures.
+
+### C04 local validation and tightly coupled CI correction
+
+All project suites and Ruff check/format/mypy passed: core 504 (one skip),
+API 549 (110 skips), agents 70, orchestrator 22, importer 39.
+Absolute per-project fixture PYTHONPATH, editable installs in session venv.
+Infra discovery passed 130 tests; all Bicep templates built/linted with 0.48.1.
+Seven container regressions, isolated Ruff/format and strict mypy passed.
+actionlint 1.7.12 verified archive, changed workflows pass without shellcheck.
+All four actual Docker runtime probes/default startups pass in hardened and
+plain non-root modes. API HTTP health and exact PNG pass in both modes.
+Docker omits Entrypoint metadata when unset; harness handles that legitimate
+optional field and verifies exact CMD instead of assuming a null JSON key.
+PR CI logs revealed /src/core/tests fixture paths: matrix interpolation resolved
+github.workspace too early. Moved scoped path expressions to the unit-test step
+environment; regression prevents the old matrix form. This is directly coupled
+CI correctness, not unrelated cleanup. No source application logic changed.
+
 ## Initial State
 
 Existing clean topic branch feat/hardened-deployment-ci-118, no open PR.

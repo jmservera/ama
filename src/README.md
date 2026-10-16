@@ -64,14 +64,14 @@ The build context is this `src/` folder, because a workload image also needs `co
 docker build -f src/agents/Dockerfile -t zava-forward-agents:local src
 ```
 
-Each image keeps the pinned base digest of the former `mvp/Dockerfile` (now
-`api/Dockerfile`), runs as UID/GID 10001:10001, copies named packages only and
-contains no working data. The shared [entrypoint](./container-entrypoint.py)
-refuses application startup (exit 78 with a diagnostic) unless the root mount
-is read-only, all five Linux capability sets are zero and NoNewPrivs is enabled.
-It execs the requested command so the application receives signals directly.
-There is no opt-out environment setting. Dockerfile alone cannot configure
-kernel mount flags or capability bounding sets: supply them at launch.
+Each image pins the `python:3.12-slim-bookworm` base by digest, runs an in-image
+`apt-get upgrade`, uses UID/GID 10001:10001, copies named packages only and
+contains no working data. The latest same-tag digest was checked on 2026-10-16
+and is unchanged. Dockerfile alone cannot configure kernel mount flags or
+capability bounding sets: supply them at launch. Images retain their direct
+Python CMD with no fail-closed ENTRYPOINT guard, so Container Apps can start
+them despite lacking these kernel controls. Non-root does not imply a
+read-only root, dropped capabilities or NoNewPrivs.
 
 ```bash
 docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges \
@@ -83,13 +83,11 @@ python src/check-container.py agents zava-forward-agents:local
 
 Working data is mounted read-only at `/data` and writable state at `/state`;
 the location follows `ZF_DATA` and is never under `src/`. `src/.dockerignore`,
-the API's allow-list `Dockerfile.dockerignore` (including the guard), and the
+the API's allow-list `Dockerfile.dockerignore`, and the
 `/src/**/data/` gitignore entry keep data out of images and git.
-An explicit `--entrypoint` or hosting command override can bypass any image
-entrypoint; it is not an authorization boundary against control-plane operators.
 The [hosting limitation](../infra/README.md#hardened-source-image-rollout-118)
-blocks rollout of these new images to the current Container Apps definitions.
-Do not remove the guard to make a deployment healthy.
+means hosted hardening acceptance remains Partial. Runtime flags are enforced
+by local/CI Docker contracts, not claimed as available on Container Apps.
 
 ## CI
 
@@ -104,22 +102,29 @@ data copy/encrypted-backup gates.
 ### Hardened image CI (#118)
 
 Each of the four image matrix entries runs [check-container.py](./check-container.py)
-without overriding its entrypoint. It verifies root mount flags, an actual EROFS
+with `docker run --read-only --cap-drop ALL --security-opt no-new-privileges`.
+It verifies root mount flags, an actual EROFS
 write failure, writable `/state`, UID/GID, all capability sets, NoNewPrivs, and no
-baked working data. Five negative launches per image independently omit
-read-only-root, capability dropping or NoNewPrivs, or change UID/GID.
+baked working data. Five negative probes per image independently omit
+read-only-root, capability dropping or NoNewPrivs, or change UID/GID; the
+external contract must reject them, not the shipped image entrypoint.
+Both hardened and plain non-root launches run each image's default command.
 The API starts its real HTTP server on an empty constructed fixture and checks
-health and PNG delivery. The other images run their current default CLI, which
-still prints a version; this does not prove a queue worker.
+health and PNG delivery in both modes. The other default CLIs still print a
+version; this does not prove a queue worker or actual Azure startup.
 
-Trivy gates HIGH/CRITICAL OS and library findings, including unfixed findings.
+Trivy gates only HIGH/CRITICAL OS and library findings that have a fix, using
+the scanner option `ignore-unfixed: true`, not a vulnerability ignore list.
 [trivy.yaml](./trivy.yaml) explicitly uses `/dev/null` as the ignore file: no
 ignore lists, baselines or repository-discovered config suppressions.
-Per-image JSON reports upload even on a scan failure. A runtime failure after a
+Each workflow also runs a non-gating scan (`exit-code: "0"`,
+`ignore-unfixed: false`) and uploads `trivy-*-all.json`, retaining all
+HIGH/CRITICAL findings including unfixed packages alongside the fixable gate
+JSON. Scanner execution errors still fail visibly. Reports upload even when the
+gate fails. A runtime failure after a
 successful build does not skip its scan. Existing `mvp-ci` scans the same source
 API image with this policy; no workflow deploys as part of this change.
-On 2026-10-16 all four local contracts passed, but all four scans failed with
-61 HIGH and two CRITICAL package findings each (16 unique CVEs, all unfixed in
-the scanned Debian 12.15 packages). See the
+The initial 2026-10-16 full scans found 61 HIGH and two CRITICAL package findings
+per image (16 unique CVEs, all unfixed in Debian 12.15). A green fixable-only
+gate is not a vulnerability-free image or hosted-hardening acceptance. See the
 [acceptance audit](../docs/architecture/cutover-evidence-pack.md#deployment-hardening-audit-118-2026-10-16).
-Green vulnerability acceptance is not claimed.

@@ -41,57 +41,81 @@ merge, and only evidence-proven criteria are eligible.
 
 | Original criterion | Evidence from this change | Honest disposition |
 | --- | --- | --- |
-| Non-root, read-only root filesystem and dropped capabilities enforced in the Dockerfile | All four Dockerfiles use UID/GID 10001:10001 and the same fail-closed entrypoint. Local Docker tests prove read-only root and EROFS, writable state, five zero capability sets, NoNewPrivs, and five unsafe launch refusals per image. API health/PNG pass | Image startup enforcement and local runtime passed. Full hardened hosted deployment remains unmet: Dockerfile cannot set kernel flags and current ACA Bicep has no supported settings. No new-image rollout |
-| Image scan and tests in CI | Existing src matrix runs the shared runtime harness, unit tests, Ruff and mypy. Trivy includes unfixed HIGH/CRITICAL OS/library findings without ignore lists or baselines; JSON artifacts persist on failure. Existing API image workflow uses the same policy | CI wiring implemented and local tests passed; branch CI execution is separate. Clean image acceptance is unmet: every local scan exits 1 with 61 HIGH/two CRITICAL package findings, all unfixed |
-| Application defined in Bicep | Compiled tests prove API, agents, orchestrator, import, token-renewal and ledger-verification image wiring; API health probes and 2-4 replicas. Maintenance command overrides explicitly invoke the image guard | Resource definitions passed offline. Queue-worker behavior (#144), manual Entra initialization and complete rebuild/live acceptance are not proved by resource existence |
-| Front Door Premium, WAF and Private Link before any public edge | Existing default-off production/private guards plus compiled Premium SKU, enabled WAF association, HTTPS-only route and Private Link origin checks | Gated infra-only definition requirement met. No public edge deployed; live Private Link approval and healthy-origin verification remain unmet (#143) |
-| Azure Policy and Defender plans decided | Audit/non-enforcing policy assignments and opt-in Standard Defender plans are code. Disabled Defender now submits no pricing resources, preserving existing subscription plans; README gives synthetic-development and cost rationale | Code decisions met. No subscription changes, cost acceptance, deployed policy compliance or active paid protection claimed (#147) |
+| Non-root, read-only root filesystem and dropped capabilities enforced in the Dockerfile | Four Dockerfiles set UID/GID 10001:10001. Local/CI Docker launches enforce read-only root, zero capability sets and NoNewPrivs via flags; probes prove EROFS and writable state. Shipped images have no startup guard and pass plain non-root startup as well | **Partial**. Dockerfiles cannot enforce host flags; Container Apps exposes no required read-only-root/capability controls. Local proof is not hosted enforcement |
+| Image scan and tests in CI | Existing workflows run tests, lint/types and image contracts. Trivy 0.76.0 gates fixable HIGH/CRITICAL findings using ignore-unfixed true, with separate non-gating full/unfixed-inclusive JSON artifacts. No ignore lists or baselines | Local gate passed with zero fixable findings. 61 HIGH/two CRITICAL unfixed package findings per image remain visible and unresolved. PR CI status must be checked separately; a green fixable gate does not mean clean images |
+| Application defined in Bicep | Compiled tests prove six workload image consumers, API health probes and 2-4 replicas. Maintenance jobs retain direct Python module commands without the guard | **Partial** overall acceptance. Definitions passed offline; queue-worker behavior (#144), manual Entra initialization and complete rebuild/live acceptance are not proved by resource existence |
+| Front Door Premium, WAF and Private Link before any public edge | Existing default-off production/private guards plus compiled Premium SKU, WAF association, HTTPS-only route and Private Link origin checks | **Partial** overall acceptance. Gated definitions proved, no public edge deployed; live Private Link approval and healthy origin remain unmet (#143). Public-edge changes are owned by the separate #344 loop |
+| Azure Policy and Defender plans decided | Audit/non-enforcing assignments and opt-in Standard Defender plans are code. Disabled Defender submits no pricing resources, preserving existing plans; README gives rationale | **Partial**. Code decisions proved; owner cost acceptance, deployed policy compliance and active paid protection are not proved (#147) |
 
-All four images were built locally using `src/` as context. The shared harness
-ran through the real entrypoint, not an entrypoint override. Agents dependency
-isolation passed; non-API default commands remain version-only CLIs and are not
-worker acceptance. The two maintenance job override paths also invoke the guard
-explicitly; this is a compiled definition, not scheduled execution evidence.
-These new images must not replace current running images until supported hosted
-controls are proven. See [rollout limits](../../infra/README.md#hardened-source-image-rollout-118).
+PR 347 review returned CHANGES. Per the owner's 2026-10-16 direction, the
+fail-closed image ENTRYPOINT and guard-only maintenance command changes were
+removed rather than shipping images that cannot start on Container Apps.
+Four fresh local builds used `--pull --no-cache` with `src/` context. The
+external harness enforces `--read-only --cap-drop ALL --security-opt
+no-new-privileges`; five incomplete-control probes per image fail the contract.
+Both hardened and plain non-root default startup pass, including API HTTP
+health/PNG and writable state. Agents dependency isolation passes.
+Non-API default commands remain version-only CLIs, not worker acceptance.
+No new hosted runtime controls or actual Azure rollout are proved.
+See [hosting limits](../../infra/README.md#hardened-source-image-rollout-118).
 
 | Local validation for this change | Result |
 | --- | --- |
 | Core / API / agents / orchestrator / importer complete suites | 504 / 549 / 70 / 22 / 39 tests; all suites OK, 111 opt-in skips total (one core, 110 API) |
 | All five projects' Ruff check, format check and mypy | Passed with existing project exemptions; API/orchestrator test-fixture PYTHONPATH used absolute paths |
-| Infrastructure suite / all Bicep build and lint | 126 tests passed; all templates passed with Bicep 0.48.1 |
-| New container helpers | Strict mypy and isolated Ruff/format passed; nine added test methods plus runtime harness |
-| Changed GitHub workflows | actionlint 1.7.12 passed (shellcheck integration disabled); workflow/check names preserved |
+| Infrastructure suite / all Bicep build and lint | 130 tests passed after merging main; all templates passed with Bicep 0.48.1 |
+| Container tooling | Strict mypy and isolated Ruff/format passed; seven external-contract regression methods plus actual Docker harness |
+| Changed GitHub workflows | actionlint 1.7.12 passed with shellcheck integration disabled; names preserved. Fixed absolute fixture paths at step runtime: github.workspace inside the matrix previously expanded to an empty prefix, breaking API/orchestrator tests |
 
-Trivy 0.76.0 was downloaded from its official release and its archive SHA-256
-verified against the published checksums. The database was retrieved on
-2026-10-16; each image has the same 16 unique CVEs across 63 package findings,
-with no FixedVersion reported. CRITICAL findings are CVE-2025-7458
-(`libsqlite3-0`) and CVE-2023-45853 (`zlib1g`). These are scanner results, not a
-claim of application exploitability. No exceptions, baseline or package
-metadata deletion were used to turn a failed gate green.
+Trivy 0.76.0 was downloaded from its official release and archive SHA-256
+verified against published checksums. A fresh 2026-10-16 database was used for
+both pre-review image rescans and rebuilt images, with DB updates disabled
+only between comparison scans. Each still has 16 unique CVEs across 63 package
+findings, with no FixedVersion. CRITICAL: CVE-2025-7458 (`libsqlite3-0`) and
+CVE-2023-45853 (`zlib1g`). These are scanner results, not exploitability findings.
 
-| Local image | Image ID (SHA-256) | Runtime | Unsuppressed scan |
+First attempted remediation: re-resolved `python:3.12-slim-bookworm` at Docker
+Hub. Its latest index digest is still
+`sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258`;
+there is no newer same-tag digest to adopt. All four no-cache builds reran
+`apt-get update && apt-get upgrade`; apt reported zero available upgrades.
+No CVE reduction is claimed. The owner-approved gate now selects fixable
+findings with the scanner option `ignore-unfixed: true`. Full reports use
+`ignore-unfixed: false`, retain every HIGH/CRITICAL finding and upload alongside
+gate results, even when the gate fails. No ignore lists, baselines,
+package metadata removal or vulnerability-specific suppressions are used.
+
+| Pre-review local image | Image ID (SHA-256) | Historical runtime | Fresh full scan before rebuild |
 | --- | --- | --- | --- |
-| api | `68ec10d0e0c12a3f5e3e5cad1e976fd8747067e4913e053e7f8670b0db0de4d9` | Passed, including real HTTP health and PNG | Failed: 61 HIGH, 2 CRITICAL |
-| agents | `5344bb07abe20cac2487fa6d5744cb622b9cc6acaf76189a06e05b58668aaf3d` | Passed, including no SQL/blob clients | Failed: 61 HIGH, 2 CRITICAL |
-| orchestrator | `6fd32ed1ee18672885b41d79a5a54bed6025dfc69dda18d5efcb78dd53af727d` | Passed | Failed: 61 HIGH, 2 CRITICAL |
-| importer | `272b0877b6332b4f363d067fc3503b892fea0c0b4e76078a9b47bdaf8367bde0` | Passed | Failed: 61 HIGH, 2 CRITICAL |
+| api | `68ec10d0e0c12a3f5e3e5cad1e976fd8747067e4913e053e7f8670b0db0de4d9` | Passed, including real HTTP health and PNG | 61 HIGH, 2 CRITICAL |
+| agents | `5344bb07abe20cac2487fa6d5744cb622b9cc6acaf76189a06e05b58668aaf3d` | Passed, including no SQL/blob clients | 61 HIGH, 2 CRITICAL |
+| orchestrator | `6fd32ed1ee18672885b41d79a5a54bed6025dfc69dda18d5efcb78dd53af727d` | Passed | 61 HIGH, 2 CRITICAL |
+| importer | `272b0877b6332b4f363d067fc3503b892fea0c0b4e76078a9b47bdaf8367bde0` | Passed | 61 HIGH, 2 CRITICAL |
+
+| Rebuilt local image | Image ID (SHA-256) | Before -> after HIGH/CRITICAL package counts | Fixable-only gate |
+| --- | --- | --- | --- |
+| api | `50a1accf9b47bb2e1906d40da443c27fc656ecf2fdc4f67113dde860e3985371` | 61/2 -> 61/2, all unfixed | Passed, zero findings |
+| agents | `1db52043163081da1ad84bae903b8491e713fa16bd2ee5b1432454ae07c65329` | 61/2 -> 61/2, all unfixed | Passed, zero findings |
+| orchestrator | `23c2aec69b57321c208c6936e951844ffe5dd7915ce291833d0b6d5aa414af03` | 61/2 -> 61/2, all unfixed | Passed, zero findings |
+| importer | `77f0c4127f9e154be232518273d98a996c5ef502828ca67c7d0d3c5828ce1d49` | 61/2 -> 61/2, all unfixed | Passed, zero findings |
 
 Reproduce with [source image commands](../../src/README.md#images) and
 [infra quality gates](../../infra/README.md#quality-gates):
 
 ```bash
 for project in api agents orchestrator importer; do
-  docker build -f "src/$project/Dockerfile" -t "zava-forward-$project:local" src
+  docker build --pull --no-cache -f "src/$project/Dockerfile" -t "zava-forward-$project:local" src
   python src/check-container.py "$project" "zava-forward-$project:local"
-  trivy image --config src/trivy.yaml --exit-code 1 "zava-forward-$project:local"
+  trivy image --config src/trivy.yaml --ignore-unfixed --exit-code 1 \
+    --format json --output "trivy-$project.json" "zava-forward-$project:local"
+  trivy image --config src/trivy.yaml --ignore-unfixed=false --exit-code 0 \
+    --format json --output "trivy-$project-all.json" "zava-forward-$project:local"
 done
 ```
 
-The loop deliberately stops on a failed scan in a `set -e` shell; run each
-image separately to retain all failure reports. Local structured JSON reports
-remain in session evidence; CI uploads per-image reports.
+For failure evidence, run the full report even if the fixable gate fails, as CI
+does. Local before/after/fixable JSON reports remain in session evidence; CI
+uploads gate and full/unfixed-inclusive reports per image.
 No new deploying CI was added. SQL public access stays disabled in the actual
 `ama` environment; no Azure run was needed. ADR 0005 is accepted for synthetic
 development only: Juan Manuel Servera is the exercise Legal, Compliance and

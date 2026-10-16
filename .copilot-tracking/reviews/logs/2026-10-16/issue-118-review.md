@@ -6,6 +6,25 @@ ms.date: 2026-10-16
 
 Task ID: 118. Slug: issue-118.
 
+## Owner-directed CHANGES disposition (2026-10-16)
+
+The original one-pass Review below remains historical. Independent review then
+returned CHANGES; this continuation implements the owner's explicit remedy,
+not a second Review or operational acceptance.
+RV-001: removed shipped fail-closed guard and two guard-only Bicep command
+changes. Local/CI external Docker contracts enforce controls and verify omitted
+controls fail the probe; plain non-root startup works too. Hosted enforcement
+remains Partial because ACA cannot set the required controls.
+RV-002: attempted latest same-tag digest refresh (unchanged), reran apt upgrade
+in four no-cache builds (zero upgrades). Same-DB before/after counts remain
+61 HIGH/two CRITICAL all unfixed per image. Owner explicitly changes gate to
+fixable-only scanner selection, preserving complete unfixed-inclusive artifacts.
+No CVE list, baseline, suppression or metadata deletion. Risk remains unresolved.
+Validation: full local project suites/Ruff/mypy, 130 infra tests, all Bicep
+build/lint, four Docker contracts with real hardened/plain API health/PNG,
+actionlint and helper checks pass. Full hosted acceptance is still Not accepted.
+Publication remains on existing PR 347; ready is conditional on all CI green.
+
 ## Opening Review State
 
 Review goal: compare the requested container, CI and Bicep scope against

@@ -441,22 +441,23 @@ Refs #118. All six application containers are defined in
 [`modules/containerapps.bicep`](./modules/containerapps.bicep): API, agents,
 orchestrator, import, token renewal and ledger verification. Compiled tests
 verify each image parameter, API health probes and 2-4 replicas, plus the
-default-off Premium Front Door/WAF/Private Link edge. Maintenance jobs explicitly
-invoke `/usr/local/bin/container-entrypoint.py` before their Python command,
-because a hosting `command` replaces the image ENTRYPOINT. They require the
-new guard-bearing orchestrator image; older images lack that path.
+default-off Premium Front Door/WAF/Private Link edge. Maintenance jobs retain
+their direct Python module commands; no guard-bearing image path is required.
 Worker transport remains #144; a Bicep resource is not worker acceptance.
 
-Rollout of these new images is blocked: the
+Hosted hardening acceptance is **Partial**: the
 [Container Apps 2025-07-01 schema](https://learn.microsoft.com/azure/templates/microsoft.app/2025-07-01/containerapps)
 and 2026-07-01 schema were checked on 2026-10-16 and expose no
 `readOnlyRootFilesystem`, capability-drop or `securityContext` settings for
 these container definitions. No unsupported property is added and no deployed
-kernel enforcement is claimed. These images now fail closed if a host lacks
-the controls. Preserve the existing running images; do not roll forward until
-a supported host configuration and private runtime proof establish the contract.
-Changing hosting architecture needs a separate reviewed decision, not a hidden
-fallback or removal of the guard.
+kernel enforcement is claimed. Images remain non-root but no longer carry a
+fail-closed startup guard that would prevent Container Apps startup. Local/CI
+Docker contracts explicitly set `--read-only --cap-drop ALL --security-opt
+no-new-privileges` and verify the actual kernel state. They also exercise plain
+non-root startup for compatibility; this is not evidence of an Azure rollout.
+A future supported hosted configuration and private runtime proof are still
+required to meet the full hardening criterion. No hosting architecture change
+or deployment approval is inferred.
 
 Front Door Premium, WAF and origin Private Link remain infra-only gated
 definitions: `enablePublicEdge=false` by default, production/private profile

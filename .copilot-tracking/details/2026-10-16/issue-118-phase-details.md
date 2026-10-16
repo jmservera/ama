@@ -6,6 +6,18 @@ ms.date: 2026-10-16
 
 Task ID: 118. Slug: issue-118.
 
+## Current continuation
+
+User explicitly requests PR 347 review fixes, not a new PR or critique loop.
+C01 completed: merge 8ac9367 preserves both log histories and is pushed.
+C02/C03 own only source Dockerfiles/harness, coupled infra tests, two job command
+lines and existing CI workflows. C04 requires local checks first with absolute
+PYTHONPATH, no Azure/private data. C05 reconciles evidence and publication.
+Latest python:3.12-slim-bookworm index resolves to the already-pinned 34386ef...
+digest on 2026-10-16; do not fabricate a newer digest or remediation reduction.
+sudo Docker works; unprivileged Docker socket access is denied.
+Historical P01/P02 guard instructions below are superseded by this direction.
+
 ## P01
 
 P01-T01: add shared stdlib entrypoint under src, infra unit tests (outside
