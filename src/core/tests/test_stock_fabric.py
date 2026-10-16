@@ -178,7 +178,13 @@ class StockFabricTests(unittest.TestCase):
             seed = root / "cases.json"
             seed.write_text(json.dumps({"cases": [case("C", "FICTION-00000")]}))
             env = dict(os.environ, ZF_DATA=str(root))
-            cmd = [sys.executable, "-m", "zava_forward.core.synthetic.stock_fabric"]
+            cmd = [
+                sys.executable,
+                "-m",
+                "zava_forward.core.synthetic.stock_fabric",
+                "--as-of",
+                "2026-10-16",
+            ]
             first = subprocess.run(
                 cmd + ["--cases", str(seed)], env=env, capture_output=True, text=True, check=True
             )
@@ -199,6 +205,14 @@ class StockFabricTests(unittest.TestCase):
             self.assertIn("not a company fact", summary["label"])
             self.assertEqual(summary["homes"], 30)
             self.assertEqual(summary["seed"], fabric.SEED)
+            self.assertEqual(summary["as_of"], "2026-10-16")
+            self.assertEqual(
+                summary["input_sha256"],
+                {
+                    "register": hashlib.sha256(reg.read_bytes()).hexdigest(),
+                    "cases": hashlib.sha256(seed.read_bytes()).hexdigest(),
+                },
+            )
             self.assertRegex(summary["generator_revision"], r"^sha256:[0-9a-f]{64}$")
             for name, digest in summary["file_sha256"].items():
                 self.assertEqual(hashlib.sha256((one / name).read_bytes()).hexdigest(), digest)
@@ -241,6 +255,146 @@ class StockFabricTests(unittest.TestCase):
                 self.assertNotEqual(bad.returncode, 0)
                 self.assertIn("outside the repository", bad.stderr)
                 self.assertFalse(dest.exists())
+
+    def test_cli_raw_input_provenance_and_label_only_date(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            reg = root / "stock.csv"
+            cases = root / "cases.json"
+            rows = register(30)
+            rows[0]["synthetic_home_id"] = "FICTION-\r\nQUOTED"
+            with reg.open("w", encoding="utf-8-sig", newline="") as stream:
+                writer = csv.DictWriter(stream, list(rows[0]), lineterminator="\r\n")
+                writer.writeheader()
+                writer.writerows(rows)
+            cases.write_text(
+                json.dumps(
+                    {
+                        "cases": [case("C", rows[0]["synthetic_home_id"])],
+                        "history": [{"retained": True}],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            def run(name: str, *args: str) -> tuple[dict[str, bytes], dict[str, object]]:
+                out = root / name
+                with contextlib.redirect_stderr(io.StringIO()):
+                    fabric.main(
+                        [
+                            "--register",
+                            str(reg),
+                            "--cases",
+                            str(cases),
+                            "--out",
+                            str(out),
+                            "--seed",
+                            "7",
+                            *args,
+                        ]
+                    )
+                payloads = {p.name: p.read_bytes() for p in out.iterdir()}
+                report = json.loads(payloads.pop("summary.json"))
+                self.assertEqual(
+                    report["input_sha256"],
+                    {
+                        "register": hashlib.sha256(reg.read_bytes()).hexdigest(),
+                        "cases": hashlib.sha256(cases.read_bytes()).hexdigest(),
+                    },
+                )
+                return payloads, report
+
+            first, initial = run("first")
+            self.assertIsNone(initial["as_of"])
+            with reg.open(encoding="utf-8-sig", newline="") as source:
+                expected = fabric.fabric_rows(list(csv.DictReader(source)), 7)
+            with io.StringIO(first["stock-fabric.csv"].decode(), newline="") as payload:
+                actual = list(csv.DictReader(payload))
+            self.assertEqual(actual[0]["synthetic_home_id"], rows[0]["synthetic_home_id"])
+            self.assertEqual(actual, [{k: str(v) for k, v in row.items()} for row in expected])
+            linked = json.loads(first["linked-cases.json"])
+            self.assertEqual(linked["history"], [{"retained": True}])
+            self.assertEqual(linked["stock_link"]["linked_cases"], 1)
+
+            for name, label in (("dated", "2026-10-16"), ("later", "2026-10-17")):
+                payloads, report = run(name, "--as-of", label)
+                self.assertEqual(payloads, first)
+                self.assertEqual(report, {**initial, "as_of": label})
+            seed_payloads, seed_report = run("seed", "--seed", "8")
+            self.assertEqual(seed_report["seed"], 8)
+            self.assertNotEqual(seed_payloads["stock-fabric.csv"], first["stock-fabric.csv"])
+
+            raw = reg.read_bytes()
+            reg.write_bytes(raw.removeprefix(b"\xef\xbb\xbf"))
+            payloads, changed_register = run("register-bytes")
+            self.assertEqual(payloads, first)
+            old_hashes = initial["input_sha256"]
+            new_hashes = changed_register["input_sha256"]
+            assert isinstance(old_hashes, dict) and isinstance(new_hashes, dict)
+            self.assertNotEqual(old_hashes["register"], new_hashes["register"])
+            self.assertEqual(old_hashes["cases"], new_hashes["cases"])
+
+            cases.write_bytes(cases.read_bytes() + b"\r\n  ")
+            payloads, changed_cases = run("case-bytes")
+            self.assertEqual(payloads, first)
+            case_hashes = changed_cases["input_sha256"]
+            assert isinstance(case_hashes, dict)
+            self.assertEqual(new_hashes["register"], case_hashes["register"])
+            self.assertNotEqual(new_hashes["cases"], case_hashes["cases"])
+
+    def test_cli_absent_cases_read_once_invalid_dates_and_refresh_preservation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            reg = root / "stock.csv"
+            cases = root / "cases.json"
+            reg.write_text("synthetic_home_id\nFICTION-ONE\n", encoding="utf-8")
+            cases.write_text('{"cases": []}', encoding="utf-8")
+            out = root / "out"
+            args = ["--register", str(reg), "--out", str(out)]
+            original = Path.read_bytes
+            with (
+                patch.object(Path, "read_bytes", autospec=True, side_effect=original) as reads,
+                contextlib.redirect_stderr(io.StringIO()),
+            ):
+                fabric.main(args)
+            self.assertEqual(sum(call.args[0] == reg for call in reads.call_args_list), 1)
+            report = json.loads((out / "summary.json").read_text())
+            self.assertIsNone(report["as_of"])
+            self.assertEqual(
+                report["input_sha256"], {"register": hashlib.sha256(reg.read_bytes()).hexdigest()}
+            )
+            self.assertFalse((out / "linked-cases.json").exists())
+            with (
+                patch.object(Path, "read_bytes", autospec=True, side_effect=original) as reads,
+                contextlib.redirect_stderr(io.StringIO()),
+            ):
+                fabric.main(
+                    ["--register", str(reg), "--cases", str(cases), "--out", str(root / "linked")]
+                )
+            for path in (reg, cases):
+                self.assertEqual(sum(call.args[0] == path for call in reads.call_args_list), 1)
+            before = {p.name: p.read_bytes() for p in out.iterdir()}
+            with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as err:
+                fabric.main([*args, "--as-of", "2026-10-17", "--seed", "8"])
+            self.assertEqual(err.exception.code, 2)
+            self.assertEqual(before, {p.name: p.read_bytes() for p in out.iterdir()})
+            for value in ("", "bad", "20261016", "2026-W42-5", "2026-02-30"):
+                for exists in (False, True):
+                    dest = root / f"invalid-{value}-{exists}"
+                    if exists:
+                        dest.mkdir()
+                    with (
+                        self.subTest(value=value, exists=exists),
+                        contextlib.redirect_stderr(io.StringIO()),
+                        patch.object(Path, "read_bytes") as reads,
+                        self.assertRaises(SystemExit) as err,
+                    ):
+                        fabric.main(["--register", str(reg), "--out", str(dest), "--as-of", value])
+                    self.assertEqual(err.exception.code, 2)
+                    reads.assert_not_called()
+                    self.assertEqual(dest.exists(), exists)
+                    if exists:
+                        self.assertEqual(list(dest.iterdir()), [])
 
     def test_installed_cli_outside_checkout_refuses_destination_repository(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
