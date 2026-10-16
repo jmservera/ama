@@ -81,3 +81,14 @@ accessibility assessment, RV-002 authorised staff comprehension and RV-003
 operational delegates/sources/ADR ship test. No conformant outcome claimed.
 The sanitized browser result is persisted beside the review. Implementation
 scope complete; P02-T03 commit/push/PR publication still pending.
+
+## P02-T03 delivery completed
+
+Feature commit 82bd6c2 published on feat/regulatory-alert-chat-ux-215.
+PR https://github.com/jmservera/ama/pull/354 targets main, uses Refs #215,
+audits all five criteria and leaves staff/WCAG acceptance unmet.
+Authenticated account resolved to jmservera / 8036360; repo-local privacy-safe
+author/committer email and required Copilot trailer used. No force push,
+history rewrite, merge, issue-checkbox update or Azure action.
+All active plan tasks are complete; remaining work is the three routed
+acceptance/evidence follow-ups, not unreported implementation work.

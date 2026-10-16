@@ -51,3 +51,10 @@ Leasehold and resident/representative guidance is supplementary design-only;
 data handling is cross-cutting. Do not substitute the critique's seven research
 rows for the issue's seven acceptance audiences. Test staff mappings and denial
 separately from documenting proposed patterns for unmapped audiences.
+
+## Final execution state
+
+P01 and P02 completed; feature commit 82bd6c2 pushed to the existing topic.
+PR #354 targets main with Refs #215, a five-criterion audit and all unmet gates.
+One Review completed with Residual work. No operational/full-WCAG/staff result
+is claimed; issue checkboxes and the owner's merge authority remain unchanged.
