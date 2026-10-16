@@ -1,19 +1,78 @@
 ---
 title: ADR 0005 Regulatory Compliance Assistant
-description: Proposed design for an AI-assisted regulatory checking system with a versioned law store, proactive step checks and a home-specific chat, built on the existing Azure SQL, Foundry and five-assistant runtime
+description: Accepted synthetic-development design for a regulatory compliance assistant with human authority boundaries and a measured chat-value ship gate; operational reliance remains unapproved
 author: AMA programme
-ms.date: 2026-10-15
+ms.date: 2026-10-16
 ms.topic: reference
 ---
 
 ## Status
 
-Proposed for operational use. On 2026-10-15 the owner permitted synthetic
-development and clearly labelled fictional demo assumptions, as bounded below.
-This is not Legal, Compliance, DPO or control-owner approval and does not decide
-which duties apply to Zava North Homes. It builds on
+Accepted for synthetic development only by the exercise owner, Juan Manuel
+Servera, on 2026-10-16 (Refs #209). Operational use remains proposed and
+unapproved. This accepts development of the regulatory compliance assistant,
+not a finding that chat adds value or that any legal duty is satisfied. Chat
+must pass the [ship test](#evaluation) before it is shipped.
+
+The 2026-10-15 permission for clearly labelled fictional demo assumptions
+remains bounded below. Neither decision supplies real company Legal,
+Compliance, DPO or control-owner approval or decides which duties apply to
+Zava North Homes. It builds on
 [ADR 0001](./0001-azure-architecture.md), [ADR 0002](./0002-pilot-readiness-architecture.md)
 and the [regulatory literacy synthesis](../reference/research/ux/regulatory-literacy-for-journeys.md).
+
+## Owner Decision: Acceptance and Authority (2026-10-16)
+
+ACCEPT the regulatory compliance assistant for synthetic development only.
+Develop the full assistant, including chat, subject to measured value over
+deterministic rule cards with provision links as the chat ship test. Accepting
+this design does not approve operational reliance, paid deployment or actual
+staff/resident processing; their existing authorization gates remain.
+
+The assistant's authority is **retrieve, compare, cite, flag and route only**.
+It may summarise retrieved evidence as a cited proposal; it has no independent
+legal, approval or action authority. It can never:
+
+* Give legal advice, make an authoritative legal interpretation, decide that a
+  duty applies or is satisfied, certify compliance or replace professional
+  judgement.
+* Approve, activate, amend or retire rule cards or live controls; remove a
+  hold; approve its own output; or promote a simulated approval to a real one.
+* Set or alter hazard awareness dates or statutory clocks, screen out a
+  report, suppress a deterministic alert, delay emergency/hazard intake,
+  decide safety acceptance or close a compliance check.
+* Infer, grant or override resident consent, representative authority,
+  privacy permissions or significant decisions affecting a resident.
+* Make financial commitments, approve expenditure, submit a real grant claim,
+  bind Zava to terms or automatically send resident communications.
+* Invent binding grant, contract or lease terms, fabricate official or licensed
+  sources, treat future/consulted law as active, or silently resolve conflicting,
+  missing, incomplete or stale evidence as clear.
+
+Legal interpretation, rule activation, resident consent, safety decisions and
+financial commitments remain under the relevant named human approval and
+resident decision rights. A deterministic engine executes only human-approved
+contracts; it does not confer any of those powers on the assistant.
+
+### Exercise Owners and Approval Capacity
+
+| Capacity | Named exercise owner | Permitted synthetic-demo capacity |
+| --- | --- | --- |
+| Legal | Juan Manuel Servera | Review cited interpretations and record simulated legal review of fictional rule cards and source-change proposals |
+| Compliance | Juan Manuel Servera | Review synthetic applicability, card approval and activation/hold/restart proposals; record simulated control-owner decisions |
+| DPO | Juan Manuel Servera | Review synthetic purpose, minimisation, access and retention assumptions; record simulated privacy review |
+
+These are exercise capacities, not actual company appointments, qualified legal
+sign-off, completed reviews or permission for real processing. Fictional role
+accounts represent those capacities; they are not additional named approvers.
+Holding all three capacities does not waive author/approver separation: Juan
+Manuel Servera cannot approve a card he authored by switching roles. If that
+separation is unavailable, keep the card unapproved.
+
+The real company Legal, Compliance and DPO owners, their delegations and
+approval capacity remain an unknown-company-details gap. Close it with named
+accountable owners and evidenced authority before operational reliance. Do not
+invent appointments or transfer synthetic approvals into operational use.
 
 ## Owner Decision: Synthetic Demo Development (2026-10-15)
 
@@ -249,9 +308,21 @@ the continuing synthetic 60,000-home stock, not unit tests alone.
 | Stale source handling | Cards using an out-of-cadence source are labelled |
 | Staff comprehension | Validated with repairs, housing and grants staff, not assumed |
 
-Compare against a non-AI baseline: deterministic rule cards with links to the
-provision. If chat adds no measured value over that, ship the rule cards
-alone.
+The owner accepted the chat ship test on 2026-10-16: compare against a non-AI
+baseline of deterministic rule cards with provision links. On the same
+role-scoped tasks and source versions, record answer/citation correctness,
+safe escalation and refusal, task completion, comprehension, elapsed time,
+human review effort and attributable service cost. Agree the graded tasks and
+benefit thresholds before running the comparison; do not choose them after
+seeing the results.
+
+Ship chat only when the evidence shows added value over that baseline without
+weakening safety, privacy or citation gates. If chat adds no measured value,
+fails those gates, or lacks comparison evidence, ship the rule cards and law
+store without chat, subject to their own approval gates. Synthetic results do
+not establish real staff benefit or authorize operational use. The comparison,
+thresholds and staff validation remain unexecuted or unset here; this records
+the accepted test, not a passing result.
 
 ## Phasing
 
@@ -266,20 +337,56 @@ alone.
 
 ## Alternatives considered
 
+The following comparison records the options for the owner's 2026-10-16
+decision. Benefits and costs are design expectations, not measured outcomes
+or service quotes.
+
+| Option | Expected value and trade-off | Decision |
+| --- | --- | --- |
+| No assistant | Avoids new store, monitoring and chat costs, but leaves users to navigate snapshots and route questions manually; no new proactive step checks | Not selected for the synthetic exercise: it does not demonstrate the requested source-to-journey workflow |
+| Rule cards and law store without chat | Versioned sources, deterministic checks, alerts and provision links provide an auditable baseline without model-answer risk or chat inference cost; users still navigate explanations themselves and store/monitoring costs remain | Required comparator and shipping fallback if chat does not demonstrate added value; simplest acceptable outcome under its own approval gates |
+| Full assistant with chat | Adds home-specific, role-scoped cited explanations and routing; potential comprehension/effort benefit is unproved, with added retrieval, inference, privacy, evaluation and review costs | ACCEPT for synthetic development only; chat shipment is conditional on the accepted value and safety gates |
+
+Additional architectural alternatives retained from the proposal:
+
 * Chat only, no rule engine: weak on clocks and silent failure; rejected.
 * Fine-tune a model on law: stale, uncitable, hard to roll back; rejected.
 * Separate regulatory product: duplicates identity, audit and hosting; rejected
   for the exercise, but the law store has a clean boundary if one is wanted.
 
+## Cost Position (2026-10-16)
+
+| Component | Estimate status | Evidence needed before billable deployment |
+| --- | --- | --- |
+| Azure AI Search | Unknown; no monthly estimate or verified incremental cost | Region, tier, partitions/replicas, index/vector size, query/indexing load, billable features, approved run duration and current pricing |
+| Source-monitoring jobs and diagnostics | Unknown; no monthly estimate or verified incremental cost | Source count/cadence, job duration/compute, retrieval and storage traffic, log volume/retention, alerting charges and current pricing |
+
+Reuse of existing services does not mean zero cost. Attribute both incremental
+and shared costs without double counting; include chat inference and human
+review effort in the comparator. Before paid deployment, document sizing,
+usage assumptions, current price evidence, budget fit and the relevant human
+spending approval. This decision is not spending authorization.
+
 ## Open items
 
-* Named Legal, Compliance and DPO owners and their approval capacity are
-  unknown company details. They gate actual reliance, not synthetic development;
-  labelled fictional exercise roles are permitted under the owner decision.
-* Which sources Zava is actually bound by (grant award, contracts, leases) is
-  unverified and needs the real documents before actual reliance. Original
-  fictional demo fixtures do not establish applicability or fill official gaps.
+* The synthetic-development decision and exercise Legal, Compliance and DPO
+  owner are recorded above. Real company owners, delegations and approval
+  capacity remain unknown company details and must be verified before
+  operational reliance; no real legal or privacy approval is recorded here.
+* Which sources Zava is actually bound by remains unverified:
+  * Grant award: obtain the actual award letter, agreement, conditions and
+    variations; a scheme overview does not establish an award or its terms.
+  * Contracts: obtain executed contracts/call-offs and incorporated standards
+    and variations; do not infer obligations from sector practice.
+  * Leases: obtain the applicable lease and variations for each relevant home;
+    do not infer repair, access, consent or cost responsibilities.
+  Original fictional demo fixtures do not establish applicability or fill
+  official gaps. Named real owners must review the actual documents before
+  operational reliance.
 * Licensed PAS 2035 text and official sources for the gaps are not yet held.
-* Cost of Azure AI Search and monitoring jobs is not estimated.
+* Azure AI Search and monitoring-job/diagnostics costs are explicitly unknown;
+  sizing, pricing and spending approval remain open as set out above.
+* Chat comparison tasks, pre-agreed benefit thresholds and measured results
+  are outstanding. Acceptance of the ship test is not evidence that it passed.
 * Phase 2 commencement on 30 November 2026 is planned, not confirmed here.
 * Whether staff want alerts at these steps needs validation with real users.
