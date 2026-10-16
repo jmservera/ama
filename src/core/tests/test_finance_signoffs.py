@@ -233,6 +233,17 @@ class Flows:
 
     # FR-014
     def res(self, user, action, **kw):
+        if action == "decision_record":
+            c = self.store.cases["ZF-1"]
+            if not c.get("technical"):
+                self.tech(U["RC-1"], "design_submit", note="Synthetic resident design")
+            for measure in ("Loft insulation", "Cavity wall"):
+                if measure not in c.get("resident_scopes", {}):
+                    self.store.resident_action(U["RLO-1"], "ZF-1", dict(
+                        action="scope_record", measure=measure, scope="Synthetic scope",
+                        design_version=c["technical"]["design_version"], source="Synthetic supplied scope"))
+            kw.setdefault("context_revision", 1)
+            kw.setdefault("source", "Synthetic supplied resident statement")
         self.store.resident_action(user, "ZF-1", dict(action=action, **kw))
 
     def decisions(self):
@@ -245,6 +256,11 @@ class Flows:
         self.res(U["RLO-1"], "decision_record", measure="Loft insulation", status="Accepted", answered_by="The resident")
         self.res(U["RLO-1"], "decision_record", measure="Cavity wall", status="Accepted", answered_by="The resident")
         self.res(U["RLO-1"], "decision_record", measure="Cavity wall", status="Paused", answered_by="The resident", note="After the winter")
+        self.res(U["RLO-1"], "safe_contact_record", safe_contact_ref="SYN-SAFE", source="Synthetic confirmation")
+        self.res(U["RLO-1"], "representative_record", measure="Cavity wall", context_revision=1,
+                 representative_ref="Rep on file", status="Confirmed", tasks=["Works decision"], source="Synthetic authority",
+                 authority_date="2026-01-01", review_date="2099-01-01", resident_wishes="Record supplied withdrawal",
+                 safe_contact_ref="SYN-SAFE")
         self.res(U["RLO-2"], "decision_record", measure="Cavity wall", status="Withdrawn", answered_by="Their representative",
                  representative_ref="Rep on file", note="Resident asked to stop")
         d = self.decisions()

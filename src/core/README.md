@@ -16,6 +16,75 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Resident decisions and representatives (#86)
+
+`resident_decisions` records supplied human statements, never inferred consent.
+Every measure starts `Not recorded`, including when a historical case-wide
+answer says Accepted. A staff member first records the exact measure scope,
+its source and the current technical design version. Scope revisions increase
+monotonically; any case-wide technical design change invalidates the current
+resident contexts conservatively. Changing back never restores an old answer.
+New answers require the exact current context revision, a supplied source and
+who spoke. Recorded home, measure, scope, design, actor, time and version remain
+in history. Contact, access, AI drafts and other measures cannot populate them.
+
+A pause, withdrawal or decline creates a human-review flag for that measure.
+Its siblings' statements are unchanged. Restart requires a new supplied
+acceptance and human-review evidence; neither a complaint outcome nor an AI
+proposal clears it. Case advancement checks every measure; work-order versions
+and quality records bind explicit measure/context revisions and check only
+those dependencies. Unbound legacy work/quality records cannot release work.
+Package scope changes require reissue with explicit current resident bindings.
+Safety, technical, funding and shared-building checks remain independent.
+The existing SQL transaction rechecks resident bindings, current authority and
+case row versions before commit, including operations that only change work
+orders. SQLite concurrency/restart is tested, actual SQL Server is not.
+
+Each representative reference has versioned task-limited authority: measure,
+scope/design, source, evidence date, review date, resident's stated wishes and
+confirmed safe-contact reference/revision. Scheduling/attendance/interpreting
+does not grant works-decision authority. Authority must be Confirmed, cover the
+requested task/current context, start no later than today and have a review date
+strictly after today (the review date itself stops reliance). Unclear, disputed,
+revoked, superseded, missing or expired authority stops representative decisions
+and disclosure checks until staff confirms through the safe route. A contact
+change, even changing back, requires new authority. Historical representative
+acceptance is rechecked at use time against its exact latest authority version;
+another valid representative cannot substitute. A resident's direct supplied
+statement remains recordable independently. Nothing is sent by the checker.
+
+Independent review is a separate service type linked to an actual recorded
+measure-decision version. Its reviewer must be neither the contested recorder
+nor the request handler; only the named reviewer updates/closes that review.
+Complaints retain separate handler/redress owners and independent closure.
+These routes remain recordable on paused or closed retrofit cases and do not
+change consent, ranking inputs, hazards, tenancy or repair state. No live formal
+complaints integration or real-user without-detriment evidence is established.
+
+Exercise field permissions for new authority/contact/source/wishes narratives
+require both a resident-workflow role and a recorded need (`ZF_REASON_ROLES`);
+defaults allow RLO and Programme Manager. Other staff see context/status and
+confirmation needs without those narratives. Contractors keep the existing
+minimum projection. Views detach nested histories before redaction, audit uses
+event/version metadata, and AI source allow-lists do not receive authority or
+wishes. Operational permission and retention ratification remain Unknown.
+
+Cards, missing-decision filters and AI citation labels use current scoped
+status, not the legacy answer. The SQL missing-decision filter deliberately uses
+the existing live in-memory path because authority can expire without a write;
+other indexed filters remain unchanged. Existing AI proposal configuration,
+release and human-review controls remain enabled as before. Representative-
+addressed legacy templates refuse unchecked disclosure; staff-facing AI
+message/summary proposals do not depend on that addressed template and remain
+unapproved drafts, never consent or sending.
+
+`tests/test_resident_decisions.py` covers JSON/SQLite exact-context decisions,
+authority expiry/supersession/contact, sibling-only work/QA release, independent
+review, privacy persistence and stale transaction refusal. Synthetic adapter
+calls are not live inference. Formal complaint routing, human accessibility/
+without-detriment acceptance, operational permissions/retention, actual model
+and SQL Server/Azure workflow evidence remain unmet.
+
 ## Stock comparisons and human technical sign-offs (#84)
 
 `stock.py` validates staff-recorded conflicting assertions for `epc`, `type`

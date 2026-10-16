@@ -20,6 +20,7 @@ import uuid
 from datetime import datetime
 
 from . import projection, ai_prompts
+from .resident_decisions import resident_status
 from .stock import support_status
 
 PROMPT_VERSION = "2026-10-09.1"
@@ -47,7 +48,7 @@ def source_labels(c, reason_ok=False):
     """Every citable fact of a case, as display labels."""
     r, h = c["resident"], c["home"]
     out = [f"Stage: {c['stage']}", f"Days in stage: {c['days_in_stage']}", f"Waiting on: {c['waiting_on']}",
-           f"Owner: {c['owner']}", f"Resident decision: {c['decision']['status']}", f"Preferred contact: {r['preferred']}",
+           f"Owner: {c['owner']}", f"Resident decision: {resident_status(c)}", f"Preferred contact: {r['preferred']}",
            f"Address: {h['address']}", f"Home type: {h['type']}", f"EPC band: {h['epc']}", f"Built: {h['built']}"]
     m = c.get("measures")
     if m:

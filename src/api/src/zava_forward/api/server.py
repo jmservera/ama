@@ -101,7 +101,7 @@ GOVERNANCE_ACTIONS = {"protocol-freeze": "protocol_freeze", "protocol-approve": 
 CONTINUITY_ACTIONS = {"restart-propose": "restart_propose", "restart-decide": "restart_decide", "change": "change_record",
                       "change-reverse": "change_reverse"}
 QUALITY_ACTIONS = {
-    "quality-submit": lambda s, u, cid, b: s.submit_quality(u, cid, b.get("measure"), b.get("submitted_by"), b.get("source"), b.get("items")),
+    "quality-submit": lambda s, u, cid, b: s.submit_quality(u, cid, b.get("measure"), b.get("submitted_by"), b.get("source"), b.get("items"), b.get("context_revision")),
     "quality-accept": lambda s, u, cid, b: s.accept_quality(u, cid, b.get("index"), b.get("note", "")),
     "quality-return": lambda s, u, cid, b: s.return_quality(u, cid, b.get("index"), b.get("reason"), b.get("defect"), b.get("owner")),
     "quality-fix": lambda s, u, cid, b: s.record_fix(u, cid, b.get("index"), b.get("fixed_by"), b.get("note", "")),
@@ -110,10 +110,10 @@ QUALITY_ACTIONS = {
     "quality-aftercare": lambda s, u, cid, b: s.add_aftercare(u, cid, b.get("index"), b.get("note")),
 }
 WO_ACTIONS = {
-    "reissue": lambda s, u, wid, b: s.reissue_work_order(u, wid, b.get("scope"), b.get("reason")),
+    "reissue": lambda s, u, wid, b: s.reissue_work_order(u, wid, b.get("scope"), b.get("reason"), b.get("resident_bindings")),
     "appointment": lambda s, u, wid, b: s.record_wo_appointment(u, wid, b.get("outcome"), b.get("date", "")),
     "complete": lambda s, u, wid, b: s.complete_work_order(u, wid, b.get("note", "")),
-    "correct": lambda s, u, wid, b: s.correct_work_order(u, wid, b.get("reason"), b.get("scope", "")),
+    "correct": lambda s, u, wid, b: s.correct_work_order(u, wid, b.get("reason"), b.get("scope", ""), b.get("resident_bindings")),
     "withdraw": lambda s, u, wid, b: s.withdraw_work_order(u, wid, b.get("reason")),
 }
 
@@ -468,7 +468,7 @@ def make_handler(app):
             elif kind == "packages" and len(rest) == 2 and rest[1] == "capacity":
                 s.set_capacity(u, rest[0], body.get("contractor"), body.get("offered"), body.get("committed"), body.get("evidence", ""))
             elif kind == "workorders" and not rest:
-                s.issue_work_order(u, body.get("package"), body.get("case_id"), body.get("scope", ""))
+                s.issue_work_order(u, body.get("package"), body.get("case_id"), body.get("scope", ""), body.get("resident_bindings"))
             elif kind == "workorders" and len(rest) == 2 and rest[1] in WO_ACTIONS:
                 WO_ACTIONS[rest[1]](s, u, rest[0], body)
             else:

@@ -7,6 +7,7 @@ must be someone other than whoever submitted the evidence, recorded it, or
 fixed a defect on it. A provider's submission is kept as evidence only.
 """
 from .workflows import MANAGER_ROLES, _now
+from .resident_decisions import require_context
 
 QUALITY_ROLES = ("Quality Inspector",) + MANAGER_ROLES
 SOURCES = ("Installer", "Contractor", "Provider submission", "Our own inspection")
@@ -69,7 +70,7 @@ class QualityMixin:
         if user["name"].strip().lower() in {(x or "").strip().lower() for x in involved} or user["code"] in (rec.get("recorded_by_code"), rec.get("fixed_by_code")):
             raise PermissionError(f"Someone independent must {what}: it cannot be the person who submitted, recorded or fixed this work.")
 
-    def submit_quality(self, user, case_id, measure, submitted_by, source, items):
+    def submit_quality(self, user, case_id, measure, submitted_by, source, items, context_revision=None):
         submitted_by, source = _clean(submitted_by, 80), _clean(source, 40)
         if not submitted_by:
             raise ValueError("Say who carried out or submitted the work.")
@@ -88,7 +89,12 @@ class QualityMixin:
             missing = [lab for lab in cl["items"] if not _clean(items.get(lab), 200)]
             if missing:
                 raise ValueError("Each check needs a note of what was seen. Missing: " + "; ".join(missing))
+            binding = None
+            if context_revision is not None:
+                require_context(c, dict(measure=measure, context_revision=context_revision))
+                binding = dict(measure=measure, context_revision=context_revision)
             rec = dict(measure=measure, state=SUBMITTED, checklist=cl["name"], checklist_version=cl["version"],
+                       resident_binding=binding,
                        items=[dict(label=lab, evidence=_clean(items[lab], 200)) for lab in cl["items"]],
                        submitted_by=submitted_by, source=source, recorded_by=user["name"], recorded_by_code=user["code"], recorded_at=_now(),
                        history=[dict(at=_now(), by=user["name"], from_state=None, to_state=SUBMITTED, note=f"{source}: {submitted_by}")],
@@ -104,6 +110,7 @@ class QualityMixin:
             c = self._case(case_id)
             self.require_safety_clear(c)
             rec = self._qrec(c, idx)
+            self.require_resident_clear(c, [rec["resident_binding"]] if rec.get("resident_binding") else [])
             if rec["state"] not in (SUBMITTED, FIXED):
                 raise ValueError(f"This work is '{rec['state']}'. It can only be accepted after it is submitted or reinspected.")
             self._independent(rec, user, "accept this work")
@@ -161,6 +168,7 @@ class QualityMixin:
             c = self._case(case_id)
             self.require_safety_clear(c)
             rec = self._qrec(c, idx)
+            self.require_resident_clear(c, [rec["resident_binding"]] if rec.get("resident_binding") else [])
             self._qmove(rec, HANDED, user, note)
             rec["handover"] = dict(by=user["name"], at=_now(), note=note, resident_told=True)
             self.audit(user["email"], "quality_handover", case_id, f"{rec['measure']} handed over to resident. {note}")

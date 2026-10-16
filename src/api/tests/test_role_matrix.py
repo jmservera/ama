@@ -137,7 +137,7 @@ class Matrix(unittest.TestCase):
 
     FINANCE_ROLES = ("Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer")
 
-    def test_new_endpoints_for_every_role(self):
+    def test_finance_and_resident_endpoints_for_every_role(self):
         for role in ROLES:
             ck = self.session(next(s["email"] for s in self.store.data["staff"] if s["role"] == role))
             code, text = self.call(ck, "/api/finance")
@@ -157,6 +157,30 @@ class Matrix(unittest.TestCase):
             self.assertIn(code, (403,) if role == projection.CONTRACTOR else (200, 400, 403), role)
             code, _ = self.call(ck, "/api/cases/ZF-3/resident", {"action": "decision_record"})
             self.assertEqual(code, 403 if role in ("Contractor", "Quality Inspector", "Building Safety Liaison", "Grants and Evidence Officer") else 400, role)
+
+    def test_integrated_case_actions_deny_contractors_and_unknown_roles(self):
+        posts = [
+            ("/api/cases/ZF-1/resident", {"action": action})
+            for action in ("scope_record", "decision_record", "representative_record",
+                           "safe_contact_record", "disclosure_check", "service_open")
+        ] + [
+            ("/api/cases/ZF-1/stock-reconciliation", {}),
+            ("/api/cases/ZF-1/stock-query-event", {"action": "resolve", "query_id": "SQ-1"}),
+            ("/api/cases/ZF-1/technical", {"action": "signoff_give", "type": "design"}),
+        ]
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        audit = list(self.store.audit_entries())
+        for email in ("u7@example.test", "u0@example.test"):
+            if email == "u0@example.test":
+                self.store.staff[email]["role"] = "Mystery"
+            try:
+                ck = self.session(email)
+                for path, body in posts:
+                    self.assertEqual(self.call(ck, path, body)[0], 403, (email, path, body))
+            finally:
+                self.store.staff["u0@example.test"]["role"] = ROLES[0]
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
 
     def test_unknown_role_is_denied(self):
         self.store.staff["u0@example.test"]["role"] = "Mystery"
@@ -203,8 +227,11 @@ class Matrix(unittest.TestCase):
         order_case = copy.deepcopy(self.store.cases["ZF-1"])
         order_case.update(id="ZF-ROLE-ORDER", hazards=[])
         self.store.cases[order_case["id"]] = order_case
-        w1 = self.store.issue_work_order(mgr, pid, order_case["id"])
-        w2 = self.store.issue_work_order(mgr, pid, "ZF-2")
+        from dataset import RESIDENT_BINDINGS, supplied_resident_fixture
+        supplied_resident_fixture(order_case)
+        supplied_resident_fixture(self.store.cases["ZF-2"])
+        w1 = self.store.issue_work_order(mgr, pid, order_case["id"], resident_bindings=RESIDENT_BINDINGS)
+        w2 = self.store.issue_work_order(mgr, pid, "ZF-2", resident_bindings=RESIDENT_BINDINGS)
         for role in ROLES:
             ck = self.session(next(s["email"] for s in self.store.data["staff"] if s["role"] == role))
             codes = {p: self.call(ck, p)[0] for p in ("/api/packages", "/api/workorders", "/api/checklists")}

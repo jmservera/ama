@@ -28,6 +28,7 @@ from .chatthreads import SQLITE_DDL as CHAT_DDL, MEMORY_ADDED as CHAT_MEMORY_ADD
 from .doc_controls import open_scanner
 from .documents import open_document_store
 from .store import ConflictError, GateError, Store
+from .resident_decisions import resident_status
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -290,7 +291,7 @@ class SqlStore(Store):
                 int(ranking._support(c)), int(c["days_in_stage"]), ranking.sql_key(c), c["contractor"]["name"],
                 " ".join([name, home["address"], home["postcode"], c["id"]]).lower(), " ".join([home["address"], home["postcode"], c["id"]]).lower(),
                 name.split(" ")[-1].lower(), (c["contacts"][-1]["at"] if c["contacts"] else None) or "0000", nxt or "9999",
-                c["decision"]["status"], c["funding"]["status"])
+                resident_status(c), c["funding"]["status"])
 
     def _db_seq(self):
         row = self.db.execute("SELECT value FROM meta WHERE key='seq'").fetchone()
@@ -332,6 +333,7 @@ class SqlStore(Store):
         if not hasattr(self.local, "touched"):
             self.local.touched, self.local.pending = set(), []
             self.local.safety_clear = set()
+            self.local.resident_clear = []
             self.local.stock_clear = set()
         return self.local.touched
 
@@ -342,6 +344,11 @@ class SqlStore(Store):
         super().require_safety_clear(c)
         self._touched()
         self.local.safety_clear.add(c["id"])
+
+    def require_resident_clear(self, c, bindings=None):
+        super().require_resident_clear(c, bindings)
+        self._touched()
+        self.local.resident_clear.append((c["id"], json.loads(json.dumps(bindings))))
 
     def require_stock_clear(self, c):
         super().require_stock_clear(c)
@@ -362,11 +369,20 @@ class SqlStore(Store):
                 super().require_stock_clear(current)
             if rv != self._rv[cid]:
                 raise ConflictError(cid)
+        for cid, bindings in self.local.resident_clear:
+            row = self.db.execute("SELECT rowversion, body FROM cases WHERE id=?", (cid,)).fetchone()
+            if row is None:
+                raise ConflictError(cid)
+            rv, body = row
+            super().require_resident_clear(json.loads(body), bindings)
+            if rv != self._rv[cid]:
+                raise ConflictError(cid)
 
     def _finish(self):
         """Outermost lock exit: write audit-only entries, drop unsaved edits."""
         touched = self._touched()
         self.local.safety_clear.clear()
+        self.local.resident_clear.clear()
         self.local.stock_clear.clear()
         pending = self.local.pending
         if touched:
@@ -440,6 +456,7 @@ class SqlStore(Store):
             pending.clear()
             touched.clear()
             self.local.safety_clear.clear()
+            self.local.resident_clear.clear()
             self.local.stock_clear.clear()
             if cur == self._seq:
                 self._seq = new
@@ -460,6 +477,7 @@ class SqlStore(Store):
             rec.update(json.loads(body))
         self._touched().clear()
         self.local.safety_clear.clear()
+        self.local.resident_clear.clear()
         self.local.stock_clear.clear()
         self.local.pending.clear()
         self._proc_sync()
@@ -575,8 +593,9 @@ class SqlStore(Store):
 
     def page_cases(self, user, view="mine", q="", filters=None, sort="urgent", limit=None, offset=0, after=None):
         """Same result as Store.page_cases, answered by SQL. `after` is a keyset cursor (the last rkey seen) for the default order."""
-        if limit is None or view == "closed":
-            return super().page_cases(user, view, q, filters, sort, limit, offset)
+        # Authority can expire without a row write; never filter current consent on a cached column.
+        if limit is None or view == "closed" or (filters or {}).get("flag") == "nodecision":
+            return super().page_cases(user, view, q, filters, sort, limit, offset, after)
         asked = sort
         if sort not in insights.SORTS:
             sort = "urgent"

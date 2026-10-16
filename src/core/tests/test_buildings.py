@@ -49,6 +49,7 @@ class BuildingTests(unittest.TestCase):
                 home = data["cases"][0]
                 if missing == "resident":
                     home["decision"]["status"] = "Waiting"
+                    home["measure_decisions"] = {}
                 elif missing == "funding":
                     home["funding_ok"] = False
                 else:
@@ -67,7 +68,9 @@ class BuildingTests(unittest.TestCase):
                         self.assertEqual(store.cases, before)
                         self.assertFalse(store.cases["ZF-2"]["closed"])
                         self.assertNotIn("quality", store.cases["ZF-2"])
-                        self.assertEqual(store.cases["ZF-2"]["documents"], [])
+                        self.assertEqual(
+                            store.cases["ZF-2"]["documents"], before["ZF-2"]["documents"]
+                        )
                         self.assertEqual(store.cases["ZF-3"]["quality"][0]["state"], "Accepted")
                     finally:
                         if sql:
@@ -79,7 +82,12 @@ class BuildingTests(unittest.TestCase):
                 store = open_store(folder, sql, fixture())
                 manager = store.data["staff"][1]
                 try:
-                    wid = store.issue_work_order(manager, "PKG-SHARED", "ZF-2")
+                    wid = store.issue_work_order(
+                        manager,
+                        "PKG-SHARED",
+                        "ZF-2",
+                        resident_bindings=[dict(measure="Loft insulation", context_revision=1)],
+                    )
                     store.data["buildings"][0]["holds"].append(hold())
                     store.save()
                     before = deepcopy(store.cases)
@@ -93,8 +101,19 @@ class BuildingTests(unittest.TestCase):
                             operation(*args)
                         self.assertEqual(store.cases, before)
                         self.assertEqual(store.data["procurement"]["work_orders"], orders)
-                    other = store.issue_work_order(manager, "PKG-OTHER", "ZF-2")
-                    store.reissue_work_order(manager, other, "New text", "Synthetic change")
+                    other = store.issue_work_order(
+                        manager,
+                        "PKG-OTHER",
+                        "ZF-2",
+                        resident_bindings=[dict(measure="Loft insulation", context_revision=1)],
+                    )
+                    store.reissue_work_order(
+                        manager,
+                        other,
+                        "New text",
+                        "Synthetic change",
+                        resident_bindings=[dict(measure="Loft insulation", context_revision=1)],
+                    )
                     store.advance(manager, "ZF-3")
                     self.assertEqual(store.detail("ZF-3")["stage"], "Install booked")
                     store.log_call(manager, "ZF-2", "Safety referral", "Synthetic hazard intake")

@@ -1,5 +1,6 @@
 """Read-only views over the case data: filters, statistics, map, visits, handover suggestions."""
 from collections import Counter, defaultdict
+from .resident_decisions import resident_status
 
 from .stock import support_coverage, support_status
 
@@ -57,7 +58,7 @@ def matches(c, f):
         return False
     if flag == "long" and c["days_in_stage"] < LONG_WAIT:
         return False
-    if flag == "nodecision" and c["decision"]["status"] in ("Accepted", "Declined"):
+    if flag == "nodecision" and resident_status(c) in ("Accepted", "Declined"):
         return False
     if flag == "fundingprog" and c["funding"]["status"] in ("To prepare", "Draft ready", "Approved", "Submitted"):
         return True
@@ -109,7 +110,7 @@ def stats(cases, staff):
     return dict(
         kpis=dict(open=len(open_), completed=len(cases) - len(open_), hazards=sum(has_hazard(c) for c in open_),
                   long=sum(c["days_in_stage"] >= LONG_WAIT for c in open_),
-                  nodecision=sum(c["decision"]["status"] in ("Not yet asked", "Waiting") for c in open_),
+                  nodecision=sum(resident_status(c) not in ("Accepted", "Declined") for c in open_),
                   funding=sum(c["funding"]["status"] in ("To prepare", "Draft ready", "Approved", "Submitted") for c in open_),
                   support=sum(support_status(c["resident"]) == "Yes" for c in open_),
                   support_unknown=sum(support_coverage(c["resident"]) == "Unknown" for c in open_)),

@@ -41,6 +41,8 @@ class StockReconciliation(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.data = copy.deepcopy(dataset.DATA)
+        self.data["cases"][2].pop("technical")
+        self.data["cases"][2]["documents"] = []
         for code, role in (
             ("rc1", "Retrofit Coordinator"),
             ("rc2", "Retrofit Coordinator"),

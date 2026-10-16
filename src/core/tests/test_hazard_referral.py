@@ -13,7 +13,7 @@ from typing import Any
 from unittest.mock import patch
 
 from building_fixture import fixture, hold
-from dataset import DATA
+from dataset import DATA, RESIDENT_BINDINGS, supplied_resident_fixture
 from zava_forward.core import ai_tasks, projection
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, GateError, Store
@@ -324,7 +324,9 @@ class JsonHazardReferral(unittest.TestCase):
             self.store._case("ZF-3")["quality"] = data["cases"][1]["quality"]
             self.store.data["procurement"] = data["procurement"]
             self.store.save()
-        wid = self.store.issue_work_order(self.pam, "PKG-SHARED", "ZF-3")
+        wid = self.store.issue_work_order(
+            self.pam, "PKG-SHARED", "ZF-3", resident_bindings=RESIDENT_BINDINGS
+        )
         self.raise_report()
         for operation in (
             lambda: self.store.advance(self.sam, "ZF-3"),
@@ -340,13 +342,21 @@ class JsonHazardReferral(unittest.TestCase):
             ),
         ):
             self.unchanged_failure(operation)
-        self.store.issue_work_order(self.pam, "PKG-SHARED", "ZF-2")
+        with self.store.lock:
+            supplied_resident_fixture(self.store._case("ZF-2"))
+            self.store.save()
+        self.store.issue_work_order(
+            self.pam, "PKG-SHARED", "ZF-2", resident_bindings=RESIDENT_BINDINGS
+        )
         self.refer()
         self.accept()
         self.store.record_repair(self.bea, "ZF-3", 0, "SYN-REPAIR")
         self.store.release_hazard(self.bo, "ZF-3", 0, "Reason", "SYN-CLEAR")
         with self.store.lock:
             self.store._case("ZF-3")["decision"]["status"] = "Withdrawn"
+            self.store._case("ZF-3")["measure_decisions"]["Loft insulation"][-1]["status"] = (
+                "Withdrawn"
+            )
             self.store.save()
         self.unchanged_failure(lambda: self.store.advance(self.sam, "ZF-3"))
         self.assertIn("resident", " ".join(self.store.detail("ZF-3")["gate"]).lower())
@@ -393,7 +403,9 @@ class SqlHazardReferral(JsonHazardReferral):
                 a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY")
                 wid = ""
                 if transition != "issue":
-                    wid = a.issue_work_order(self.pam, pid, "ZF-3")
+                    wid = a.issue_work_order(
+                        self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS
+                    )
                     a.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
                 if transition == "correct":
                     a.complete_work_order(self.pam, wid)
@@ -411,11 +423,30 @@ class SqlHazardReferral(JsonHazardReferral):
                         a.save()
                 inspector = self.bo
                 operations: dict[str, Callable[[], object]] = {
-                    "issue": partial(a.issue_work_order, self.pam, pid, "ZF-3"),
-                    "reissue": partial(a.reissue_work_order, self.pam, wid, "Loft", "Reason"),
+                    "issue": partial(
+                        a.issue_work_order,
+                        self.pam,
+                        pid,
+                        "ZF-3",
+                        resident_bindings=RESIDENT_BINDINGS,
+                    ),
+                    "reissue": partial(
+                        a.reissue_work_order,
+                        self.pam,
+                        wid,
+                        "Loft",
+                        "Reason",
+                        resident_bindings=RESIDENT_BINDINGS,
+                    ),
                     "book": partial(a.record_wo_appointment, self.pam, wid, "Booked", "2099-01-02"),
                     "complete": partial(a.complete_work_order, self.pam, wid, "SYN-DONE"),
-                    "correct": partial(a.correct_work_order, self.pam, wid, "SYN-CORRECTION"),
+                    "correct": partial(
+                        a.correct_work_order,
+                        self.pam,
+                        wid,
+                        "SYN-CORRECTION",
+                        resident_bindings=RESIDENT_BINDINGS,
+                    ),
                     "accept": partial(a.accept_quality, self.pam, "ZF-3", 0),
                     "handover": partial(
                         a.hand_over_quality, self.pam, "ZF-3", 0, "Guarantees", True
@@ -455,7 +486,7 @@ class SqlHazardReferral(JsonHazardReferral):
             self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN"
         )
         a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY")
-        wid = a.issue_work_order(self.pam, pid, "ZF-3")
+        wid = a.issue_work_order(self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
         a.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         before = copy.deepcopy(a.data["procurement"])
         b = self.sql_store("stale")
@@ -472,7 +503,10 @@ class SqlHazardReferral(JsonHazardReferral):
         self.assertEqual(list(a.audit_entries())[-1]["action"], "log_contact")
         b.raise_hazard(self.sam, "ZF-3", "Electrical", "Emergency", metadata=SOURCE)
         # A refused request must not poison an unrelated home or a safe withdrawal.
-        a.issue_work_order(self.pam, pid, "ZF-2")
+        with a.lock:
+            supplied_resident_fixture(a._case("ZF-2"))
+            a.save()
+        a.issue_work_order(self.pam, pid, "ZF-2", resident_bindings=RESIDENT_BINDINGS)
         a.withdraw_work_order(self.pam, wid, "Safety hold")
         self.assertTrue(a.verify_audit())
 
@@ -493,7 +527,7 @@ class SqlHazardReferral(JsonHazardReferral):
             self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN"
         )
         a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY")
-        wid = a.issue_work_order(self.pam, pid, "ZF-3")
+        wid = a.issue_work_order(self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
         a.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         b = self.sql_store("serialized")
         statements: list[str] = []

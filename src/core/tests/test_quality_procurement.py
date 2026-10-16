@@ -27,6 +27,8 @@ class Flows:
         self.tmp = tempfile.TemporaryDirectory()
         d = copy.deepcopy(dataset.DATA)
         d["staff"] = STAFF
+        for c in d["cases"][:2]:
+            dataset.supplied_resident_fixture(c)
         self.store = self.make(d, self.tmp.name)
 
     def tearDown(self):
@@ -39,7 +41,7 @@ class Flows:
         return self.store.detail(cid)["quality"][0]
 
     def submit(self, user=SAM, cid="ZF-1", by="Install Team"):
-        return self.store.submit_quality(user, cid, "Loft insulation", by, "Installer", EVIDENCE)
+        return self.store.submit_quality(user, cid, "Loft insulation", by, "Installer", EVIDENCE, context_revision=1)
 
     # ---- quality acceptance
     def test_submit_needs_positive_evidence_for_every_check(self):
@@ -65,7 +67,7 @@ class Flows:
             self.store.accept_quality(QUIN, "ZF-1", 0)
         with self.assertRaises(PermissionError):
             self.store.accept_quality(SAM, "ZF-1", 0)
-        self.store.submit_quality(QUIL, "ZF-2", "Loft insulation", "Quil Other", "Our own inspection", EVIDENCE)
+        self.store.submit_quality(QUIL, "ZF-2", "Loft insulation", "Quil Other", "Our own inspection", EVIDENCE, context_revision=1)
         with self.assertRaises(PermissionError):
             self.store.accept_quality(QUIL, "ZF-2", 0)
         self.store.accept_quality(PAM, "ZF-2", 0)
@@ -152,11 +154,11 @@ class Flows:
             self.store.set_capacity(PAM, pid, "Nobody Ltd", 1, 1, "x")
         self.store.set_capacity(PAM, pid, "Test Ltd", 3, 0)
         with self.assertRaises(ValueError):
-            self.store.issue_work_order(PAM, pid, "ZF-1")
+            self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
         self.store.set_capacity(PAM, pid, "Test Ltd", 3, 1, "Signed plan")
-        self.store.issue_work_order(PAM, pid, "ZF-1")
+        self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
         with self.assertRaises(ValueError):
-            self.store.issue_work_order(PAM, pid, "ZF-2")
+            self.store.issue_work_order(PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS)
         row = self.store.list_packages(PAM)[0]["capacity"][0]
         self.assertEqual((row["offered"], row["committed"], row["in_use"], row["headroom"], row["unevidenced"]), (3, 1, 1, 0, 2))
         with self.assertRaises(ValueError):
@@ -164,23 +166,23 @@ class Flows:
 
     def test_work_order_lifecycle_versions_and_audit(self):
         pid = self.package(committed=2)
-        wid = self.store.issue_work_order(PAM, pid, "ZF-1", "Loft to 270mm")
+        wid = self.store.issue_work_order(PAM, pid, "ZF-1", "Loft to 270mm", resident_bindings=dataset.RESIDENT_BINDINGS)
         with self.assertRaises(PermissionError):
             self.store.issue_work_order(SAM, pid, "ZF-2")
         with self.assertRaises(ValueError):
-            self.store.issue_work_order(PAM, pid, "ZF-1")
-        for bad in (lambda: self.store.complete_work_order(PAM, wid), lambda: self.store.correct_work_order(PAM, wid, "x"),
+            self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
+        for bad in (lambda: self.store.complete_work_order(PAM, wid), lambda: self.store.correct_work_order(PAM, wid, "x", resident_bindings=dataset.RESIDENT_BINDINGS),
                     lambda: self.store.record_wo_appointment(PAM, wid, "Weird")):
             with self.assertRaises(ValueError):
                 bad()
         self.store.record_wo_appointment(PAM, wid, "Booked", "2099-02-02")
         self.store.record_wo_appointment(PAM, wid, "No access")
         self.store.record_wo_appointment(PAM, wid, "Booked", "2099-02-03")
-        self.store.reissue_work_order(PAM, wid, "Loft to 300mm", "Design changed")
+        self.store.reissue_work_order(PAM, wid, "Loft to 300mm", "Design changed", resident_bindings=dataset.RESIDENT_BINDINGS)
         self.store.complete_work_order(PAM, wid, "Done")
         with self.assertRaises(ValueError):
             self.store.reissue_work_order(PAM, wid, "x", "y")
-        self.store.correct_work_order(PAM, wid, "Hatch not sealed")
+        self.store.correct_work_order(PAM, wid, "Hatch not sealed", resident_bindings=dataset.RESIDENT_BINDINGS)
         w = self.store.list_work_orders(PAM)[0]
         self.assertEqual((w["state"], w["version"], w["scope"], len(w["corrections"])), ("Issued", 3, "Loft to 300mm", 1))
         self.assertTrue(all(v["issued_by"] == "Pam Lead" for v in w["versions"]))
@@ -195,7 +197,7 @@ class Flows:
     def test_contractor_sees_only_own_work_orders_without_reason(self):
         pid = self.package(committed=2)
         self.store.cases["ZF-1"]["resident"].update(adjustment="SEEDED-REASON", priority_support=True)
-        self.store.issue_work_order(PAM, pid, "ZF-1")
+        self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
         mine = self.store.list_work_orders(STAFF[4])
         self.assertEqual(len(mine), 1)
         self.assertTrue(mine[0]["needs_notice"])
@@ -205,7 +207,7 @@ class Flows:
 
     def test_state_survives_reload(self):
         pid = self.package()
-        self.store.issue_work_order(PAM, pid, "ZF-1")
+        self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
         self.submit()
         again = self.reopen()
         self.assertEqual(len(again.list_work_orders(PAM)), 1)

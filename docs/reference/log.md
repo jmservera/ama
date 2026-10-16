@@ -3397,3 +3397,49 @@ metadata when the knowledge base was created.
   index. Source authority, resolution rules and eligibility remain
   Unknown/owner-approval-needed. Local evidence is not professional,
   operational, real-model or SQL Server/Azure acceptance; Refs #84 remains.
+
+## [2026-10-15] query | Resident decisions, representative authority and scoped withdrawal (#86)
+
+* Extended existing `src/core` and `src/api` contracts, not `mvp/`, to record
+  supplied resident answers against exact measure/scope/design revisions.
+  Historical case-wide answers and contact/access/AI output cannot create
+  scoped consent. Source, actor and answer history remain separate.
+* Added versioned representative tasks, evidence/review dates, resident wishes
+  and safe-contact binding. Current authority is rechecked for disclosure,
+  consent reliance and dependent release; interpreter/scheduling permission is
+  not works-decision authority. Nothing is sent by these local controls.
+* Pause/withdrawal flags only its measure for human review. Explicit work-order
+  and QA bindings preserve independent sibling release; restart needs new
+  supplied acceptance and review evidence. SQL transaction guards recheck the
+  dependency using existing case bodies, without new SQL syntax or dependencies.
+* Added independent review bound to a recorded decision and distinct reviewer,
+  keeping complaint/review, urgent safety and retrofit state independent.
+  Detached field projections protect authority/wishes without changing stored
+  histories; existing AI proposal and human-review boundaries are preserved.
+* Updated the [core guide](../../src/core/README.md#resident-decisions-and-representatives-86),
+  [API guide](../../src/api/README.md#resident-decisions-and-representative-api-86)
+  and this index. Local JSON/SQLite, synthetic adapter and loopback HTTP evidence
+  do not establish real model, SQL Server/Azure or resident acceptance.
+* Formal complaints-service integration, real accessible independent review
+  without detriment, operational field/retention policy and authorized live
+  platform evidence remain open. Docker daemon access is permission denied;
+  image checks remain for CI. Issue #86 returns no comments from GitHub.
+
+## [2026-10-16] fix | Resident decisions current-main integration (#86)
+
+* Continued PR #319's interrupted merge of origin/main without aborting,
+  rebasing or rewriting history. Preserved both append-only log histories,
+  component guide sections and every mypy override module from both parents.
+* Combined resident SQL dependencies with main's stock and hazard checks,
+  retaining technical sign-off/design-version, handoff, RAI release,
+  role-workbench and synthetic behavior. Scoped withdrawal cannot clear
+  independent technical or safety gates; sibling release remains isolated.
+* Extended endpoint inventory and authenticated role-matrix coverage and
+  retained regressions for commit-time dependency checks and cleanup. Local
+  core 392, API 516 run/99 skipped and agents 70 suites passed; mypy, Ruff and
+  format checks passed in all three projects. Full commands and honest
+  environment/skipped-test limits are in the existing
+  [changes record](../../.copilot-tracking/changes/2026-10-15/resident-decisions-86-changes.md#resumed-integration-results-2026-10-16).
+* Refs #86 remains open: formal complaints/human acceptance, operational
+  authority/retention and actual model/SQL Server/Azure evidence are not
+  established. Local checks do not claim hosted CI, deployment or approval.
