@@ -2,7 +2,7 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-15
+ms.date: 2026-10-16
 ms.topic: reference
 ---
 
@@ -647,7 +647,9 @@ and licensed PAS 2035 are gaps answered as "no source held". The keyword index
 `mssql` job (`test_lawstore.MssqlStoreTests`). Open items: the Azure Blob container
 immutability (WORM) policy and the Azure SQL deployment are infrastructure and are not
 verified here; the Azure Blob client is tested only against a fake container. The
-read-only viewer at `/law.html` and `/api/law/*` serves staff roles with no AI. Seeded
+read-only viewer at `/law.html` and the source/search routes under `/api/law/`
+serve staff roles with no AI; the separate [rule-card API](../api/README.md#rule-card-approval-api-211)
+adds controlled exercise writes. Seeded
 versions are `not_reviewed` with owner "to be named"; this is a reference copy, not
 legal advice or approval. Seed metadata is `src/core/src/zava_forward/core/law/law-source-register.json`.
 
@@ -663,12 +665,35 @@ affected card, active version, requirements and tests, source versions and effec
 and never alters an approved card. `assess_review` lets only the card's named owner record
 the interpretation, tests, effective date, notification, rollback and any hold; it never
 activates a rule, so activation still needs propose, approve and activate by named humans.
+`LawStore.rules` reuses this store on the existing SQLite or SQL Server adapter.
+Initialization idempotently adds the two draft exercise seeds. Public mutations
+hold the shared adapter reentrant lock and a database write transaction before
+version/state reads, including supersession and assessment holds; a failure
+rolls back the whole mutation. SQLite uses its writer lock, SQL Server reuses
+the existing cross-replica application lock. Rule IDs are explicitly allocated
+inside that transaction, without SQLite-only identity syntax or pagination.
+The existing SQL Server backend initializes append-only ledger tables (when
+enabled) or append-only triggers. Local adapter-contract tests are not a live
+SQL Server run.
+
+Changed source ingestion now adds review records inside the same transaction as
+source/provision rows. First ingestion and unchanged retries add no review.
+Card contents, approval events and snapshots are never overwritten. The derived
+keyword index is rebuilt after commit and repaired by unchanged retries; an
+index failure does not undo already committed source/review evidence. Failed
+ingestion can leave an unreferenced immutable blob; it is not deleted or treated
+as approved evidence. Existing SQLite rule histories and identity strings remain
+unchanged on reopen. Direct core callers remain trusted internal code; HTTP
+authority is enforced by the API, never by accepting request role strings.
+
 The card-to-requirement and test trace for the two seed cards is a static exercise map;
 unmapped cards are flagged for the owner. The two seed cards (hazard awareness clock, automated decision
-safeguard) are labelled exercise fixtures with simulated approvals only; they are not
+safeguard) remain unapproved drafts until a distinct named exercise owner acts;
+any approval is explicitly simulated. They are not
 law or real approval, and the owner, clock durations and citations remain open items
-for named Compliance and DPO approval. Mapping the roles to Entra app roles (#116)
-and the rule engine are not done here.
+for named Compliance and DPO approval. The API binds separate Entra rule
+capabilities to a unique provisioned identity; actual tenant assignments, human
+approval of specific cards, the rule engine and rule-card UI remain open.
 
 ## SQL store
 
