@@ -135,6 +135,14 @@ class Azure:
             )
             if result.returncode:
                 error = result.stderr.lower()
+                if args[0] == "afd" and "'afd' is misspelled or not recognized" in error:
+                    raise SetupError(
+                        "Front Door CLI commands are unavailable. Install the CDN extension in "
+                        "the isolated setup extension directory: "
+                        "AZURE_CONFIG_DIR=$HOME/.azure/zava-entra-init "
+                        "AZURE_EXTENSION_DIR=$HOME/.azure/zava-entra-init/cliextensions "
+                        "az extension add --name cdn --upgrade. "
+                        "For --tenant-profile, use that private directory instead.")
                 kind = ("not-found" if any(s in error for s in ("resourcenotfound", "request_resourcenotfound", "status code: 404"))
                         else "permission" if any(s in error for s in ("forbidden", "authorization_requestdenied", "403", "insufficient privileges"))
                         else "login" if any(s in error for s in ("az login", "aadsts", "401"))

@@ -682,6 +682,23 @@ class SetupTests(unittest.TestCase):
             login.assert_not_called()
         self.assertFalse(self.profile.exists())
 
+    def test_missing_afd_command_reports_isolated_cdn_install_without_mutations(self):
+        original = self.fake.run
+
+        def missing_afd(command, **kwargs):
+            if command[1] == "afd":
+                return subprocess.CompletedProcess(
+                    command, 2, "",
+                    f"ERROR: 'afd' is misspelled or not recognized by the system.\n{TENANT} {SECRET}")
+            return original(command, **kwargs)
+
+        with patch.object(SETUP.subprocess, "run", side_effect=missing_afd):
+            self.assertEqual(self.invoke(), 1)
+        self.assertIn("az extension add --name cdn --upgrade", self.output.getvalue())
+        self.assertIn("AZURE_EXTENSION_DIR=$HOME/.azure/zava-entra-init/cliextensions",
+                      self.output.getvalue())
+        self.assertFalse(self.fake.writes)
+
     def test_cross_tenant_login_fails_before_mutation(self):
         original = self.fake.run
         def different_tenant(command, **kwargs):

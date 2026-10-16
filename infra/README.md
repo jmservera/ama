@@ -1405,7 +1405,16 @@ python3 -m pip install azure-cli
 mkdir -p ~/.azure/zava-entra-init
 chmod 700 ~/.azure/zava-entra-init
 AZURE_CONFIG_DIR=$HOME/.azure/zava-entra-init az extension add --name containerapp --upgrade
+AZURE_CONFIG_DIR=$HOME/.azure/zava-entra-init \
+AZURE_EXTENSION_DIR=$HOME/.azure/zava-entra-init/cliextensions \
+az extension add --name cdn --upgrade
 ```
+
+The `cdn` extension supplies `az afd` discovery commands on CLI installations
+where they are not built in. Install it in the setup extension directory, not
+only the operator's default extension directory. Setup reports a missing `afd`
+command with these installation instructions rather than a generic request
+failure. For `--tenant-profile`, substitute that private directory.
 
 All CLI calls disable file logging, telemetry and automatic extension installs;
 use no shell tracing, CLI debug logging or external session recorder when
