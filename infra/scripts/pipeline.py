@@ -314,10 +314,13 @@ def deployment(infra: Path, environment: str, output: Path, images_directory: Pa
         raise PipelineError("Cannot read deployed authentication state; deployment stopped")
     if any((item.get("tags") or {}).get("zava-forward-auth-lock") for item in existing):
         raise PipelineError("Authentication setup holds an advisory lock; wait before deploying")
-    if any((item.get("tags") or {}).get("zava-forward-credential-store") == "app" for item in existing):
+    if any(
+        (item.get("tags") or {}).get("zava-forward-credential-store") == "app" for item in existing
+    ):
         raise PipelineError(
             "App-local demo credential detected; this Key Vault pipeline cannot overwrite it. "
-            "Use the guarded dependency-only deployment with entraCredentialStore=app and deployApplications=false"
+            "Use the guarded dependency-only deployment with entraCredentialStore=app "
+            "and deployApplications=false"
         )
     if images_directory is not None:
         images = release_images(images_directory, registry())

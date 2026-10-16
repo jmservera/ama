@@ -110,14 +110,17 @@ def authentication_guard(apps: list[dict[str, Any]], parameters: list[str]) -> N
     for app in apps:
         tags = app.get("tags") or {}
         if tags.get("zava-forward-auth-lock"):
-            raise DeploymentError("Authentication setup holds an advisory lock; wait before deploying.")
+            raise DeploymentError(
+                "Authentication setup holds an advisory lock; wait before deploying."
+            )
         if tags.get("zava-forward-credential-store") == "app" and not (
             values.get("entraCredentialStore") == "app"
             and values.get("deployApplications", "").lower() == "false"
         ):
             raise DeploymentError(
                 "App-local browser credential detected. Preserve the deployed store and secret "
-                "with entraCredentialStore=app and deployApplications=false for dependency-only updates; "
+                "with entraCredentialStore=app and deployApplications=false for "
+                "dependency-only updates; "
                 "this deployment was stopped before it could overwrite authentication."
             )
 

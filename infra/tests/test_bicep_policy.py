@@ -1533,15 +1533,25 @@ class BicepPolicyTests(unittest.TestCase):
 
         self.assertEqual(failures(), set())
         self.assertEqual(defaults["entraCredentialStore"], "keyvault")
-        self.assertEqual(failures(
-            entraCredentialStore="app", demoDirectIngress=True,
-            deploymentProfile="development", entraClientId="synthetic-client",
-        ), {"appCredentialBlocksApplicationDeployment"})
-        self.assertEqual(failures(
-            entraCredentialStore="app", demoDirectIngress=True,
-            deploymentProfile="development", entraClientId="synthetic-client",
-            deployApplications=False,
-        ), set())
+        self.assertEqual(
+            failures(
+                entraCredentialStore="app",
+                demoDirectIngress=True,
+                deploymentProfile="development",
+                entraClientId="synthetic-client",
+            ),
+            {"appCredentialBlocksApplicationDeployment"},
+        )
+        self.assertEqual(
+            failures(
+                entraCredentialStore="app",
+                demoDirectIngress=True,
+                deploymentProfile="development",
+                entraClientId="synthetic-client",
+                deployApplications=False,
+            ),
+            set(),
+        )
         self.assertEqual(failures(regionCheckReference=""), {"regionCheckMustBeRecorded"})
         self.assertEqual(failures(quotaCheckReference=""), {"quotaCheckMustBeRecorded"})
         self.assertEqual(

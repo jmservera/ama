@@ -50,8 +50,13 @@ def job(suffix: str, image: str, prefix: str = "forward-test") -> dict:
 
 
 class DeployTests(unittest.TestCase):
-    def run_deploy(self, responses: list[dict], *options: str, script: Path = SCRIPT,
-                   apps: list[dict] | None = None):
+    def run_deploy(
+        self,
+        responses: list[dict],
+        *options: str,
+        script: Path = SCRIPT,
+        apps: list[dict] | None = None,
+    ):
         with TemporaryDirectory(prefix="ama-fake-az-") as directory:
             root = Path(directory)
             az = root / "az"
@@ -59,7 +64,8 @@ class DeployTests(unittest.TestCase):
             az.chmod(0o755)
             (root / "calls.json").write_text("[]", encoding="utf-8")
             (root / "responses.json").write_text(
-                json.dumps([reply("containerapp list", apps or []), *responses]), encoding="utf-8")
+                json.dumps([reply("containerapp list", apps or []), *responses]), encoding="utf-8"
+            )
             env = {**os.environ, "PATH": str(root), "FAKE_AZ_ROOT": str(root)}
             result = subprocess.run(
                 [
@@ -88,7 +94,10 @@ class DeployTests(unittest.TestCase):
     def test_app_local_credential_and_authentication_lock_block_full_deployment(self):
         for tags in (
             {"zava-forward-auth-lock": "another-session"},
-            {"zava-forward-credential-store": "app", "zava-forward-credential-name": "private-name"},
+            {
+                "zava-forward-credential-store": "app",
+                "zava-forward-credential-name": "private-name",
+            },
         ):
             with self.subTest(tags=tags):
                 result, calls = self.run_deploy([], "--apply", apps=[{"tags": tags}])
@@ -98,8 +107,13 @@ class DeployTests(unittest.TestCase):
 
     def test_dependency_only_deployment_can_explicitly_preserve_app_local_store(self):
         result, calls = self.run_deploy(
-            [reply("deployment group what-if")], "--orchestrator-image", CURRENT,
-            "--parameter", "entraCredentialStore=app", "--parameter", "deployApplications=false",
+            [reply("deployment group what-if")],
+            "--orchestrator-image",
+            CURRENT,
+            "--parameter",
+            "entraCredentialStore=app",
+            "--parameter",
+            "deployApplications=false",
             apps=[{"tags": {"zava-forward-credential-store": "app"}}],
         )
         self.assertEqual(result.returncode, 0, result.stderr)

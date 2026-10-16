@@ -549,15 +549,21 @@ class PipelineTests(unittest.TestCase):
             )
 
     def test_auth_lock_or_app_local_store_blocks_pipeline_before_plan_or_apply(self):
-        for tags in ({"zava-forward-auth-lock": "other-session"},
-                     {"zava-forward-credential-store": "app"}):
-            with TemporaryDirectory() as temporary, patch.dict(os.environ, ENV), \
-                    patch.object(pipeline, "parameters", return_value={"parameters": {}}), \
-                    patch.object(pipeline, "az", return_value=[{"tags": tags}]) as az, \
-                    patch.object(pipeline, "release_images") as images:
+        for tags in (
+            {"zava-forward-auth-lock": "other-session"},
+            {"zava-forward-credential-store": "app"},
+        ):
+            with (
+                TemporaryDirectory() as temporary,
+                patch.dict(os.environ, ENV),
+                patch.object(pipeline, "parameters", return_value={"parameters": {}}),
+                patch.object(pipeline, "az", return_value=[{"tags": tags}]) as az,
+                patch.object(pipeline, "release_images") as images,
+            ):
                 with self.assertRaises(pipeline.PipelineError):
-                    pipeline.deployment(ROOT / "infra", "test",
-                                        Path(temporary) / "summary.json", Path(temporary))
+                    pipeline.deployment(
+                        ROOT / "infra", "test", Path(temporary) / "summary.json", Path(temporary)
+                    )
                 images.assert_not_called()
                 self.assertEqual(az.call_count, 1)
 
