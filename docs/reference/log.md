@@ -3443,3 +3443,24 @@ metadata when the knowledge base was created.
 * Refs #86 remains open: formal complaints/human acceptance, operational
   authority/retention and actual model/SQL Server/Azure evidence are not
   established. Local checks do not claim hosted CI, deployment or approval.
+
+## [2026-10-16] restructure | Complete live src path cut-over (#200)
+
+* Reused the merged source packages, generator imports and private-data guards.
+  Aligned the API module entry point, CI version probes/shared build filters,
+  Bicep job image selection and branding web/policy targets. Runtime and
+  generators now share the external `ZF_DATA` default; no private data was read.
+* Updated the [source project index](../../src/README.md#ci),
+  [API local recipe](../../src/api/README.md#run-it-locally),
+  [orchestrator guide](../../src/orchestrator/README.md),
+  [infra source-image recipe](../../infra/README.md#source-image-cut-over-200-2026-10-16),
+  [branding guide](../../tools/rename-zava.md), root README, repository instructions
+  and knowledge-base routing. Historical deployment identifiers remain exact.
+* Kept workflow/check names for branch-protection continuity. The issue #200
+  owner comment of 2026-10-15 confirms retention until cut-over; the later naming
+  question remains a deliberate single-PR owner decision.
+* Local synthetic runtime and four-image non-root/no-data/read-only checks
+  passed, as did compiled Bicep build/lint and infra/branding regressions.
+  No new tag was deployed to Azure. Private copy/encrypted backup, healthy
+  Azure revisions/job executions and #201/#202 owner sign-off remain unmet;
+  `mvp/README.md` remains, with no deletion or invented approval.

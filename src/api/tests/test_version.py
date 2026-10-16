@@ -1,6 +1,8 @@
 import importlib.metadata
 import importlib.util
+import runpy
 import unittest
+from unittest.mock import patch
 
 from zava_forward.api import version
 
@@ -8,6 +10,11 @@ DISTRIBUTION = "zava-forward-api"
 
 
 class VersionTests(unittest.TestCase):
+    def test_module_entry_point_starts_the_existing_server(self) -> None:
+        with patch("zava_forward.api.server.main") as main:
+            runpy.run_module("zava_forward.api", run_name="__main__")
+        main.assert_called_once_with()
+
     def test_version_matches_distribution_metadata(self) -> None:
         self.assertEqual(version.__version__, importlib.metadata.version(DISTRIBUTION))
 

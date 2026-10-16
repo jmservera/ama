@@ -1,7 +1,7 @@
 ---
 title: One-Off Zava North Homes and Zava Forward Migration
 description: Dry-run-first local branding migration, presentation handling and explicit Azure redeployment follow-up
-ms.date: 2026-10-13
+ms.date: 2026-10-16
 ms.topic: how-to
 ---
 
@@ -69,6 +69,10 @@ files, and stage/commit the intended results before a new dry run.
   validation records beside them remain historical.
 * The MVP website gets the same locally served PNG with accessible alternate
   text and a contrasting background. No remote logo dependency or CSP change.
+  Live targets are `src/api/src/zava_forward/api/web/` and the hash-checked
+  ranking policy under `src/core/src/zava_forward/core/policies/`; applying
+  branding never recreates `mvp/web/`. Historical old-name assertions and
+  pinned/datetime records remain exact, not a request to rename Python packages.
 * Files are replaced atomically and existing permissions are retained. Newly
   created public assets use mode 0644; the MVP image also makes packaged web
   assets readable by its non-root runtime.

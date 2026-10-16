@@ -1,14 +1,14 @@
 """Choose the store from the environment: ZF_STORE=json (default), sqlite or mssql (Azure SQL)."""
 import os
-from pathlib import Path
 
+from .data_paths import data_file
 from .sqlstore import SqlStore
 from .store import Store
 
 
 def open_store(env=None):
     env = os.environ if env is None else env
-    data = env.get("ZF_DATA", str(Path.cwd() / "data" / "zavaforward.json"))
+    data = str(data_file(env))
     state = env.get("ZF_STATE")
     kind = (env.get("ZF_STORE") or "json").lower()
     if kind == "sqlite":

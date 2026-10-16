@@ -2,10 +2,10 @@ name: MVP CI
 
 on:
   pull_request:
-    paths: ["mvp/**", "src/core/**", "src/agents/**", "src/api/**", "src/orchestrator/**", ".github/workflows/mvp-ci.yml"]
+    paths: ["src/**", ".github/workflows/mvp-ci.yml"]
   push:
     branches: [main]
-    paths: ["mvp/**", "src/core/**", "src/agents/**", "src/api/**", "src/orchestrator/**"]
+    paths: ["src/**", ".github/workflows/mvp-ci.yml"]
   workflow_dispatch:
 
 permissions:

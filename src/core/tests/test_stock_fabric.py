@@ -251,6 +251,7 @@ class StockFabricTests(unittest.TestCase):
             source = Path(fabric.__file__).parent
             for name in ("__init__.py", "provenance.py", "stock_fabric.py"):
                 shutil.copyfile(source / name, package / name)
+            shutil.copyfile(source.parent / "data_paths.py", package.parent / "data_paths.py")
             reg = root / "register.csv"
             reg.write_text("synthetic_home_id\nFICTION-ONE\n")
             env = dict(os.environ, PYTHONPATH=str(installed))

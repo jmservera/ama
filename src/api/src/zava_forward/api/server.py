@@ -662,7 +662,7 @@ def make_handler(app):
     return H
 
 
-def main():
+def main() -> None:
     password = os.environ.get("ZF_PASSWORD") or secrets.token_urlsafe(9)
     try:
         store = open_store()

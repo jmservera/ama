@@ -2,7 +2,7 @@
 title: Azure Infrastructure (Bicep)
 description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
-ms.date: 2026-10-14
+ms.date: 2026-10-16
 ms.topic: how-to
 ---
 
@@ -109,6 +109,8 @@ Naming and tagging:
 Run before a pull request (CI runs the same in `.github/workflows/mvp-validation.yml`):
 
 ```bash
+python3 -m pip install --no-deps -e src/core -e src/agents -e src/api
+az bicep build --file infra/main.bicep --stdout > /dev/null
 az bicep lint --file infra/main.bicep
 python3 -m unittest discover -s infra/tests -v
 ```
@@ -208,6 +210,40 @@ Region notes for `northeurope` (observed 2026-10-08): Azure SQL was not acceptin
 Deployed on 2026-10-08 to resource group `ama` with `location=uksouth environmentName=test`. `swedencentral` returned `AKSCapacityHeavyUsage` for the Container Apps environment, so keep `location` a parameter. The SQL admin can be a user, group or application (`sqlAdminPrincipalType`).
 
 ## Deploying the workbench image and sign-in
+
+### Source-image cut-over (#200, 2026-10-16)
+
+Build and run locally before registry publication. ADR 0006 uses `src/` as
+context so named workload packages can include sibling core; never use `mvp/`
+or the repository root as context. The API starts with `python -m zava_forward.api`.
+The token-store and ledger jobs use `orchestratorImage` with commands
+`python -m zava_forward.orchestrator.token_store` and
+`python -m zava_forward.orchestrator.digest_blob --publish`, retaining their
+existing identities and grants. No approval authority changes.
+
+```bash
+docker build -f src/api/Dockerfile -t zava-forward-api:local src
+docker build -f src/orchestrator/Dockerfile -t zava-forward-orchestrator:local src
+az acr build -r <registry> -f src/api/Dockerfile -t zava-forward-api:<new-tag> src
+az acr build -r <registry> -f src/orchestrator/Dockerfile -t zava-forward-orchestrator:<new-tag> src
+az deployment group what-if -g ama -f infra/main.bicep -p <private-parameters> \
+  -p apiImage=<registry>.azurecr.io/zava-forward-api:<new-tag> \
+  orchestratorImage=<registry>.azurecr.io/zava-forward-orchestrator:<new-tag>
+```
+
+Publish only after local image checks and review the what-if before deployment
+to the existing `ama` resources. Use new immutable tags; never overwrite tags
+referenced by historical running revisions. The commands above are instructions,
+not evidence that a new image is deployed. Azure rollout/health, private data
+copy/encrypted backup and #201 owner sign-off remain unmet. No resources are
+created or changed by the local path-cut-over work.
+
+Existing `MVP CI` / `MVP validation` names and job/check IDs remain unchanged.
+The issue #200 owner decision (2026-10-15) retains them through cut-over; later
+naming and branch-protection changes remain one deliberate owner-directed PR.
+The retired prototype workflow is already absent; do not recreate it.
+
+### Historical deployment recipe
 
 Observed 2026-10-11 in resource group `ama` (`uksouth`, `environmentName=test`, `deploymentProfile=development`):
 
