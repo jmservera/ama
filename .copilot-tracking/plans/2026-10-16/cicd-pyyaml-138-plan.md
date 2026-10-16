@@ -62,7 +62,7 @@ Use existing PyYAML parsing rather than a bespoke YAML subset.
 
 * [x] P02-T01: Run clean-venv infra suite, mutations, Ruff/format and mypy.
 * [x] P02-T02: Record one post-implementation review and acceptance audit.
-* [ ] P02-T03: Commit and push; reuse existing PR 357.
+* [x] P02-T03: Commit and push; reuse existing PR 357.
 
 ## Test Ownership and Change Budget
 
@@ -93,4 +93,6 @@ private runtime checks and live log audit remain unmet.
 
 Research: `.copilot-tracking/research/2026-10-16/cicd-pyyaml-138-research.md`.
 Changes: `.copilot-tracking/changes/2026-10-16/cicd-pyyaml-138-changes.md`.
-Implementation readiness: Ready.
+Implementation and local validation complete. Source correction `e3f31b2`
+pushed normally to existing PR 357; no duplicate PR or issue-body edit.
+Remote CI remains to be observed after publication.

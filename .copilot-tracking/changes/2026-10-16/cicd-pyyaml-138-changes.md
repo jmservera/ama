@@ -43,4 +43,8 @@ live acceptance, no correction defect found. Seven workflow test methods pass
 separately, including both original unsafe-control and new dependency mutations.
 Programmatic checks confirm all prior branch/upstream log entries retained
 verbatim and no retired-layout or production manifest edits.
-P02-T02 complete; publication remains.
+P02-T02 complete. Source correction `e3f31b2` committed with the requested
+coauthor trailer and privacy-safe repository-local identity, then pushed
+normally to `feat/cicd-deploy-pipeline-138`. Existing PR 357 reused; no duplicate
+PR, merge, force push or issue-body change. P02-T03 complete.
+Publication metadata is committed separately; remote CI is not yet claimed.
