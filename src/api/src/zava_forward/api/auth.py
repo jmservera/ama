@@ -40,6 +40,10 @@ DEFAULT_ROLE_MAP = {
     "ZavaForward.Contractor": "Contractor",
 }
 MAX_HEADER = 16384
+RULE_ROLE_MAP = {
+    "ZavaForward.RuleAuthor": "rule_author",
+    "ZavaForward.RuleOwner": "rule_owner",
+}
 
 
 def zf_hash(password, salt):
@@ -129,21 +133,26 @@ class TrustedProxyProvider:
         tid = {t.lower() for t in self.claims(p, TID)}
         if tid != {self.tenant}:
             return self._deny("tenant mismatch", sorted(tid))
-        mapped = {self.role_map[r] for r in self.claims(p, ROLES) if r in self.role_map}
+        claims = self.claims(p, ROLES)
+        mapped = {self.role_map[r] for r in claims if r in self.role_map and r not in RULE_ROLE_MAP}
         if len(mapped) != 1:
             return self._deny("need exactly one mapped app role", self.claims(p, ROLES))
         role = mapped.pop()
         oid = self.claims(p, OID)
         person = None
+        bound = False
         if len(oid) == 1:
-            person = next((s for s in self.store.staff.values() if s.get("oid", "").lower() == oid[0].lower()), None)
+            matches = [s for s in self.store.staff.values() if s.get("oid", "").lower() == oid[0].lower()]
+            if len(matches) == 1:
+                person = matches[0]
+                bound = True
         if person is None and self.email_fallback:
             em = self.claims(p, EMAIL)
             if len(em) == 1:
                 person = self.store.staff.get(em[0].lower())
         if person is None:
             return self._deny("no staff record with this oid", oid)
-        return dict(person, role=role)
+        return dict(person, role=role, rule_roles=sorted({RULE_ROLE_MAP[r] for r in claims if bound and r in RULE_ROLE_MAP}))
 
     @staticmethod
     def _deny(reason, detail=None):

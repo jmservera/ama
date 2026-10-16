@@ -2,10 +2,10 @@ name: MVP validation
 
 on:
   pull_request:
-    paths: ["mvp/**", "src/core/**", "src/agents/**", "src/api/**", "src/orchestrator/**", "infra/**", ".github/workflows/mvp-validation.yml"]
+    paths: ["src/**", "infra/**", "tools/rename-zava*", "support/synthetic-data/**", ".github/workflows/mvp-validation.yml"]
   push:
     branches: [main]
-    paths: ["mvp/**", "src/core/**", "src/agents/**", "src/api/**", "src/orchestrator/**", "infra/**"]
+    paths: ["src/**", "infra/**", "tools/rename-zava*", "support/synthetic-data/**", ".github/workflows/mvp-validation.yml"]
   workflow_dispatch:
 
 permissions:
@@ -49,3 +49,7 @@ jobs:
         run: node --check src/api/src/zava_forward/api/web/app.js
       - name: Refuse committed working data
         run: test -z "$(git ls-files mvp/data ':(glob)src/**/data/**')"
+      - name: Branding migration regressions
+        run: |
+          pip install -r tools/rename-zava-requirements.txt
+          python3 tools/rename-zava-tests.py

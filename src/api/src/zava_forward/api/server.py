@@ -15,7 +15,7 @@ from zava_forward.core import profile
 
 from zava_forward.core import projection, quality
 
-from zava_forward.core import lawstore
+from zava_forward.core import lawstore, rulecards
 from zava_forward.api import auth
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import ChatModel
@@ -229,6 +229,8 @@ def make_handler(app):
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
             if url.path.startswith("/api/law"):
+                if url.path == "/api/law/cards" or url.path.startswith("/api/law/cards/"):
+                    return self._rulecards(u, url.path, None)
                 if app.law is None:
                     return self._json(503, {"error": "The law store is not loaded."})
                 parts = [unquote(x) for x in url.path.strip("/").split("/")]
@@ -385,6 +387,66 @@ def make_handler(app):
                 return self._json(200, s.verify_ledger())
             return self._json(404, {"error": "Not found."})
 
+        def _rulecards(self, user, path, body):
+            if not projection.allowed(user, "law"):
+                return self._json(403, {"error": "Your role does not include this."})
+            parts = [unquote(p) for p in path.strip("/").split("/")]
+            if body is not None:
+                capability = rulecards.AUTHOR if len(parts) == 3 else rulecards.OWNER
+                if app.provider.name != "trusted-proxy" or capability not in user.get("rule_roles", []):
+                    return self._json(403, {"error": "A provisioned rule author or named owner capability is required."})
+            if app.law is None:
+                return self._json(503, {"error": "The law store is not loaded."})
+            rules = app.law.rules
+            try:
+                with app.law_lock:
+                    if body is None:
+                        if len(parts) == 3:
+                            return self._json(200, {"cards": rules.cards()})
+                        if len(parts) == 4 and parts[3] == "reviews":
+                            return self._json(200, {"reviews": rules.reviews()})
+                        if len(parts) == 4:
+                            history = rules.history(parts[3])
+                            if not history:
+                                return self._json(404, {"error": "Card not found."})
+                            return self._json(200, {"versions": history, "active_version": rules.is_active(parts[3])})
+                    elif len(parts) == 3:
+                        allowed = {"card_id", *rulecards.FIELDS}
+                        if set(body) - allowed:
+                            raise ValueError("Only card fields are accepted; authority is server-derived.")
+                        owner = body.get("approver")
+                        if not isinstance(owner, str):
+                            raise ValueError("approver must be a provisioned staff email.")
+                        owner = owner.strip().lower()
+                        person = app.store.staff.get(owner)
+                        if not person or person.get("role") not in projection.STAFF_ROLES:
+                            raise ValueError("approver must be a provisioned staff email.")
+                        fields = {k: v for k, v in body.items() if k != "card_id"}
+                        fields["approver"] = person["email"].strip().lower()
+                        cid = body.get("card_id")
+                        cid = cid.strip() if isinstance(cid, str) else cid
+                        version = rules.propose(cid, user["email"].strip().lower(), rulecards.AUTHOR, **fields)
+                        return self._json(201, {"version": version, "versions": rules.history(cid)})
+                    elif len(parts) == 6:
+                        if set(body) - {"note"}:
+                            raise ValueError("Only note is accepted; authority and event dates are server-derived.")
+                        cid, version, action = parts[3], int(parts[4]), parts[5]
+                        actions = {"approve": rules.approve, "activate": rules.activate, "hold": rules.hold,
+                                   "release": rules.release, "retire": rules.retire}
+                        if action not in actions or not 1 <= version <= 2147483647:
+                            return self._json(404, {"error": "Rule action not found."})
+                        args = (cid, version, user["email"].strip().lower(), rulecards.OWNER)
+                        if action == "hold":
+                            rules.hold(*args, note=body.get("note"))
+                        else:
+                            actions[action](*args)
+                        return self._json(200, {"versions": rules.history(cid)})
+            except rulecards.RuleError as e:
+                return self._json(409, {"error": str(e)})
+            except ValueError as e:
+                return self._json(400, {"error": str(e)})
+            return self._json(404, {"error": "Rule route not found."})
+
         def _chat(self, user, path, body):
             """Chat and memory. The owner is always the signed-in user; no request field names an owner."""
             c, s, parts = app.chat, app.store, path.strip("/").split("/")[2:]
@@ -506,6 +568,8 @@ def make_handler(app):
             s = app.store
             if not projection.allowed(u, "post", "POST"):
                 return self._json(403, {"error": "Your role does not include this."})
+            if url.path == "/api/law/cards" or url.path.startswith("/api/law/cards/"):
+                return self._rulecards(u, url.path, body)
             if url.path.startswith("/api/chat"):
                 return self._chat(u, url.path, body)
             parts = url.path.strip("/").split("/")
@@ -662,7 +726,7 @@ def make_handler(app):
     return H
 
 
-def main():
+def main() -> None:
     password = os.environ.get("ZF_PASSWORD") or secrets.token_urlsafe(9)
     try:
         store = open_store()

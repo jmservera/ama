@@ -101,14 +101,17 @@ jobs:
         working-directory: .
         env:
           DIST: ${{ matrix.dist }}
-          # The api image runs the server by default; the version check overrides it (mvp-ci image job runs the server).
-          RUN_CMD: ${{ matrix.project == 'api' && 'python -m zava_forward.api' || '' }}
         run: |
           mkdir -p "$RUNNER_TEMP/seed"
           chmod -R a+rX "$RUNNER_TEMP/seed"
+          if [ "${{ matrix.project }}" = api ]; then
+            set -- python -c 'from zava_forward.api.version import __version__; print(f"zava-forward-api {__version__}")'
+          else
+            set --
+          fi
           out="$(docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges \
             --tmpfs /tmp --tmpfs /state:uid=10001,gid=10001 \
-            -v "$RUNNER_TEMP/seed:/data:ro" zava-forward-${{ matrix.project }}:ci $RUN_CMD)"
+            -v "$RUNNER_TEMP/seed:/data:ro" zava-forward-${{ matrix.project }}:ci "$@")"
           echo "$out"
           test "$out" = "$DIST 0.1.0"
       - name: Scan image for high and critical vulnerabilities
@@ -136,7 +139,8 @@ jobs:
         run: pip install -e src/core -e src/agents -e src/api -e src/orchestrator -e src/importer
       - name: Every distribution imports and the namespace has no init module
         run: |
-          for name in core api agents orchestrator importer; do python -m zava_forward.$name; done
+          for name in core agents orchestrator importer; do python -m zava_forward.$name; done
+          python -c 'from zava_forward.api.version import __version__; print(f"zava-forward-api {__version__}")'
           python -c "import zava_forward; assert getattr(zava_forward, '__file__', None) is None; assert len(list(zava_forward.__path__)) == 5"
 
   no-working-data:

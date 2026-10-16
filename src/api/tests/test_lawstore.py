@@ -9,9 +9,10 @@ import urllib.error
 import urllib.request
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from unittest.mock import patch
 
 import test_mvp
-from zava_forward.core import lawstore
+from zava_forward.core import lawstore, rulecards
 from zava_forward.core.projection import STAFF_ROLES
 from zava_forward.api.server import App, make_handler
 from zava_forward.core.sqlstore import SqlStore
@@ -95,6 +96,79 @@ class BlobInterfaceTests(unittest.TestCase):
 
 
 class StoreTests(LawBase):
+    def test_ingestion_records_reviews_without_modifying_cards(self):
+        rules = self.law.rules
+        cid = "hazard-awareness-clock"
+        fields = dict(rulecards.SEED_CARDS[0])
+        fields.pop("card_id")
+        fields["provisions"] = ["awaabs-law-phase-1-guidance-2025"]
+        fields["approver"] = "owner@example.test"
+        rules.propose(cid, "author@example.test", rulecards.AUTHOR, **fields)
+        rules.approve(cid, 2, "owner@example.test", rulecards.OWNER)
+        rules.activate(cid, 2, "owner@example.test", rulecards.OWNER)
+        before = rules.history(cid)
+        self.assertEqual(rules.reviews(), [])
+        f = self.reg / "social-housing-regulation" / "awaabs-law-phase-1-guidance-2025.md"
+        f.write_text(f.read_text() + "\n\nSynthetic changed source.\n")
+        self.law.seed(self.reg)
+        self.assertEqual(rules.history(cid), before)
+        reviews = rules.reviews(cid)
+        self.assertEqual(len(reviews), 1)
+        self.assertEqual((reviews[0]["prior_version"], reviews[0]["source_version"]), (1, 2))
+        self.law.seed(self.reg)
+        self.assertEqual(rules.reviews(cid), reviews)
+
+    def test_failed_source_review_rolls_back_source_and_recovers(self):
+        sid = "awaabs-law-regulations-2025"
+        source = self.law.source(sid)
+        path = self.reg / next(s["file"] for s in json.loads(lawstore.REGISTER.read_text())["sources"] if s["id"] == sid)
+        path.write_text(path.read_text() + "\n\nSynthetic change.\n")
+        before = self.law.rules.history("hazard-awareness-clock")
+        original = self.law.rules._source_changed
+
+        def fail(*args, **kw):
+            original(*args, **kw)
+            raise RuntimeError("injected review failure")
+
+        with patch.object(self.law.rules, "_source_changed", side_effect=fail), self.assertRaises(RuntimeError):
+            self.law.seed(self.reg)
+        self.assertEqual(self.law.source(sid), source)
+        self.assertEqual(self.law.rules.reviews(), [])
+        self.assertEqual(self.law.rules.history("hazard-awareness-clock"), before)
+        self.law.seed(self.reg)
+        self.assertEqual(len(self.law.source(sid)["versions"]), 2)
+        self.assertEqual(len(self.law.rules.reviews()), 1)
+
+    def test_derived_index_failure_is_repaired_on_unchanged_retry(self):
+        sid = "awaabs-law-regulations-2025"
+        path = self.reg / next(s["file"] for s in json.loads(lawstore.REGISTER.read_text())["sources"] if s["id"] == sid)
+        path.write_text(path.read_text() + "\n\nSynthetic source change before index failure.\n")
+        with patch.object(self.law.sql, "many", side_effect=RuntimeError("injected index failure")), self.assertRaises(RuntimeError):
+            self.law.seed(self.reg)
+        self.assertEqual(len(self.law.source(sid)["versions"]), 2)
+        self.assertEqual(len(self.law.rules.reviews()), 1)
+        self.assertEqual(self.law.seed(self.reg)["added"], [])
+        self.assertTrue(self.law.search("hazard")["results"])
+
+    def test_failed_provision_insert_preserves_source_and_rules(self):
+        sid = "awaabs-law-regulations-2025"
+        before = self.law.source(sid)
+        path = self.reg / next(s["file"] for s in json.loads(lawstore.REGISTER.read_text())["sources"] if s["id"] == sid)
+        path.write_text(path.read_text() + "\n\n## Synthetic addition\n\nChanged provision.\n")
+        original = self.law.sql.run
+
+        def fail(sql, args=()):
+            if sql.startswith("INSERT INTO reg_provision"):
+                raise RuntimeError("injected provision failure")
+            return original(sql, args)
+
+        with patch.object(self.law.sql, "run", side_effect=fail), self.assertRaises(RuntimeError):
+            self.law.seed(self.reg)
+        self.assertEqual(self.law.source(sid), before)
+        self.assertEqual(self.law.rules.reviews(), [])
+        self.law.seed(self.reg)
+        self.assertEqual(len(self.law.rules.reviews()), 1)
+
     def test_every_snapshot_is_loaded_with_full_records(self):
         register = json.loads(lawstore.REGISTER.read_text())
         self.assertEqual(self.report["missing_files"], [])
@@ -183,7 +257,7 @@ class StoreTests(LawBase):
 
 
 ON = os.environ.get("ZF_TEST_MSSQL") == "1"
-TABLES = ("reg_index", "reg_gap", "reg_provision", "reg_version", "reg_source")
+TABLES = tuple(reversed(rulecards.APPEND_ONLY)) + ("reg_index", "reg_gap", "reg_provision", "reg_version", "reg_source")
 
 
 def wipe_mssql():

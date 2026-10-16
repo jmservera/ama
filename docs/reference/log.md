@@ -3444,6 +3444,45 @@ metadata when the knowledge base was created.
   authority/retention and actual model/SQL Server/Azure evidence are not
   established. Local checks do not claim hosted CI, deployment or approval.
 
+## [2026-10-16] ingest | Rule-card identity and source-review engineering slice
+
+* Extended the existing `src/core` rule-card/law stores and `src/api`
+  authentication/routes for #211; no new feature code in `mvp/`.
+* Updated the [core lifecycle contract](../../src/core/README.md#rule-cards-adr-0005-phase-2),
+  [API authority boundary](../../src/api/README.md#rule-card-approval-api-211)
+  and knowledge-base index. Retained versions and approval dates, atomic
+  supersession/source reviews, separate trusted rule capabilities, email-fallback
+  denial and owner hold now have local synthetic regression coverage.
+* Both seed cards remain labelled unassigned exercise drafts. Recorded
+  approvals are simulated, not legal or operational approvals; #209 owner
+  nomination approves no card. No tenant assignments, real legal approval,
+  SQL Server/Azure run, rule-card UI or rule engine is claimed.
+* Local core 398 and API 532 tests passed (103 API environment-dependent
+  skips); final core 17/API 40 targeted checks and project mypy/ruff checks
+  passed. The six-test running loopback app exercise passed. Single RPI
+  Review was conformant for the labelled local slice, with four explicitly
+  routed deployment/human/product residuals; Refs #211 remains open.
+## [2026-10-16] restructure | Complete live src path cut-over (#200)
+
+* Reused the merged source packages, generator imports and private-data guards.
+  Aligned the API module entry point, CI version probes/shared build filters,
+  Bicep job image selection and branding web/policy targets. Runtime and
+  generators now share the external `ZF_DATA` default; no private data was read.
+* Updated the [source project index](../../src/README.md#ci),
+  [API local recipe](../../src/api/README.md#run-it-locally),
+  [orchestrator guide](../../src/orchestrator/README.md),
+  [infra source-image recipe](../../infra/README.md#source-image-cut-over-200-2026-10-16),
+  [branding guide](../../tools/rename-zava.md), root README, repository instructions
+  and knowledge-base routing. Historical deployment identifiers remain exact.
+* Kept workflow/check names for branch-protection continuity. The issue #200
+  owner comment of 2026-10-15 confirms retention until cut-over; the later naming
+  question remains a deliberate single-PR owner decision.
+* Local synthetic runtime and four-image non-root/no-data/read-only checks
+  passed, as did compiled Bicep build/lint and infra/branding regressions.
+  No new tag was deployed to Azure. Private copy/encrypted backup, healthy
+  Azure revisions/job executions and #201/#202 owner sign-off remain unmet;
+  `mvp/README.md` remains, with no deletion or invented approval.
+
 ## [2026-10-16] query | Resident first-contact retention and confirmed field matrix (#86)
 
 * Applied [owner retention/matrix decisions](https://github.com/jmservera/ama/issues/86#issuecomment-6209881675)
