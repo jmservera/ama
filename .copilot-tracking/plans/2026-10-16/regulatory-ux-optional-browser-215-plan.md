@@ -4,7 +4,7 @@ description: Bounded import-boundary repair and local validation
 ms.date: 2026-10-16
 ---
 
-Task ID: 215. Status: implementation-ready.
+Task ID: 215. Status: completed; repair published on existing PR #354.
 
 ## Executive summary
 
@@ -56,7 +56,7 @@ or weakening of typing. Match existing Playwright types when dev tools exist.
 
 * [x] P01 / P01-T01: isolate browser imports and add import-blocking regression.
 * [x] P02 / P02-T01: execute both unit environments, lint/type and browser checks.
-* [ ] P03 / P03-T01: update documentation, review and publish existing PR branch.
+* [x] P03 / P03-T01: update documentation, review and publish existing PR branch.
 
 ## Test ownership and validation lock
 
