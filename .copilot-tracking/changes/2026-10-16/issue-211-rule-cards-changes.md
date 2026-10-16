@@ -4,8 +4,8 @@ ms.date: 2026-10-16
 ---
 
 Task: 211 / issue-211-rule-cards. Scope: full finalized plan.
-Execution: implementation and local validation complete; review-ready.
-Review and publishing P03-T03 remain pending.
+Execution: implementation, local validation, single Review and authorized
+publication complete. PR #324 to main; Refs #211 remains open.
 
 ## P01: Core persistence and lifecycle
 
@@ -221,9 +221,9 @@ No approval is invented for Juan Manuel Servera or any other person.
 
 ## Handoff
 
-Implementation is review-ready; plan/details and validation are reconciled.
-The single post-implementation Review has now completed. Publication remains
-P03-T03; no implementation restart or second Review is required.
+Implementation, plan/details, validation and the single post-implementation
+Review are reconciled. P03-T03 publication completed in PR #324. No
+implementation restart or second Review was required.
 
 ## Single RPI Review
 
@@ -248,3 +248,33 @@ explicit tenant capability definitions/assignments; live platform/ingress
 acceptance; human approval of specific cards; separate UI/engine work. They are
 routed to distinct future work, not silently treated as completed or executed
 inside this loop. Human approval remains unchecked/unperformed.
+
+## Publication and Final State
+
+Authenticated GitHub identity rechecked as 8036360 / jmservera.
+`git config --local user.email 8036360+jmservera@users.noreply.github.com`
+and local user name configured; author and committer email explicitly set
+for the commit and verified with `git show -s --format='%h %ae %ce'`.
+
+`git commit` created 2678443 (`feat: bind exercise rule cards to authenticated
+approval roles`) with `Refs #211` and the required Copilot co-author trailer.
+All twelve implementation/docs files plus the seven dated RPI artifacts were
+included. No secrets, private files, generated metadata, `.vscode`, `.env` or
+`.copilot-tracking/github-issues` were staged.
+
+`git push -u origin feat/src-rule-cards-211` succeeded, without force.
+`gh pr create --base main --head feat/src-rule-cards-211 --title
+'feat: authenticated exercise rule cards and approval workflow (Refs #211)'
+--body-file <session-files>/issue-211-pr-body.md` succeeded:
+https://github.com/jmservera/ama/pull/324.
+`gh pr view --json number,url,state,baseRefName,headRefName,isDraft` confirmed
+OPEN, non-draft, base main, correct topic head. The body lists commands,
+results, intermediate metadata recovery, all artifacts and unmet criteria.
+This evidence-only completion handoff is committed and pushed on the same PR.
+No main push, merge, history rewrite, new review or new work item was performed.
+
+Task complete; automatic session remains running at Follow-up awaiting an
+owner-selected next item. Ranked choices: dedicated tenant capability definition/
+assignment (RV-001), live platform/ingress acceptance (RV-002), specific-card
+human approval (RV-003). Stop automatic session and switch to manual mode
+remain available; no follow-up has been started without selection.

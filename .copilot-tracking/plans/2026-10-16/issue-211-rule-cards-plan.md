@@ -3,7 +3,8 @@ title: Issue 211 implementation plan
 ms.date: 2026-10-16
 ---
 
-Task: 211 / issue-211-rule-cards. Status: implementation-ready.
+Task: 211 / issue-211-rule-cards. Status: completed local exercise slice,
+review Conformant, published in PR #324 to main. Operational residuals remain.
 
 ## Executive Summary
 
@@ -66,23 +67,23 @@ types, canonical dates and intervals before writes. Existing behavior survives.
 ## Phase Checklist
 
 <!-- P01 -->
-### P01: Core reuse and persistence
+### P01: Core reuse and persistence (complete)
 
 * [x] P01-T01: Adapt RuleCardStore to law SQL adapters and atomic portable writes.
 * [x] P01-T02: Validate drafts/dates/holds and wire source review creation.
 
 <!-- P02 -->
-### P02: Authenticated API
+### P02: Authenticated API (complete)
 
 * [x] P02-T01: Preserve existing staff auth and add separate trusted rule claims.
 * [x] P02-T02: Expose history, draft and owner transition routes with server checks.
 
 <!-- P03 -->
-### P03: Evidence and delivery
+### P03: Evidence and delivery (complete)
 
 * [x] P03-T01: Extend existing core/law/auth/inventory tests and add bounded HTTP tests.
 * [x] P03-T02: Run local suites/tooling/app, update docs and record results.
-* [ ] P03-T03: One post-implementation review, commit, push, open PR to main.
+* [x] P03-T03: One post-implementation review, commit, push, open PR to main.
 
 ## Test Ownership and Validation Lock
 
@@ -121,5 +122,7 @@ remain owner/deployment work. UI and rule engine are outside this bounded slice.
 
 ## Handoff
 
-After critique disposition, proceed under explicit full-loop user direction.
+Full ordered loop and authorized publication completed. PR #324 uses Refs #211;
+no merge or issue closure. RV-001 through RV-004 remain distinct follow-ups,
+not incomplete local implementation. Automatic session awaits owner selection.
 Changes: .copilot-tracking/changes/2026-10-16/issue-211-rule-cards-changes.md.

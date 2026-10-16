@@ -12,6 +12,12 @@ Test legacy history, rollback recovery and portable SQL contracts. Any material
 post-implementation Review finding blocks acceptance and makes the PR draft;
 do not restart implementation in this one-pass lifecycle.
 
+Completion: P01/P02 and P03 all delivered. One Review completed, Conformant
+within the local labelled exercise boundary; commit 2678443 pushed to the
+requested branch and PR #324 opened to main. Commands, results, final
+publication and residuals are recorded in the changes artifact. No human
+card approval or live-platform acceptance is inferred.
+
 Parent plan:
 .copilot-tracking/plans/2026-10-16/issue-211-rule-cards-plan.md.
 
