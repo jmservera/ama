@@ -120,7 +120,8 @@ class FakeAzure:
             body = json.loads(filename.read_text())
             assert SECRET not in " ".join(command)
         if self.fail and self.fail(args):
-            return subprocess.CompletedProcess(command, 1, "", f"Forbidden {TENANT} {SECRET}")
+            stderr = getattr(self, "fail_stderr", None) or f"Forbidden {TENANT} {SECRET}"
+            return subprocess.CompletedProcess(command, 1, "", stderr)
         if args[0] == "rest":
             method = args[args.index("--method") + 1]
             url = args[args.index("--url") + 1]
@@ -720,6 +721,19 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(self.invoke(), 1)
         self.assertIn("MailboxSettings.Read", self.output.getvalue())
         self.assert_no_generation_writes()
+
+    def test_user_without_mailbox_is_skipped_not_fatal(self):
+        self.demo_roster()
+        self.fake.users.append(self.demo_person("ordinary-looking"))
+        unlicensed = uid("ordinary-looking")
+        self.fake.fail = lambda args: unlicensed in " ".join(str(a) for a in args) and any(
+            "/mailboxSettings/" in str(a) for a in args
+        )
+        self.fake.fail_stderr = "MailboxNotEnabledForRESTAPI status code: 404"
+        graph = SETUP.Azure(self.profile)
+        people = SETUP.eligible_people(graph)
+        self.assertNotIn(unlicensed, [p["oid"] for p in people])
+        self.assertEqual(len(people), 7)
 
     def test_persisted_people_revalidate_mailbox_type_without_reshuffling(self):
         self.demo_roster()

@@ -676,7 +676,9 @@ def eligible_people(graph: Azure) -> list[dict[str, str]]:
 def individual_mailbox(graph: Azure, principal: str) -> bool:
     try:
         purpose = graph.rest(GRAPH + f"users/{principal}/mailboxSettings/userPurpose")
-    except AzureError:
+    except AzureError as error:
+        if error.kind in ("not-found", "request"):
+            return False  # no mailbox (for example unlicensed): not an individual staff candidate
         raise SetupError(
             "Cannot verify mailbox eligibility. An authorized provisioning profile needs "
             "MailboxSettings.Read access to candidate user purposes; no permissions were "

@@ -1451,6 +1451,10 @@ include every existing staff code, with a distinct enabled tenant member for
 each. A fixture with ten internal positions and one existing Contractor needs
 eleven people; automatic generation covers only positions actually in SQL.
 If SQL lacks a Contractor, adding one remains a separate explicit action.
+Automatic generation never reuses a person for several staff codes, because the
+initializer requires a distinct user per code; with too few eligible users it
+stops and reports the shortfall. Members without a mailbox (for example
+unlicensed) are skipped, while a permission or login failure stops the run.
 New Contractor
 entries also require `"role": "Contractor"` and `"contractor"` naming an
 existing case supplier. Room, desk and workspace accounts are rejected.
