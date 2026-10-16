@@ -9,7 +9,7 @@ EDGE = (MODULES / "edge.bicep").read_text(encoding="utf-8")
 MAIN = (ROOT / "main.bicep").read_text(encoding="utf-8")
 GUARD = (MODULES / "guard.bicep").read_text(encoding="utf-8")
 
-# Services with a publicNetworkAccess switch and the group IDs of their private endpoints.
+# Data services and the group IDs of their private endpoints.
 COVERAGE = {
     "sql.bicep": ["sqlServer"],
     "storage.bicep": ["blob", "queue"],
@@ -79,7 +79,12 @@ class PrivateEndpointCoverageTests(unittest.TestCase):
     def test_every_public_switch_module_has_private_endpoint(self) -> None:
         for name, groups in COVERAGE.items():
             text = (MODULES / name).read_text(encoding="utf-8")
-            self.assertIn("allowPublicNetworkAccess ? 'Enabled' : 'Disabled'", text, name)
+            if name == "sql.bicep":
+                self.assertIn("publicNetworkAccess: 'Disabled'", text, name)
+                self.assertNotIn("param allowPublicNetworkAccess", text, name)
+                self.assertNotIn("Microsoft.Sql/servers/firewallRules", text, name)
+            else:
+                self.assertIn("allowPublicNetworkAccess ? 'Enabled' : 'Disabled'", text, name)
             self.assertIn("privateEndpoint.bicep", text, name)
             for group in groups:
                 self.assertIn(f"groupId: '{group}'", text, name)
