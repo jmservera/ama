@@ -50,7 +50,7 @@ documentation records all external approval/federation/runtime gaps.
 
 * [x] P01-T01: Add workflow and infra helper with unit tests.
 * [x] P02-T01: Update READMEs, reference index and append-only log.
-* [ ] P03-T01: Run local lint/types/tests, one review, commit and open PR.
+* [x] P03-T01: Run local lint/types/tests, one review, commit and open PR.
 
 ## Test Ownership
 
@@ -95,3 +95,9 @@ No significant divergence from user direction requires a new decision.
 
 Live environment reviewer/branch rules, federated credentials, scoped RBAC,
 private runners, pilot ownership/region and actual deployment evidence.
+
+## Delivery
+
+Reviewed source commit: 22f04b1. PR: https://github.com/jmservera/ama/pull/357.
+One Review completed with outcome Residual work for external setup and live
+acceptance. All local tasks are complete; no issue acceptance checkbox changed.

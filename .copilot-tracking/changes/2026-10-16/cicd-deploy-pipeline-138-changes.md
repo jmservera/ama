@@ -47,3 +47,16 @@ Release workflow retains those gates, and live criteria remain unmet.
 
 Implementation ready for the single post-implementation Review. Publication
 remains P03-T01 work after Review; no unresolved local test failures.
+
+## Review and publication (P03-T01)
+
+One Review executed, Complete, outcome Residual work. No local source defect
+identified; external configuration/live acceptance and remote CI evidence are
+routed separately in RV-001 through RV-003. No second Review or Azure run.
+
+Reviewed code committed as 22f04b1 with the verified authenticated account's
+repository-local noreply email and required Copilot trailer. Topic branch
+pushed without history rewrite; PR https://github.com/jmservera/ama/pull/357
+opened against main with Refs #138 only. All six acceptance criteria remain
+unchecked, and every live gap is explicit in the PR body. Final tracking-only
+closeout does not alter the reviewed source. Remote CI is not presumed passed.
