@@ -69,3 +69,21 @@ Implementation and docs are ready for one Review. No source blockers or plan
 divergences remain. The live prerequisites are explicit acceptance gaps, not
 reported passes. Review owns later-work routing; no current-task correction loop.
 Publication (privacy-safe commit/push/PR) follows the recorded review outcome.
+
+## Publication
+
+Implementation commit: 37af66e, pushed to origin/feat/run-in-azure-360.
+PR: https://github.com/jmservera/ama/pull/370, targeting main, Refs #360.
+Authenticated owner account was resolved before committing; author and
+committer use the repository-local privacy-safe noreply address. No merge,
+force-push, issue checkbox mutation or Azure execution was performed.
+
+Review execution is Complete; outcome Residual work. Implementation is
+delivered; authorized image/role activation, live acceptance and serialized
+operator recovery remain distinct follow-ups, not active implementation.
+
+The installed commit/PR commands referenced supplemental instruction files
+not present at their advertised paths; no repository citation-policy file
+was found. Repository/user conventions were used. Existing tracked
+.copilot-tracking/pr/pr.md was not overwritten; PR body and generated XML
+reference were kept in the session workspace.

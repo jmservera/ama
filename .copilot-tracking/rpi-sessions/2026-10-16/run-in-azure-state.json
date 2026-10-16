@@ -29,12 +29,17 @@
       "decision": "One Review executed directly. Execution Complete; outcome Residual work. No known source-blocking defect; live deployment/acceptance and operational constraints remain explicit.",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-16/run-in-azure-review.md"
+    },
+    {
+      "decision": "Implementation commit 37af66e pushed; PR #370 opened against main. No Azure execution, merge or issue checkbox edits.",
+      "status": "published",
+      "evidence": "https://github.com/jmservera/ama/pull/370"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Publish the user-requested commit, branch and PR; no new implementation work."
+    "action": "Owner reviews PR #370 and CI. Any later image build, scoped role deployment and live acceptance require separate authorization; no automatic follow-up task is started."
   },
   "prioritized_follow_ups": [
     {

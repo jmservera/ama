@@ -75,9 +75,10 @@ cleanup even when start/worker/log retrieval fails. No raw exceptions/payloads.
 * [x] P02-T01 Add transport/worker tests and documentation.
 * [x] P02-T02 Run local validation and record changes for one Review.
 
-Source implementation and validation are complete. Parent-owned Review and
-privacy-safe commit/push/PR publication are the remaining lifecycle actions,
-not unimplemented source tasks.
+Source implementation and validation are complete. One Review executed:
+Complete, outcome Residual work. Commit 37af66e is published on the topic
+branch and PR #370 targets main. Only the separately authorized live and
+operational follow-ups remain; no unimplemented source tasks.
 
 ## Test Ownership and Boundaries
 
