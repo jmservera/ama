@@ -1,16 +1,18 @@
 """Initialize app-scoped Entra roles and the existing SQL workbench roster."""
 import argparse
-from datetime import datetime, timezone
 import json
 import logging
 import os
-from pathlib import Path
 import stat
 import subprocess
 import time
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
-import uuid
+
+from staff_roster import person, roster_rows, staff_candidates
 
 GRAPH = "https://graph.microsoft.com/v1.0/"
 LOGGER = logging.getLogger(__name__)
@@ -75,9 +77,7 @@ def read_roster(path: Path) -> list[dict]:
             or stat.S_IMODE(path.stat().st_mode) != 0o600
             or stat.S_IMODE(path.parent.stat().st_mode) != 0o700):
         raise ValueError("Roster must have mode 0600 in a mode-0700 directory.")
-    value = json.loads(path.read_text())
-    if not isinstance(value, list) or not value:
-        raise ValueError("Roster must be a nonempty array of code/userId objects.")
+    value = roster_rows(json.loads(path.read_text()))
     codes, ids = set(), set()
     for row in value:
         if not isinstance(row, dict) or not isinstance(row.get("code"), str) or not row["code"]:
@@ -88,18 +88,6 @@ def read_roster(path: Path) -> list[dict]:
         codes.add(row["code"])
         ids.add(row["userId"])
     return value
-
-
-def person(user: dict) -> dict:
-    """Validate an enabled human member and normalize only current identity fields."""
-    if user.get("accountEnabled") is not True or user.get("userType") != "Member":
-        raise ValueError("Selected account is not an enabled member person.")
-    name, email = user.get("displayName"), user.get("userPrincipalName")
-    if not isinstance(name, str) or not name.strip() or not isinstance(email, str) or not email.strip() or len(email) > 200:
-        raise ValueError("Selected account is missing a usable display name or UPN.")
-    if "confrm" in name.lower() or email.lower().startswith(("desk-", "desk.", "wksp-")):
-        raise ValueError("Room, desk and workspace accounts cannot be staff.")
-    return {"oid": str(uuid.UUID(user["id"])), "name": name, "email": email.lower()}
 
 
 def effective_roles(assignments: list[dict], uid: str, groups: set[str],
@@ -319,7 +307,7 @@ def main(argv: list[str] | None = None) -> int:
             if args.apply or args.restart:
                 raise ValueError("Candidate listing is read-only.")
             rows = [json.loads(body) for _, body in db.execute("SELECT email, body FROM staff").fetchall()]
-            print(json.dumps([{"code": row["code"], "role": row["role"]} for row in rows]))
+            print(json.dumps(staff_candidates(rows)))
             return 0
         if env.get("ZF_ENTRA_TENANT_ID", "").lower() != operator_tenant.lower() or env.get("ZF_AUTH") != "trusted-proxy":
             raise ValueError("API is not protected by the expected tenant's trusted proxy.")

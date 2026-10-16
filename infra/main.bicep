@@ -130,6 +130,7 @@ var compact = replace(prefix, '-', '')
 var allTags = union(tags, {
   workload: 'zava-forward-demonstrator'
   environment: environmentName
+  'zava-forward-deployment-profile': deploymentProfile
   dataClassification: 'constructed-non-identifying'
   purpose: 'non-production-demonstrator'
   owner: ownerTag

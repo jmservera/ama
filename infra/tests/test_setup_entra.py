@@ -6,6 +6,7 @@ import io
 import json
 import os
 import subprocess
+import sys
 import tempfile
 import unittest
 import uuid
@@ -13,6 +14,8 @@ from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 SPEC = importlib.util.spec_from_file_location(
     "setup_entra", Path(__file__).resolve().parents[1] / "scripts" / "setup-entra.py")
@@ -86,6 +89,10 @@ class FakeAzure:
         self.sql_calls = []
         self.sql_code = 0
         self.sql_failure = None
+        self.candidates = [{"code": "fictional-coordinator", "role": "Coordinator", "bound": False}]
+        self.users = []
+        self.purposes = {}
+        self.candidate_code = 0
         self.revisions = []
         self.deployments = []
         self.vaults = [{"name": "fictional-vault"}]
@@ -96,8 +103,8 @@ class FakeAzure:
         if command[0] != "az":
             self.sql_calls.append(command)
             if "--list-candidates" in command:
-                return subprocess.CompletedProcess(command, 0, json.dumps(
-                    [{"code": "fictional-coordinator", "role": "Coordinator"}]), "")
+                return subprocess.CompletedProcess(
+                    command, self.candidate_code, json.dumps(self.candidates), "")
             summary = self.sql_failure or {
                 "staff_changes": 0, "owner_labels": 0, "restart_required": "--restart" not in command,
             }
@@ -227,6 +234,15 @@ class FakeAzure:
         if route == f"users/{USER}":
             assert "$select=id,accountEnabled,userType" in url
             return {"id": USER, "accountEnabled": True, "userType": "Member"}
+        if route == "users":
+            return {"value": self.users}
+        if route.startswith("users/") and route.endswith("/mailboxSettings/userPurpose"):
+            return {"value": self.purposes.get(route.split("/")[1], "user")}
+        if route.startswith("users/") and route != f"users/{USER}/memberOf/microsoft.graph.group":
+            user_id = route.split("/")[1]
+            if "/memberOf/" in route:
+                return {"value": []}
+            return next(u for u in self.users if u["id"] == user_id)
         if route == f"groups/{GROUP}":
             assert "$select=id,securityEnabled" in url
             return {"id": GROUP, "securityEnabled": True}
@@ -520,22 +536,19 @@ class SetupTests(unittest.TestCase):
 
     def test_missing_roster_reports_incomplete(self):
         self.roster.unlink()
-        self.assertEqual(self.invoke("--dry-run"), 2)
-        self.assertIn("Private roster missing", self.output.getvalue())
+        self.assertEqual(self.invoke("--dry-run"), 1)
+        self.assertIn("Automatic demo roster refused", self.output.getvalue())
 
-    def test_missing_roster_creates_private_template_before_any_azure_call(self):
+    def test_missing_roster_refuses_unknown_profile_without_creating_a_template(self):
         self.roster.unlink()
         self.roster = self.home / "new-private-roster" / "roster.json"
         SETUP.ROSTER = self.roster
         self.assertEqual(self.invoke(), 1)
-        self.assertEqual(self.roster.stat().st_mode & 0o777, 0o600)
-        self.assertEqual(self.roster.parent.stat().st_mode & 0o777, 0o700)
-        self.assertIn("REPLACE_PERSON_OBJECT_ID", self.roster.read_text())
-        self.assertIn("not an application/client ID", self.output.getvalue())
-        self.assertFalse(self.fake.calls)
-        self.assertEqual(self.invoke(), 1)
-        self.assertIn("placeholders", self.output.getvalue())
-        self.assertFalse(self.fake.calls)
+        self.assertFalse(self.roster.exists())
+        self.assertFalse(self.roster.parent.exists())
+        self.assertIn("Automatic demo roster refused", self.output.getvalue())
+        self.assertFalse(self.fake.writes)
+        self.assertFalse(self.fake.tag_writes)
 
     def test_invalid_directory_mode_and_duplicate_codes_precede_cloud_access(self):
         self.roster.parent.chmod(0o755)
@@ -545,6 +558,350 @@ class SetupTests(unittest.TestCase):
         self.write_roster([{"code": "same", "userId": USER, "role": "Coordinator"},
                            {"code": "same", "userId": GROUP, "role": "SupportOfficer"}])
         self.assertEqual(self.invoke(), 1)
+        self.assertFalse(self.fake.calls)
+
+    def demo_roster(self):
+        self.roster.unlink(missing_ok=True)
+        self.fake.app["tags"].update({
+            SETUP.PROFILE_TAG: "development", "environment": "test"})
+        self.fake.candidates = [
+            {"code": "PM-02", "role": "Retrofit Programme Manager", "bound": False},
+            {"code": "CT-01", "role": "Contractor",
+             "contractor": "Fixture Supplier", "bound": False},
+            {"code": "RC-01", "role": "Coordinator", "bound": False},
+            {"code": "PM-01", "role": "ProgrammeManager", "bound": False},
+        ]
+        self.fake.users = [self.demo_person("administrator", upn="ADMIN@example.invalid")]
+        self.fake.users += [self.demo_person(f"person-{n}") for n in range(6)]
+
+    @staticmethod
+    def demo_person(key, *, upn=None, **changes):
+        return {"id": uid(key), "displayName": f"Fictional Person {key}",
+                "userPrincipalName": upn or f"{key}@example.invalid",
+                "accountEnabled": True, "userType": "Member", **changes}
+
+    def assert_no_generation_writes(self):
+        self.assertFalse(self.roster.exists())
+        self.assertFalse(self.fake.writes)
+        self.assertFalse(self.fake.tag_writes)
+
+    def test_demo_generation_seed_permissions_scope_and_no_personal_output(self):
+        self.demo_roster()
+        self.assertEqual(self.invoke("--seed", "178"), 0, self.output.getvalue())
+        data = json.loads(self.roster.read_text())
+        self.assertEqual(data["version"], 1)
+        self.assertEqual(data["seed"], 178)
+        rows = data["staff"]
+        self.assertEqual([r["code"] for r in rows], ["CT-01", "PM-01", "PM-02", "RC-01"])
+        assigned_admin = next(r for r in rows if r["code"] == "PM-01")["userId"]
+        self.assertEqual(assigned_admin, uid("administrator"))
+        self.assertEqual(rows[0]["contractor"], "Fixture Supplier")
+        self.assertEqual(len({r["userId"] for r in rows}), len(rows))
+        self.assertEqual(self.roster.stat().st_mode & 0o777, 0o600)
+        self.assertEqual(self.roster.parent.stat().st_mode & 0o777, 0o700)
+        output = self.output.getvalue()
+        for user in self.fake.users:
+            for field in ("id", "displayName", "userPrincipalName"):
+                self.assertNotIn(user[field], output)
+        self.assertNotIn("Fixture Supplier", output)
+        self.assertIn("ProgrammeManager: 2", output)
+        self.assertIn("not evidence of professional competence", output)
+        self.assertIn("replica restart: verified", output)
+
+    def test_seed_reproducible_with_unsorted_graph_and_sql_and_rerun_never_reshuffles(self):
+        self.demo_roster()
+        self.assertEqual(self.invoke("--seed", "41"), 0, self.output.getvalue())
+        original = self.roster.read_bytes()
+        self.fake.users.reverse()
+        self.fake.candidates.reverse()
+        self.roster.unlink()
+        self.assertEqual(self.invoke("--seed", "41"), 0, self.output.getvalue())
+        self.assertEqual(self.roster.read_bytes(), original)
+        self.fake.candidates = []
+        self.assertEqual(self.invoke("--seed", "999"), 0, self.output.getvalue())
+        self.assertEqual(self.roster.read_bytes(), original)
+        self.assertIn("Reusing persisted roster", self.output.getvalue())
+
+    def test_seed_changes_assignment_only_before_persistence(self):
+        self.demo_roster()
+        self.assertEqual(self.invoke("--seed", "1", "--dry-run"), 2)
+        graph = SETUP.Azure(self.profile)
+        candidates = SETUP.candidate_staff(
+            graph, SETUP.parser().parse_args(["--roster", str(self.roster)]), self.fake.app)
+        args = SETUP.parser().parse_args(["--yes", "--seed", "1", "--roster", str(self.roster)])
+        with redirect_stdout(self.output):
+            SETUP.generate_roster(graph, args, candidates, readonly=False, expected=None)
+        first = json.loads(self.roster.read_text())["staff"]
+        self.roster.unlink()
+        args.seed = 2
+        with redirect_stdout(self.output):
+            SETUP.generate_roster(graph, args, candidates, readonly=False, expected=None)
+        second = json.loads(self.roster.read_text())["staff"]
+        self.assertNotEqual(first, second)
+
+    def test_exact_template_is_replaced_but_partial_placeholders_are_rejected(self):
+        self.demo_roster()
+        self.write_roster(SETUP.TEMPLATE)
+        self.assertEqual(self.invoke("--seed", "1"), 0, self.output.getvalue())
+        self.assertIsInstance(json.loads(self.roster.read_text()), dict)
+        self.fake.calls.clear()
+        self.write_roster([{**SETUP.TEMPLATE[0], "code": "PM-01"}])
+        self.assertEqual(self.invoke(), 1)
+        self.assertFalse(self.fake.calls)
+
+    def test_admin_none_many_and_explicit_resolution_are_private(self):
+        for count in (0, 2):
+            with self.subTest(count=count):
+                self.demo_roster()
+                self.fake.assignments.clear()
+                self.fake.users = [u for u in self.fake.users
+                                   if not u["userPrincipalName"].lower().startswith("admin@")]
+                self.fake.users += [self.demo_person(f"admin-{n}", upn=f"admin@domain-{n}.invalid")
+                                    for n in range(count)]
+                self.fake.writes.clear()
+                self.fake.tag_writes.clear()
+                self.assertEqual(self.invoke(), 1)
+                self.assertIn(f"Found {count} eligible", self.output.getvalue())
+                self.assert_no_generation_writes()
+                self.assertEqual(self.invoke("--admin-upn", "person-1@example.invalid"), 0,
+                                 self.output.getvalue())
+                rows = json.loads(self.roster.read_text())["staff"]
+                assigned_admin = next(r for r in rows if r["code"] == "PM-01")["userId"]
+                self.assertEqual(assigned_admin, uid("person-1"))
+                self.assertNotIn("person-1@example.invalid", self.output.getvalue())
+
+    def test_admin_ambiguity_asks_exactly_one_plain_question_then_stops_on_bad_input(self):
+        self.demo_roster()
+        self.fake.users = self.fake.users[1:]
+        with patch.object(SETUP.sys.stdin, "isatty", return_value=True), \
+                patch("builtins.input", return_value="unknown@example.invalid") as ask, \
+                redirect_stdout(self.output), redirect_stderr(self.output):
+            self.assertEqual(SETUP.main([]), 1)
+        ask.assert_called_once_with("Which tenant administrator UPN should this demo use? ")
+        self.assertNotIn("unknown@example.invalid", self.output.getvalue())
+        self.assert_no_generation_writes()
+
+    def test_explicit_admin_must_be_eligible_and_manager_code_must_exist(self):
+        for changes in ({"accountEnabled": False}, {"userType": "Guest"},
+                        {"displayName": "Shared Mailbox"}, {"id": "not-a-guid"}):
+            self.demo_roster()
+            self.fake.users[0].update(changes)
+            self.assertEqual(self.invoke("--admin-upn", "admin@example.invalid"), 1)
+            self.assert_no_generation_writes()
+        self.demo_roster()
+        self.fake.candidates = [
+            r for r in self.fake.candidates if not r["code"].startswith("PM-")]
+        self.assertEqual(self.invoke(), 1)
+        self.assertIn("no ProgrammeManager position", self.output.getvalue())
+        self.assert_no_generation_writes()
+
+    def test_eligibility_guests_disabled_resources_shared_and_unknown_purpose(self):
+        self.demo_roster()
+        self.fake.users += [
+            self.demo_person("guest", userType="Guest"),
+            self.demo_person("disabled", accountEnabled=False),
+            self.demo_person("boardroom", displayName="Meeting Room"),
+            self.demo_person("desk", upn="desk.office@example.invalid"),
+            self.demo_person("workspace", displayName="Main Workspace"),
+            self.demo_person("shared", displayName="Shared Mailbox"),
+            self.demo_person("service", displayName="Service Account"),
+            self.demo_person("ordinary-looking"),
+            self.demo_person("unknown-purpose"),
+            self.demo_person(
+                "principal-object", **{"@odata.type": "#microsoft.graph.servicePrincipal"}),
+        ]
+        self.fake.purposes[uid("ordinary-looking")] = "shared"
+        self.fake.purposes[uid("unknown-purpose")] = "unknownFutureValue"
+        graph = SETUP.Azure(self.profile)
+        people = SETUP.eligible_people(graph)
+        self.assertEqual(len(people), 7)
+        self.assertNotIn(uid("ordinary-looking"), [p["oid"] for p in people])
+        self.fake.fail = lambda args: any("/mailboxSettings/" in str(a) for a in args)
+        self.assertEqual(self.invoke(), 1)
+        self.assertIn("MailboxSettings.Read", self.output.getvalue())
+        self.assert_no_generation_writes()
+
+    def test_persisted_people_revalidate_mailbox_type_without_reshuffling(self):
+        self.demo_roster()
+        self.assertEqual(self.invoke("--seed", "7"), 0, self.output.getvalue())
+        original = self.roster.read_bytes()
+        self.fake.purposes[uid("administrator")] = "shared"
+        self.fake.writes.clear()
+        self.fake.tag_writes.clear()
+        self.fake.sql_calls.clear()
+        self.assertEqual(self.invoke(), 1)
+        self.assertEqual(self.roster.read_bytes(), original)
+        self.assertFalse(self.fake.writes)
+        self.assertFalse(self.fake.tag_writes)
+        self.assertFalse(self.fake.sql_calls)
+
+    def test_shortage_counts_only_eligible_non_admin_members_and_stops(self):
+        self.demo_roster()
+        self.fake.users = self.fake.users[:3]
+        self.fake.users += [self.demo_person("disabled", accountEnabled=False),
+                            self.demo_person("guest", userType="Guest")]
+        self.assertEqual(self.invoke(), 1)
+        self.assertIn("Need 3 distinct non-admin users; 2 eligible. Missing exactly 1",
+                      self.output.getvalue())
+        self.assert_no_generation_writes()
+        self.fake.users.append(self.demo_person("enough"))
+        self.assertEqual(self.invoke(), 0, self.output.getvalue())
+
+    def test_profile_unknown_production_conflicting_and_unrelated_deployment_refused(self):
+        for profile in ("production", None, "unknown"):
+            self.demo_roster()
+            self.fake.app["tags"].pop(SETUP.PROFILE_TAG)
+            if profile:
+                self.fake.app["tags"][SETUP.PROFILE_TAG] = profile
+            self.fake.deployments = [{"properties": {
+                "provisioningState": "Succeeded",
+                "outputResources": [{"id": "/unrelated"}],
+                "parameters": {"deploymentProfile": {"value": "development"}}}}]
+            self.assertEqual(self.invoke(), 1)
+            self.assert_no_generation_writes()
+            self.assertFalse(self.fake.sql_calls)
+        for params in ({}, {"deploymentProfile": {"value": "production"}}):
+            self.demo_roster()
+            self.fake.deployments = [{"properties": {"provisioningState": "Succeeded",
+                                      "outputResources": [{"id": APP_ID}], "parameters": params}}]
+            self.assertEqual(self.invoke(), 1)
+            self.assert_no_generation_writes()
+            self.assertFalse(self.fake.sql_calls)
+
+    def test_bound_deployment_can_prove_profile_but_production_environment_overrides(self):
+        self.demo_roster()
+        self.fake.app["tags"].pop(SETUP.PROFILE_TAG)
+        self.fake.deployments = [{"properties": {
+            "provisioningState": "Succeeded", "outputResources": [{"id": APP_ID}],
+            "parameters": {"deploymentProfile": {"value": "development"},
+                           "environmentName": {"value": "test"}}}}]
+        self.assertEqual(self.invoke(), 0, self.output.getvalue())
+        self.demo_roster()
+        self.direct()
+        self.fake.environment["tags"] = {SETUP.PROFILE_TAG: "production"}
+        self.fake.writes.clear()
+        self.fake.tag_writes.clear()
+        self.assertEqual(self.invoke(), 1)
+        self.assert_no_generation_writes()
+
+    def test_nested_module_profile_tags_are_bound_to_actual_output_resources(self):
+        self.demo_roster()
+        self.fake.app["tags"].pop(SETUP.PROFILE_TAG)
+        self.fake.deployments = [{"properties": {
+            "provisioningState": "Succeeded", "outputResources": [{"id": APP_ID}],
+            "parameters": {"tags": {"value": {SETUP.PROFILE_TAG: "development",
+                                             "environment": "test"}}}}}]
+        self.assertEqual(self.invoke(), 0, self.output.getvalue())
+        self.demo_roster()
+        parameters = self.fake.deployments[0]["properties"]["parameters"]
+        parameters["deploymentProfile"] = {"value": "production"}
+        self.fake.writes.clear()
+        self.fake.tag_writes.clear()
+        self.assertEqual(self.invoke(), 1)
+        self.assert_no_generation_writes()
+
+    def test_persisted_generated_roster_cannot_run_in_production_either(self):
+        self.demo_roster()
+        self.assertEqual(self.invoke(), 0, self.output.getvalue())
+        original = self.roster.read_bytes()
+        self.fake.app["tags"][SETUP.PROFILE_TAG] = "production"
+        self.fake.writes.clear()
+        self.fake.tag_writes.clear()
+        self.assertEqual(self.invoke(), 1)
+        self.assertEqual(self.roster.read_bytes(), original)
+        self.assertFalse(self.fake.writes)
+        self.assertFalse(self.fake.tag_writes)
+
+    def test_bound_sql_candidate_wrong_role_duplicate_and_missing_supplier_stop_early(self):
+        for changes in ({"bound": True}, {"role": "Unknown"}, {"bound": None},
+                        {"code": "PM-01"}, {"contractor": ""}):
+            self.demo_roster()
+            self.fake.candidates[1].update(changes)
+            self.assertEqual(self.invoke(), 1)
+            self.assert_no_generation_writes()
+
+    def test_readonly_generation_preview_writes_nothing_and_never_applies_sql(self):
+        for mode in ("--check", "--dry-run"):
+            self.demo_roster()
+            self.roster = self.home / "missing-parent" / "roster.json"
+            SETUP.ROSTER = self.roster
+            self.assertEqual(self.invoke(mode, "--seed", "5"), 2, self.output.getvalue())
+            self.assertFalse(self.roster.parent.exists())
+            self.assert_no_generation_writes()
+            self.assertTrue(all("--list-candidates" in cmd for cmd in self.fake.sql_calls))
+
+    def test_generation_confirmation_decline_and_accept_once_before_sql_confirmation(self):
+        self.demo_roster()
+        with patch.object(SETUP.sys.stdin, "isatty", return_value=True), \
+                patch("builtins.input", return_value="n") as ask, \
+                redirect_stdout(self.output), redirect_stderr(self.output):
+            self.assertEqual(SETUP.main([]), 1)
+        ask.assert_called_once_with("Write this private demo roster? [y/N] ")
+        self.assert_no_generation_writes()
+        with patch.object(SETUP.sys.stdin, "isatty", return_value=True), \
+                patch("builtins.input", side_effect=["y", "y"]) as ask, \
+                redirect_stdout(self.output), redirect_stderr(self.output):
+            self.assertEqual(SETUP.main([]), 0, self.output.getvalue())
+        self.assertEqual([c.args[0] for c in ask.call_args_list], [
+            "Write this private demo roster? [y/N] ",
+            "Apply these SQL bindings and restart the API replicas? [y/N] "])
+        output = self.output.getvalue()
+        self.assertLess(output.index("Private roster saved"), output.index("4/7 Reconciling"))
+        final_sql = output.rindex("SQL plan:")
+        self.assertGreater(final_sql, output.index("5/7 Checking"))
+        self.assertGreater(output.rindex("replica restart: verified"), final_sql)
+        self.assertEqual(sum("--apply" in cmd for cmd in self.fake.sql_calls), 1)
+
+    def test_missing_sql_candidates_prints_single_exact_safe_handoff_never_admin_upn(self):
+        self.demo_roster()
+        self.fake.candidate_code = 1
+        self.assertEqual(self.invoke("--admin-upn", "private-admin@example.invalid",
+                                     "--seed", "11", "--dry-run"), 1)
+        output = self.output.getvalue()
+        self.assertEqual(output.count("python3 infra/scripts/setup-entra.py "), 1)
+        self.assertIn("--seed 11", output)
+        self.assertIn("--dry-run", output)
+        self.assertNotIn("private-admin@example.invalid", output)
+        self.assertNotIn("--admin-upn", output)
+        self.assert_no_generation_writes()
+
+    def test_missing_roster_honours_remote_lock_before_candidate_sql_or_writes(self):
+        self.demo_roster()
+        self.fake.app["tags"][SETUP.LOCK_TAG] = "another-session"
+        self.assertEqual(self.invoke(), 1)
+        self.assert_no_generation_writes()
+        self.assertFalse(self.fake.sql_calls)
+
+    def test_roster_symlinks_and_changed_input_never_overwrite_private_work(self):
+        self.demo_roster()
+        target = self.home / "private-target.json"
+        target.write_text("private-work")
+        self.roster.symlink_to(target)
+        self.assertEqual(self.invoke(), 1)
+        self.assertEqual(target.read_text(), "private-work")
+        self.assertFalse(self.fake.calls)
+        self.roster.unlink()
+        self.write_roster(SETUP.TEMPLATE)
+        before = self.roster.read_bytes()
+        args = SETUP.parser().parse_args(["--roster", str(self.roster), "--yes"])
+        graph = SETUP.Azure(self.profile)
+        candidates = SETUP.candidate_staff(graph, args, self.fake.app)
+        self.roster.write_text("private-work")
+        with redirect_stdout(self.output), self.assertRaises(SETUP.SetupError):
+            SETUP.generate_roster(graph, args, candidates, readonly=False, expected=before)
+        self.assertEqual(self.roster.read_text(), "private-work")
+        self.assertFalse(self.fake.writes)
+
+    def test_generated_envelope_and_invalid_seed_are_validated_before_cloud_access(self):
+        for envelope in ({"version": 2, "seed": 1, "staff": []},
+                         {"version": 1, "seed": -1, "staff": []},
+                         {"version": 1, "seed": True, "staff": []},
+                         {"version": True, "seed": 1, "staff": []},
+                         {"version": 1, "seed": 1, "staff": None}):
+            self.write_roster(envelope)
+            self.assertEqual(self.invoke(), 1)
+            self.assertFalse(self.fake.calls)
+        self.assertEqual(self.invoke("--seed", "-3"), 1)
         self.assertFalse(self.fake.calls)
 
     def test_direct_demo_falls_back_automatically_without_vault_flags(self):

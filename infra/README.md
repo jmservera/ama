@@ -1448,39 +1448,80 @@ The default setup command now orchestrates `scripts/initialize-workbench-staff.p
 after Entra reconciliation and a fresh Entra check. Its private JSON roster
 is an array of `code`/`userId`/`role` objects:
 include every existing staff code, with a distinct enabled tenant member for
-each. The current fixture needs ten internal positions; one additional
-Contractor makes eleven people covering all eight role kinds. New Contractor
+each. A fixture with ten internal positions and one existing Contractor needs
+eleven people; automatic generation covers only positions actually in SQL.
+If SQL lacks a Contractor, adding one remains a separate explicit action.
+New Contractor
 entries also require `"role": "Contractor"` and `"contractor"` naming an
 existing case supplier. Room, desk and workspace accounts are rejected.
 
 Keep the roster outside the repository with file mode 0600 and parent-directory
 mode 0700, for example `~/.azure/zava-forward-staff/roster.json`. The initializer
 resolves current names/UPNs from Graph; do not put directory names, UPNs or ids
-in committed examples. Title/group-based allocation is illustrative exercise
-coherence, not evidence of professional competence or delegated authority.
+in committed examples.
 
-A missing roster makes the normal command create
-`~/.azure/zava-forward-staff/roster.json` in a mode-0700 directory, write the
-following mode-0600 **template**, and stop before any cloud mutation:
+Owner decision 2026-10-16, Refs #360: **demo/synthetic-exercise assignment only,
+not evidence of professional competence or delegated authority**. A default
+run with a missing roster or the exact original placeholder template now:
 
-```json
-[
-  {
-    "code": "REPLACE_EXISTING_STAFF_CODE",
-    "userId": "REPLACE_PERSON_OBJECT_ID",
-    "role": "REPLACE_APPROVED_WORKBENCH_ROLE"
-  }
-]
-```
+1. Verifies a development-profile demo/test/dev deployment. The authoritative
+   `zava-forward-deployment-profile` tag is propagated to app/environment by
+   Bicep. Existing deployments may supply `deploymentProfile` parameters only
+   when `outputResources` includes the selected app/environment's exact resource
+   ID; nested modules may supply the same profile/environment in their `tags`
+   parameter. Omitting both forms means production. Production, absent,
+   conflicting or unsuccessful evidence refuses generation, even with direct
+   ingress or a test name. Merely renaming resources is not an override.
+2. Reads existing SQL staff codes, approved roles, existing Contractor supplier
+   scopes and a binding-present flag through the same `--list-staff` path.
+   It never invents an extra code or Contractor. Existing immutable SQL
+   bindings stop regeneration: restore the original private roster instead.
+3. Enumerates Graph users, excluding guests, disabled accounts, resource/shared/
+   service account naming and non-user objects. It additionally requires
+   `GET /users/{id}/mailboxSettings/userPurpose` to report `user`, rejecting
+   shared, room, equipment and unknown classifications even when names look
+   personal. Missing classification/read authority stops before persistence or
+   Entra writes, not a naming-only fallback. This requires provisioning access
+   to `MailboxSettings.Read` for candidate mailboxes, separately approved by an
+   authorized tenant administrator; setup grants no permissions. Unlicensed or
+   inaccessible mailboxes are not silently treated as people. See the official
+   [GET contract](https://learn.microsoft.com/en-us/graph/api/user-get-mailboxsettings?view=graph-rest-1.0)
+   and [purpose values](https://learn.microsoft.com/en-us/graph/api/resources/mailboxsettings?view=graph-rest-1.0),
+   retrieved 2026-10-16. Directory/Exchange classification remains the evidence
+   boundary, not an attestation of someone's competence or actual identity.
+4. Reserves the first code in stable code order with role `ProgrammeManager`
+   (Retrofit Programme Manager, the administrative workbench role) for the
+   single eligible user whose UPN starts `admin@`, case-insensitively. Zero or
+   several matches reports the count and asks one plain UPN question; explicit
+   `--admin-upn` resolves it without printing the value. Noninteractive runs
+   stop with that flag's instruction. Invalid input or no ProgrammeManager
+   position stops, never chooses an invented role or code. No Entra directory
+   administrator role is granted.
+5. Sorts remaining eligible people before a seeded random shuffle and assigns a
+   distinct person to each remaining code, preserving each SQL role and supplier.
+   It prints the seed (`--seed N` reproduces the mapping for unchanged inputs),
+   counts, codes and administrator role, never personal names, UPNs, object IDs
+   or supplier names. Too few people reports the exact deficit and stops without
+   writing. This implementation chooses the permitted **stop** alternative:
+   there is no reuse override because the initializer requires distinct people.
+6. Shows one-screen counts per role and asks once to write the private roster.
+   `--yes` accepts; `--check` and `--dry-run` preview without any writes or
+   confirmation and exit incomplete (2), since no roster/bindings were installed.
+   Admin ambiguity in read-only modes requires `--admin-upn`, not a prompt.
+   The generated file is atomically saved with mode 0600 in a mode-0700 directory.
 
-Fill `code` from an existing staff record, `userId` with the person's Entra
-user object ID (not a client/application ID), and `role` with that position's
-approved workbench role. Manifest keys or their full workbench labels are
-accepted. Never invent people or assign one broad role to everyone. Setup
-rejects placeholders, non-GUID/zero IDs, duplicates, unknown roles, group-only
-entries, symlinks and unsafe modes before cloud writes. SQL additionally
-validates existing codes/roles, complete coverage and immutable bindings
-before its transaction; a connectivity blocker is not validation.
+Generated JSON is an envelope with `"version": 1`, a nonnegative integer `seed`
+and the nonempty `staff` array of code/userId/role objects (plus existing
+Contractor scope). Both setup and SQL initializer accept it; legacy array
+rosters remain supported. Reruns reuse the persisted mapping even when a new
+`--seed` is supplied; they do not reshuffle. Generated-roster reruns revalidate
+the demo profile and individual-mailbox eligibility. An existing populated or
+partly edited invalid roster is never replaced automatically.
+
+Setup still rejects placeholders, non-GUID/zero IDs, duplicates, unknown roles,
+group-only entries, symlinks and unsafe modes before directory changes. SQL
+additionally validates complete coverage, roles, suppliers and immutable
+bindings before its transaction; a connectivity blocker is not validation.
 
 `python3 infra/scripts/setup-entra.py --list-staff` reads only candidate codes
 and approved roles from private SQL; no roster or browser configuration is
@@ -1492,7 +1533,8 @@ the mapping into the roster privately; the helper does not allocate roles.
 
 The normal command displays only SQL change counts, asks once to apply and
 restart, then verifies fresh ready replicas for every traffic-serving revision.
-`--yes` accepts that one plan; a current roster/revision with recorded restart
+This is a separate confirmation after the roster-write confirmation;
+`--yes` accepts both displayed plans. A current roster/revision with recorded restart
 evidence needs no further restart. `--check` and `--dry-run` inspect Entra and
 SQL without applying or restarting. Unknown/missing restart evidence remains
 incomplete. When this host cannot reach private SQL or lacks its drivers or
@@ -1501,7 +1543,11 @@ authority, setup exits incomplete and prints an exact, already discovered
 host holding the same private roster/profile. SQL binding and restart are
 explicitly **not confirmed**. The existing in-VNet proof initializer has no
 approved staff-roster/Graph-profile transport, so this flow does not invent
-one or upload personal mappings to a job.
+one or upload personal mappings to a job. When even candidate discovery is
+unreachable, it instead prints one exact `setup-entra.py` command for that host,
+preserving app/profile/roster/mode/seed but never an administrator UPN. Provide
+private admin input there if requested. No roster or template is written on
+this failure path.
 
 SQL prerequisites: `python3 -m pip install -e src/core -e src/agents -e src/api
 pyodbc` and Microsoft ODBC Driver 18 for SQL Server on an authorized host
@@ -1776,8 +1822,9 @@ checked when computing each person's effective application role.
 Existing code/userId-only staff rosters need explicit `role` enrichment for
 this setup tool; it never infers a person's authority from their code or name.
 Invalid, duplicate or permissively readable input blocks before directory
-writes. A missing roster creates only the clearly marked private template and
-stops; no identities, codes or approvals are fabricated.
+writes. Missing or exact-template rosters follow the guarded
+[automatic demo assignment](#tenant-staff-and-application-role-initialization)
+above; no identities, codes, suppliers or approvals are fabricated.
 Assignments are additive and app-scoped, preserve Default Access and unrelated
 grants, and reject conflicting direct or effective direct-group app roles,
 including conflicts from existing group grants.
@@ -1789,6 +1836,9 @@ An authorized provisioning principal needs application-write permission
 for owned apps), `AppRoleAssignment.ReadWrite.All` for roster writes and
 appropriate user/group read permissions (`User.Read.All`,
 `GroupMember.Read.All`), plus the directory role/ownership required by Graph.
+Automatic demo assignment also needs readable candidate mailbox user purposes
+(`MailboxSettings.Read`); it refuses unverifiable mailbox types rather than
+silently selecting personal-looking resource accounts.
 Already-consented broader directory scopes are recognized but never requested
 or added. Azure RG Owner, an M365 login, and directory authority are different:
 

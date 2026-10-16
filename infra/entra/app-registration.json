@@ -28,7 +28,7 @@
     "requires": "Tenant owner (not yet confirmed as Juan Manuel Servera) confirms guest invitation, access reviews and cross-tenant settings"
   },
   "manualSteps": [
-    {"step": "Run python3 infra/scripts/setup-entra.py as an authorized application owner or administrator; supply private explicit-role roster mappings", "owner": "Juan Manuel Servera"},
+    {"step": "Run python3 infra/scripts/setup-entra.py as an authorized application owner or administrator; missing/exact-template rosters are generated only for verified demo development profiles using SQL positions and eligible Graph members, with a private seeded plan and confirmation", "owner": "Juan Manuel Servera"},
     {"step": "Complete any human admin consent; setup checks SQL bindings, requests one confirmation and restarts, or prints the exact authorized-private-host command when blocked", "owner": "Juan Manuel Servera"},
     {"step": "Tenant-level B2B guest and cross-tenant policy", "owner": "Juan Manuel Servera, open"}
   ]

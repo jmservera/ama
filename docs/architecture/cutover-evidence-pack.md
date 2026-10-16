@@ -54,7 +54,7 @@ FQDN, and the demo tag/flag bypasses all Front Door discovery.
 
 ### Single-command Authentication Continuation (2026-10-16)
 
-Refs #360. Owner follow-up replaces manual credential flags, roster creation,
+Refs #360. The earlier owner follow-up replaced manual credential flags, roster creation,
 separate Entra check, and SQL check/apply/restart instructions with
 `python3 infra/scripts/setup-entra.py` (`--yes` for the single SQL confirmation).
 This continuation is offline implementation only, not a tenant/deployment
@@ -66,7 +66,7 @@ remain historical.
 | --- | --- |
 | Automatic browser credential and private-vault preference | Named unexpired credential/storage matching, unique interrupted-handoff recovery, automatic direct-demo fallback on vault probe/write failure, and private temporary body files are mocked. Actual vault access, MI permission and token exchange are Not run |
 | No typed vault or identity | API secret references/attached identities, configured vault URI, deployment tags/resource lookup, and available Bicep outputs are used; optional overrides remain. Interactive ambiguity asks once; headless ambiguity stops with names, never invented choices |
-| Private roster onboarding/validation | Missing roster creates a 0700 directory/0600 placeholder template and stops before cloud calls. Placeholders, duplicate codes/IDs, non-GUID/zero IDs, unknown roles, groups, symlinks and incorrect modes are rejected. Candidate SQL codes/roles and private UPN lookup are helpers, not role approval |
+| Private roster onboarding/validation | Historical at this continuation: missing roster created a 0700 directory/0600 placeholder template and stopped. Superseded only for missing/exact-template demo rosters by the automatic roster follow-up below. Placeholders in other populated files, duplicates, invalid IDs/roles, groups, symlinks and unsafe modes remain rejected |
 | Reconcile then check Entra | Default run rereads registration/auth/credential/runtime state and checks assignments before SQL. Mocked ordering is evidence, not real tenant/browser acceptance |
 | SQL binding and restart | Default checks, shows counts, asks once, applies and verifies serving replicas. Matching roster/revision evidence avoids redundant restart. Missing private connectivity/driver/authority produces an exact authorized-host command and explicitly unconfirmed SQL/restart |
 | Approved private execution route | Existing in-VNet proof initialization has no staff-roster or delegated Graph-profile transport. No new upload/job/permission mechanism is invented; authorized-host handoff is implemented. Live SQL binding/restart remains Not run |
@@ -87,6 +87,43 @@ local compiled Bicep guards; four production scripts passed scoped mypy;
 focused Ruff passed with no introduced baseline findings; 32 local loopback
 API authentication tests and Markdown/diff checks passed. No deployed probe
 was run, and no strict distributed-mutex or full live acceptance is claimed.
+
+### Automatic Demo Roster Follow-up (2026-10-16)
+
+Refs #360. Owner instruction removes manual template filling for the synthetic
+demo only. **No setup command was run live and no Azure, Entra, SQL, network or
+private dataset was changed.** Results below are offline engineering evidence,
+not a deployment receipt. The current contract is the
+[tenant initialization runbook](../../infra/README.md#tenant-staff-and-application-role-initialization).
+
+| Owner follow-up criterion | Observed offline evidence | Unmet or bounded evidence |
+| --- | --- | --- |
+| 1. Authoritative SQL candidate codes/roles, approved private route or exact command | Pass: existing candidate subprocess adds supplier scope and binding-present metadata without personal fields. Invalid/unknown/duplicate/placeholder candidates stop. Connectivity failure prints one exact setup command, preserving safe mode/seed/profile/app without private administrator input | Actual SQL connectivity Not run. Existing VNet proof job still has no approved roster/Graph-profile transport; no invented codes or new transport |
+| 2. Case-insensitive admin, none/one/many and administrative role | Pass: mocked zero/one/multiple matches, explicit selection and one invalid interactive answer; first stable ProgrammeManager code reserved and described in plain words. Missing role or ineligible admin stops | UPN prefix is an owner-selected exercise convention, not proof of actual tenant admin authority. No directory administrator role is granted |
+| 3. Distinct enabled people, seeded random assignment, role/supplier preservation and shortage | Pass: guests, disabled, rooms/desks/workspaces/shared/service naming, non-user objects and non-user/unknown mailbox purposes excluded. Personal-looking shared account rejected by Graph purpose. Sorted input/reversed-response seed equality, differing seed variation and persisted no-reshuffle tested. Exact one-user deficit stops; existing bound SQL rows stop before writes | Uses Graph/Exchange classifications, not independent verification of real humans or competence. `MailboxSettings.Read` access to all candidates is a real prerequisite, Not run. Deliberately chooses the permitted stop alternative, not an `--allow-reuse` override incompatible with distinct SQL bindings |
+| 4. Private write, redacted counts/role summary, confirmation and read-only | Pass: private 0700/0600 envelope shared by both readers, seed persistence, exact-template replacement only, symlink/changed-input refusal, no object IDs/UPNs/names/supplier names in generated output, one roster confirmation and decline, `--yes`, no-write check/dry-run previews | Offline filesystem and mocked directory evidence only. Existing populated legacy arrays remain supported and are not automatically replaced |
+| 5. Synthetic-only disclaimer and production refusal | Pass: disclaimer in docs/output; Bicep profile tag cannot be overridden by caller tags. App/environment production, omitted/default profile, unknown/conflicting evidence and unrelated deployment outputs refuse generation without candidate SQL or auth writes. Bound development outputs and nested module tags accepted; persisted generated rosters rechecked | No deployment/tag mutation performed. Old untagged resources need verified resource-bound development evidence; a demo name/direct ingress cannot authorize generation |
+| 6. Continue Entra check, SQL check/confirmation/apply/restart and final status | Pass: default mocked generation reaches existing reconciliation/final Entra verification, then SQL check and one separate SQL confirmation, apply with restart, and final explicit binding/restart summary. Current persisted roster reuses mapping; mailbox eligibility rechecked before remote mutation | Actual Entra grants, SQL binding, serving-replica restart and browser sign-in Not run. Existing advisory lock is not independently proven cross-host exclusion |
+| 7. Existing safeguards, tests, README/evidence/log | Pass within offline scope: legacy array and envelope readers, existing placeholder/duplicate/mode/role/group/lock tests retained; full infra suite 282 passed, including compiled Bicep and SQL initializer tests. Scoped script mypy and 32 local responsive loopback auth tests pass | Lint baseline uses existing script exclusions; new-line lint is checked separately. No issue-body boxes changed; coordinator owns merge-time evidence decisions |
+
+ProgrammeManager is selected for existing administrative capabilities, including
+the memory administration role (`src/core/src/zava_forward/core/chat_privacy.py`)
+and document controls (`src/core/src/zava_forward/core/doc_controls.py`), not
+because random assignment creates authority. Juan Manuel Servera remains the
+exercise Legal, Compliance and DPO owner. Legal interpretation, activation,
+consent, safety and financial commitments remain named-human decisions.
+ADR 0005 acceptance is synthetic-development only, with real owners/sources
+still a gap before operational reliance.
+
+Mailbox-purpose API and classification values were checked against official
+Microsoft Graph documentation on 2026-10-16; links and permission prerequisites
+are in the runbook. Permission denial/unknown classification fails closed;
+setup never grants new mailbox or directory permissions.
+
+Original issue #360 criteria a/b/f have additional bounded offline coverage only;
+c (migration/cost approval), d (live HTTPS/browser/roles/SQL/AI) and e (separately
+authorized retirement) remain unmet by this follow-up. Historical observations
+elsewhere in this pack are not fresh acceptance evidence.
 
 ### Proposed Migration and Approval Gates
 
