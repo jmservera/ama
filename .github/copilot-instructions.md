@@ -54,6 +54,13 @@ Zava Forward demonstrator, infrastructure and supporting tools.
   Bicep and initialization helpers; `tools/` contains migration and authoring
   tools. Their READMEs define current commands and evidence boundaries.
 
+Install the `src/<project>` distributions with pip before running application or
+infra scripts; do not add `PYTHONPATH=mvp` workarounds. Image context is `src/`
+(`docker build -f src/api/Dockerfile src`), not the repository or project folder.
+Working data follows `ZF_DATA`, default `~/.zava-forward/data/zavaforward.json`;
+never read private datasets as part of a code-path migration. Keep the existing
+workflow/check names until a deliberate post-cut-over branch-protection update.
+
 There is no repository-wide documentation build or lint command. Validate
 documentation with Markdown/link review and the Git diff. Executable changes
 also require the relevant existing tests: for example, from `src/api`,

@@ -104,12 +104,14 @@ class RenameTests(unittest.TestCase):
             self.assertTrue((new / "global/style.yaml").exists())
             self.assertTrue((new / "slide-001/images/zava-logo.png").exists())
             self.assertIn("Zava branding logo", (new / "slide-001/content.yaml").read_text())
+            self.assertEqual((root / rename.WEB_ROOT / "zava-logo.png").read_bytes(), logo.getvalue())
+            self.assertFalse((root / "mvp").exists())
 
     def test_policy_metadata_rename_recomputes_integrity_hash_without_changing_rules(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             subprocess.run(["git", "init", "-q", root], check=True)
-            path = root / "mvp/policies/ranking-v1.json"
+            path = root / rename.POLICY_ROOT / "ranking-v1.json"
             path.parent.mkdir(parents=True)
             rules = [{"code": "waiting", "label": "Longest waiting first"}]
             path.write_text(json.dumps({"policy_id": "proper-warm-home-ranking",
@@ -187,11 +189,11 @@ class RenameTests(unittest.TestCase):
 
     def test_web_logo_and_styles(self):
         self.assertIn('src="/zava-logo.png"', rename.update_text(
-            '<span class="logo" aria-hidden="true">PW</span>', "mvp/web/index.html", {},
+            '<span class="logo" aria-hidden="true">PW</span>', f"{rename.WEB_ROOT}/index.html", {},
         ))
-        once = rename.update_text("", "mvp/web/style.css", {})
+        once = rename.update_text("", f"{rename.WEB_ROOT}/style.css", {})
         self.assertIn(".top nav{flex-wrap:wrap;min-width:0}", once)
-        self.assertEqual(rename.update_text(once, "mvp/web/style.css", {}), once)
+        self.assertEqual(rename.update_text(once, f"{rename.WEB_ROOT}/style.css", {}), once)
         html_path = ".github/extensions/program-workbench/assets/index.html"
         html = '<head><link rel="stylesheet" href="/styles.css"></head><span class="brand-mark" aria-hidden="true">PW</span>'
         updated = rename.update_text(html, html_path, {})

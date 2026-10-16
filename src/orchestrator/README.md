@@ -2,13 +2,19 @@
 title: Zava Forward orchestrator
 description: Scheduled job documentation (ledger digest publish and verification) for the orchestrator project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-15
+ms.date: 2026-10-16
 ms.topic: reference
 ---
 
 The orchestrator hosts the scheduled jobs: `zava_forward.orchestrator.token_store` and
-`zava_forward.orchestrator.digest_blob`. Until the job image split in #200 (A4) the Container Apps jobs
-still run in the [api](../api/README.md) image. Tests are in `src/orchestrator/tests/` and run with
+`zava_forward.orchestrator.digest_blob`. Bicep selects `orchestratorImage` for
+both jobs (#200); the [api](../api/README.md) image no longer packages them.
+Token maintenance retains its own identity and ledger verification retains the
+API identity/grants. This image change grants no new permissions. Build from the
+repository root with `docker build -f src/orchestrator/Dockerfile -t zava-forward-orchestrator:local src`;
+pass the versioned registry tag as `orchestratorImage` with the matching API tag.
+New-tag deployment and healthy job executions remain cut-over evidence, not
+established by changing the template. Tests are in `src/orchestrator/tests/` and run with
 `PYTHONPATH=../core/tests python3 -m unittest discover -s tests`. The section below is moved
 unchanged from the former `mvp/README.md` (M6 of #199).
 

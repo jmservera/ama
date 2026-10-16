@@ -1,3 +1,4 @@
-from zava_forward.api.version import __version__
+from zava_forward.api.server import main
 
-print(f"zava-forward-api {__version__}")
+if __name__ == "__main__":
+    main()

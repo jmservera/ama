@@ -50,6 +50,7 @@ management: short pages that point to clusters of related material.
 
 | Task | Start with | Then consult |
 | --- | --- | --- |
+| Build, test or deploy the migrated source images (#200) | [Source projects and CI cut-over](../../src/README.md#ci) | [Source-image cut-over recipe](../../infra/README.md#source-image-cut-over-200-2026-10-16): installed packages, src context, isolated job image, external data and unchanged check names; Azure rollout, private backup and owner retirement gates remain unmet |
 | Understand the customer and the sector | [Housing Association Primer](./research/sector/housing-association-primer.md) | [Company Profile Research](./research/company/company-profile-research.md) |
 | Start or resume any project work | [Original Case Study 48](../case_study_48_original.md) and [Case Study 48 Addendum](../case_study_48_addendum.md) | [Project Memory](./memory.md) |
 | Answer as a Zava North Homes role | [Company Profile Research](./research/company/company-profile-research.md) | The matching `company-*` agent in [.github/agents/](../../.github/agents/) |

@@ -99,6 +99,22 @@ class BicepPolicyTests(unittest.TestCase):
         for required in ("no-unused-params", "secure-secrets-in-params", "outputs-should-not-contain-secrets"):
             self.assertIn(required, CONFIG["analyzers"]["core"]["rules"])
 
+    def test_src_workload_images_and_job_commands(self) -> None:
+        template = compile_bicep("modules/containerapps.bicep")
+        containers = {
+            container["name"]: container
+            for resource in resources(template)
+            for container in resource.get("properties", {}).get("template", {}).get("containers", [])
+        }
+        self.assertEqual(containers["api"]["image"], "[parameters('apiImage')]")
+        for name, module, args in (
+            ("auth-renewal", "token_store", []),
+            ("ledger-verify", "digest_blob", ["--publish"]),
+        ):
+            self.assertEqual(containers[name]["image"], "[parameters('orchestratorImage')]")
+            self.assertEqual(containers[name]["command"],
+                             ["python", "-m", f"zava_forward.orchestrator.{module}", *args])
+
     def test_production_is_the_default_profile(self) -> None:
         self.assertEqual(self.defaults["deploymentProfile"], "production")
         self.assertIs(self.defaults["allowPublicNetworkAccess"], False)

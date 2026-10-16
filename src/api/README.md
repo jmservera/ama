@@ -201,7 +201,9 @@ given. Module names without a path (`store`, `ranking`, `projection`, `quality`,
 Run the suites from `src/api` with
 `PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests`, after
 `pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator`. When `ZF_DATA` is not
-set, the data file defaults to `data/zavaforward.json` under the current folder.
+set, the data file defaults to `~/.zava-forward/data/zavaforward.json`, outside
+the checkout. `ZF_DATA` accepts an explicit JSON file or a data directory;
+an explicit filename is preserved. Runtime and generator resolve the same folder.
 
 ## Resident decisions and representative API (#86)
 
@@ -795,9 +797,9 @@ it is git-ignored, binds to loopback only and must never be committed, deployed
 or shared. The repository must stay private.
 
 ```bash
-python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py --seed 20260901   # writes to ZF_DATA, default ~/.zava-forward/data/zavaforward.json
 python3 -m pip install --no-deps -e src/core -e src/agents -e src/api   # modules moved in M1 to M5 (ADR 0006)
-ZF_PASSWORD=choose-a-password python3 -m zava_forward.api.server
+python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py --seed 20260901   # writes to ZF_DATA, default ~/.zava-forward/data/zavaforward.json
+ZF_PASSWORD=choose-a-password python3 -m zava_forward.api
 ```
 
 Open `http://127.0.0.1:8088` and sign in with a staff email from the data (for
