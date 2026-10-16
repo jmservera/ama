@@ -1,11 +1,19 @@
 ---
 title: Zava Forward Architecture Views
 description: Editable Excalidraw executive and technical architecture views grounded in PR 68, with Azure icons, interaction contracts and explicit implementation limits
-ms.date: 2026-10-14
+ms.date: 2026-10-16
 ms.topic: concept
 ---
 
 ## Scope and Reading Order
+
+For issues #200/#201, use the dated
+[cut-over evidence pack](./cutover-evidence-pack.md), its
+[row-level parity audit](./cutover-parity-audit.tsv) and
+[remaining-reference inventory](./cutover-reference-inventory.tsv).
+The pack distinguishes successful source-image builds from the failed Azure
+bootstrap and leaves all owner sign-off gates unchecked. It does not authorize
+legacy deletion or change the historical architecture views below.
 
 These are two views of the same solution, not two alternative architectures.
 They describe the sources on [PR #68](https://github.com/jmservera/ama/pull/68)

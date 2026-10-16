@@ -47,6 +47,17 @@ Regenerate hashed requirements with `pip-compile --generate-hashes --no-emit-ind
 
 ## Images
 
+The [cut-over evidence pack](../docs/architecture/cutover-evidence-pack.md)
+records the source-image build attempts, image digests, remote runtime checks
+and failed Azure bootstrap for #200/#201. With no local Docker, the tested
+remote alternative is
+`az acr run -r <registry> -f acr-cutover.yaml --timeout 1800 src` from the
+repository root. [acr-cutover.yaml](./acr-cutover.yaml) enables BuildKit for
+the existing `RUN --mount` instructions, tests UID/read-only/capabilities/data
+paths (and agents dependency isolation), then pushes run-ID-specific tags.
+This is not a deployment or vulnerability scan. The context retains only the
+API's explicit runtime golden-file exception; other evals/tests/data stay out.
+
 The build context is this `src/` folder, because a workload image also needs `core`:
 
 ```bash

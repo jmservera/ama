@@ -1,0 +1,519 @@
+{
+  "observed_at_utc": "2026-10-16T12:18:52.628697+00:00",
+  "base_commit": "aedd616ffff8abfcf0379a538b895e4427147c8f",
+  "build_source": "local src working tree plus this PR additions; not a Git-context build",
+  "resource_group_id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama",
+  "initial_resources": [],
+  "initial_budgets": [
+    "budget-forward-test"
+  ],
+  "what_if": {
+    "status": "Succeeded",
+    "change_counts": {
+      "Create": 98,
+      "Unsupported": 14
+    }
+  },
+  "deployment": {
+    "correlationId": "4758806b-a539-494a-a02e-4433215b7c27",
+    "error": {
+      "additionalInfo": null,
+      "code": "DeploymentFailed",
+      "details": [
+        {
+          "additionalInfo": null,
+          "code": "ResourceDeploymentFailure",
+          "details": null,
+          "message": "The resource write operation failed to complete successfully, because it reached terminal provisioning state 'Failed'.",
+          "target": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Resources/deployments/sql"
+        },
+        {
+          "additionalInfo": null,
+          "code": "ResourceDeploymentFailure",
+          "details": null,
+          "message": "The resource write operation failed to complete successfully, because it reached terminal provisioning state 'Failed'.",
+          "target": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Resources/deployments/iothub"
+        }
+      ],
+      "message": "At least one resource deployment operation failed. Please list deployment operations for details. Please see https://aka.ms/arm-deployment-operations for usage details.",
+      "target": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Resources/deployments/cutover-201-bootstrap"
+    },
+    "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Resources/deployments/cutover-201-bootstrap",
+    "state": "Failed",
+    "timestamp": "2026-10-16T12:10:46.891265+00:00"
+  },
+  "failed_operations": [
+    {
+      "error": {
+        "error": {
+          "additionalInfo": null,
+          "code": "DeploymentFailed",
+          "details": [
+            {
+              "additionalInfo": null,
+              "code": "DenyPublicEndpointEnabled",
+              "details": null,
+              "message": "Unable to create or modify firewall rules when public network interface for the server is disabled. To manage server or database level firewall rules, please enable the public network interface.",
+              "target": null
+            }
+          ],
+          "message": "At least one resource deployment operation failed. Please list deployment operations for details. Please see https://aka.ms/arm-deployment-operations for usage details.",
+          "target": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Resources/deployments/sql"
+        },
+        "status": "Failed"
+      },
+      "target": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Resources/deployments/sql"
+    },
+    {
+      "error": {
+        "error": {
+          "additionalInfo": null,
+          "code": "DeploymentFailed",
+          "details": [
+            {
+              "additionalInfo": null,
+              "code": "MissingSubscriptionRegistration",
+              "details": [
+                {
+                  "additionalInfo": null,
+                  "code": "MissingSubscriptionRegistration",
+                  "details": null,
+                  "message": "The subscription is not registered to use namespace 'Microsoft.Devices'. See https://aka.ms/rps-not-found for how to register subscriptions.",
+                  "target": "Microsoft.Devices"
+                }
+              ],
+              "message": "The subscription is not registered to use namespace 'Microsoft.Devices'. See https://aka.ms/rps-not-found for how to register subscriptions.",
+              "target": null
+            }
+          ],
+          "message": "At least one resource deployment operation failed. Please list deployment operations for details. Please see https://aka.ms/arm-deployment-operations for usage details.",
+          "target": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Resources/deployments/iothub"
+        },
+        "status": "Failed"
+      },
+      "target": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Resources/deployments/iothub"
+    }
+  ],
+  "sql": {
+    "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Sql/servers/sql-cutover-test-rzsrg",
+    "publicNetworkAccess": "Disabled",
+    "state": "Ready"
+  },
+  "iot_provider": {
+    "namespace": "Microsoft.Devices",
+    "state": "NotRegistered"
+  },
+  "image_run": {
+    "createTime": "2026-10-16T12:14:51.005514+00:00",
+    "finishTime": "2026-10-16T12:16:01.636317+00:00",
+    "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg/runs/db8",
+    "outputImages": [
+      {
+        "digest": "sha256:df71013540f701d50e3d4e43aa75724af421f10d6a3359ba08da7cc8d8c3fa1c",
+        "registry": "crcutovertestrzsrg.azurecr.io",
+        "repository": "zava-forward-api",
+        "tag": "cutover-db8"
+      },
+      {
+        "digest": "sha256:15efeca7a3a99e75e977e2195e6ed6bd360bee84281c9ad4bc78ef91fd39f6dc",
+        "registry": "crcutovertestrzsrg.azurecr.io",
+        "repository": "zava-forward-agents",
+        "tag": "cutover-db8"
+      },
+      {
+        "digest": "sha256:323668fbd5a68267fb75c0bc48e9810b81ccb4b8f617819bca97ac36c0001926",
+        "registry": "crcutovertestrzsrg.azurecr.io",
+        "repository": "zava-forward-orchestrator",
+        "tag": "cutover-db8"
+      },
+      {
+        "digest": "sha256:93a2fc8e7004be01f5363b2c2d2bc1b65f19632551c2cb7f50c9b3e81fd926ad",
+        "registry": "crcutovertestrzsrg.azurecr.io",
+        "repository": "zava-forward-importer",
+        "tag": "cutover-db8"
+      }
+    ],
+    "runId": "db8",
+    "startTime": "2026-10-16T12:14:51.162445+00:00",
+    "status": "Succeeded"
+  },
+  "remote_contract_output": [
+    "api image contract PASS 0.1.0",
+    "agents image contract PASS",
+    "orchestrator image contract PASS",
+    "importer image contract PASS"
+  ],
+  "deployed_apps": [],
+  "smoke": {
+    "status": "Blocked",
+    "endpoint_discovery_exit": 1,
+    "error": "ResourceNotFound: ca-cutover-test-api",
+    "health": "Not run: no endpoint",
+    "anonymous_api_denial": "Not run: no endpoint",
+    "authenticated_sql": "Not run: prerequisites unavailable"
+  },
+  "retained_resources": [
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg",
+      "name": "aif-cutover-test-rzsrg",
+      "type": "Microsoft.CognitiveServices/accounts"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg/projects/zava-forward-agents",
+      "name": "aif-cutover-test-rzsrg/zava-forward-agents",
+      "type": "Microsoft.CognitiveServices/accounts/projects"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg",
+      "name": "crcutovertestrzsrg",
+      "type": "Microsoft.ContainerRegistry/registries"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Insights/actiongroups/ag-cutover-test-ops",
+      "name": "ag-cutover-test-ops",
+      "type": "Microsoft.Insights/actiongroups"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/microsoft.insights/actiongroups/Application Insights Smart Detection",
+      "name": "Application Insights Smart Detection",
+      "type": "microsoft.insights/actiongroups"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Insights/components/appi-cutover-test",
+      "name": "appi-cutover-test",
+      "type": "Microsoft.Insights/components"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Insights/metricalerts/alert-cutover-test-foundry-throttle",
+      "name": "alert-cutover-test-foundry-throttle",
+      "type": "Microsoft.Insights/metricalerts"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/microsoft.insights/privateLinkScopes/ampls-cutover-test",
+      "name": "ampls-cutover-test",
+      "type": "microsoft.insights/privateLinkScopes"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Insights/scheduledqueryrules/alert-kv-cutovertest-rzsrg-denied-access",
+      "name": "alert-kv-cutovertest-rzsrg-denied-access",
+      "type": "Microsoft.Insights/scheduledqueryrules"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Insights/scheduledqueryrules/alert-kv-cutovertest-rzsrg-secret-expiry",
+      "name": "alert-kv-cutovertest-rzsrg-secret-expiry",
+      "type": "Microsoft.Insights/scheduledqueryrules"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg",
+      "name": "kv-cutovertest-rzsrg",
+      "type": "Microsoft.KeyVault/vaults"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-agents",
+      "name": "id-cutover-test-agents",
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api",
+      "name": "id-cutover-test-api",
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-import",
+      "name": "id-cutover-test-import",
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-orchestrator",
+      "name": "id-cutover-test-orchestrator",
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-aif-cutover-test-rzsrg.nic.823cc344-e8b8-4f68-986b-88bc83d678eb",
+      "name": "pe-aif-cutover-test-rzsrg.nic.823cc344-e8b8-4f68-986b-88bc83d678eb",
+      "type": "Microsoft.Network/networkInterfaces"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-ampls-cutover-test.nic.1594de99-1566-4151-9663-fcfdd8fdec66",
+      "name": "pe-ampls-cutover-test.nic.1594de99-1566-4151-9663-fcfdd8fdec66",
+      "type": "Microsoft.Network/networkInterfaces"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-crcutovertestrzsrg.nic.581a4025-6197-43bf-9102-7af7e8083823",
+      "name": "pe-crcutovertestrzsrg.nic.581a4025-6197-43bf-9102-7af7e8083823",
+      "type": "Microsoft.Network/networkInterfaces"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-kv-cutovertest-rzsrg.nic.d0e3f239-6c7d-4fd2-a5d7-bd0d6f87c5cb",
+      "name": "pe-kv-cutovertest-rzsrg.nic.d0e3f239-6c7d-4fd2-a5d7-bd0d6f87c5cb",
+      "type": "Microsoft.Network/networkInterfaces"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-sql-cutover-test-rzsrg.nic.15a1c17e-15c6-461f-851a-0a2ac4d9cde6",
+      "name": "pe-sql-cutover-test-rzsrg.nic.15a1c17e-15c6-461f-851a-0a2ac4d9cde6",
+      "type": "Microsoft.Network/networkInterfaces"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-stcutovertestrzsrg-blob.nic.2f3de8c1-83d3-4e03-a836-f9d27a4bd6a1",
+      "name": "pe-stcutovertestrzsrg-blob.nic.2f3de8c1-83d3-4e03-a836-f9d27a4bd6a1",
+      "type": "Microsoft.Network/networkInterfaces"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-stcutovertestrzsrg-queue.nic.1ddfd037-2785-4fae-b574-883244181dd7",
+      "name": "pe-stcutovertestrzsrg-queue.nic.1ddfd037-2785-4fae-b574-883244181dd7",
+      "type": "Microsoft.Network/networkInterfaces"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkSecurityGroups/nsg-cutover-test-aca",
+      "name": "nsg-cutover-test-aca",
+      "type": "Microsoft.Network/networkSecurityGroups"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/networkSecurityGroups/nsg-cutover-test-pe",
+      "name": "nsg-cutover-test-pe",
+      "type": "Microsoft.Network/networkSecurityGroups"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.agentsvc.azure-automation.net",
+      "name": "privatelink.agentsvc.azure-automation.net",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.agentsvc.azure-automation.net/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.agentsvc.azure-automation.net/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.azure-devices.net",
+      "name": "privatelink.azure-devices.net",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.azure-devices.net/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.azure-devices.net/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.azurecr.io",
+      "name": "privatelink.azurecr.io",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.azurecr.io/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.azurecr.io/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net",
+      "name": "privatelink.blob.core.windows.net",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.blob.core.windows.net/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.cognitiveservices.azure.com",
+      "name": "privatelink.cognitiveservices.azure.com",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.cognitiveservices.azure.com/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.cognitiveservices.azure.com/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.database.windows.net",
+      "name": "privatelink.database.windows.net",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.database.windows.net/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.database.windows.net/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.monitor.azure.com",
+      "name": "privatelink.monitor.azure.com",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.monitor.azure.com/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.monitor.azure.com/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.ods.opinsights.azure.com",
+      "name": "privatelink.ods.opinsights.azure.com",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.ods.opinsights.azure.com/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.ods.opinsights.azure.com/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.oms.opinsights.azure.com",
+      "name": "privatelink.oms.opinsights.azure.com",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.oms.opinsights.azure.com/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.oms.opinsights.azure.com/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.openai.azure.com",
+      "name": "privatelink.openai.azure.com",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.openai.azure.com/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.openai.azure.com/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.queue.core.windows.net",
+      "name": "privatelink.queue.core.windows.net",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.queue.core.windows.net/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.queue.core.windows.net/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.servicebus.windows.net",
+      "name": "privatelink.servicebus.windows.net",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.servicebus.windows.net/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.servicebus.windows.net/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.services.ai.azure.com",
+      "name": "privatelink.services.ai.azure.com",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.services.ai.azure.com/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.services.ai.azure.com/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net",
+      "name": "privatelink.vaultcore.azure.net",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net/virtualNetworkLinks/link-cutover-test",
+      "name": "privatelink.vaultcore.azure.net/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateEndpoints/pe-aif-cutover-test-rzsrg",
+      "name": "pe-aif-cutover-test-rzsrg",
+      "type": "Microsoft.Network/privateEndpoints"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateEndpoints/pe-ampls-cutover-test",
+      "name": "pe-ampls-cutover-test",
+      "type": "Microsoft.Network/privateEndpoints"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateEndpoints/pe-crcutovertestrzsrg",
+      "name": "pe-crcutovertestrzsrg",
+      "type": "Microsoft.Network/privateEndpoints"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateEndpoints/pe-kv-cutovertest-rzsrg",
+      "name": "pe-kv-cutovertest-rzsrg",
+      "type": "Microsoft.Network/privateEndpoints"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateEndpoints/pe-sql-cutover-test-rzsrg",
+      "name": "pe-sql-cutover-test-rzsrg",
+      "type": "Microsoft.Network/privateEndpoints"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateEndpoints/pe-stcutovertestrzsrg-blob",
+      "name": "pe-stcutovertestrzsrg-blob",
+      "type": "Microsoft.Network/privateEndpoints"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/privateEndpoints/pe-stcutovertestrzsrg-queue",
+      "name": "pe-stcutovertestrzsrg-queue",
+      "type": "Microsoft.Network/privateEndpoints"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Network/virtualNetworks/vnet-cutover-test",
+      "name": "vnet-cutover-test",
+      "type": "Microsoft.Network/virtualNetworks"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.OperationalInsights/workspaces/log-cutover-test",
+      "name": "log-cutover-test",
+      "type": "Microsoft.OperationalInsights/workspaces"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Sql/servers/sql-cutover-test-rzsrg",
+      "name": "sql-cutover-test-rzsrg",
+      "type": "Microsoft.Sql/servers"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/master",
+      "name": "sql-cutover-test-rzsrg/master",
+      "type": "Microsoft.Sql/servers/databases"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/retrofit",
+      "name": "sql-cutover-test-rzsrg/retrofit",
+      "type": "Microsoft.Sql/servers/databases"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg",
+      "name": "stcutovertestrzsrg",
+      "type": "Microsoft.Storage/storageAccounts"
+    }
+  ],
+  "retained_budgets": [
+    "budget-forward-test",
+    "budget-cutover-test"
+  ],
+  "cleanup": "Not performed; no current owner post-evidence teardown instruction; group and pre-existing budget preserved",
+  "source_input_sha256": {
+    "src/.dockerignore": "0ac88dfc417483d8726a5f415f807cc9d824c65a8b8084db4cf80aa782ffb0cd",
+    "src/acr-cutover.yaml": "ab9873f0d74e6ba2095a14f23e5ced9594ee28624c96bfce011fe8111caeadf1",
+    "src/core/src/zava_forward/core/synthetic/cutover_audit.py": "6a3f7530add81b3a24a2b2250f96bb92d31a5d9b6ec6486275fa807b919d7998",
+    "src/build-requirements.txt": "a5276a99d4b83ade299016963ef33a7682ac069d25dc38f103d50de74fa76ffc",
+    "src/core/pyproject.toml": "3dbf81fc2708df12a8930153e568b2fa21992c6aa864188936cd404871173fa0",
+    "src/api/pyproject.toml": "035509e2b53c3d93933b71e0726da3591a6c743baea4952ef0f1f0683d72f72d",
+    "src/api/Dockerfile": "4c21ce8bc8a314ed53b6d63d235c4683ffd65f44c5b1429371bc6a4308cc53c4",
+    "src/api/requirements.txt": "36eff644a558fba36e68491b72e54215231048217350de7e621d2a57df845e7c",
+    "src/agents/pyproject.toml": "36c31b09f58fec6981c85286b6d2ff9683743585683c7474d1523759233c5b74",
+    "src/agents/Dockerfile": "9beb4d2ed5135aa241f3f035298c5ed3a3c670ba25799858cd955f2731407943",
+    "src/agents/requirements.txt": "d47277b4f0d7a01c4666f3086f59ecb4fad0632a2cab357df9f738850bb2f875",
+    "src/orchestrator/pyproject.toml": "a808da2c84636d30c736fee988eee9df5115bde04804154feb0c98b8b08106d9",
+    "src/orchestrator/Dockerfile": "df29fe5a218db639074ac85712a6fe36f7c48a729dbf2b847d363871215d00db",
+    "src/orchestrator/requirements.txt": "36eff644a558fba36e68491b72e54215231048217350de7e621d2a57df845e7c",
+    "src/importer/pyproject.toml": "5b0182b89401496b5832165190d21b90e9f2baa35676df4dad9e68b89d3be914",
+    "src/importer/Dockerfile": "c393c89b5f86d672eb2b777e82a493a70ade81d4ab45f7f92f8829e687e94589",
+    "src/importer/requirements.txt": "c543b82171f7300f591eaba7b804586fa6c30fc50b1262cc6a0468f95573908c"
+  },
+  "failed_builds": {
+    "db1": "orchestrator: classic builder needs BuildKit",
+    "db2": "agents: classic builder needs BuildKit",
+    "db3": "api: classic builder needs BuildKit",
+    "db4": "importer: classic builder needs BuildKit",
+    "db5": "stdin template interpreted as /workspace/-",
+    "db6": "BuildKit API context missing agents/evals/ai_priority_golden.json"
+  },
+  "successful_builds": [
+    "db7: build and push",
+    "db8: build, four runtime contracts, push"
+  ],
+  "owner_sign_off": "Not requested or recorded; checklist remains unchecked"
+}

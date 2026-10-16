@@ -3706,3 +3706,31 @@ metadata when the knowledge base was created.
   while the fixed method passed all four. One RPI Review found no in-scope
   defect; hosted PR checks and the owner merge decision remain separate.
 * Published PR #335 with Refs #332 only and no issue-closing references.
+
+## [2026-10-16] update | Source cut-over evidence pack (Refs #200, Refs #201)
+
+* Added the [owner evidence pack](../architecture/cutover-evidence-pack.md),
+  [row reconciliation](../architecture/cutover-parity-audit.tsv),
+  [scoped legacy-reference inventory](../architecture/cutover-reference-inventory.tsv)
+  and [sanitized Azure record](../architecture/cutover-azure-evidence.json).
+  All 578 historical tracked path names map to 130 matrix rows/patterns;
+  actual-target exceptions and partial worker rebuild remain explicit.
+* Ran five local source suites, Ruff/format/mypy, 86 infrastructure tests,
+  all Bicep build/lint, 25 rename regressions, JS/namespace/data checks and
+  the synthetic Chromium harness. SQL skips, initial dependency/discovery
+  failures and the lack of measured coverage equivalence are disclosed.
+* Reproduced remote-build failures and added a source-context ACR BuildKit
+  task plus a golden-only context exception. Run db8 built four images and
+  passed bounded UID/read-only/capabilities/no-working-data-path checks;
+  agents client isolation passed. Regression and old-context mutation checks
+  fail without the corrections.
+* The authorized ama bootstrap failed: Microsoft.Devices is NotRegistered;
+  SQL rejected firewall changes with its public interface disabled. No
+  subscription registration, policy workaround, tenant change or app exposure
+  was attempted. No deployed health/smoke pass is claimed.
+* Retained the partial stack and unique image tags for inspection, recording
+  resource IDs and ongoing-charge risk; no current post-evidence teardown
+  instruction was established. Preserved ama and its pre-existing budget.
+  Private-data copy/open/encrypted-backup attestation and sign-off remain
+  owner-only, with every checklist box unchecked. No legacy folder deletion
+  or workflow rename occurs in this work.

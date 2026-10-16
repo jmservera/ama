@@ -7,6 +7,13 @@ ms.topic: reference
 
 ## Purpose and Status
 
+Current check: the [2026-10-16 evidence pack](./cutover-evidence-pack.md) and
+[generated row reconciliation](./cutover-parity-audit.tsv) account for all
+130 per-file/pattern rows (578 historical tracked paths), including actual
+placements that differ from proposed targets below. Source images built;
+Azure bootstrap failed, so deployed health and owner sign-off remain unmet.
+This current audit supplements, rather than rewrites, the historical record.
+
 This is the evidence for the cut-over gate in issue
 [#201](https://github.com/jmservera/ama/issues/201), under the epic
 [#195](https://github.com/jmservera/ama/issues/195). It records one outcome for

@@ -9,3 +9,6 @@
 **/*.pyc
 **/.mypy_cache
 **/.ruff_cache
+!agents/evals
+agents/evals/*
+!agents/evals/ai_priority_golden.json
