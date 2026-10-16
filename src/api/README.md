@@ -6,6 +6,86 @@ ms.date: 2026-10-16
 ms.topic: reference
 ---
 
+## Home-specific cited chat, offline synthetic slice (#214)
+
+The existing home/case chat panel contains an optional cited regulatory lookup.
+It is hidden unless the [core synthetic admission contract](../core/README.md#synthetic-home-specific-cited-chat-214)
+passes. It supports hazard and automated-decision source lookup, restores owned
+historical turns, shows provision/fact IDs with status and dates, and exposes a
+one-action doubt button. Excerpts remain quotes, never an assessment that law
+applies or a duty is satisfied. No model is called, even if ordinary Foundry
+credentials are configured. The API retrieves; the agents library renders a
+fixed five-part answer. No sixth assistant or live AI task is activated.
+
+| Method and path | Contract |
+| --- | --- |
+| `GET /api/chat/regulatory/status` | Synthetic admission only; 403 when disabled or not a declared synthetic dataset |
+| `POST /api/chat/regulatory/threads` | `{"case_id":"ZF-1"}`; owned thread bound to that home/case |
+| `GET /api/chat/regulatory/threads/{id}` | Owner-only historical messages, source snapshots and current role/case checks |
+| `POST /api/chat/regulatory/threads/{id}/ask` | `{"content":"What do the hazard sources say for this home?"}`; exact source/fact answer or explicit refusal |
+| `POST /api/chat/regulatory/threads/{id}/doubt` | `{"turn":2}`; atomically copy that stored question/answer pair into the named exercise owner's isolated inbox |
+| `GET /api/chat/regulatory/inbox` | Juan Manuel Servera's provisioned exercise principal only; no access to senders' threads or memory |
+
+No client owner, role, facts, model, source version or date overrides are
+accepted. Generic chat ask/messages/proposals cannot bypass this bounded path.
+Generic history uses the same regulatory guard. Missing/ambiguous named owner
+or an invalid pair returns 400; role/field refusal 403; foreign/missing thread
+or case 404; a concurrent/archive conflict 409. Unexpected failures log an
+explicit 503 and warn that a turn/receipt may already be durable; reload before
+retrying. A successful doubt response means a local exercise inbox copy, not
+email delivery, actual human review or legal approval. The named recipient
+must already be uniquely provisioned in the synthetic staff register; the
+application does not create an account or invent an operational delegation.
+
+The panel offers the named owner's inbox and current case's copied turns.
+Copies remain separately owned/deletable under existing chat storage; sender
+deletion does not retract a copy already explicitly sent. Operational retention,
+rights handling and actual staff use remain unapproved. Ordinary case workflow,
+human safety routes, deterministic cards and rule-engine alerts stay independent.
+
+### Acceptance audit (2026-10-16)
+
+Issue checkboxes are deliberately untouched; the coordinator owns merge-time
+updates. "Pass" below means observed bounded offline engineering evidence,
+not full ADR 0005 adoption or operational acceptance.
+
+| #214 criterion | Offline result and evidence | Remaining unmet boundary |
+| --- | --- | --- |
+| Every statement cites a provision/fact with status/dates; unsupported dropped | Pass for exact excerpt/fact fragments: `test_every_fragment_is_exact_and_cited`, snapshot/hash and size tests. Unsupported questions return no factual fragments | No generated-prose claim validation or actual-model evaluation; unknown effective dates stay null |
+| Role-scoped categories and question minimisation | Pass: core minimisation tests, API revocation and foreign-thread denial; fresh SQL staff read. No health/contact/free-text/memory retrieval | Purpose coverage limited to two source lookups; actual company field/purpose ratification unmet |
+| No legal conclusions/advice, future law active or inferred terms | Pass for closed output surface and frozen refusal cases; source-gate and interpretation tests | Partial for arbitrary legal-intent recognition: lexical classifier is not general semantic understanding. Live legal/source approval unmet |
+| Conflicting sources both shown and escalated | Partial: changed approved versions and disagreeing same-purpose cards show both, no winner, `requires_human`; explicit doubt route works | Arbitrary semantic contradictions cannot be detected. Actual human resolution not performed; no automatic private-content sharing |
+| One-action doubt to named owner | Pass locally: atomic selected-pair copy, idempotent receipt, missing owner denial, role recheck, rollback/reopen and owner-only HTTP inbox tests | No live notification or human acknowledgement; actual delegation/provisioning unmet |
+| Retrieved text is data, with injection tests | Pass structurally: malicious source text is an inert quote; zero provider/tool calls, safe DOM and no controlled writes | No actual-model injection test or general model-safety claim |
+| Model-negative never suppresses rule-engine alert | Pass for offline negative/unavailable-answer dataflow: retained alerts and safety hold equality in `test_card_conflict_and_no_rule_alert_suppression` | No actual model-negative provider run; this path has no model or rule write capability |
+| Turns stored with sources | Pass in JSON/SQLite: full versioned envelope, evidence IDs, immutable historical snapshots, restart and isolated handoff tests | Azure SQL execution, approved retention/privacy and continuing-stock acceptance not run |
+
+The [frozen evaluation](../agents/evals/regulatory_chat_results.json) records
+3/3 exact cited answers and 10/10 expected refusals. The test comparator uses
+the same deterministic cards with actual provision links: six joined permitted
+home facts across three answers versus none in cards alone, with three
+structural card/provision/home lookups versus one joined request. This is
+bounded offline lookup value only, not measured staff effort or AI superiority.
+Real inference, held-out evaluation, staff comprehension, live approval,
+60,000-home stock and Azure acceptance remain unmet and are not disguised by
+passing local tests.
+
+Install the editable core/agents/API packages and declared development tools
+with pip. From the repository root:
+
+```bash
+PYTHONPATH="$PWD/src/api/tests:$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python3 -m unittest test_regulatory_chat_api test_regulatory_chat \
+  test_regulatory_answers -q
+```
+
+The HTTP harness starts a loopback application on an ephemeral port over only
+temporary synthetic SQL data, checks health/case responsiveness, exercises the
+actual cited routes, historical reads and explicit owner handoff, forbids
+outbound inference, then stops the server. Browser interaction and human
+accessibility/comprehension are not established by HTTP/static DOM tests.
+No Azure resources or private data are required or accessed.
+
 ## Rule-card approval API (#211)
 
 The existing law store now exposes exercise rule cards, without an AI call or

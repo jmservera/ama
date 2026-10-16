@@ -1,0 +1,74 @@
+{
+  "task_id": "214",
+  "task_slug": "regulatory-home-chat-214",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/regulatory-home-chat-214-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/regulatory-home-chat-214-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/regulatory-home-chat-214-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-16/regulatory-home-chat-214-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/regulatory-home-chat-214-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/regulatory-home-chat-214-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "User explicitly requests end-to-end implementation, evidence review and PR; no automatic follow-up session inferred.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-16"
+    },
+    {
+      "decision": "ADR 0005 synthetic development only; Juan Manuel Servera is exercise Legal, Compliance and DPO owner.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-16"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready.",
+      "status": "completed",
+      "evidence": ".copilot-tracking/research/2026-10-16/regulatory-home-chat-214-research.md"
+    },
+    {
+      "decision": "One critique executed, Revise; PC-001 through PC-008 directly dispositioned without new user decision or repeat critique.",
+      "status": "applied",
+      "evidence": ".copilot-tracking/details/2026-10-16/regulatory-home-chat-214-phase-details.md"
+    },
+    {
+      "decision": "Single post-implementation Review execution Complete.",
+      "status": "executed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/regulatory-home-chat-214-review.md"
+    },
+    {
+      "decision": "Review outcome Residual work: bounded offline slice supported; full operational/AI/staff/stock/Azure acceptance unmet.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/regulatory-home-chat-214-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Commit and push the reviewed branch, then open the requested main-target PR; do not change source or repeat Review."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Verify actual sources, delegates and operational privacy/retention before any real reliance.",
+      "rationale": "Synthetic development permission is not operational approval.",
+      "evidence": "User request and ADR 0005"
+    },
+    {
+      "rank": 2,
+      "task": "Evaluate real inference and held-out questions against cards with staff review effort.",
+      "rationale": "Offline context joins do not prove AI or human benefit.",
+      "evidence": "src/agents/evals/regulatory_chat_results.json"
+    },
+    {
+      "rank": 3,
+      "task": "Broader question/conflict coverage, browser/human and concurrency evidence if broader chat is adopted.",
+      "rationale": "Finite source lookups and static/HTTP tests are deliberately narrower than general semantic chat.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/regulatory-home-chat-214-review.md RV-003"
+    }
+  ]
+}

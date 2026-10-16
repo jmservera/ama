@@ -1281,3 +1281,65 @@ change register and a supplier-independent evidence export. Synthetic demonstrat
   assistant proposals there; assistant suspension on a JSON store is unsupported.
 * Open owner items: witnessed authorised drill, recovery and response limits, supplier contract terms, Azure SQL
   drill evidence, interface identifier mapping, and the named restart authority.
+## Synthetic home-specific cited chat (#214)
+
+`regulatory_chat.RegulatoryChat` is the API-owned offline retrieval and storage
+boundary. It reuses existing `LawStore`, approved exercise cards and
+`citation_eligibility`, not a new vector store. The agents callback receives only
+a bounded data bundle; it has no database, write tool or provider connection.
+Only active simulated cards with complete, reviewed, current-version,
+non-future provisions support an answer. Seeds stay unapproved. Held,
+retired, missing, partial and unreviewed sources cannot support an answer.
+Changed approved-source versions and same-purpose cards with differing
+safe-action/clock text are flagged as potential conflicts, not reconciled.
+This is not general semantic conflict detection or a live source-currentness check.
+
+The supported lookup purposes are hazard sources and automated-decision sources.
+Hazard facts are restricted further to Building Safety Liaison, Resident Liaison
+Officer and Programme Manager roles: at most two hazards' enumerated category
+and priority, after the existing case projection. No vulnerability, health,
+address, resident name, contact, report narrative, memory or previous assistant
+answer is retrieved. Other roles receive source excerpts and an explicit
+missing-facts statement. Automated-decision lookup currently retrieves sources
+only; it does not infer a decision or home applicability.
+
+Fact citations bind the case/path, value and observation time by hash, with
+unknown effective date; law citations retain immutable provision/version,
+status, effective/retrieval dates and hash. Excerpts are limited to 350
+characters and explicitly mark truncation and unverified live currentness.
+The complete `regulatory-chat-v1` envelope is stored in the existing isolated
+assistant message, with string IDs in evidence. Questions are limited to 1,000
+characters, sources to four, cards to two and facts to four. An envelope over
+the existing 8,000-character message limit fails before writing; it is never
+silently truncated.
+
+Answer pairs and explicit selected-turn doubt copies use single chat-repository
+transactions. JSON restores a pre-image on failure; SQLite uses rollback.
+A copied pair lives in the uniquely provisioned Juan Manuel Servera exercise
+owner's own isolated thread, with a sender receipt and idempotent retries.
+The sender's other messages and memory are not shared. Both current roles/case
+rights are checked; SQL staff roles are read freshly, not from the legacy
+staff cache. Historical reads deny changed roles instead of replaying wider
+content. A post-commit audit error surfaces as an error with an already-durable
+receipt; retry does not create another copy. Audit holds metadata only.
+Copies have independent thread ownership/deletion; deleting the sender's
+thread does not delete the explicit owner's copy. No email or live delivery
+is implied. No rule-engine alert, consent, safety hold or case fact is changed.
+
+Admission requires `ZF_REGULATORY_CHAT=synthetic-demo`, omitted/test/development
+`ZF_ENV`, the loaded dataset's `regulatory_chat_exercise=synthetic-demo`
+declaration (SQL `meta` key or JSON root) and all three existing privacy
+references prefixed `SYNTH-`. These are simulated exercise references, not
+actual privacy approvals; the marker is a trusted fixture declaration, not a
+detector of real data. Do not set it on private or operational data. Unknown or
+production environments deny. No automatic dataset marking or owner
+provisioning is performed. Ordinary chat and memory gates are unchanged.
+
+Run the synthetic core proofs with an installed editable package, from the
+repository root:
+
+```bash
+PYTHONPATH="$PWD/src/core/tests" python3 -m unittest \
+  test_regulatory_chat test_chat_panel test_chatthreads test_rule_engine \
+  test_rulecards test_source_monitor -q
+```

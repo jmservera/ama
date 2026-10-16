@@ -6,6 +6,47 @@ ms.date: 2026-10-15
 ms.topic: reference
 ---
 
+## Offline cited-answer evaluation (#214)
+
+`regulatory_chat` renders exact server-selected source excerpts and structured
+home facts in a fixed five-part answer. It does not call Foundry or accept
+model-authored claims. Question text and retrieved text are data, never
+instructions; quotes are attributed, not adopted as legal conclusions.
+No new assistant, tools, database access or live conversational task activation
+is introduced. Legal/action requests and unsupported/mixed-purpose questions
+refuse using a deliberately finite lexical classifier and source-lookup
+vocabulary. Topic words alone cannot turn an unrelated question into an
+answer. Unsupported words/purposes refuse rather than falling back to a model.
+This is not a general semantic legal-intent detector; no permitted wording
+can produce a generated legal answer.
+
+`regulatory_eval` freezes 13 synthetic development questions. The observed
+[report](./evals/regulatory_chat_results.json) records 3/3 exact cited answers
+and 10/10 expected refusals, with identical semantic results on rerun.
+Tests separately exercise malicious source/question text, conflicting versions,
+unsupported sources and automated-decision lookup. These are implementer-authored
+engineering cases, not independently graded or held-out legal questions.
+
+The same-source comparator builds actual deterministic card/provision links.
+Cards alone expose zero joined home-fact fragments; three cited answers
+expose six permitted fragments. A card/provision/home lookup requires three
+structural lookups versus one bounded chat request for the joined view.
+This demonstrates offline context-join value, not observed staff time,
+comprehension, generative AI superiority, net effort or business benefit.
+Retain cards as the baseline. Real-model benefit, source approval, owner
+thresholds, human research and operational enablement are unmet.
+
+With the editable core/agents packages installed, run from the repository root:
+
+```bash
+PYTHONPATH="$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python3 -m unittest test_regulatory_answers -q
+```
+
+That test runs the evaluation twice and checks the recorded report, along
+with exact statement-to-excerpt/fact equality. Evaluation fixtures remain
+outside the package; no fixture or report is shipped in the agents image.
+
 The agents project (`zava_forward.agents`) holds the AI evaluation harness and its golden data
 (`evals/`). The five retrofit assistants and the AI task registry still live in `zava_forward.core`
 (`assistants`, `assistant_release`, `ai_registry`, divergence A1 of the parity matrix) and are exposed by
