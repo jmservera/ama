@@ -738,10 +738,19 @@ class SetupTests(unittest.TestCase):
 
     def test_device_login_only_prints_device_prompt_and_uses_isolated_profile(self):
         process = unittest.mock.Mock()
-        process.stdout = io.StringIO(
-            f"To sign in, use a web browser to open https://microsoft.com/devicelogin and enter the code ABCD12345 to authenticate.\n{TENANT} {SECRET}\n")
         process.wait.return_value = 0
-        with (patch.object(SETUP.subprocess, "Popen", return_value=process) as popen,
+
+        def start_login(args, **kwargs):
+            suppressed = ("--only-show-errors" in args
+                          or kwargs["env"]["AZURE_CORE_ONLY_SHOW_ERRORS"] != "false")
+            prompt = "" if suppressed else (
+                "To sign in, use a web browser to open https://microsoft.com/devicelogin "
+                "and enter the code ABCD12345 to authenticate.\n")
+            process.stdout = io.StringIO(f"{prompt}{TENANT} {SECRET}\n")
+            return process
+
+        with (patch.dict(os.environ, AZURE_CORE_ONLY_SHOW_ERRORS="true"),
+              patch.object(SETUP.subprocess, "Popen", side_effect=start_login) as popen,
               redirect_stdout(self.output)):
             SETUP.device_login(SETUP.Azure(self.profile), TENANT)
         self.assertIn("ABCD12345", self.output.getvalue())
@@ -749,6 +758,7 @@ class SetupTests(unittest.TestCase):
         self.assertNotIn(SECRET, self.output.getvalue())
         self.assertEqual(popen.call_args.kwargs["env"]["AZURE_CONFIG_DIR"], str(self.profile))
         self.assertIn("--use-device-code", popen.call_args.args[0])
+        self.assertEqual(SETUP.Azure(self.profile).environment()["AZURE_CORE_ONLY_SHOW_ERRORS"], "true")
 
     def test_bicep_discovery_tags_exist(self):
         infra = Path(__file__).resolve().parents[1]
