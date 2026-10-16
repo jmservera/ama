@@ -4,8 +4,8 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Follow-up",
-  "status": "active",
-  "session_status": "running",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/deployed-src-proof-research.md",
     "plan": ".copilot-tracking/plans/2026-10-16/deployed-src-proof-plan.md",
@@ -34,6 +34,11 @@
       "decision": "Single post-implementation Review executed Complete; outcome Residual work; bounded private proof supported, tenant/owner acceptance not complete",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-16/deployed-src-proof-review.md; RV-001 through RV-003 routed to distinct follow-ups"
+    },
+    {
+      "decision": "Requested manual delivery published; no automatic session or residual work started; issues remain open",
+      "status": "confirmed",
+      "evidence": "Commit 36dde3b5d0e8c939f1673989e475a1f9d0ce23d6 pushed to feat/deployed-from-src-proof-200; https://github.com/jmservera/ama/pull/342 targets main with Refs #200 and Refs #201; checks started"
     }
   ],
   "blockers": [
@@ -50,7 +55,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Publish reviewed bounded results with commit, push and PR; do not start residual work"
+    "action": "Owner reviews PR 342 and supplies approved tenant/staff prerequisites for ranked follow-ups; no merge, sign-off or further implementation inferred"
   },
   "prioritized_follow_ups": [
     {

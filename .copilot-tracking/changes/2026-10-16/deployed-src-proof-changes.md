@@ -80,4 +80,9 @@ inventory refreshed. All implementation markers reconciled.
 The single Review is Complete with outcome Residual work; bounded private
 infrastructure is supported, RV-001 through RV-003 route tenant/staff and
 functional/owner acceptance to distinct follow-ups. Review reran 117 infra
-tests successfully. Administrative publication remains pending.
+tests successfully.
+
+Publication: commit 36dde3b pushed to the existing topic branch; PR #342 opened
+against main with Refs #200 and Refs #201 only. Checks have started; no merge
+performed. Nine generated-audit tests also passed before publication.
+Requested delivery is complete with tenant/staff/owner limits still explicit.
