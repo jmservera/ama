@@ -149,3 +149,13 @@ axe. API ruff, format (17 files), strict mypy (47 files), isolated harness
 lint/format and existing design-system browser pass. Updated READMEs, KB
 index and appended log; criterion audit still keeps full WCAG/staff testing
 unmet. PR body update and ordinary commit/push remain the delivery actions.
+
+## P03-T04 publication complete
+
+Committed corrections as d2b8df4 and pushed existing branch successfully without
+force, after merge 91ed90e. Updated existing PR #354 body with CI execution,
+optional pinned axe, measured targets and exact mutation proof. Only Refs #215
+used for the correction's issue reference; required trailer and authenticated
+repository-local privacy-safe author/committer email retained. No new PR,
+issue checkbox change, merge, force push or hosted-check wait. P03 complete.
+This final artifact reconciliation contains no source/workflow changes.

@@ -79,3 +79,7 @@ a target-size assertion failure; restore it immediately afterward.
 Run both normal and no-axe browser paths, relevant unit tests, ruff/format/mypy.
 Record that hosted CI is pending because the owner says push and do not wait.
 Leave WCAG/staff/value/operational acceptance gaps unchanged.
+
+P03 completed: d2b8df4 committed and pushed without force; existing PR #354
+body updated. Both download modes and exact CSS-deletion mutation verified
+locally; hosted CI intentionally not awaited. No issue checkbox changed.

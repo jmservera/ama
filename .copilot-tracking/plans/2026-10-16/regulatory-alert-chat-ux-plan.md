@@ -80,12 +80,16 @@ critique remains historical; no additional critique or full UX Review.
   unavailable download must not skip functional/keyboard/size checks.
 * [x] P03-T03 Measure visible interactive targets at least 24px in both axes,
   retaining the designed 44px cited-lookup summary; prove removal of its CSS rule fails.
-* [ ] P03-T04 Run local CI-equivalent validation, update README/KB/evidence and
+* [x] P03-T04 Run local CI-equivalent validation, update README/KB/evidence and
   PR body with honest unmet criteria, commit and push without waiting on CI.
 
 Approved write boundary: workflow, src/api checks/tests and directly coupled
 web sizing if necessary, READMEs, KB index/log and existing RPI artifacts.
 No backend authority changes, private data, legacy trees, Azure or issue edits.
+
+P03 complete. Corrections published as d2b8df4 after merge 91ed90e; existing
+PR #354 body updated with CI wiring, mutation evidence and unchanged unmet
+criteria. Hosted CI is pending; owner explicitly requested no waiting.
 
 ## Test Ownership and Boundary
 
