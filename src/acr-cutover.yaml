@@ -8,21 +8,21 @@ steps:
   - build: -f orchestrator/Dockerfile -t {{.Run.Registry}}/zava-forward-orchestrator:cutover-{{.Run.ID}} .
   - build: -f importer/Dockerfile -t {{.Run.Registry}}/zava-forward-importer:cutover-{{.Run.ID}} .
   - cmd: >-
-      --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint python
+      --read-only --cap-drop ALL --security-opt no-new-privileges
       {{.Run.Registry}}/zava-forward-api:cutover-{{.Run.ID}}
-      -c "import os; from pathlib import Path; assert os.getuid()==10001; assert os.statvfs('/').f_flag & os.ST_RDONLY; assert not Path('/data/zavaforward.json').exists(); assert not Path('/app/data').exists(); assert 'CapEff:\t0000000000000000' in Path('/proc/self/status').read_text(); from zava_forward.api.version import __version__; print('api image contract PASS', __version__)"
+      python -c "import os; from pathlib import Path; assert os.getuid()==10001; assert os.statvfs('/').f_flag & os.ST_RDONLY; assert not Path('/data/zavaforward.json').exists(); assert not Path('/app/data').exists(); assert 'CapEff:\t0000000000000000' in Path('/proc/self/status').read_text(); from zava_forward.api.version import __version__; print('api image contract PASS', __version__)"
   - cmd: >-
-      --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint python
+      --read-only --cap-drop ALL --security-opt no-new-privileges
       {{.Run.Registry}}/zava-forward-agents:cutover-{{.Run.ID}}
-      -c "import os, importlib.util as u; from pathlib import Path; assert os.getuid()==10001; assert os.statvfs('/').f_flag & os.ST_RDONLY; assert not Path('/data/zavaforward.json').exists(); assert not Path('/app/data').exists(); assert 'CapEff:\t0000000000000000' in Path('/proc/self/status').read_text(); assert not any(u.find_spec(m) for m in ('mssql_python','azure')); print('agents image contract PASS')"
+      python -c "import os, importlib.util as u; from pathlib import Path; assert os.getuid()==10001; assert os.statvfs('/').f_flag & os.ST_RDONLY; assert not Path('/data/zavaforward.json').exists(); assert not Path('/app/data').exists(); assert 'CapEff:\t0000000000000000' in Path('/proc/self/status').read_text(); assert not any(u.find_spec(m) for m in ('mssql_python','azure')); print('agents image contract PASS')"
   - cmd: >-
-      --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint python
+      --read-only --cap-drop ALL --security-opt no-new-privileges
       {{.Run.Registry}}/zava-forward-orchestrator:cutover-{{.Run.ID}}
-      -c "import os; from pathlib import Path; assert os.getuid()==10001; assert os.statvfs('/').f_flag & os.ST_RDONLY; assert not Path('/data/zavaforward.json').exists(); assert not Path('/app/data').exists(); assert 'CapEff:\t0000000000000000' in Path('/proc/self/status').read_text(); print('orchestrator image contract PASS')"
+      python -c "import os; from pathlib import Path; assert os.getuid()==10001; assert os.statvfs('/').f_flag & os.ST_RDONLY; assert not Path('/data/zavaforward.json').exists(); assert not Path('/app/data').exists(); assert 'CapEff:\t0000000000000000' in Path('/proc/self/status').read_text(); print('orchestrator image contract PASS')"
   - cmd: >-
-      --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint python
+      --read-only --cap-drop ALL --security-opt no-new-privileges
       {{.Run.Registry}}/zava-forward-importer:cutover-{{.Run.ID}}
-      -c "import os; from pathlib import Path; assert os.getuid()==10001; assert os.statvfs('/').f_flag & os.ST_RDONLY; assert not Path('/data/zavaforward.json').exists(); assert not Path('/app/data').exists(); assert 'CapEff:\t0000000000000000' in Path('/proc/self/status').read_text(); print('importer image contract PASS')"
+      python -c "import os; from pathlib import Path; assert os.getuid()==10001; assert os.statvfs('/').f_flag & os.ST_RDONLY; assert not Path('/data/zavaforward.json').exists(); assert not Path('/app/data').exists(); assert 'CapEff:\t0000000000000000' in Path('/proc/self/status').read_text(); print('importer image contract PASS')"
   - push:
       - "{{.Run.Registry}}/zava-forward-api:cutover-{{.Run.ID}}"
       - "{{.Run.Registry}}/zava-forward-agents:cutover-{{.Run.ID}}"

@@ -16,6 +16,7 @@ from zava_forward.core import projection
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
+from zava_forward.core.regulatory_privacy import retention_report
 from zava_forward.core.rule_engine import citation_eligibility
 from zava_forward.core.source_monitor import card_freshness
 
@@ -66,7 +67,12 @@ class RegulatoryChat:
             marker = row[0] if row else None
             if not person:
                 raise ChatForbidden("The staff principal is no longer provisioned.")
-            user = json.loads(person[0])
+            person = json.loads(person[0])
+            user = (
+                dict(person, role=user["role"])
+                if user.get("auth_provider") == "trusted-proxy"
+                else person
+            )
         if (
             self.env.get("ZF_REGULATORY_CHAT") != MARKER
             or marker != MARKER
@@ -85,7 +91,12 @@ class RegulatoryChat:
             if not projection.allowed(user, "chat"):
                 raise ChatForbidden("The current staff role does not include chat.")
             return dict(user)
-        return dict(self.iso.current_user(user))
+        current = self.iso.current_user(user)
+        if user.get("auth_provider") == "trusted-proxy":
+            current = dict(current, role=user["role"])
+            if not projection.allowed(current, "chat"):
+                raise ChatForbidden("The authenticated staff role does not include chat.")
+        return dict(current)
 
     def thread(self, user: dict[str, Any], tid: str) -> tuple[dict[str, Any], dict[str, Any]]:
         user = self.admit(user)
@@ -109,6 +120,45 @@ class RegulatoryChat:
     def history(self, user: dict[str, Any], tid: str) -> dict[str, Any]:
         _, thread = self.thread(user, tid)
         return thread
+
+    def privacy_status(self, user: dict[str, Any]) -> dict[str, Any]:
+        user = self.admit(user)
+        threads = [
+            t
+            for t in self.store.chat_repo.list(user_key(user), None)
+            if t["title"].startswith(TASK + ":") and t["owner_role"] == user["role"]
+        ]
+        return retention_report(threads, self.iso.env, self.clock())
+
+    def _audit(
+        self, user: dict[str, Any], action: str, thread: dict[str, Any], **meta: Any
+    ) -> None:
+        """SQL caller owns the transaction; JSON retains the separate file-ledger boundary."""
+        detail = json.dumps(
+            dict(
+                thread=thread["id"],
+                messages=thread["message_count"],
+                status=thread["status"],
+                role=user["role"],
+                label=MARKER,
+                **meta,
+            ),
+            sort_keys=True,
+        )
+        if hasattr(self.store, "assistant_connection"):
+            self.store._append_audit(
+                [
+                    (
+                        user_key(user),
+                        action,
+                        thread["case_id"],
+                        detail,
+                        self.clock().isoformat(timespec="milliseconds"),
+                    )
+                ]
+            )
+        else:
+            self.store.audit(user_key(user), action, thread["case_id"], detail)
 
     def _fact(self, cid: str, path: str, value: str, at: str) -> dict[str, Any]:
         digest = hashlib.sha256(f"{path}:{value}:{at}".encode()).hexdigest()[:16]
@@ -283,14 +333,23 @@ class RegulatoryChat:
                                 created_at=now,
                             )
                         )
+                    if hasattr(self.store, "assistant_connection"):
+                        self._audit(
+                            user,
+                            "chat.regulatory.turn",
+                            dict(thread, message_count=seq),
+                            turn=seq,
+                            model="offline-extractive",
+                            citations=[c["id"] for c in reply["citations"]],
+                            answer_hash=hashlib.sha256(text.encode()).hexdigest(),
+                        )
                     repo.commit()
             except BaseException:
                 if not hasattr(self.store, "assistant_connection"):
                     self.store.data["chat_threads"] = before
                 raise
-        self.store._chat_event(
-            user, "chat.regulatory.turn", dict(thread, message_count=seq), turn=seq
-        )
+        if not hasattr(self.store, "assistant_connection"):
+            self._audit(user, "chat.regulatory.turn", dict(thread, message_count=seq), turn=seq)
         return dict(reply, turn=seq)
 
     def _owner(self, sender: dict[str, Any], case_id: str) -> dict[str, Any]:
@@ -393,17 +452,27 @@ class RegulatoryChat:
                             created_at=now,
                         )
                     )
+                    if hasattr(self.store, "assistant_connection"):
+                        self._audit(
+                            user,
+                            "chat.regulatory.doubt",
+                            dict(thread, message_count=fresh["message_count"] + 1),
+                            turn=seq,
+                            inbox_thread=inbox_id,
+                            decision_owner=user_key(owner),
+                        )
                     repo.commit()
             except BaseException:
                 if not hasattr(self.store, "assistant_connection"):
                     self.store.data["chat_threads"] = before
                 raise
-        self.store._chat_event(
-            user,
-            "chat.regulatory.doubt",
-            dict(thread, message_count=thread["message_count"] + 1),
-            turn=seq,
-        )
+        if not hasattr(self.store, "assistant_connection"):
+            self._audit(
+                user,
+                "chat.regulatory.doubt",
+                dict(thread, message_count=thread["message_count"] + 1),
+                turn=seq,
+            )
         return receipt
 
     def inbox(self, user: dict[str, Any]) -> dict[str, Any]:

@@ -16,7 +16,7 @@ AUDIENCES = {
 }
 SAFE_ROUTE = "Use the existing human emergency or hazard service now; do not wait for checks."
 TABLES = ("reg_check", "reg_alert", "reg_alert_event", "reg_checkpoint")
-ENGINE_VERSION = 1
+ENGINE_VERSION = 2
 SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS reg_check (id TEXT PRIMARY KEY, case_id TEXT NOT NULL, "
     "at TEXT NOT NULL, check_seq INTEGER NOT NULL, body TEXT NOT NULL)",
@@ -109,6 +109,7 @@ def evaluate(
                     and item.get("state") == "recorded"
                     and _text(item.get("source"))
                     and _text(item.get("evidence"))
+                    and _text(item.get("reasons"))
                     and at is not None
                     and at <= now
                 ):
