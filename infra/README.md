@@ -37,12 +37,15 @@ Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `mo
 
 ```bash
 python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> \
-  --environment dev --parameters infra/main.bicepparam
+  --environment dev --parameters <private-completed-parameters.bicepparam>
 # After reviewing the what-if, repeat with --apply to deploy.
 ```
 
 Then run the SQL script from a host with private network access, push the
 application images to the registry and update the image parameters.
+Start from the appropriate committed [environment example](#environments),
+replace all marked placeholders and record the region/quota checks first.
+Compilation alone does not make an example deployable.
 
 For a from-empty rebuild, first set `deployApplications=false`. This creates
 the dependencies without temporarily exposing an unauthenticated placeholder
@@ -78,7 +81,9 @@ command, including explicit overrides. Job and registry discovery is scoped to
 the supplied resource group. `--workload` defaults to `forward` and
 `--environment` to `dev`; these options determine both lookup names and the
 final Bicep parameters, overriding conflicting values in the parameter file.
-Set them explicitly when deploying test or pilot. The registry name is required
+Set them explicitly when deploying test or pilot. Workload names must be 3-10
+lowercase letters/digits, starting with a letter. The wrapper rejects resource
+groups other than `ama` before any Azure call. The registry name is required
 even for a from-empty bootstrap; it need not exist yet in the group.
 
 To intentionally roll forward, pass `--orchestrator-image <tag-or-digest>`.
@@ -105,19 +110,14 @@ of an Azure rollout.
 
 ## Deployment profile
 
-`deploymentProfile` is the general switch. It defaults to `production`, so a plain deployment keeps every isolation control.
-
-| Control | production (default) | development |
-|---|---|---|
-| Network access | Private endpoints only, internal Container Apps environment | Public only when `allowPublicNetworkAccess=true`; explicit false keeps private networking |
-| Registry quarantine | Enabled: pushed images wait for scan and release | Disabled: new images can be pulled at once |
-| Key Vault | 90 day soft delete with purge protection | 7 day soft delete, no purge protection |
-
-`allowPublicNetworkAccess=true` and `keyVaultPurgeProtection=false` are rejected in the production profile (see Quality gates). Use `deploymentProfile=development` for a throwaway stack. Do not use the development profile as evidence for the private-network claims in ADR 0001.
-
-Development no longer overrides an explicit `allowPublicNetworkAccess=false`.
-The committed dev/test parameter files still explicitly select true. Private
-development retains development quarantine/purge settings, not production ones.
+`deploymentProfile` defaults to `production`. Development alone relaxes
+nothing: public access, purge protection and registry quarantine each require
+an explicit opt-out/opt-in. Production rejects public access, disabled purge
+protection or disabled quarantine through named guards. SQL public access is
+always Disabled, independent of profile. The single
+[environment differences table](#environments) records the committed choices.
+These are security profiles for a synthetic demonstrator, not production or
+pilot acceptance. No development setting authorizes a policy exception.
 
 ### Private cut-over proof (2026-10-16)
 
@@ -158,7 +158,9 @@ python3 infra/scripts/deploy.py \
   --parameter sqlAdminPrincipalType=Application \
   --parameter entraClientId=<existing-application-client-id> \
   --parameter entraBearerOnly=true \
-  --parameter alertEmail=<approved-mailbox> --parameter 'modelDeployments=[]'
+  --parameter alertEmail=<approved-mailbox> --parameter 'modelDeployments=[]' \
+  --parameter regionCheckReference=<reviewed-region-record> \
+  --parameter quotaCheckReference=<reviewed-quota-record>
 # Repeat with --apply only after reviewing the what-if.
 ```
 
@@ -214,32 +216,61 @@ Runner unit tests use installed source packages:
 `python3 -m unittest discover -s infra/tests -p test_private_cutover_proof.py -v`.
 Compiled profile/staging/auth-mode checks run in the existing infra suite.
 
-Example from the repository root: `python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> --parameters infra/main.bicepparam --parameter deploymentProfile=development` (what-if; add `--apply` only after review).
+Example from the repository root: `python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> --environment dev --parameters <private-completed-parameters.bicepparam>` (what-if; complete the recorded checks below and add `--apply` only after review).
 
 ## Environments
 
-Issue #137. One template deploys dev, test and pilot; the parameter file is the only difference. Each environment gets its own resource group in the subscription owned by Juan Manuel Servera (owner decision 2026-10-15), named `rg-zava-forward-{environmentName}`. The pilot region is `uksouth` (owner decision 2026-10-15). Parameter files contain no secrets; placeholders carry a `PLACEHOLDER` comment (`example.invalid` mailbox, all-zero GUID).
+Refs #137. The same template/commit supports dev, test and pilot using the
+following secret-free examples. Replace every `PLACEHOLDER` in a private,
+untracked parameter file kept alongside `main.bicep` so its relative `using`
+path resolves; never commit the completed file. Do not store secrets there:
+secure inputs use the approved secret-management path.
+
+Current owner direction (2026-10-16) leaves pilot region and subscription
+ownership **open**. It supersedes the 2026-10-15 issue comment for this task;
+no previous region or ownership claim is deployment authority. Pilot locations
+are empty placeholders, not `uksouth` defaults. The `ownerTag` default identifies
+the synthetic exercise resource contact, not the pilot subscription owner.
+
+All permitted deployments stay inside the existing resource group `ama`;
+never create or delete a group, deploy subscription governance, change a
+policy/exemption, or modify resources outside it for this task. Environment
+names isolate resource names inside `ama`; they do not create separate security
+or subscription boundaries. Separate subscriptions/groups for operational use
+remain an owner design decision, not an executable instruction here.
 
 | Setting | dev (`main.bicepparam`) | test (`main.test.bicepparam`) | pilot (`main.pilot.example.bicepparam`) |
 | --- | --- | --- | --- |
 | `environmentName` | `dev` | `test` | `pilot` |
-| `deploymentProfile` | `development` | `development` | `production` (template default) |
-| Public access (`allowPublicNetworkAccess`) | `true` | `true` | `false` (private endpoints only) |
-| Key Vault (`keyVaultPurgeProtection`) | `false`: 7 day soft delete | `false`: 7 day soft delete | `true`: 90 day soft delete, purge protection |
-| Registry quarantine | off | off | on |
+| `deploymentProfile` | `development` | `production` | `production` (template default) |
+| Public access (`allowPublicNetworkAccess`) | `false` | `false` | `false` (private endpoints only) |
+| SQL public access | Always Disabled; no firewall | same | same |
+| Key Vault (`keyVaultPurgeProtection`) | `false`: 7 day soft delete | `true`: 90 day soft delete, purge protection | `true`: 90 day soft delete, purge protection |
+| Registry quarantine (`registryQuarantineEnabled`) | `false`, explicit development opt-out | `true` | `true` |
 | `enableLocks` | `false` | `false` | `true` |
-| `zoneRedundant` (storage ZRS, SQL zone, registry) | `false` | `false` | `false` until the uksouth zone check below is recorded |
-| SKUs | Template defaults: IoT Hub `B1`, Log Analytics `PerGB2018`, registry Premium | same | same; change by parameter, not by template edit |
-| Fixed retention (all environments) | Log Analytics 90 days, SQL point in time 14 days, blob and container soft delete 30 days | same | same |
-| `location` and `sqlLocation` | `uksouth` | `uksouth` | `uksouth` |
-| Deployable as committed | after placeholders | after placeholders | no: copy to a private untracked file first |
+| `zoneRedundant` (storage ZRS, SQL zone, registry and Container Apps) | `false` | `false` | `false` PLACEHOLDER pending selected-region support and owner decision |
+| Service SKUs | IoT Hub `B1`/1 unit; SQL `GP_S_Gen5`/2 max vCores; Log Analytics `PerGB2018`; registry Premium; Foundry `S0`; Container Apps Consumption | same | same; not a pilot sizing approval |
+| Model SKU/quota inputs (`modelDeployments`) | `standard`: gpt-4.1-mini; `capable`: gpt-4.1; both version 2025-04-14, `GlobalStandard`, capacity 30 | same defaults, subject to checks | same defaults, unverified until region/subscription selected |
+| Retention (fixed unless a documented module input exists) | Log Analytics 90 days; SQL PITR 14 days; blob/container soft delete 30 days; ACR 30 days; audit/digest immutability 365 days unlocked; IoT 1 day | same | same; not a legally approved retention schedule |
+| `location` and `sqlLocation` | `uksouth` candidate, recheck | `uksouth` candidate, recheck | empty PLACEHOLDERs, owner decisions |
+| `regionCheckReference`, `quotaCheckReference` | empty PLACEHOLDERs | empty PLACEHOLDERs | empty PLACEHOLDERs |
+| Deployable as committed | No: complete placeholders/checks privately | No: complete placeholders/checks privately | No: additionally requires pilot decisions |
 
 Rules:
 
-* Production is the template default. The dev and test files list every relaxation explicitly, and the template rejects `allowPublicNetworkAccess=true` or `keyVaultPurgeProtection=false` in the production profile.
+* Production is the template default. Only dev opts out of purge protection
+  and quarantine explicitly. Test/pilot retain both. Development with the
+  default inputs retains all controls; SQL cannot opt out in any profile.
 * `environmentName=pilot` with the development profile or public access is rejected by the parameter guard (`pilotRequiresProductionProfile`).
 * Promotion is by the same template version and a different parameter file: validate in dev, deploy the same commit to test with `what-if`, then to pilot after the owner approves the `what-if` output. Images are promoted by digest through the registry, never rebuilt per environment.
-* `location`, `sqlLocation` and `modelDeployments` are parameters, never template constants.
+* `location`, `sqlLocation`, `modelDeployments` (model/version/SKU/capacity),
+  `iotHubSku` and `iotHubUnits` are parameters. Do not infer that fixed service
+  SKUs or every retention period are entry-point configurable.
+* Empty `regionCheckReference` or `quotaCheckReference` fails a named guard;
+  empty locations also fail. These references point to actual dated reviewed
+  records, not approval tokens. Any nonempty string satisfies the mechanical
+  gate, so a human must verify contents, freshness and exact configuration.
+  Do not enter placeholder text to pass it.
 
 Recorded region and quota checks (re-run before each deployment; a check in another subscription or on another date proves nothing):
 
@@ -249,15 +280,53 @@ Recorded region and quota checks (re-run before each deployment; a check in anot
 | Container Apps environment in `swedencentral` | `AKSCapacityHeavyUsage` | 2026-10-08 |
 | Azure SQL in `northeurope` | Not accepting new servers | 2026-10-08 |
 | Model `gpt-4.1-mini` and `gpt-4.1`, `GlobalStandard`, capacity 30 in `uksouth` | Deployed | 2026-10-11 |
-| Zone redundancy support and quota in `uksouth` for the pilot subscription | Not yet checked: open item | none |
+| Zone redundancy support and quota in the owner-selected pilot regions/subscription | Not yet checked: open decisions | none |
 | Pilot subscription quota for Container Apps cores and model capacity | Not yet checked: open item | none |
 
-Check with `az vm list-skus -l uksouth` style queries and `az cognitiveservices usage list -l uksouth` before the pilot deployment, and record the result here.
+Historical rows above are discovery evidence, not current checks for another
+subscription or configuration. No fresh Azure check was run for this offline
+change. Before what-if/apply, the owner records a dated result/reference for:
+Container Apps regional/zone availability and managed-environment core quota
+(`az containerapp list-usages --location <region>`); SQL regional provisioning,
+the selected SKU and zone support; IoT SKU/units; and each model/version,
+deployment SKU and capacity (`az cognitiveservices model list --location
+<region>` and `az cognitiveservices usage list --location <region>`).
+Use the relevant provider's capability/quota surfaces, not VM SKU results as
+proof for these services. Record requested/available quantities, zone support,
+reviewer, date and pass/blocked outcome with the exact configuration. Keep
+actual identifiers and raw account output private. Cost authorization and
+pilot subscription ownership remain human decisions, not agent approvals.
+
+Supply the record references in the private parameter file or with
+`--parameter regionCheckReference=<reviewed-record>` and
+`--parameter quotaCheckReference=<reviewed-record>`. Rerun checks when region,
+subscription, SKU, capacity, redundancy or template version changes, and
+before each deployment; reusing a reference does not certify freshness.
 
 Naming and tagging:
 
-* Names derive from `{workload}-{environmentName}` (for example `forward-pilot`), with a 5 character hash of the resource group, location and a version salt where the Azure namespace is global (Key Vault, storage, registry). Storage and registry names drop hyphens.
-* Every resource carries `workload`, `environment` (the environment name), `dataClassification`, `purpose` and `owner`, applied through `allTags` in `main.bicep`; the required-tag policy checks the resource group (see Governance controls). Add environment-wide tags with the `tags` parameter.
+* Keep `{workload}-{environmentName}` as the prefix (`forward-dev`,
+  `forward-test`, `forward-pilot`). Workload is 3-10 lowercase letters/digits,
+  starting with a letter; the deployment wrapper enforces it. Service prefixes
+  include `vnet-`, `ca-`, `job-`, `sql-` and `aif-`; SQL/Foundry and globally
+  named Key Vault/storage/registry append a five-character
+  `uniqueString(resourceGroup().id, location, 'v2')` hash. Key Vault uses
+  `kv-{compact}-{hash}`, storage `st{compact}{hash}`, registry
+  `cr{compact}{hash}`, with hyphens removed from `compact`. Existing names,
+  version salt and job suffixes stay unchanged. Changing workload, environment
+  or hash inputs can create new resources; incremental deployment is not
+  cleanup or migration authority.
+* `allTags` applies `workload=zava-forward-demonstrator`,
+  `environment={environmentName}`, `dataClassification=constructed-non-identifying`,
+  `purpose=non-production-demonstrator`, and `owner={ownerTag}` to taggable
+  resources through every main module. Extra `tags` cannot override those
+  required values. Container workloads refine `workload` to the component;
+  token storage/maintenance uses `dataClassification=authentication-secrets`.
+  Tags contain no secrets, IDs or resident data. Untaggable child resources
+  (RBAC assignments, DNS records, diagnostics, policies/locks) rely on their
+  tagged parent; do not claim every child supports tags.
+* Resource-group tags are a separate owner-managed prerequisite. Resource-group
+  scope templates neither create nor retag `ama`; never add a policy exception.
 
 ## Quality gates
 
@@ -291,12 +360,12 @@ the same assertions. The compiled Bicep suite checks default/empty/tag/digest
 behaviour and all three job image consumers; three template mutations must
 fail. Both suites run in the existing infra discovery step, not a new check.
 For local type checking in a pip venv, install `mypy` and run
-`mypy --check-untyped-defs infra/scripts/deploy.py infra/tests/test_deploy.py`.
+`mypy --check-untyped-defs infra/scripts/deploy.py infra/tests/test_deploy.py infra/tests/test_bicep_policy.py`.
 
 * `bicepconfig.json` explicitly enables the core analyzer and sets selected high-value rules to `error`: unused declarations, secrets in parameters or outputs, hardcoded environment URLs or locations, and unsafe resource identifiers. A temporary unused-parameter mutation proves both build and lint return nonzero with the named diagnostic. All entry points and standalone modules, including subscription-scoped governance, build and lint.
-* `tests/test_bicep_policy.py` checks locally compiled JSON, not a committed snapshot. Required public-access properties and module arguments must exist and follow the computed switch, including the optional token store and monitoring ingestion/query settings. Container Apps must be internal and SQL's wide-open development firewall must remain conditional. The full production/development, public-access and purge input matrix proves that production/public or production/no-purge combinations are rejected by the named guard, not silently accepted.
+* `tests/test_bicep_policy.py` checks locally compiled JSON, not a committed snapshot. Public-access properties and module arguments follow the computed switch, including optional token storage and monitoring. SQL is the exception: always Disabled, no public parameter or firewall. Container Apps is internal unless development explicitly opts in. The profile/input matrix rejects unsupported production/public, no-purge and no-quarantine combinations. All three committed parameter files compile and their actual values, placeholders, named missing-check failures, naming and tag propagation are asserted offline.
 * Each data service must have its own unconditional endpoint module with the right target, subnet and DNS arguments, an actual private endpoint/connection and DNS-zone-group resources. Existing endpoint tests also check service DNS zones against `network.bicep`. No-shared-key/local-auth assertions cover storage, registry, Foundry, Application Insights, Log Analytics and IoT Hub; forbidden key/credential functions are checked case-insensitively. SQL remains Entra-only without an administrator login/password. Key Vault retains profile-driven purge protection, soft delete and RBAC.
-* Both `audit-archive` and `ledger-digests` must have policies on the correct container with positive, constrained retention. Mutated deep copies of the real compiled template must fail the same assertions for removed/disconnected endpoints, missing/public network settings or forwarding, external environment mode, unconditional SQL firewall, key authentication/functions, SQL authentication, purge protection, wrong/missing/zero retention and production guard bypass. Mutations never alter working Bicep files.
+* Both `audit-archive` and `ledger-digests` must have policies on the correct container with positive, constrained retention. Mutated deep copies must fail the same assertions for disconnected endpoints, missing/public network settings, external environment mode, any SQL firewall/public switch, key authentication/functions, SQL authentication, purge/quarantine changes, wrong/missing/zero retention and guard bypass (including recorded-check and location gates). Mutations never alter working Bicep files.
 * `modules/guard.bicep` uses descriptive `@minLength(1)` parameter constraints; every main resource waits for the guard directly or transitively. CI sets `REQUIRE_AZ_BICEP=1`, so absence of `az` fails rather than skips the compiled checks. Named rejection cases cover production/public access or disabled purge protection, pilot/development, public edge without production isolation or applications, SharePoint without a site ID, token-store readiness without the store, and a role map without an Entra client ID.
 
 Findings addressed in this offline slice (2026-10-16, Refs #139): audit retention
@@ -321,25 +390,30 @@ work is part of this offline gate.
 `allowPublicNetworkAccess` (default `false`) is a development switch. When `true`, the private endpoints stay in place but the following also accept external connections:
 
 * Storage, Key Vault, Foundry, Container Registry, Log Analytics and Application Insights: public network access enabled (network ACL default action `Allow`).
-* Azure SQL: the generic public development profile requests a wide firewall.
-  Do not use it for the ama cut-over proof: policy intentionally keeps public
-  access Disabled. Use the private recipe and explicit false switch; no SQL
-  firewall resource is submitted. Historical policy/tag exceptions are not
-  authorization to bypass this owner direction.
+* Azure SQL is excluded: it remains Disabled with no firewall in all profiles.
+  Initialization and data-plane tests require a private-network host/job.
+  Historical policy/tag exceptions do not authorize bypassing this boundary.
 * Container Apps environment: external (not internal) with public access enabled, so the API gets a public FQDN. The private DNS zone for the environment is not created.
 
 The Container Registry export policy is set to `enabled` in this mode because ACR requires it when public access is on. Identity and RBAC controls are unchanged (no keys, no SQL logins). Never set it to `true` outside a throwaway development stack, and do not use it as evidence for the private-network claims in ADR 0001.
 
 ## Governance controls
 
-Governance as code for issue #147 (ADR 0002 decision 6). Owner decisions (2026-10-15): region `uksouth`; subscription owner and Legal/Compliance/DPO owner Juan Manuel Servera.
+Governance as code for issue #147 (ADR 0002 decision 6). For this synthetic
+exercise Juan Manuel Servera is the Legal, Compliance and DPO owner. Current
+direction (2026-10-16) leaves pilot region and subscription ownership open,
+superseding the older selection; resource contacts below do not settle those
+decisions. Agents retrieve, compare, summarize and flag only. Rule activation,
+consent, safety, legal interpretation and financial commitments require named
+human approval; ADR 0005 is accepted for synthetic development only, with real
+owners and sources still a gap before operational reliance.
 
 | Control | Where | Decision | Owner | Cost |
 | --- | --- | --- | --- | --- |
 | Azure Policy assignments (SQL and storage public access, Key Vault deletion protection, required tags) | [`governance.bicep`](./governance.bicep), subscription scope, deployed separately by the subscription owner | Built-in definitions, audit only (`enforcementMode=DoNotEnforce`): policy reports non-compliance but blocks nothing; a Deny stance is an open owner decision | Juan Manuel Servera | No charge for Azure Policy |
 | Defender for Cloud plans (Storage, SQL servers, Key Vaults, Containers) | [`governance.bicep`](./governance.bicep) | No pricing resource is submitted until the owner accepts a cost and sets `enableDefenderPlans=true`; then the four plans request Standard. Existing paid or Free subscription plans are preserved when disabled | Juan Manuel Servera | Per-resource pricing, not yet estimated: open item, confirm in the Azure pricing calculator before enabling |
 | Resource locks | `enableLocks` in `main.bicep` (Key Vault, SQL, storage) | [`main.pilot.example.bicepparam`](./main.pilot.example.bicepparam) (a non-deployable example with placeholders; copy it to a private file and fill every value) sets `true`; the development file keeps `false` so the stack can be reset | Juan Manuel Servera | None |
-| Tagging standard | `allTags` in `main.bicep` | `workload`, `environment`, `dataClassification`, `purpose`, `owner` on every resource; the required-tag policy checks `workload`, `environment`, `dataClassification` and `owner` on resource groups | Juan Manuel Servera | None |
+| Tagging standard | `allTags` in `main.bicep` | Required tags on taggable resources, component refinements and untaggable-child exceptions documented in Environments; group tags remain separate | Juan Manuel Servera (exercise resource contact) | None |
 | Known exceptions | [`policy-exceptions.json`](./policy-exceptions.json) | EX-001: `SecurityControl=Ignore` on the development resource group (MCAPS SQL public-access policy); expires 2026-12-31 | Juan Manuel Servera | None |
 
 ```bash
