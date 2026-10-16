@@ -5,7 +5,8 @@ ms.date: 2026-10-16
 ---
 
 Task ID: 344. Slug: public-browser-access-344. Status: implemented, reviewed and
-published as PR #352; real-user and full feature acceptance Blocked.
+published as PR #352, including owner-requested P04 review continuation;
+real-user and full feature acceptance Blocked.
 
 ## Executive Summary
 
@@ -67,7 +68,7 @@ Do not tick issue criteria; coordinator owns ticks at merge.
   name setup-entra.py in the guard error and prove regressions with mutations.
 * [x] P04-T03: Document User-Agent API behavior and readback preservation limits,
   retain #349/#350 acceptance blockers and run installed-venv infra validation.
-* [ ] P04-T04: Record continuation evidence, update existing PR, commit and push
+* [x] P04-T04: Record continuation evidence, update existing PR, commit and push
   without force, issue ticks or a second postimplementation Review.
 
 <!-- P01 -->

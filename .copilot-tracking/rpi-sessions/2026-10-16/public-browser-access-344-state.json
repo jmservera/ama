@@ -3,8 +3,8 @@
   "task_slug": "public-browser-access-344",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "blocked",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/public-browser-access-344-research.md",
@@ -39,6 +39,11 @@
       "decision": "Exactly one postimplementation Review executed; outcome Not accepted for full issue 344 acceptance. RV-001 tenant, RV-002 browser API behavior and RV-003 feature evidence remain routed.",
       "status": "Review execution Complete; outcome Not accepted",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-16/public-browser-access-344-review.md"
+    },
+    {
+      "decision": "Owner explicitly requested later PR 352 continuation from supplied independent CHANGES verdict at 3f33ff1; P04 completed without repeat critique or postimplementation Review.",
+      "status": "Implemented and published; full acceptance remains Blocked",
+      "evidence": "Main merges 3b08ace/63e3594; UUID fix 74af35f; 186 infra tests, 32 auth tests, scoped Ruff/mypy and isolated local app passed; PR 352 and unchecked issue 350 criterion updated"
     }
   ],
   "blockers": [
@@ -46,7 +51,7 @@
     {"id": "browser-api", "summary": "Native anonymous API curl is 401 but browser User-Agent API requests receive EasyAuth 302.", "resolution": "Issue 350: verify authenticated platform principal handling before any API exclusion and prove browser API 401"},
     {"id": "feature-parity", "summary": "Package assets are present but real-user, representative data, model/map/photo/law and positive-role feature acceptance is unavailable.", "resolution": "Issue 350 and specialist issues in complete parity matrix"}
   ],
-  "next_action": {"phase": "Implement", "action": "User explicitly requests continuation of PR 352: merge main, enforce UUID prerequisite, mutation tests, honest auth/readback evidence, commit and push. Existing review remains historical; no repeat critique."},
+  "next_action": {"phase": "Follow-up", "action": "PR 352 is published and mergeable, hosted checks running. Owner decides merge; authorized setup and human sign-in under 349, browser API coexistence/feature evidence under 350 remain required. No issue ticks or repeat Review."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Restore valid tenant browser prerequisites, issue 349", "rationale": "Unlocks real-user and all positive-role acceptance without weakening auth.", "evidence": "Invalid client, absent credential and staff; evidence JSON and issue 349"},
     {"rank": 2, "task": "Prove browser API 401 coexistence, issue 350", "rationale": "Small bounded authentication contract, dependent on trustworthy platform principal evidence.", "evidence": "Public native API 401 but browser User-Agent API 302"},

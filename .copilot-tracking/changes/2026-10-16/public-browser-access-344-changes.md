@@ -79,6 +79,36 @@ Original critique/Review remain historical. The supplied independent CHANGES
 verdict is user-authorized later work; full acceptance remains Not accepted.
 Remaining P04-T04 owns final main reconciliation, PR/issue metadata and push.
 
+### P04-T04: Integrated source candidate
+
+Implementation commit 74af35f carries UUID guard/tests and honest documentation.
+Main advanced to ae99282 during execution; merged it without conflicts as
+63e3594, retaining incoming regulatory UX/source/checks. Re-ran the full
+installed-venv infra suite on that integrated candidate: 186 passed.
+The serving image is unchanged: earlier asset-hash proof is dated image
+evidence, not parity with these newly integrated source/UX changes.
+Updated README/evidence/index relative link paths resolve; JSON and whitespace
+checks pass. All commits use the authenticated account's repository-local
+noreply email and required Copilot trailer. Remote publication remains pending.
+
+### P04-T04: Publication completed
+
+Pushed 63e3594 (including 74af35f and both main merges) to the existing branch
+without force. Updated PR 352 body with the complete criterion audit, guard and
+readback limits, fresh probes and current local validation. GitHub reports
+MERGEABLE; hosted checks are running, not claimed passed. Added an explicit
+unchecked browser/fetch JSON API 401 coexistence criterion to #350, preserving
+all its existing body content. The initial conservative body comparison stopped
+on trailing-newline differences; normalized only trailing whitespace for the
+second comparison before editing, with no remote content discarded.
+
+All P04 tasks are complete. The final evidence-only publication commit records
+this state and the serving-image/source-head distinction; no source behavior
+changes follow validation. Full #344 acceptance remains Blocked on #349/#350.
+No merge, issue tick, live deployment, credential/tenant write, private-data
+read or resource deletion occurred. Manual session remains stopped; named
+human approvals and the original review's Not accepted outcome are unchanged.
+
 ## P01: Infrastructure and Auth
 
 Added `infra/public-edge-existing.bicep` plus two bounded helper modules.

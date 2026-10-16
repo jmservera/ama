@@ -217,6 +217,9 @@ includes compiled guard behavior and rejected mutations. Focused API auth:
 mypy and Bicep build passed. The installed local app served health/welcome 200
 and anonymous API 401 on an isolated synthetic fixture; this is not live Entra
 acceptance. Historical broader suite results above remain dated, not rerun.
+The serving image was not rebuilt or redeployed in this continuation. Asset
+hashes above describe the earlier recorded serving image, not parity with the
+new branch head after integrating main's later source/UX changes.
 
 ## Deployment Hardening Audit #118 (2026-10-16)
 
