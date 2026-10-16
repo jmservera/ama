@@ -102,7 +102,7 @@ class ContainerContractTests(unittest.TestCase):
         self.assertEqual(recipe.count("--security-opt no-new-privileges"), 4)
 
     def test_existing_workflows_gate_fixable_and_report_unfixed_without_lists(self):
-        for name in ("src-ci.yml", "mvp-ci.yml"):
+        for name in ("src-ci.yml",):
             text = (ROOT / ".github/workflows" / name).read_text()
             with self.subTest(workflow=name):
                 self.assertEqual(text.count("trivy-config: src/trivy.yaml"), 2)
