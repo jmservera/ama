@@ -1,0 +1,50 @@
+{
+  "task_id": "329",
+  "task_slug": "rule-engine-gating-329",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": null,
+    "plan": ".copilot-tracking/plans/2026-10-16/rule-engine-gating-329-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/rule-engine-gating-329-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-16/rule-engine-gating-329-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/rule-engine-gating-329-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/rule-engine-gating-329-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "User requests end-to-end implementation, RPI artifacts, local verification, push and PR.",
+      "status": "confirmed",
+      "evidence": "Current user request; rpi-quick parent continuation."
+    },
+    {
+      "decision": "Research reused; Planning Readiness Ready.",
+      "status": "reused",
+      "evidence": "Issue 329 and comments; rule_engine.citation_eligibility and RuleEngine._publish; EngineTests; core README; ADR 0006. Exact-result assertions and cross-episode publication counts are absent. No additional research needed."
+    },
+    {
+      "decision": "Exactly one final-candidate critique executed; Pass with no findings.",
+      "status": "completed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-16/rule-engine-gating-329-plan-critique.md"
+    },
+    {
+      "decision": "Implementation and local validation complete; production code unchanged.",
+      "status": "verified",
+      "evidence": "20 targeted tests; 466 core tests with one Azure opt-in skip; Ruff lint/format and mypy pass; nine in-memory mutations rejected. README/index/log updated. P01-T02 remote publication remains after Review."
+    },
+    {
+      "decision": "One post-implementation Review executed; outcome Conformant for implemented tests/docs.",
+      "status": "completed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/rule-engine-gating-329-review.md; no findings. Commit/push/PR remain parent delivery actions, not reviewed as already published."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Publish reviewed implementation with privacy-safe commit, non-forced branch push and references-only PR; persist actual delivery result."
+  },
+  "prioritized_follow_ups": []
+}

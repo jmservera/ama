@@ -3639,3 +3639,24 @@ metadata when the knowledge base was created.
   Review completed; no in-scope defect, with live and owner-approval residuals
   routed separately. CI names are unchanged; hosted checks remain separate
   from these local results. No merge or issue disposition is implied.
+
+## [2026-10-16] update | Rule-engine gating regression coverage (Refs #329)
+
+* Tightened the [core deterministic-check contract](../../src/core/README.md#deterministic-checks-and-alerts-212)
+  tests to distinguish exact `not applicable` consultation/historical/future
+  source results from `unknown` incomplete/unreviewed/stale/missing evidence.
+  Assertions retain source metadata and verify no evaluator call or persisted
+  alert for gated sources.
+* Added same-home, distinct-case and changed-due-time episode attempts.
+  Checks/checkpoints remain persisted while attention publication is limited
+  until exactly 24 elapsed hours. Independent home/card/step/item keys and
+  immediate cross-case breach escalation are positive controls.
+* All 20 rule-engine tests and the full 466-test core suite passed locally
+  (one explicit isolated-Azure-SQL opt-in test skipped). Core Ruff check,
+  format check and mypy passed in a pip venv. Nine in-memory source-gate,
+  shared-throttle, boundary and key-dimension mutations failed the intended
+  assertions without changing package files.
+* No production defect was revealed; runtime code is unchanged. Evidence uses
+  constructed temporary SQL facts and simulated approvals only. No private
+  data, cloud service, deployment, actual legal approval or operational
+  acceptance is involved. Updated the knowledge-base routing entry.
