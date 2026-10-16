@@ -1,6 +1,6 @@
 ---
 title: Source cut-over evidence pack
-description: Dated parity, local validation, Azure build and failed deployment evidence for owner review of issues 200 and 201
+description: Dated parity, private Azure deployment proof and remaining owner gates for issues 200 and 201
 ms.date: 2026-10-16
 ms.topic: reference
 ---
@@ -10,10 +10,13 @@ ms.topic: reference
 Refs #200. Refs #201. Evidence prepared on 2026-10-16 against base
 `aedd616ffff8abfcf0379a538b895e4427147c8f`, then refreshed after integrating
 `79b153b` (including #337 and #338), plus the source changes in this PR.
-**Cut-over is not ready for owner sign-off.** Four source images built and
-passed bounded remote image checks, but the infrastructure bootstrap failed.
-There is no deployed application, healthy revision or deployed smoke pass.
-No owner sign-off is recorded or inferred.
+**Cut-over is not ready for owner sign-off.** The original failed bootstrap
+below is preserved as historical evidence. The owner-authorized private-network
+continuation on 2026-10-16 has since passed bootstrap, private health/denial,
+API-MI SQL and restart persistence for one synthetic case. Authorized HTTP and
+human staff initialization remain Blocked. The results below supersede the
+original platform blockers, not the remaining owner gates. No owner sign-off
+is recorded or inferred.
 
 This pack does not delete `mvp/` or `prototype/`, rename workflows, migrate
 private data, change tenant configuration or authorize product operation.
@@ -27,6 +30,7 @@ The canonical policy is [ADR 0006](../adrs/0006-src-layout-and-cutover.md).
 | [#201 comments](https://github.com/jmservera/ama/issues/201), 2026-10-15 | Juan Manuel Servera (@jmservera) signs off; no minimum soak; healthy src deployment and owner sign-off precede deletion |
 | [#322 comment](https://github.com/jmservera/ama/issues/322), 2026-10-16 | Deploy-script resolution: existing job image, else newest registry tag, else visibly reported placeholder. Implemented by #337 and integrated here; explicit digest used for this evidence run |
 | [#323 comment](https://github.com/jmservera/ama/issues/323), 2026-10-16 | Rulesets warn, not enforce; owner says no protection change needed; src-ci already validates source |
+| Owner task direction, 2026-10-16 | Providers registered, ama costs acceptable, RG ownership available; SQL public access stays Disabled, no policy/tag/firewall bypass or peering; all private data-plane probes run inside the ama VNet |
 
 ## Current Parity Audit
 
@@ -214,7 +218,7 @@ identity-dependent role expressions were inspected for ama-scoped targets;
 what-if is not full validation. An initial literal-ID-only assertion rejected
 those expressions; manual source/target review preceded the actual deployment.
 
-### Infrastructure Result: Failed
+### Historical Infrastructure Result: Failed Before Private Continuation
 
 The group deployment exited **1**, terminal state `Failed`, correlation ID
 `4758806b-a539-494a-a02e-4433215b7c27`.
@@ -260,7 +264,7 @@ correlation ID `d32ef897-d489-4fb9-a259-c614322cbc8e`. The sanitized JSON
 retains both attempts. Retrying through the wrapper does not resolve the
 platform prerequisites or constitute deployed-image proof.
 
-Do not advance to `deployApplications=true`: successful dependency provisioning,
+At that earlier checkpoint, do not advance to `deployApplications=true`: successful dependency provisioning,
 reachable/initialized SQL with managed-identity users, existing Entra client ID,
 vault auth-secret availability and safe synthetic initialization have not all
 been established. No unauthenticated public substitute was deployed. The
@@ -315,7 +319,7 @@ Agents also checked that neither SQL nor Azure client packages were installed.
 These are bounded remote image checks, not full filesystem absence proofs,
 vulnerability scans or Container Apps workload health.
 
-### Deployed Smoke: Blocked, Not Passed
+### Historical Deployed Smoke: Blocked, Not Passed
 
 ```bash
 az containerapp list -g ama \
@@ -336,13 +340,250 @@ polling to 12 attempts, ten seconds apart, each request timeout ten seconds.
 Authenticated synthetic SQL and restart checks require an authorized identity,
 without publishing tokens or private response bodies.
 
+### Private-Network Continuation (2026-10-16)
+
+The owner confirmed that resource providers are registered, ama resource costs
+are acceptable and RG Owner rights are available. SQL public access Disabled
+is intentional. The operator VM is on SwedenCentral `172.16.0.0/24`, not
+`vnet-cutover-test` in uksouth `10.40.0.0/16`; no peering was wanted or created.
+No policy/tag exemption, public SQL enablement or firewall request was attempted.
+All SQL and private HTTP probes below execute inside Container Apps jobs.
+
+The original failures above remain historical, not current diagnoses.
+`Microsoft.Devices` now reports `Registered`. A private bootstrap through
+`infra/scripts/deploy.py` and `infra/main.bicep` succeeded at
+**2026-10-16 14:03:51 UTC**. The explicit false public-access switch is now
+honored in development; dev/test parameter-file defaults remain unchanged.
+The private development stack is not a production-profile acceptance claim.
+
+The bootstrap used `deployApplications=false`,
+`deployEnvironmentOnly=true`, `allowPublicNetworkAccess=false`,
+`sqlAdminGroupName=id-cutover-test-init`,
+`sqlAdminGroupObjectId=<initializer-mi-principal-id>`,
+`sqlAdminPrincipalType=Application`, `entraBearerOnly=true`,
+`entraClientId=<existing-application-client-id>` and `modelDeployments=[]`.
+The Entra audience is the application identified by the existing CLI
+service-principal session, not an invented workbench registration. No Entra
+app, role assignment or secret was created. RG ownership does not grant Graph
+rights: the read-only application lookup returned `Insufficient privileges`.
+
+```bash
+# Workload build context is src/, never a legacy directory.
+az acr run -g ama -r crcutovertestrzsrg -f acr-cutover.yaml --timeout 1800 src
+az acr build -g ama -r crcutovertestrzsrg -f infra/cutover-proof.Dockerfile \
+  --build-arg API_IMAGE=crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d \
+  -t zava-forward-cutover-proof:proof-20261016 infra
+
+# Use the private recipe's remaining parameters, unchanged for what-if/apply.
+python3 infra/scripts/deploy.py \
+  --resource-group ama --registry crcutovertestrzsrg \
+  --workload cutover --environment test --parameters infra/main.bicepparam \
+  --orchestrator-image crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7 \
+  --parameter allowPublicNetworkAccess=false \
+  --parameter deployApplications=false --parameter deployEnvironmentOnly=true \
+  --parameter sqlAdminGroupName=id-cutover-test-init \
+  --parameter sqlAdminGroupObjectId=<initializer-mi-principal-id> \
+  --parameter sqlAdminPrincipalType=Application \
+  --parameter entraClientId=<existing-application-client-id> \
+  --parameter entraBearerOnly=true \
+  --parameter alertEmail=8036360+jmservera@users.noreply.github.com \
+  --parameter 'modelDeployments=[]'
+# Repeat with --apply after scope review. For workload rollout, use
+# deployApplications=true and all four digest image parameters below.
+```
+
+Bootstrap what-if: 9 Create, 43 Modify, 47 NoChange, 18 Unsupported,
+11 Ignore, zero Delete. First workload what-if: 10 Create, 47 Modify,
+52 NoChange, 18 Unsupported, 16 Ignore, zero Delete. These touched only ama
+cutover resources; the pre-existing `budget-forward-test` was preserved.
+The first workload rollout failed on two ledger alerts using the obsolete
+`ContainerAppConsoleLogs_CL` schema. ARM log-table metadata identifies
+`ContainerAppConsoleLogs` with `JobName` and `Log`; both queries were corrected,
+without disabling validation. Corrected what-if: 2 Create, 53 Modify,
+54 NoChange, 18 Unsupported, 17 Ignore, zero Delete.
+
+ACR task `dba` succeeded at 13:52:27 UTC with all four existing remote image
+contracts passing; proof build `dbb` succeeded at 13:53:24 UTC. Source base is
+`3c2d9e9`; src contents were unchanged, built from the local src context,
+not a Git-context build. Both builds preceded ACR isolation. No local Docker
+was used. The proof image predates final source formatting, diagnostic-message
+cleanup and an offline-tested partial-initialization retry correction. The
+observed clean initialization/seedless verification paths are unchanged; no
+deployed partial-initialization retry pass is claimed. Its immutable digest
+remains the one below; no post-isolation rebuild was attempted.
+
+| Image repository | Deployed digest |
+| --- | --- |
+| `zava-forward-api` | `sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d` |
+| `zava-forward-agents` | `sha256:79ec0c252c22e271fb5e833437dab1e217cca7f46cc683a48e4216c9c917fcf0` |
+| `zava-forward-orchestrator` | `sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7` |
+| `zava-forward-importer` | `sha256:51b6a480bd7e89506341cb8d2fa667c0c24d86a4793f22358fa930a86f093f6f` |
+| `zava-forward-cutover-proof` | `sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72` |
+
+All are under `crcutovertestrzsrg.azurecr.io`. ACR is now private with
+quarantine disabled for this development exercise. Successful private job pulls
+demonstrate registry MI access; default post-isolation ACR Tasks repair access
+is not claimed.
+
+SQL initializer execution `job-cutover-test-init-siaykij` succeeded at
+14:03:13 UTC. Its non-root proof container used the dedicated initializer MI,
+the configured SQL Entra Application administrator. It first inspected only
+system-table metadata, confirmed an empty target and then created the schema
+through the installed MssqlStore. API/import contained users were granted by
+known client SID without Directory Readers. API has reader/writer/ddladmin for
+existing startup migrations; import has reader/writer only. The initializer
+remains administrator of this isolated proof stack, not the API runtime.
+
+This is a **one-case synthetic infrastructure fixture, with zero staff**,
+not a restored private dataset or the continuing 60,000-home/980-case lineage.
+The runner refuses unrecognized tables/state before constructing Store.
+No private dataset, answer key, roster or backup was opened.
+
+```json
+{"check":"sql_private_dns","addresses":["10.40.4.25"],"status":"Passed"}
+{"check":"database_preflight","recognized_proof":false,"status":"Passed"}
+{"check":"contained_users","count":2,"status":"Passed"}
+{"check":"application_sql_state","status":"Passed","cases":1,"staff":0,"marker":"ama-src-private-proof-2026-10-16","seed_available":true,"identity":"initializer"}
+```
+
+Separate execution `job-cutover-test-verify-oerk856` succeeded at 14:04:39 UTC
+using **API MI**, not the administrator. It reopened MssqlStore with no seed
+file, reading the same case/marker and zero staff:
+
+```json
+{"check":"application_sql_state","status":"Passed","cases":1,"staff":0,"marker":"ama-src-private-proof-2026-10-16","seed_available":false,"identity":"api"}
+```
+
+The source API revision `ca-cutover-test-api--bl42b7u` became Healthy/Running,
+with two serving replicas, pinned to the API digest above. Its private origin is
+`https://ca-cutover-test-api.jollytree-20e6e99e.uksouth.azurecontainerapps.io`.
+Environment DNS resolves inside the VNet to `10.40.0.184`; environment ingress
+is internal and public network access Disabled. The source agents app is
+provisioned with its digest but remains a scale-to-zero skeleton, not a proven
+queue worker. Orchestrator/import job image bindings are separate from actual
+functional worker acceptance.
+
+Private smoke execution `job-cutover-test-smoke-pdil7sg` succeeded at
+14:11:51 UTC. The app's EasyAuth configuration is enabled, tenant-specific,
+bearer-only and Return401; no browser secret/delegated token store was used.
+
+```json
+{"check":"api_private_dns","addresses":["10.40.0.184"],"status":"Passed"}
+{"check":"health","http_status":200,"expected":200,"status":"Passed"}
+{"check":"anonymous_api_denial","http_status":401,"expected":401,"status":"Passed"}
+{"check":"malformed_bearer_denial","http_status":401,"expected":401,"status":"Passed"}
+{"check":"forged_principal_denial","http_status":401,"expected":401,"status":"Passed"}
+```
+
+#### Deployed Smoke: Bounded Infrastructure Passed, Staff/HTTP Blocked
+
+The corrected full workload deployment succeeded at **14:17:06 UTC**.
+The final JSON therefore reports the aggregate as **Partially passed**, not
+unqualified acceptance. Both ledger alerts are now enabled with corrected
+queries; alert delivery and scheduled digest publication were not exercised.
+
+Continuation validation passed **117 offline infra tests**, including ten
+runner tests, all Bicep builds/lints and scoped Ruff check/format. The runner
+tests include unknown-table refusal before application queries, known assistant
+tables, SID validation/idempotence, partial-initialization retry, private
+DNS/URL rejection, exact HTTP outcomes and redacted errors. These are separate
+from the actual Azure executions, not substitutes for them.
+
+The serving revision was explicitly restarted. Both original replicas
+(`...-c9c685d79-9pptb`, `...-c9c685d79-dsdq9`) were replaced by running
+replicas (`...-7698b9d7ff-xvgrk`, `...-7698b9d7ff-zzk8d`).
+Post-restart HTTP execution `job-cutover-test-smoke-elvbjnq` repeated health
+200 and all three 401 checks successfully.
+
+The first post-restart SQL probe `job-cutover-test-verify-qlkf04p` failed
+closed in the proof instrument, before reading case/staff bodies: API startup
+had added its five expected `assistant_*` tables, absent from the initial
+instrument allowlist. Metadata-only execution `job-cutover-test-verify-pwkpi12`
+confirmed 16 recognized tables including the sentinel. The runner now derives
+assistant table names from installed MSSQL DDL, still rejecting arbitrary
+tables; an offline regression covers both branches.
+
+No private registry rebuild or network reopening was used. The corrected
+tracked runner was deployed explicitly as the verify job's Python command,
+retaining the immutable proof image and API identity. Its source SHA-256 is
+`0560f367cf36fa7dd0e850040c55463b712b781a465d1ebd5f4e8de6406cd7e4`.
+Execution `job-cutover-test-verify-8ycguks` succeeded at **14:22:48 UTC**:
+same synthetic case and marker, zero staff, `seed_available=false`, identity
+`api`. No initialization or reseeding ran after restart.
+
+```bash
+az containerapp job create -g ama -n job-cutover-test-init \
+  --yaml <private-initializer-job-specification> -o none
+az containerapp job start -g ama -n job-cutover-test-init
+az containerapp job start -g ama -n job-cutover-test-verify
+az containerapp job start -g ama -n job-cutover-test-smoke
+az containerapp revision restart -g ama -n ca-cutover-test-api \
+  --revision ca-cutover-test-api--bl42b7u
+az containerapp job update -g ama -n job-cutover-test-verify \
+  --yaml <private-job-specification-with-tracked-runner-command> -o none
+az containerapp job start -g ama -n job-cutover-test-verify
+az containerapp job logs show -g ama -n job-cutover-test-verify \
+  --execution job-cutover-test-verify-8ycguks --container proof \
+  --tail 100 --format text
+```
+
+The private job specifications contain ama resource IDs and MI client selection,
+not credentials or datasets; they are not published. The
+[infra recipe](../../infra/README.md#private-cut-over-proof-2026-10-16) documents
+their inputs and source-command delivery. An initial smoke CLI submission
+rejected `--base-url` as a CLI argument; using a generated JSON/YAML job
+specification preserved the intended container argument array. No resource
+was created by the rejected submission.
+
+Orchestrator execution `job-cutover-test-orchestrator-fquuldv` and importer
+execution `job-cutover-test-import-tm1jmkt` succeeded with their source images.
+These are CLI-only results: the importer ran `python -m
+zava_forward.importer --help`, not an import; orchestration remains a version
+entry point, not an accepted scheduler/worker. Agents remain a provisioned
+scale-to-zero skeleton. No assertion of four functional workers, real inference,
+continuing-stock acceptance or deployed read-only-root enforcement follows.
+
+An additional in-VNet API-MI HTTP attempt
+`job-cutover-test-mi-http-4d5qn9m` reached the managed-identity endpoint, but
+token acquisition for the identified existing application resource returned
+HTTP **400**. No token was printed or exported; no tenant permissions were
+added. This is **Blocked**, not authorized HTTP success. Staff initialization
+is also **Blocked**: no owner-supplied private roster or approved workbench
+registration/Graph permissions are available, and the proof intentionally has
+no staff. RG Owner cannot supply these tenant prerequisites. A managed identity
+was not bound as a human or granted a fictional staff role. Browser sign-in,
+valid-token issuer/audience acceptance and actual staff-authorized API behavior
+remain unproved.
+
+Resource IDs are group ID plus `/providers/` and these suffixes:
+
+* `Microsoft.App/managedEnvironments/cae-cutover-test`
+* `Microsoft.App/containerApps/ca-cutover-test-api`
+* `Microsoft.App/containerApps/ca-cutover-test-agents`
+* `Microsoft.App/jobs/job-cutover-test-init`
+* `Microsoft.App/jobs/job-cutover-test-verify`
+* `Microsoft.App/jobs/job-cutover-test-smoke`
+* `Microsoft.App/jobs/job-cutover-test-mi-http`
+* `Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-init`
+* `Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/retrofit`
+
+Execution IDs append `/executions/<execution-name>` to their job ID.
+The sanitized JSON contains observed image/revision/job bindings and final
+resource inventory. Subscription, tenant and Entra identifiers remain
+placeholders; command arguments carrying them stay outside Git.
+
 ### Retained Resources and Cleanup
 
-The final captured inventory contains **65 generic resources** inside ama, listed
+The historical captured inventory contained **65 generic resources** inside ama, listed
 by ID in the JSON, plus the run-created `budget-cutover-test`. Billable partial
 services include ACR Premium, SQL/database, monitoring, storage/private
 endpoints and a Foundry account without model deployments. No cost estimate
-or successful alert delivery is asserted.
+or successful alert delivery is asserted. The continuation's final inventory
+is separately recorded in JSON. The owner explicitly accepts ama costs for
+this run; that is not permission for unbounded future spending.
+It contains **87 generic resources**, plus the retained budgets
+`budget-forward-test`, `budget-cutover-test` and `budget-iot-cutover-test-rzsrg`.
+No resource was deleted in this continuation.
 
 No current owner instruction requires automatic post-evidence teardown; the
 historical from-empty rebuild describes a pre-rebuild reset, not teardown of
@@ -421,13 +662,12 @@ All boxes are deliberately unchecked. Technical evidence is not owner approval.
 * [ ] Refresh all historical-row/destination checks and attach green
   candidate-commit CI, SQL Server and image evidence; resolve coverage
   equivalence uncertainty rather than equating counts with coverage.
-* [ ] Resolve Microsoft.Devices registration through an authorized
-  subscription operator and the SQL public-access/network restriction through
-  the approved network/policy route. Do not weaken controls silently.
-* [ ] Complete safe SQL/Entra/secret prerequisites, deploy explicit source
-  image digests through repo infra, and capture healthy revision binding,
-  public health, protected API denial, authorized SQL and restart persistence.
-  Record each workload/job's actual functional versus skeleton status.
+* [ ] Review the resolved provider registration and private SQL network route,
+  including Disabled public access and no policy/tag/firewall bypass or peering.
+* [ ] Review the explicit source-image rollout, private health/denial, API-MI
+  SQL and restart proof. Separately resolve tenant registration/Graph/private
+  roster prerequisites and authorized HTTP/staff acceptance. Confirm each
+  workload/job's functional versus skeleton boundary; no public health is claimed.
 * [ ] Review retained ama resources and ongoing charges; explicitly choose
   remediation/retention or ID-scoped cleanup without deleting ama.
 * [ ] Personally confirm private data copied to `ZF_DATA`, opened successfully

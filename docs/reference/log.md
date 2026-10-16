@@ -3872,3 +3872,28 @@ metadata when the knowledge base was created.
   merged PR references but unticked criteria and are listed for evidence-based
   ticking by the coordinator at merge time.
 * Updated the coordinator agent with the status and criteria upkeep rules.
+## [2026-10-16] query | Private deployed-from-src proof (Refs #200, Refs #201)
+
+* Updated the [cut-over pack](../architecture/cutover-evidence-pack.md),
+  [sanitized Azure evidence](../architecture/cutover-azure-evidence.json),
+  index and [infra recipe](../../infra/README.md#private-cut-over-proof-2026-10-16).
+  Preserved historical failures and every unchecked owner gate.
+* Owner confirmed provider registration and acceptable ama costs. Repository
+  bootstrap and corrected full source-image rollout succeeded privately;
+  SQL public access remained Disabled, without policy/tag/firewall bypass,
+  peering, resource deletion or changes outside ama. All three budgets retained.
+* Remote ACR runs dba/dbb built four src images and the proof instrument.
+  In-VNet jobs initialized schema/two contained users and one fictional case,
+  with zero staff. API-MI seedless reload and restart persistence passed;
+  private health returned 200 and anonymous, malformed-token and forged-header
+  requests returned 401 before/after replacing both serving replicas.
+* Corrected explicit-false development networking, added environment-only
+  staging and opt-in bearer-only ingress. Corrected ledger alerts to the actual
+  Azure Monitor table schema. An instrument allowlist omission failed closed
+  after API assistant-table creation; deployed tracked runner source as a
+  hashed job command and verified persistence without reseeding or reopening ACR.
+* Aggregate smoke is Partially passed: authorized HTTP token acquisition
+  returned 400; actual tenant staff initialization requires an owner-supplied
+  private roster/approved registration and Graph permissions unavailable to
+  this principal. No fabricated human binding, private dataset read, inference,
+  worker acceptance, owner sign-off, legacy deletion or workflow rename.

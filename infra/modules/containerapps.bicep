@@ -16,6 +16,8 @@ param foundryProjectName string
 param modelDeploymentNames object
 param keyVaultUri string
 param entraClientId string
+param deployWorkloads bool = true
+param entraBearerOnly bool = false
 param entraRoleMap object = {}
 param tokenStoreReady bool = false
 param tokenStoreAccountName string = ''
@@ -89,7 +91,7 @@ var commonEnv = [
   { name: 'OTEL_SERVICE_NAMESPACE', value: 'zava-forward' }
 ]
 
-resource api 'Microsoft.App/containerApps@2025-07-01' = {
+resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
   name: 'ca-${prefix}-api'
   location: location
   tags: union(tags, { workload: 'api' })
@@ -109,7 +111,7 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
         allowInsecure: false
       }
       registries: [{ server: registryServer, identity: identityIds.api }]
-      secrets: concat(authEnabled ? [
+      secrets: concat(authEnabled && !entraBearerOnly ? [
         { name: 'entra-client-secret', keyVaultUrl: '${keyVaultUri}/secrets/entra-client-secret', identity: identityIds.api }
       ] : [], tokenStoreReady ? [
         { name: 'entra-token-store-sas', keyVaultUrl: '${keyVaultUri}/secrets/entra-token-store-sas', identity: identityIds.api }
@@ -177,7 +179,7 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = {
   dependsOn: [dns]
 }
 
-resource apiAuth 'Microsoft.App/containerApps/authConfigs@2025-07-01' = if (!empty(entraClientId)) {
+resource apiAuth 'Microsoft.App/containerApps/authConfigs@2025-07-01' = if (deployWorkloads && authEnabled) {
   parent: api
   name: 'current'
   properties: {
@@ -190,7 +192,7 @@ resource apiAuth 'Microsoft.App/containerApps/authConfigs@2025-07-01' = if (!emp
       }
     }
     globalValidation: {
-      unauthenticatedClientAction: 'RedirectToLoginPage'
+      unauthenticatedClientAction: entraBearerOnly ? 'Return401' : 'RedirectToLoginPage'
       redirectToProvider: 'azureactivedirectory'
       excludedPaths: ['/healthz', '/readyz', '/', '/welcome.html', '/style.css', '/zava-logo.png', '/sign-in']
     }
@@ -205,18 +207,18 @@ resource apiAuth 'Microsoft.App/containerApps/authConfigs@2025-07-01' = if (!emp
         registration: {
           openIdIssuer: '${environment().authentication.loginEndpoint}${tenant().tenantId}/v2.0'
           clientId: entraClientId
-          clientSecretSettingName: 'entra-client-secret'
+          clientSecretSettingName: entraBearerOnly ? null : 'entra-client-secret'
         }
 
         validation: {
-          allowedAudiences: ['api://${entraClientId}']
+          allowedAudiences: entraBearerOnly ? [entraClientId, 'api://${entraClientId}'] : ['api://${entraClientId}']
         }
       }
     }
   }
 }
 
-resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (!empty(tokenMaintenanceIdentityId)) {
+resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && !empty(tokenMaintenanceIdentityId)) {
   name: 'job-${prefix}-auth-renewal'
   location: location
   tags: union(tags, { workload: 'entra-token-maintenance', dataClassification: 'authentication-secrets' })
@@ -251,7 +253,7 @@ resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (!empty(tokenMaintena
 }
 
 // The agent runner has no database, blob or write credential. It reads context and posts proposals only through the API tool contract.
-resource agents 'Microsoft.App/containerApps@2025-07-01' = {
+resource agents 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
   name: 'ca-${prefix}-agents'
   location: location
   tags: union(tags, { workload: 'agents' })
@@ -281,7 +283,7 @@ resource agents 'Microsoft.App/containerApps@2025-07-01' = {
             { name: 'QUEUE_ENDPOINT', value: queueEndpoint }
             { name: 'TASK_QUEUE', value: 'agent-tasks' }
             { name: 'POISON_QUEUE', value: 'agent-tasks-poison' }
-            { name: 'API_BASE_URL', value: 'https://${api.properties.configuration.ingress.fqdn}' }
+            { name: 'API_BASE_URL', value: 'https://${api!.properties.configuration.ingress.fqdn}' }
             { name: 'API_AUDIENCE', value: 'api://${entraClientId}' }
           ])
         }
@@ -309,7 +311,7 @@ resource agents 'Microsoft.App/containerApps@2025-07-01' = {
   }
 }
 
-resource orchestrator 'Microsoft.App/jobs@2025-07-01' = {
+resource orchestrator 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads) {
   name: 'job-${prefix}-orchestrator'
   location: location
   tags: union(tags, { workload: 'orchestrator' })
@@ -341,7 +343,7 @@ resource orchestrator 'Microsoft.App/jobs@2025-07-01' = {
             { name: 'AZURE_CLIENT_ID', value: identityClientIds.orchestrator }
             { name: 'QUEUE_ENDPOINT', value: queueEndpoint }
             { name: 'TASK_QUEUE', value: 'agent-tasks' }
-            { name: 'API_BASE_URL', value: 'https://${api.properties.configuration.ingress.fqdn}' }
+            { name: 'API_BASE_URL', value: 'https://${api!.properties.configuration.ingress.fqdn}' }
             { name: 'API_AUDIENCE', value: 'api://${entraClientId}' }
           ])
         }
@@ -350,7 +352,7 @@ resource orchestrator 'Microsoft.App/jobs@2025-07-01' = {
   }
 }
 
-resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = {
+resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads) {
   name: 'job-${prefix}-ledger-verify'
   location: location
   tags: union(tags, { workload: 'ledger-verify' })
@@ -397,7 +399,7 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = {
   }
 }
 
-resource importJob 'Microsoft.App/jobs@2025-07-01' = {
+resource importJob 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads) {
   name: 'job-${prefix}-import'
   location: location
   tags: union(tags, { workload: 'import' })
@@ -458,7 +460,7 @@ resource importJob 'Microsoft.App/jobs@2025-07-01' = {
 
 output environmentId string = environmentResource.id
 output environmentName string = environmentResource.name
-output apiFqdn string = api.properties.configuration.ingress.fqdn
-output apiName string = api.name
-output apiId string = api.id
-output ledgerVerifyJobName string = ledgerVerify.name
+output apiFqdn string = deployWorkloads ? api!.properties.configuration.ingress.fqdn : ''
+output apiName string = deployWorkloads ? api!.name : ''
+output apiId string = deployWorkloads ? api!.id : ''
+output ledgerVerifyJobName string = deployWorkloads ? ledgerVerify!.name : ''
