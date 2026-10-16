@@ -16,6 +16,7 @@ param foundryProjectName string
 param modelDeploymentNames object
 param keyVaultUri string
 param entraClientId string
+param entraClientSecretName string = 'entra-client-secret'
 param deployWorkloads bool = true
 param entraBearerOnly bool = false
 param entraRoleMap object = {}
@@ -94,7 +95,7 @@ var commonEnv = [
 resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
   name: 'ca-${prefix}-api'
   location: location
-  tags: union(tags, { workload: 'api' })
+  tags: union(tags, { workload: 'api', 'zava-forward-role': 'api' })
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: { '${identityIds.api}': {} }
@@ -112,7 +113,7 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
       }
       registries: [{ server: registryServer, identity: identityIds.api }]
       secrets: concat(authEnabled && !entraBearerOnly ? [
-        { name: 'entra-client-secret', keyVaultUrl: '${keyVaultUri}/secrets/entra-client-secret', identity: identityIds.api }
+        { name: entraClientSecretName, keyVaultUrl: '${keyVaultUri}/secrets/${entraClientSecretName}', identity: identityIds.api }
       ] : [], tokenStoreReady ? [
         { name: 'entra-token-store-sas', keyVaultUrl: '${keyVaultUri}/secrets/entra-token-store-sas', identity: identityIds.api }
       ] : [])
@@ -207,7 +208,7 @@ resource apiAuth 'Microsoft.App/containerApps/authConfigs@2025-07-01' = if (depl
         registration: {
           openIdIssuer: '${environment().authentication.loginEndpoint}${tenant().tenantId}/v2.0'
           clientId: entraClientId
-          clientSecretSettingName: entraBearerOnly ? null : 'entra-client-secret'
+          clientSecretSettingName: entraBearerOnly ? null : entraClientSecretName
         }
 
         validation: {

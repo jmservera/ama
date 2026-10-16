@@ -18,7 +18,12 @@ class InventoryTests(unittest.TestCase):
         names = {entry["name"] for entry in INVENTORY["secrets"]}
         apps = (ROOT / "modules" / "containerapps.bicep").read_text(encoding="utf-8")
         for name in names:
-            self.assertIn(f"/secrets/{name}'", apps)
+            if name == "entra-client-secret":
+                self.assertIn("param entraClientSecretName string = 'entra-client-secret'", apps)
+                self.assertIn("name: entraClientSecretName, keyVaultUrl: "
+                              "'${keyVaultUri}/secrets/${entraClientSecretName}'", apps)
+            else:
+                self.assertIn(f"/secrets/{name}'", apps)
 
     def test_missing_owner_is_reported(self) -> None:
         bad = {"secrets": [{"name": "x", "rotationIntervalDays": 1, "expiryAlertDays": 1}]}
