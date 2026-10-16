@@ -120,6 +120,45 @@ class SourceMonitorTests(MonitorFixture):
         with self.assertRaisesRegex(rulecards.RuleError, "clock"):
             self.monitor.due(SOURCE, "2026-10-15")
 
+    def test_failed_retrieval_without_success_is_due_next_day(self) -> None:
+        for cadence in (30, 366):
+            with self.subTest(cadence=cadence):
+                self.configure(cadence_days=cadence)
+                self.observe(content=None, metadata={}, error="Synthetic retrieval failure")
+                self.assertTrue(self.monitor.due(SOURCE, "2026-10-17"))
+
+    def test_failures_preserve_success_cadence_and_successful_retry_resets_it(self) -> None:
+        self.configure(cadence_days=30)
+        self.monitor.observe(
+            SOURCE, today=DAY, content=RAW, metadata={}, provenance="Synthetic unchanged fixture"
+        )
+        self.observe(today="2026-10-17", content=None, metadata={}, error="Synthetic early failure")
+        self.assertFalse(self.monitor.due(SOURCE, "2026-11-14"))
+        self.assertTrue(self.monitor.due(SOURCE, "2026-11-15"))
+        self.observe(
+            today="2026-11-15", content=None, metadata={}, error="Synthetic due-day failure"
+        )
+        self.assertTrue(self.monitor.due(SOURCE, "2026-11-16"))
+        self.observe(
+            today="2026-11-16", content=None, metadata={}, error="Synthetic repeated failure"
+        )
+        self.assertTrue(self.monitor.due(SOURCE, "2026-11-17"))
+        self.observe(today="2026-11-17")
+        self.assertFalse(self.monitor.due(SOURCE, "2026-11-18"))
+        self.assertFalse(self.monitor.due(SOURCE, "2026-12-16"))
+        self.assertTrue(self.monitor.due(SOURCE, "2026-12-17"))
+
+    def test_clock_cannot_precede_latest_failed_attempt(self) -> None:
+        self.observe(content=None, metadata={}, error="Synthetic retrieval failure")
+        with self.assertRaisesRegex(rulecards.RuleError, "clock"):
+            self.monitor.due(SOURCE, "2026-10-15")
+        self.observe()
+        self.observe(today="2026-10-17", content=None, metadata={}, error="Synthetic later failure")
+        with self.assertRaisesRegex(rulecards.RuleError, "clock"):
+            self.monitor.due(SOURCE, DAY)
+        with self.assertRaisesRegex(rulecards.RuleError, "clock"):
+            self.observe()
+
     def test_approval_needs_owner_provenance_complete_impact_and_card_approval(self) -> None:
         cid = self.observe()
         self.card()

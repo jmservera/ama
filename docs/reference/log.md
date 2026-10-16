@@ -3639,3 +3639,23 @@ metadata when the knowledge base was created.
   Review completed; no in-scope defect, with live and owner-approval residuals
   routed separately. CI names are unchanged; hosted checks remain separate
   from these local results. No merge or issue disposition is implied.
+
+## [2026-10-16] update | Source monitor retrieval retry cadence (Refs #332)
+
+* Corrected the [core monitor](../../src/core/README.md#source-change-monitoring-and-review-213)
+  to measure per-source cadence from the last successful retrieval, retaining
+  failed attempts without postponing an already-due source. Latest-attempt
+  clock protection remains in force, including failures.
+* Updated the [offline job contract](../../src/orchestrator/README.md#offline-source-change-job-213)
+  and synthetic core/job regressions for next-day retry, repeated failures,
+  successful recovery and exact cadence boundaries. Retrieval success remains
+  unverified discovery, not legal approval or rule activation.
+* Scope is local source scheduling only; no live retrieval, hosted timer,
+  private data, Azure operation or human approval is implied.
+* Local pip-venv validation: core 466 tests run with one opt-in skip,
+  orchestrator 22 passed; both component Ruff check/format and mypy passed.
+  In-memory mutation of the original cadence method made all four selected
+  regression methods fail (five assertions including long-cadence subtests),
+  while the fixed method passed all four. One RPI Review found no in-scope
+  defect; hosted PR checks and the owner merge decision remain separate.
+* Published PR #335 with Refs #332 only and no issue-closing references.
