@@ -89,4 +89,12 @@ P02-T01 completed: isolated Azure SQL Basic database, real MssqlStore,
 reopened scoped decisions and purge, first contact preserved, intact audit,
 ledger off; no private inputs. P02-T02 teardown running with no remaining SQL,
 storage, AI or application resources in the latest inventory.
-P02-T03 documentation ready; one Review and git delivery remain.
+P02-T03 complete: documentation, one Review and draft PR 326.
+Final integrated core 409/API 534 and Ruff/format/mypy passed after a normal
+main-to-topic merge resolved only the append-only log conflict.
+P02-T02 final group/environment absence confirmation is blocked by Azure
+authorization: accepted group delete removed observed billable resources, then
+operation-result and group reads became forbidden; filtered group list is empty.
+The last readable inventory had only a Consumption environment and networking.
+Do not treat lost read access as proof of complete deletion. Subscription-scoped
+reader confirmation is the remaining owner/platform action.

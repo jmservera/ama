@@ -3,9 +3,9 @@
   "task_slug": "resident-retention-permissions",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Review",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "blocked",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/resident-retention-permissions-research.md",
     "plan": ".copilot-tracking/plans/2026-10-16/resident-retention-permissions-plan.md",
@@ -39,8 +39,30 @@
       "decision": "Local gates and isolated synthetic Azure SQL verification passed; whole-group cleanup in progress",
       "status": "verified",
       "evidence": ".copilot-tracking/changes/2026-10-16/resident-retention-permissions-changes.md"
+    },
+    {
+      "decision": "One Review executed; outcome Residual work, no source defect identified; final Azure cleanup confirmation blocked by lost group read authority",
+      "status": "completed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/resident-retention-permissions-review.md"
+    },
+    {
+      "decision": "Normal main-to-topic merge preserves both append-only log histories; integrated core 409/API 534 and lint/types passed; draft PR 326",
+      "status": "verified",
+      "evidence": "https://github.com/jmservera/ama/pull/326"
     }
   ],
-  "blockers": [],
-  "next_action": {"phase": "Review", "action": "Finish single review after final cleanup evidence; then git delivery"}
+  "blockers": [
+    {
+      "id": "azure-cleanup-confirmation",
+      "summary": "Deletion accepted and directly billable resources observed removed; final group/environment absence unverified because operation poll and group read now return Forbidden. Filtered group list empty.",
+      "resolution": "Subscription-scoped reader verifies ama and managed environment absence and removes anything remaining; do not infer completion from an empty permission-filtered list."
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Owner/platform verify final Azure cleanup with subscription-scoped read authority; draft PR 326 awaits that evidence and owner review"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Verify final Azure cleanup", "rationale": "Smallest action that clears the current cost/evidence blocker", "evidence": "RV-004"},
+    {"rank": 2, "task": "Reconcile earliest contact and cross-case resident identity", "rationale": "Protects correct retention origin before any real-data activation", "evidence": "RV-001"},
+    {"rank": 3, "task": "Approve history/backup erasure and operational purge design", "rationale": "Current-payload removal must not be misrepresented as complete historical erasure", "evidence": "RV-002"},
+    {"rank": 4, "task": "Complete named human and accessible resident acceptance", "rationale": "Required issue 86 operational acceptance remains outside synthetic engineering evidence", "evidence": "RV-003"}
+  ]
 }

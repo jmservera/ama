@@ -73,8 +73,8 @@ Phase status: Completed.
 ### P02: Azure, evidence and delivery
 
 * [x] P02-T01: Isolated synthetic Azure SQL exercise, restart and ledger checks.
-* [ ] P02-T02: Remove ama resource group, verify deletion, record limitations.
-* [ ] P02-T03: Documentation/log, one Review, commit/push/PR.
+* [ ] P02-T02: Remove ama resource group, verify deletion, record limitations. Blocked only on final read confirmation after Azure removed group-scoped access.
+* [x] P02-T03: Documentation/log, one Review, commit/push/PR. Draft PR 326.
 
 ## Test Ownership and Locked Scope
 
@@ -120,8 +120,14 @@ operational erasure design separately. No automatic purge service is configured.
 
 ## Current Execution State
 
-P01 complete. P02 SQL verification complete, authorized teardown running.
-Documentation and log updated. Review and git delivery await cleanup evidence.
+P01 complete. P02 SQL verification complete; teardown accepted, SQL/apps/storage/
+AI/monitoring observed removed. Final group/environment absence cannot be
+confirmed: operation-result poll and group reads became Forbidden; filtered
+group inventory is empty. No zero-cost guarantee or group-absence claim.
+Review executed once, outcome Residual work. Draft PR 326 published.
+Only P02-T02 remains blocked on subscription-scoped cleanup confirmation.
+Main-to-topic merge resolved append-only log conflict without rewriting history;
+final integrated suites passed (409 core, 534 API).
 Service-action preservation is an ordinary coupled compatibility correction,
 not a grant to managers to record resident decisions. No material divergence
 from owner choices; no additional critique required.

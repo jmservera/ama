@@ -101,3 +101,41 @@ and contractor flag-only panel. `node --check` and `git diff --check` passed.
 Updated core/API guides and knowledge index; append-only reference log records
 owner decisions, evidence and limits. No change to original/addendum, private
 memory, infrastructure, environment files or forbidden tracking folders.
+
+## Current-main integration and delivery
+
+Committed source/docs/artifacts as 705a0f1 with requested author/committer email
+and Copilot trailer, pushed topic, opened draft PR 326. Main advanced with PRs
+321 and 324; GitHub reported one conflict in the append-only reference log.
+Normal merge a45af94 preserves both main entries before this task's entry,
+without rebase, force-push or history rewriting. No manual implementation edit
+outside src. Relative to current main, the PR contains only this task's
+src/docs/tracking changes.
+
+After integration:
+
+* Core full suite: 409 run, 1 opt-in skip, passed (162.630 s).
+* API full suite: 534 run, 103 existing opt-in skips, passed (291.507 s).
+* Core/API Ruff and format checks passed; mypy passed, 82/42 source files.
+* Git comparison confirms the Azure-verified resident policy, projection and
+  SqlStore/MssqlStore implementation did not change in the integration.
+* Single Review completed: Residual work, no source defect identified.
+
+## Final Azure cleanup evidence and blocker
+
+The accepted whole-group deletion removed SQL, Container Apps/jobs, storage,
+Foundry, registry, monitoring and private endpoints from the observed inventory.
+Last readable inventory contained Consumption/ScheduledForDelete
+cae-forward-test, vnet-forward-test and two NSGs only.
+
+The deletion command eventually failed its subscription operation-result poll
+with AuthorizationFailed (`Microsoft.Resources/subscriptions/operationresults/read`).
+Subsequent group exists/show/resource-list reads also returned Forbidden.
+Retry using the existing ARM credentials and filtered `az group list` returned
+an empty list, but direct group-existence read remained forbidden.
+
+This is consistent with deletion removing group-scoped access, not independent
+proof of final environment/group removal. No alternate identity or escalation
+was attempted. Zero remaining cost and completed group deletion are not claimed.
+Final confirmation requires an owner/platform operator with subscription-scoped
+read authority. Draft PR 326 stays draft to expose that blocker honestly.

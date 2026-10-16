@@ -24,8 +24,9 @@ no source changes or repeated critique.
 
 ## Execution Status
 
-Execution: Partial, assessment in progress pending final cleanup evidence.
-No conclusion yet about the whole task's delivery completion.
+Execution: Complete. Exactly one post-implementation Review.
+Source implementation and SQL verification pass. Whole-task cleanup confirmation
+has a platform authorization blocker, recorded as RV-004, not assumed successful.
 
 ## Plan-to-Change Reconciliation
 
@@ -33,10 +34,10 @@ No conclusion yet about the whole task's delivery completion.
 | --- | --- | --- |
 | P01-T01 | Shared calendar schedule; earliest contact marker; legal-hold-aware retention approval; JSON/SQLite boundary/purge tests | Reconciled |
 | P01-T02 | Registered human writer gate, legacy endpoint, separate view set, detached resident subtrees, contractor flags and record-only form gating | Reconciled |
-| P01-T03 | 401 core, 517 API, 70 agents; exact-field tests; local HTTP; Ruff/format/mypy; Node rendering | Reconciled |
+| P01-T03 | Final integrated 409 core, 534 API, 70 agents; exact-field tests; local HTTP; Ruff/format/mypy; Node rendering | Reconciled |
 | P02-T01 | Real Azure SQL Basic database; new MssqlStore connections preserve decisions and purge; intact audit; ledger off | Reconciled |
-| P02-T02 | SQL/apps/storage/AI/monitoring removed; consumption environment and free network resources awaiting Azure deletion | In progress, not claimed complete |
-| P02-T03 | Core/API documentation and reference index/log updated; git commit/push/PR follow review | Delivery pending |
+| P02-T02 | SQL/apps/storage/AI/monitoring observed removed; final operation polling and existence read became forbidden after group-scoped access disappeared; filtered group list empty | Final independent confirmation blocked, RV-004 |
+| P02-T03 | Documentation/log and artifacts committed, draft PR 326 open; final review/evidence commit follows | Parent delivery closeout |
 
 ## Implementation-Time Updates and Critique
 
@@ -54,6 +55,13 @@ route; managers still cannot record resident decisions or authority. UI follows
 that same boundary. Partial content fixtures without resident objects remain
 Unknown rather than crashing. No unresolved significant owner decision, no
 material scope expansion and no premature activation of operational controls.
+
+Origin/main advanced with accepted PRs 321 and 324 during execution. A normal
+non-rewriting merge into this topic resolved only an append-only log conflict,
+preserving both main entries before this task's entry. The actual resident
+policy, projection and SQL implementation remained unchanged; full integrated
+core/API suites and type/lint checks passed. This is integration of accepted
+main, not a new policy decision, a repeated critique or a second Review.
 
 ## Findings and Residual Work
 
@@ -82,6 +90,22 @@ without-detriment acceptance remain issue 86 work. Synthetic tests, a real
 SQL engine and an intact audit chain cannot satisfy human acceptance.
 Destination: owner-led acceptance follow-up; no issue closure.
 
+### RV-004 [Medium]: Final Azure teardown confirmation lost its read authority
+
+`az group delete --name ama --yes` was accepted and removed the observed SQL,
+apps, storage, AI and monitoring resources. Last authorized resource inventory
+contained only cae-forward-test (Consumption/ScheduledForDelete), VNet and
+two NSGs. The command's subscription operation-result poll subsequently returned
+AuthorizationFailed. Direct group show/exists/resource inventory retries are now
+forbidden; the authorized filtered group list returns empty.
+
+That is consistent with group-scoped RBAC disappearing during deletion, but
+does not independently prove the final group/managed-environment absence.
+No alternate identity, permission escalation or claimed zero-cost guarantee.
+Destination: owner/platform follow-up with subscription-scoped read authority:
+verify ama and its managed environment are absent, remove any remaining resources.
+This blocks the whole-task cleanup completion claim, not the verified source fix.
+
 ## Validation Evidence
 
 * New tests failed on the original source: manager mutation wrongly succeeded
@@ -90,6 +114,9 @@ Destination: owner-led acceptance follow-up; no issue closure.
   skips; agents 70 passed. Later exact-field and UI changes covered by targeted
   resident 30 run/1 skip, HTTP/role 13 and Node render checks.
 * Core/API Ruff, format and mypy passed. Diff whitespace check passed.
+* Current-main integration: 409 core run/1 opt-in skip (162.630 seconds);
+  534 API run/103 existing opt-in skips (291.507 seconds), all passed.
+  Ruff/format passed; mypy passed for 82 core and 42 API source files.
 * Synthetic real Azure SQL: 1 test passed in 10.889 seconds; actual ledger off.
   Verified per-measure Proceed/Hold, manager denial, coordinator view, first
   contact anniversary, disclosure expiry, new-connection persistence and purge,
@@ -98,5 +125,8 @@ Destination: owner-led acceptance follow-up; no issue closure.
 
 ## Outcome
 
-Pending final cleanup evidence. Residual operational follow-ups do not convert
-owner exercise policy into legal certification or close issue 86.
+Outcome: Residual work. No in-scope source defect identified; local and real SQL
+engineering evidence is accepted within its stated boundary. RV-004 blocks
+verified final cleanup. RV-001 through RV-003 are existing operational
+follow-ups outside this engineering slice, not invented approvals.
+No second Review or implementation correction loop is requested. Issue 86 stays open.

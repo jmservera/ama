@@ -3509,3 +3509,11 @@ metadata when the knowledge base was created.
   require separate retention design. Universal cross-case resident identity,
   missing historical contact evidence, named human acceptance and formal
   complaints integration remain open. Refs #86, never closes it.
+* Published draft PR #326. Main integration preserved both append-only log
+  histories; final integrated core 409/API 534 tests and Ruff/format/mypy passed.
+* Authorized ama teardown removed the observed SQL/apps/storage/AI/monitoring
+  resources. Final group/environment absence is not independently confirmed:
+  the deletion poll and subsequent group reads became Forbidden after
+  group-scoped access disappeared; a filtered group list is empty. An operator
+  with subscription-scoped read access must confirm completion. No zero-cost
+  or complete erasure claim is made; this remains the delivery blocker.
