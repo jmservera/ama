@@ -3706,3 +3706,30 @@ metadata when the knowledge base was created.
   while the fixed method passed all four. One RPI Review found no in-scope
   defect; hosted PR checks and the owner merge decision remain separate.
 * Published PR #335 with Refs #332 only and no issue-closing references.
+
+## [2026-10-16] update | Resident retention restarts after approved deletion (Refs #86)
+
+* Implemented the [latest owner retention decision](https://github.com/jmservera/ama/issues/86)
+  in the [core resident contract](../../src/core/README.md#resident-decisions-and-representatives-86):
+  after manager-approved deletion, five calendar years starts from the first
+  newly recorded contact, not the deletion or decision date. No contact means
+  an Unknown origin/due date; subsequent contact does not extend the period.
+* Cleared the cached origin and retained a content-free count tombstone so
+  separately purposed old contact records cannot pin the new clock. Same-day
+  renewed contacts remain eligible. Older date-only deletions conservatively
+  exclude general contacts on/before deletion; fresh safe-contact evidence or
+  later-day general contact can establish their new period.
+* Replaced the obsolete pinning regression with inherited JSON/SQLite coverage
+  for returning residents through each contact route, repeated expiry/deletion/
+  renewal, legacy recovery, persistence, fresh scoped acceptance and exact
+  personal-data-free tombstone metadata. Old consent is never revived.
+* Removed the superseded README known limit and updated reference routing.
+  This is an owner-approved exercise rule, not legal advice, historical erasure,
+  live-platform evidence or resident acceptance. Existing issue #86 operational
+  and human acceptance work remains open. No private data, Docker or Azure
+  operation was involved.
+* Local pip-venv evidence: full core suite 482 tests with one explicit Azure
+  opt-in skip; all executed tests and three resident API tests passed. Core
+  Ruff check/format and mypy passed. All ten new inherited JSON/SQLite cases
+  failed semantic assertions against the complete original module in memory,
+  then passed against the installed changed code without package-file mutation.
