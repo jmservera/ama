@@ -4345,3 +4345,25 @@ metadata when the knowledge base was created.
 * Final offline validation: 260 infra tests with compiled Bicep guards and no
   skips, four-script scoped mypy, focused Ruff with no introduced baseline
   findings, 32 responsive loopback API auth tests and Markdown/diff checks.
+
+## [2026-10-16] ingest | Automatic private demo roster follow-up
+
+* Refs #360. Implemented missing/exact-template roster generation using existing
+  private SQL codes/roles/supplier scopes and enabled member Graph users with
+  individual-mailbox purpose evidence; no invented staff codes or people.
+* Reserved the first stable ProgrammeManager code for the selected admin,
+  seeded remaining distinct assignments, privately persisted version/seed/staff,
+  and preserved existing Entra verification then SQL check/confirmation/restart.
+  Production/unknown/conflicting profiles and existing immutable SQL bindings
+  refuse regeneration. Shortages report exact counts and stop, never reuse.
+* Updated `infra/README.md`, registration guidance, the cut-over evidence pack
+  and reference index. Both private roster readers retain legacy arrays. No
+  private names, UPNs or directory IDs enter generated summaries or handoff.
+* Official Graph mailbox-settings API/purpose documentation retrieved
+  2026-10-16 identifies the classification and MailboxSettings.Read prerequisite.
+  Missing mailbox access fails closed; no permissions are granted automatically.
+* Offline infra suite: 282 tests passed without skips, including compiled Bicep
+  profile-tag protection and mocked SQL/Graph cases. Scoped production mypy
+  and 32 responsive loopback API auth tests passed; actual tenant people,
+  browser sign-in, SQL binding/restart and migration/retirement approvals remain
+  Not run or unmet. No Azure writes, live setup, issue ticks or approval claims.

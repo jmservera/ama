@@ -2,11 +2,13 @@ import importlib.util
 import json
 from pathlib import Path
 import sqlite3
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "infra/scripts"))
 spec = importlib.util.spec_from_file_location("staff_initializer", ROOT / "infra/scripts/initialize-workbench-staff.py")
 INIT = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(INIT)
@@ -82,12 +84,39 @@ class StaffInitializationTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 INIT.read_roster(path)
 
+    def test_generated_envelope_and_candidate_metadata_contract(self):
+        from staff_roster import staff_candidates
+
+        row = {"code": "CT-01", "userId": ONE, "role": "Contractor",
+               "contractor": "Example Supplier"}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "roster.json"
+            path.write_text(json.dumps({"version": 1, "seed": 41, "staff": [row]}))
+            path.chmod(0o600)
+            self.assertEqual(INIT.read_roster(path), [row])
+            for envelope in ({"version": 2, "seed": 41, "staff": [row]},
+                             {"version": 1, "seed": "41", "staff": [row]},
+                             {"version": 1, "seed": 41, "staff": []}):
+                path.write_text(json.dumps(envelope))
+                with self.assertRaises(ValueError):
+                    INIT.read_roster(path)
+        candidates = staff_candidates([dict(row, oid=ONE, name="Private Person",
+                                             email="private@example.invalid")])
+        self.assertEqual(candidates, [{"code": "CT-01", "role": "Contractor",
+                                      "bound": True, "contractor": "Example Supplier"}])
+        self.assertNotIn(ONE, json.dumps(candidates))
+        self.assertNotIn("private@example.invalid", json.dumps(candidates))
+
     def test_resource_and_disabled_accounts_refused(self):
         user = {"id": ONE, "displayName": "Example Member", "userPrincipalName": "person@example.invalid",
                 "accountEnabled": True, "userType": "Member"}
         self.assertEqual(INIT.person(user)["oid"], ONE)
         for changes in ({"accountEnabled": False}, {"userType": "Guest"},
-                        {"displayName": "Example ConfRm"}, {"userPrincipalName": "wksp-office@example.invalid"}):
+                        {"displayName": "Example ConfRm"},
+                        {"userPrincipalName": "wksp-office@example.invalid"},
+                        {"displayName": "Board Room"}, {"displayName": "Shared Mailbox"},
+                        {"userPrincipalName": "desk.office@example.invalid"},
+                        {"displayName": "Service Account"}):
             with self.subTest(changes=changes), self.assertRaises(ValueError):
                 INIT.person(dict(user, **changes))
         self.db.execute("ALTER TABLE cases ADD COLUMN contractor TEXT")

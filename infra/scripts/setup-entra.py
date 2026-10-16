@@ -6,6 +6,7 @@ import base64
 import hashlib
 import json
 import os
+import random
 import re
 import shlex
 import shutil
@@ -22,6 +23,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, NoReturn
 from urllib.parse import quote, urlencode, urlsplit
+
+from staff_roster import person, roster_rows
 
 GRAPH = "https://graph.microsoft.com/v1.0/"
 ARM = "https://management.azure.com"
@@ -41,6 +44,13 @@ APP_PORTAL = "https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/App
 SP_PORTAL = "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/StartboardApplicationsMenuBlade/~/AppAppsPreview"
 LOCK_TAG = "zava-forward-auth-lock"
 STORE_TAG = "zava-forward-credential-store"
+PROFILE_TAG = "zava-forward-deployment-profile"
+TEMPLATE = [{"code": "REPLACE_EXISTING_STAFF_CODE", "userId": "REPLACE_PERSON_OBJECT_ID",
+             "role": "REPLACE_APPROVED_WORKBENCH_ROLE"}]
+EXERCISE_NOTICE = (
+    "Demo/synthetic-exercise assignment only, by owner decision (2026-10-16). "
+    "This is not evidence of professional competence or delegated authority."
+)
 
 
 class SetupError(Exception):
@@ -489,7 +499,7 @@ def read_roster(path: Path, keys: set[str]) -> list[dict[str, str]]:
     private_path(path)
     private_path(path.parent, directory=True)
     try:
-        data = json.loads(path.read_text())
+        data = roster_rows(json.loads(path.read_text()))
     except (OSError, ValueError):
         raise SetupError("Private roster is unreadable or invalid JSON; see the documented schema.") from None
     if not isinstance(data, list) or not data:
@@ -520,27 +530,242 @@ def read_roster(path: Path, keys: set[str]) -> list[dict[str, str]]:
     return out
 
 
-def prepare_private_roster(path: Path, *, readonly: bool) -> None:
-    if path.exists():
-        return
+def roster_input(path: Path) -> tuple[bytes | None, bool]:
+    """Only the exact shipped template is replaceable, never partial operator input."""
+    if path.is_symlink() or any(p.is_symlink() for p in path.parents):
+        raise SetupError("Private roster paths must not contain symbolic links.")
+    if REPO == path.resolve() or REPO in path.resolve().parents:
+        raise SetupError("Keep the private roster outside Git.")
+    if not path.exists():
+        if path.parent.exists():
+            private_path(path.parent, directory=True)
+        return None, True
+    private_path(path)
+    private_path(path.parent, directory=True)
+    try:
+        data = path.read_bytes()
+        return data, json.loads(data) == TEMPLATE
+    except (OSError, ValueError):
+        raise SetupError("Private roster is unreadable or invalid JSON.") from None
+
+
+def require_demo(cli: Azure, app: dict[str, Any]) -> None:
+    """Require resource-bound development evidence; production always wins."""
+    resources = [app]
+    properties = app.get("properties", {})
+    environment_id = properties.get("environmentId") or properties.get("managedEnvironmentId")
+    if environment_id:
+        resources.append(cli.rest(ARM + environment_id + f"?api-version={API_VERSION}"))
+    profiles = [r.get("tags", {}).get(PROFILE_TAG) for r in resources
+                if PROFILE_TAG in r.get("tags", {})]
+    environments = [r.get("tags", {}).get("environment") for r in resources
+                    if "environment" in r.get("tags", {})]
+    ids = {app["id"].lower()}
+    if isinstance(environment_id, str):
+        ids.add(environment_id.lower())
+    deployments = cli.call(["deployment", "group", "list", "-g", "ama"])
+    for deployment in deployments:
+        deployed = deployment.get("properties", {})
+        if not any(str(r.get("id", "")).lower() in ids
+                   for r in deployed.get("outputResources", [])):
+            continue
+        if deployed.get("provisioningState") != "Succeeded":
+            raise SetupError(
+                "Demo profile evidence is not a successful deployment; no roster generated.")
+        parameters = deployed.get("parameters", {})
+        parameter_tags = parameters.get("tags", {}).get("value", {})
+        module_profile = parameter_tags.get(PROFILE_TAG)
+        if module_profile is not None:
+            profiles.append(module_profile)
+        if "deploymentProfile" in parameters:
+            profiles.append(parameters["deploymentProfile"].get("value"))
+        elif module_profile is None:
+            profiles.append("production")
+        if "environmentName" in parameters:
+            environments.append(parameters["environmentName"].get("value"))
+        if "environment" in parameter_tags:
+            environments.append(parameter_tags["environment"])
+    if (not profiles or any(p != "development" for p in profiles) or not environments
+            or any(e not in ("dev", "test", "demo") for e in environments)):
+        raise SetupError(
+            "Automatic demo roster refused: a development profile and demo/test/dev environment "
+            "must be verified for this app/environment. Production, unknown or conflicting "
+            "profile evidence is not allowed; direct ingress or a test name is not proof.")
+
+
+def candidate_staff(cli: Azure, args: argparse.Namespace,
+                    app: dict[str, Any]) -> list[dict[str, str]]:
+    command = staff_command(args, app) + ["--list-candidates"]
+    environment = {**cli.environment(), "ZF_SETUP_EXPECTED_APP": app["id"]}
+    if cli.subscription:
+        environment["ZF_SETUP_SUBSCRIPTION"] = cli.subscription
+    try:
+        result = subprocess.run(command, env=environment, capture_output=True, text=True,
+                                timeout=120, check=False)
+    except (OSError, subprocess.TimeoutExpired):
+        result = subprocess.CompletedProcess(command, 1, "", "")
+    if result.returncode:
+        handoff = ["python3", "infra/scripts/setup-entra.py", "--container-app", app["name"],
+                   "--tenant-profile", str(args.tenant_profile), "--roster", str(args.roster)]
+        for flag, enabled in (("--direct-ingress", args.direct_ingress), ("--check", args.check),
+                              ("--dry-run", args.dry_run), ("--list-staff", args.list_staff)):
+            if enabled:
+                handoff.append(flag)
+        if args.seed is not None:
+            handoff += ["--seed", str(args.seed)]
+        print("Private SQL candidate lookup is blocked. No codes were invented or roster written; "
+              "SQL binding and replica restart: NOT done.")
+        print("On an authorized private-connected host with the same isolated profile, run:")
+        print(shlex.join(handoff))
+        raise SetupError(
+            "Private SQL candidates unavailable. SQL public access must stay Disabled.")
+    definitions = json.loads(MANIFEST.read_text())["appRoles"]
+    role_keys = {r["key"] for r in definitions}
+    aliases = {r["label"]: r["key"] for r in definitions}
+    try:
+        data = roster_rows(json.loads(result.stdout))
+        rows: list[dict[str, str]] = []
+        codes: set[str] = set()
+        for row in data:
+            code, role = row.get("code"), row.get("role")
+            role = aliases.get(role, role)
+            if (not isinstance(code, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,40}", code)
+                    or any(word in code.upper() for word in ("PLACEHOLDER", "REPLACE_", "YOUR_"))
+                    or code in codes or not isinstance(role, str) or role not in role_keys
+                    or type(row.get("bound")) is not bool):
+                raise ValueError
+            codes.add(code)
+            candidate = {"code": code, "role": role}
+            if role == "Contractor":
+                supplier = row.get("contractor")
+                if (not isinstance(supplier, str) or not supplier.strip()
+                        or any(word in supplier.upper()
+                               for word in ("PLACEHOLDER", "REPLACE_", "<", "YOUR_"))):
+                    raise ValueError
+                candidate["contractor"] = supplier
+            if row["bound"] and not args.list_staff:
+                raise SetupError(
+                    "SQL already contains immutable staff bindings. Restore the existing "
+                    "private roster; random regeneration is unsafe. No Entra changes made.")
+            rows.append(candidate)
+        return sorted(rows, key=lambda r: r["code"])
+    except (ValueError, TypeError):
+        raise SetupError("SQL candidate response is invalid; no roster generated.") from None
+
+
+def eligible_people(graph: Azure) -> list[dict[str, str]]:
+    people = []
+    seen: set[str] = set()
+    emails: set[str] = set()
+    path = "users?$select=id,displayName,userPrincipalName,accountEnabled,userType"
+    for user in graph.pages(path):
+        try:
+            identity = person(user)
+        except (ValueError, KeyError, TypeError):
+            continue
+        if not individual_mailbox(graph, identity["oid"]):
+            continue
+        if identity["oid"] in seen or identity["email"] in emails:
+            raise SetupError("Graph returned duplicate candidate people; no roster generated.")
+        seen.add(identity["oid"])
+        emails.add(identity["email"])
+        people.append(identity)
+    return sorted(people, key=lambda p: p["oid"])
+
+
+def individual_mailbox(graph: Azure, principal: str) -> bool:
+    try:
+        purpose = graph.rest(GRAPH + f"users/{principal}/mailboxSettings/userPurpose")
+    except AzureError as error:
+        if error.kind in ("not-found", "request"):
+            return False  # no mailbox (for example unlicensed): not an individual staff candidate
+        raise SetupError(
+            "Cannot verify mailbox eligibility. An authorized provisioning profile needs "
+            "MailboxSettings.Read access to candidate user purposes; no permissions were "
+            "granted. Unknown mailbox types cannot be assigned automatically.") from None
+    return purpose.get("value") == "user"
+
+
+def generate_roster(graph: Azure, args: argparse.Namespace,
+                    candidates: list[dict[str, str]],
+                    *, readonly: bool, expected: bytes | None) -> list[dict[str, str]]:
+    print(EXERCISE_NOTICE)
+    candidates = sorted(candidates, key=lambda r: r["code"])
+    seed = args.seed if args.seed is not None else random.SystemRandom().randrange(2**63)
+    print(f"Assignment seed: {seed}; reuse with --seed {seed}.")
+    managers = [c for c in candidates if c["role"] == "ProgrammeManager"]
+    if not managers:
+        raise SetupError(
+            "SQL has no ProgrammeManager position for the administrator; no codes invented.")
+    people = eligible_people(graph)
+    admins = [p for p in people if p["email"].startswith("admin@")]
+    upn = args.admin_upn
+    if upn is None and len(admins) == 1:
+        admin = admins[0]
+    else:
+        if upn is None:
+            print(f"Found {len(admins)} eligible tenant members whose UPN starts with admin@.")
+            if readonly or not sys.stdin.isatty():
+                raise SetupError(
+                    "Supply --admin-upn for the intended enabled member administrator; "
+                    "no roster written.")
+            upn = input("Which tenant administrator UPN should this demo use? ").strip()
+        selected = [p for p in people if p["email"] == upn.strip().lower()]
+        if len(selected) != 1:
+            raise SetupError(
+                "Administrator input did not match one eligible member; no roster written.")
+        admin = selected[0]
+    remaining = [p for p in people if p["oid"] != admin["oid"]]
+    missing = len(candidates) - 1 - len(remaining)
+    if missing > 0:
+        raise SetupError(f"Need {len(candidates) - 1} distinct non-admin users; "
+                         f"{len(remaining)} eligible. Missing exactly {missing} user(s). "
+                         "Stopped: initializer requires a distinct person per code; "
+                         "no roster written.")
+    random.Random(seed).shuffle(remaining)
+    admin_code = managers[0]["code"]
+    rows = []
+    for candidate in candidates:
+        identity = admin if candidate["code"] == admin_code else remaining.pop()
+        rows.append({**candidate, "userId": identity["oid"]})
+    print(f"Roster plan: {len(rows)} staff codes, {len(rows)} distinct people "
+          f"from {len(people)} eligible members.")
+    print("Administrator: Retrofit Programme Manager (ProgrammeManager), "
+          f"code {admin_code}.")
+    print("Codes covered: " + ", ".join(r["code"] for r in rows))
+    for role in sorted({r["role"] for r in rows}):
+        print(f"  {role}: {sum(r['role'] == role for r in rows)}")
     if readonly:
-        print("Roster: missing; a normal run will create a private template and stop.")
-        return
-    parent = private_path(path.parent, directory=True, create=True)
-    if path.is_symlink() or REPO in path.resolve().parents:
-        raise SetupError("Roster must be outside Git and must not be a symbolic link.")
-    with open(path, "x", opener=lambda p, flags: os.open(p, flags, 0o600)) as stream:
-        json.dump([{"code": "REPLACE_EXISTING_STAFF_CODE", "userId": "REPLACE_PERSON_OBJECT_ID",
-                    "role": "REPLACE_APPROVED_WORKBENCH_ROLE"}], stream, indent=2)
-        stream.write("\n")
-    private_path(parent, directory=True)
-    raise SetupError(
-        "Created the private roster TEMPLATE at " + str(path) + ". "
-        "Fill code with an existing workbench staff record; userId with that person's Entra "
-        "user object ID (not an application/client ID); role with that position's approved "
-        "workbench role. Do not invent identities or give everyone one broad role. "
-        "Use --list-staff for candidate codes/roles; --lookup-upn with --staff-code and "
-        "--staff-role can fill one entry when directory reads are permitted. Rerun this command.")
+        print("Read-only roster preview; no private files, Entra assignments "
+              "or SQL bindings written.")
+        return []
+    if not args.yes and (not sys.stdin.isatty()
+                         or input("Write this private demo roster? [y/N] ").strip().lower() != "y"):
+        raise SetupError(
+            "Roster not written; review the plan and rerun with --yes to accept.")
+    parent = private_path(args.roster.parent, directory=True, create=True)
+    current, replaceable = roster_input(args.roster)
+    if current != expected or not replaceable:
+        raise SetupError("Roster changed while planning; rerun without overwriting it.")
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(
+                mode="w", dir=parent, prefix=".roster-", delete=False) as stream:
+            temporary = Path(stream.name)
+            json.dump({"version": 1, "seed": seed, "staff": rows}, stream, indent=2)
+            stream.write("\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, args.roster)
+    except OSError:
+        raise SetupError(
+            "Private roster could not be saved; no Entra or SQL changes made.") from None
+    finally:
+        if temporary:
+            temporary.unlink(missing_ok=True)
+    print("Private roster saved; subsequent runs reuse it without reshuffling.")
+    roles = {r["key"] for r in json.loads(MANIFEST.read_text())["appRoles"]}
+    return read_roster(args.roster, roles)
 
 
 def app_url(app: dict[str, Any]) -> str:
@@ -850,10 +1075,14 @@ def service_principal(graph: Azure, client: str) -> dict[str, Any] | None:
     return rows[0] if rows else None
 
 
-def resolve_roster(graph: Azure, roster: list[dict[str, str]]) -> list[tuple[dict[str, str], set[str]]]:
+def resolve_roster(
+    graph: Azure, roster: list[dict[str, str]], *, verify_people: bool = False,
+) -> list[tuple[dict[str, str], set[str]]]:
     resolved = []
     for row in roster:
         select = "id,accountEnabled,userType" if row["kind"] == "users" else "id,securityEnabled"
+        if verify_people and row["kind"] == "users":
+            select += ",displayName,userPrincipalName"
         principal = graph.rest(GRAPH + f"{row['kind']}/{row['id']}?$select={select}")
         if object_id(principal.get("id")) != row["id"]:
             raise SetupError("Graph returned a different roster principal.")
@@ -861,6 +1090,15 @@ def resolve_roster(graph: Azure, roster: list[dict[str, str]]) -> list[tuple[dic
         if row["kind"] == "users":
             if principal.get("accountEnabled") is not True or principal.get("userType") != "Member":
                 raise SetupError("Roster users must be enabled tenant members; guests need separate human approval.")
+            if verify_people:
+                try:
+                    person(principal)
+                except (ValueError, KeyError, TypeError):
+                    raise SetupError(
+                        "A persisted demo roster user is no longer an eligible person.") from None
+                if not individual_mailbox(graph, row["id"]):
+                    raise SetupError("A demo roster user does not have an individual-user mailbox; "
+                                     "no automatic assignments are safe.")
             groups = {object_id(g["id"]) for g in graph.pages(
                 f"users/{row['id']}/memberOf/microsoft.graph.group?$select=id")}
         elif principal.get("securityEnabled") is not True:
@@ -1117,9 +1355,13 @@ def setup(args: argparse.Namespace) -> int:
     args.roster = args.roster.expanduser()
     manifest = json.loads(MANIFEST.read_text())
     roles = {r["key"] for r in manifest["appRoles"]}
+    expected, generate = (None, False)
     if not args.list_staff and not args.lookup_upn:
-        prepare_private_roster(args.roster, readonly=readonly)
-    roster = [] if args.lookup_upn or args.list_staff else read_roster(args.roster, roles)
+        expected, generate = roster_input(args.roster)
+    persisted = json.loads(expected) if expected is not None and not generate else None
+    generated = isinstance(persisted, dict)
+    roster = ([] if args.lookup_upn or args.list_staff or generate
+              else read_roster(args.roster, roles))
     if any(r["kind"] != "users" for r in roster):
         raise SetupError("SQL staff binding needs individual userId entries, not groupId mappings.")
     unresolved_profile = args.tenant_profile.expanduser()
@@ -1137,7 +1379,8 @@ def setup(args: argparse.Namespace) -> int:
     require_extension(operator, "containerapp")
     print("2/7 Checking login, tenant binding, network and Graph access.")
     cli, graph, tenant, subscription = contexts(args, operator)
-    if roster and not readonly and not token_permissions(graph).intersection(ASSIGNMENT_WRITE):
+    if ((roster or generate) and not readonly
+            and not token_permissions(graph).intersection(ASSIGNMENT_WRITE)):
         authority_help()
         raise SetupError("Roster assignment permission is missing; no registration changes were made.")
     with run_lock(args.tenant_profile, readonly), ExitStack() as stack:
@@ -1147,17 +1390,25 @@ def setup(args: argparse.Namespace) -> int:
             lookup_person(graph, args, roles)
             return 0
         if args.list_staff:
-            command = staff_command(args, app) + ["--list-candidates"]
-            result = subprocess.run(command, env=cli.environment(), capture_output=True, text=True,
-                                    timeout=120, check=False)
-            if result.returncode:
-                raise SetupError("Candidate staff lookup needs installed src packages and private SQL "
-                                 "connectivity. Run --list-staff from an authorized private-network host.")
-            candidates = json.loads(result.stdout)
+            candidates = candidate_staff(cli, args, app)
             print("Existing workbench positions (code / approved role):")
             for row in candidates:
                 print(label(row["code"]) + " / " + label(row["role"]))
             return 0
+        if generate or generated:
+            require_demo(cli, app)
+        if generate:
+            coordination_status(cli, app)
+            roster = generate_roster(graph, args, candidate_staff(cli, args, app),
+                                     readonly=readonly, expected=expected)
+            if readonly:
+                return 2
+        elif generated:
+            assert isinstance(persisted, dict)
+            print(EXERCISE_NOTICE)
+            print(f"Reusing persisted roster: {len(roster)} codes; seed {persisted['seed']}; "
+                  "no reshuffle.")
+        resolved_roster = resolve_roster(graph, roster, verify_people=generate or generated)
         coordination_problem = None
         try:
             stack.enter_context(authentication_lock(cli, app, readonly))
@@ -1179,7 +1430,6 @@ def setup(args: argparse.Namespace) -> int:
         args.create_secret = args.create_secret or (
             not args.bearer_only and (args.direct_ingress or action != "Return401"))
         configured = aad_registration(current_auth).get("clientId")
-        resolved_roster = resolve_roster(graph, roster)
         print("4/7 Reconciling application registration, callback URLs and enterprise app.")
         reg = registration(graph, args.client_id or configured, args.registration_name)
         drift = 0
@@ -1322,6 +1572,8 @@ def setup(args: argparse.Namespace) -> int:
         if not sql_done:
             remaining.append("SQL binding and serving-replica restart are not confirmed.")
         print("7/7 Summary: " + ("read-only; " if readonly else "") + f"{drift} reconciliation item(s).")
+        print("SQL binding: " + ("confirmed; replica restart: confirmed." if sql_done
+                                 else "NOT confirmed; replica restart: NOT confirmed."))
         for item in remaining:
             print("Remaining: " + item)
         print("Separate acceptance: test an authorized person's real browser sign-in. "
@@ -1355,7 +1607,10 @@ def parser() -> argparse.ArgumentParser:
                         help="Optional override; otherwise discover, prefer private Key Vault")
     result.add_argument("--vault", help="Key Vault name in ama")
     result.add_argument("--vault-identity", help="Key Vault-enabled managed identity already attached to the API")
-    result.add_argument("--yes", action="store_true", help="Approve the displayed SQL plan and replica restart")
+    result.add_argument("--yes", action="store_true",
+                        help="Accept the displayed private roster and SQL/restart plans")
+    result.add_argument("--seed", type=int, help="Nonnegative reproducible demo assignment seed")
+    result.add_argument("--admin-upn", help="Explicit demo administrator UPN; never printed")
     result.add_argument("--list-staff", action="store_true", help="List only existing SQL staff codes/roles")
     result.add_argument("--lookup-upn", help="Look up a person's object ID into the private roster, never stdout")
     result.add_argument("--staff-code", help="Existing workbench position for --lookup-upn")
@@ -1371,6 +1626,8 @@ def parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     try:
         args = parser().parse_args(argv)
+        if args.seed is not None and args.seed < 0:
+            raise SetupError("--seed must be a nonnegative integer.")
         if args.wait_seconds < 0 or args.wait_seconds > 1800:
             raise SetupError("--wait-seconds must be between 0 and 1800.")
         if args.login and (args.check or args.dry_run):
