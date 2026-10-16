@@ -6,6 +6,7 @@ param peSubnetId string
 param zoneIds object
 param enableLock bool
 @description('Days audit archive blobs stay immutable (time-based retention, unlocked until the owner locks the policy).')
+@minValue(1)
 param auditImmutabilityDays int = 365
 @description('Days ledger digests stay immutable. Must be no shorter than the legal audit retention period (open owner decision). The policy is created unlocked; locking is irreversible and is done by the owner.')
 @minValue(1)

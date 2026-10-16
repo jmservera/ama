@@ -2,10 +2,10 @@ name: Source projects CI
 
 on:
   pull_request:
-    paths: ["src/**", "docs/reference/research/retrofit-synthetic-data/**", "support/synthetic-data/**", ".github/workflows/src-ci.yml"]
+    paths: ["src/**", "infra/**", "docs/reference/research/retrofit-synthetic-data/**", "support/synthetic-data/**", ".github/workflows/src-ci.yml"]
   push:
     branches: [main]
-    paths: ["src/**", "docs/reference/research/retrofit-synthetic-data/**", "support/synthetic-data/**"]
+    paths: ["src/**", "infra/**", "docs/reference/research/retrofit-synthetic-data/**", "support/synthetic-data/**", ".github/workflows/src-ci.yml"]
   workflow_dispatch:
 
 permissions:
@@ -142,6 +142,21 @@ jobs:
           for name in core agents orchestrator importer; do python -m zava_forward.$name; done
           python -c 'from zava_forward.api.version import __version__; print(f"zava-forward-api {__version__}")'
           python -c "import zava_forward; assert getattr(zava_forward, '__file__', None) is None; assert len(list(zava_forward.__path__)) == 5"
+      - name: Build and lint all infrastructure templates offline
+        run: |
+          az bicep version
+          for file in infra/*.bicep infra/modules/*.bicep; do
+            az bicep build --file "$file" --stdout > /dev/null
+            az bicep lint --file "$file"
+          done
+      - name: Infrastructure controls and mutation regressions
+        env:
+          REQUIRE_AZ_BICEP: "1"
+        run: |
+          python -m unittest discover -s infra/tests -v
+          pip install 'ruff==0.17.1'
+          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/tests/test_bicep_policy.py
+          ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.py
 
   no-working-data:
     name: src-no-working-data
