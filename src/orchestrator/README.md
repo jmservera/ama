@@ -58,9 +58,12 @@ ZF_LAW_BLOBS=/absolute/exercise/law-blobs \
   /absolute/exercise/observations.json --today 2026-10-16 --limit 100
 ```
 
-Each configured source uses its own day cadence. Sources checked too recently
-are skipped; failed attempts also count for cadence, with failures retained
-for the owner. A due source with no observation becomes an explicit failure
+Each configured source uses its own day cadence, measured from its last
+successful retrieval. Sources successfully checked too recently are skipped;
+failed attempts retain evidence for the owner but do not reset cadence.
+A due source remains eligible on the next run, including the next day, until
+a retrieval succeeds. Sources with no successful observation are always due.
+A due source with no observation becomes an explicit failure
 review item. Output lists `checked`, `skipped`, `changes`, `failures` and
 `next_after`; failures exit 1. Repeat with `--after <next_after>` until null
 to cover subsequent pages, and start again from the beginning on the next

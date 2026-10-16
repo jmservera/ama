@@ -847,6 +847,13 @@ to select the interval and rationale, including increased cadence around
 commencement; the code does not guess an interval from prose or turn
 likelihood into legal importance. Unconfigured sources are not monitored.
 
+`due(source_id, today)` measures cadence from the last successful retrieval,
+not the last attempt. Failures remain recorded but do not reset the timer:
+a due source stays eligible for the next run, including the next day. A source
+with no successful observation is always due. A successful retry starts a new
+cadence interval; success is not verification. Dates before the latest attempt,
+including a failed attempt, are rejected.
+
 `observe` accepts explicit UTF-8 bytes, publication metadata, provenance,
 discovery method and an exercise date, or an explicit retrieval error.
 It compares hashes/metadata against the retained law-store baseline and stores
@@ -982,8 +989,9 @@ executable. A newer draft does not disable a prior eligible active version.
 Every citation must be an exact held provision ID, such as
 `source-id@v1#0001`. Missing citations, incomplete/unreviewed sources or
 superseded versions prevent clear and return unknown. Consultations, historical
-sources and future effective dates never fire as active controls. These are
-local metadata checks, not verification that legislation is currently correct.
+sources and future effective dates return `not applicable` and never fire as
+active controls. These are local metadata checks, not verification that
+legislation is currently correct.
 Seed references and their review state remain unchanged.
 
 Checks retain card/version/status, exact citations and source statuses, case
@@ -1034,6 +1042,15 @@ and outcome. Read scopes and HTTP behavior are in the
 [API guide](../api/README.md#deterministic-step-alert-api-212).
 
 Local tests use constructed SQL facts and explicitly simulated approvals only.
+Issue #329 regressions assert exact source-gating results and retained citation
+metadata, with no evaluator call or persisted alert for ineligible sources.
+Attention tests use distinct cases on the same home and changed due-time
+episodes on one case: checks/checkpoints persist while publications are
+suppressed just before 24 hours and allowed at exactly 24 hours. Independent
+home/card/step/item keys and cross-case breach escalation have positive controls.
+Nine in-memory mutations of source gates, shared throttling, its boundary and
+each key dimension fail the intended assertions. These tests exposed no
+production defect; the existing rule-engine implementation is unchanged.
 Actual legal approvals, a deployed timer, step UI, real staff precision and
 comprehension trials, operational retention policy, continuing 60,000-home
 acceptance and live SQL Server/Azure verification remain unmet. Refs #212,

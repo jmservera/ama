@@ -215,15 +215,19 @@ class SourceMonitor:
         with self.sql.lock:
             config = self.config(source_id)
             rows = self.sql.all(
-                "SELECT at FROM reg_monitor_observation WHERE source_id=? ORDER BY id DESC",
+                "SELECT at, body FROM reg_monitor_observation WHERE source_id=? ORDER BY id DESC",
                 (source_id,),
             )
             if not rows:
                 return True
-            last = date.fromisoformat(rows[0]["at"])
-            if last > date.fromisoformat(today):
+            current = date.fromisoformat(today)
+            if date.fromisoformat(rows[0]["at"]) > current:
                 raise rulecards.RuleError("monitor clock precedes the last observation")
-            return date.fromisoformat(today) >= last + timedelta(days=config["cadence_days"])
+            for row in rows:
+                if not json.loads(row["body"])["error"]:
+                    last = date.fromisoformat(row["at"])
+                    return current >= last + timedelta(days=config["cadence_days"])
+            return True
 
     def _heads(self, cards: list[str]) -> dict[str, Any]:
         return {cid: self.rules.history(cid) for cid in cards}

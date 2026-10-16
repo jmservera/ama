@@ -3664,3 +3664,45 @@ metadata when the knowledge base was created.
 * Published PR #336 with Refs #327, no automatic issue-disposition reference.
   One plan critique passed and one implementation Review was Conformant.
   Hosted checks started; merge remains the owner's decision.
+## [2026-10-16] update | Rule-engine gating regression coverage (Refs #329)
+
+* Tightened the [core deterministic-check contract](../../src/core/README.md#deterministic-checks-and-alerts-212)
+  tests to distinguish exact `not applicable` consultation/historical/future
+  source results from `unknown` incomplete/unreviewed/stale/missing evidence.
+  Assertions retain source metadata and verify no evaluator call or persisted
+  alert for gated sources.
+* Added same-home, distinct-case and changed-due-time episode attempts.
+  Checks/checkpoints remain persisted while attention publication is limited
+  until exactly 24 elapsed hours. Independent home/card/step/item keys and
+  immediate cross-case breach escalation are positive controls.
+* All 20 rule-engine tests and the full 466-test core suite passed locally
+  (one explicit isolated-Azure-SQL opt-in test skipped). Core Ruff check,
+  format check and mypy passed in a pip venv. Nine in-memory source-gate,
+  shared-throttle, boundary and key-dimension mutations failed the intended
+  assertions without changing package files.
+* No production defect was revealed; runtime code is unchanged. Evidence uses
+  constructed temporary SQL facts and simulated approvals only. No private
+  data, cloud service, deployment, actual legal approval or operational
+  acceptance is involved. Updated the knowledge-base routing entry.
+* Published PR #334 with references-only linkage. One RPI critique and one
+  Review completed; Review Conformant with no findings. Hosted checks and the
+  owner's merge decision remain separate from local regression evidence.
+## [2026-10-16] update | Source monitor retrieval retry cadence (Refs #332)
+
+* Corrected the [core monitor](../../src/core/README.md#source-change-monitoring-and-review-213)
+  to measure per-source cadence from the last successful retrieval, retaining
+  failed attempts without postponing an already-due source. Latest-attempt
+  clock protection remains in force, including failures.
+* Updated the [offline job contract](../../src/orchestrator/README.md#offline-source-change-job-213)
+  and synthetic core/job regressions for next-day retry, repeated failures,
+  successful recovery and exact cadence boundaries. Retrieval success remains
+  unverified discovery, not legal approval or rule activation.
+* Scope is local source scheduling only; no live retrieval, hosted timer,
+  private data, Azure operation or human approval is implied.
+* Local pip-venv validation: core 466 tests run with one opt-in skip,
+  orchestrator 22 passed; both component Ruff check/format and mypy passed.
+  In-memory mutation of the original cadence method made all four selected
+  regression methods fail (five assertions including long-cadence subtests),
+  while the fixed method passed all four. One RPI Review found no in-scope
+  defect; hosted PR checks and the owner merge decision remain separate.
+* Published PR #335 with Refs #332 only and no issue-closing references.

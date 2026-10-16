@@ -102,13 +102,14 @@ class EngineTests(unittest.TestCase):
     def card(
         self,
         *,
+        card_id: str = "synthetic-clock",
         approve: bool = True,
         effective: str = "2026-01-01",
         check: dict[str, Any] | None = None,
         provisions: list[str] | None = None,
     ) -> int:
         v: int = self.law.rules.propose(
-            "synthetic-clock",
+            card_id,
             "author@example.test",
             rulecards.AUTHOR,
             today="2026-01-01",
@@ -124,12 +125,8 @@ class EngineTests(unittest.TestCase):
             check=check or SPEC,
         )
         if approve:
-            self.law.rules.approve(
-                "synthetic-clock", v, OWNER["email"], rulecards.OWNER, "2026-01-01"
-            )
-            self.law.rules.activate(
-                "synthetic-clock", v, OWNER["email"], rulecards.OWNER, "2026-01-01"
-            )
+            self.law.rules.approve(card_id, v, OWNER["email"], rulecards.OWNER, "2026-01-01")
+            self.law.rules.activate(card_id, v, OWNER["email"], rulecards.OWNER, "2026-01-01")
         return v
 
     def hazard(self, *, hours_ago: int = 25, priority: str = "Emergency") -> dict[str, Any]:
@@ -164,6 +161,12 @@ class EngineTests(unittest.TestCase):
 
     def alerts(self) -> list[dict[str, Any]]:
         return [a for h in self.engine.alerts(OWNER)["homes"] for a in h["alerts"]]
+
+    def publications(self) -> list[dict[str, Any]]:
+        return [
+            json.loads(row["body"])
+            for row in self.law.sql.all("SELECT body FROM reg_alert ORDER BY created, id")
+        ]
 
     def test_five_results_exact_thresholds_and_citations(self) -> None:
         for hours, expected in (
@@ -242,24 +245,41 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(self.checks()[0]["result"], "attention")
 
     def test_future_consulted_historical_partial_stale_and_missing_sources(self) -> None:
-        for kw in (
-            dict(status="consultation"),
-            dict(status="historical"),
-            dict(effective="2027-01-01"),
-            dict(completeness="partial"),
-            dict(reviewed="not_reviewed"),
+        for kw, expected in (
+            (dict(status="consultation"), "not applicable"),
+            (dict(status="historical"), "not applicable"),
+            (dict(effective="2027-01-01"), "not applicable"),
+            (dict(completeness="partial"), "unknown"),
+            (dict(reviewed="not_reviewed"), "unknown"),
         ):
             with self.subTest(kw=kw):
                 version = len(self.law.source("synthetic")["versions"]) + 1
                 self.source(version=version, **kw)
                 self.card(provisions=[f"synthetic@v{version}#0001"])
-                result = self.checks()[0]["result"]
-                self.assertIn(result, ("unknown", "not applicable"))
+                with patch.object(rule_engine, "evaluate", wraps=rule_engine.evaluate) as evaluate:
+                    check = self.checks()[0]
+                self.assertEqual(check["result"], expected)
+                self.assertEqual(check["item"], "card")
+                self.assertEqual(check["card_status"], "active")
+                citation = check["citations"][0]
+                self.assertEqual(citation["id"], f"synthetic@v{version}#0001")
+                for field, default in (
+                    ("status", "in_force"),
+                    ("effective", "2026-01-01"),
+                    ("completeness", "full"),
+                ):
+                    self.assertEqual(citation[field], kw.get(field, default))
+                self.assertEqual(citation["review_status"], kw.get("reviewed", "reviewed"))
+                evaluate.assert_not_called()
+                self.assertEqual(self.publications(), [])
                 self.assertEqual(self.alerts(), [])
         self.card(provisions=["missing@v1#0001"])
-        self.assertEqual(self.checks()[0]["citations"][0]["status"], "missing")
+        check = self.checks()[0]
+        self.assertEqual(check["result"], "unknown")
+        self.assertEqual(check["citations"][0]["status"], "missing")
         self.card(provisions=[PID])
         self.assertEqual(self.checks()[0]["result"], "unknown")
+        self.assertEqual(self.publications(), [])
 
     def test_no_duration_guessed_and_specs_are_immutable_validated(self) -> None:
         self.card(check=dict(kind=SPEC["kind"]))
@@ -328,6 +348,103 @@ class EngineTests(unittest.TestCase):
         count = self.law.sql.all("SELECT COUNT(*) n FROM reg_alert")[0]["n"]
         self.run_engine(trigger="schedule", now=NOW + timedelta(hours=24))
         self.assertEqual(self.law.sql.all("SELECT COUNT(*) n FROM reg_alert")[0]["n"], count + 1)
+
+    def test_attention_limit_across_cases_and_due_time_episodes(self) -> None:
+        self.card(check=SPEC | dict(hours=100, attention_hours=100))
+        for different_case in (True, False):
+            with self.subTest(different_case=different_case):
+                self.facts["home_id"] = f"SYN-HOME-{different_case}"
+                self.facts["hazards"] = [self.hazard()]
+                first_case = f"SYN-FIRST-{different_case}"
+                self.write(first_case)
+                count = len(self.publications())
+                checkpoints = self.law.sql.all("SELECT COUNT(*) n FROM reg_checkpoint")[0]["n"]
+                first = self.checks(case_id=first_case, trigger="schedule")[0]
+                self.assertEqual(first["result"], "attention")
+                original = next(a for a in self.publications() if a["id"] == first["id"])
+                self.assertEqual(original["id"], first["id"])
+                case_id = "SYN-SECOND" if different_case else first_case
+                if not different_case:
+                    self.facts["hazards"] = [self.hazard(hours_ago=26)]
+                self.write(case_id)
+                attempts = [
+                    self.checks(case_id=case_id, trigger="schedule", now=NOW + elapsed)[0]
+                    for elapsed in (timedelta(minutes=1), timedelta(hours=24, microseconds=-1))
+                ]
+                for check in attempts:
+                    self.assertEqual(check["result"], "attention")
+                    self.assertNotEqual(check["id"], first["id"])
+                    if different_case:
+                        self.assertNotEqual(check["case_id"], first["case_id"])
+                        self.assertEqual(check["due_at"], first["due_at"])
+                    else:
+                        self.assertGreater(check["revision"], first["revision"])
+                        self.assertNotEqual(check["due_at"], first["due_at"])
+                self.assertEqual(len(self.publications()), count + 1)
+                boundary = self.checks(
+                    case_id=case_id, trigger="schedule", now=NOW + timedelta(hours=24)
+                )[0]
+                self.assertEqual(boundary["result"], "attention")
+                self.assertEqual(len(self.publications()), count + 2)
+                published = next(a for a in self.publications() if a["id"] == boundary["id"])
+                self.assertEqual(published["id"], boundary["id"])
+                self.assertEqual(published["at"], (NOW + timedelta(hours=24)).isoformat())
+                self.assertNotEqual(published["episode"], original["episode"])
+                retained = {
+                    json.loads(row["body"])["id"]
+                    for row in self.law.sql.all("SELECT body FROM reg_check")
+                }
+                self.assertTrue({c["id"] for c in [first, *attempts, boundary]} <= retained)
+                self.assertEqual(
+                    self.law.sql.all("SELECT COUNT(*) n FROM reg_checkpoint")[0]["n"],
+                    checkpoints + 4,
+                )
+
+    def test_attention_throttle_keeps_home_card_step_and_item_independent(self) -> None:
+        self.card(check=SPEC | dict(hours=100, attention_hours=100))
+        self.run_engine()
+        baseline = copy.deepcopy(self.facts)
+        original = self.publications()[0]
+        for dimension in ("home_id", "step", "item", "card_id"):
+            with self.subTest(dimension=dimension):
+                self.facts = copy.deepcopy(baseline)
+                if dimension == "home_id":
+                    self.facts["home_id"] = "SYN-OTHER-HOME"
+                elif dimension == "step":
+                    self.facts["stage"] = "Assess the home"
+                elif dimension == "item":
+                    self.facts["hazards"].append(self.hazard())
+                else:
+                    self.card(
+                        card_id="synthetic-other",
+                        check=SPEC | dict(hours=100, attention_hours=100),
+                    )
+                self.write("SYN-2")
+                prior = {a["id"] for a in self.publications()}
+                self.run_engine(case_id="SYN-2", now=NOW + timedelta(minutes=1))
+                additions = [a for a in self.publications() if a["id"] not in prior]
+                self.assertEqual(len(additions), 1)
+                published = additions[0]
+                self.assertEqual(published["result"], "attention")
+                for key in ("home_id", "card_id", "step", "item"):
+                    if key == dimension:
+                        self.assertNotEqual(published[key], original[key])
+                    else:
+                        self.assertEqual(published[key], original[key])
+
+    def test_cross_case_breach_bypasses_attention_throttle(self) -> None:
+        first = self.checks()[0]
+        self.assertEqual(first["result"], "attention")
+        self.assertEqual(len(self.publications()), 1)
+        self.facts["hazards"] = [self.hazard(hours_ago=60)]
+        self.write("SYN-2")
+        breach = self.checks(case_id="SYN-2", now=NOW + timedelta(minutes=1))[0]
+        self.assertEqual(breach["result"], "breach risk")
+        self.assertEqual(len(self.publications()), 2)
+        self.assertEqual(self.publications()[-1]["id"], breach["id"])
+        risk = next(a for a in self.alerts() if a["id"] == breach["id"])
+        self.assertTrue(risk["requires_acknowledgement"])
+        self.assertTrue(risk["requires_outcome"])
 
     def test_breach_owner_ack_outcome_false_positive_history_no_suppression(self) -> None:
         self.facts["hazards"] = [self.hazard(hours_ago=60)]
