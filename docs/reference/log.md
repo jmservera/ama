@@ -3633,3 +3633,9 @@ metadata when the knowledge base was created.
   messages and private-network/Front Door acceptance are unverified. No
   deployment, Azure resource access, private-data operation or #138 pipeline
   work was performed.
+* Published PR #333. Local Bicep 0.48.1 build/lint passed for all entry points
+  and modules; 86 infra tests passed with no skips, including 131 compiled
+  mutation cases; scoped Ruff check/format passed. One RPI critique and one
+  Review completed; no in-scope defect, with live and owner-approval residuals
+  routed separately. CI names are unchanged; hosted checks remain separate
+  from these local results. No merge or issue disposition is implied.

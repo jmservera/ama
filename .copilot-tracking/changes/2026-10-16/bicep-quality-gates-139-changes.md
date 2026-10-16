@@ -79,6 +79,18 @@ One Review complete: outcome Residual work, no in-scope defects; RV-001/RV-002
 route live acceptance and owner retention/locking outside this slice.
 Commit/push/PR authorized by caller after Review. No blockers.
 
+## Publication
+
+Code/evidence commit `bfef987` pushed normally to
+`feat/bicep-quality-gates-139`. PR https://github.com/jmservera/ama/pull/333 targets
+main and is open. Its body contains Refs #139, no closing keywords;
+`closingIssuesReferences` is empty. Verified author and committer email:
+`8036360+jmservera@users.noreply.github.com`, with required Copilot trailer.
+Hosted MVP validation and source CI checks started; no merge attempted.
+This delivery-evidence update is a normal subsequent commit, not an amendment
+or history rewrite. One-shot manual parent session stops after publication;
+the offline task is complete and the two review residuals remain separate.
+
 ## Residual work
 
 Owner locking/legal retention, actual ARM rejection messages, private networking
