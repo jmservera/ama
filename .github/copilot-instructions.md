@@ -1,5 +1,5 @@
 ---
-description: "Repository guidance for evolving AMA research documentation"
+description: "Repository guidance for AMA research, executable development and web work"
 applyTo: "**"
 ---
 
@@ -67,6 +67,41 @@ also require the relevant existing tests: for example, from `src/api`,
 `PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -q`; migration regressions
 use `python3 tools/rename-zava-tests.py` from the repository root. Use the
 component guides and existing workflows rather than infer that no tests exist.
+
+## Web Development Guidance
+
+Apply this guidance to web implementation, design, redesign, styling and review.
+Backend-only, data-only and infrastructure-only work is exempt; for mixed tasks,
+apply it only to the web portion without changing other testing requirements.
+
+* Before implementation, design, redesign or styling, select relevant installed
+  skills from the [skill collection](../.agents/skills/) by task description and
+  read their full applicable SKILL.md bodies. Do not load every skill; load
+  supporting resources only as needed by the selected workflow.
+* Default to [current design-taste-frontend](../.agents/skills/design-taste-frontend/SKILL.md)
+  for public pages, not dashboards or app screens. Use
+  [v1](../.agents/skills/design-taste-frontend-v1/SKILL.md) or
+  [experimental](../.agents/skills/design-taste-frontend-v2-experimental/SKILL.md)
+  only on explicit request or for a stated compatibility need, not as fallback.
+  Select specialized brand, image, mobile, Stitch or style skills only as relevant.
+* For existing-app design improvements, use the relevant
+  [redesign skill](../.agents/skills/redesign-existing-projects/SKILL.md).
+  Preserve the owner-selected Fluent 2 [design system](../docs/reference/research/ux/design-system.md),
+  [WCAG baseline](../docs/reference/research/ux/wcag-conformance-baseline.md) and
+  [plain-language content standard](../docs/reference/research/ux/content-standard.md)
+  over generic aesthetics. Retain native semantics, non-colour status signals,
+  reduced motion, manual paths and human/resident approval boundaries. Skills do
+  not authorize unrelated visual overhauls or framework swaps; partial Fluent
+  adoption and engineering checks do not establish accessibility acceptance.
+* Before web edits, load [web-design-guidelines](skills/web-design-guidelines/SKILL.md)
+  and fetch its current source so the rules guide implementation. Refresh before
+  each review, then read and review changed web files against all fetched rules;
+  follow the source's reporting format with `file:line` findings.
+* For standalone UI, accessibility or UX reviews, use supplied files/patterns or
+  ask for missing scope. Do not silently audit the whole repository.
+* Disclose missing skills, failed or partial source retrieval and unavailable or
+  unperformed checks. Distinguish completed work from blocked validation; do not
+  claim a fresh complete review or conformance without the required evidence.
 
 ## Branch and Pull Request Workflow
 
