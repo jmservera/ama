@@ -45,7 +45,18 @@ the guard. Legitimate all-excluded monitoring output is accepted explicitly.
 AC1/3/4 have local bounded evidence. AC2 unmet.
 One post-implementation Review completed: execution Complete, outcome Residual
 work. RV-001 routes missing source provenance to a distinct research follow-up.
-No second Review or source correction loop. PR delivery remains.
+No second Review or source correction loop.
+
+## Delivery
+
+Commit db4e27e pushed on docs/synthetic-dictionary-175. PR #369 targets main:
+https://github.com/jmservera/ama/pull/369. PR uses Refs #175, includes all four
+criterion dispositions and validation/limitations; no issue checkboxes changed.
+Authenticated privacy-safe repo-local author/committer matches the caller's
+required address; required Co-authored-by trailer is present.
+The complete bounded plan is delivered, while overall issue acceptance remains
+blocked by AC2. Merge remains the owner's decision; hosted checks are separate
+from the recorded local evidence.
 
 ### Reproduction commands
 

@@ -65,7 +65,7 @@ Existing source CI must execute the tests without private support data.
 ### P02: Evidence and delivery
 
 * [x] P02-T01: Targeted tests, ruff/mypy, local CLI and local app smoke.
-* [ ] P02-T02: One post-implementation Review, criterion audit, commit/push/PR.
+* [x] P02-T02: One post-implementation Review, criterion audit, commit/push/PR.
 
 ## Locked Test Ownership
 
@@ -93,6 +93,7 @@ No user decision required; final plan ready. No second critique.
 AC2: owner must verify the three external source retrieval dates/licence terms.
 Operational reliance, full-stock materialization and actual chat/DPO approval
 remain out of scope, not claimed as complete.
+Bounded delivery is PR #369; issue #175 remains open with AC2 unmet.
 
 ## Handoff
 
