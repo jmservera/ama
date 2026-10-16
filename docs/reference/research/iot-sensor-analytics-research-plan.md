@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-10-14
+ms.date: 2026-10-16
 ms.topic: reference
 ---
 
@@ -141,6 +141,134 @@ Next step for R1: search building-science sources (for example Building and
 Environment, Energy and Buildings, BRE, Housing Ombudsman) and obtain the
 official BS 5250, BS EN ISO 13788 and PAS 2035 texts through the owner's
 licensed access.
+
+## Historical outdoor climate source decision (2026-10-16, Refs #178)
+
+This is an offline evidence audit, not a completed historical-source study.
+The issue and its owner comment were read on 2026-10-16; that is a GitHub
+decision-evidence date, not a climate-data or licence retrieval date. No
+external climate records or licence pages were retrieved for this audit.
+The existing generator and tests explicitly state that climate records have
+not been retrieved. No outdoor temperature or humidity figure is introduced
+here.
+
+### Owner direction and current selection
+
+The [owner's issue comment](https://github.com/jmservera/ama/issues/178)
+dated 2026-10-15 directs use of Met Office (UKCP18) and Environment Agency
+open data under the Open Government Licence (OGL) where available, otherwise
+clearly labelled synthetic data, with retrieval dates and licence recorded
+per dataset. This is source direction, not dataset-specific reuse confirmation.
+
+The selected current fallback remains
+`synthetic-uk-seasonal-model-v1`, as declared by
+[`sensor_backfill.py`](../../../src/core/src/zava_forward/core/synthetic/sensor_backfill.py).
+It is constructed demonstration data, not historical North East England
+weather, and has no external climate retrieval date. The owner-directed
+external source family is recorded, but no historical product, station,
+grid cell, release or observation period is selected as verified.
+
+UKCP18 is the owner's named lead. Before selecting any product from that
+family, establish whether the particular files contain historical
+observations, historical model output or future projections; neither a
+projection nor a generic provider name proves historical observation bounds.
+HadUK-Grid and MIDAS Open remain candidates, not silent substitutions for
+the owner's direction. A different product choice must be explicit.
+
+### Candidate comparison and verification gaps
+
+The candidate names in #178 were explicitly unverified. The table compares
+their outstanding suitability questions, not verified product properties.
+`Unverified` means no supporting dataset metadata, records or terms are held
+in this audit; it does not mean unavailable from the provider. No candidate
+passes the historical temperature-and-humidity evidence gate yet.
+
+| Candidate | North East coverage and historical period | Resolution and required variables | Licence and reuse evidence | Current disposition |
+| --- | --- | --- | --- | --- |
+| Met Office HadUK-Grid, via CEDA | Unverified; identify cells and period covering the intended North East locations | Unverified; confirm spatial/temporal resolution and both outdoor temperature and relative humidity fields | Unverified; obtain the exact release's terms, attribution and redistribution conditions; do not assume OGL | Issue-named candidate; no records retrieved |
+| Met Office MIDAS Open station data, via CEDA | Unverified; identify station IDs, locations, elevations, period and missingness | Unverified; confirm observation cadence, temperature and relative humidity availability and quality flags | Unverified; confirm the selected collection/version's access and reuse terms and attribution | Issue-named candidate; no records retrieved |
+| Met Office historic station data | Unverified; identify a representative station and actual record period | Unverified; confirm whether the published variables and cadence support both required bounds rather than temperature alone | Unverified; retain the selected station file's applicable terms and attribution | Issue-named candidate; no records retrieved |
+| Copernicus ERA5 reanalysis | Unverified; identify cells, product, version and period | Unverified; distinguish modelled fields from observations; establish whether relative humidity is supplied or must be derived from other fields with a cited method | Unverified; confirm product-specific licence, acknowledgement and redistribution terms | Issue-named alternative; no records retrieved |
+| CIBSE weather files | Unverified; identify location, vintage and whether the file represents actual history or a constructed design year | Unverified; confirm cadence and both variables, and whether design-year extrema are suitable for historical bounds | Unverified; check access, purchase, permitted use and redistribution terms before obtaining or sharing files | Issue-named alternative; no records retrieved or purchase authorized |
+| Met Office UKCP18 | Unverified; resolve the owner's lead to an exact historical product and period, if suitable | Unverified; distinguish observations, model output and projections; confirm both variables, units and resolution | Unverified; establish dataset-specific OGL applicability or other terms rather than generalizing from the owner comment | Owner-directed lead; no verified historical dataset selected |
+| Environment Agency open data | Unverified; no collection or station has been identified | Unverified; first establish whether a collection supplies both required climate variables at relevant locations/cadence | Unverified; confirm the exact dataset's licence and attribution even where described as open data | Owner-directed lead; not yet an identified climate dataset |
+
+### Retrieval, provenance and reuse register
+
+| Field | Recorded state on 2026-10-16 |
+| --- | --- |
+| Current generator source | Labelled synthetic seasonal model; unchanged |
+| Verified historical dataset and release | None selected |
+| Climate record retrieval date | Not retrieved; no date to record |
+| Licence evidence retrieval date | Not retrieved; no date to record |
+| Dataset licence, version and terms | Unknown; OGL only where dataset-specific evidence establishes applicability |
+| Attribution | Not yet verified; retain the provider's exact required acknowledgement with the eventual dataset citation |
+| Source URLs, station/cell IDs, observation period and input hashes | No retrieved dataset packet held; must be recorded before deriving historical bounds |
+| Reuse confirmation | Open; Juan Manuel Servera is the synthetic-exercise Legal, Compliance and DPO owner, not an inferred operational approver |
+| Observed outdoor temperature and humidity bounds | Not derived; no retrieved records available |
+
+An open-data label, access permission, or owner source preference does not
+itself establish the terms for redistributing records or derived assets.
+Agents may retrieve when authorized, compare, summarise and flag terms;
+legal interpretation and reuse confirmation stay with the named human owner.
+Real owners and sources remain a gap before operational reliance, consistent
+with [ADR 0005's synthetic-only acceptance](../../adrs/0005-regulatory-compliance-assistant.md#owner-decision-acceptance-and-authority-2026-10-16).
+No consent, safety decision, operational rule, purchase or financial
+commitment follows from this source register.
+
+### Evidence packet and bounds derivation gate
+
+To resume offline, supply a locally retained evidence packet; alternatively
+obtain separate authorization for external climate retrieval. The packet
+must identify the provider, exact product/release and stable source URLs;
+dataset and terms retrieval dates; applicable licence text/version or
+reference and required attribution; raw file hashes; station IDs or grid
+coordinates and elevation where supplied; historical period, timezone,
+cadence, variable definitions, units, quality flags and missing-value codes.
+Record any download query, extraction and conversion so the analysis can be
+reproduced. Do not redistribute protected records before reuse review.
+
+Derive bounds from the retained records, not from the generator's parameters:
+
+1. Establish the selected locations and observation window from metadata and
+   preserve the raw inputs. Identify observation versus modelled data; do not
+   silently pool products, stations, periods or resolutions.
+2. Parse timestamps and units using the source definitions. Count total,
+   missing, duplicate, quality-rejected and valid values per variable,
+   location and period. Retain rejection reasons; do not silently fill gaps.
+   If humidity must be derived, cite and version that method and its inputs.
+3. Calculate the minimum and maximum of the retained valid temperature and
+   relative humidity records. Report the extrema with their source row/time,
+   sample counts, window and input hashes. Report paired-sample coverage if
+   temperature and humidity support a joint model. An empty required variable
+   is insufficient evidence, never a default bound.
+4. Retain the analysis command/code version and output hash. Review seasonal
+   and location coverage and limitations before using the results to justify
+   any synthetic range. One station or a short period cannot establish
+   region-wide extremes. Observed sample extrema are not physical limits,
+   a forecast, indoor thresholds or safety rules.
+5. Obtain the owner's dataset-specific reuse confirmation and any required
+   competent method review before adopting changed generator/test limits.
+   Keep derived historical evidence separate from synthetic scenario
+   parameters and injected faults; do not clip observations to make an
+   exercise test pass.
+
+The existing
+[`OUTDOOR_EXERCISE` expectations](../../../src/core/tests/test_sensor_plausibility.py)
+remain selected exercise values. Their tests establish internal synthetic
+plausibility, not historical climate validity. Neither they nor this audit
+satisfy the broader PRD AC-066 to AC-068 IoT, method or live-platform gates.
+
+### Issue #178 acceptance audit
+
+| Acceptance criterion | Status | Evidence and missing work |
+| --- | --- | --- |
+| Candidate sources compared on coverage, resolution, licence and reuse terms | Unmet; offline comparison framework only | All issue-named candidates and owner leads are listed above, but the dataset properties and terms remain unverified. Retrieve and compare primary metadata and applicable terms |
+| Chosen source, retrieval date and licence recorded; licence stays open until the owner confirms reuse | Unmet; fallback/source direction recorded only | Synthetic fallback and owner direction are explicit; no verified historical source, retrieval date or licence evidence exists. Dataset-specific reuse confirmation remains open |
+| Outdoor temperature and humidity bounds derived from retrieved records, not typed in | Unmet; blocked on records | Existing bounds are exercise values. No historical observations or calculated extrema are available; execute and retain the derivation above once records are supplied |
+
+All three issue checkboxes remain unchanged. This audit is a bounded
+documentation contribution, not completion of #178 or approval for real use.
 
 ## Public document check (owner-supplied, 2026-10-14)
 
