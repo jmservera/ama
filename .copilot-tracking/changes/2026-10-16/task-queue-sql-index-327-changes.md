@@ -150,3 +150,12 @@ paired comparison: initialization 25.521 s; median write/cold/repeat millisecond
 Cold context counts remain 50, or zero for priority. Raw session evidence:
 files/core-integrated-tests.txt. README discloses this variability separately
 from the adjacent baseline/final paired experiment.
+
+## Final publication evidence
+
+Integration commit 4dea936 was pushed normally. PR #340 is OPEN and MERGEABLE;
+hosted checks are running, with src-no-working-data already successful at the
+observation point. closingIssuesReferences remains empty and #327 remains OPEN.
+No PR merge, force push, history rewrite or additional review occurred. P03-T01
+is complete; manual session stopped with task completed in Follow-up. No source
+blocker or current user-selected child work remains.

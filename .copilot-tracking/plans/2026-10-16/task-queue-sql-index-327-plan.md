@@ -77,7 +77,12 @@ New regressions must fail with the changed path disabled.
 ### P03: Review and publication
 
 <!-- rpi:task id=P03-T01 -->
-* [ ] P03-T01: Perform one post-implementation review, commit/push/open PR.
+* [x] P03-T01: Perform one post-implementation review, commit/push/open PR.
+
+Delivery complete: source 318d7fe and normal main-integration commit 4dea936
+pushed to perf/task-queue-sql-index-327. PR #340 is open and mergeable; checks
+are running and issue #327 remains open. Integration validation and additional
+timing variability are recorded in changes; no second Review was performed.
 
 ## Critique Disposition
 

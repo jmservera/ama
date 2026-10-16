@@ -55,3 +55,9 @@ tests, 111 conditional skips. All five projects pass lint/format/type checks.
 
 Review once after implementation; publish without merging. This delivery-only
 task is separated from P02-T02 to avoid a circular pre-Review completion gate.
+Completed: PR #340 published with references-only linkage. Concurrent main
+updates were integrated normally because resident-retention behavior affects
+the queue evaluator; only the append-only log conflicted, preserving both sides.
+Integrated core 495 tests / one skip, nine affected API/portable tests and core
+tooling passed. Extra full-suite latency variability is disclosed in README and
+changes. Hosted checks are running; merge remains the owner's decision.
