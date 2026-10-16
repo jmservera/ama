@@ -1,0 +1,61 @@
+{
+  "task_id": "215",
+  "task_slug": "regulatory-ux-optional-browser-215",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/regulatory-ux-optional-browser-215-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/regulatory-ux-optional-browser-215-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/regulatory-ux-optional-browser-215-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-16/regulatory-ux-optional-browser-215-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/regulatory-ux-optional-browser-215-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/regulatory-ux-optional-browser-215-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Owner explicitly requests research, plan, implementation, review, commit and push in one bounded repair; retain manual mode without an automatic follow-up session.",
+      "status": "confirmed",
+      "evidence": "Current task request."
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready. Lazy browser imports preserve pure tests and explicit browser failures.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-10-16/regulatory-ux-optional-browser-215-research.md"
+    },
+    {
+      "decision": "One critique executed, verdict Revise; PC-001 applied directly by clarifying runner-local expect and sync_playwright imports. Plan ready.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-10-16/regulatory-ux-optional-browser-215-critique.md"
+    },
+    {
+      "decision": "One post-implementation Review executed; outcome Conformant for the bounded import repair, with no substantive defects. Full issue acceptance remains partial/unmet.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/regulatory-ux-optional-browser-215-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": null,
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Assess retained axe contrast incompletes and full manual accessibility",
+      "rationale": "Eight known incomplete states provide concrete bounded evidence; full WCAG acceptance remains unmet.",
+      "evidence": "src/api/README.md#issue-criterion-audit"
+    },
+    {
+      "rank": 2,
+      "task": "Run authorized repairs, housing and grants staff comprehension and paired chat-value testing",
+      "rationale": "The existing protocol supports the required staff acceptance and comparison, but no real participants were tested.",
+      "evidence": "src/api/README.md#staff-comprehension-protocol-not-run-unmet"
+    },
+    {
+      "rank": 3,
+      "task": "Establish real accountable delegates and verified applicable sources before operational reliance",
+      "rationale": "Synthetic development acceptance does not supply operational legal, consent, safety or financial authority.",
+      "evidence": "docs/adrs/0005-regulatory-compliance-assistant.md"
+    }
+  ]
+}

@@ -77,6 +77,19 @@ h2{font-size:var(--fs-lg);line-height:var(--lineHeightBase500);margin:var(--sp-5
 input,select,textarea{font:inherit;padding:var(--sp-2) var(--sp-3);border:1px solid var(--field-line);border-radius:var(--radius);max-width:100%}
 label{display:block;font-weight:600;margin:.6rem 0 .2rem}
 textarea{width:100%;min-height:5rem}
+.regulatory{overflow-wrap:anywhere;min-width:0}
+.regulatory .plain-explanation{display:none}
+.regulatory.plain-language .plain-explanation{display:block}
+.regulatory-mode{display:flex;align-items:center;gap:.5rem;min-height:2.75rem}
+.regulatory-mode input{width:1.5rem;height:1.5rem;flex-shrink:0}
+.regulatory-alert,.regulatory-turn{border-top:2px solid var(--line);padding:1rem 0}
+.regulatory h3,.regulatory h4{margin:.75rem 0 .5rem}
+.regulatory blockquote{margin:.75rem 0;padding-left:1rem;border-left:3px solid var(--brand)}
+.regulatory-excerpt{white-space:pre-wrap}
+.regulatory a{display:inline-block;min-height:1.5rem;color:var(--brand-d);text-decoration:underline}
+.regulatory summary{cursor:pointer;min-height:2.75rem;padding:.5rem 0}
+.regulatory dl{grid-template-columns:minmax(0,9rem) minmax(0,1fr)}
+@media(max-width:600px){.regulatory dl{grid-template-columns:minmax(0,1fr)}.regulatory dd{margin-bottom:.65rem}.regulatory ol,.regulatory ul{padding-left:1.3rem}}
 #outcome{width:100%}
 .list{list-style:none;padding:0;margin:0}
 .item{display:grid;grid-template-columns:1fr auto;gap:.2rem 1rem;padding:.8rem 1rem;background:var(--surface);border:1px solid var(--line);border-radius:.6rem;margin-bottom:.6rem;color:inherit;text-decoration:none}

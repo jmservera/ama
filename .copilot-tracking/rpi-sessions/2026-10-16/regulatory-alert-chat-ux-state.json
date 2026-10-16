@@ -1,0 +1,79 @@
+{
+  "task_id": "215",
+  "task_slug": "regulatory-alert-chat-ux",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Implement",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/regulatory-alert-chat-ux-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/regulatory-alert-chat-ux-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/regulatory-alert-chat-ux-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-16/regulatory-alert-chat-ux-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/regulatory-alert-chat-ux-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/regulatory-alert-chat-ux-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "P03 corrections committed as d2b8df4 and pushed to existing branch after merge 91ed90e; PR #354 body updated with CI execution and honest acceptance. No force push, new PR, issue edits, hosted check wait or repeated Review.",
+      "status": "completed",
+      "evidence": "https://github.com/jmservera/ama/pull/354; d2b8df4"
+    },
+    {
+      "decision": "P03 CI shell block passed locally with genuine pinned axe download and deliberately failed curl, 17 states/142 targets each. Exact summary CSS deletion failed at 1198x24 against retained 44px design floor; restoration passed. 86 API, 33 core and three new tests plus browser/lint/type checks pass. Hosted CI pending; WCAG/staff/operational gaps unchanged.",
+      "status": "verified",
+      "evidence": ".copilot-tracking/changes/2026-10-16/regulatory-alert-chat-ux-changes.md; .copilot-tracking/reviews/logs/2026-10-16/regulatory-alert-chat-ux-review.md"
+    },
+    {
+      "decision": "Owner explicitly advances to bounded P03 implementation of both independent CHANGES findings on d79a737; merge main, update existing PR, commit and push without waiting. No automatic-mode switch or repeated full Review.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-16; PR #354; merge 91ed90e"
+    },
+    {
+      "decision": "Owner explicitly requests research, plan, implementation, review and PR in this invocation; no automatic-mode switch inferred.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-16"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready. Critique executed once, Revise reconciled with PC-001 bounded lifecycle disposition and PC-002 actual issue audience crosswalk.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/plans/2026-10-16/regulatory-alert-chat-ux-plan.md"
+    },
+    {
+      "decision": "One post-implementation Review executed; outcome Residual work. No known blocking code defect in the synthetic UX boundary. RV-001/002/003 remain unmet acceptance/evidence follow-ups.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/regulatory-alert-chat-ux-review.md"
+    },
+    {
+      "decision": "Published PR #354 against main with Refs #215 and all unproven criteria explicit; synthetic engineering/delivery scope complete, issue acceptance partial.",
+      "status": "recorded",
+      "evidence": "https://github.com/jmservera/ama/pull/354; feature commit 82bd6c2"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "No further action in this invocation: owner/coordinator owns hosted CI and PR review. Original Review remains Residual work; WCAG/staff/operational evidence gaps remain unmet. Do not wait or merge."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Complete accessibility assessment, including textarea contrast incompletes and assistive technology",
+      "rationale": "Concrete local gap with high usability leverage; investigate before full WCAG acceptance.",
+      "evidence": "RV-001; 17 scans, eight states with color-contrast incompletes"
+    },
+    {
+      "rank": 2,
+      "task": "Run authorised repairs/housing/grants comprehension and paired task study",
+      "rationale": "Required safety and value evidence; cannot be obtained from synthetic automation or role agents.",
+      "evidence": "RV-002; API README staff comprehension protocol; Not run"
+    },
+    {
+      "rank": 3,
+      "task": "Verify actual accountable delegates, applicable sources and ADR chat ship gate before operational use",
+      "rationale": "Essential operational control, but outside this explicitly synthetic implementation.",
+      "evidence": "RV-003; ADR 0005 accepted for synthetic development only"
+    }
+  ]
+}
