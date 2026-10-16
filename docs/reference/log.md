@@ -3917,3 +3917,20 @@ metadata when the knowledge base was created.
   workflow/check names, live Azure operations or invented human approvals.
   Juan Manuel Servera remains the synthetic exercise Legal/Compliance/DPO
   owner; ADR 0005 acceptance is development-only, not operational reliance.
+## [2026-10-16] decision | ADR 0005 accepted for synthetic development only (Refs #209)
+
+* Updated [ADR 0005](../adrs/0005-regulatory-compliance-assistant.md) to
+  record Juan Manuel Servera's 2026-10-16 acceptance for synthetic development,
+  not operational approval. Preserved the 2026-10-15 fixture safeguards and
+  added decision routing to the [knowledge-base index](./README.md).
+* Compared no assistant, rule cards/law store without chat, and the full
+  assistant with chat. Accepted measured value over deterministic cards with
+  provision links as the chat ship test; no measured pass is claimed.
+* Made retrieve, compare, cite, flag and route the explicit authority boundary,
+  with prohibited actions and human/resident decision rights retained.
+  Recorded Juan Manuel Servera as exercise Legal, Compliance and DPO owner
+  for simulated reviews only, without waiving author/approver separation.
+* Real company owners/delegations and binding grant awards, contracts and
+  leases remain unverified before operational reliance. Search and monitoring
+  costs are explicitly unknown; paid deployment, actual processing, real
+  legal approval and benefit evidence are not authorized or proved here.
