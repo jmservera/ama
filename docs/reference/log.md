@@ -3660,3 +3660,6 @@ metadata when the knowledge base was created.
   constructed temporary SQL facts and simulated approvals only. No private
   data, cloud service, deployment, actual legal approval or operational
   acceptance is involved. Updated the knowledge-base routing entry.
+* Published PR #334 with references-only linkage. One RPI critique and one
+  Review completed; Review Conformant with no findings. Hosted checks and the
+  owner's merge decision remain separate from local regression evidence.

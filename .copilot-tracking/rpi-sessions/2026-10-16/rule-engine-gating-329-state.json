@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "active",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": null,
@@ -39,12 +39,24 @@
       "decision": "One post-implementation Review executed; outcome Conformant for implemented tests/docs.",
       "status": "completed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-16/rule-engine-gating-329-review.md; no findings. Commit/push/PR remain parent delivery actions, not reviewed as already published."
+    },
+    {
+      "decision": "Reviewed implementation committed and pushed; references-only PR opened to main.",
+      "status": "verified",
+      "evidence": "Commit f5b297b8697d7dc9de538d2681d5e2f1a6114faa; https://github.com/jmservera/ama/pull/334 is OPEN on test/rule-engine-gating-329, base main, closingIssuesReferences empty. Verified author/committer email matches authenticated id/login. Hosted checks queued/running."
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Publish reviewed implementation with privacy-safe commit, non-forced branch push and references-only PR; persist actual delivery result."
+    "action": "Await hosted checks and owner review of PR 334; no child implementation task selected or required."
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Review PR 334 after hosted checks",
+      "rationale": "Only supported remaining action is the owner's merge decision; local implementation and Review are complete with no findings.",
+      "evidence": "https://github.com/jmservera/ama/pull/334; hosted checks queued/running at publication."
+    }
+  ]
 }

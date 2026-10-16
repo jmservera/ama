@@ -8,7 +8,7 @@ ms.date: 2026-10-16
 
 * Task ID: 329
 * Task slug: rule-engine-gating-329
-* Planning status: Implemented and reviewed; remote publication pending
+* Planning status: Complete; implemented, reviewed and published as PR 334
 * Plan date: 2026-10-16
 * Phase details: .copilot-tracking/details/2026-10-16/rule-engine-gating-329-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-16/rule-engine-gating-329-plan-critique.md
@@ -92,7 +92,7 @@ decision or additional external/legal research is needed.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Pin behavior and publish verified evidence
+### [x] P01: Pin behavior and publish verified evidence
 
 <!-- rpi:task id=P01-T01 -->
 #### [x] P01-T01: Add focused regressions and repair a demonstrated defect
@@ -104,15 +104,18 @@ decision or additional external/legal research is needed.
   code passes all regressions. No defect or production edit required.
 
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Validate, document and deliver
+#### [x] P01-T02: Validate, document and deliver
 
 * Run targeted tests, full core suite, ruff/format/mypy and in-memory mutation
   checks, preserving the working implementation after every mutation.
 * Update docs, record changes and one review, then commit/push/open PR.
 * Dependency: P01-T01.
 * Local implementation/validation/docs complete; one Review completed,
-  Conformant, no findings. Publication remains. Core 466 tests, one explicit Azure opt-in skip; targeted 20 pass;
-  ruff check/format/mypy pass; nine assertion-failing mutations.
+  Conformant, no findings. Core 466 tests, one explicit Azure opt-in skip;
+  targeted 20 pass; ruff check/format/mypy pass; nine assertion-failing mutations.
+* Published https://github.com/jmservera/ama/pull/334, OPEN to main on the
+  existing topic branch. Verified empty closingIssuesReferences; hosted checks
+  queued/running. Initial implementation commit f5b297b.
 
 ## Test Ownership and Validation Lock
 
@@ -139,5 +142,5 @@ decision or additional external/legal research is needed.
 ## Handoff
 
 * Implementation evidence: .copilot-tracking/changes/2026-10-16/rule-engine-gating-329-changes.md
-* Implementation and one Review complete; parent performs P01-T02 publication.
-* No blockers. Core installed in pip venv; all local validation complete.
+* All implementation and delivery tasks complete; one Review Conformant.
+* No blockers. Await hosted checks and owner's review/merge decision on PR 334.
