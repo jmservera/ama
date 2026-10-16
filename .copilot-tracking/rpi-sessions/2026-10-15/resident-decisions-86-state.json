@@ -17,8 +17,8 @@
   "confirmed_decisions": [
     {
       "decision": "Owner selected current-main integration via git fetch && git merge origin/main; resolve conflicts, validate src, update evidence/PR, commit and ordinary topic push",
-      "status": "conflicts resolved; local validation passed; publication authorized",
-      "evidence": "Explicit resumed user request 2026-10-16 for PR #319; origin/main 06d8aeda; changes record contains core/API/agents suite and quality results"
+      "status": "completed and published; hosted checks pending",
+      "evidence": "Merge 72d9a4bfdf7da5dfc421f06d70227e5e0fbb6ae5 pushed on 2026-10-16; origin/main 06d8aeda is an ancestor; PR #319 MERGEABLE with eleven checks queued"
     },
     {
       "decision": "Run full RPI loop automatically and publish a PR to main on the named branch",
@@ -56,37 +56,31 @@
       "evidence": ".copilot-tracking/reviews/logs/2026-10-15/resident-decisions-86-review.md"
     },
     {
-      "decision": "Commit ee649f0 pushed; PR #319 opened to main with Refs #86; newer-main conflicts prevent CI",
-      "status": "published but integration blocked",
+      "decision": "PR #319 published to main with Refs #86; interrupted current-main merge completed and pushed as 72d9a4b; no closing issue references",
+      "status": "published and mergeable; hosted CI pending",
       "evidence": "https://github.com/jmservera/ama/pull/319"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Commit validated merge, ordinary topic push and refresh PR #319 with Refs #86; inspect hosted checks without claiming live or human acceptance"
+    "action": "Hosted PR #319 checks and owner merge decision remain; no further implementation or repeated RPI Review is selected"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Complete authorized current-main merge integration for PR #319",
-      "rationale": "All conflicts and local validation are complete; only authorized commit/push and PR refresh remain",
-      "evidence": "Resumed integration results in .copilot-tracking/changes/2026-10-15/resident-decisions-86-changes.md"
-    },
-    {
-      "rank": 2,
       "task": "Ratify operational representative authority, field roles and retention policy",
       "rationale": "Smallest bounded owner decision; unlocks safe operational planning without speculative code",
       "evidence": "RV-001 in .copilot-tracking/reviews/logs/2026-10-15/resident-decisions-86-review.md"
     },
     {
-      "rank": 3,
+      "rank": 2,
       "task": "Supply actual formal complaints and accessible independent-review routes and human acceptance",
       "rationale": "Directly resolves the unticked fourth issue criterion; needs service and resident-engagement owners",
       "evidence": "RV-002 in .copilot-tracking/reviews/logs/2026-10-15/resident-decisions-86-review.md"
     },
     {
-      "rank": 4,
+      "rank": 3,
       "task": "Capture authorized actual inference, SQL Server/Azure and CI container evidence",
       "rationale": "Confirms runtime quality after local tests; needs authorized services and CI because Docker daemon is denied",
       "evidence": "RV-003 in .copilot-tracking/reviews/logs/2026-10-15/resident-decisions-86-review.md"

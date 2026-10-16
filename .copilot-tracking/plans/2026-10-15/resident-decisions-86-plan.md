@@ -6,7 +6,7 @@ ms.date: 2026-10-15
 
 Task: issue-86 / resident-decisions-86. Status: Implementation locally validated,
 single Review complete, PR #319 published; authorized current-main integration
-resolved and locally validated, with hosted CI pending.
+resolved, locally validated and pushed as merge commit 72d9a4b; hosted CI pending.
 
 ## Executive Summary
 
@@ -146,7 +146,8 @@ No significant/divergent user decision required; no repeated critique.
 Owner-authorized integration of current main is resolved and locally validated
 for PR #319. Stock query events/sign-offs/design versions, hazard holds, handoffs,
 RAI release records and synthetic support are preserved; no rebase/force push
-or main write. Publication and hosted CI remain separate from local validation.
+or main write. Merge commit 72d9a4b is published and PR #319 is MERGEABLE;
+hosted CI and owner approval remain separate from local validation.
 Formal complaints integration, representative retention/role ratification,
 real user independent-review/without-detriment testing and authorized live
 Foundry/SQL Server/Azure evidence are not local implementation acceptance.

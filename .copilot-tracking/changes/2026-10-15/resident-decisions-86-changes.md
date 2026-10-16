@@ -319,3 +319,20 @@ trailer, Refs #86 and an ordinary topic push. Hosted checks were absent before
 publication; their later status is recorded in PR #319, not assumed passed.
 This follow-up does not repeat the completed RPI Review or close operational,
 human, actual model, SQL Server/Azure or container acceptance gaps.
+
+### Integration Publication
+
+Merge commit `72d9a4bfdf7da5dfc421f06d70227e5e0fbb6ae5` has parents
+`ea15556` and `06d8aed`; author and committer both use
+`8036360+jmservera@users.noreply.github.com` and the required Copilot trailer
+is present. Ordinary `git push origin feat/src-resident-decisions-86` succeeded,
+and `git ls-remote` confirmed that exact remote head. `gh pr edit 319` refreshed
+the body with the combined behavior, exact validation and remaining limits.
+
+`git merge-base --is-ancestor origin/main HEAD` passes; MERGE_HEAD is absent
+and the worktree was clean after publication. GitHub reports PR #319
+`MERGEABLE`, with no closing issue references. Eleven hosted checks were queued
+at that observation (`UNSTABLE`), not passed. This replaces the historical
+conflict/publication blocker above; owner merge approval and hosted check
+completion remain separate. This final metadata update uses another ordinary
+commit/push, without amending or rewriting the published merge.
