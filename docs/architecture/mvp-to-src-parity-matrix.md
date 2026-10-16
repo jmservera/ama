@@ -1,7 +1,7 @@
 ---
 title: MVP and Prototype to src Parity Matrix
 description: Per-file outcome for every tracked mvp/ and prototype/ file, review of PRs 235 to 287 against their issues, issues to reopen, and the proposed migration order for issue 199
-ms.date: 2026-10-15
+ms.date: 2026-10-16
 ms.topic: reference
 ---
 
@@ -31,6 +31,30 @@ of #235 to #287, and a run of the MVP unit suite on 2026-10-15.
 Limits: no Azure resource was used or created. Acceptance criteria are read from
 the issue text; a criterion is "unmet" only where the pull request body, the
 code or the repository record shows it is not delivered.
+
+## Role Task Queue Offline Slice (2026-10-16)
+
+Refs #76. This dated audit extends, rather than rewrites, the historical
+migration inventory below. It was made against the issue body/comments,
+ADR 0006 and current `src` after #116, #317 and #318.
+Details and definitions are in the
+[API guide](../../src/api/README.md#role-task-queues-and-shared-case-context-76).
+
+| #76 criterion | Already in src before this slice | Gap addressed and remaining boundary |
+| --- | --- | --- |
+| Own list, one status and next action | Authenticated own-case list and plain status | Shared recorded next action replaces generic open-case prompt; missing action stays an owned recording task. |
+| No perspective picker | Existing server-described role navigation | Preserved; no identity provider or role simulator added. |
+| Six visible queues | General flags/sort only | Versioned definitions and filters for new/priority/stale/blocked/overdue/unowned. Draft ranking policy makes approved priority visibly unavailable; owner definition/priority approval remains open. |
+| Blocked reason, named owner and action | Domain blocker prose and technical responsible roles | Shared structured stops/prerequisites; missing named owner explicitly Unknown, never inferred from a role. |
+| Hazard clock and named owner | Expanded case safety observations and external authority | Queue and case show the same recorded awareness/elapsed snapshot, deadlines and follow-up owner. Missing precise awareness stays Unknown; external service owns timing. |
+| FR-034 agreement | Separate handoff/return/stock histories | One projected per-case context in list, case, history-current, sources and proposed-reviewer panels. Historical event owners remain unchanged; no operational rights ratification. |
+| FR-032 reset | One own-queue reset with focus/announcement and cancellation | Server version/default/result order/no-selection contract, new queue-filter reset and alternate-default browser regression. |
+
+The implementation is confined to `src/core`/`src/api` plus requested evidence
+and documentation. JSON/SQLite/loopback Chromium checks are local engineering
+evidence. OQ-005/OD-14/OD-19 owner role/redaction/delegation decisions, queue
+ratification, real AI/SQL Server/Azure and direct human acceptance remain open.
+This is not full #76 or deployed application acceptance.
 
 ## Working Layout
 

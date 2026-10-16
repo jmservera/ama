@@ -13,7 +13,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 from zava_forward.core import profile
 
-from zava_forward.core import projection, quality
+from zava_forward.core import projection, quality, ranking, taskqueues
 
 from zava_forward.core import lawstore
 from zava_forward.api import auth
@@ -119,7 +119,7 @@ WO_ACTIONS = {
 
 
 def filt(q):
-    return {k: q[k][0] for k in ("stage", "area", "wave", "owner", "contractor", "flag") if q.get(k) and q[k][0]}
+    return {k: q[k][0] for k in ("stage", "area", "wave", "owner", "contractor", "flag", "queue") if q.get(k) and q[k][0]}
 
 
 def num(q, key, default, lo, hi):
@@ -268,6 +268,8 @@ def make_handler(app):
                 out["account"] = app.provider.account(self.headers, u)
                 out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
                 out["navigation"] = navigation(u)
+                if not projection.is_contractor(u):
+                    out["work_queues"] = taskqueues.contract(ranking.CURRENT)
                 return self._json(200, out)
             if url.path == "/api/account/photo":
                 try:
@@ -278,14 +280,17 @@ def make_handler(app):
                     return self._json(error.status, {"error": str(error)})
             if url.path in ("/api/cases", "/api/cases.csv"):
                 view, text, sort = q.get("view", ["mine"])[0], q.get("q", [""])[0], q.get("sort", ["urgent"])[0]
-                if url.path.endswith(".csv"):
-                    rows = s.list_cases(u, view, text, filt(q), sort)
-                    return self._send(200, s.export_csv(rows), "text/csv; charset=utf-8",
-                                      {"Content-Disposition": 'attachment; filename="cases.csv"'})
                 try:
+                    taskqueues.validate_queue(q.get("queue", [""])[0])
+                    if url.path.endswith(".csv"):
+                        rows = s.list_cases(u, view, text, filt(q), sort)
+                        return self._send(200, s.export_csv(rows), "text/csv; charset=utf-8",
+                                          {"Content-Disposition": 'attachment; filename="cases.csv"'})
                     limit, offset = num(q, "limit", 50, 1, 100), num(q, "offset", 0, 0, 10**9)
                 except ValueError as e:
                     return self._json(400, {"error": str(e)})
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
                 try:
                     after = q.get("after", [""])[0][:100] or None
                     return self._json(200, s.page_cases(u, view, text, filt(q), sort, limit, offset, after))

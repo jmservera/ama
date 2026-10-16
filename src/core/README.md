@@ -2,7 +2,7 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-15
+ms.date: 2026-10-16
 ms.topic: reference
 ---
 
@@ -15,6 +15,20 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `test_chat_isolation` and `test_continuity` are in `src/api/tests/`. Run the suite from `src/core` with
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
+
+## Derived role task queues (#76)
+
+`taskqueues` provides the shared, read-only `work-queues-1` definition/default
+contract and case task context. Store and SqlStore return identical projected
+context in staff list/detail; dynamic queue membership is evaluated before
+counting/paging, using the existing Store fallback rather than dialect-specific
+SQL. No schema, approval, assignment or event history changes are required.
+The API guide documents [definitions, source fields, snapshot clock, redaction
+and remaining owner decisions](../api/README.md#role-task-queues-and-shared-case-context-76).
+JSON/SQLite semantic tests cover seven/30/180-day boundaries, unknowns,
+handoff lifecycle, independent deadlines, missing named owners and 120-case
+paging/sort/export parity. Role-only responsibility never invents a named owner;
+draft policy and accepted AI advice cannot produce approved programme priority.
 
 ## Resident decisions and representatives (#86)
 
