@@ -1,0 +1,358 @@
+"""Synthetic local app checks for issue 215; no private data or provider calls."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from datetime import timedelta
+from pathlib import Path
+from threading import Event
+from typing import Any
+from unittest.mock import patch
+
+from playwright.sync_api import Page, expect, sync_playwright
+from regulatory_fixture import NOW
+from test_regulatory_chat_api import RegulatoryApi
+
+AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
+ROLES = {
+    "Resident Liaison Officer": "Repairs and intake",
+    "Building Safety Liaison": "Building Safety:",
+    "Retrofit Coordinator": "Assessment and coordination",
+    "Quality Inspector": "Assessment and quality",
+    "Retrofit Programme Manager": "Programme:",
+    "Programme Support Officer": "Programme support",
+    "Grants and Evidence Officer": "Finance and grants",
+}
+
+
+def scan(
+    page: Page,
+    axe: str,
+    reports: list[dict[str, Any]],
+    state: str,
+    selector: str = "#regulatory-alerts, #chat-panel",
+) -> None:
+    page.evaluate(axe)
+    result: dict[str, Any] = page.evaluate(
+        """async selector => await axe.run(
+          {include: [[selector]]},
+          {runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a',
+            'wcag21aa', 'wcag22aa']}})""",
+        selector,
+    )
+    reports.append(
+        dict(
+            state=state,
+            violations=result["violations"],
+            incomplete=[
+                dict(
+                    id=item["id"],
+                    nodes=[
+                        dict(target=node["target"], reason=node.get("failureSummary"))
+                        for node in item["nodes"]
+                    ],
+                )
+                for item in result["incomplete"]
+            ],
+            passes=len(result["passes"]),
+        )
+    )
+    assert not result["violations"], json.dumps(result["violations"], indent=2)
+
+
+def open_home(page: Page, base: str) -> None:
+    page.goto(base + "/app#/case/ZF-1")
+    page.reload()
+    expect(page.locator("#regulatory-alerts")).to_be_visible()
+    expect(page.locator("#regulatory-alerts [role=status]")).not_to_contain_text("Loading")
+
+
+def keyboard_activate(page: Page, selector: str, key: str = "Enter") -> None:
+    target = page.locator(selector)
+    target.focus()
+    expect(target).to_be_focused()
+    assert target.evaluate(
+        """el => {
+          const s = getComputedStyle(el), r = el.getBoundingClientRect();
+          return s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) >= 2 &&
+            r.width >= 24 && r.height >= 24;
+        }"""
+    ), f"Visible focus or target size: {selector}"
+    page.keyboard.press(key)
+
+
+def keyboard_walk(page: Page, selector: str) -> None:
+    controls = page.locator(selector).locator(
+        "summary:visible, a:visible, button:visible:enabled, "
+        "input:visible:enabled, textarea:visible:enabled"
+    )
+    count = controls.count()
+    assert count > 0
+    controls.first.focus()
+    for index in range(count):
+        control = controls.nth(index)
+        expect(control).to_be_focused()
+        assert control.evaluate(
+            """el => {
+              const r = el.getBoundingClientRect(), s = getComputedStyle(el);
+              const top = Math.max(0, r.top), bottom = Math.min(innerHeight, r.bottom);
+              return bottom > top && s.outlineStyle !== 'none' &&
+                parseFloat(s.outlineWidth) >= 2;
+            }"""
+        ), f"Focus hidden or not visible: {selector}/{index}"
+        page.keyboard.press("Tab")
+    page.keyboard.press("Shift+Tab")
+    expect(controls.last).to_be_focused()
+
+
+def run(axe_path: Path) -> dict[str, Any]:
+    raw = axe_path.read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == AXE_SHA256, "Unexpected axe 4.10.3 content"
+    axe = raw.decode()
+    fixture = RegulatoryApi("runTest")
+    reports: list[dict[str, Any]] = []
+    fixture.setUp()
+    try:
+        # This clock is deliberately fictional and never supplied through HTTP.
+        fixture.app.rule_engine().run(
+            fixture.f.store, "ZF-1", "schedule", now=NOW + timedelta(days=1)
+        )
+        for index, role in enumerate((*ROLES, "Contractor")):
+            person = dict(
+                email=f"role-{index}@example.test",
+                name=f"Synthetic role {index}",
+                role=role,
+                code=f"SYN-{index}",
+                contractor="Test Ltd",
+            )
+            fixture.f.store.db.execute(
+                "INSERT INTO staff (email, body) VALUES (?,?)",
+                (person["email"], json.dumps(person)),
+            )
+            fixture.f.store.staff[person["email"]] = person
+            fixture.f.store.data["staff"].append(person)
+        with fixture.f.store.lock:
+            pass
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            context = browser.new_context(viewport={"width": 1280, "height": 900})
+            # Never load tiles, remote fonts or other third-party resources.
+            context.route(
+                "**/*",
+                lambda route: (
+                    route.continue_()
+                    if route.request.url.startswith(fixture.base + "/")
+                    else route.abort()
+                ),
+            )
+            context.add_cookies(
+                [
+                    dict(
+                        name="zf_session",
+                        value=fixture.cookies["sam@example.test"].split("=", 1)[1],
+                        url=fixture.base,
+                    )
+                ]
+            )
+            page = context.new_page()
+            errors: list[str] = []
+            page.on("pageerror", lambda error: errors.append(str(error)))
+            open_home(page, fixture.base)
+            alerts = page.locator("#regulatory-alerts")
+            expect(alerts).to_contain_text("Status: breach risk")
+            for field in (
+                "What was noticed",
+                "Safe action",
+                "Decision owner",
+                "Clock",
+                "Source and status",
+                "Retrieved/observed:",
+                "Owner acknowledgement: required",
+                "synthetic-demo",
+            ):
+                expect(alerts).to_contain_text(field)
+            expect(alerts).to_contain_text("Coverage: unknown")
+            # The safety route is visible while optional chat is collapsed.
+            expect(page.locator("#chat-panel")).not_to_have_attribute("open", "")
+            expect(alerts.locator(".notice")).to_be_visible()
+            scan(page, axe, reports, "alert-collapsed-chat")
+
+            keyboard_activate(page, "#alerts-plain-mode", "Space")
+            expect(alerts.locator(".plain-explanation")).not_to_be_visible()
+            keyboard_activate(page, "#alerts-plain-mode", "Space")
+            expect(alerts.locator(".plain-explanation")).to_be_visible()
+            # Real sequential Tab and reverse traversal, not only programmatic focus.
+            page.keyboard.press("Tab")
+            expect(alerts.locator("a").first).to_be_focused()
+            page.keyboard.press("Shift+Tab")
+            expect(page.locator("#alerts-plain-mode")).to_be_focused()
+            keyboard_activate(page, "#chat-panel > summary")
+            keyboard_activate(page, "#regulatory-chat > summary", "Space")
+            chat = page.locator("#regulatory-chat")
+            expect(chat).to_contain_text("Synthetic source lookup available")
+            keyboard_activate(page, "#chat-plain-mode", "Space")
+            expect(chat.locator(".plain-explanation").first).not_to_be_visible()
+            keyboard_activate(page, "#chat-plain-mode", "Space")
+            question = page.locator("#regulatory-question")
+            question.focus()
+            page.keyboard.type("What do the hazard sources say for this home?")
+            page.keyboard.press("Tab")
+            expect(chat.locator("button[type=submit]")).to_be_focused()
+            started, release = Event(), Event()
+            render = fixture.app.regulatory.render
+
+            def delayed_render(bundle: dict[str, Any]) -> dict[str, Any]:
+                started.set()
+                if not release.wait(10):
+                    raise RuntimeError("Synthetic pending-answer test timed out")
+                result: dict[str, Any] = render(bundle)
+                return result
+
+            with patch.object(fixture.app.regulatory, "render", side_effect=delayed_render):
+                try:
+                    with page.expect_request("**/api/chat/regulatory/threads/*/ask"):
+                        page.keyboard.press("Enter")
+                    question.fill("Next draft retained")
+                finally:
+                    release.set()
+                expect(chat.locator(".regulatory-turn")).to_have_count(1)
+                assert started.is_set(), "Local source lookup did not start"
+            expect(question).to_have_value("Next draft retained")
+            expect(chat.locator("ol > li").first).to_contain_text(
+                "What do the hazard sources say for this home?"
+            )
+            expect(question).to_be_focused()
+            for heading in (
+                "What the sources say",
+                "Recorded home facts",
+                "Unknown or missing",
+                "Safe next action",
+                "Who decides",
+            ):
+                expect(chat.locator("h4", has_text=heading)).to_be_visible()
+            expect(chat).to_contain_text("Synthetic hazard reports go to a human reviewer")
+            expect(chat).to_contain_text("Effective: 2026-01-01")
+            expect(chat.locator("a").first).to_have_attribute(
+                "href", "/api/law/provisions/synthetic%40v1%230001"
+            )
+            scan(page, axe, reports, "cited-answer")
+            doubt = chat.locator(".regulatory-turn button").first
+            doubt.focus()
+            page.keyboard.press("Enter")
+            expect(chat.locator("[role=status]")).to_contain_text("exercise inbox")
+            expect(doubt).to_be_focused()
+            expect(doubt).to_have_attribute("aria-disabled", "true")
+            keyboard_walk(page, "#regulatory-alerts")
+            keyboard_walk(page, "#regulatory-chat")
+            inbox = fixture.call("/api/chat/regulatory/inbox", email="exercise-owner@example.test")[
+                1
+            ]
+            assert len(inbox["threads"]) == 1
+
+            question.fill("What are the lease terms?")
+            question.press("Tab")
+            page.keyboard.press("Enter")
+            expect(chat.locator(".regulatory-turn")).to_have_count(2)
+            expect(chat.locator(".regulatory-turn").last).to_contain_text("No source held")
+            scan(page, axe, reports, "no-source-refused")
+            for width in (320, 390, 1280):
+                page.set_viewport_size({"width": width, "height": 900})
+                for selector in ("#regulatory-alerts", "#regulatory-chat"):
+                    assert page.locator(selector).evaluate(
+                        "el => el.scrollWidth <= el.clientWidth + 1"
+                    ), f"Horizontal overflow at {width}px: {selector}"
+                scan(page, axe, reports, f"{width}px-reflow")
+            page.locator("#regulatory-alerts, #regulatory-chat").evaluate_all(
+                "nodes => nodes.forEach(el => el.style.fontSize = '200%')"
+            )
+            page.set_viewport_size({"width": 320, "height": 900})
+            for selector in ("#regulatory-alerts", "#regulatory-chat"):
+                assert page.locator(selector).evaluate(
+                    "el => el.scrollWidth <= el.clientWidth + 1"
+                ), f"200% text overflow: {selector}"
+            scan(page, axe, reports, "200-percent-text-320px")
+            page.set_viewport_size({"width": 1280, "height": 900})
+            page.reload()
+            expect(page.locator("#regulatory-alerts")).to_be_visible()
+            page.locator("#chat-panel > summary").click()
+            page.locator("#regulatory-chat > summary").click()
+            expect(chat.locator(".regulatory-turn")).to_have_count(2)
+            expect(chat.locator("[role=status]")).to_contain_text("historical snapshots")
+
+            fixture.f.source(version=2)
+            page.get_by_role("button", name="Refresh alerts", exact=True).click()
+            expect(alerts).to_contain_text("Not active or source uncertain")
+            expect(alerts).to_contain_text("Status: breach risk")
+            scan(page, axe, reports, "source-changed-retained-risk")
+
+            # Actual service outage and disabled capability, not fake successful responses.
+            law = fixture.app.law
+            fixture.app.law = None
+            page.get_by_role("button", name="Refresh alerts", exact=True).click()
+            expect(alerts.locator("[role=status]")).to_contain_text("Alert coverage unknown")
+            expect(alerts.locator(".regulatory-alert")).to_have_count(0)
+            fixture.app.law = law
+            fixture.app.regulatory.env = {}
+            page.reload()
+            page.locator("#chat-panel > summary").click()
+            page.locator("#regulatory-chat > summary").click()
+            expect(question).to_be_disabled()
+            expect(chat.locator("[role=status]")).to_contain_text("Cited lookup unavailable")
+            scan(page, axe, reports, "disabled-chat")
+            fixture.app.regulatory.env = fixture.app.chat.env
+
+            # Every existing account mapping is checked independently of audience designs.
+            for index, (role, text) in enumerate(ROLES.items()):
+                context.clear_cookies()
+                response = context.request.post(
+                    fixture.base + "/api/login",
+                    data=dict(email=f"role-{index}@example.test", password="synthetic-local"),
+                )
+                assert response.ok, role
+                open_home(page, fixture.base)
+                expect(alerts.locator(".regulatory-guidance")).to_contain_text(text)
+                expect(alerts).to_contain_text("For everyone handling data")
+                if role == "Quality Inspector":
+                    expect(alerts).to_contain_text("No visible alerts does not mean no risk")
+                scan(page, axe, reports, role)
+            context.clear_cookies()
+            response = context.request.post(
+                fixture.base + "/api/login",
+                data=dict(email="role-7@example.test", password="synthetic-local"),
+            )
+            assert response.ok
+            page.goto(fixture.base + "/app#/case/ZF-1")
+            page.reload()
+            expect(page.get_by_role("heading", name="Requirements and doubt route")).to_be_visible()
+            expect(page.locator("#regulatory-alerts, #chat-panel")).to_have_count(0)
+            scan(page, axe, reports, "supplier-human-route", "#regulatory-supplier")
+            assert context.request.get(fixture.base + "/api/law/alerts?case=ZF-1").status == 403
+            assert context.request.get(fixture.base + "/api/chat/regulatory/status").status == 403
+            assert not errors, errors
+            browser.close()
+        return dict(
+            outcome="passed",
+            scope="Synthetic changed surfaces only; not a WCAG conformance certification",
+            axe_version="4.10.3",
+            axe_sha256=AXE_SHA256,
+            scans=reports,
+            staff_comprehension="Not run; unmet",
+        )
+    finally:
+        fixture.doCleanups()
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--axe", type=Path, required=True, help="Pinned local axe 4.10.3 script")
+    parser.add_argument("--out", type=Path, required=True, help="Local JSON evidence output")
+    args = parser.parse_args()
+    result = run(args.axe)
+    args.out.write_text(json.dumps(result, indent=2) + "\n")
+    print(f"PASS: {len(result['scans'])} axe states, keyboard, reflow, roles and real local API")
+
+
+if __name__ == "__main__":
+    main()

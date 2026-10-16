@@ -3952,3 +3952,17 @@ metadata when the knowledge base was created.
   leases remain unverified before operational reliance. Search and monitoring
   costs are explicitly unknown; paid deployment, actual processing, real
   legal approval and benefit evidence are not authorized or proved here.
+
+## [2026-10-16] implementation | Regulatory alert and home chat UX (Refs #215)
+
+* Added the [API UX guide and criterion audit](../../src/api/README.md#regulatory-alert-and-home-chat-ux-215)
+  and index route for seven audience patterns, plain-language presentation,
+  scoped home alerts, structured cited lookup and explicit doubt/missing-source
+  states. Reused merged deterministic checks, source monitoring and home chat;
+  no new rights, clocks, legal interpretation, approvals or sending.
+* Added a synthetic local SQL-backed browser exercise with automated WCAG 2.2
+  A/AA-tagged axe checks and keyboard/reflow assertions. This is bounded
+  engineering evidence, not complete conformance or staff acceptance.
+* Documented a repairs/housing/grants comprehension protocol and left actual
+  testing Not run/unmet. ADR 0005 acceptance remains synthetic-development-only;
+  real owners/sources, operational approval and measured chat value remain gaps.
