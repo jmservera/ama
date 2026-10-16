@@ -3898,6 +3898,25 @@ metadata when the knowledge base was created.
   this principal. No fabricated human binding, private dataset read, inference,
   worker acceptance, owner sign-off, legacy deletion or workflow rename.
 
+## [2026-10-16] query | Hardened source deployment and honest criterion audit
+
+* Refs #118. Updated the reference index, source/infra READMEs and cut-over
+  evidence pack with all five original criteria and explicit unmet gates.
+* Four local Docker image contracts passed with fail-closed startup, real API
+  health/static delivery and five rejected unsafe launches per image.
+  Existing CI now runs the same harness and retains unsuppressed scan JSON.
+* All four Trivy 0.76.0 scans failed: 61 HIGH and two CRITICAL package findings
+  each, 16 unique CVEs, all without a reported fixed version. No ignore lists,
+  baselines or unfixed-finding exemption was introduced.
+* Compiled Bicep proves six image consumers and the gated Premium/WAF/private
+  origin. Disabled Defender opt-in no longer submits Free pricing resources
+  that could downgrade existing shared-subscription protection.
+* Hosted read-only-root/capability enforcement remains unmet with the current
+  Container Apps schema; new image rollout is blocked, not silently relaxed.
+  No Azure/public deployment, policy bypass, SQL access change, private data
+  read or human approval was performed or inferred. ADR 0005 remains only a
+  synthetic-development acceptance with real owners/sources still a gap.
+
 ## [2026-10-16] query | Bounded home-specific cited chat (Refs #214)
 
 * Added the synthetic-only cited lookup, source/fact envelope persistence,
@@ -3916,6 +3935,7 @@ metadata when the knowledge base was created.
   Real sources/delegates/approvals, actual inference, continuing-stock,
   Azure SQL and operational privacy/retention remain unmet. No issue acceptance
   checkbox was updated; the coordinator retains merge-time ownership.
+
 ## [2026-10-16] query | Environment strategy and parameter checks (Refs #137, Refs #139)
 
 * Updated [infra environments](../../infra/README.md#environments), parameter
@@ -3966,3 +3986,48 @@ metadata when the knowledge base was created.
 * Documented a repairs/housing/grants comprehension protocol and left actual
   testing Not run/unmet. ADR 0005 acceptance remains synthetic-development-only;
   real owners/sources, operational approval and measured chat value remain gaps.
+## [2026-10-16] query | PR 347 deployment hardening review corrections
+
+* Refs #118. Merged origin/main into the existing topic branch and preserved
+  both append-only log histories. Updated the reference index, source/infra
+  READMEs and [criterion audit](../architecture/cutover-evidence-pack.md#deployment-hardening-audit-118-2026-10-16).
+* Removed the shipped fail-closed ENTRYPOINT guard and its two maintenance job
+  command additions so images can start on Container Apps. UID/GID 10001 stays.
+  Docker runtime controls are enforced and probed in local/CI launch contracts;
+  hardened and plain non-root application startup pass. Hosted enforcement
+  remains Partial, not silently treated as fulfilled.
+* Latest same-tag Python base digest is unchanged. Four no-cache builds reran
+  apt upgrade with zero available upgrades. Fresh before/after scans each show
+  61 HIGH/two CRITICAL unfixed package findings per image, zero reduction.
+  Owner-directed scanner ignore-unfixed true gates only fixable findings;
+  separate full/unfixed-inclusive JSON reports remain uploaded and visible.
+  No ignore lists, baselines or vulnerability-specific suppressions.
+* All five local project suites, Ruff and mypy pass; 130 infra tests, every
+  Bicep build/lint, four Docker/application contracts and workflow syntax pass.
+  Corrected step-time absolute CI fixture paths after matrix-time workspace
+  expansion caused API/orchestrator import failures.
+* No public edge changes, Azure execution, policy bypass, SQL public access
+  change, private-data read or invented approvals. ADR 0005 remains synthetic
+  development only; real owners/sources are still a gap. Issue checkboxes stay
+  unchanged; the same PR stays draft until green CI is verified.
+
+## [2026-10-16] query | Integrated PR 347 validation and publication evidence
+
+* Refs #118. Concurrent main advanced while CI ran. Merged it again without
+  rewriting history and retained both log histories verbatim. Preserved new
+  agents/core test fixtures in the step-time absolute CI configuration.
+* Repeated full local validation: 517 core, 553 API, 77 agents, 22 orchestrator
+  and 39 importer tests pass, 111 opt-in skips total; all Ruff/format/mypy and
+  130 infra tests pass. Four integrated Docker builds and hardened/plain
+  startup contracts pass, including real API health/PNG.
+* Same-DB integrated image scans still have 61 HIGH/two CRITICAL unfixed
+  findings per image, zero fixable findings. Earlier uploaded CI artifacts
+  were downloaded and checked, not merely assumed to exist.
+* All 11 checks pass at integrated source candidate 8142553 (source CI
+  38936437239, API/SQL CI 38936437236, validation 38936437380).
+  An earlier browser navigation timeout passed the full local harness unchanged
+  and its CI rerun; no test bypass or speculative application change.
+* Final documentation/RPI closeout retains identical source/infra/workflows.
+  Existing PR ready status requires all latest-head checks green. Hosted
+  hardening and other unmet criteria remain Partial; owner review and all
+  operational/legal/consent/safety/financial approvals remain separate.

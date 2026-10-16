@@ -19,7 +19,7 @@ jobs:
   project:
     name: src-${{ matrix.project }}
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
@@ -31,17 +31,14 @@ jobs:
           - project: api
             dist: zava-forward-api
             deps: "-e ../core -e ../agents"
-            pythonpath: "../core/tests:../agents/tests"
             image: true
           - project: agents
             dist: zava-forward-agents
             deps: "-e ../core"
-            pythonpath: "../core/tests"
             image: true
           - project: orchestrator
             dist: zava-forward-orchestrator
             deps: "-e ../core"
-            pythonpath: "../core/tests"
             image: true
           - project: importer
             dist: zava-forward-import
@@ -63,7 +60,7 @@ jobs:
         run: pip install $DEPS -e ".[dev]"
       - name: Unit tests and dependency-rule test
         env:
-          PYTHONPATH: ${{ matrix.pythonpath }}
+          PYTHONPATH: ${{ matrix.project == 'api' && format('{0}/src/core/tests:{0}/src/agents/tests', github.workspace) || (matrix.project == 'orchestrator' || matrix.project == 'agents') && format('{0}/src/core/tests', github.workspace) || '' }}
         run: python -m unittest discover -s tests -v
       - name: Lint
         run: ruff check . && ruff format --check .
@@ -80,50 +77,49 @@ jobs:
           python -m playwright install --with-deps chromium
           python -m checks.design_system_browser_check
       - name: Build image
+        id: build
         if: matrix.image
         working-directory: .
         run: docker build -f src/${{ matrix.project }}/Dockerfile -t zava-forward-${{ matrix.project }}:ci src
-      - name: Image runs as a non-root user
+      - name: Docker security contract and hardened/plain application startup
         if: matrix.image
         working-directory: .
-        run: test "$(docker run --rm --entrypoint id zava-forward-${{ matrix.project }}:ci -u)" = "10001"
-      - name: Image contains no working data
-        if: matrix.image
-        working-directory: .
-        run: docker run --rm --entrypoint sh zava-forward-${{ matrix.project }}:ci -c 'test ! -e /app/data && test ! -e /data/zavaforward.json'
-      - name: Agents image carries no SQL or blob client code
-        if: matrix.project == 'agents'
-        working-directory: .
-        run: |
-          docker run --rm --entrypoint python zava-forward-agents:ci -c \
-            "import importlib.util as u; assert not any(u.find_spec(m) for m in ('mssql_python', 'azure'))"
-      - name: Image runs with a read-only root file system and no capabilities
-        if: matrix.image
-        working-directory: .
-        env:
-          DIST: ${{ matrix.dist }}
-        run: |
-          mkdir -p "$RUNNER_TEMP/seed"
-          chmod -R a+rX "$RUNNER_TEMP/seed"
-          if [ "${{ matrix.project }}" = api ]; then
-            set -- python -c 'from zava_forward.api.version import __version__; print(f"zava-forward-api {__version__}")'
-          else
-            set --
-          fi
-          out="$(docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges \
-            --tmpfs /tmp --tmpfs /state:uid=10001,gid=10001 \
-            -v "$RUNNER_TEMP/seed:/data:ro" zava-forward-${{ matrix.project }}:ci "$@")"
-          echo "$out"
-          test "$out" = "$DIST 0.1.0"
-      - name: Scan image for high and critical vulnerabilities
-        if: matrix.image
+        run: python src/check-container.py ${{ matrix.project }} zava-forward-${{ matrix.project }}:ci
+      - name: Gate fixable high and critical vulnerabilities
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
         with:
+          version: v0.76.0
           image-ref: zava-forward-${{ matrix.project }}:ci
+          trivy-config: src/trivy.yaml
           severity: HIGH,CRITICAL
           exit-code: "1"
           vuln-type: os,library
           ignore-unfixed: true
+          format: json
+          output: trivy-${{ matrix.project }}.json
+      - name: Report all high and critical vulnerabilities including unfixed
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          image-ref: zava-forward-${{ matrix.project }}:ci
+          trivy-config: src/trivy.yaml
+          severity: HIGH,CRITICAL
+          exit-code: "0"
+          vuln-type: os,library
+          ignore-unfixed: false
+          format: json
+          output: trivy-${{ matrix.project }}-all.json
+          skip-setup-trivy: true
+      - name: Retain fixable gate and full unfixed-inclusive scan evidence
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: trivy-${{ matrix.project }}
+          path: |
+            trivy-${{ matrix.project }}.json
+            trivy-${{ matrix.project }}-all.json
+          if-no-files-found: error
 
   namespace:
     name: src-namespace
@@ -158,6 +154,12 @@ jobs:
           pip install 'ruff==0.17.1'
           ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py
           ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py
+      - name: Check container tooling
+        run: |
+          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 src/check-container.py infra/tests/test_container_contract.py
+          ruff format --isolated --line-length 100 --check src/check-container.py infra/tests/test_container_contract.py
+          pip install 'mypy==2.4.0'
+          mypy --strict src/check-container.py
 
   no-working-data:
     name: src-no-working-data
