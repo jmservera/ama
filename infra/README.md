@@ -307,6 +307,16 @@ Deployed on 2026-10-08 to resource group `ama` with `location=uksouth environmen
 
 ### Source-image cut-over (#200, 2026-10-16)
 
+Execution evidence is in the
+[cut-over pack](../docs/architecture/cutover-evidence-pack.md): four images
+built and passed bounded remote runtime checks, but the ama bootstrap failed
+on Microsoft.Devices registration and SQL public-interface restrictions.
+No application deployed or owner sign-off is established. Plain `az acr build`
+failed on existing BuildKit-only `RUN --mount`; the tested alternative is
+`az acr run -r <registry> -f acr-cutover.yaml --timeout 1800 src`, using the
+[source task](../src/acr-cutover.yaml). This does not satisfy the unavailable
+local Docker checks or authorize subscription/tenant changes.
+
 Build and run locally before registry publication. ADR 0006 uses `src/` as
 context so named workload packages can include sibling core; never use `mvp/`
 or the repository root as context. The API starts with `python -m zava_forward.api`.

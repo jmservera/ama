@@ -50,6 +50,7 @@ management: short pages that point to clusters of related material.
 
 | Task | Start with | Then consult |
 | --- | --- | --- |
+| Review cut-over evidence and owner gates (#200/#201) | [Cut-over evidence pack](../architecture/cutover-evidence-pack.md) | [Current row reconciliation](../architecture/cutover-parity-audit.tsv), [reference inventory](../architecture/cutover-reference-inventory.tsv) and [sanitized Azure evidence](../architecture/cutover-azure-evidence.json): refreshed after #337/#338; four remote source images built and bounded contracts passed; canonical deploy-wrapper retry failed on IoT provider registration and SQL public interface. No deployed health, private-data attestation, legacy deletion or owner sign-off |
 | Build, test or deploy the migrated source images (#200) | [Source projects and CI cut-over](../../src/README.md#ci) | [Source-image cut-over recipe](../../infra/README.md#source-image-cut-over-200-2026-10-16): installed packages, src context, isolated job image, external data and unchanged check names; Azure rollout, private backup and owner retirement gates remain unmet |
 | Understand the customer and the sector | [Housing Association Primer](./research/sector/housing-association-primer.md) | [Company Profile Research](./research/company/company-profile-research.md) |
 | Start or resume any project work | [Original Case Study 48](../case_study_48_original.md) and [Case Study 48 Addendum](../case_study_48_addendum.md) | [Project Memory](./memory.md) |

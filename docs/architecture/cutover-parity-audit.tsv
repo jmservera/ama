@@ -1,0 +1,131 @@
+historical_path	outcome	historical_target	actual_target	status
+mvp/.assistant-test-*/cases.sqlite	retire	none	-	absent-before-this-pack
+mvp/.assistant-test-*/seed.json	retire	none	-	absent-before-this-pack
+mvp/zavaforward_mvp/__init__.py	retire	none	-	absent-before-this-pack
+mvp/zavaforward_mvp/ai.py	migrate	`core/ai.py`	src/core/src/zava_forward/core/ai.py	destination-present
+mvp/zavaforward_mvp/ai_eval.py	migrate	`agents/ai_eval.py`	src/agents/src/zava_forward/agents/ai_eval.py	destination-present
+mvp/zavaforward_mvp/ai_registry.py	migrate	`agents/ai_registry.py`	src/core/src/zava_forward/core/ai_registry.py	destination-present
+mvp/zavaforward_mvp/ai_tasks.py	migrate	`core/ai_tasks.py`	src/core/src/zava_forward/core/ai_tasks.py	destination-present
+mvp/zavaforward_mvp/assistants.py	rebuild	`agents/assistants.py` (proposal logic moves as is; dispatch worker rebuilt in `agents/`)	src/core/src/zava_forward/core/assistants.py;src/agents/src/zava_forward/agents/dispatch.py	partial-rebuild-not-deployed-worker
+mvp/zavaforward_mvp/assistant_release.py	migrate	`core/assistant_release.py` (A2)	src/core/src/zava_forward/core/assistant_release.py	destination-present
+mvp/zavaforward_mvp/auth.py	migrate	`api/auth.py`	src/api/src/zava_forward/api/auth.py	destination-present
+mvp/zavaforward_mvp/chat_fixture.py	migrate	`agents-tests/chat_fixture.py` (test support)	src/agents/tests/chat_fixture.py	destination-present
+mvp/zavaforward_mvp/chat_isolation.py	migrate	`core/chat_isolation.py`	src/core/src/zava_forward/core/chat_isolation.py	destination-present
+mvp/zavaforward_mvp/chat_privacy.py	migrate	`core/chat_privacy.py`	src/core/src/zava_forward/core/chat_privacy.py	destination-present
+mvp/zavaforward_mvp/chatthreads.py	migrate	`core/chatthreads.py`	src/core/src/zava_forward/core/chatthreads.py	destination-present
+mvp/zavaforward_mvp/continuity.py	migrate	`core/continuity.py`	src/core/src/zava_forward/core/continuity.py	destination-present
+mvp/zavaforward_mvp/controls.py	migrate	`core/controls.py`	src/core/src/zava_forward/core/controls.py	destination-present
+mvp/zavaforward_mvp/digest_blob.py	migrate	`orchestrator/digest_blob.py`	src/orchestrator/src/zava_forward/orchestrator/digest_blob.py	destination-present
+mvp/zavaforward_mvp/doc_controls.py	migrate	`core/doc_controls.py`	src/core/src/zava_forward/core/doc_controls.py	destination-present
+mvp/zavaforward_mvp/documents.py	migrate	`core/documents.py`	src/core/src/zava_forward/core/documents.py	destination-present
+mvp/zavaforward_mvp/factory.py	migrate	`core/factory.py`	src/core/src/zava_forward/core/factory.py	destination-present
+mvp/zavaforward_mvp/finance.py	migrate	`core/finance.py`	src/core/src/zava_forward/core/finance.py	destination-present
+mvp/zavaforward_mvp/governance.py	migrate	`core/governance.py`	src/core/src/zava_forward/core/governance.py	destination-present
+mvp/zavaforward_mvp/grants.py	migrate	`core/grants.py`	src/core/src/zava_forward/core/grants.py	destination-present
+mvp/zavaforward_mvp/insights.py	migrate	`core/insights.py`	src/core/src/zava_forward/core/insights.py	destination-present
+mvp/zavaforward_mvp/lawstore.py	migrate	`core/lawstore.py` (CLI later to `importer`)	src/core/src/zava_forward/core/lawstore.py	destination-present
+mvp/zavaforward_mvp/ledger.py	migrate	`core/ledger.py`	src/core/src/zava_forward/core/ledger.py	destination-present
+mvp/zavaforward_mvp/loadcheck.py	migrate	`core/synthetic/loadcheck.py`	src/core/src/zava_forward/core/synthetic/loadcheck.py	destination-present
+mvp/zavaforward_mvp/mssqlstore.py	migrate	`core/mssqlstore.py`	src/core/src/zava_forward/core/mssqlstore.py	destination-present
+mvp/zavaforward_mvp/procurement.py	migrate	`core/procurement.py`	src/core/src/zava_forward/core/procurement.py	destination-present
+mvp/zavaforward_mvp/profile.py	migrate	`core/profile.py`	src/core/src/zava_forward/core/profile.py	destination-present
+mvp/zavaforward_mvp/projection.py	migrate	`core/projection.py`	src/core/src/zava_forward/core/projection.py	destination-present
+mvp/zavaforward_mvp/quality.py	migrate	`core/quality.py`	src/core/src/zava_forward/core/quality.py	destination-present
+mvp/zavaforward_mvp/ranking.py	migrate	`core/ranking.py`	src/core/src/zava_forward/core/ranking.py	destination-present
+mvp/zavaforward_mvp/recovery.py	migrate	`core/recovery.py`	src/core/src/zava_forward/core/recovery.py	destination-present
+mvp/zavaforward_mvp/resident_decisions.py	migrate	`core/resident_decisions.py`	src/core/src/zava_forward/core/resident_decisions.py	destination-present
+mvp/zavaforward_mvp/rulecards.py	migrate	`core/rulecards.py`	src/core/src/zava_forward/core/rulecards.py	destination-present
+mvp/zavaforward_mvp/scale_fixture.py	migrate	`core/synthetic/scale_fixture.py`	src/core/src/zava_forward/core/synthetic/scale_fixture.py	destination-present
+mvp/zavaforward_mvp/sensor_backfill.py	migrate	`core/synthetic/sensor_backfill.py`	src/core/src/zava_forward/core/synthetic/sensor_backfill.py	destination-present
+mvp/zavaforward_mvp/server.py	migrate	`api/server.py`, routers split in later work	src/api/src/zava_forward/api/server.py	destination-present
+mvp/zavaforward_mvp/signoffs.py	migrate	`core/signoffs.py`	src/core/src/zava_forward/core/signoffs.py	destination-present
+mvp/zavaforward_mvp/sqlstore.py	migrate	`core/sqlstore.py`	src/core/src/zava_forward/core/sqlstore.py	destination-present
+mvp/zavaforward_mvp/store.py	migrate	`core/store.py`	src/core/src/zava_forward/core/store.py	destination-present
+mvp/zavaforward_mvp/timecapture.py	migrate	`api/timecapture.py`	src/api/src/zava_forward/api/timecapture.py	destination-present
+mvp/zavaforward_mvp/token_store.py	migrate	`orchestrator/token_store.py`	src/orchestrator/src/zava_forward/orchestrator/token_store.py	destination-present
+mvp/zavaforward_mvp/workflows.py	migrate	`core/workflows.py`	src/core/src/zava_forward/core/workflows.py	destination-present
+mvp/web/app.js	migrate	`api/web/app.js`	src/api/src/zava_forward/api/web/app.js	destination-present
+mvp/web/assistants.js	migrate	`api/web/assistants.js`	src/api/src/zava_forward/api/web/assistants.js	destination-present
+mvp/web/index.html	migrate	`api/web/index.html`	src/api/src/zava_forward/api/web/index.html	destination-present
+mvp/web/law.html	migrate	`api/web/law.html`	src/api/src/zava_forward/api/web/law.html	destination-present
+mvp/web/law.js	migrate	`api/web/law.js`	src/api/src/zava_forward/api/web/law.js	destination-present
+mvp/web/ops.js	migrate	`api/web/ops.js`	src/api/src/zava_forward/api/web/ops.js	destination-present
+mvp/web/panels.js	migrate	`api/web/panels.js`	src/api/src/zava_forward/api/web/panels.js	destination-present
+mvp/web/style.css	migrate	`api/web/style.css`	src/api/src/zava_forward/api/web/style.css	destination-present
+mvp/web/timecapture.js	migrate	`api/web/timecapture.js`	src/api/src/zava_forward/api/web/timecapture.js	destination-present
+mvp/web/welcome.html	migrate	`api/web/welcome.html`	src/api/src/zava_forward/api/web/welcome.html	destination-present
+mvp/web/zava-logo.png	migrate	`api/web/zava-logo.png`	src/api/src/zava_forward/api/web/zava-logo.png	destination-present
+mvp/web/vendor/LICENSE	migrate	`api/web/vendor/LICENSE`	src/api/src/zava_forward/api/web/vendor/LICENSE	destination-present
+mvp/web/vendor/leaflet.css	migrate	`api/web/vendor/leaflet.css`	src/api/src/zava_forward/api/web/vendor/leaflet.css	destination-present
+mvp/web/vendor/leaflet.js	migrate	`api/web/vendor/leaflet.js`	src/api/src/zava_forward/api/web/vendor/leaflet.js	destination-present
+mvp/web/vendor/images/layers.png	migrate	`api/web/vendor/images/layers.png`	src/api/src/zava_forward/api/web/vendor/images/layers.png	destination-present
+mvp/web/vendor/images/marker-icon.png	migrate	`api/web/vendor/images/marker-icon.png`	src/api/src/zava_forward/api/web/vendor/images/marker-icon.png	destination-present
+mvp/policies/ranking-v1.json	migrate	`core/policies/ranking-v1.json` (package data)	src/core/src/zava_forward/core/policies/ranking-v1.json	destination-present
+mvp/law/law-source-register.json	migrate	`core/law/law-source-register.json` (package data)	src/core/src/zava_forward/core/law/law-source-register.json	destination-present
+mvp/evals/ai_priority_golden.json	migrate	`agents-evals/ai_priority_golden.json`	src/agents/evals/ai_priority_golden.json	destination-present
+mvp/evals/document_control_fixtures.json	migrate	`core-evals/document_control_fixtures.json`	src/core/evals/document_control_fixtures.json	destination-present
+mvp/evals/document_form_fixtures.json	migrate	`importer-evals/document_form_fixtures.json`	src/importer/evals/document_form_fixtures.json	destination-present
+mvp/evals/registry.json	migrate	`agents-evals/registry.json`	src/agents/evals/registry.json	destination-present
+mvp/tests/assistants_browser_check.py	migrate	`api/checks/assistants_browser_check.py`	src/api/checks/assistants_browser_check.py	destination-present
+mvp/tests/browser_check.py	migrate	`api/checks/browser_check.py`	src/api/checks/browser_check.py	destination-present
+mvp/tests/test_accessibility_baseline.py	migrate	`api-tests/test_accessibility_baseline.py`	src/api/tests/test_accessibility_baseline.py	destination-present
+mvp/tests/test_ai_eval.py	migrate	`agents-tests/test_ai_eval.py`	src/agents/tests/test_ai_eval.py	destination-present
+mvp/tests/test_ai_identity.py	migrate	`agents-tests/test_ai_identity.py`	src/agents/tests/test_ai_identity.py	destination-present
+mvp/tests/test_ai_tasks.py	migrate	`api-tests/test_ai_tasks.py`	src/api/tests/test_ai_tasks.py	destination-present
+mvp/tests/test_assistant_release.py	migrate	`api-tests/test_assistant_release.py`	src/api/tests/test_assistant_release.py	destination-present
+mvp/tests/release_support.py	migrate	`api-tests/release_support.py`	src/core/tests/release_support.py	destination-present
+mvp/tests/test_assistants.py	migrate	`api-tests/test_assistants.py`	src/api/tests/test_assistants.py	destination-present
+mvp/tests/test_auth.py	migrate	`api-tests/test_auth.py`	src/api/tests/test_auth.py	destination-present
+mvp/tests/test_chat_fixture.py	migrate	`agents-tests/test_chat_fixture.py`	src/agents/tests/test_chat_fixture.py	destination-present
+mvp/tests/test_chat_isolation.py	migrate	`api-tests/test_chat_isolation.py`	src/api/tests/test_chat_isolation.py	destination-present
+mvp/tests/test_chat_memory.py	migrate	`core-tests/test_chat_memory.py`	src/core/tests/test_chat_memory.py	destination-present
+mvp/tests/test_chat_privacy.py	migrate	`core-tests/test_chat_privacy.py`	src/core/tests/test_chat_privacy.py	destination-present
+mvp/tests/test_chatthreads.py	migrate	`core-tests/test_chatthreads.py`	src/core/tests/test_chatthreads.py	destination-present
+mvp/tests/test_content_standard.py	migrate	`api-tests/test_content_standard.py`	src/api/tests/test_content_standard.py	destination-present
+mvp/tests/test_continuity.py	migrate	`api-tests/test_continuity.py`	src/api/tests/test_continuity.py	destination-present
+mvp/tests/test_design_system.py	migrate	`api-tests/test_design_system.py`	src/api/tests/test_design_system.py	destination-present
+mvp/tests/test_digest_blob.py	migrate	`orchestrator-tests/test_digest_blob.py`	src/orchestrator/tests/test_digest_blob.py	destination-present
+mvp/tests/test_document_controls.py	migrate	`api-tests/test_document_controls.py`	src/api/tests/test_document_controls.py	destination-present
+mvp/tests/test_document_form_fixtures.py	migrate	`importer-tests/test_document_form_fixtures.py`	src/importer/tests/test_document_form_fixtures.py	destination-present
+mvp/tests/test_documents.py	migrate	`core-tests/test_documents.py`	src/core/tests/test_documents.py	destination-present
+mvp/tests/test_eval_registry.py	migrate	`agents-tests/test_eval_registry.py`	src/agents/tests/test_eval_registry.py	destination-present
+mvp/tests/test_finance_signoffs.py	migrate	`core-tests/test_finance_signoffs.py`	src/core/tests/test_finance_signoffs.py	destination-present
+mvp/tests/test_generated_dataset.py	migrate	`core-tests/test_generated_dataset.py`	src/core/tests/test_generated_dataset.py	destination-present
+mvp/tests/test_governance.py	migrate	`core-tests/test_governance.py`	src/core/tests/test_governance.py	destination-present
+mvp/tests/test_lawstore.py	migrate	`api-tests/test_lawstore.py`	src/api/tests/test_lawstore.py	destination-present
+mvp/tests/test_ledger.py	migrate	`api-tests/test_ledger.py`	src/api/tests/test_ledger.py	destination-present
+mvp/tests/test_mssqlstore.py	migrate	`api-tests/test_mssqlstore.py`	src/api/tests/test_mssqlstore.py	destination-present
+mvp/tests/test_mvp.py	migrate	`api-tests/test_mvp.py`	src/api/tests/test_mvp.py	destination-present
+mvp/tests/test_needs_inventory.py	migrate	`core-tests/test_needs_inventory.py`	src/core/tests/test_needs_inventory.py	destination-present
+mvp/tests/test_profile.py	migrate	`core-tests/test_profile.py`	src/core/tests/test_profile.py	destination-present
+mvp/tests/test_quality_procurement.py	migrate	`core-tests/test_quality_procurement.py`	src/core/tests/test_quality_procurement.py	destination-present
+mvp/tests/test_ranking_policy.py	migrate	`api-tests/test_ranking_policy.py`	src/api/tests/test_ranking_policy.py	destination-present
+mvp/tests/test_ranking_scale.py	migrate	`api-tests/test_ranking_scale.py`	src/api/tests/test_ranking_scale.py	destination-present
+mvp/tests/test_recovery.py	migrate	`core-tests/test_recovery.py`	src/core/tests/test_recovery.py	destination-present
+mvp/tests/test_role_endpoint_inventory.py	migrate	`api-tests/test_role_endpoint_inventory.py`	src/api/tests/test_role_endpoint_inventory.py	destination-present
+mvp/tests/test_role_matrix.py	migrate	`api-tests/test_role_matrix.py`	src/api/tests/test_role_matrix.py	destination-present
+mvp/tests/test_rulecards.py	migrate	`core-tests/test_rulecards.py`	src/core/tests/test_rulecards.py	destination-present
+mvp/tests/test_sensor_backfill.py	migrate	`core-tests/test_sensor_backfill.py`	src/core/tests/test_sensor_backfill.py	destination-present
+mvp/tests/test_sensor_plausibility.py	migrate	`core-tests/test_sensor_plausibility.py`	src/core/tests/test_sensor_plausibility.py	destination-present
+mvp/tests/test_sqlreads.py	migrate	`core-tests/test_sqlreads.py`	src/core/tests/test_sqlreads.py	destination-present
+mvp/tests/test_sqlstore.py	migrate	`core-tests/test_sqlstore.py`	src/core/tests/test_sqlstore.py	destination-present
+mvp/tests/test_synthetic_provenance.py	migrate	`core-tests/test_synthetic_provenance.py`	src/core/tests/test_synthetic_provenance.py	destination-present
+mvp/tests/test_timecapture.py	migrate	`api-tests/test_timecapture.py`	src/api/tests/test_timecapture.py	destination-present
+mvp/tests/test_token_store.py	migrate	`orchestrator-tests/test_token_store.py`	src/orchestrator/tests/test_token_store.py	destination-present
+mvp/tests/test_ui_support.py	migrate	`api-tests/test_ui_support.py`	src/api/tests/test_ui_support.py	destination-present
+mvp/tests/test_workflows.py	migrate	`api-tests/test_workflows.py`	src/api/tests/test_workflows.py	destination-present
+mvp/.dockerignore	migrate	`src/api/.dockerignore`	src/.dockerignore	destination-present
+mvp/Dockerfile	migrate	`src/api/Dockerfile`	src/api/Dockerfile	destination-present
+mvp/README.md	migrate	`src/api/README.md`, split per package	src/api/README.md	destination-present
+mvp/requirements.in	migrate	`[project.dependencies]` in `src/api/pyproject.toml` and `src/core/pyproject.toml`	src/api/pyproject.toml;src/core/pyproject.toml	destination-present
+mvp/requirements.txt	migrate	`src/api/requirements.txt` (hashed lock, one per image)	src/api/requirements.txt	destination-present
+prototype/README.md	archive	Concepts in ADR 0001 and the PRD; history keeps the text	-	absent-before-this-pack
+prototype/Dockerfile	retire	`mvp/Dockerfile` is the deployed image	-	absent-before-this-pack
+prototype/requirements.txt	retire	No third-party dependencies of value	-	absent-before-this-pack
+prototype/zavaforward/__init__.py	retire	Empty package marker	-	absent-before-this-pack
+prototype/zavaforward/domain.py	retire	Stage order, gated approver, version and idempotency, hash-chained audit and proposal rules are implemented in `mvp/` `workflows.py`, `store.py`, `ledger.py` and `ai_tasks.py`	-	absent-before-this-pack
+prototype/zavaforward/server.py	retire	Read of `X-MS-CLIENT-PRINCIPAL` is in `mvp/` `auth.py` and `server.py`	-	absent-before-this-pack
+prototype/web/app.js	retire	6-line health client; `mvp/web/` replaces it	-	absent-before-this-pack
+prototype/tests/test_domain.py	retire	11 tests; equivalents in test_workflows, test_ledger, test_ai_tasks	-	absent-before-this-pack
+prototype/tests/test_server.py	retire	4 tests; equivalents in test_mvp, test_auth, test_role_matrix	-	absent-before-this-pack
+prototype/scripts/evaluate_agent.py	retire	Offline reject-unsafe-proposal contract cases are covered by `ai_eval.py` and test_ai_eval; no model-quality value	-	absent-before-this-pack
