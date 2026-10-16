@@ -16,6 +16,38 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Read-only source cadence labels (#216)
+
+`source_monitor.source_freshness`, `card_freshness` and `dated_card` read the
+existing monitoring configuration and observations without creating tables or
+modifying a source, card, approval, clock, hold or alert. They share #213's
+cadence semantics: a source becomes `out_of_cadence` at
+`last_success + cadence_days`, including equality. A failed attempt never
+refreshes the successful observation. Missing tables/configuration/success and
+a clock before the latest attempt (even a failed attempt) return `unknown`,
+never fresh. Free-text source-register cadence is not guessed into a duration.
+
+Per-source status, configured cadence, last-success date and due date accompany
+the card label. Any known overdue source makes the card out-of-cadence;
+otherwise incomplete/empty coverage is unknown; only all in-cadence sources
+yield in-cadence. This is a monitoring label, **not legal-currentness evidence**,
+source eligibility or permission to rely on a rule. Existing source/version
+gates and human approval remain separate; freshness reads never suppress safety
+alerts. API collection/version reads and bounded chat use the same read model.
+Historical chat stores the label and its as-of date, not a live freshness claim.
+
+From the repository root with editable packages installed:
+
+```bash
+PYTHONPATH="$PWD/src/core/tests" python3 -m unittest \
+  test_source_freshness test_source_monitor test_rule_engine test_regulatory_chat -q
+```
+
+The [evaluation report and acceptance audit](../agents/README.md#regulatory-evaluation-gates-216)
+distinguish the generated 60,000-home stateless rule baseline from a small
+SQLite integration slice and the unexecuted continuing-stock/staff trials.
+No owner threshold agreement, legal approval or operational use is claimed.
+
 ## Derived role task queues (#76)
 
 `taskqueues` provides the shared, read-only `work-queues-1` definition/default

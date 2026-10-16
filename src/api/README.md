@@ -6,6 +6,45 @@ ms.date: 2026-10-16
 ms.topic: reference
 ---
 
+## Regulatory evaluation and card cadence labels (#216)
+
+`GET /api/law/cards` and `GET /api/law/cards/{card_id}` add a read-only
+`source_freshness` object to every returned card/version. It includes
+`status` (`in_cadence`, `out_of_cadence`, `unknown`), plain-language `label`,
+`as_of` and per-source monitoring evidence. The same object accompanies
+bounded regulatory chat cards; the panel renders the card link, text label
+and historical as-of date without a colour-only signal. Older stored turns
+without the field explicitly show unknown cadence.
+
+Cadence is measured from a successful configured source-monitor observation,
+not a retrieval timestamp or inferred legal commencement. Missing evidence is
+unknown; known overdue evidence remains labelled even if another source is
+unknown. An overdue label does not approve, retire or disable a rule, resolve
+a source conflict or suppress an independent hazard alert. Cards retain all
+existing source/version/approval gates. This is not a live-currentness claim.
+
+The [per-check evaluation audit](../agents/README.md#regulatory-evaluation-gates-216)
+records exact citation/refusal development grading, critical hazard omissions,
+a generated stateless 60,000-home baseline, and explicit human/continuing-stock
+gaps. There is no overall pass. With no measured staff comparison, the report
+recommends cards-only shipment. Existing chat remains disabled by default and
+available only under its explicit synthetic-development admission; this change
+does not approve operational chat or activate a release.
+
+Local validation starts a responsive loopback app on an ephemeral port using
+temporary synthetic SQLite data, checks health, authenticates fixture staff,
+reads collection/history labels and a cited turn, and proves retained alerts
+unchanged. Outbound inference is forbidden by the harness:
+
+```bash
+PYTHONPATH="$PWD/src/api/tests:$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python3 -m unittest test_regulatory_chat_api test_rule_alerts -q
+```
+
+Human comprehension/accessibility, actual staff classifications and
+acknowledgements, live Azure SQL and continuing-stock acceptance are not
+established by these checks. No Azure changes or private data are required.
+
 ## Home-specific cited chat, offline synthetic slice (#214)
 
 The existing home/case chat panel contains an optional cited regulatory lookup.

@@ -42,6 +42,94 @@ MSSQL_DDL = (
 IMPACT_FIELDS = ("requirements", "journeys", "tests", "communications")
 
 
+def source_freshness(law: Any, source_id: str, today: str) -> dict[str, Any]:
+    """Read existing monitoring evidence only; cadence is not legal currentness."""
+    current = date.fromisoformat(_day(today))
+    result: dict[str, Any] = dict(
+        source_id=source_id,
+        status="unknown",
+        as_of=today,
+        cadence_days=None,
+        last_success=None,
+        due_on=None,
+        reason="No configured monitoring evidence; live currentness not verified.",
+    )
+    with law.sql.lock:
+        for table in ("reg_monitor_config", "reg_monitor_observation"):
+            exists = (
+                law.sql.all(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table,)
+                )
+                if law.sql.dialect == "sqlite"
+                else law.sql.all("SELECT name FROM sys.tables WHERE name=?", (table,))
+            )
+            if not exists:
+                return result
+        configs = law.sql.all(
+            "SELECT body FROM reg_monitor_config WHERE source_id=? ORDER BY id DESC",
+            (source_id,),
+        )
+        if not configs:
+            return result
+        config = json.loads(configs[0]["body"])
+        result["cadence_days"] = config["cadence_days"]
+        rows = law.sql.all(
+            "SELECT at, body FROM reg_monitor_observation WHERE source_id=? ORDER BY id DESC",
+            (source_id,),
+        )
+        if rows and date.fromisoformat(rows[0]["at"]) > current:
+            result["reason"] = "Evaluation clock precedes the latest monitoring attempt."
+            return result
+        for row in rows:
+            if not json.loads(row["body"])["error"]:
+                due = date.fromisoformat(row["at"]) + timedelta(days=config["cadence_days"])
+                result.update(
+                    status="out_of_cadence" if current >= due else "in_cadence",
+                    last_success=row["at"],
+                    due_on=due.isoformat(),
+                    reason="Monitoring cadence only; live legal currentness not verified.",
+                )
+                break
+    return result
+
+
+def card_freshness(law: Any, card: dict[str, Any], today: str) -> dict[str, Any]:
+    """Any overdue source wins; otherwise incomplete coverage is unknown."""
+    sources: dict[str, dict[str, Any]] = {}
+    with law.sql.lock:
+        for pid in card["provisions"]:
+            try:
+                provision = law.provision(pid)
+            except KeyError:
+                sources[pid] = dict(source_id=None, provision_id=pid, status="unknown")
+                continue
+            sid = provision["source_id"]
+            if sid not in sources:
+                sources[sid] = source_freshness(law, sid, today)
+    statuses = [source["status"] for source in sources.values()]
+    status = (
+        "out_of_cadence"
+        if "out_of_cadence" in statuses
+        else "in_cadence"
+        if statuses and all(s == "in_cadence" for s in statuses)
+        else "unknown"
+    )
+    return dict(
+        status=status,
+        label={
+            "out_of_cadence": "Source out of monitoring cadence; ask the named owner.",
+            "unknown": "Source monitoring cadence unknown; ask the named owner.",
+            "in_cadence": "Within monitoring cadence; not proof of legal currentness.",
+        }[status],
+        as_of=today,
+        sources=list(sources.values()),
+    )
+
+
+def dated_card(law: Any, card: dict[str, Any], today: str) -> dict[str, Any]:
+    return dict(card, source_freshness=card_freshness(law, card, today))
+
+
 def _json(value: object) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
 

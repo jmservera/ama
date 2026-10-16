@@ -95,6 +95,12 @@ function regulatoryChatPanel(caseId) {
         source.link ? h("a", { href: source.link, target: "_blank", rel: "noopener" }, source.id) : h("code", {}, source.id),
         ` | ${source.status} | effective: ${source.effective || "unknown"} | retrieved/observed: ${source.retrieved}`));
     }
+    for (const card of answer.cards) {
+      const freshness = card.source_freshness;
+      citations.append(h("li", {},
+        h("a", { href: card.link, target: "_blank", rel: "noopener" }, card.id),
+        ` | ${freshness?.label || "Historical source monitoring cadence unknown."} | as of: ${freshness?.as_of || "unknown"}`));
+    }
     const doubt = h("button", { type: "button", class: "alt", onclick: async () => {
       doubt.disabled = true;
       try {

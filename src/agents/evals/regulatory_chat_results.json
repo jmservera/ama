@@ -118,10 +118,9 @@
     "Azure SQL",
     "operational sources, legal approval and privacy acceptance"
   ],
-  "passed": true,
   "refusals": {
     "passed": 10,
     "total": 10
   },
-  "version": "regulatory-home-chat-eval-v1"
+  "version": "regulatory-home-chat-eval-v2"
 }

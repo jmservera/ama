@@ -68,7 +68,7 @@ def evaluate(
         )
     card_actions = 1 + len(permitted) + 1  # card, each provision link, then home lookup
     return dict(
-        version="regulatory-home-chat-eval-v1",
+        version="regulatory-home-chat-eval-v2",
         label="synthetic-demo",
         dataset="implementer-authored frozen development set, not held-out",
         cases=rows,
@@ -85,7 +85,6 @@ def evaluate(
             result="bounded context-join/lookup value, not measured staff time or AI benefit",
             lookup_basis="Structural card/provision/home lookups, not observed human actions.",
         ),
-        passed=grounded == cited and correct == refused,
         not_evaluated=[
             "real model",
             "held-out semantic grading",

@@ -17,6 +17,7 @@ from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
 from zava_forward.core.rule_engine import citation_eligibility
+from zava_forward.core.source_monitor import card_freshness
 
 TASK = "regulatory-home-chat"
 SCHEMA = "regulatory-chat-v1"
@@ -192,6 +193,7 @@ class RegulatoryChat:
                         link="/api/law/cards/" + quote(card["card_id"], safe=""),
                         safe_default=card["safe_default"],
                         clock=card["clock"],
+                        source_freshness=card_freshness(self.law, card, day),
                     )
                 )
                 signatures.add((card["safe_default"], card["clock"]))

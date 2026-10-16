@@ -1,0 +1,106 @@
+---
+title: Regulatory evaluation gates plan
+description: Issue 216 synthetic implementation and evidence boundary
+ms.date: 2026-10-16
+---
+
+Task: issue-216 / regulatory-eval-gates. Full plan scope.
+
+## Executive Summary
+
+Extend the existing extractive development evaluation with independent expected
+fragments, adversarial cases, critical hazard misses and a generated 60,000-home
+baseline. Label source cadence on rule-card reads without changing approved
+rules or suppressing alerts. Missing comparative staff evidence selects cards
+alone for shipping; explicit synthetic development lookup remains available.
+
+## User Decisions and Requirements
+
+* Implement #216 on the merged #328/#331/#348 work; PR uses Refs #216 only.
+* ADR 0005 is accepted for synthetic development, not operational reliance.
+* Juan Manuel Servera is the exercise Legal, Compliance and DPO owner.
+* Thresholds are provisional and reported per check, never as one overall pass.
+* New executable work only in src/ and infra/; no private datasets or Azure needed.
+* Update READMEs, reference log, RPI artifacts, commit and push this clean topic branch.
+* User requests all four RPI phases in this invocation; no mode switch is inferred.
+
+## Goals
+
+Make local safety measurements reproducible, non-vacuous and honest.
+
+## Scope and Non-Goals
+
+Pure agents graders; offline runner and fixtures outside packages; core cadence
+read model; API card responses and existing chat display. No model, approval,
+real staff data, SQL platform acceptance or operational enablement.
+
+## Functional Requirements
+
+Separate citation, refusal, hazard, recall, stale-source and comparison checks;
+show numerators, denominators, failed case IDs, thresholds and evidence limits.
+Hazard misses are critical regardless of recall; recall threshold remains unset
+until baseline owner review. Comparison records same-source cards/provision links
+and structural results, but no benefit without human evidence.
+
+## Non-Functional Requirements
+
+Deterministic outputs; no secret/private inputs; read-only freshness labels;
+portable parameterized SQL; empty coverage is not a pass; test negative controls.
+
+## Acceptance Criteria
+
+Local: exact-fragment and metadata validity; expected refusal and false-refusal
+measurements; critical seeded hazard miss; baseline before recall threshold;
+cards-only ship recommendation without comparison; cadence labels; no aggregate
+pass. Unmet: owner-agreed thresholds, held-out legal grading, continuing-stock
+pipeline evidence and staff comparison/precision/acknowledgement/comprehension.
+
+## Phase Checklist
+
+<!-- rpi:phase id=P01 -->
+### P01 Evaluation contracts
+
+* [x] P01 complete
+<!-- rpi:task id=P01-T01 -->
+* [x] P01-T01 Implement independent extractive graders and per-check report.
+<!-- rpi:task id=P01-T02 -->
+* [x] P01-T02 Add frozen adversarial retrieval cases and 60,000-home seeded baseline runner.
+
+<!-- rpi:phase id=P02 -->
+### P02 Source cadence visibility
+
+* [x] P02 complete; depends on P01
+<!-- rpi:task id=P02-T01 -->
+* [x] P02-T01 Read configured source-monitor cadence and label cards/API/chat without mutations.
+
+<!-- rpi:phase id=P03 -->
+### P03 Evidence and delivery
+
+* [ ] P03 complete; depends on P02
+<!-- rpi:task id=P03-T01 -->
+* [x] P03-T01 Run tests, ruff, mypy and loopback app; record report and acceptance audit.
+<!-- rpi:task id=P03-T02 -->
+* [ ] P03-T02 Perform one post-implementation review, commit, push and open PR.
+
+## Test Ownership and Targets
+
+No test removals. Add at most 45 methods across agents grader/runner, core freshness
+and API regression tests. Existing regulatory tests remain owners of retrieval,
+state, permission and handoff behavior. Canonical new semantic report under
+src/agents/evals/; generated report recorded there. Existing historical report
+loses aggregate `passed`; its other evidence remains. Use installed editable
+packages, absolute test PYTHONPATH, per-project ruff and mypy.
+
+## Critique Disposition
+
+One final-candidate critique executed, verdict Revise; all five planner-owned
+findings accepted and resolved in phase details before implementation:
+PC-001 independent frozen oracle/full envelope; PC-002 pinned profile units;
+PC-003 freshness reduction/clock/storage truth table; PC-004 fix or disclose
+blocking defects without repeating review; PC-005 coordinated legacy migration.
+No divergent user decision, no second critique. Implementation ready.
+
+## Follow-Up Items
+
+Owner ratification and independent grading; actual staff paired trial and net
+effort/cost; continuing-stock integration and authorized platform verification.

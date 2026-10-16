@@ -1,0 +1,30 @@
+{
+  "task_id": "issue-216",
+  "task_slug": "regulatory-eval-gates",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "active",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/regulatory-eval-gates-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/regulatory-eval-gates-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/regulatory-eval-gates-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-16/regulatory-eval-gates-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/regulatory-eval-gates-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/regulatory-eval-gates-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "User explicitly requests research, plan, implementation, review and PR", "status": "confirmed", "evidence": "2026-10-16 user request; no automatic-mode switch"},
+    {"decision": "Research executed, planning ready; single critique executed Revise, PC-001 to PC-005 resolved directly", "status": "recorded", "evidence": "research, plan, details and critique artifacts"},
+    {"decision": "ADR 0005 accepted for synthetic development only; thresholds provisional", "status": "confirmed", "evidence": "2026-10-16 owner direction"},
+    {"decision": "One Review executed Complete, outcome Not accepted at reviewed snapshot; RV-001/RV-002/RV-003 corrected with targeted regression evidence, no second review", "status": "recorded", "evidence": "canonical review and changes implementation disposition"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Finish requested commit/push/PR after final correction validation; no second Review"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Owner threshold review and independent grading", "rationale": "Required acceptance evidence absent", "evidence": "Issue 216 and ADR 0005 Evaluation"},
+    {"rank": 2, "task": "Staff paired trial", "rationale": "No comparative value or comprehension measured", "evidence": "ADR 0005 ship gate"},
+    {"rank": 3, "task": "Continuing-stock integration", "rationale": "Stateless baseline cannot prove continuing pipeline", "evidence": "Research C2/C7"}
+  ]
+}

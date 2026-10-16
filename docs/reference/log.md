@@ -3952,3 +3952,25 @@ metadata when the knowledge base was created.
   leases remain unverified before operational reliance. Search and monitoring
   costs are explicitly unknown; paid deployment, actual processing, real
   legal approval and benefit evidence are not authorized or proved here.
+
+## [2026-10-16] implementation | Synthetic regulatory evaluation gates (Refs #216)
+
+* Added [per-check development evaluation and acceptance audit](../../src/agents/README.md#regulatory-evaluation-gates-216):
+  24 frozen source/adversarial questions, independent expected fragments and
+  template, negative controls and explicit provisional thresholds pending Juan
+  Manuel Servera's exercise-owner agreement. No overall pass or legal approval.
+* Recorded a generated 60,000-home seeded stateless baseline: 120,000 exact
+  rule-state matches, 78,000 required flags and zero misses among 42,000 required
+  hazard flags. Every omitted/mismatched seeded hazard flag is critical.
+  Recall threshold remains unset pending baseline review. A separate ten-state
+  SQLite engine slice is not continuing-stock or Azure acceptance.
+* Added [read-only source-cadence labels](../../src/core/README.md#read-only-source-cadence-labels-216)
+  to card collection/version HTTP reads and chat. Missing evidence is unknown;
+  failed observations cannot refresh cadence. No activation, hold release,
+  alert suppression or new source authority follows.
+* Same-role/source-version card links and structural chat facts are recorded,
+  but no staff task/comprehension/time/review/cost comparison ran. The report
+  recommends cards-only shipment; explicit synthetic-development chat access
+  is unchanged. Owner agreement, independent grading, actual staff precision/
+  acknowledgement/comprehension and continuing-stock acceptance remain unmet.
+  Updated the knowledge-base index; did not modify memory or legal snapshots.
