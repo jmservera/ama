@@ -198,6 +198,7 @@ class QueueDefinitions(unittest.TestCase):
 
 
 class StoreQueueParity(unittest.TestCase):
+    @patch.dict(ranking.CURRENT, dict(ranking.CURRENT, status="Approved", owner="Synthetic owner"))
     def test_all_queue_filters_sorts_and_visibility_match_uncached_selection(self) -> None:
         data = dataset(queue_cases(90))
         data["as_of"] = AS_OF
@@ -212,9 +213,21 @@ class StoreQueueParity(unittest.TestCase):
                 )
                 try:
                     for queue, _, _ in taskqueues.DEFINITIONS:
-                        for sort in ("urgent", "waiting", "name", "contact", "visit", "bogus"):
+                        for sort in (
+                            "urgent",
+                            "waiting",
+                            "name",
+                            "contact",
+                            "visit",
+                            "bogus",
+                            "",
+                            None,
+                        ):
                             for user, view, filters, query in (
                                 (STAFF[1], "all", {}, ""),
+                                (STAFF[1], "mine", {}, ""),
+                                (STAFF[0], "all", {}, ""),
+                                (STAFF[1], "closed", {}, ""),
                                 (STAFF[0], "mine", {"area": "North", "flag": "long"}, ""),
                                 (STAFF[1], "all", {"wave": "Wave 1", "owner": "PM-01"}, "TE"),
                                 (STAFF[1], "all", {"flag": "nodecision"}, ""),

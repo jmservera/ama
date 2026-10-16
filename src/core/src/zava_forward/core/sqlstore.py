@@ -12,7 +12,9 @@ Reads: the case list (filters, search, every sort, totals, ranks, keyset and
 offset paging) and the header counts are answered by SQL on indexed derived
 columns, and only the page's rows are decoded. The derived `rkey` column is the
 ranking policy as a sortable text key (ranking.sql_key), rebuilt when the policy
-version changes. Case detail, the map, statistics, visits and writes still use
+version changes. Queue membership uses indexed, transactionally maintained
+flags beneath a hot ID cache; queue filtering, sorting and ranking stay in memory.
+Case detail, the map, statistics, visits and writes still use
 the in-memory copy kept in step with the change sequence; the full-list export
 and the closed list also fall back to it.
 """
@@ -22,7 +24,7 @@ import sqlite3
 import threading
 from datetime import datetime
 
-from . import continuity, insights, ledger, projection, ranking, stock
+from . import continuity, controls, insights, ledger, projection, ranking, stock, taskqueues
 from zava_forward.core.ai import Ai
 from .chatthreads import SQLITE_DDL as CHAT_DDL, MEMORY_ADDED as CHAT_MEMORY_ADDED
 from .doc_controls import open_scanner
@@ -40,10 +42,18 @@ CREATE TABLE IF NOT EXISTS cases (
   body TEXT NOT NULL, support INTEGER NOT NULL DEFAULT 0, days INTEGER NOT NULL DEFAULT 0, rkey TEXT NOT NULL DEFAULT '',
   contractor TEXT NOT NULL DEFAULT '', search TEXT NOT NULL DEFAULT '', search_c TEXT NOT NULL DEFAULT '',
   surname TEXT NOT NULL DEFAULT '', last_contact TEXT NOT NULL DEFAULT '0000', next_visit TEXT NOT NULL DEFAULT '9999',
-  decision TEXT NOT NULL DEFAULT '', fstatus TEXT NOT NULL DEFAULT '');
+  decision TEXT NOT NULL DEFAULT '', fstatus TEXT NOT NULL DEFAULT '',
+  queue_new INTEGER NOT NULL DEFAULT 0, queue_priority INTEGER NOT NULL DEFAULT 0,
+  queue_stale INTEGER NOT NULL DEFAULT 0, queue_blocked INTEGER NOT NULL DEFAULT 0,
+  queue_overdue INTEGER NOT NULL DEFAULT 0, queue_unowned INTEGER NOT NULL DEFAULT 0);
 """
 
-INDEXES = """
+QUEUE_COLS = tuple(f"queue_{name}" for name, _, _ in taskqueues.DEFINITIONS)
+
+INDEXES = "\n".join(
+    f"CREATE INDEX IF NOT EXISTS ix_cases_{col} ON cases ({col}, id);"
+    for col in QUEUE_COLS
+) + """
 CREATE INDEX IF NOT EXISTS ix_cases_filter ON cases (closed, stage, area, wave, owner_code);
 CREATE INDEX IF NOT EXISTS ix_cases_owner ON cases (owner_code, closed);
 CREATE INDEX IF NOT EXISTS ix_cases_rkey ON cases (closed, rkey, id);
@@ -124,6 +134,7 @@ class SqlStore(Store):
         self._open(db_path)
         self._create_schema()
         self._migrate()
+        self._migrate_queues()
         self._create_indexes()
         self.docs_dir = docs_dir or os.path.join(os.path.dirname(db_path) or ".", "docs")
         self.docstore = open_document_store(self.docs_dir)
@@ -145,7 +156,7 @@ class SqlStore(Store):
         self._insert_ignore("meta", ["key", "value"], ["as_of", os.environ.get("ZF_AS_OF") or datetime.now().date().isoformat()])
         self.as_of = self.db.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()[0]
         with self.lock:
-            pass
+            self._ensure_queue_membership()
 
     # ---- dialect hooks (SQLite here; MssqlStore overrides them for Azure SQL)
     dberror = sqlite3.Error
@@ -254,6 +265,109 @@ class SqlStore(Store):
                 raise
 
     # ---- load and sync
+    def _migrate_queues(self):
+        """Add flags without certifying default-zero rows as evaluated."""
+        self.db.execute("BEGIN IMMEDIATE")
+        try:
+            have = self._columns()
+            missing = set(QUEUE_COLS) - have
+            for col in QUEUE_COLS:
+                if col in missing:
+                    self.db.execute(f"ALTER TABLE cases ADD {col} INTEGER NOT NULL DEFAULT 0")
+            if missing:
+                self._meta_set("queue_context", "")
+            self.db.execute("COMMIT")
+        except BaseException:
+            self.db.execute("ROLLBACK")
+            raise
+
+    def _queue_fingerprint(self):
+        return json.dumps(
+            [taskqueues.VERSION, self.as_of, controls.today(), ranking.CURRENT],
+            sort_keys=True,
+        )
+
+    def _refresh_queue_membership(self, ids=None):
+        """Maintain flags and publish one generation inside the caller's write transaction."""
+        fingerprint = self._queue_fingerprint()
+        row = self.db.execute("SELECT value FROM meta WHERE key='queue_context'").fetchone()
+        if row is None or row[0] != fingerprint:
+            ids = None
+        if ids is not None and not ids:
+            return
+        if ids is None:
+            rows = self.db.execute("SELECT id, body FROM cases").fetchall()
+        else:
+            ids = sorted(ids)
+            rows = []
+            for start in range(0, len(ids), 500):
+                batch = ids[start:start + 500]
+                marks = ",".join("?" * len(batch))
+                rows.extend(self.db.execute(
+                    f"SELECT id, body FROM cases WHERE id IN ({marks})", batch
+                ).fetchall())
+        cases = {cid: json.loads(body) for cid, body in rows}
+        selected = list(cases.values())
+        data = {}
+        for name in ("buildings", "procurement"):
+            row = self.db.execute("SELECT value FROM meta WHERE key=?", (name,)).fetchone()
+            if row:
+                data[name] = json.loads(row[0])
+        if ids is not None and any(c.get("building_id") for c in selected):
+            # Building validation checks all linked home IDs, not just changed homes.
+            cases = {cid: json.loads(body) for cid, body in
+                     self.db.execute("SELECT id, body FROM cases").fetchall()}
+        values = []
+        for c in selected:
+            queues = self._work_context(c, None, data, cases)["queues"]
+            values.append(tuple(int(col[6:] in queues) for col in QUEUE_COLS) + (c["id"],))
+        if values:
+            self.db.executemany(
+                "UPDATE cases SET " + ", ".join(f"{col}=?" for col in QUEUE_COLS) + " WHERE id=?",
+                values,
+            )
+        if self._queue_fingerprint() != fingerprint:
+            raise ConflictError("Queue evaluation inputs changed during refresh.")
+        row = self.db.execute("SELECT value FROM meta WHERE key='queue_generation'").fetchone()
+        self._meta_set("queue_generation", str(int(row[0]) + 1 if row else 1))
+        self._meta_set("queue_context", fingerprint)
+
+    def _ensure_queue_membership(self):
+        with self.dblock:
+            self.db.execute("BEGIN IMMEDIATE")
+            try:
+                self._refresh_queue_membership([])
+                self.db.execute("COMMIT")
+            except BaseException:
+                self.db.execute("ROLLBACK")
+                raise
+
+    def _queue_candidates(self, queue):
+        """SQL supplies IDs on a miss; permissions and projection remain downstream."""
+        taskqueues.validate_queue(queue)
+        with self.dblock:
+            self.db.execute("BEGIN IMMEDIATE")
+            try:
+                # Synchronise under the same writer lock as the membership generation.
+                self._sync()
+                self._refresh_queue_membership([])
+                generation = self.db.execute(
+                    "SELECT value FROM meta WHERE key='queue_generation'"
+                ).fetchone()[0]
+                key = (self.version, generation, self._queue_fingerprint())
+                cached = getattr(self, "_queue_index", None)
+                members = cached[1] if cached is not None and cached[0] == key else {}
+                if queue not in members:
+                    members[queue] = [r[0] for r in self.db.execute(
+                        f"SELECT id FROM cases WHERE queue_{queue}=1"
+                    ).fetchall()]
+                self.db.execute("COMMIT")
+            except BaseException:
+                self.db.execute("ROLLBACK")
+                raise
+            self._queue_index = (key, members)
+        return (self.cases[cid] for cid in members[queue])
+
     def _seed(self, data_path):
         with self.dblock:
             self.db.execute("BEGIN IMMEDIATE")
@@ -277,6 +391,11 @@ class SqlStore(Store):
                         self._meta_set("as_of", src["as_of"])
                     self._insert_ignore("meta", ("key", "value"), ("seq", "1"))
                     self._insert_ignore("audit_head", ("id", "count", "hash"), (1, 0, ledger.GENESIS))
+                    self._insert_ignore("meta", ("key", "value"), (
+                        "as_of", os.environ.get("ZF_AS_OF") or datetime.now().date().isoformat()
+                    ))
+                    self.as_of = self.db.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()[0]
+                    self._refresh_queue_membership()
                 self.db.execute("COMMIT")
             except BaseException:
                 self.db.execute("ROLLBACK")
@@ -437,6 +556,13 @@ class SqlStore(Store):
                             raise ConflictError(rid)
                         recs.append((rid, known[0] + 1, rec, body))
                 proc_body = self._proc_write()
+                # Shared validation can change when packages, holds or linked homes change.
+                shared = bool({"buildings", "procurement"} & proc_body.keys()) or any(
+                    self.cases[cid].get("building_id")
+                    or json.loads(self._snap[cid]).get("building_id")
+                    for cid, _ in changed
+                )
+                self._refresh_queue_membership(None if shared else [cid for cid, _ in changed])
                 self._append_audit(pending)
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
                 self.db.execute("COMMIT")

@@ -266,8 +266,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def page_cases(self, user, view="mine", q="", filters=None, sort="urgent", limit=None, offset=0, after=None):
         """One page of the filtered, sorted list plus the total. limit None returns everything."""
         with self.lock:
-            ranks = self._ranking()
             rows = self._filtered(user, view, q, filters or {})
+            ranks = self._ranking()
             total = len(rows)
             if view == "closed":
                 page = rows if limit is None else rows[offset:offset + limit]
@@ -310,12 +310,16 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         return self.page_cases(user, view, q, filters, sort)["items"]
 
     def work_context(self, c, user):
+        return self._work_context(c, user, self.data, self.cases)
+
+    def _work_context(self, c, user, data, cases):
+        """Evaluate against either the live copy or a transaction-local SQL snapshot."""
         return taskqueues.context(
             c, as_of=self.as_of, reason_ok=user is None or projection.can_see_reason(user),
             policy=ranking.CURRENT,
             stock_queries=[q for q in c.get("stock_reconciliation", [])
                            if stock.query_status(c, q["id"]) == "Unresolved"],
-            building_reasons=buildings.blockers(self.data, self.cases, c),
+            building_reasons=buildings.blockers(data, cases, c),
             resident_reasons=resident_gate(c), technical_missing=missing_items(c),
             handoff=handoff_view(c))
 
