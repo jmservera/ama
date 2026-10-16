@@ -4386,6 +4386,24 @@ metadata when the knowledge base was created.
   receipts are not regenerated. Refresh cadence/approval/live-protection
   policy is documented, not owner-approved. No resident, legal, safety,
   financial or operational approval is inferred; issue ticks stay unchanged.
+## [2026-10-16] query | Offline historical climate source audit
+
+* Refs #178. Updated the existing sensor analytics research plan with the
+  2026-10-15 owner direction: Met Office (UKCP18) and Environment Agency
+  OGL data where available, otherwise clearly labelled synthetic data.
+* Recorded every issue candidate and both owner-directed leads across
+  coverage, resolution and licence/reuse evidence gaps. No external climate
+  metadata, licence page or observation records were retrieved under the
+  offline-only instruction; no product facts, retrieval dates or climate
+  figures are presented as verified.
+* Retained the existing synthetic generator and exercise plausibility
+  expectations unchanged. Documented the required local provenance/terms
+  packet, reproducible observed-extrema procedure and explicit unmet audit
+  for all three issue criteria; source direction is not reuse confirmation.
+* Updated the reference index and core README. Juan Manuel Servera remains
+  the exercise Legal, Compliance and DPO owner; dataset-specific reuse,
+  competent method review and operational authority are not inferred.
+  No issue checkboxes, executable files, private data or Azure state changed.
 ## [2026-10-16] update | Demo external environment created (#360)
 
 * Owner approved (via ask_user form): full migration at once, Key Vault

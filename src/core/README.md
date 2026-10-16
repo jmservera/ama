@@ -742,7 +742,13 @@ generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
   `SYNTHETIC` with a stock home ID and `SENS-SYN-` sensor ID; `load_into()`
   validates and appends idempotently on sensor ID plus reading ID, and
   `SQL_DDL` is the Azure SQL schema. Open: Met Office and Environment Agency
-  open data are not yet retrieved (climate is a labelled synthetic model),
+  open data are not yet retrieved (climate is a labelled synthetic model;
+  the [offline source decision and acceptance audit](../../docs/reference/research/iot-sensor-analytics-research-plan.md#historical-outdoor-climate-source-decision-2026-10-16-refs-178)
+  records owner-directed leads, unverified candidate coverage/resolution/terms
+  and the evidence packet needed before observed bounds can be derived).
+  Dataset-specific licence evidence and Juan Manuel Servera's exercise reuse
+  confirmation remain open; synthetic plausibility is not historical
+  validation. Also open:
   #110 consumer validation is mirrored by `validate_reading()` and must be
   reconciled when #110 lands, and a full-stock run needs a storage and cost
   decision.
