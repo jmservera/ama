@@ -137,6 +137,11 @@ The original Review verdict is retained; corrections are subsequent
 implementation, not a second Review or retroactive conformance claim.
 After these corrections all 237 infra tests passed without skips; corrected
 template builds/lints, scoped Ruff/CI formatting and diff checks passed.
+Current main was then merged, including the device-code prompt and missing-tool
+diagnostics fixes. Final integrated infra discovery passed **238 tests** without
+skips, and integrated setup production mypy passed. PR #362 contains the offline
+implementation/corrections; its human review and CI are separate from local
+evidence. No live acceptance or issue checkbox is implied.
 
 ## Public Browser Restoration (2026-10-16)
 

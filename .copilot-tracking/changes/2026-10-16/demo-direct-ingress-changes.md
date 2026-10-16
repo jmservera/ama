@@ -4,7 +4,7 @@ Task ID: issue-360. Slug: demo-direct-ingress. Full plan implementation.
 
 ## Execution
 
-Implementation active. P01 infrastructure and P02 auth/probes are independent,
+Implementation completed. P01 infrastructure and P02 auth/probes are independent,
 write-disjoint phases. Parent owns P03 documentation and P04 validation/delivery.
 Phase partition refined for safe delegation without scope change; no further
 critique. All PC findings are incorporated in the current phase details.
@@ -85,7 +85,12 @@ regional rates unavailable, so documented rates are explicitly illustrative.
 
 ## Remaining Work
 
-P01-P03 complete; P04 validation complete, one Review and publication pending.
-Live c/d/e are later owner/coordinator work, not this task. Current source is
-review-ready with all compatible critique corrections applied and no
-implementation blocker.
+P01-P04 complete. One Review execution Complete, outcome Not accepted for its
+assessed candidate; RV-001/RV-002 routed and implemented in the distinct
+demo-direct-ingress-review-corrections record. No second Review or conformant
+verdict is claimed. PR https://github.com/jmservera/ama/pull/362 opened on
+feat/demo-direct-ingress; source and all required artifacts committed/pushed.
+Current main's device-code and missing-tool fixes merged non-destructively.
+Final integrated infra suite: 238 tests passed; setup production mypy passed.
+Live c/d/e remain later owner/coordinator work. Required human PR/cost/migration
+review and live proof are not completed approval.

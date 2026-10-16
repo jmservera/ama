@@ -72,10 +72,10 @@ issue 360 and owner task constraints.
 #### [x] P03-T01: Migration, history and architecture reconciliation
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Validation and delivery
+### [x] P04: Validation and delivery
 
 <!-- rpi:task id=P04-T01 -->
-#### [ ] P04-T01: Offline checks, one review, commit/push/PR
+#### [x] P04-T01: Offline checks, one review, commit/push/PR
 
 ## Validation Ownership and Boundaries
 
@@ -112,6 +112,10 @@ then authorize selective retirement. Browser JSON API 302 gap remains explicit.
 
 Details: .copilot-tracking/details/2026-10-16/demo-direct-ingress-phase-details.md.
 Changes: .copilot-tracking/changes/2026-10-16/demo-direct-ingress-changes.md.
-P01-P03 completed; P04 validation complete, source ready for one Review.
-Only recording that Review and commit/push/PR publication remain. These are
-delivery tasks, not missing implementation or unexecuted offline checks.
+P01-P04 completed. One Review executed, Complete / Not accepted for its assessed
+candidate. RV-001/RV-002 were routed to distinct subsequent implementation,
+corrected and tested; no second Review or rewritten verdict. Current main,
+including merged device-code/missing-tool changes, integrated without rewriting
+history. Final infra suite 238 passed. Pushed feat/demo-direct-ingress and opened
+https://github.com/jmservera/ama/pull/362. Owner PR/migration approval and c/d/e
+remain outstanding; no issue checkboxes changed.

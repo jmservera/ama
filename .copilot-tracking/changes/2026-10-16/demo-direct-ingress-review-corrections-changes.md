@@ -45,3 +45,11 @@ lines were corrected before the successful results. No live validation.
 Publication refresh found main now two commits ahead and PR 359 merged. The
 initial merge-before-edit prerequisite was met at intake; integrate the newer
 device-prompt fix before final publication without rewriting history.
+
+Merged origin/main successfully without conflicts, retaining both direct
+setup and the device-code/missing-Front-Door-tool diagnostics fixes.
+Final infra discovery: 238 tests passed, no skips, 59.933s. Integrated setup
+production mypy passed. API source unchanged since its successful 563-test run.
+Pushed topic branch and opened https://github.com/jmservera/ama/pull/362.
+RV-001/RV-002 implementation is complete and tested, not independently
+re-reviewed. No second Review, live action, issue tick or merge performed.

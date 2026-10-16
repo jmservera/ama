@@ -4320,3 +4320,7 @@ metadata when the knowledge base was created.
 * Corrected full infra suite passed 237 tests without skips, including 46
   compiled-policy and 20 proof/probe tests. Corrected Bicep builds/lints,
   scoped Ruff and CI-format checks passed.
+* Integrated current main's device-code/missing-tool diagnostics changes
+  without rewriting history; final infra suite passed 238 tests without skips
+  and setup production mypy passed. Opened PR #362 for human review; no issue
+  ticks, live acceptance, deletion or merge.
