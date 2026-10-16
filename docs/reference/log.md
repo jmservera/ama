@@ -3860,6 +3860,18 @@ metadata when the knowledge base was created.
   errors separately from passing project/CI checks. No unrelated code changes,
   legacy deletion, workflow rename, owner sign-off or second RPI Review.
 
+## 2026-10-16 Backlog board reconciliation
+
+* Added [tools/backlog-sync.py](../../tools/backlog-sync.py), a read-only audit
+  (default) and `--apply` repair of the project board against issues and PRs:
+  closed issues become Done with criteria ticked, open issues never Done,
+  In Progress only with an open PR or live worktree, missing items added.
+* Applied it: moved merged-but-partial issues from In Progress to Todo, reopened
+  #117 and #122 on the board (criteria unmet), ticked criteria on 17 closed
+  issues and set or added board status for 14 issues. About 70 open issues have
+  merged PR references but unticked criteria and are listed for evidence-based
+  ticking by the coordinator at merge time.
+* Updated the coordinator agent with the status and criteria upkeep rules.
 ## [2026-10-16] query | Private deployed-from-src proof (Refs #200, Refs #201)
 
 * Updated the [cut-over pack](../architecture/cutover-evidence-pack.md),
