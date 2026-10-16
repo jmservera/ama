@@ -227,18 +227,55 @@ class DeployTests(unittest.TestCase):
 
     def test_explicit_tag_digest_and_placeholder_skip_discovery(self):
         for image in ("registry/image:release", CURRENT, PLACEHOLDER):
-            with self.subTest(image=image):
-                result, calls = self.assert_selection([], image, "--orchestrator-image", image)
-                self.assertEqual(len(calls), 1)
-                self.assertIn("source: explicit --orchestrator-image", result.stdout)
+            for explicit in (image, f" \t{image}\n "):
+                with self.subTest(image=image, explicit=explicit):
+                    result, calls = self.assert_selection(
+                        [], image, "--orchestrator-image", explicit
+                    )
+                    self.assertEqual(len(calls), 1)
+                    self.assertIn("source: explicit --orchestrator-image", result.stdout)
 
-    def test_empty_explicit_image_resolves_normally(self):
-        self.assert_selection(
-            [reply("containerapp job list", [job("orchestrator", CURRENT)])],
-            CURRENT,
-            "--orchestrator-image",
-            "",
-        )
+    def test_blank_explicit_image_resolves_normally_for_both_actions(self):
+        for explicit in ("", "  ", "\t\n "):
+            for action in ("what-if", "create"):
+                for image in (CURRENT, PLACEHOLDER):
+                    with self.subTest(explicit=explicit, action=action, image=image):
+                        jobs = [job("orchestrator", image)] if image == CURRENT else []
+                        responses = [reply("containerapp job list", jobs)]
+                        if image == PLACEHOLDER:
+                            responses.append(reply("acr list", []))
+                        options = ("--apply",) if action == "create" else ()
+                        result, calls = self.run_deploy(
+                            [*responses, reply(f"deployment group {action}")],
+                            "--orchestrator-image",
+                            explicit,
+                            *options,
+                        )
+                        self.assertEqual(result.returncode, 0, result.stderr)
+                        self.assertEqual(
+                            [
+                                call[: len(response["command"])]
+                                for call, response in zip(calls[:-1], responses, strict=True)
+                            ],
+                            [response["command"] for response in responses],
+                        )
+                        self.assertEqual(len(calls), len(responses) + 1)
+                        self.assertEqual(calls[-1][:3], ["deployment", "group", action])
+                        self.assertEqual(
+                            calls[-1][-2:], ["--parameters", f"orchestratorImage={image}"]
+                        )
+                        source = (
+                            "existing job"
+                            if image == CURRENT
+                            else "no existing job image or registry"
+                        )
+                        self.assertIn(
+                            f"orchestratorImage={image} (source: {source})", result.stdout
+                        )
+                        if image == PLACEHOLDER:
+                            self.assertIn("WARNING: placeholder image selected", result.stderr)
+                        else:
+                            self.assertNotIn("WARNING:", result.stderr)
 
     def test_conflicting_job_images_stop_deployment(self):
         result, calls = self.run_deploy(

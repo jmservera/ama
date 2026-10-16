@@ -138,6 +138,7 @@ def main() -> int:
         "--apply", action="store_true", help="Deploy instead of the default what-if"
     )
     args = parser.parse_args()
+    args.orchestrator_image = args.orchestrator_image.strip()
     if not re.fullmatch(r"[a-z][a-z0-9]{2,9}", args.workload):
         parser.error("--workload must be 3-10 lowercase letters/digits, starting with a letter")
     for value in args.parameter:
