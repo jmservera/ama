@@ -190,11 +190,14 @@ class Azure:
 
 def device_login(cli: Azure, tenant: str | None) -> None:
     print("Sign in as an authorized application owner/admin in the isolated setup profile.")
-    args = ["az", "login", "--use-device-code", "--allow-no-subscriptions", "-o", "none", "--only-show-errors"]
+    args = ["az", "login", "--use-device-code", "--allow-no-subscriptions", "-o", "none"]
     if tenant:
         args += ["--tenant", tenant]
+    env = cli.environment()
+    # Older Azure CLI versions emit the device-code instructions as a warning.
+    env["AZURE_CORE_ONLY_SHOW_ERRORS"] = "false"
     try:
-        process = subprocess.Popen(args, env=cli.environment(), stdout=subprocess.PIPE,
+        process = subprocess.Popen(args, env=env, stdout=subprocess.PIPE,
                                    stderr=subprocess.STDOUT, text=True)
     except OSError:
         raise SetupError("Cannot start Azure CLI device login; reinstall Azure CLI.") from None

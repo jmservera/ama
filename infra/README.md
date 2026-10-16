@@ -1372,6 +1372,22 @@ device-login URL/code in a browser as an authorized human. Other login output,
 directory names, IDs and CLI stderr are suppressed. The sign-in has a
 five-minute limit; rerun if it expires.
 
+If login waits without displaying a device code, interrupt it with Ctrl+C and
+authenticate directly in the same isolated profile, with warnings enabled:
+
+```bash
+AZURE_CONFIG_DIR="$HOME/.azure/zava-entra-init" \
+AZURE_CORE_ONLY_SHOW_ERRORS=false \
+az login --use-device-code --allow-no-subscriptions --output none
+python3 infra/scripts/setup-entra.py
+```
+
+Choose the deployment's tenant. For `--tenant-profile`, use that directory
+instead. Rerun setup without `--login` to reuse this session. Interactive setup
+keeps Azure CLI warnings enabled internally because older CLI versions emit
+the device code as a warning; only the recognized device-code instructions
+are printed. Other setup commands retain warning suppression.
+
 Preflight checks Python >=3.10, az, the isolated `containerapp` extension,
 login, Graph token permission hints and authenticated management/Graph reads
 (also the network check). Nothing requires a Python framework or package.
