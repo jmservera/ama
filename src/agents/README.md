@@ -6,6 +6,27 @@ ms.date: 2026-10-16
 ms.topic: reference
 ---
 
+## Generated chat provenance (#175)
+
+`tests/test_chat_provenance.py` writes all nine `chat_fixture` JSONL payloads
+to a fresh disposable directory and validates them through the shared core
+`synthetic.privacy` checker. Each payload is independently mutated with a false
+label and an email pattern, with the aggregate hash refreshed so a hash error
+cannot mask a broken scanner. Existing fixture bytes are unchanged.
+
+```bash
+PYTHONPATH="$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python -m unittest test_chat_provenance test_chat_fixture test_eval_registry -q
+```
+
+Run from the repository root with editable core/agents installed. The
+[dictionary](../../docs/reference/research/retrofit-synthetic-data/data-dictionary.md#chat-and-assistant-data)
+separates scripted turns/development evals from actual runtime messages/memory.
+Actual user/model content may be personal; passing fixture checks is not DPO
+approval or a universal PII-free guarantee. The separate source-provenance
+audit still rejects three unverified historic source entries, leaving that
+issue #175 criterion unmet. No live service, model or private dataset is used.
+
 ## Regulatory evaluation gates (#216)
 
 The [per-check report](./evals/regulatory_gates_results.json) extends #108/#164

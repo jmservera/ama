@@ -11,6 +11,22 @@ ms.topic: reference
 > North Homes fact, and no person, address, supplier or organisation is real.
 > Every table carries `is_synthetic=true`.
 
+## Offline dictionary and provenance audit (2026-10-16)
+
+Refs #175. The [dictionary](./data-dictionary.md#dataset-coverage-and-provenance)
+and [register](./provenance-register.json) now distinguish generated sensor,
+scale/fabric and scripted chat fixtures from potentially personal runtime chat.
+Use the [core offline checker](../../../../src/core/README.md#offline-provenance-and-privacy-audit-175)
+for public data or an explicitly supplied fresh snapshot; it reads no private
+working data. Public/snapshot pattern and label checks are bounded engineering
+evidence, not universal PII detection or permission to publish map anchors.
+
+The [criterion audit](./data-dictionary.md#issue-175-acceptance-audit-2026-10-16)
+leaves external-source completeness unmet: three historic retrieval dates and
+verified licence/attribution terms are unavailable locally. The separate
+`--sources` audit rejects them. No dates/approvals were invented and no official
+source or Azure service was contacted.
+
 ## Purpose
 
 The AMA exercise refers to the whole learning programme, not an isolated test
