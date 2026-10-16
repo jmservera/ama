@@ -57,25 +57,27 @@ def _text(value, name, limit=None):
     return value.strip()
 STATES = ("draft", "approved", "active", "held", "retired")
 EXERCISE_LABEL = "EXERCISE CARD: synthetic fixture. Any recorded approval is simulated only, not legal or operational approval (ADR 0005 owner decision, 2026-10-15)."
-APPEND_ONLY = ("rule_card_version", "rule_card_event", "rule_card_review", "rule_card_review_event")
+APPEND_ONLY = ("rule_card_version", "rule_card_event", "rule_card_review", "rule_card_review_event", "rule_card_check")
 REVIEW_STATES = ("open", "assessed")
 TRACE = {
     "hazard-awareness-clock": dict(requirements=["CON-001", "FR-003", "RULE-003"], tests=["src/core/tests/test_rulecards.py", "src/api/tests/test_lawstore.py"]),
     "automated-decision-safeguard": dict(requirements=["FR-034", "RULE-021"], tests=["src/core/tests/test_rulecards.py", "src/agents/tests/test_ai_eval.py"]),
 }
-FIELDS = ("title", "trigger", "applicability", "provisions", "clock", "safe_default", "escalation_role", "approver", "effective", "retirement")
+FIELDS = ("title", "trigger", "applicability", "provisions", "clock", "safe_default", "escalation_role", "approver", "effective", "retirement", "check")
 
 SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS rule_card_version (card_id TEXT NOT NULL, version INTEGER NOT NULL, title TEXT NOT NULL, trigger_text TEXT NOT NULL, applicability TEXT NOT NULL, provisions TEXT NOT NULL, clock TEXT NOT NULL, safe_default TEXT NOT NULL, escalation_role TEXT NOT NULL, approver TEXT NOT NULL, author TEXT NOT NULL, effective TEXT, retirement TEXT, exercise INTEGER NOT NULL, created TEXT NOT NULL, PRIMARY KEY (card_id, version))",
     "CREATE TABLE IF NOT EXISTS rule_card_event (id INTEGER PRIMARY KEY, card_id TEXT NOT NULL, version INTEGER NOT NULL, state TEXT NOT NULL, actor TEXT NOT NULL, role TEXT NOT NULL, at TEXT NOT NULL, simulated INTEGER NOT NULL, note TEXT)",
     "CREATE TABLE IF NOT EXISTS rule_card_review (id INTEGER PRIMARY KEY, card_id TEXT NOT NULL, source_id TEXT NOT NULL, source_version INTEGER NOT NULL, detected TEXT NOT NULL, status TEXT NOT NULL, note TEXT, affected TEXT, prior_version INTEGER, source_effective TEXT)",
     "CREATE TABLE IF NOT EXISTS rule_card_review_event (id INTEGER PRIMARY KEY, review_id INTEGER NOT NULL, state TEXT NOT NULL, actor TEXT NOT NULL, role TEXT NOT NULL, at TEXT NOT NULL, record TEXT)",
+    "CREATE TABLE IF NOT EXISTS rule_card_check (card_id TEXT NOT NULL, version INTEGER NOT NULL, specification TEXT NOT NULL, PRIMARY KEY (card_id, version))",
 )
 MSSQL_DDL = (
     "CREATE TABLE rule_card_version (card_id VARCHAR(100) NOT NULL, version INT NOT NULL, title NVARCHAR(200) NOT NULL, trigger_text NVARCHAR(600) NOT NULL, applicability NVARCHAR(600) NOT NULL, provisions NVARCHAR(MAX) NOT NULL, clock NVARCHAR(400) NOT NULL, safe_default NVARCHAR(600) NOT NULL, escalation_role NVARCHAR(200) NOT NULL, approver NVARCHAR(200) NOT NULL, author NVARCHAR(200) NOT NULL, effective VARCHAR(10) NULL, retirement VARCHAR(10) NULL, exercise BIT NOT NULL, created VARCHAR(10) NOT NULL, PRIMARY KEY (card_id, version))",
     "CREATE TABLE rule_card_event (id INT PRIMARY KEY, card_id VARCHAR(100) NOT NULL, version INT NOT NULL, state VARCHAR(20) NOT NULL, actor NVARCHAR(200) NOT NULL, role VARCHAR(40) NOT NULL, at VARCHAR(10) NOT NULL, simulated BIT NOT NULL, note NVARCHAR(400) NULL)",
     "CREATE TABLE rule_card_review (id INT PRIMARY KEY, card_id VARCHAR(100) NOT NULL, source_id VARCHAR(100) NOT NULL, source_version INT NOT NULL, detected VARCHAR(10) NOT NULL, status VARCHAR(20) NOT NULL, note NVARCHAR(400) NULL, affected NVARCHAR(MAX) NULL, prior_version INT NULL, source_effective VARCHAR(10) NULL)",
     "CREATE TABLE rule_card_review_event (id INT PRIMARY KEY, review_id INT NOT NULL, state VARCHAR(20) NOT NULL, actor NVARCHAR(200) NOT NULL, role VARCHAR(40) NOT NULL, at VARCHAR(10) NOT NULL, record NVARCHAR(MAX) NULL)",
+    "CREATE TABLE rule_card_check (card_id VARCHAR(100) NOT NULL, version INT NOT NULL, specification NVARCHAR(MAX) NOT NULL, PRIMARY KEY (card_id, version))",
 )
 LEDGER_SUFFIX = " WITH (LEDGER = ON (APPEND_ONLY = ON))"
 
@@ -175,13 +177,19 @@ class RuleCardStore:
             raise RuleError("card_id must be at most 100 characters, contain no slash and not be reviews")
         if set(f) - set(FIELDS):
             raise RuleError("unknown card fields")
-        missing = [k for k in FIELDS if k not in ("retirement",) and not f.get(k)]
+        missing = [k for k in FIELDS if k not in ("retirement", "check") and not f.get(k)]
         if missing:
             raise RuleError("missing fields: " + ", ".join(missing))
         limits = dict(title=200, trigger=600, applicability=600, clock=400, safe_default=600, escalation_role=200, approver=200)
         for k in FIELDS:
-            if k not in ("provisions", "effective", "retirement"):
+            if k not in ("provisions", "effective", "retirement", "check"):
                 f[k] = _text(f[k], k, limits[k])
+        if f.get("check") is not None:
+            from zava_forward.core.rule_engine import validate_spec
+            try:
+                f["check"] = validate_spec(f["check"])
+            except ValueError as exc:
+                raise RuleError(str(exc)) from exc
         if not isinstance(f["provisions"], list) or not f["provisions"]:
             raise RuleError("provisions must be a nonempty list of citations")
         f["provisions"] = [_text(p, "provision") for p in f["provisions"]]
@@ -195,6 +203,9 @@ class RuleCardStore:
         self.sql.run("INSERT INTO rule_card_version VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (
             card_id, v, f["title"], f["trigger"], f["applicability"], json.dumps(f["provisions"]), f["clock"], f["safe_default"],
             f["escalation_role"], f["approver"], author, f["effective"], f.get("retirement"), int(exercise), today))
+        if f.get("check") is not None:
+            self.sql.run("INSERT INTO rule_card_check (card_id, version, specification) VALUES (?,?,?)",
+                         (card_id, v, json.dumps(f["check"], sort_keys=True)))
         self._event(card_id, v, "draft", author, role, today, exercise)
         return v
 
@@ -276,6 +287,8 @@ class RuleCardStore:
         for r in self.sql.all("SELECT * FROM rule_card_version WHERE card_id=? ORDER BY version", (card_id,)):
             d = dict(r)
             d["provisions"] = json.loads(d["provisions"])
+            specs = self.sql.all("SELECT specification FROM rule_card_check WHERE card_id=? AND version=?", (card_id, r["version"]))
+            d["check"] = json.loads(specs[0]["specification"]) if specs else None
             d["state"] = self.state(card_id, r["version"])
             d["label"] = EXERCISE_LABEL if r["exercise"] else None
             d["events"] = self.sql.all("SELECT state, actor, role, at, simulated, note FROM rule_card_event WHERE card_id=? AND version=? ORDER BY id", (card_id, r["version"]))

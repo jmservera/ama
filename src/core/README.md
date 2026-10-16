@@ -656,7 +656,8 @@ legal advice or approval. Seed metadata is `src/core/src/zava_forward/core/law/l
 ## Rule cards (ADR 0005, phase 2)
 
 `src/core/src/zava_forward/core/rulecards.py` (moved from `mvp/` in M1 of #199) holds versioned rule cards in append-only tables
-(`rule_card_version`, `rule_card_event`, `rule_card_review`, `rule_card_review_event`) with a draft, approved,
+(`rule_card_version`, `rule_card_event`, `rule_card_review`, `rule_card_review_event`,
+`rule_card_check`) with a draft, approved,
 active, held, retired lifecycle. A card is drafted by the `rule_author` role and only
 its named `rule_owner` can approve, activate, hold, release or retire it; an author
 cannot approve their own card. Versions, approver, approval date and effective dates
@@ -693,7 +694,118 @@ any approval is explicitly simulated. They are not
 law or real approval, and the owner, clock durations and citations remain open items
 for named Compliance and DPO approval. The API binds separate Entra rule
 capabilities to a unique provisioned identity; actual tenant assignments, human
-approval of specific cards, the rule engine and rule-card UI remain open.
+approval of specific cards and the rule-card UI remain open. The bounded
+exercise engine below does not supply those approvals.
+
+## Deterministic checks and alerts (#212)
+
+`rule_engine` reads persisted SQL case bodies and row versions, never a model's
+fact snapshot. It has no model, resident-message, awareness-write or hold-release
+interface. Existing hazard intake/referral and independent human hold release
+remain authoritative. A bounded `clear` means only that particular check passed,
+not that a home is compliant, safe, or released.
+
+New draft cards may include an optional immutable `check` object. Its exact
+contents appear in card history before the existing distinct named-owner
+approval and activation. No contract is attached to old versions or seed drafts.
+The two allowed kinds are:
+
+| Kind | SQL case evidence and deterministic result |
+| --- | --- |
+| `hazard-awareness-clock` | Explicit `hazards` list; an empty list is not applicable. Each open record needs a valid, non-future timezone-aware `aware_at`, report `source`, known `priority` and explicit `released` boolean. `hours` is an owner-supplied integer 1..8760, not a guessed statutory period. Due time is awareness plus those elapsed hours; at due time the result is breach risk. Within `attention_hours` before due it is attention; before that it is clear for this clock only. Missing duration/evidence is unknown. Evidenced independent human release can be clear, but the checker never changes a hold. |
+| `automated-decision-safeguard` | Explicit `automated_decisions` list; missing is unknown, empty is not applicable. An explicitly non-significant entry is not applicable. Significant entries need named `decision_owner` and proposal `source`; explicit `state: pending` is attention. `state: recorded` additionally needs human `evidence` and a non-future timezone-aware `decided_at` to be clear. Missing or contradictory evidence stays unknown. This field has no general-purpose writer or AI write path in this slice. |
+
+For example, an exercise author can propose
+`"check": {"kind": "hazard-awareness-clock", "hours": 48, "attention_hours": 24}`.
+Those numbers are an illustrative fictional contract, not legal advice or
+approved operational timings. The decision kind accepts only `kind`, no clock.
+Unknown keys, expressions, model awareness dates and suppression flags are
+rejected. Prose clocks are never parsed into executable rules.
+
+Only an active, human-approved card inside its effective/retirement dates is
+executable. A newer draft does not disable a prior eligible active version.
+Every citation must be an exact held provision ID, such as
+`source-id@v1#0001`. Missing citations, incomplete/unreviewed sources or
+superseded versions prevent clear and return unknown. Consultations, historical
+sources and future effective dates never fire as active controls. These are
+local metadata checks, not verification that legislation is currently correct.
+Seed references and their review state remain unchanged.
+
+Checks retain card/version/status, exact citations and source statuses, case
+revision/evidence pointers, input hash, journey step, UTC evaluation time, safe
+action, named decision owner and clock. All results, including throttled ones,
+are retained. Checks, alert publication and the checkpoint commit atomically in
+the law-store SQL adapter. Tables are append-only ledger tables on a
+ledger-enabled SQL backend, otherwise protected by append-only triggers.
+No SQLite replace/ignore/automatic-ID syntax is added.
+
+Data/step retries use stable case-revision, card/source fingerprint and engine
+version keys; schedule retries add a UTC minute bucket. Replaying a key returns
+its original persisted time/results, even later or after restart. API case
+mutations evaluate after commit; schedule pages revisit persisted cases to
+recover missed or failed dispatch. Intermediate revisions that were never
+checked are not reconstructed. Supply trusted SQL/law configuration, then run:
+
+```bash
+python -m zava_forward.core.rule_engine --limit 100 --after ""
+```
+
+Run successive pages using `next_after` until a page is empty, then restart at
+the beginning on the next scheduled sweep. The maximum page is 100; the
+existing store's backend-specific pagination is reused. The command does not
+install a timer or change a deployment. A failed page exits unsuccessfully;
+retry from the previous page token. Already committed home checkpoints replay,
+and a later sweep advances the clocks.
+
+Alerts group by explicit home ID (case ID when no separate home ID is held),
+then rank by due time, harm, and stable IDs. Home groups rank by their first
+alert. Attention publication is limited to once per 24 elapsed hours for a
+home/card/step/evidence item; it never suppresses evaluations or breach
+escalations. Latest attention/unknown episodes replace their older visible
+copies; clear/inactive checks remove those advisory copies from the open view.
+Unresolved breach risks remain visible across changes, holds and retirement,
+labelled with their original evaluation and current-control availability.
+Only the exact named owner with trusted `rule_owner` capability can acknowledge
+or record outcomes/classifications. Breach outcome requires acknowledgement;
+neither action changes the underlying hazard hold. An unresolved underlying
+risk can raise a new alert after a recorded outcome.
+
+False-positive and confirmed classifications are append-only and mutually
+exclusive per alert, with total/classified/unclassified counts and
+`false_positives / classified` (null for zero classified alerts). This is an
+owner-classified fatigue indicator, not measured clinical/legal accuracy.
+Classification never suppresses checks or substitutes for breach acknowledgement
+and outcome. Read scopes and HTTP behavior are in the
+[API guide](../api/README.md#deterministic-step-alert-api-212).
+
+Local tests use constructed SQL facts and explicitly simulated approvals only.
+Actual legal approvals, a deployed timer, step UI, real staff precision and
+comprehension trials, operational retention policy, continuing 60,000-home
+acceptance and live SQL Server/Azure verification remain unmet. Refs #212,
+not issue closure or production acceptance.
+
+### Issue #212 acceptance audit
+
+Statuses below describe observed local engineering evidence only.
+`test_rule_engine` is in core/tests; `test_rule_alerts` and the endpoint
+inventory are in api/tests. No row grants operational or legal approval.
+
+| Issue acceptance criterion | Local status and evidence | Unmet boundary |
+| --- | --- | --- |
+| Five cited results and status | Met locally: exact-threshold, missing-evidence, explicit empty applicability and cited source/status tests | No genuinely approved operational card or live source-currentness verification |
+| Missing evidence unknown, never clear | Met locally: absent/invalid/future awareness, source, release and decision evidence tests | No fabricated source or human evidence fills gaps |
+| Future/consulted rules never active | Met locally: future card/source dates, consultation, historical, partial/unreviewed and superseded source tests | No legal currentness claim |
+| Model never sets awareness or suppresses checks | Met locally: no model dependency/write interface; unsupported spec/body fields denied; SQL facts unchanged by checks | No real-model safety evaluation is claimed |
+| Safe action, owner, clock; breach acknowledgement/outcome | Met locally: payload assertions, exact-owner/capability and acknowledgement-before-outcome HTTP tests | Real decision-owner delegation and tenant assignment not evidenced |
+| No alert sends a resident message | Met locally: no send interface or messaging side effect; HTTP lifecycle preserves contact records and holds | Human communication stays in its separate existing workflow |
+| Home grouping, clock/harm ranking, attention limits, false positives | Partial end-to-end: local grouping/ranking, 24-hour publication and retained-classification tests pass | Missing distinct home IDs isolate cases instead of inventing cross-case home identity; no real staff precision/false-positive trial |
+| Safety routes work with engine down | Met locally: absent/evaluation/persistence failure HTTP tests preserve emergency intake/referral and show unknown/manual route | No Azure outage exercise |
+| Idempotent and checkpointed | Met locally: exact retries, later-time retry, restart, concurrent adapters, atomic rollback and scheduled catch-up/page tests | No deployed timer or live SQL Server recovery evidence; unevaluated intermediate revisions are not reconstructed |
+
+The API makes alerts available at their recorded journey step, but a workbench
+alert component is not delivered. Together with real approvals, hosted
+scheduling, staff trial and live-platform evidence, this remains an explicit
+unmet end-to-end acceptance boundary rather than an issue-closing claim.
 
 ## SQL store
 

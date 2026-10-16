@@ -63,7 +63,7 @@ ignore_errors = true
 
 # chat_panel is typed; it calls siblings that still wait for their typing pass (M6).
 [[tool.mypy.overrides]]
-module = ["zava_forward.core.chat_panel"]
+module = ["zava_forward.core.chat_panel", "zava_forward.core.rule_engine"]
 disallow_untyped_calls = false
 
 [tool.setuptools.package-data]
@@ -76,4 +76,8 @@ module = ["test_stock_reconciliation", "tests.test_stock_reconciliation",
           "test_hazard_referral", "tests.test_hazard_referral",
           "test_sensor_stock", "tests.test_sensor_stock",
           "test_resident_decisions", "tests.test_resident_decisions"]
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = ["test_rule_engine", "tests.test_rule_engine"]
 disallow_untyped_calls = false

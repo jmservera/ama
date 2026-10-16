@@ -2,6 +2,7 @@
 import base64
 import binascii
 import json
+import logging
 import os
 import secrets
 import sys
@@ -15,7 +16,7 @@ from zava_forward.core import profile
 
 from zava_forward.core import projection, quality
 
-from zava_forward.core import lawstore, rulecards
+from zava_forward.core import lawstore, rulecards, rule_engine
 from zava_forward.api import auth
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import ChatModel
@@ -65,6 +66,25 @@ class App:
         self.panel = ChatPanel(self.chat, ChatModel(AgentWorker(lambda *args: store.ai.evidence(*args))))
         self.law = law
         self.law_lock = threading.Lock()
+        self.engine = None
+
+    def rule_engine(self):
+        if self.law is None:
+            raise ValueError("The law store is not loaded; rule checks are unknown.")
+        if self.engine is None:
+            self.engine = rule_engine.RuleEngine(self.law)
+        return self.engine
+
+    def check_case(self, case_id, trigger):
+        """Post-commit boundary: checks cannot undo or block human safety intake."""
+        try:
+            with self.law_lock:
+                self.rule_engine().run(self.store, case_id, trigger)
+            return {"status": "evaluated", "safe_route": rule_engine.SAFE_ROUTE}
+        except Exception:
+            logging.getLogger(__name__).exception("Rule evaluation unavailable for %s", case_id)
+            return {"status": "unknown", "error": "Rule checks unavailable; work was saved.",
+                    "safe_route": rule_engine.SAFE_ROUTE}
 
 
 def get_kind(path):
@@ -229,6 +249,8 @@ def make_handler(app):
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
             if url.path.startswith("/api/law"):
+                if url.path == "/api/law/alerts":
+                    return self._rule_alerts(u, url.path, None, q)
                 if url.path == "/api/law/cards" or url.path.startswith("/api/law/cards/"):
                     return self._rulecards(u, url.path, None)
                 if app.law is None:
@@ -386,6 +408,50 @@ def make_handler(app):
             if url.path == "/api/audit-check":
                 return self._json(200, s.verify_ledger())
             return self._json(404, {"error": "Not found."})
+
+        def _rule_alerts(self, user, path, body, query=None):
+            if not projection.allowed(user, "law"):
+                return self._json(403, {"error": "Your role does not include this."})
+            parts = [unquote(p) for p in path.strip("/").split("/")]
+            try:
+                with app.law_lock:
+                    engine = app.rule_engine()
+                    if body is None and parts == ["api", "law", "alerts"]:
+                        case_id = (query or {}).get("case", [None])[0]
+                        if case_id:
+                            app.store.detail(case_id, user)
+                        return self._json(200, engine.alerts(user, case_id))
+                    if body is not None and len(parts) == 4 and parts[2] == "checks":
+                        if body:
+                            raise ValueError("Check inputs, trigger and time are server-derived.")
+                        app.store.detail(parts[3], user)
+                        checkpoint = engine.run(app.store, parts[3])
+                        checkpoint["checks"] = [
+                            c for c in checkpoint["checks"]
+                            if user["role"] in c["audience"] or user["email"] == c["decision_owner"]
+                        ]
+                        return self._json(200, checkpoint)
+                    if body is not None and len(parts) == 5 and parts[2] == "alerts":
+                        if app.provider.name != "trusted-proxy":
+                            raise PermissionError("Alert decisions require a trusted named owner.")
+                        if set(body) != {"note"}:
+                            raise ValueError("Only note is accepted; actor and date are server-derived.")
+                        engine.disposition(user, parts[3], parts[4], body["note"])
+                        return self._json(200, {"ok": True})
+            except PermissionError as exc:
+                return self._json(403, {"error": str(exc)})
+            except KeyError:
+                return self._json(404, {"error": "Case not found."})
+            except ValueError as exc:
+                if app.law is not None and hasattr(app.store, "db"):
+                    return self._json(400, {"error": str(exc)})
+                return self._json(503, {"status": "unknown", "error": str(exc),
+                                        "safe_route": rule_engine.SAFE_ROUTE})
+            except Exception:
+                logging.getLogger(__name__).exception("Rule alert service unavailable")
+                return self._json(503, {"status": "unknown", "error": "Rule alert service unavailable.",
+                                        "safe_route": rule_engine.SAFE_ROUTE})
+            return self._json(404, {"error": "Rule alert route not found."})
 
         def _rulecards(self, user, path, body):
             if not projection.allowed(user, "law"):
@@ -568,6 +634,8 @@ def make_handler(app):
             s = app.store
             if not projection.allowed(u, "post", "POST"):
                 return self._json(403, {"error": "Your role does not include this."})
+            if url.path.startswith("/api/law/alerts/") or url.path.startswith("/api/law/checks/"):
+                return self._rule_alerts(u, url.path, body)
             if url.path == "/api/law/cards" or url.path.startswith("/api/law/cards/"):
                 return self._rulecards(u, url.path, body)
             if url.path.startswith("/api/chat"):
@@ -627,6 +695,8 @@ def make_handler(app):
                     return self._json(200, s.resolve_priority(u, parts[3], parts[4], body.get("reason", ""), body.get("items")))
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
                     cid, act = parts[2], parts[3]
+                    with s.lock:
+                        prior_stage = s._case(cid)["stage"]
                     if act == "call":
                         s.log_call(u, cid, body.get("outcome"), body.get("note"), body.get("channel", "Phone"))
                     elif act == "decision":
@@ -704,7 +774,10 @@ def make_handler(app):
                         return self._json(200, s.draft(cid, body.get("kind", "update")))
                     else:
                         return self._json(404, {"error": "Not found."})
-                    return self._json(200, s.detail(cid, u))
+                    detail = s.detail(cid, u)
+                    detail["rule_checks"] = app.check_case(
+                        cid, "step_transition" if detail["stage"] != prior_stage else "data_change")
+                    return self._json(200, detail)
             except DocumentStoreError:
                 return self._json(502, {"error": "The document store is not available. Try again shortly."})
             except ConflictError:

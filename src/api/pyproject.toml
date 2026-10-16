@@ -71,6 +71,15 @@ module = ["test_stock_reconciliation_api", "tests.test_stock_reconciliation_api"
           "test_handoff_api", "tests.test_handoff_api", "test_hazard_api", "tests.test_hazard_api",
           "test_resident_api", "tests.test_resident_api"]
 disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = ["test_rule_alerts", "tests.test_rule_alerts"]
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = ["test_rule_engine", "dataset"]
+follow_imports = "skip"
+ignore_missing_imports = true
 # Runtime PYTHONPATH supplies the shared fixture, strictly checked by the core project.
 [[tool.mypy.overrides]]
 module = ["building_fixture"]
