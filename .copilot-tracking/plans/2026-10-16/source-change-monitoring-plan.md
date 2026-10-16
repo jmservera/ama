@@ -80,7 +80,7 @@ verified source promotion and human/production acceptance.
 
 * [x] P01 Persistence and detection
 * [x] P02 Controlled release
-* [ ] P03 Validation and publication handoff
+* [x] P03 Validation and publication handoff
 
 <!-- rpi:phase id=P01 -->
 ### P01 Persistence and detection
@@ -102,7 +102,7 @@ verified source promotion and human/production acceptance.
 
 * [x] P03-T01 Run affected project local suites, ruff and mypy;
   update READMEs, index and append log with honest acceptance audit.
-* [ ] P03-T02 Reconcile RPI evidence, run one implementation Review,
+* [x] P03-T02 Reconcile RPI evidence, run one implementation Review,
   commit, push and open Refs #213 PR.
 
 ## Dependencies
@@ -128,3 +128,9 @@ coordinated multi-source release, staff/communication UX and human
 legal/platform acceptance are outside this offline slice. Overlapping changed
 sources fail closed rather than accepting one source's approval for another.
 These must not be reported as delivered.
+
+## Publication
+
+Bounded implementation published in PR #331 targeting main, initial commit
+cda537b. One Review executed with outcome Residual work; full issue #213
+acceptance is not claimed. No merge or follow-up implementation was performed.

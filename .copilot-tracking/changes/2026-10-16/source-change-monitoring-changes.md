@@ -110,3 +110,13 @@ Ruff/format/mypy and targeted API law/rule regressions passed as recorded.
 Authenticated GitHub account rechecked: id 8036360, login jmservera,
 matching the requested privacy-safe commit identity. Commit/push/PR is the
 remaining authorized publication action.
+
+## Publication result
+
+Initial implementation commit cda537b pushed normally on
+feat/src-regulatory-change-review-213. Opened PR #331 targeting main:
+https://github.com/jmservera/ama/pull/331. Body uses Refs #213 and retains all
+six acceptance outcomes, skipped/live boundaries and routed residual work.
+No merge, force push or issue closure. Final evidence-only commit records
+publication and completed finite manual task state; it changes no executable
+code and does not trigger another Review.

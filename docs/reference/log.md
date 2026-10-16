@@ -3601,3 +3601,7 @@ metadata when the knowledge base was created.
   impact mapping, verified new-source publication, actual human legal
   approval, operational regression/notification delivery and live Azure/SQL
   verification remain unmet. Refs #213, never issue closure.
+* Published PR #331. Final local core suite: 463 run, one opt-in skip;
+  orchestrator: 21 passed. Core/orchestrator Ruff, format and mypy passed.
+  Existing API law-store tests: 34 run/16 SQL Server skips; API rule tests:
+  five passed. No live legal-source currentness or Azure acceptance is implied.
