@@ -92,7 +92,9 @@ even for a from-empty bootstrap; it need not exist yet in the group.
 
 To intentionally roll forward, pass `--orchestrator-image <tag-or-digest>`.
 This bypasses discovery, as does explicitly passing the placeholder (still
-warned). An empty option uses normal resolution. The wrapper owns the image
+warned). Leading and trailing whitespace is stripped from the explicit value;
+an empty or whitespace-only option uses normal resolution (Refs #339).
+The wrapper owns the image
 parameter: an image set only in the parameter file is not an explicit override.
 Other overrides use repeatable `--parameter NAME=VALUE`; image, workload and
 environment must use their named options.

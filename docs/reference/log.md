@@ -4386,3 +4386,36 @@ metadata when the knowledge base was created.
   receipts are not regenerated. Refresh cadence/approval/live-protection
   policy is documented, not owner-approved. No resident, legal, safety,
   financial or operational approval is inferred; issue ticks stay unchanged.
+## [2026-10-16] update | Demo external environment created (#360)
+
+* Owner approved (via ask_user form): full migration at once, Key Vault
+  credential store, retire the old environment without a rollback window, and
+  retire the demo Front Door without a second confirmation. Group `ama` is
+  never deleted.
+* Applied the environment-only deployment `demo-env-360` (`demoDirectIngress`,
+  `deployApplications=false`, `deployBackgroundWorkloads=false`, registry
+  quarantine pinned to the live false value). Created `cae-cutover-test-demo`
+  (external, own subnet and NSG) and its diagnostics. The old environment, apps,
+  jobs and Front Door were not changed. SQL, Key Vault, storage and registry
+  still report public network access Disabled.
+* Blocked: the demo apps cannot be deployed yet. The Key Vault credential
+  `entra-client-secret` and the real registration client ID need the owner's
+  Entra login and private vault access (this VM's service principal cannot read
+  the tenant or the vault). Old resources are retained because no replacement
+  serves traffic; real browser sign-in, roles, SQL and AI remain unverified.
+* Next: owner runs `python3 infra/scripts/setup-entra.py --direct-ingress`
+  from an authorised host, then the coordinator deploys the apps and jobs,
+  verifies, and retires the old stack and Front Door.
+
+## [2026-10-16] ingest | Explicit orchestrator image whitespace
+
+* Refs #339. Trim explicit `--orchestrator-image` before image selection so
+  empty or whitespace-only values use existing discovery and warned placeholder
+  fallback instead of forwarding a blank image to Bicep.
+* Expanded `infra/tests/test_deploy.py` subprocess coverage for empty/spaces/
+  tabs-newlines, existing-job and placeholder outcomes, what-if/apply and
+  padded explicit tags/digests/placeholder. Updated `infra/README.md`.
+* Validation is offline with isolated fake Azure CLI responses. No live Azure,
+  setup-entra changes, private datasets, operational approvals or issue ticks.
+* Expanded regressions failed in 11 subcases before normalization; all 19 deploy
+  tests pass after the fix, with scoped Ruff/format/mypy and local CLI help.
