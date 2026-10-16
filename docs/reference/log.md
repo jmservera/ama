@@ -4062,3 +4062,24 @@ metadata when the knowledge base was created.
   All three actual Bicep parameter examples compiled through the new helper
   offline with constructed override fixtures.
   Docker daemon is unavailable locally; no image/Trivy rerun is claimed.
+
+## [2026-10-16] query | Infra CI test-only dependency correction
+
+* Refs #138. Reproduced PR 357 validate's missing `yaml` import in a clean
+  Python 3.12 venv with only editable core, agents and API installed:
+  infra discovery ran 131 tests with one import error.
+* Merged origin/main without rewriting history and retained both log histories.
+  The validate infra-test step now installs `PyYAML==6.0.3`, matching source
+  CI. No production package dependency was added. Updated the full infra
+  quality-gate recipe and reference routing.
+* Added assertions for both CI discovery consumers and six mutations covering
+  missing, unpinned and late installation. Existing removed-control workflow
+  mutations remain intact; no ImportError skip or weakened YAML parser.
+* Same-venv discovery passes all 156 tests after the explicit pinned test
+  prerequisite. The Bicep-required run with absolute source fixture paths also
+  passes; local real API health/authentication-denial probes, Ruff/format and
+  strict pipeline helper mypy pass.
+* All six live acceptance criteria remain unmet and unchecked. No Azure
+  deployment/OIDC execution, new human approval, private-data read or
+  operational/legal acceptance is claimed. ADR 0005 remains synthetic-only;
+  real owners and sources remain gaps.

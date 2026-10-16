@@ -104,7 +104,48 @@ def workflow_errors(document):
     return errors
 
 
+def infra_test_dependency_errors(document):
+    errors = []
+    discovery = "python -m unittest discover -s infra/tests"
+    scripts = [
+        step["run"]
+        for job in document["jobs"].values()
+        for step in job["steps"]
+        if discovery in step.get("run", "")
+    ]
+    if not scripts:
+        errors.append("missing infra discovery")
+    for script in scripts:
+        if "pip install 'PyYAML==6.0.3'" not in script.partition(discovery)[0]:
+            errors.append("missing pinned PyYAML before infra discovery")
+    return errors
+
+
 class WorkflowTests(unittest.TestCase):
+    def test_each_infra_ci_step_installs_pinned_test_dependency_before_discovery(self):
+        for name in ("src-ci.yml", "mvp-validation.yml"):
+            with self.subTest(name=name):
+                self.assertEqual(infra_test_dependency_errors(workflow(name)), [])
+
+    def test_reject_missing_or_late_infra_test_dependency(self):
+        install = "pip install 'PyYAML==6.0.3'"
+        for name in ("src-ci.yml", "mvp-validation.yml"):
+            for replacement in ("", "pip install PyYAML"):
+                with self.subTest(name=name, replacement=replacement):
+                    document = deepcopy(workflow(name))
+                    for job in document["jobs"].values():
+                        for step in job["steps"]:
+                            if "unittest discover -s infra/tests" in step.get("run", ""):
+                                step["run"] = step["run"].replace(install, replacement)
+                    self.assertTrue(infra_test_dependency_errors(document))
+            with self.subTest(name=name, ordering="late"):
+                document = deepcopy(workflow(name))
+                for job in document["jobs"].values():
+                    for step in job["steps"]:
+                        if "unittest discover -s infra/tests" in step.get("run", ""):
+                            step["run"] = step["run"].replace(install, "") + f"\n{install}\n"
+                self.assertTrue(infra_test_dependency_errors(document))
+
     def test_structure_permissions_pinning_and_no_secret_echo(self):
         for name in ("src-deploy.yml", "infra-plan.yml"):
             with self.subTest(name=name):
