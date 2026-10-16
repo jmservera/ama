@@ -1,6 +1,6 @@
 # Demo automatic roster changes
 
-Task auto-roster-360, Refs #360. Full-plan implementation in progress.
+Task auto-roster-360, Refs #360. Full-plan offline delivery complete.
 
 ## P01: Implementation
 
@@ -33,5 +33,8 @@ Runbook, manifest guidance, evidence pack, index and append-only log updated.
 One post-implementation Review executed: Complete, outcome Residual work for
 separate authorized live acceptance (RV-001); no material source defect found.
 Review: `.copilot-tracking/reviews/logs/2026-10-16/auto-roster-360-review.md`.
-Pending requested commit/push/PR delivery; no repeat Review.
+Implementation commit `37dd1ec` pushed to `feat/auto-roster-360`; PR #363 opened
+against main: https://github.com/jmservera/ama/pull/363.
+Delivery-state receipt is a documentation-only follow-up commit, not a source
+change or another Review. All active plan tasks complete; no merge requested.
 No issue checkboxes changed. Live sign-in/SQL/restart remain Not run.

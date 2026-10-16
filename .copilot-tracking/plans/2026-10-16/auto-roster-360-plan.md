@@ -1,6 +1,6 @@
 # Demo automatic roster plan
 
-Task: auto-roster-360, Refs #360. Status: implementation ready after one critique.
+Task: auto-roster-360, Refs #360. Status: offline delivery complete; PR #363 open.
 
 ## Executive Summary
 
@@ -69,7 +69,7 @@ Live acceptance is explicitly Not run.
 
 * [x] P02-T01: Offline regression tests, ruff and mypy; local app smoke if applicable.
 * [x] P02-T02: Update runbook, evidence, index and append-only log.
-* [ ] P02-T03: One post-implementation review; commit/push/PR.
+* [x] P02-T03: One post-implementation review; commit/push/PR.
 
 ## Validation Ownership and Bounds
 
@@ -107,6 +107,10 @@ Live person/Exchange attestation, tenant sign-in, SQL binding and restart remain
 separate operational evidence, not inferred from mocks.
 
 ## Handoff
+
+Implementation commit `37dd1ec` pushed on `feat/auto-roster-360`; PR #363 targets
+main. One Review executed, outcome Residual work for separate live/operator
+evidence only. No merge or issue ticks. Owner/coordinator retains live acceptance.
 
 Research: `.copilot-tracking/research/2026-10-16/auto-roster-360-research.md`.
 Details: `.copilot-tracking/details/2026-10-16/auto-roster-360-phase-details.md`.
