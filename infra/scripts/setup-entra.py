@@ -565,15 +565,15 @@ def require_demo(cli: Azure, app: dict[str, Any]) -> None:
         ids.add(environment_id.lower())
     deployments = cli.call(["deployment", "group", "list", "-g", "ama"])
     for deployment in deployments:
-        deployed = deployment.get("properties", {})
+        deployed = deployment.get("properties") or {}
         if not any(str(r.get("id", "")).lower() in ids
-                   for r in deployed.get("outputResources", [])):
+                   for r in deployed.get("outputResources") or []):
             continue
         if deployed.get("provisioningState") != "Succeeded":
             raise SetupError(
                 "Demo profile evidence is not a successful deployment; no roster generated.")
-        parameters = deployed.get("parameters", {})
-        parameter_tags = parameters.get("tags", {}).get("value", {})
+        parameters = deployed.get("parameters") or {}
+        parameter_tags = (parameters.get("tags") or {}).get("value") or {}
         module_profile = parameter_tags.get(PROFILE_TAG)
         if module_profile is not None:
             profiles.append(module_profile)
@@ -792,7 +792,7 @@ def coordination_status(cli: Azure, app: dict[str, Any]) -> None:
            for r in revisions):
         raise SetupError("An API revision update is in progress; wait before changing authentication.")
     deployments = cli.call(["deployment", "group", "list", "-g", "ama"])
-    if any(d.get("properties", {}).get("provisioningState") in
+    if any((d.get("properties") or {}).get("provisioningState") in
            ("Accepted", "Running", "Creating", "Updating") for d in deployments):
         raise SetupError("A resource-group deployment is running; authentication setup must wait.")
 
@@ -849,7 +849,7 @@ def discover_credential_target(cli: Azure, app: dict[str, Any],
                           and "environment" in tags]
         if not candidates:
             deployments = cli.call(["deployment", "group", "list", "-g", args.resource_group])
-            names = {d.get("properties", {}).get("outputs", {}).get(
+            names = {((d.get("properties") or {}).get("outputs") or {}).get(
                 "keyVaultName", {}).get("value") for d in deployments}
             candidates = [v for v in vaults if v["name"] in names] or vaults
     vault = choose(candidates, args.vault, "Key Vault", r".*", "--vault",
@@ -872,7 +872,7 @@ def discover_credential_target(cli: Azure, app: dict[str, Any],
                        or r.get("name", "").endswith("-api"))}
         if len(tagged) != 1:
             deployments = cli.call(["deployment", "group", "list", "-g", args.resource_group])
-            principal_ids = {d.get("properties", {}).get("outputs", {}).get(
+            principal_ids = {((d.get("properties") or {}).get("outputs") or {}).get(
                 "identityPrincipalIds", {}).get("value", {}).get("api") for d in deployments}
             tagged = {key for key, value in attached.items()
                       if value.get("principalId") and value["principalId"] in principal_ids}

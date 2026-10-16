@@ -782,6 +782,19 @@ class SetupTests(unittest.TestCase):
             self.assert_no_generation_writes()
             self.assertFalse(self.fake.sql_calls)
 
+    def test_deployments_with_null_properties_are_ignored(self):
+        self.demo_roster()
+        self.fake.deployments = [
+            {"properties": None},
+            {"properties": {"provisioningState": "Succeeded", "outputResources": None,
+                            "parameters": None}},
+            {"properties": {"provisioningState": "Failed", "outputResources": [{"id": APP_ID}],
+                            "parameters": {"tags": None, "deploymentProfile": {"value": "development"},
+                                           "environmentName": {"value": "test"}}}},
+        ]
+        self.fake.deployments[2]["properties"]["provisioningState"] = "Succeeded"
+        self.assertEqual(self.invoke(), 0, self.output.getvalue())
+
     def test_bound_deployment_can_prove_profile_but_production_environment_overrides(self):
         self.demo_roster()
         self.fake.app["tags"].pop(SETUP.PROFILE_TAG)
