@@ -49,3 +49,8 @@ Reuse clean topic fix/source-monitor-retry-332 (no prior PR).
 Authenticated id/login matches requested privacy email. Configure local author
 and committer, include Copilot trailer, push normally and open main-based PR.
 PR body references issues only with Refs #332; do not merge.
+
+Completed: commit 3e724f6503bc5e375c5794d89e90c22c597a27e0, normal push,
+PR #335 at https://github.com/jmservera/ama/pull/335. Verified open/main target,
+matching remote head, required identity/trailer and no issue-closing references.
+Task-local venv and scratch removed after validation.

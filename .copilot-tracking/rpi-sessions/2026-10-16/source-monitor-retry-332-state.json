@@ -3,8 +3,8 @@
   "task_slug": "source-monitor-retry-332",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/source-monitor-retry-332-research.md",
@@ -34,12 +34,17 @@
       "decision": "One Review executed; outcome Conformant with justified divergence for generator scratch placement; no implementation findings",
       "status": "complete",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-16/source-monitor-retry-332-review.md"
+    },
+    {
+      "decision": "Implementation pushed and PR 335 opened against main; no issue-closing references; owner merge remains separate",
+      "status": "complete",
+      "evidence": "https://github.com/jmservera/ama/pull/335"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Publish P02-T02: commit, push, open PR, then record completed delivery"
+    "action": "No implementation work remains; hosted checks and owner PR review/merge are separate"
   },
   "prioritized_follow_ups": []
 }

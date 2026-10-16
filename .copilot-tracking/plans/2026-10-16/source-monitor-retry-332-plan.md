@@ -77,13 +77,13 @@ Preserve locks, append-only evidence and observation/approval semantics.
 #### [x] P01-T02: Run unit, static and mutation checks
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Review and publish
+### [x] P02: Review and publish
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Record one implementation Review and reconcile evidence
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Commit, push and open PR
+#### [x] P02-T02: Commit, push and open PR
 
 ## Test Ownership and Critique Boundary
 
@@ -114,4 +114,7 @@ Conformant with justified divergence (generator scratch placement). Core: 466 ru
 one opt-in skip. Orchestrator: 22 passed. Both components' Ruff check/format
 and mypy passed. Mutation rejects the original due() in all four selected
 test methods (five assertion failures including 30/366-day subtests).
-P02-T02 publication remains under the explicit user delivery request.
+P02-T02 complete: implementation commit 3e724f6503bc5e375c5794d89e90c22c597a27e0
+pushed on fix/source-monitor-retry-332 and PR #335 opened against main.
+Verified the remote head, author/committer privacy email and empty PR
+closingIssuesReferences. Hosted checks are running; owner merge remains separate.

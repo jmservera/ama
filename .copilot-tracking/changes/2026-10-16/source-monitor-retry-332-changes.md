@@ -59,3 +59,15 @@ follow-ups. Handoff to the single post-implementation Review was ready.
 One Review executed: Complete, Conformant with justified divergence for
 generator scratch placement. No implementation defects, new follow-ups or
 blockers. Plan and state reconciled. P02-T02 publication remains.
+
+## P02-T02: Published delivery
+
+Implementation commit 3e724f6503bc5e375c5794d89e90c22c597a27e0 pushed normally
+on fix/source-monitor-retry-332. PR #335 opened against main:
+https://github.com/jmservera/ama/pull/335.
+Verified remote head matches, PR is open, closingIssuesReferences is empty,
+author and committer use 8036360+jmservera@users.noreply.github.com, and the
+requested Copilot trailer is present. Hosted checks started; no merge or issue
+disposition performed. Temporary src venv and scratch removed.
+Full plan complete; final delivery evidence is committed separately without
+rewriting the implementation commit.

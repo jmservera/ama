@@ -3658,3 +3658,4 @@ metadata when the knowledge base was created.
   regression methods fail (five assertions including long-cadence subtests),
   while the fixed method passed all four. One RPI Review found no in-scope
   defect; hosted PR checks and the owner merge decision remain separate.
+* Published PR #335 with Refs #332 only and no issue-closing references.
