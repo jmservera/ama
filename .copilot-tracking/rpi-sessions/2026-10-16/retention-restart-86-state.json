@@ -4,8 +4,8 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Follow-up",
-  "status": "active",
-  "session_status": "running",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/retention-restart-86-research.md",
     "plan": ".copilot-tracking/plans/2026-10-16/retention-restart-86-plan.md",
@@ -34,12 +34,30 @@
       "decision": "One post-implementation Review executed; Complete and Conformant for local P01 code/tests/documentation",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-16/retention-restart-86-review.md"
+    },
+    {
+      "decision": "Implementation committed as 2cc3e3d and normally pushed; PR 338 opened to main, no issue-closing references, issue 86 remains open",
+      "status": "confirmed",
+      "evidence": "https://github.com/jmservera/ama/pull/338; gh pr view closingIssuesReferences returned an empty list"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Commit and publish reviewed implementation; persist PR evidence after creation"
+    "action": "Owner reviews PR 338 hosted checks and decides merge; no automatic child task or merge"
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner reviews hosted checks and PR 338",
+      "rationale": "Required merge gate for the completed local implementation; no merge authority delegated",
+      "evidence": "https://github.com/jmservera/ama/pull/338"
+    },
+    {
+      "rank": 2,
+      "task": "Continue separate issue 86 operational/human acceptance and historical-erasure design",
+      "rationale": "Pre-existing wider acceptance is outside this narrowly approved retention restart",
+      "evidence": "Issue 86 comments and core README current-payload deletion boundary"
+    }
+  ]
 }

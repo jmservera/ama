@@ -7,8 +7,8 @@ ms.date: 2026-10-16
 
 Task ID: issue-86-retention-restart. Slug: retention-restart-86.
 Declared scope: full P01 plan, including implementation, validation,
-documentation and PR publication. Execution: local implementation complete,
-publication pending. One Review completed, outcome Conformant. Blockers: none.
+documentation and PR publication. Execution: complete and published.
+One Review completed, outcome Conformant. Blockers: none.
 Plan and details use matching task slug under their 2026-10-16 directories.
 One critique completed; PC-001/002 applied and unsupported PC-003 rejected.
 
@@ -65,7 +65,16 @@ Core README limit replaced with approved restart rule and legacy boundary;
 reference index updated and dated log appended. One Review completed:
 .copilot-tracking/reviews/logs/2026-10-16/retention-restart-86-review.md.
 Execution Complete, outcome Conformant for local P01 evidence; no findings.
-Publication pending.
+Published implementation commit 2cc3e3d to
+feat/retention-restart-after-deletion-86 and opened
+https://github.com/jmservera/ama/pull/338 targeting main. Author and committer use
+8036360+jmservera@users.noreply.github.com; required Copilot trailer included.
+Normal push only. PR body has Refs #86 as its only issue linkage;
+closingIssuesReferences is empty and issue #86 remains open. Hosted checks
+started; no hosted success or owner merge is claimed.
+
+Structured PR reference XML was generated in the session workspace (1161 lines),
+not committed as another source artifact. No PR template was found.
 No private datasets, excluded files, uv, Docker or Azure used.
 
 ## Amendments and divergences

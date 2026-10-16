@@ -3733,3 +3733,7 @@ metadata when the knowledge base was created.
   Ruff check/format and mypy passed. All ten new inherited JSON/SQLite cases
   failed semantic assertions against the complete original module in memory,
   then passed against the installed changed code without package-file mutation.
+* Published PR #338 with Refs #86 only; no issue-disposition reference was
+  attached and #86 remained open. One RPI Review completed with a Conformant
+  outcome and no in-scope findings. Hosted checks and the owner's merge decision
+  remain separate from the local evidence.

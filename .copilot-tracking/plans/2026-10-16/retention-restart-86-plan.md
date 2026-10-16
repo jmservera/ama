@@ -16,8 +16,8 @@ ms.date: 2026-10-16
 Restart the five-calendar-year resident retention period only when actual contact
 is recorded after manager-approved deletion. Preserve unrelated contact records
 without letting their old timestamps pin the new period.
-Implementation and local validation are complete; publication follows the single
-implementation Review. No product decision remains unresolved.
+Implementation and local validation are complete. One implementation Review was
+Conformant and PR 338 is published to main. No product decision remains unresolved.
 
 ### What You May Not Know
 
@@ -151,4 +151,6 @@ Local implementation is review-ready: 482 core tests (one opt-in Azure skip),
 3 resident API tests, core Ruff check/format and mypy passed. Complete original
 module mutation caused assertion failures in all 10 new JSON/SQLite cases;
 restored installed code passed all 40 resident tests (one opt-in skip).
-After Review, commit/push/open PR and record durable publication evidence.
+One Review completed with no findings; implementation commit 2cc3e3d normally
+pushed and PR 338 opened to main with Refs #86 only. Hosted checks and merge
+remain the owner's next action, not local acceptance evidence.
