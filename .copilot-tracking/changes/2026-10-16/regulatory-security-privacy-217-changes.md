@@ -88,3 +88,17 @@ as P03-T01 so Review does not prematurely claim commit/push/PR. This is a
 tracking clarification, not a scope change. Details and plan agree. Ten new
 methods remain below the locked maximum of 20, no removals. No implementation
 blocker remains; human/deployed acceptance is routed as distinct follow-up.
+
+## P03-T01: Publication completed
+
+One source Review recorded: execution Complete, outcome Residual work. No
+post-Review source corrections or repeated Review. Implementation commit
+f5ebc5e pushed to feat/regulatory-security-privacy-217. Opened PR 353 against
+main: https://github.com/jmservera/ama/pull/353, with Refs #217 and an explicit
+seven-criterion acceptance audit. GitHub reports the PR open and checks running;
+no CI result is represented as already passing. Issue body remains unchanged.
+Author and committer use authenticated account 8036360/jmservera's noreply
+address, with the required Copilot trailer. No merge, force-push or cloud change.
+
+Full bounded plan complete. Manual-mode Review state records task completion,
+not completion of DPO/deployed acceptance or an automatic follow-up session.

@@ -80,9 +80,14 @@ Issue criteria requiring live/DPO evidence remain explicitly partial or unmet.
 <!-- rpi:phase id=P03 -->
 ### P03: Publication
 
-* [ ] P03-T01: Record one post-implementation review, then commit, push and open
+* [x] P03-T01: Record one post-implementation review, then commit, push and open
   the requested evidence-qualified PR. Source review assesses P01/P02; publication
   is tracked separately, not prematurely claimed.
+
+Publication evidence: implementation commit f5ebc5e pushed to the topic branch;
+PR 353 opened against main with Refs #217 and all seven criterion dispositions.
+Source Review execution Complete, outcome Residual work. Full bounded plan
+complete; issue-wide human/deployed acceptance remains open.
 
 ## Critique Disposition
 

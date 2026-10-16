@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Review",
-  "status": "active",
+  "status": "completed",
   "session_status": null,
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/regulatory-security-privacy-217-research.md",
@@ -29,12 +29,17 @@
       "decision": "Review executed once for P01/P02; execution Complete, outcome Residual work. No material source defect identified; DPO, hosted/provider evidence and JSON limitation routed separately.",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-16/regulatory-security-privacy-217-review.md"
+    },
+    {
+      "decision": "Implementation committed and pushed; PR 353 opened against main with Refs #217 and all seven acceptance dispositions. Issue checkboxes untouched; no merge.",
+      "status": "published",
+      "evidence": "https://github.com/jmservera/ama/pull/353"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "P03-T01: commit and push the reviewed slice, open the requested PR, then persist publication evidence."
+    "phase": "Follow-up",
+    "action": "Owner reviews PR 353 and draft DPIA; DPO periods and authorized platform/provider evidence remain unmet. No automatic session or child work started."
   },
   "prioritized_follow_ups": [
     {
