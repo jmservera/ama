@@ -4018,3 +4018,26 @@ metadata when the knowledge base was created.
   Existing PR ready status requires all latest-head checks green. Hosted
   hardening and other unmet criteria remain Partial; owner review and all
   operational/legal/consent/safety/financial approvals remain separate.
+
+## [2026-10-16] query | Offline CI/CD deployment pipeline
+
+* Refs #138. Added trusted default-branch PR what-if and main-only manual
+  source-image release/deployment workflows, pinned actions, job-local OIDC
+  permissions, protected environment configuration checks and isolated private
+  runner requirements. No retired-layout or legacy CI workflow edits.
+* Reused the environment parameter sets, source Docker contexts, hardened/plain
+  startup contract and fixable/full Trivy policy. Four run-versioned images
+  are handed off as exact digests; no mutable cache reuse or mixed-source release.
+* Added ama-only incremental what-if/apply guards, sanitized artifacts,
+  quarantine-aware pull-only admission, private SQL checks and strict local
+  HTTP health/authentication-denial regressions. Source CI retains existing
+  check names and adds dependency-aware image path filtering.
+* Updated source/infra guides and reference routing. All live issue criteria
+  remain unchecked: no Azure pipeline execution, real federation, reviewer
+  approval, release, SQL/model identity proof or operational/legal acceptance
+  is claimed. Existing hosted-kernel hardening and pilot setup gaps remain.
+* Local evidence: 154 infra tests including the real installed API on an empty
+  constructed fixture, Ruff/format, strict helper mypy and actionlint pass.
+  All three actual Bicep parameter examples compiled through the new helper
+  offline with constructed override fixtures.
+  Docker daemon is unavailable locally; no image/Trivy rerun is claimed.

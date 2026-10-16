@@ -110,6 +110,152 @@ of an Azure rollout.
 
 ## Deployment profile
 
+### GitHub deployment pipeline (Refs #138)
+
+[`infra-plan.yml`](../.github/workflows/infra-plan.yml) and
+[`src-deploy.yml`](../.github/workflows/src-deploy.yml) add offline-tested
+pipeline definitions, **not observed Azure deployment or OIDC acceptance**.
+No workflow was dispatched against Azure for this implementation.
+
+The PR workflow runs only after successful `Source projects CI` on an infra
+PR from this repository. A default-branch `workflow_run` loads trusted helper
+code, checks the candidate paths without executing them, then inspects candidate
+Bicep as data. Fork PRs are deliberately excluded: maintainers must review and
+adopt their changes onto a trusted branch first. The result is attached as a
+seven-day Actions artifact, keyed by environment and exact candidate SHA.
+There is no privileged `pull_request_target` checkout or PR comment token.
+Only status, change counts, source SHA and a parameter hash are published;
+raw what-if output, parameters, resource IDs and Azure errors are withheld.
+Failed plans attach a failed-status summary when the helper has started.
+The workflow must first merge to the default branch before this trigger exists.
+
+Release is manual, **main-only**, and serialized across all environments in
+`ama`. It builds all four source images from the same immutable workflow SHA.
+Every image passes the existing non-root/hardened/plain startup contract and
+the same `src/trivy.yaml` fixable HIGH/CRITICAL gate as source CI; full reports
+including unfixed findings are retained even on gate failure. Only passing
+images leave the unprivileged hosted build job. Private publish jobs load
+(never execute) those same-run image artifacts, push tags
+`sha-<commit>-r<run>-a<attempt>` to separate `zava-forward-<project>` repositories
+and capture registry digests. Importer maps to Bicep `importImage`; agents to
+`agentImage`. Deployment validates all four digest records against this run,
+attempt, source and registry before applying them. Releases always rebuild
+the complete set rather than mixing revisions or trusting mutable cache tags.
+Source CI uses dependency-aware per-project image path filters; core/shared
+build inputs affect all images, and agents changes also affect API.
+
+#### Required external setup
+
+Create protected GitHub environments `dev`, `test`, `pilot`, plus
+`<environment>-plan` and `<environment>-release` for each target. Require
+reviewers, prevent self-review, disallow administrator bypass and allow only
+protected branches; protect `main` itself. Review the exact PR SHA before
+planning and the exact workflow SHA/run, scan reports and four digest artifacts
+before deployment approval. The helper verifies reviewer/branch configuration
+before Azure login; YAML alone cannot provision or prove that anyone approved.
+No particular deployment approver is invented by this implementation.
+
+Use separate OIDC application identities for plan, publish and deploy in every
+environment. Configure the GitHub issuer `https://token.actions.githubusercontent.com`,
+audience `api://AzureADTokenExchange`, and exact subject
+`repo:<owner>/<repo>:environment:<environment-name>`, including the `-plan` and
+`-release` suffixes for their respective identities. Never add client secrets,
+credential JSON, passwords or long-lived registry credentials. GitHub's
+short-lived job token is used only to read environment configuration.
+
+Set these **GitHub environment variables**, never committed values:
+
+| Variable | Where and purpose |
+| --- | --- |
+| `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID` | Each privileged environment; owner-supplied federation/account configuration |
+| `AZURE_PLAN_CLIENT_ID` | `<environment>-plan`; plan identity only |
+| `AZURE_PUBLISH_CLIENT_ID` | `<environment>-release`; publisher only |
+| `AZURE_DEPLOY_CLIENT_ID` | Target environment; deploy identity only |
+| `AZURE_REGISTRY_NAME` | Release and target environments; existing registry in ama |
+| `DEPLOY_PARAMETERS` | Plan and target environments; JSON override contract below |
+
+`DEPLOY_PARAMETERS` must contain exactly `location`, `sqlLocation`,
+`regionCheckReference`, `quotaCheckReference`, `alertEmail`,
+`sqlAdminGroupName`, `sqlAdminGroupObjectId`, `entraClientId` (all nonempty
+strings), and `entraBearerOnly` (an explicit JSON boolean). Use approved values
+outside the repository; placeholders are refused. The helper compiles the
+selected committed dev/test/pilot example with Bicep and overlays only these
+keys. Production security defaults, locks and quarantine remain in their
+environment set. Public network access is always forced false. The generated
+ARM parameter file is private, temporary and removed on success or failure.
+
+Choose `entraBearerOnly=false` to preserve browser mode and its separately
+initialized Key Vault application secret. That existing runtime credential is
+not a pipeline credential and is never read by the pipeline. Browser sign-in
+must return 302 while anonymous `/api/me` must return exactly 401; a platform
+302 on the API is a failed check, not a pass. Use `true` only for an explicitly
+approved secretless service-test target as described above, not as a silent
+workbench UX change. Tenant registration, SQL users/seed and browser callback,
+staff and token-store initialization remain separate human-controlled tasks.
+
+Provide isolated, **ephemeral** Linux x64 runners with labels
+`ama-private-plan`, `ama-private-release`, `ama-private-deploy`, Python 3.12,
+Azure CLI/Bicep, gh and Docker (release/deploy only). They must reach private
+ACR and API DNS/network paths without widening any network policy. Restrict
+runner groups to the trusted default-branch workflows; do not share runners
+with arbitrary PR jobs, ambient managed identities or reusable credentials.
+Destroy runner disks, Docker credentials and isolated Azure CLI caches after
+each job. Plan needs resource reads plus what-if/validation, no resource
+writes; publish needs registry read/AcrPush scoped to the ama registry; deploy
+needs an approved ama-scoped deployment/resource custom role, template-required
+role-assignment rights and registry **AcrPull only**, without quarantine bypass.
+Do not grant subscription Owner or move governance/policy into this pipeline.
+Actual RBAC/federation and runner isolation require platform-owner verification.
+
+Quarantine is never disabled or bypassed. Test/pilot registries retain their
+quarantine policy: an independently approved scan/release process must make
+these digests pullable before target-environment approval. The deploy identity
+pulls every exact digest before apply; denied/quarantined images stop the run.
+No quarantine-release process is provisioned here, so this remains a live gap.
+Registry scan acceptance is not hosted read-only/capability enforcement;
+the inherited Container Apps hardening limitation remains Partial.
+
+#### Apply policy, probes and acceptance boundary
+
+The workflow targets existing, initialized infrastructure only. PR planning
+requires four existing immutable workload images and consistent maintenance
+job images; it does not silently select placeholders or newest tags. The
+deployment helper invokes only group-scoped, incremental operations in `ama`.
+It creates/deletes no group and rejects Delete, Ignore, unsupported/unknown
+what-if changes or resources outside the configured subscription's `ama`.
+The exact generated parameters are reused for the fresh what-if and apply.
+SQL server discovery must be nonempty, and **every** SQL server in ama must
+have public access Disabled before and after deployment. SQL stays private
+in the template; there are no firewall or policy-exemption workarounds.
+
+After successful ARM provisioning, the helper uses the deployment's own
+`apiInternalFqdn`, HTTPS certificate validation and no redirect following.
+It retries health briefly until exact 200, then requires exact 401 for anonymous
+API, malformed bearer and forged principal-header requests. Browser mode also
+requires sign-in 302. Any unauthenticated 2xx, redirect on the API, wrong status
+or network failure fails the run. A failed rollout is not automatically undone:
+retain the run and have an owner review a new release; never delete ama.
+The sanitized artifact distinguishes successful what-if from successful
+deployment/checks. SQL read/write, authorized staff, model access and restart
+persistence in rebuild step 7 are **not** proven by these HTTP/SQL-policy
+checks; private identity-backed acceptance remains separate.
+
+| Issue criterion | Current evidence and unmet boundary |
+| --- | --- |
+| Per-environment OIDC | Wired with job-local id-token write, no stored pipeline secrets; actual federation/RBAC unverified |
+| Infra PR what-if attached | Trusted trigger and sanitized artifact wired/tested; no live PR what-if executed |
+| Approval and environment parameter sets | Same template/examples, environment configuration guard and approval boundaries implemented; actual reviewer rules/approval and pilot ownership/region unverified |
+| Versioned image push and deployment reference | Four image/scan/artifact/digest path implemented/tested; no live build/push/deploy or quarantine release observed |
+| Automatic post-deployment checks | Local HTTP negative/positive tests and fake-command orchestration; live ingress/authentication/SQL/model/restart acceptance unmet |
+| No secret values in logs/repository | Pinned workflows, no stored-secret inputs, captured command output and canary regression checks; end-to-end live log audit not performed |
+
+All six live issue criteria remain unchecked. Local checks:
+`python3 -m pip install PyYAML==6.0.3`, then
+`python3 -m unittest discover -s infra/tests -p test_pipeline.py -v`.
+`actionlint -config-file infra/tests/actionlint.yaml .github/workflows/infra-plan.yml .github/workflows/src-deploy.yml .github/workflows/src-ci.yml`
+checks real workflow syntax when actionlint is installed. Source CI persists
+the structure/permission/pinning/no-echo mutation tests and helper Ruff/mypy.
+
 `deploymentProfile` defaults to `production`. Development alone relaxes
 nothing: public access, purge protection and registry quarantine each require
 an explicit opt-out/opt-in. Production rejects public access, disabled purge
