@@ -4270,3 +4270,53 @@ metadata when the knowledge base was created.
   Full acceptance remains Blocked on authorized real registration/credential/
   staff setup and human sign-in (#349), browser API coexistence and positive
   feature evidence (#350). No issue tick, merge or operational approval.
+
+## [2026-10-16] implementation | Offline direct demo ingress (Refs #360)
+
+* Added explicit demo-only external Container Apps configuration, distinct
+  replacement workload names/subnet/HTTPS NSG and inactive background staging.
+  Default/production isolation, private backing services and reused identities
+  remain; no broad public-data access or Azure operations are authorized.
+* Added direct Entra discovery from an explicit flag or demo app tag without
+  Front Door discovery/cdn requirements, mode-aware browser auth reconciliation
+  and strict public probes. Fake CLI/HTTP tests are offline engineering
+  evidence, not tenant authority, directory writes or successful human sign-in.
+* Updated [infra migration/runbook](../../infra/README.md#direct-demo-ingress-migration-proposal-2026-10-16-360),
+  [ADR 0001](../adrs/0001-azure-architecture.md#direct-synthetic-demo-entry-decision-2026-10-16),
+  architecture notes, [cut-over audit](../architecture/cutover-evidence-pack.md#direct-demo-ingress-offline-scope-2026-10-16)
+  and index. Historical Front Door observations and MVP git-only direct callback
+  prior art remain distinct from the proposed replacement; obsolete broad
+  development exposure is not copied.
+* The proposed sequence includes image/config/DNS/identity parity, all queue and
+  scheduled consumer staging/drain, rollback, separately authorized selective
+  retirement and cost sensitivity, not a quote or financial approval.
+  Criterion c owner approval and d/e live verification/retirement remain unmet.
+  No issue checkbox, Azure resource, private dataset or tenant object changed;
+  `ama` and all private endpoints remain untouched. Browser JSON API 302 remains
+  an explicit failure/gap, not a denial pass.
+* Offline validation: 234 infra tests with required local Bicep compiler,
+  all root/module template builds/lints, CI-aligned Bicep-test Ruff/format,
+  probe Ruff and setup mypy passed. API suite passed 563 tests with 110
+  conditional skips after correcting the discovery working directory.
+  Broader setup Ruff/probe mypy retain baseline diagnostics, none introduced.
+* Juan Manuel Servera remains the exercise Legal, Compliance and DPO owner;
+  ADR 0005 is accepted for synthetic development only. No actual legal,
+  consent, safety, rule activation, spending or operational approval is inferred.
+
+## [2026-10-16] implementation | Routed direct-ingress review corrections (Refs #360)
+
+* The single Review returned Not accepted for overlong demo job names and an
+  invalid role-denial endpoint. Subsequent bounded implementation shortens only
+  demo job suffixes and aligns ledger alerts; compiled tests cover supported
+  workload/environment bounds and preserve existing names.
+* Role-denial probes now establish authenticated Contractor `/api/me` 200,
+  then require staff-only `/api/stats` 403. The actual local provider/router
+  regression distinguishes valid Contractor authorization from anonymous/
+  unknown-session authentication failure. Credentials and response bodies
+  remain private and unlogged.
+* Updated the infra runbook and evidence receipt without rewriting the
+  completed Review or claiming another review/conformance. Owner approval and
+  all replacement live/retirement gates remain unmet; no Azure operation.
+* Corrected full infra suite passed 237 tests without skips, including 46
+  compiled-policy and 20 proof/probe tests. Corrected Bicep builds/lints,
+  scoped Ruff and CI-format checks passed.

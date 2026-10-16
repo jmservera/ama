@@ -23,14 +23,15 @@ private production profile. They do not authorize deployment.
 * `role-assignments.json`: role-assignment matrix; `entra/app-registration.json`: declarative Entra registration and owners. Both are checked by `tests/test_identity_rbac.py`.
 * `scripts/create-sql-users.sql`: contained SQL users for the managed identities. `scripts/create-sql-users.py` runs the same grants idempotently from the Azure CLI login.
 * `scripts/create-api-app-registration.sh`: Entra app registration, app roles and secret (Key Vault) for API sign-in.
-* `scripts/setup-entra.py`: one-command API/edge discovery, additive Entra registration/roles, private-roster assignments and auth wiring.
+* `scripts/setup-entra.py`: direct-demo or optional edge discovery, additive Entra registration/roles, private-roster assignments and auth wiring.
 * `scripts/initialize-api-auth.py`: compatibility CLI forwarding to `setup-entra.py`; its callback-only Python API is retained for existing importers.
 * `scripts/initialize-workbench-staff.py`: private tenant-member/app-role/SQL binding reconciliation, with idempotent checks and serving-replica restart.
 * `scripts/configure-m365-provisioner-app.sh`: delegated Graph permissions for the app the m365 CLI uses to set up SharePoint and Teams.
 * `scripts/grant-sharepoint-access.sh`: optional Graph `Sites.Selected` grant for the SharePoint evidence store.
 * `scripts/deploy.py`: image-preserving infrastructure what-if/deploy wrapper; see [Orchestrator image selection](#orchestrator-image-selection-322).
 * `scripts/private-cutover-proof.py`, `cutover-proof.Dockerfile`: bounded
-  synthetic SQL/private-ingress proof executed inside the ama VNet.
+  synthetic SQL/private-ingress proof inside the ama VNet and explicit public
+  direct-ingress acceptance probes.
 * `public-edge-existing.bicep`: additive Front Door Premium/WAF/Private Link
   for an existing internal, authenticated API; preserves data-service settings.
 
@@ -367,7 +368,283 @@ Compiled profile/staging/auth-mode checks run in the existing infra suite.
 
 Example from the repository root: `python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> --environment dev --parameters <private-completed-parameters.bicepparam>` (what-if; complete the recorded checks below and add `--apply` only after review).
 
+## Direct demo ingress migration proposal (2026-10-16, #360)
+
+Refs #360. The owner selects direct Container Apps HTTPS with Entra browser
+sign-in for the synthetic demo, without Front Door. This supersedes the edge
+prerequisite in the historical #344 procedure below, not the optional
+production/private-origin architecture. This is an **offline implementation and
+proposed migration**, not owner migration approval, deployment or permission
+to spend. The coordinator owns all live steps after explicit owner approval.
+Never delete resource group `ama`, enable SQL public access, bypass policy,
+change private endpoints or read a private dataset to perform this migration.
+
+### Configuration and guard boundary
+
+`demoDirectIngress=true` is independent of `allowPublicNetworkAccess`.
+Use `deploymentProfile=development`, `allowPublicNetworkAccess=false` and
+`enablePublicEdge=false`. The guard rejects production, edge coexistence and
+public-backing combinations. Browser authentication is required for serving
+demo workloads; bearer-only proof mode is not a browser demo.
+Default/production behavior is unchanged. The optional production Front Door
+path remains available with its original guards.
+
+The new environment and workload names use a `-demo` suffix on the existing
+workload/environment prefix; **do not change `workload` or `environmentName`**
+to achieve that suffix. Changing the root prefix provisions different SQL,
+storage, identities and other backing services, not a safe replacement.
+For the current prefix the replacement environment is
+`cae-cutover-test-demo`, API `ca-cutover-test-demo-api` and corresponding
+`ca-`/`job-cutover-test-demo-*` workloads. Demo job suffixes are shortened
+to `auth`, `orch`, `audit` and `load` for token renewal, orchestration,
+ledger verification and imports respectively; this keeps names below 32
+characters even at the supported workload/environment input bounds. The
+existing non-demo job names are unchanged. Existing identities, registry,
+SQL database, Key Vault, storage, Foundry and IoT Hub stay private and retain
+their names. The demo environment alone becomes external/public, with HTTPS
+ingress; its separate `snet-aca-demo` delegates to Microsoft.App/environments.
+The separate demo NSG permits Internet TCP 443, not Internet port 80 or
+arbitrary Internet ports. Existing `snet-aca` and its NSG remain unchanged.
+Review address-space conflicts before selecting the proposed
+`10.40.6.0/23` subnet; a template default is not a measured free allocation.
+
+The external environment uses public default-domain DNS, not the old internal
+environment wildcard zone. Keep all service private DNS zones and VNet links.
+EasyAuth must use `NoProxy` (`behindPublicEdge=false`); registration callbacks
+are `https://<demo-app-fqdn>/.auth/login/aad/callback`. Never reuse an edge
+callback as the sole direct callback or trust caller-supplied forwarding hosts.
+The API tag `zava-forward-ingress=direct` selects this path in setup without
+requiring `az afd`, its `cdn` extension or Front Door discovery permissions.
+
+### Owner-reviewed migration sequence
+
+1. Obtain the owner's review and approval of this exact migration, overlap
+   cost, rollback window and future retirement boundary. Reconfirm resource
+   scope `ama`, location/capability/quota checks, vacant subnet range, policy
+   constraints and external workload-profile support. Record approval outside
+   this repository's secret-free evidence; no approval is inferred here.
+2. Inventory the old environment, every app/job and trigger, current revisions,
+   image digests, identities, environment variables, secret **reference names**,
+   auth configuration, SQL persistence baseline and private DNS links. Keep
+   IDs, roster, tokens and private config exports outside Git. Never export
+   secret values. Confirm workload names are unique within `ama`: apps/jobs
+   cannot move to another environment and `internal` is immutable.
+3. Review a coordinator-generated incremental what-if using the same existing
+   root prefix and all retained private parameters, adding the explicit demo
+   flags. Start with `deployApplications=false`,
+   `deployEnvironmentOnly=true`, `deployBackgroundWorkloads=false`.
+   Expected delta: demo subnet/NSG and external environment/diagnostics only,
+   plus reviewed subnet-list reconciliation. Reject deletion, replacement,
+   public backing-service changes, identity recreation, unrelated drift or
+   unreviewed model/resource creation. Main reconciles the whole stack: these
+   flags are not a workload-only deployment or a deletion instruction.
+4. Only after approval, let the coordinator create that environment and subnet.
+   Keep the original environment/apps/jobs serving. Check public default-domain
+   resolution, TLS, VNet integration and private DNS from the new environment.
+   Confirm SQL/Key Vault/storage/registry/Foundry/IoT public network access is
+   still Disabled. A public browser cannot test those private data paths.
+5. Check each reused user-assigned identity, registry AcrPull, vault secret
+   access, blob/queue grants, SQL contained-user SID/grants and Foundry roles
+   against the existing matrix. Reuse SQL persistence; never reinitialize or
+   reseed the database. Managed identity attachment, not just matching labels,
+   must agree. Operator RG access is not tenant or vault data-plane authority.
+6. Stage the replacement API only: `deployApplications=true`,
+   `deployBackgroundWorkloads=false`, explicit retained digests for **all**
+   image parameters, browser registration and credential reference. Keep the
+   old background generation authoritative. Omission of background resources
+   in an incremental template does not stop any already-created resources:
+   staging must be a fresh generation or independently verified stopped.
+   Configure the direct registration using the setup procedure below from an
+   approved private-network path when vault access is needed.
+7. Perform the parity checklist and public/identity-backed acceptance below.
+   Before any switch of consumers, pause producers and new claims, drain
+   running jobs/messages or explicitly disposition them, and verify only one
+   generation can consume/publish. Activate the new background generation
+   with `deployBackgroundWorkloads=true` only after the old one is stopped
+   and its in-flight work accounted for. Do not start an import twice.
+8. Update demo links to the new app FQDN after successful human sign-in and
+   recorded owner cut-over approval. No custom DNS purchase is necessary.
+   If an existing custom domain is retained, separately review its binding,
+   certificate, verification records, TTL and rollback; do not move service
+   private DNS or overwrite old callback URLs.
+9. Retain the old stack and edge through the agreed rollback window. Retirement
+   is a **second explicit owner authorization**, after all live criterion d
+   checks pass, not a consequence of a successful ARM deployment or unit test.
+
+### Image, configuration and trigger parity checklist
+
+| Surface | Required coordinator comparison |
+| --- | --- |
+| Images | Exact immutable digests for API, agents, orchestrator, import and maintenance commands; src image context, no placeholders or implicit latest tags |
+| API configuration | SQL server/database and MI auth; blob/queue endpoints; document store; tile URL/attribution; trusted-proxy mode; role map; law-store settings; AI endpoint/deployments; release/assistance gates and disabled defaults |
+| Authentication | Real registration and tenant-specific issuer/audiences; retained existing callbacks; app-FQDN callback; NoProxy; HTTPS; public exclusions; browser secret/token-store references; assignment-required enterprise app |
+| Staff and authorization | Authorized private roster, exactly one effective staff role, scoped SQL bindings, fresh staff cache/restart, unknown/wrong-role denial; no fabricated people or runtime directory-management rights |
+| Private dependencies | Same identities, database and grants, private endpoints and VNet DNS links, registry image pulls, vault references, blob/queue/Foundry reachability; all public network access Disabled |
+| Operations | Probes/scale, logs/diagnostic destination, alerts for new names, job commands/schedules, retries/timeouts, token SAS rotation and expiry; no omitted secrets reconstructed from redacted readback |
+
+| Consumer/producer | Inactive staging and activation/drain boundary |
+| --- | --- |
+| Agents queue-scaled app | Omit with `deployBackgroundWorkloads=false`; minReplicas=0 is not disabled KEDA. Pause producers, stop old claims and account for in-flight messages before enabling the new worker |
+| Orchestrator scheduled job | Omit during staging; suspend old trigger and wait for/disposition running executions before enabling exactly one new schedule |
+| Import event job | Omit during staging; retain queue contents, stop old trigger and finish/disposition each execution; no duplicate import/replay without reviewed idempotency evidence |
+| Auth renewal job | Omit during staging; keep the old renewal responsible for the shared token store until ownership switches, with expiry headroom and no two active schedules |
+| Ledger verification/publishing job | Omit during staging; retain old verified publication until new job is ready; preserve immutable blobs and checkpoints, then switch one schedule |
+| API or other configured producers | Compare runtime gates and pending work; pause discretionary background production for the drain, preserve human/manual safety routes and do not activate new AI authority |
+
+These are migration controls, not evidence that placeholder queue workers
+implement their intended contracts. Existing #144 and feature gaps remain.
+
+### Direct Entra setup and acceptance
+
+After owner authorization, explicit selection avoids ambiguity with the retained
+old API:
+
+```bash
+python3 infra/scripts/setup-entra.py --direct-ingress \
+  --container-app ca-cutover-test-demo-api --dry-run
+python3 infra/scripts/setup-entra.py --direct-ingress \
+  --container-app ca-cutover-test-demo-api --check
+```
+
+The direct tag also selects direct mode automatically. Use the authorized
+isolated login/profile and private roster workflow from
+[authentication initialization](#post-deployment-api-authentication-initialization).
+Actual initialization is a live mutation, intentionally not run here.
+If inherited bearer-only settings are intentional, do not silently replace
+them; direct browser initialization requires explicit browser enablement and
+valid registration/credential prerequisites. Direct mode uses only the app
+FQDN; it does not discover or require the retained Front Door.
+Setup adds missing registration/enterprise app/manifest roles and roster
+assignments, enforces assignment-required sign-in and runtime staff-role
+checks, and preserves unrelated callbacks/roles/configuration.
+SQL staff initialization and serving-replica reload remain separate in-VNet
+steps, not implied by directory role assignment.
+
+For an owner-authorized browser-mode conversion, add `--enable-browser`.
+If the credential is missing, explicitly add `--create-secret --secret-store
+keyvault --vault <existing-vault-name>` from the approved private-network
+operator path; setup does not open the vault. Retain its resulting secret
+reference on subsequent Bicep redeploys. Use the existing tenant authority/
+roster instructions, not Azure RG ownership as a substitute for Entra consent.
+
+Run the strict public probes from an HTTPS-capable client, using installed
+src distributions:
+
+```bash
+python3 infra/scripts/private-cutover-proof.py smoke --direct-ingress \
+  --base-url https://<demo-app-fqdn>
+# Optional role-denial evidence; never put a session value on the command line.
+python3 infra/scripts/private-cutover-proof.py smoke --direct-ingress \
+  --base-url https://<demo-app-fqdn> --auth-hops 1 \
+  --wrong-role-session "$HOME/.azure/private/wrong-role.json"
+```
+
+The optional session file must be owner-owned mode `0600`, outside the
+repository, with exactly one `cookie` or `token` JSON field. It supplies an
+already authenticated **Contractor** session with provisioned staff binding;
+it does not manufacture roles or authenticate a person. The probe first
+requires `/api/me` 200, then `/api/stats` 403: Contractor may read its own
+account but cannot read staff-wide statistics. An administrator is not the
+wrong-role fixture for this endpoint. Missing/unknown staff or invalid sessions
+are authentication-denial checks, not proof of role authorization.
+Default `--auth-hops 0` requires the direct Microsoft login redirect. Where
+EasyAuth emits a local login step, `--auth-hops 1` permits one individually
+validated same-origin `/.auth/` hop; the bounded maximum is five. No automatic
+redirect following or external credential forwarding is allowed.
+JSON Lines contain sanitized check/status/outcome fields. Any status/host
+mismatch or network/TLS failure exits nonzero. Without a supplied role session,
+the role check is explicitly Not run even when transport checks succeed.
+Omitting `--direct-ingress` preserves private smoke's private-DNS requirement;
+do not use public mode for SQL initialization or private persistence proof.
+
+Probe results must retain only check names/status/outcomes, never credentials,
+claims, identity IDs, full login URLs, callback query strings or roster data.
+Require health and welcome 200, native and browser JSON API 401, malformed
+bearer/forged-header denial, and browser navigation 302 to HTTPS
+`login.microsoftonline.com`. A browser API 302 is the known #350 gap, **not**
+a 401 pass. Real users must complete callback/session, assigned-role access,
+wrong-role/unknown-staff denial and logout/account switching. Validate actual
+SQL state before/after an API restart and bounded authorized AI calls with
+provider/model/usage evidence. Missing role credentials mean Not run, not Pass;
+fixture-based role tests are not real Entra acceptance.
+
+### Rollback and selective retirement
+
+On TLS, authentication, authorization, persistence or private-network failure,
+stop the new generation's producers/triggers, drain/disposition executions and
+prevent new claims. Restore old triggers only after the new consumers are
+inactive; return links/custom DNS to the old entry if it is still verified.
+The old edge's historical redirect did not prove usable tenant sign-in:
+otherwise mark demo unavailable while correcting it, never grant anonymous
+access. Keep both callback sets until the rollback window ends. Do not restore
+a stale database snapshot over shared live writes or reseed to hide a failure.
+No automatic deletion or network relaxation is a rollback.
+
+After d and the separate retirement approval, the coordinator inventories
+dependencies again, disables the old edge route/endpoint, then removes only
+the approved `afd-cutover-test` profile/children and dedicated WAF association/
+policy, diagnostics and its managed Private Link connection when no longer
+referenced. Verify no shared domain/policy/connection is removed. Stop and
+remove only old apps/jobs and explicitly approved proof jobs after draining,
+then remove `cae-cutover-test` when no workloads or endpoint dependencies
+remain. Retire its **environment-specific** private DNS zone/link and old
+delegated subnet/NSG only after confirming they are unused and future main
+reconciliation will not recreate them. That last IaC retirement delta needs a
+separately reviewed change; this implementation intentionally retains them.
+Never remove the VNet, service private DNS/PEs, reused identities/RBAC, SQL,
+registry, vault, storage or Foundry. Never delete `ama`. Record terminal
+resource checks and acceptance without IDs or secrets.
+
+### Cost proposal, not a quote or spending approval
+
+Microsoft's [billing guidance](https://learn.microsoft.com/en-us/azure/container-apps/billing)
+and [pricing page](https://azure.microsoft.com/en-us/pricing/details/container-apps/)
+were retrieved on 2026-10-16. A Consumption-only environment has no standing
+environment management charge **by itself**; running replicas/jobs, requests,
+networking and logs still cost money. Private endpoints or planned maintenance
+can add the Dedicated Plan Management meter even on Consumption. No new
+environment private endpoint or planned-maintenance feature is proposed.
+Existing backing private endpoints remain and still incur their own charges;
+the retained old edge/environment can retain management/Private Link costs.
+
+The API retains two 0.5-vCPU/1-GiB minimum replicas: 30 continuously running
+days allocate 2,592,000 vCPU-seconds and 5,184,000 GiB-seconds per generation.
+At **illustrative, unquoted** active rates of USD 0.000024/vCPU-second and
+0.000003/GiB-second that is USD 77.76/month before grants; at illustrative
+idle CPU USD 0.000003 it is USD 23.33/month. Thus plan roughly USD 23-78
+per API generation, USD 47-156 for full-month two-generation overlap, or
+USD 0.78-2.59 per additional day of API overlap. These are sensitivity
+assumptions, not retrieved UK/account prices; the public page returned no
+numeric regional rates. Free subscription grants are shared and not assumed.
+Workers/jobs add their allocated active vCPU/GiB-seconds; inference adds actual
+model token charges under existing authority. No new model deployment is
+authorized.
+
+The coordinator must replace these assumptions with approved region/currency/
+agreement rates and estimate new logs (GiB times ingestion/retention rate),
+public IP/VNet/data egress, job duration, request volume and overlap duration
+before c. Reused SQL/registry/storage/Key Vault/Foundry/PE baseline costs
+continue, not zero. Front Door/WAF/Private Link savings begin only after
+authorized retirement and invoice verification; no exact savings or total
+budget compliance is proved offline.
+
+### Historical MVP comparison
+
+History-only inspection of commit `15e8158` shows external app ingress,
+EasyAuth `RedirectToLoginPage`, public welcome exclusions and callbacks built
+from the app FQDN. Environment exposure used the broad
+`allowPublicNetworkAccess` switch, also affecting backing services. The prior
+working sign-in reports are historical, not evidence that the new tenant
+registration exists or direct src sign-in works. The new explicit demo mode
+reuses the useful FQDN/browser pattern without copying obsolete public-data
+configuration, old image names, datasets or tenant identifiers. No code was
+restored from `mvp/`.
+
 ## Public browser continuation (2026-10-16, #344)
+
+The #360 direct-demo decision above supersedes this edge choice for the demo.
+Keep these observations as history and the recipe as an optional private-origin
+edge path; they are not observations of the new direct configuration.
 
 Refs #344. Refs #143. Refs #200. The owner authorized public browser access
 again, not public SQL or a policy bypass. The proof environment

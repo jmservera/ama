@@ -96,7 +96,8 @@ class PrivateEndpointCoverageTests(unittest.TestCase):
 
     def test_container_environment_internal_in_production(self) -> None:
         text = (MODULES / "containerapps.bicep").read_text(encoding="utf-8")
-        self.assertIn("internal: !allowPublicNetworkAccess", text)
+        self.assertIn("internal: !externalEnvironment", text)
+        self.assertIn("var externalEnvironment = demoDirectIngress || allowPublicNetworkAccess", text)
 
 
 class PublicEdgeTests(unittest.TestCase):

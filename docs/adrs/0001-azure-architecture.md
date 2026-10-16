@@ -2,7 +2,7 @@
 title: ADR 0001 Azure Architecture for the Zava Forward Demonstrator
 description: Proposed Azure hosting, agent placement, data, model and security architecture for the non-production Zava Forward retrofit workbench demonstrator
 author: AMA programme
-ms.date: 2026-10-15
+ms.date: 2026-10-16
 ms.topic: reference
 ---
 
@@ -74,7 +74,7 @@ assumed.
 
 | Concern | Decision | Rationale |
 |---|---|---|
-| Hosting | Azure Container Apps, VNet-integrated, internal environment | Several small workloads (API, agents, orchestrator, import), queue-driven scale to zero, jobs, per-workload identity and mTLS. App Service would suit one web app but gives weaker per-workload isolation and no native event-driven jobs. Containers keep the design portable (NFR-010) |
+| Hosting | Azure Container Apps, VNet-integrated; internal by default, explicit external synthetic-demo mode per the 2026-10-16 decision below | Several small workloads (API, agents, orchestrator, import), queue-driven scale to zero, jobs, per-workload identity and mTLS. App Service would suit one web app but gives weaker per-workload isolation and no native event-driven jobs. Containers keep the design portable (NFR-010) |
 | Agents | One `agents` Container App scaled by the `agent-tasks` queue (KEDA, 0 to 5) | Bounded task service. Its identity can call Foundry and read and write the task queue, and has no database, blob or Key Vault access. It posts proposals to the API, which validates and stores them |
 | Orchestrator | Container Apps job on a 5 minute schedule | Deterministic, idempotent, checkpointed in SQL through the API. Durable Functions remains an option if replay semantics are needed |
 | Import | Event-triggered Container Apps job on `import-jobs` queue | Writes bad rows to the quarantine container, good rows through its own limited SQL role |
@@ -83,7 +83,25 @@ assumed.
 | Models | Microsoft Foundry account with a project and two deployments, `standard` (gpt-4.1-mini) and `capable` (gpt-4.1) | PRD requires choosing the smallest model that meets task thresholds on held-out cases. The tier per task is configuration, not code. Versions are placeholders pending the evaluation harness |
 | Registry | ACR Premium, private, no admin user, identity pull | Private endpoint support and quarantine and retention policies |
 | Secrets | Key Vault, RBAC, purge protection, private | No secret is needed by default (all access is by managed identity) |
-| Edge | Internal environment only. Front Door Premium with WAF and Private Link is the intended public edge but is not deployed yet | Avoids public exposure of a demonstrator. See open items |
+| Edge | Optional production/private-origin path: Front Door Premium with WAF and Private Link. Synthetic demo: direct Container Apps HTTPS with Entra, owner decision 2026-10-16 | Keeps private backing services without requiring a paid edge for the demo. Historical #344 edge deployment is not direct-demo acceptance |
+
+### Direct synthetic-demo entry decision (2026-10-16)
+
+Refs #360. The owner selects direct Container Apps HTTPS ingress and Entra
+browser sign-in, without Front Door, for the synthetic demo only. Production
+and default isolation remain unchanged. `demoDirectIngress` is separate from
+the broad development public-network switch, which must remain false.
+SQL, vault, registry, storage, Foundry and IoT stay private; no policy bypass.
+A new external Consumption environment in a dedicated subnet and distinctly
+named replacement apps/jobs are needed because the old environment's internal
+setting is immutable and workloads cannot move between environments.
+Reuse identities, data and images; use default-domain callbacks and NoProxy.
+The [migration proposal](../../infra/README.md#direct-demo-ingress-migration-proposal-2026-10-16-360)
+and [acceptance audit](../architecture/cutover-evidence-pack.md#direct-demo-ingress-offline-scope-2026-10-16)
+separate offline implementation from required owner approval, live sign-in,
+SQL/AI proof and separately authorized retirement. No deployment or spending
+approval is implied. Front Door remains an optional production edge, not a
+demo prerequisite.
 
 ## Identities and access
 
@@ -103,7 +121,7 @@ is set). SQL contained users are created with
 
 * Private endpoints for SQL, Blob, Queue, Key Vault, ACR, Foundry and Azure Monitor (AMPLS, private-only), with private DNS zones linked to the VNet.
 * Local authentication disabled on Foundry, Log Analytics, Application Insights and storage shared keys; SQL is Entra-only; ACR admin user off.
-* NSGs deny by default on the private endpoint subnet; the Container Apps subnet only admits Front Door and VNet traffic.
+* NSGs deny by default on the private endpoint subnet; the default Container Apps subnet admits Front Door and VNet traffic. Explicit direct-demo mode adds a separate subnet/NSG with Internet TCP 443, without opening backing services.
 * Container Apps environment mTLS, HTTPS-only ingress, health probes, single-revision mode, images pulled by identity.
 * Diagnostic settings from every service to one Log Analytics workspace; SQL auditing to Azure Monitor; ledger tables; immutable `audit-archive` blob container.
 * Defender alert policy on SQL, metric alerts for Foundry client errors and SQL CPU to the action group, optional `CanNotDelete` locks.
@@ -423,7 +441,7 @@ Result: the redeploy `warm-dev2` into `ama` (`uksouth`, `allowPublicNetworkAcces
 
 * Approve the retention schedule and resolve how ledger tables and immutable audit storage coexist with erasure.
 * Azure Policy assignments and subscription-level Defender plans: defined in [`infra/governance.bicep`](../../infra/README.md#governance-controls) (policy is audit-only, `DoNotEnforce`, so nothing is blocked; Defender plans stay Free until the owner accepts a cost); EX-001 expires 2026-12-31; Defender cost and any Deny stance remain owner decisions.
-* Add Front Door Premium, WAF and the Private Link origin to the internal environment, plus an Entra app registration, once a public edge is needed.
+* For a production/private-origin public edge, review Front Door Premium, WAF and Private Link plus an Entra app registration. The synthetic demo instead follows the direct-ingress decision above; live acceptance remains unmet.
 * Confirm the Foundry model names, versions, SKUs and quotas in the chosen region, and set `modelDeployments` from the PRD evaluation results.
 * Container hardening (non-root user, read-only root file system, dropped capabilities) is an application image requirement; Container Apps does not expose these settings, so enforce them in the Dockerfile and scan images in CI.
 * Build the application images; the default placeholder image only proves the infrastructure.

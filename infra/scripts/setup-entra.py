@@ -6,6 +6,7 @@ import base64
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -242,13 +243,20 @@ def preflight(operator: Azure) -> None:
         raise SetupError("Install Azure CLI: python3 -m pip install azure-cli; "
                          "Windows: winget install Microsoft.AzureCLI; macOS: brew install azure-cli")
     operator.call(["version"])
+
+
+def require_extension(operator: Azure, name: str) -> None:
     try:
-        operator.call(["extension", "show", "--name", "containerapp"])
+        operator.call(["extension", "show", "--name", name])
     except AzureError:
-        raise SetupError("Install the Container Apps extension in the isolated profile: "
-                         "mkdir -p ~/.azure/zava-entra-init && chmod 700 ~/.azure/zava-entra-init && "
-                         "AZURE_CONFIG_DIR=$HOME/.azure/zava-entra-init az extension add --name containerapp --upgrade. "
-                         "For --tenant-profile, use that private directory instead.") from None
+        profile = shlex.quote(str(operator.extension_directory.parent))
+        extensions = shlex.quote(str(operator.extension_directory))
+        raise SetupError(
+            f"Install missing {name} extension in the isolated extension directory: "
+            f"mkdir -p {profile} {extensions} && chmod 700 {profile} {extensions} && "
+            f"AZURE_CONFIG_DIR={profile} AZURE_EXTENSION_DIR={extensions} "
+            f"az extension add --name {name} --upgrade. Then rerun setup."
+        ) from None
 
 
 def token_permissions(cli: Azure, tenant: str | None = None) -> set[str]:
@@ -340,7 +348,14 @@ def discover(cli: Azure, args: argparse.Namespace, subscription: str) -> tuple[d
     rows = cli.call(["containerapp", "list", "-g", args.resource_group])
     if not isinstance(rows, list):
         raise SetupError("Container App discovery did not return a list.")
-    app = choose(rows, args.container_app, "api", r"ca-.+-api", "--container-app")
+    direct_rows = [r for r in rows if r.get("tags", {}).get("zava-forward-role") == "api"
+                   and r.get("tags", {}).get("zava-forward-ingress") == "direct"]
+    candidates = rows
+    if not args.container_app and direct_rows:
+        candidates = direct_rows
+    app = choose(candidates, args.container_app, "api", r"ca-.+-api", "--container-app")
+    args.direct_ingress = (
+        args.direct_ingress or app.get("tags", {}).get("zava-forward-ingress") == "direct")
     name = app["name"]
     app = cli.call(["containerapp", "show", "-g", args.resource_group, "-n", name])
     if not isinstance(app, dict):
@@ -353,6 +368,29 @@ def discover(cli: Azure, args: argparse.Namespace, subscription: str) -> tuple[d
         raise SetupError("API has no ingress hostname; deploy the API first.")
     app_url = origin("https://" + fqdn)
     urls = {app_url}
+    if args.direct_ingress:
+        if args.edge_profile:
+            raise SetupError("--direct-ingress cannot use --edge-profile; select one ingress mode.")
+        properties = app.get("properties", {})
+        ingress = properties.get("configuration", {}).get("ingress", {})
+        environment_id = properties.get("environmentId") or properties.get("managedEnvironmentId")
+        prefix = (f"/subscriptions/{subscription}/resourceGroups/{args.resource_group}"
+                  "/providers/Microsoft.App/managedEnvironments/")
+        if (ingress.get("external") is not True or not isinstance(environment_id, str)
+                or not environment_id.lower().startswith(prefix.lower())
+                or not re.fullmatch(r"[A-Za-z0-9_-]+", environment_id[len(prefix):])):
+            raise SetupError(
+                "Direct ingress requires external API ingress in an environment in ama.")
+        environment = cli.rest(ARM + environment_id + f"?api-version={API_VERSION}")
+        vnet = environment.get("properties", {}).get("vnetConfiguration") or {}
+        if vnet.get("internal") is not False:
+            raise SetupError(
+                "Direct ingress requires a verified external Container Apps environment.")
+        if args.public_url and origin(args.public_url) != app_url:
+            raise SetupError("Direct public URL must match the selected API ingress FQDN.")
+        print(f"Selected direct API: {label(name)}; one API FQDN callback origin.")
+        return app, [app_url]
+    require_extension(cli, "cdn")
     profiles = cli.call(["afd", "profile", "list", "-g", args.resource_group])
     if not isinstance(profiles, list):
         raise SetupError("Front Door discovery did not return a list.")
@@ -605,7 +643,7 @@ def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration
             and any(s["name"] == existing_ref for s in secrets)):
         return existing_ref, False
     action = (auth.get("globalValidation") or {}).get("unauthenticatedClientAction")
-    if action == "Return401" and not args.create_secret:
+    if action == "Return401" and not args.create_secret and not args.enable_browser:
         return None, False
     stored = any(s["name"] == secret_name for s in secrets)
     credentials = [c for c in registration.get("passwordCredentials", []) if c.get("displayName") == secret_name]
@@ -687,12 +725,15 @@ def aad_registration(auth: dict[str, Any]) -> dict[str, Any]:
 
 
 def auth_patch(current: dict[str, Any], client: str, tenant: str, urls: list[str],
-               secret: str | None, bearer: bool) -> dict[str, Any]:
+               secret: str | None, bearer: bool, *, direct: bool = False,
+               enable_browser: bool = False) -> dict[str, Any]:
     desired = json.loads(json.dumps(current))
     desired["platform"] = {**(desired.get("platform") or {}), "enabled": True}
     http = dict(desired.get("httpSettings") or {})
     http["requireHttps"] = True
-    if ((any(".azurefd.net" in url for url in urls) or len(urls) > 1)
+    if direct:
+        http["forwardProxy"] = {"convention": "NoProxy"}
+    elif ((any(".azurefd.net" in url for url in urls) or len(urls) > 1)
             and (http.get("forwardProxy") or {}).get("convention") != "Custom"):
         http["forwardProxy"] = {"convention": "Standard"}
     desired["httpSettings"] = http
@@ -712,7 +753,8 @@ def auth_patch(current: dict[str, Any], client: str, tenant: str, urls: list[str
     validation = dict(desired.get("globalValidation") or {})
     if not current.get("globalValidation"):
         validation["excludedPaths"] = ["/healthz", "/readyz", "/", "/welcome.html", "/style.css", "/zava-logo.png", "/sign-in"]
-    if bearer or validation.get("unauthenticatedClientAction") in (None, "AllowAnonymous"):
+    if (bearer or enable_browser
+            or validation.get("unauthenticatedClientAction") in (None, "AllowAnonymous")):
         validation.update(unauthenticatedClientAction="Return401" if bearer else "RedirectToLoginPage",
                           redirectToProvider="azureactivedirectory")
     desired["globalValidation"] = validation
@@ -771,6 +813,7 @@ def setup(args: argparse.Namespace) -> int:
     print("1/6 Checking Python, Azure CLI and Container Apps extension.")
     operator = Azure(operator_profile, extension_directory=args.tenant_profile / "cliextensions")
     preflight(operator)
+    require_extension(operator, "containerapp")
     print("2/6 Checking login, tenant binding, network and Graph access.")
     cli, graph, tenant, subscription = contexts(args, operator)
     manifest = json.loads(MANIFEST.read_text())
@@ -788,6 +831,13 @@ def setup(args: argparse.Namespace) -> int:
             if error.kind != "not-found":
                 raise
             current_auth = {}
+        action = (current_auth.get("globalValidation") or {}).get("unauthenticatedClientAction")
+        if (args.direct_ingress and not args.bearer_only and not args.enable_browser
+                and action == "Return401"):
+            raise SetupError(
+                "Direct API inherited Return401. Review browser activation and rerun with "
+                "--enable-browser (plus --create-secret if missing), or explicitly "
+                "--bearer-only to preserve service-only access.")
         configured = aad_registration(current_auth).get("clientId")
         resolved_roster = resolve_roster(graph, roster)
         print("4/6 Reconciling application registration, callback URLs and enterprise app.")
@@ -856,12 +906,14 @@ def setup(args: argparse.Namespace) -> int:
             drift += int(changed)
             service_mode = args.bearer_only or (
                 (current_auth.get("globalValidation") or {}).get("unauthenticatedClientAction") == "Return401"
-                and not args.create_secret)
+                and not args.create_secret and not args.enable_browser)
             if secret is None and not service_mode:
                 remaining.append("Browser credential missing: rerun with --create-secret "
                                  "(Key Vault default), or explicitly --create-secret --secret-store app.")
             else:
-                desired = auth_patch(current_auth, object_id(reg["appId"]), tenant, urls, secret, service_mode)
+                desired = auth_patch(
+                    current_auth, object_id(reg["appId"]), tenant, urls, secret, service_mode,
+                    direct=args.direct_ingress, enable_browser=args.enable_browser)
                 if desired.get("globalValidation", {}).get("unauthenticatedClientAction") == "Return401":
                     remaining.append("Bearer-only service action retained; browser sign-in still needs "
                                      "a valid credential and human-reviewed browser configuration.")
@@ -927,6 +979,8 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("-g", "--resource-group", default="ama")
     result.add_argument("-n", "--container-app")
     result.add_argument("--edge-profile")
+    result.add_argument("--direct-ingress", action="store_true",
+                        help="Use only the verified external API FQDN; never discover Front Door")
     result.add_argument("--public-url", help="Verify this HTTPS origin is linked to the selected API")
     result.add_argument("--registration-name", default="zava-forward-api")
     result.add_argument("--client-id", type=object_id, help="Explicit intended registration; never printed")
@@ -941,6 +995,8 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--vault", help="Key Vault name in ama")
     result.add_argument("--vault-identity", help="Key Vault-enabled managed identity already attached to the API")
     result.add_argument("--bearer-only", action="store_true", help="Explicit secretless service-test mode, not browser acceptance")
+    result.add_argument("--enable-browser", action="store_true",
+                        help="Explicitly replace Return401 with credential-backed browser login")
     result.add_argument("--account-photo", action="store_true", help="Merge delegated User.Read and poll human admin consent")
     result.add_argument("--wait-seconds", type=int, default=300, help="Bounded human-consent polling, 0 to report only")
     return result
@@ -955,6 +1011,8 @@ def main(argv: list[str] | None = None) -> int:
             raise SetupError("--check/--dry-run never log in; run --login separately.")
         if args.create_secret and args.bearer_only:
             raise SetupError("--create-secret and --bearer-only select different modes; use one.")
+        if args.enable_browser and args.bearer_only:
+            raise SetupError("--enable-browser and --bearer-only select different modes; use one.")
         return setup(args)
     except AzureError as error:
         if error.kind in ("permission", "login"):

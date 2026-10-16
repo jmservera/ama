@@ -1,10 +1,14 @@
 """Offline safety and exact-outcome contracts for the in-VNet proof runner."""
 
 import importlib.util
+import io
 import json
 import sys
 import tempfile
+import threading
 import unittest
+from contextlib import redirect_stdout
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -165,6 +169,292 @@ class PrivateProofTests(unittest.TestCase):
         ):
             self.assertEqual(proof.main(), 1)
             self.assertNotIn("secret-token", str(emit.call_args))
+
+    def test_help_retains_successful_exit_without_failed_probe_record(self):
+        output = io.StringIO()
+        with (
+            patch.object(sys, "argv", ["proof", "--help"]),
+            redirect_stdout(output),
+            self.assertRaises(SystemExit) as stopped,
+        ):
+            proof.main()
+        self.assertEqual(stopped.exception.code, 0)
+        self.assertIn("--direct-ingress", output.getvalue())
+        self.assertNotIn('"status": "Failed"', output.getvalue())
+
+
+class DirectProofTests(unittest.TestCase):
+    BASE = "https://fictional.public.azurecontainerapps.io"
+    SECRET = "fictional-private-session-do-not-log"
+
+    def setUp(self):
+        self.responses = {
+            "/healthz": (200, ""),
+            "/": (200, ""),
+            "/welcome.html": (200, ""),
+            "/app": (302, "https://login.microsoftonline.com/fictional/oauth2/authorize?secret=query"),
+        }
+        self.browser_api = 401
+        self.wrong_role = 403
+        self.session_status = 200
+        self.requests: list[tuple[str, dict[str, str]]] = []
+        self.output = io.StringIO()
+        owner = self
+
+        class Handler(BaseHTTPRequestHandler):
+            def do_GET(self):
+                owner.requests.append((self.path, dict(self.headers)))
+                if self.path == "/api/me":
+                    if self.headers.get("Cookie") or self.headers.get("Authorization") == (
+                            "Bearer " + owner.SECRET):
+                        code, location = owner.session_status, ""
+                    else:
+                        browser = "Mozilla" in self.headers.get("User-Agent", "")
+                        code = owner.browser_api if browser else 401
+                        location = "https://hostile.invalid/?credential=never-follow"
+                elif self.path == "/api/stats":
+                    code, location = owner.wrong_role, ""
+                else:
+                    code, location = owner.responses.get(self.path, (404, ""))
+                self.send_response(code)
+                if location:
+                    self.send_header("Location", location)
+                self.end_headers()
+
+            def log_message(self, *_args):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        server_thread = threading.Thread(target=server.serve_forever, daemon=True)
+        server_thread.start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(server_thread.join)
+        self.addCleanup(server.shutdown)
+        self.real_result = proof.http_result
+        self.local = f"http://127.0.0.1:{server.server_port}"
+
+    def result(self, url, headers=None):
+        self.assertTrue(url.startswith(self.BASE + "/"), "Unvalidated redirect was requested")
+        return self.real_result(self.local + url[len(self.BASE):], headers)
+
+    def run_probe(self, **kwargs):
+        with (
+            redirect_stdout(self.output),
+            patch.object(proof, "http_result", side_effect=self.result),
+            patch.object(proof, "private_dns",
+                         side_effect=AssertionError("Private DNS in direct mode")),
+        ):
+            proof.smoke(self.BASE, direct_ingress=True, **kwargs)
+
+    def records(self):
+        return [json.loads(line) for line in self.output.getvalue().splitlines()]
+
+    def test_direct_strict_statuses_and_not_run_is_not_authorization_pass(self):
+        self.run_probe()
+        records = {row["check"]: row for row in self.records()}
+        for name in ("health", "root", "welcome"):
+            self.assertEqual(records[name]["http_status"], 200)
+        for name in ("anonymous_api_denial", "browser_json_api_denial",
+                     "malformed_bearer_denial", "forged_principal_denial"):
+            self.assertEqual(records[name]["http_status"], 401)
+        self.assertEqual(records["wrong_role_denial"]["status"], "Not run")
+        self.assertEqual(records["browser_sign_in"]["status"], "Passed")
+        self.assertNotIn("secret=query", self.output.getvalue())
+        self.assertEqual(len(self.requests), 8)
+        native = [headers for path, headers in self.requests if path == "/api/me"
+                  and headers.get("User-Agent") == "ZavaForwardDirectProbe/1.0"]
+        self.assertEqual(len(native), 1)
+        self.assertEqual(native[0]["Accept"], "application/json")
+
+    def test_browser_api302_health_redirect_and_inexact_statuses_fail(self):
+        for path, code in (("/healthz", 302), ("/", 204), ("/welcome.html", 404)):
+            with self.subTest(path=path):
+                original = self.responses[path]
+                self.responses[path] = (code, "https://hostile.invalid")
+                with self.assertRaises(RuntimeError):
+                    self.run_probe()
+                self.responses[path] = original
+        self.browser_api = 302
+        with self.assertRaises(RuntimeError):
+            self.run_probe()
+        self.assertTrue(any(row["check"] == "browser_json_api_denial"
+                            and row["status"] == "Failed" for row in self.records()))
+        self.assertFalse(any("hostile" in path for path, _ in self.requests))
+
+    def test_redirects_never_automatically_follow_and_hostile_hosts_fail(self):
+        for location in (
+            "https://login.microsoftonline.com.hostile.invalid/authorize",
+            "https://login.microsoftonline.com@hostile.invalid/authorize",
+            "https://hostile.invalid",
+            "//hostile.invalid/.auth/login",
+            "http://login.microsoftonline.com/authorize",
+            "https://login.microsoftonline.com:444/authorize",
+            "https://login.microsoftonline.com/authorize#fragment",
+            "https://[malformed",
+            "/app",
+            "",
+        ):
+            with self.subTest(location=location):
+                self.responses["/app"] = (302, location)
+                self.requests.clear()
+                with self.assertRaises(RuntimeError):
+                    self.run_probe(auth_hops=2)
+                self.assertEqual(len(self.requests), 8)
+        self.responses["/app"] = (301, "https://login.microsoftonline.com/authorize")
+        with self.assertRaises(RuntimeError):
+            self.run_probe()
+
+    def test_same_origin_auth_hops_are_opt_in_individually_checked_and_bounded(self):
+        self.responses["/app"] = (302, "/.auth/login/aad?credential=not-logged")
+        self.responses["/.auth/login/aad?credential=not-logged"] = (
+            302, "https://login.microsoftonline.com/fictional/authorize?client_id=not-logged")
+        with self.assertRaises(RuntimeError):
+            self.run_probe()
+        self.requests.clear()
+        self.run_probe(auth_hops=1)
+        self.assertEqual(len(self.requests), 9)
+        self.assertEqual(self.records()[-1]["same_origin_hops"], 1)
+        self.assertNotIn("not-logged", self.output.getvalue())
+        self.responses["/.auth/login/aad?credential=not-logged"] = (302, "https://hostile.invalid")
+        with self.assertRaises(RuntimeError):
+            self.run_probe(auth_hops=5)
+        self.responses["/.auth/login/aad?credential=not-logged"] = (
+            302, "/.auth/login/aad?credential=not-logged")
+        self.requests.clear()
+        with self.assertRaises(RuntimeError):
+            self.run_probe(auth_hops=2)
+        self.assertEqual(len(self.requests), 10)
+
+    def test_wrong_role_private_cookie_and_token_exact403_no_leakage(self):
+        with tempfile.TemporaryDirectory() as directory:
+            private = Path(directory) / "session.json"
+            with patch.object(proof, "REPO", Path(directory) / "fictional-repository"):
+                for key in ("cookie", "token"):
+                    private.write_text(json.dumps({key: self.SECRET}))
+                    private.chmod(0o600)
+                    self.run_probe(wrong_role_session=private)
+                    row = [r for r in self.records() if r["check"] == "wrong_role_denial"][-1]
+                    self.assertEqual(row["status"], "Passed")
+                    self.assertEqual(row["http_status"], 403)
+                    self.assertTrue(any(path == "/api/stats" for path, _ in self.requests))
+                for code in (200, 302, 401):
+                    self.wrong_role = code
+                    with self.assertRaises(RuntimeError):
+                        self.run_probe(wrong_role_session=private)
+                self.assertNotIn(self.SECRET, self.output.getvalue())
+                self.assertNotIn(str(private), self.output.getvalue())
+
+    def test_wrong_role_probe_requires_authenticated_session_before_role_request(self):
+        with tempfile.TemporaryDirectory() as directory:
+            private = Path(directory) / "session.json"
+            private.write_text(json.dumps({"cookie": self.SECRET}))
+            private.chmod(0o600)
+            self.session_status = 401
+            with patch.object(proof, "REPO", Path(directory) / "fictional-repository"):
+                with self.assertRaisesRegex(RuntimeError, "authenticated Contractor"):
+                    self.run_probe(wrong_role_session=private)
+            self.assertFalse(any(path == "/api/stats" for path, _ in self.requests))
+            self.assertNotIn(self.SECRET, self.output.getvalue())
+
+    def test_real_trusted_provider_router_allows_me_and_denies_contractor_stats(self):
+        import base64
+
+        from zava_forward.api.auth import TrustedProxyProvider
+        from zava_forward.api.server import App, make_handler
+        from zava_forward.core.store import Store
+
+        with tempfile.TemporaryDirectory() as directory:
+            seed = Path(directory) / "seed.json"
+            fixture = proof.fixture()
+            fixture["staff"] = [{
+                "code": "CON-FIXTURE", "name": "Synthetic Contractor",
+                "email": "contractor@example.test", "role": "Contractor",
+                "contractor": "Fictional Ltd", "oid": "synthetic-contractor",
+            }]
+            seed.write_text(json.dumps(fixture))
+            store = Store(str(seed))
+            provider = TrustedProxyProvider(
+                store, {"ZF_ENTRA_TENANT_ID": "synthetic-tenant", "ZF_TRUSTED_PROXY": "1"})
+            server = ThreadingHTTPServer(
+                ("127.0.0.1", 0), make_handler(App(store, provider=provider)))
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            principal = base64.b64encode(json.dumps({
+                "auth_typ": "aad",
+                "claims": [
+                    {"typ": "roles", "val": "ZavaForward.Contractor"},
+                    {"typ": "tid", "val": "synthetic-tenant"},
+                    {"typ": "oid", "val": "synthetic-contractor"},
+                ],
+            }).encode()).decode()
+            headers = {"X-MS-CLIENT-PRINCIPAL": principal}
+            try:
+                base = f"http://127.0.0.1:{server.server_port}"
+                self.assertEqual(self.real_result(base + "/api/me", headers)[0], 200)
+                self.assertEqual(self.real_result(base + "/api/stats", headers)[0], 403)
+                self.assertEqual(self.real_result(base + "/api/me")[0], 401)
+                private = Path(directory) / "session.json"
+                private.write_text(json.dumps({"cookie": self.SECRET}))
+                private.chmod(0o600)
+                fake_result = self.result
+
+                def transport(url, request_headers=None):
+                    if request_headers and request_headers.get("Cookie") == self.SECRET:
+                        return self.real_result(base + url[len(self.BASE):], headers)
+                    return fake_result(url, request_headers)
+
+                with (
+                    patch.object(proof, "REPO", Path(directory) / "fictional-repository"),
+                    patch.object(self, "result", side_effect=transport),
+                ):
+                    self.run_probe(wrong_role_session=private)
+                self.assertNotIn(self.SECRET, self.output.getvalue())
+                self.assertNotIn("synthetic-contractor", self.output.getvalue())
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join()
+
+    def test_private_session_permissions_schema_symlink_repo_and_controls(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            private = root / "session.json"
+            private.write_text(json.dumps({"cookie": self.SECRET}))
+            private.chmod(0o600)
+            with patch.object(proof, "REPO", root):
+                with self.assertRaises(ValueError):
+                    proof.session_headers(private)
+            with patch.object(proof, "REPO", root / "fictional-repository"):
+                private.chmod(0o644)
+                with self.assertRaises(ValueError):
+                    proof.session_headers(private)
+                private.chmod(0o600)
+                link = root / "link.json"
+                link.symlink_to(private)
+                with self.assertRaises(ValueError):
+                    proof.session_headers(link)
+                for data in ({"cookie": "bad\r\nheader"}, {"cookie": "", "token": self.SECRET},
+                             {"token": ""}, ["token"], {"token": 123}):
+                    private.write_text(json.dumps(data))
+                    with self.assertRaises(ValueError):
+                        proof.session_headers(private)
+
+    def test_bad_options_and_session_read_errors_never_log_private_input(self):
+        for arguments in (
+            ["smoke", "--base-url", self.BASE, "--direct-ingress",
+             "--wrong-role-session", "/nonexistent/" + self.SECRET],
+            ["smoke", "--base-url", self.BASE, "--auth-hops", "1"],
+            ["smoke", "--base-url", self.BASE, "--direct-ingress", "--auth-hops", "6"],
+            ["verify", "--direct-ingress"],
+            ["smoke", "--auth-hops", self.SECRET],
+        ):
+            with (
+                patch.object(sys, "argv", ["proof", *arguments]),
+                redirect_stdout(self.output),
+            ):
+                self.assertEqual(proof.main(), 1)
+        self.assertNotIn(self.SECRET, self.output.getvalue())
+        self.assertEqual(self.requests, [])
 
 
 if __name__ == "__main__":

@@ -8,9 +8,11 @@ import subprocess
 import unittest
 from copy import deepcopy
 from functools import reduce
+from ipaddress import IPv4Network
 from itertools import product
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from types import SimpleNamespace
 from typing import Any, ClassVar
 
 INFRA = Path(__file__).resolve().parents[1]
@@ -109,6 +111,10 @@ def resources(template: dict):
 
 def evaluate(expression, parameters: dict, variables: dict):
     """Evaluate the small ARM expression subset used by the guard conditions."""
+    if isinstance(expression, dict):
+        return {key: evaluate(value, parameters, variables) for key, value in expression.items()}
+    if isinstance(expression, list):
+        return [evaluate(value, parameters, variables) for value in expression]
     if not (
         isinstance(expression, str) and expression.startswith("[") and expression.endswith("]")
     ):
@@ -140,6 +146,10 @@ def evaluate(expression, parameters: dict, variables: dict):
         "true": lambda: True,
         "null": lambda: None,
         "format": lambda pattern, *args: pattern.format(*args),
+        "replace": lambda value, old, new: value.replace(old, new),
+        "createArray": lambda *values: list(values),
+        "concat": lambda *values: reduce(lambda left, right: left + right, values),
+        "resourceId": lambda kind, *names: "/fixture/" + kind + "/" + "/".join(names),
     }
     return eval(source, {"__builtins__": {}}, scope)  # noqa: S307 - compiled repository template only
 
@@ -515,13 +525,22 @@ class BicepPolicyTests(unittest.TestCase):
                 matches = [r for r in resources(nested) if r["type"] == kind]
                 self.assertEqual(len(matches), 1, f"{name}: missing/duplicate {kind}")
                 for prop in properties:
-                    self.assertEqual(matches[0]["properties"].get(prop), PUBLIC, f"{name}.{prop}")
+                    expected = (
+                        "[if(variables('externalEnvironment'), 'Enabled', 'Disabled')]"
+                        if name == "containerapps"
+                        else PUBLIC
+                    )
+                    self.assertEqual(matches[0]["properties"].get(prop), expected, f"{name}.{prop}")
         environment = resource(
             module_template(template, "containerapps"), "Microsoft.App/managedEnvironments"
         )
         self.assertEqual(
             environment["properties"]["vnetConfiguration"].get("internal"),
-            "[not(parameters('allowPublicNetworkAccess'))]",
+            "[not(variables('externalEnvironment'))]",
+        )
+        self.assertEqual(
+            module_template(template, "containerapps")["variables"]["externalEnvironment"],
+            "[or(parameters('demoDirectIngress'), parameters('allowPublicNetworkAccess'))]",
         )
         sql = module_template(template, "sql")
         self.assertNotIn("allowPublicNetworkAccess", sql["parameters"])
@@ -602,6 +621,511 @@ class BicepPolicyTests(unittest.TestCase):
         for item in template["resources"]:
             if item["type"] in ("Microsoft.App/containerApps", "Microsoft.App/jobs"):
                 self.assertIn("parameters('deployWorkloads')", item["condition"])
+
+    def assert_demo_guard_controls(self, template: dict) -> None:
+        passed = module(template, "parameter-guard")["properties"]["parameters"]
+        defaults = {
+            name: spec["defaultValue"]
+            for name, spec in template["parameters"].items()
+            if "defaultValue" in spec
+        }
+        for demo, profile, edge, public, apps, env_only, audience, bearer in product(
+            (False, True),
+            ("development", "production"),
+            (False, True),
+            (False, True),
+            (False, True),
+            (False, True),
+            ("", "synthetic-audience"),
+            (False, True),
+        ):
+            values = {
+                **defaults,
+                "demoDirectIngress": demo,
+                "deploymentProfile": profile,
+                "enablePublicEdge": edge,
+                "allowPublicNetworkAccess": public,
+                "deployApplications": apps,
+                "deployEnvironmentOnly": env_only,
+                "entraClientId": audience,
+                "entraBearerOnly": bearer,
+                "regionCheckReference": "synthetic-region-check",
+                "quotaCheckReference": "synthetic-quota-check",
+                "location": "offline-region",
+                "sqlLocation": "offline-region",
+            }
+            expected = set()
+            if demo:
+                if profile != "development":
+                    expected.add("demoRequiresDevelopmentProfile")
+                if edge:
+                    expected.add("demoForbidsPublicEdge")
+                if public:
+                    expected.add("demoRequiresPrivateBackingServices")
+                if apps and (not audience or bearer):
+                    expected.add("demoRequiresBrowserAuthentication")
+            if profile == "production" and public:
+                expected.add("productionProfileForbidsPublicNetworkAccess")
+            if edge and (profile != "production" or public):
+                expected.add("publicEdgeRequiresProductionProfile")
+            if edge and not apps:
+                expected.add("publicEdgeRequiresApplications")
+            if bearer and not audience:
+                expected.add("bearerOnlyRequiresAudience")
+            actual = {
+                name
+                for name, expression in passed.items()
+                if not evaluate(expression, values, template["variables"])["value"]
+            }
+            self.assertEqual(actual, expected, str(values))
+        for name in (
+            "demoRequiresDevelopmentProfile",
+            "demoForbidsPublicEdge",
+            "demoRequiresPrivateBackingServices",
+            "demoRequiresBrowserAuthentication",
+        ):
+            self.assertEqual(self.guard["parameters"][name]["minLength"], 1)
+
+    def test_demo_guard_matrix_including_environment_only_staging(self) -> None:
+        self.assertIs(self.defaults["demoDirectIngress"], False)
+        self.assertIs(self.defaults["deployBackgroundWorkloads"], True)
+        self.assert_demo_guard_controls(self.main)
+
+    def test_demo_guard_bypass_mutations_are_rejected(self) -> None:
+        for name in (
+            "demoRequiresDevelopmentProfile",
+            "demoForbidsPublicEdge",
+            "demoRequiresPrivateBackingServices",
+            "demoRequiresBrowserAuthentication",
+        ):
+            with self.subTest(guard=name):
+                mutated = deepcopy(self.main)
+                module(mutated, "parameter-guard")["properties"]["parameters"][name] = {
+                    "value": "ok"
+                }
+                self.assert_mutation_rejected(self.assert_demo_guard_controls, mutated)
+
+    def test_demo_mode_is_external_with_no_internal_dns_and_direct_auth(self) -> None:
+        apps = module(self.main, "containerapps")
+        passed = apps["properties"]["parameters"]
+        template = apps["properties"]["template"]
+        environment = resource(template, "Microsoft.App/managedEnvironments")
+        dns = next(
+            r for r in template["resources"] if r["type"] == "Microsoft.Resources/deployments"
+        )
+        api = resource(template, "Microsoft.App/containerApps")
+        auth = resource(template, "Microsoft.App/containerApps/authConfigs")
+        for demo, public, edge in product((False, True), repeat=3):
+            values = {
+                **self.defaults,
+                "demoDirectIngress": demo,
+                "allowPublicNetworkAccess": public,
+                "deploymentProfile": "development" if public or demo else "production",
+                "enablePublicEdge": edge,
+                "entraClientId": "synthetic-audience",
+            }
+            nested = {
+                **values,
+                **{
+                    name: evaluate(passed[name], values, self.main["variables"])["value"]
+                    for name in (
+                        "demoDirectIngress",
+                        "allowPublicNetworkAccess",
+                        "behindPublicEdge",
+                    )
+                },
+            }
+            variables = template["variables"]
+            self.assertEqual(
+                evaluate(environment["properties"]["publicNetworkAccess"], nested, variables),
+                "Enabled" if demo or public else "Disabled",
+            )
+            self.assertEqual(
+                evaluate(
+                    environment["properties"]["vnetConfiguration"]["internal"], nested, variables
+                ),
+                not (demo or public),
+            )
+            self.assertEqual(evaluate(dns["condition"], nested, variables), not (demo or public))
+            forwarding = evaluate(
+                auth["properties"]["httpSettings"]["forwardProxy"], nested, variables
+            )
+            self.assertEqual(forwarding["convention"], "Custom" if edge else "NoProxy")
+            if demo and not edge:
+                self.assertFalse(nested["behindPublicEdge"])
+                self.assertEqual(
+                    evaluate(
+                        auth["properties"]["globalValidation"]["unauthenticatedClientAction"],
+                        nested,
+                        variables,
+                    ),
+                    "RedirectToLoginPage",
+                )
+                tags = evaluate(api["tags"], nested, variables)
+                self.assertEqual(tags["zava-forward-ingress"], "direct")
+                self.assertEqual(tags["zava-forward-role"], "api")
+            elif not demo:
+                self.assertNotIn("zava-forward-ingress", evaluate(api["tags"], nested, variables))
+        self.assertEqual(
+            api["properties"]["managedEnvironmentId"],
+            "[resourceId('Microsoft.App/managedEnvironments', "
+            "format('cae-{0}', parameters('prefix')))]",
+        )
+        self.assertIs(api["properties"]["configuration"]["ingress"]["external"], True)
+        self.assertIs(api["properties"]["configuration"]["ingress"]["allowInsecure"], False)
+        self.assertEqual(
+            auth["properties"]["identityProviders"]["azureActiveDirectory"]["validation"][
+                "allowedAudiences"
+            ],
+            "[if(parameters('entraBearerOnly'), createArray(parameters('entraClientId'), "
+            "format('api://{0}', parameters('entraClientId'))), "
+            "createArray(format('api://{0}', parameters('entraClientId'))))]",
+        )
+
+    def test_demo_preserves_private_backing_services_names_and_identity_inputs(self) -> None:
+        demo = {
+            **self.defaults,
+            "demoDirectIngress": True,
+            "deploymentProfile": "development",
+            "entraClientId": "synthetic-audience",
+        }
+        self.assertFalse(
+            evaluate(self.main["variables"]["publicAccess"], demo, self.main["variables"])
+        )
+        for name, kinds in NETWORK_RESOURCES.items():
+            if name == "containerapps":
+                continue
+            passed = module(self.main, name)["properties"]["parameters"]
+            nested = module_template(self.main, name)
+            public = evaluate(passed["allowPublicNetworkAccess"], demo, self.main["variables"])[
+                "value"
+            ]
+            self.assertIs(public, False, name)
+            for kind, properties in kinds.items():
+                item = resource(nested, kind)
+                for prop in properties:
+                    self.assertEqual(
+                        evaluate(
+                            item["properties"][prop], {"allowPublicNetworkAccess": public}, {}
+                        ),
+                        "Disabled",
+                        f"{name}.{prop}",
+                    )
+        self.assertEqual(
+            resource(module_template(self.main, "sql"), "Microsoft.Sql/servers")["properties"][
+                "publicNetworkAccess"
+            ],
+            "Disabled",
+        )
+        for item in self.main["resources"]:
+            if item["type"] != "Microsoft.Resources/deployments" or item["name"] == "containerapps":
+                continue
+            passed = item["properties"]["parameters"]
+            for key in ("name", "prefix"):
+                if key not in passed:
+                    continue
+                # Stable fixture avoids evaluating Azure's resourceGroup()/uniqueString().
+                variables = {**self.main["variables"], "unique": "fixed"}
+                self.assertEqual(
+                    evaluate(passed[key], demo, variables),
+                    evaluate(passed[key], {**demo, "demoDirectIngress": False}, variables),
+                    f"{item['name']}.{key}",
+                )
+        passed = module(self.main, "containerapps")["properties"]["parameters"]
+        for name in ("identityIds", "identityClientIds"):
+            output = "ids" if name == "identityIds" else "clientIds"
+            self.assertEqual(
+                passed[name]["value"],
+                f"[reference(resourceId('Microsoft.Resources/deployments', 'identity'), "
+                f"'2025-04-01').outputs.{output}.value]",
+            )
+        self.assert_endpoint_controls(self.main)
+        self.assert_key_controls(self.main)
+
+    def test_demo_names_are_workload_only_and_reuse_existing_uamis(self) -> None:
+        apps = module_template(self.main, "containerapps")
+        naming = module(self.main, "containerapps")["properties"]["parameters"]["prefix"]
+        items = [
+            r
+            for r in apps["resources"]
+            if r["type"]
+            in (
+                "Microsoft.App/managedEnvironments",
+                "Microsoft.App/containerApps",
+                "Microsoft.App/jobs",
+            )
+        ]
+        original = {
+            "cae-forward-dev",
+            "ca-forward-dev-api",
+            "ca-forward-dev-agents",
+            "job-forward-dev-auth-renewal",
+            "job-forward-dev-orchestrator",
+            "job-forward-dev-ledger-verify",
+            "job-forward-dev-import",
+        }
+        expected = {
+            "cae-forward-dev-demo",
+            "ca-forward-dev-demo-api",
+            "ca-forward-dev-demo-agents",
+            "job-forward-dev-demo-auth",
+            "job-forward-dev-demo-orch",
+            "job-forward-dev-demo-audit",
+            "job-forward-dev-demo-load",
+        }
+        for demo in (False, True):
+            values = {**self.defaults, "demoDirectIngress": demo}
+            prefix = evaluate(naming, values, self.main["variables"])["value"]
+            nested = {
+                "prefix": prefix,
+                "demoDirectIngress": demo,
+                "identityIds": SimpleNamespace(
+                    api="existing-api",
+                    agents="existing-agents",
+                    orchestrator="existing-orchestrator",
+                    import_="existing-import",
+                ),
+                "tokenMaintenanceIdentityId": "existing-token-maintenance",
+            }
+            actual = {evaluate(item["name"], nested, {}) for item in items}
+            self.assertEqual(actual, expected if demo else original)
+            for item in items:
+                if "identity" not in item:
+                    continue
+                identity = item["identity"]
+                self.assertEqual(identity["type"], "UserAssigned")
+                keys = [
+                    evaluate(key.replace(".import", ".import_"), nested, {})
+                    for key in identity["userAssignedIdentities"]
+                ]
+                role = item["properties"]["template"]["containers"][0]["name"]
+                expected_role = {"auth-renewal": "token-maintenance", "ledger-verify": "api"}.get(
+                    role, role
+                )
+                self.assertEqual(keys, ["existing-" + expected_role])
+
+    def test_demo_names_fit_platform_bounds_and_ledger_alerts_match(self) -> None:
+        apps = module_template(self.main, "containerapps")
+        naming = module(self.main, "containerapps")["properties"]["parameters"]["prefix"]
+        jobs = [item for item in apps["resources"] if item["type"] == "Microsoft.App/jobs"]
+        for workload, environment in product(
+            ("abc", "forward", "cutover", "abcdefghij"), ("dev", "test", "pilot")
+        ):
+            with self.subTest(workload=workload, environment=environment):
+                values = {
+                    **self.defaults,
+                    "workload": workload,
+                    "environmentName": environment,
+                    "demoDirectIngress": True,
+                }
+                prefix = evaluate(naming, values, self.main["variables"])["value"]
+                nested = {"prefix": prefix, "demoDirectIngress": True}
+                names = [evaluate(job["name"], nested, {}) for job in jobs]
+                self.assertEqual(len(set(names)), 4)
+                for name in names:
+                    self.assertLess(len(name), 32, name)
+                    self.assertRegex(name, r"^[a-z][a-z0-9-]*[a-z0-9]$")
+                    self.assertIn("-demo-", name)
+                ledger_name = evaluate(
+                    self.main["variables"]["ledgerJobName"], values, self.main["variables"]
+                )
+                self.assertIn(ledger_name, names)
+                for item in self.main["resources"]:
+                    if item["type"] == "Microsoft.Insights/scheduledQueryRules" and (
+                        "ledger-" in item["name"]
+                    ):
+                        query = item["properties"]["criteria"]["allOf"][0]["query"]
+                        self.assertIn(
+                            f'JobName startswith "{ledger_name}"',
+                            evaluate(query, values, self.main["variables"]),
+                        )
+
+    def test_demo_subnet_and_https_nsg_are_conditional_and_non_overlapping(self) -> None:
+        template = module_template(self.main, "network")
+        passed = module(self.main, "network")["properties"]["parameters"]
+        self.assertEqual(
+            passed["demoDirectIngress"], {"value": "[parameters('demoDirectIngress')]"}
+        )
+        defaults = {
+            name: spec["defaultValue"]
+            for name, spec in template["parameters"].items()
+            if "defaultValue" in spec
+        }
+        defaults["prefix"] = "forward-dev"
+        vnet = resource(template, "Microsoft.Network/virtualNetworks")
+        demo_nsg = next(r for r in template["resources"] if "-aca-demo" in r["name"])
+        before = evaluate(
+            vnet["properties"]["subnets"], {**defaults, "demoDirectIngress": False}, {}
+        )
+        after = evaluate(vnet["properties"]["subnets"], {**defaults, "demoDirectIngress": True}, {})
+        self.assertEqual([subnet["name"] for subnet in before], ["snet-aca", "snet-pe"])
+        self.assertEqual(after[:2], before)
+        self.assertEqual(
+            [subnet["name"] for subnet in after], ["snet-aca", "snet-pe", "snet-aca-demo"]
+        )
+        demo_subnet = after[2]["properties"]
+        self.assertEqual(demo_subnet["addressPrefix"], "10.40.6.0/23")
+        for old in before:
+            self.assertFalse(
+                IPv4Network(demo_subnet["addressPrefix"]).overlaps(
+                    IPv4Network(old["properties"]["addressPrefix"])
+                )
+            )
+        self.assertTrue(
+            IPv4Network(demo_subnet["addressPrefix"]).subnet_of(
+                IPv4Network(defaults["vnetAddressPrefix"])
+            )
+        )
+        self.assertEqual(
+            demo_subnet["delegations"][0]["properties"]["serviceName"], "Microsoft.App/environments"
+        )
+        self.assertTrue(
+            demo_subnet["networkSecurityGroup"]["id"].endswith("/nsg-forward-dev-aca-demo")
+        )
+        rules = demo_nsg["properties"]["securityRules"]
+        self.assertEqual(
+            [rule["properties"]["sourceAddressPrefix"] for rule in rules],
+            ["Internet", "VirtualNetwork"],
+        )
+        internet = [
+            rule["properties"]
+            for rule in rules
+            if rule["properties"]["sourceAddressPrefix"] == "Internet"
+        ]
+        self.assertEqual(len(internet), 1)
+        self.assertEqual(
+            {
+                key: internet[0][key]
+                for key in ("direction", "access", "protocol", "destinationPortRange")
+            },
+            {
+                "direction": "Inbound",
+                "access": "Allow",
+                "protocol": "Tcp",
+                "destinationPortRange": "443",
+            },
+        )
+        for demo in (False, True):
+            values = {**defaults, "demoDirectIngress": demo}
+            self.assertEqual(evaluate(demo_nsg["condition"], values, {}), demo)
+            output = evaluate(template["outputs"]["demoAcaSubnetId"]["value"], values, {})
+            self.assertEqual(output.endswith("/vnet-forward-dev/snet-aca-demo"), demo)
+        old_nsg = next(
+            r
+            for r in template["resources"]
+            if r["name"] == "[format('nsg-{0}-aca', parameters('prefix'))]"
+        )
+        self.assertNotIn("condition", old_nsg)
+        self.assertEqual(
+            [
+                r["properties"]["sourceAddressPrefix"]
+                for r in old_nsg["properties"]["securityRules"]
+            ],
+            ["AzureFrontDoor.Backend", "VirtualNetwork"],
+        )
+        subnet_input = module(self.main, "containerapps")["properties"]["parameters"][
+            "infrastructureSubnetId"
+        ]
+        if isinstance(subnet_input, dict):
+            subnet_input = "[createObject('value', " + subnet_input["value"][1:-1] + ")]"
+        for demo in (False, True):
+            expression = subnet_input
+            for output in ("acaSubnetId", "demoAcaSubnetId"):
+                expression = expression.replace(
+                    "reference(resourceId('Microsoft.Resources/deployments', 'network'), "
+                    f"'2025-04-01').outputs.{output}.value",
+                    f"parameters('{output}')",
+                )
+            self.assertEqual(
+                evaluate(
+                    expression,
+                    {
+                        "demoDirectIngress": demo,
+                        "acaSubnetId": "old-subnet",
+                        "demoAcaSubnetId": "demo-subnet",
+                    },
+                    {},
+                )["value"],
+                "demo-subnet" if demo else "old-subnet",
+            )
+
+    def assert_background_staging_controls(self, main: dict) -> None:
+        module_resource = module(main, "containerapps")
+        passed = module_resource["properties"]["parameters"]
+        template = module_resource["properties"]["template"]
+        self.assertEqual(
+            passed["deployBackgroundWorkloads"],
+            {"value": "[parameters('deployBackgroundWorkloads')]"},
+        )
+        self.assertIs(template["parameters"]["deployBackgroundWorkloads"]["defaultValue"], True)
+        consumers = [
+            item
+            for item in template["resources"]
+            if item["type"] in ("Microsoft.App/containerApps", "Microsoft.App/jobs")
+        ]
+        self.assertEqual(len(consumers), 6)
+        for demo, apps, env_only, background, maintenance in product((False, True), repeat=5):
+            values = {
+                **self.defaults,
+                "demoDirectIngress": demo,
+                "deployApplications": apps,
+                "deployEnvironmentOnly": env_only,
+                "deployBackgroundWorkloads": background,
+            }
+            nested = {
+                "deployWorkloads": evaluate(passed["deployWorkloads"], values, main["variables"])[
+                    "value"
+                ],
+                "deployBackgroundWorkloads": evaluate(
+                    passed["deployBackgroundWorkloads"], values, main["variables"]
+                )["value"],
+                "tokenMaintenanceIdentityId": "existing-token-maintenance" if maintenance else "",
+                "prefix": "fixture",
+                "demoDirectIngress": demo,
+            }
+            self.assertEqual(
+                evaluate(module_resource["condition"], values, main["variables"]), apps or env_only
+            )
+            for item in consumers:
+                name = evaluate(item["name"], nested, {})
+                expected = apps and (name.endswith("-api") or background)
+                if item["properties"]["template"]["containers"][0]["name"] == "auth-renewal":
+                    expected = expected and maintenance
+                self.assertEqual(
+                    evaluate(item["condition"], nested, template["variables"]), expected, name
+                )
+            job = evaluate(template["outputs"]["ledgerVerifyJobName"]["value"], nested, {})
+            expected_job = "job-fixture-audit" if demo else "job-fixture-ledger-verify"
+            self.assertEqual(job, expected_job if apps and background else "")
+            for alert in main["resources"]:
+                if (
+                    alert["type"] == "Microsoft.Insights/scheduledQueryRules"
+                    and "ledger-" in alert["name"]
+                ):
+                    self.assertEqual(
+                        evaluate(alert["condition"], values, main["variables"]), apps and background
+                    )
+
+    def test_api_only_staging_omits_all_background_consumers(self) -> None:
+        self.assert_background_staging_controls(self.main)
+
+    def test_staging_rejects_background_condition_bypass_mutations(self) -> None:
+        template = module_template(self.main, "containerapps")
+        for item in template["resources"]:
+            if (
+                item["type"] not in ("Microsoft.App/jobs", "Microsoft.App/containerApps")
+                or "-api" in item["name"]
+            ):
+                continue
+            with self.subTest(resource=item["name"]):
+                mutated = deepcopy(self.main)
+                target = next(
+                    r
+                    for r in module_template(mutated, "containerapps")["resources"]
+                    if r["name"] == item["name"]
+                )
+                target["condition"] = "[parameters('deployWorkloads')]"
+                self.assert_mutation_rejected(self.assert_background_staging_controls, mutated)
 
     def test_bearer_only_keeps_validation_and_omits_browser_secret(self) -> None:
         template = module_template(self.main, "containerapps")

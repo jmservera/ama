@@ -11,6 +11,7 @@ import unittest
 import uuid
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 SPEC = importlib.util.spec_from_file_location(
@@ -31,11 +32,14 @@ FQDN = "api.internal.example.invalid"
 EDGE = "edge.azurefd.net"
 ARM_APP = SETUP.ARM + APP_ID + f"?api-version={SETUP.API_VERSION}"
 AUTH_URL = SETUP.ARM + APP_ID + f"/authConfigs/current?api-version={SETUP.API_VERSION}"
+ENV_ID = (f"/subscriptions/{SUB}/resourceGroups/ama/providers"
+          "/Microsoft.App/managedEnvironments/direct-demo")
+ENV_URL = SETUP.ARM + ENV_ID + f"?api-version={SETUP.API_VERSION}"
 
 
 class FakeAzure:
     def __init__(self):
-        self.app = {
+        self.app: dict[str, Any] = {
             "name": "ca-cutover-test-api", "id": APP_ID,
             "tags": {"zava-forward-role": "api"},
             "identity": {"type": "UserAssigned", "userAssignedIdentities": {"managed-identity": {}}},
@@ -45,7 +49,7 @@ class FakeAzure:
                 "template": {"containers": [{"name": "api", "env": [{"name": "ZF_AUTH", "value": "trusted-proxy"}]}]},
             },
         }
-        self.auth = {
+        self.auth: dict[str, Any] = {
             "platform": {"enabled": True},
             "httpSettings": {"forwardProxy": {"convention": "Standard"}},
             "globalValidation": {"unauthenticatedClientAction": "RedirectToLoginPage",
@@ -58,8 +62,8 @@ class FakeAzure:
             }},
         }
         self.apps = [self.app]
-        self.reg = None
-        self.sp = None
+        self.reg: Any = None
+        self.sp: Any = None
         self.assignments = []
         self.permissions = {"Application.ReadWrite.All", "AppRoleAssignment.ReadWrite.All",
                             "User.Read.All", "GroupMember.Read.All"}
@@ -75,6 +79,8 @@ class FakeAzure:
         self.domains = []
         self.memberships = []
         self.consent = []
+        self.environment: dict[str, Any] = {
+            "properties": {"vnetConfiguration": {"internal": False}}}
 
     def run(self, command, *, env, capture_output, text, timeout, check):
         self.calls.append((command, env))
@@ -133,6 +139,8 @@ class FakeAzure:
         return subprocess.CompletedProcess(command, 0, json.dumps(copy.deepcopy(value)), "")
 
     def rest(self, method, url, body):
+        if url == ENV_URL:
+            return self.environment
         if url == AUTH_URL:
             if method == "PUT":
                 self.auth = copy.deepcopy(body["properties"])
@@ -212,6 +220,7 @@ class SetupTests(unittest.TestCase):
         self.addCleanup(patch.stopall)
         patch.object(SETUP, "PROFILE", self.profile).start()
         patch.object(SETUP, "ROSTER", self.roster).start()
+        patch.object(SETUP, "REPO", self.home / "repository").start()
         patch.object(SETUP.subprocess, "run", side_effect=self.fake.run).start()
         patch.object(SETUP.shutil, "which", return_value="/fake/az").start()
         patch.object(SETUP.time, "sleep").start()
@@ -230,6 +239,125 @@ class SetupTests(unittest.TestCase):
 
     def bootstrap(self):
         self.assertEqual(self.invoke("--create-secret", "--secret-store", "app"), 0, self.output.getvalue())
+
+    def direct(self, *, tagged=True):
+        if tagged:
+            self.fake.app["tags"]["zava-forward-ingress"] = "direct"
+        self.fake.app["properties"]["managedEnvironmentId"] = ENV_ID
+        self.fake.app["properties"]["configuration"]["ingress"]["external"] = True
+
+    def assert_no_edge_calls(self):
+        for command, _env in self.fake.calls:
+            self.assertNotIn("afd", command)
+            self.assertNotIn("cdn", command)
+
+    def test_direct_flag_and_tag_need_no_frontdoor_permissions_or_extension(self):
+        for tagged in (True, False):
+            with self.subTest(tagged=tagged):
+                self.fake = FakeAzure()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                self.direct(tagged=tagged)
+                self.fake.fail = lambda a: a[0] == "afd" or "cdn" in a
+                flags = [] if tagged else ["--direct-ingress"]
+                self.assertEqual(self.invoke(*flags, "--create-secret", "--secret-store", "app"),
+                                 0, self.output.getvalue())
+                self.assertEqual(self.fake.auth["httpSettings"]["forwardProxy"],
+                                 {"convention": "NoProxy"})
+                callbacks = self.fake.reg["web"]["redirectUris"]
+                self.assertEqual(callbacks, [f"https://{FQDN}/.auth/login/aad/callback"])
+                self.assertTrue(self.fake.sp["appRoleAssignmentRequired"])
+                self.assertEqual(len(self.fake.assignments), 1)
+                env = self.fake.app["properties"]["template"]["containers"][0]["env"]
+                self.assertIn({"name": "ZF_ENV", "value": "production"}, env)
+                self.assertIn({"name": "ZF_TRUSTED_PROXY", "value": "1"}, env)
+                writes = len(self.fake.writes)
+                self.assertEqual(self.invoke(*flags), 0, self.output.getvalue())
+                self.assertEqual(self.invoke(*flags, "--check"), 0, self.output.getvalue())
+                self.assertEqual(len(self.fake.writes), writes)
+                self.assert_no_edge_calls()
+
+    def test_direct_prefers_unique_tagged_api_and_rejects_ambiguity(self):
+        self.direct()
+        legacy = copy.deepcopy(self.fake.app)
+        legacy["name"] = "ca-old-api"
+        legacy["tags"].pop("zava-forward-ingress")
+        self.fake.apps = [legacy, self.fake.app]
+        self.assertEqual(self.invoke("--dry-run"), 2, self.output.getvalue())
+        self.assert_no_edge_calls()
+        duplicate = copy.deepcopy(self.fake.app)
+        duplicate["name"] = "ca-second-demo-api"
+        self.fake.apps.append(duplicate)
+        self.assertEqual(self.invoke("--dry-run"), 1)
+        self.assertIn("--container-app", self.output.getvalue())
+        self.assertFalse(self.fake.writes)
+        self.assertEqual(self.invoke("--container-app", self.fake.app["name"], "--dry-run"), 2)
+        self.assert_no_edge_calls()
+
+    def test_direct_guards_environment_origin_and_conflicting_edge(self):
+        self.direct()
+        self.fake.environment["properties"]["vnetConfiguration"]["internal"] = True
+        self.assertEqual(self.invoke(), 1)
+        self.fake.environment["properties"]["vnetConfiguration"]["internal"] = False
+        self.fake.app["properties"]["configuration"]["ingress"]["external"] = False
+        self.assertEqual(self.invoke(), 1)
+        self.fake.app["properties"]["configuration"]["ingress"]["external"] = True
+        self.assertEqual(self.invoke("--public-url", f"https://{EDGE}"), 1)
+        self.assertEqual(self.invoke("--edge-profile", "afd-cutover-test"), 1)
+        self.fake.app["properties"]["managedEnvironmentId"] = "/untrusted/environment"
+        self.assertEqual(self.invoke(), 1)
+        self.assertFalse(self.fake.writes)
+        self.assert_no_edge_calls()
+
+    def test_direct_replaces_stale_proxy_but_retains_registered_callbacks(self):
+        self.bootstrap()
+        callbacks = self.fake.reg["web"]["redirectUris"][:]
+        for convention in ("Standard", "Custom"):
+            with self.subTest(convention=convention):
+                self.direct()
+                self.fake.auth["httpSettings"]["forwardProxy"] = {
+                    "convention": convention, "customHostHeaderName": "untrusted-host",
+                    "customProtoHeaderName": "untrusted-protocol",
+                }
+                self.fake.calls.clear()
+                self.assertEqual(self.invoke(), 0, self.output.getvalue())
+                self.assertEqual(self.fake.auth["httpSettings"]["forwardProxy"],
+                                 {"convention": "NoProxy"})
+                self.assertEqual(self.fake.reg["web"]["redirectUris"], callbacks)
+                self.assert_no_edge_calls()
+
+    def test_direct_return401_requires_explicit_browser_enable_or_bearer(self):
+        self.direct()
+        self.fake.auth["globalValidation"]["unauthenticatedClientAction"] = "Return401"
+        self.assertEqual(self.invoke("--create-secret", "--secret-store", "app"), 1)
+        self.assertFalse(self.fake.writes)
+        self.assertIn("--enable-browser", self.output.getvalue())
+        self.assertEqual(self.invoke("--bearer-only"), 2)
+        self.assertEqual(
+            self.fake.auth["globalValidation"]["unauthenticatedClientAction"], "Return401")
+        self.assertFalse(self.fake.reg["passwordCredentials"])
+        self.assertEqual(
+            self.invoke("--enable-browser", "--create-secret", "--secret-store", "app"), 0)
+        self.assertEqual(
+            self.fake.auth["globalValidation"]["unauthenticatedClientAction"],
+            "RedirectToLoginPage")
+        self.assertEqual(self.invoke(), 0)
+        self.assertEqual(self.invoke("--enable-browser", "--bearer-only"), 1)
+        self.assert_no_edge_calls()
+
+    def test_missing_extensions_diagnose_only_required_isolated_install(self):
+        self.direct()
+        self.fake.fail = lambda a: a[:2] == ["extension", "show"] and "containerapp" in a
+        self.assertEqual(self.invoke(), 1)
+        self.assertIn("--name containerapp --upgrade", self.output.getvalue())
+        self.assertIn("AZURE_EXTENSION_DIR=", self.output.getvalue())
+        self.assertIn(str(self.profile / "cliextensions"), self.output.getvalue())
+        self.assert_no_edge_calls()
+        self.fake.fail = lambda a: a[:2] == ["extension", "show"] and "cdn" in a
+        self.assertEqual(self.invoke("--dry-run"), 2)
+        self.fake.app["tags"].pop("zava-forward-ingress")
+        self.assertEqual(self.invoke("--dry-run"), 1)
+        self.assertIn("--name cdn --upgrade", self.output.getvalue())
+        self.assertFalse(self.fake.writes)
 
     def test_tag_discovery_managed_identity_creation_and_idempotent_rerun(self):
         self.fake.app["name"] = "api-not-a-pattern"
