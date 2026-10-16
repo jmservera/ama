@@ -3929,3 +3929,185 @@ metadata when the knowledge base was created.
   One postimplementation Review ran: Complete execution, Not accepted for full
   #344 acceptance; tenant, browser API and positive-feature findings route to
   #349/#350. No merge or issue-body tick was performed.
+## [2026-10-16] query | Hardened source deployment and honest criterion audit
+
+* Refs #118. Updated the reference index, source/infra READMEs and cut-over
+  evidence pack with all five original criteria and explicit unmet gates.
+* Four local Docker image contracts passed with fail-closed startup, real API
+  health/static delivery and five rejected unsafe launches per image.
+  Existing CI now runs the same harness and retains unsuppressed scan JSON.
+* All four Trivy 0.76.0 scans failed: 61 HIGH and two CRITICAL package findings
+  each, 16 unique CVEs, all without a reported fixed version. No ignore lists,
+  baselines or unfixed-finding exemption was introduced.
+* Compiled Bicep proves six image consumers and the gated Premium/WAF/private
+  origin. Disabled Defender opt-in no longer submits Free pricing resources
+  that could downgrade existing shared-subscription protection.
+* Hosted read-only-root/capability enforcement remains unmet with the current
+  Container Apps schema; new image rollout is blocked, not silently relaxed.
+  No Azure/public deployment, policy bypass, SQL access change, private data
+  read or human approval was performed or inferred. ADR 0005 remains only a
+  synthetic-development acceptance with real owners/sources still a gap.
+
+## [2026-10-16] query | Bounded home-specific cited chat (Refs #214)
+
+* Added the synthetic-only cited lookup, source/fact envelope persistence,
+  current-role retrieval and selected-turn doubt inbox in src/core,
+  src/agents and src/api. Updated their READMEs with the contracts, eight-row
+  acceptance audit, privacy/copy semantics and explicit unmet boundaries.
+* Reused the merged law store, simulated card lifecycle, shared source gates
+  and isolated chat repositories. No legacy code, source snapshots, memory,
+  operational approvals or rule-engine state were changed.
+* Recorded exact cited-answer/refusal development evaluation and a same-source
+  deterministic-card-with-links comparator under src/agents/evals. Context-join
+  value is structural offline evidence, not measured staff time, AI benefit,
+  semantic conflict detection, human review or legal compliance.
+* Owner's 2026-10-16 direction accepts ADR 0005 for synthetic development only;
+  Juan Manuel Servera is the exercise Legal, Compliance and DPO owner.
+  Real sources/delegates/approvals, actual inference, continuing-stock,
+  Azure SQL and operational privacy/retention remain unmet. No issue acceptance
+  checkbox was updated; the coordinator retains merge-time ownership.
+
+## [2026-10-16] query | Environment strategy and parameter checks (Refs #137, Refs #139)
+
+* Updated [infra environments](../../infra/README.md#environments), parameter
+  examples, deployment wrapper and compiled infrastructure tests. Preserved
+  file paths and naming lineage; consolidated environment differences into
+  one table and documented required tag propagation/component exceptions.
+* Current owner direction supersedes the 2026-10-15 pilot region/subscription
+  ownership assertion in the issue comment and README. Both stay open;
+  pilot locations and dated region/quota check references remain placeholders.
+  Historical deployment observations are not current subscription checks.
+* Production remains the default. Development alone disables no controls;
+  only dev explicitly relaxes purge protection and quarantine. Test/pilot
+  keep production protection, all examples keep public networking off, and
+  SQL has no public access switch or firewall in any profile.
+* Added named missing-check/location guards and ama-only wrapper scope.
+  Extended existing issue 139 offline semantic/mutation gates, without new
+  workflow/check names, live Azure operations or invented human approvals.
+  Juan Manuel Servera remains the synthetic exercise Legal/Compliance/DPO
+  owner; ADR 0005 acceptance is development-only, not operational reliance.
+## [2026-10-16] decision | ADR 0005 accepted for synthetic development only (Refs #209)
+
+* Updated [ADR 0005](../adrs/0005-regulatory-compliance-assistant.md) to
+  record Juan Manuel Servera's 2026-10-16 acceptance for synthetic development,
+  not operational approval. Preserved the 2026-10-15 fixture safeguards and
+  added decision routing to the [knowledge-base index](./README.md).
+* Compared no assistant, rule cards/law store without chat, and the full
+  assistant with chat. Accepted measured value over deterministic cards with
+  provision links as the chat ship test; no measured pass is claimed.
+* Made retrieve, compare, cite, flag and route the explicit authority boundary,
+  with prohibited actions and human/resident decision rights retained.
+  Recorded Juan Manuel Servera as exercise Legal, Compliance and DPO owner
+  for simulated reviews only, without waiving author/approver separation.
+* Real company owners/delegations and binding grant awards, contracts and
+  leases remain unverified before operational reliance. Search and monitoring
+  costs are explicitly unknown; paid deployment, actual processing, real
+  legal approval and benefit evidence are not authorized or proved here.
+
+## [2026-10-16] query | One-command Entra setup and public-edge discovery (Refs #351, Refs #344)
+
+* Added `infra/scripts/setup-entra.py` and routed the old auth initializer CLI
+  to it. The tool discovers the ama API/linked edge, preserves existing
+  redirects and roles, provisions missing registration/enterprise app,
+  reconciles explicit private user/group role mappings and wires auth.
+* Updated the [infra guide](../../infra/README.md#api-registration-management-with-the-existing-m365-session)
+  and [knowledge index](./README.md) with isolated device login, fictional
+  roster schema, human consent/authority, optional private secret storage and
+  interrupted-credential recovery. Added minimal API/edge discovery tags and
+  a browser secret-name parameter for later declarative redeployments.
+* Read the unpublished #344 branch and pending additive infra changes without
+  modifying them. Origin-linked edge discovery and preservation of auth
+  exclusions, token storage and bearer/browser action support both designs.
+* Evidence is offline mocked-az testing, not a tenant write, private roster
+  read, successful browser sign-in or operational approval. Private-network
+  SQL staff binding/restart, actual admin consent and human acceptance remain
+  separate gates. No private dataset or live Entra identifier was recorded.
+## [2026-10-16] implementation | Regulatory security, privacy and audit (Refs #217)
+
+* Added separate trusted RegulatoryChat capability and matching local Entra
+  manifest/script declarations alongside RuleAuthor and RuleOwner. Direct and
+  generic regulatory-thread access deny without the capability; current token
+  roles cannot regain wider hazard access from the staff register.
+* Added metadata-only own-role retention review using existing chat settings,
+  explicit unknown source/card/check/alert/audit periods and no deletion or DPO
+  approval. SQL turn/referral audit now commits with messages/receipts; JSON
+  retains its separate-file atomicity limitation. Significant-decision checks
+  require recorded reasons, not just an evidence ID.
+* Extended the [draft DPIA for DPO review](./research/chat-memory-dpia.md)
+  with regulatory data flows, risks, rights/hold questions and unchecked human
+  gates. Juan Manuel Servera remains the exercise Legal, Compliance and DPO
+  owner; DPIA completion and real retention periods remain unmet.
+* Updated [API acceptance evidence](../../src/api/README.md#regulatory-security-privacy-and-audit-217),
+  [core controls](../../src/core/README.md#regulatory-privacy-and-audit-217),
+  [infra role declaration](../../infra/README.md#regulatory-assistant-capability-roles-217)
+  and index. Synthetic local tests, lint/type checks and loopback HTTP only;
+  no actual staff/resident data, Azure/tenant changes, model call or operational
+  legal approval. Issue checkboxes remain for merge-time coordination.
+## [2026-10-16] query | PR 347 deployment hardening review corrections
+
+* Refs #118. Merged origin/main into the existing topic branch and preserved
+  both append-only log histories. Updated the reference index, source/infra
+  READMEs and [criterion audit](../architecture/cutover-evidence-pack.md#deployment-hardening-audit-118-2026-10-16).
+* Removed the shipped fail-closed ENTRYPOINT guard and its two maintenance job
+  command additions so images can start on Container Apps. UID/GID 10001 stays.
+  Docker runtime controls are enforced and probed in local/CI launch contracts;
+  hardened and plain non-root application startup pass. Hosted enforcement
+  remains Partial, not silently treated as fulfilled.
+* Latest same-tag Python base digest is unchanged. Four no-cache builds reran
+  apt upgrade with zero available upgrades. Fresh before/after scans each show
+  61 HIGH/two CRITICAL unfixed package findings per image, zero reduction.
+  Owner-directed scanner ignore-unfixed true gates only fixable findings;
+  separate full/unfixed-inclusive JSON reports remain uploaded and visible.
+  No ignore lists, baselines or vulnerability-specific suppressions.
+* All five local project suites, Ruff and mypy pass; 130 infra tests, every
+  Bicep build/lint, four Docker/application contracts and workflow syntax pass.
+  Corrected step-time absolute CI fixture paths after matrix-time workspace
+  expansion caused API/orchestrator import failures.
+* No public edge changes, Azure execution, policy bypass, SQL public access
+  change, private-data read or invented approvals. ADR 0005 remains synthetic
+  development only; real owners/sources are still a gap. Issue checkboxes stay
+  unchanged; the same PR stays draft until green CI is verified.
+
+## [2026-10-16] query | Integrated PR 347 validation and publication evidence
+
+* Refs #118. Concurrent main advanced while CI ran. Merged it again without
+  rewriting history and retained both log histories verbatim. Preserved new
+  agents/core test fixtures in the step-time absolute CI configuration.
+* Repeated full local validation: 517 core, 553 API, 77 agents, 22 orchestrator
+  and 39 importer tests pass, 111 opt-in skips total; all Ruff/format/mypy and
+  130 infra tests pass. Four integrated Docker builds and hardened/plain
+  startup contracts pass, including real API health/PNG.
+* Same-DB integrated image scans still have 61 HIGH/two CRITICAL unfixed
+  findings per image, zero fixable findings. Earlier uploaded CI artifacts
+  were downloaded and checked, not merely assumed to exist.
+* All 11 checks pass at integrated source candidate 8142553 (source CI
+  38936437239, API/SQL CI 38936437236, validation 38936437380).
+  An earlier browser navigation timeout passed the full local harness unchanged
+  and its CI rerun; no test bypass or speculative application change.
+* Final documentation/RPI closeout retains identical source/infra/workflows.
+  Existing PR ready status requires all latest-head checks green. Hosted
+  hardening and other unmet criteria remain Partial; owner review and all
+  operational/legal/consent/safety/financial approvals remain separate.
+
+## [2026-10-16] implementation | Entra setup review findings and infra CI repair (Refs #351)
+
+* Merged current main into the existing setup topic without rewriting history;
+  retained both sides of the append-only log conflict. Read pending public-edge
+  changes without editing that branch; setup preserves its Custom forwarded
+  headers and supports the legacy CLI's delegated `--public-url`.
+* Moved planned effective user/group role-conflict rejection before any
+  registration/enterprise-app writes. Added selected-vault metadata-only
+  preflight before one-time credentials and final provisioning checks even
+  for converged runtime values. No secret values are read by the vault probe.
+* Reproduced the failing infra suite in an isolated pip venv with editable
+  source distributions; repaired the parameterized secret-inventory assertion
+  and the compiled-policy test's CI formatting. All 177 infra tests, all
+  template build/lint checks, workflow static checks, setup mypy and both
+  local CLI help launches pass. Each review safeguard's behavioral test fails
+  when its fix is removed in memory.
+* Updated the [infra guide](../../infra/README.md#post-deployment-api-authentication-initialization)
+  and [index](./README.md). Mock evidence proves sequencing/idempotence, not
+  tenant writes, live vault permissions, human consent, private SQL bindings/
+  restart or browser sign-in. No private roster/dataset was read and no Azure
+  policy, resource or network setting was changed. Exercise legal ownership
+  and the development-only ADR 0005 boundary remain unchanged.

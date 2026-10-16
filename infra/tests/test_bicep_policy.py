@@ -10,6 +10,7 @@ from copy import deepcopy
 from itertools import product
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Any, ClassVar
 
 INFRA = Path(__file__).resolve().parents[1]
 CONFIG = json.loads((INFRA / "bicepconfig.json").read_text(encoding="utf-8"))
@@ -56,11 +57,11 @@ SERVICES = {
         },
     ),
 }
-NETWORK_RESOURCES = {
+NETWORK_RESOURCES: dict[str, dict[str, tuple[str, ...]]] = {
     **{
         name: {kind: ("publicNetworkAccess",)}
         for name, (kind, _) in SERVICES.items()
-        if name != "monitoring"
+        if name not in ("monitoring", "sql")
     },
     "monitoring": {
         "Microsoft.OperationalInsights/workspaces": PUBLIC_PROPERTIES[1:],
@@ -122,6 +123,7 @@ def evaluate(expression, parameters: dict, variables: dict):
         "parameters": lambda n: parameters[n],
         "variables": lambda n: evaluate(variables[n], parameters, variables),
         "createObject": lambda *a: dict(zip(a[::2], a[1::2], strict=True)),
+        "union": lambda *objects: {key: value for obj in objects for key, value in obj.items()},
         "true": lambda: True,
         "null": lambda: None,
         "format": lambda pattern, *args: pattern.format(*args),
@@ -134,6 +136,11 @@ def evaluate(expression, parameters: dict, variables: dict):
     "Azure CLI with Bicep is needed to compile the templates",
 )
 class BicepPolicyTests(unittest.TestCase):
+    main: ClassVar[dict[str, Any]]
+    guard: ClassVar[dict[str, Any]]
+    defaults: ClassVar[dict[str, Any]]
+    guard_module: ClassVar[dict[str, Any]]
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.main = compile_bicep("main.bicep")
@@ -229,7 +236,17 @@ class BicepPolicyTests(unittest.TestCase):
             .get("template", {})
             .get("containers", [])
         }
-        self.assertEqual(containers["api"]["image"], "[parameters('apiImage')]")
+        for name, parameter in (
+            ("api", "apiImage"),
+            ("agents", "agentImage"),
+            ("orchestrator", "orchestratorImage"),
+            ("import", "importImage"),
+            ("auth-renewal", "orchestratorImage"),
+            ("ledger-verify", "orchestratorImage"),
+        ):
+            with self.subTest(container=name):
+                self.assertEqual(containers[name]["image"], f"[parameters('{parameter}')]")
+        self.assertEqual(len(containers), 6)
         for name, module, args in (
             ("auth-renewal", "token_store", []),
             ("ledger-verify", "digest_blob", ["--publish"]),
@@ -237,17 +254,188 @@ class BicepPolicyTests(unittest.TestCase):
             self.assertEqual(containers[name]["image"], "[parameters('orchestratorImage')]")
             self.assertEqual(
                 containers[name]["command"],
-                ["python", "-m", f"zava_forward.orchestrator.{module}", *args],
+                [
+                    "python",
+                    "-m",
+                    f"zava_forward.orchestrator.{module}",
+                    *args,
+                ],
             )
+
+    def test_api_replicas_probes_and_private_edge_contract(self) -> None:
+        apps = module_template(self.main, "containerapps")
+        api = next(r for r in resources(apps) if r["type"] == "Microsoft.App/containerApps")
+        template = api["properties"]["template"]
+        self.assertEqual(template["scale"]["minReplicas"], 2)
+        self.assertEqual(template["scale"]["maxReplicas"], 4)
+        self.assertEqual(
+            template["containers"][0]["probes"],
+            [
+                {"type": "Liveness", "httpGet": {"path": "/healthz", "port": 8088}},
+                {"type": "Readiness", "httpGet": {"path": "/healthz", "port": 8088}},
+            ],
+        )
+        self.assertFalse(self.defaults["enablePublicEdge"])
+        edge = module(self.main, "edge")
+        self.assertEqual(edge["condition"], "[parameters('enablePublicEdge')]")
+        compiled = edge["properties"]["template"]
+        profile = resource(compiled, "Microsoft.Cdn/profiles")
+        waf = resource(compiled, "Microsoft.Network/FrontDoorWebApplicationFirewallPolicies")
+        self.assertEqual(profile["sku"]["name"], "Premium_AzureFrontDoor")
+        self.assertEqual(waf["sku"]["name"], "Premium_AzureFrontDoor")
+        self.assertEqual(waf["properties"]["policySettings"]["enabledState"], "Enabled")
+        self.assertEqual(compiled["parameters"]["wafMode"]["defaultValue"], "Prevention")
+        origin = resource(compiled, "Microsoft.Cdn/profiles/originGroups/origins")
+        self.assertEqual(
+            origin["properties"]["sharedPrivateLinkResource"]["groupId"], "managedEnvironments"
+        )
+        self.assertEqual(
+            origin["properties"]["sharedPrivateLinkResource"]["privateLink"],
+            {"id": "[parameters('environmentId')]"},
+        )
+        policy = resource(compiled, "Microsoft.Cdn/profiles/securityPolicies")
+        self.assertEqual(
+            policy["properties"]["parameters"]["wafPolicy"]["id"],
+            "[resourceId('Microsoft.Network/FrontDoorWebApplicationFirewallPolicies', "
+            "variables('wafName'))]",
+        )
+        route = resource(compiled, "Microsoft.Cdn/profiles/afdEndpoints/routes")
+        self.assertEqual(route["properties"]["supportedProtocols"], ["Https"])
+        self.assertEqual(route["properties"]["forwardingProtocol"], "HttpsOnly")
+
+    def test_defender_opt_in_does_not_downgrade_existing_subscription_plans(self) -> None:
+        governance = compile_bicep("governance.bicep")
+        self.assertFalse(governance["parameters"]["enableDefenderPlans"]["defaultValue"])
+        pricing = resource(governance, "Microsoft.Security/pricings")
+        self.assertEqual(pricing["condition"], "[parameters('enableDefenderPlans')]")
+        self.assertEqual(pricing["properties"]["pricingTier"], "Standard")
+        self.assertEqual(
+            governance["parameters"]["defenderPlans"]["defaultValue"],
+            ["StorageAccounts", "SqlServers", "KeyVaults", "Containers"],
+        )
+        self.assertEqual(
+            governance["parameters"]["enforcementMode"]["defaultValue"], "DoNotEnforce"
+        )
 
     def test_production_is_the_default_profile(self) -> None:
         self.assertEqual(self.defaults["deploymentProfile"], "production")
         self.assertIs(self.defaults["allowPublicNetworkAccess"], False)
         self.assertIs(self.defaults["keyVaultPurgeProtection"], True)
+        self.assertIs(self.defaults["registryQuarantineEnabled"], True)
         self.assertIn(
             "param deploymentProfile = 'production'",
             (INFRA / "main.pilot.example.bicepparam").read_text(encoding="utf-8"),
         )
+
+    def test_committed_environment_parameters_compile_and_match_the_contract(self) -> None:
+        files = {
+            "dev": "main.bicepparam",
+            "test": "main.test.bicepparam",
+            "pilot": "main.pilot.example.bicepparam",
+        }
+        guards = module(self.main, "parameter-guard")["properties"]["parameters"]
+        for environment, filename in files.items():
+            with self.subTest(environment=environment):
+                result = subprocess.run(
+                    ["az", "bicep", "build-params", "--file", str(INFRA / filename), "--stdout"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+                compiled = json.loads(json.loads(result.stdout)["parametersJson"])["parameters"]
+                values = {**self.defaults, **{k: v["value"] for k, v in compiled.items()}}
+                self.assertEqual(values["environmentName"], environment)
+                self.assertEqual(values["workload"], "forward")
+                self.assertEqual(
+                    values["deploymentProfile"],
+                    "development" if environment == "dev" else "production",
+                )
+                self.assertIs(values["allowPublicNetworkAccess"], False)
+                self.assertIs(values["keyVaultPurgeProtection"], environment != "dev")
+                self.assertIs(values["registryQuarantineEnabled"], environment != "dev")
+                self.assertIs(values["enableLocks"], environment == "pilot")
+                self.assertIs(values["zoneRedundant"], False)
+                self.assertEqual(values["regionCheckReference"], "")
+                self.assertEqual(values["quotaCheckReference"], "")
+                self.assertTrue(values["alertEmail"].endswith("@example.invalid"))
+                self.assertEqual(
+                    values["sqlAdminGroupObjectId"], "00000000-0000-0000-0000-000000000000"
+                )
+                self.assertEqual(values["entraClientId"], "")
+                failures = {
+                    name
+                    for name, arg in guards.items()
+                    if not evaluate(arg, values, self.main["variables"])["value"]
+                }
+                expected = {"regionCheckMustBeRecorded", "quotaCheckMustBeRecorded"}
+                if environment == "pilot":
+                    self.assertEqual(values["location"], "")
+                    self.assertEqual(values["sqlLocation"], "")
+                    expected.add("deploymentLocationsMustBeSelected")
+                else:
+                    self.assertEqual(values["location"], "uksouth")
+                    self.assertEqual(values["sqlLocation"], "uksouth")
+                self.assertEqual(failures, expected)
+                source = (INFRA / filename).read_text(encoding="utf-8")
+                for line in source.splitlines():
+                    if "example.invalid" in line or "00000000-" in line or "= ''" in line:
+                        self.assertIn("PLACEHOLDER", line)
+
+    def test_naming_and_tags_are_forwarded_without_changing_existing_names(self) -> None:
+        variables = self.main["variables"]
+        self.assertEqual(
+            variables["prefix"],
+            "[format('{0}-{1}', parameters('workload'), parameters('environmentName'))]",
+        )
+        self.assertEqual(variables["compact"], "[replace(variables('prefix'), '-', '')]")
+        self.assertEqual(
+            variables["unique"],
+            "[take(uniqueString(resourceGroup().id, parameters('location'), 'v2'), 5)]",
+        )
+        tags = variables["allTags"]
+        for key in ("workload", "environment", "dataClassification", "purpose", "owner"):
+            self.assertIn(f"'{key}'", tags)
+        self.assertIn("union(parameters('tags'),", tags)
+        self.assertIn("parameters('ownerTag')", tags)
+        self.assertIn("parameters('environmentName')", tags)
+        self.assertEqual(
+            evaluate(
+                tags,
+                {
+                    **self.defaults,
+                    "environmentName": "test",
+                    "ownerTag": "synthetic-resource-contact",
+                    "tags": {"environment": "wrong", "owner": "wrong", "extra": "retained"},
+                },
+                variables,
+            ),
+            {
+                "workload": "zava-forward-demonstrator",
+                "environment": "test",
+                "dataClassification": "constructed-non-identifying",
+                "purpose": "non-production-demonstrator",
+                "owner": "synthetic-resource-contact",
+                "extra": "retained",
+            },
+        )
+        for item in self.main["resources"]:
+            params = item.get("properties", {}).get("parameters", {})
+            if item["name"] == "parameter-guard":
+                continue
+            if item["type"] == "Microsoft.Resources/deployments":
+                self.assertEqual(params["tags"]["value"], "[variables('allTags')]", item["name"])
+            elif "tags" in item:
+                self.assertEqual(item["tags"], "[variables('allTags')]", item["name"])
+        for name, expression in {
+            "keyvault": "[format('kv-{0}-{1}', variables('compact'), variables('unique'))]",
+            "storage": "[format('st{0}{1}', variables('compact'), variables('unique'))]",
+            "registry": "[format('cr{0}{1}', variables('compact'), variables('unique'))]",
+            "sql": "[format('sql-{0}-{1}', variables('prefix'), variables('unique'))]",
+        }.items():
+            self.assertEqual(
+                module(self.main, name)["properties"]["parameters"]["name"]["value"], expression
+            )
 
     def assert_orchestrator_image_contract(self, template: dict) -> None:
         self.assertEqual(template["parameters"]["orchestratorImage"]["defaultValue"], "")
@@ -322,11 +510,18 @@ class BicepPolicyTests(unittest.TestCase):
             environment["properties"]["vnetConfiguration"].get("internal"),
             "[not(parameters('allowPublicNetworkAccess'))]",
         )
-        for firewall in resources(module_template(template, "sql")):
-            if firewall["type"] == "Microsoft.Sql/servers/firewallRules":
-                self.assertEqual(
-                    firewall.get("condition"), "[parameters('allowPublicNetworkAccess')]"
-                )
+        sql = module_template(template, "sql")
+        self.assertNotIn("allowPublicNetworkAccess", sql["parameters"])
+        self.assertNotIn(
+            "allowPublicNetworkAccess", module(template, "sql")["properties"]["parameters"]
+        )
+        self.assertEqual(
+            resource(sql, "Microsoft.Sql/servers")["properties"].get("publicNetworkAccess"),
+            "Disabled",
+        )
+        self.assertFalse(
+            any(r["type"] == "Microsoft.Sql/servers/firewallRules" for r in resources(sql))
+        )
 
     def test_every_module_gets_the_computed_public_access(self) -> None:
         for module in self.main["resources"]:
@@ -397,6 +592,13 @@ class BicepPolicyTests(unittest.TestCase):
 
     def test_bearer_only_keeps_validation_and_omits_browser_secret(self) -> None:
         template = module_template(self.main, "containerapps")
+        self.assertEqual(
+            template["parameters"]["entraClientSecretName"]["defaultValue"], "entra-client-secret"
+        )
+        apps = module(self.main, "containerapps")["properties"]["parameters"]
+        self.assertEqual(
+            apps["entraClientSecretName"]["value"], "[parameters('entraClientSecretName')]"
+        )
         auth = resource(template, "Microsoft.App/containerApps/authConfigs")
         properties = auth["properties"]
         self.assertEqual(
@@ -407,12 +609,15 @@ class BicepPolicyTests(unittest.TestCase):
         self.assertIn("tenant().tenantId", aad["registration"]["openIdIssuer"])
         self.assertEqual(
             aad["registration"]["clientSecretSettingName"],
-            "[if(parameters('entraBearerOnly'), null(), 'entra-client-secret')]",
+            "[if(parameters('entraBearerOnly'), null(), parameters('entraClientSecretName'))]",
         )
         self.assertIn("parameters('entraClientId')", aad["validation"]["allowedAudiences"])
         api = resource(template, "Microsoft.App/containerApps")
         self.assertIn(
             "not(parameters('entraBearerOnly'))", api["properties"]["configuration"]["secrets"]
+        )
+        self.assertIn(
+            "parameters('entraClientSecretName')", api["properties"]["configuration"]["secrets"]
         )
 
     def test_existing_stack_edge_is_additive_and_single_origin(self) -> None:
@@ -701,7 +906,15 @@ class BicepPolicyTests(unittest.TestCase):
         self.assertEqual(set(passed), set(guard_parameters))
 
         def failures(**overrides) -> set[str]:
-            values = {**defaults, "entraTokenStoreReady": False, **overrides}
+            values = {
+                **defaults,
+                "location": "offline-region",
+                "sqlLocation": "offline-sql-region",
+                "regionCheckReference": "synthetic-region-check",
+                "quotaCheckReference": "synthetic-quota-check",
+                "entraTokenStoreReady": False,
+                **overrides,
+            }
             return {
                 name
                 for name, arg in passed.items()
@@ -709,6 +922,25 @@ class BicepPolicyTests(unittest.TestCase):
             }
 
         self.assertEqual(failures(), set())
+        self.assertEqual(failures(regionCheckReference=""), {"regionCheckMustBeRecorded"})
+        self.assertEqual(failures(quotaCheckReference=""), {"quotaCheckMustBeRecorded"})
+        self.assertEqual(
+            failures(regionCheckReference="", quotaCheckReference=""),
+            {"regionCheckMustBeRecorded", "quotaCheckMustBeRecorded"},
+        )
+        for name in ("location", "sqlLocation"):
+            self.assertEqual(failures(**{name: ""}), {"deploymentLocationsMustBeSelected"})
+        self.assertEqual(
+            failures(registryQuarantineEnabled=False),
+            {"productionProfileRequiresRegistryQuarantine"},
+        )
+        self.assertEqual(
+            failures(deploymentProfile="development", registryQuarantineEnabled=False), set()
+        )
+        self.assertEqual(
+            module(template, "registry")["properties"]["parameters"]["quarantine"],
+            {"value": "[parameters('registryQuarantineEnabled')]"},
+        )
         self.assertEqual(
             failures(deploymentProfile="development", allowPublicNetworkAccess=True), set()
         )
@@ -736,8 +968,8 @@ class BicepPolicyTests(unittest.TestCase):
             {"entraRoleMapRequiresEntraClientId"},
         )
         self.assertEqual(failures(entraRoleMap={"a": "b"}, entraClientId="id"), set())
-        for profile, public, purge in product(
-            ("production", "development"), (False, True), (False, True)
+        for profile, public, purge, quarantine in product(
+            ("production", "development"), (False, True), (False, True), (False, True)
         ):
             expected = set()
             if profile == "production":
@@ -745,10 +977,13 @@ class BicepPolicyTests(unittest.TestCase):
                     expected.add("productionProfileForbidsPublicNetworkAccess")
                 if not purge:
                     expected.add("productionProfileRequiresKeyVaultPurgeProtection")
+                if not quarantine:
+                    expected.add("productionProfileRequiresRegistryQuarantine")
             overrides = {
                 "deploymentProfile": profile,
                 "allowPublicNetworkAccess": public,
                 "keyVaultPurgeProtection": purge,
+                "registryQuarantineEnabled": quarantine,
             }
             self.assertEqual(failures(**overrides), expected, str(overrides))
             if not expected:
@@ -767,7 +1002,7 @@ class BicepPolicyTests(unittest.TestCase):
                         {**defaults, **overrides},
                         template["variables"],
                     ),
-                    profile == "production",
+                    profile == "production" or purge,
                     str(overrides),
                 )
             edge_expected = expected | (
@@ -810,16 +1045,24 @@ class BicepPolicyTests(unittest.TestCase):
             "properties"
         ]["vnetConfiguration"]["internal"] = False
         self.assert_mutation_rejected(self.assert_network_controls, mutated)
-        for remove in (False, True):
-            with self.subTest(firewall_condition_removed=remove):
+        for change in ("public", "missing", "firewall", "switch"):
+            with self.subTest(sql=change):
                 mutated = deepcopy(self.main)
-                firewall = resource(
-                    module_template(mutated, "sql"), "Microsoft.Sql/servers/firewallRules"
-                )
-                if remove:
-                    del firewall["condition"]
+                sql = module_template(mutated, "sql")
+                props = resource(sql, "Microsoft.Sql/servers")["properties"]
+                if change == "public":
+                    props["publicNetworkAccess"] = "Enabled"
+                elif change == "missing":
+                    del props["publicNetworkAccess"]
+                elif change == "switch":
+                    sql["parameters"]["allowPublicNetworkAccess"] = {"type": "bool"}
                 else:
-                    firewall["condition"] = True
+                    sql["resources"].append(
+                        {
+                            "type": "Microsoft.Sql/servers/firewallRules",
+                            "name": "mutated-firewall",
+                        }
+                    )
                 self.assert_mutation_rejected(self.assert_network_controls, mutated)
 
     def test_mutations_reject_key_auth_and_key_functions(self) -> None:
@@ -950,6 +1193,10 @@ class BicepPolicyTests(unittest.TestCase):
         for name in (
             "productionProfileForbidsPublicNetworkAccess",
             "productionProfileRequiresKeyVaultPurgeProtection",
+            "productionProfileRequiresRegistryQuarantine",
+            "regionCheckMustBeRecorded",
+            "quotaCheckMustBeRecorded",
+            "deploymentLocationsMustBeSelected",
         ):
             with self.subTest(guard=name):
                 mutated = deepcopy(self.main)
@@ -957,6 +1204,9 @@ class BicepPolicyTests(unittest.TestCase):
                     "value": "ok"
                 }
                 self.assert_mutation_rejected(self.assert_parameter_controls, mutated)
+        mutated = deepcopy(self.main)
+        module(mutated, "registry")["properties"]["parameters"]["quarantine"]["value"] = False
+        self.assert_mutation_rejected(self.assert_parameter_controls, mutated)
         for variable, value in (("publicAccess", True), ("purgeProtection", False)):
             with self.subTest(variable=variable):
                 mutated = deepcopy(self.main)

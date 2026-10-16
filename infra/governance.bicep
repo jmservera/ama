@@ -3,7 +3,7 @@ targetScope = 'subscription'
 @description('Short workload prefix used in assignment names.')
 param workload string = 'forward'
 
-@description('Set to true only after the subscription owner has accepted the Defender plan cost in infra/README.md (Governance controls). False leaves every plan on Free.')
+@description('Set to true only after the subscription owner accepts Defender costs. False submits no pricing changes and preserves existing subscription plans.')
 param enableDefenderPlans bool = false
 
 @description('Defender for Cloud plans decided for the demonstrator. Each name is a Microsoft.Security/pricings plan.')
@@ -65,9 +65,9 @@ resource requireTag 'Microsoft.Authorization/policyAssignments@2024-04-01' = [fo
   }
 }]
 
-resource defender 'Microsoft.Security/pricings@2024-01-01' = [for plan in defenderPlans: {
+resource defender 'Microsoft.Security/pricings@2024-01-01' = [for plan in defenderPlans: if (enableDefenderPlans) {
   name: plan
   properties: {
-    pricingTier: enableDefenderPlans ? 'Standard' : 'Free'
+    pricingTier: 'Standard'
   }
 }]

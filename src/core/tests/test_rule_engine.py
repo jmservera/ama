@@ -519,6 +519,14 @@ class EngineTests(unittest.TestCase):
             state="recorded", evidence="SYN-HUMAN", decided_at=NOW.isoformat()
         )
         self.write()
+        self.assertEqual(self.checks()[0]["result"], "unknown")
+        self.facts["automated_decisions"][0]["reasons"] = "   "
+        self.write()
+        self.assertEqual(self.checks()[0]["result"], "unknown")
+        self.facts["automated_decisions"][0]["reasons"] = (
+            "Synthetic human review: evidence checked; refer disputed facts to the owner."
+        )
+        self.write()
         self.assertEqual(self.checks()[0]["result"], "clear")
 
     def test_sql_new_statements_are_portable_and_append_only(self) -> None:

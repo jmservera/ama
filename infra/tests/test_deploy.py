@@ -307,6 +307,34 @@ class DeployTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 2)
                 self.assertEqual(calls, [])
 
+    def test_scope_and_workload_errors_stop_before_any_azure_call(self):
+        for options in (
+            ("--resource-group", "other-group"),
+            ("--workload", "UPPER"),
+            ("--workload", "ab"),
+            ("--workload", "abcdefghijk"),
+            ("--workload", "bad-name"),
+            ("--workload", "1forward"),
+        ):
+            with self.subTest(options=options):
+                result, calls = self.run_deploy([], *options)
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertEqual(calls, [])
+
+    def test_recorded_check_references_are_forwarded_unchanged(self):
+        result, calls = self.run_deploy(
+            [reply("deployment group what-if")],
+            "--orchestrator-image",
+            CURRENT,
+            "--parameter",
+            "regionCheckReference=reviewed-region-record",
+            "--parameter",
+            "quotaCheckReference=reviewed-quota-record",
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("regionCheckReference=reviewed-region-record", calls[-1])
+        self.assertIn("quotaCheckReference=reviewed-quota-record", calls[-1])
+
     def test_mutations_break_precedence_forwarding_and_warning_assertions(self):
         source = SCRIPT.read_text(encoding="utf-8")
         mutations = [

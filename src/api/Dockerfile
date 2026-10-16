@@ -1,5 +1,5 @@
 # Build context is the src/ folder: docker build -f src/api/Dockerfile src
-# python:3.12-slim-bookworm, pinned by digest (resolved 2026-10-08). Bump deliberately and re-run the tests.
+# python:3.12-slim-bookworm, latest digest verified 2026-10-16. Bump deliberately and re-run the tests.
 FROM python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258 AS build
 WORKDIR /build
 COPY build-requirements.txt .
@@ -27,7 +27,7 @@ RUN --mount=type=bind,from=build,source=/wheels,target=/wheels \
     && rm requirements.txt \
     && chmod -R a+rX /usr/local/lib/python3.12/site-packages/zava_forward/api/web
 COPY agents/evals/ai_priority_golden.json ./evals/ai_priority_golden.json
-USER 10001
+USER 10001:10001
 # No working data is baked into the image. Mount the dataset at /data and a writable volume at /state.
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=8088 ZF_BIND=0.0.0.0 ZF_DATA=/data/zavaforward.json ZF_STATE=/state ZF_AI_GOLDEN=/app/evals/ai_priority_golden.json
 EXPOSE 8088

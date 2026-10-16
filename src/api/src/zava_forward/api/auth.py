@@ -43,6 +43,7 @@ MAX_HEADER = 16384
 RULE_ROLE_MAP = {
     "ZavaForward.RuleAuthor": "rule_author",
     "ZavaForward.RuleOwner": "rule_owner",
+    "ZavaForward.RegulatoryChat": "regulatory_chat",
 }
 
 
@@ -152,7 +153,8 @@ class TrustedProxyProvider:
                 person = self.store.staff.get(em[0].lower())
         if person is None:
             return self._deny("no staff record with this oid", oid)
-        return dict(person, role=role, rule_roles=sorted({RULE_ROLE_MAP[r] for r in claims if bound and r in RULE_ROLE_MAP}))
+        return dict(person, role=role, auth_provider=self.name,
+                    rule_roles=sorted({RULE_ROLE_MAP[r] for r in claims if bound and r in RULE_ROLE_MAP}))
 
     @staticmethod
     def _deny(reason, detail=None):

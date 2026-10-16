@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -103,7 +104,7 @@ def resolve_image(group: str, prefix: str, registry: str) -> tuple[str, str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--resource-group", required=True)
+    parser.add_argument("--resource-group", required=True, choices=("ama",))
     parser.add_argument("--parameters", required=True, help="Bicep parameter file")
     parser.add_argument("--registry", required=True, help="Registry name in the resource group")
     parser.add_argument("--workload", default="forward")
@@ -114,6 +115,8 @@ def main() -> int:
         "--apply", action="store_true", help="Deploy instead of the default what-if"
     )
     args = parser.parse_args()
+    if not re.fullmatch(r"[a-z][a-z0-9]{2,9}", args.workload):
+        parser.error("--workload must be 3-10 lowercase letters/digits, starting with a letter")
     for value in args.parameter:
         name, separator, _ = value.partition("=")
         if (

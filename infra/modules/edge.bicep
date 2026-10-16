@@ -23,7 +23,7 @@ var hasDomain = !empty(customDomain)
 resource profile 'Microsoft.Cdn/profiles@2024-09-01' = {
   name: 'afd-${prefix}'
   location: 'global'
-  tags: tags
+  tags: union(tags, { 'zava-forward-role': 'api-edge' })
   sku: { name: 'Premium_AzureFrontDoor' }
 }
 
@@ -51,7 +51,7 @@ resource endpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-09-01' = {
   parent: profile
   name: 'ep-${prefix}'
   location: 'global'
-  tags: tags
+  tags: union(tags, { 'zava-forward-role': 'api-edge' })
   properties: { enabledState: 'Enabled' }
 }
 
