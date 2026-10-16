@@ -1318,10 +1318,13 @@ transactions. JSON restores a pre-image on failure; SQLite uses rollback.
 A copied pair lives in the uniquely provisioned Juan Manuel Servera exercise
 owner's own isolated thread, with a sender receipt and idempotent retries.
 The sender's other messages and memory are not shared. Both current roles/case
-rights are checked; SQL staff roles are read freshly, not from the legacy
-staff cache. Historical reads deny changed roles instead of replaying wider
-content. A post-commit audit error surfaces as an error with an already-durable
-receipt; retry does not create another copy. Audit holds metadata only.
+rights are checked; SQL provisioning is read freshly, not from the legacy
+staff cache. Trusted-proxy roles remain claim-derived instead of being replaced
+by a wider staff-register role. Historical reads deny changed roles instead of
+replaying wider content. SQL turn/referral metadata audit now commits in the
+same transaction as the messages and receipt; an audit failure rolls back both.
+The JSON file store alone retains the post-commit separate-ledger error boundary;
+it is not evidence of SQL audit atomicity. Audit holds metadata only.
 Copies have independent thread ownership/deletion; deleting the sender's
 thread does not delete the explicit owner's copy. No email or live delivery
 is implied. No rule-engine alert, consent, safety hold or case fact is changed.
@@ -1334,6 +1337,33 @@ actual privacy approvals; the marker is a trusted fixture declaration, not a
 detector of real data. Do not set it on private or operational data. Unknown or
 production environments deny. No automatic dataset marking or owner
 provisioning is performed. Ordinary chat and memory gates are unchanged.
+
+### Regulatory privacy and audit (#217)
+
+`regulatory_privacy.retention_report` aligns own-thread review metadata with
+the existing `CHAT_RETENTION_REF` and `CHAT_RETENTION_DAYS` settings. Without
+both, periods and due status are unknown. For synthetic reporting, both must
+be valid, the reference must start `SYNTH-` and days must be 1..36500 (technical
+input bound, not a legal period). Review due is creation time plus days,
+inclusive at the exact due instant, and includes archived regulatory threads.
+No content is loaded, no records are deleted and no DPO approval is inferred.
+Other source/card/check/alert/audit periods stay explicitly unknown. This is
+not a complete retention or rights implementation; the
+[draft DPIA](../../docs/reference/research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217)
+requires DPO review and remains unapproved.
+
+Rule/card approvals, source reviews, checks and alerts already retain append-only
+SQL history. SQL chat turn events now include actor/role, case/thread/sequence,
+model, citation IDs and answer hash, never question/answer/excerpt/health content.
+Referrals retain receipt and decision-owner linkage, once per selected pair.
+Rollback-after-audit-insert and reopen tests cover the chain head and data.
+Metadata and linkable hashes are not anonymous; DPO retention review is still needed.
+
+Engine contract version 2 requires nonempty `reasons` as well as named human,
+source, evidence and decision timestamp before a significant-decision check is
+clear. An evidence ID alone, absent reasons or whitespace reasons stays unknown.
+Version 1 checkpoints are not reused. This is a bounded evidence check, not
+proof of a real human decision or UK GDPR compliance.
 
 Run the synthetic core proofs with an installed editable package, from the
 repository root:

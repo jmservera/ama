@@ -1,0 +1,66 @@
+{
+  "task_id": "351",
+  "task_slug": "one-command-entra-setup-351",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Implement",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/one-command-entra-setup-351-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/one-command-entra-setup-351-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/one-command-entra-setup-351-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-16/one-command-entra-setup-351-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/one-command-entra-setup-351-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/one-command-entra-setup-351-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Owner explicitly requested all RPI phases, implementation and PR in this task; no automatic follow-up session",
+      "status": "confirmed",
+      "evidence": "Issue #351 expanded owner request"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-16/one-command-entra-setup-351-research.md"
+    },
+    {
+      "decision": "One critique executed: Revise; PC-001 through PC-008 incorporated directly in plan/details",
+      "status": "complete",
+      "evidence": ".copilot-tracking/plans/2026-10-16/one-command-entra-setup-351-plan.md"
+    },
+    {
+      "decision": "Historical independent Review executed: Complete; outcome Not accepted at original source boundary. Owner-selected later implementation disposed all three routed findings without repeating Review",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/one-command-entra-setup-351-review.md"
+    },
+    {
+      "decision": "Published draft PR #356; no merge or issue-body checkbox edits",
+      "status": "complete",
+      "evidence": "https://github.com/jmservera/ama/pull/356"
+    },
+    {
+      "decision": "Owner selected later implementation on existing branch; merge main first, resolve all routed findings, repair CI and mark existing PR ready",
+      "status": "confirmed",
+      "evidence": "Owner continuation 2026-10-16; main merged as d007c69; no automatic follow-up session"
+    },
+    {
+      "decision": "RV-001/RV-002/RV-003 implemented and mutation-proven; 177 infra tests, all offline Bicep and workflow static checks pass",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-16/one-command-entra-setup-351-changes.md"
+    },
+    {
+      "decision": "Source commit 90da083 pushed without force, PR body updated with Refs #351 only, all eight hosted checks passed and gh pr ready 356 succeeded; no issue checkbox changes or PR merge",
+      "status": "complete",
+      "evidence": "https://github.com/jmservera/ama/pull/356; validation run 38944911484, source CI run 38944911514"
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "Implementation complete; owner retains PR review/merge decision. Live tenant, consent, SQL/restart and browser gates remain separate; no automatic session or further Review"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Authorized tenant execution and consent", "rationale": "Live authority and vault behavior remain unproven by mocks", "evidence": "Current acceptance audit: tenant/vault/consent UNMET"},
+    {"rank": 2, "task": "Private-network SQL staff binding and restart", "rationale": "Directory assignments alone cannot authorize workbench staff", "evidence": "infra/README.md tenant staff procedure; separate operator gate"},
+    {"rank": 3, "task": "Authorized browser sign-in after public edge readiness", "rationale": "Configuration convergence is not end-to-end human sign-in acceptance", "evidence": "Current acceptance audit: browser acceptance UNMET"}
+  ]
+}

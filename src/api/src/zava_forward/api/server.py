@@ -23,7 +23,7 @@ from zava_forward.agents.chat import ChatModel
 from zava_forward.agents.dispatch import AgentWorker
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
-from zava_forward.core.chat_privacy import ChatNotApproved
+from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
 from zava_forward.core.chat_panel import ChatPanel
 from zava_forward.core.regulatory_chat import RegulatoryChat, TASK as REGULATORY_TASK
 from zava_forward.agents import regulatory_chat
@@ -531,9 +531,11 @@ def make_handler(app):
                 return self._json(400, {"error": "Chat request must be an object."})
             try:
                 if parts and parts[0] == "regulatory":
+                    self._regulatory_access(user)
                     if not post and parts == ["regulatory", "status"]:
-                        app.regulatory.admit(user)
-                        return self._json(200, {"label": "synthetic-demo", "enabled": True})
+                        return self._json(200, {"label": "synthetic-demo", "enabled": True,
+                                               "privacy": app.regulatory.privacy_status(user),
+                                               "warning": CHAT_WARNING})
                     if not post and parts == ["regulatory", "inbox"]:
                         return self._json(200, app.regulatory.inbox(user))
                     if post and parts == ["regulatory", "threads"]:
@@ -551,10 +553,18 @@ def make_handler(app):
                         raise ValueError("Only content for ask or turn for doubt is accepted.")
                     return self._json(404, {"error": "Regulatory chat route not found."})
                 if not post and parts == ["threads"]:
-                    return self._json(200, s.chat_list_threads(c.current_user(user)))
+                    current = c.current_user(user)
+                    threads = s.chat_list_threads(current)
+                    trusted = app.provider.name == "trusted-proxy"
+                    role = user["role"] if trusted else current["role"]
+                    permitted = not trusted or "regulatory_chat" in user.get("rule_roles", [])
+                    threads = [t for t in threads if not t["title"].startswith(REGULATORY_TASK + ":")
+                               or permitted and t["owner_role"] == role]
+                    return self._json(200, threads)
                 if not post and len(parts) == 2 and parts[0] == "threads":
                     thread = s.chat_resume(c.current_user(user), parts[1])
                     if thread["title"].startswith(REGULATORY_TASK + ":"):
+                        self._regulatory_access(user)
                         thread = app.regulatory.history(user, parts[1])
                     return self._json(200, thread)
                 if not post and parts == ["memory"]:
@@ -570,7 +580,8 @@ def make_handler(app):
                     u, tid = c.current_user(user), parts[1]
                     thread = s.chat_resume(u, tid)
                     if thread["title"].startswith(REGULATORY_TASK + ":"):
-                        app.regulatory.thread(u, tid)
+                        self._regulatory_access(user)
+                        u, _ = app.regulatory.thread(user, tid)
                         if parts[2] not in ("archive", "delete"):
                             raise ValueError("Use the bounded regulatory endpoint for this thread.")
                     if parts[2] == "messages":
@@ -628,6 +639,10 @@ def make_handler(app):
                     return self._json(503, {"error": "Regulatory chat failed. A stored turn or inbox receipt may already exist; reload before retrying. Use the independent human safety route."})
                 raise
             return self._json(404, {"error": "Not found."})
+
+        def _regulatory_access(self, user):
+            if app.provider.name == "trusted-proxy" and "regulatory_chat" not in user.get("rule_roles", []):
+                raise ChatForbidden("A separately assigned RegulatoryChat capability is required.")
 
         def _procurement(self, s, u, parts, body):
             """Package, capacity and work-order writes. Returns the refreshed list the screen shows."""

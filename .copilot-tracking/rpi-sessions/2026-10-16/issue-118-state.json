@@ -1,0 +1,34 @@
+{
+  "task_id": "118",
+  "task_slug": "issue-118",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Implement",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/issue-118-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/issue-118-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/issue-118-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-16/issue-118-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/issue-118-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/issue-118-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Implement and publish full requested scope", "status": "confirmed", "evidence": "User request 2026-10-16"},
+    {"decision": "Research reused; Planning Readiness Ready", "status": "confirmed", "evidence": ".copilot-tracking/research/2026-10-16/issue-118-research.md"},
+    {"decision": "Single critique executed; Revise verdict; PC-001 through PC-004 directly dispositioned", "status": "applied", "evidence": ".copilot-tracking/plans/2026-10-16/issue-118-plan.md"},
+    {"decision": "Single Review executed Complete; outcome Not accepted for full hardened hosted deployment; no new source defects identified in assessed scope", "status": "reviewed", "evidence": ".copilot-tracking/reviews/logs/2026-10-16/issue-118-review.md"},
+    {"decision": "Bounded implementation published as open draft PR 347, no merge, no issue checkbox mutation", "status": "published", "evidence": "https://github.com/jmservera/ama/pull/347"},
+    {"decision": "Owner directs PR 347 CHANGES implementation: remove shipped guard; external Docker contract; fixable-only scan gate and separate unfixed artifact; ready only on green CI", "status": "confirmed", "evidence": "User continuation request 2026-10-16"},
+    {"decision": "Owner-directed source corrections complete; all local validation and 11 integrated PR checks pass at 8142553. Evidence-only closeout must retain identical source/infra/workflows, and latest checks must pass before ready", "status": "validated", "evidence": "Source CI 38936437239, MVP CI 38936437236, MVP validation 38936437380; changes artifact C05"}
+  ],
+  "blockers": [
+    {"id": "hosted-runtime", "summary": "Full criterion remains Partial: ACA lacks required kernel controls; no shipped guard blocks startup", "resolution": "Separately reviewed supported host configuration with private runtime evidence; not a blocker to the authorized bounded PR corrections"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Owner reviews existing PR 347; ready status is permitted only when every latest-head check is green. Full hosted hardening, unfixed CVE remediation and operational approvals remain separate unmet gates"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Track compatible base-image security remediation", "rationale": "61 HIGH and two CRITICAL unfixed package findings persist per image despite latest digest and fresh upgrade; fixable-only gates pass but risk remains", "evidence": "Review RV-002 disposition and before/after cutover criterion audit"},
+    {"rank": 2, "task": "Plan supported hosted runtime enforcement", "rationale": "Current ACA schema lacks required kernel controls; blocks rollout and needs a reviewed hosting decision", "evidence": "Review RV-001 and Microsoft.App 2025-07-01 schema"}
+  ]
+}

@@ -23,13 +23,16 @@ private production profile. They do not authorize deployment.
 * `role-assignments.json`: role-assignment matrix; `entra/app-registration.json`: declarative Entra registration and owners. Both are checked by `tests/test_identity_rbac.py`.
 * `scripts/create-sql-users.sql`: contained SQL users for the managed identities. `scripts/create-sql-users.py` runs the same grants idempotently from the Azure CLI login.
 * `scripts/create-api-app-registration.sh`: Entra app registration, app roles and secret (Key Vault) for API sign-in.
-* `scripts/initialize-api-auth.py`: post-deployment callback synchronization for an existing API registration, without replacing roles, assignments or credentials.
+* `scripts/setup-entra.py`: one-command API/edge discovery, additive Entra registration/roles, private-roster assignments and auth wiring.
+* `scripts/initialize-api-auth.py`: compatibility CLI forwarding to `setup-entra.py`; its callback-only Python API is retained for existing importers.
 * `scripts/initialize-workbench-staff.py`: private tenant-member/app-role/SQL binding reconciliation, with idempotent checks and serving-replica restart.
 * `scripts/configure-m365-provisioner-app.sh`: delegated Graph permissions for the app the m365 CLI uses to set up SharePoint and Teams.
 * `scripts/grant-sharepoint-access.sh`: optional Graph `Sites.Selected` grant for the SharePoint evidence store.
 * `scripts/deploy.py`: image-preserving infrastructure what-if/deploy wrapper; see [Orchestrator image selection](#orchestrator-image-selection-322).
 * `scripts/private-cutover-proof.py`, `cutover-proof.Dockerfile`: bounded
   synthetic SQL/private-ingress proof executed inside the ama VNet.
+* `public-edge-existing.bicep`: additive Front Door Premium/WAF/Private Link
+  for an existing internal, authenticated API; preserves data-service settings.
 
 Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `monthlyBudget`. See the M365 section of the ADR.
 
@@ -109,6 +112,152 @@ integration remains separate; these are offline-tested semantics, not evidence
 of an Azure rollout.
 
 ## Deployment profile
+
+### GitHub deployment pipeline (Refs #138)
+
+[`infra-plan.yml`](../.github/workflows/infra-plan.yml) and
+[`src-deploy.yml`](../.github/workflows/src-deploy.yml) add offline-tested
+pipeline definitions, **not observed Azure deployment or OIDC acceptance**.
+No workflow was dispatched against Azure for this implementation.
+
+The PR workflow runs only after successful `Source projects CI` on an infra
+PR from this repository. A default-branch `workflow_run` loads trusted helper
+code, checks the candidate paths without executing them, then inspects candidate
+Bicep as data. Fork PRs are deliberately excluded: maintainers must review and
+adopt their changes onto a trusted branch first. The result is attached as a
+seven-day Actions artifact, keyed by environment and exact candidate SHA.
+There is no privileged `pull_request_target` checkout or PR comment token.
+Only status, change counts, source SHA and a parameter hash are published;
+raw what-if output, parameters, resource IDs and Azure errors are withheld.
+Failed plans attach a failed-status summary when the helper has started.
+The workflow must first merge to the default branch before this trigger exists.
+
+Release is manual, **main-only**, and serialized across all environments in
+`ama`. It builds all four source images from the same immutable workflow SHA.
+Every image passes the existing non-root/hardened/plain startup contract and
+the same `src/trivy.yaml` fixable HIGH/CRITICAL gate as source CI; full reports
+including unfixed findings are retained even on gate failure. Only passing
+images leave the unprivileged hosted build job. Private publish jobs load
+(never execute) those same-run image artifacts, push tags
+`sha-<commit>-r<run>-a<attempt>` to separate `zava-forward-<project>` repositories
+and capture registry digests. Importer maps to Bicep `importImage`; agents to
+`agentImage`. Deployment validates all four digest records against this run,
+attempt, source and registry before applying them. Releases always rebuild
+the complete set rather than mixing revisions or trusting mutable cache tags.
+Source CI uses dependency-aware per-project image path filters; core/shared
+build inputs affect all images, and agents changes also affect API.
+
+#### Required external setup
+
+Create protected GitHub environments `dev`, `test`, `pilot`, plus
+`<environment>-plan` and `<environment>-release` for each target. Require
+reviewers, prevent self-review, disallow administrator bypass and allow only
+protected branches; protect `main` itself. Review the exact PR SHA before
+planning and the exact workflow SHA/run, scan reports and four digest artifacts
+before deployment approval. The helper verifies reviewer/branch configuration
+before Azure login; YAML alone cannot provision or prove that anyone approved.
+No particular deployment approver is invented by this implementation.
+
+Use separate OIDC application identities for plan, publish and deploy in every
+environment. Configure the GitHub issuer `https://token.actions.githubusercontent.com`,
+audience `api://AzureADTokenExchange`, and exact subject
+`repo:<owner>/<repo>:environment:<environment-name>`, including the `-plan` and
+`-release` suffixes for their respective identities. Never add client secrets,
+credential JSON, passwords or long-lived registry credentials. GitHub's
+short-lived job token is used only to read environment configuration.
+
+Set these **GitHub environment variables**, never committed values:
+
+| Variable | Where and purpose |
+| --- | --- |
+| `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID` | Each privileged environment; owner-supplied federation/account configuration |
+| `AZURE_PLAN_CLIENT_ID` | `<environment>-plan`; plan identity only |
+| `AZURE_PUBLISH_CLIENT_ID` | `<environment>-release`; publisher only |
+| `AZURE_DEPLOY_CLIENT_ID` | Target environment; deploy identity only |
+| `AZURE_REGISTRY_NAME` | Release and target environments; existing registry in ama |
+| `DEPLOY_PARAMETERS` | Plan and target environments; JSON override contract below |
+
+`DEPLOY_PARAMETERS` must contain exactly `location`, `sqlLocation`,
+`regionCheckReference`, `quotaCheckReference`, `alertEmail`,
+`sqlAdminGroupName`, `sqlAdminGroupObjectId`, `entraClientId` (all nonempty
+strings), and `entraBearerOnly` (an explicit JSON boolean). Use approved values
+outside the repository; placeholders are refused. The helper compiles the
+selected committed dev/test/pilot example with Bicep and overlays only these
+keys. Production security defaults, locks and quarantine remain in their
+environment set. Public network access is always forced false. The generated
+ARM parameter file is private, temporary and removed on success or failure.
+
+Choose `entraBearerOnly=false` to preserve browser mode and its separately
+initialized Key Vault application secret. That existing runtime credential is
+not a pipeline credential and is never read by the pipeline. Browser sign-in
+must return 302 while anonymous `/api/me` must return exactly 401; a platform
+302 on the API is a failed check, not a pass. Use `true` only for an explicitly
+approved secretless service-test target as described above, not as a silent
+workbench UX change. Tenant registration, SQL users/seed and browser callback,
+staff and token-store initialization remain separate human-controlled tasks.
+
+Provide isolated, **ephemeral** Linux x64 runners with labels
+`ama-private-plan`, `ama-private-release`, `ama-private-deploy`, Python 3.12,
+Azure CLI/Bicep, gh and Docker (release/deploy only). They must reach private
+ACR and API DNS/network paths without widening any network policy. Restrict
+runner groups to the trusted default-branch workflows; do not share runners
+with arbitrary PR jobs, ambient managed identities or reusable credentials.
+Destroy runner disks, Docker credentials and isolated Azure CLI caches after
+each job. Plan needs resource reads plus what-if/validation, no resource
+writes; publish needs registry read/AcrPush scoped to the ama registry; deploy
+needs an approved ama-scoped deployment/resource custom role, template-required
+role-assignment rights and registry **AcrPull only**, without quarantine bypass.
+Do not grant subscription Owner or move governance/policy into this pipeline.
+Actual RBAC/federation and runner isolation require platform-owner verification.
+
+Quarantine is never disabled or bypassed. Test/pilot registries retain their
+quarantine policy: an independently approved scan/release process must make
+these digests pullable before target-environment approval. The deploy identity
+pulls every exact digest before apply; denied/quarantined images stop the run.
+No quarantine-release process is provisioned here, so this remains a live gap.
+Registry scan acceptance is not hosted read-only/capability enforcement;
+the inherited Container Apps hardening limitation remains Partial.
+
+#### Apply policy, probes and acceptance boundary
+
+The workflow targets existing, initialized infrastructure only. PR planning
+requires four existing immutable workload images and consistent maintenance
+job images; it does not silently select placeholders or newest tags. The
+deployment helper invokes only group-scoped, incremental operations in `ama`.
+It creates/deletes no group and rejects Delete, Ignore, unsupported/unknown
+what-if changes or resources outside the configured subscription's `ama`.
+The exact generated parameters are reused for the fresh what-if and apply.
+SQL server discovery must be nonempty, and **every** SQL server in ama must
+have public access Disabled before and after deployment. SQL stays private
+in the template; there are no firewall or policy-exemption workarounds.
+
+After successful ARM provisioning, the helper uses the deployment's own
+`apiInternalFqdn`, HTTPS certificate validation and no redirect following.
+It retries health briefly until exact 200, then requires exact 401 for anonymous
+API, malformed bearer and forged principal-header requests. Browser mode also
+requires sign-in 302. Any unauthenticated 2xx, redirect on the API, wrong status
+or network failure fails the run. A failed rollout is not automatically undone:
+retain the run and have an owner review a new release; never delete ama.
+The sanitized artifact distinguishes successful what-if from successful
+deployment/checks. SQL read/write, authorized staff, model access and restart
+persistence in rebuild step 7 are **not** proven by these HTTP/SQL-policy
+checks; private identity-backed acceptance remains separate.
+
+| Issue criterion | Current evidence and unmet boundary |
+| --- | --- |
+| Per-environment OIDC | Wired with job-local id-token write, no stored pipeline secrets; actual federation/RBAC unverified |
+| Infra PR what-if attached | Trusted trigger and sanitized artifact wired/tested; no live PR what-if executed |
+| Approval and environment parameter sets | Same template/examples, environment configuration guard and approval boundaries implemented; actual reviewer rules/approval and pilot ownership/region unverified |
+| Versioned image push and deployment reference | Four image/scan/artifact/digest path implemented/tested; no live build/push/deploy or quarantine release observed |
+| Automatic post-deployment checks | Local HTTP negative/positive tests and fake-command orchestration; live ingress/authentication/SQL/model/restart acceptance unmet |
+| No secret values in logs/repository | Pinned workflows, no stored-secret inputs, captured command output and canary regression checks; end-to-end live log audit not performed |
+
+All six live issue criteria remain unchecked. Local checks:
+`python3 -m pip install PyYAML==6.0.3`, then
+`python3 -m unittest discover -s infra/tests -p test_pipeline.py -v`.
+`actionlint -config-file infra/tests/actionlint.yaml .github/workflows/infra-plan.yml .github/workflows/src-deploy.yml .github/workflows/src-ci.yml`
+checks real workflow syntax when actionlint is installed. Source CI persists
+the structure/permission/pinning/no-echo mutation tests and helper Ruff/mypy.
 
 `deploymentProfile` defaults to `production`. Development alone relaxes
 nothing: public access, purge protection and registry quarantine each require
@@ -217,6 +366,118 @@ Runner unit tests use installed source packages:
 Compiled profile/staging/auth-mode checks run in the existing infra suite.
 
 Example from the repository root: `python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> --environment dev --parameters <private-completed-parameters.bicepparam>` (what-if; complete the recorded checks below and add `--apply` only after review).
+
+## Public browser continuation (2026-10-16, #344)
+
+Refs #344. Refs #143. Refs #200. The owner authorized public browser access
+again, not public SQL or a policy bypass. The proof environment
+`cae-cutover-test` is internal in `vnet-cutover-test` (`10.40.0.0/16`,
+uksouth); its internal setting cannot be changed in place. We chose Front Door
+Premium with Private Link and WAF Prevention over a new external environment:
+it reuses the existing API, identities, private data path and immutable src
+image without replacing the environment, subnet or jobs. The trade-off is an
+additional paid edge/private-endpoint service and connection approval. This
+synthetic-development continuation is not production-profile or pilot acceptance.
+The owner also allowed an API-only external environment, but not the existing
+global `allowPublicNetworkAccess` switch, which also requests public data access.
+
+The additive entry point checks that the existing environment is internal with
+public access Disabled and that the sole API origin belongs to it with ingress
+authentication enabled. It does not establish a valid tenant registration.
+It now also requires a hexadecimal UUID-shaped Entra `clientId`; empty,
+malformed and `systemAssignedIdentity` values stop the dependent auth/edge
+deployment. The guard points to `python3 infra/scripts/setup-entra.py`, whose
+existing `--public-url` discovers and verifies linked edge callbacks. Run setup
+before reapplying the edge. A syntactically valid UUID is not proof that the
+registration exists, credentials work or a human can sign in.
+It leaves main's production-profile guard intact. It carries forward provider
+validation, public exclusions, token storage and credential references returned
+by the auth-config read, sets
+`forwardProxy=Custom` with `X-Forwarded-Host` / `X-Forwarded-Proto`, HTTPS
+required, and uses the default
+`entraBearerOnly=false` / `RedirectToLoginPage`. No credential is generated.
+
+The auth update is a full-resource PUT formed with `union`, not a PATCH.
+Preservation is limited to properties returned by the selected auth-config API
+version. Secret **values** belong to the Container App secret store and are not
+read or written by this module; their auth-config references are carried forward
+only when present in the read response. A write-only, omitted or redacted
+provider/token-store reference cannot be reconstructed by `union`. Before a live
+reapply, a human operator must verify the non-secret reference names against the
+authorized configuration and stop if any required reference is absent/redacted;
+repair through setup or the owning secret-management path, never copy secret
+values into Bicep or evidence. No preservation of omitted fields or live
+credential round-trip has been proved. This continuation makes no live auth write.
+
+```bash
+az deployment group what-if -g ama -n public-browser-344 \
+  -f infra/public-edge-existing.bicep \
+  -p environmentName=cae-cutover-test apiName=ca-cutover-test-api \
+  workspaceName=log-cutover-test prefix=cutover-test entraBearerOnly=false \
+  --no-pretty-print
+# Review the exact delta, then use create --mode Incremental with the same input.
+```
+
+Initial what-if: eight edge resources Create, no resource Modify/Delete.
+The auth-preserving follow-on also changes only the existing API auth child.
+Provider-populated defaults and runtime references can appear as what-if
+property deltas; inspect them, never treat them as permission to modify SQL.
+Approve only this edge's pending connection on `cae-cutover-test`, matching
+`Front Door Premium private origin for cutover-test`. A write can return
+Pending while its asynchronous operation runs; verify terminal operation and
+connection **Approved**, not just CLI exit 0.
+
+Exact new resource names: `afd-cutover-test`, its `ep-cutover-test` endpoint,
+`og-api` group / `api` origin, `route-api`, `sp-waf`,
+`to-log-analytics` diagnostics and `wafcutovertest`. The managed connection
+belongs to that origin. `job-cutover-test-public-audit` is a manual image-only
+asset hash instrument, using the same serving digest and existing pull identity;
+it does not open the dataset or any store. A second execution probes only
+anonymous private HTTP status/redirect host. No pre-existing resource was
+deleted or replaced, including the group, internal environment, SQL, existing
+proof jobs and budget. Only the empty, unused `afd-cutover-test/originheaders`
+rule set created by a rejected header-removal trial was deleted.
+
+The public endpoint is
+<https://ep-cutover-test-esdrcphsarcahhde.b01.azurefd.net/>.
+Detailed public checks, resource inventory and feature acceptance are in the
+[cut-over pack](../docs/architecture/cutover-evidence-pack.md#public-browser-restoration-2026-10-16)
+and its sanitized JSON. Until the tenant gap is resolved, this URL is not a
+claim that a person can complete sign-in.
+
+Public curl on 2026-10-16 proved health/welcome/static 200, native anonymous
+APIs 401 and browser `/app` redirect to Entra with the public callback host.
+Forged principals/malformed bearer were denied; conflicting Host returned 421.
+Individual and combined forwarding-header probes retain the HTTPS edge callback.
+Standard forwarding initially trusted a client RFC `Forwarded` host; Azure
+disallows deleting that reserved header in a rule, so both edge entry points now
+use only Front Door-overwritten X-Forwarded headers through Custom configuration.
+Native API curl is not the browser API contract: a browser User-Agent still
+receives EasyAuth 302 for an anonymous API request, even with
+`Accept: application/json`. With `entraBearerOnly=false`, the configured
+unauthenticated action is a redirect, not a route-aware browser/API split;
+the observed native curl 401 depends on EasyAuth's client/User-Agent handling.
+Changing User-Agent can therefore change an anonymous API response from 401
+to 302. These observations are not a reliable API-wide 401 guarantee. Refs #350:
+the required browser-page redirect plus anonymous API 401 coexistence remains
+unchecked, including browser/fetch-style JSON requests. No API exemption was
+added without positive authenticated-platform proof.
+
+The existing proof client value `systemAssignedIdentity` is **not an Entra
+application registration**. Matching-tenant read-only discovery found no retained
+workbench registration; no valid browser credential or staff roster is supplied.
+Real-user sign-in is **Blocked**, filed as #349. Supply the intended registration
+and private-vault credential through authorized tenant/in-VNet operators; then
+run `python3 infra/scripts/setup-entra.py --public-url https://<edge-host>`,
+reconcile the private staff
+roster and restart replicas. Do not reuse another application's client or
+fabricate staff. The full feature/configuration gap audit is filed as #350.
+
+Before auth mutation, baseline was `Return401` / `NoProxy` with the seven
+existing public exclusions. If critical health, API denial or routing isolation
+fails after propagation, disable only the new endpoint and restore those two
+auth fields; do not delete resources or weaken private networking. A tenant
+prerequisite blocker alone is not a reason to enable anonymous APIs.
 
 ## Environments
 
@@ -335,11 +596,15 @@ and need no Azure login, subscription access or deployment. Install the source
 packages first, preferably in a disposable virtual environment (pip only).
 Source CI runs the gates within the existing `namespace` / `src-namespace` job
 in `.github/workflows/src-ci.yml`, including on `infra/**` changes. The legacy
-`.github/workflows/mvp-validation.yml` infra checks and all existing job/check
-names remain unchanged, following the #321 cut-over decision.
+`.github/workflows/mvp-validation.yml` also runs full infra discovery. Both
+infra-test steps install the test-only `PyYAML==6.0.3` pin before discovery;
+it is not a production package dependency. All existing job/check names remain
+unchanged, following the #321 cut-over decision. The workflow regression tests
+reject missing, unpinned or late installation without skipping pipeline controls.
 
 ```bash
 python3 -m pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator
+python3 -m pip install 'PyYAML==6.0.3'
 az bicep version
 for file in infra/*.bicep infra/modules/*.bicep; do
   az bicep build --file "$file" --stdout > /dev/null || exit 1
@@ -350,6 +615,14 @@ python3 -m pip install 'ruff==0.17.1'
 ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py
 ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py
 ```
+
+To reproduce the test dependency boundary in a fresh venv, install only
+`pip install -e src/core -e src/agents -e src/api`, then run
+`python -m unittest discover -s infra/tests -q`. Without the explicit test
+prerequisite, discovery fails with `ModuleNotFoundError: No module named 'yaml'`.
+Install `python -m pip install 'PyYAML==6.0.3'` in that same venv and rerun
+the identical discovery command. This is intentional test setup, not a reason
+to add PyYAML to the application packages.
 
 Image-selection tests alone need only Python, with no Azure CLI or login:
 `python3 -m unittest discover -s infra/tests -p test_deploy.py -v`.
@@ -373,7 +646,7 @@ previously lacked the positive minimum already used for digest retention; it
 now has `@minValue(1)`. All-file build exposed governance policy IDs incorrectly
 prefixed by the subscription ID; built-in definitions now use
 `tenantResourceId('Microsoft.Authorization/policyDefinitions', ...)`, with a
-compiled regression. Policy stays audit-only and Defender stays Free by default.
+compiled regression. Policy stays audit-only; Defender activation remains opt-in.
 Existing lint configuration and guards were reused, not newly invented.
 
 Limits and open items: immutability policies are intentionally created
@@ -411,7 +684,7 @@ owners and sources still a gap before operational reliance.
 | Control | Where | Decision | Owner | Cost |
 | --- | --- | --- | --- | --- |
 | Azure Policy assignments (SQL and storage public access, Key Vault deletion protection, required tags) | [`governance.bicep`](./governance.bicep), subscription scope, deployed separately by the subscription owner | Built-in definitions, audit only (`enforcementMode=DoNotEnforce`): policy reports non-compliance but blocks nothing; a Deny stance is an open owner decision | Juan Manuel Servera | No charge for Azure Policy |
-| Defender for Cloud plans (Storage, SQL servers, Key Vaults, Containers) | [`governance.bicep`](./governance.bicep) | Decided; plans stay on Free (no protection added) until the owner accepts a cost and sets `enableDefenderPlans=true` | Juan Manuel Servera | Per-resource pricing, not yet estimated: open item, confirm in the Azure pricing calculator before enabling |
+| Defender for Cloud plans (Storage, SQL servers, Key Vaults, Containers) | [`governance.bicep`](./governance.bicep) | No pricing resource is submitted until the owner accepts a cost and sets `enableDefenderPlans=true`; then the four plans request Standard. Existing paid or Free subscription plans are preserved when disabled | Juan Manuel Servera | Per-resource pricing, not yet estimated: open item, confirm in the Azure pricing calculator before enabling |
 | Resource locks | `enableLocks` in `main.bicep` (Key Vault, SQL, storage) | [`main.pilot.example.bicepparam`](./main.pilot.example.bicepparam) (a non-deployable example with placeholders; copy it to a private file and fill every value) sets `true`; the development file keeps `false` so the stack can be reset | Juan Manuel Servera | None |
 | Tagging standard | `allTags` in `main.bicep` | Required tags on taggable resources, component refinements and untaggable-child exceptions documented in Environments; group tags remain separate | Juan Manuel Servera (exercise resource contact) | None |
 | Known exceptions | [`policy-exceptions.json`](./policy-exceptions.json) | EX-001: `SecurityControl=Ignore` on the development resource group (MCAPS SQL public-access policy); expires 2026-12-31 | Juan Manuel Servera | None |
@@ -422,6 +695,51 @@ az deployment sub create -l uksouth -f infra/governance.bicep
 ```
 
 Open items: Defender cost estimate and the decision to enable; renewal of EX-001 after 2026-12-31 (never on a pilot group); whether to switch any policy from audit to Deny; the group must carry the required tags before Deny is considered. The platform-wide MCAPS policy itself is managed outside this repository.
+
+The synthetic-development decision is to audit the selected public-access,
+purge-protection and tag controls without replacing or weakening existing
+platform policies. DoNotEnforce applies only to these new assignments, not to
+the subscription's existing enforcement. Paid Defender activation is deferred
+because an accepted cost and service-coverage appraisal are absent; the Free
+tier is not a replacement for image scanning or workload protection. Submitting
+Free would downgrade a shared subscription, so disabled opt-in now creates no
+pricing resources rather than changing any plan. This is a code decision, not
+evidence of deployed policy compliance, protection, or financial approval.
+The subscription-scoped governance template is outside a resource-group-only
+`ama` execution boundary and was compiled/tested only in this task.
+
+## Hardened source image rollout (#118)
+
+Refs #118. All six application containers are defined in
+[`modules/containerapps.bicep`](./modules/containerapps.bicep): API, agents,
+orchestrator, import, token renewal and ledger verification. Compiled tests
+verify each image parameter, API health probes and 2-4 replicas, plus the
+default-off Premium Front Door/WAF/Private Link edge. Maintenance jobs retain
+their direct Python module commands; no guard-bearing image path is required.
+Worker transport remains #144; a Bicep resource is not worker acceptance.
+
+Hosted hardening acceptance is **Partial**: the
+[Container Apps 2025-07-01 schema](https://learn.microsoft.com/azure/templates/microsoft.app/2025-07-01/containerapps)
+and 2026-07-01 schema were checked on 2026-10-16 and expose no
+`readOnlyRootFilesystem`, capability-drop or `securityContext` settings for
+these container definitions. No unsupported property is added and no deployed
+kernel enforcement is claimed. Images remain non-root but no longer carry a
+fail-closed startup guard that would prevent Container Apps startup. Local/CI
+Docker contracts explicitly set `--read-only --cap-drop ALL --security-opt
+no-new-privileges` and verify the actual kernel state. They also exercise plain
+non-root startup for compatibility; this is not evidence of an Azure rollout.
+A future supported hosted configuration and private runtime proof are still
+required to meet the full hardening criterion. No hosting architecture change
+or deployment approval is inferred.
+
+Front Door Premium, WAF and origin Private Link remain infra-only gated
+definitions: `enablePublicEdge=false` by default, production/private profile
+required, no new edge deployed publicly. No Azure deployment or what-if, policy
+bypass, SQL public access change or new deploying CI is part of this work.
+See the [criterion audit](../docs/architecture/cutover-evidence-pack.md#deployment-hardening-audit-118-2026-10-16).
+ADR 0005 remains accepted only for synthetic development; Juan Manuel Servera
+is the exercise Legal, Compliance and DPO owner, not evidence of operational
+legal approval. Real owners and sources remain a gap before operational reliance.
 
 ## Identity and role assignments (issue 141)
 
@@ -437,7 +755,14 @@ Open items: Defender cost estimate and the decision to enable; renewal of EX-001
 
 Chat and memory store (ADR 0004, accepted by the owner 2026-10-15): no Bicep resource exists yet. When added it gets one data-plane role for the api identity, local auth disabled, and a new matrix row.
 
-Entra registration: [entra/app-registration.json](entra/app-registration.json) is the declarative record (audience, callback, eight app roles mapped to the MVP personas, assignment required). `create-api-app-registration.sh` applies the registration idempotently but does not read the manifest: a test only keeps manifest, script app roles and `DEFAULT_ROLE_MAP` identical, and callback hostnames are supplied with `-u` at run time. Reproducibility (criterion 4) is therefore met by explicit manual steps and a named owner, not declaratively. Existing sign-in, picture and user switching are unchanged. Owner of the manual steps: Juan Manuel Servera (subscription owner; tenant ownership unconfirmed).
+Entra registration: [entra/app-registration.json](entra/app-registration.json)
+records the single-tenant audience, callback path and eight workbench roles.
+`setup-entra.py` reads its roles/callback path, preserves existing role IDs and
+unrelated grants, and discovers deployed callback hosts. The older creation
+shell helper remains for explicit historical procedures; it is not the
+recommended repair path. See [API registration management](#api-registration-management-with-the-existing-m365-session).
+Juan Manuel Servera is the exercise Legal, Compliance and DPO owner; that does
+not establish tenant administrator authority or operational approval.
 
 Open items:
 
@@ -445,6 +770,22 @@ Open items:
 * Contractor B2B guest model (ADR 0002, #116) is proposed, not confirmed; tenant guest and cross-tenant policy are manual tenant steps.
 * Drop `db_ddladmin` from the api identity after schema migration moves out of app start.
 * Live `az role assignment list` comparison against a deployed group was not run here.
+
+## Regulatory assistant capability roles (#217)
+
+The Entra registration manifest keeps auxiliary `capabilityRoles` separate from
+the mutually exclusive staff `appRoles`. The registration script declares all
+three: `ZavaForward.RuleAuthor`, `ZavaForward.RuleOwner` and
+`ZavaForward.RegulatoryChat`. These supplement, never replace, one staff role.
+The API grants them only from a trusted claim bound to a uniquely provisioned
+principal; a local staff field or email fallback does not grant authority.
+Holding multiple capabilities never permits author self-approval.
+
+Manifest/script/API parity is checked in `test_identity_rbac`. This update
+changes local declarations only: no tenant role creation/assignment, identity
+administration, Azure deployment or actual revocation test was performed.
+Provisioning and human approval remain unmet operational gates. The synthetic
+exercise DPO is Juan Manuel Servera; no real-company delegation is inferred.
 
 ## Key Vault secret lifecycle
 
@@ -664,39 +1005,155 @@ operator execution or local Chromium fixtures.
 
 ## Post-deployment API authentication initialization
 
-An environment rebuild changes the ingress FQDN even when the API registration
-is retained. After the protected API has been deployed, initialize its callback:
+Refs #351. Refs #344. Use the same command after a rebuild or after adding a
+Front Door edge:
 
 ```bash
-python3 infra/scripts/initialize-api-auth.py \
-  -g ama -n ca-forward-test-api --login
+python3 infra/scripts/setup-entra.py
 ```
 
-The deployment operator discovers the tenant, current FQDN and configured client
-ID. Explicit `--login` starts tenant-scoped device-code authentication in a
-separate private Azure CLI profile, by default
-`$AZURE_CONFIG_DIR/zava-entra-init` (or `~/.azure/zava-entra-init` when unset).
-Complete it as an authorised registration owner or administrator. This does
-not overwrite the deployment identity or grant tenant permissions to it.
-Keep the profile outside the repository: it contains authentication material.
-
-Subsequent initialization runs omit `--login`. Use `--tenant-profile <directory>`
-to select an existing Graph-authorised provisioning profile. Verify without
-changing the registration:
+No required arguments. The default resource group is `ama` (other groups are
+refused). API selection prefers `zava-forward-role=api`, then the existing
+`workload=api` tag, then `ca-*-api`. New Bicep deployments tag the API and
+Front Door profile/endpoint (`zava-forward-role=api-edge`). Existing untagged
+resources still work. Ambiguity prints resource-name candidates, never IDs;
+select explicitly rather than guessing:
 
 ```bash
-python3 infra/scripts/initialize-api-auth.py \
-  -g ama -n ca-forward-test-api --check
+python3 infra/scripts/setup-entra.py --container-app ca-cutover-test-api
+python3 infra/scripts/setup-entra.py --check
+python3 infra/scripts/setup-entra.py --dry-run
 ```
 
-The command validates tenant/client identity and enabled ingress authentication,
-then reads the existing registration by client ID. It adds the current callback
-to `web.redirectUris` only if missing, preserves prior redirects, and verifies
-the update. Reruns do not patch an already initialized registration. Missing
-callbacks in check-only mode, permission denial and unverifiable updates exit
-nonzero. The command does not change display names, roles, assignments or
-secrets. The existing creation helper is for first-time registration and role
-provisioning, not a callback-only repair.
+`ca-cutover-test-agents` is not the API and is never selected by the fallback.
+The script matches enabled Front Door origins to the selected API FQDN and
+uses only enabled HTTPS `/*` routes. It includes the API hostname, default
+edge domain when linked, and attached custom domains after validation and
+deployment succeed. Multiple eligible edges require `--edge-profile`, unless
+one linked profile carries the role tag. `--public-url https://<edge-host>`
+asserts a discovered eligible origin; it cannot inject an unrelated callback.
+This handles both main's edge module and #344's additive existing-app edge.
+In particular, setup retains the existing `Custom` forwarding convention and
+`X-Forwarded-Host` / `X-Forwarded-Proto` header names used by the pending
+`public-edge-existing.bicep` and `edge-existing-auth.bicep` deployment.
+It does not replace that configuration with `Standard`. The legacy CLI also
+accepts `--public-url` through its delegation to setup.
+It does not create an edge, approve Private Link, validate DNS/certificates or
+open the private data network.
+
+A UUID auth client selects its existing tenant registration. A managed-identity
+value such as `systemAssignedIdentity` is not a registration UUID: find by
+exact `zava-forward-api` display name, then by application role tag; create
+only when neither exists. Duplicate matches stop. `--registration-name` or
+`--client-id` selects an intended registration without printing its identifier.
+Missing enterprise app and manifest roles are added; old redirects, unrelated
+roles, existing role IDs, credentials and assignments are retained. Disabled
+or incompatible existing workbench roles stop rather than being replaced.
+Propagation is polled and verified. The script enables assignment-required
+sign-in, requires HTTPS, and configures the matching issuer/audiences and
+trusted-proxy runtime settings while preserving unrelated container settings.
+Existing auth exclusions, token storage, other providers and bearer/browser
+action are preserved; an anonymous action is tightened, never enabled.
+Planned direct user/group memberships with different effective roles are
+rejected before any registration or enterprise-app create/update, including
+on a fresh setup. The same role through both a user and group is allowed.
+
+Browser credentials are optional and never printed. An existing same-client
+secret reference is reused without rotation; this does not prove its validity.
+With no usable reference, setup reports incomplete rather than attaching a
+new registration to an old client's secret. Explicitly create a missing
+180-day credential with one of:
+
+```bash
+python3 infra/scripts/setup-entra.py --create-secret --vault <vault-name> \
+  --vault-identity <already-attached-key-vault-enabled-identity-resource-id>
+python3 infra/scripts/setup-entra.py --create-secret --secret-store app
+```
+
+Key Vault is the default store; a unique vault in `ama` is auto-selected.
+Before minting a one-time credential, setup probes that vault's data endpoint
+with `az keyvault secret list --maxresults 1`, which returns metadata, never
+secret values. The operator needs metadata-list permission in addition to the
+separate secret-write permission. Denial, network failure or timeout stops
+before credential creation. A successful probe does not prove write authority
+or guarantee subsequent availability; later storage failures still require
+the interrupted-handoff recovery below. Existing credential reuse and
+read-only modes do not run this creation-only probe.
+The reference uses the specified attached API identity, or an existing
+system-assigned identity. Private-vault operations require the authorized
+network/operator path; a failure never changes networking or silently falls
+back. `--secret-store app` is an explicit Container App secret alternative.
+Setup-owned secret/credential names are stable and bound to the selected
+application. Secret bodies use temporary mode-0600 files under the isolated
+profile, removed even on CLI failure; secret values never enter process
+arguments, repo files or CLI logs. Existing app secrets are preserved.
+Serialize runs across machines; a local profile lock prevents concurrent
+mutation, but there is no cross-host distributed lock.
+
+After interruption between credential creation and storage, rerunning must
+not mint another secret or switch auth. The tool stops with portal recovery
+instructions. An authorized owner must inspect the setup-only credential in
+Certificates & secrets; if its value was lost and it is unused, remove only
+that orphan before retrying. If Key Vault storage succeeded, an operator may
+instead attach that stored secret to the API. Never remove an in-use credential.
+A stale local lock may be removed only after verifying no setup process runs.
+Expired setup credentials require the separate reviewed rotation procedure.
+For a later declarative browser redeploy, retain the selected registration
+and Key Vault secret name privately as `entraClientId` and
+`entraClientSecretName`; the latter defaults to the historical
+`entra-client-secret` for existing deployments. Never commit completed
+identity parameters. A Bicep browser redeploy assumes Key Vault storage;
+an explicitly selected app-local secret must first be moved through the
+approved vault path, or be retained by an app/auth-only rollout. Do not
+silently replace it with an unrelated canonical vault secret.
+
+An existing `Return401` configuration stays service-test mode. `--bearer-only`
+explicitly selects secretless Return401 service wiring, including when the
+previous action was browser redirect, but is not browser acceptance.
+Provisioning a credential does not change an existing bearer-only action to
+browser mode; #344's human-reviewed browser deployment owns that transition.
+The final summary keeps this distinction and the separate SQL binding gate.
+
+Exit codes: `0` means the requested configuration converged, not successful
+human sign-in; `2` means drift in read-only mode or incomplete prerequisites;
+`1` means blocked/error; `130` means interrupted. `--check` and `--dry-run`
+make no remote mutations, do not log in or create a missing private profile,
+and cannot be combined with `--login`. They need existing authorized sessions.
+A final fresh Container App read must report provisioning `Succeeded`.
+Failed, in-progress, canceled or missing provisioning state is incomplete
+(exit `2` on otherwise converged runs), even when runtime values already
+match, in ordinary no-op runs as well as `--check` / `--dry-run`.
+Successful earlier writes are retained on failure, so rerun discovery after
+an unknown write outcome. Mutating POSTs are not blindly retried.
+The old `initialize-api-auth.py` CLI forwards to this command with the same
+options; its imported callback-only Python function is retained for compatibility.
+
+Local regression evidence (2026-10-16): all 177 infra tests pass with the source
+distributions installed in an isolated pip venv, including compiled Bicep
+controls. Each RV-001/RV-002/RV-003 safeguard was independently removed in
+memory and its behavioral regression failed. This proves mocked command
+ordering, preservation and failure handling, not live directory permissions,
+vault connectivity/write authority, secret validity, consent, Private Link
+readiness, SQL bindings/restart or an authorized person's browser sign-in.
+
+For a Front Door hostname, first configure `forwardProxy.convention=Custom`,
+`customHostHeaderName=X-Forwarded-Host` and
+`customProtoHeaderName=X-Forwarded-Proto`, then pass the explicit HTTPS origin
+to both apply and check:
+
+```bash
+python3 infra/scripts/initialize-api-auth.py -g ama -n ca-cutover-test-api \
+  --public-url https://<edge-host>
+python3 infra/scripts/initialize-api-auth.py -g ama -n ca-cutover-test-api \
+  --public-url https://<edge-host> --check
+```
+
+This adds only the edge callback, preserving the original callbacks. It rejects
+non-HTTPS URLs, credentials, ports, extra paths/queries/fragments and a differing
+edge host without that exact Custom proxy configuration. Standard also trusts
+client RFC Forwarded input and is rejected for this edge callback. It still requires a real
+registration and an authorized tenant profile; it cannot repair the #349
+missing-registration prerequisite.
 
 ### Tenant staff and application-role initialization
 
@@ -722,10 +1179,10 @@ coherence, not evidence of professional competence or delegated authority.
 
 ```bash
 python3 infra/scripts/initialize-workbench-staff.py \
-  --resource-group ama --container-app ca-forward-test-api \
+  --resource-group ama --container-app ca-cutover-test-api \
   --roster "$HOME/.azure/zava-forward-staff/roster.json" --check
 python3 infra/scripts/initialize-workbench-staff.py \
-  --resource-group ama --container-app ca-forward-test-api \
+  --resource-group ama --container-app ca-cutover-test-api \
   --roster "$HOME/.azure/zava-forward-staff/roster.json" --apply --restart
 ```
 
@@ -765,16 +1222,15 @@ The existing registration is retained. Add only delegated own-user Graph
 `User.Read` with the same isolated provisioning profile:
 
 ```bash
-python3 infra/scripts/initialize-api-auth.py \
-  -g ama -n ca-forward-test-api --account-photo
-python3 infra/scripts/initialize-api-auth.py \
-  -g ama -n ca-forward-test-api --account-photo --check
+python3 infra/scripts/setup-entra.py --account-photo
+python3 infra/scripts/setup-entra.py --account-photo --check
 ```
 
 This opt-in flag merges `User.Read` into existing requested permissions,
 preserving all previous permissions/redirects. It does not grant administrator
-consent, change roles, rotate credentials or request app-only
-`ProfilePhoto.Read.All`. Users complete normal Microsoft sign-in/MFA/consent;
+consent, rotate existing credentials or request app-only
+`ProfilePhoto.Read.All`. The setup command also reconciles its ordinary
+registration/roster/auth scope as described above. Users complete normal Microsoft sign-in/MFA/consent;
 an administrator handles consent if tenant policy requires it. Never share
 passwords, device codes, access tokens or a CLI profile directory.
 
@@ -827,7 +1283,7 @@ output to `log-forward-test`; no new logging resources or role grants are
 needed. Live console access:
 
 ```bash
-az containerapp logs show -g ama -n ca-forward-test-api \
+az containerapp logs show -g ama -n ca-cutover-test-api \
   --type console --tail 50
 ```
 
@@ -838,7 +1294,7 @@ instead of publishing raw platform logs:
 ```kusto
 ContainerAppConsoleLogs
 | where TimeGenerated > ago(1h)
-| where ContainerAppName == "ca-forward-test-api"
+| where ContainerAppName == "ca-cutover-test-api"
 | extend Event = extract(@"auth flow: (sign-in-started|account-picker-started|account-switch-requested|sign-out-requested|workbench-entered)", 1, Log)
 | where isnotempty(Event)
 | summarize Events=count(), Latest=max(TimeGenerated) by Event, RevisionName
@@ -896,6 +1352,122 @@ startup. Remove unnecessary provisioning consent afterwards, including
 use delegated `User.Read`, not tenant-wide application photo permission.
 
 ### API registration management with the existing M365 session
+
+The supported single-line entry point is:
+
+```bash
+python3 infra/scripts/setup-entra.py
+```
+
+This is Entra application setup, not M365 user creation, licensing, Teams or
+SharePoint provisioning. It does not access an existing M365 CLI cache. It
+reads the deployment operator's Azure context for the selected subscription
+and tenant; device-code sign-in writes only the independent
+`~/.azure/zava-entra-init` profile (mode 0700), never the operator's profile.
+Use `--login` to renew that isolated session, or `--tenant-profile` for another
+private directory outside Git. The directory account must match the deployment
+tenant. With no deployment login, setup offers isolated device-code login;
+the account must have access to the existing `ama` group. Follow the printed
+device-login URL/code in a browser as an authorized human. Other login output,
+directory names, IDs and CLI stderr are suppressed. The sign-in has a
+five-minute limit; rerun if it expires.
+
+Preflight checks Python >=3.10, az, the isolated `containerapp` extension,
+login, Graph token permission hints and authenticated management/Graph reads
+(also the network check). Nothing requires a Python framework or package.
+Permission hints do not prove app ownership, directory role, policy or write
+authority; a denied write is an error, not a missing object or successful setup.
+For missing tools the script prints installation commands. Supported examples:
+
+```bash
+python3 -m pip install azure-cli
+# Or Windows: winget install Microsoft.AzureCLI
+# Or macOS: brew install azure-cli
+# Python if missing: sudo apt install python3
+# Windows: winget install Python.Python.3.12
+# macOS: brew install python@3.12
+mkdir -p ~/.azure/zava-entra-init
+chmod 700 ~/.azure/zava-entra-init
+AZURE_CONFIG_DIR=$HOME/.azure/zava-entra-init az extension add --name containerapp --upgrade
+```
+
+All CLI calls disable file logging, telemetry and automatic extension installs;
+use no shell tracing, CLI debug logging or external session recorder when
+handling private directory inputs. No real tenant, subscription, object IDs,
+secrets or emails should be copied into repository evidence. Generic portal
+URLs deliberately contain no identifiers.
+
+The same run reads `~/.azure/zava-forward-staff/roster.json`, or `--roster`
+outside Git. Parent directory must be mode 0700 and file mode 0600.
+Each entry needs a distinct code and exactly one `userId` or `groupId`, plus
+one explicit manifest role key. Fictional schema example (replace placeholders
+privately; these strings are not usable directory identities):
+
+```json
+[
+  {"code": "fictional-coordinator", "userId": "<private-user-object-id>", "role": "Coordinator"},
+  {"code": "fictional-quality-team", "groupId": "<private-security-group-object-id>", "role": "QualityInspector"}
+]
+```
+
+Role keys are `Coordinator`, `LiaisonOfficer`, `SafetyLiaison`, `GrantsOfficer`,
+`QualityInspector`, `ProgrammeManager`, `SupportOfficer` and `Contractor`.
+Users must be enabled tenant members; groups must be security-enabled.
+Existing code/userId-only staff rosters need explicit `role` enrichment for
+this setup tool; it never infers a person's authority from their code or name.
+Invalid, duplicate or permissively readable input blocks before directory
+writes. Missing roster is reported as incomplete; it is never fabricated.
+Assignments are additive and app-scoped, preserve Default Access and unrelated
+grants, and reject conflicting direct or effective direct-group app roles,
+including conflicts introduced by planned user/group assignments.
+Nested groups do not confer app assignments. Group-based assignment requires
+appropriate tenant licensing; a directory rejection remains a blocker.
+No users, groups, group memberships, guests or administrator roles are created.
+
+An authorized provisioning principal needs application-write permission
+(`Application.ReadWrite.All`, or application `Application.ReadWrite.OwnedBy`
+for owned apps), `AppRoleAssignment.ReadWrite.All` for roster writes and
+appropriate user/group read permissions (`User.Read.All`,
+`GroupMember.Read.All`), plus the directory role/ownership required by Graph.
+Already-consented broader directory scopes are recognized but never requested
+or added. Azure RG Owner, an M365 login, and directory authority are different:
+
+* Option A: authorized owner/admin uses
+  <https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade>
+  > All applications > select the workbench registration > Authentication
+  (Web redirect URLs) / App roles. For assignments use
+  <https://entra.microsoft.com/#view/Microsoft_AAD_IAM/StartboardApplicationsMenuBlade/~/AppAppsPreview>
+  > All applications > select the workbench > Users and groups >
+  Add user/group > select principal > Select a role > Assign.
+* Option B: authorized tenant admin approves the provisioning client's
+  narrowly required management permissions and directory authority, then the
+  operator renews the isolated session with `--login` and reruns. A service
+  principal without that authority cannot use resource-group ownership to
+  grant it to itself. Remove unnecessary provisioning grants afterwards;
+  never add directory-management permissions to runtime managed identities.
+
+`--account-photo` only merges delegated own-user Graph `User.Read`, preserving
+other requested permissions. User consent may occur naturally at sign-in
+where policy permits. If administrator consent is needed, setup prints the
+identifier-free portal URL and exact API permissions > Grant admin consent >
+Yes steps, then polls the app's Graph grant for up to `--wait-seconds` (default
+300, maximum 1800). Use `--wait-seconds 0` or read-only modes to report pending
+consent without waiting. It never clicks consent or grants directory-wide
+management consent itself. A timeout/denial is not a pass.
+
+App-role assignments alone do not initialize SQL staff. Continue the
+[private-network staff binding and replica restart](#tenant-staff-and-application-role-initialization)
+with a complete user roster, not a group row, and the installed source packages.
+SQL stays private and this script does not access datasets or open SQL.
+Juan Manuel Servera's exercise Legal, Compliance and DPO role is not tenant
+authority, resident consent, safety approval or operational rule activation.
+ADR 0005 remains accepted for synthetic development only; real owners and
+sources are still a gap before operational reliance.
+
+Offline evidence: `python3 -m unittest discover -s infra/tests -p
+test_setup_entra.py -q` covers fake-az discovery, ambiguity, creation/reruns,
+drift, private roster, edge matching, secret redaction and failure recovery.
+This is not evidence of tenant provisioning or successful human sign-in.
 
 The existing delegated M365 session was checked on 2026-10-12. Its consented
 Graph scopes do not include application management. Being logged in does not

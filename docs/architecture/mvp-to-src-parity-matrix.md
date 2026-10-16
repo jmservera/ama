@@ -10,8 +10,9 @@ ms.topic: reference
 Current check: the [2026-10-16 evidence pack](./cutover-evidence-pack.md) and
 [generated row reconciliation](./cutover-parity-audit.tsv) account for all
 130 per-file/pattern rows (578 historical tracked paths), including actual
-placements that differ from proposed targets below. Source images built;
-Azure bootstrap failed, so deployed health and owner sign-off remain unmet.
+placements that differ from proposed targets below. The failed bootstrap was
+followed by the private proof in the pack and the additive public-edge
+continuation below. Real-user feature acceptance and owner sign-off remain unmet.
 This current audit supplements, rather than rewrites, the historical record.
 
 This is the evidence for the cut-over gate in issue
@@ -40,6 +41,87 @@ created; a later partial deployment is recorded in
 [cutover-evidence-pack.md](cutover-evidence-pack.md). Acceptance criteria are read from
 the issue text; a criterion is "unmet" only where the pull request body, the
 code or the repository record shows it is not delivered.
+
+## Public Deployment Feature Audit (2026-10-16)
+
+Refs #344. Refs #143. Refs #200. Audit target:
+`ca-cutover-test-api`, immutable src API
+`sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d`,
+through the public Front Door endpoint in the
+[evidence pack](./cutover-evidence-pack.md#public-browser-restoration-2026-10-16).
+This is a feature-by-feature audit, **not full functional parity acceptance**.
+
+Historical names come only from this matrix, not legacy files. A manual
+image-only job, `job-cutover-test-public-audit-ud03kna`, succeeded and enumerated
+17 web assets in the exact serving image. All SHA-256 values match current
+`src/api/src/zava_forward/api/web/`, including every one of the 16 historical
+rows below. It never opened a dataset, Store, SQL or staff. `chat.js` is the
+seventeenth, additional asset. The sanitized
+[JSON](./cutover-azure-evidence.json) preserves the per-file hashes and curl
+observations. A platform redirect is only an auth intercept, not asset existence,
+successful rendering or authorized behavior.
+
+| Historical asset relative to web/ | Current src and serving-image presence | Functional/rendered acceptance |
+| --- | --- | --- |
+| `app.js` | Passed, matching hash | Blocked, #349/#350 |
+| `assistants.js` | Passed, matching hash | Blocked, #349/#350 |
+| `index.html` | Passed, matching hash | Blocked, #349/#350 |
+| `law.html` | Passed, matching hash | Blocked, #349/#350 |
+| `law.js` | Passed, matching hash | Blocked, #349/#350 |
+| `ops.js` | Passed, matching hash | Blocked, #349/#350 |
+| `panels.js` | Passed, matching hash | Blocked, #349/#350 |
+| `style.css` | Passed, matching hash | Public retrieval recorded separately; rendered acceptance Blocked, #350 |
+| `timecapture.js` | Passed, matching hash | Blocked, #349/#350 |
+| `welcome.html` | Passed, matching hash | Public retrieval recorded separately; real-user acceptance Blocked, #349 |
+| `zava-logo.png` | Passed, matching hash | Public retrieval recorded separately; rendered acceptance Blocked, #350 |
+| `vendor/LICENSE` | Passed, matching hash | Included, not a user workflow; no rendered claim |
+| `vendor/leaflet.css` | Passed, matching hash | Blocked, #349/#350 |
+| `vendor/leaflet.js` | Passed, matching hash | Blocked, #349/#350 |
+| `vendor/images/layers.png` | Passed, matching hash | Blocked, #349/#350 |
+| `vendor/images/marker-icon.png` | Passed, matching hash | Blocked, #349/#350 |
+
+Every user-visible capability represented by the historical modules/assets,
+their named tests and the migrated API guide is reconciled below. Route probes
+are anonymous only; a denial demonstrates protection, not that an authorized
+feature works. Hash fragments are client-side navigation, not distinct public
+server routes. The earlier local suites and historical MVP results remain
+separate evidence and cannot fill a deployed-result cell.
+
+| User-visible capability | Current src surface / public probe | Deployed result and filed gap |
+| --- | --- | --- |
+| Public welcome, branding and health | `/`, `/welcome.html`, `/style.css`, `/zava-logo.png`, `/healthz` | Public curl 200 Passed; no broader rendered/user-acceptance inference |
+| Entra sign-in, role landing, authorization and field projection | `/app`, `/sign-in`, `/.auth/login/aad`, `/api/me`; `auth.py`, `projection.py` | Redirect/edge callback proved; real-user acceptance Blocked: invalid client literal, no browser credential or staff. Native APIs 401 but browser API requests 302: #350. #349, #116 |
+| Account name, own-user photo, logout and account switching | `/api/account/photo`, existing account menu and `/api/logout` | Blocked: #349 plus disabled delegated token store. #350, #116 |
+| Own case queue, list pagination/filter/sort/reset, flags and CSV | `/api/cases`, `/api/cases.csv`, `/api/facets`; `app.js`, `workbench.py`, `taskqueues.py` | Blocked on staff and representative workload; no rendered or role-data pass. #350 |
+| Deterministic ranking, reasons, policy version/hash and snapshot | `/api/ranking/policy`, `/api/ranking/snapshot`; `ranking.py` | Blocked; retained unsigned policy is not ratified priority. #350 |
+| Overview counts, charts, map clusters, accessible map list and sensor views | `/api/stats`, `/api/map`; `ops.js`, Leaflet, `sensors.py` | Blocked; tile URL empty in production, no implicit OSM fallback. #350, #119, #112 |
+| Visits, appointment outcomes and no-access escalation | `/api/visits`, case pages; `panels.js`, `store.py` | Blocked; one-case proof is not the continuing visits/sensor fixture. #350 |
+| Case card, contact/preferences/support, calls, history and next action | `/api/cases/{id}`; `app.js`, `store.py` | Blocked; no private case reads attempted. #350 |
+| Resident answers, consent, pause/withdrawal, representation and redress | Case resident panels; `resident_decisions.py` | Blocked; no consent recorded or inferred. #350, #86 |
+| Colleague suggestions, return/reopen, handoff receipt/acceptance and chase ownership | `/api/handoffs`, case actions; `workflows.py`, `panels.js` | Blocked; sender/receiver behavior needs authorized users. #350, #83 |
+| Stage progression, safety referral/hold and server readiness gates | Case actions; `workflows.py`, `controls.py` | Blocked; no release/safety approval exercised. #350, #85 |
+| Contractor My jobs, scoped job card and need-to-know view | Work orders/case pages; `projection.py` | Blocked; no contractor assignment or positive role-session proof. #350, #116 |
+| Assessment, design, building and coordinator sign-offs/version invalidation | Case technical panel; `signoffs.py` | Blocked; no technical or professional approval substituted. #350 |
+| Capacity, packages, committed crews and versioned work orders | `/api/packages`, `/api/workorders`; `procurement.py` | Blocked; representative package/order fixtures and authorized staff absent. #350 |
+| Quality checklists, defects, fix/reinspection, independent acceptance and handover | `/api/checklists`, case quality panel; `quality.py` | Blocked; no QA/resident handover acceptance claimed. #350 |
+| Finance budgets, commitments, invoice/valuation matching and payment holds | `/api/finance`, case finance panel; `finance.py` | Blocked; no financial commitment or payment performed. #350 |
+| Funding application draft/review/submission record, grant award/claim/cash | `/api/funding`, case funding/grant panel; `grants.py` | Blocked; no application submitted or award/receipt inferred. #350 |
+| Document upload/download, checklist, scan holds, review and form assistance | Case document panel, `/api/docs/{id}`; `documents.py`, `doc_controls.py` | Blocked; Blob configured but real upload/scanner/durable retrieval not proved. #350, #117 |
+| Retention review, legal holds and manager-approved deletion | `/api/retention`; document controls | Blocked; no live deletion or approved retention schedule invented. #350 |
+| Excel export and spreadsheet column/row checking | `/api/cases.csv`, `/api/import-check`; `store.py`, importer fixtures | Blocked; UI/import transport acceptance remains separate from fixture migration. #350 |
+| AI top-five, briefing, message draft, catch-up, funding and document reading; five assistant panels | `/api/briefing`, `/api/assistants`, `/api/ai/priority`; `assistants.js`, `ai_tasks.py` | Blocked; no deployed model or API model endpoint. Manual/template paths not relabeled real AI. #350, #107, #108, #219 |
+| AI review/edit/reject, citations, workflow-only/failure path, comparison and budgets | `/api/governance`, `/api/ai/report`, case recommendations; `governance.py`, `ai_registry.py` | Blocked; release authority and real evaluation remain unmet. #350 |
+| Conversation threads, cited answers/proposals, memory, privacy and recovery | `/api/chat`; `chat.js`, `chatthreads.py`, `chat_privacy.py`, `chat_isolation.py` | Blocked; no role-scoped dialogue or privacy acceptance session. #350, #159 |
+| Law/provision viewer, source references and rule-card boundaries | `/law.html`, `/api/law`; `lawstore.py`, `rulecards.py` | Blocked; law-store settings absent. ADR 0005 synthetic-development acceptance is not operational rule approval. #350, #210 |
+| Staff own-time entries, notice, separate enabling and aggregated reports | `/api/time/status`, `#/time`; `timecapture.js`, `timecapture.py` | Blocked/intentionally gated: no DPIA/consultation/notice approval supplied. #350, #120 |
+| Audit verification, digest, continuity status and restart/recovery | `/api/audit-check`, `/api/continuity`; `ledger.py`, `continuity.py`, orchestrator jobs | Blocked for full workflow/digest acceptance. Earlier one-case SQL restart proof is retained, not expanded. #350, #114, #115 |
+
+No omitted capability has been silently called Passed. #349 tracks the common
+tenant prerequisite; #350 files all remaining feature/data/configuration and
+positive-role acceptance gaps, with existing specialist issues linked. Operational
+sources, real owners, resident choice, safety and financial/legal decisions
+remain human gates. Juan Manuel Servera is the exercise Legal/Compliance/DPO
+owner only; no other approval is invented. No issue-body criterion was ticked.
 
 ## Role Task Queue Offline Slice (2026-10-16)
 

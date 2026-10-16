@@ -1376,5 +1376,619 @@
     ],
     "deletions": [],
     "owner_checklist": "All unchecked"
+  },
+  "public_browser_344": {
+    "observed_at_utc": "2026-10-16T17:03:39.939315+00:00",
+    "refs": [
+      344,
+      143,
+      200
+    ],
+    "status": "Partial: public transport/browser redirect proved; real-user sign-in and full deployed parity Blocked",
+    "review_continuation_2026_10_16": {
+      "source_only_uuid_guard": "Requires hexadecimal UUID syntax before dependent auth/edge writes; points to python3 infra/scripts/setup-entra.py",
+      "guard_deployed": false,
+      "cli": "initialize-api-auth.py main delegates to setup-entra.py; existing linked-edge public-url coverage retained",
+      "public_reprobe_approx_utc": "2026-10-16T18:30:00Z",
+      "public_statuses": {
+        "healthz": 200,
+        "native_api_me": 401,
+        "browser_api_me_accept_json": 302,
+        "browser_app": 302
+      },
+      "redirect_host_only": "login.microsoftonline.com",
+      "api_contract": "Unmet: default redirect mode is not a route-aware split; observed API status is User-Agent-sensitive. Refs #350",
+      "private_management_recheck_approx_utc": "2026-10-16T18:32:00Z",
+      "sql": {
+        "state": "Ready",
+        "public_network_access": "Disabled"
+      },
+      "environment": {
+        "internal": true,
+        "public_network_access": "Disabled"
+      },
+      "auth_union_limit": "Full-resource PUT retains read-visible references only; omitted/write-only/redacted references cannot be reconstructed; no live credential round-trip proved",
+      "azure_writes": false,
+      "tenant_writes": false,
+      "full_acceptance": "Blocked pending authorized setup, human sign-in and remaining browser API/feature evidence. Refs #349. Refs #350"
+    },
+    "architecture": {
+      "selected": "Front Door Premium, WAF Prevention, Private Link to existing internal environment",
+      "alternative": "New external environment/API only; not selected because existing internal setting is immutable and replacement adds wiring",
+      "production_profile_acceptance": false,
+      "waf_enabled": true,
+      "waf_mode": "Prevention",
+      "origin_count": 1,
+      "origin_host_header_and_tls_name": "Fixed API FQDN",
+      "route": "HTTPS /*; no cache configuration or rewrite rules"
+    },
+    "deployments": {
+      "public-browser-344": "Succeeded",
+      "public-browser-344-browser": "Succeeded",
+      "public-browser-344-final": "Succeeded",
+      "public-browser-344-headers": "Failed: Azure disallows modification of reserved Forwarded header",
+      "public-browser-344-trusted-proxy": "Succeeded"
+    },
+    "initial_what_if": {
+      "Create": 8,
+      "Modify": 0,
+      "Delete": 0
+    },
+    "retained_new_resources": [
+      {
+        "type": "Microsoft.Cdn/profiles",
+        "name": "afd-cutover-test"
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/afdEndpoints",
+        "parent": "afd-cutover-test",
+        "name": "ep-cutover-test"
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/originGroups",
+        "parent": "afd-cutover-test",
+        "name": "og-api"
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/originGroups/origins",
+        "parent": "afd-cutover-test/og-api",
+        "name": "api"
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/afdEndpoints/routes",
+        "parent": "afd-cutover-test/ep-cutover-test",
+        "name": "route-api"
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/securityPolicies",
+        "parent": "afd-cutover-test",
+        "name": "sp-waf"
+      },
+      {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "parent": "afd-cutover-test",
+        "name": "to-log-analytics"
+      },
+      {
+        "type": "Microsoft.Network/FrontDoorWebApplicationFirewallPolicies",
+        "name": "wafcutovertest"
+      },
+      {
+        "type": "Microsoft.App/managedEnvironments/privateEndpointConnections",
+        "parent": "cae-cutover-test",
+        "selector": "Sole connection for request Front Door Premium private origin for cutover-test",
+        "state": "Approved"
+      },
+      {
+        "type": "Microsoft.App/jobs",
+        "name": "job-cutover-test-public-audit"
+      }
+    ],
+    "existing_resource_changes": [
+      "ca-cutover-test-api/authConfigs/current only; preserved provider validation, exclusions, credential references and token-store setting"
+    ],
+    "deletions": [
+      {
+        "type": "Microsoft.Cdn/profiles/ruleSets",
+        "parent": "afd-cutover-test",
+        "name": "originheaders",
+        "reason": "Empty unused trial resource created by this task; header rule rejected before creation; no route association",
+        "deleted": true
+      }
+    ],
+    "pre_existing_resources_deleted": [],
+    "group_deleted": false,
+    "policy_bypass": false,
+    "tenant_mutations": false,
+    "private_data_reads": false,
+    "configuration": {
+      "observed_at_utc": "2026-10-16T17:03:39.939315+00:00",
+      "environment": {
+        "name": "cae-cutover-test",
+        "internal": true,
+        "public_network_access": "Disabled",
+        "managed_connection_states": [
+          "Approved"
+        ]
+      },
+      "sql": {
+        "name": "sql-cutover-test-rzsrg",
+        "state": "Ready",
+        "public_network_access": "Disabled",
+        "private_connection_states": [
+          "Approved"
+        ]
+      },
+      "auth": {
+        "action": "RedirectToLoginPage",
+        "forward_proxy": {
+          "convention": "Custom",
+          "customHostHeaderName": "X-Forwarded-Host",
+          "customProtoHeaderName": "X-Forwarded-Proto"
+        },
+        "excluded_paths": [
+          "/healthz",
+          "/readyz",
+          "/",
+          "/welcome.html",
+          "/style.css",
+          "/zava-logo.png",
+          "/sign-in"
+        ],
+        "valid_client_uuid": false,
+        "browser_credential_present": false,
+        "token_store_enabled": false
+      }
+    },
+    "private_link_approval": {
+      "native_put_http_status": 201,
+      "async_operation": "Succeeded",
+      "readback": "Approved",
+      "earlier_cli_exit_zero_pending_not_counted": true
+    },
+    "public_curl": {
+      "observed_at_utc": "2026-10-16T17:01:57.318954+00:00",
+      "public_url": "https://ep-cutover-test-esdrcphsarcahhde.b01.azurefd.net",
+      "curl_from_operator_vm": true,
+      "paths": {
+        "/": {
+          "status": 200,
+          "cache_control": "no-store",
+          "curl_exit": 0
+        },
+        "/welcome.html": {
+          "status": 200,
+          "cache_control": "no-store",
+          "curl_exit": 0
+        },
+        "/style.css": {
+          "status": 200,
+          "cache_control": "no-store",
+          "curl_exit": 0
+        },
+        "/zava-logo.png": {
+          "status": 200,
+          "cache_control": "no-store",
+          "curl_exit": 0
+        },
+        "/healthz": {
+          "status": 200,
+          "cache_control": "no-store",
+          "curl_exit": 0
+        },
+        "/app": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/sign-in": {
+          "status": 302,
+          "cache_control": "no-store",
+          "redirect_host": null,
+          "redirect_path": "/.auth/login/aad",
+          "curl_exit": 0
+        },
+        "/.auth/login/aad?post_login_redirect_uri=%2Fapp": {
+          "status": 302,
+          "redirect_host": "login.microsoftonline.com",
+          "redirect_path": "/<tenant>/oauth2/v2.0/authorize",
+          "callback_uses_edge": true,
+          "curl_exit": 0
+        },
+        "/api/me": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/cases": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/cases.csv": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/ranking/policy": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/ranking/snapshot": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/facets": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/stats": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/map": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/visits": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/briefing": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/funding": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/finance": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/handoffs": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/packages": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/workorders": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/checklists": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/governance": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/retention": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/time/status": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/continuity": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/audit-check": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/assistants": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/chat": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/law": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "/api/account/photo": {
+          "status": 401,
+          "curl_exit": 0
+        }
+      },
+      "historical_assets": {
+        "app.js": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "assistants.js": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "index.html": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "law.html": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "law.js": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "ops.js": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "panels.js": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "style.css": {
+          "status": 200,
+          "cache_control": "no-store",
+          "curl_exit": 0
+        },
+        "timecapture.js": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "welcome.html": {
+          "status": 200,
+          "cache_control": "no-store",
+          "curl_exit": 0
+        },
+        "zava-logo.png": {
+          "status": 200,
+          "cache_control": "no-store",
+          "curl_exit": 0
+        },
+        "vendor/LICENSE": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "vendor/leaflet.css": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "vendor/leaflet.js": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "vendor/images/layers.png": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "vendor/images/marker-icon.png": {
+          "status": 401,
+          "curl_exit": 0
+        }
+      },
+      "hostile_requests": {
+        "forged_principal": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "malformed_bearer": {
+          "status": 401,
+          "curl_exit": 0
+        },
+        "conflicting_host": {
+          "status": 421,
+          "cache_control": "no-store",
+          "curl_exit": 0
+        },
+        "forged_forwarded_host": {
+          "status": 302,
+          "redirect_host": "login.microsoftonline.com",
+          "redirect_path": "/<tenant>/oauth2/v2.0/authorize",
+          "callback_uses_edge": true,
+          "curl_exit": 0
+        },
+        "forged_forwarded": {
+          "status": 302,
+          "redirect_host": "login.microsoftonline.com",
+          "redirect_path": "/<tenant>/oauth2/v2.0/authorize",
+          "callback_uses_edge": true,
+          "curl_exit": 0
+        }
+      },
+      "real_user_browser_sign_in": {
+        "status": "Blocked",
+        "issue": 349,
+        "reason": "No valid workbench registration, credential or staff bindings"
+      },
+      "deployed_feature_acceptance": {
+        "status": "Blocked",
+        "issue": 350
+      },
+      "additional_browser_and_forwarding_probes": {
+        "browser_app": {
+          "status": 302,
+          "redirect_host": "login.microsoftonline.com",
+          "redirect_path": "/<tenant>/oauth2/v2.0/authorize",
+          "callback_uses_edge": true,
+          "curl_exit": 0
+        },
+        "browser_api": {
+          "status": 302,
+          "redirect_host": "login.microsoftonline.com",
+          "redirect_path": "/<tenant>/oauth2/v2.0/authorize",
+          "callback_uses_edge": true,
+          "curl_exit": 0
+        },
+        "forged_proto": {
+          "status": 302,
+          "redirect_host": "login.microsoftonline.com",
+          "redirect_path": "/<tenant>/oauth2/v2.0/authorize",
+          "callback_uses_edge": true,
+          "curl_exit": 0
+        },
+        "combined_forwarding": {
+          "status": 302,
+          "redirect_host": "login.microsoftonline.com",
+          "redirect_path": "/<tenant>/oauth2/v2.0/authorize",
+          "callback_uses_edge": true,
+          "curl_exit": 0
+        }
+      }
+    },
+    "earlier_observations": {
+      "initial_edge_propagation": {
+        "observed_at_utc": "2026-10-16T16:50:50.296138+00:00",
+        "all_probed_paths_status": 404,
+        "counted_as_pass": false
+      },
+      "standard_proxy_host_spoof": {
+        "observed_at_utc": "2026-10-16T16:54:57.039311+00:00",
+        "forged_forwarded_callback_uses_edge": false,
+        "correction": "Custom forwardProxy using only Front Door overwritten X-Forwarded-Host and X-Forwarded-Proto",
+        "verified_by": "Final individual, combined and repeated canonical HTTPS callback probes"
+      },
+      "custom_auth_propagation": "One combined-header result still reflected old configuration immediately after update; three repeated complete sets and final full smoke canonical after propagation"
+    },
+    "private_origin_anonymous_http": {
+      "job": "job-cutover-test-public-audit",
+      "execution": "job-cutover-test-public-audit-zqdjdqp",
+      "status": "Succeeded",
+      "paths": {
+        "/healthz": 200,
+        "/api/me": 401,
+        "/app": 401,
+        "/.auth/login/aad": 302
+      },
+      "login_redirect_host": "login.microsoftonline.com",
+      "scope": "Anonymous status and redirect host only; no login follow, Store, data or credentials"
+    },
+    "image_asset_audit": {
+      "job": "job-cutover-test-public-audit",
+      "execution": "job-cutover-test-public-audit-ud03kna",
+      "status": "Succeeded",
+      "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d",
+      "scope": "Package files only; no Store, SQL, dataset, staff or credentials opened",
+      "assets": {
+        "app.js": {
+          "image_sha256": "05259cfa04efabb4c5a0007862037939b5b00adcade780fc49ecc4c00fbde11a",
+          "matches_current_src": true
+        },
+        "assistants.js": {
+          "image_sha256": "62f1f061f3309ff11d1f3a37dc78e55b4a06a922c618b922681d2ef75a7ca73b",
+          "matches_current_src": true
+        },
+        "chat.js": {
+          "image_sha256": "d1e5cd38956947e81bf223421a0047122304b747c21a2864b5ceb0c6bf71d67a",
+          "matches_current_src": true
+        },
+        "index.html": {
+          "image_sha256": "20af7a661d5428eb294bf67195aa5f85d5b1c26365c9644d1c6b22ebbb1a4fa8",
+          "matches_current_src": true
+        },
+        "law.html": {
+          "image_sha256": "2c8550ae75bcf1e31621188aa515a95da11f04fa1d6067313ae1d63ef989e212",
+          "matches_current_src": true
+        },
+        "law.js": {
+          "image_sha256": "f4e8b19102532e4c7dbb3fb008ab6dde2990751393e8797b565c192950b61fe5",
+          "matches_current_src": true
+        },
+        "ops.js": {
+          "image_sha256": "27f86e536e7b0e48ac7770773661eb43d8e794aa72db2ee613e0e95002d6ec80",
+          "matches_current_src": true
+        },
+        "panels.js": {
+          "image_sha256": "0076fdd478723dcfbddf151b354c4785a5a0dd643aca592282a0991c89386783",
+          "matches_current_src": true
+        },
+        "style.css": {
+          "image_sha256": "50b10f851ccf1f0b4de353e8e79c4da16dc9e4c68d197b89ab720eb38d3a812d",
+          "matches_current_src": true
+        },
+        "timecapture.js": {
+          "image_sha256": "bbcd8deaf9e2417189a6d7d0d81dd19337bc9e70de9522891a4d9054bf8dccdd",
+          "matches_current_src": true
+        },
+        "vendor/LICENSE": {
+          "image_sha256": "53e8dc25862014e4324741ca18fbe3611e11d42ef69f59f86ea8c5389647d4cb",
+          "matches_current_src": true
+        },
+        "vendor/images/layers.png": {
+          "image_sha256": "1dbbe9d028e292f36fcba8f8b3a28d5e8932754fc2215b9ac69e4cdecf5107c6",
+          "matches_current_src": true
+        },
+        "vendor/images/marker-icon.png": {
+          "image_sha256": "574c3a5cca85f4114085b6841596d62f00d7c892c7b03f28cbfa301deb1dc437",
+          "matches_current_src": true
+        },
+        "vendor/leaflet.css": {
+          "image_sha256": "a7837102824184820dfa198d1ebcd109ff6d0ff9a2672a074b9a1b4d147d04c6",
+          "matches_current_src": true
+        },
+        "vendor/leaflet.js": {
+          "image_sha256": "db49d009c841f5ca34a888c96511ae936fd9f5533e90d8b2c4d57596f4e5641a",
+          "matches_current_src": true
+        },
+        "welcome.html": {
+          "image_sha256": "c38290f27474fe2097645f8b7cdff481f95852ae39247afd642b50491a4d629a",
+          "matches_current_src": true
+        },
+        "zava-logo.png": {
+          "image_sha256": "92a6cd06c63f978ad1a2d8f8a07b2899819ebf0f6bc6f5042bd23f3adc249895",
+          "matches_current_src": true
+        }
+      }
+    },
+    "feature_audit": {
+      "historical_assets": 16,
+      "present_serving_assets": 17,
+      "capabilities": 26,
+      "matrix": "docs/architecture/mvp-to-src-parity-matrix.md",
+      "real_user_sign_in": "Blocked #349",
+      "full_deployed_feature_acceptance": "Blocked #350",
+      "browser_user_agent_api_status": 302,
+      "native_api_status": 401,
+      "api_exemption_added": false
+    },
+    "acceptance": {
+      "public_url_with_successful_browser_sign_in": "Blocked #349; public browser redirect only Passed",
+      "edge_choice_and_tradeoff": "Passed",
+      "public_health_and_native_api_denial": "Passed: 200 and 401 from operator VM",
+      "anonymous_browser_api_401": "Blocked #350: observed 302",
+      "sql_private_no_policy_bypass": "Passed for this continuation",
+      "all_features_reachable": "Blocked #349/#350; complete audit and gaps filed",
+      "honest_real_user_smoke": "Blocked, recorded"
+    },
+    "validation": {
+      "infra_unittest": {
+        "run": 123,
+        "result": "OK"
+      },
+      "api_unittest": {
+        "run": 549,
+        "skipped": 110,
+        "result": "OK"
+      },
+      "auth_loopback_unittest": {
+        "run": 31,
+        "result": "OK"
+      },
+      "cutover_parser_unittest": {
+        "run": 9,
+        "result": "OK"
+      },
+      "api_ruff_format_mypy": "Passed",
+      "initializer_mypy": "Passed",
+      "bicep_build_lint": "Passed",
+      "older_initializer_test_optional_mypy": "Pre-existing mixed-dict typing errors; not claimed Passed"
+    },
+    "owner_checklist": "All unchecked; coordinator at merge",
+    "operational_approval": "None inferred; ADR 0005 synthetic development only",
+    "implementation_sha256": {
+      "infra/public-edge-existing.bicep": "51fdbbd9a76e75264c569ca8e2231d2859cacb4c2739488fa51537b02c38b9b9",
+      "infra/modules/edge-existing-auth.bicep": "e43932c35d001cf12b0b96372b4ed7b66f0daa7d291ec46a49f8d86f32a11df0",
+      "infra/modules/edge-existing-guard.bicep": "4a789b925b0d21796f8137b07da880a7c4f3021d3a245bd2706110321924a025",
+      "infra/modules/edge.bicep": "c89cae8ce4e77513075d58577945f73259dd12f19bf4323cfbba03decd9ab072",
+      "infra/modules/containerapps.bicep": "9ccdc097f58d05e0f719830253cac1fd85b13705b83679cd0bd2f8b37d301b67",
+      "infra/scripts/initialize-api-auth.py": "b0a9bff14c0b35b44d1059b7839e87dde9f0361047b9bbd3d5eb0b9117b68541"
+    }
   }
 }

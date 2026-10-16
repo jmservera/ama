@@ -19,7 +19,7 @@ fixed five-part answer. No sixth assistant or live AI task is activated.
 
 | Method and path | Contract |
 | --- | --- |
-| `GET /api/chat/regulatory/status` | Synthetic admission only; 403 when disabled or not a declared synthetic dataset |
+| `GET /api/chat/regulatory/status` | Synthetic admission, free-text warning and metadata-only own-role retention review; 403 when disabled or unauthorized |
 | `POST /api/chat/regulatory/threads` | `{"case_id":"ZF-1"}`; owned thread bound to that home/case |
 | `GET /api/chat/regulatory/threads/{id}` | Owner-only historical messages, source snapshots and current role/case checks |
 | `POST /api/chat/regulatory/threads/{id}/ask` | `{"content":"What do the hazard sources say for this home?"}`; exact source/fact answer or explicit refusal |
@@ -84,6 +84,50 @@ temporary synthetic SQL data, checks health/case responsiveness, exercises the
 actual cited routes, historical reads and explicit owner handoff, forbids
 outbound inference, then stops the server. Browser interaction and human
 accessibility/comprehension are not established by HTTP/static DOM tests.
+
+## Regulatory security, privacy and audit (#217)
+
+On trusted-proxy ingress, all regulatory endpoints require the separate
+`ZavaForward.RegulatoryChat` capability in addition to a permitted staff role.
+RuleAuthor and RuleOwner do not imply chat access. Capabilities require a unique
+provisioned principal binding; email fallback cannot grant them. Generic history,
+archive and delete routes enforce the same capability for regulatory threads;
+thread lists omit them when it is absent. Existing owner/role/home isolation
+remains. The claim-derived staff role cannot regain hazard facts from a wider
+register role. Local password mode remains a synthetic development convenience,
+not evidence of Entra authentication or operational segregation.
+
+The regulatory panel displays the existing special-category/free-text warning
+and unknown or simulated retention. Status returns `privacy` with draft DPIA
+state, `dpo_reviewed=false`, `deletion_enabled=false`, own-role regulatory thread
+IDs/counts and unknown per-class law/card/check/alert/audit periods. Simulated
+CHAT_RETENTION settings list review-due ages only; they are not a purge or an
+approved schedule. Both archived sender threads and separately owned referral
+copies require DPO retention/rights/hold alignment.
+
+| #217 acceptance criterion | Evidence and honest disposition |
+| --- | --- |
+| DPIA with DPO completed before live data use | Unmet. [Draft for Juan Manuel Servera's DPO review](../../docs/reference/research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217), no completed consultation/sign-off or live-data permission |
+| Chat/check retention with DPO-set periods | Unmet. Existing chat settings reused for metadata-only simulated review; all real periods, check/alert disposal, holds, backups and immutable history alignment require DPO review |
+| Minimum Foundry fields and special-category purpose controls | Partial. Existing offline retrieval excludes health, contact, narrative, memory and unrelated home fields; role/purpose tests pass and no provider is called. No regulatory Foundry query or actual-provider privacy evidence exists |
+| Separate Entra author, approver and chat roles | Partial. Distinct capability mapping, registration/script parity, no-self-approval and HTTP denials pass locally. Actual tenant assignments, ingress and revocation not tested or applied |
+| Rule changes, approvals, checks, alerts and turns audit-logged | Locally demonstrated with append-only rule/check/alert events and transactional SQL turn/referral metadata audit; failure rollback, restart, idempotency and chain checks pass. Azure SQL/ledger archive evidence not collected; JSON separate-file atomicity remains unsupported |
+| Prompt-injection and cross-role disclosure tests pass | Met for this offline synthetic slice: injected question/source containment, no controlled writes, no health-canary disclosure, current claim role versus register, capability denial on direct/generic routes, foreign threads and role-change denial. No actual-model adversarial or production assurance |
+| Art 22A to 22C proposal/flag-only, named human and reasons | Partial. No chat decision-write path; version-2 significant-decision check requires explicit reasons beyond an evidence ID. Actual human authority/reasons/contestability and legal assessment remain unverified; no statutory compliance claim |
+
+Issue checkboxes remain unchanged for the merge coordinator. ADR 0005 acceptance
+permits synthetic development only. This slice uses no actual staff/resident
+data, Azure changes or model calls and claims no operational approval.
+
+With installed projects and tools, run from the repository root:
+
+```bash
+PYTHONPATH="$PWD/src/api/tests:$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python3 -m unittest test_regulatory_chat_api test_auth test_rule_alerts \
+  test_regulatory_chat test_regulatory_privacy test_rule_engine test_rulecards \
+  test_chat_privacy test_chatthreads test_regulatory_answers -q
+PYTHONPATH="$PWD/infra/tests" python3 -m unittest test_identity_rbac -q
+```
 No Azure resources or private data are required or accessed.
 
 ## Rule-card approval API (#211)
@@ -760,6 +804,17 @@ editor or automatic retrofit of building data into an already populated store.
 
 ## What staff see
 
+The #344 public edge now targets the existing immutable src API, not a rebuilt
+legacy app. Deployment and tenant prerequisites are documented in the
+[public browser continuation](../../infra/README.md#public-browser-continuation-2026-10-16-344).
+Welcome/health are intentionally public; workbench pages require Entra and
+protected JSON APIs must return 401 without a user. Browser redirect mode is
+the infrastructure default (`entraBearerOnly=false`), not successful sign-in.
+The proof's invalid registration/absent staff block real-user acceptance (#349).
+The [dated feature audit](../../docs/architecture/mvp-to-src-parity-matrix.md#public-deployment-feature-audit-2026-10-16)
+separates image presence, public intercepts and rendered/authorized behavior;
+missing deployment/data/model/photo/law prerequisites are tracked by #350.
+
 * Sign in once and land on "My cases today", with open safety issues first.
 * A full-screen case card: contact details, preferences and support needs, a
   plain status line, owner, contractor, next visit and history.
@@ -1180,3 +1235,197 @@ private data. The AI tests use a scripted model or the template path (no network
 
 Browser check (needs python3 playwright and chromium, and the built dataset):
 `python3 src/api/checks/browser_check.py` (the dataset at `ZF_DATA`).
+
+## Regulatory alert and home chat UX (#215)
+
+Synthetic development only under ADR 0005, accepted on 2026-10-16. The home
+view now presents `/api/law/alerts?case=<id>` outside the optional chat. Each
+visible alert shows what was noticed, source ID/status/effective/retrieval
+dates, safe action, decision owner, clock and recorded due time. Latest check
+and current-control status distinguish retained breach risk from an active
+control. The browser does not calculate statutory deadlines, acknowledge
+alerts, release holds or alter approvals. No visible alerts is not a safety
+or compliance conclusion. Coverage stays unknown when the service says unknown
+or cannot be reached. Refresh failures remove old results rather than present
+them as current.
+
+The existing bounded regulatory chat renders source excerpts, home facts,
+unknowns, safe next action and human decision owner as separate sections.
+Source quotations and stored evidence are unchanged. Plain-language
+explanations are on by default and can be toggled with a labelled checkbox;
+they explain the interface, not the law. Provision links open a source record
+in a new tab, with an explicit warning. Missing sources, unsupported terms,
+disabled lookup and outages have visible text and a human route, not a silent
+success. Source excerpts retain snapshot/currentness and truncation caveats.
+The existing doubt action sends the actual turn to Juan Manuel Servera's
+synthetic exercise inbox; its receipt is not legal approval or a resident
+message. Failed referrals are explicit and retryable.
+
+### Audience patterns and delivery boundary
+
+These patterns follow the [regulatory literacy research](../../docs/reference/research/ux/regulatory-literacy-for-journeys.md),
+not validated staff needs or new legal advice. Role guidance never grants
+access: existing server projection and alert audiences still govern every read.
+All staff see data-minimisation guidance and the named exercise doubt owner.
+
+| Issue audience | Know at least / alert pattern | Home-chat and doubt pattern | Existing account / evidence boundary |
+| --- | --- | --- | --- |
+| Repairs and intake, including housing/contact staff | Recognise a possible damp, mould or emergency report; record awareness without guessing; use the human hazard route without waiting. Show the recorded clock and safe action, not an inferred legal deadline. | Ask for hazard sources and recorded home facts; uncertainty goes to the human safety service and exercise owner. | Resident Liaison Officer guidance and scoped hazard alerts exercised locally. There is no distinct repairs account or validated operational procedure. |
+| Building Safety | Categorisation, recorded clocks and independent evidence need human judgement; completion is not assurance. | Compare cited source records; interpretive questions go to Juan Manuel Servera as exercise owner, never to an automatic hold release. | Building Safety Liaison guidance exercised; existing owner capabilities are unchanged. |
+| Assessor and coordinator | Appointed PAS roles, risk path and independent evidence matter. Only an overview is held; licensed text and contract incorporation are unverified. | Identify the missing licensed/contract source and ask the appointed coordinator/Compliance; no invented PAS requirement. | Retrofit Coordinator and Quality Inspector guidance exercised. No separate assessor role is created. |
+| Programme | A policy target is not a duty in force, completed task, investment approval or award. Read source status and dependencies. | Source lookup may inform a proposal; applicability, source conflict and approval stay human. | Retrofit Programme Manager and Programme Support Officer guidance exercised. |
+| Finance and grants | Obtain the actual award letter/agreement; an allocation annex does not authorise a claim or commitment. | Requests for binding grant/contract terms have no supported answer without the actual document; refer to funding owner/Finance, with exercise legal doubt to Juan Manuel Servera. | Grants and Evidence Officer guidance exercised; no new financial approval or grant lookup capability is claimed. |
+| Data handlers | Purpose limits, sensitive health/vulnerability data, consent versus other lawful bases and meaningful human involvement in significant decisions. | Do not type personal details; use bounded automated-decision source lookup where supported and the exercise DPO doubt route. | Cross-cutting guidance for all seven staff account roles exercised. No new data-handler access role. |
+| Suppliers | Follow agreed contract/scheme requirements; contract and TrustMark terms are not held. Obtain them from the named contact/contracts manager. Safety intake cannot wait. | Staff chat is unavailable; named-contact human route in the supplier home view. A supplier chat/alert interface remains design-only. | Existing Contractor view guidance exercised; law/alert/chat endpoint denial retained. No supplier rights added. |
+
+Supplementary design-only patterns: leasehold-service staff must obtain the
+actual lease and Legal review before explaining responsibility. Residents and
+representatives need a human-reviewed plain explanation of choices, safe
+contact, complaints/redress and a non-digital route, not a legal-duty lesson.
+Neither audience receives a new chat interface or invented source in this slice.
+
+### Local engineering checks
+
+Unit discovery requires only the installed runtime distributions, not Playwright
+or a browser. The regulatory harness imports its browser APIs only when browser
+operations run; target-size boundary and axe-integrity assertions always run in
+the unit suite. A subprocess regression also blocks Playwright imports even
+when the dev extra is installed. From the repository root:
+
+```bash
+python3 -m venv /tmp/v215c
+/tmp/v215c/bin/pip install -e src/core -e src/agents -e src/api
+(cd src/api && PYTHONPATH="$PWD/../core/tests:$PWD/../agents/tests" \
+  /tmp/v215c/bin/python -m unittest discover -s tests -q)
+```
+
+Install `src/api[dev]` in that venv before running Ruff, mypy or browser checks.
+Playwright stays dev-only; asking to run a browser check without it fails
+explicitly rather than skipping browser coverage.
+
+The browser check uses the actual loopback HTTP app, SQL case store, law store
+and wholly constructed `regulatory_fixture` data. It does not read `ZF_DATA`
+or private working files. Provider calls are blocked; browser network access
+outside loopback is aborted. A pinned local axe script runs inside Chromium;
+no application content is sent to the download host. From the repository root,
+after installing the project distributions and API dev extras with pip:
+
+```bash
+python3 -m playwright install chromium
+curl -fsSL https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js \
+  -o /tmp/axe-4.10.3.min.js
+export PYTHONPATH="$PWD/src/api/tests:$PWD/src/core/tests:$PWD/src/agents/tests"
+python3 src/api/checks/regulatory_ux_check.py \
+  --axe /tmp/axe-4.10.3.min.js --out /tmp/regulatory-ux-results.json
+python3 -m unittest test_regulatory_chat_api test_rule_alerts test_chat_panel \
+  test_chat_isolation test_accessibility_baseline test_design_system test_role_matrix -q
+(cd src/api && python3 -m unittest test_regulatory_ux_check -q)
+(cd src/api && ruff check . && ruff format --isolated --line-length 100 --check checks/regulatory_ux_check.py && mypy)
+```
+
+The check verifies the axe 4.10.3 SHA-256 before execution:
+`880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb`.
+API tests precede core tests in the absolute `PYTHONPATH` to avoid colliding
+test module names. Checks cover WCAG 2.2 A/AA axe tags on the changed surfaces,
+native Enter/Space controls, Tab/Shift-Tab traversal, visible focus, post-answer
+and doubt focus, text statuses, 320/390/1280px reflow and 200% text sizing.
+Every exercised state also measures visible enabled controls, links and
+disclosure summaries: at least 24px width/height, preserving the cited-lookup
+summary's stronger shipped 44px height. Citation links now have a 24px
+inline-block target rather than an 18px inline text box. The supplier guidance
+is static and has no interactive targets.
+The test also checks persisted doubt/history, missing sources, retained risk
+after source change, service outage, disabled lookup, staff guidance and
+contractor denial. It is an engineering check, not a complete WCAG conformance
+assessment, human screen-reader test or operational release gate.
+
+Observed locally on 2026-10-16: 17 axe states had zero detected violations;
+eight states retained `color-contrast` incomplete results for textareas whose
+background axe could not establish (reported as partially obscured). Those
+results require further assessment, not a pass declaration. Keyboard traversal,
+focus and reflow assertions passed. The 86 targeted API and 33 core regression
+tests, API ruff/format and strict mypy passed. These observations do not satisfy
+the full WCAG criterion or the staff comprehension criterion.
+
+The `src-api` job in [source CI](../../.github/workflows/src-ci.yml) now runs
+this UX regression check next to `checks.design_system_browser_check`, using
+the same installed Chromium and an absolute API/core/agents test path.
+It fetches the pinned axe version with bounded retries/timeouts; the harness
+verifies the SHA-256 before executing it. A failed download emits a CI warning
+and omits only axe, never the target-size, keyboard, reflow, role or local API
+assertions. Supplied wrong-hash content fails rather than downgrading. JSON
+results explicitly record axe execution/skipping and are uploaded as
+`regulatory-ux-results`. To run without axe locally:
+
+```bash
+python3 src/api/checks/regulatory_ux_check.py --out /tmp/regulatory-ux-no-axe.json
+```
+
+Review follow-up on 2026-10-16: the exact new CI shell block passed locally both
+with a successful download and a deliberately failed curl. Both paths checked
+142 targets across 17 states, minimum measured width/height 24px; cited-lookup
+summary height 44px. The axe path retained the same eight contrast incompletes.
+Deleting `.regulatory summary{cursor:pointer;min-height:2.75rem;padding:.5rem 0}`
+from the served stylesheet failed the actual browser check at `cited-answer`:
+the summary measured 1198 x 24px, below its 44px design floor. Restoring the rule
+passed both CI paths. The unstyled 24px summary alone is not an AA violation;
+the stronger assertion protects the existing intended target. Three harness
+unit tests also cover 24px boundaries, static supplier content and corrupt axe.
+The subsequent CI import-boundary repair adds a fourth harness test that
+rejects any discovery-time Playwright import, without skipping those assertions.
+After merging current main, the runtime-only `/tmp/v215c` environment reproduced
+the eager-import failure. With browser imports deferred, all 561 API tests pass
+(110 opt-in skips), both before and after installing Playwright 1.64.0.
+API Ruff/format and strict mypy pass; both source CI browser harnesses pass
+against the synthetic loopback app. Regulatory results remain 17 states,
+142 targets, zero detected axe violations and eight incomplete contrast states.
+The 86 targeted API and 33 core tests, design-system browser check and API
+ruff/format/mypy passed. Hosted CI is pending, not claimed passed: the owner
+requested push without waiting. Full issue acceptance remains unchanged.
+
+### Staff comprehension protocol (Not run; unmet)
+
+Before actual staff use, obtain participant/research authorization and privacy
+review from the relevant real owners; the exercise owner decision does not
+provide these. Recruit at least three authorised participants from each of
+repairs, housing and grants, including keyboard/assistive-technology users where
+possible. Obtain informed voluntary consent, accessible/non-digital instructions
+and the right to stop. Use only fictional homes, sources and exercise identities.
+Do not record actual resident information, private staff identifiers or unconsented
+audio/video. Agree storage, access, retention and deletion before collection.
+
+Give each participant the same five tasks without legal coaching: recognise an
+urgent hazard while chat is unavailable; identify noticed/source/status/action/
+owner/clock; distinguish future/unknown evidence from an active control; handle
+a missing grant/contract source without inventing terms; and route a doubtful
+turn and explain what its receipt does not approve. Counterbalance deterministic
+cards with provision links against chat on equivalent fictional tasks. Record
+task success, unsafe actions, source/status/owner comprehension, completion time,
+assistance, accessibility barriers and confidence, using anonymous study codes.
+
+Predeclare success as at least 90% correct required answers overall and at least
+80% in each participant group, with zero critical errors (delayed hazard intake,
+invented approval/consent/terms, future-as-active duty, or a claim that a doubt
+receipt establishes compliance). Two reviewers independently score against a
+frozen answer key; reconcile disagreements with reasons. Report denominators,
+failures, group differences and uncertainty, not just averages. Small formative
+samples cannot establish generalised staff comprehension or chat value.
+Stop a task immediately if real personal information or a safety misconception
+appears; explain the safe route, record the failure and revise before a new
+approved round. The human owner reviews results before any staff-use decision.
+No participants were tested here; no comprehension result or chat-value pass is
+claimed.
+
+### Issue criterion audit
+
+| #215 criterion | Local disposition | Evidence and remaining gap |
+| --- | --- | --- |
+| Patterns defined per role with know-at-least content | Met as synthetic design/implemented existing-role guidance | Seven-audience matrix above, real role-loop browser assertions and supplier human-route/denial check. Separate repairs, Finance, resident and supplier-chat journeys are not delivered or user-validated. |
+| Each alert states noticed/source/status/safe action/owner/clock | Met for the existing scoped alert contracts | Browser asserts required fields against a real SQL-backed breach-risk alert; current-control state, empty visibility and outage are explicit. No new rule coverage is claimed. |
+| WCAG 2.2 AA, no colour-only status, keyboard, plain language | Partial; full criterion unmet | Automated axe and keyboard checks cover changed surfaces, textual statuses, focus, toggles and reflow. Comprehensive manual/assistive-technology conformance remains unassessed. |
+| Doubt and no-source states explicitly designed | Met in bounded synthetic slice | Persisted exercise inbox receipt, visible unsupported/missing-source state, disabled/outage text and manual owner route. No real owner notification or approval claimed. |
+| Comprehension tested with repairs, housing and grants staff | Unmet / Not run | Protocol only. Actual staff testing is unavailable and remains required before use. |
+
+No issue checkboxes are changed by this implementation. Real delegates,
+verified applicable sources, operational acceptance and the ADR 0005 measured
+chat-value ship test remain open.

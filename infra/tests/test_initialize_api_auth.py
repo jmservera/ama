@@ -30,6 +30,9 @@ class InitializationTests(unittest.TestCase):
         self.profile = Path(directory.name) / "tenant"
         self.graph_tenant = TENANT
         self.enabled = True
+        self.proxy = "Custom"
+        self.proxy_host = "X-Forwarded-Host"
+        self.proxy_proto = "X-Forwarded-Proto"
         self.fqdn = FQDN
         self.client = CLIENT
         self.application = {
@@ -61,7 +64,8 @@ class InitializationTests(unittest.TestCase):
             return {"fqdn": self.fqdn}
         if args[:3] == ["containerapp", "auth", "show"]:
             self.assertEqual(profile, self.operator)
-            return {"enabled": self.enabled, "clientId": self.client}
+            return {"enabled": self.enabled, "clientId": self.client, "proxy": self.proxy,
+                    "proxyHost": self.proxy_host, "proxyProto": self.proxy_proto}
         self.assertEqual(args[:3], ["ad", "app", "show"])
         self.assertEqual(profile, self.profile)
         self.assertEqual(args[args.index("--id") + 1], CLIENT)
@@ -146,6 +150,40 @@ class InitializationTests(unittest.TestCase):
         self.assertEqual(self.application["web"]["redirectUris"],
                          ["https://old.example.test/callback", CALLBACK,
                           f"https://{self.fqdn}/.auth/login/aad/callback"])
+
+    def test_edge_callback_preserves_origin_callbacks_and_is_idempotent(self) -> None:
+        self.run_init()
+        result = INIT.initialize("ama", "api", tenant_profile=self.profile,
+                                 public_url="https://edge.example.test/")
+        self.assertEqual(result["callback"], "https://edge.example.test/.auth/login/aad/callback")
+        self.assertIn(CALLBACK, self.application["web"]["redirectUris"])
+        self.assertEqual(INIT.initialize("ama", "api", tenant_profile=self.profile,
+                                        public_url="https://edge.example.test", check=True)["status"],
+                         "already-initialized")
+        self.assertEqual(len(self.writes), 2)
+        self.assertEqual(self.application["appRoles"], self.snapshot["appRoles"])
+        self.assertEqual(self.application["passwordCredentials"], self.snapshot["passwordCredentials"])
+
+    def test_edge_requires_trusted_proxy_and_rejects_unsafe_origins(self) -> None:
+        for convention, host, proto in (
+            ("NoProxy", self.proxy_host, self.proxy_proto),
+            ("Standard", self.proxy_host, self.proxy_proto),
+            ("Custom", "Forwarded", self.proxy_proto),
+            ("Custom", self.proxy_host, "Forwarded"),
+            ("Custom", None, None),
+        ):
+            self.proxy, self.proxy_host, self.proxy_proto = convention, host, proto
+            with self.subTest(convention=convention, host=host, proto=proto), self.assertRaisesRegex(ValueError, "forwardProxy"):
+                INIT.initialize("ama", "api", tenant_profile=self.profile,
+                                public_url="https://edge.example.test")
+        self.proxy, self.proxy_host, self.proxy_proto = "Custom", "X-Forwarded-Host", "X-Forwarded-Proto"
+        for url in ("http://edge.example.test", "https://user@edge.example.test",
+                    "https://edge.example.test:443", "https://edge.example.test/path",
+                    "https://edge.example.test?x=1", "https://edge.example.test#fragment",
+                    "https://*.example.test", "https://edge..test", "https://127.0.0.1:8088"):
+            with self.subTest(url=url), self.assertRaisesRegex(ValueError, "Public URL"):
+                INIT.initialize("ama", "api", tenant_profile=self.profile, public_url=url)
+        self.assertFalse(self.writes)
 
     def test_tenant_mismatch_fails_before_registration_access(self) -> None:
         self.graph_tenant = "44444444-4444-4444-4444-444444444444"
