@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Follow-up",
-  "status": "active",
+  "status": "completed",
   "session_status": null,
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/environment-parameter-sets-research.md",
@@ -34,12 +34,17 @@
       "decision": "Single post-implementation Review executed; outcome Residual work, four criteria met offline and region/quota partially evidenced",
       "status": "reviewed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-16/environment-parameter-sets-review.md"
+    },
+    {
+      "decision": "Committed and pushed the topic branch; PR 346 targets main with no merge or checkbox changes",
+      "status": "delivered",
+      "evidence": "https://github.com/jmservera/ama/pull/346; implementation commit ab1fb52"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Review complete; commit, push and create the explicitly requested PR without merge or checkbox changes"
+    "action": "Owner reviews PR 346; separately decide pilot region/subscription ownership and record fresh checks before deployment"
   },
   "prioritized_follow_ups": [
     {
