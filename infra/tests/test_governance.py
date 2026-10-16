@@ -45,18 +45,19 @@ class GovernanceTests(unittest.TestCase):
         for name, environment in expected.items():
             text = (INFRA / name).read_text()
             self.assertIn(f"param environmentName = '{environment}'", text, name)
-            self.assertIn("param location = 'uksouth'", text, name)
+            location = "" if environment == "pilot" else "uksouth"
+            self.assertIn(f"param location = '{location}'", text, name)
             self.assertIn("PLACEHOLDER", text, name)
             params = "\n".join(line for line in text.splitlines() if line.startswith("param"))
             self.assertNotRegex(params, r"(?i)password|secret|webhook|sig=", name)
-        for name in ("main.bicepparam", "main.test.bicepparam"):
-            text = (INFRA / name).read_text()
-            for relaxation in ("deploymentProfile = 'development'", "allowPublicNetworkAccess = true", "keyVaultPurgeProtection = false"):
-                self.assertIn(relaxation, text, name)
-        pilot = (INFRA / "main.pilot.example.bicepparam").read_text()
-        self.assertIn("deploymentProfile = 'production'", pilot)
-        for relaxation in ("allowPublicNetworkAccess", "keyVaultPurgeProtection"):
-            self.assertNotIn(relaxation, pilot)
+            self.assertIn("param allowPublicNetworkAccess = false", text, name)
+            self.assertIn("param regionCheckReference = '' // PLACEHOLDER", text, name)
+            self.assertIn("param quotaCheckReference = '' // PLACEHOLDER", text, name)
+            profile = "development" if environment == "dev" else "production"
+            protection = "false" if environment == "dev" else "true"
+            self.assertIn(f"param deploymentProfile = '{profile}'", text, name)
+            self.assertIn(f"param keyVaultPurgeProtection = {protection}", text, name)
+            self.assertIn(f"param registryQuarantineEnabled = {protection}", text, name)
 
     def test_pilot_requires_production_profile(self) -> None:
         self.assertIn("pilotRequiresProductionProfile", (INFRA / "main.bicep").read_text())

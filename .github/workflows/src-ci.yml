@@ -36,6 +36,7 @@ jobs:
           - project: agents
             dist: zava-forward-agents
             deps: "-e ../core"
+            pythonpath: "../core/tests"
             image: true
           - project: orchestrator
             dist: zava-forward-orchestrator

@@ -9,6 +9,22 @@ param productionProfileForbidsPublicNetworkAccess string
 param productionProfileRequiresKeyVaultPurgeProtection string
 
 @minLength(1)
+@description('Must not be empty. Empty means production was combined with registryQuarantineEnabled=false.')
+param productionProfileRequiresRegistryQuarantine string
+
+@minLength(1)
+@description('Must not be empty. Empty means regionCheckReference is missing; record a dated capability check for the selected regions first.')
+param regionCheckMustBeRecorded string
+
+@minLength(1)
+@description('Must not be empty. Empty means quotaCheckReference is missing; record a dated quota check for the selected configuration first.')
+param quotaCheckMustBeRecorded string
+
+@minLength(1)
+@description('Must not be empty. Empty means location or sqlLocation is still an unresolved owner placeholder.')
+param deploymentLocationsMustBeSelected string
+
+@minLength(1)
 @description('Must not be empty. Empty means evidenceStore=sharepoint without sharePointSiteId.')
 param sharePointEvidenceStoreRequiresSiteId string
 
@@ -42,6 +58,10 @@ output checked array = [
   publicEdgeRequiresApplications
   productionProfileForbidsPublicNetworkAccess
   productionProfileRequiresKeyVaultPurgeProtection
+  productionProfileRequiresRegistryQuarantine
+  regionCheckMustBeRecorded
+  quotaCheckMustBeRecorded
+  deploymentLocationsMustBeSelected
   sharePointEvidenceStoreRequiresSiteId
   tokenStoreReadyRequiresTokenStore
   entraRoleMapRequiresEntraClientId
