@@ -20,15 +20,65 @@ per-user `ZF_DATA` folder, never under `src/`.
 
 `taskqueues` provides the shared, read-only `work-queues-1` definition/default
 contract and case task context. Store and SqlStore return identical projected
-context in staff list/detail; dynamic queue membership is evaluated before
-counting/paging, using the existing Store fallback rather than dialect-specific
-SQL. No schema, approval, assignment or event history changes are required.
+context in staff list/detail. Queue reads use a process-local inverted case-ID
+index before filtering/counting/paging, shared by JSON and SQL stores rather
+than dialect-specific SQL. All six memberships are built together from the
+canonical evaluator under the store lock. The index is invalidated by the store
+version (including SQL change-sequence catch-up and shared-building changes),
+dataset `as_of`, ranking policy contents and the current resident-authority/
+retention day. No schema, approval, assignment or event history changes are
+required. Cached IDs never contain role-projected context: visibility, filters
+and returned narratives are checked anew for each request.
+
+The first queue request after startup or invalidation still builds membership
+for every open case while holding the lock. Repeated pages avoid that work;
+CSV still projects every matching output row. This is a snapshot-cache
+optimisation, not a claim of constant-time reads or faster cold rebuilds.
 The API guide documents [definitions, source fields, snapshot clock, redaction
 and remaining owner decisions](../api/README.md#role-task-queues-and-shared-case-context-76).
 JSON/SQLite semantic tests cover seven/30/180-day boundaries, unknowns,
 handoff lifecycle, independent deadlines, missing named owners and 120-case
 paging/sort/export parity. Role-only responsibility never invents a named owner;
 draft policy and accepted AI advice cannot produce approved programme priority.
+
+### Generated 60,000-case queue timing (#327, 2026-10-16)
+
+Local Python 3.12 SQLite results, not Azure or private-stock evidence. The
+reproducible fixture is `test_sqlreads.queue_cases(60000)`, seed 5, snapshot
+2026-10-16: fictional Test Road homes with deterministic stage dates, EPC dates,
+handoffs and resident-update deadlines; 58,224 are open. Measurements exclude
+generation/database initialisation and include a lightweight evaluator counter.
+Values below are medians of three 50-row second-page reads (milliseconds);
+the unavailable priority queue has no page.
+
+| Queue | Matches | Before | Indexed |
+| --- | ---: | ---: | ---: |
+| new | 19,375 | 2167.9 | 215.3 |
+| priority (draft policy) | 0 | 1931.9 | <0.1 |
+| stale | 14,539 | 2102.7 | 158.3 |
+| blocked | 58,224 | 2567.9 | 611.3 |
+| overdue | 18,326 | 2157.9 | 198.8 |
+| unowned | 11,675 | 2134.4 | 129.6 |
+
+The first `new` page, including cold global ranking and membership construction,
+was **3217.4 ms before and 3090.6 ms after**: cold latency is not materially
+improved. That request builds all queues; subsequent first pages reuse it.
+Repeated nonempty pages now evaluate 50 output contexts instead of 58,274
+contexts per request; the empty priority queue evaluates zero instead of
+58,224. Broad queues still filter/sort their candidate IDs; CSV still pays for
+every matching projected row. Results vary with hardware and concurrent load.
+
+Run from `src/core` in the installed pip venv:
+
+```bash
+python -m unittest discover -s tests -p test_sqlreads.py -k test_queue_filters_at_60000 -v
+```
+
+The regression checks all six warm reads against 1500 ms and, independently,
+requires no context evaluation beyond returned rows. It failed for all six
+queues against the original scan. JSON/SQLite tests also compare uncached
+selection across sorts, views, filters and search, exercise exports and
+authorisation, and check policy/snapshot/day/local/shared/cross-process refresh.
 
 ## Resident decisions and representatives (#86)
 
