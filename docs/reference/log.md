@@ -3640,6 +3640,30 @@ metadata when the knowledge base was created.
   routed separately. CI names are unchanged; hosted checks remain separate
   from these local results. No merge or issue disposition is implied.
 
+## [2026-10-16] update | Indexed task queue membership (Refs #327)
+
+* Replaced repeated full work-context scans with a snapshot-scoped inverted
+  case-ID index in [core](../../src/core/README.md#derived-role-task-queues-76).
+  JSON and SQL queue reads share it; existing visibility, filtering, ordering,
+  paging, CSV and per-request narrative projection remain unchanged.
+* Recorded [generated 60,000-case timings](../../src/core/README.md#generated-60000-case-queue-timing-327-2026-10-16):
+  median repeated nonempty pages improved from 2102.7-2567.9 ms to
+  129.6-611.3 ms. The first cold page remained 3090.6 ms versus 3217.4 ms before;
+  cold rebuilds still run after writes, snapshot/policy changes or the current
+  resident-authority/retention day changes. CSV retains output-size costs.
+* Added five core regression methods covering all queues, uncached parity,
+  policy/snapshot/day changes, shared/local/cross-process changes and 60k
+  evaluator counts. Original-scan mutation fails in both JSON and SQLite;
+  the new 60k regression also failed for all six queues before implementation.
+* Used only generated fictional data and local pip-venv checks. No private
+  datasets, environment files, Docker, Azure, schema migration, changed
+  approval/assignment or operational acceptance is involved.
+* Local suites totalled 1,140 tests with 104 existing conditional skips; all
+  executed tests passed. All five projects passed ruff, formatting and mypy.
+  Hosted checks and any live-platform performance remain separate evidence.
+* Published PR #336 with Refs #327, no automatic issue-disposition reference.
+  One plan critique passed and one implementation Review was Conformant.
+  Hosted checks started; merge remains the owner's decision.
 ## [2026-10-16] update | Rule-engine gating regression coverage (Refs #329)
 
 * Tightened the [core deterministic-check contract](../../src/core/README.md#deterministic-checks-and-alerts-212)

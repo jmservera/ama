@@ -551,6 +551,9 @@ before totals, ordering and pagination. Other filters/sorts still apply.
 Unknown queue IDs return 400 on both endpoints; an unavailable approved-priority
 queue returns an empty result, with its explanation in the visible definitions.
 Contractors cannot use staff queues and receive no new context or staff metadata.
+Queue selection now uses the shared snapshot-scoped case-ID index; see the
+[60,000-case before/after measurements and cold-build limitation](../core/README.md#generated-60000-case-queue-timing-327-2026-10-16).
+Filtering and reset do not change that authorisation boundary.
 
 | Queue ID | Visible definition and source |
 | --- | --- |

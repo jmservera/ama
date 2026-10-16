@@ -6,8 +6,11 @@ import tempfile
 import unittest
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
+from building_fixture import fixture, hold, open_store
 from dataset import DATA
+from test_sqlreads import STAFF, dataset, queue_cases
 from zava_forward.core import ranking, taskqueues
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
@@ -195,6 +198,174 @@ class QueueDefinitions(unittest.TestCase):
 
 
 class StoreQueueParity(unittest.TestCase):
+    def test_all_queue_filters_sorts_and_visibility_match_uncached_selection(self) -> None:
+        data = dataset(queue_cases(90))
+        data["as_of"] = AS_OF
+        with tempfile.TemporaryDirectory() as tmp:
+            seed = Path(tmp) / "synthetic.json"
+            seed.write_text(json.dumps(data))
+            for sql in (False, True):
+                store = (
+                    SqlStore(str(seed), str(seed.with_suffix(".sqlite")))
+                    if sql
+                    else Store(str(seed))
+                )
+                try:
+                    for queue, _, _ in taskqueues.DEFINITIONS:
+                        for sort in ("urgent", "waiting", "name", "contact", "visit", "bogus"):
+                            for user, view, filters, query in (
+                                (STAFF[1], "all", {}, ""),
+                                (STAFF[0], "mine", {"area": "North", "flag": "long"}, ""),
+                                (STAFF[1], "all", {"wave": "Wave 1", "owner": "PM-01"}, "TE"),
+                                (STAFF[1], "all", {"flag": "nodecision"}, ""),
+                            ):
+                                args = dict(
+                                    view=view,
+                                    filters=dict(filters, queue=queue),
+                                    q=query,
+                                    sort=sort,
+                                    limit=7,
+                                    offset=2,
+                                )
+                                with self.subTest(sql=sql, queue=queue, args=args):
+                                    actual = store.page_cases(user, **args)
+
+                                    def uncached(
+                                        name: str, target: Store = store
+                                    ) -> list[dict[str, Any]]:
+                                        return [
+                                            c
+                                            for c in target.cases.values()
+                                            if name in target.work_context(c, None)["queues"]
+                                        ]
+
+                                    with patch.object(store, "_queue_candidates", new=uncached):
+                                        expected = store.page_cases(user, **args)
+                                    self.assertEqual(actual, expected)
+                finally:
+                    if isinstance(store, SqlStore):
+                        store.db.close()
+
+    def test_warm_pages_exports_and_denials_do_not_rescan_context(self) -> None:
+        data = dataset(queue_cases(90))
+        data["as_of"] = AS_OF
+        for sql in (False, True):
+            with self.subTest(sql=sql), tempfile.TemporaryDirectory() as tmp:
+                store = open_store(tmp, sql, data)
+                try:
+                    store.page_cases(STAFF[1], "all", filters={"queue": "new"}, limit=2)
+                    for user in (STAFF[0], STAFF[1]):
+                        for queue, _, _ in taskqueues.DEFINITIONS:
+                            with patch.object(
+                                store, "work_context", wraps=store.work_context
+                            ) as ctx:
+                                page = store.page_cases(
+                                    user, "mine", filters={"queue": queue}, limit=2
+                                )
+                                self.assertEqual(ctx.call_count, len(page["items"]))
+                            with patch.object(
+                                store, "work_context", wraps=store.work_context
+                            ) as ctx:
+                                rows = store.list_cases(user, "all", filters={"queue": queue})
+                                self.assertEqual(ctx.call_count, len(rows))
+                                self.assertEqual(
+                                    len(store.export_csv(rows).splitlines()), len(rows) + 1
+                                )
+                    with patch.object(store, "_queue_candidates", side_effect=AssertionError):
+                        for user, filters, error in (
+                            (STAFF[2], {"queue": "new"}, PermissionError),
+                            (STAFF[1], {"queue": "invented"}, ValueError),
+                        ):
+                            with self.assertRaises(error):
+                                store.page_cases(user, "all", filters=filters, limit=2)
+                        with self.assertRaises(PermissionError):
+                            store.page_cases(STAFF[0], "closed", filters={"queue": "new"})
+                        closed = store.page_cases(STAFF[1], "closed", filters={"queue": "new"})
+                        self.assertEqual(closed["total"], sum(c["closed"] for c in data["cases"]))
+                finally:
+                    if sql:
+                        store.db.close()
+
+    def test_snapshot_policy_and_current_day_invalidate_membership(self) -> None:
+        for sql in (False, True):
+            with self.subTest(sql=sql), tempfile.TemporaryDirectory() as tmp:
+                data: dict[str, Any] = copy.deepcopy(DATA)
+                data["as_of"] = AS_OF
+                data["cases"][0]["stage_since"] = AS_OF
+                data["cases"][2]["resident"]["first_contact_at"] = "2026-01-01"
+                store = open_store(tmp, sql, data)
+                try:
+
+                    def ids(queue: str, target: Store = store) -> set[str]:
+                        return {
+                            r["id"]
+                            for r in target.list_cases(
+                                DATA["staff"][1], "all", filters={"queue": queue}
+                            )
+                        }
+
+                    self.assertEqual(ids("new"), {"ZF-1"})
+                    store.as_of = "2026-11-01"
+                    self.assertEqual(ids("new"), set())
+                    self.assertEqual(ids("priority"), set())
+                    approved = dict(ranking.CURRENT, status="Approved", owner="Synthetic owner")
+                    with patch.dict(ranking.CURRENT, approved):
+                        self.assertEqual(ids("priority"), set(store.cases))
+                    self.assertEqual(ids("priority"), set())
+                    with patch("zava_forward.core.controls.today", return_value="2026-10-16"):
+                        self.assertNotIn("ZF-3", ids("blocked"))
+                    with patch("zava_forward.core.controls.today", return_value="2032-01-01"):
+                        self.assertIn("ZF-3", ids("blocked"))
+                    store.as_of = "invalid"
+                    with self.assertRaises(ValueError):
+                        ids("new")
+                    store.as_of = AS_OF
+                    self.assertEqual(ids("new"), {"ZF-1"})
+                finally:
+                    if sql:
+                        store.db.close()
+
+    def test_saved_case_and_shared_changes_invalidate_json_and_other_sql_process(self) -> None:
+        for sql in (False, True):
+            with self.subTest(sql=sql), tempfile.TemporaryDirectory() as tmp:
+                data = fixture()
+                data["as_of"] = AS_OF
+                writer = open_store(tmp, sql, data)
+                reader = open_store(tmp, sql) if sql else writer
+                try:
+
+                    def ids(queue: str, target: Store = reader) -> set[str]:
+                        return {
+                            r["id"]
+                            for r in target.list_cases(
+                                DATA["staff"][1], "all", filters={"queue": queue}
+                            )
+                        }
+
+                    self.assertEqual(ids("blocked"), set())
+                    with writer.lock:
+                        writer.data["buildings"][0]["holds"].append(hold())
+                        writer.save()
+                    self.assertEqual(ids("blocked"), {"ZF-2"})
+                    with writer.lock:
+                        writer.data["buildings"][0]["holds"].clear()
+                        writer.save()
+                    self.assertEqual(ids("blocked"), set())
+                    self.assertEqual(ids("unowned"), set())
+                    writer.offer_handoff(data["staff"][0], "ZF-2", data["staff"][1]["email"])
+                    self.assertEqual(ids("unowned"), {"ZF-2"})
+                    writer.withdraw_handoff(data["staff"][0], "ZF-2")
+                    self.assertEqual(ids("unowned"), set())
+                    with writer.lock:
+                        case = writer._case("ZF-2")
+                        case.update(closed=True, stage_since=AS_OF)
+                        writer.save()
+                    self.assertNotIn("ZF-2", ids("new"))
+                finally:
+                    if sql:
+                        reader.db.close()
+                        writer.db.close()
+
     def test_filter_before_paging_sort_export_and_unchanged_records(self) -> None:
         data: dict[str, Any] = copy.deepcopy(DATA)
         data["as_of"] = AS_OF

@@ -8,6 +8,7 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import dataset as fixtures
 from zava_forward.core import ranking
@@ -49,6 +50,20 @@ def dataset(cases):
     d = copy.deepcopy(fixtures.DATA)
     d["staff"], d["cases"] = copy.deepcopy(STAFF), cases
     return d
+
+
+def queue_cases(n=60000):
+    """Fictional stock with deterministic positive and negative queue membership."""
+    cases = make_cases(n, seed=5)
+    for i, c in enumerate(cases):
+        c["stage_since"] = "2026-10-15" if i % 3 == 0 else "2026-01-01"
+        c["documents"] = [dict(kind="EPC", at="2026-01-01" if i % 4 == 0 else "2026-10-15")]
+        if i % 5 == 0:
+            c["handoff"] = dict(state="Offered", from_name="Sam Example",
+                                due_at="2026-10-15T10:00:00Z")
+        if i % 7 == 0:
+            c["resident_update"] = dict(owner="Sam Example", due_at="2026-10-15T10:00:00Z")
+    return cases
 
 
 class Parity(unittest.TestCase):
@@ -207,6 +222,51 @@ class Plans(unittest.TestCase):
 
 class Scale(unittest.TestCase):
     N = 60000
+
+    def test_queue_filters_at_60000(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "synthetic.json"
+            data = dataset(queue_cases(self.N))
+            data["as_of"] = "2026-10-16"
+            p.write_text(json.dumps(data))
+            s = SqlStore(str(p), str(p.with_suffix(".sqlite")))
+            self.addCleanup(s.db.close)
+            measurements = []
+            for queue in ("new", "priority", "stale", "blocked", "overdue", "unowned"):
+                calls = 0
+                original = s.work_context
+
+                def counted(*args, **kwargs):
+                    nonlocal calls
+                    calls += 1
+                    return original(*args, **kwargs)
+
+                with patch.object(s, "work_context", new=counted):
+                    start = time.perf_counter()
+                    first = s.page_cases(STAFF[1], "all", filters={"queue": queue}, limit=50)
+                    cold_ms = (time.perf_counter() - start) * 1000
+                    cold_calls = calls
+                    calls = 0
+                    samples = []
+                    for _ in range(3):
+                        start = time.perf_counter()
+                        page = s.page_cases(STAFF[1], "all", filters={"queue": queue},
+                                            limit=50, after=first["next_cursor"])
+                        samples.append((time.perf_counter() - start) * 1000)
+                    print(f"[timing] queue={queue}, {self.N:,} synthetic cases: "
+                          f"first={cold_ms:.1f} ms ({cold_calls} contexts), "
+                          f"repeat_ms={[round(ms, 1) for ms in samples]}, "
+                          f"repeat_contexts={calls}, matches={first['total']}",
+                          flush=True)
+                    measurements.append((queue, max(samples), calls, len(page["items"])))
+                    self.assertEqual(page["total"], first["total"])
+                    if first["next_cursor"]:
+                        self.assertTrue(set(r["id"] for r in first["items"]).isdisjoint(
+                            r["id"] for r in page["items"]))
+            for queue, ms, calls, size in measurements:
+                with self.subTest(queue=queue):
+                    self.assertLessEqual(calls, 3 * size)
+                    self.assertLess(ms, 1500)
 
     def test_sql_reads_at_60000(self):
         with tempfile.TemporaryDirectory() as tmp:

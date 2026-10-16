@@ -9,7 +9,7 @@ import threading
 import uuid
 from datetime import datetime
 
-from . import ai_tasks, ai_prompts, buildings, insights, ledger, projection, ranking, stock, taskqueues
+from . import ai_tasks, ai_prompts, buildings, controls, insights, ledger, projection, ranking, stock, taskqueues
 from .finance import FinanceMixin
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
@@ -227,6 +227,20 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 os.replace(path + ".tmp", path)
             return snap
 
+    def _queue_candidates(self, queue):
+        """Index IDs, never viewer-projected context; called under the store lock."""
+        key = (self.version, self.as_of, controls.today(),
+               json.dumps(ranking.CURRENT, sort_keys=True))
+        cached = getattr(self, "_queue_index", None)
+        if cached is None or cached[0] != key:
+            members = {name: [] for name, _, _ in taskqueues.DEFINITIONS}
+            for c in self.cases.values():
+                if not c["closed"]:
+                    for name in self.work_context(c, None)["queues"]:
+                        members[name].append(c["id"])
+            self._queue_index = (key, members)
+        return (self.cases[cid] for cid in self._queue_index[1][queue])
+
     def _filtered(self, user, view, q, f):
         taskqueues.validate_queue(f.get("queue", ""))
         if f.get("queue") and projection.is_contractor(user):
@@ -235,13 +249,12 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if user["role"] not in MANAGER_ROLES:
                 raise PermissionError("Only a manager can see closed cases.")
             return sorted((c for c in self.cases.values() if c["closed"] and insights.matches(c, f)), key=lambda c: c["id"])
-        rows = [c for c in self.cases.values() if not c["closed"] and insights.matches(c, f)]
+        candidates = self._queue_candidates(f["queue"]) if f.get("queue") else self.cases.values()
+        rows = [c for c in candidates if not c["closed"] and insights.matches(c, f)]
         if projection.is_contractor(user):
             rows = [c for c in rows if projection.own_case(user, c)]
         elif view == "mine":
             rows = [c for c in rows if c["owner_code"] == user["code"]]
-        if f.get("queue"):
-            rows = [c for c in rows if f["queue"] in self.work_context(c, user)["queues"]]
         if q:
             ql = q.lower()
             # a contractor cannot search on the resident's name: that would reveal who lives where
