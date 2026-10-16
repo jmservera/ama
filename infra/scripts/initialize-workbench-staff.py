@@ -5,6 +5,7 @@ import json
 import logging
 import os
 from pathlib import Path
+import stat
 import subprocess
 import time
 from typing import Any
@@ -12,6 +13,7 @@ from urllib.parse import urlsplit
 import uuid
 
 GRAPH = "https://graph.microsoft.com/v1.0/"
+LOGGER = logging.getLogger(__name__)
 
 
 def azure(args: list[str], profile: Path | None = None) -> Any:
@@ -19,6 +21,8 @@ def azure(args: list[str], profile: Path | None = None) -> Any:
     env = dict(os.environ)
     if profile is not None:
         env["AZURE_CONFIG_DIR"] = str(profile)
+    if env.get("ZF_SETUP_SUBSCRIPTION") and args[0] in ("containerapp", "sql", "account"):
+        args = [*args, "--subscription", env["ZF_SETUP_SUBSCRIPTION"]]
     result = subprocess.run(["az", *args, "-o", "json"], env=env,
                             capture_output=True, text=True)
     if result.returncode:
@@ -67,7 +71,9 @@ class Directory:
 
 def read_roster(path: Path) -> list[dict]:
     """Read private operator input; personal directory data must stay outside Git."""
-    if path.stat().st_mode & 0o077 or path.parent.stat().st_mode & 0o077:
+    if (path.is_symlink() or path.parent.is_symlink()
+            or stat.S_IMODE(path.stat().st_mode) != 0o600
+            or stat.S_IMODE(path.parent.stat().st_mode) != 0o700):
         raise ValueError("Roster must have mode 0600 in a mode-0700 directory.")
     value = json.loads(path.read_text())
     if not isinstance(value, list) or not value:
@@ -122,7 +128,8 @@ def reconcile_roles(directory: Directory, resource: str, roles: list[dict],
         if not actual:
             choices = [r for r in roles if r.get("isEnabled") is True
                        and "User" in r.get("allowedMemberTypes", [])
-                       and role_map.get(r.get("value")) == row["role"]]
+                       and isinstance(role_value := r.get("value"), str)
+                       and role_map.get(role_value) == row["role"]]
             if len(choices) != 1:
                 raise ValueError(f"Position {row['code']} needs one enabled matching app-role definition.")
             missing.append((row, groups, choices[0]["id"]))
@@ -152,12 +159,18 @@ def prepare_roster(db: Any, wanted: list[dict], directory: Directory) -> list[di
         raise ValueError("Roster must cover every current staff code.")
     suppliers = {r[0] for r in db.execute("SELECT DISTINCT contractor FROM cases").fetchall() if r[0]}
     out, emails = [], set()
+    definitions = json.loads((Path(__file__).resolve().parents[1] /
+                              "entra/app-registration.json").read_text())
+    labels = {r["key"]: r["label"] for r in definitions["appRoles"]}
     for spec in wanted:
         old = current.get(spec["code"])
         if old is None:
             if spec.get("role") != "Contractor" or spec.get("contractor") not in suppliers:
                 raise ValueError("New positions must be Contractors with an existing explicit supplier scope.")
             old = {"code": spec["code"], "role": "Contractor", "contractor": spec["contractor"]}
+        requested_role = spec.get("role")
+        if requested_role is not None and labels.get(requested_role, requested_role) != old["role"]:
+            raise ValueError("Roster role must match the existing approved workbench position.")
         identity = person(directory.request(
             f"users/{spec['userId']}?$select=id,displayName,userPrincipalName,accountEnabled,userType"))
         if identity["oid"] != spec["userId"]:
@@ -252,13 +265,25 @@ def restart_api(group: str, app: str) -> None:
             raise RuntimeError("SQL committed but fresh API replicas are not ready; retry --apply --restart.")
 
 
+def sql_settings(env: dict[str, Any], group: str) -> dict[str, Any]:
+    """Discover the existing private server from deployed API settings, never a typed name."""
+    server = env.get("ZF_SQL_SERVER") or env.get("SQL_SERVER")
+    database = env.get("ZF_SQL_DATABASE") or env.get("SQL_DATABASE")
+    servers = azure(["sql", "server", "list", "-g", group])
+    matches = [row for row in servers if row.get("fullyQualifiedDomainName") == server]
+    if len(matches) != 1 or matches[0].get("publicNetworkAccess") != "Disabled" or not database:
+        raise ValueError("Cannot confirm the API's SQL server in ama with public access Disabled; "
+                         "no SQL changes are safe.")
+    return {**env, "ZF_SQL_SERVER": server, "ZF_SQL_DATABASE": database}
+
+
 def main(argv: list[str] | None = None) -> int:
     """Resolve deployed configuration and reconcile only explicitly selected private people."""
     from zava_forward.api.auth import DEFAULT_ROLE_MAP
     from zava_forward.core.mssqlstore import _Conn, connection_string
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--resource-group", required=True)
+    parser.add_argument("--resource-group", required=True, choices=("ama",))
     parser.add_argument("--container-app", required=True)
     parser.add_argument("--roster", type=Path, required=True)
     parser.add_argument("--tenant-profile", type=Path, default=Path.home() / ".azure" / "zava-entra-init")
@@ -266,29 +291,46 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--check", action="store_true")
     mode.add_argument("--apply", action="store_true")
     parser.add_argument("--restart", action="store_true")
+    parser.add_argument("--list-candidates", action="store_true",
+                        help="Read only existing workbench codes and approved roles")
     args = parser.parse_args(argv)
     if args.restart and not args.apply:
         parser.error("--restart requires --apply; --check is read-only.")
-    wanted = read_roster(args.roster)
+    wanted = [] if args.list_candidates else read_roster(args.roster)
     operator_tenant = azure(["account", "show", "--query", "tenantId"])
     if azure(["account", "show", "--query", "tenantId"], args.tenant_profile) != operator_tenant:
         raise ValueError("Administrative profile is not in the deployment tenant.")
     container = azure(["containerapp", "show", "-g", args.resource_group, "-n", args.container_app])
-    env = {r["name"]: r.get("value") for r in container["properties"]["template"]["containers"][0]["env"]}
-    if env.get("ZF_ENTRA_TENANT_ID", "").lower() != operator_tenant.lower() or env.get("ZF_AUTH") != "trusted-proxy":
-        raise ValueError("API is not protected by the expected tenant's trusted proxy.")
-    auth = azure(["containerapp", "auth", "show", "-g", args.resource_group, "-n", args.container_app])
-    if auth["platform"]["enabled"] is not True:
-        raise ValueError("Ingress authentication is disabled.")
-    client = str(uuid.UUID(auth["identityProviders"]["azureActiveDirectory"]["registration"]["clientId"]))
-    directory = Directory(args.tenant_profile)
-    sp = directory.request(f"servicePrincipals(appId='{client}')?$select=id,appRoles")
-    role_map = dict(DEFAULT_ROLE_MAP)
-    role_map.update(json.loads(env.get("ZF_ROLE_MAP") or "{}"))
+    if os.environ.get("ZF_SETUP_EXPECTED_APP") and container.get("id", "").lower() != os.environ["ZF_SETUP_EXPECTED_APP"].lower():
+        raise ValueError("Selected API differs from the discovered deployment; SQL was not changed.")
+    containers = container["properties"]["template"]["containers"]
+    candidates = [c for c in containers if c.get("name") == "api"]
+    if not candidates and len(containers) == 1:
+        candidates = containers
+    if len(candidates) != 1:
+        raise ValueError("Cannot select one API container for SQL settings.")
+    env = {r["name"]: r.get("value") for r in candidates[0]["env"]}
+    env = sql_settings(env, args.resource_group)
     token = azure(["account", "get-access-token", "--resource", "https://database.windows.net/"])["accessToken"]
     sql_env = {**env, "ZF_SQL_AUTH": "token", "ZF_SQL_TOKEN": token}
     db = _Conn(connection_string(sql_env), token)
     try:
+        if args.list_candidates:
+            if args.apply or args.restart:
+                raise ValueError("Candidate listing is read-only.")
+            rows = [json.loads(body) for _, body in db.execute("SELECT email, body FROM staff").fetchall()]
+            print(json.dumps([{"code": row["code"], "role": row["role"]} for row in rows]))
+            return 0
+        if env.get("ZF_ENTRA_TENANT_ID", "").lower() != operator_tenant.lower() or env.get("ZF_AUTH") != "trusted-proxy":
+            raise ValueError("API is not protected by the expected tenant's trusted proxy.")
+        auth = azure(["containerapp", "auth", "show", "-g", args.resource_group, "-n", args.container_app])
+        if auth["platform"]["enabled"] is not True:
+            raise ValueError("Ingress authentication is disabled.")
+        client = str(uuid.UUID(auth["identityProviders"]["azureActiveDirectory"]["registration"]["clientId"]))
+        directory = Directory(args.tenant_profile)
+        sp = directory.request(f"servicePrincipals(appId='{client}')?$select=id,appRoles")
+        role_map = dict(DEFAULT_ROLE_MAP)
+        role_map.update(json.loads(env.get("ZF_ROLE_MAP") or "{}"))
         roster = prepare_roster(db, wanted, directory)
         sql = install_roster(db, roster, apply=False)
         grants = reconcile_roles(directory, sp["id"], sp["appRoles"], role_map, roster, apply=args.apply)
@@ -316,6 +358,14 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     try:
         raise SystemExit(main())
-    except (ValueError, RuntimeError) as error:
+    except ValueError:
+        print(json.dumps({"error": "validation"}))
+        LOGGER.error("Private roster or deployed auth/SQL validation failed; no raw input was logged.")
+        raise SystemExit(1) from None
+    except ImportError:
+        LOGGER.error("Install source packages and SQL dependencies: python3 -m pip install "
+                     "-e src/core -e src/agents -e src/api pyodbc; install Microsoft ODBC Driver 18.")
+        raise SystemExit(1) from None
+    except RuntimeError as error:
         logging.error("%s", error)
         raise SystemExit(1) from None

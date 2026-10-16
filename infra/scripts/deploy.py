@@ -102,6 +102,26 @@ def resolve_image(group: str, prefix: str, registry: str) -> tuple[str, str]:
     return f"{server}/{REPOSITORY}:{tags[0]}", "newest registry tag (time_desc)"
 
 
+def authentication_guard(apps: list[dict[str, Any]], parameters: list[str]) -> None:
+    """Never replace a private app-local credential with a default vault reference."""
+    values = dict(value.split("=", 1) for value in parameters)
+    if not isinstance(apps, list) or any(not isinstance(app, dict) for app in apps):
+        raise DeploymentError("Cannot read deployed authentication state; deployment stopped.")
+    for app in apps:
+        tags = app.get("tags") or {}
+        if tags.get("zava-forward-auth-lock"):
+            raise DeploymentError("Authentication setup holds an advisory lock; wait before deploying.")
+        if tags.get("zava-forward-credential-store") == "app" and not (
+            values.get("entraCredentialStore") == "app"
+            and values.get("deployApplications", "").lower() == "false"
+        ):
+            raise DeploymentError(
+                "App-local browser credential detected. Preserve the deployed store and secret "
+                "with entraCredentialStore=app and deployApplications=false for dependency-only updates; "
+                "this deployment was stopped before it could overwrite authentication."
+            )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--resource-group", required=True, choices=("ama",))
@@ -126,6 +146,10 @@ def main() -> int:
         ):
             parser.error("Use named options for image/workload/environment; others need NAME=VALUE")
     try:
+        authentication_guard(
+            az_json("containerapp", "list", "--resource-group", args.resource_group),
+            args.parameter,
+        )
         image, source = (
             (args.orchestrator_image, "explicit --orchestrator-image")
             if args.orchestrator_image

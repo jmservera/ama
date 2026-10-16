@@ -52,6 +52,42 @@ registry/Foundry/IoT and private endpoints are reused, not recreated.
 Default/production behavior is retained, direct auth uses NoProxy and the app
 FQDN, and the demo tag/flag bypasses all Front Door discovery.
 
+### Single-command Authentication Continuation (2026-10-16)
+
+Refs #360. Owner follow-up replaces manual credential flags, roster creation,
+separate Entra check, and SQL check/apply/restart instructions with
+`python3 infra/scripts/setup-entra.py` (`--yes` for the single SQL confirmation).
+This continuation is offline implementation only, not a tenant/deployment
+receipt. The [runbook](../../infra/README.md#post-deployment-api-authentication-initialization)
+is the current operator contract; earlier step-by-step observations below
+remain historical.
+
+| Owner requirement | Offline evidence and limit |
+| --- | --- |
+| Automatic browser credential and private-vault preference | Named unexpired credential/storage matching, unique interrupted-handoff recovery, automatic direct-demo fallback on vault probe/write failure, and private temporary body files are mocked. Actual vault access, MI permission and token exchange are Not run |
+| No typed vault or identity | API secret references/attached identities, configured vault URI, deployment tags/resource lookup, and available Bicep outputs are used; optional overrides remain. Interactive ambiguity asks once; headless ambiguity stops with names, never invented choices |
+| Private roster onboarding/validation | Missing roster creates a 0700 directory/0600 placeholder template and stops before cloud calls. Placeholders, duplicate codes/IDs, non-GUID/zero IDs, unknown roles, groups, symlinks and incorrect modes are rejected. Candidate SQL codes/roles and private UPN lookup are helpers, not role approval |
+| Reconcile then check Entra | Default run rereads registration/auth/credential/runtime state and checks assignments before SQL. Mocked ordering is evidence, not real tenant/browser acceptance |
+| SQL binding and restart | Default checks, shows counts, asks once, applies and verifies serving replicas. Matching roster/revision evidence avoids redundant restart. Missing private connectivity/driver/authority produces an exact authorized-host command and explicitly unconfirmed SQL/restart |
+| Approved private execution route | Existing in-VNet proof initialization has no staff-roster or delegated Graph-profile transport. No new upload/job/permission mechanism is invented; authorized-host handoff is implemented. Live SQL binding/restart remains Not run |
+| Credential-store deployment protection | Store/name tags and default-Key-Vault Bicep parameter/guards exist. Guarded CLI and CI refuse full application deployment over app-local credentials. Explicit app mode permits dependency-only updates; no secret value is exported into ARM templates |
+| Coordination | Existing advisory tag, app/environment/revision update and running group-deployment refusals are mocked. Local exclusive lock and owned app-tag release are tested; conditional If-Match is used when available. A tag alone does not establish an Azure-enforced simultaneous-start mutex; that stronger cross-host guarantee remains unmet/unverified and raw portal changes require operator serialization |
+| Read-only and privacy boundaries | Check/dry-run do not mutate cloud resources or create a roster/profile, apply SQL or restart. Real identifiers/credentials/private datasets are absent from committed evidence. `ama` deletion, network opening and direct-mode Front Door discovery have no new path |
+| Original issue acceptance | Offline infrastructure/auth/documentation work does not satisfy migration/cost approval (c), live HTTPS/browser/roles/SQL/AI (d), or authorized edge retirement (e). No issue checkboxes changed |
+
+The SQL helper additionally discovers the configured server within `ama` and
+refuses anything except public access `Disabled`; role keys/full labels must
+match existing workbench positions before SQL writes. Juan Manuel Servera
+remains the synthetic exercise Legal, Compliance and DPO owner. This technical
+onboarding adds no legal interpretation, control activation, consent, safety
+or financial approval and makes no operational-readiness claim.
+
+Offline continuation receipt: 260 infra tests passed without skips, including
+local compiled Bicep guards; four production scripts passed scoped mypy;
+focused Ruff passed with no introduced baseline findings; 32 local loopback
+API authentication tests and Markdown/diff checks passed. No deployed probe
+was run, and no strict distributed-mutex or full live acceptance is claimed.
+
 ### Proposed Migration and Approval Gates
 
 The canonical step-by-step

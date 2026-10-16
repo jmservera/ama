@@ -4324,3 +4324,24 @@ metadata when the knowledge base was created.
   without rewriting history; final infra suite passed 238 tests without skips
   and setup production mypy passed. Opened PR #362 for human review; no issue
   ticks, live acceptance, deletion or merge.
+
+## [2026-10-16] ingest | Single-command Entra onboarding continuation
+
+* Refs #360. Continued the existing topic/PR and RPI plan, without repeating
+  completed research, critique or the historical Review.
+* Updated `infra/scripts/setup-entra.py`, the directly coupled SQL/deployment
+  helpers, Bicep guards and offline tests: automatic credential discovery and
+  direct-demo app-local fallback, private roster template/validation/helpers,
+  post-reconcile Entra verification, SQL check/confirmation/apply/restart or
+  exact authorized-host handoff, and advisory deployment coordination.
+* Updated `infra/README.md`, the cut-over evidence pack and this index. Store
+  tags plus guarded CLI/CI and Bicep parameters prevent supported full
+  application deployments from overwriting app-local credentials; dependency
+  updates must explicitly retain that store and omit application deployment.
+* No Azure, directory, private-dataset or network changes were performed.
+  Advisory tags do not prove a simultaneous-start distributed mutex. Real
+  browser, vault/MI, SQL/restart and original migration/retirement acceptance
+  remain unproved; no issue checkboxes or approval records were changed.
+* Final offline validation: 260 infra tests with compiled Bicep guards and no
+  skips, four-script scoped mypy, focused Ruff with no introduced baseline
+  findings, 32 responsive loopback API auth tests and Markdown/diff checks.

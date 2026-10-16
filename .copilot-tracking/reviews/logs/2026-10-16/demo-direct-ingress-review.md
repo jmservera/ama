@@ -4,6 +4,32 @@ description: "Single offline RPI Review for issue-360/demo-direct-ingress."
 ms.date: 2026-10-16
 ---
 
+## P05 Owner-requested Continuation Acceptance Audit
+
+Date: 2026-10-16. Boundary: owner-directed single-command automation added after
+the historical Review below; not a rerun or rewritten verdict of that Review.
+This bounded audit uses the current P05 plan/details/changes, changed setup/
+staff/deployment scripts, compiled guards/tests and runbook/evidence updates.
+No Azure call or live acceptance is inferred.
+
+| Requirement | Assessment |
+| --- | --- |
+| Default one-line invocation and resource discovery | Implemented offline: fixed permitted ama group; tagged API/direct mode; attached/reference/tag/output vault/identity discovery; SQL/environment/registry from app configuration. No required resource-name inputs. Ambiguity is interactive once or an explicit headless blocker |
+| Automatic browser credential and recovery | Implemented offline: named unexpired matching credential/storage pair reused, missing/expired pair created, orphan handoffs cannot masquerade as usable values, old credentials retained, private-vault probe/write fallback announced only for direct demo. Metadata is not live token validity |
+| Private staff roster and helper paths | Implemented offline: missing 0700/0600 template stops before cloud calls; placeholder, GUID/zero, duplicate, role, symlink and mode validation; candidate code/role list and private UPN mapping; manifest keys/full SQL labels bridged without role inference |
+| Entra then verification then SQL | Implemented offline: fresh assignment-required/SP, assignment, registration, credential, auth and runtime reads precede SQL check; counts-only plan, one confirmation/yes, apply and serving-replica verification; current roster/revision marker avoids redundant restart |
+| Private-host execution alternative | Implemented exact authorized-host command. Existing proof initializer does not carry private roster/delegated Graph credentials, so no unsupported job transport is invented. Connection/driver/authority failure and validation rejection have distinct sanitized reporting; SQL/restart are explicitly unconfirmed |
+| App-local redeployment guard | Implemented/tested on supported wrappers and Bicep store parameter/guards: app-local full application deployment refused, dependency-only updates explicit. Existing no-secret-list Bicep policy retained. Raw commands omitting the recorded store are outside that protection and must not be used |
+| Coordination refusal and lock ownership | Implemented/tested for existing advisory locks, deployment/revision/provisioning activity, lost ownership and owned cleanup; conditional ETag when available. Advisory tags are not a proven atomic cross-host mutex. The absolute simultaneous-start guarantee remains unmet/unverified, not conformant acceptance |
+| Offline validation | 260 infra tests with local Bicep compilation and no skips; four-script scoped mypy; focused Ruff and zero introduced baseline findings; 32 responsive local API auth tests; CLI help, Markdown target checks and diff hygiene |
+| Human/live boundaries | Original c/d/e remain unmet; no tenant, browser, SQL, AI, migration/cost approval or retirement evidence. No new approval from role simulation; Juan Manuel Servera remains the exercise legal/compliance/DPO owner only |
+
+Audit execution: complete for P05 offline boundary. Outcome: partial acceptance,
+not a conformant claim for the strict cross-host guarantee or live requirements.
+Next owner actions: review PR 362 and the coordination limitation; serialize
+authorized mutation windows, establish an approved provider-enforced mutex if
+strict exclusion must be claimed, and retain the original separate live gates.
+
 ## Scope and Evidence
 
 * Task ID: issue-360/demo-direct-ingress.

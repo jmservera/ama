@@ -43,6 +43,9 @@ param sqlAdminPrincipalType string = 'Group'
 param entraClientId string = ''
 @description('Key Vault and Container App secret name for browser authentication. Retain the private setup-selected name on redeploy; never put the secret value here.')
 param entraClientSecretName string = 'entra-client-secret'
+@description('Browser credential storage. App-local demo credentials block application redeployment; use deployApplications=false for dependency-only updates. Wrappers discover the deployed tag and refuse an unsafe full deployment.')
+@allowed(['keyvault', 'app'])
+param entraCredentialStore string = 'keyvault'
 @description('Explicit Entra role-value mapping for an existing registration. Empty uses the application defaults. Transitional mappings do not rename tenant roles.')
 param entraRoleMap object = {}
 @description('Provision private token-only storage and its maintenance identity/job for delegated Microsoft profile photos.')
@@ -156,6 +159,8 @@ module guard 'modules/guard.bicep' = {
     demoForbidsPublicEdge: !demoDirectIngress || !enablePublicEdge ? 'ok' : ''
     demoRequiresPrivateBackingServices: !demoDirectIngress || !allowPublicNetworkAccess ? 'ok' : ''
     demoRequiresBrowserAuthentication: !demoDirectIngress || !deployApplications || (!empty(entraClientId) && !entraBearerOnly) ? 'ok' : ''
+    appCredentialRequiresDirectDemo: entraCredentialStore != 'app' || (demoDirectIngress && !entraBearerOnly && !empty(entraClientId)) ? 'ok' : ''
+    appCredentialBlocksApplicationDeployment: entraCredentialStore != 'app' || !deployApplications ? 'ok' : ''
   }
 }
 
@@ -335,6 +340,7 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
     keyVaultUri: 'https://${keyvault.outputs.name}${environment().suffixes.keyvaultDns}'
     entraClientId: entraClientId
     entraClientSecretName: entraClientSecretName
+    entraCredentialStore: entraCredentialStore
     deployWorkloads: deployApplications
     deployBackgroundWorkloads: deployBackgroundWorkloads
     entraBearerOnly: entraBearerOnly
@@ -584,6 +590,7 @@ resource budget 'Microsoft.Consumption/budgets@2023-05-01' = {
 output apiInternalFqdn string = deployApplications ? apps!.outputs.apiFqdn : ''
 output containerRegistry string = registry.outputs.loginServer
 output sqlServer string = sql.outputs.fqdn
+output keyVaultName string = keyvault.outputs.name
 output iotHubName string = iotHub.outputs.name
 output iotHubConsumerGroup string = iotHub.outputs.consumerGroup
 output foundryEndpoint string = foundry.outputs.endpoint

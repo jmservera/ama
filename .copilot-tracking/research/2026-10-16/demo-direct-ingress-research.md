@@ -62,3 +62,18 @@ material. Browser sign-in, real roles, SQL/AI and approvals remain live gaps.
 
 Research disposition: executed. Planning Readiness: Ready for offline scope.
 No additional cycle needed: remaining unknowns are deliberately live acceptance.
+
+## P05 continuation evidence reuse
+
+Disposition: reused, Planning Readiness: Ready for the owner-specified offline
+continuation. Existing script/initializer/deployment/guard evidence and the
+owner's detailed follow-up are sufficient; no new external/tenant research.
+The staff initializer already provides SQL check/apply and verified replica
+restart. The existing in-VNet proof initializer has no approved personal
+roster/delegated Graph-profile transport, so use the expressly allowed exact
+authorized-host handoff rather than inventing a remote upload path.
+Both private roster formats must bridge manifest role keys to full SQL labels.
+The existing no-secret-list-functions Bicep policy is retained: app-local
+store blocks full application deployment instead of exporting its value.
+An app advisory tag is not a proven provider-enforced mutex; live simultaneous
+starts/raw portal changes remain a stronger unresolved coordination boundary.

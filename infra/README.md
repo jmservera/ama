@@ -195,7 +195,8 @@ must return 302 while anonymous `/api/me` must return exactly 401; a platform
 302 on the API is a failed check, not a pass. Use `true` only for an explicitly
 approved secretless service-test target as described above, not as a silent
 workbench UX change. Tenant registration, SQL users/seed and browser callback,
-staff and token-store initialization remain separate human-controlled tasks.
+staff/SQL onboarding is orchestrated by setup with one human confirmation;
+token-store consent/initialization remains a separate human-controlled task.
 
 Provide isolated, **ephemeral** Linux x64 runners with labels
 `ama-private-plan`, `ama-private-release`, `ama-private-deploy`, Python 3.12,
@@ -511,19 +512,21 @@ isolated login/profile and private roster workflow from
 [authentication initialization](#post-deployment-api-authentication-initialization).
 Actual initialization is a live mutation, intentionally not run here.
 If inherited bearer-only settings are intentional, do not silently replace
-them; direct browser initialization requires explicit browser enablement and
-valid registration/credential prerequisites. Direct mode uses only the app
+them: use `--bearer-only`. The normal direct-demo command now explicitly
+targets browser onboarding and creates a missing credential automatically.
+Direct mode uses only the app
 FQDN; it does not discover or require the retained Front Door.
 Setup adds missing registration/enterprise app/manifest roles and roster
 assignments, enforces assignment-required sign-in and runtime staff-role
 checks, and preserves unrelated callbacks/roles/configuration.
-SQL staff initialization and serving-replica reload remain separate in-VNet
-steps, not implied by directory role assignment.
+The same command checks SQL staff binding, presents a count-only plan, asks
+once, and applies with verified serving-replica restart when private SQL is
+reachable. Directory role assignment alone never implies SQL completion.
 
-For an owner-authorized browser-mode conversion, add `--enable-browser`.
-If the credential is missing, explicitly add `--create-secret --secret-store
-keyvault --vault <existing-vault-name>` from the approved private-network
-operator path; setup does not open the vault. Retain its resulting secret
+The default command discovers the Bicep-created vault and API identity; neither
+`--vault` nor `--vault-identity` is required. Private-vault failure permits the
+direct demo's clearly announced app-local fallback, never network changes.
+Retain its resulting secret
 reference on subsequent Bicep redeploys. Use the existing tenant authority/
 roster instructions, not Azure RG ownership as a substitute for Entra consent.
 
@@ -1282,19 +1285,21 @@ operator execution or local Chromium fixtures.
 
 ## Post-deployment API authentication initialization
 
-Refs #351. Refs #344. Use the same command after a rebuild or after adding a
-Front Door edge:
+Refs #360. Use one command after a rebuild, or to resume an interrupted setup:
 
 ```bash
 python3 infra/scripts/setup-entra.py
 ```
 
-No required arguments. The default resource group is `ama` (other groups are
+No required resource arguments. Add `--yes` to approve the SQL plan/restart
+non-interactively; it does not approve tenant admin consent, migration or spend.
+The default resource group is `ama` (other groups are
 refused). API selection prefers `zava-forward-role=api`, then the existing
 `workload=api` tag, then `ca-*-api`. New Bicep deployments tag the API and
 Front Door profile/endpoint (`zava-forward-role=api-edge`). Existing untagged
 resources still work. Ambiguity prints resource-name candidates, never IDs;
-select explicitly rather than guessing:
+an interactive run asks one plain question rather than guessing. A headless
+run reports candidates and stops; optional overrides are for unusual ambiguity:
 
 ```bash
 python3 infra/scripts/setup-entra.py --container-app ca-cutover-test-api
@@ -1329,67 +1334,66 @@ or incompatible existing workbench roles stop rather than being replaced.
 Propagation is polled and verified. The script enables assignment-required
 sign-in, requires HTTPS, and configures the matching issuer/audiences and
 trusted-proxy runtime settings while preserving unrelated container settings.
-Existing auth exclusions, token storage, other providers and bearer/browser
-action are preserved; an anonymous action is tightened, never enabled.
-Planned direct user/group memberships with different effective roles are
-rejected before any registration or enterprise-app create/update, including
-on a fresh setup. The same role through both a user and group is allowed.
+Existing auth exclusions, token storage and other providers are preserved.
+In direct demo mode the normal command enables browser login, including an
+inherited `Return401`; use `--bearer-only` to deliberately retain service mode.
+The optional edge path retains its previous bearer-mode behavior.
 
-Browser credentials are optional and never printed. An existing same-client
-secret reference is reused without rotation; this does not prove its validity.
-With no usable reference, setup reports incomplete rather than attaching a
-new registration to an old client's secret. Explicitly create a missing
-180-day credential with one of:
+The browser credential is automatic and never printed. Setup reuses a
+same-registration, unexpired named credential with matching app storage.
+Missing/expired or interrupted unmatched pairs receive a uniquely named
+180-day credential; old credentials are not deleted. A stored matched pair is
+reused after interruption before auth wiring. Unmatched orphan credentials
+are not mistaken for recoverable values; authorized owners should review and
+retire unused/expired credentials separately. Metadata matching is not proof
+of a successful live token exchange or real browser login.
 
-```bash
-python3 infra/scripts/setup-entra.py --create-secret --vault <vault-name> \
-  --vault-identity <already-attached-key-vault-enabled-identity-resource-id>
-python3 infra/scripts/setup-entra.py --create-secret --secret-store app
-```
+Discovery prefers the API's Key Vault secret references and their attached
+identity, then its configured vault URI/attached identities, deployment-tagged
+resources in `ama`, and available Bicep outputs. A unique resource is selected
+automatically. Multiple/absent candidates are reported by resource name, not
+identifier; interactive selection asks once. `--vault` and `--vault-identity`
+remain optional overrides only. The API's environment, registry and SQL
+settings come from its deployed configuration; no names need to be typed.
 
-Key Vault is the default store; a unique vault in `ama` is auto-selected.
-Before minting a one-time credential, setup probes that vault's data endpoint
-with `az keyvault secret list --maxresults 1`, which returns metadata, never
-secret values. The operator needs metadata-list permission in addition to the
-separate secret-write permission. Denial, network failure or timeout stops
-before credential creation. A successful probe does not prove write authority
-or guarantee subsequent availability; later storage failures still require
-the interrupted-handoff recovery below. Existing credential reuse and
-read-only modes do not run this creation-only probe.
-The reference uses the specified attached API identity, or an existing
-system-assigned identity. Private-vault operations require the authorized
-network/operator path; a failure never changes networking or silently falls
-back. `--secret-store app` is an explicit Container App secret alternative.
-Setup-owned secret/credential names are stable and bound to the selected
-application. Secret bodies use temporary mode-0600 files under the isolated
-profile, removed even on CLI failure; secret values never enter process
-arguments, repo files or CLI logs. Existing app secrets are preserved.
-Serialize runs across machines; a local profile lock prevents concurrent
-mutation, but there is no cross-host distributed lock.
+Key Vault is preferred. The command tests its private data endpoint using
+secret metadata, then attempts the write. If network/permission prevents the
+probe or write, **only direct demo mode** automatically uses the Container App
+secret store with a one-line notice. An explicit `--secret-store keyvault`
+disables fallback; `--secret-store app` remains an explicit demo alternative.
+No path opens vault networking, enables SQL public access, changes policy,
+deletes `ama`, or prints a credential or directory identifier. Temporary
+secret/request files have mode 0600 outside Git and are removed. Existing app
+secrets are retained. The app tags `zava-forward-credential-store` and
+`zava-forward-credential-name` record the selected store and reference name.
 
-After interruption between credential creation and storage, rerunning must
-not mint another secret or switch auth. The tool stops with portal recovery
-instructions. An authorized owner must inspect the setup-only credential in
-Certificates & secrets; if its value was lost and it is unused, remove only
-that orphan before retrying. If Key Vault storage succeeded, an operator may
-instead attach that stored secret to the API. Never remove an in-use credential.
-A stale local lock may be removed only after verifying no setup process runs.
-Expired setup credentials require the separate reviewed rotation procedure.
-For a later declarative browser redeploy, retain the selected registration
-and Key Vault secret name privately as `entraClientId` and
-`entraClientSecretName`; the latter defaults to the historical
-`entra-client-secret` for existing deployments. Never commit completed
-identity parameters. A Bicep browser redeploy assumes Key Vault storage;
-an explicitly selected app-local secret must first be moved through the
-approved vault path, or be retained by an app/auth-only rollout. Do not
-silently replace it with an unrelated canonical vault secret.
+Full Bicep application deployment is **blocked** for an app-local credential,
+rather than trying to export/reimport its value. `entraCredentialStore`
+defaults to `keyvault`; its `app` value requires the direct demo and
+`deployApplications=false`. `deploy.py` discovers app-local tags and refuses
+the unsafe default full deployment; the Key Vault CI pipeline also refuses.
+Use the guarded wrapper for dependency-only updates with
+`--parameter entraCredentialStore=app --parameter deployApplications=false`.
+Migration to Key Vault before later full application deployment needs the
+approved private-network path and explicit operator review. Do not bypass the
+wrapper with raw deployment commands or silently overwrite the store.
 
-An existing `Return401` configuration stays service-test mode. `--bearer-only`
+Coordination: setup refuses a running group deployment, app/environment
+provisioning or revision activation, or another `zava-forward-auth-lock` tag.
+It holds a private local lock and app advisory tag through Entra, SQL and
+restart, removes only its own tag, and uses conditional If-Match when an ETag
+is supplied. The deployment wrappers refuse the same tag. After interruption,
+only an authorized operator who verified that the prior process and remote
+updates stopped may remove a stale local lock/advisory tag. An advisory tag
+is not an Azure-enforced distributed mutex: cross-host simultaneous-start
+exclusion and raw-portal deployments still need a serialized operator window.
+That stronger concurrency guarantee is not established by offline tests.
+
+An existing edge-path `Return401` configuration stays service-test mode. `--bearer-only`
 explicitly selects secretless Return401 service wiring, including when the
 previous action was browser redirect, but is not browser acceptance.
-Provisioning a credential does not change an existing bearer-only action to
-browser mode; #344's human-reviewed browser deployment owns that transition.
-The final summary keeps this distinction and the separate SQL binding gate.
+For direct mode, browser conversion is now part of the normal command.
+The final summary separately reports SQL binding and restart, not just Entra.
 
 Exit codes: `0` means the requested configuration converged, not successful
 human sign-in; `2` means drift in read-only mode or incomplete prerequisites;
@@ -1397,15 +1401,15 @@ human sign-in; `2` means drift in read-only mode or incomplete prerequisites;
 make no remote mutations, do not log in or create a missing private profile,
 and cannot be combined with `--login`. They need existing authorized sessions.
 A final fresh Container App read must report provisioning `Succeeded`.
-Failed, in-progress, canceled or missing provisioning state is incomplete
-(exit `2` on otherwise converged runs), even when runtime values already
-match, in ordinary no-op runs as well as `--check` / `--dry-run`.
+Failed, in-progress, canceled or missing provisioning state blocks mutation
+(exit `1`); read-only modes report it as incomplete (exit `2`), even when
+runtime values already match.
 Successful earlier writes are retained on failure, so rerun discovery after
 an unknown write outcome. Mutating POSTs are not blindly retried.
 The old `initialize-api-auth.py` CLI forwards to this command with the same
 options; its imported callback-only Python function is retained for compatibility.
 
-Local regression evidence (2026-10-16): all 177 infra tests pass with the source
+Historical local regression evidence (before this continuation): 177 infra tests passed with the source
 distributions installed in an isolated pip venv, including compiled Bicep
 controls. Each RV-001/RV-002/RV-003 safeguard was independently removed in
 memory and its behavioral regression failed. This proves mocked command
@@ -1440,8 +1444,9 @@ valid role with no matching staff `oid` produces `Account not authorised`;
 email fallback remains disabled. SQL staff is cached at startup, so completing
 the binding also requires reloading the API replicas.
 
-Use `scripts/initialize-workbench-staff.py` after callback initialization and
-SQL seeding. Its private JSON roster is an array of `code`/`userId` objects:
+The default setup command now orchestrates `scripts/initialize-workbench-staff.py`
+after Entra reconciliation and a fresh Entra check. Its private JSON roster
+is an array of `code`/`userId`/`role` objects:
 include every existing staff code, with a distinct enabled tenant member for
 each. The current fixture needs ten internal positions; one additional
 Contractor makes eleven people covering all eight role kinds. New Contractor
@@ -1453,6 +1458,58 @@ mode 0700, for example `~/.azure/zava-forward-staff/roster.json`. The initialize
 resolves current names/UPNs from Graph; do not put directory names, UPNs or ids
 in committed examples. Title/group-based allocation is illustrative exercise
 coherence, not evidence of professional competence or delegated authority.
+
+A missing roster makes the normal command create
+`~/.azure/zava-forward-staff/roster.json` in a mode-0700 directory, write the
+following mode-0600 **template**, and stop before any cloud mutation:
+
+```json
+[
+  {
+    "code": "REPLACE_EXISTING_STAFF_CODE",
+    "userId": "REPLACE_PERSON_OBJECT_ID",
+    "role": "REPLACE_APPROVED_WORKBENCH_ROLE"
+  }
+]
+```
+
+Fill `code` from an existing staff record, `userId` with the person's Entra
+user object ID (not a client/application ID), and `role` with that position's
+approved workbench role. Manifest keys or their full workbench labels are
+accepted. Never invent people or assign one broad role to everyone. Setup
+rejects placeholders, non-GUID/zero IDs, duplicates, unknown roles, group-only
+entries, symlinks and unsafe modes before cloud writes. SQL additionally
+validates existing codes/roles, complete coverage and immutable bindings
+before its transaction; a connectivity blocker is not validation.
+
+`python3 infra/scripts/setup-entra.py --list-staff` reads only candidate codes
+and approved roles from private SQL; no roster or browser configuration is
+needed. `--lookup-upn <person-upn> --staff-code <existing-code>
+--staff-role <approved-role>` saves one enabled member's mapping to a separate
+mode-0600 file beside the roster when Graph directory-read permission allows.
+It prints only the private file path, never the object ID. Review and merge
+the mapping into the roster privately; the helper does not allocate roles.
+
+The normal command displays only SQL change counts, asks once to apply and
+restart, then verifies fresh ready replicas for every traffic-serving revision.
+`--yes` accepts that one plan; a current roster/revision with recorded restart
+evidence needs no further restart. `--check` and `--dry-run` inspect Entra and
+SQL without applying or restarting. Unknown/missing restart evidence remains
+incomplete. When this host cannot reach private SQL or lacks its drivers or
+authority, setup exits incomplete and prints an exact, already discovered
+`initialize-workbench-staff.py ... --apply --restart` command for an authorized
+host holding the same private roster/profile. SQL binding and restart are
+explicitly **not confirmed**. The existing in-VNet proof initializer has no
+approved staff-roster/Graph-profile transport, so this flow does not invent
+one or upload personal mappings to a job.
+
+SQL prerequisites: `python3 -m pip install -e src/core -e src/agents -e src/api
+pyodbc` and Microsoft ODBC Driver 18 for SQL Server on an authorized host
+with private DNS/routing and SQL write authority. Setup separately diagnoses
+Python 3.10+, Azure CLI and the Container Apps extension with exact install
+commands, and supplies the isolated device-login link. Direct ingress never
+requires Front Door commands or the CDN extension. SQL discovery confirms
+the configured server is in `ama` and its public access is `Disabled`.
 
 ```bash
 python3 infra/scripts/initialize-workbench-staff.py \
@@ -1701,29 +1758,30 @@ URLs deliberately contain no identifiers.
 
 The same run reads `~/.azure/zava-forward-staff/roster.json`, or `--roster`
 outside Git. Parent directory must be mode 0700 and file mode 0600.
-Each entry needs a distinct code and exactly one `userId` or `groupId`, plus
-one explicit manifest role key. Fictional schema example (replace placeholders
+Each entry needs a distinct existing staff code, one `userId` and an explicit
+approved role. Group-only rows cannot bind SQL staff. Fictional schema example (replace placeholders
 privately; these strings are not usable directory identities):
 
 ```json
 [
   {"code": "fictional-coordinator", "userId": "<private-user-object-id>", "role": "Coordinator"},
-  {"code": "fictional-quality-team", "groupId": "<private-security-group-object-id>", "role": "QualityInspector"}
+  {"code": "fictional-quality-inspector", "userId": "<different-private-user-object-id>", "role": "QualityInspector"}
 ]
 ```
 
 Role keys are `Coordinator`, `LiaisonOfficer`, `SafetyLiaison`, `GrantsOfficer`,
 `QualityInspector`, `ProgrammeManager`, `SupportOfficer` and `Contractor`.
-Users must be enabled tenant members; groups must be security-enabled.
+Users must be enabled tenant members. Existing direct-group grants are still
+checked when computing each person's effective application role.
 Existing code/userId-only staff rosters need explicit `role` enrichment for
 this setup tool; it never infers a person's authority from their code or name.
 Invalid, duplicate or permissively readable input blocks before directory
-writes. Missing roster is reported as incomplete; it is never fabricated.
+writes. A missing roster creates only the clearly marked private template and
+stops; no identities, codes or approvals are fabricated.
 Assignments are additive and app-scoped, preserve Default Access and unrelated
 grants, and reject conflicting direct or effective direct-group app roles,
-including conflicts introduced by planned user/group assignments.
-Nested groups do not confer app assignments. Group-based assignment requires
-appropriate tenant licensing; a directory rejection remains a blocker.
+including conflicts from existing group grants.
+Nested groups do not confer app assignments. A directory rejection remains a blocker.
 No users, groups, group memberships, guests or administrator roles are created.
 
 An authorized provisioning principal needs application-write permission
@@ -1757,10 +1815,13 @@ Yes steps, then polls the app's Graph grant for up to `--wait-seconds` (default
 consent without waiting. It never clicks consent or grants directory-wide
 management consent itself. A timeout/denial is not a pass.
 
-App-role assignments alone do not initialize SQL staff. Continue the
+App-role assignments alone do not initialize SQL staff. Setup now orchestrates
+the
 [private-network staff binding and replica restart](#tenant-staff-and-application-role-initialization)
-with a complete user roster, not a group row, and the installed source packages.
-SQL stays private and this script does not access datasets or open SQL.
+with a complete user roster, not a group row, and installed source packages,
+or prints the exact authorized-host command when private connectivity is absent.
+SQL stays private; only the explicitly selected workbench staff/current-owner
+records and minimal audit/sequence metadata are reconciled, never reseeded.
 Juan Manuel Servera's exercise Legal, Compliance and DPO role is not tenant
 authority, resident consent, safety approval or operational rule activation.
 ADR 0005 remains accepted for synthetic development only; real owners and

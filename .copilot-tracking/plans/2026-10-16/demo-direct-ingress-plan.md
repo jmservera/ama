@@ -110,6 +110,43 @@ then authorize selective retirement. Browser JSON API 302 gap remains explicit.
 
 ## Handoff
 
+## Owner-directed continuation: one resilient command
+
+The 2026-10-16 follow-up extends this existing task, without repeating its
+completed research, critique or historical Review. Reuse the active branch/PR.
+Implement only offline; do not call Azure or directory services.
+
+<!-- rpi:phase id=P05 -->
+### [ ] P05: Resilient authentication onboarding
+
+<!-- rpi:task id=P05-T01 -->
+#### [x] P05-T01: Discover credential dependencies, onboard private roster, coordinate and orchestrate SQL
+
+Default setup creates missing credentials, discovers vault/attached identity,
+permits app-local fallback only for direct demo, records storage selection,
+rechecks Entra and checks/applies SQL with one confirmation and replica restart.
+Missing roster creates a private placeholder template and stops before cloud
+writes. Read-only modes report every step. Deployment/revision/advisory locks
+block concurrent mutations. No usable in-VNet staff/roster transport exists in
+the proof initializer; provide an exact authorized-host command instead.
+
+<!-- rpi:task id=P05-T02 -->
+#### [ ] P05-T02: Protect app-local credentials and prove the offline contract
+
+Bicep/store guard, mocked Azure/SQL regressions, scoped lint/type checks,
+runbook/evidence/KB log and acceptance audit. Preserve unmet live/human gates.
+Commit/push existing branch and update PR 362 using Refs #360 only.
+
+P05 source/test/documentation implementation is complete. Final candidate:
+260 infra tests passed without skips (local Bicep compiler included), four-script
+scoped mypy and focused Ruff passed, no introduced Ruff baseline diagnostics,
+32 responsive loopback API auth tests passed, local Markdown targets and diff
+hygiene passed. Bounded continuation acceptance audit is appended to the
+existing review artifact; historical Review/critique verdicts are unchanged.
+Absolute simultaneous-start exclusion is not established by advisory tags,
+and raw unguarded deployments remain outside the supported wrapper boundary.
+Live/human c/d/e gates remain unmet. Delivery is the remaining P05-T02 step.
+
 Details: .copilot-tracking/details/2026-10-16/demo-direct-ingress-phase-details.md.
 Changes: .copilot-tracking/changes/2026-10-16/demo-direct-ingress-changes.md.
 P01-P04 completed. One Review executed, Complete / Not accepted for its assessed

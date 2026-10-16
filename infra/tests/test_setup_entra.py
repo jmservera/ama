@@ -40,6 +40,7 @@ ENV_URL = SETUP.ARM + ENV_ID + f"?api-version={SETUP.API_VERSION}"
 class FakeAzure:
     def __init__(self):
         self.app: dict[str, Any] = {
+            "etag": '"fictional-version"',
             "name": "ca-cutover-test-api", "id": APP_ID,
             "tags": {"zava-forward-role": "api"},
             "identity": {"type": "UserAssigned", "userAssignedIdentities": {"managed-identity": {}}},
@@ -81,9 +82,26 @@ class FakeAzure:
         self.consent = []
         self.environment: dict[str, Any] = {
             "properties": {"vnetConfiguration": {"internal": False}}}
+        self.tag_writes = []
+        self.sql_calls = []
+        self.sql_code = 0
+        self.sql_failure = None
+        self.revisions = []
+        self.deployments = []
+        self.vaults = [{"name": "fictional-vault"}]
+        self.identities = []
 
-    def run(self, command, *, env, capture_output, text, timeout, check):
+    def run(self, command, *, env=None, capture_output, text, timeout, check):
         self.calls.append((command, env))
+        if command[0] != "az":
+            self.sql_calls.append(command)
+            if "--list-candidates" in command:
+                return subprocess.CompletedProcess(command, 0, json.dumps(
+                    [{"code": "fictional-coordinator", "role": "Coordinator"}]), "")
+            summary = self.sql_failure or {
+                "staff_changes": 0, "owner_labels": 0, "restart_required": "--restart" not in command,
+            }
+            return subprocess.CompletedProcess(command, self.sql_code, json.dumps(summary), "")
         assert command[0] == "az"
         assert env["AZURE_LOGGING_ENABLE_LOG_FILE"] == "false"
         assert capture_output and text and timeout
@@ -99,7 +117,9 @@ class FakeAzure:
         if args[0] == "rest":
             method = args[args.index("--method") + 1]
             url = args[args.index("--url") + 1]
-            if method != "GET" and "/listSecrets?" not in url:
+            if body is not None and set(body) == {"tags"}:
+                self.tag_writes.append(body)
+            elif method != "GET" and "/listSecrets?" not in url:
                 self.writes.append((method, url, body))
             value = self.rest(method, url, body)
         elif args[:2] == ["account", "show"]:
@@ -111,6 +131,10 @@ class FakeAzure:
             value = self.apps
         elif args[:2] == ["containerapp", "show"]:
             value = self.app
+        elif args[:3] == ["containerapp", "revision", "list"]:
+            value = self.revisions
+        elif args[:3] == ["deployment", "group", "list"]:
+            value = self.deployments
         elif args[:3] == ["afd", "profile", "list"]:
             value = self.profiles
         elif args[:3] == ["afd", "origin-group", "list"]:
@@ -124,7 +148,9 @@ class FakeAzure:
         elif args[:3] == ["afd", "route", "list"]:
             value = self.routes
         elif args[:2] == ["keyvault", "list"]:
-            value = [{"name": "fictional-vault"}]
+            value = self.vaults
+        elif args[:2] == ["identity", "list"]:
+            value = self.identities
         elif args[:3] == ["keyvault", "secret", "list"]:
             assert args[args.index("--vault-name") + 1] == "fictional-vault"
             assert args[args.index("--maxresults") + 1] == "1"
@@ -147,14 +173,20 @@ class FakeAzure:
             return {"properties": self.auth}
         if url == ARM_APP:
             if method == "PATCH":
-                if "configuration" in body["properties"]:
+                if "tags" in body:
+                    self.app["tags"] = copy.deepcopy(body["tags"])
+                properties = body.get("properties", {})
+                if "configuration" in properties:
                     assert body["properties"]["configuration"]["ingress"]["fqdn"] == FQDN
                     self.app["properties"]["configuration"]["secrets"] = body["properties"]["configuration"]["secrets"]
-                if "template" in body["properties"]:
+                if "template" in properties:
                     self.app["properties"]["template"] = body["properties"]["template"]
             return self.app
         if "/listSecrets?" in url:
-            return {"value": [{"name": "preserved", "value": "preserved-private-value"}]}
+            return {"value": [
+                {"name": "preserved", "value": "preserved-private-value"}
+                if s["name"] == "preserved" else copy.deepcopy(s)
+                for s in self.app["properties"]["configuration"]["secrets"]]}
         path = url.removeprefix(SETUP.GRAPH)
         route = path.split("?")[0]
         if route == "applications":
@@ -232,7 +264,7 @@ class SetupTests(unittest.TestCase):
 
     def invoke(self, *args):
         with redirect_stdout(self.output), redirect_stderr(self.output):
-            code = SETUP.main(list(args))
+            code = SETUP.main(["--yes", *args])
         for sensitive in (TENANT, SUB, CLIENT, OBJECT, SP, USER, GROUP, SECRET, "preserved-private-value"):
             self.assertNotIn(sensitive, self.output.getvalue())
         return code
@@ -325,12 +357,9 @@ class SetupTests(unittest.TestCase):
                 self.assertEqual(self.fake.reg["web"]["redirectUris"], callbacks)
                 self.assert_no_edge_calls()
 
-    def test_direct_return401_requires_explicit_browser_enable_or_bearer(self):
+    def test_direct_return401_automatically_enables_browser_unless_explicit_bearer(self):
         self.direct()
         self.fake.auth["globalValidation"]["unauthenticatedClientAction"] = "Return401"
-        self.assertEqual(self.invoke("--create-secret", "--secret-store", "app"), 1)
-        self.assertFalse(self.fake.writes)
-        self.assertIn("--enable-browser", self.output.getvalue())
         self.assertEqual(self.invoke("--bearer-only"), 2)
         self.assertEqual(
             self.fake.auth["globalValidation"]["unauthenticatedClientAction"], "Return401")
@@ -385,11 +414,11 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(len(self.fake.writes), count)
         self.assertFalse(list(self.profile.iterdir()))
 
-    def test_no_arguments_reports_missing_credential_not_uuid_traceback(self):
-        self.assertEqual(self.invoke(), 2)
-        self.assertIn("Browser credential missing", self.output.getvalue())
+    def test_no_arguments_creates_missing_credential_without_uuid_traceback(self):
+        self.assertEqual(self.invoke(), 0)
+        self.assertTrue(self.fake.reg["passwordCredentials"])
         self.assertNotIn("hexadecimal", self.output.getvalue())
-        self.assertEqual(self.fake.auth["identityProviders"]["azureActiveDirectory"]["registration"]["clientId"], "systemAssignedIdentity")
+        self.assertEqual(self.fake.auth["identityProviders"]["azureActiveDirectory"]["registration"]["clientId"], CLIENT)
 
     def test_managed_identity_sentinel_finds_existing_registration_and_rewires_uuid(self):
         self.bootstrap()
@@ -494,17 +523,222 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(self.invoke("--dry-run"), 2)
         self.assertIn("Private roster missing", self.output.getvalue())
 
+    def test_missing_roster_creates_private_template_before_any_azure_call(self):
+        self.roster.unlink()
+        self.roster = self.home / "new-private-roster" / "roster.json"
+        SETUP.ROSTER = self.roster
+        self.assertEqual(self.invoke(), 1)
+        self.assertEqual(self.roster.stat().st_mode & 0o777, 0o600)
+        self.assertEqual(self.roster.parent.stat().st_mode & 0o777, 0o700)
+        self.assertIn("REPLACE_PERSON_OBJECT_ID", self.roster.read_text())
+        self.assertIn("not an application/client ID", self.output.getvalue())
+        self.assertFalse(self.fake.calls)
+        self.assertEqual(self.invoke(), 1)
+        self.assertIn("placeholders", self.output.getvalue())
+        self.assertFalse(self.fake.calls)
+
+    def test_invalid_directory_mode_and_duplicate_codes_precede_cloud_access(self):
+        self.roster.parent.chmod(0o755)
+        self.assertEqual(self.invoke(), 1)
+        self.assertFalse(self.fake.calls)
+        self.roster.parent.chmod(0o700)
+        self.write_roster([{"code": "same", "userId": USER, "role": "Coordinator"},
+                           {"code": "same", "userId": GROUP, "role": "SupportOfficer"}])
+        self.assertEqual(self.invoke(), 1)
+        self.assertFalse(self.fake.calls)
+
+    def test_direct_demo_falls_back_automatically_without_vault_flags(self):
+        self.direct()
+        self.fake.fail = lambda a: a[:3] == ["keyvault", "secret", "list"]
+        self.assertEqual(self.invoke(), 0, self.output.getvalue())
+        self.assertIn("using the Container App secret store", self.output.getvalue())
+        self.assertEqual(self.fake.app["tags"][SETUP.STORE_TAG], "app")
+        self.assertIn("value", self.fake.app["properties"]["configuration"]["secrets"][-1])
+        self.assert_no_edge_calls()
+        self.assertFalse(any("network-rule" in command for command, _ in self.fake.calls))
+        count = len(self.fake.reg["passwordCredentials"])
+        self.assertEqual(self.invoke(), 0)
+        self.assertEqual(len(self.fake.reg["passwordCredentials"]), count)
+
+    def test_direct_fallback_also_handles_vault_write_permission_failure(self):
+        self.direct()
+        self.fake.fail = lambda a: a[:3] == ["keyvault", "secret", "set"]
+        self.assertEqual(self.invoke(), 0, self.output.getvalue())
+        self.assertEqual(self.fake.app["tags"][SETUP.STORE_TAG], "app")
+        self.assertIn("write unavailable", self.output.getvalue())
+
+    def test_vault_reference_precedence_and_attached_identity_selection(self):
+        other = "/fictional/other-identity"
+        self.fake.app["identity"]["userAssignedIdentities"][other] = {}
+        self.fake.app["properties"]["configuration"]["secrets"].append({
+            "name": "other", "keyVaultUrl": "https://fictional-vault.vault.azure.net/secrets/other",
+            "identity": "managed-identity"})
+        self.assertEqual(self.invoke(), 0, self.output.getvalue())
+        self.assertEqual(self.fake.app["properties"]["configuration"]["secrets"][-1]["identity"],
+                         "managed-identity")
+
+    def test_vault_discovery_uses_deployment_tags_and_then_outputs(self):
+        for use_outputs in (False, True):
+            self.fake = FakeAzure()
+            SETUP.subprocess.run.side_effect = self.fake.run
+            self.fake.vaults.append({"name": "unrelated-vault", "tags": {"environment": "other"}})
+            if use_outputs:
+                self.fake.deployments = [{"properties": {
+                    "outputs": {"keyVaultName": {"value": "fictional-vault"}}}}]
+            else:
+                self.fake.app["tags"]["environment"] = "test"
+                self.fake.app["tags"]["workload"] = "api"
+                self.fake.vaults[0]["tags"] = {"environment": "test",
+                                              "workload": "zava-forward-demonstrator"}
+            self.assertEqual(self.invoke(), 0, self.output.getvalue())
+            self.assertEqual(self.fake.app["tags"][SETUP.STORE_TAG], "keyvault")
+
+    def test_ambiguous_or_missing_vault_never_mints_a_credential_or_asks_for_required_flags(self):
+        for vaults in ([], [{"name": "first"}, {"name": "second"}]):
+            self.fake.vaults = vaults
+            self.assertEqual(self.invoke(), 1)
+            self.assertFalse(self.fake.reg["passwordCredentials"])
+            self.assertIn("Candidates:", self.output.getvalue())
+
+    def test_expired_credential_rotates_without_removing_in_use_old_credential(self):
+        self.bootstrap()
+        old = self.fake.reg["passwordCredentials"][0]
+        old["endDateTime"] = "2000-01-01T00:00:00Z"
+        self.assertEqual(self.invoke(), 0, self.output.getvalue())
+        self.assertEqual(len(self.fake.reg["passwordCredentials"]), 2)
+        self.assertNotEqual(self.fake.reg["passwordCredentials"][-1]["displayName"], old["displayName"])
+        self.assertEqual(len(self.fake.app["properties"]["configuration"]["secrets"]), 3)
+
+    def test_advisory_lock_deployment_and_revision_updates_refuse_before_auth_writes(self):
+        for state in ("lock", "deployment", "revision"):
+            with self.subTest(state=state):
+                self.fake.app["tags"].pop(SETUP.LOCK_TAG, None)
+                self.fake.revisions, self.fake.deployments = [], []
+                self.fake.sql_calls.clear()
+                if state == "lock":
+                    self.fake.app["tags"][SETUP.LOCK_TAG] = "another-session"
+                elif state == "deployment":
+                    self.fake.deployments = [{"properties": {"provisioningState": "Running"}}]
+                else:
+                    self.fake.revisions = [{"properties": {"provisioningState": "Provisioning"}}]
+                self.assertEqual(self.invoke(), 1)
+                self.assertFalse(self.fake.writes)
+                self.assertFalse(self.fake.sql_calls)
+                self.assertEqual(self.invoke("--check"), 2)
+                self.assertIn("Coordination: blocked", self.output.getvalue())
+                self.assertFalse(self.fake.tag_writes)
+
+    def test_sql_check_confirmation_apply_restart_and_post_entra_verification_order(self):
+        self.assertEqual(self.invoke(), 0)
+        calls = [c for c, _ in self.fake.calls]
+        sql = [i for i, c in enumerate(calls) if c[0] != "az"]
+        self.assertEqual(len(sql), 2)
+        self.assertIn("--check", calls[sql[0]])
+        self.assertIn("--apply", calls[sql[1]])
+        self.assertIn("--restart", calls[sql[1]])
+        verifications = [i for i, c in enumerate(calls) if "/appRoleAssignedTo" in " ".join(c)
+                         and "--body" not in c]
+        self.assertLess(verifications[-1], sql[0])
+        self.assertNotIn(SETUP.LOCK_TAG, self.fake.app["tags"])
+        self.fake.sql_calls.clear()
+        self.assertEqual(self.invoke(), 0)
+        self.assertEqual(len(self.fake.sql_calls), 1)
+        self.assertIn("--check", self.fake.sql_calls[0])
+        self.assertEqual(self.invoke("--check"), 0)
+
+    def test_sql_unreachable_returns_exact_private_host_command_and_incomplete_summary(self):
+        self.fake.sql_code = 1
+        self.assertEqual(self.invoke(), 2)
+        self.assertIn("authorized host with private SQL connectivity", self.output.getvalue())
+        self.assertIn("--apply --restart", self.output.getvalue())
+        self.assertIn("SQL binding/restart: NOT confirmed", self.output.getvalue())
+        self.assertIn("SQL public access must stay Disabled", self.output.getvalue())
+        self.assertEqual(len(self.fake.sql_calls), 1)
+
+    def test_sql_validation_failure_is_not_misreported_as_network_or_applied(self):
+        self.fake.sql_code = 1
+        self.fake.sql_failure = {"error": "validation"}
+        self.assertEqual(self.invoke(), 2)
+        self.assertIn("SQL preflight rejected the private roster", self.output.getvalue())
+        self.assertNotIn("authorized host with private SQL connectivity", self.output.getvalue())
+        self.assertTrue(all("--apply" not in c for c in self.fake.sql_calls))
+
+    def test_sql_confirmation_decline_and_readonly_never_apply_or_restart(self):
+        args = SETUP.parser().parse_args(["--roster", str(self.roster)])
+        args.tenant_profile = self.profile
+        with redirect_stdout(self.output), patch.object(SETUP.sys.stdin, "isatty", return_value=True), \
+                patch("builtins.input", return_value="n") as question:
+            self.assertFalse(SETUP.sql_staff_step(args, self.fake.app, readonly=False))
+            question.assert_called_once()
+        self.assertTrue(all("--apply" not in c for c in self.fake.sql_calls))
+        self.fake.sql_calls.clear()
+        self.assertEqual(self.invoke("--check"), 2)
+        self.assertTrue(all("--apply" not in c and "--restart" not in c for c in self.fake.sql_calls))
+
+    def test_staff_candidate_listing_needs_no_roster_and_prints_only_codes_roles(self):
+        self.roster.unlink()
+        self.assertEqual(self.invoke("--list-staff"), 0)
+        self.assertIn("fictional-coordinator / Coordinator", self.output.getvalue())
+        self.assertFalse(self.roster.exists())
+        self.assertFalse(self.fake.writes)
+        self.assertFalse(self.fake.tag_writes)
+
+    def test_upn_lookup_saves_mapping_privately_with_read_permission_only(self):
+        self.fake.permissions = {"User.Read.All"}
+        self.roster.unlink()
+        original = self.fake.rest
+
+        def person(method, url, body):
+            if "/users/person%40example.invalid?" in url:
+                return {"id": USER, "accountEnabled": True, "userType": "Member"}
+            return original(method, url, body)
+
+        with patch.object(self.fake, "rest", side_effect=person):
+            self.assertEqual(self.invoke("--lookup-upn", "person@example.invalid",
+                                         "--staff-code", "fictional-coordinator",
+                                         "--staff-role", "Retrofit Coordinator"), 0)
+        files = list(self.roster.parent.glob("person-*.json"))
+        self.assertEqual(len(files), 1)
+        self.assertEqual(files[0].stat().st_mode & 0o777, 0o600)
+        self.assertEqual(json.loads(files[0].read_text())[0]["userId"], USER)
+        self.assertFalse(self.roster.exists())
+        self.assertFalse(self.fake.writes)
+        self.assertFalse(self.fake.tag_writes)
+
+    def test_lost_lock_ownership_stops_and_does_not_remove_another_sessions_tag(self):
+        original = self.fake.rest
+
+        def takeover(method, url, body):
+            response = original(method, url, body)
+            if method == "PATCH" and body.get("tags", {}).get(SETUP.LOCK_TAG):
+                self.fake.app["tags"][SETUP.LOCK_TAG] = "other-session"
+            return response
+
+        with patch.object(self.fake, "rest", side_effect=takeover):
+            self.assertEqual(self.invoke(), 1)
+        self.assertEqual(self.fake.app["tags"][SETUP.LOCK_TAG], "other-session")
+        self.assertFalse(self.fake.writes)
+        headers = [c for c, _ in self.fake.calls if "--headers" in c]
+        self.assertTrue(headers)
+
+    def test_interactive_resource_ambiguity_asks_once_without_printing_ids(self):
+        rows = [{"name": "first"}, {"name": "second"}]
+        with redirect_stdout(self.output), patch.object(SETUP.sys.stdin, "isatty", return_value=True), \
+                patch("builtins.input", return_value="second") as question:
+            selected = SETUP.choose(rows, None, "Key Vault", ".*", "--vault", interactive=True)
+        self.assertEqual(selected["name"], "second")
+        question.assert_called_once()
+
     def test_group_assignment_and_planned_user_group_conflict(self):
         self.write_roster([{"code": "fictional-team", "groupId": GROUP, "role": "Coordinator"}])
-        self.bootstrap()
-        self.assertEqual(self.fake.assignments[0]["principalId"], GROUP)
-        self.fake.assignments = []
+        self.assertEqual(self.invoke(), 1)
+        self.assertFalse(self.fake.writes)
         self.fake.memberships = [GROUP]
         self.write_roster([{"code": "fictional-team", "groupId": GROUP, "role": "Coordinator"},
                            {"code": "fictional-officer", "userId": USER, "role": "SupportOfficer"}])
         count = len(self.fake.writes)
         self.assertEqual(self.invoke(), 1)
-        self.assertIn("Planned group and user assignments conflict", self.output.getvalue())
+        self.assertIn("individual userId", self.output.getvalue())
         self.assertEqual(len(self.fake.writes), count)
 
     def test_fresh_planned_user_group_conflict_precedes_all_directory_writes(self):
@@ -516,20 +750,21 @@ class SetupTests(unittest.TestCase):
                 with self.subTest(reversed=rows != roster, mode=mode):
                     self.write_roster(rows)
                     self.assertEqual(self.invoke(*mode), 1)
-                    self.assertIn("Planned group and user assignments conflict", self.output.getvalue())
+                    self.assertIn("individual userId", self.output.getvalue())
                     self.assertFalse(self.fake.writes)
                     self.assertIsNone(self.fake.reg)
                     self.assertIsNone(self.fake.sp)
 
-    def test_planned_matching_user_group_roles_are_allowed(self):
+    def test_matching_group_roles_resolve_but_sql_roster_requires_individuals(self):
         self.fake.memberships = [GROUP]
         self.write_roster([{"code": "fictional-team", "groupId": GROUP, "role": "Coordinator"},
                            {"code": "fictional-officer", "userId": USER, "role": "Coordinator"}])
-        self.bootstrap()
-        count = len(self.fake.writes)
-        self.assertEqual(self.invoke("--check"), 0)
-        self.assertEqual(self.invoke(), 0)
-        self.assertEqual(len(self.fake.writes), count)
+        rows = SETUP.read_roster(self.roster, {"Coordinator"})
+        graph = SETUP.Azure(self.profile)
+        self.assertEqual(len(SETUP.resolve_roster(graph, rows)), 2)
+        self.assertEqual(self.invoke("--check"), 1)
+        self.assertEqual(self.invoke(), 1)
+        self.assertFalse(self.fake.writes)
 
     def test_existing_group_role_conflict_fails_without_new_assignments(self):
         self.bootstrap()
@@ -596,15 +831,18 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(self.invoke("--dry-run"), 2)
         self.assertFalse(self.fake.writes)
 
-    def test_secret_failure_never_activates_and_rerun_requires_orphan_recovery(self):
-        self.fake.fail = lambda a: a[0] == "rest" and a[a.index("--method") + 1] == "PATCH" and a[a.index("--url") + 1] == ARM_APP
+    def test_secret_failure_never_activates_and_rerun_recovers_with_distinct_pair(self):
+        self.fake.fail = lambda a: (a[0] == "rest" and a[a.index("--method") + 1] == "PATCH"
+                                   and a[a.index("--url") + 1] == ARM_APP
+                                   and "configuration" in json.loads(Path(a[a.index("--body") + 1][1:]).read_text()).get("properties", {}))
         self.assertEqual(self.invoke("--create-secret", "--secret-store", "app"), 1)
         self.assertEqual(self.fake.auth["identityProviders"]["azureActiveDirectory"]["registration"]["clientId"], "systemAssignedIdentity")
         self.fake.fail = None
         count = len(self.fake.reg["passwordCredentials"])
-        self.assertEqual(self.invoke("--create-secret", "--secret-store", "app"), 1)
-        self.assertIn("handoff is incomplete", self.output.getvalue())
-        self.assertEqual(len(self.fake.reg["passwordCredentials"]), count)
+        self.assertEqual(self.invoke("--create-secret", "--secret-store", "app"), 0)
+        self.assertEqual(len(self.fake.reg["passwordCredentials"]), count + 1)
+        credentials = self.fake.reg["passwordCredentials"]
+        self.assertNotEqual(credentials[-1]["displayName"], credentials[-2]["displayName"])
         self.assertFalse(list(self.profile.iterdir()))
 
     def test_keyvault_credential_storage_no_secret_argv_and_identity_validation(self):
@@ -622,7 +860,7 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(self.invoke("--create-secret", "--vault-identity", "managed-identity"), 1)
         self.assertFalse(self.fake.reg["passwordCredentials"])
         self.assertFalse(any("/addPassword" in url for _, url, _ in self.fake.writes))
-        self.assertIn("Key Vault endpoint preflight failed", self.output.getvalue())
+        self.assertIn("Private Key Vault preflight failed", self.output.getvalue())
         self.assertEqual(self.fake.auth["identityProviders"]["azureActiveDirectory"]["registration"]["clientId"],
                          "systemAssignedIdentity")
         self.assertFalse(list(self.profile.iterdir()))
@@ -639,7 +877,7 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(self.invoke("--create-secret", "--vault-identity", "managed-identity"), 0)
         self.assertFalse(any(c[1:4] == ["keyvault", "secret", "list"] for c, _ in self.fake.calls))
 
-    def test_vault_endpoint_timeout_creates_no_credential_and_readonly_never_probes(self):
+    def test_vault_endpoint_timeout_creates_no_credential_and_readonly_only_probes_metadata(self):
         original = self.fake.run
         def timeout(command, **kwargs):
             if command[1:4] == ["keyvault", "secret", "list"]:
@@ -655,17 +893,18 @@ class SetupTests(unittest.TestCase):
             self.assertEqual(self.invoke(mode, "--create-secret",
                                          "--vault-identity", "managed-identity"), 2)
         self.assertEqual(len(self.fake.writes), count)
-        self.assertFalse(any(c[1:4] == ["keyvault", "secret", "list"] for c, _ in self.fake.calls))
+        self.assertTrue(any(c[1:4] == ["keyvault", "secret", "list"] for c, _ in self.fake.calls))
 
-    def test_missing_vault_identity_fails_before_password_creation(self):
-        self.assertEqual(self.invoke("--create-secret"), 1)
-        self.assertFalse(self.fake.reg["passwordCredentials"])
-        self.assertIn("--vault-identity", self.output.getvalue())
+    def test_attached_vault_identity_is_discovered_without_flags(self):
+        self.assertEqual(self.invoke(), 0)
+        self.assertTrue(self.fake.reg["passwordCredentials"])
+        self.assertEqual(self.fake.app["properties"]["configuration"]["secrets"][-1]["identity"],
+                         "managed-identity")
 
     def test_unverified_runtime_rollout_is_not_success(self):
         self.fake.app["properties"]["provisioningState"] = "Failed"
         self.assertEqual(self.invoke("--create-secret", "--secret-store", "app"), 1)
-        self.assertIn("runtime authentication settings are not verified", self.output.getvalue())
+        self.assertIn("provisioning/revision update", self.output.getvalue())
         self.assertFalse(list(self.profile.iterdir()))
 
     def test_converged_runtime_requires_successful_provisioning_in_every_mode(self):
@@ -675,8 +914,8 @@ class SetupTests(unittest.TestCase):
             for mode in ((), ("--check",), ("--dry-run",)):
                 with self.subTest(state=state, mode=mode):
                     self.fake.app["properties"]["provisioningState"] = state
-                    self.assertEqual(self.invoke(*mode), 2)
-                    self.assertIn("Remaining: API provisioning is not Succeeded", self.output.getvalue())
+                    self.assertEqual(self.invoke(*mode), 2 if mode else 1)
+                    self.assertIn("provisioning/revision update", self.output.getvalue())
                     self.assertEqual(len(self.fake.writes), count)
         self.fake.app["properties"]["provisioningState"] = "Succeeded"
         self.assertEqual(self.invoke("--check"), 0)
@@ -875,7 +1114,7 @@ class SetupTests(unittest.TestCase):
             self.assertEqual(call.call_count, 1)
         for result in (OSError("sensitive"), subprocess.TimeoutExpired("sensitive", 1)):
             with (patch.object(SETUP.subprocess, "run", side_effect=result),
-                  self.assertRaisesRegex(SETUP.SetupError, "could not run or timed out")):
+                  self.assertRaisesRegex(SETUP.SetupError, "could not run or timed out|network")):
                 cli.call(["version"])
         with (patch.object(SETUP.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, SECRET, "")),
               self.assertRaisesRegex(SETUP.SetupError, "invalid JSON")):

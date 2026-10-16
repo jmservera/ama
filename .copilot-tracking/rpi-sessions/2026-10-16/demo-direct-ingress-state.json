@@ -3,8 +3,8 @@
   "task_slug": "demo-direct-ingress",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Follow-up",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/demo-direct-ingress-research.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-16/demo-direct-ingress-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Owner-directed P05 continuation implemented and bounded acceptance audit recorded; existing research reused and historical full Review/critique not rerun. Final offline candidate passed 260 infra and 32 loopback API auth tests, scoped mypy/Ruff and documentation checks.",
+      "status": "complete-offline-partial-acceptance",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/demo-direct-ingress-review.md"
+    },
     {
       "decision": "One Review execution Complete; outcome Not accepted, RV-001 High and RV-002 Medium routed to distinct later implementation under original complete-working-offline request. Verdict remains historical, no second Review.",
       "status": "complete",
@@ -36,10 +41,16 @@
       "evidence": ".copilot-tracking/research/2026-10-16/demo-direct-ingress-research.md"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "strict-cross-host-exclusion",
+      "summary": "Advisory app tags and cooperating wrappers reject observed activity but do not prove atomic simultaneous-start exclusion or guard raw portal/deployment bypass.",
+      "resolution": "Serialize authorized sessions; establish an approved provider-enforced shared mutex and provider validation before claiming strict exclusion. Do not claim this acceptance criterion is complete."
+    }
+  ],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Owner reviews PR 362, routed corrections and migration/cost proposal before coordinator live work. No automatic follow-up loop."
+    "phase": "Implement",
+    "action": "Complete P05 delivery on the existing branch/PR, then record completed offline implementation separately from partial coordination/live acceptance."
   },
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Human PR and migration/cost approval", "rationale": "Required before any live change; review corrections are tested but not independently re-reviewed.", "evidence": "PR 362; infra/README.md direct-demo proposal"},

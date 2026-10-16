@@ -1,5 +1,24 @@
 # Demo direct ingress phase details
 
+## P05 continuation
+
+Owner-directed scope: infra/scripts/setup-entra.py and directly coupled staff,
+deployment/template helpers/tests; runbook/evidence/KB index/log and existing
+RPI artifacts. First implement private-roster preflight and workflow helpers,
+then wire discovery, credential recovery, coordination, SQL check/apply/restart
+and post-reconcile checks. Test offline using fake CLI/SQL responses. No Azure,
+private datasets, environment files or issue-body mutation. Record candidate
+metadata separately from credential/identity data; only private files hold IDs.
+
+P05 source/test/documentation implementation and offline validation complete:
+260 infra tests, four-script scoped mypy, focused Ruff, zero introduced Ruff
+diagnostics, 32 local loopback API auth tests, Markdown local targets and diff
+hygiene. Read-only credential plans include metadata-only target/reachability
+checks and explicit storage-blocked status. SQL validation failures have a
+sanitized structured failure category distinct from connectivity/driver errors.
+Delivery pending. Advisory simultaneous-start exclusion and unguarded portal/
+raw deployment behavior are not proven guarantees; live/human gates remain.
+
 Task ID: issue-360. Slug: demo-direct-ingress.
 
 ## P01-T01

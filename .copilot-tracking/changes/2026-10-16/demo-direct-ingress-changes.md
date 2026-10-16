@@ -1,5 +1,66 @@
 # Demo direct ingress changes
 
+## P05 owner-directed continuation intake
+
+Read the existing plan/changes first and reused their evidence, not rerun
+research or critique. Clean feat/demo-direct-ingress matches open PR 362.
+New requirements replace manual missing-secret/roster/SQL handoffs with a
+default resumable orchestration and an honest private-network blocker.
+Implementation active; offline validation pending. No Azure changes authorized.
+
+## P05 implementation and validation
+
+P05-T01 is implemented. Default direct setup creates/reuses credentials,
+discovers the Bicep-created vault/attached identity, announces demo-only
+private-vault fallback, records store/name tags, creates only a private
+missing-roster template before any cloud calls, validates private input,
+offers candidate/UPN helpers, verifies Entra after reconciliation and
+orchestrates SQL check/one confirmation/apply/verified restart.
+SQL helper preserves approved roles, bridges manifest keys/full labels,
+discovers/validates Disabled public SQL and pins the selected API/subscription.
+No approved personal-roster transport exists for the proof job, so the exact
+authorized-host command is the implemented remote-connectivity alternative.
+
+Coordination detects app/environment/revision/group-deployment activity and
+uses local exclusion plus an owned advisory app tag, conditional when an ETag
+is supplied. Strong cross-host simultaneous-start exclusion is not proved;
+the supported wrappers cooperate, but raw portal activity remains outside it.
+This limitation is explicit, not counted as strict distributed-lock acceptance.
+
+P05-T02 store protection is implemented: default Key Vault parameter plus
+Bicep guards, deployment CLI and CI refuse app-local full application
+deployment. Dependency-only update is explicit. An initial implementation
+using ARM listSecrets was rejected by the existing no-secret-list Bicep policy;
+replaced with fail-closed deployment protection, preserving that policy.
+
+Offline infrastructure suite: 257 passed without skips including local Bicep
+compilation (initial failing mocks and the new store guard were corrected).
+Scoped four-script mypy passed with installed-distribution import-untyped
+diagnostics disabled; no production type error remains. Ruff baseline
+comparison across all nine changed Python files found zero introduced
+diagnostics; existing baseline warnings are retained. API auth suite starts
+responsive ephemeral loopback servers with generated fixtures: 32 passed
+using absolute project-test PYTHONPATH. Expected law-store-unavailable
+diagnostics remained explicit; no deployed service/private dataset was used.
+Final documentation/diff audit and delivery remain pending.
+
+### P05 final candidate receipt
+
+Final infra discovery passed 260 tests without skips in 61.735 seconds,
+including compiled Bicep policy/credential-store guards. Four production
+scripts passed scoped mypy (import-untyped disabled for installed source
+distributions); focused Ruff passed. Baseline comparison of all nine changed
+Python files had zero introduced findings. Existing broad lint/style warnings
+are not represented as fixed. API loopback auth passed 32 tests with absolute
+project-test PYTHONPATH. CLI help, Markdown local link targets (zero missing),
+and git diff --check passed.
+
+No full post-implementation Review was repeated. The original review record
+now contains the requested bounded P05 acceptance audit with the candidate
+evidence and explicit coordination/raw-deployment/live gaps. No second critique,
+tenant authority, human approval, migration, Azure write, private-data read,
+resource retirement or issue checkbox update was performed.
+
 Task ID: issue-360. Slug: demo-direct-ingress. Full plan implementation.
 
 ## Execution

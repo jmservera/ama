@@ -68,6 +68,14 @@ param demoRequiresPrivateBackingServices string
 @description('Must not be empty. Empty means demo applications lack entraClientId or use entraBearerOnly=true; shared demos require browser authentication. Environment-only staging may omit the audience.')
 param demoRequiresBrowserAuthentication string
 
+@minLength(1)
+@description('Must not be empty. Empty means app-local browser credentials were selected outside the authenticated direct-ingress demo.')
+param appCredentialRequiresDirectDemo string
+
+@minLength(1)
+@description('Must not be empty. Empty means app-local credentials would be overwritten by an application deployment; choose deployApplications=false or perform an authorized migration to Key Vault first.')
+param appCredentialBlocksApplicationDeployment string
+
 output checked array = [
   pilotRequiresProductionProfile
   publicEdgeRequiresProductionProfile
@@ -86,4 +94,6 @@ output checked array = [
   demoForbidsPublicEdge
   demoRequiresPrivateBackingServices
   demoRequiresBrowserAuthentication
+  appCredentialRequiresDirectDemo
+  appCredentialBlocksApplicationDeployment
 ]

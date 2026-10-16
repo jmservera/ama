@@ -50,14 +50,16 @@ def job(suffix: str, image: str, prefix: str = "forward-test") -> dict:
 
 
 class DeployTests(unittest.TestCase):
-    def run_deploy(self, responses: list[dict], *options: str, script: Path = SCRIPT):
+    def run_deploy(self, responses: list[dict], *options: str, script: Path = SCRIPT,
+                   apps: list[dict] | None = None):
         with TemporaryDirectory(prefix="ama-fake-az-") as directory:
             root = Path(directory)
             az = root / "az"
             az.write_text(f"#!{sys.executable}\n{FAKE_AZ}", encoding="utf-8")
             az.chmod(0o755)
             (root / "calls.json").write_text("[]", encoding="utf-8")
-            (root / "responses.json").write_text(json.dumps(responses), encoding="utf-8")
+            (root / "responses.json").write_text(
+                json.dumps([reply("containerapp list", apps or []), *responses]), encoding="utf-8")
             env = {**os.environ, "PATH": str(root), "FAKE_AZ_ROOT": str(root)}
             result = subprocess.run(
                 [
@@ -79,7 +81,29 @@ class DeployTests(unittest.TestCase):
                 check=False,
             )
             calls = json.loads((root / "calls.json").read_text(encoding="utf-8"))
+            if apps is None and calls and calls[0][:2] == ["containerapp", "list"]:
+                calls = calls[1:]
         return result, calls
+
+    def test_app_local_credential_and_authentication_lock_block_full_deployment(self):
+        for tags in (
+            {"zava-forward-auth-lock": "another-session"},
+            {"zava-forward-credential-store": "app", "zava-forward-credential-name": "private-name"},
+        ):
+            with self.subTest(tags=tags):
+                result, calls = self.run_deploy([], "--apply", apps=[{"tags": tags}])
+                self.assertEqual(result.returncode, 1)
+                self.assertEqual(len(calls), 1)
+                self.assertIn("authentication", result.stderr.lower())
+
+    def test_dependency_only_deployment_can_explicitly_preserve_app_local_store(self):
+        result, calls = self.run_deploy(
+            [reply("deployment group what-if")], "--orchestrator-image", CURRENT,
+            "--parameter", "entraCredentialStore=app", "--parameter", "deployApplications=false",
+            apps=[{"tags": {"zava-forward-credential-store": "app"}}],
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(calls), 2)
 
     def assert_selection(self, responses: list[dict], image: str, *options: str, **kwargs):
         result, calls = self.run_deploy(
