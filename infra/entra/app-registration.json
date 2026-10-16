@@ -17,6 +17,11 @@
     {"key": "SupportOfficer", "label": "Programme Support Officer"},
     {"key": "Contractor", "label": "Contractor"}
   ],
+  "capabilityRoles": [
+    {"key": "RuleAuthor", "label": "Regulatory rule author", "capability": "rule_author"},
+    {"key": "RuleOwner", "label": "Regulatory named owner", "capability": "rule_owner"},
+    {"key": "RegulatoryChat", "label": "Regulatory chat user", "capability": "regulatory_chat"}
+  ],
   "contractorIdentity": {
     "status": "Proposed in ADR 0002, owner confirmation open (#116)",
     "model": "Entra B2B guest users assigned only the ZavaForward.Contractor app role; appRoleAssignmentRequired blocks every other guest",
