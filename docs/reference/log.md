@@ -3897,3 +3897,31 @@ metadata when the knowledge base was created.
   private roster/approved registration and Graph permissions unavailable to
   this principal. No fabricated human binding, private dataset read, inference,
   worker acceptance, owner sign-off, legacy deletion or workflow rename.
+
+## [2026-10-16] query | Public src browser restoration and deployed parity audit
+
+* Refs #344. Refs #143. Refs #200. Selected additive Front Door Premium,
+  WAF Prevention and Private Link to the existing internal environment instead
+  of a new external environment. Preserved private SQL and all existing data,
+  workloads, budgets and group; no pre-existing deletion, policy bypass, public SQL or
+  tenant mutation. Recorded exact new edge resources and image-only audit job.
+* Added existing-stack guard/auth-preservation Bicep and explicit health/all-path
+  route settings; extended callback initialization for a validated edge HTTPS
+  origin with explicit Custom X-Forwarded-Host/Proto forwarding, retaining
+  existing callbacks/roles/secrets. Public health/welcome 200, native API 401
+  and Entra browser redirect proved. Forwarded-host spoof correction verified;
+  only the empty unused rule set created by a rejected header-delete trial
+  was removed. Browser API User-Agent 302 remains a filed #350 gap.
+* Updated infra/API READMEs, evidence pack/JSON, full feature/16-asset parity
+  audit and this index. Image-only execution verified all 17 serving web assets
+  match src; anonymous public observations remain distinct from functional
+  rendering, positive authorization and real-user acceptance.
+* Detected the earlier proof's invalid `systemAssignedIdentity` client literal.
+  Matching-tenant read-only discovery found no retained workbench registration.
+  Filed tenant browser prerequisites as #349 and all remaining deployed
+  feature/data/model/map/photo/law/positive-role acceptance gaps as #350.
+  Browser sign-in remains Blocked, not a redirect-shaped success.
+* ADR 0005 is accepted for synthetic development only. Real sources/owners,
+  legal interpretation/rule activation, consent, safety, financial commitments
+  and operational reliance remain named human gates; Juan Manuel Servera is
+  the exercise Legal/Compliance/DPO owner. No other approval was invented.

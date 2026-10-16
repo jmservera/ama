@@ -1,0 +1,55 @@
+{
+  "task_id": "344",
+  "task_slug": "public-browser-access-344",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "blocked",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/public-browser-access-344-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/public-browser-access-344-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/public-browser-access-344-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-16/public-browser-access-344-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/public-browser-access-344-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/public-browser-access-344-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Explicit end-to-end implementation, deployment, RPI artifacts and PR requested; noninteractive execution does not wait at routine phase boundaries.",
+      "status": "confirmed",
+      "evidence": "User task 2026-10-16; no inferred automatic-session enrollment"
+    },
+    {
+      "decision": "SQL remains private, no policy bypass or resource-group deletion; source-only changes and no legacy/private dataset reads.",
+      "status": "confirmed",
+      "evidence": "User task and issues 344/143/118"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready for bounded edge, real sign-in blocked separately.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-16/public-browser-access-344-research.md"
+    },
+    {
+      "decision": "One final-candidate critique executed, verdict Revise; PC-001 through PC-004 directly incorporated without repeat critique.",
+      "status": "disposed",
+      "evidence": ".copilot-tracking/plans/2026-10-16/public-browser-access-344-critique.md and plan Critique Disposition"
+    },
+    {
+      "decision": "Exactly one postimplementation Review executed; outcome Not accepted for full issue 344 acceptance. RV-001 tenant, RV-002 browser API behavior and RV-003 feature evidence remain routed.",
+      "status": "Review execution Complete; outcome Not accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/public-browser-access-344-review.md"
+    }
+  ],
+  "blockers": [
+    {"id": "tenant-browser", "summary": "Existing auth client is systemAssignedIdentity, not a registered Entra application; no retained workbench registration found.", "resolution": "Authorized tenant owner provides registration, credential, callback and staff bindings; issue 349"},
+    {"id": "browser-api", "summary": "Native anonymous API curl is 401 but browser User-Agent API requests receive EasyAuth 302.", "resolution": "Issue 350: verify authenticated platform principal handling before any API exclusion and prove browser API 401"},
+    {"id": "feature-parity", "summary": "Package assets are present but real-user, representative data, model/map/photo/law and positive-role feature acceptance is unavailable.", "resolution": "Issue 350 and specialist issues in complete parity matrix"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Publish reviewed implementation and honest blockers through topic commit/push/PR; no implementation or repeat Review"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Restore valid tenant browser prerequisites, issue 349", "rationale": "Unlocks real-user and all positive-role acceptance without weakening auth.", "evidence": "Invalid client, absent credential and staff; evidence JSON and issue 349"},
+    {"rank": 2, "task": "Prove browser API 401 coexistence, issue 350", "rationale": "Small bounded authentication contract, dependent on trustworthy platform principal evidence.", "evidence": "Public native API 401 but browser User-Agent API 302"},
+    {"rank": 3, "task": "Complete deployed feature/configuration parity, issue 350", "rationale": "Broad MVP acceptance, dependent on tenant access and representative approved synthetic workload.", "evidence": "26 capability rows and 17 matching package assets in parity matrix/JSON"}
+  ]
+}

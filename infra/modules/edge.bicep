@@ -1,8 +1,7 @@
-// WARNING (open item): Private Link to groupId 'managedEnvironments' of an internal, VNet-injected Container Apps
-// environment is unverified for this configuration. Confirm in a production-profile deployment that the pending
-// private endpoint connection appears and the origin becomes healthy before relying on enablePublicEdge.
+// Internal workload-profile Private Link proved public health/native API denial on 2026-10-16 (issue 344).
+// Verify connection approval and origin health for each deployment; this proof is not production acceptance.
 // Public edge: Front Door Premium, WAF policy and a Private Link origin to the internal Container Apps environment
-// (ADR 0002 decision 6, issue 143). Deployed only when enablePublicEdge is true in the production profile.
+// (ADR 0002 decision 6, issue 143). Main requires the production profile; the existing-stack wrapper is additive.
 param prefix string
 param tags object
 @description('Container Apps environment resource ID used as the Private Link origin target.')
@@ -70,7 +69,7 @@ resource originGroup 'Microsoft.Cdn/profiles/originGroups@2024-09-01' = {
   name: 'og-api'
   properties: {
     loadBalancingSettings: { sampleSize: 4, successfulSamplesRequired: 3 }
-    healthProbeSettings: { probePath: '/', probeRequestType: 'HEAD', probeProtocol: 'Https', probeIntervalInSeconds: 100 }
+    healthProbeSettings: { probePath: '/healthz', probeRequestType: 'GET', probeProtocol: 'Https', probeIntervalInSeconds: 100 }
   }
 }
 
@@ -98,6 +97,7 @@ resource route 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-09-01' = {
   properties: {
     originGroup: { id: originGroup.id }
     customDomains: hasDomain ? [{ id: domain.id }] : []
+    patternsToMatch: ['/*']
     supportedProtocols: ['Https']
     httpsRedirect: 'Enabled'
     forwardingProtocol: 'HttpsOnly'

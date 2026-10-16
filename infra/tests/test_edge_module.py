@@ -112,6 +112,14 @@ class PublicEdgeTests(unittest.TestCase):
         self.assertIn("output entraRedirectUri", MAIN)
         self.assertIn("behindPublicEdge: enablePublicEdge", MAIN)
 
+    def test_health_and_all_path_route_do_not_cache_sessions(self) -> None:
+        self.assertIn("probePath: '/healthz'", EDGE)
+        self.assertIn("probeRequestType: 'GET'", EDGE)
+        self.assertIn("patternsToMatch: ['/*']", EDGE)
+        self.assertNotIn("cacheConfiguration:", EDGE)
+        self.assertIn("originHostHeader: originHostName", EDGE)
+        self.assertIn("enforceCertificateNameCheck: true", EDGE)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -30,6 +30,8 @@ private production profile. They do not authorize deployment.
 * `scripts/deploy.py`: image-preserving infrastructure what-if/deploy wrapper; see [Orchestrator image selection](#orchestrator-image-selection-322).
 * `scripts/private-cutover-proof.py`, `cutover-proof.Dockerfile`: bounded
   synthetic SQL/private-ingress proof executed inside the ama VNet.
+* `public-edge-existing.bicep`: additive Front Door Premium/WAF/Private Link
+  for an existing internal, authenticated API; preserves data-service settings.
 
 Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `monthlyBudget`. See the M365 section of the ADR.
 
@@ -215,6 +217,91 @@ Runner unit tests use installed source packages:
 Compiled profile/staging/auth-mode checks run in the existing infra suite.
 
 Example from the repository root: `python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> --parameters infra/main.bicepparam --parameter deploymentProfile=development` (what-if; add `--apply` only after review).
+
+## Public browser continuation (2026-10-16, #344)
+
+Refs #344. Refs #143. Refs #200. The owner authorized public browser access
+again, not public SQL or a policy bypass. The proof environment
+`cae-cutover-test` is internal in `vnet-cutover-test` (`10.40.0.0/16`,
+uksouth); its internal setting cannot be changed in place. We chose Front Door
+Premium with Private Link and WAF Prevention over a new external environment:
+it reuses the existing API, identities, private data path and immutable src
+image without replacing the environment, subnet or jobs. The trade-off is an
+additional paid edge/private-endpoint service and connection approval. This
+synthetic-development continuation is not production-profile or pilot acceptance.
+The owner also allowed an API-only external environment, but not the existing
+global `allowPublicNetworkAccess` switch, which also requests public data access.
+
+The additive entry point checks that the existing environment is internal with
+public access Disabled and that the sole API origin belongs to it with ingress
+authentication enabled. It does not establish a valid tenant registration.
+It leaves main's production-profile guard intact. It preserves existing provider
+validation, public exclusions, token storage and credential references, sets
+`forwardProxy=Custom` with `X-Forwarded-Host` / `X-Forwarded-Proto`, HTTPS
+required, and uses the default
+`entraBearerOnly=false` / `RedirectToLoginPage`. No credential is generated.
+
+```bash
+az deployment group what-if -g ama -n public-browser-344 \
+  -f infra/public-edge-existing.bicep \
+  -p environmentName=cae-cutover-test apiName=ca-cutover-test-api \
+  workspaceName=log-cutover-test prefix=cutover-test entraBearerOnly=false \
+  --no-pretty-print
+# Review the exact delta, then use create --mode Incremental with the same input.
+```
+
+Initial what-if: eight edge resources Create, no resource Modify/Delete.
+The auth-preserving follow-on also changes only the existing API auth child.
+Provider-populated defaults and runtime references can appear as what-if
+property deltas; inspect them, never treat them as permission to modify SQL.
+Approve only this edge's pending connection on `cae-cutover-test`, matching
+`Front Door Premium private origin for cutover-test`. A write can return
+Pending while its asynchronous operation runs; verify terminal operation and
+connection **Approved**, not just CLI exit 0.
+
+Exact new resource names: `afd-cutover-test`, its `ep-cutover-test` endpoint,
+`og-api` group / `api` origin, `route-api`, `sp-waf`,
+`to-log-analytics` diagnostics and `wafcutovertest`. The managed connection
+belongs to that origin. `job-cutover-test-public-audit` is a manual image-only
+asset hash instrument, using the same serving digest and existing pull identity;
+it does not open the dataset or any store. A second execution probes only
+anonymous private HTTP status/redirect host. No pre-existing resource was
+deleted or replaced, including the group, internal environment, SQL, existing
+proof jobs and budget. Only the empty, unused `afd-cutover-test/originheaders`
+rule set created by a rejected header-removal trial was deleted.
+
+The public endpoint is
+<https://ep-cutover-test-esdrcphsarcahhde.b01.azurefd.net/>.
+Detailed public checks, resource inventory and feature acceptance are in the
+[cut-over pack](../docs/architecture/cutover-evidence-pack.md#public-browser-restoration-2026-10-16)
+and its sanitized JSON. Until the tenant gap is resolved, this URL is not a
+claim that a person can complete sign-in.
+
+Public curl on 2026-10-16 proved health/welcome/static 200, native anonymous
+APIs 401 and browser `/app` redirect to Entra with the public callback host.
+Forged principals/malformed bearer were denied; conflicting Host returned 421.
+Individual and combined forwarding-header probes retain the HTTPS edge callback.
+Standard forwarding initially trusted a client RFC `Forwarded` host; Azure
+disallows deleting that reserved header in a rule, so both edge entry points now
+use only Front Door-overwritten X-Forwarded headers through Custom configuration.
+Native API curl is not the browser API contract: a browser User-Agent still
+receives EasyAuth 302 for an anonymous API request, filed under #350. No API
+exemption was added without positive authenticated-platform proof.
+
+The existing proof client value `systemAssignedIdentity` is **not an Entra
+application registration**. Matching-tenant read-only discovery found no retained
+workbench registration; no valid browser credential or staff roster is supplied.
+Real-user sign-in is **Blocked**, filed as #349. Supply the intended registration
+and private-vault credential through authorized tenant/in-VNet operators; then
+run callback initialization with the public URL, reconcile the private staff
+roster and restart replicas. Do not reuse another application's client or
+fabricate staff. The full feature/configuration gap audit is filed as #350.
+
+Before auth mutation, baseline was `Return401` / `NoProxy` with the seven
+existing public exclusions. If critical health, API denial or routing isolation
+fails after propagation, disable only the new endpoint and restore those two
+auth fields; do not delete resources or weaken private networking. A tenant
+prerequisite blocker alone is not a reason to enable anonymous APIs.
 
 ## Environments
 
@@ -623,6 +710,25 @@ callbacks in check-only mode, permission denial and unverifiable updates exit
 nonzero. The command does not change display names, roles, assignments or
 secrets. The existing creation helper is for first-time registration and role
 provisioning, not a callback-only repair.
+
+For a Front Door hostname, first configure `forwardProxy.convention=Custom`,
+`customHostHeaderName=X-Forwarded-Host` and
+`customProtoHeaderName=X-Forwarded-Proto`, then pass the explicit HTTPS origin
+to both apply and check:
+
+```bash
+python3 infra/scripts/initialize-api-auth.py -g ama -n ca-cutover-test-api \
+  --public-url https://<edge-host>
+python3 infra/scripts/initialize-api-auth.py -g ama -n ca-cutover-test-api \
+  --public-url https://<edge-host> --check
+```
+
+This adds only the edge callback, preserving the original callbacks. It rejects
+non-HTTPS URLs, credentials, ports, extra paths/queries/fragments and a differing
+edge host without that exact Custom proxy configuration. Standard also trusts
+client RFC Forwarded input and is rejected for this edge callback. It still requires a real
+registration and an authorized tenant profile; it cannot repair the #349
+missing-registration prerequisite.
 
 ### Tenant staff and application-role initialization
 

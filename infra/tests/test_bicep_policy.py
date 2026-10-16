@@ -414,6 +414,72 @@ class BicepPolicyTests(unittest.TestCase):
         self.assertIn(
             "not(parameters('entraBearerOnly'))", api["properties"]["configuration"]["secrets"]
         )
+
+    def test_existing_stack_edge_is_additive_and_single_origin(self) -> None:
+        template = compile_bicep("public-edge-existing.bicep")
+        self.assertEqual(
+            {item["name"] for item in template["resources"]},
+            {"edge-existing-guard", "edge-existing-auth", "public-edge-existing"},
+        )
+        guards = module(template, "edge-existing-guard")["properties"]
+        private_guard = json.dumps(guards["parameters"]["privateEnvironment"])
+        auth_guard = json.dumps(guards["parameters"]["authenticatedOrigin"])
+        self.assertIn("'Disabled'", private_guard)
+        self.assertIn(".internal", private_guard)
+        self.assertIn("managedEnvironmentId", auth_guard)
+        self.assertIn("platform.enabled", auth_guard)
+        self.assertFalse(template["parameters"]["entraBearerOnly"]["defaultValue"])
+        auth_template = module_template(template, "edge-existing-auth")
+        browser_auth = resource(auth_template, "Microsoft.App/containerApps/authConfigs")
+        self.assertIn("RedirectToLoginPage", browser_auth["properties"])
+        for setting in ("'Custom'", "'X-Forwarded-Host'", "'X-Forwarded-Proto'"):
+            self.assertIn(setting, browser_auth["properties"])
+        self.assertNotIn("'Standard'", browser_auth["properties"])
+        edge = module_template(template, "public-edge-existing")
+        origins = [
+            r for r in resources(edge) if r["type"] == "Microsoft.Cdn/profiles/originGroups/origins"
+        ]
+        self.assertEqual(len(origins), 1)
+        origin = origins[0]["properties"]
+        self.assertEqual(origin["hostName"], origin["originHostHeader"])
+        self.assertTrue(origin["enforceCertificateNameCheck"])
+        self.assertEqual(origin["sharedPrivateLinkResource"]["groupId"], "managedEnvironments")
+        route = resource(edge, "Microsoft.Cdn/profiles/afdEndpoints/routes")["properties"]
+        self.assertEqual(route["patternsToMatch"], ["/*"])
+        self.assertEqual(route["supportedProtocols"], ["Https"])
+        self.assertNotIn("cacheConfiguration", route)
+        self.assertNotIn("ruleSets", route)
+        probe = resource(edge, "Microsoft.Cdn/profiles/originGroups")["properties"][
+            "healthProbeSettings"
+        ]
+        self.assertEqual((probe["probePath"], probe["probeRequestType"]), ("/healthz", "GET"))
+        waf = resource(edge, "Microsoft.Network/FrontDoorWebApplicationFirewallPolicies")
+        self.assertEqual(waf["properties"]["policySettings"]["mode"], "[parameters('wafMode')]")
+        self.assertEqual(
+            module(template, "public-edge-existing")["properties"]["parameters"]["wafMode"][
+                "value"
+            ],
+            "Prevention",
+        )
+
+    def test_edge_auth_trusts_only_front_door_overwritten_headers(self) -> None:
+        template = module_template(self.main, "containerapps")
+        auth = resource(template, "Microsoft.App/containerApps/authConfigs")
+        expression = auth["properties"]["httpSettings"]["forwardProxy"]
+        for behind_edge, expected in (
+            (False, {"convention": "NoProxy"}),
+            (
+                True,
+                {
+                    "convention": "Custom",
+                    "customHostHeaderName": "X-Forwarded-Host",
+                    "customProtoHeaderName": "X-Forwarded-Proto",
+                },
+            ),
+        ):
+            self.assertEqual(evaluate(expression, {"behindPublicEdge": behind_edge}, {}), expected)
+
+    def test_bearer_only_guard_requires_identified_audience(self) -> None:
         guard = module(self.main, "parameter-guard")["properties"]["parameters"]
         expression = guard["bearerOnlyRequiresAudience"]
         for overrides, expected in (
