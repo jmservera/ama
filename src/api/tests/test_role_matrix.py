@@ -102,7 +102,7 @@ class Matrix(unittest.TestCase):
         code, text = self.call(ck, "/api/cases/ZF-1")
         self.assertEqual(code, 200)
         d = json.loads(text)
-        self.assertEqual(set(d), {"id", "stage", "status", "measures", "needs_notice", "named_contact", "home", "contractor", "appointments"})
+        self.assertEqual(set(d), {"id", "stage", "status", "measures", "needs_notice", "named_contact", "home", "contractor", "appointments", "resident_readiness"})
         self.assertTrue(d["needs_notice"])
         self.assertEqual(d["named_contact"], "User 1")
         self.assertEqual(set(d["appointments"][0]), {"type", "date", "slot", "outcome"})
@@ -156,7 +156,7 @@ class Matrix(unittest.TestCase):
             code, _ = self.call(ck, "/api/cases/ZF-3/technical", {"action": "design_submit", "note": "n"})
             self.assertIn(code, (403,) if role == projection.CONTRACTOR else (200, 400, 403), role)
             code, _ = self.call(ck, "/api/cases/ZF-3/resident", {"action": "decision_record"})
-            self.assertEqual(code, 403 if role in ("Contractor", "Quality Inspector", "Building Safety Liaison", "Grants and Evidence Officer") else 400, role)
+            self.assertEqual(code, 400 if role in projection.RESIDENT_RECORD_ROLES else 403, role)
 
     def test_integrated_case_actions_deny_contractors_and_unknown_roles(self):
         posts = [

@@ -239,6 +239,14 @@ class DocControlsMixin:
         rows = []
         with self.lock:
             for c in self.cases.values():
+                from .resident_decisions import RESIDENT_FIELDS, RESIDENT_RETENTION_ID, retention_schedule
+                schedule = retention_schedule(c, today.isoformat())
+                if schedule["expired"] and (any(c.get(key) for key in RESIDENT_FIELDS)
+                                             or (c.get("decision") or {}).get("at")):
+                    rows.append(dict(case_id=c["id"], doc_id=RESIDENT_RETENTION_ID,
+                                     kind="Resident decisions", trigger=schedule["first_contact"],
+                                     due=schedule["due"], status="blocked: legal hold" if
+                                     (c.get("legal_hold") or {}).get("active") else "awaiting owner approval"))
                 trig = None
                 for d in c["documents"]:
                     if d.get("generated"):
@@ -258,6 +266,9 @@ class DocControlsMixin:
 
     def approve_retention_deletion(self, user, case_id, doc_id, today=None):
         """Owner approval for one due document. A legal hold blocks it. The log keeps no file name or content."""
+        from .resident_decisions import RESIDENT_RETENTION_ID
+        if doc_id == RESIDENT_RETENTION_ID:
+            return self.delete_resident_records(user, case_id, (today or date.today()).isoformat())
         self._manager(user, "approve a retention deletion")
         today = today or date.today()
         with self.lock:

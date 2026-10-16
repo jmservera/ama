@@ -52,7 +52,8 @@ Package scope changes require reissue with explicit current resident bindings.
 Safety, technical, funding and shared-building checks remain independent.
 The existing SQL transaction rechecks resident bindings, current authority and
 case row versions before commit, including operations that only change work
-orders. SQLite concurrency/restart is tested, actual SQL Server is not.
+orders. SQLite concurrency/restart and a separate synthetic Azure SQL exercise
+are tested; this is not real resident or operational acceptance.
 
 Each representative reference has versioned task-limited authority: measure,
 scope/design, source, evidence date, review date, resident's stated wishes and
@@ -75,13 +76,56 @@ These routes remain recordable on paused or closed retrofit cases and do not
 change consent, ranking inputs, hazards, tenancy or repair state. No live formal
 complaints integration or real-user without-detriment evidence is established.
 
-Exercise field permissions for new authority/contact/source/wishes narratives
-require both a resident-workflow role and a recorded need (`ZF_REASON_ROLES`);
-defaults allow RLO and Programme Manager. Other staff see context/status and
-confirmation needs without those narratives. Contractors keep the existing
-minimum projection. Views detach nested histories before redaction, audit uses
-event/version metadata, and AI source allow-lists do not receive authority or
-wishes. Operational permission and retention ratification remain Unknown.
+The owner confirmed the field matrix on
+[2026-10-16](https://github.com/jmservera/ama/issues/86#issuecomment-6209881675).
+Existing `Resident Liaison Officer` represents Neighbourhood/Resident Engagement;
+`Retrofit Coordinator` represents Retrofit staff. Both record and view decisions,
+authority evidence, wishes and safe-contact references. `Retrofit Programme
+Manager` and `Programme Support Officer` view, but cannot record these fields,
+including through the legacy decision endpoint. Writers must match a registered
+named human, not merely supply a role. Separate complaint/redress actions retain
+their existing named-owner controls; they cannot change works decisions.
+Other staff do not receive authority/contact/source/wishes narratives.
+Resident viewing rights do not depend on `ZF_REASON_ROLES`; unrelated vulnerability
+and contact-note restrictions still apply. Contractors receive only per-measure
+`Proceed` or `Hold` resident readiness, never the underlying resident reason,
+wishes, vulnerability or safe-contact details. Other existing operational
+allow-listed fields remain. AI tasks use narrow task inputs; no authority,
+wishes, safe-contact history or complete decision record enters those inputs.
+Views detach histories before redaction. Audit uses event/version metadata;
+new legacy decision notes are no longer copied into the immutable ledger.
+
+The [owner's first-contact clarification](https://github.com/jmservera/ama/issues/86#issuecomment-6209904857)
+sets retention to five calendar years from the resident's first recorded
+interaction, not the decision, withdrawal, authority expiry or work completion.
+`RESIDENT_RETENTION_YEARS` in `resident_decisions.py` is the configurable constant.
+The earliest valid nonfuture `contacts`/`resident_contact_history` timestamp or
+`resident.first_contact_at` establishes the origin. Recording contact or a
+resident-confirmed safe route preserves the earliest marker. Missing/invalid
+history stays `Unknown`, never inferred from a decision; reconcile it before
+operational use. The schema has no universal cross-case resident identity:
+importers must preserve the resident's actual first-contact marker across cases,
+not match people by name or address.
+
+`resident_retention` in staff detail reports origin, due date and expiry.
+February 29 anniversaries use February 28 in a non-leap year. At the anniversary,
+decisions and representative disclosure/consent checks cannot release work,
+even if legal hold retains the records. Withdrawn decisions and expired
+authority use exactly the same schedule. The existing manager retention list
+includes a `resident-decisions` item; approve it through `retention-approve`
+to remove current scoped decisions, authorities, wishes, safe-contact references/
+history, resident reviews and scopes, reset the legacy answer, clear the resident
+representative and remove service-request representative references. The earliest
+contact marker and deletion date remain. Complaint outcomes and general contact
+records have separate purposes and are not silently deleted. Legal hold blocks
+deletion, not expiry. Deletion is manager-reviewed, not a configured automatic
+purge job. Existing ledger text, backups and SQL row history are not erased by
+current-payload removal; operational erasure needs a separately approved design.
+
+Known limit pending an owner rule (#86): after expiry and an approved deletion the
+first-contact marker is kept, so retention stays expired and the case refuses new
+resident decisions. Whether renewed contact starts a new period is an open owner
+decision; nothing here invents that rule.
 
 Cards, missing-decision filters and AI citation labels use current scoped
 status, not the legacy answer. The SQL missing-decision filter deliberately uses
@@ -96,8 +140,20 @@ unapproved drafts, never consent or sending.
 authority expiry/supersession/contact, sibling-only work/QA release, independent
 review, privacy persistence and stale transaction refusal. Synthetic adapter
 calls are not live inference. Formal complaint routing, human accessibility/
-without-detriment acceptance, operational permissions/retention, actual model
-and SQL Server/Azure workflow evidence remain unmet.
+without-detriment acceptance, actual model and full hosted workflow acceptance
+remain unmet. The opt-in `AzureResidentDecisions` test exercises the SqlStore
+behavior through MssqlStore on an isolated Azure SQL database using constructed
+DATA only, verifies reopened state/current-payload purge and an intact audit
+chain, and reports the database ledger mode. It refuses database names outside
+the `resident86test` prefix. The operator must create a fresh database, supply
+Entra authentication, and remove verification resources afterward:
+
+```bash
+ZF_RESIDENT_AZURE_TEST=1 PYTHONPATH=src/core/tests python3 -m unittest test_resident_decisions.AzureResidentDecisions -v
+```
+
+This is a real SQL engine check, not evidence that historical database copies
+were erased or that any real resident accepted the service.
 
 ## Stock comparisons and human technical sign-offs (#84)
 
