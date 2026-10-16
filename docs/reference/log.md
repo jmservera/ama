@@ -3443,3 +3443,22 @@ metadata when the knowledge base was created.
 * Refs #86 remains open: formal complaints/human acceptance, operational
   authority/retention and actual model/SQL Server/Azure evidence are not
   established. Local checks do not claim hosted CI, deployment or approval.
+
+## [2026-10-16] ingest | Rule-card identity and source-review engineering slice
+
+* Extended the existing `src/core` rule-card/law stores and `src/api`
+  authentication/routes for #211; no new feature code in `mvp/`.
+* Updated the [core lifecycle contract](../../src/core/README.md#rule-cards-adr-0005-phase-2),
+  [API authority boundary](../../src/api/README.md#rule-card-approval-api-211)
+  and knowledge-base index. Retained versions and approval dates, atomic
+  supersession/source reviews, separate trusted rule capabilities, email-fallback
+  denial and owner hold now have local synthetic regression coverage.
+* Both seed cards remain labelled unassigned exercise drafts. Recorded
+  approvals are simulated, not legal or operational approvals; #209 owner
+  nomination approves no card. No tenant assignments, real legal approval,
+  SQL Server/Azure run, rule-card UI or rule engine is claimed.
+* Local core 398 and API 532 tests passed (103 API environment-dependent
+  skips); final core 17/API 40 targeted checks and project mypy/ruff checks
+  passed. The six-test running loopback app exercise passed. Single RPI
+  Review was conformant for the labelled local slice, with four explicitly
+  routed deployment/human/product residuals; Refs #211 remains open.

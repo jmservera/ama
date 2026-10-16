@@ -16,6 +16,8 @@ import re
 import sqlite3
 import stat
 import sys
+import threading
+from contextlib import contextmanager
 from datetime import date
 from pathlib import Path
 
@@ -136,11 +138,13 @@ class AzureBlobSnapshots:
 
 class SqliteDb:
     """Local test double for the SQL backend."""
+    dialect = "sqlite"
     ledger = False
     dberror = sqlite3.DatabaseError
 
-    def __init__(self, path):
-        self.db = sqlite3.connect(path, check_same_thread=False)
+    def __init__(self, path=None, connection=None):
+        self.lock = threading.RLock()
+        self.db = connection if connection is not None else sqlite3.connect(path, check_same_thread=False)
         self.db.row_factory = sqlite3.Row
         for ddl in SQLITE_DDL:
             self.db.execute(ddl)
@@ -150,7 +154,15 @@ class SqliteDb:
         self.db.commit()
 
     def all(self, sql, args=()):
-        return [dict(r) for r in self.db.execute(sql, args).fetchall()]
+        with self.lock:
+            return [dict(r) for r in self.db.execute(sql, args).fetchall()]
+
+    def begin(self):
+        self.db.execute("BEGIN IMMEDIATE")
+
+    @property
+    def integrity_error(self):
+        return sqlite3.IntegrityError
 
     def run(self, sql, args=()):
         self.db.execute(sql, args)
@@ -159,7 +171,8 @@ class SqliteDb:
         self.db.executemany(sql, rows)
 
     def insert_ignore(self, table, key, sql, args):
-        self.db.execute(sql.replace("INSERT", "INSERT OR IGNORE", 1), args)
+        if not self.all(f"SELECT {key} FROM {table} WHERE {key}=?", (args[0],)):
+            self.run(sql, args)
 
     def limited(self, sql):
         return sql + " LIMIT ?"
@@ -176,10 +189,12 @@ class SqliteDb:
 
 class MssqlDb:
     """Azure SQL (or SQL Server in CI) backend reusing the store's connection settings (ZF_SQL_*)."""
+    dialect = "mssql"
 
     def __init__(self, env=None):
         from zava_forward.core.mssqlstore import _Conn, connection_string
         env = os.environ if env is None else env
+        self.lock = threading.RLock()
         self.db = _Conn(connection_string(env), env.get("ZF_SQL_TOKEN"))
         self.ledger = bool(self.db.execute("SELECT is_ledger_on FROM sys.databases WHERE name = DB_NAME()").fetchone()[0])
         self.db.execute("BEGIN IMMEDIATE")
@@ -208,9 +223,18 @@ class MssqlDb:
         return mssql_python.Error
 
     def all(self, sql, args=()):
-        cur = self.db.execute(sql, args)
-        names = [d[0] for d in cur.cur.description]
-        return [dict(zip(names, r)) for r in cur.fetchall()]
+        with self.lock:
+            cur = self.db.execute(sql, args)
+            names = [d[0] for d in cur.cur.description]
+            return [dict(zip(names, r)) for r in cur.fetchall()]
+
+    def begin(self):
+        self._begin()
+
+    @property
+    def integrity_error(self):
+        import mssql_python
+        return mssql_python.IntegrityError
 
     def run(self, sql, args=()):
         self._begin()
@@ -250,6 +274,20 @@ class LawStore:
         """Local test double by default (sqlite file and blob folder); pass db and blobs for Azure SQL and Azure Blob."""
         self.sql = db or SqliteDb(db_path)
         self.blobs = blobs or LocalSnapshots(blob_dir)
+        from zava_forward.core.rulecards import RuleCardStore
+        self.rules = RuleCardStore(self.sql)
+        self.rules.seed()
+
+    @contextmanager
+    def transaction(self):
+        with self.sql.lock:
+            self.sql.begin()
+            try:
+                yield
+                self.sql.commit()
+            except BaseException:
+                self.sql.rollback()
+                raise
 
     @classmethod
     def from_env(cls, env=None):
@@ -264,11 +302,11 @@ class LawStore:
         self.sql.close()
 
     def seed(self, regulatory_dir, register_path=REGISTER, today=None):
-        try:
-            return self._seed(regulatory_dir, register_path, today)
-        except BaseException:
-            self.sql.rollback()
-            raise
+        with self.sql.lock:
+            with self.transaction():
+                report = self._seed(regulatory_dir, register_path, today)
+            self.rebuild_index()
+            return report
 
     def _seed(self, regulatory_dir, register_path, today):
         """Load the register and snapshots. Idempotent: an unchanged hash adds nothing; a changed one adds a version."""
@@ -301,11 +339,11 @@ class LawStore:
             for i, (path, body) in enumerate(provisions, 1):
                 self.sql.run("INSERT INTO reg_provision VALUES (?,?,?,?,?,?,?)", (
                     f"{s['id']}@v{v}#{i:04d}", s["id"], v, i, path, body, sha256(body.encode())))
+            if last:
+                self.rules._source_changed(s["id"], v, today, s.get("effective"), last)
             report["added"].append(f"{s['id']}@v{v}")
         for g in reg["gaps"]:
             self.sql.insert_ignore("reg_gap", "id", "INSERT INTO reg_gap VALUES (?,?,?,?,?)", (g["id"], g["topic"], json.dumps(g["keywords"]), g["reason"], today))
-        self.sql.commit()
-        self.rebuild_index()
         return report
 
     def _write_blob(self, source_id, version, digest, raw):
@@ -321,6 +359,10 @@ class LawStore:
 
     def rebuild_index(self):
         """Derive the retrieval index from SQL only. Current versions only; older ones stay readable but are not retrieved."""
+        with self.transaction():
+            return self._rebuild_index()
+
+    def _rebuild_index(self):
         self.sql.run("DELETE FROM reg_index")
         rows = self.sql.all("SELECT p.id, p.heading_path, p.text FROM reg_provision p JOIN (SELECT source_id, MAX(version) v FROM reg_version GROUP BY source_id) c ON c.source_id=p.source_id AND c.v=p.version")
         for r in rows:
@@ -328,7 +370,6 @@ class LawStore:
             for t in terms(r["heading_path"] + " " + r["text"]):
                 counts[t] = counts.get(t, 0) + 1
             self.sql.many("INSERT INTO reg_index VALUES (?,?,?)", [(t, r["id"], n) for t, n in counts.items()])
-        self.sql.commit()
         return len(rows)
 
     def _source(self, row):

@@ -20,6 +20,7 @@ GET_ENDPOINTS = ["/api/me", "/api/account/photo", "/api/cases?view=all", "/api/c
                  "/api/handoffs", "/api/packages", "/api/workorders", "/api/checklists", "/api/ai/report", "/api/finance",
                  "/api/governance", "/api/continuity", "/api/continuity/export", "/api/retention", "/api/docs/ZF-1/none",
                  "/api/time/status", "/api/time/mine", "/api/time/report", "/api/law/sources", "/api/law/search?q=x",
+                 "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock",
                  "/api/assistants", "/api/assistants/proposals", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1", "/api/nothing"]
 POST_ENDPOINTS = [("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
                   ("/api/cases/ZF-1/resident", {"action": "decision_record"}),
@@ -38,7 +39,8 @@ POST_ENDPOINTS = [("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task"
                   ("/api/cases/ZF-1/draft", {"kind": "update"}), ("/api/cases/ZF-1/funding-draft", {}), ("/api/cases/ZF-1/read-doc", {}),
                   ("/api/cases/ZF-1/call", {"outcome": "x"}), ("/api/import-check", {"text": "a"}), ("/api/time/acknowledge", {}), ("/api/time/request-enable", {}), ("/api/time/enable", {}),
                   ("/api/ledger/digest", {}), ("/api/assistants/stock-prioritisation/invoke", {"case_id": "ZF-1"}),
-                  ("/api/continuity/suspend", {}), ("/api/assistants/releases", {})]
+                  ("/api/continuity/suspend", {}), ("/api/assistants/releases", {}),
+                  ("/api/law/cards", {}), ("/api/law/cards/hazard-awareness-clock/1/approve", {})]
 
 
 class RoleEndpointInventory(Matrix):

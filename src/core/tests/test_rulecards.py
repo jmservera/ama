@@ -1,6 +1,10 @@
 """Rule cards: lifecycle, role separation, version retention, holds, exercise labelling, source changes."""
 import sqlite3
+import tempfile
+import threading
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
 from zava_forward.core import rulecards as rc
 
@@ -84,6 +88,130 @@ class RuleCardTests(unittest.TestCase):
     def test_effective_and_retirement_dates(self):
         self.activate()
         self.assertIsNone(self.s.is_active(self.cid, "2025-01-01"))
+
+    def fields(self, **kw):
+        fields = dict(rc.SEED_CARDS[0])
+        fields.pop("card_id")
+        fields.update(kw)
+        return fields
+
+    def test_invalid_fields_are_atomic(self):
+        before = self.s.history(self.cid)
+        for kw in (dict(effective="2026-1-01"), dict(effective="2026-02-30"),
+                   dict(retirement="2025-10-27"), dict(provisions="citation"),
+                   dict(provisions=[None]), dict(approver=" "), dict(title=123), dict(title="t" * 201)):
+            with self.subTest(kw=kw), self.assertRaises(rc.RuleError):
+                self.s.propose(self.cid, "Pat", rc.AUTHOR, **self.fields(**kw))
+            self.assertEqual(before, self.s.history(self.cid))
+        self.activate()
+        with self.assertRaises(rc.RuleError):
+            self.s.hold(self.cid, 1, OWNER, rc.OWNER, "")
+        self.assertEqual(self.s.state(self.cid, 1), "active")
+
+    def test_supersession_failure_rolls_back_and_connection_recovers(self):
+        self.activate()
+        v = self.s.propose(self.cid, "Pat", rc.AUTHOR, **self.fields())
+        self.s.approve(self.cid, v, OWNER, rc.OWNER)
+        before = self.s.history(self.cid)
+        original = self.s._event
+
+        def fail(cid, version, state, *args, **kw):
+            if state == "active":
+                raise RuntimeError("injected activation failure")
+            return original(cid, version, state, *args, **kw)
+
+        with patch.object(self.s, "_event", side_effect=fail), self.assertRaises(RuntimeError):
+            self.s.activate(self.cid, v, OWNER, rc.OWNER)
+        self.assertEqual(self.s.history(self.cid), before)
+        self.s.activate(self.cid, v, OWNER, rc.OWNER)
+        self.assertEqual([r["state"] for r in self.s.history(self.cid)], ["retired", "active"])
+
+    def test_persisted_legacy_history_and_initialization_are_preserved(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = str(Path(tmp) / "rules.sqlite")
+            original = rc.RuleCardStore(sqlite3.connect(path))
+            original.seed()
+            original.approve(self.cid, 1, OWNER, rc.OWNER, "2026-10-16")
+            original.source_changed("awaabs-law-regulations-2025", 2)
+            history, reviews = original.history(self.cid), original.reviews()
+            original.db.close()
+            reopened = rc.RuleCardStore(sqlite3.connect(path))
+            reopened.seed()
+            self.assertEqual(reopened.history(self.cid), history)
+            self.assertEqual(reopened.reviews(), reviews)
+            self.assertEqual(reopened.propose(self.cid, "Pat", rc.AUTHOR, **self.fields()), 2)
+            with self.assertRaises(sqlite3.DatabaseError):
+                reopened.db.execute("DELETE FROM rule_card_version")
+            reopened.db.rollback()
+            reopened.db.close()
+
+    def test_independent_and_shared_connection_writers_serialize_versions(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = str(Path(tmp) / "rules.sqlite")
+            stores = [rc.RuleCardStore(sqlite3.connect(path, check_same_thread=False)) for _ in range(2)]
+            errors = []
+            barrier = threading.Barrier(4)
+
+            def write(store):
+                try:
+                    barrier.wait(timeout=5)
+                    store.propose("concurrent", "Pat", rc.AUTHOR, **self.fields())
+                except Exception as exc:
+                    errors.append(exc)
+
+            threads = [threading.Thread(target=write, args=(stores[i % 2],)) for i in range(4)]
+            for thread in threads:
+                thread.start()
+            for thread in threads:
+                thread.join(timeout=10)
+                self.assertFalse(thread.is_alive())
+            self.assertEqual(errors, [])
+            self.assertEqual([r["version"] for r in stores[0].history("concurrent")], [1, 2, 3, 4])
+            for store in stores:
+                store.db.close()
+
+    def test_driver_integrity_error_is_translated_and_rolled_back(self):
+        class DriverIntegrityError(Exception):
+            pass
+
+        with patch.object(type(self.s.sql), "integrity_error", DriverIntegrityError):
+            with patch.object(self.s.sql, "run", side_effect=DriverIntegrityError("conflict")):
+                with self.assertRaisesRegex(rc.RuleError, "conflicting"):
+                    self.s.propose("c", "Pat", rc.AUTHOR, **self.fields())
+        self.assertEqual(self.s.history("c"), [])
+        self.assertEqual(self.s.propose("c", "Pat", rc.AUTHOR, **self.fields()), 1)
+
+    def test_sqlserver_adapter_initializes_append_only_portable_tables(self):
+        from zava_forward.core import lawstore
+
+        class ContractDb(lawstore.MssqlDb):
+            def __init__(self):
+                self.lock = threading.RLock()
+                self.ledger = True
+                self.db = None
+                self.statements = []
+
+            def begin(self):
+                self.statements.append("begin")
+
+            def run(self, sql, args=()):
+                self.statements.append(sql)
+
+            def all(self, sql, args=()):
+                return [{"ledger_type_desc": "APPEND_ONLY_LEDGER_TABLE"}]
+
+            def commit(self):
+                self.statements.append("commit")
+
+            def rollback(self):
+                self.statements.append("rollback")
+
+        db = ContractDb()
+        rc.RuleCardStore(db)
+        self.assertEqual(db.statements[0], "begin")
+        self.assertEqual(db.statements[-1], "commit")
+        for table in rc.APPEND_ONLY:
+            self.assertTrue(any(f"CREATE TABLE {table} " in s and rc.LEDGER_SUFFIX in s for s in db.statements))
 
     def test_source_change_never_overwrites_approved_card(self):
         self.activate()
