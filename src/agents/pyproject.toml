@@ -52,8 +52,3 @@ module = ["zava_forward.core.*"]
 ignore_errors = true
 follow_imports = "skip"
 ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = ["regulatory_fixture"]
-follow_imports = "skip"
-ignore_missing_imports = true

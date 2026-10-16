@@ -122,5 +122,6 @@
   "refusals": {
     "passed": 10,
     "total": 10
-  }
+  },
+  "version": "regulatory-home-chat-eval-v1"
 }

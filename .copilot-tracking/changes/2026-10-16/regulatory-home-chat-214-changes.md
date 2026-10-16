@@ -82,3 +82,34 @@ src/api/README.md with explicit partial/unmet operational gates; issue body is
 unchanged. Per-project READMEs and append-only reference log updated. Commit/
 push/PR delivery follows the requested one Review and is not an unchecked source
 task. No source change remains planned before Review.
+
+## Delivery validation correction, after the single Review
+
+PR #348 opened after source commit 718d75d. Inspection of the actual src CI
+matrix showed agents runs with no shared-test PYTHONPATH; the original new
+agents test imported the core test fixture. Made the agents composer tests
+self-contained with independent constructed evidence. Core/API suites still own
+the real retrieval/storage/handoff proofs. No runtime answer policy changed.
+
+The expanded standard agents test discovery then found the new evaluation
+report missing from the existing dataset registry. Added its explicit version
+to evaluator/report and registered the synthetic dataset with exercise owner
+and no-real-data classification. These are tightly coupled CI delivery
+corrections, not a repeat Review or new scope. Full standalone agents discovery
+and project gates must pass before the follow-up delivery commit is pushed.
+
+Standard agents discovery with empty PYTHONPATH now passes all 77 tests;
+project-wide ruff/format/mypy pass without shared test paths. The versioned
+report was regenerated from the actual core/API retrieval bundle twice with
+identical output; independent composer fixtures also match it exactly.
+This delivery correction does not change the single Review's operational,
+model, human, browser or scale limitations.
+
+## Delivery outcome
+
+PR https://github.com/jmservera/ama/pull/348 targets main from
+feat/regulatory-home-chat-214. Source/review commit 718d75d was pushed, followed
+by the CI-contract/evidence delivery commit. Both use the authenticated
+account's repository-local noreply email and required Copilot trailer.
+Issue body/checkboxes are unchanged. No merge, force-push, Azure call, protected
+file/private dataset access or legacy-tree write was performed.

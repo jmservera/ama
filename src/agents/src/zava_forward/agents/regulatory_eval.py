@@ -68,6 +68,7 @@ def evaluate(
         )
     card_actions = 1 + len(permitted) + 1  # card, each provision link, then home lookup
     return dict(
+        version="regulatory-home-chat-eval-v1",
         label="synthetic-demo",
         dataset="implementer-authored frozen development set, not held-out",
         cases=rows,

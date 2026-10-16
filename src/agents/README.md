@@ -46,6 +46,15 @@ PYTHONPATH="$PWD/src/core/tests:$PWD/src/agents/tests" \
 That test runs the evaluation twice and checks the recorded report, along
 with exact statement-to-excerpt/fact equality. Evaluation fixtures remain
 outside the package; no fixture or report is shipped in the agents image.
+The report is versioned and registered in `evals/registry.json`. Composer
+tests use independent local fixtures and need no core-test import path;
+the core/API suites separately verify actual retrieval, storage and handoff.
+Standard standalone agents discovery also passed all 77 tests:
+
+```bash
+cd src/agents
+PYTHONPATH="$PWD/tests" python3 -m unittest discover -s tests -q
+```
 
 The agents project (`zava_forward.agents`) holds the AI evaluation harness and its golden data
 (`evals/`). The five retrofit assistants and the AI task registry still live in `zava_forward.core`
