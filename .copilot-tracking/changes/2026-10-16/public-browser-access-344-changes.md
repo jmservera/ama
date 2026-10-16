@@ -8,6 +8,77 @@ Task 344, public-browser-access-344. Full plan scope. Implementation executed;
 real-user and full deployed parity acceptance remain Blocked.
 Canonical plan/details/critique under their 2026-10-16 directories.
 
+## P04: Owner-requested review continuation intake
+
+Supplied independent verdict CHANGES against 3f33ff1 is accepted as input to
+later implementation, not a repeat of the historical postimplementation Review.
+Clean worktree and matching open PR 352 verified. Fetched main and initiated
+the explicitly requested merge. Four conflicts affect additive evidence/log,
+compiled tests and the old CLI. Resolve by keeping both documentation/test
+workstreams and main's thin delegating main(). setup-entra.py already tests
+the additive edge callback, Custom forwarding and idempotence; do not duplicate
+its command logic. P04 plan/details now own the remaining bounded changes.
+
+### P04-T01: Main integration and CLI ownership
+
+Merged main 204b434 as merge commit 3b08ace, preserving both documentation/log
+sections and the additive compiled tests plus incoming secret-reference checks.
+The old CLI main() delegates unchanged to setup-entra.py. Existing setup edge
+callback tests passed; added a regression pinning delegated argv/result/path.
+No extension of setup's already-sufficient discovery/callback algorithm.
+During final preparation main advanced to ae99282; integrate that separately
+before publication without rewriting either lineage.
+
+### P04-T02: UUID prerequisite and mutation evidence
+
+The entry point now safely treats missing/null clientId as empty, strips only
+hexadecimal UUID characters and requires exact 36-character/five-segment form
+with separators at the four canonical positions. A separate minLength guard
+parameter describes the setup command. Auth depends on guard and edge on auth.
+Compiled tests exercise null/empty/sentinel, uppercase/lowercase synthetic
+UUIDs, invalid characters/length/wrapping and every misplaced separator.
+Four compiled mutations are rejected: nonempty-only, always-ok, constraint
+disabled and auth dependency removed. UUID syntax is not a Graph lookup.
+No live deployment was attempted over the blocked placeholder configuration.
+
+### P04-T03: Honest evidence and validation
+
+Infra README, evidence pack/JSON and reference index/log document default
+redirect mode's User-Agent-sensitive API behavior and full-resource PUT
+preservation limits. Only returned fields/references can survive union; absent,
+write-only or redacted references require human verification/authorized repair.
+No live credential round-trip is proved. Existing six-row criterion audit
+retains real sign-in/API-coexistence/feature blockers, no issue ticks.
+
+Validation in a new session pip venv after editable core/agents/API install:
+
+* Full infra suite with REQUIRE_AZ_BICEP=1 and absolute project fixture
+  PYTHONPATH: 186 tests passed, no skips. Includes new mutations/delegation
+  and retained setup/public-edge/profile/hardening contracts.
+* Compiled-policy tests Ruff check/format and compiled tests/initializer mypy
+  passed. Initial missing Ruff/mypy resolved by pip installation of the
+  repository-pinned versions. A tuple fixture annotation fixed a new mypy
+  inference error; no blanket typing suppression.
+* Bicep entry build passed. An initial reduce argument-order compile failure
+  was corrected before behavioral validation.
+* Initial mutation harness used subTest inside an expected-failure helper,
+  which swallowed expected assertion failures. Removed the inner subTest;
+  final suite now proves those mutations fail normally.
+* Focused API auth suite: 32 tests passed, including real-loopback requests.
+  Expected denial/missing-law diagnostics are not positive platform proof.
+* Installed local API subprocess with temporary synthetic fixture/state:
+  responsiveness verified, health/welcome 200 and anonymous API 401; process
+  terminated and temporary files removed. No default/private dataset opened.
+* Public curl around 18:30 UTC: health 200, native API 401, browser app 302
+  and browser JSON API 302; only redirect hostname login.microsoftonline.com
+  retained. Read-only management around 18:32 UTC: SQL Ready/public Disabled;
+  environment internal/public Disabled. No Azure/tenant writes.
+* Git whitespace and JSON/link checks are included in final publication gate.
+
+Original critique/Review remain historical. The supplied independent CHANGES
+verdict is user-authorized later work; full acceptance remains Not accepted.
+Remaining P04-T04 owns final main reconciliation, PR/issue metadata and push.
+
 ## P01: Infrastructure and Auth
 
 Added `infra/public-edge-existing.bicep` plus two bounded helper modules.

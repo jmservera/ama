@@ -58,6 +58,18 @@ Do not tick issue criteria; coordinator owns ticks at merge.
 
 ## Phase Checklist
 
+<!-- rpi:phase id=P04 -->
+### P04: Owner-requested PR 352 review continuation
+
+* [x] P04-T01: Merge origin/main, retain both evidence/log/test workstreams and
+  the setup-entra.py CLI delegation; verify its existing edge callback tests.
+* [x] P04-T02: Require UUID-shaped existing Entra client before auth/edge writes,
+  name setup-entra.py in the guard error and prove regressions with mutations.
+* [x] P04-T03: Document User-Agent API behavior and readback preservation limits,
+  retain #349/#350 acceptance blockers and run installed-venv infra validation.
+* [ ] P04-T04: Record continuation evidence, update existing PR, commit and push
+  without force, issue ticks or a second postimplementation Review.
+
 <!-- P01 -->
 ### P01: Implement and validate infrastructure
 

@@ -34,6 +34,25 @@ owner direction authorizes bounded deployment, gap filing and PR publication.
 
 ## Research Questions
 
+### Owner-requested PR 352 continuation evidence
+
+Supplied independent CHANGES verdict at 3f33ff1 is reused, not a new broad
+research/critique cycle. Fetched main 204b434 contains merged PR 356's setup
+command. Its existing stateful test
+`test_pending_edge_custom_forward_headers_and_public_url_fit` covers this
+edge's public callback, Custom forwarded headers and idempotence. Preserve
+the legacy main() delegate; no setup algorithm extension is necessary.
+
+The previous nonempty auth-client check accepts the managed-identity sentinel.
+Require UUID hexadecimal syntax, exact length and separators through the
+existing nested minLength guard pattern. Compiled-expression tests must reject
+the old nonempty-only behavior. UUID syntax does not prove Graph existence.
+The auth helper PUT preserves only fields present in its read response;
+document the omitted/reference limit rather than claiming credential recovery.
+Fresh public probes reproduce browser JSON API 302 versus native 401; #350
+must retain the explicit unmet coexistence criterion. Planning readiness:
+Ready for owner-requested P04; real login and feature acceptance remain Blocked.
+
 | ID | Question | Type | Status |
 | --- | --- | --- | --- |
 | Q1 | Can the existing internal environment safely expose the API via Private Link? | depth | Supported by official guidance/live resource advertisement; deployed transport requires execution proof |

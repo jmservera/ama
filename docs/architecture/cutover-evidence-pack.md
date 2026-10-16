@@ -64,8 +64,8 @@ transport, denial and actual-user acceptance.
 without running main's broad development public-access switch. Initial
 what-if: eight Create, zero Modify/Delete resources. The auth-preserving
 follow-on uses `entraBearerOnly=false`, the same default as main, and changes
-only the auth child in addition to the edge. It retains provider validation,
-exclusions, token store and credential references; sets HTTPS required,
+only the auth child in addition to the edge. It carries forward read-visible
+provider validation, exclusions, token store and credential references; sets HTTPS required,
 `RedirectToLoginPage` and `forwardProxy=Custom` using only
 `X-Forwarded-Host` / `X-Forwarded-Proto`. A separate client secret
 was not invented to conceal the missing tenant prerequisite.
@@ -170,6 +170,54 @@ Recovery baseline: Return401 / NoProxy and seven exact existing public
 exclusions. Critical network/denial/isolation failure disables only the new
 endpoint and restores those auth fields; no deletion or private-network
 relaxation. Tenant-prerequisite failure does not authorize anonymous access.
+
+### PR 352 Review Continuation (2026-10-16)
+
+Merged `origin/main`, including the #351 setup command and #118 hardening
+evidence, retaining both additive evidence sections and log entries. The old
+`initialize-api-auth.py` CLI remains a thin delegate to `setup-entra.py`; the
+existing setup tests cover linked-edge `--public-url`, Custom forwarding and
+idempotent callback updates. No second CLI implementation was added.
+
+The additive edge now rejects missing, empty, malformed and
+`systemAssignedIdentity` client values before its dependent auth/edge writes.
+It requires hexadecimal UUID syntax with exact separator positions and points
+to `python3 infra/scripts/setup-entra.py`. This is a local compiled-template
+guard, not verification that the registration exists or a live redeployment:
+the currently deployed placeholder remains an unresolved #349 prerequisite.
+Full #344 acceptance stays **Blocked** until authorized setup creates or
+reconciles the real registration/credential/staff bindings and a human completes
+sign-in. No issue checkbox was ticked.
+
+Fresh public curl at approximately 18:30 UTC: `/healthz` 200; native `/api/me`
+401; browser User-Agent `/api/me` with `Accept: application/json` 302 to
+`login.microsoftonline.com`; browser `/app` 302 to the same host. Redirect
+headers/queries were discarded, retaining only status and hostname. In default
+`entraBearerOnly=false` mode, EasyAuth is configured to redirect anonymous
+requests; native curl's observed 401 depends on client/User-Agent handling.
+This is not a route-aware browser/API split or API-wide 401 guarantee. The
+browser/fetch JSON API criterion remains unmet and explicitly tracked in #350.
+Read-only management probes at approximately 18:32 UTC confirmed SQL Ready/
+public access Disabled and environment internal/public access Disabled.
+No Azure or tenant configuration was changed.
+
+Auth preservation has a specific limit: `edge-existing-auth.bicep` uses a
+full-resource PUT with `union` of the read response. Returned references are
+carried forward, but omitted/write-only/redacted credential or token-store
+references cannot be recovered this way. Container App secret values are not
+read or written by the module. A human must verify non-secret required
+references before a live reapply and stop/repair through the authorized setup
+or secret-management path if any are absent/redacted. No omitted-field
+preservation or live credential round-trip is claimed.
+
+Continuation validation: 186 infra tests passed in an isolated pip venv with
+editable core/agents/API distributions and absolute fixture PYTHONPATH; this
+includes compiled guard behavior and rejected mutations. Focused API auth:
+32 tests passed. Scoped compiled-test Ruff/format, compiled-test/initializer
+mypy and Bicep build passed. The installed local app served health/welcome 200
+and anonymous API 401 on an isolated synthetic fixture; this is not live Entra
+acceptance. Historical broader suite results above remain dated, not rerun.
+
 ## Deployment Hardening Audit #118 (2026-10-16)
 
 Refs #118. This audit is separate from the historical cut-over results below.

@@ -24,11 +24,17 @@ resource workspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existin
   name: workspaceName
 }
 
+var existingClientId = auth.properties.identityProviders.azureActiveDirectory.registration.?clientId ?? ''
+// Strip only UUID characters, then check exact length, separator count and positions.
+var nonHexClientIdCharacters = reduce(split('0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,-', ','), toLower(existingClientId), (remaining, digit) => replace(remaining, digit, ''))
+var clientIdIsUuid = length(existingClientId) == 36 && empty(nonHexClientIdCharacters) && length(split(existingClientId, '-')) == 5 && take(skip(existingClientId, 8), 1) == '-' && take(skip(existingClientId, 13), 1) == '-' && take(skip(existingClientId, 18), 1) == '-' && take(skip(existingClientId, 23), 1) == '-'
+
 module guard 'modules/edge-existing-guard.bicep' = {
   name: 'edge-existing-guard'
   params: {
     privateEnvironment: existingEnvironment.properties.vnetConfiguration.internal == true && existingEnvironment.properties.publicNetworkAccess == 'Disabled' ? 'ok' : ''
-    authenticatedOrigin: api.properties.managedEnvironmentId == existingEnvironment.id && auth.properties.platform.enabled == true && !empty(auth.properties.identityProviders.azureActiveDirectory.registration.clientId) ? 'ok' : ''
+    authenticatedOrigin: api.properties.managedEnvironmentId == existingEnvironment.id && auth.properties.platform.enabled == true ? 'ok' : ''
+    registeredClient: clientIdIsUuid ? 'ok' : ''
   }
 }
 

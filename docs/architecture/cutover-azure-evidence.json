@@ -1385,6 +1385,33 @@
       200
     ],
     "status": "Partial: public transport/browser redirect proved; real-user sign-in and full deployed parity Blocked",
+    "review_continuation_2026_10_16": {
+      "source_only_uuid_guard": "Requires hexadecimal UUID syntax before dependent auth/edge writes; points to python3 infra/scripts/setup-entra.py",
+      "guard_deployed": false,
+      "cli": "initialize-api-auth.py main delegates to setup-entra.py; existing linked-edge public-url coverage retained",
+      "public_reprobe_approx_utc": "2026-10-16T18:30:00Z",
+      "public_statuses": {
+        "healthz": 200,
+        "native_api_me": 401,
+        "browser_api_me_accept_json": 302,
+        "browser_app": 302
+      },
+      "redirect_host_only": "login.microsoftonline.com",
+      "api_contract": "Unmet: default redirect mode is not a route-aware split; observed API status is User-Agent-sensitive. Refs #350",
+      "private_management_recheck_approx_utc": "2026-10-16T18:32:00Z",
+      "sql": {
+        "state": "Ready",
+        "public_network_access": "Disabled"
+      },
+      "environment": {
+        "internal": true,
+        "public_network_access": "Disabled"
+      },
+      "auth_union_limit": "Full-resource PUT retains read-visible references only; omitted/write-only/redacted references cannot be reconstructed; no live credential round-trip proved",
+      "azure_writes": false,
+      "tenant_writes": false,
+      "full_acceptance": "Blocked pending authorized setup, human sign-in and remaining browser API/feature evidence. Refs #349. Refs #350"
+    },
     "architecture": {
       "selected": "Front Door Premium, WAF Prevention, Private Link to existing internal environment",
       "alternative": "New external environment/API only; not selected because existing internal setting is immutable and replacement adds wiring",

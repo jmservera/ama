@@ -4111,3 +4111,24 @@ metadata when the knowledge base was created.
   restart or browser sign-in. No private roster/dataset was read and no Azure
   policy, resource or network setting was changed. Exercise legal ownership
   and the development-only ADR 0005 boundary remain unchanged.
+
+## [2026-10-16] implementation | Public edge review continuation (Refs #344)
+
+* Merged main into PR #352 without rewriting history. Retained both sides of
+  evidence/log/compiled-test conflicts and the #351 CLI delegation to
+  `setup-entra.py`; its existing linked-edge callback tests remain authoritative.
+* Added a fail-closed UUID-syntax prerequisite before the existing-stack
+  auth/edge writes, rejecting `systemAssignedIdentity` with setup guidance.
+  Compiled behavioral tests reject non-empty-only/bypassed/disabled/unordered
+  guard mutations. A separate regression pins the legacy CLI's delegation.
+* Documented full-resource auth PUT preservation as limited to read-visible
+  references: `union` cannot reconstruct omitted, write-only or redacted fields.
+  No secret value or live auth configuration was read/written.
+* Fresh public probes retain health 200, native API 401, browser app 302 and
+  browser API 302 even with JSON Accept; User-Agent-sensitive handling is not
+  API-wide 401 acceptance. Refs #350. Read-only SQL/environment checks retain
+  public access Disabled and an internal environment; no Azure writes.
+* Updated the infra guide, cut-over evidence/JSON and reference index.
+  Full acceptance remains Blocked on authorized real registration/credential/
+  staff setup and human sign-in (#349), browser API coexistence and positive
+  feature evidence (#350). No issue tick, merge or operational approval.

@@ -3,8 +3,8 @@
   "task_slug": "public-browser-access-344",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Follow-up",
-  "status": "blocked",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/public-browser-access-344-research.md",
@@ -46,7 +46,7 @@
     {"id": "browser-api", "summary": "Native anonymous API curl is 401 but browser User-Agent API requests receive EasyAuth 302.", "resolution": "Issue 350: verify authenticated platform principal handling before any API exclusion and prove browser API 401"},
     {"id": "feature-parity", "summary": "Package assets are present but real-user, representative data, model/map/photo/law and positive-role feature acceptance is unavailable.", "resolution": "Issue 350 and specialist issues in complete parity matrix"}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Authorized tenant/staff owner clears issue 349; later implementation/research handles issue 350 and RV-002/RV-003. PR 352 is published, no merge or issue ticks."},
+  "next_action": {"phase": "Implement", "action": "User explicitly requests continuation of PR 352: merge main, enforce UUID prerequisite, mutation tests, honest auth/readback evidence, commit and push. Existing review remains historical; no repeat critique."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Restore valid tenant browser prerequisites, issue 349", "rationale": "Unlocks real-user and all positive-role acceptance without weakening auth.", "evidence": "Invalid client, absent credential and staff; evidence JSON and issue 349"},
     {"rank": 2, "task": "Prove browser API 401 coexistence, issue 350", "rationale": "Small bounded authentication contract, dependent on trustworthy platform principal evidence.", "evidence": "Public native API 401 but browser User-Agent API 302"},

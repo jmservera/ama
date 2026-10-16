@@ -238,11 +238,30 @@ global `allowPublicNetworkAccess` switch, which also requests public data access
 The additive entry point checks that the existing environment is internal with
 public access Disabled and that the sole API origin belongs to it with ingress
 authentication enabled. It does not establish a valid tenant registration.
-It leaves main's production-profile guard intact. It preserves existing provider
-validation, public exclusions, token storage and credential references, sets
+It now also requires a hexadecimal UUID-shaped Entra `clientId`; empty,
+malformed and `systemAssignedIdentity` values stop the dependent auth/edge
+deployment. The guard points to `python3 infra/scripts/setup-entra.py`, whose
+existing `--public-url` discovers and verifies linked edge callbacks. Run setup
+before reapplying the edge. A syntactically valid UUID is not proof that the
+registration exists, credentials work or a human can sign in.
+It leaves main's production-profile guard intact. It carries forward provider
+validation, public exclusions, token storage and credential references returned
+by the auth-config read, sets
 `forwardProxy=Custom` with `X-Forwarded-Host` / `X-Forwarded-Proto`, HTTPS
 required, and uses the default
 `entraBearerOnly=false` / `RedirectToLoginPage`. No credential is generated.
+
+The auth update is a full-resource PUT formed with `union`, not a PATCH.
+Preservation is limited to properties returned by the selected auth-config API
+version. Secret **values** belong to the Container App secret store and are not
+read or written by this module; their auth-config references are carried forward
+only when present in the read response. A write-only, omitted or redacted
+provider/token-store reference cannot be reconstructed by `union`. Before a live
+reapply, a human operator must verify the non-secret reference names against the
+authorized configuration and stop if any required reference is absent/redacted;
+repair through setup or the owning secret-management path, never copy secret
+values into Bicep or evidence. No preservation of omitted fields or live
+credential round-trip has been proved. This continuation makes no live auth write.
 
 ```bash
 az deployment group what-if -g ama -n public-browser-344 \
@@ -288,15 +307,23 @@ Standard forwarding initially trusted a client RFC `Forwarded` host; Azure
 disallows deleting that reserved header in a rule, so both edge entry points now
 use only Front Door-overwritten X-Forwarded headers through Custom configuration.
 Native API curl is not the browser API contract: a browser User-Agent still
-receives EasyAuth 302 for an anonymous API request, filed under #350. No API
-exemption was added without positive authenticated-platform proof.
+receives EasyAuth 302 for an anonymous API request, even with
+`Accept: application/json`. With `entraBearerOnly=false`, the configured
+unauthenticated action is a redirect, not a route-aware browser/API split;
+the observed native curl 401 depends on EasyAuth's client/User-Agent handling.
+Changing User-Agent can therefore change an anonymous API response from 401
+to 302. These observations are not a reliable API-wide 401 guarantee. Refs #350:
+the required browser-page redirect plus anonymous API 401 coexistence remains
+unchecked, including browser/fetch-style JSON requests. No API exemption was
+added without positive authenticated-platform proof.
 
 The existing proof client value `systemAssignedIdentity` is **not an Entra
 application registration**. Matching-tenant read-only discovery found no retained
 workbench registration; no valid browser credential or staff roster is supplied.
 Real-user sign-in is **Blocked**, filed as #349. Supply the intended registration
 and private-vault credential through authorized tenant/in-VNet operators; then
-run callback initialization with the public URL, reconcile the private staff
+run `python3 infra/scripts/setup-entra.py --public-url https://<edge-host>`,
+reconcile the private staff
 roster and restart replicas. Do not reuse another application's client or
 fabricate staff. The full feature/configuration gap audit is filed as #350.
 

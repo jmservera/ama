@@ -6,6 +6,18 @@ ms.date: 2026-10-16
 
 ## Scope and Evidence
 
+### Historical Review and Later Owner-Requested Continuation
+
+The original one-pass Review below remains historical and its full-acceptance
+outcome stays Not accepted. The user subsequently supplied an independent
+CHANGES verdict at 3f33ff1 and explicitly requested P04 implementation in the
+same PR. This annotation records routing/disposition, not a second Review or
+verification of closure inside the original task. Merge/main delegation and
+UUID-guard findings are implemented with local regression/mutation evidence;
+User-Agent-dependent API behavior and readback-only auth preservation are
+documented. Live real-user/feature findings remain routed to #349/#350.
+P04 execution/validation/publication evidence belongs to the changes record.
+
 * Task ID: 344; slug: public-browser-access-344.
 * Review date: 2026-10-16.
 * Scope: Full supplied implementation, deployment, parity audit and acceptance

@@ -6,6 +6,22 @@ ms.date: 2026-10-16
 
 Task ID: 344. Slug: public-browser-access-344.
 
+## P04: Explicit continuation after independent CHANGES verdict
+
+Owner request 2026-10-16 authorizes main merge and ordinary implementation of
+the supplied review findings. Scope is infra modules/tests, existing docs,
+RPI evidence and PR 352 metadata. Preserve setup-entra.py as the CLI owner;
+its linked-edge --public-url/Custom-proxy/idempotence coverage already exists.
+Keep all incoming hardening, parameter-profile and Entra evidence/tests.
+Require canonical hexadecimal UUID syntax before deploying auth or edge;
+syntactic validation is not verification of an application, secret or login.
+Test compiled guard expressions and mutations removing UUID validation or
+minLength enforcement. Document User-Agent-sensitive anonymous responses and
+readback-only preservation; no secret values or live auth update. Validate
+infra in an isolated pip venv with editable core/agents/API installations.
+Retain historical Review and critique, recording this later continuation
+separately without claiming a second Review or full acceptance.
+
 ## P01
 
 P01-T01: Existing edge module has unverified comments, root HEAD probe and
