@@ -585,6 +585,44 @@ Local SQLite evidence does not establish live SQL Server or Azure behavior.
 
 ## Datasets, fixtures and synthetic tools
 
+### Offline provenance and privacy audit (#175)
+
+The [dictionary](../../docs/reference/research/retrofit-synthetic-data/data-dictionary.md#dataset-coverage-and-provenance)
+and [provenance register](../../docs/reference/research/retrofit-synthetic-data/provenance-register.json)
+cover current sensor, scale/fabric and generated/runtime chat families.
+`synthetic.privacy` scans only public registered payloads or an explicitly
+supplied snapshot. It does not discover/read private working data, certify
+arbitrary text PII-free, or authorize publication of real map anchors or chat.
+Run from the repository root with the editable core installed:
+
+```bash
+python -m zava_forward.core.synthetic.privacy --public-root "$PWD"
+python -m zava_forward.core.synthetic.privacy --public-root "$PWD" --sources
+python -m zava_forward.core.synthetic.privacy --snapshot /path/to/fresh-snapshot --kind sensor
+PYTHONPATH="$PWD/src/core/tests" \
+  python -m unittest test_synthetic_provenance test_synthetic_determinism -q
+```
+
+Snapshot kinds are `scale`, `sensor` (including register-backed fabric) and
+`chat`. Exit 0 means the bounded pattern/label checks passed, 1 lists
+sanitized violations and 2 reports malformed/unreadable input. Every expected
+payload is scanned; extra/missing files, wrong labels or hash mismatches fail.
+Sensor rows use `source_type=SYNTHETIC`; scale homes/events inherit the exact
+hash-bound manifest label; chat/households use Boolean row labels.
+Public fixture metadata exemptions never exempt their contents from scanning.
+Regexes detect email, UK phone, NI and postcode patterns, not all real names,
+addresses or contextual identification. The exact fictional scale-home
+`TE[0-8] 1ST` field has a narrow exception. Runtime chat can be personal.
+
+The public-only command passes without private support files. The separate
+`--sources` command currently returns 1: Census TS054, IMD 2025 and ONS
+boundaries lack verified historic retrieval dates/licence/attribution terms.
+This explicitly leaves issue #175's external-source criterion unmet. No dates
+are inferred from commits and no official-source currentness is claimed.
+Exercise Legal/Compliance/DPO owner Juan Manuel Servera owns the follow-up,
+not an automated approval. Rehashed mutation tests independently demonstrate
+pattern/label rejection, not merely an unrelated integrity failure.
+
 The [synthetic needs inventory](../../docs/reference/research/retrofit-synthetic-data/needs-inventory.json)
 and [scenario manifest](../../docs/reference/research/retrofit-synthetic-data/scenario-manifest.json)
 bind each iteration's engineering review by inventory version/date and SN row.

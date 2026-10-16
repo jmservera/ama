@@ -1,13 +1,15 @@
 ---
 title: Data Dictionary - Retrofit Synthetic Evidence Pack
 description: Field definitions, keys, allowed values and record-keeping notes for the Zava Forward year-one synthetic evidence pack
-ms.date: 2026-10-15
+ms.date: 2026-10-16
 ms.topic: reference
 ---
 
 > [!WARNING]
 > SYNTHETIC DATA. Fictional records for design and analysis practice. Not
-> Zava North Homes data. Every table has `is_synthetic` set to `true`.
+> Zava North Homes data. Public operating records use `is_synthetic=true`;
+> generated families use the explicit label contracts below. Actual user chat
+> and tenant bindings are private and are not certified synthetic.
 
 ## Separate Private MVP JSON Extension
 
@@ -220,23 +222,34 @@ The v1 codes, used from 2025-07-01 to 2026-02-01, and the v2 codes, used from
 ## Dataset Coverage and Provenance
 
 [`provenance-register.json`](./provenance-register.json) is the single machine-readable
-register of every dataset, its public or private visibility, its generator, its
-data dictionary entry and its external sources. The automated check
-`src/core/tests/test_synthetic_provenance.py` enforces it.
+register of the known dataset families, their public/private visibility,
+generators, dictionary entries and external sources. Generation status is
+separate from visibility: tested generators do not prove a full-stock run.
+The executable `zava_forward.core.synthetic.privacy` checker and core/agents
+regressions enforce the bounded contracts, without reading private working data.
 
 | Dataset | Visibility | Dictionary entry |
 | --- | --- | --- |
 | Year-one operating CSV pack and manifest | Public | This file, table sections above |
-| MVP operational JSON seed | Private (`mvp/data/`, gitignored) | [Private MVP JSON extension](#separate-private-mvp-json-extension) |
+| Operational JSON seed | Private (`ZF_DATA`, outside the repository) | [Private MVP JSON extension](#separate-private-mvp-json-extension) |
 | 60,000-home stock register and map overlay | Private (`support/`) | [Private stock geography register](#private-stock-geography-register) |
-| AI evaluation scenarios and assistant runtime tables | Public scenarios, private runtime tables | [Chat and assistant data](#chat-and-assistant-data) |
-| Document, form-schema and seeded-defect fixtures | Public | [Document and form data](#document-and-form-data) |
-| Sensor readings | Not generated | [Sensor data](#sensor-data) |
+| Stock-scale homes, households/tenancies and events | Private generated snapshots (`ZF_DATA/scale-fixture`) | [Stock-scale fixture](#stock-scale-household-and-tenancy-fixture-2026-10-15) |
+| Derived fabric, link reports and linked cases | Private generated snapshots (`ZF_DATA/stock-fabric`) | [Derived fabric and links](#derived-stock-fabric-and-link-reports) |
+| Stock EPC, surveys and conflict manifest/summary | Private source-anchor working area (`support/`) | [EPC/survey fixture](#stock-epc-surveys-and-conflicts) |
+| AI/chat/regulatory evaluation scenarios and reports | Public constructed scenarios/reports | [Chat and assistant data](#chat-and-assistant-data) |
+| Assistant attempts/events and actual chat/memory | Private serving database; potentially personal user content | [Chat and assistant data](#chat-and-assistant-data) |
+| Document controls, form-schema and seeded-defect fixtures; eval registry | Public | [Document and form data](#document-and-form-data) |
+| Sensor register, readings, estimate and optional fabric | Private generated snapshots (`ZF_DATA/sensor-backfill`); generators and small fixtures delivered | [Sensor data](#sensor-data) |
 
-External sources record licence, retrieval date and attribution in the register.
-OpenStreetMap (ODbL 1.0, retrieved 2026-09-30) is complete. Retrieval dates and
-licence wording for Census 2021 TS054, IMD 2025 and the ONS boundaries are open
-items for the owner, not inferred here.
+External sources are inventoried, not all verified. The local source README
+records OpenStreetMap ODbL 1.0, retrieval 2026-09-30 and contributor attribution.
+Census 2021 TS054, IMD 2025 and ONS boundaries still lack historic retrieval
+dates and verified licence/attribution terms. Null dates and provisional wording
+remain explicit; a Git commit date is not a retrieval date. The strict source
+audit returns nonzero for these three entries. No official-source recheck was
+performed in this offline task. Exercise Legal, Compliance and DPO owner
+Juan Manuel Servera retains interpretation/approval; real owners and sources
+remain a gap before operational reliance.
 
 ### Private stock geography register
 
@@ -249,7 +262,7 @@ need, occupancy and condition are invented (`is_synthetic` is `true`,
 
 ### Stock-scale household and tenancy fixture (2026-10-15)
 
-`src/core/src/zava_forward/core/synthetic/scale_fixture.py` (version 1.1.0, seed 174) writes
+`src/core/src/zava_forward/core/synthetic/scale_fixture.py` (version 1.2.0, seed 174) writes
 `households.jsonl` with one row per home in the 60,000-home fixture, rebuilt from
 the seed and Git-ignored. Every row has `is_synthetic` set to `true`. Names come
 from a fixed fictional list; no email, phone number or real identifier exists.
@@ -272,21 +285,77 @@ The distributions are invented for scale testing and are not evidence of Zava
 North Homes tenure, consent rates or vulnerability. Consent and representative
 rules are demonstrator rules, not legal advice or an approved policy.
 
+The same snapshot includes `homes.jsonl`: `id`, area, stage, fixed fictional
+resident name, support/safety flags, numbered Test Road address, fictional
+`TE[0-8] 1ST` postcode and invented grid coordinates. `events.jsonl` has `case`,
+`seq`, `kind` (contact, appointment, stage_change, hazard_check, decision) and
+`day` in the declared calendar year 2026. These two historical payloads inherit
+the `source_type=SYNTHETIC` manifest label, bound to exact `file_sha256` values;
+they do not have per-row Boolean labels. Manifest version, seed, as-of, source
+revision, counts and hashes identify the snapshot; they are not approval.
+
+### Derived stock fabric and link reports
+
+`stock-fabric.csv` has `synthetic_home_id`, `build_year`, `age_band`,
+`dwelling_type`, `construction`, `heating`, `fabric_is_synthetic`,
+`fabric_version` and `is_synthetic`. `summary.json` records assumptions, seed,
+revision, counts and hashes; optional `linked-cases.json` retains the supplied
+case dataset with the link/fabric fields documented above. The outputs are
+private: an arbitrary input case snapshot may contain personal data. The
+standalone generator refuses repository output paths. No private dataset is
+opened by the public provenance tests.
+
+### Stock EPC, surveys and conflicts
+
+The retained `zf_stock_epc.py` generator adds EPC band/SAP, lodgement/expiry
+dates, status and recorded age/dwelling/construction/heating; about 35% of
+constructed homes have survey type/date, surveyed SAP/band and fabric values.
+`private-stock-epc-conflict-manifest.csv` records home reference, conflict type,
+EPC value and surveyed value. `private-stock-epc-summary.json` holds counts
+and assumptions; the full EPC CSV remains private generated working data.
+The operational seed's `case.stock_epc` and `stock_epc_seed` carry derived
+values, not verified certificates. This is schema-level coverage from the
+[existing recipe](./README.md#stock-epc-survey-and-conflict-fixtures-2026-10-15),
+not a new private-output inspection or reproduction. Stock and case EPC
+denominators are not reconciled; the owner has not confirmed the conflict mix.
+
 ### Document and form data
 
 `src/importer/evals/document_form_fixtures.json` holds 120 constructed document families,
 form schemas and seeded defects with gold labels. All content is synthetic and
 holds no personal data. The real funding form schema (OQ-015) and human
 adjudication of the gold labels are open items, not inferred here.
+`src/core/evals/document_control_fixtures.json` separately holds labelled
+`cases` with constructed home references, uploads/scan classes, retention
+triggers and legal-hold fixtures. These are not actual documents, retention
+policy or legal approval. Form `families` and control `cases` require labels;
+nested metadata inherits its labelled record, and existing nested Boolean
+declarations must remain true. `src/agents/evals/registry.json` supplies dataset
+version, owner, purpose, consumers and `contains_real_data=false`; the provenance
+register adds visibility, label contract and external sources, without replacing
+that evaluation-specific registry.
 
 ### Chat and assistant data
 
-No free-form chat transcripts are generated. The assistant surfaces create
+Generated fixture turns are scripted; actual chat does store user free text.
+The assistant surfaces create
 `assistant_tasks`, `assistant_attempts` and `assistant_events` rows from the
 synthetic seed; these hold prompts built from synthetic case fields, bounded
 model output labelled as an AI suggestion, and append-only audit events. They
-stay in the private serving database. `src/agents/evals/ai_priority_golden.json`
-holds constructed public scenarios and scripted model outputs.
+stay in the private serving database. Inputs and model outputs are not
+automatically personal-data-free. `chat_thread`, `chat_message`, `chat_memory`
+and `chat_memory_control` hold owner/case/task context, messages, memory and
+switches; the retained ledger holds audit metadata. Runtime access, deletion,
+retention and human privacy approvals are independent of fixture validation.
+
+`src/agents/evals/ai_priority_golden.json` and `chat_golden.json` hold constructed
+scenarios, scripted outputs, citations and expectations, inheriting their root
+constructed/synthetic note. `regulatory_gates_cases.json` holds question,
+scenario and expected answer/refusal fields; `regulatory_chat_results.json` and
+`regulatory_gates_results.json` hold observed offline outcomes, denominators,
+comparators and fixture fingerprints. These inherit the root synthetic label.
+They are not live conversations, real-model benefit or human legal grading.
+All inherited/exempt content is still pattern-scanned.
 
 ### Chat and memory test fixtures (2026-10-15)
 
@@ -310,13 +379,63 @@ are fixture targets for #160 to #164, not evidence that a runtime enforces them.
 
 ### Sensor data
 
-No sensor dataset or generator exists. The register records this as an open
-item pending an owner decision on scope; no fields are invented here.
+`src/core/src/zava_forward/core/synthetic/sensor_backfill.py` delivers
+`sensor-backfill-v2` and register-backed `sensor-backfill-stock-v1`. Small
+generated snapshots are tested; a canonical full-stock materialization is
+not verified. Neither generation mode reads real device/resident telemetry.
+
+| File / table | Fields and meaning |
+| --- | --- |
+| `sensors.csv` / `sensor_register` | `sensor_id`, `home_id`, dwelling type/age band, modelled retrofit Boolean, heating/fault profile and `source_type=SYNTHETIC` |
+| `readings-NNNN.csv` / `sensor_reading` | `sensor_id`, `reading_id`, `home_id`, UTC `observed_at`, `temperature_c`, `humidity_pct`, `source_type=SYNTHETIC`, `scenario=BACKFILL_2Y`, seed, `schema_version=reading-v1`, `injected_fault` (empty, OUTLIER or STUCK); dropout means absent readings |
+| `estimate.json` | Homes/days/cadence, nominal readings, measured sample/estimated rows and storage; estimates, not completed full-run counts |
+| `manifest.json` | Version/schema, seed/as-of, source revision, half-open UTC start/end, climate source/model parameters, coverage, actual rows/shards and exact payload hashes |
+| Optional `stock-fabric.csv` | Fabric fields above plus synthetic `monitoring_consent` (`granted`, `declined`, `unknown`); only granted fixtures emit readings |
+
+Default history is 730 days from 2024-10-01, hourly, unless explicitly overridden.
+Scale mode links fictional `ZF-` homes to `SENS-SYN-` sensors; register mode
+retains supplied opaque synthetic IDs and hashes them for sensor IDs. Synthetic
+permission fixtures are not resident consent. Climate is the labelled
+`synthetic-uk-seasonal-model-v1`; Met Office/Environment Agency data are not
+retrieved or claimed as licensed sources. Moisture, CO2, energy, live ingestion,
+calibration and dated retrofit effects are not delivered by this generator.
+Injected faults deliberately include out-of-range measurements; ingestion
+validation and privacy/label validation are separate checks.
 
 ### Real-person guarantee
 
-Public datasets must contain no email address, UK phone number, National
-Insurance number or real-looking postcode, and every record carries
-`is_synthetic=true`. Real map addresses appear only in private datasets. The
-check fails when a pattern or an unlabelled record appears, or when a private
-path is not ignored or held under `support/`.
+The guarantee is bounded to constructed inputs and the executable pattern/label
+contract, not a proof that arbitrary text cannot identify a person. The checker
+rejects email, UK telephone, NI and UK-postcode patterns (case-insensitive where
+applicable), missing/false required labels, malformed payloads, unknown snapshot
+files and hash mismatches. It never prints matched values. It does not recognize
+all names, addresses, international identifiers or contextual reidentification.
+Real map anchors remain private and require human review before any disclosure.
+
+Public operating CSV rows require `is_synthetic=true`, except the named
+`evidence-gap-register.csv` metadata table. Public manifests require the root
+Boolean label; labelled eval collections and declared inherited labels use the
+contracts above. Generated sensor rows use `source_type=SYNTHETIC`; generated
+chat rows require Boolean labels on all nine JSONL payloads. Scale homes/events
+inherit only a valid hash-bound manifest. Only the scale home's exact fictional
+postcode field has a narrow pattern exception, not other fields or datasets.
+No generator payload/schema was changed to satisfy this check.
+
+Run the [core commands](../../../../src/core/README.md#offline-provenance-and-privacy-audit-175)
+and [chat regression](../../../../src/agents/README.md#generated-chat-provenance-175).
+Public checks open no private stock, runtime database or tenant roster. Tests
+check registry visibility, ignored working-data/answer-key paths and fresh
+snapshots; this is not an attestation of existing private data or runtime chat.
+
+### Issue 175 acceptance audit (2026-10-16)
+
+| Criterion | Status | Evidence and limit |
+| --- | --- | --- |
+| Dictionary covers every dataset including sensor/chat | Met for known dataset families | Register covers public CSV/manifests/evals, private seed/geography, scale/fabric, sensor and generated/runtime chat. Core coverage test checks IDs/anchors and every public JSON/CSV payload |
+| Every external source has licence, retrieval date and attribution | Unmet | Three historic source entries lack verified dates/terms; strict `--sources` audit rejects them. Offline work cannot invent or refresh that evidence |
+| Automated check rejects real-person patterns or unlabelled records | Met for specified bounded contract | Production checker/CLI mutation tests cover four patterns, required labels, inherited/exempt content and independently rehashed fixtures; not universal PII certification |
+| Private/public separation is tested | Met locally | Public-only inventory/scan, ignored-path checks and fresh scale/sensor/chat fixtures; no private corpus read or publish approval |
+
+Issue remains open. Coordinator decides checkboxes at merge; no operational
+legal interpretation, rule activation, safety, consent or financial approval
+is inferred. ADR 0005 acceptance is synthetic-development-only.

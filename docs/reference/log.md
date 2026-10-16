@@ -4419,3 +4419,23 @@ metadata when the knowledge base was created.
   setup-entra changes, private datasets, operational approvals or issue ticks.
 * Expanded regressions failed in 11 subcases before normalization; all 19 deploy
   tests pass after the fix, with scoped Ruff/format/mypy and local CLI help.
+
+## [2026-10-16] ingest | Offline synthetic dictionary and provenance audit
+
+* Refs #175. Updated the existing dictionary/register for generated sensor
+  readings/registers/manifests, stock-scale homes/households/events, derived
+  fabric/link reports, scripted chat/evals and potentially personal runtime
+  messages/memory. Visibility is separate from full-stock materialization.
+* Added the core offline pattern/label checker with public-only and explicit
+  snapshot modes, sanitized diagnostics and independently failing source audit.
+  Replaced private-stock-reading regressions with public inventory, ignored-path
+  and fresh generated-fixture checks; generated chat tests cover all nine
+  payloads. Generator payload bytes and approval/consent boundaries are unchanged.
+* The acceptance audit marks three local engineering criteria met for their
+  stated scope and external-source completeness unmet. Historic retrieval
+  dates and verified licence/attribution terms for Census TS054, IMD 2025 and ONS
+  boundaries remain unavailable; no dates or legal approvals were invented.
+  Exercise Legal, Compliance and DPO owner Juan Manuel Servera owns review;
+  operational owners/sources remain a gap. No Azure, actual model, private data
+  attestation or universal PII-free certification is claimed.
+* Updated the knowledge-base index and relevant core/agents/pack READMEs.
