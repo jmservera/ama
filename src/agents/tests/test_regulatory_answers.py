@@ -71,7 +71,7 @@ class CitedAnswers(unittest.TestCase):
         self.assertEqual(first, evaluate(self.ask, self.bundle))
         recorded = Path(__file__).resolve().parents[1] / "evals/regulatory_chat_results.json"
         self.assertEqual(first, json.loads(recorded.read_text()))
-        self.assertTrue(first["passed"], json.dumps(first))
+        self.assertNotIn("passed", first)
         self.assertEqual(first["cited_answers"], dict(passed=3, total=3))
         self.assertEqual(first["refusals"], dict(passed=10, total=10))
         comparator = first["comparison"]

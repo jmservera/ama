@@ -5,13 +5,31 @@
   {
    "id": "regulatory-home-chat-evaluation",
    "path": "src/agents/evals/regulatory_chat_results.json",
-   "version": "regulatory-home-chat-eval-v1",
+   "version": "regulatory-home-chat-eval-v2",
    "owner": "Juan Manuel Servera (synthetic-demo exercise owner; no operational approval)",
    "purpose": "Frozen implementer-authored offline cited-answer/refusal development evaluation and same-source deterministic-card comparator. No real model, held-out grading or human benefit claim.",
    "used_by": [
     "src/agents/src/zava_forward/agents/regulatory_eval.py",
     "src/agents/tests/test_regulatory_answers.py"
    ],
+   "contains_real_data": false
+  },
+  {
+   "id": "regulatory-gates-development",
+   "path": "src/agents/evals/regulatory_gates_cases.json",
+   "version": "regulatory-gates-development-v1",
+   "owner": "Juan Manuel Servera (synthetic-demo exercise owner; thresholds not agreed)",
+   "purpose": "Frozen implementer-authored source lookup, refusal and adversarial questions with independent expected outcomes. Not held-out legal grading.",
+   "used_by": ["src/agents/tests/regulatory_gate_fixture.py", "src/agents/tests/test_regulatory_gates.py"],
+   "contains_real_data": false
+  },
+  {
+   "id": "regulatory-gates-results",
+   "path": "src/agents/evals/regulatory_gates_results.json",
+   "version": "regulatory-evaluation-gates-v1",
+   "owner": "Juan Manuel Servera (synthetic-demo exercise owner; no operational approval)",
+   "purpose": "Reproducible per-check development results, generated 60000-home seeded baseline and cards-only recommendation pending actual staff comparison. No overall pass.",
+   "used_by": ["src/agents/evals/run_regulatory_gates.py", "src/agents/tests/test_regulatory_gates.py"],
    "contains_real_data": false
   },
   {

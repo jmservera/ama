@@ -191,6 +191,7 @@ class RuleHttpTests(Base):
             code, result = self.transition(action, body={"note": "Synthetic owner hold"} if action == "hold" else {})
             self.assertEqual(code, 200, result)
         history = self.call("/api/law/cards/hazard-awareness-clock")[1]["versions"]
+        self.assertTrue(all(c["source_freshness"]["status"] == "unknown" for c in history))
         self.assertEqual([c["state"] for c in history], ["draft", "retired"])
         self.assertEqual(history[-1]["author"], "sam@example.test")
         self.assertEqual(history[-1]["approved_by"], "pam@example.test")
@@ -203,7 +204,13 @@ class RuleHttpTests(Base):
         self.law.close()
         self.law = LawStore(str(Path(self.tmp.name) / "law.sqlite"), Path(self.tmp.name) / "blobs")
         self.app.law = self.law
-        self.assertEqual(self.call("/api/law/cards/hazard-awareness-clock")[1]["versions"], before)
+        reopened = self.call("/api/law/cards/hazard-awareness-clock")[1]["versions"]
+        self.assertEqual(reopened, history)
+        self.assertEqual(
+            [{k: v for k, v in card.items() if k != "source_freshness"} for card in reopened],
+            before,
+        )
+        self.assertEqual(self.law.rules.history("hazard-awareness-clock"), before)
 
     def test_body_cannot_supply_authority_or_dates(self):
         for key, value in (("author", "pam@example.test"), ("role", "rule_owner"), ("actor", "pam@example.test"),

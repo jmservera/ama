@@ -14,9 +14,11 @@ from types import SimpleNamespace
 from typing import Any
 from unittest.mock import patch
 
-from regulatory_fixture import ENV, NOW, PID, Fixture
+from regulatory_fixture import ENV, NOW, PID, QUOTE, Fixture
+from zava_forward.core import rule_engine, rulecards
 from zava_forward.core.chat_isolation import ChatIsolation
 from zava_forward.core.regulatory_chat import RegulatoryChat
+from zava_forward.core.source_monitor import SourceMonitor
 
 from zava_forward.api.server import App, make_handler
 
@@ -247,6 +249,45 @@ class RegulatoryApi(unittest.TestCase):
             self.assertIn(required, text)
         self.assertNotIn("innerHTML", text)
         self.assertIn("chatCasePanel(id)", (web / "app.js").read_text())
+
+    def test_stale_card_labels_agree_on_http_history_and_chat_without_suppression(self) -> None:
+        monitor = SourceMonitor(self.f.law)
+        monitor.configure(
+            "synthetic",
+            cadence_days=1,
+            likelihood="High",
+            rationale="Synthetic daily fixture",
+            impact=dict(requirements=[], journeys=[], tests=[], communications=[]),
+            actor="Juan Manuel Servera",
+            role=rulecards.OWNER,
+        )
+        monitor.observe(
+            "synthetic",
+            today="2026-10-09",
+            content=QUOTE.encode(),
+            metadata={},
+            provenance="Constructed unchanged fixture",
+            method="local-fixture",
+        )
+        engine = rule_engine.RuleEngine(self.f.law)
+        engine.run(self.f.store, "ZF-1", "schedule", now=NOW)
+        before = self.f.law.sql.all("SELECT body FROM reg_alert ORDER BY id")
+        self.assertTrue(before)
+        code, collection = self.call("/api/law/cards")
+        self.assertEqual(code, 200, collection)
+        card = next(c for c in collection["cards"] if c["card_id"] == "synthetic-hazard")
+        self.assertEqual(card["source_freshness"]["status"], "out_of_cadence")
+        code, history = self.call("/api/law/cards/synthetic-hazard")
+        self.assertEqual(code, 200, history)
+        self.assertEqual(history["versions"][0]["source_freshness"], card["source_freshness"])
+        tid = self.start()
+        code, reply = self.call(
+            f"/api/chat/regulatory/threads/{tid}/ask", dict(content="What are the hazard sources?")
+        )
+        self.assertEqual((code, reply["kind"]), (200, "answer"), reply)
+        self.assertEqual(reply["cards"][0]["source_freshness"]["status"], "out_of_cadence")
+        self.assertEqual(before, self.f.law.sql.all("SELECT body FROM reg_alert ORDER BY id"))
+        self.assertEqual(self.f.law.rules.is_active("synthetic-hazard", "2026-10-16"), 1)
 
 
 if __name__ == "__main__":

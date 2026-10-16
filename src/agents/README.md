@@ -2,9 +2,137 @@
 title: Zava Forward agents
 description: Five retrofit assistants, the offline AI evaluation harness and their dated validation record for the agents project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-15
+ms.date: 2026-10-16
 ms.topic: reference
 ---
+
+## Regulatory evaluation gates (#216)
+
+The [per-check report](./evals/regulatory_gates_results.json) extends #108/#164
+and the #214 extractive evaluation. `regulatory_gates` is a pure grader, not a
+model, approval tool or service with database access. Its offline driver lives
+outside the package, uses temporary synthetic SQLite stores, exercises real
+retrieval/persistence and grades against separately authored expected fragments,
+metadata, refusal/conflict outcomes and the closed visible-answer template.
+Card identities/links, visible cadence labels and answer/cadence dates are
+independently frozen too; removing or altering them invalidates the answer.
+Mutations of citations, facts, reply-only claims, escalation and false refusals
+must fail. This is exact extractive development grading, not semantic
+entailment of generated prose or independently adjudicated legal questions.
+
+| Check | Observed synthetic result | Threshold and limitation |
+| --- | --- | --- |
+| Citation validity | 7/7 supported responses, including conflicting and malicious quoted sources | Provisional 1.0; exact expected provision/fact IDs, text, metadata and links |
+| Refusal accuracy / answer contract | 24/24; 17 expected refusals, zero unsafe non-refusals and zero false refusals | Provisional 1.0; full fixed-template consistency, not general legal-intent understanding |
+| Rule recall baseline | 78,000/78,000 required attention, breach-risk or unknown flags; exact state agreement 120,000/120,000 checks | Threshold unset pending baseline review; clear/not-applicable checks excluded from recall denominator |
+| Hazard misses | Zero among 42,000 required hazard flags | Provisional zero misses (reported as 1.0 required-flag agreement); every miss critical, independent of baseline threshold |
+| SQL integration | 10/10 seeded hazard states; seven required flags; five retained alert publications | Small SQLite slice, not 60,000-home SQL throughput or staff precision |
+| Stale-source label | 1/1 deliberately overdue source labelled in actual chat retrieval | Provisional 1.0; boundary, missing/failed observations and HTTP views covered separately |
+| Paired staff comparison | Not evaluated; same-role/source-version card/provision links recorded alongside structural chat facts | No agreed benefit threshold or measured task completion, comprehension, elapsed/review time or service cost; recommend `cards_only` |
+
+All numeric targets are labelled **provisional, not owner-agreed**. Juan Manuel
+Servera is the exercise Legal, Compliance and DPO owner, not an invented real
+company approver. Rule recall has no fixed threshold: the baseline precedes
+that owner decision. Reports have no overall `passed` or aggregate release score.
+The legacy 13-case report also no longer exposes an overall pass.
+
+The frozen [development cases](./evals/regulatory_gates_cases.json) and independent
+oracles are implementer-authored. The 60,000 identities come from the existing
+seed-174 fictional home generator, joined to ten explicit hazard profiles and
+five automated-decision profiles at 2026-10-16T12:00:00Z. Recorded human reviews
+include synthetic reasons, as required by the safeguard;
+an evidence ID alone cannot establish a completed human review. The fixture
+fingerprint is regenerated when this declared fixture evidence changes.
+Expected-state coverage and denominators are reconciled in the report; missing
+output is a mismatch.
+Wrong, unrelated or duplicate engine item identities cannot satisfy a required
+flag, even when their result string matches. SQL outputs must match the home
+and card as well. Invalid output case IDs are reported separately and never
+summarised as correct refusals or supported responses.
+This is a stateless seeded baseline, not the continuing generated event
+pipeline, a real stock dataset, operational recall or a legal-currentness check.
+The report fingerprints both the case file and fixture/oracle driver.
+
+With editable core/agents/API packages and development tools installed using
+pip, run from the repository root:
+
+```bash
+PYTHONPATH="$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python3 src/agents/evals/run_regulatory_gates.py \
+  --record src/agents/evals/regulatory_gates_results.json
+PYTHONPATH="$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python3 -m unittest test_regulatory_gates test_regulatory_answers test_eval_registry -q
+```
+
+The runner prints independent check outcomes; exit zero means the process ran,
+not that evaluation or shipment is approved. The regression tests assert each
+check, reject empty evidence, detect critical omissions and reproduce the
+recorded 60,000-home report. The cases/results are registered in
+`evals/registry.json`; fixtures and runner are not shipped in the agents image.
+For standalone agents discovery include absolute core-test and agents-test paths:
+
+```bash
+cd src/agents
+PYTHONPATH="$PWD/tests:$PWD/../core/tests" python3 -m unittest discover -s tests -q
+```
+
+### Integrated full-suite correction evidence (2026-10-16)
+
+After merging main into PR #355, the complete project discoveries reported:
+
+| Project | Discovered/run | Passed | Skipped |
+| --- | ---: | ---: | ---: |
+| core | 529 | 528 | 1 |
+| agents | 93 | 93 | 0 |
+| api | 559 | 449 | 110 |
+
+Skipped checks are existing opt-in platform/browser or other environment-gated
+checks, not executed passes. No test was removed. Ruff check, Ruff format check
+and mypy run separately in each project; the local HTTP tests use responsive
+loopback servers and temporary synthetic stores, not Azure acceptance.
+
+With editable packages and declared development tools installed via pip, run
+each suite from its project root, followed there by the quality gates:
+
+```bash
+# From src/core:
+PYTHONPATH="$PWD/src:$PWD/tests" python3 -m unittest discover -s tests -q
+# From src/agents:
+PYTHONPATH="$PWD/../core/tests" python3 -m unittest discover -s tests -q
+# From src/api:
+PYTHONPATH="$PWD/../core/tests:$PWD/../agents/tests" \
+  python3 -m unittest discover -s tests -q
+# In each project:
+ruff check .
+ruff format --check .
+mypy
+```
+
+The retained-history regression now checks every stored field and the complete
+additive HTTP shape across reopen. Expected unavailable-law-store logs are
+explicit unknown-state diagnostics, not uncaught suite errors. Empty-store and
+unavailable-store HTTP behavior are exercised separately. The stricter merged
+human-decision reasons requirement is satisfied by declared synthetic fixture
+evidence, not disabled in the engine. All acceptance limitations below remain.
+
+### Acceptance audit (2026-10-16)
+
+| #216 criterion | Local evidence | Unmet boundary |
+| --- | --- | --- |
+| Citation/refusal gates set with owners and measured on graded/adversarial set | Independently specified development oracles and mutation controls; per-check measurements above | Owner agreement and independently graded/held-out set absent; criterion not met in full |
+| Hazard misses on seeded cases critical | Negative control omits hazard output: exact failed identities, critical severity, failed hazard check despite unset recall threshold | No operational safety claim |
+| Recall baseline before thresholds fixed | Generated 60,000-home stateless baseline and small SQL baseline; recall target remains null | Continuing-stock ingestion/SQL baseline and owner review not run; broader acceptance remains partial |
+| Paired comparison and cards alone without measured value | Same-role/source-version structural pairs; `cards_only` ship recommendation, no benefit invented | Staff paired trial and measured chat value absent; criterion not met in full |
+| Out-of-cadence cards labelled | Shared read model exposed in collection/history HTTP and chat, due-boundary/failed-attempt/unknown tests | Live monitoring and legal-currentness review not performed |
+| Results per check, no overall pass | Separate named checks, counts, failures, thresholds, critical misses and explicit not-evaluated entries | No aggregate acceptance claim |
+
+Owner-threshold ratification, staff alert precision/acknowledgement time and
+repairs/housing/grants comprehension trials remain not evaluated. No provider,
+Azure or private data was accessed. Missing comparative evidence recommends
+cards alone for shipment under ADR 0005, subject to their own approval gates;
+the existing explicitly enabled, synthetic-development-only lookup is unchanged.
+No report grants an operational release or activates a rule. Issue checkboxes
+remain untouched for the coordinator's merge-time evidence review.
 
 ## Offline cited-answer evaluation (#214)
 
@@ -49,11 +177,12 @@ outside the package; no fixture or report is shipped in the agents image.
 The report is versioned and registered in `evals/registry.json`. Composer
 tests use independent local fixtures and need no core-test import path;
 the core/API suites separately verify actual retrieval, storage and handoff.
-Standard standalone agents discovery also passed all 77 tests:
+The original standalone agents discovery passed 77 tests; with the #216
+regressions the suite passes 93:
 
 ```bash
 cd src/agents
-PYTHONPATH="$PWD/tests" python3 -m unittest discover -s tests -q
+PYTHONPATH="$PWD/tests:$PWD/../core/tests" python3 -m unittest discover -s tests -q
 ```
 
 The agents project (`zava_forward.agents`) holds the AI evaluation harness and its golden data

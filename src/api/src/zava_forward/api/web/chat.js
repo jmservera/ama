@@ -194,6 +194,12 @@ function regulatoryChatPanel(caseId) {
         h("h4", {}, "Who decides"), h("p", {}, sections.who_decides));
     } else item.append(h("p", {}, answer.reply));
     const citations = regulatorySources(answer.citations);
+    for (const card of answer.cards || []) {
+      const freshness = card.source_freshness;
+      citations.append(h("li", {},
+        h("a", { href: card.link, target: "_blank", rel: "noopener" }, card.id),
+        ` | ${freshness?.label || "Historical source monitoring cadence unknown."} | as of: ${freshness?.as_of || "unknown"}`));
+    }
     const doubt = h("button", { type: "button", class: "alt", onclick: async () => {
       if (doubt.getAttribute("aria-disabled") === "true") return;
       doubt.setAttribute("aria-disabled", "true");

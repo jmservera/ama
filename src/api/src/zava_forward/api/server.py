@@ -7,6 +7,7 @@ import os
 import secrets
 import sys
 import threading
+from datetime import UTC, datetime
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -27,6 +28,7 @@ from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARN
 from zava_forward.core.chat_panel import ChatPanel
 from zava_forward.core.regulatory_chat import RegulatoryChat, TASK as REGULATORY_TASK
 from zava_forward.agents import regulatory_chat
+from zava_forward.core.source_monitor import dated_card
 from zava_forward.core.chatthreads import ChatNotFound
 from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.factory import open_store
@@ -477,15 +479,18 @@ def make_handler(app):
             try:
                 with app.law_lock:
                     if body is None:
+                        day = datetime.now(UTC).date().isoformat()
                         if len(parts) == 3:
-                            return self._json(200, {"cards": rules.cards()})
+                            cards = [dated_card(app.law, c, day) for c in rules.cards()]
+                            return self._json(200, {"cards": cards})
                         if len(parts) == 4 and parts[3] == "reviews":
                             return self._json(200, {"reviews": rules.reviews()})
                         if len(parts) == 4:
                             history = rules.history(parts[3])
                             if not history:
                                 return self._json(404, {"error": "Card not found."})
-                            return self._json(200, {"versions": history, "active_version": rules.is_active(parts[3])})
+                            versions = [dated_card(app.law, c, day) for c in history]
+                            return self._json(200, {"versions": versions, "active_version": rules.is_active(parts[3])})
                     elif len(parts) == 3:
                         allowed = {"card_id", *rulecards.FIELDS}
                         if set(body) - allowed:
