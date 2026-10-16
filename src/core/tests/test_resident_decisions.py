@@ -6,6 +6,7 @@ import os
 import tempfile
 import unittest
 from collections.abc import Callable
+from datetime import date, datetime
 from functools import partial
 from pathlib import Path
 from typing import Any
@@ -145,28 +146,207 @@ class JsonResidentDecisions(unittest.TestCase):
         c = again.cases["ZF-1"]
         for key in ("measure_decisions", "representative_authorities", "resident_safe_contact"):
             self.assertNotIn(key, c)
-        self.assertEqual(c["resident"]["first_contact_at"], "2020-02-29")
+        self.assertNotIn("first_contact_at", c["resident"])
         self.assertEqual(c["decision"]["status"], "Not recorded")
         self.assertNotIn("SYN-WISHES-CANARY", json.dumps(c))
         self.assertEqual(len(c["contacts"]), 1)
         self.assertEqual(c["service_requests"], [dict(outcome="SYN-COMPLAINT-OUTCOME")])
         self.assertTrue(again.verify_audit())
 
-    def test_expired_retention_stays_blocked_after_deletion_pending_owner_rule(self) -> None:
-        from datetime import date
+    def test_returning_resident_general_contact_restarts_after_deletion(self) -> None:
+        from zava_forward.core.resident_decisions import retention_schedule
+
+        self.scope()
+        self.answer()
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["resident"]["first_contact_at"] = "2020-02-29"
+            c["contacts"] = [
+                dict(at="2020-02-29T10:00"),
+                dict(at="2025-02-28T10:00", note="SYN-OLD-CONTACT"),
+            ]
+            self.store.save()
+        with patch("zava_forward.core.controls.today", return_value="2025-02-28"):
+            self.store.approve_retention_deletion(
+                self.pam, "ZF-1", "resident-decisions", today=date(2025, 2, 28)
+            )
+            self.store = self.open_store()
+            c = self.store.cases["ZF-1"]
+            self.assertIsNone(retention_schedule(c)["first_contact"])
+            self.assertIsNone(retention_schedule(c)["due"])
+            self.assertFalse(retention_schedule(c)["expired"])
+            self.assertTrue(resident_gate(c, self.bind(MEASURES[0])))
+            self.unchanged_failure(lambda: self.answer())
+            with patch("zava_forward.core.store.datetime") as clock:
+                clock.now.return_value = datetime(2025, 2, 28, 10)
+                self.store.log_call(self.sam, "ZF-1", "SYN-RETURN", "SYN-NEW-CONTACT")
+            self.scope()
+            self.answer()
+            self.store = self.open_store()
+            c = self.store.cases["ZF-1"]
+            self.assertEqual(retention_schedule(c)["first_contact"], "2025-02-28")
+            self.assertEqual(retention_schedule(c)["due"], "2030-02-28")
+            self.assertFalse(resident_gate(c, self.bind(MEASURES[0])))
+            self.assertEqual(len(c["contacts"]), 3)
+            self.assertEqual(len(c["measure_decisions"][MEASURES[0]]), 1)
+            self.assertTrue(self.store.verify_audit())
+
+    def test_returning_resident_safe_contact_starts_once_not_at_deletion(self) -> None:
+        from zava_forward.core.resident_decisions import retention_schedule
 
         self.scope()
         self.answer(status="Withdrawn")
         with self.store.lock:
             c = self.store._case("ZF-1")
             c["resident"]["first_contact_at"] = "2020-02-29"
+            c["contacts"] = [dict(at="2020-02-29T10:00")]
             self.store.save()
-        with patch("zava_forward.core.controls.today", return_value="2025-02-28"):
-            self.store.approve_retention_deletion(
-                self.pam, "ZF-1", "resident-decisions", today=date(2025, 2, 28)
-            )
-            with self.assertRaises((ValueError, PermissionError)):
+        self.store.approve_retention_deletion(
+            self.pam, "ZF-1", "resident-decisions", today=date(2025, 2, 28)
+        )
+        with patch.object(controls, "today", return_value="2026-02-28"):
+            self.assertIsNone(retention_schedule(self.open_store().cases["ZF-1"])["due"])
+            self.scope()
+            self.assertIsNone(retention_schedule(self.store.cases["ZF-1"])["due"])
+            with patch.object(controls, "now", return_value="2026-02-28T10:00"):
+                self.action("safe_contact_record", safe_contact_ref="SYN-NEW-SAFE", source="SYN")
+            self.assertTrue(resident_gate(self.store.cases["ZF-1"], self.bind(MEASURES[0])))
+            self.answer()
+            self.store = self.open_store()
+            self.assertEqual(retention_schedule(self.store.cases["ZF-1"])["due"], "2031-02-28")
+            self.assertFalse(resident_gate(self.store.cases["ZF-1"], self.bind(MEASURES[0])))
+        with (
+            patch.object(controls, "today", return_value="2027-03-01"),
+            patch.object(controls, "now", return_value="2027-03-01T10:00"),
+        ):
+            self.action("safe_contact_record", safe_contact_ref="SYN-LATER-SAFE", source="SYN")
+            self.answer(status="Withdrawn")
+            c = self.open_store().cases["ZF-1"]
+            self.assertEqual(retention_schedule(c)["first_contact"], "2026-02-28")
+            self.assertEqual(retention_schedule(c)["due"], "2031-02-28")
+
+    def test_renewed_period_expires_and_contact_cannot_reset_before_next_deletion(self) -> None:
+        from zava_forward.core.resident_decisions import retention_schedule
+
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["resident"]["first_contact_at"] = "2016-02-29"
+            c["contacts"] = [dict(at="2016-02-29")]
+            self.store.save()
+        for deletion_day, contact_day, due_day in (
+            ("2021-02-28", "2024-02-29", "2029-02-28"),
+            ("2029-02-28", "2030-03-01", "2035-03-01"),
+        ):
+            with patch.object(controls, "today", return_value=deletion_day):
+                self.assertTrue(retention_schedule(self.store.cases["ZF-1"])["expired"])
+                with patch.object(controls, "now", return_value=deletion_day + "T09:00"):
+                    self.action("safe_contact_record", safe_contact_ref="SYN-EXPIRED", source="SYN")
+                self.scope()
+                with self.assertRaises(GateError):
+                    self.store.require_resident_clear(
+                        self.store.cases["ZF-1"], self.bind(MEASURES[0])
+                    )
+                self.assertTrue(retention_schedule(self.store.cases["ZF-1"])["expired"])
+                self.store.approve_retention_deletion(
+                    self.pam, "ZF-1", "resident-decisions", today=date.fromisoformat(deletion_day)
+                )
+                self.assertIsNone(retention_schedule(self.open_store().cases["ZF-1"])["due"])
+            with (
+                patch.object(controls, "today", return_value=contact_day),
+                patch("zava_forward.core.store.datetime") as clock,
+            ):
+                clock.now.return_value = datetime.fromisoformat(contact_day + "T10:00")
+                self.store.log_call(self.sam, "ZF-1", "SYN-RETURN", "SYN")
+                self.scope()
                 self.answer()
+                self.store = self.open_store()
+                schedule = retention_schedule(self.store.cases["ZF-1"])
+                self.assertEqual(schedule["first_contact"], contact_day)
+                self.assertEqual(schedule["due"], due_day)
+                self.assertFalse(schedule["expired"])
+                self.assertFalse(resident_gate(self.store.cases["ZF-1"], self.bind(MEASURES[0])))
+        with patch.object(controls, "today", return_value="2035-03-01"):
+            self.assertTrue(retention_schedule(self.store.cases["ZF-1"])["expired"])
+            self.assertTrue(resident_gate(self.store.cases["ZF-1"], self.bind(MEASURES[0])))
+
+    def test_legacy_deletion_ignores_old_contacts_and_allows_later_contact(self) -> None:
+        from zava_forward.core.resident_decisions import retention_schedule
+
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["resident"]["first_contact_at"] = "2020-02-29"
+            c["resident_retention_deleted_at"] = "2025-02-28"
+            c["contacts"] = [
+                dict(at="2020-02-29"),
+                dict(at="2025-02-28T10:00"),
+                dict(at="invalid"),
+                dict(at="2099-01-01"),
+            ]
+            self.store.save()
+        with (
+            patch.object(controls, "today", return_value="2025-03-01"),
+            patch("zava_forward.core.store.datetime") as clock,
+        ):
+            self.assertIsNone(retention_schedule(self.open_store().cases["ZF-1"])["due"])
+            clock.now.return_value = datetime(2025, 3, 1, 10)
+            self.store.log_call(self.sam, "ZF-1", "SYN-RETURN", "SYN")
+            self.scope()
+            self.answer()
+            c = self.open_store().cases["ZF-1"]
+            self.assertEqual(retention_schedule(c)["first_contact"], "2025-03-01")
+            self.assertEqual(retention_schedule(c)["due"], "2030-03-01")
+            self.assertFalse(resident_gate(c, self.bind(MEASURES[0])))
+
+    def test_deletion_tombstone_contains_only_boundary_metadata(self) -> None:
+        self.scope()
+        self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")
+        self.authority()
+        self.answer(answered_by="Their representative", representative_ref="SYN-REP-A")
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["resident"]["first_contact_at"] = "2020-02-29"
+            c["contacts"] = [dict(at="2020-02-29", note="SYN-PERSONAL-CONTACT")]
+            self.store.save()
+        self.store.approve_retention_deletion(
+            self.pam, "ZF-1", "resident-decisions", today=date(2025, 2, 28)
+        )
+        c = self.open_store().cases["ZF-1"]
+        tombstone = {
+            key: value for key, value in c.items() if key.startswith("resident_retention_")
+        }
+        self.assertEqual(
+            tombstone,
+            {
+                "resident_retention_deleted_at": "2025-02-28",
+                "resident_retention_tombstone": {"contacts_before_deletion": 1},
+            },
+        )
+        self.assertIs(
+            type(tombstone["resident_retention_tombstone"]["contacts_before_deletion"]), int
+        )
+        for personal in (
+            "SYN-SAFE-CANARY",
+            "SYN-WISHES-CANARY",
+            "SYN-AUTH-CANARY",
+            "SYN-REP-A",
+            "SYN-NOTE-CANARY",
+            "SYN-PERSONAL-CONTACT",
+            self.sam["name"],
+            self.sam["email"],
+        ):
+            self.assertNotIn(personal, json.dumps(tombstone))
+        self.assertNotIn("first_contact_at", c["resident"])
+        for key in (
+            "resident_scopes",
+            "measure_decisions",
+            "representative_authorities",
+            "resident_safe_contact",
+            "resident_contact_history",
+            "resident_reviews",
+        ):
+            self.assertNotIn(key, c)
+        self.assertEqual(c["contacts"][0]["note"], "SYN-PERSONAL-CONTACT")
+        self.assertTrue(self.store.verify_audit())
 
     def test_matrix_registered_writer_and_exact_private_fields(self) -> None:
         self.scope()
@@ -217,7 +397,7 @@ class JsonResidentDecisions(unittest.TestCase):
             [dict(measure=MEASURES[0], flag="Proceed"), dict(measure=MEASURES[1], flag="Hold")],
         )
 
-    def test_first_contact_evidence_is_not_decision_date_and_never_resets(self) -> None:
+    def test_first_contact_evidence_is_not_decision_date_and_stays_until_deletion(self) -> None:
         from zava_forward.core.resident_decisions import retention_schedule
 
         with patch.object(controls, "today", return_value="2026-10-16"):
@@ -711,7 +891,7 @@ class AzureResidentDecisions(unittest.TestCase):
             for key in ("measure_decisions", "resident_safe_contact", "representative_authorities"):
                 self.assertNotIn(key, final.cases["ZF-1"])
             self.assertNotIn("SYN-WISHES", json.dumps(final.cases["ZF-1"]))
-            self.assertEqual(final.cases["ZF-1"]["resident"]["first_contact_at"], "2021-10-17")
+            self.assertNotIn("first_contact_at", final.cases["ZF-1"]["resident"])
             self.assertTrue(final.verify_audit())
             mode = final.db.execute(
                 "SELECT is_ledger_on FROM sys.databases WHERE name=DB_NAME()"
