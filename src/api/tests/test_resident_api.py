@@ -227,9 +227,35 @@ class ResidentApi(unittest.TestCase):
             )[0],
             400,
         )
-        for actor in ("rex", "kim"):
+        for actor in ("rex", "pam"):
+            text = json.dumps(self.call("/api/cases/ZF-1", actor)[1])
+            for canary in ("SYN-AUTH-CANARY", "SYN-WISHES-CANARY", "SYN-SAFE-CANARY"):
+                self.assertIn(canary, text)
+        for actor in ("kim",):
             text = json.dumps(self.call("/api/cases/ZF-1", actor)[1])
             for canary in ("SYN-AUTH-CANARY", "SYN-WISHES-CANARY", "SYN-SAFE-CANARY"):
                 self.assertNotIn(canary, text)
         self.assertEqual(self.store.cases["ZF-1"], before)
         self.assertEqual(list(self.store.audit_entries()), audit)
+
+    def test_manager_read_only_coordinator_records_and_contractor_flags(self) -> None:
+        self.context()
+        self.assertEqual(
+            self.action("safe_contact_record", "rex", safe_contact_ref="SYN-SAFE", source="SYN")[0],
+            200,
+        )
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        for path, body in (
+            (
+                "/api/cases/ZF-1/resident",
+                dict(action="safe_contact_record", safe_contact_ref="FORGED", source="FORGED"),
+            ),
+            ("/api/cases/ZF-1/decision", dict(status="Accepted")),
+        ):
+            self.assertEqual(self.call(path, "pam", body)[0], 403)
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertFalse(self.call("/api/cases/ZF-1", "pam")[1]["can_record_resident"])
+        self.assertEqual(
+            self.call("/api/cases/ZF-1", "kim")[1]["resident_readiness"],
+            [dict(measure="Loft insulation", flag="Hold")],
+        )

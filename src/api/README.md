@@ -280,6 +280,27 @@ defines currentness, authority, release dependencies and evidence limits.
 
 Authenticated resident-workflow staff use `POST /api/cases/{id}/resident`:
 
+For decision/scope/authority/safe-contact recording and disclosure checks,
+only registered named Liaison Officers (Neighbourhood/Resident Engagement) and
+Retrofit Coordinators may write. Managers and Programme Support view only;
+their attempts, including the legacy `decision` route, return 403. Existing
+complaint/redress actions retain separate named-owner restrictions. The panel
+uses server-projected `can_record_resident`, rather than treating every manager
+as a resident recorder. Other staff do not receive private evidence narratives.
+Contractor detail contains `resident_readiness: [{"measure": "...", "flag":
+"Proceed"}]` (or `Hold`), never decision reasons, wishes, authority or safe routes.
+Unrelated vulnerability restrictions remain unchanged for staff.
+
+Staff detail includes `resident_retention`: five calendar years from first
+recorded resident contact, including withdrawal and expired authority. Unknown
+first-contact history is explicit. `GET /api/retention` includes due
+`doc_id: "resident-decisions"` entries for manager review. A manager posts
+`{"id": "resident-decisions"}` to `/api/cases/{id}/retention-approve` to remove
+the current resident payload; legal hold returns 403, not-yet-due or unknown
+origin returns 400. At expiry, work and representative disclosure reliance hold
+even before deletion. See the [core retention contract](../core/README.md#resident-decisions-and-representatives-86)
+for the exact deletion inventory and ledger/backups/cross-case limitations.
+
 | `action` | Required input and control |
 | --- | --- |
 | `scope_record` | `measure`, `scope`, integer current `design_version`, `source`; creates a new context revision and no answer |

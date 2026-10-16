@@ -16,10 +16,14 @@ field out of contractor responses and AI prompts, and roles without a recorded
 need see a "held" marker in place of staff-written notes and contact outcomes.
 """
 import os
+from copy import deepcopy
 
+from .controls import RESIDENT_ROLES, RESIDENT_VIEW_ROLES
+from .resident_decisions import RESIDENT_FIELDS, case_measures, current_context, resident_gate
 from .stock import support_status
 
 CONTRACTOR = "Contractor"
+RESIDENT_RECORD_ROLES = RESIDENT_ROLES
 DEFAULT_REASON_ROLES = ("Resident Liaison Officer", "Building Safety Liaison", "Retrofit Programme Manager")
 REDACTED = "Extra support noted"
 NOTE_HELD = "Held for roles with a recorded need"
@@ -69,16 +73,18 @@ def own_case(user, c):
 
 def contractor_summary(c, s):
     out = dict(s, needs_notice=needs_notice(c), named_contact=c["owner"])
-    if out.get("status", "").startswith("Waiting on "):
-        out["status"] = "Waiting for the recorded next step"
+    out["status"] = "Completed" if c["closed"] else c["stage"]
     return {k: out[k] for k in SUMMARY_FIELDS if k in out}
 
 
 def contractor_detail(c, d):
     out = dict(d, needs_notice=needs_notice(c), named_contact=c["owner"])
-    if out.get("status", "").startswith("Waiting on "):
-        out["status"] = "Waiting for the recorded next step"
     keep = {k: out[k] for k in DETAIL_FIELDS if k in out}
+    keep["status"] = "Completed" if c["closed"] else c["stage"]
+    keep["resident_readiness"] = [
+        dict(measure=m, flag="Hold" if resident_gate(c, [
+            dict(measure=m, context_revision=(current_context(c, m) or {}).get("revision"))
+        ]) else "Proceed") for m in case_measures(c)]
     keep["home"] = {k: c["home"][k] for k in ("address", "town", "postcode", "type")}
     keep["contractor"] = {"name": c["contractor"]["name"], "contact": c["contractor"]["contact"]}
     keep["appointments"] = [{k: a[k] for k in ("type", "date", "slot")} | {"outcome": status_only(a["outcome"])} for a in c["appointments"]]
@@ -119,8 +125,10 @@ def hold_notes(c):
 
 
 def redact_staff_detail(user, d):
-    from .controls import RESIDENT_ROLES
-    if user.get("role") not in RESIDENT_ROLES or not can_see_reason(user):
+    resident_view = user.get("role") in RESIDENT_VIEW_ROLES
+    resident_data = {key: deepcopy(d[key]) for key in RESIDENT_FIELDS + ("decision",)
+                     if key in d} if resident_view else {}
+    if not resident_view:
         for key in ("representative_authorities", "resident_safe_contact", "resident_contact_history", "resident_scopes"):
             d.pop(key, None)
         for measure in d.get("measure_decisions", []):
@@ -148,6 +156,7 @@ def redact_staff_detail(user, d):
         d["resident"]["adjustment"] = (
             "Unknown" if adjustment in (None, "", "Unknown") else
             REDACTED if adjustment != "None" else "None")
+    d.update(resident_data)
     if user.get("role") not in FINANCE_VIEW:
         d.pop("finance", None)
         d.pop("grants", None)

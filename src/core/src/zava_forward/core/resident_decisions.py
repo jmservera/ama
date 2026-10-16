@@ -23,6 +23,49 @@ RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_recor
 NOT_RECORDED = "Not recorded"
 AUTHORITY_TASKS = ("Receive information", "Communicate", "Attend", "Works decision")
 AUTHORITY_STATUSES = ("Confirmed", "Unclear", "Disputed", "Revoked")
+RESIDENT_RETENTION_YEARS = 5
+RESIDENT_RETENTION_ID = "resident-decisions"
+RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_authorities",
+                   "resident_safe_contact", "resident_contact_history", "resident_reviews")
+
+
+def first_contact(c, today=None):
+    """Only actual contact evidence can establish the resident's first interaction."""
+    today = date.fromisoformat(today or k.today())
+    candidates = [(c.get("resident") or {}).get("first_contact_at")]
+    candidates += [r.get("at") for key in ("contacts", "resident_contact_history")
+                   for r in c.get(key, [])]
+    days = []
+    for raw in candidates:
+        try:
+            day = date.fromisoformat(str(raw)[:10])
+        except ValueError:
+            continue
+        if day <= today:
+            days.append(day)
+    return min(days) if days else None
+
+
+def remember_first_contact(c):
+    day = first_contact(c)
+    if day:
+        c["resident"]["first_contact_at"] = day.isoformat()
+
+
+def retention_schedule(c, today=None):
+    today = today or k.today()
+    start = first_contact(c, today)
+    due = None
+    if start:
+        try:
+            due = start.replace(year=start.year + RESIDENT_RETENTION_YEARS)
+        except ValueError:
+            due = start.replace(year=start.year + RESIDENT_RETENTION_YEARS, day=28)
+    return dict(years=RESIDENT_RETENTION_YEARS, trigger="First recorded resident contact",
+                first_contact=start.isoformat() if start else None,
+                due=due.isoformat() if due else None,
+                expired=bool(due and due.isoformat() <= today),
+                status="Known" if start else "Unknown: first recorded contact needs evidence")
 
 
 def current_context(c, measure):
@@ -45,6 +88,8 @@ def require_context(c, body):
 
 
 def authority_for(c, ref, task, measure, context, version=None):
+    if retention_schedule(c)["expired"]:
+        raise ValueError("Resident records are past retention. Obtain current human-reviewed evidence.")
     versions = c.get("representative_authorities", {}).get(ref, []) if isinstance(ref, str) else []
     a = versions[-1] if versions else None
     if not a or (version is not None and a["version"] != version):
@@ -60,6 +105,8 @@ def authority_for(c, ref, task, measure, context, version=None):
 
 def resident_gate(c, bindings=None):
     """Case advance checks all measures; scoped work checks only explicit bindings."""
+    if retention_schedule(c)["expired"]:
+        return ["Resident records are past retention. Owner: Resident Liaison Officer. Next action: obtain current human-reviewed evidence."]
     if bindings is None:
         bindings = [dict(measure=m, context_revision=(current_context(c, m) or {}).get("revision"))
                     for m in case_measures(c)]
@@ -124,13 +171,40 @@ def measure_decision_view(c):
 
 
 class ResidentDecisionMixin:
+    def resident_recorder(self, user, service=False):
+        roles = k.RESIDENT_VIEW_ROLES if service else k.RESIDENT_ROLES
+        k.require_role(user, roles, "authorised resident-workflow staff")
+        actor = self.staff.get(user.get("email", "").lower())
+        if not actor or any(actor.get(key) != user.get(key) for key in ("role", "name", "code")):
+            raise PermissionError("Resident records require a registered named human staff identity.")
+        return actor
+
+    def delete_resident_records(self, user, case_id, today=None):
+        self._manager(user, "approve resident record deletion")
+        with self.lock:
+            c = self._case(case_id)
+            if (c.get("legal_hold") or {}).get("active"):
+                raise PermissionError("A legal hold blocks deletion on this case.")
+            if not retention_schedule(c, today)["expired"]:
+                raise ValueError("Resident records are not past their first-contact retention period.")
+            remember_first_contact(c)
+            for key in RESIDENT_FIELDS:
+                c.pop(key, None)
+            c["decision"] = dict(status=NOT_RECORDED, by=None, at=None)
+            c["resident"]["representative"] = None
+            for request in c.get("service_requests", []):
+                request.pop("representative_ref", None)
+            c["resident_retention_deleted_at"] = today or k.today()
+            self.audit(user["email"], "resident_retention_deleted", case_id, "resident decision payload removed")
+            self.save()
+
     def resident_action(self, user, case_id, body):
         k.refuse_bulk(body)
         action = body.get("action")
         if action not in RESIDENT_ACTIONS:
             raise ValueError("Unknown step.")
-        k.require_role(user, k.RESIDENT_ROLES, "the Resident Liaison Officer, coordinator or a manager")
         with self.lock:
+            self.resident_recorder(user, service=action in ("service_open", "service_update", "service_close"))
             c = self._case(case_id)
             detail = getattr(self, "_res_" + action)(user, c, body)
             self.audit(user["email"], f"resident_{action}", case_id, detail)
@@ -157,6 +231,7 @@ class ResidentDecisionMixin:
         c["resident_safe_contact"] = ref
         c.setdefault("resident_contact_history", []).append(
             dict(reference=ref, source=source, recorded_by=user["email"], at=k.now()))
+        remember_first_contact(c)
         return f"safe contact revision {len(c['resident_contact_history'])} recorded"
 
     def _res_representative_record(self, user, c, body):
@@ -184,7 +259,7 @@ class ResidentDecisionMixin:
                    context_revision=context["revision"], authority_date=start, review_date=review,
                    safe_contact_ref=safe, safe_contact_revision=len(c.get("resident_contact_history", [])),
                    source=source, resident_wishes=wishes,
-                   recorded_by=user["email"], at=k.now(), retention="Unknown until approved")
+                   recorded_by=user["email"], at=k.now())
         c.setdefault("representative_authorities", {}).setdefault(ref, []).append(rec)
         return f"representative authority version {rec['version']} recorded"
 
