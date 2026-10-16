@@ -853,6 +853,17 @@ editor or automatic retrofit of building data into an already populated store.
 
 ## What staff see
 
+The #344 public edge now targets the existing immutable src API, not a rebuilt
+legacy app. Deployment and tenant prerequisites are documented in the
+[public browser continuation](../../infra/README.md#public-browser-continuation-2026-10-16-344).
+Welcome/health are intentionally public; workbench pages require Entra and
+protected JSON APIs must return 401 without a user. Browser redirect mode is
+the infrastructure default (`entraBearerOnly=false`), not successful sign-in.
+The proof's invalid registration/absent staff block real-user acceptance (#349).
+The [dated feature audit](../../docs/architecture/mvp-to-src-parity-matrix.md#public-deployment-feature-audit-2026-10-16)
+separates image presence, public intercepts and rendered/authorized behavior;
+missing deployment/data/model/photo/law prerequisites are tracked by #350.
+
 * Sign in once and land on "My cases today", with open safety issues first.
 * A full-screen case card: contact details, preferences and support needs, a
   plain status line, owner, contractor, next visit and history.

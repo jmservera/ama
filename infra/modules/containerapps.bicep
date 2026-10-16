@@ -185,7 +185,13 @@ resource apiAuth 'Microsoft.App/containerApps/authConfigs@2025-07-01' = if (depl
   name: 'current'
   properties: {
     platform: { enabled: true }
-    httpSettings: { forwardProxy: { convention: behindPublicEdge ? 'Standard' : 'NoProxy' } }
+    httpSettings: {
+      forwardProxy: behindPublicEdge ? {
+        convention: 'Custom'
+        customHostHeaderName: 'X-Forwarded-Host'
+        customProtoHeaderName: 'X-Forwarded-Proto'
+      } : { convention: 'NoProxy' }
+    }
     login: {
       tokenStore: {
         enabled: tokenStoreReady

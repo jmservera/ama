@@ -1,6 +1,6 @@
 ---
 title: Source cut-over evidence pack
-description: Dated parity, private Azure deployment proof and remaining owner gates for issues 200 and 201
+description: Dated parity, private SQL and public edge proof with remaining owner gates
 ms.date: 2026-10-16
 ms.topic: reference
 ---
@@ -16,7 +16,8 @@ continuation on 2026-10-16 has since passed bootstrap, private health/denial,
 API-MI SQL and restart persistence for one synthetic case. Authorized HTTP and
 human staff initialization remain Blocked. The results below supersede the
 original platform blockers, not the remaining owner gates. No owner sign-off
-is recorded or inferred.
+is recorded or inferred. The public-edge continuation below additionally proves
+public health, native API denial and browser redirect, not a real-user session.
 
 This pack does not delete `mvp/` or `prototype/`, rename workflows, migrate
 private data, change tenant configuration or authorize product operation.
@@ -31,6 +32,194 @@ The canonical policy is [ADR 0006](../adrs/0006-src-layout-and-cutover.md).
 | [#322 comment](https://github.com/jmservera/ama/issues/322), 2026-10-16 | Deploy-script resolution: existing job image, else newest registry tag, else visibly reported placeholder. Implemented by #337 and integrated here; explicit digest used for this evidence run |
 | [#323 comment](https://github.com/jmservera/ama/issues/323), 2026-10-16 | Rulesets warn, not enforce; owner says no protection change needed; src-ci already validates source |
 | Owner task direction, 2026-10-16 | Providers registered, ama costs acceptable, RG ownership available; SQL public access stays Disabled, no policy/tag/firewall bypass or peering; all private data-plane probes run inside the ama VNet |
+
+## Public Browser Restoration (2026-10-16)
+
+Refs #344. Refs #143. Refs #200. The owner requires public browser entry again,
+with SQL private and no policy bypass. This supersedes the private-only entry
+point as the intended exercise access path, not the private SQL proof or the
+unchecked cut-over/sign-off gates.
+
+Selected edge: **Front Door Premium, WAF Prevention, Private Link to the
+existing internal environment**. An API-only external environment was permitted
+but would require a new environment/subnet and parallel API or explicit
+replacement because `internal` cannot change in place. The chosen additive
+edge reuses the serving src digest and private dependencies. It costs an
+additional edge/private-endpoint service, requires connection approval, and
+does not establish the complete production-profile controls in #143/#118.
+Official Microsoft guidance checked on 2026-10-16:
+[networking](https://learn.microsoft.com/en-us/azure/container-apps/networking),
+[Front Door integration](https://learn.microsoft.com/en-us/azure/container-apps/how-to-integrate-with-azure-front-door)
+and [existing environment Private Link](https://learn.microsoft.com/en-us/azure/container-apps/private-endpoints-with-dns).
+
+Public HTTPS origin:
+<https://ep-cutover-test-esdrcphsarcahhde.b01.azurefd.net/>.
+The [infra continuation recipe](../../infra/README.md#public-browser-continuation-2026-10-16-344)
+and [sanitized JSON](./cutover-azure-evidence.json) separate configuration,
+transport, denial and actual-user acceptance.
+
+### Bounded Resources and Configuration
+
+`infra/public-edge-existing.bicep` was deployed incrementally inside `ama`,
+without running main's broad development public-access switch. Initial
+what-if: eight Create, zero Modify/Delete resources. The auth-preserving
+follow-on uses `entraBearerOnly=false`, the same default as main, and changes
+only the auth child in addition to the edge. It carries forward read-visible
+provider validation, exclusions, token store and credential references; sets HTTPS required,
+`RedirectToLoginPage` and `forwardProxy=Custom` using only
+`X-Forwarded-Host` / `X-Forwarded-Proto`. A separate client secret
+was not invented to conceal the missing tenant prerequisite.
+
+New resources retained: `afd-cutover-test`, its `ep-cutover-test`, `og-api/api`,
+`route-api`, `sp-waf`, `to-log-analytics`, and `wafcutovertest`; one managed
+Private Link connection to `cae-cutover-test`; manual
+`job-cutover-test-public-audit` using the exact serving API image. ARM nested
+deployment records are execution metadata, not replaced workloads.
+No pre-existing resources were deleted or replaced. Only the empty, unused
+`afd-cutover-test/originheaders` rule set created by a failed header-removal
+trial was deleted; Azure rejected deletion of reserved `Forwarded` request
+headers before creating the rule. In particular, `ama`, all data services,
+the internal environment, existing apps/jobs/identities, private DNS and budgets
+remain. No tenant object, private dataset, firewall, policy/tag exemption or
+network peering was changed.
+
+The sole origin and origin Host/TLS name are the API's internal FQDN. The
+endpoint has one HTTPS `/*` route, no alternate origin, rewrite rule or cache
+configuration. Health probes use GET `/healthz` (the API does not implement
+HEAD). WAF associates all paths with the endpoint. The connection was read
+back **Approved** after native async approval completed. Earlier approval
+writes returned Pending; an exit-zero write was not counted as approval.
+SQL metadata still reports Ready, publicNetworkAccess **Disabled**, one
+Approved private connection. The environment remains internal/Disabled.
+No other app currently has ingress enabled.
+
+At 17:01 UTC, public curl from the operator VM proved `/healthz`, `/`,
+`/welcome.html`, `/style.css` and `/zava-logo.png` **200**; all probed native
+anonymous `/api/` families **401**; `/sign-in` **302** to the platform login;
+and browser `/app` **302** to `login.microsoftonline.com` with the HTTPS edge
+callback. Native curl `/app` is 401, not a browser redirect. Initial Front Door
+404s during propagation are retained separately, not counted as passes.
+
+Forged principal and malformed bearer returned 401; conflicting Host returned
+421. Individual and combined RFC Forwarded / X-Forwarded-Host/Proto requests
+kept the canonical HTTPS edge callback after Custom auth propagation. Standard
+initially accepted an attacker-supplied RFC host; changing both entry points to
+explicit Custom headers fixed that observed failure. Final repeated probes
+passed. No route rewrite, header-removal rule or API auth exemption remains.
+
+An anonymous API request with a browser User-Agent still receives EasyAuth
+302 even with `Accept: application/json`. Native curl 401 does **not** prove
+the browser API-expiry contract; this additional parity gap is filed in #350.
+Authenticated platform-principal handling must be proved before introducing
+any API path exemption. The current result is bounded, not full acceptance.
+
+### Browser and Feature Acceptance Boundary
+
+The proof client is the literal `systemAssignedIdentity`, not a valid Entra
+application identifier. Matching-tenant read-only discovery found no retained
+workbench registration. Its browser credential is absent, delegated token store
+is off, and the prior synthetic proof has zero staff. This invalidates any
+interpretation of the earlier configured issuer/audience as proof of a usable
+tenant registration. No real user signed in during this task.
+**Real-user smoke is Blocked**, filed as #349. A redirect reaching an Entra host
+is only a redirect observation, not successful client validation, callback,
+role, staff binding or authenticated session. The edge-aware initializer
+preserves old callbacks but still requires an authorized tenant operator and a
+real registration; it cannot resolve this prerequisite itself.
+
+The [complete dated feature audit](./mvp-to-src-parity-matrix.md#public-deployment-feature-audit-2026-10-16)
+covers every historical user-visible capability and all 16 historical web
+assets. The image-only job succeeded on execution
+`job-cutover-test-public-audit-ud03kna`; all 17 present assets, including the
+newer chat script, hash-match current src. It reads package files only, never
+Store/SQL/staff/data. This proves image presence, **not functional acceptance**.
+
+Full deployed feature parity is **Blocked**, filed as #350: one fictional case
+instead of the continuing workload, no model deployment/API model settings,
+empty production map tile configuration, disabled delegated-photo token store,
+missing law-store settings and unexecuted positive-role workflows. Time capture
+remains intentionally gated by actual DPIA/consultation/notice approvals.
+Existing specialist issues are linked from each audit row, not silently treated
+as delivered. Legal/source interpretation, rule activation, resident consent,
+safety and financial commitments remain named human decisions. Juan Manuel
+Servera is the exercise Legal/Compliance/DPO owner; ADR 0005 acceptance covers
+synthetic development only, not real sources/owners or operational reliance.
+
+### Issue 344 Acceptance Audit
+
+| Criterion | Status | Evidence boundary |
+| --- | --- | --- |
+| Public workbench with Entra browser sign-in | Blocked | Public edge configured; a valid tenant application/credential/staff session is not available (#349) |
+| Edge choice and trade-off | Passed | Deployed Premium/WAF/Private Link; no environment replacement; additional service/cost/approval boundary recorded |
+| Public health 200 and anonymous API 401 | Native curl Passed; browser API contract Blocked | Health 200, all native API probes 401; browser User-Agent API 302 is filed in #350 |
+| SQL private, Disabled, no policy bypass | Passed for this continuation | SQL/environment management metadata read back; no public-data, firewall, policy or exemption mutation |
+| Every MVP feature reachable, gaps filed | Audit complete; acceptance Blocked | All capability/asset rows reconciled; image presence verified; gaps #349/#350 |
+| Honest real-user browser smoke | Blocked, recorded | No real-user callback/session, staff authorization or consent performed |
+
+No #344 body checkboxes were ticked. Owner/coordinator acceptance remains
+separate. Local evidence: 123 infra tests passed, 549 API tests with 110 opt-in
+skips, including 31 real-loopback auth HTTP contracts; API Ruff/format/mypy and
+changed initializer mypy passed. These are not live authentication or actual
+SQL feature tests. Initial missing-package checks failed before pip installation;
+one new compiled assertion was corrected for runtime ARM parameter shape.
+An optional mypy run over the older initializer test fixture still reports its
+pre-existing heterogeneous-dict typing errors; production initializer checks
+pass. No unrelated test typing cleanup was performed.
+
+Recovery baseline: Return401 / NoProxy and seven exact existing public
+exclusions. Critical network/denial/isolation failure disables only the new
+endpoint and restores those auth fields; no deletion or private-network
+relaxation. Tenant-prerequisite failure does not authorize anonymous access.
+
+### PR 352 Review Continuation (2026-10-16)
+
+Merged `origin/main`, including the #351 setup command and #118 hardening
+evidence, retaining both additive evidence sections and log entries. The old
+`initialize-api-auth.py` CLI remains a thin delegate to `setup-entra.py`; the
+existing setup tests cover linked-edge `--public-url`, Custom forwarding and
+idempotent callback updates. No second CLI implementation was added.
+
+The additive edge now rejects missing, empty, malformed and
+`systemAssignedIdentity` client values before its dependent auth/edge writes.
+It requires hexadecimal UUID syntax with exact separator positions and points
+to `python3 infra/scripts/setup-entra.py`. This is a local compiled-template
+guard, not verification that the registration exists or a live redeployment:
+the currently deployed placeholder remains an unresolved #349 prerequisite.
+Full #344 acceptance stays **Blocked** until authorized setup creates or
+reconciles the real registration/credential/staff bindings and a human completes
+sign-in. No issue checkbox was ticked.
+
+Fresh public curl at approximately 18:30 UTC: `/healthz` 200; native `/api/me`
+401; browser User-Agent `/api/me` with `Accept: application/json` 302 to
+`login.microsoftonline.com`; browser `/app` 302 to the same host. Redirect
+headers/queries were discarded, retaining only status and hostname. In default
+`entraBearerOnly=false` mode, EasyAuth is configured to redirect anonymous
+requests; native curl's observed 401 depends on client/User-Agent handling.
+This is not a route-aware browser/API split or API-wide 401 guarantee. The
+browser/fetch JSON API criterion remains unmet and explicitly tracked in #350.
+Read-only management probes at approximately 18:32 UTC confirmed SQL Ready/
+public access Disabled and environment internal/public access Disabled.
+No Azure or tenant configuration was changed.
+
+Auth preservation has a specific limit: `edge-existing-auth.bicep` uses a
+full-resource PUT with `union` of the read response. Returned references are
+carried forward, but omitted/write-only/redacted credential or token-store
+references cannot be recovered this way. Container App secret values are not
+read or written by the module. A human must verify non-secret required
+references before a live reapply and stop/repair through the authorized setup
+or secret-management path if any are absent/redacted. No omitted-field
+preservation or live credential round-trip is claimed.
+
+Continuation validation: 186 infra tests passed in an isolated pip venv with
+editable core/agents/API distributions and absolute fixture PYTHONPATH; this
+includes compiled guard behavior and rejected mutations. Focused API auth:
+32 tests passed. Scoped compiled-test Ruff/format, compiled-test/initializer
+mypy and Bicep build passed. The installed local app served health/welcome 200
+and anonymous API 401 on an isolated synthetic fixture; this is not live Entra
+acceptance. Historical broader suite results above remain dated, not rerun.
+The serving image was not rebuilt or redeployed in this continuation. Asset
+hashes above describe the earlier recorded serving image, not parity with the
+new branch head after integrating main's later source/UX changes.
 
 ## Deployment Hardening Audit #118 (2026-10-16)
 

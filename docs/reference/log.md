@@ -3898,6 +3898,37 @@ metadata when the knowledge base was created.
   this principal. No fabricated human binding, private dataset read, inference,
   worker acceptance, owner sign-off, legacy deletion or workflow rename.
 
+## [2026-10-16] query | Public src browser restoration and deployed parity audit
+
+* Refs #344. Refs #143. Refs #200. Selected additive Front Door Premium,
+  WAF Prevention and Private Link to the existing internal environment instead
+  of a new external environment. Preserved private SQL and all existing data,
+  workloads, budgets and group; no pre-existing deletion, policy bypass, public SQL or
+  tenant mutation. Recorded exact new edge resources and image-only audit job.
+* Added existing-stack guard/auth-preservation Bicep and explicit health/all-path
+  route settings; extended callback initialization for a validated edge HTTPS
+  origin with explicit Custom X-Forwarded-Host/Proto forwarding, retaining
+  existing callbacks/roles/secrets. Public health/welcome 200, native API 401
+  and Entra browser redirect proved. Forwarded-host spoof correction verified;
+  only the empty unused rule set created by a rejected header-delete trial
+  was removed. Browser API User-Agent 302 remains a filed #350 gap.
+* Updated infra/API READMEs, evidence pack/JSON, full feature/16-asset parity
+  audit and this index. Image-only execution verified all 17 serving web assets
+  match src; anonymous public observations remain distinct from functional
+  rendering, positive authorization and real-user acceptance.
+* Detected the earlier proof's invalid `systemAssignedIdentity` client literal.
+  Matching-tenant read-only discovery found no retained workbench registration.
+  Filed tenant browser prerequisites as #349 and all remaining deployed
+  feature/data/model/map/photo/law/positive-role acceptance gaps as #350.
+  Browser sign-in remains Blocked, not a redirect-shaped success.
+* ADR 0005 is accepted for synthetic development only. Real sources/owners,
+  legal interpretation/rule activation, consent, safety, financial commitments
+  and operational reliance remain named human gates; Juan Manuel Servera is
+  the exercise Legal/Compliance/DPO owner. No other approval was invented.
+* Published the implementation and honest acceptance boundaries as #352.
+  One postimplementation Review ran: Complete execution, Not accepted for full
+  #344 acceptance; tenant, browser API and positive-feature findings route to
+  #349/#350. No merge or issue-body tick was performed.
 ## [2026-10-16] query | Hardened source deployment and honest criterion audit
 
 * Refs #118. Updated the reference index, source/infra READMEs and cut-over
@@ -4111,6 +4142,49 @@ metadata when the knowledge base was created.
   comparative value and continuing-stock/Azure acceptance remain unmet.
   No issue checkbox, legal approval, live activation, private dataset, Azure
   resource or legacy application tree was changed.
+## [2026-10-16] query | Offline CI/CD deployment pipeline
+
+* Refs #138. Added trusted default-branch PR what-if and main-only manual
+  source-image release/deployment workflows, pinned actions, job-local OIDC
+  permissions, protected environment configuration checks and isolated private
+  runner requirements. No retired-layout or legacy CI workflow edits.
+* Reused the environment parameter sets, source Docker contexts, hardened/plain
+  startup contract and fixable/full Trivy policy. Four run-versioned images
+  are handed off as exact digests; no mutable cache reuse or mixed-source release.
+* Added ama-only incremental what-if/apply guards, sanitized artifacts,
+  quarantine-aware pull-only admission, private SQL checks and strict local
+  HTTP health/authentication-denial regressions. Source CI retains existing
+  check names and adds dependency-aware image path filtering.
+* Updated source/infra guides and reference routing. All live issue criteria
+  remain unchecked: no Azure pipeline execution, real federation, reviewer
+  approval, release, SQL/model identity proof or operational/legal acceptance
+  is claimed. Existing hosted-kernel hardening and pilot setup gaps remain.
+* Local evidence: 154 infra tests including the real installed API on an empty
+  constructed fixture, Ruff/format, strict helper mypy and actionlint pass.
+  All three actual Bicep parameter examples compiled through the new helper
+  offline with constructed override fixtures.
+  Docker daemon is unavailable locally; no image/Trivy rerun is claimed.
+
+## [2026-10-16] query | Infra CI test-only dependency correction
+
+* Refs #138. Reproduced PR 357 validate's missing `yaml` import in a clean
+  Python 3.12 venv with only editable core, agents and API installed:
+  infra discovery ran 131 tests with one import error.
+* Merged origin/main without rewriting history and retained both log histories.
+  The validate infra-test step now installs `PyYAML==6.0.3`, matching source
+  CI. No production package dependency was added. Updated the full infra
+  quality-gate recipe and reference routing.
+* Added assertions for both CI discovery consumers and six mutations covering
+  missing, unpinned and late installation. Existing removed-control workflow
+  mutations remain intact; no ImportError skip or weakened YAML parser.
+* Same-venv discovery passes all 156 tests after the explicit pinned test
+  prerequisite. The Bicep-required run with absolute source fixture paths also
+  passes; local real API health/authentication-denial probes, Ruff/format and
+  strict pipeline helper mypy pass.
+* All six live acceptance criteria remain unmet and unchecked. No Azure
+  deployment/OIDC execution, new human approval, private-data read or
+  operational/legal acceptance is claimed. ADR 0005 remains synthetic-only;
+  real owners and sources remain gaps.
 ## [2026-10-16] implementation | Regulatory UX review regression gates
 
 * Refs #215. Merged origin/main into the existing PR branch and retained both
@@ -4175,3 +4249,24 @@ metadata when the knowledge base was created.
   restart or browser sign-in. No private roster/dataset was read and no Azure
   policy, resource or network setting was changed. Exercise legal ownership
   and the development-only ADR 0005 boundary remain unchanged.
+
+## [2026-10-16] implementation | Public edge review continuation (Refs #344)
+
+* Merged main into PR #352 without rewriting history. Retained both sides of
+  evidence/log/compiled-test conflicts and the #351 CLI delegation to
+  `setup-entra.py`; its existing linked-edge callback tests remain authoritative.
+* Added a fail-closed UUID-syntax prerequisite before the existing-stack
+  auth/edge writes, rejecting `systemAssignedIdentity` with setup guidance.
+  Compiled behavioral tests reject non-empty-only/bypassed/disabled/unordered
+  guard mutations. A separate regression pins the legacy CLI's delegation.
+* Documented full-resource auth PUT preservation as limited to read-visible
+  references: `union` cannot reconstruct omitted, write-only or redacted fields.
+  No secret value or live auth configuration was read/written.
+* Fresh public probes retain health 200, native API 401, browser app 302 and
+  browser API 302 even with JSON Accept; User-Agent-sensitive handling is not
+  API-wide 401 acceptance. Refs #350. Read-only SQL/environment checks retain
+  public access Disabled and an internal environment; no Azure writes.
+* Updated the infra guide, cut-over evidence/JSON and reference index.
+  Full acceptance remains Blocked on authorized real registration/credential/
+  staff setup and human sign-in (#349), browser API coexistence and positive
+  feature evidence (#350). No issue tick, merge or operational approval.

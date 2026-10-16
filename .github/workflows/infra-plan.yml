@@ -1,0 +1,107 @@
+name: Infrastructure PR what-if
+
+# workflow_run loads this workflow and its helpers from the default branch,
+# never from the PR whose templates are being inspected.
+on:
+  workflow_run:
+    workflows: ["Source projects CI"]
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ama-plan-${{ github.event.workflow_run.pull_requests[0].number }}
+  cancel-in-progress: false
+
+jobs:
+  changes:
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.pull_requests[0].number != null
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      infra: ${{ steps.paths.outputs.infra }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check only candidate paths, without executing candidate code
+        id: paths
+        env:
+          BASE_SHA: ${{ github.event.workflow_run.pull_requests[0].base.sha }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          changed=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- infra/)
+          if [ -n "$changed" ]; then
+            echo "infra=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "infra=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  what-if:
+    needs: changes
+    if: needs.changes.outputs.infra == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [dev, test, pilot]
+    environment: ${{ matrix.environment }}-plan
+    runs-on: [self-hosted, linux, x64, ama-private-plan]
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    env:
+      RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      DEPLOY_PARAMETERS: ${{ vars.DEPLOY_PARAMETERS }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          path: candidate
+          sparse-checkout: infra
+          persist-credentials: false
+      - name: Require approval configuration before Azure login
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_ENVIRONMENT: ${{ matrix.environment }}-plan
+        run: |
+          echo "AZURE_CONFIG_DIR=$RUNNER_TEMP/azure" >> "$GITHUB_ENV"
+          python3 infra/scripts/pipeline.py verify-environment --github-environment "$TARGET_ENVIRONMENT"
+      - uses: azure/login@8216e11d8cd9b42fe925c852af8e76311ff067ac # v2
+        env:
+          AZURE_CORE_OUTPUT: none
+        with:
+          client-id: ${{ vars.AZURE_PLAN_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: false
+      - name: What-if candidate Bicep with trusted helper
+        env:
+          TARGET_ENVIRONMENT: ${{ matrix.environment }}
+        run: |
+          python3 infra/scripts/pipeline.py plan \
+            --infra candidate/infra --environment "$TARGET_ENVIRONMENT" \
+            --output "$RUNNER_TEMP/what-if-summary.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: ${{ !cancelled() }}
+        with:
+          name: what-if-${{ matrix.environment }}-${{ github.event.workflow_run.head_sha }}
+          path: ${{ runner.temp }}/what-if-summary.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Remove local Azure credentials
+        if: always()
+        run: az logout --output none

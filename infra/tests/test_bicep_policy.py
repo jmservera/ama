@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import unittest
 from copy import deepcopy
+from functools import reduce
 from itertools import product
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -113,6 +114,11 @@ def evaluate(expression, parameters: dict, variables: dict):
     ):
         return expression
     source = re.sub(r"\b(if|or|and|not)\(", r"\1_(", expression[1:-1])
+    source = source.replace(
+        "lambda('remaining', 'digit', replace(lambdaVariables('remaining'), "
+        "lambdaVariables('digit'), ''))",
+        "(lambda remaining, digit: remaining.replace(digit, ''))",
+    )
     scope = {
         "if_": lambda c, a, b: a if c else b,
         "or_": lambda *a: any(a),
@@ -120,6 +126,13 @@ def evaluate(expression, parameters: dict, variables: dict):
         "not_": lambda a: not a,
         "equals": lambda a, b: a == b,
         "empty": lambda a: not a,
+        "coalesce": lambda *values: next(value for value in values if value is not None),
+        "length": len,
+        "split": lambda value, delimiter: value.split(delimiter),
+        "toLower": str.lower,
+        "take": lambda value, count: value[:count],
+        "skip": lambda value, count: value[count:],
+        "reduce": lambda values, initial, function: reduce(function, values, initial),
         "parameters": lambda n: parameters[n],
         "variables": lambda n: evaluate(variables[n], parameters, variables),
         "createObject": lambda *a: dict(zip(a[::2], a[1::2], strict=True)),
@@ -619,6 +632,145 @@ class BicepPolicyTests(unittest.TestCase):
         self.assertIn(
             "parameters('entraClientSecretName')", api["properties"]["configuration"]["secrets"]
         )
+
+    def test_existing_stack_edge_is_additive_and_single_origin(self) -> None:
+        template = compile_bicep("public-edge-existing.bicep")
+        self.assertEqual(
+            {item["name"] for item in template["resources"]},
+            {"edge-existing-guard", "edge-existing-auth", "public-edge-existing"},
+        )
+        guards = module(template, "edge-existing-guard")["properties"]
+        private_guard = json.dumps(guards["parameters"]["privateEnvironment"])
+        auth_guard = json.dumps(guards["parameters"]["authenticatedOrigin"])
+        self.assertIn("'Disabled'", private_guard)
+        self.assertIn(".internal", private_guard)
+        self.assertIn("managedEnvironmentId", auth_guard)
+        self.assertIn("platform.enabled", auth_guard)
+        self.assertFalse(template["parameters"]["entraBearerOnly"]["defaultValue"])
+        auth_template = module_template(template, "edge-existing-auth")
+        browser_auth = resource(auth_template, "Microsoft.App/containerApps/authConfigs")
+        self.assertIn("RedirectToLoginPage", browser_auth["properties"])
+        for setting in ("'Custom'", "'X-Forwarded-Host'", "'X-Forwarded-Proto'"):
+            self.assertIn(setting, browser_auth["properties"])
+        self.assertNotIn("'Standard'", browser_auth["properties"])
+        edge = module_template(template, "public-edge-existing")
+        origins = [
+            r for r in resources(edge) if r["type"] == "Microsoft.Cdn/profiles/originGroups/origins"
+        ]
+        self.assertEqual(len(origins), 1)
+        origin = origins[0]["properties"]
+        self.assertEqual(origin["hostName"], origin["originHostHeader"])
+        self.assertTrue(origin["enforceCertificateNameCheck"])
+        self.assertEqual(origin["sharedPrivateLinkResource"]["groupId"], "managedEnvironments")
+        route = resource(edge, "Microsoft.Cdn/profiles/afdEndpoints/routes")["properties"]
+        self.assertEqual(route["patternsToMatch"], ["/*"])
+        self.assertEqual(route["supportedProtocols"], ["Https"])
+        self.assertNotIn("cacheConfiguration", route)
+        self.assertNotIn("ruleSets", route)
+        probe = resource(edge, "Microsoft.Cdn/profiles/originGroups")["properties"][
+            "healthProbeSettings"
+        ]
+        self.assertEqual((probe["probePath"], probe["probeRequestType"]), ("/healthz", "GET"))
+        waf = resource(edge, "Microsoft.Network/FrontDoorWebApplicationFirewallPolicies")
+        self.assertEqual(waf["properties"]["policySettings"]["mode"], "[parameters('wafMode')]")
+        self.assertEqual(
+            module(template, "public-edge-existing")["properties"]["parameters"]["wafMode"][
+                "value"
+            ],
+            "Prevention",
+        )
+
+    def test_edge_auth_trusts_only_front_door_overwritten_headers(self) -> None:
+        template = module_template(self.main, "containerapps")
+        auth = resource(template, "Microsoft.App/containerApps/authConfigs")
+        expression = auth["properties"]["httpSettings"]["forwardProxy"]
+        for behind_edge, expected in (
+            (False, {"convention": "NoProxy"}),
+            (
+                True,
+                {
+                    "convention": "Custom",
+                    "customHostHeaderName": "X-Forwarded-Host",
+                    "customProtoHeaderName": "X-Forwarded-Proto",
+                },
+            ),
+        ):
+            self.assertEqual(evaluate(expression, {"behindPublicEdge": behind_edge}, {}), expected)
+
+    def assert_existing_edge_client_guard(self, template: dict) -> None:
+        guard = module(template, "edge-existing-guard")
+        definition = module_template(template, "edge-existing-guard")["parameters"][
+            "registeredClient"
+        ]
+        self.assertEqual(definition["minLength"], 1)
+        self.assertIn("python3 infra/scripts/setup-entra.py", definition["metadata"]["description"])
+        self.assertIn("edge-existing-guard", module(template, "edge-existing-auth")["dependsOn"][0])
+        self.assertIn(
+            "edge-existing-auth", module(template, "public-edge-existing")["dependsOn"][0]
+        )
+        expression = guard["properties"]["parameters"]["registeredClient"]
+        client_read = (
+            "coalesce(tryGet(reference(resourceId('Microsoft.App/containerApps/authConfigs', "
+            "parameters('apiName'), 'current'), '2025-07-01')"
+            ".identityProviders.azureActiveDirectory.registration, 'clientId'), '')"
+        )
+        self.assertIn(client_read, expression)
+        expression = expression.replace(client_read, "coalesce(parameters('clientId'), '')")
+        valid = "01234567-89ab-cdef-0123-456789abcdef"
+        cases: tuple[tuple[str | None, bool], ...] = (
+            (None, False),
+            ("", False),
+            ("systemAssignedIdentity", False),
+            ("not-an-application", False),
+            (valid, True),
+            (valid.upper(), True),
+            (valid.replace("-", ""), False),
+            ("{" + valid + "}", False),
+            (" " + valid[1:], False),
+            (valid[:-1] + "g", False),
+            (valid[:-1] + "-", False),
+            (valid.replace("-", "_"), False),
+            (valid[:7] + "-" + valid[8:9] + valid[10:], False),
+            (valid + "0", False),
+            (valid[:-1], False),
+        )
+        cases += tuple(
+            (valid[:index] + valid[index + 1] + "-" + valid[index + 2 :], False)
+            for index in (8, 13, 18, 23)
+        )
+        for client_id, accepted in cases:
+            value = evaluate(expression, {"clientId": client_id}, {})["value"]
+            self.assertEqual(len(value) >= definition["minLength"], accepted, repr(client_id))
+
+    def test_existing_edge_requires_uuid_before_auth_or_edge_write(self) -> None:
+        self.assert_existing_edge_client_guard(compile_bicep("public-edge-existing.bicep"))
+
+    def test_existing_edge_client_guard_mutations_are_rejected(self) -> None:
+        template = compile_bicep("public-edge-existing.bicep")
+        for mutation in ("nonempty-only", "always-ok", "constraint-removed", "auth-unordered"):
+            with self.subTest(mutation=mutation):
+                mutated = deepcopy(template)
+                guard = module(mutated, "edge-existing-guard")
+                if mutation == "nonempty-only":
+                    expression = guard["properties"]["parameters"]["registeredClient"]
+                    client = re.search(r"coalesce\(tryGet\(.*?'clientId'\), ''\)", expression)
+                    self.assertIsNotNone(client)
+                    assert client is not None
+                    guard["properties"]["parameters"]["registeredClient"] = (
+                        f"[if(not(empty({client.group()})), "
+                        "createObject('value', 'ok'), createObject('value', ''))]"
+                    )
+                elif mutation == "always-ok":
+                    guard["properties"]["parameters"]["registeredClient"] = {"value": "ok"}
+                elif mutation == "constraint-removed":
+                    guard["properties"]["template"]["parameters"]["registeredClient"][
+                        "minLength"
+                    ] = 0
+                else:
+                    module(mutated, "edge-existing-auth")["dependsOn"] = ["unrelated"]
+                self.assert_mutation_rejected(self.assert_existing_edge_client_guard, mutated)
+
+    def test_bearer_only_guard_requires_identified_audience(self) -> None:
         guard = module(self.main, "parameter-guard")["properties"]["parameters"]
         expression = guard["bearerOnlyRequiresAudience"]
         for overrides, expected in (
