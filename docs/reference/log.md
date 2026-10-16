@@ -3551,3 +3551,11 @@ metadata when the knowledge base was created.
   Final combined core 418/API 537 tests and Ruff/format/mypy passed. Resident
   retention/write persistence and SQL driver remained unchanged; new queue
   reads were validated locally, not claimed as another Azure run.
+
+## [2026-10-16] review-fix | Resident retention expiry limit pinned
+
+* PR #326 review found that after retention expiry and an approved deletion the
+  first-contact marker is kept, so the case refuses new resident decisions.
+  Documented this as a known limit in `src/core/README.md`, pinned it with a
+  core test, and asked the owner on #86 whether renewed contact restarts the
+  period. No restart rule was invented.

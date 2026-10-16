@@ -152,6 +152,22 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(c["service_requests"], [dict(outcome="SYN-COMPLAINT-OUTCOME")])
         self.assertTrue(again.verify_audit())
 
+    def test_expired_retention_stays_blocked_after_deletion_pending_owner_rule(self) -> None:
+        from datetime import date
+
+        self.scope()
+        self.answer(status="Withdrawn")
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["resident"]["first_contact_at"] = "2020-02-29"
+            self.store.save()
+        with patch("zava_forward.core.controls.today", return_value="2025-02-28"):
+            self.store.approve_retention_deletion(
+                self.pam, "ZF-1", "resident-decisions", today=date(2025, 2, 28)
+            )
+            with self.assertRaises((ValueError, PermissionError)):
+                self.answer()
+
     def test_matrix_registered_writer_and_exact_private_fields(self) -> None:
         self.scope()
         self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")

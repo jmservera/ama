@@ -122,6 +122,11 @@ deletion, not expiry. Deletion is manager-reviewed, not a configured automatic
 purge job. Existing ledger text, backups and SQL row history are not erased by
 current-payload removal; operational erasure needs a separately approved design.
 
+Known limit pending an owner rule (#86): after expiry and an approved deletion the
+first-contact marker is kept, so retention stays expired and the case refuses new
+resident decisions. Whether renewed contact starts a new period is an open owner
+decision; nothing here invents that rule.
+
 Cards, missing-decision filters and AI citation labels use current scoped
 status, not the legacy answer. The SQL missing-decision filter deliberately uses
 the existing live in-memory path because authority can expire without a write;
